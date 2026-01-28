@@ -52,8 +52,8 @@ class PluginError extends Error {
   constructor({ error, pluginType, pluginName, received, location, configKey }) {
     const message = error.message;
 
-    // Format the message with context
-    let formattedMessage = `[Plugin Error] ${message}`;
+    // Format the message with context (no prefix - logger uses error.name for display)
+    let formattedMessage = message;
     if (received !== undefined) {
       try {
         formattedMessage += ` Received: ${JSON.stringify(received)}`;
@@ -67,16 +67,50 @@ class PluginError extends Error {
 
     super(formattedMessage, { cause: error });
     this.name = 'PluginError';
-    this.rawMessage = message;
     this.pluginType = pluginType;
     this.pluginName = pluginName;
     this.received = received;
     this.location = location;
     this.configKey = error.configKey ?? configKey ?? null;
 
+    // Location info (set by server-side resolution)
+    this.source = null;
+    this.config = null;
+    this.link = null;
+
     if (error.stack) {
       this.stack = error.stack;
     }
+  }
+
+  /**
+   * Serializes the error for transport (e.g., client to server).
+   * @returns {Object} Serialized error data with type marker
+   */
+  serialize() {
+    return {
+      '~err': 'PluginError',
+      message: this.message,
+      pluginType: this.pluginType,
+      pluginName: this.pluginName,
+      location: this.location,
+      configKey: this.configKey,
+    };
+  }
+
+  /**
+   * Deserializes error data back into a PluginError.
+   * @param {Object} data - Serialized error data
+   * @returns {PluginError}
+   */
+  static deserialize(data) {
+    return new PluginError({
+      error: new Error(data.message),
+      pluginType: data.pluginType,
+      pluginName: data.pluginName,
+      location: data.location,
+      configKey: data.configKey,
+    });
   }
 }
 

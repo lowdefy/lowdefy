@@ -6,7 +6,7 @@
         "should not include a period"
       ],
       "errorContains": [
-        "[Config Error] Request id \"my.request\" at page \"home\" should not include a period (\".\").",
+        "Request id \"my.request\" at page \"home\" should not include a period (\".\").",
         "lowdefy.yaml:23"
       ]
     }

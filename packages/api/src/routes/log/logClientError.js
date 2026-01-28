@@ -15,19 +15,16 @@
 */
 
 import { resolveConfigLocation } from '@lowdefy/errors/build';
+import { deserializeError } from '@lowdefy/errors/server';
 
-async function logClientError(
-  context,
-  { configKey, isServiceError, message, name, pageId, timestamp }
-) {
+async function logClientError(context, data) {
   const { logger } = context;
 
-  let source = null;
-  let config = null;
-  let link = null;
+  // Deserialize the error from the client
+  const error = deserializeError(data);
 
-  // Only resolve config location for config errors (not service errors)
-  if (configKey && !isServiceError) {
+  // Resolve config location if error has configKey
+  if (error.configKey) {
     try {
       const [keyMap, refMap] = await Promise.all([
         context.readConfigFile('keyMap.json'),
@@ -35,49 +32,30 @@ async function logClientError(
       ]);
 
       const location = resolveConfigLocation({
-        configKey,
+        configKey: error.configKey,
         keyMap,
         refMap,
         configDirectory: context.configDirectory,
       });
+
       if (location) {
-        source = location.source;
-        config = location.config;
-        link = location.link;
+        error.source = location.source;
+        error.config = location.config;
+        error.link = location.link;
       }
-    } catch (error) {
-      // Maps may not exist in all environments
-      logger.warn({ event: 'warn_maps_load_failed', error: error.message });
+    } catch (err) {
+      logger.warn({ event: 'warn_maps_load_failed', error: err.message });
     }
   }
 
-  const logData = {
-    event: isServiceError ? 'client_service_error' : 'client_config_error',
-    errorName: name,
-    errorMessage: message,
-    isServiceError: isServiceError || false,
-    pageId,
-    timestamp,
-    source,
-    config,
-    link,
-  };
-
-  // Human-readable output: source (info/blue) then message (error/red)
-  if (source) {
-    logger.info(source);
-  }
-  logger.error(message);
-
-  // Structured logging for log aggregation (debug level - won't display in dev)
-  logger.debug(logData);
+  // Log error - logger handles formatting based on error.name and error.source
+  logger.error(error);
 
   return {
     success: true,
-    isServiceError: isServiceError || false,
-    source,
-    config,
-    link,
+    source: error.source ?? null,
+    config: error.config ?? null,
+    link: error.link ?? null,
   };
 }
 

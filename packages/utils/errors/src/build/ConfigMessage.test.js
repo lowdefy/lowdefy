@@ -124,141 +124,95 @@ describe('ConfigMessage.shouldSuppress', () => {
   });
 });
 
-describe('ConfigMessage.format', () => {
-  test('formats message without location', () => {
-    const result = ConfigMessage.format({
-      prefix: '[Config Error]',
-      message: 'Test error',
-    });
-    expect(result).toBe('[Config Error] Test error');
-  });
-
-  test('formats message with configKey and context (mode 1)', () => {
-    const result = ConfigMessage.format({
-      prefix: '[Config Error]',
-      message: 'Invalid block',
-      configKey: 'abc123',
+describe('ConfigMessage.resolveLocation', () => {
+  test('returns null for missing configKey', () => {
+    const result = ConfigMessage.resolveLocation({
+      configKey: null,
       context: { keyMap, refMap },
     });
-    expect(result).toBe('pages/home.yaml:5\n[Config Error] Invalid block');
+    expect(result).toBeNull();
   });
 
-  test('formats message with operatorLocation (mode 2)', () => {
-    const result = ConfigMessage.format({
-      prefix: '[Config Warning]',
-      message: 'Deprecated operator',
-      operatorLocation: { ref: 'ref1', line: 15 },
+  test('returns null for missing keyMap in context', () => {
+    const result = ConfigMessage.resolveLocation({
+      configKey: 'abc123',
       context: { refMap },
     });
-    expect(result).toBe('pages/home.yaml:15\n[Config Warning] Deprecated operator');
+    expect(result).toBeNull();
   });
 
-  test('formats message with raw filePath and lineNumber (mode 3)', () => {
-    const result = ConfigMessage.format({
-      prefix: '[Config Error]',
-      message: 'YAML parse error',
-      filePath: 'lowdefy.yaml',
-      lineNumber: 42,
+  test('resolves location from configKey', () => {
+    const result = ConfigMessage.resolveLocation({
+      configKey: 'abc123',
+      context: { keyMap, refMap, directories: { config: '/app' } },
     });
-    expect(result).toBe('lowdefy.yaml:42\n[Config Error] YAML parse error');
-  });
-
-  test('formats message with filePath only (no line number)', () => {
-    const result = ConfigMessage.format({
-      prefix: '[Config Error]',
-      message: 'File not found',
-      filePath: 'config.yaml',
+    expect(result).toEqual({
+      source: 'pages/home.yaml:5',
+      config: 'root.pages[0:home].blocks[0:header]',
+      link: '/app/pages/home.yaml:5',
     });
-    expect(result).toBe('config.yaml\n[Config Error] File not found');
-  });
-
-  test('returns empty string when suppressed', () => {
-    const result = ConfigMessage.format({
-      prefix: '[Config Warning]',
-      message: 'State reference not found',
-      configKey: 'withParent',
-      context: { keyMap, refMap },
-      checkSlug: 'state-refs',
-    });
-    expect(result).toBe('');
-  });
-
-  test('uses configDirectory from context', () => {
-    const result = ConfigMessage.format({
-      prefix: '[Config Error]',
-      message: 'Test',
-      filePath: 'test.yaml',
-      lineNumber: 1,
-      context: { directories: { config: '/app' } },
-    });
-    expect(result).toBe('test.yaml:1\n[Config Error] Test');
-  });
-
-  test('uses explicit configDirectory over context', () => {
-    const result = ConfigMessage.format({
-      prefix: '[Config Error]',
-      message: 'Test',
-      filePath: 'test.yaml',
-      lineNumber: 1,
-      configDirectory: '/explicit',
-      context: { directories: { config: '/context' } },
-    });
-    expect(result).toBe('test.yaml:1\n[Config Error] Test');
   });
 });
 
-describe('ConfigMessage._resolveOperatorLocation', () => {
+describe('ConfigMessage.resolveOperatorLocation', () => {
+  test('returns null for missing operatorLocation', () => {
+    const result = ConfigMessage.resolveOperatorLocation({
+      operatorLocation: null,
+      context: { refMap },
+    });
+    expect(result).toBeNull();
+  });
+
   test('resolves location from ref and line', () => {
-    const result = ConfigMessage._resolveOperatorLocation({
+    const result = ConfigMessage.resolveOperatorLocation({
       operatorLocation: { ref: 'ref1', line: 25 },
-      refMap,
+      context: { refMap },
     });
     expect(result).toEqual({
       source: 'pages/home.yaml:25',
-      link: '',
+      link: null,
     });
   });
 
   test('includes configDirectory in link', () => {
-    const result = ConfigMessage._resolveOperatorLocation({
+    const result = ConfigMessage.resolveOperatorLocation({
       operatorLocation: { ref: 'ref1', line: 25 },
-      refMap,
-      configDirectory: '/app',
+      context: { refMap, directories: { config: '/app' } },
     });
     expect(result.link).toBe('/app/pages/home.yaml:25');
   });
 
   test('defaults to lowdefy.yaml when ref not found', () => {
-    const result = ConfigMessage._resolveOperatorLocation({
+    const result = ConfigMessage.resolveOperatorLocation({
       operatorLocation: { ref: 'notfound', line: 10 },
-      refMap,
+      context: { refMap },
     });
     expect(result.source).toBe('lowdefy.yaml:10');
   });
 
   test('handles missing line number', () => {
-    const result = ConfigMessage._resolveOperatorLocation({
+    const result = ConfigMessage.resolveOperatorLocation({
       operatorLocation: { ref: 'ref1' },
-      refMap,
+      context: { refMap },
     });
     expect(result.source).toBe('pages/home.yaml');
   });
 });
 
-describe('ConfigMessage._resolveRawLocation', () => {
+describe('ConfigMessage.resolveRawLocation', () => {
   test('resolves location from filePath and lineNumber', () => {
-    const result = ConfigMessage._resolveRawLocation({
+    const result = ConfigMessage.resolveRawLocation({
       filePath: 'config.yaml',
       lineNumber: 15,
     });
     expect(result).toEqual({
       source: 'config.yaml:15',
-      link: '',
+      link: null,
     });
   });
 
   test('includes configDirectory in link', () => {
-    const result = ConfigMessage._resolveRawLocation({
+    const result = ConfigMessage.resolveRawLocation({
       filePath: 'config.yaml',
       lineNumber: 15,
       configDirectory: '/myapp',
@@ -267,7 +221,7 @@ describe('ConfigMessage._resolveRawLocation', () => {
   });
 
   test('handles missing line number', () => {
-    const result = ConfigMessage._resolveRawLocation({
+    const result = ConfigMessage.resolveRawLocation({
       filePath: 'config.yaml',
     });
     expect(result.source).toBe('config.yaml');

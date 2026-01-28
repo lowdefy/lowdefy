@@ -18,25 +18,20 @@ import ConfigWarning from './ConfigWarning.js';
 
 test('ConfigWarning creates warning with message only', () => {
   const warning = new ConfigWarning({ message: 'Test warning' });
-  expect(warning.message).toBe('[Config Warning] Test warning');
-  expect(warning.rawMessage).toBe('Test warning');
+  expect(warning.message).toBe('Test warning');
+  expect(warning.source).toBeNull();
 });
 
-test('ConfigWarning with source includes source in message', () => {
+test('ConfigWarning stores source', () => {
   const warning = new ConfigWarning({
     message: 'Deprecated feature',
     source: 'config.yaml:10',
   });
-  expect(warning.message).toBe('config.yaml:10\n[Config Warning] Deprecated feature');
+  expect(warning.message).toBe('Deprecated feature');
   expect(warning.source).toBe('config.yaml:10');
 });
 
 test('ConfigWarning is not an Error instance', () => {
   const warning = new ConfigWarning({ message: 'Test' });
   expect(warning instanceof Error).toBe(false);
-});
-
-test('ConfigWarning stores raw message', () => {
-  const warning = new ConfigWarning({ message: 'Raw message here' });
-  expect(warning.rawMessage).toBe('Raw message here');
 });

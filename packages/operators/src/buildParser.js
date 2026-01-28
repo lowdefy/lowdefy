@@ -158,7 +158,7 @@ class BuildParser {
         });
         return res;
       } catch (e) {
-        const formattedMessage = `Operator Error: ${e.message} Received: ${JSON.stringify({
+        const formattedMessage = `${e.message} Received: ${JSON.stringify({
           [key]: params,
         })} at ${operatorLocation}.`;
         const formattedError = new Error(formattedMessage);

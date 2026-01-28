@@ -14,49 +14,49 @@
   limitations under the License.
 */
 
-import { ConfigError, PluginError, ServiceError } from '@lowdefy/errors/client';
+import { ConfigError } from '@lowdefy/errors/client';
 
 function createLogError(lowdefy) {
-  // Track logged errors for deduplication
   const loggedErrors = new Set();
 
   return async function logError(error) {
-    // Deduplicate by message + configKey
     const errorKey = `${error.message}:${error.configKey || ''}`;
     if (loggedErrors.has(errorKey)) {
       return;
     }
     loggedErrors.add(errorKey);
 
-    // ServiceError - log without config resolution (message already formatted in constructor)
-    if (error instanceof ServiceError) {
-      console.error(error.message);
+    // Serialize and send to server for logging with location resolution
+    if (error.serialize) {
+      try {
+        const response = await fetch(`${lowdefy.basePath}/api/client-error`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(error.serialize()),
+          credentials: 'same-origin',
+        });
+        if (response.ok) {
+          const { source } = await response.json();
+          if (source) {
+            console.info(source);
+          }
+        }
+      } catch {
+        // Server logging failed - continue with local console
+      }
+      console.error(`[${error.name}] ${error.message}`);
       return;
     }
 
-    // PluginError - resolve location (if available) and log to server
-    if (error instanceof PluginError) {
-      const configError = ConfigError.from({ error, configKey: error.configKey });
-      await configError.resolve(lowdefy);
-      console.error(`${configError.source ? configError.source + '\n' : ''}${error.message}`);
-      return;
-    }
-
-    // ConfigError - resolve location and log
-    if (error instanceof ConfigError) {
-      await error.log(lowdefy);
-      return;
-    }
-
-    // Plain errors with configKey - wrap in ConfigError for location resolution
+    // Plain errors with configKey - wrap in ConfigError for serialization
     if (error.configKey) {
-      const configError = ConfigError.from({ error, configKey: error.configKey });
-      await configError.log(lowdefy);
+      const configError = new ConfigError({ error });
+      await logError(configError);
       return;
     }
 
-    // Other errors - log as-is
-    console.error(`[Error] ${error.message}`);
+    // Other errors - just log locally
+    console.error(`[${error.name || 'Error'}] ${error.message}`);
   };
 }
 

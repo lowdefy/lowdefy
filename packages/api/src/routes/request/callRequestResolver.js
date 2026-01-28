@@ -48,7 +48,11 @@ async function callRequestResolver(
 
     // Check if this is a service error (network, timeout, 5xx)
     if (ServiceError.isServiceError(error)) {
-      const serviceError = ServiceError.from(error, requestConfig.connectionId, requestConfig['~k']);
+      const serviceError = new ServiceError({
+        error,
+        service: requestConfig.connectionId,
+        configKey: requestConfig['~k'],
+      });
       logger.debug(
         { params: { id: requestConfig.requestId, type: requestConfig.type }, err: serviceError },
         serviceError.message

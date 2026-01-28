@@ -6,7 +6,7 @@
         "Duplicate actionId"
       ],
       "errorContains": [
-        "[Config Error] Duplicate actionId \"linkAction\" on event \"onClick\" on block \"button\" on page \"home\".",
+        "Duplicate actionId \"linkAction\" on event \"onClick\" on block \"button\" on page \"home\".",
         "lowdefy.yaml:26"
       ]
     }

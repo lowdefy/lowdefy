@@ -18,10 +18,22 @@ function createStdOutLineHandler({ context }) {
   const { logger } = context;
   function stdOutLineHandler(line) {
     try {
-      const { level, msg } = JSON.parse(line);
-      if (level && msg) {
-        const print = level === 30 ? 'info' : logger.levels.labels[level];
-        logger[logger.levels.labels[level]]({ print }, msg);
+      const { level, msg, source, err } = JSON.parse(line);
+      if (!level) return;
+
+      const levelLabel = logger.levels.labels[level];
+
+      // Extract source from err (pino error serialization) or top-level (merging object)
+      const resolvedSource = err?.source ?? source;
+
+      // Error/warn with source: show source line (info/blue) before the message
+      if (resolvedSource && level >= 40) {
+        logger.info({ print: 'info' }, resolvedSource);
+      }
+
+      if (msg) {
+        const print = level === 30 ? 'info' : levelLabel;
+        logger[levelLabel]({ print }, msg);
       }
     } catch (error) {
       logger.info({ print: 'info' }, line);

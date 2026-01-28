@@ -55,17 +55,20 @@ test('getConfigFile throws formatted error when file does not exist', async () =
   const refDef = { path: 'missing.yaml', lineNumber: 10 };
 
   await expect(getConfigFile({ context, refDef, referencedFrom: 'lowdefy.yaml' })).rejects.toThrow(
-    '[Config Error] Referenced file does not exist: "missing.yaml"'
+    'Referenced file does not exist: "missing.yaml"'
   );
 });
 
-test('getConfigFile error includes line number when available', async () => {
+test('getConfigFile error includes line number in source', async () => {
   mockReadConfigFile.mockResolvedValue(null);
   const refDef = { path: 'missing.yaml', lineNumber: 25 };
 
-  await expect(
-    getConfigFile({ context, refDef, referencedFrom: 'pages/home.yaml' })
-  ).rejects.toThrow('pages/home.yaml:25');
+  try {
+    await getConfigFile({ context, refDef, referencedFrom: 'pages/home.yaml' });
+    throw new Error('Expected error to be thrown');
+  } catch (error) {
+    expect(error.source).toBe('pages/home.yaml:25');
+  }
 });
 
 test('getConfigFile error shows resolved absolute path', async () => {
@@ -121,7 +124,7 @@ test('getConfigFile does not suggest path for normal paths', async () => {
   await expect(errorPromise).rejects.not.toThrow('Tip:');
 });
 
-test('getConfigFile includes all error details in message', async () => {
+test('getConfigFile includes all error details in message and source', async () => {
   mockReadConfigFile.mockResolvedValue(null);
   const refDef = { path: '../missing.yaml', lineNumber: 42 };
 
@@ -129,9 +132,8 @@ test('getConfigFile includes all error details in message', async () => {
     await getConfigFile({ context, refDef, referencedFrom: 'pages/test.yaml' });
     throw new Error('Expected error to be thrown');
   } catch (error) {
-    expect(error.message).toContain('[Config Error]');
+    expect(error.source).toBe('pages/test.yaml:42');
     expect(error.message).toContain('Referenced file does not exist: "../missing.yaml"');
-    expect(error.message).toContain('pages/test.yaml:42');
     expect(error.message).toContain('Resolved to: /test/missing.yaml'); // path.resolve normalizes ../
     expect(error.message).toContain('Did you mean "missing.yaml"?');
   }

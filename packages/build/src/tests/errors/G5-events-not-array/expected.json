@@ -6,7 +6,7 @@
         "must be array"
       ],
       "errorContains": [
-        "[Config Error] must be array",
+        "must be array",
         "lowdefy.yaml:21"
       ]
     }

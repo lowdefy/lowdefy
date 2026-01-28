@@ -26,6 +26,17 @@ function createLogger({ level = 'info' }) {
         print: context.print ?? logger.levels.labels[level],
       };
     },
+    serializers: {
+      err: (err) => ({
+        message: err.message,
+        name: err.name,
+        stack: err.stack,
+        source: err.source,
+        config: err.config,
+        configKey: err.configKey,
+        isServiceError: err.isServiceError,
+      }),
+    },
   });
   return logger;
 }

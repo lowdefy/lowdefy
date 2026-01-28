@@ -202,7 +202,7 @@ test('operator errors with verbose', () => {
   expect(res.output).toEqual({ a: null });
   expect(res.errors.length).toBe(1);
   expect(res.errors[0].message).toBe(
-    'Operator Error: Test error. Received: {"_error":{"params":true}} at location.'
+    'Test error. Received: {"_error":{"params":true}} at location.'
   );
 });
 
@@ -219,7 +219,7 @@ test('operator errors include configKey from ~k', () => {
   expect(res.output).toEqual({ a: null });
   expect(res.errors.length).toBe(1);
   expect(res.errors[0].message).toBe(
-    'Operator Error: Test error. Received: {"_error":{"params":true}} at location.'
+    'Test error. Received: {"_error":{"params":true}} at location.'
   );
   expect(res.errors[0].configKey).toBe('config-key-456');
 });

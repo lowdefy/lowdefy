@@ -203,12 +203,12 @@ export default MongoDBFindOne;
 
 Located in `operators/shared/` (everywhere), `operators/client/`, `operators/server/`, or `operators/build/`.
 
-Operators throw simple error messages without formatting. The parsers (WebParser, ServerParser, BuildParser) add the "Operator Error:" prefix, received value, and location:
+Operators throw simple error messages. The parsers (WebParser, ServerParser, BuildParser) add the received value and location:
 
 ```javascript
 function _myOperator({ params }) {
   if (typeof params !== 'object') {
-    // Simple error - parsers will format with prefix, received value, and location
+    // Simple error - parsers will format with received value and location
     throw new Error('_myOperator requires an object.');
   }
   return result;

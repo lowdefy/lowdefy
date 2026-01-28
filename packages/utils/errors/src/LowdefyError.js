@@ -16,15 +16,13 @@
 
 /**
  * Error class for internal Lowdefy errors (bugs, unexpected conditions).
- * Message is formatted with [Lowdefy Error] prefix in the constructor.
  *
  * Use this for unexpected runtime errors, not for config validation errors.
  * ConfigError should be used for user-facing config issues.
  *
  * @example
- * // Create a new error - message is auto-formatted
+ * // Create a new error
  * throw new LowdefyError('Unexpected condition');
- * // error.message = "[Lowdefy Error] Unexpected condition"
  *
  * @example
  * // At top-level catch, log the error with stack
@@ -35,15 +33,15 @@
  */
 class LowdefyError extends Error {
   /**
-   * Creates a LowdefyError instance with formatted message.
-   * @param {string} message - The raw error message
+   * Creates a LowdefyError instance.
+   * @param {string} message - The error message
    * @param {Object} [options]
    * @param {Error} [options.cause] - The original error that caused this
    */
   constructor(message, options = {}) {
-    super(`[Lowdefy Error] ${message}`, options);
+    // Message without prefix - logger uses error.name for display
+    super(message, options);
     this.name = 'LowdefyError';
-    this.rawMessage = message;
     this.configKey = null;
   }
 

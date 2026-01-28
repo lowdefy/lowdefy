@@ -6,7 +6,7 @@
         "Duplicate pageId"
       ],
       "errorContains": [
-        "[Config Error] Duplicate pageId \"home\".",
+        "Duplicate pageId \"home\".",
         "lowdefy.yaml:15"
       ]
     }

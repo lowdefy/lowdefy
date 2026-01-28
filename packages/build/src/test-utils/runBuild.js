@@ -129,27 +129,37 @@ function createRunBuild(build, fixturesDir) {
 
     const logger = {
       info: jest.fn(),
-      log: jest.fn((msg) => {
-        // Capture log line to combine with next warn/error (for split source:line + message format)
-        pendingLogLine = msg;
-      }),
-      warn: jest.fn((msg) => {
-        // Combine with pending log line if present
-        if (pendingLogLine) {
-          warnings.push(`${pendingLogLine}\n${msg}`);
-          pendingLogLine = null;
-        } else {
-          warnings.push(msg);
+      log: jest.fn(),
+      warn: jest.fn((objOrMsg, maybeMsg) => {
+        // Handle pino-style calls: logger.warn({ source }, message) or logger.warn(message)
+        let source = null;
+        let message = objOrMsg;
+        if (typeof objOrMsg === 'object' && objOrMsg !== null) {
+          source = objOrMsg.source ?? null;
+          message = maybeMsg ?? '';
         }
+        // Format as "source\nmessage" or just "message"
+        const formatted = source ? `${source}\n${message}` : message;
+        warnings.push(formatted);
       }),
-      error: jest.fn((msg) => {
-        // Combine with pending log line if present
-        if (pendingLogLine) {
-          errors.push(`${pendingLogLine}\n${msg}`);
-          pendingLogLine = null;
+      error: jest.fn((objOrMsg, maybeMsg) => {
+        // Handle pino-style calls:
+        // - logger.error(Error) - Error object (pino serializes into err field)
+        // - logger.error({ source }, message) - merging object
+        let source = null;
+        let message;
+        if (objOrMsg instanceof Error) {
+          source = objOrMsg.source ?? null;
+          message = objOrMsg.message;
+        } else if (typeof objOrMsg === 'object' && objOrMsg !== null) {
+          source = objOrMsg.source ?? null;
+          message = maybeMsg ?? '';
         } else {
-          errors.push(msg);
+          message = objOrMsg;
         }
+        // Format as "source\nmessage" or just "message"
+        const formatted = source ? `${source}\n${message}` : message;
+        errors.push(formatted);
       }),
       succeed: jest.fn(),
     };

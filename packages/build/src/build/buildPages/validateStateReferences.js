@@ -65,7 +65,7 @@ function validateStateReferences({ page, context }) {
       `State keys are created from input block ids. ` +
       `Check for typos, add an input block with this id, or initialize the state with SetState.`;
 
-    context.logger.configWarning({ message, configKey, prodError: true, checkSlug: 'state-refs' });
+    context.logger.warn({ message, configKey, prodError: true, checkSlug: 'state-refs' });
   });
 }
 

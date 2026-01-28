@@ -58,6 +58,12 @@ async function logError({ context, error }) {
             configDirectory: context.configDirectory,
           });
 
+    // Attach resolved location to error for consistency
+    if (location) {
+      error.source = location.source;
+      error.config = location.config;
+    }
+
     // Human-readable output: source (info/blue) then message (error/red)
     // LowdefyError shows with stack trace
     if (isLowdefyError) {
@@ -67,17 +73,18 @@ async function logError({ context, error }) {
     }
 
     // Structured logging (consistent with client error schema + production fields)
+    const errorName = error?.name || 'Error';
     context.logger.error(
       {
         // Core error schema (consistent with client)
         event: eventType,
-        errorName: error?.name || 'Error',
+        errorName,
         errorMessage: message,
         isServiceError,
         pageId: context.pageId || null,
         timestamp: new Date().toISOString(),
-        source: location?.source || null,
-        config: location?.config || null,
+        source: error.source || null,
+        config: error.config || null,
         link: location?.link || null,
         // Production fields
         user: {
@@ -116,7 +123,7 @@ async function logError({ context, error }) {
           'cf-visitor': headers['cf-visitor'],
         },
       },
-      message
+      `[${errorName}] ${message}`
     );
 
     // Capture error to Sentry (no-op if Sentry not configured)

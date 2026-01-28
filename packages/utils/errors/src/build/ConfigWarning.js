@@ -19,14 +19,15 @@ import ConfigMessage from './ConfigMessage.js';
 
 /**
  * Build-time configuration warning class.
+ * All formatting happens in the constructor - properties are ready for the logger.
  *
- * In development: Creates a formatted warning message
+ * In development: Creates a warning with source and message properties
  * In production with prodError: Throws ConfigError instead
  *
  * @example
  * const warning = new ConfigWarning({ message, configKey, context });
  * if (!warning.suppressed) {
- *   logger.warn(warning.message);
+ *   logger.warn({ source: warning.source }, warning.message);
  * }
  *
  * @example
@@ -63,7 +64,8 @@ class ConfigWarning {
       throw new ConfigError({ message, configKey, operatorLocation, context, checkSlug });
     }
 
-    this.rawMessage = message;
+    // Store all properties for the logger
+    this.configKey = configKey ?? null;
     this.checkSlug = checkSlug;
 
     // Check for ~ignoreBuildChecks suppression
@@ -75,30 +77,35 @@ class ConfigWarning {
 
     if (this.suppressed) {
       this.message = '';
+      this.source = null;
+      this.config = null;
+      this.link = null;
       return;
     }
 
-    // Format message with location
-    this.message = ConfigMessage.format({
-      prefix: '[Config Warning]',
-      message,
-      configKey,
-      operatorLocation,
-      filePath,
-      lineNumber,
-      context,
-      configDirectory,
-      checkSlug,
-    });
-  }
+    // Resolve location based on available info
+    let location = null;
+    const configDir = configDirectory ?? context?.directories?.config;
 
-  /**
-   * Static format method for backwards compatibility.
-   * @deprecated Use constructor instead: new ConfigWarning({ ... })
-   */
-  static format(params) {
-    const warning = new ConfigWarning(params);
-    return warning.message;
+    if (configKey && context?.keyMap) {
+      location = ConfigMessage.resolveLocation({ configKey, context });
+    } else if (operatorLocation && context?.refMap) {
+      location = ConfigMessage.resolveOperatorLocation({ operatorLocation, context });
+    } else if (filePath) {
+      location = ConfigMessage.resolveRawLocation({
+        filePath,
+        lineNumber,
+        configDirectory: configDir,
+      });
+    }
+
+    // Set location properties
+    this.source = location?.source ?? null;
+    this.config = location?.config ?? null;
+    this.link = location?.link ?? null;
+
+    // Set message (no prefix - logger uses class name for display)
+    this.message = message;
   }
 }
 

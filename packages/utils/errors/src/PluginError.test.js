@@ -16,12 +16,11 @@
 
 import PluginError from './PluginError.js';
 
-test('PluginError wraps error with formatted message', () => {
+test('PluginError wraps error with message', () => {
   const original = new Error('Test error message');
   const error = new PluginError({ error: original });
-  expect(error.message).toBe('[Plugin Error] Test error message');
+  expect(error.message).toBe('Test error message');
   expect(error.name).toBe('PluginError');
-  expect(error.rawMessage).toBe('Test error message');
   expect(error.configKey).toBeNull();
   expect(error.cause).toBe(original);
 });
@@ -43,7 +42,7 @@ test('PluginError includes received value in message', () => {
     error: original,
     received: { test: true },
   });
-  expect(error.message).toBe('[Plugin Error] Invalid params Received: {"test":true}');
+  expect(error.message).toBe('Invalid params Received: {"test":true}');
   expect(error.received).toEqual({ test: true });
 });
 
@@ -56,7 +55,7 @@ test('PluginError handles unserializable received value', () => {
     error: original,
     received: circular,
   });
-  expect(error.message).toBe('[Plugin Error] Invalid params Received: [unserializable]');
+  expect(error.message).toBe('Invalid params Received: [unserializable]');
 });
 
 test('PluginError includes location in message', () => {
@@ -65,7 +64,7 @@ test('PluginError includes location in message', () => {
     error: original,
     location: 'blocks.0.properties.visible',
   });
-  expect(error.message).toBe('[Plugin Error] Invalid params at blocks.0.properties.visible.');
+  expect(error.message).toBe('Invalid params at blocks.0.properties.visible.');
   expect(error.location).toBe('blocks.0.properties.visible');
 });
 
@@ -79,9 +78,7 @@ test('PluginError with all fields', () => {
     location: 'blocks.0.visible',
     configKey: 'key123',
   });
-  expect(error.message).toBe(
-    '[Plugin Error] _if requires boolean test Received: "string" at blocks.0.visible.'
-  );
+  expect(error.message).toBe('_if requires boolean test Received: "string" at blocks.0.visible.');
   expect(error.pluginType).toBe('operator');
   expect(error.pluginName).toBe('_if');
   expect(error.received).toBe('string');

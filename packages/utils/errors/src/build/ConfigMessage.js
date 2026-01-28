@@ -35,7 +35,7 @@ export const VALID_CHECK_SLUGS = {
 };
 
 /**
- * Base class for config message formatting.
+ * Base class for config message utilities.
  * Provides shared utilities for ConfigError and ConfigWarning.
  */
 class ConfigMessage {
@@ -79,19 +79,43 @@ class ConfigMessage {
   }
 
   /**
+   * Resolves location from configKey using keyMap and refMap.
+   * @param {Object} params
+   * @param {string} params.configKey - Config key (~k) for keyMap lookup
+   * @param {Object} params.context - Build context with keyMap, refMap, directories
+   * @returns {Object|null} Location object { source, config, link } or null
+   */
+  static resolveLocation({ configKey, context }) {
+    if (!configKey || !context?.keyMap) return null;
+
+    return resolveConfigLocation({
+      configKey,
+      keyMap: context.keyMap,
+      refMap: context.refMap,
+      configDirectory: context.directories?.config,
+    });
+  }
+
+  /**
    * Resolves location directly from operatorLocation (ref + line) without keyMap.
    * Used during early build stages (buildRefs) when keyMap doesn't exist yet.
-   * @private
+   * @param {Object} params
+   * @param {Object} params.operatorLocation - { ref, line }
+   * @param {Object} params.context - Build context with refMap, directories
+   * @returns {Object|null} Location object { source, link } or null
    */
-  static _resolveOperatorLocation({ operatorLocation, refMap, configDirectory }) {
-    const refEntry = refMap?.[operatorLocation.ref];
+  static resolveOperatorLocation({ operatorLocation, context }) {
+    if (!operatorLocation) return null;
+
+    const refEntry = context?.refMap?.[operatorLocation.ref];
     const filePath = refEntry?.path ?? 'lowdefy.yaml';
     const lineNumber = operatorLocation.line;
 
     const source = lineNumber ? `${filePath}:${lineNumber}` : filePath;
-    let link = '';
-    if (configDirectory) {
-      link = path.join(configDirectory, filePath) + (lineNumber ? `:${lineNumber}` : '');
+    let link = null;
+    if (context?.directories?.config) {
+      link =
+        path.join(context.directories.config, filePath) + (lineNumber ? `:${lineNumber}` : '');
     }
 
     return { source, link };
@@ -100,86 +124,20 @@ class ConfigMessage {
   /**
    * Resolves location from raw filePath and lineNumber.
    * Used for YAML parse errors and other cases without config context.
-   * @private
+   * @param {Object} params
+   * @param {string} params.filePath - Direct file path
+   * @param {number|string} [params.lineNumber] - Direct line number
+   * @param {string} [params.configDirectory] - Config directory for link
+   * @returns {Object} Location object { source, link }
    */
-  static _resolveRawLocation({ filePath, lineNumber, configDirectory }) {
+  static resolveRawLocation({ filePath, lineNumber, configDirectory }) {
     const source = lineNumber ? `${filePath}:${lineNumber}` : filePath;
-    let link = '';
+    let link = null;
     if (configDirectory) {
       link = path.join(configDirectory, filePath) + (lineNumber ? `:${lineNumber}` : '');
     }
 
     return { source, link };
-  }
-
-  /**
-   * Core formatting method for config messages.
-   *
-   * Supports three modes:
-   * 1. configKey mode: Uses keyMap to resolve location (standard case after addKeys)
-   * 2. operatorLocation mode: Uses refMap directly (early build stages like buildRefs)
-   * 3. Raw mode: Uses filePath/lineNumber directly (YAML parse errors)
-   *
-   * @param {Object} params
-   * @param {string} params.prefix - Message prefix like '[Config Error]' or '[Config Warning]'
-   * @param {string} params.message - The error/warning message
-   * @param {string} [params.configKey] - Config key (~k) for keyMap lookup
-   * @param {Object} [params.operatorLocation] - { ref, line } for direct refMap lookup
-   * @param {string} [params.filePath] - Direct file path (for raw mode)
-   * @param {number|string} [params.lineNumber] - Direct line number (for raw mode)
-   * @param {Object} [params.context] - Build context with keyMap, refMap, directories
-   * @param {string} [params.configDirectory] - Config directory (for raw mode without context)
-   * @param {string} [params.checkSlug] - The specific check being performed (e.g., 'state-refs')
-   * @returns {string} Formatted message or empty string if suppressed
-   */
-  static format({
-    prefix,
-    message,
-    configKey,
-    operatorLocation,
-    filePath,
-    lineNumber,
-    context,
-    configDirectory,
-    checkSlug,
-  }) {
-    // Check for ~ignoreBuildChecks suppression
-    if (ConfigMessage.shouldSuppress({ configKey, keyMap: context?.keyMap, checkSlug })) {
-      return '';
-    }
-
-    let location = null;
-    const configDir = configDirectory ?? context?.directories?.config;
-
-    if (configKey && context?.keyMap) {
-      // Mode 1: Use configKey -> keyMap -> refMap path (standard case after addKeys)
-      location = resolveConfigLocation({
-        configKey,
-        keyMap: context.keyMap,
-        refMap: context.refMap,
-        configDirectory: configDir,
-      });
-    } else if (operatorLocation && context?.refMap) {
-      // Mode 2: Use operatorLocation directly with refMap (early build stages)
-      location = ConfigMessage._resolveOperatorLocation({
-        operatorLocation,
-        refMap: context.refMap,
-        configDirectory: configDir,
-      });
-    } else if (filePath) {
-      // Mode 3: Use raw filePath/lineNumber (YAML parse errors, etc.)
-      location = ConfigMessage._resolveRawLocation({
-        filePath,
-        lineNumber,
-        configDirectory: configDir,
-      });
-    }
-
-    if (!location) {
-      return `${prefix} ${message}`;
-    }
-
-    return `${location.source}\n${prefix} ${message}`;
   }
 }
 

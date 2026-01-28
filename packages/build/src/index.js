@@ -71,7 +71,7 @@ async function build(options) {
     } catch (err) {
       // Handle ConfigError from buildRefs (e.g., missing _ref files)
       if (err instanceof ConfigError) {
-        context.logger.error(err.message);
+        context.logger.error(err);
         const error = new Error('Build failed with 1 error(s). See above for details.');
         error.isFormatted = true;
         error.hideStack = true;
@@ -88,7 +88,7 @@ async function build(options) {
     // Schema errors mean structurally invalid data - stop before processing further
     if (context.errors.length > 0) {
       // Log all errors together before summary to ensure proper ordering
-      context.errors.forEach((errorMsg) => context.logger.error(errorMsg));
+      context.errors.forEach((err) => context.logger.error(err));
       const error = new Error(`Build failed with ${context.errors.length} error(s).`);
       error.isFormatted = true;
       error.hideStack = true;
@@ -114,7 +114,7 @@ async function build(options) {
     // Check if there are any collected errors before writing
     if (context.errors.length > 0) {
       // Log all errors together before summary to ensure proper ordering
-      context.errors.forEach((errorMsg) => context.logger.error(errorMsg));
+      context.errors.forEach((err) => context.logger.error(err));
       const error = new Error(`Build failed with ${context.errors.length} error(s).`);
       // Mark this error as already formatted so stack trace isn't shown
       error.isFormatted = true;

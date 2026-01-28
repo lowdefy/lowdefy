@@ -39,8 +39,9 @@ function tryBuildStep(stepFn, stepName, { components, context }) {
     if (error instanceof ConfigError && error.suppressed) {
       return;
     }
-    // Collect error - logging happens at checkpoints in index.js
-    context.errors.push(error.message);
+    // Collect error object - logging happens at checkpoints in index.js
+    // ConfigError instances have source and message properties
+    context.errors.push(error);
   }
 }
 

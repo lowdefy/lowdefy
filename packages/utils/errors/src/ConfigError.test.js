@@ -18,9 +18,8 @@ import ConfigError from './ConfigError.js';
 
 test('ConfigError creates error with message only (object)', () => {
   const error = new ConfigError({ message: 'Test error message' });
-  expect(error.message).toBe('[Config Error] Test error message');
+  expect(error.message).toBe('Test error message');
   expect(error.name).toBe('ConfigError');
-  expect(error.rawMessage).toBe('Test error message');
   expect(error.configKey).toBeNull();
   expect(error.source).toBeNull();
   expect(error.link).toBeNull();
@@ -29,9 +28,8 @@ test('ConfigError creates error with message only (object)', () => {
 
 test('ConfigError creates error with string message (simple form for plugins)', () => {
   const error = new ConfigError('Simple error message');
-  expect(error.message).toBe('[Config Error] Simple error message');
+  expect(error.message).toBe('Simple error message');
   expect(error.name).toBe('ConfigError');
-  expect(error.rawMessage).toBe('Simple error message');
   expect(error.configKey).toBeNull();
   expect(error.source).toBeNull();
   expect(error.link).toBeNull();
@@ -57,7 +55,7 @@ test('ConfigError stores checkSlug', () => {
   expect(error.checkSlug).toBe('block-types');
 });
 
-test('ConfigError with pre-resolved location includes source in message', () => {
+test('ConfigError with pre-resolved location stores source', () => {
   const error = new ConfigError({
     message: 'Invalid block type',
     location: {
@@ -66,7 +64,7 @@ test('ConfigError with pre-resolved location includes source in message', () => 
       config: 'root.pages[0:home].blocks[0:header]',
     },
   });
-  expect(error.message).toBe('pages/home.yaml:42\n[Config Error] Invalid block type');
+  expect(error.message).toBe('Invalid block type');
   expect(error.source).toBe('pages/home.yaml:42');
   expect(error.link).toBe('/path/to/pages/home.yaml:42');
   expect(error.config).toBe('root.pages[0:home].blocks[0:header]');
@@ -79,50 +77,56 @@ test('ConfigError is an instance of Error', () => {
   expect(error instanceof ConfigError).toBe(true);
 });
 
-test('ConfigError.from creates error from existing error', () => {
+test('ConfigError constructor wraps existing error', () => {
   const original = new Error('Original error');
-  const configError = ConfigError.from({ error: original, configKey: 'key123' });
+  const configError = new ConfigError({ error: original, configKey: 'key123' });
 
-  expect(configError.message).toBe('[Config Error] Original error');
+  expect(configError.message).toBe('Original error');
   expect(configError.configKey).toBe('key123');
   expect(configError.stack).toBe(original.stack);
 });
 
-test('ConfigError.from preserves configKey from original error', () => {
+test('ConfigError constructor preserves configKey from original error', () => {
   const original = new Error('Original error');
   original.configKey = 'original_key';
-  const configError = ConfigError.from({ error: original });
+  const configError = new ConfigError({ error: original });
 
   expect(configError.configKey).toBe('original_key');
 });
 
-test('ConfigError.from uses provided configKey over original', () => {
+test('ConfigError constructor uses provided configKey over original', () => {
   const original = new Error('Original error');
   original.configKey = 'original_key';
-  const configError = ConfigError.from({ error: original, configKey: 'new_key' });
+  const configError = new ConfigError({ error: original, configKey: 'new_key' });
 
   // Provided configKey takes precedence
-  expect(configError.configKey).toBe('original_key');
+  expect(configError.configKey).toBe('new_key');
 });
 
-test('ConfigError.from with location', () => {
+test('ConfigError constructor with error and location', () => {
   const original = new Error('Parse error');
-  const configError = ConfigError.from({
+  const configError = new ConfigError({
     error: original,
     location: { source: 'config.yaml:10', link: '/path/config.yaml:10' },
   });
 
-  expect(configError.message).toBe('config.yaml:10\n[Config Error] Parse error');
+  expect(configError.message).toBe('Parse error');
   expect(configError.source).toBe('config.yaml:10');
   expect(configError.resolved).toBe(true);
 });
 
-test('ConfigError _updateMessage updates message with source', () => {
-  const error = new ConfigError({ message: 'Test error' });
-  expect(error.message).toBe('[Config Error] Test error');
+test('ConfigError serialize returns message and configKey', () => {
+  const error = new ConfigError({ message: 'Test error', configKey: 'abc123' });
+  expect(error.serialize()).toEqual({
+    '~err': 'ConfigError',
+    message: 'Test error',
+    configKey: 'abc123',
+  });
+});
 
-  error.source = 'updated.yaml:5';
-  error._updateMessage();
-
-  expect(error.message).toBe('updated.yaml:5\n[Config Error] Test error');
+test('ConfigError deserialize creates error from data', () => {
+  const data = { message: 'Test error', configKey: 'abc123' };
+  const error = ConfigError.deserialize(data);
+  expect(error.message).toBe('Test error');
+  expect(error.configKey).toBe('abc123');
 });

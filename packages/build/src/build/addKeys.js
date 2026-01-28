@@ -15,9 +15,9 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { VALID_CHECK_SLUGS } from '@lowdefy/errors/build';
+import { ConfigError, VALID_CHECK_SLUGS } from '@lowdefy/errors/build';
 
-import collectConfigError from '../utils/collectConfigError.js';
+import collectExceptions from '../utils/collectExceptions.js';
 import makeId from '../utils/makeId.js';
 
 function recArray({ array, nextKey, key, keyMap, keyMapId, context }) {
@@ -76,14 +76,17 @@ function recAddKeys({ object, key, keyMap, parentKeyMapId, context }) {
 
     // Migration error for old property name
     if (object['~ignoreBuildCheck'] !== undefined) {
-      collectConfigError({
-        message:
-          '~ignoreBuildCheck has been renamed to ~ignoreBuildChecks. ' +
-          'Use ~ignoreBuildChecks: true to suppress all checks, or ' +
-          "~ignoreBuildChecks: ['state-refs', 'types'] to suppress specific checks.",
-        configKey: keyMapId,
+      collectExceptions(
         context,
-      });
+        new ConfigError({
+          message:
+            '~ignoreBuildCheck has been renamed to ~ignoreBuildChecks. ' +
+            'Use ~ignoreBuildChecks: true to suppress all checks, or ' +
+            "~ignoreBuildChecks: ['state-refs', 'types'] to suppress specific checks.",
+          configKey: keyMapId,
+          context,
+        })
+      );
     }
 
     // Handle new ~ignoreBuildChecks property
@@ -94,22 +97,28 @@ function recAddKeys({ object, key, keyMap, parentKeyMapId, context }) {
         const validSlugs = Object.keys(VALID_CHECK_SLUGS);
         const invalid = checks.filter((slug) => !validSlugs.includes(slug));
         if (invalid.length > 0) {
-          collectConfigError({
-            message: `Invalid check slug(s): "${invalid.join(
-              '", "'
-            )}". Valid slugs: ${validSlugs.join(', ')}`,
-            configKey: keyMapId,
+          collectExceptions(
             context,
-          });
+            new ConfigError({
+              message: `Invalid check slug(s): "${invalid.join(
+                '", "'
+              )}". Valid slugs: ${validSlugs.join(', ')}`,
+              configKey: keyMapId,
+              context,
+            })
+          );
         }
       } else if (checks !== true) {
-        collectConfigError({
-          message: `~ignoreBuildChecks must be true or an array of check slugs. Received: ${JSON.stringify(
-            checks
-          )}`,
-          configKey: keyMapId,
+        collectExceptions(
           context,
-        });
+          new ConfigError({
+            message: `~ignoreBuildChecks must be true or an array of check slugs. Received: ${JSON.stringify(
+              checks
+            )}`,
+            configKey: keyMapId,
+            context,
+          })
+        );
       }
 
       entry['~ignoreBuildChecks'] = checks;

@@ -6,7 +6,7 @@
         "Duplicate requestId"
       ],
       "errorContains": [
-        "[Config Error] Duplicate requestId \"myRequest\" on page \"home\".",
+        "Duplicate requestId \"myRequest\" on page \"home\".",
         "lowdefy.yaml:27"
       ]
     }

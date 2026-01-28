@@ -80,7 +80,7 @@ test('invalid schema', () => {
     global: 'global',
   };
   expect(() => testSchema({ components, context })).toThrow(
-    '[Config Error] App "global" should be an object.'
+    'App "global" should be an object.'
   );
 });
 
@@ -103,7 +103,7 @@ test('multiple schema errors throws on first error', () => {
   };
   // Without context.errors array, throws on first error
   expect(() => testSchema({ components, context })).toThrow(
-    '[Config Error] Block should have required property "id".'
+    'Block should have required property "id".'
   );
 });
 
@@ -141,7 +141,7 @@ test('nested schema error', () => {
     ],
   };
   expect(() => testSchema({ components, context })).toThrow(
-    '[Config Error] Action should have required property "type".'
+    'Action should have required property "type".'
   );
 });
 
@@ -173,7 +173,7 @@ test('nested schema error 2', () => {
     ],
   };
   expect(() => testSchema({ components, context })).toThrow(
-    '[Config Error] Block "blocks" should be an array.'
+    'Block "blocks" should be an array.'
   );
 });
 
@@ -200,7 +200,7 @@ test('connections schema error', () => {
     ],
   };
   expect(() => testSchema({ components, context })).toThrow(
-    '[Config Error] Connection should have required property "type".'
+    'Connection should have required property "type".'
   );
 });
 
@@ -254,7 +254,7 @@ test('requests schema error', () => {
     ],
   };
   expect(() => testSchema({ components, context })).toThrow(
-    '[Config Error] Request should have required property "id".'
+    'Request should have required property "id".'
   );
 });
 
@@ -283,7 +283,7 @@ test('menus schema error', () => {
     ],
   };
   expect(() => testSchema({ components, context })).toThrow(
-    '[Config Error] must NOT have additional properties - "pageId"'
+    'must NOT have additional properties - "pageId"'
   );
 });
 
@@ -314,6 +314,6 @@ test('missing lowdefy version schema error', () => {
     ],
   };
   expect(() => testSchema({ components, context })).toThrow(
-    '[Config Error] Lowdefy configuration should have required property "lowdefy".'
+    'Lowdefy configuration should have required property "lowdefy".'
   );
 });

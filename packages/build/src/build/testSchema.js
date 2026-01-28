@@ -67,10 +67,10 @@ function testSchema({ components, context }) {
       if (!configError.suppressed) {
         if (!context.errors) {
           // If no error collection array, throw immediately (fallback for tests)
-          throw new Error(configError.message);
+          throw configError;
         }
-        // Collect error - logging happens at checkpoints in index.js
-        context.errors.push(configError.message);
+        // Collect error object - logging happens at checkpoints in index.js
+        context.errors.push(configError);
       }
     });
   }

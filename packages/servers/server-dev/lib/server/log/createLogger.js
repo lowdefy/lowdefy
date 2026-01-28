@@ -20,6 +20,17 @@ const logger = pino({
   name: 'lowdefy_server',
   level: process.env.LOWDEFY_LOG_LEVEL ?? 'info',
   base: { pid: undefined, hostname: undefined },
+  serializers: {
+    err: (err) => ({
+      message: err.message,
+      name: err.name,
+      stack: err.stack,
+      source: err.source,
+      config: err.config,
+      configKey: err.configKey,
+      isServiceError: err.isServiceError,
+    }),
+  },
 });
 
 function createLogger(metadata = {}) {

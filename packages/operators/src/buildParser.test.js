@@ -181,7 +181,7 @@ test('operator errors', () => {
   expect(res.output).toEqual({ a: null });
   expect(res.errors.length).toBe(1);
   expect(res.errors[0].message).toBe(
-    'Operator Error: Test error. Received: {"_error":{"params":true}} at location.'
+    'Test error. Received: {"_error":{"params":true}} at location.'
   );
 });
 

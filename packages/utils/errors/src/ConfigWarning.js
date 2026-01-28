@@ -33,14 +33,9 @@ class ConfigWarning {
    * @param {string} [params.source] - Source file:line
    */
   constructor({ message, source }) {
-    this.rawMessage = message;
-    this.source = source;
-
-    if (source) {
-      this.message = `${source}\n[Config Warning] ${message}`;
-    } else {
-      this.message = `[Config Warning] ${message}`;
-    }
+    // Message without prefix - logger uses class name for display
+    this.message = message;
+    this.source = source ?? null;
   }
 }
 

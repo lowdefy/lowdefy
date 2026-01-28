@@ -39,6 +39,7 @@ class ConfigError extends Error {
    * Creates a ConfigError instance with formatted message.
    * @param {string|Object} messageOrParams - Error message string, or params object
    * @param {string} [messageOrParams.message] - The error message (if object)
+   * @param {Error} [messageOrParams.error] - Original error to wrap (extracts message/configKey/stack)
    * @param {string} [messageOrParams.configKey] - Config key (~k) for location resolution
    * @param {Object} [messageOrParams.location] - Pre-resolved location { source, link, config }
    * @param {string} [messageOrParams.checkSlug] - The build check that triggered this error
@@ -46,20 +47,15 @@ class ConfigError extends Error {
   constructor(messageOrParams) {
     // Support both string and object parameter
     const isString = typeof messageOrParams === 'string';
-    const message = isString ? messageOrParams : messageOrParams.message;
-    const configKey = isString ? null : messageOrParams.configKey;
+    const error = isString ? null : messageOrParams.error;
+    const message = isString ? messageOrParams : (messageOrParams.message ?? error?.message);
+    const configKey = isString ? null : (messageOrParams.configKey ?? error?.configKey);
     const location = isString ? null : messageOrParams.location;
     const checkSlug = isString ? undefined : messageOrParams.checkSlug;
 
-    // Format the message with location if available
-    let formattedMessage = `[Config Error] ${message}`;
-    if (location?.source) {
-      formattedMessage = `${location.source}\n${formattedMessage}`;
-    }
-
-    super(formattedMessage);
+    // Message without prefix - logger uses error.name for display
+    super(message);
     this.name = 'ConfigError';
-    this.rawMessage = message;
     this.configKey = configKey ?? null;
     this.checkSlug = checkSlug;
 
@@ -68,37 +64,35 @@ class ConfigError extends Error {
     this.link = location?.link ?? null;
     this.config = location?.config ?? null;
     this.resolved = !!location;
-  }
 
-  /**
-   * Updates message after location is resolved.
-   * Called by subclasses after setting source/link/config.
-   * @protected
-   */
-  _updateMessage() {
-    let formattedMessage = `[Config Error] ${this.rawMessage}`;
-    if (this.source) {
-      formattedMessage = `${this.source}\n${formattedMessage}`;
+    // Preserve original error's stack if wrapping
+    if (error?.stack) {
+      this.stack = error.stack;
     }
-    this.message = formattedMessage;
   }
 
   /**
-   * Creates a ConfigError from an existing error.
-   * @param {Object} params
-   * @param {Error} params.error - Original error
-   * @param {string} [params.configKey] - Config key for location resolution
-   * @param {Object} [params.location] - Pre-resolved location
+   * Serializes the error for transport (e.g., client to server).
+   * @returns {Object} Serialized error data with type marker
+   */
+  serialize() {
+    return {
+      '~err': 'ConfigError',
+      message: this.message,
+      configKey: this.configKey,
+    };
+  }
+
+  /**
+   * Deserializes error data back into a ConfigError.
+   * @param {Object} data - Serialized error data
    * @returns {ConfigError}
    */
-  static from({ error, configKey, location }) {
-    const configError = new ConfigError({
-      message: error.message,
-      configKey: error.configKey ?? configKey,
-      location,
+  static deserialize(data) {
+    return new ConfigError({
+      message: data.message,
+      configKey: data.configKey,
     });
-    configError.stack = error.stack;
-    return configError;
   }
 }
 

@@ -6,7 +6,7 @@
         "NonExistentBlockType"
       ],
       "errorContains": [
-        "[Config Error] Block type \"NonExistentBlockType\" was used but is not defined.",
+        "Block type \"NonExistentBlockType\" was used but is not defined.",
         "pages/home.yaml:12"
       ]
     },
@@ -16,7 +16,7 @@
         "NonExistentBlockType"
       ],
       "errorContains": [
-        "[Config Error] Block type \"NonExistentBlockType\" was used but is not defined.",
+        "Block type \"NonExistentBlockType\" was used but is not defined.",
         "pages/home.yaml:12"
       ],
       "expectThrow": true

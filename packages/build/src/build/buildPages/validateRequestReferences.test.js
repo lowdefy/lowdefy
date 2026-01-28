@@ -24,19 +24,19 @@ describe('validateRequestReferences', () => {
     const context = {
       stage,
       logger: {
-        warn: warnFn,
+        warn: (params) => {
+          if (params.prodError && context.stage === 'prod') {
+            throw new Error(params.message);
+          }
+          warnFn(params.message);
+        },
       },
       directories: {
         config: '/test',
       },
       keyMap: {},
       refMap: {},
-    };
-    context.logger.configWarning = ({ message, prodError }) => {
-      if (prodError && context.stage === 'prod') {
-        throw new Error(message);
-      }
-      warnFn(message);
+      warnFn, // Expose for test assertions
     };
     return context;
   };
@@ -60,7 +60,7 @@ describe('validateRequestReferences', () => {
       context,
     });
 
-    expect(context.logger.warn).not.toHaveBeenCalled();
+    expect(context.warnFn).not.toHaveBeenCalled();
   });
 
   test('warns in dev mode when request not defined on page', () => {
@@ -82,8 +82,8 @@ describe('validateRequestReferences', () => {
       context,
     });
 
-    expect(context.logger.warn).toHaveBeenCalledTimes(1);
-    expect(context.logger.warn).toHaveBeenCalledWith(
+    expect(context.warnFn).toHaveBeenCalledTimes(1);
+    expect(context.warnFn).toHaveBeenCalledWith(
       expect.stringContaining('Request "undefinedRequest" not defined on page "testPage"')
     );
   });
@@ -135,7 +135,7 @@ describe('validateRequestReferences', () => {
       context,
     });
 
-    expect(context.logger.warn).not.toHaveBeenCalled();
+    expect(context.warnFn).not.toHaveBeenCalled();
   });
 
   test('skips validation when skip is an operator object', () => {
@@ -165,7 +165,7 @@ describe('validateRequestReferences', () => {
       context,
     });
 
-    expect(context.logger.warn).not.toHaveBeenCalled();
+    expect(context.warnFn).not.toHaveBeenCalled();
   });
 
   test('validates normally when skip is false', () => {
@@ -193,8 +193,8 @@ describe('validateRequestReferences', () => {
       context,
     });
 
-    expect(context.logger.warn).toHaveBeenCalledTimes(1);
-    expect(context.logger.warn).toHaveBeenCalledWith(
+    expect(context.warnFn).toHaveBeenCalledTimes(1);
+    expect(context.warnFn).toHaveBeenCalledWith(
       expect.stringContaining('Request "undefinedRequest" not defined')
     );
   });
@@ -224,7 +224,7 @@ describe('validateRequestReferences', () => {
       context,
     });
 
-    expect(context.logger.warn).toHaveBeenCalledTimes(1);
+    expect(context.warnFn).toHaveBeenCalledTimes(1);
   });
 
   test('skips validation when skip is empty object', () => {
@@ -252,7 +252,7 @@ describe('validateRequestReferences', () => {
       context,
     });
 
-    expect(context.logger.warn).not.toHaveBeenCalled();
+    expect(context.warnFn).not.toHaveBeenCalled();
   });
 
   test('validates multiple request actions with mixed skip conditions', () => {
@@ -301,8 +301,8 @@ describe('validateRequestReferences', () => {
     });
 
     // Only undefinedRequest2 should trigger a warning (no skip condition)
-    expect(context.logger.warn).toHaveBeenCalledTimes(1);
-    expect(context.logger.warn).toHaveBeenCalledWith(
+    expect(context.warnFn).toHaveBeenCalledTimes(1);
+    expect(context.warnFn).toHaveBeenCalledWith(
       expect.stringContaining('Request "undefinedRequest2" not defined')
     );
   });
@@ -317,7 +317,7 @@ describe('validateRequestReferences', () => {
       context,
     });
 
-    expect(context.logger.warn).not.toHaveBeenCalled();
+    expect(context.warnFn).not.toHaveBeenCalled();
   });
 
   test('handles requests with no actions', () => {
@@ -330,6 +330,6 @@ describe('validateRequestReferences', () => {
       context,
     });
 
-    expect(context.logger.warn).not.toHaveBeenCalled();
+    expect(context.warnFn).not.toHaveBeenCalled();
   });
 });

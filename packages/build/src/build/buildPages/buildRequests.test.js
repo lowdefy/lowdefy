@@ -160,7 +160,7 @@ test('request type is not a string', () => {
     ],
   };
   expect(() => buildPages({ components, context })).toThrow(
-    '[Config Error] Request type is not a string at request "request" at page "page_1". Received undefined.'
+    'Request type is not a string at request "request" at page "page_1". Received undefined.'
   );
 });
 
@@ -176,7 +176,7 @@ test('request payload not an object', () => {
     ],
   };
   expect(() => buildPages({ components, context })).toThrow(
-    '[Config Error] Request "my_request" at page "page_1" payload should be an object.'
+    'Request "my_request" at page "page_1" payload should be an object.'
   );
 });
 
@@ -409,7 +409,7 @@ test('request connectionId is not a string', () => {
     ],
   };
   expect(() => buildPages({ components, context })).toThrow(
-    '[Config Error] Request "my_request" at page "page_1" connectionId is not a string. Received 123.'
+    'Request "my_request" at page "page_1" connectionId is not a string. Received 123.'
   );
 });
 
@@ -425,7 +425,7 @@ test('request references non-existent connection', () => {
     ],
   };
   expect(() => buildPages({ components, context })).toThrow(
-    '[Config Error] Request "my_request" at page "page_1" references non-existent connection "nonExistentConnection".'
+    'Request "my_request" at page "page_1" references non-existent connection "nonExistentConnection".'
   );
 });
 

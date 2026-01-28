@@ -44,7 +44,7 @@ function evaluateStaticOperators({ context, input, refDef }) {
 
   if (errors.length > 0) {
     errors.forEach((error) => {
-      context.logger.configWarning({
+      context.logger.warn({
         message: error.message,
         operatorLocation: error.operatorLocation,
       });

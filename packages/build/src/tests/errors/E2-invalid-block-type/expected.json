@@ -6,7 +6,7 @@
         "Buton"
       ],
       "errorContains": [
-        "[Config Error] Block type \"Buton\" was used but is not defined. Did you mean \"Button\"?",
+        "Block type \"Buton\" was used but is not defined. Did you mean \"Button\"?",
         "lowdefy.yaml:17"
       ]
     }

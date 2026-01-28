@@ -17,7 +17,16 @@
 function createStdOutLineHandler({ context }) {
   function stdOutLineHandler(line) {
     try {
-      const { print, msg } = JSON.parse(line);
+      const { print, msg, source, err } = JSON.parse(line);
+
+      // Extract source from err (pino error serialization) or top-level (merging object)
+      const resolvedSource = err?.source ?? source;
+
+      // Error/warn with source: show source line (info/blue) before the message
+      if (resolvedSource && (print === 'error' || print === 'warn')) {
+        context.print.info(resolvedSource);
+      }
+
       context.print[print](msg);
     } catch (error) {
       context.print.log(line);

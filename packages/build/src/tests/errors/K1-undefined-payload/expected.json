@@ -3,13 +3,13 @@
     {
       "mode": "dev",
       "exactWarnings": [
-        "lowdefy.yaml:33\n[Config Warning] _payload references \"undefinedKey\" in request \"testRequest\" on page \"home\", but no key \"undefinedKey\" exists in the request payload definition. Payload keys are defined in the request's \"payload\" property. Check for typos or add the key to the payload definition."
+        "lowdefy.yaml:33\n_payload references \"undefinedKey\" in request \"testRequest\" on page \"home\", but no key \"undefinedKey\" exists in the request payload definition. Payload keys are defined in the request's \"payload\" property. Check for typos or add the key to the payload definition."
       ]
     },
     {
       "mode": "prod",
       "exactErrors": [
-        "lowdefy.yaml:33\n[Config Error] _payload references \"undefinedKey\" in request \"testRequest\" on page \"home\", but no key \"undefinedKey\" exists in the request payload definition. Payload keys are defined in the request's \"payload\" property. Check for typos or add the key to the payload definition."
+        "lowdefy.yaml:33\n_payload references \"undefinedKey\" in request \"testRequest\" on page \"home\", but no key \"undefinedKey\" exists in the request payload definition. Payload keys are defined in the request's \"payload\" property. Check for typos or add the key to the payload definition."
       ],
       "expectThrow": true
     }

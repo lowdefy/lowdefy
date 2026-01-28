@@ -6,7 +6,7 @@
         "Block should have required property \"id\""
       ],
       "errorContains": [
-        "[Config Error] Block should have required property \"id\".",
+        "Block should have required property \"id\".",
         "lowdefy.yaml:16"
       ]
     }

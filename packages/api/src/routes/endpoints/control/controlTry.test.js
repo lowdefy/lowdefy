@@ -126,7 +126,7 @@ test('try catch with unsuccessful try', async () => {
           type: 'TestRequestError',
         },
       },
-      '[Plugin Error] Try and fail at test/try_fail.',
+      'Try and fail at test/try_fail.',
     ],
     [
       {
@@ -248,7 +248,7 @@ test('try only, fail', async () => {
           type: 'TestRequestError',
         },
       },
-      '[Plugin Error] Try and fail at test/try_fail.',
+      'Try and fail at test/try_fail.',
     ],
   ]);
   expect(res.response).toEqual(undefined);
@@ -387,7 +387,7 @@ test('try with finally, try fail', async () => {
           type: 'TestRequestError',
         },
       },
-      '[Plugin Error] Try and fail at test/try_fail.',
+      'Try and fail at test/try_fail.',
     ],
     [
       {
@@ -571,7 +571,7 @@ test('try catch finally, try fail', async () => {
           type: 'TestRequestError',
         },
       },
-      '[Plugin Error] Try and fail at test/try_fail.',
+      'Try and fail at test/try_fail.',
     ],
     [
       {
@@ -692,7 +692,7 @@ test('try catch finally, try and catch fail', async () => {
           type: 'TestRequestError',
         },
       },
-      '[Plugin Error] Try and fail at test/try_fail.',
+      'Try and fail at test/try_fail.',
     ],
     [
       {
@@ -724,7 +724,7 @@ test('try catch finally, try and catch fail', async () => {
           type: 'TestRequestError',
         },
       },
-      '[Plugin Error] Fallback thing fail at test/catch_error.',
+      'Fallback thing fail at test/catch_error.',
     ],
     [
       {

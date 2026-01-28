@@ -6,7 +6,7 @@
         "~ignoreBuildCheck has been renamed to ~ignoreBuildChecks"
       ],
       "errorContains": [
-        "[Config Error] ~ignoreBuildCheck has been renamed to ~ignoreBuildChecks. Use ~ignoreBuildChecks: true to suppress all checks, or ~ignoreBuildChecks: ['state-refs', 'types'] to suppress specific checks.",
+        "~ignoreBuildCheck has been renamed to ~ignoreBuildChecks. Use ~ignoreBuildChecks: true to suppress all checks, or ~ignoreBuildChecks: ['state-refs', 'types'] to suppress specific checks.",
         "lowdefy.yaml:10"
       ],
       "expectThrow": true

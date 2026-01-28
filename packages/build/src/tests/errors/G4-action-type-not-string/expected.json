@@ -6,7 +6,7 @@
         "Action \"type\" should be a string"
       ],
       "errorContains": [
-        "[Config Error] Action \"type\" should be a string.",
+        "Action \"type\" should be a string.",
         "lowdefy.yaml:24"
       ]
     }

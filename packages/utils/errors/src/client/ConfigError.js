@@ -25,7 +25,8 @@ import BaseConfigError from '../ConfigError.js';
  * @example
  * const error = new ConfigError({ message: 'Invalid operator', configKey });
  * await error.resolve(lowdefy);
- * console.error(error.message); // "pages/home.yaml:42\n[Config Error] Invalid operator"
+ * console.error(error.source); // "pages/home.yaml:42"
+ * console.error(error.message); // "Invalid operator"
  */
 class ConfigError extends BaseConfigError {
   /**
@@ -50,14 +51,7 @@ class ConfigError extends BaseConfigError {
       const response = await fetch(`${lowdefy.basePath}/api/client-error`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: this.rawMessage,
-          name: this.name,
-          configKey: this.configKey,
-          isServiceError: false,
-          pageId: lowdefy.pageId,
-          timestamp: new Date().toISOString(),
-        }),
+        body: JSON.stringify(this.serialize()),
         signal: controller.signal,
         credentials: 'same-origin',
       });
@@ -68,7 +62,6 @@ class ConfigError extends BaseConfigError {
         this.source = result.source;
         this.config = result.config;
         this.link = result.link;
-        this._updateMessage();
       }
     } catch {
       clearTimeout(timeoutId);
@@ -92,25 +85,6 @@ class ConfigError extends BaseConfigError {
     console.error(this.message);
   }
 
-  /**
-   * Creates a ConfigError from an existing error.
-   * @param {Object} params
-   * @param {Error} params.error - Original error
-   * @param {string} [params.configKey] - Config key for location resolution
-   * @param {Object} [params.location] - Pre-resolved location
-   * @returns {ConfigError}
-   */
-  static from({ error, configKey, location }) {
-    const configError = new ConfigError({
-      message: error.message,
-      configKey: error.configKey ?? configKey,
-      location,
-    });
-    // Preserve original error's name and stack
-    configError.name = error.name;
-    configError.stack = error.stack;
-    return configError;
-  }
 }
 
 export default ConfigError;

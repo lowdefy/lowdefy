@@ -19,35 +19,11 @@
 import { mergeObjects } from '@lowdefy/helpers';
 import { ConfigError, ConfigWarning } from '@lowdefy/errors/build';
 
+import collectExceptions from './utils/collectExceptions.js';
 import createCounter from './utils/createCounter.js';
 import createReadConfigFile from './utils/readConfigFile.js';
 import createWriteBuildArtifact from './utils/writeBuildArtifact.js';
 import defaultTypesMap from './defaultTypesMap.js';
-
-/**
- * Extracts source:line from a formatted message for deduplication.
- * Format: "source:line\n[Config Warning/Error] message"
- * Returns the first line (source:line) as the dedup key.
- */
-function getSourceLine(formatted) {
-  const newlineIndex = formatted.indexOf('\n');
-  return newlineIndex > 0 ? formatted.slice(0, newlineIndex) : formatted;
-}
-
-/**
- * Splits a formatted message into source line and message parts.
- * Returns { source, message } or { message } if no source line.
- */
-function splitMessage(formatted) {
-  const newlineIndex = formatted.indexOf('\n');
-  if (newlineIndex > 0) {
-    return {
-      source: formatted.slice(0, newlineIndex),
-      message: formatted.slice(newlineIndex + 1),
-    };
-  }
-  return { message: formatted };
-}
 
 function createContext({ customTypesMap, directories, logger, refResolver, stage = 'prod' }) {
   // Track seen source:line for deduplication (same file:line = same warning, even if different pages)
@@ -87,78 +63,54 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
     writeBuildArtifact: createWriteBuildArtifact({ directories }),
   };
 
-  // Add config-aware methods to logger (don't spread - pino uses Symbol-keyed internals)
-  logger.configWarning = ({ message, configKey, operatorLocation, prodError, checkSlug }) => {
-    try {
-      // ConfigWarning constructor throws ConfigError in prod mode when prodError is true
-      const warning = new ConfigWarning({
-        message,
-        configKey,
-        operatorLocation,
-        context,
-        prodError,
-        checkSlug,
-      });
+  // Store context reference on logger so wrapper can access current context on rebuild
+  // This allows the wrapper to use fresh seenSourceLines and context each build
+  logger._lowdefyContext = context;
 
-      // Skip suppressed warnings (from ~ignoreBuildChecks)
-      if (warning.suppressed || !warning.message) {
+  // Wrap logger.warn to handle ConfigWarning or params with deduplication
+  // Only wrap once - check for marker to prevent double-wrapping on rebuild
+  if (!logger.warn._lowdefyWrapped) {
+    const originalWarn = logger.warn.bind(logger);
+    const wrappedWarn = (warningOrParams) => {
+      // Get current context (updated each build)
+      const ctx = logger._lowdefyContext;
+      const seen = ctx?.seenSourceLines;
+
+      // Plain pino call
+      if (typeof warningOrParams === 'string' || !warningOrParams.message) {
+        originalWarn(warningOrParams);
         return;
       }
 
-      // Deduplicate by source:line only (same file:line = same warning)
-      const sourceLine = getSourceLine(warning.message);
-      if (seenSourceLines.has(sourceLine)) {
+      // Already a ConfigWarning instance
+      if (warningOrParams instanceof ConfigWarning) {
+        if (warningOrParams.suppressed) return;
+        const dedupKey = warningOrParams.source ?? warningOrParams.message;
+        if (seen?.has(dedupKey)) return;
+        seen?.add(dedupKey);
+        originalWarn({ source: warningOrParams.source }, warningOrParams.message);
         return;
       }
-      seenSourceLines.add(sourceLine);
 
-      // Log source line then warning message
-      const parts = splitMessage(warning.message);
-      if (parts.source) {
-        logger.info(parts.source);
-      }
-      logger.warn(parts.message);
-    } catch (err) {
-      // ConfigError thrown in prod mode - collect instead of throwing
-      // This allows validation to continue and report all errors
-      if (err instanceof ConfigError) {
-        // Skip suppressed errors (empty message means ~ignoreBuildCheck: true)
-        if (err.suppressed || !err.message) {
-          return;
+      // Params object - create ConfigWarning with location resolution
+      try {
+        const warning = new ConfigWarning({ ...warningOrParams, context: ctx });
+        if (warning.suppressed) return;
+        const dedupKey = warning.source ?? warning.message;
+        if (seen?.has(dedupKey)) return;
+        seen?.add(dedupKey);
+        originalWarn({ source: warning.source }, warning.message);
+      } catch (err) {
+        if (err instanceof ConfigError) {
+          collectExceptions(ctx, err);
+        } else {
+          throw err;
         }
-        const sourceLine = getSourceLine(err.message);
-        if (!seenSourceLines.has(sourceLine)) {
-          seenSourceLines.add(sourceLine);
-          context.errors.push(err.message);
-        }
-      } else {
-        throw err;
       }
-    }
-  };
-
-  logger.configError = ({ message, configKey, operatorLocation, checkSlug }) => {
-    const error = new ConfigError({ message, configKey, operatorLocation, context, checkSlug });
-
-    // Skip suppressed errors (from ~ignoreBuildChecks)
-    if (error.suppressed || !error.message) {
-      return;
-    }
-
-    // Deduplicate by source:line only (same file:line = same error)
-    const sourceLine = getSourceLine(error.message);
-    if (seenSourceLines.has(sourceLine)) {
-      return;
-    }
-    seenSourceLines.add(sourceLine);
-
-    // Log source line then error message
-    const parts = splitMessage(error.message);
-    if (parts.source) {
-      logger.info(parts.source);
-    }
-    logger.error(parts.message);
-  };
+    };
+    wrappedWarn._lowdefyWrapped = true;
+    logger.warn = wrappedWarn;
+  }
   context.logger = logger;
 
   return context;

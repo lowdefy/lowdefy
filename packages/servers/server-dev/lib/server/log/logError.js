@@ -20,7 +20,6 @@ import captureSentryError from '../sentry/captureSentryError.js';
 
 async function logError({ context, error }) {
   try {
-    const message = error?.message || 'Unknown error';
     const isServiceError = error?.isServiceError === true;
 
     // For service errors, don't resolve config location (not a config issue)
@@ -32,24 +31,19 @@ async function logError({ context, error }) {
           configDirectory: context.configDirectory,
         });
 
-    // Human-readable output: source (info/blue) then message (error/red)
+    // Attach resolved location to error for display layer
     if (location) {
-      context.logger.info(location.source);
+      error.source = location.source;
+      error.config = location.config;
     }
-    context.logger.error(message);
 
-    // Structured logging for log aggregation (debug level - won't display in dev)
-    context.logger.debug({
-      event: isServiceError ? 'service_error' : 'config_error',
-      errorName: error?.name || 'Error',
-      errorMessage: message,
-      isServiceError,
-      pageId: context.pageId || null,
-      timestamp: new Date().toISOString(),
-      source: location?.source || null,
-      config: location?.config || null,
-      link: location?.link || null,
-    });
+    // Log source first (if resolved), then error with name prefix
+    if (error.source) {
+      context.logger.info(error.source);
+    }
+    const errorName = error?.name || 'Error';
+    const errorMessage = error?.message || 'Unknown error';
+    context.logger.error(`[${errorName}] ${errorMessage}`);
 
     // Capture error to Sentry (no-op if Sentry not configured)
     captureSentryError({

@@ -84,13 +84,15 @@ class WebParser {
         });
         return res;
       } catch (e) {
-        const formattedMessage = `Operator Error: ${e.message} Received: ${JSON.stringify({
+        const formattedMessage = `${e.message} Received: ${JSON.stringify({
           [key]: params,
         })} at ${operatorLocation}.`;
-        const formattedError = new Error(formattedMessage);
-        formattedError.stack = e.stack;
-        formattedError.configKey = e.configKey; // Preserve original configKey if present
-        errors.push(ConfigError.from({ error: formattedError, configKey }));
+        errors.push(
+          new ConfigError({
+            message: formattedMessage,
+            configKey: e.configKey ?? configKey,
+          })
+        );
         return null;
       }
     };

@@ -16,11 +16,10 @@
 
 import LowdefyError from './LowdefyError.js';
 
-test('LowdefyError creates error with formatted message', () => {
+test('LowdefyError creates error with message', () => {
   const error = new LowdefyError('Unexpected condition');
-  expect(error.message).toBe('[Lowdefy Error] Unexpected condition');
+  expect(error.message).toBe('Unexpected condition');
   expect(error.name).toBe('LowdefyError');
-  expect(error.rawMessage).toBe('Unexpected condition');
   expect(error.configKey).toBeNull();
 });
 
@@ -40,9 +39,8 @@ test('LowdefyError.from creates error from existing error', () => {
   const original = new Error('Original error message');
   const lowdefyError = LowdefyError.from(original);
 
-  expect(lowdefyError.message).toBe('[Lowdefy Error] Original error message');
+  expect(lowdefyError.message).toBe('Original error message');
   expect(lowdefyError.name).toBe('LowdefyError');
-  expect(lowdefyError.rawMessage).toBe('Original error message');
   expect(lowdefyError.stack).toBe(original.stack);
   expect(lowdefyError.cause).toBe(original);
 });

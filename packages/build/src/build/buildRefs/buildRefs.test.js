@@ -1397,9 +1397,8 @@ answer:
       answer: null,
     });
     expect(mockLogWarn.mock.calls).toEqual([
-      ['Build operator errors.'],
       [
-        '[Plugin Error] _sum takes an array type as input. Received: {"_build.sum":"A"} at lowdefy.yaml:2.',
+        '_sum takes an array type as input. Received: {"_build.sum":"A"} at lowdefy.yaml:2.',
       ],
     ]);
   });
@@ -1424,9 +1423,8 @@ _build.sum: A`,
       answer: null,
     });
     expect(mockLogWarn.mock.calls).toEqual([
-      ['Build operator errors.'],
       [
-        '[Plugin Error] _sum takes an array type as input. Received: {"_build.sum":"A"} at file.yaml:2.',
+        '_sum takes an array type as input. Received: {"_build.sum":"A"} at file.yaml:2.',
       ],
     ]);
   });

@@ -24,19 +24,19 @@ describe('validateLinkReferences', () => {
     const context = {
       stage,
       logger: {
-        warn: warnFn,
+        warn: (params) => {
+          if (params.prodError && context.stage === 'prod') {
+            throw new Error(params.message);
+          }
+          warnFn(params.message);
+        },
       },
       directories: {
         config: '/test',
       },
       keyMap: {},
       refMap: {},
-    };
-    context.logger.configWarning = ({ message, prodError }) => {
-      if (prodError && context.stage === 'prod') {
-        throw new Error(message);
-      }
-      warnFn(message);
+      warnFn, // Expose for test assertions
     };
     return context;
   };
@@ -60,7 +60,7 @@ describe('validateLinkReferences', () => {
       context,
     });
 
-    expect(context.logger.warn).not.toHaveBeenCalled();
+    expect(context.warnFn).not.toHaveBeenCalled();
   });
 
   test('warns in dev mode when page not found', () => {
@@ -82,8 +82,8 @@ describe('validateLinkReferences', () => {
       context,
     });
 
-    expect(context.logger.warn).toHaveBeenCalledTimes(1);
-    expect(context.logger.warn).toHaveBeenCalledWith(
+    expect(context.warnFn).toHaveBeenCalledTimes(1);
+    expect(context.warnFn).toHaveBeenCalledWith(
       expect.stringContaining('Page "nonExistentPage" not found')
     );
   });
@@ -135,7 +135,7 @@ describe('validateLinkReferences', () => {
       context,
     });
 
-    expect(context.logger.warn).not.toHaveBeenCalled();
+    expect(context.warnFn).not.toHaveBeenCalled();
   });
 
   test('validates normally when skip is an operator object', () => {
@@ -165,8 +165,8 @@ describe('validateLinkReferences', () => {
       context,
     });
 
-    expect(context.logger.warn).toHaveBeenCalledTimes(1);
-    expect(context.logger.warn).toHaveBeenCalledWith(
+    expect(context.warnFn).toHaveBeenCalledTimes(1);
+    expect(context.warnFn).toHaveBeenCalledWith(
       expect.stringContaining('Page "nonExistentPage" not found')
     );
   });
@@ -196,8 +196,8 @@ describe('validateLinkReferences', () => {
       context,
     });
 
-    expect(context.logger.warn).toHaveBeenCalledTimes(1);
-    expect(context.logger.warn).toHaveBeenCalledWith(
+    expect(context.warnFn).toHaveBeenCalledTimes(1);
+    expect(context.warnFn).toHaveBeenCalledWith(
       expect.stringContaining('Page "nonExistentPage" not found')
     );
   });
@@ -227,7 +227,7 @@ describe('validateLinkReferences', () => {
       context,
     });
 
-    expect(context.logger.warn).toHaveBeenCalledTimes(1);
+    expect(context.warnFn).toHaveBeenCalledTimes(1);
   });
 
   test('validates normally when skip is empty object', () => {
@@ -255,7 +255,7 @@ describe('validateLinkReferences', () => {
       context,
     });
 
-    expect(context.logger.warn).toHaveBeenCalledTimes(1);
+    expect(context.warnFn).toHaveBeenCalledTimes(1);
   });
 
   test('validates multiple link actions with mixed skip conditions', () => {
@@ -308,11 +308,11 @@ describe('validateLinkReferences', () => {
 
     // nonExistentPage2 and nonExistentPage3 should trigger warnings
     // (skip: true is skipped, operator object is NOT skipped)
-    expect(context.logger.warn).toHaveBeenCalledTimes(2);
-    expect(context.logger.warn).toHaveBeenCalledWith(
+    expect(context.warnFn).toHaveBeenCalledTimes(2);
+    expect(context.warnFn).toHaveBeenCalledWith(
       expect.stringContaining('Page "nonExistentPage2" not found')
     );
-    expect(context.logger.warn).toHaveBeenCalledWith(
+    expect(context.warnFn).toHaveBeenCalledWith(
       expect.stringContaining('Page "nonExistentPage3" not found')
     );
   });
@@ -326,7 +326,7 @@ describe('validateLinkReferences', () => {
       context,
     });
 
-    expect(context.logger.warn).not.toHaveBeenCalled();
+    expect(context.warnFn).not.toHaveBeenCalled();
   });
 
   test('handles no link actions', () => {
@@ -338,6 +338,6 @@ describe('validateLinkReferences', () => {
       context,
     });
 
-    expect(context.logger.warn).not.toHaveBeenCalled();
+    expect(context.warnFn).not.toHaveBeenCalled();
   });
 });

@@ -6,7 +6,7 @@
         "should be a string"
       ],
       "errorContains": [
-        "[Config Error] Block \"id\" should be a string.",
+        "Block \"id\" should be a string.",
         "lowdefy.yaml:16"
       ]
     }

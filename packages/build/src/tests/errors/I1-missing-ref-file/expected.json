@@ -6,7 +6,7 @@
         "Referenced file does not exist"
       ],
       "errorContains": [
-        "[Config Error] Referenced file does not exist: \"nonexistent.yaml\".",
+        "Referenced file does not exist: \"nonexistent.yaml\".",
         "lowdefy.yaml:15"
       ]
     },
@@ -16,7 +16,7 @@
         "Referenced file does not exist"
       ],
       "errorContains": [
-        "[Config Error] Referenced file does not exist: \"nonexistent.yaml\".",
+        "Referenced file does not exist: \"nonexistent.yaml\".",
         "lowdefy.yaml:15"
       ],
       "expectThrow": true
