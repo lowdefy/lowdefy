@@ -17,3 +17,4 @@ name: blocks-antd E2E Tests
 
 pages:
   - _ref: ../../src/blocks/Button/tests/Button.e2e.yaml
+  - _ref: ../../src/blocks/Selector/tests/Selector.e2e.yaml
