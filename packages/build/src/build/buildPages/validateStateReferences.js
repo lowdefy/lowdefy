@@ -27,9 +27,13 @@ function validateStateReferences({ page, context }) {
   traverseConfig({
     config: page,
     visitor: (obj) => {
-      // Collect blockId if present
+      // Collect blockId if present, including the top-level key for dot-notation ids
       if (obj.blockId) {
         blockIds.add(obj.blockId);
+        const topLevel = obj.blockId.split(/[.\[]/)[0];
+        if (topLevel !== obj.blockId) {
+          blockIds.add(topLevel);
+        }
       }
 
       // Collect SetState action params to track state keys being initialized
