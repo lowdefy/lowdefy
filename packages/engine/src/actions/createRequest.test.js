@@ -14,6 +14,7 @@
   limitations under the License.
 */
 import { jest } from '@jest/globals';
+import { PluginError } from '@lowdefy/errors/client';
 
 import testContext from '../../test/testContext.js';
 
@@ -29,7 +30,7 @@ const mockReqResponses = {
     success: true,
     response: 2,
   },
-  req_error: new Error('Request error'),
+  req_error: expect.any(PluginError),
 };
 
 const mockCallRequest = jest.fn();
@@ -386,7 +387,7 @@ test('Request call request error', async () => {
   expect(context.requests.req_error).toEqual([
     {
       blockId: 'button',
-      error: new Error('Request error'),
+      error: expect.any(PluginError),
       loading: false,
       payload: {},
       requestId: 'req_error',
@@ -405,7 +406,7 @@ test('Request call request error', async () => {
         params: 'req_error',
         type: 'Request',
       },
-      error: new Error('Request error'),
+      error: expect.any(PluginError),
       index: 0,
     },
     responses: {
@@ -415,7 +416,7 @@ test('Request call request error', async () => {
           params: 'req_error',
           type: 'Request',
         },
-        error: new Error('Request error'),
+        error: expect.any(PluginError),
         index: 0,
       },
     },

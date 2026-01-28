@@ -43,6 +43,7 @@
     "@ant-design/icons": "4.8.0",
     "@lowdefy/block-utils": "4.5.2",
     "@lowdefy/engine": "4.5.2",
+    "@lowdefy/errors": "4.5.2",
     "@lowdefy/helpers": "4.5.2",
     "@lowdefy/layout": "4.5.2",
     "classnames": "2.3.2",

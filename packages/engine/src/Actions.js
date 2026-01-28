@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { ConfigError, PluginError } from '@lowdefy/errors/client';
 import { type } from '@lowdefy/helpers';
 import getActionMethods from './actions/getActionMethods.js';
 
@@ -30,7 +31,7 @@ class Actions {
   }
 
   // Log action errors appropriately:
-  // - Operator errors (have configKey): use logError for config tracing
+  // - ConfigError/PluginError: use logError for config tracing
   // - Throw errors: log as regular error (intentional, no config trace)
   // - Other errors: log as regular error
   logActionError({ error, action }) {
@@ -50,8 +51,14 @@ class Actions {
       return;
     }
 
-    // Errors with configKey or isServiceError flag - use logError for proper handling
-    if ((error?.configKey || error?.isServiceError) && logError) {
+    // ConfigError, PluginError, or errors with isServiceError flag - use logError
+    if (
+      (error instanceof ConfigError ||
+        error instanceof PluginError ||
+        error?.configKey ||
+        error?.isServiceError) &&
+      logError
+    ) {
       logError(error);
       return;
     }
@@ -169,9 +176,10 @@ class Actions {
 
   async callAction({ action, arrayIndices, block, event, index, progress, responses }) {
     if (!this.actions[action.type]) {
-      const error = new Error(`Invalid action type "${action.type}" at "${block.blockId}".`);
-      // Attach action's configKey so error can be traced to config
-      error.configKey = action['~k'];
+      const error = new ConfigError({
+        message: `Invalid action type "${action.type}" at "${block.blockId}".`,
+        configKey: action['~k'],
+      });
       throw { error, action, index };
     }
     const { output: parsedAction, errors: parserErrors } = this.context._internal.parser.parse({
@@ -212,7 +220,19 @@ class Actions {
         progress();
       }
     } catch (err) {
-      responses[action.id] = { error: err, index, type: action.type };
+      // Wrap plain Error in PluginError (but preserve ConfigError)
+      const error =
+        err instanceof ConfigError || err instanceof PluginError
+          ? err
+          : PluginError.from({
+              error: err,
+              pluginType: 'action',
+              pluginName: action.type,
+              location: block.blockId,
+              configKey: action['~k'],
+            });
+
+      responses[action.id] = { error, index, type: action.type };
       const { output: parsedMessages, errors: parserErrors } = this.context._internal.parser.parse({
         actions: responses,
         event,
@@ -232,8 +252,7 @@ class Actions {
         message: (parsedMessages || {}).error,
         status: 'error',
       });
-      // Don't attach configKey to action errors (e.g. Throw) - they are intentional
-      throw { error: err, action, index };
+      throw { error, action, index };
     }
     closeLoading();
     this.displayMessage({

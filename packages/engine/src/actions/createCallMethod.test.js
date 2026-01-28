@@ -14,6 +14,7 @@
   limitations under the License.
 */
 import { jest } from '@jest/globals';
+import { PluginError } from '@lowdefy/errors/client';
 
 import testContext from '../../test/testContext.js';
 
@@ -230,9 +231,7 @@ test('CallMethod with args not an array', async () => {
         },
         type: 'CallMethod',
       },
-      error: new Error(
-        'Failed to call method "blockMethod" on block "textInput": "args" should be an array. Received "{"blockId":"textInput","method":"blockMethod","args":"arg"}".'
-      ),
+      error: expect.any(PluginError),
       index: 0,
     },
     responses: {
@@ -246,9 +245,7 @@ test('CallMethod with args not an array', async () => {
           },
           type: 'CallMethod',
         },
-        error: new Error(
-          'Failed to call method "blockMethod" on block "textInput": "args" should be an array. Received "{"blockId":"textInput","method":"blockMethod","args":"arg"}".'
-        ),
+        error: expect.any(PluginError),
         index: 0,
       },
     },
@@ -256,6 +253,7 @@ test('CallMethod with args not an array', async () => {
     startTimestamp: { date: 0 },
     endTimestamp: { date: 0 },
   });
+  expect(res.error.error.rawMessage).toContain('"args" should be an array');
   expect(blockMethod.mock.calls).toEqual([]);
 });
 
@@ -502,9 +500,7 @@ test('CallMethod with method does not exist', async () => {
         },
         type: 'CallMethod',
       },
-      error: new Error(
-        'Failed to call method "no-method" on block "textInput". Check if "no-method" is a valid block method for block "textInput". Received "{"blockId":"textInput","method":"no-method"}".'
-      ),
+      error: expect.any(PluginError),
       index: 0,
     },
     responses: {
@@ -517,9 +513,7 @@ test('CallMethod with method does not exist', async () => {
           },
           type: 'CallMethod',
         },
-        error: new Error(
-          'Failed to call method "no-method" on block "textInput". Check if "no-method" is a valid block method for block "textInput". Received "{"blockId":"textInput","method":"no-method"}".'
-        ),
+        error: expect.any(PluginError),
         index: 0,
       },
     },
@@ -527,5 +521,6 @@ test('CallMethod with method does not exist', async () => {
     startTimestamp: { date: 0 },
     endTimestamp: { date: 0 },
   });
+  expect(res.error.error.rawMessage).toContain('is a valid block method');
   expect(blockMethod.mock.calls).toEqual([]);
 });

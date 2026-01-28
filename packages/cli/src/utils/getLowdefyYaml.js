@@ -16,7 +16,8 @@
 
 import path from 'path';
 import { get, type } from '@lowdefy/helpers';
-import { ConfigError, readFile } from '@lowdefy/node-utils';
+import { ConfigError } from '@lowdefy/errors/build';
+import { readFile } from '@lowdefy/node-utils';
 import YAML from 'yaml';
 
 async function getLowdefyYaml({ configDirectory, requiresLowdefyYaml }) {

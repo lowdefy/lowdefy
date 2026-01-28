@@ -17,7 +17,7 @@
 */
 
 import { jest } from '@jest/globals';
-import { ConfigError } from '@lowdefy/helpers';
+import { PluginError } from '@lowdefy/errors/client';
 
 import testContext from './testContext.js';
 
@@ -373,7 +373,8 @@ test('action error in error messages from same action id', async () => {
   expect(displayMessage.mock.calls).toEqual([
     [
       {
-        content: 'Result one: one response - Result two: Error: Test error',
+        content:
+          'Result one: one response - Result two: PluginError: [Plugin Error] Test error at blockId.',
         duration: 6,
         status: 'error',
       },
@@ -422,13 +423,15 @@ test('action error in error parser', async () => {
     event: {},
     eventName,
   });
-  expect(res.responses.two.error).toBeInstanceOf(ConfigError);
+  expect(res.responses.two.error).toBeInstanceOf(PluginError);
+  expect(res.responses.two.error.rawMessage).toBe('_divide takes an array of 2 numbers.');
   expect(res.responses.two.error.message).toBe(
-    'Operator Error: _divide takes an array of 2 numbers. Received: {"_divide":[3,{"name":"Error"}]} at blockId.'
+    '[Plugin Error] _divide takes an array of 2 numbers. Received: {"_divide":[3,{"name":"PluginError"}]} at blockId.'
   );
-  expect(res.error.error).toBeInstanceOf(ConfigError);
+  expect(res.error.error).toBeInstanceOf(PluginError);
+  expect(res.error.error.rawMessage).toBe('_divide takes an array of 2 numbers.');
   expect(res.error.error.message).toBe(
-    'Operator Error: _divide takes an array of 2 numbers. Received: {"_divide":[3,{"name":"Error"}]} at blockId.'
+    '[Plugin Error] _divide takes an array of 2 numbers. Received: {"_divide":[3,{"name":"PluginError"}]} at blockId.'
   );
 });
 
@@ -538,7 +541,7 @@ test('action throws a error', async () => {
         params: 'params',
         type: 'ActionError',
       },
-      error: new Error('Test error'),
+      error: expect.any(PluginError),
       index: 0,
     },
     responses: {
@@ -548,7 +551,7 @@ test('action throws a error', async () => {
           params: 'params',
           type: 'ActionError',
         },
-        error: new Error('Test error'),
+        error: expect.any(PluginError),
         index: 0,
       },
     },
@@ -556,6 +559,7 @@ test('action throws a error', async () => {
     startTimestamp: { date: 0 },
     endTimestamp: { date: 0 },
   });
+  expect(res.error.error.rawMessage).toContain('Test error');
   expect(actions.ActionError.mock.calls.length).toBe(1);
 });
 
@@ -593,7 +597,7 @@ test('actions after a error are not called throws a error', async () => {
         params: 'params',
         type: 'ActionError',
       },
-      error: new Error('Test error'),
+      error: expect.any(PluginError),
       index: 0,
     },
     responses: {
@@ -603,7 +607,7 @@ test('actions after a error are not called throws a error', async () => {
           params: 'params',
           type: 'ActionError',
         },
-        error: new Error('Test error'),
+        error: expect.any(PluginError),
         index: 0,
       },
     },
@@ -611,6 +615,7 @@ test('actions after a error are not called throws a error', async () => {
     startTimestamp: { date: 0 },
     endTimestamp: { date: 0 },
   });
+  expect(res.error.error.rawMessage).toContain('Test error');
   expect(actions.ActionError.mock.calls.length).toBe(1);
   expect(actions.ActionSync.mock.calls.length).toBe(0);
 });
@@ -646,7 +651,7 @@ test('Invalid action type', async () => {
         params: 'params',
         type: 'Invalid',
       },
-      error: new Error('Invalid action type "Invalid" at "blockId".'),
+      error: expect.any(Error),
       index: 0,
     },
     responses: {
@@ -656,7 +661,7 @@ test('Invalid action type', async () => {
           params: 'params',
           type: 'Invalid',
         },
-        error: new Error('Invalid action type "Invalid" at "blockId".'),
+        error: expect.any(Error),
         index: 0,
       },
     },
@@ -701,9 +706,12 @@ test('Parser error in action', async () => {
     type: 'ActionSync',
   });
   expect(res.error.index).toBe(0);
-  expect(res.error.error).toBeInstanceOf(ConfigError);
+  expect(res.error.error).toBeInstanceOf(PluginError);
+  expect(res.error.error.rawMessage).toBe(
+    '_state params must be of type string, integer, boolean or object.'
+  );
   expect(res.error.error.message).toBe(
-    'Operator Error: _state params must be of type string, integer, boolean or object. Received: {"_state":[]} at blockId.'
+    '[Plugin Error] _state params must be of type string, integer, boolean or object. Received: {"_state":[]} at blockId.'
   );
 
   // Check responses structure
@@ -713,9 +721,12 @@ test('Parser error in action', async () => {
     type: 'ActionSync',
   });
   expect(res.responses.test.index).toBe(0);
-  expect(res.responses.test.error).toBeInstanceOf(ConfigError);
+  expect(res.responses.test.error).toBeInstanceOf(PluginError);
+  expect(res.responses.test.error.rawMessage).toBe(
+    '_state params must be of type string, integer, boolean or object.'
+  );
   expect(res.responses.test.error.message).toBe(
-    'Operator Error: _state params must be of type string, integer, boolean or object. Received: {"_state":[]} at blockId.'
+    '[Plugin Error] _state params must be of type string, integer, boolean or object. Received: {"_state":[]} at blockId.'
   );
 });
 
@@ -992,7 +1003,7 @@ test('Call catchActions when actions throws error', async () => {
         },
         type: 'ActionError',
       },
-      error: new Error('Test error'),
+      error: expect.any(PluginError),
       index: 0,
     },
     event: {},
@@ -1011,7 +1022,7 @@ test('Call catchActions when actions throws error', async () => {
           },
           type: 'ActionError',
         },
-        error: new Error('Test error'),
+        error: expect.any(PluginError),
         index: 0,
       },
     },
@@ -1020,6 +1031,7 @@ test('Call catchActions when actions throws error', async () => {
     },
     success: false,
   });
+  expect(res.error.error.rawMessage).toContain('Test error');
   expect(actions.ActionAsync.mock.calls.length).toBe(1);
 });
 
@@ -1079,7 +1091,7 @@ test('Call catchActions when actions throws error and catchActions throws error'
         },
         type: 'ActionError',
       },
-      error: new Error('Test error'),
+      error: expect.any(PluginError),
       index: 0,
     },
     errorCatch: {
@@ -1090,7 +1102,7 @@ test('Call catchActions when actions throws error and catchActions throws error'
         },
         type: 'CatchActionError',
       },
-      error: new Error('Test catch error'),
+      error: expect.any(PluginError),
       index: 1,
     },
     event: {},
@@ -1109,7 +1121,7 @@ test('Call catchActions when actions throws error and catchActions throws error'
           },
           type: 'ActionError',
         },
-        error: new Error('Test error'),
+        error: expect.any(PluginError),
         index: 0,
       },
       catch_error: {
@@ -1120,7 +1132,7 @@ test('Call catchActions when actions throws error and catchActions throws error'
           },
           type: 'CatchActionError',
         },
-        error: new Error('Test catch error'),
+        error: expect.any(PluginError),
         index: 1,
       },
     },
@@ -1129,6 +1141,8 @@ test('Call catchActions when actions throws error and catchActions throws error'
     },
     success: false,
   });
+  expect(res.error.error.rawMessage).toContain('Test error');
+  expect(res.errorCatch.error.rawMessage).toContain('Test catch error');
   expect(actions.ActionAsync.mock.calls.length).toBe(1);
 });
 
@@ -1248,7 +1262,7 @@ test('call async: true with error', async () => {
       },
       test1: {
         action: { id: 'test1', type: 'ActionAsyncError', async: true, params: { ms: 100 } },
-        error: new Error('Test error'),
+        error: expect.any(PluginError),
         index: 0,
       },
     },
@@ -1256,6 +1270,7 @@ test('call async: true with error', async () => {
     startTimestamp: { date: 0 },
     endTimestamp: { date: 0 },
   });
+  expect(res.responses.test1.error.rawMessage).toContain('Test error');
 });
 
 test('call 2 actions, first with async: false', async () => {
