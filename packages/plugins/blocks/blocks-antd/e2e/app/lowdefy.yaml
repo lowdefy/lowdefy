@@ -38,3 +38,8 @@ pages:
   - _ref: ../../src/blocks/DateRangeSelector/tests/DateRangeSelector.e2e.yaml
   - _ref: ../../src/blocks/MonthSelector/tests/MonthSelector.e2e.yaml
   - _ref: ../../src/blocks/WeekSelector/tests/WeekSelector.e2e.yaml
+  # Step 1.4: Slider/Toggle Inputs
+  - _ref: ../../src/blocks/Slider/tests/Slider.e2e.yaml
+  - _ref: ../../src/blocks/RatingSlider/tests/RatingSlider.e2e.yaml
+  - _ref: ../../src/blocks/Switch/tests/Switch.e2e.yaml
+  - _ref: ../../src/blocks/CheckboxSwitch/tests/CheckboxSwitch.e2e.yaml
