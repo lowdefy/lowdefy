@@ -17,23 +17,27 @@
 import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
 
+// Box renders a div with id={blockId}
+// Structure: #bl-{blockId} (wrapper) > #{blockId} (div with styles)
+const getBoxElement = (page, blockId) => page.locator(`#${blockId}`);
+
 test.describe('Box Block', () => {
   test.beforeEach(async ({ page }) => {
     await navigateToTestPage(page, 'box');
   });
 
   test('renders basic Box', async ({ page }) => {
-    const box = getBlock(page, 'box_basic');
-    await expect(box).toBeAttached();
+    const wrapper = getBlock(page, 'box_basic');
+    await expect(wrapper).toBeAttached();
   });
 
   test('displays properties.content text', async ({ page }) => {
-    const box = getBlock(page, 'box_content');
+    const box = getBoxElement(page, 'box_content');
     await expect(box).toHaveText('Hello from Box');
   });
 
   test('applies properties.style', async ({ page }) => {
-    const box = getBlock(page, 'box_styled');
+    const box = getBoxElement(page, 'box_styled');
     await expect(box).toHaveCSS('background-color', 'rgb(0, 128, 255)');
     await expect(box).toHaveCSS('color', 'rgb(255, 255, 255)');
     await expect(box).toHaveCSS('padding', '10px');
@@ -48,7 +52,7 @@ test.describe('Box Block', () => {
   });
 
   test('onClick event fires and updates state', async ({ page }) => {
-    const box = getBlock(page, 'box_clickable');
+    const box = getBoxElement(page, 'box_clickable');
     await expect(box).toHaveText('Click me');
     await box.click();
     await expect(box).toHaveText('Clicked!');

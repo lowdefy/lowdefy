@@ -17,23 +17,27 @@
 import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
 
+// Span renders a span element with id={blockId}
+// Structure: #bl-{blockId} (wrapper) > #{blockId} (span element with styles)
+const getSpanElement = (page, blockId) => page.locator(`#${blockId}`);
+
 test.describe('Span Block', () => {
   test.beforeEach(async ({ page }) => {
     await navigateToTestPage(page, 'span');
   });
 
   test('renders basic Span', async ({ page }) => {
-    const span = getBlock(page, 'span_basic');
-    await expect(span).toBeAttached();
+    const wrapper = getBlock(page, 'span_basic');
+    await expect(wrapper).toBeAttached();
   });
 
   test('displays properties.content text', async ({ page }) => {
-    const span = getBlock(page, 'span_content');
+    const span = getSpanElement(page, 'span_content');
     await expect(span).toHaveText('Hello from Span');
   });
 
   test('applies properties.style', async ({ page }) => {
-    const span = getBlock(page, 'span_styled');
+    const span = getSpanElement(page, 'span_styled');
     await expect(span).toHaveCSS('color', 'rgb(255, 0, 0)');
     await expect(span).toHaveCSS('font-weight', '700');
   });
@@ -47,7 +51,7 @@ test.describe('Span Block', () => {
   });
 
   test('onClick event fires and updates state', async ({ page }) => {
-    const span = getBlock(page, 'span_clickable');
+    const span = getSpanElement(page, 'span_clickable');
     await expect(span).toHaveText('Click me');
     await span.click();
     await expect(span).toHaveText('Clicked!');
