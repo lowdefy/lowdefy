@@ -43,3 +43,6 @@ pages:
   - _ref: ../../src/blocks/RatingSlider/tests/RatingSlider.e2e.yaml
   - _ref: ../../src/blocks/Switch/tests/Switch.e2e.yaml
   - _ref: ../../src/blocks/CheckboxSwitch/tests/CheckboxSwitch.e2e.yaml
+  # Step 1.5: Special Inputs
+  - _ref: ../../src/blocks/PhoneNumberInput/tests/PhoneNumberInput.e2e.yaml
+  - _ref: ../../src/blocks/Tag/tests/Tag.e2e.yaml
