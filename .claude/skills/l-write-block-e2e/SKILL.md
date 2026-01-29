@@ -290,15 +290,23 @@ Fix any failures before committing.
 
 ## Selector Strategy
 
+### Framework Wrapper ID Pattern
+
+All Lowdefy blocks are wrapped by `BlockLayout` which renders `id="bl-{blockId}"`. This wrapper ID is **framework-guaranteed** and always exists, making it the most reliable selector for targeting blocks.
+
+- `getBlock(page, blockId)` uses `#bl-{blockId}` (framework wrapper)
+- Input elements use `#${blockId}_input` (component-rendered)
+- Options use `#${blockId}_0`, `#${blockId}_1`, etc. (component-rendered)
+
 ### Selector Priority (Most to Least Preferred)
 
 | Priority | Selector Type | When to Use | Example |
 |----------|---------------|-------------|---------|
-| 1 | ID `#id` | Always preferred when available | `#textinput_basic_input` |
-| 2 | Role-based | For buttons, inputs with accessible names | `getByRole('button', { name: 'Copy' })` |
-| 3 | ID attribute | For blockId on wrapper | `getBlock()` uses `[id="..."]` |
-| 4 | Class + ID | When targeting Ant Design internals | `.ant-select:has(#id)` |
-| 5 | Class only | **Last resort** - for style assertions | `.ant-input-sm` |
+| 1 | Framework wrapper | Block container | `getBlock()` → `#bl-{blockId}` |
+| 2 | Input ID | Form inputs | `#${blockId}_input` |
+| 3 | Role-based | Buttons with accessible names | `getByRole('button', { name: 'Copy' })` |
+| 4 | Class + ID | Ant Design internals | `.ant-select:has(#${blockId}_input)` |
+| 5 | Class only | **Last resort** - style assertions | `.ant-input-sm` |
 
 ### Role-Based Selectors (Preferred for Ant Design Buttons)
 
@@ -339,6 +347,7 @@ We use `.ant-select:has(#${blockId}_input)` for Selector blocks because:
 | Button | `ant-btn-sm` | `ant-btn-lg` |
 | Select | `ant-select-sm` | `ant-select-lg` |
 | NumberInput wrapper | `ant-input-number-sm` | `ant-input-number-lg` |
+| DatePicker | `ant-picker-small` | `ant-picker-large` |
 
 ### Style Classes
 | Style | Class Pattern |
@@ -468,6 +477,52 @@ const value = await textarea.inputValue();
 expect(value.length).toBeLessThanOrEqual(100);
 ```
 
+### DatePicker Blocks (DateSelector, DateTimeSelector, etc.)
+Date picker blocks use Ant Design's DatePicker which has specific patterns:
+
+```javascript
+// Helper to get the picker wrapper (use framework wrapper ID)
+const getPicker = (page, blockId) => page.locator(`#bl-${blockId} .ant-picker`);
+
+// Helper to get the input
+const getInput = (page, blockId) => page.locator(`#${blockId}_input`);
+
+test('can select a date', async ({ page }) => {
+  const input = getInput(page, 'ds_basic');
+  await input.click();
+
+  // Wait for dropdown
+  const dropdown = page.locator('.ant-picker-dropdown:visible');
+  await expect(dropdown).toBeVisible();
+
+  // Use .ant-picker-cell-in-view for reliable date cell targeting
+  // (more reliable than .ant-picker-cell-today which may not be visible)
+  const dateCell = page.locator('.ant-picker-cell-in-view').first();
+  await dateCell.click();
+
+  await expect(input).toHaveValue(/\d{4}-\d{2}-\d{2}/);
+});
+
+test('can clear value', async ({ page }) => {
+  const picker = getPicker(page, 'ds_clearable');
+  const input = getInput(page, 'ds_clearable');
+
+  // First select a date
+  await input.click();
+  await page.locator('.ant-picker-cell-in-view').first().click();
+
+  // Hover to reveal clear button
+  await picker.hover();
+  await picker.locator('.ant-picker-clear').click();
+  await expect(input).toHaveValue('');
+});
+```
+
+**Key insights:**
+- DatePicker size classes are `ant-picker-small/large` (not `sm/lg`)
+- Use `.ant-picker-cell-in-view` for reliable date cell selection
+- RangePicker: start input has ID, end input needs `.ant-picker-input:last-child input`
+
 ## Package Setup (First-Time Only)
 
 ### 1. Create e2e/playwright.config.js
@@ -524,7 +579,7 @@ pages:
 The `@lowdefy/block-dev-e2e` package provides:
 
 - `createPlaywrightConfig({ packageDir, port })` - Creates Playwright config
-- `getBlock(page, blockId)` - Gets element by `[id="blockId"]` selector
+- `getBlock(page, blockId)` - Gets element by `#bl-{blockId}` (framework wrapper ID)
 - `navigateToTestPage(page, pageId)` - Navigates to test page
 
 ## Port Assignments
