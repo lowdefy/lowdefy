@@ -46,3 +46,8 @@ pages:
   # Step 1.5: Special Inputs
   - _ref: ../../src/blocks/PhoneNumberInput/tests/PhoneNumberInput.e2e.yaml
   - _ref: ../../src/blocks/Tag/tests/Tag.e2e.yaml
+  # Step 2.1: Text Display
+  - _ref: ../../src/blocks/Title/tests/Title.e2e.yaml
+  - _ref: ../../src/blocks/Paragraph/tests/Paragraph.e2e.yaml
+  - _ref: ../../src/blocks/Divider/tests/Divider.e2e.yaml
+  - _ref: ../../src/blocks/Avatar/tests/Avatar.e2e.yaml
