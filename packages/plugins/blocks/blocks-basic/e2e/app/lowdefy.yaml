@@ -23,3 +23,4 @@ pages:
   - _ref: ../../src/blocks/Icon/tests/Icon.e2e.yaml
   - _ref: ../../src/blocks/Img/tests/Img.e2e.yaml
   - _ref: ../../src/blocks/Span/tests/Span.e2e.yaml
+  - _ref: ../../src/blocks/List/tests/List.e2e.yaml
