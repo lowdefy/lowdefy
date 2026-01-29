@@ -1,0 +1,146 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: daterangeselector
+type: Box
+
+events:
+  onInit:
+    - id: set_defaults
+      type: SetState
+      params:
+        drs_with_value:
+          - _date: '2024-06-01'
+          - _date: '2024-06-30'
+        drs_clearable:
+          - _date: '2024-01-01'
+          - _date: '2024-01-31'
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: drs_basic
+    type: DateRangeSelector
+    properties:
+      title: Basic Date Range
+
+  - id: drs_with_value
+    type: DateRangeSelector
+    properties:
+      title: With Value
+
+  # ============================================
+  # PROPERTY TESTS
+  # ============================================
+
+  - id: drs_disabled
+    type: DateRangeSelector
+    properties:
+      title: Disabled
+      disabled: true
+
+  - id: drs_small
+    type: DateRangeSelector
+    properties:
+      title: Small Size
+      size: small
+
+  - id: drs_large
+    type: DateRangeSelector
+    properties:
+      title: Large Size
+      size: large
+
+  - id: drs_placeholder
+    type: DateRangeSelector
+    properties:
+      title: Custom Placeholder
+      placeholder:
+        - From date
+        - To date
+
+  - id: drs_borderless
+    type: DateRangeSelector
+    properties:
+      title: Borderless
+      bordered: false
+
+  - id: drs_no_allowclear
+    type: DateRangeSelector
+    properties:
+      title: No Allow Clear
+      allowClear: false
+
+  - id: drs_separator
+    type: DateRangeSelector
+    properties:
+      title: Custom Separator
+      separator: ' to '
+
+  - id: drs_with_title
+    type: DateRangeSelector
+    properties:
+      title: Date Range with Title
+
+  - id: drs_with_label
+    type: DateRangeSelector
+    properties:
+      title: Date Range Label
+      label:
+        extra: Select start and end dates
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  - id: drs_onchange
+    type: DateRangeSelector
+    properties:
+      title: OnChange Test
+    events:
+      onChange:
+        - id: set_onchange
+          type: SetState
+          params:
+            drs_onchange_value:
+              _event: value
+
+  - id: drs_onchange_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: drs_onchange_value
+              - null
+          then: Range selected
+          else: ''
+
+  # ============================================
+  # INTERACTION TESTS
+  # ============================================
+
+  - id: drs_interaction
+    type: DateRangeSelector
+    properties:
+      title: Interaction Test
+
+  - id: drs_clearable
+    type: DateRangeSelector
+    properties:
+      title: Clearable
+      allowClear: true

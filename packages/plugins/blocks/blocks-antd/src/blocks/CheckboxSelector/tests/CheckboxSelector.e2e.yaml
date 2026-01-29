@@ -1,0 +1,202 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: checkbox_selector
+type: Box
+
+events:
+  onInit:
+    - id: set_defaults
+      type: SetState
+      params:
+        cs_with_value:
+          - Option 2
+          - Option 3
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: cs_basic
+    type: CheckboxSelector
+    properties:
+      options:
+        - Option 1
+        - Option 2
+        - Option 3
+
+  - id: cs_with_value
+    type: CheckboxSelector
+    properties:
+      options:
+        - Option 1
+        - Option 2
+        - Option 3
+
+  # ============================================
+  # PROPERTY TESTS
+  # ============================================
+
+  - id: cs_disabled
+    type: CheckboxSelector
+    properties:
+      disabled: true
+      options:
+        - A
+        - B
+        - C
+
+  - id: cs_vertical
+    type: CheckboxSelector
+    properties:
+      direction: vertical
+      options:
+        - A
+        - B
+        - C
+
+  - id: cs_horizontal
+    type: CheckboxSelector
+    properties:
+      direction: horizontal
+      options:
+        - A
+        - B
+        - C
+
+  - id: cs_no_wrap
+    type: CheckboxSelector
+    properties:
+      wrap: false
+      options:
+        - Option 1
+        - Option 2
+        - Option 3
+        - Option 4
+        - Option 5
+
+  - id: cs_align_center
+    type: CheckboxSelector
+    properties:
+      align: center
+      options:
+        - A
+        - B
+        - C
+
+  - id: cs_align_end
+    type: CheckboxSelector
+    properties:
+      align: end
+      options:
+        - A
+        - B
+        - C
+
+  - id: cs_with_title
+    type: CheckboxSelector
+    properties:
+      title: Select your options
+      options:
+        - A
+        - B
+        - C
+
+  - id: cs_with_label
+    type: CheckboxSelector
+    properties:
+      label:
+        title: Choose items
+        colon: true
+        extra: Select one or more
+      options:
+        - A
+        - B
+        - C
+
+  # ============================================
+  # OPTIONS TESTS
+  # ============================================
+
+  - id: cs_object_options
+    type: CheckboxSelector
+    properties:
+      options:
+        - value: opt1
+          label: First Option
+        - value: opt2
+          label: Second Option
+        - value: opt3
+          label: Third Option
+
+  - id: cs_disabled_option
+    type: CheckboxSelector
+    properties:
+      options:
+        - value: enabled1
+          label: Enabled Option
+        - value: disabled1
+          label: Disabled Option
+          disabled: true
+        - value: enabled2
+          label: Another Enabled
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  - id: cs_onchange
+    type: CheckboxSelector
+    properties:
+      options:
+        - Apple
+        - Banana
+        - Cherry
+    events:
+      onChange:
+        - id: set_onchange
+          type: SetState
+          params:
+            cs_onchange_value:
+              _state: cs_onchange
+
+  - id: cs_onchange_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: cs_onchange_value
+              - null
+          then:
+            _string.concat:
+              - 'Selected: '
+              - _json.stringify:
+                  - _state: cs_onchange_value
+          else: ''
+
+  # ============================================
+  # INTERACTION TESTS
+  # ============================================
+
+  - id: cs_interaction
+    type: CheckboxSelector
+    properties:
+      options:
+        - A
+        - B
+        - C
+        - D
