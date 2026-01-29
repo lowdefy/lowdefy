@@ -58,3 +58,8 @@ pages:
   - _ref: ../../src/blocks/Statistic/tests/Statistic.e2e.yaml
   - _ref: ../../src/blocks/Result/tests/Result.e2e.yaml
   - _ref: ../../src/blocks/Breadcrumb/tests/Breadcrumb.e2e.yaml
+  # Step 2.3: Utility Display
+  - _ref: ../../src/blocks/Tooltip/tests/Tooltip.e2e.yaml
+  - _ref: ../../src/blocks/Popover/tests/Popover.e2e.yaml
+  - _ref: ../../src/blocks/Comment/tests/Comment.e2e.yaml
+  - _ref: ../../src/blocks/TimelineList/tests/TimelineList.e2e.yaml
