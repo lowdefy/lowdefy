@@ -17,6 +17,23 @@
 import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
 
+// ===========================================
+// CHOOSE THE APPROPRIATE HELPER FOR YOUR BLOCK TYPE:
+// ===========================================
+
+// For Display Blocks (Button, Alert, Badge, etc.):
+// getBlock() returns the framework wrapper (#bl-{blockId})
+// Locate the Ant Design component inside the wrapper
+const getButton = (page, blockId) => getBlock(page, blockId).locator('.ant-btn');
+
+// For Input Blocks (TextInput, NumberInput, etc.):
+// Input element has a specific ID pattern
+// const getInput = (page, blockId) => page.locator(`#${blockId}_input`);
+
+// For Selector Blocks (Selector, MultipleSelector, etc.):
+// const getSelector = (page, blockId) => page.locator(`.ant-select:has(#${blockId}_input)`);
+// const getOption = (page, blockId, index) => page.locator(`#${blockId}_${index}`);
+
 test.describe('BlockName Block', () => {
   test.beforeEach(async ({ page }) => {
     await navigateToTestPage(page, 'blockname'); // matches yaml page id
@@ -26,14 +43,12 @@ test.describe('BlockName Block', () => {
   // RENDERING TESTS
   // ============================================
 
-  test('renders basic block with data-testid', async ({ page }) => {
+  test('renders basic block', async ({ page }) => {
     const block = getBlock(page, 'blockname_basic');
     await expect(block).toBeVisible();
-  });
-
-  test('renders with title property', async ({ page }) => {
-    const block = getBlock(page, 'blockname_basic');
-    await expect(block).toHaveText('Expected Title');
+    // Locate Ant component inside wrapper for further assertions
+    const button = getButton(page, 'blockname_basic');
+    await expect(button).toHaveText('Expected Title');
   });
 
   // ============================================
@@ -41,18 +56,19 @@ test.describe('BlockName Block', () => {
   // ============================================
 
   test('renders with property variant', async ({ page }) => {
-    const block = getBlock(page, 'blockname_variant');
-    await expect(block).toHaveClass(/expected-class/);
+    // Check class on the Ant component, not the wrapper
+    const button = getButton(page, 'blockname_variant');
+    await expect(button).toHaveClass(/ant-btn-primary/);
   });
 
   test('renders disabled state', async ({ page }) => {
-    const block = getBlock(page, 'blockname_disabled');
-    await expect(block).toBeDisabled();
+    const button = getButton(page, 'blockname_disabled');
+    await expect(button).toBeDisabled();
   });
 
   test('renders with size property', async ({ page }) => {
-    const block = getBlock(page, 'blockname_small');
-    await expect(block).toHaveClass(/size-class-sm/);
+    const button = getButton(page, 'blockname_small');
+    await expect(button).toHaveClass(/ant-btn-sm/);
   });
 
   // ============================================
@@ -60,13 +76,8 @@ test.describe('BlockName Block', () => {
   // ============================================
 
   test('sets href attribute correctly', async ({ page }) => {
-    const block = getBlock(page, 'blockname_href');
-    await expect(block).toHaveAttribute('href', 'https://example.com');
-  });
-
-  test('sets target="_blank" for newTab', async ({ page }) => {
-    const block = getBlock(page, 'blockname_newtab');
-    await expect(block).toHaveAttribute('target', '_blank');
+    const button = getButton(page, 'blockname_href');
+    await expect(button).toHaveAttribute('href', 'https://example.com');
   });
 
   // ============================================
@@ -74,13 +85,8 @@ test.describe('BlockName Block', () => {
   // ============================================
 
   test('applies custom color style', async ({ page }) => {
-    const block = getBlock(page, 'blockname_color');
-    await expect(block).toHaveCSS('background-color', 'rgb(82, 196, 26)');
-  });
-
-  test('applies disabled cursor style', async ({ page }) => {
-    const block = getBlock(page, 'blockname_disabled');
-    await expect(block).toHaveCSS('cursor', 'not-allowed');
+    const button = getButton(page, 'blockname_color');
+    await expect(button).toHaveCSS('background-color', 'rgb(82, 196, 26)');
   });
 
   // ============================================
@@ -88,9 +94,9 @@ test.describe('BlockName Block', () => {
   // ============================================
 
   test('renders with icon', async ({ page }) => {
-    const block = getBlock(page, 'blockname_with_icon');
-    await expect(block).toBeVisible();
-    const svg = block.locator('svg');
+    const button = getButton(page, 'blockname_with_icon');
+    await expect(button).toBeVisible();
+    const svg = button.locator('svg');
     await expect(svg).toBeAttached();
   });
 
@@ -99,17 +105,17 @@ test.describe('BlockName Block', () => {
   // ============================================
 
   test('onClick event fires and updates state', async ({ page }) => {
-    const block = getBlock(page, 'blockname_clickable');
-    await expect(block).toHaveText('Click me');
-    await block.click();
-    await expect(block).toHaveText('Clicked!');
+    const button = getButton(page, 'blockname_clickable');
+    await expect(button).toHaveText('Click me');
+    await button.click();
+    await expect(button).toHaveText('Clicked!');
   });
 
   test('shows loading spinner during async action', async ({ page }) => {
-    const block = getBlock(page, 'blockname_loading');
-    await block.click();
-    // Check for loading class/state immediately after click
-    await expect(block).toHaveClass(/loading-class/);
+    const button = getButton(page, 'blockname_loading');
+    await button.click();
+    // Check for loading class on Ant component
+    await expect(button).toHaveClass(/ant-btn-loading/);
   });
 
   // ============================================
@@ -117,8 +123,7 @@ test.describe('BlockName Block', () => {
   // ============================================
 
   test('handles empty content gracefully', async ({ page }) => {
-    const block = getBlock(page, 'blockname_empty');
-    await expect(block).toBeVisible();
-    await expect(block).toHaveText('');
+    const button = getButton(page, 'blockname_empty');
+    await expect(button).toBeVisible();
   });
 });

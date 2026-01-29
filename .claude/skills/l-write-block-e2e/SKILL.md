@@ -42,22 +42,49 @@ Read these files to understand the block:
    - All available properties with types and defaults
    - All available events
 
-### Step 2: Identify Block Type
+### Step 2: Identify Block Type and Create Helper
 
-**Display Blocks** (Button, Title, Alert, Badge, etc.):
-- Have `id={blockId}` on main element
-- Use `getBlock(page, blockId)` directly
+**CRITICAL: Always start with `getBlock()` which uses the framework wrapper `#bl-{blockId}`**
 
-**Input Blocks with Label** (TextInput, Selector, NumberInput, etc.):
-- Wrapped in Label component which has `id={blockId}`
-- Actual input has `id={\`${blockId}_input\`}`
-- Need helper: `const getInput = (page, blockId) => page.locator(\`#${blockId}_input\`);`
+The framework wrapper (`#bl-{blockId}`) is guaranteed to exist for ALL block types and should be your primary selector. `getBlock(page, blockId)` returns this wrapper element.
+
+**Two-step pattern for all blocks:**
+1. Get the framework wrapper: `getBlock(page, blockId)` → `#bl-{blockId}`
+2. Locate the Ant Design component inside: `.locator('.ant-xxx')`
+
+**Display Blocks** (Button, Alert, Badge, Progress, Result, etc.):
+```javascript
+// Pattern: getBlock() returns wrapper, then locate Ant component inside
+const getButton = (page, blockId) => getBlock(page, blockId).locator('.ant-btn');
+const getAlert = (page, blockId) => getBlock(page, blockId).locator('.ant-alert');
+const getBadge = (page, blockId) => getBlock(page, blockId).locator('.ant-badge');
+const getProgress = (page, blockId) => getBlock(page, blockId).locator('.ant-progress');
+```
+
+**Typography Display Blocks** (Title, Paragraph):
+```javascript
+const getTitle = (page, blockId) => getBlock(page, blockId).locator('h1, h2, h3, h4, h5');
+const getParagraph = (page, blockId) => getBlock(page, blockId).locator('.ant-typography');
+```
+
+**Input Blocks with Label** (TextInput, NumberInput, etc.):
+- Input element has a known ID pattern: `${blockId}_input`
+- Still use `getBlock()` for the wrapper when checking labels, clear buttons, etc.
+```javascript
+// For the input element specifically (has its own ID)
+const getInput = (page, blockId) => page.locator(`#${blockId}_input`);
+
+// For wrapper-level operations (hover for clear button, check label, etc.)
+// Use getBlock(page, blockId) directly
+```
 
 **Select/Dropdown Blocks** (Selector, MultipleSelector, etc.):
-- Use Ant Design Select internally
-- The `.ant-select` wrapper is created by Ant Design (we can't add test IDs to it)
-- Need helper: `const getSelector = (page, blockId) => page.locator(\`.ant-select:has(#${blockId}_input)\`);`
-- Options have IDs: `${blockId}_0`, `${blockId}_1`, etc.
+- Ant Design controls the `.ant-select` wrapper (we can't add IDs to it)
+- Scope with the input ID we DO control
+```javascript
+const getSelector = (page, blockId) => page.locator(`.ant-select:has(#${blockId}_input)`);
+const getOption = (page, blockId, index) => page.locator(`#${blockId}_${index}`);
+```
 
 ### Step 3: Create Test Fixtures
 
@@ -179,6 +206,7 @@ blocks:
 
 Create `src/blocks/{BlockName}/tests/{BlockName}.e2e.spec.js`:
 
+**For Display Blocks (Button, Alert, Badge, etc.):**
 ```javascript
 /*
   Copyright 2020-2024 Lowdefy, Inc
@@ -190,77 +218,85 @@ Create `src/blocks/{BlockName}/tests/{BlockName}.e2e.spec.js`:
 import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
 
-// For input blocks with Label wrapper:
-const getInput = (page, blockId) => page.locator(`#${blockId}_input`);
+// Display block: use framework wrapper, then locate Ant component inside
+const getButton = (page, blockId) => getBlock(page, blockId).locator('.ant-btn');
 
-// For Selector-type blocks (class selector needed - Ant Design controls the wrapper):
-// const getSelector = (page, blockId) => page.locator(`.ant-select:has(#${blockId}_input)`);
-// const getOption = (page, blockId, index) => page.locator(`#${blockId}_${index}`);
-
-test.describe('BlockName Block', () => {
+test.describe('Button Block', () => {
   test.beforeEach(async ({ page }) => {
-    await navigateToTestPage(page, 'blockname');  // matches yaml id
+    await navigateToTestPage(page, 'button');  // matches yaml id
   });
 
-  // ============================================
-  // BASIC RENDERING TESTS
-  // ============================================
+  test('renders basic button', async ({ page }) => {
+    const block = getBlock(page, 'button_basic');
+    await expect(block).toBeVisible();
+    const button = getButton(page, 'button_basic');
+    await expect(button).toHaveText('Click Me');
+  });
+
+  test('renders primary type', async ({ page }) => {
+    const button = getButton(page, 'button_primary');
+    await expect(button).toHaveClass(/ant-btn-primary/);
+  });
+
+  test('renders disabled state', async ({ page }) => {
+    const button = getButton(page, 'button_disabled');
+    await expect(button).toBeDisabled();
+  });
+
+  test('onClick event fires', async ({ page }) => {
+    const button = getButton(page, 'button_onclick');
+    await button.click();
+    const display = getBlock(page, 'onclick_display');
+    await expect(display).toHaveText('Clicked!');
+  });
+});
+```
+
+**For Input Blocks (TextInput, NumberInput, etc.):**
+```javascript
+import { test, expect } from '@playwright/test';
+import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+
+// Input block: input element has specific ID pattern
+const getInput = (page, blockId) => page.locator(`#${blockId}_input`);
+
+test.describe('TextInput Block', () => {
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'textinput');
+  });
 
   test('renders with label', async ({ page }) => {
-    const block = getBlock(page, 'blockname_basic');
+    const block = getBlock(page, 'textinput_basic');
     await expect(block).toBeVisible();
     const label = block.locator('label');
-    await expect(label).toContainText('Basic Title');
+    await expect(label).toContainText('Basic Input');
   });
 
   test('renders with initial value', async ({ page }) => {
-    const input = getInput(page, 'blockname_with_value');
+    const input = getInput(page, 'textinput_with_value');
     await expect(input).toHaveValue('Initial Value');
   });
 
-  // ============================================
-  // PROPERTY TESTS
-  // ============================================
-
   test('renders disabled state', async ({ page }) => {
-    const input = getInput(page, 'blockname_disabled');
+    const input = getInput(page, 'textinput_disabled');
     await expect(input).toBeDisabled();
   });
 
   test('renders small size', async ({ page }) => {
-    const input = getInput(page, 'blockname_small');
+    const input = getInput(page, 'textinput_small');
     await expect(input).toHaveClass(/ant-input-sm/);
   });
 
-  // ============================================
-  // EVENT TESTS
-  // ============================================
-
   test('onChange event fires when value changes', async ({ page }) => {
-    const input = getInput(page, 'blockname_onchange');
+    const input = getInput(page, 'textinput_onchange');
     await input.fill('New Value');
-
     const display = getBlock(page, 'onchange_display');
     await expect(display).toHaveText('Value: New Value');
   });
 
-  test('onBlur event fires when input loses focus', async ({ page }) => {
-    const input = getInput(page, 'blockname_onblur');
-    await input.focus();
-    await input.blur();
-
-    const display = getBlock(page, 'onblur_display');
-    await expect(display).toHaveText('Blur fired');
-  });
-
-  // ============================================
-  // INTERACTION TESTS
-  // ============================================
-
   test('can clear value with clear button', async ({ page }) => {
-    const block = getBlock(page, 'blockname_clearable');
-    const input = getInput(page, 'blockname_clearable');
-
+    const block = getBlock(page, 'textinput_clearable');
+    const input = getInput(page, 'textinput_clearable');
     await expect(input).toHaveValue('Clear me');
     await block.hover();
     const clearBtn = block.locator('.ant-input-clear-icon');
