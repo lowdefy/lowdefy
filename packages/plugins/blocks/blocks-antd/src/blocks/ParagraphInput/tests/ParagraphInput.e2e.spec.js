@@ -17,6 +17,9 @@
 import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
 
+// ParagraphInput: use framework wrapper, then locate paragraph element inside
+const getParagraph = (page, blockId) => getBlock(page, blockId).locator('.ant-typography');
+
 test.describe('ParagraphInput Block', () => {
   test.beforeEach(async ({ page }) => {
     await navigateToTestPage(page, 'paragraphinput');
@@ -29,7 +32,8 @@ test.describe('ParagraphInput Block', () => {
   test('renders as div with ant-typography class', async ({ page }) => {
     const block = getBlock(page, 'paragraphinput_basic');
     await expect(block).toBeVisible();
-    await expect(block).toHaveClass(/ant-typography/);
+    const paragraph = getParagraph(page, 'paragraphinput_basic');
+    await expect(paragraph).toHaveClass(/ant-typography/);
   });
 
   test('renders with initial value', async ({ page }) => {
@@ -78,8 +82,8 @@ test.describe('ParagraphInput Block', () => {
   });
 
   test('renders disabled state', async ({ page }) => {
-    const block = getBlock(page, 'paragraphinput_disabled');
-    await expect(block).toHaveClass(/ant-typography-disabled/);
+    const paragraph = getParagraph(page, 'paragraphinput_disabled');
+    await expect(paragraph).toHaveClass(/ant-typography-disabled/);
   });
 
   // ============================================
@@ -87,23 +91,23 @@ test.describe('ParagraphInput Block', () => {
   // ============================================
 
   test('renders secondary type', async ({ page }) => {
-    const block = getBlock(page, 'paragraphinput_secondary');
-    await expect(block).toHaveClass(/ant-typography-secondary/);
+    const paragraph = getParagraph(page, 'paragraphinput_secondary');
+    await expect(paragraph).toHaveClass(/ant-typography-secondary/);
   });
 
   test('renders warning type', async ({ page }) => {
-    const block = getBlock(page, 'paragraphinput_warning');
-    await expect(block).toHaveClass(/ant-typography-warning/);
+    const paragraph = getParagraph(page, 'paragraphinput_warning');
+    await expect(paragraph).toHaveClass(/ant-typography-warning/);
   });
 
   test('renders danger type', async ({ page }) => {
-    const block = getBlock(page, 'paragraphinput_danger');
-    await expect(block).toHaveClass(/ant-typography-danger/);
+    const paragraph = getParagraph(page, 'paragraphinput_danger');
+    await expect(paragraph).toHaveClass(/ant-typography-danger/);
   });
 
   test('renders success type', async ({ page }) => {
-    const block = getBlock(page, 'paragraphinput_success');
-    await expect(block).toHaveClass(/ant-typography-success/);
+    const paragraph = getParagraph(page, 'paragraphinput_success');
+    await expect(paragraph).toHaveClass(/ant-typography-success/);
   });
 
   // ============================================

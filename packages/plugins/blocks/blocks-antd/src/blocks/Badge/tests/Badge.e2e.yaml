@@ -1,0 +1,195 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: badge
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: badge_basic
+    type: Badge
+    properties:
+      count: 5
+
+  - id: badge_with_content
+    type: Badge
+    properties:
+      count: 10
+    areas:
+      content:
+        blocks:
+          - id: badge_content_avatar
+            type: Avatar
+            properties:
+              content: U
+
+  # ============================================
+  # COUNT TESTS
+  # ============================================
+
+  - id: badge_count_zero
+    type: Badge
+    properties:
+      count: 0
+
+  - id: badge_show_zero
+    type: Badge
+    properties:
+      count: 0
+      showZero: true
+
+  - id: badge_overflow
+    type: Badge
+    properties:
+      count: 150
+      overflowCount: 99
+
+  - id: badge_custom_overflow
+    type: Badge
+    properties:
+      count: 1500
+      overflowCount: 999
+
+  # ============================================
+  # DOT TESTS
+  # ============================================
+
+  - id: badge_dot
+    type: Badge
+    properties:
+      dot: true
+    areas:
+      content:
+        blocks:
+          - id: badge_dot_avatar
+            type: Avatar
+            properties:
+              content: D
+
+  # ============================================
+  # SIZE TESTS
+  # ============================================
+
+  - id: badge_small
+    type: Badge
+    properties:
+      count: 5
+      size: small
+    areas:
+      content:
+        blocks:
+          - id: badge_small_avatar
+            type: Avatar
+            properties:
+              content: S
+
+  - id: badge_default_size
+    type: Badge
+    properties:
+      count: 5
+      size: default
+    areas:
+      content:
+        blocks:
+          - id: badge_default_avatar
+            type: Avatar
+            properties:
+              content: D
+
+  # ============================================
+  # STATUS TESTS
+  # ============================================
+
+  - id: badge_status_success
+    type: Badge
+    properties:
+      status: success
+      text: Success
+
+  - id: badge_status_processing
+    type: Badge
+    properties:
+      status: processing
+      text: Processing
+
+  - id: badge_status_default
+    type: Badge
+    properties:
+      status: default
+      text: Default
+
+  - id: badge_status_error
+    type: Badge
+    properties:
+      status: error
+      text: Error
+
+  - id: badge_status_warning
+    type: Badge
+    properties:
+      status: warning
+      text: Warning
+
+  # ============================================
+  # COLOR TESTS
+  # ============================================
+
+  - id: badge_custom_color
+    type: Badge
+    properties:
+      count: 5
+      color: '#52c41a'
+    areas:
+      content:
+        blocks:
+          - id: badge_color_avatar
+            type: Avatar
+            properties:
+              content: C
+
+  # ============================================
+  # ICON TESTS
+  # ============================================
+
+  - id: badge_with_icon
+    type: Badge
+    properties:
+      icon: AiOutlineClockCircle
+    areas:
+      content:
+        blocks:
+          - id: badge_icon_avatar
+            type: Avatar
+            properties:
+              content: I
+
+  # ============================================
+  # TITLE TESTS
+  # ============================================
+
+  - id: badge_with_title
+    type: Badge
+    properties:
+      count: 5
+      title: Custom tooltip title
+    areas:
+      content:
+        blocks:
+          - id: badge_title_avatar
+            type: Avatar
+            properties:
+              content: T

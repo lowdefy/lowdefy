@@ -126,8 +126,9 @@ test.describe('TextInput Block', () => {
 
   test('renders with inline label', async ({ page }) => {
     const block = getBlock(page, 'textinput_label_inline');
-    // Inline label uses ant-form-item-horizontal class
-    await expect(block).toHaveClass(/ant-row/);
+    // Inline label uses ant-row class inside the wrapper
+    const formItem = block.locator('.ant-row');
+    await expect(formItem).toBeVisible();
   });
 
   test('renders label extra text', async ({ page }) => {

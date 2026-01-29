@@ -51,3 +51,10 @@ pages:
   - _ref: ../../src/blocks/Paragraph/tests/Paragraph.e2e.yaml
   - _ref: ../../src/blocks/Divider/tests/Divider.e2e.yaml
   - _ref: ../../src/blocks/Avatar/tests/Avatar.e2e.yaml
+  # Step 2.2: Status Display
+  - _ref: ../../src/blocks/Alert/tests/Alert.e2e.yaml
+  - _ref: ../../src/blocks/Badge/tests/Badge.e2e.yaml
+  - _ref: ../../src/blocks/Progress/tests/Progress.e2e.yaml
+  - _ref: ../../src/blocks/Statistic/tests/Statistic.e2e.yaml
+  - _ref: ../../src/blocks/Result/tests/Result.e2e.yaml
+  - _ref: ../../src/blocks/Breadcrumb/tests/Breadcrumb.e2e.yaml

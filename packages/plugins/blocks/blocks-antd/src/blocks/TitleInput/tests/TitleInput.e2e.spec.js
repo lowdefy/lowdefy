@@ -17,6 +17,9 @@
 import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
 
+// TitleInput: use framework wrapper, then locate heading element inside
+const getTitle = (page, blockId) => getBlock(page, blockId).locator('h1, h2, h3, h4, h5');
+
 test.describe('TitleInput Block', () => {
   test.beforeEach(async ({ page }) => {
     await navigateToTestPage(page, 'titleinput');
@@ -29,7 +32,8 @@ test.describe('TitleInput Block', () => {
   test('renders as h1 by default', async ({ page }) => {
     const block = getBlock(page, 'titleinput_basic');
     await expect(block).toBeVisible();
-    const tagName = await block.evaluate((el) => el.tagName.toLowerCase());
+    const title = getTitle(page, 'titleinput_basic');
+    const tagName = await title.evaluate((el) => el.tagName.toLowerCase());
     expect(tagName).toBe('h1');
   });
 
@@ -43,20 +47,20 @@ test.describe('TitleInput Block', () => {
   // ============================================
 
   test('renders level 2 as h2', async ({ page }) => {
-    const block = getBlock(page, 'titleinput_level2');
-    const tagName = await block.evaluate((el) => el.tagName.toLowerCase());
+    const title = getTitle(page, 'titleinput_level2');
+    const tagName = await title.evaluate((el) => el.tagName.toLowerCase());
     expect(tagName).toBe('h2');
   });
 
   test('renders level 3 as h3', async ({ page }) => {
-    const block = getBlock(page, 'titleinput_level3');
-    const tagName = await block.evaluate((el) => el.tagName.toLowerCase());
+    const title = getTitle(page, 'titleinput_level3');
+    const tagName = await title.evaluate((el) => el.tagName.toLowerCase());
     expect(tagName).toBe('h3');
   });
 
   test('renders level 4 as h4', async ({ page }) => {
-    const block = getBlock(page, 'titleinput_level4');
-    const tagName = await block.evaluate((el) => el.tagName.toLowerCase());
+    const title = getTitle(page, 'titleinput_level4');
+    const tagName = await title.evaluate((el) => el.tagName.toLowerCase());
     expect(tagName).toBe('h4');
   });
 
@@ -95,8 +99,8 @@ test.describe('TitleInput Block', () => {
   });
 
   test('renders disabled state', async ({ page }) => {
-    const block = getBlock(page, 'titleinput_disabled');
-    await expect(block).toHaveClass(/ant-typography-disabled/);
+    const title = getTitle(page, 'titleinput_disabled');
+    await expect(title).toHaveClass(/ant-typography-disabled/);
   });
 
   // ============================================
@@ -104,23 +108,23 @@ test.describe('TitleInput Block', () => {
   // ============================================
 
   test('renders secondary type', async ({ page }) => {
-    const block = getBlock(page, 'titleinput_secondary');
-    await expect(block).toHaveClass(/ant-typography-secondary/);
+    const title = getTitle(page, 'titleinput_secondary');
+    await expect(title).toHaveClass(/ant-typography-secondary/);
   });
 
   test('renders warning type', async ({ page }) => {
-    const block = getBlock(page, 'titleinput_warning');
-    await expect(block).toHaveClass(/ant-typography-warning/);
+    const title = getTitle(page, 'titleinput_warning');
+    await expect(title).toHaveClass(/ant-typography-warning/);
   });
 
   test('renders danger type', async ({ page }) => {
-    const block = getBlock(page, 'titleinput_danger');
-    await expect(block).toHaveClass(/ant-typography-danger/);
+    const title = getTitle(page, 'titleinput_danger');
+    await expect(title).toHaveClass(/ant-typography-danger/);
   });
 
   test('renders success type', async ({ page }) => {
-    const block = getBlock(page, 'titleinput_success');
-    await expect(block).toHaveClass(/ant-typography-success/);
+    const title = getTitle(page, 'titleinput_success');
+    await expect(title).toHaveClass(/ant-typography-success/);
   });
 
   // ============================================
