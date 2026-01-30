@@ -199,7 +199,7 @@ test.describe('Notification Block', () => {
     const closeBtn = notification.locator('.ant-notification-notice-close');
     await closeBtn.click();
 
-    await expect(notification).not.toBeVisible();
+    await expect(notification).toBeHidden();
   });
 
   // ============================================

@@ -138,7 +138,7 @@ test.describe('Modal Block', () => {
     const okBtn = modal.locator('.ant-modal-footer .ant-btn-primary');
     await okBtn.click();
 
-    await expect(modal).not.toBeVisible();
+    await expect(modal).toBeHidden();
   });
 
   test('closes modal when Cancel button is clicked', async ({ page }) => {
@@ -151,7 +151,7 @@ test.describe('Modal Block', () => {
     const cancelBtn = modal.locator('.ant-modal-footer .ant-btn-default');
     await cancelBtn.click();
 
-    await expect(modal).not.toBeVisible();
+    await expect(modal).toBeHidden();
   });
 
   test('closes modal when close button is clicked', async ({ page }) => {
@@ -164,7 +164,7 @@ test.describe('Modal Block', () => {
     const closeBtn = modal.locator('.ant-modal-close');
     await closeBtn.click();
 
-    await expect(modal).not.toBeVisible();
+    await expect(modal).toBeHidden();
   });
 
   test('closes modal when mask is clicked (maskClosable true)', async ({ page }) => {
@@ -178,7 +178,7 @@ test.describe('Modal Block', () => {
     const modalWrap = page.locator('.ant-modal-wrap');
     await modalWrap.click({ position: { x: 10, y: 10 } });
 
-    await expect(modal).not.toBeVisible();
+    await expect(modal).toBeHidden();
   });
 
   test('does not close modal when mask is clicked (maskClosable false)', async ({ page }) => {
@@ -205,7 +205,7 @@ test.describe('Modal Block', () => {
 
     // Modal should be closed initially
     const modal = page.locator('.ant-modal-content');
-    await expect(modal).not.toBeVisible();
+    await expect(modal).toBeHidden();
 
     // Toggle open
     await toggleBtn.click();
@@ -214,7 +214,7 @@ test.describe('Modal Block', () => {
     // Close modal using Ok button (since modal overlay blocks the toggle button)
     const okBtn = page.locator('.ant-modal-footer .ant-btn-primary');
     await okBtn.click();
-    await expect(modal).not.toBeVisible();
+    await expect(modal).toBeHidden();
 
     // Toggle open again to verify method still works
     await toggleBtn.click();

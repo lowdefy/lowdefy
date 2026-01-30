@@ -183,7 +183,7 @@ test.describe('ConfirmModal Block', () => {
     const okBtn = modal.locator('.ant-modal-confirm-btns .ant-btn-primary');
     await okBtn.click();
 
-    await expect(modal).not.toBeVisible();
+    await expect(modal).toBeHidden();
   });
 
   test('closes modal when Cancel button is clicked', async ({ page }) => {
@@ -196,7 +196,7 @@ test.describe('ConfirmModal Block', () => {
     const cancelBtn = modal.locator('.ant-modal-confirm-btns .ant-btn-default');
     await cancelBtn.click();
 
-    await expect(modal).not.toBeVisible();
+    await expect(modal).toBeHidden();
   });
 
   // ============================================

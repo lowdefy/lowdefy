@@ -179,7 +179,7 @@ test.describe('Drawer Block', () => {
 
     // Drawer should be closed initially
     const drawerContent = getDrawerContent(page);
-    await expect(drawerContent).not.toBeVisible();
+    await expect(drawerContent).toBeHidden();
 
     // Toggle open
     await toggleBtn.click();
