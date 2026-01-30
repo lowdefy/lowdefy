@@ -1,0 +1,209 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: card
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: card_basic
+    type: Card
+    properties:
+      title: Basic Card
+    areas:
+      content:
+        blocks:
+          - id: card_basic_content
+            type: Span
+            properties:
+              content: Card content here
+
+  - id: card_no_title
+    type: Card
+    areas:
+      content:
+        blocks:
+          - id: card_no_title_content
+            type: Span
+            properties:
+              content: Card without title
+
+  # ============================================
+  # SIZE TESTS
+  # ============================================
+
+  - id: card_small
+    type: Card
+    properties:
+      title: Small Card
+      size: small
+    areas:
+      content:
+        blocks:
+          - id: card_small_content
+            type: Span
+            properties:
+              content: Small card content
+
+  # ============================================
+  # STYLE TESTS
+  # ============================================
+
+  - id: card_bordered
+    type: Card
+    properties:
+      title: Bordered Card
+      bordered: true
+    areas:
+      content:
+        blocks:
+          - id: card_bordered_content
+            type: Span
+            properties:
+              content: Bordered card
+
+  - id: card_borderless
+    type: Card
+    properties:
+      title: Borderless Card
+      bordered: false
+    areas:
+      content:
+        blocks:
+          - id: card_borderless_content
+            type: Span
+            properties:
+              content: No border
+
+  - id: card_hoverable
+    type: Card
+    properties:
+      title: Hoverable Card
+      hoverable: true
+    areas:
+      content:
+        blocks:
+          - id: card_hoverable_content
+            type: Span
+            properties:
+              content: Hover me
+
+  - id: card_inner
+    type: Card
+    properties:
+      title: Inner Card
+      inner: true
+    areas:
+      content:
+        blocks:
+          - id: card_inner_content
+            type: Span
+            properties:
+              content: Inner style card
+
+  # ============================================
+  # CONTENT AREAS
+  # ============================================
+
+  - id: card_with_extra
+    type: Card
+    properties:
+      title: Card with Extra
+    areas:
+      content:
+        blocks:
+          - id: card_with_extra_content
+            type: Span
+            properties:
+              content: Card body
+      extra:
+        blocks:
+          - id: card_extra_link
+            type: Anchor
+            properties:
+              title: More
+              href: '#'
+
+  - id: card_with_cover
+    type: Card
+    properties:
+      title: Card with Cover
+    areas:
+      cover:
+        blocks:
+          - id: card_cover_image
+            type: Img
+            properties:
+              src: https://via.placeholder.com/300x200
+              alt: Cover image
+      content:
+        blocks:
+          - id: card_with_cover_content
+            type: Span
+            properties:
+              content: Content below cover
+
+  - id: card_title_block
+    type: Card
+    areas:
+      title:
+        blocks:
+          - id: card_title_block_title
+            type: Title
+            properties:
+              content: Custom Title Block
+              level: 4
+      content:
+        blocks:
+          - id: card_title_block_content
+            type: Span
+            properties:
+              content: With custom title block
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  - id: card_onclick
+    type: Card
+    properties:
+      title: Clickable Card
+    events:
+      onClick:
+        - id: set_clicked
+          type: SetState
+          params:
+            card_clicked: true
+    areas:
+      content:
+        blocks:
+          - id: card_onclick_content
+            type: Span
+            properties:
+              content: Click this card
+
+  - id: onclick_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: card_clicked
+              - true
+          then: Card clicked!
+          else: ''

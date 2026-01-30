@@ -63,3 +63,19 @@ pages:
   - _ref: ../../src/blocks/Popover/tests/Popover.e2e.yaml
   - _ref: ../../src/blocks/Comment/tests/Comment.e2e.yaml
   - _ref: ../../src/blocks/TimelineList/tests/TimelineList.e2e.yaml
+  # Step 3.1: Core Layout
+  - _ref: ../../src/blocks/Layout/tests/Layout.e2e.yaml
+  - _ref: ../../src/blocks/Header/tests/Header.e2e.yaml
+  - _ref: ../../src/blocks/Footer/tests/Footer.e2e.yaml
+  - _ref: ../../src/blocks/Sider/tests/Sider.e2e.yaml
+  - _ref: ../../src/blocks/Content/tests/Content.e2e.yaml
+  # Step 3.2: Container Blocks
+  - _ref: ../../src/blocks/Card/tests/Card.e2e.yaml
+  - _ref: ../../src/blocks/Collapse/tests/Collapse.e2e.yaml
+  - _ref: ../../src/blocks/Tabs/tests/Tabs.e2e.yaml
+  - _ref: ../../src/blocks/Descriptions/tests/Descriptions.e2e.yaml
+  # Step 3.3: List/Page Containers
+  - _ref: ../../src/blocks/ControlledList/tests/ControlledList.e2e.yaml
+  - _ref: ../../src/blocks/Carousel/tests/Carousel.e2e.yaml
+  - _ref: ../../src/blocks/Pagination/tests/Pagination.e2e.yaml
+  - _ref: ../../src/blocks/Affix/tests/Affix.e2e.yaml
