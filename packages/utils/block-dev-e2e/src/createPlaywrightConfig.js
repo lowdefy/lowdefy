@@ -32,9 +32,6 @@ function createPlaywrightConfig({ packageDir, port = 3001, testMatch = '**/tests
     testDir: srcDir,
     testMatch,
     fullyParallel: true,
-    forbidOnly: !!process.env.CI,
-    retries: process.env.CI ? 2 : 0,
-    workers: process.env.CI ? 1 : undefined,
     reporter: 'list',
     outputDir: path.join(e2eDir, 'test-results'),
     use: {
@@ -50,7 +47,7 @@ function createPlaywrightConfig({ packageDir, port = 3001, testMatch = '**/tests
     webServer: {
       command: `node ${cliPath} dev --config-directory ${appDir} --dev-directory ${serverDevDir} --port ${port} --no-open`,
       url: `http://localhost:${port}`,
-      reuseExistingServer: !process.env.CI,
+      reuseExistingServer: true,
       timeout: 120000,
     },
   });
