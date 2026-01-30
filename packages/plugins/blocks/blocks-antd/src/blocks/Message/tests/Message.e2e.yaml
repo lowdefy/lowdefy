@@ -1,0 +1,246 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: message
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: msg_basic
+    type: Message
+    properties:
+      content: Basic message content
+      status: info
+
+  - id: open_basic
+    type: Button
+    properties:
+      title: Show Basic Message
+    events:
+      onClick:
+        - id: open_message
+          type: CallMethod
+          params:
+            blockId: msg_basic
+            method: open
+
+  # ============================================
+  # STATUS TYPES
+  # ============================================
+
+  # Success status
+  - id: msg_success
+    type: Message
+    properties:
+      content: Operation successful!
+      status: success
+
+  - id: open_success
+    type: Button
+    properties:
+      title: Show Success
+    events:
+      onClick:
+        - id: open_message
+          type: CallMethod
+          params:
+            blockId: msg_success
+            method: open
+
+  # Error status
+  - id: msg_error
+    type: Message
+    properties:
+      content: An error occurred!
+      status: error
+
+  - id: open_error
+    type: Button
+    properties:
+      title: Show Error
+    events:
+      onClick:
+        - id: open_message
+          type: CallMethod
+          params:
+            blockId: msg_error
+            method: open
+
+  # Warning status
+  - id: msg_warning
+    type: Message
+    properties:
+      content: Warning message!
+      status: warning
+
+  - id: open_warning
+    type: Button
+    properties:
+      title: Show Warning
+    events:
+      onClick:
+        - id: open_message
+          type: CallMethod
+          params:
+            blockId: msg_warning
+            method: open
+
+  # Loading status
+  - id: msg_loading
+    type: Message
+    properties:
+      content: Loading...
+      status: loading
+      duration: 10
+
+  - id: open_loading
+    type: Button
+    properties:
+      title: Show Loading
+    events:
+      onClick:
+        - id: open_message
+          type: CallMethod
+          params:
+            blockId: msg_loading
+            method: open
+
+  # ============================================
+  # PROPERTY TESTS
+  # ============================================
+
+  # Custom duration (longer)
+  - id: msg_long_duration
+    type: Message
+    properties:
+      content: This message stays for 10 seconds
+      status: info
+      duration: 10
+
+  - id: open_long_duration
+    type: Button
+    properties:
+      title: Show Long Duration
+    events:
+      onClick:
+        - id: open_message
+          type: CallMethod
+          params:
+            blockId: msg_long_duration
+            method: open
+
+  # With custom icon
+  - id: msg_custom_icon
+    type: Message
+    properties:
+      content: Message with custom icon
+      status: info
+      icon: AiOutlineSmile
+
+  - id: open_custom_icon
+    type: Button
+    properties:
+      title: Show With Icon
+    events:
+      onClick:
+        - id: open_message
+          type: CallMethod
+          params:
+            blockId: msg_custom_icon
+            method: open
+
+  # ============================================
+  # RUNTIME OVERRIDE TESTS
+  # ============================================
+
+  - id: msg_runtime
+    type: Message
+    properties:
+      content: Default content
+      status: info
+
+  - id: open_runtime_success
+    type: Button
+    properties:
+      title: Open as Success
+    events:
+      onClick:
+        - id: open_message
+          type: CallMethod
+          params:
+            blockId: msg_runtime
+            method: open
+            args:
+              - status: success
+                content: Runtime success message
+
+  - id: open_runtime_error
+    type: Button
+    properties:
+      title: Open as Error
+    events:
+      onClick:
+        - id: open_message
+          type: CallMethod
+          params:
+            blockId: msg_runtime
+            method: open
+            args:
+              - status: error
+                content: Runtime error message
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  # onClose event (set short duration so it fires quickly)
+  - id: msg_onclose
+    type: Message
+    properties:
+      content: Message will close soon
+      status: info
+      duration: 1
+    events:
+      onClose:
+        - id: set_close_fired
+          type: SetState
+          params:
+            msg_close_fired: true
+
+  - id: open_onclose
+    type: Button
+    properties:
+      title: Show OnClose Test
+    events:
+      onClick:
+        - id: open_message
+          type: CallMethod
+          params:
+            blockId: msg_onclose
+            method: open
+
+  - id: onclose_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: msg_close_fired
+              - true
+          then: Close fired
+          else: ''

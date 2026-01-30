@@ -79,3 +79,10 @@ pages:
   - _ref: ../../src/blocks/Carousel/tests/Carousel.e2e.yaml
   - _ref: ../../src/blocks/Pagination/tests/Pagination.e2e.yaml
   - _ref: ../../src/blocks/Affix/tests/Affix.e2e.yaml
+  # Step 4.1: Modal Blocks
+  - _ref: ../../src/blocks/Modal/tests/Modal.e2e.yaml
+  - _ref: ../../src/blocks/ConfirmModal/tests/ConfirmModal.e2e.yaml
+  - _ref: ../../src/blocks/Drawer/tests/Drawer.e2e.yaml
+  # Step 4.2: Message Blocks
+  - _ref: ../../src/blocks/Message/tests/Message.e2e.yaml
+  - _ref: ../../src/blocks/Notification/tests/Notification.e2e.yaml
