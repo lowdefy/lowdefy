@@ -131,17 +131,6 @@ blocks:
         properties:
           title: Green tooltip
 
-  - id: tooltip_default_visible
-    type: Tooltip
-    properties:
-      title: Visible by default
-      defaultVisible: true
-    blocks:
-      - id: tooltip_default_visible_trigger
-        type: Button
-        properties:
-          title: Default visible
-
   # ============================================
   # EVENT TESTS
   # ============================================
@@ -188,3 +177,19 @@ blocks:
         type: Button
         properties:
           title: HTML tooltip
+
+  # ============================================
+  # DEFAULT VISIBLE (at end to avoid blocking other elements)
+  # ============================================
+
+  - id: tooltip_default_visible
+    type: Tooltip
+    properties:
+      title: Visible by default
+      defaultVisible: true
+      placement: bottom
+    blocks:
+      - id: tooltip_default_visible_trigger
+        type: Button
+        properties:
+          title: Default visible

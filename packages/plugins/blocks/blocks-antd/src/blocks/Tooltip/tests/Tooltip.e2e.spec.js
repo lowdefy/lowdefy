@@ -88,12 +88,8 @@ test.describe('Tooltip Block', () => {
   });
 
   test('renders tooltip with custom color', async ({ page }) => {
-    // Close any open tooltips first by clicking elsewhere
-    await page.locator('body').click({ position: { x: 10, y: 10 } });
     const trigger = getBlock(page, 'tooltip_color_trigger');
-    await trigger.scrollIntoViewIfNeeded();
     await trigger.hover();
-    // Color tooltips get the color in title
     const tooltip = page.locator('.ant-tooltip').filter({ hasText: 'Colored tooltip' });
     await expect(tooltip).toBeVisible();
   });

@@ -183,26 +183,6 @@ blocks:
             properties:
               content: Blue content
 
-  - id: popover_default_open
-    type: Popover
-    properties:
-      title: Default Open
-      defaultOpen: true
-      placement: bottom
-    areas:
-      content:
-        blocks:
-          - id: popover_default_open_trigger
-            type: Button
-            properties:
-              title: Default open
-      popover:
-        blocks:
-          - id: popover_default_open_content
-            type: Span
-            properties:
-              content: Open by default
-
   # ============================================
   # EVENT TESTS
   # ============================================
@@ -243,3 +223,27 @@ blocks:
               - true
           then: Open changed!
           else: ''
+
+  # ============================================
+  # DEFAULT OPEN (at end to avoid blocking other elements)
+  # ============================================
+
+  - id: popover_default_open
+    type: Popover
+    properties:
+      title: Default Open
+      defaultOpen: true
+      placement: bottom
+    areas:
+      content:
+        blocks:
+          - id: popover_default_open_trigger
+            type: Button
+            properties:
+              title: Default open
+      popover:
+        blocks:
+          - id: popover_default_open_content
+            type: Span
+            properties:
+              content: Open by default
