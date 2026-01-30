@@ -69,6 +69,9 @@ Create `src/blocks/MyBlock/tests/MyBlock.e2e.spec.js`:
 import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
 
+// Helper: get framework wrapper, then locate Ant component inside
+const getButton = (page, blockId) => getBlock(page, blockId).locator('.ant-btn');
+
 test.describe('MyBlock', () => {
   test.beforeEach(async ({ page }) => {
     await navigateToTestPage(page, 'myblock');
@@ -76,7 +79,10 @@ test.describe('MyBlock', () => {
 
   test('renders block', async ({ page }) => {
     const block = getBlock(page, 'myblock_basic');
-    await expect(block).toBeAttached();
+    await expect(block).toBeVisible();
+
+    const button = getButton(page, 'myblock_basic');
+    await expect(button).toHaveText('Test Title');
   });
 });
 ```
@@ -104,11 +110,29 @@ Creates a Playwright config for a block package.
 
 ### getBlock(page, blockId)
 
-Returns a Playwright locator for a block by its `id` attribute.
+Returns a Playwright locator for a block's framework wrapper element (`#bl-{blockId}`). This wrapper is guaranteed to exist for all block types.
 
+**Two-step pattern for targeting Ant Design components:**
 ```javascript
-const box = getBlock(page, 'box_basic');
-await expect(box).toBeVisible();
+// 1. Get the framework wrapper
+const block = getBlock(page, 'button_basic');
+await expect(block).toBeVisible();
+
+// 2. Locate the Ant Design component inside the wrapper
+const button = block.locator('.ant-btn');
+await expect(button).toHaveText('Click Me');
+```
+
+**Common helper patterns:**
+```javascript
+// Display blocks (Button, Alert, Badge, etc.)
+const getButton = (page, blockId) => getBlock(page, blockId).locator('.ant-btn');
+
+// Input blocks - use the input's specific ID
+const getInput = (page, blockId) => page.locator(`#${blockId}_input`);
+
+// Selector blocks - scope with input ID
+const getSelector = (page, blockId) => page.locator(`.ant-select:has(#${blockId}_input)`);
 ```
 
 ### navigateToTestPage(page, pageId)
@@ -137,3 +161,4 @@ Use unique ports to allow parallel test runs:
 | blocks-basic | 3001 |
 | blocks-antd | 3002 |
 | blocks-aggrid | 3003 |
+| blocks-markdown | 3004 |
