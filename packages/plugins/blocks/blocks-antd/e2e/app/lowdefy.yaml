@@ -91,3 +91,5 @@ pages:
   - _ref: ../../src/blocks/MobileMenu/tests/MobileMenu.e2e.yaml
   - _ref: ../../src/blocks/PageHeaderMenu/tests/PageHeaderMenu.e2e.yaml
   - _ref: ../../src/blocks/PageSiderMenu/tests/PageSiderMenu.e2e.yaml
+  # Step 6: Form Components
+  - _ref: ../../src/blocks/Label/tests/Label.e2e.yaml
