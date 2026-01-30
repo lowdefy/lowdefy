@@ -24,12 +24,9 @@ import getPageConfig from './routes/page/getPageConfig.js';
 import getRootConfig from './routes/rootConfig/getRootConfig.js';
 import logClientError from './routes/log/logClientError.js';
 
-import { ConfigurationError, RequestError, ServerError } from './context/errors.js';
-
 export {
   callEndpoint,
   callRequest,
-  ConfigurationError,
   createApiContext,
   createSessionCallback,
   getHomeAndMenus,
@@ -37,6 +34,4 @@ export {
   getPageConfig,
   getRootConfig,
   logClientError,
-  RequestError,
-  ServerError,
 };

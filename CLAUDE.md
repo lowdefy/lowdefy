@@ -203,12 +203,12 @@ export default MongoDBFindOne;
 
 Located in `operators/shared/` (everywhere), `operators/client/`, `operators/server/`, or `operators/build/`.
 
-Operators throw simple error messages without formatting. The parsers (WebParser, ServerParser, BuildParser) add the "Operator Error:" prefix, received value, and location:
+Operators throw simple error messages. The parsers (WebParser, ServerParser, BuildParser) catch errors and wrap them with `received` value and location:
 
 ```javascript
 function _myOperator({ params }) {
   if (typeof params !== 'object') {
-    // Simple error - parsers will format with prefix, received value, and location
+    // Simple error - parser adds params as received value and location
     throw new Error('_myOperator requires an object.');
   }
   return result;
@@ -218,23 +218,66 @@ export default _myOperator;
 
 ### Actions
 
+Actions throw simple errors. The engine's action interface layer (Actions.js) catches and wraps them in `PluginError` with the `received` value:
+
 ```javascript
-function SetState({ methods: { setState }, params }) {
+function MyAction({ methods: { setState }, params }) {
+  if (!params.value) {
+    // Simple error - interface layer adds params as received value
+    throw new Error('MyAction requires "value" property.');
+  }
   setState(params);
 }
-export default SetState;
+export default MyAction;
+```
+
+### Connections/Requests
+
+Connections throw simple errors. The request interface layer catches and wraps them in `PluginError`:
+
+```javascript
+async function MongoDBFindOne({ request, connection }) {
+  if (!request.collection) {
+    // Simple error - interface layer adds request as received value
+    throw new Error('MongoDBFindOne requires "collection" property.');
+  }
+  // ... execute query
+}
 ```
 
 ## Error Handling
 
-Build-time code and parsers format errors with location and received value. Plugins throw simple error messages.
+### Error Class Hierarchy
+
+Lowdefy uses a unified error system in `@lowdefy/errors` with environment-specific subpaths:
+
+```javascript
+// Server/API runtime - base classes
+import { ConfigError, PluginError, ServiceError } from '@lowdefy/errors/server';
+
+// Build-time - classes with sync location resolution via keyMap/refMap
+import { ConfigError, ConfigWarning } from '@lowdefy/errors/build';
+
+// Client-side - classes with async location resolution via API
+import { ConfigError } from '@lowdefy/errors/client';
+```
+
+| Class | Purpose | Catch Layer |
+|-------|---------|-------------|
+| `LowdefyError` | Internal Lowdefy bugs | Top-level in build/server/client |
+| `PluginError` | Plugin failures (operators, actions, blocks, requests) | Plugin interface layer |
+| `ServiceError` | External service failures (network, timeout, 5xx) | Request/connection layer |
+| `ConfigError` | YAML config validation errors | Build validation, runtime |
+| `ConfigWarning` | Config inconsistencies (warning in dev, error in prod) | Build validation |
+
+**Key principle:** Plugins throw errors without knowing about config keys. The interface layer catches errors and adds `configKey` for location resolution to ALL error types - this helps developers trace any error back to its config source.
 
 ### Build-Time Errors (in `packages/build/`)
 
-Use `ConfigError` from `@lowdefy/node-utils` for errors with config location. Use `context.logger.configWarning()` for warnings:
+Use `ConfigError` from `@lowdefy/errors/build` for errors with config location:
 
 ```javascript
-import { ConfigError } from '@lowdefy/node-utils';
+import { ConfigError } from '@lowdefy/errors/build';
 
 // Fatal error - stops build
 throw new ConfigError({
@@ -257,28 +300,130 @@ context.logger.configWarning({
 });
 ```
 
-### Plugin Errors (operators, actions, connections)
+### Plugin Interface Layer and Error Propagation
 
-Plugins throw plain errors - **never use ConfigError in plugins**. Parsers format operator errors with prefix, received value, and location:
+**How errors flow from plugins:**
+
+```
+Plugin code throws Error (no configKey - plugin doesn't know about ~k)
+        ↓
+Interface layer catches
+        ↓
+Add configKey to ANY error (for location tracing)
+        ↓
+Then handle by type:
+  - ConfigError  → re-throw (for location resolution)
+  - ServiceError → wrap with ServiceError.from()
+  - Plain Error  → wrap in PluginError (add received value, location)
+        ↓
+Error bubbles to top-level handler
+        ↓
+logError() resolves configKey → file:line using keyMap/refMap
+```
+
+**Plugin code throws simple errors:**
 
 ```javascript
-// In operator plugin - throw simple, descriptive error
-throw new Error('_if requires boolean test.');
-// Parser formats to: "Operator Error: _if requires boolean test. Received: {...} at location."
+// In plugin code (operator, action, request) - throw simple error
+function _myOperator({ params }) {
+  if (typeof params !== 'object') {
+    throw new Error('_myOperator requires an object.');
+  }
+}
+```
+
+**Plugin code throws ConfigError without configKey:**
+
+Plugins should NOT know about `configKey` - they just report what's wrong. The interface layer adds location context. ConfigError supports a simple string form for plugin convenience:
+
+```javascript
+// In plugin code (operator, action, request, block)
+// Plugin throws simple ConfigError - no configKey needed
+import { ConfigError } from '@lowdefy/errors';
+
+function _myOperator({ params }) {
+  if (typeof params.value !== 'string') {
+    // Simple string form - interface layer adds configKey
+    throw new ConfigError('_myOperator "value" must be a string.');
+  }
+  return params.value.toUpperCase();
+}
+
+async function MongoDBFind({ request }) {
+  if (!request.collection) {
+    throw new ConfigError('MongoDBFind requires "collection" property.');
+  }
+  // ... execute query
+}
+```
+
+**Interface layer adds configKey to ALL errors:**
+
+```javascript
+import { ConfigError, PluginError, ServiceError } from '@lowdefy/errors/server';
+
+// In parser/interface - add configKey to ANY error, then handle by type
+try {
+  return operator({ params, ...context });
+} catch (e) {
+  // Add configKey to any error for location tracing
+  if (!e.configKey) {
+    e.configKey = obj['~k'];
+  }
+
+  if (e instanceof ConfigError) {
+    throw e;
+  }
+
+  if (ServiceError.isServiceError(e)) {
+    throw ServiceError.from(e, connectionId, obj['~k']);
+  }
+
+  // Plain errors get wrapped in PluginError with context
+  throw new PluginError({
+    error: e,
+    pluginType: 'operator',
+    pluginName: '_if',
+    received: params,
+    location: 'blockId.events.onClick',
+    configKey: obj['~k'],
+  });
+}
+```
+
+**Why this pattern:**
+- **Plugins stay simple** - they don't need to know about `~k` keys or config tracking
+- **ALL errors get configKey first** - one place for the assignment, cleaner code
+- **ConfigError string form** - plugins can throw `new ConfigError('message')` for simplicity
+- **Plain Error becomes PluginError** - adds received value and location for debugging
+
+### Service Errors
+
+Use `ServiceError` for external service failures. The `from()` method accepts an optional `configKey` to help trace which config triggered the service call:
+
+```javascript
+import { ServiceError } from '@lowdefy/errors/server';
+
+// Check if error is service-related (network issues, timeouts, 5xx)
+if (ServiceError.isServiceError(error)) {
+  // Third parameter is configKey for location tracing
+  throw ServiceError.from(error, 'MongoDB', requestConfig['~k']);
+}
 ```
 
 ### Client-Side Errors
 
-Client code uses `ConfigError` from `@lowdefy/helpers` for async location resolution:
+Client code uses `ConfigError` from `@lowdefy/errors/client` for async location resolution:
 
 ```javascript
-import { ConfigError } from '@lowdefy/helpers';
+import { ConfigError } from '@lowdefy/errors/client';
 
-// Wrap error with configKey (in WebParser, engine)
+// Wrap error with configKey
 const configError = ConfigError.from({ error: e, configKey: obj['~k'] });
 
-// Log with resolved location (non-blocking)
-await configError.log(lowdefy);
+// Resolve location asynchronously via /api/client-error endpoint
+await configError.resolve(lowdefy);
+console.error(configError.message); // Now includes source:line
 ```
 
 See `cc-docs/architecture/error-tracing.md` for the complete error system.

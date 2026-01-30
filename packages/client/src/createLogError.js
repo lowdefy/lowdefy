@@ -14,34 +14,49 @@
   limitations under the License.
 */
 
-import { ConfigError } from '@lowdefy/helpers';
+import { ConfigError } from '@lowdefy/errors/client';
 
 function createLogError(lowdefy) {
-  // Track logged errors for deduplication
   const loggedErrors = new Set();
 
   return async function logError(error) {
-    // Deduplicate by message + configKey
     const errorKey = `${error.message}:${error.configKey || ''}`;
     if (loggedErrors.has(errorKey)) {
       return;
     }
     loggedErrors.add(errorKey);
 
-    // Service errors just log without resolution
-    if (error.isServiceError === true) {
-      console.error(`[Service Error] ${error.message}`);
+    // Serialize and send to server for logging with location resolution
+    if (error.serialize) {
+      try {
+        const response = await fetch(`${lowdefy.basePath}/api/client-error`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(error.serialize()),
+          credentials: 'same-origin',
+        });
+        if (response.ok) {
+          const { source } = await response.json();
+          if (source) {
+            console.info(source);
+          }
+        }
+      } catch {
+        // Server logging failed - continue with local console
+      }
+      console.error(`[${error.name}] ${error.message}`);
       return;
     }
 
-    // Wrap in ConfigError if not already (handles plain errors with configKey attached)
-    const configError =
-      error instanceof ConfigError
-        ? error
-        : ConfigError.from({ error, configKey: error.configKey });
+    // Plain errors with configKey - wrap in ConfigError for serialization
+    if (error.configKey) {
+      const configError = new ConfigError({ error });
+      await logError(configError);
+      return;
+    }
 
-    // Resolve location and log (non-blocking)
-    await configError.log(lowdefy);
+    // Other errors - just log locally
+    console.error(`[${error.name || 'Error'}] ${error.message}`);
   };
 }
 

@@ -1,7 +1,9 @@
 ---
 '@lowdefy/api': minor
 '@lowdefy/build': minor
+'@lowdefy/cli': minor
 '@lowdefy/client': minor
+'@lowdefy/errors': minor
 '@lowdefy/engine': minor
 '@lowdefy/helpers': minor
 '@lowdefy/node-utils': minor
@@ -34,18 +36,28 @@ feat: Config-aware error tracing and Sentry integration
 
 **Operator Error Refactoring**
 
-- Operators now throw simple error messages without formatting
-- Parsers (WebParser, ServerParser, BuildParser) format errors with "Operator Error:" prefix, received value, and location
-- Utility functions `runClass`, `runInstance`, `getFromObject`, `getFromArray` simplified
-- Consistent error format: "Operator Error: {message} Received: {params} at {location}."
+- Operators throw simple error messages without formatting
+- Parsers (WebParser, ServerParser, BuildParser) format errors with received value and location
+- Removed redundant "Operator Error:" prefix from error messages
+- Consistent error format: "{message} Received: {params} at {location}."
 
-**Error Class Refactoring**
+**Error Class Hierarchy**
 
-- New `ConfigError`, `ConfigWarning`, `ConfigMessage` classes in `@lowdefy/node-utils` for build-time errors
-- New client-side `ConfigError` class in `@lowdefy/helpers` with async location resolution
+- Unified error system in `@lowdefy/errors` with environment-specific subpaths:
+  - `@lowdefy/errors/server` - Base classes for server/API runtime
+  - `@lowdefy/errors/build` - Build-time classes with sync location resolution
+  - `@lowdefy/errors/client` - Client-side classes with async location resolution
+- Error classes: `LowdefyError`, `ConfigError`, `ConfigWarning`, `PluginError`, `ServiceError`
 - `ConfigWarning` supports `prodError` flag to throw in production builds
-- Logger convenience methods: `context.logger.configWarning()`, `context.logger.configError()`
-- Plugin/core boundary maintained: plugins throw plain errors, core wraps with ConfigError
+- `ServiceError.isServiceError()` detects network/timeout/5xx errors
+- `~ignoreBuildCheck` cascades through `_ref` to suppress warnings in referenced files
+
+**Build Error Collection**
+
+- Errors collected in `context.errors[]` instead of throwing immediately
+- `tryBuildStep()` wrapper catches and collects errors from build steps
+- All errors logged together before summary message for proper ordering
+- `collectExceptions()` utility handles both errors and warnings
 
 **Sentry Integration (#1945)**
 

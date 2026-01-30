@@ -15,6 +15,7 @@
 */
 
 import { jest } from '@jest/globals';
+import { PluginError } from '@lowdefy/errors/client';
 import { type } from '@lowdefy/helpers';
 
 import testContext from '../../test/testContext.js';
@@ -26,11 +27,9 @@ const lowdefy = {
         const linkParams = type.isString(params) ? { pageId: params } : params;
         try {
           link(linkParams);
-        } catch (error) {
-          console.log(error);
-          throw new Error(
-            `Invalid Link, check action params. Received "${JSON.stringify(params)}".`
-          );
+        } catch (e) {
+          console.log(e);
+          throw new Error('Invalid Link, check action params.');
         }
       },
     },
@@ -153,7 +152,7 @@ test('Link error', async () => {
         },
         type: 'Link',
       },
-      error: new Error('Invalid Link, check action params. Received "{"invalid":true}".'),
+      error: expect.any(PluginError),
       index: 0,
     },
     responses: {
@@ -165,7 +164,7 @@ test('Link error', async () => {
           },
           type: 'Link',
         },
-        error: new Error('Invalid Link, check action params. Received "{"invalid":true}".'),
+        error: expect.any(PluginError),
         index: 0,
       },
     },
@@ -173,4 +172,5 @@ test('Link error', async () => {
     startTimestamp: { date: 0 },
     endTimestamp: { date: 0 },
   });
+  expect(res.error.error.rawMessage).toContain('Invalid Link, check action params');
 });

@@ -15,13 +15,17 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/node-utils';
+import { ConfigError } from '@lowdefy/errors/build';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 import buildEndpoint from './buildEndpoint.js';
 
 function buildApi({ components, context }) {
   if (components.api && !type.isArray(components.api)) {
-    throw new Error(`Api is not an array. Received ${JSON.stringify(components.api)}.`);
+    throw new ConfigError({
+      message: 'Api is not an array.',
+      received: components.api,
+      context,
+    });
   }
   const api = type.isArray(components.api) ? components.api : [];
   const checkDuplicateEndpointId = createCheckDuplicateId({
@@ -38,9 +42,9 @@ function buildApi({ components, context }) {
       if (error instanceof ConfigError && error.suppressed) {
         return;
       }
-      // Collect error if context.errors exists, otherwise throw (for backward compat with tests)
+      // Collect error object if context.errors exists, otherwise throw (for backward compat with tests)
       if (context?.errors) {
-        context.errors.push(error.message);
+        context.errors.push(error);
       } else {
         throw error;
       }

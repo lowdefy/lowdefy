@@ -8,11 +8,11 @@
         "undefinedState3"
       ],
       "warningContains": [
-        "[Config Warning] _state references \"undefinedState1\" on page \"page1\"",
+        "_state references \"undefinedState1\" on page \"page1\"",
         "lowdefy.yaml:19",
-        "[Config Warning] _state references \"undefinedState2\" on page \"page2\"",
+        "_state references \"undefinedState2\" on page \"page2\"",
         "lowdefy.yaml:28",
-        "[Config Warning] _state references \"undefinedState3\" on page \"page3\"",
+        "_state references \"undefinedState3\" on page \"page3\"",
         "lowdefy.yaml:37"
       ]
     },
@@ -24,11 +24,11 @@
         "undefinedState3"
       ],
       "errorContains": [
-        "[Config Error] _state references \"undefinedState1\" on page \"page1\"",
+        "_state references \"undefinedState1\" on page \"page1\"",
         "lowdefy.yaml:19",
-        "[Config Error] _state references \"undefinedState2\" on page \"page2\"",
+        "_state references \"undefinedState2\" on page \"page2\"",
         "lowdefy.yaml:28",
-        "[Config Error] _state references \"undefinedState3\" on page \"page3\"",
+        "_state references \"undefinedState3\" on page \"page3\"",
         "lowdefy.yaml:37"
       ],
       "errorCount": 3,

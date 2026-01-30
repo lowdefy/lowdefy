@@ -23,9 +23,7 @@ const readFilePromise = promisify(fs.readFile);
 
 async function readFile(filePath) {
   if (!type.isString(filePath)) {
-    throw new Error(
-      `Could not read file, file path should be a string, received ${JSON.stringify(filePath)}.`
-    );
+    throw new Error('Could not read file, file path should be a string.');
   }
   try {
     // By specifying encoding, readFile returns a string instead of a buffer.

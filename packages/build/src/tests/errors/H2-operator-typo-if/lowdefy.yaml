@@ -4,7 +4,7 @@
 # This example uses "_iff" which is a typo for "_if".
 #
 # Expected warning:
-#   [Config Error] Operator type "_iff" was used but is not defined.
+#   [Config Warning] Operator type "_iff" was used but is not defined.
 #   Did you mean "_if"?
 #
 # The error points to line 19 where the operator is used.

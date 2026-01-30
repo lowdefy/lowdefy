@@ -6,7 +6,7 @@
         "Duplicate menuId"
       ],
       "errorContains": [
-        "[Config Error] Duplicate menuId \"default\".",
+        "Duplicate menuId \"default\".",
         "lowdefy.yaml:20"
       ]
     }

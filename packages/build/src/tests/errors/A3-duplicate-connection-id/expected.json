@@ -6,7 +6,7 @@
         "Duplicate connectionId"
       ],
       "errorContains": [
-        "[Config Error] Duplicate connectionId \"testApi\".",
+        "Duplicate connectionId \"testApi\".",
         "lowdefy.yaml:17"
       ]
     }

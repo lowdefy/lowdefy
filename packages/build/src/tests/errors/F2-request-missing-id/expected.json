@@ -6,7 +6,7 @@
         "Request should have required property \"id\""
       ],
       "errorContains": [
-        "[Config Error] Request should have required property \"id\".",
+        "Request should have required property \"id\".",
         "lowdefy.yaml:22"
       ]
     }

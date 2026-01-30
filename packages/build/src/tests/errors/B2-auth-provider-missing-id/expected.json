@@ -6,7 +6,7 @@
         "should have required property \"id\""
       ],
       "errorContains": [
-        "[Config Error] Auth provider should have required property \"id\".",
+        "Auth provider should have required property \"id\".",
         "lowdefy.yaml:14"
       ]
     }

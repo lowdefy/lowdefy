@@ -59,24 +59,80 @@ const location = resolveConfigLocation({
 // }
 ```
 
-### Error Formatting Classes
+### Error Class Hierarchy
 
-Error and warning formatting is handled by classes in `@lowdefy/node-utils`:
+Lowdefy uses a unified error system in `@lowdefy/errors` package:
 
-| Class            | Purpose                              | Prefix             |
-| ---------------- | ------------------------------------ | ------------------ |
-| `ConfigMessage`  | Base formatter (shared logic)        | Custom             |
-| `ConfigError`    | Build errors (fatal, extends Error)  | `[Config Error]`   |
-| `ConfigWarning`  | Build warnings (non-fatal)           | `[Config Warning]` |
+```
+@lowdefy/errors/
+├── LowdefyError.js     # Internal Lowdefy bugs
+├── PluginError.js      # Plugin failures (operators, actions, blocks, requests)
+├── ServiceError.js     # External service failures (network, timeout, 5xx)
+├── ConfigError.js      # Config validation errors
+└── ConfigWarning.js    # Warnings (dev) / Errors (prod)
+```
 
-Location: `packages/utils/node-utils/src/`
+| Error Class      | Purpose                                          | Thrown By                      | Caught At                        | Prefix             |
+| ---------------- | ------------------------------------------------ | ------------------------------ | -------------------------------- | ------------------ |
+| `LowdefyError`   | Internal Lowdefy bugs, unexpected conditions     | Anywhere inside Lowdefy        | Top-level (build/server/client)  | `[Lowdefy Error]`  |
+| `PluginError`    | Plugin code failures (operators, actions, etc.)  | Plugin interface layer         | Request handlers, parsers        | `[Plugin Error]`   |
+| `ServiceError`   | External service failures (network, timeout)     | Plugin interface layer         | Request handlers                 | `[Service Error]`  |
+| `ConfigError`    | Config validation errors (invalid YAML, schema)  | Build validation               | Build orchestrator               | `[Config Error]`   |
+| `ConfigWarning`  | Config inconsistencies (warning in dev only)     | Build validation               | Build orchestrator               | `[Config Warning]` |
 
-**Architecture:** `ConfigError` and `ConfigWarning` use `ConfigMessage.format()` internally for consistent formatting.
+**Key principle:** Plugins throw errors without knowing about config keys. The interface layer catches all errors and adds `configKey` for location resolution - this helps developers trace any error back to its config source. ConfigError supports a simple string form (`new ConfigError('message')`) for plugin convenience.
 
-**Usage (preferred - via logger methods):**
+### Error Catch Layers
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           ERROR CATCH LAYERS                                │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  Layer 1: TOP LEVEL (build/server/client entry points)                      │
+│  ├─ Catches: Everything that bubbles up                                     │
+│  ├─ Wraps unexpected errors as: LowdefyError                                │
+│  └─ Re-throws: ConfigError, PluginError, ServiceError (already formatted)   │
+│                                                                             │
+│  Layer 2: PLUGIN INTERFACE (parsers, action runner, request handler)        │
+│  ├─ Catches: All errors from plugin code                                    │
+│  ├─ Adds configKey to ALL errors for location tracing                       │
+│  ├─ ConfigError: adds configKey if not present, re-throws                   │
+│  ├─ ServiceError: creates with configKey via ServiceError.from(e, svc, key) │
+│  └─ Plain Error: wraps in PluginError (adds received, location, configKey)  │
+│                                                                             │
+│  Layer 3: BUILD VALIDATION (schema, refs, type checking)                    │
+│  ├─ Throws: ConfigError (with configKey for location)                       │
+│  └─ Uses: ConfigWarning (warn in dev, error in prod)                        │
+│                                                                             │
+│  Layer 4: PLUGIN CODE (operators, actions, blocks, connections)             │
+│  ├─ Throws: Plain Error('simple message')                                   │
+│  └─ No knowledge of Lowdefy error classes                                   │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Build-Time Error Formatting
+
+Build-time errors use classes from `@lowdefy/errors/build` which extend the base classes:
+
+| Class            | Purpose                              | Location                                   |
+| ---------------- | ------------------------------------ | ------------------------------------------ |
+| `ConfigMessage`  | Base formatter (shared logic)        | `packages/utils/errors/src/build/`         |
+| `ConfigError`    | Build errors (extends base class)    | `packages/utils/errors/src/build/`         |
+| `ConfigWarning`  | Build warnings (non-fatal)           | `packages/utils/errors/src/build/`         |
+
+**Architecture:** Build-time `ConfigError` and `ConfigWarning` use `ConfigMessage.format()` for synchronous location resolution via `keyMap` and `refMap`.
+
+**Import pattern:**
+```javascript
+import { ConfigError, ConfigWarning } from '@lowdefy/errors/build';
+```
+
+**Usage (build-time - via logger methods):**
 
 ```javascript
-import { ConfigError } from '@lowdefy/node-utils';
+import { ConfigError } from '@lowdefy/errors/build';
 
 // For fatal errors that stop the build
 throw new ConfigError({
@@ -102,9 +158,91 @@ context.logger.configWarning({
 **Output format:**
 
 ```
+pages/home.yaml:15
 [Config Error] Block type "Buton" not found. Did you mean "Button"?
-  pages/home.yaml:15 at pages.0.blocks.0.type
-  /Users/dev/myapp/pages/home.yaml:15
+```
+
+### Client-Side Error Handling
+
+Client-side uses the base `ConfigError` from `@lowdefy/errors` (via `@lowdefy/helpers`):
+
+```javascript
+import { ConfigError, PluginError, ServiceError } from '@lowdefy/helpers';
+
+// ConfigError resolves location asynchronously from server
+const error = new ConfigError({ message: 'Invalid operator', configKey });
+await error.resolve(lowdefy); // Fetches location from /api/client-error
+console.error(error.message); // Message already formatted with location
+
+// PluginError wraps plugin failures
+const pluginError = PluginError.from({
+  error: originalError,
+  pluginType: 'operator',
+  pluginName: '_if',
+  received: params,
+  location: 'blocks.0.properties.visible',
+  configKey,
+});
+
+// ServiceError for network failures
+if (ServiceError.isServiceError(error)) {
+  const serviceError = ServiceError.from(error, 'connectionId', configKey);
+  console.error(serviceError.message); // Message already formatted
+}
+```
+
+### Plugin Interface Examples
+
+**Operators (in parser):**
+
+```javascript
+try {
+  return operator({ params });
+} catch (error) {
+  // ConfigError - add configKey for location resolution
+  if (error instanceof ConfigError) {
+    if (!error.configKey) {
+      error.configKey = configKey;
+    }
+    throw error;
+  }
+  // Plain errors get wrapped in PluginError
+  throw PluginError.from({
+    error,
+    pluginType: 'operator',
+    pluginName: '_if',
+    received: params,
+    location: operatorLocation,
+    configKey,
+  });
+}
+```
+
+**Requests (in callRequestResolver):**
+
+```javascript
+try {
+  return await requestResolver({ ... });
+} catch (error) {
+  // ConfigError - add configKey for location resolution
+  if (error instanceof ConfigError) {
+    if (!error.configKey) {
+      error.configKey = requestConfig['~k'];
+    }
+    throw error;
+  }
+  // ServiceError - pass configKey to help trace which config caused the call
+  if (ServiceError.isServiceError(error)) {
+    throw ServiceError.from(error, connectionId, requestConfig['~k']);
+  }
+  // Plain errors get wrapped in PluginError
+  throw PluginError.from({
+    error,
+    pluginType: 'request',
+    pluginName: requestType,
+    configKey: requestConfig['~k'],
+  });
+}
 ```
 
 ### Operator Key Extraction
@@ -683,13 +821,67 @@ Build failed with 3 error(s):
 
 **Problem:** Should plugins know about `configKey` and throw ConfigError directly?
 
-**Decision:** Plugins throw plain errors. Core (WebParser, engine) wraps them with ConfigError.
+**Decision:** Plugins throw errors without `configKey`. The interface layer adds `configKey` to ALL error types before re-throwing.
 
 **Rationale:**
 - Plugins are user-facing, should have simple error interface
 - `configKey` is an internal implementation detail
 - Core already tracks `~k` during operator evaluation
 - Keeps plugin API stable even if error tracking changes
+
+### Why Add configKey to ALL Errors (Including ServiceError)?
+
+**Problem:** Initially, ServiceError passed through unchanged because it represents infrastructure issues, not config problems. However, even service errors originate from a specific config location (e.g., a request that made a database call).
+
+**Decision:** Add `configKey` to ALL error types at the interface layer:
+- `ConfigError`: Add `configKey` if not present, then re-throw
+- `ServiceError`: Pass `configKey` via `ServiceError.from(error, service, configKey)`
+- Plain `Error`: Wrap in `PluginError` with `configKey`
+
+**Rationale:**
+- Even infrastructure errors are triggered by specific config - developers want to know which request/connection caused the issue
+- Consistent error handling - all errors can be traced back to config
+- The service may be fine; the config might have wrong connection string
+- Adding location to ServiceError helps distinguish "MongoDB is down" from "this specific request to MongoDB failed"
+
+**Implementation:** `ServiceError.from()` accepts optional third parameter:
+```javascript
+static from(error, service, configKey) {
+  const serviceError = new ServiceError({ ... });
+  if (configKey) {
+    serviceError.configKey = configKey;
+  }
+  return serviceError;
+}
+```
+
+### Why ConfigError String Overload?
+
+**Problem:** Plugins throwing ConfigError had to use object form: `throw new ConfigError({ message: 'msg' })`. This was verbose for simple error messages.
+
+**Decision:** Support both string and object forms:
+```javascript
+// Simple string form (for plugins)
+throw new ConfigError('Property must be a string.');
+
+// Object form (when you have additional context)
+throw new ConfigError({ message: 'Property must be a string.', configKey });
+```
+
+**Rationale:**
+- Plugins should have a simple API - they shouldn't need to know about configKey
+- String form is concise and readable
+- Interface layer adds configKey anyway, so plugins don't need to provide it
+- Object form still available for cases where additional metadata is needed
+
+**Implementation:** Constructor checks parameter type:
+```javascript
+constructor(messageOrParams) {
+  const isString = typeof messageOrParams === 'string';
+  const message = isString ? messageOrParams : messageOrParams.message;
+  // ...
+}
+```
 
 ## Related
 
@@ -710,11 +902,16 @@ Build failed with 3 error(s):
 - `packages/utils/helpers/src/resolveConfigLocation.js` - Location resolver
 - `packages/utils/helpers/src/ConfigError.js` - Client-side ConfigError class
 
-### Node Utils
+### Errors Package
 
-- `packages/utils/node-utils/src/ConfigMessage.js` - Base message formatter
-- `packages/utils/node-utils/src/ConfigError.js` - Build-time ConfigError class
-- `packages/utils/node-utils/src/ConfigWarning.js` - Build-time warning with prodError
+- `packages/utils/errors/src/ConfigError.js` - Base ConfigError class
+- `packages/utils/errors/src/ConfigWarning.js` - Base ConfigWarning class
+- `packages/utils/errors/src/PluginError.js` - Plugin failure wrapper
+- `packages/utils/errors/src/ServiceError.js` - Service/network failure wrapper
+- `packages/utils/errors/src/build/ConfigError.js` - Build-time ConfigError (sync resolution)
+- `packages/utils/errors/src/build/ConfigWarning.js` - Build-time warning with prodError
+- `packages/utils/errors/src/build/ConfigMessage.js` - Base message formatter
+- `packages/utils/errors/src/client/ConfigError.js` - Client-side ConfigError (async resolution)
 
 ### Client
 

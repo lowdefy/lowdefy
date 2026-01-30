@@ -4,7 +4,7 @@
 # This example uses "_staet" which is a typo for "_state".
 #
 # Expected warning:
-#   [Config Error] Operator type "_staet" was used but is not defined.
+#   [Config Warning] Operator type "_staet" was used but is not defined.
 #   Did you mean "_state"?
 #
 # The error points to line 19 where the operator is used.

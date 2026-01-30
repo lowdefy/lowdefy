@@ -125,12 +125,42 @@ function createRunBuild(build, fixturesDir) {
     const configDir = path.join(fixturesDir, fixtureDir);
     const errors = [];
     const warnings = [];
+    let pendingLogLine = null; // Captures log line to combine with next warn/error
 
     const logger = {
       info: jest.fn(),
       log: jest.fn(),
-      warn: jest.fn((msg) => warnings.push(msg)),
-      error: jest.fn((msg) => errors.push(msg)),
+      warn: jest.fn((objOrMsg, maybeMsg) => {
+        // Handle pino-style calls: logger.warn({ source }, message) or logger.warn(message)
+        let source = null;
+        let message = objOrMsg;
+        if (typeof objOrMsg === 'object' && objOrMsg !== null) {
+          source = objOrMsg.source ?? null;
+          message = maybeMsg ?? '';
+        }
+        // Format as "source\nmessage" or just "message"
+        const formatted = source ? `${source}\n${message}` : message;
+        warnings.push(formatted);
+      }),
+      error: jest.fn((objOrMsg, maybeMsg) => {
+        // Handle pino-style calls:
+        // - logger.error(Error) - Error object (pino serializes into err field)
+        // - logger.error({ source }, message) - merging object
+        let source = null;
+        let message;
+        if (objOrMsg instanceof Error) {
+          source = objOrMsg.source ?? null;
+          message = objOrMsg.message;
+        } else if (typeof objOrMsg === 'object' && objOrMsg !== null) {
+          source = objOrMsg.source ?? null;
+          message = maybeMsg ?? '';
+        } else {
+          message = objOrMsg;
+        }
+        // Format as "source\nmessage" or just "message"
+        const formatted = source ? `${source}\n${message}` : message;
+        errors.push(formatted);
+      }),
       succeed: jest.fn(),
     };
 

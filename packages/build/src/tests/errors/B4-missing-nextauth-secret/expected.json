@@ -9,7 +9,7 @@
         "NEXTAUTH_SECRET"
       ],
       "errorContains": [
-        "[Config Error] Auth providers are configured but NEXTAUTH_SECRET environment variable is not set.",
+        "Auth providers are configured but NEXTAUTH_SECRET environment variable is not set.",
         "lowdefy.yaml:13"
       ]
     }

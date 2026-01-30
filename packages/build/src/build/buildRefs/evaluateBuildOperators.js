@@ -24,7 +24,7 @@ import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
 validateOperatorsDynamic({ operators });
 const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
 
-async function evaluateBuildOperators({ context, input, refDef }) {
+function evaluateBuildOperators({ context, input, refDef }) {
   const operatorsParser = new BuildParser({
     env: process.env,
     operators,
@@ -37,9 +37,13 @@ async function evaluateBuildOperators({ context, input, refDef }) {
     operatorPrefix: '_build.',
   });
   if (errors.length > 0) {
-    await context.logger.warn('Build operator errors.');
-    const promises = errors.map((error) => context.logger.warn(error.message));
-    await promises;
+    errors.forEach((error) => {
+      context.logger.warn({
+        message: error.message,
+        received: error.received,
+        operatorLocation: error.operatorLocation,
+      });
+    });
   }
   return output;
 }

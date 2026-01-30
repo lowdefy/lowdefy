@@ -14,7 +14,8 @@
   limitations under the License.
 */
 
-import { applyArrayIndices, ConfigError, serializer, type } from '@lowdefy/helpers';
+import { ConfigError, PluginError } from '@lowdefy/errors/client';
+import { applyArrayIndices, serializer, type } from '@lowdefy/helpers';
 
 class WebParser {
   constructor({ context, operators }) {
@@ -83,13 +84,25 @@ class WebParser {
         });
         return res;
       } catch (e) {
-        const formattedMessage = `Operator Error: ${e.message} Received: ${JSON.stringify({
-          [key]: params,
-        })} at ${operatorLocation}.`;
-        const formattedError = new Error(formattedMessage);
-        formattedError.stack = e.stack;
-        formattedError.configKey = e.configKey; // Preserve original configKey if present
-        errors.push(ConfigError.from({ error: formattedError, configKey }));
+        // ConfigError from plugin - add configKey and re-throw structure
+        if (e instanceof ConfigError) {
+          if (!e.configKey) {
+            e.configKey = configKey;
+          }
+          errors.push(e);
+          return null;
+        }
+        // Plain error from plugin - wrap in PluginError
+        errors.push(
+          new PluginError({
+            error: e,
+            pluginType: 'operator',
+            pluginName: op,
+            received: { [key]: params },
+            location: operatorLocation,
+            configKey: e.configKey ?? configKey,
+          })
+        );
         return null;
       }
     };

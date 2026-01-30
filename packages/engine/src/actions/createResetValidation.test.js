@@ -14,6 +14,7 @@
   limitations under the License.
 */
 import { jest } from '@jest/globals';
+import { PluginError } from '@lowdefy/errors/client';
 
 import testContext from '../../test/testContext.js';
 
@@ -119,7 +120,7 @@ test('RestValidation after required field', async () => {
         id: 'validate',
         type: 'Validate',
       },
-      error: new Error('Your input has 1 validation error.'),
+      error: expect.any(PluginError),
       index: 0,
     },
     responses: {
@@ -128,7 +129,7 @@ test('RestValidation after required field', async () => {
           id: 'validate',
           type: 'Validate',
         },
-        error: new Error('Your input has 1 validation error.'),
+        error: expect.any(PluginError),
         index: 0,
       },
     },
@@ -136,6 +137,9 @@ test('RestValidation after required field', async () => {
     startTimestamp: { date: 0 },
     endTimestamp: { date: 0 },
   });
+  expect(button.Events.events.onClick.history[0].error.error.rawMessage).toContain(
+    'Your input has 1 validation error'
+  );
   expect(text1.eval.validation).toEqual({
     errors: ['This field is required'],
     status: 'error',
@@ -164,7 +168,7 @@ test('RestValidation after required field', async () => {
         id: 'validate',
         type: 'Validate',
       },
-      error: new Error('Your input has 1 validation error.'),
+      error: expect.any(PluginError),
       index: 0,
     },
     event: undefined,
@@ -175,7 +179,7 @@ test('RestValidation after required field', async () => {
           id: 'validate',
           type: 'Validate',
         },
-        error: new Error('Your input has 1 validation error.'),
+        error: expect.any(PluginError),
         index: 0,
       },
     },

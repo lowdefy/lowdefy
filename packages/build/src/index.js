@@ -16,7 +16,8 @@
   limitations under the License.
 */
 
-import { ConfigError } from '@lowdefy/node-utils';
+import { LowdefyError } from '@lowdefy/errors';
+import { ConfigError } from '@lowdefy/errors/build';
 
 import createContext from './createContext.js';
 import createPluginTypesMap from './utils/createPluginTypesMap.js';
@@ -60,84 +61,98 @@ async function build(options) {
   // Reset makeId counter for each build (dev server may run multiple builds)
   makeId.reset();
 
-  const context = createContext(options);
-
-  let components;
+  let context;
   try {
-    components = await buildRefs({ context });
-  } catch (err) {
-    // Handle ConfigError from buildRefs (e.g., missing _ref files)
-    if (err instanceof ConfigError) {
-      context.logger.error(err.message);
-      const error = new Error('Build failed with 1 error(s). See above for details.');
+    context = createContext(options);
+
+    let components;
+    try {
+      components = await buildRefs({ context });
+    } catch (err) {
+      // Handle ConfigError from buildRefs (e.g., missing _ref files)
+      if (err instanceof ConfigError) {
+        context.logger.error(err);
+        const error = new Error('Build failed with 1 error(s). See above for details.');
+        error.isFormatted = true;
+        error.hideStack = true;
+        throw error;
+      }
+      throw err;
+    }
+
+    // Build steps - collect all errors before stopping
+    // addKeys runs first so testSchema has ~k markers for error location info
+    tryBuildStep(addKeys, 'addKeys', { components, context });
+    tryBuildStep(testSchema, 'testSchema', { components, context });
+
+    // Schema errors mean structurally invalid data - stop before processing further
+    if (context.errors.length > 0) {
+      // Log all errors together before summary to ensure proper ordering
+      context.errors.forEach((err) => context.logger.error(err));
+      const error = new Error(`Build failed with ${context.errors.length} error(s).`);
       error.isFormatted = true;
       error.hideStack = true;
       throw error;
     }
-    throw err;
-  }
 
-  // Build steps - collect all errors before stopping
-  // addKeys runs first so testSchema has ~k markers for error location info
-  tryBuildStep(addKeys, 'addKeys', { components, context });
-  tryBuildStep(testSchema, 'testSchema', { components, context });
+    tryBuildStep(buildApp, 'buildApp', { components, context });
+    tryBuildStep(buildLogger, 'buildLogger', { components, context });
+    tryBuildStep(validateConfig, 'validateConfig', { components, context });
+    tryBuildStep(addDefaultPages, 'addDefaultPages', { components, context });
+    // addKeys runs again to add keys to any new objects created by earlier build steps
+    tryBuildStep(addKeys, 'addKeys', { components, context });
+    tryBuildStep(buildAuth, 'buildAuth', { components, context });
+    tryBuildStep(buildConnections, 'buildConnections', { components, context });
+    tryBuildStep(buildApi, 'buildApi', { components, context });
+    tryBuildStep(buildPages, 'buildPages', { components, context });
+    tryBuildStep(buildMenu, 'buildMenu', { components, context });
+    tryBuildStep(buildJs, 'buildJs', { components, context });
+    tryBuildStep(buildTypes, 'buildTypes', { components, context });
+    tryBuildStep(buildImports, 'buildImports', { components, context });
+    // Final addKeys pass to ensure all objects (including those created by build steps) have ~k
+    tryBuildStep(addKeys, 'addKeys', { components, context });
+    // Check if there are any collected errors before writing
+    if (context.errors.length > 0) {
+      // Log all errors together before summary to ensure proper ordering
+      context.errors.forEach((err) => context.logger.error(err));
+      const error = new Error(`Build failed with ${context.errors.length} error(s).`);
+      // Mark this error as already formatted so stack trace isn't shown
+      error.isFormatted = true;
+      error.hideStack = true;
+      throw error;
+    }
 
-  // Schema errors mean structurally invalid data - stop before processing further
-  if (context.errors.length > 0) {
-    // Log all errors together before summary to ensure proper ordering
-    context.errors.forEach((errorMsg) => context.logger.error(errorMsg));
-    const error = new Error(`Build failed with ${context.errors.length} error(s).`);
+    // Write steps - only if no errors
+    await cleanBuildDirectory({ context });
+    await writeApp({ components, context });
+    await writeAuth({ components, context });
+    await writeConnections({ components, context });
+    await writeApi({ components, context });
+    await writeRequests({ components, context });
+    await writePages({ components, context });
+    await writeConfig({ components, context });
+    await writeGlobal({ components, context });
+    await writeLogger({ components, context });
+    await writeMaps({ components, context });
+    await writeMenus({ components, context });
+    await writeTypes({ components, context });
+    await writePluginImports({ components, context });
+    await writeJs({ components, context });
+    await updateServerPackageJson({ components, context });
+    await copyPublicFolder({ components, context });
+  } catch (err) {
+    // Re-throw already formatted errors (ConfigError or build errors)
+    if (err.isFormatted) {
+      throw err;
+    }
+    // Unexpected internal error - log as [Lowdefy Error] with stack trace
+    const logger = context?.logger ?? options.logger ?? console;
+    logger.error(LowdefyError.format(err));
+    const error = new Error('Build failed due to internal error. See above for details.');
     error.isFormatted = true;
     error.hideStack = true;
     throw error;
   }
-
-  tryBuildStep(buildApp, 'buildApp', { components, context });
-  tryBuildStep(buildLogger, 'buildLogger', { components, context });
-  tryBuildStep(validateConfig, 'validateConfig', { components, context });
-  tryBuildStep(addDefaultPages, 'addDefaultPages', { components, context });
-  // addKeys runs again to add keys to any new objects created by earlier build steps
-  tryBuildStep(addKeys, 'addKeys', { components, context });
-  tryBuildStep(buildAuth, 'buildAuth', { components, context });
-  tryBuildStep(buildConnections, 'buildConnections', { components, context });
-  tryBuildStep(buildApi, 'buildApi', { components, context });
-  tryBuildStep(buildPages, 'buildPages', { components, context });
-  tryBuildStep(buildMenu, 'buildMenu', { components, context });
-  tryBuildStep(buildJs, 'buildJs', { components, context });
-  tryBuildStep(buildTypes, 'buildTypes', { components, context });
-  tryBuildStep(buildImports, 'buildImports', { components, context });
-  // Final addKeys pass to ensure all objects (including those created by build steps) have ~k
-  tryBuildStep(addKeys, 'addKeys', { components, context });
-
-  // Check if there are any collected errors before writing
-  if (context.errors.length > 0) {
-    // Log all errors together before summary to ensure proper ordering
-    context.errors.forEach((errorMsg) => context.logger.error(errorMsg));
-    const error = new Error(`Build failed with ${context.errors.length} error(s).`);
-    // Mark this error as already formatted so stack trace isn't shown
-    error.isFormatted = true;
-    error.hideStack = true;
-    throw error;
-  }
-
-  // Write steps - only if no errors
-  await cleanBuildDirectory({ context });
-  await writeApp({ components, context });
-  await writeAuth({ components, context });
-  await writeConnections({ components, context });
-  await writeApi({ components, context });
-  await writeRequests({ components, context });
-  await writePages({ components, context });
-  await writeConfig({ components, context });
-  await writeGlobal({ components, context });
-  await writeLogger({ components, context });
-  await writeMaps({ components, context });
-  await writeMenus({ components, context });
-  await writeTypes({ components, context });
-  await writePluginImports({ components, context });
-  await writeJs({ components, context });
-  await updateServerPackageJson({ components, context });
-  await copyPublicFolder({ components, context });
 }
 
 export { createPluginTypesMap };

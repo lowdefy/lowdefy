@@ -6,7 +6,7 @@
         "nonExistentPage"
       ],
       "warningContains": [
-        "[Config Warning] Page \"nonExistentPage\" referenced in menu link \"badLink\" not found.",
+        "Page \"nonExistentPage\" referenced in menu link \"badLink\" not found.",
         "lowdefy.yaml:15"
       ]
     },
@@ -16,7 +16,7 @@
         "nonExistentPage"
       ],
       "errorContains": [
-        "[Config Error] Page \"nonExistentPage\" referenced in menu link \"badLink\" not found.",
+        "Page \"nonExistentPage\" referenced in menu link \"badLink\" not found.",
         "lowdefy.yaml:15"
       ]
     }

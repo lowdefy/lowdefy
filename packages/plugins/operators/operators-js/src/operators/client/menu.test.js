@@ -132,8 +132,9 @@ test('_menu null', () => {
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
   expect(res.errors.length).toBe(1);
+  expect(res.errors[0].rawMessage).toBe('_menu must be of type string, number or object.');
   expect(res.errors[0].message).toBe(
-    'Operator Error: _menu must be of type string, number or object. Received: {"_menu":null} at locationId.'
+    '[Plugin Error] _menu must be of type string, number or object. Received: {"_menu":null} at locationId.'
   );
 });
 
@@ -171,8 +172,9 @@ test('_menu params object value not string', () => {
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
   expect(res.errors.length).toBe(1);
+  expect(res.errors[0].rawMessage).toBe('_menu.value must be of type string.');
   expect(res.errors[0].message).toBe(
-    'Operator Error: _menu.value must be of type string. Received: {"_menu":{"value":1}} at locationId.'
+    '[Plugin Error] _menu.value must be of type string. Received: {"_menu":{"value":1}} at locationId.'
   );
 });
 
@@ -186,8 +188,9 @@ test('_menu params object index not number', () => {
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
   expect(res.errors.length).toBe(1);
+  expect(res.errors[0].rawMessage).toBe('_menu.index must be of type number.');
   expect(res.errors[0].message).toBe(
-    'Operator Error: _menu.index must be of type number. Received: {"_menu":{"index":"a"}} at locationId.'
+    '[Plugin Error] _menu.index must be of type number. Received: {"_menu":{"index":"a"}} at locationId.'
   );
 });
 
@@ -246,7 +249,8 @@ test('_menu param object invalid', () => {
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual(null);
   expect(res.errors.length).toBe(1);
+  expect(res.errors[0].rawMessage).toBe('_menu must be of type string, number or object.');
   expect(res.errors[0].message).toBe(
-    'Operator Error: _menu must be of type string, number or object. Received: {"_menu":{"other":true}} at locationId.'
+    '[Plugin Error] _menu must be of type string, number or object. Received: {"_menu":{"other":true}} at locationId.'
   );
 });

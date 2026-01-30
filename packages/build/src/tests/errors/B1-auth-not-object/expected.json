@@ -6,7 +6,7 @@
         "should be an object"
       ],
       "errorContains": [
-        "[Config Error] App \"auth\" should be an object.",
+        "App \"auth\" should be an object.",
         "lowdefy.yaml:11"
       ]
     }

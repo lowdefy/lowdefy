@@ -6,7 +6,7 @@
         "contact_company_ids"
       ],
       "warningContains": [
-        "[Config Warning] _state references \"contact_company_ids\" on page \"contacts-new\", but no input block with id \"contact_company_ids\" exists on this page.",
+        "_state references \"contact_company_ids\" on page \"contacts-new\", but no input block with id \"contact_company_ids\" exists on this page.",
         "request-template.yaml:11"
       ]
     },
@@ -16,7 +16,7 @@
         "contact_company_ids"
       ],
       "errorContains": [
-        "[Config Error] _state references \"contact_company_ids\" on page \"contacts-new\", but no input block with id \"contact_company_ids\" exists on this page.",
+        "_state references \"contact_company_ids\" on page \"contacts-new\", but no input block with id \"contact_company_ids\" exists on this page.",
         "request-template.yaml:11"
       ],
       "expectThrow": true

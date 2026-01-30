@@ -15,7 +15,7 @@
 */
 
 import { jest } from '@jest/globals';
-import { ConfigError } from '@lowdefy/node-utils';
+import { ConfigError } from '@lowdefy/errors/build';
 import tryBuildStep from './tryBuildStep.js';
 
 const mockLogger = {
@@ -55,7 +55,8 @@ test('tryBuildStep collects error when function throws', () => {
 
   expect(stepFn).toHaveBeenCalledWith({ components, context });
   expect(context.errors).toHaveLength(1);
-  expect(context.errors[0]).toBe('Build step failed');
+  expect(context.errors[0]).toBeInstanceOf(Error);
+  expect(context.errors[0].message).toBe('Build step failed');
   // Note: Logging happens at checkpoints in index.js, not in tryBuildStep
 });
 
@@ -75,8 +76,8 @@ test('tryBuildStep collects multiple errors from different steps', () => {
   tryBuildStep(secondStep, 'step2', { components, context });
 
   expect(context.errors).toHaveLength(2);
-  expect(context.errors[0]).toBe('First error');
-  expect(context.errors[1]).toBe('Second error');
+  expect(context.errors[0].message).toBe('First error');
+  expect(context.errors[1].message).toBe('Second error');
   // Note: Logging happens at checkpoints in index.js, not in tryBuildStep
 });
 
@@ -134,7 +135,7 @@ test('tryBuildStep passes components and context to function', () => {
 
 test('tryBuildStep catches errors with detailed messages', () => {
   const stepFn = jest.fn(() => {
-    throw new Error('[Config Error] Invalid configuration at pages.0.blocks.0');
+    throw new Error('Invalid configuration at pages.0.blocks.0');
   });
 
   const components = {};
@@ -142,7 +143,7 @@ test('tryBuildStep catches errors with detailed messages', () => {
 
   tryBuildStep(stepFn, 'validateStep', { components, context });
 
-  expect(context.errors[0]).toBe('[Config Error] Invalid configuration at pages.0.blocks.0');
+  expect(context.errors[0].message).toBe('Invalid configuration at pages.0.blocks.0');
   // Note: Logging happens at checkpoints in index.js, not in tryBuildStep
 });
 
@@ -242,7 +243,7 @@ test('tryBuildStep collects non-suppressed ConfigError', () => {
 
   expect(stepFn).toHaveBeenCalled();
   expect(mockContext.errors).toHaveLength(1);
-  expect(mockContext.errors[0]).toContain('[Config Error]');
-  expect(mockContext.errors[0]).toContain('This error should be collected.');
+  expect(mockContext.errors[0]).toBeInstanceOf(ConfigError);
+  expect(mockContext.errors[0].message).toBe('This error should be collected.');
   // Note: Logging happens at checkpoints in index.js, not in tryBuildStep
 });

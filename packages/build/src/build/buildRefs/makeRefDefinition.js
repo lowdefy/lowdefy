@@ -26,6 +26,7 @@ function makeRefDefinition(refDefinition, parent, refMap, lineNumber) {
     lineNumber,
   };
   refMap[id] = refDef;
+  const ignoreBuildChecks = get(refDefinition, '~ignoreBuildChecks');
   return {
     ...refDef,
     id,
@@ -35,6 +36,7 @@ function makeRefDefinition(refDefinition, parent, refMap, lineNumber) {
     resolver: get(refDefinition, 'resolver'),
     transformer: get(refDefinition, 'transformer'),
     vars: get(refDefinition, 'vars', { default: {} }),
+    ...(ignoreBuildChecks !== undefined && { ignoreBuildChecks }),
   };
 }
 

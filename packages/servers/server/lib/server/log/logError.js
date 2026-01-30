@@ -14,63 +14,77 @@
   limitations under the License.
 */
 
-import { resolveConfigLocation } from '@lowdefy/node-utils';
+import {
+  ConfigError,
+  LowdefyError,
+  PluginError,
+  ServiceError,
+} from '@lowdefy/errors/server';
+import { resolveErrorConfigLocation } from '@lowdefy/errors/build';
 
 import captureSentryError from '../sentry/captureSentryError.js';
 
-async function resolveErrorConfigLocation(context, error) {
-  if (!error.configKey) {
-    return null;
+function getEventType(error) {
+  if (error instanceof ServiceError || error?.isServiceError === true) {
+    return 'service_error';
   }
-  try {
-    const [keyMap, refMap] = await Promise.all([
-      context.readConfigFile('keyMap.json'),
-      context.readConfigFile('refMap.json'),
-    ]);
-    const location = resolveConfigLocation({
-      configKey: error.configKey,
-      keyMap,
-      refMap,
-      configDirectory: context.configDirectory,
-    });
-    return location || null;
-  } catch {
-    return null;
+  if (error instanceof PluginError) {
+    return 'plugin_error';
   }
+  if (error instanceof ConfigError) {
+    return 'config_error';
+  }
+  if (error instanceof LowdefyError) {
+    return 'lowdefy_error';
+  }
+  return 'error';
 }
 
 async function logError({ context, error }) {
   try {
     const { headers = {}, user = {} } = context;
     const message = error?.message || 'Unknown error';
-    const isServiceError = error?.isServiceError === true;
+    const eventType = getEventType(error);
+    const isServiceError = error instanceof ServiceError || error?.isServiceError === true;
+    const isLowdefyError = error instanceof LowdefyError;
 
-    // For service errors, don't resolve config location (not a config issue)
-    const location = isServiceError ? null : await resolveErrorConfigLocation(context, error);
+    // For service errors and internal lowdefy errors, don't resolve config location
+    const location =
+      isServiceError || isLowdefyError
+        ? null
+        : await resolveErrorConfigLocation({
+            error,
+            readConfigFile: context.readConfigFile,
+            configDirectory: context.configDirectory,
+          });
 
-    // Human-readable console output (single log entry)
-    const errorType = isServiceError ? 'Service Error' : 'Config Error';
-    const source = location?.source ? `${location.source} at ${location.config}` : '';
-    const link = location?.link || '';
+    // Attach resolved location to error for consistency
+    if (location) {
+      error.source = location.source;
+      error.config = location.config;
+    }
 
-    if (isServiceError || !location) {
-      console.error(`[${errorType}] ${message}`);
-    } else {
-      console.error(`[${errorType}] ${message}\n  ${source}\n  ${link}`);
+    // Human-readable output: source (info/blue) then message (error/red)
+    // LowdefyError shows with stack trace
+    if (isLowdefyError) {
+      context.logger.error(LowdefyError.format(error));
+    } else if (location) {
+      context.logger.info(location.source);
     }
 
     // Structured logging (consistent with client error schema + production fields)
+    const errorName = error?.name || 'Error';
     context.logger.error(
       {
         // Core error schema (consistent with client)
-        event: isServiceError ? 'service_error' : 'config_error',
-        errorName: error?.name || 'Error',
+        event: eventType,
+        errorName,
         errorMessage: message,
         isServiceError,
         pageId: context.pageId || null,
         timestamp: new Date().toISOString(),
-        source: location?.source || null,
-        config: location?.config || null,
+        source: error.source || null,
+        config: error.config || null,
         link: location?.link || null,
         // Production fields
         user: {
@@ -109,7 +123,7 @@ async function logError({ context, error }) {
           'cf-visitor': headers['cf-visitor'],
         },
       },
-      message
+      `[${errorName}] ${message}`
     );
 
     // Capture error to Sentry (no-op if Sentry not configured)

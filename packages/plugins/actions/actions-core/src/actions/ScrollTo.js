@@ -19,7 +19,7 @@ import { type } from '@lowdefy/helpers';
 function ScrollTo({ globals, params }) {
   const { document, window } = globals;
   if (!type.isObject(params)) {
-    throw new Error(`Invalid ScrollTo, check action params. Received "${JSON.stringify(params)}".`);
+    throw new Error('Invalid ScrollTo, check action params.');
   }
   if (params.blockId) {
     const element = document.getElementById(params.blockId);

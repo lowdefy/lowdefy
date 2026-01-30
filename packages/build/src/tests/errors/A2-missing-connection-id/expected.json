@@ -6,7 +6,7 @@
         "should have required property \"id\""
       ],
       "errorContains": [
-        "[Config Error] Connection should have required property \"id\".",
+        "Connection should have required property \"id\".",
         "lowdefy.yaml:13"
       ]
     }

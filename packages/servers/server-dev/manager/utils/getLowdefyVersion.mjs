@@ -16,7 +16,8 @@
 
 import path from 'path';
 import { type } from '@lowdefy/helpers';
-import { ConfigError, readFile } from '@lowdefy/node-utils';
+import { readFile } from '@lowdefy/node-utils';
+import { ConfigError } from '@lowdefy/errors/build';
 import YAML from 'yaml';
 
 async function getLowdefyVersion(context) {
@@ -44,11 +45,12 @@ async function getLowdefyVersion(context) {
     );
   }
   if (!type.isString(lowdefy.lowdefy)) {
-    throw new Error(
-      `Version number specified in "lowdefy.yaml" file should be a string. Received ${JSON.stringify(
-        lowdefy.lowdefy
-      )}.`
-    );
+    throw new ConfigError({
+      message: 'Version number specified in "lowdefy.yaml" file should be a string.',
+      received: lowdefy.lowdefy,
+      filePath,
+      configDirectory: context.directories.config,
+    });
   }
   return lowdefy.lowdefy;
 }

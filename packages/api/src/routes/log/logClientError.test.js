@@ -33,7 +33,7 @@ const refMap = {
 };
 
 describe('logClientError', () => {
-  test('logs error without configKey', async () => {
+  test('logs ConfigError without configKey', async () => {
     const mockLogger = {
       error: jest.fn(),
       warn: jest.fn(),
@@ -44,37 +44,24 @@ describe('logClientError', () => {
     };
 
     const result = await logClientError(context, {
+      '~err': 'ConfigError',
       message: 'Test error',
-      name: 'Error',
-      pageId: 'home',
-      stack: 'Error stack',
-      timestamp: '2024-01-01T00:00:00.000Z',
     });
 
     expect(result).toEqual({
       success: true,
-      isServiceError: false,
       source: null,
       config: null,
       link: null,
     });
-    expect(mockLogger.error).toHaveBeenCalledWith(
-      expect.objectContaining({
-        event: 'client_config_error',
-        errorName: 'Error',
-        errorMessage: 'Test error',
-        isServiceError: false,
-        pageId: 'home',
-        source: null,
-        config: null,
-        link: null,
-      }),
-      'Test error'
-    );
+    expect(mockLogger.error).toHaveBeenCalledTimes(1);
+    const loggedError = mockLogger.error.mock.calls[0][0];
+    expect(loggedError.name).toBe('ConfigError');
+    expect(loggedError.message).toBe('Test error');
     expect(context.readConfigFile).not.toHaveBeenCalled();
   });
 
-  test('logs error with configKey and resolves location', async () => {
+  test('logs ConfigError with configKey and resolves location', async () => {
     const mockLogger = {
       error: jest.fn(),
       warn: jest.fn(),
@@ -88,34 +75,82 @@ describe('logClientError', () => {
     };
 
     const result = await logClientError(context, {
-      configKey: 'key-123',
+      '~err': 'ConfigError',
       message: 'Test error',
-      name: 'Error',
-      pageId: 'home',
-      stack: 'Error stack',
-      timestamp: '2024-01-01T00:00:00.000Z',
+      configKey: 'key-123',
     });
 
     expect(result).toEqual({
       success: true,
-      isServiceError: false,
       source: 'pages/home.yaml:8',
       config: 'root.pages[0:home].blocks[0:header]',
       link: null,
     });
-    expect(mockLogger.error).toHaveBeenCalledWith(
-      expect.objectContaining({
-        event: 'client_config_error',
-        errorName: 'Error',
-        errorMessage: 'Test error',
-        isServiceError: false,
-        pageId: 'home',
-        source: 'pages/home.yaml:8',
-        config: 'root.pages[0:home].blocks[0:header]',
-        link: null,
+    const loggedError = mockLogger.error.mock.calls[0][0];
+    expect(loggedError.name).toBe('ConfigError');
+    expect(loggedError.message).toBe('Test error');
+    expect(loggedError.source).toBe('pages/home.yaml:8');
+  });
+
+  test('logs PluginError with configKey and resolves location', async () => {
+    const mockLogger = {
+      error: jest.fn(),
+      warn: jest.fn(),
+    };
+    const context = {
+      logger: mockLogger,
+      readConfigFile: jest.fn((file) => {
+        if (file === 'keyMap.json') return Promise.resolve(keyMap);
+        if (file === 'refMap.json') return Promise.resolve(refMap);
       }),
-      'Test error'
-    );
+    };
+
+    const result = await logClientError(context, {
+      '~err': 'PluginError',
+      message: 'Operator failed',
+      configKey: 'key-123',
+      pluginType: 'operator',
+      pluginName: '_if',
+    });
+
+    expect(result).toEqual({
+      success: true,
+      source: 'pages/home.yaml:8',
+      config: 'root.pages[0:home].blocks[0:header]',
+      link: null,
+    });
+    const loggedError = mockLogger.error.mock.calls[0][0];
+    expect(loggedError.name).toBe('PluginError');
+    expect(loggedError.message).toBe('Operator failed');
+    expect(loggedError.source).toBe('pages/home.yaml:8');
+  });
+
+  test('logs ServiceError', async () => {
+    const mockLogger = {
+      error: jest.fn(),
+      warn: jest.fn(),
+    };
+    const context = {
+      logger: mockLogger,
+      readConfigFile: jest.fn(),
+    };
+
+    const result = await logClientError(context, {
+      '~err': 'ServiceError',
+      message: 'MongoDB: Connection refused',
+      service: 'MongoDB',
+    });
+
+    expect(result).toEqual({
+      success: true,
+      source: null,
+      config: null,
+      link: null,
+    });
+    const loggedError = mockLogger.error.mock.calls[0][0];
+    expect(loggedError.name).toBe('ServiceError');
+    expect(loggedError.message).toBe('MongoDB: Connection refused');
+    expect(context.readConfigFile).not.toHaveBeenCalled();
   });
 
   test('handles missing configKey in keyMap', async () => {
@@ -132,29 +167,21 @@ describe('logClientError', () => {
     };
 
     const result = await logClientError(context, {
-      configKey: 'non-existent-key',
+      '~err': 'ConfigError',
       message: 'Test error',
-      name: 'Error',
-      pageId: 'home',
-      stack: 'Error stack',
-      timestamp: '2024-01-01T00:00:00.000Z',
+      configKey: 'non-existent-key',
     });
 
     expect(result).toEqual({
       success: true,
-      isServiceError: false,
       source: null,
       config: null,
       link: null,
     });
-    expect(mockLogger.error).toHaveBeenCalledWith(
-      expect.objectContaining({
-        source: null,
-        config: null,
-        link: null,
-      }),
-      'Test error'
-    );
+    const loggedError = mockLogger.error.mock.calls[0][0];
+    expect(loggedError.name).toBe('ConfigError');
+    expect(loggedError.message).toBe('Test error');
+    expect(loggedError.source).toBeNull();
   });
 
   test('handles error when loading maps', async () => {
@@ -168,17 +195,13 @@ describe('logClientError', () => {
     };
 
     const result = await logClientError(context, {
-      configKey: 'key-123',
+      '~err': 'ConfigError',
       message: 'Test error',
-      name: 'Error',
-      pageId: 'home',
-      stack: 'Error stack',
-      timestamp: '2024-01-01T00:00:00.000Z',
+      configKey: 'key-123',
     });
 
     expect(result).toEqual({
       success: true,
-      isServiceError: false,
       source: null,
       config: null,
       link: null,
@@ -187,13 +210,8 @@ describe('logClientError', () => {
       event: 'warn_maps_load_failed',
       error: 'File not found',
     });
-    expect(mockLogger.error).toHaveBeenCalledWith(
-      expect.objectContaining({
-        source: null,
-        config: null,
-        link: null,
-      }),
-      'Test error'
-    );
+    const loggedError = mockLogger.error.mock.calls[0][0];
+    expect(loggedError.name).toBe('ConfigError');
+    expect(loggedError.message).toBe('Test error');
   });
 });

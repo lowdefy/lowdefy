@@ -99,7 +99,8 @@ test('_nunjucks invalid template', () => {
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(null);
   expect(res.errors.length).toBe(1);
+  expect(res.errors[0].rawMessage).toBe('_nunjucks failed to parse nunjucks template.');
   expect(res.errors[0].message).toBe(
-    'Operator Error: _nunjucks failed to parse nunjucks template. Received: {"_nunjucks":"String with {{ string  embedded"} at locationId.'
+    '[Plugin Error] _nunjucks failed to parse nunjucks template. Received: {"_nunjucks":"String with {{ string  embedded"} at locationId.'
   );
 });

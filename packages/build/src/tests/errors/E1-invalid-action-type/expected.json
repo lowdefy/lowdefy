@@ -6,7 +6,7 @@
         "SetStat"
       ],
       "errorContains": [
-        "[Config Error] Action type \"SetStat\" was used but is not defined. Did you mean \"SetState\"?",
+        "Action type \"SetStat\" was used but is not defined. Did you mean \"SetState\"?",
         "lowdefy.yaml:23"
       ]
     }

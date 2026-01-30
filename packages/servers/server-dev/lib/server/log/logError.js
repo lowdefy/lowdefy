@@ -14,65 +14,31 @@
   limitations under the License.
 */
 
-import { resolveConfigLocation } from '@lowdefy/node-utils';
+import { resolveErrorConfigLocation } from '@lowdefy/errors/build';
 
 import captureSentryError from '../sentry/captureSentryError.js';
 
-async function resolveErrorConfigLocation(context, error) {
-  if (!error.configKey) {
-    return null;
-  }
-  try {
-    const [keyMap, refMap] = await Promise.all([
-      context.readConfigFile('keyMap.json'),
-      context.readConfigFile('refMap.json'),
-    ]);
-    const location = resolveConfigLocation({
-      configKey: error.configKey,
-      keyMap,
-      refMap,
-      configDirectory: context.configDirectory,
-    });
-    return location || null;
-  } catch {
-    return null;
-  }
-}
-
 async function logError({ context, error }) {
   try {
-    const message = error?.message || 'Unknown error';
     const isServiceError = error?.isServiceError === true;
 
     // For service errors, don't resolve config location (not a config issue)
-    const location = isServiceError ? null : await resolveErrorConfigLocation(context, error);
+    const location = isServiceError
+      ? null
+      : await resolveErrorConfigLocation({
+          error,
+          readConfigFile: context.readConfigFile,
+          configDirectory: context.configDirectory,
+        });
 
-    // Human-readable console output (single log entry)
-    const errorType = isServiceError ? 'Service Error' : 'Config Error';
-    const source = location?.source ? `${location.source} at ${location.config}` : '';
-    const link = location?.link || '';
-
-    if (isServiceError || !location) {
-      console.error(`[${errorType}] ${message}`);
-    } else {
-      console.error(`[${errorType}] ${message}\n  ${source}\n  ${link}`);
+    // Attach resolved location to error for display layer
+    if (location) {
+      error.source = location.source;
+      error.config = location.config;
     }
 
-    // Structured logging
-    context.logger.error(
-      {
-        event: isServiceError ? 'service_error' : 'config_error',
-        errorName: error?.name || 'Error',
-        errorMessage: message,
-        isServiceError,
-        pageId: context.pageId || null,
-        timestamp: new Date().toISOString(),
-        source: location?.source || null,
-        config: location?.config || null,
-        link: location?.link || null,
-      },
-      message
-    );
+    // Log error - logger handles source, name prefix, and received formatting
+    context.logger.error(error);
 
     // Capture error to Sentry (no-op if Sentry not configured)
     captureSentryError({

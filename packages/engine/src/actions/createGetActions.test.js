@@ -14,6 +14,7 @@
   limitations under the License.
 */
 import { jest } from '@jest/globals';
+import { PluginError } from '@lowdefy/errors/client';
 
 import testContext from '../../test/testContext.js';
 
@@ -193,9 +194,7 @@ test('getActions params is none', async () => {
     endTimestamp: { date: 0 },
     error: {
       action: { id: 'a', type: 'Action' },
-      error: new Error(
-        'Method Error: getActions params must be of type string, integer, boolean or object. Received: undefined at button.'
-      ),
+      error: expect.any(PluginError),
       index: 0,
     },
     event: undefined,
@@ -203,15 +202,16 @@ test('getActions params is none', async () => {
     responses: {
       a: {
         action: { id: 'a', type: 'Action' },
-        error: new Error(
-          'Method Error: getActions params must be of type string, integer, boolean or object. Received: undefined at button.'
-        ),
+        error: expect.any(PluginError),
         index: 0,
       },
     },
     startTimestamp: { date: 0 },
     success: false,
   });
+  expect(res.error.error.rawMessage).toContain(
+    'params must be of type string, integer, boolean or object'
+  );
 });
 
 test('getActions params.key is null', async () => {
@@ -375,9 +375,7 @@ test('getActions params.key is not string or int', async () => {
         },
         type: 'Action',
       },
-      error: new Error(
-        'Method Error: getActions params.key must be of type string or integer. Received: {"key":{}} at button.'
-      ),
+      error: expect.any(PluginError),
       index: 0,
     },
     responses: {
@@ -389,15 +387,14 @@ test('getActions params.key is not string or int', async () => {
           },
           type: 'Action',
         },
-        error: new Error(
-          'Method Error: getActions params.key must be of type string or integer. Received: {"key":{}} at button.'
-        ),
+        error: expect.any(PluginError),
         index: 0,
       },
     },
     startTimestamp: { date: 0 },
     success: false,
   });
+  expect(res.error.error.rawMessage).toContain('params.key must be of type string or integer');
 });
 
 test('getActions params.key is a', async () => {

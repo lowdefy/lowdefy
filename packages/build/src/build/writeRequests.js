@@ -14,14 +14,15 @@
   limitations under the License.
 */
 import { serializer, type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/node-utils';
+import { ConfigError } from '@lowdefy/errors/build';
 
 async function writeRequestsOnPage({ page, context }) {
   const requests = page.requests ?? [];
 
   if (!type.isArray(requests)) {
     throw new ConfigError({
-      message: `Page requests must be an array. Received ${JSON.stringify(requests)}.`,
+      message: `Page requests must be an array.`,
+      received: requests,
       configKey: page['~k'],
       context,
     });

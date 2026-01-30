@@ -6,7 +6,7 @@
         "NonExistentConnection"
       ],
       "errorContains": [
-        "[Config Error] Connection type \"NonExistentConnection\" was used but is not defined.",
+        "Connection type \"NonExistentConnection\" was used but is not defined.",
         "lowdefy.yaml:14"
       ]
     }

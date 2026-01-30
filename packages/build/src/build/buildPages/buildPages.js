@@ -17,7 +17,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/node-utils';
+import { ConfigError } from '@lowdefy/errors/build';
 import buildPage from './buildPage.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 import validateLinkReferences from './validateLinkReferences.js';
@@ -50,9 +50,9 @@ function buildPages({ components, context }) {
       if (error instanceof ConfigError && error.suppressed) {
         return;
       }
-      // Collect error if context.errors exists, otherwise throw (for backward compat with tests)
+      // Collect error object if context.errors exists, otherwise throw (for backward compat with tests)
       if (context?.errors) {
-        context.errors.push(error.message);
+        context.errors.push(error);
         failedPageIndices.add(index);
       } else {
         throw error;

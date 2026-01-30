@@ -56,7 +56,11 @@ function copyVarValue(value, sourceRefId) {
 function refReviver(key, value) {
   if (type.isObject(value)) {
     if (!type.isUndefined(value._ref)) {
-      return this.parsedFiles[value._ref.id];
+      const result = this.parsedFiles[value._ref.id];
+      if (value._ref.ignoreBuildChecks !== undefined && type.isObject(result)) {
+        result['~ignoreBuildChecks'] = value._ref.ignoreBuildChecks;
+      }
+      return result;
     }
     if (value._var) {
       if (type.isString(value._var)) {
@@ -81,9 +85,7 @@ function refReviver(key, value) {
         return copyVarValue(defaultValue, null);
       }
       throw new Error(
-        `"_var" operator takes a string or object with "key" field as arguments. Received "${JSON.stringify(
-          value
-        )}"`
+        '_var operator takes a string or object with "key" field as arguments.'
       );
     }
   }

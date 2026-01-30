@@ -121,7 +121,8 @@ test(':in is not an array', async () => {
   const { res } = await runTest({ routine });
   expect(res.status).toEqual('error');
   expect(res.error.message).toContain(':in must evaluate to an array');
-  expect(res.error.message).toContain('not an array');
+  // Received value is stored in error.received, not in message - logger formats it
+  expect(res.error.received).toBe('not an array');
 });
 
 test('missing :do', async () => {

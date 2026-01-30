@@ -6,7 +6,7 @@
         "nonExistentConnection"
       ],
       "errorContains": [
-        "[Config Error] Request \"badConnectionRequest\" at page \"home\" references non-existent connection \"nonExistentConnection\".",
+        "Request \"badConnectionRequest\" at page \"home\" references non-existent connection \"nonExistentConnection\".",
         "lowdefy.yaml:17"
       ]
     }

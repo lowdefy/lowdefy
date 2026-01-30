@@ -50,6 +50,9 @@ importers:
       '@lowdefy/ajv':
         specifier: 4.5.2
         version: link:../utils/ajv
+      '@lowdefy/errors':
+        specifier: 4.5.2
+        version: link:../utils/errors
       '@lowdefy/helpers':
         specifier: 4.5.2
         version: link:../utils/helpers
@@ -80,7 +83,7 @@ importers:
         version: 0.2.29(@swc/core@1.3.99(@swc/helpers@0.5.2))
       jest:
         specifier: 28.1.3
-        version: 28.1.3(@types/node@16.18.101)
+        version: 28.1.3(@types/node@20.6.2)
 
   packages/build:
     dependencies:
@@ -93,6 +96,9 @@ importers:
       '@lowdefy/blocks-loaders':
         specifier: 4.5.2
         version: link:../plugins/blocks/blocks-loaders
+      '@lowdefy/errors':
+        specifier: 4.5.2
+        version: link:../utils/errors
       '@lowdefy/helpers':
         specifier: 4.5.2
         version: link:../utils/helpers
@@ -225,10 +231,13 @@ importers:
         version: 0.2.29(@swc/core@1.3.99(@swc/helpers@0.5.2))
       jest:
         specifier: 28.1.3
-        version: 28.1.3(@types/node@20.6.2)
+        version: 28.1.3(@types/node@16.18.101)
 
   packages/cli:
     dependencies:
+      '@lowdefy/errors':
+        specifier: 4.5.2
+        version: link:../utils/errors
       '@lowdefy/helpers':
         specifier: 4.5.2
         version: link:../utils/helpers
@@ -290,6 +299,9 @@ importers:
       '@lowdefy/engine':
         specifier: 4.5.2
         version: link:../engine
+      '@lowdefy/errors':
+        specifier: 4.5.2
+        version: link:../utils/errors
       '@lowdefy/helpers':
         specifier: 4.5.2
         version: link:../utils/helpers
@@ -370,6 +382,9 @@ importers:
 
   packages/engine:
     dependencies:
+      '@lowdefy/errors':
+        specifier: 4.5.2
+        version: link:../utils/errors
       '@lowdefy/helpers':
         specifier: 4.5.2
         version: link:../utils/helpers
@@ -523,6 +538,9 @@ importers:
 
   packages/operators:
     dependencies:
+      '@lowdefy/errors':
+        specifier: 4.5.2
+        version: link:../utils/errors
       '@lowdefy/helpers':
         specifier: 4.5.2
         version: link:../utils/helpers
@@ -1993,6 +2011,9 @@ importers:
       '@lowdefy/blocks-aggrid':
         specifier: 4.5.2
         version: link:../../plugins/blocks/blocks-aggrid
+      '@lowdefy/blocks-algolia':
+        specifier: 4.5.2
+        version: link:../../plugins/blocks/blocks-algolia
       '@lowdefy/blocks-antd':
         specifier: 4.5.2
         version: link:../../plugins/blocks/blocks-antd
@@ -2005,6 +2026,9 @@ importers:
       '@lowdefy/blocks-echarts':
         specifier: 4.5.2
         version: link:../../plugins/blocks/blocks-echarts
+      '@lowdefy/blocks-google-maps':
+        specifier: 4.5.2
+        version: link:../../plugins/blocks/blocks-google-maps
       '@lowdefy/blocks-loaders':
         specifier: 4.5.2
         version: link:../../plugins/blocks/blocks-loaders
@@ -2023,9 +2047,18 @@ importers:
       '@lowdefy/connection-axios-http':
         specifier: 4.5.2
         version: link:../../plugins/connections/connection-axios-http
+      '@lowdefy/connection-mongodb':
+        specifier: 4.5.2
+        version: link:../../plugins/connections/connection-mongodb
+      '@lowdefy/docs':
+        specifier: workspace:*
+        version: link:../../docs
       '@lowdefy/engine':
         specifier: 4.5.2
         version: link:../../engine
+      '@lowdefy/errors':
+        specifier: 4.5.2
+        version: link:../../utils/errors
       '@lowdefy/helpers':
         specifier: 4.5.2
         version: link:../../utils/helpers
@@ -2059,6 +2092,9 @@ importers:
       '@lowdefy/operators-yaml':
         specifier: 4.5.2
         version: link:../../plugins/operators/operators-yaml
+      '@lowdefy/plugin-aws':
+        specifier: 4.5.2
+        version: link:../../plugins/plugins/plugin-aws
       '@lowdefy/plugin-next-auth':
         specifier: 4.5.2
         version: link:../../plugins/plugins/plugin-next-auth
@@ -2216,6 +2252,9 @@ importers:
       '@emotion/css':
         specifier: 11.11.2
         version: 11.11.2
+      '@lowdefy/errors':
+        specifier: 4.5.2
+        version: link:../errors
       '@lowdefy/helpers':
         specifier: 4.5.2
         version: link:../helpers
@@ -2266,8 +2305,29 @@ importers:
         specifier: 7.1.0
         version: 7.1.0
 
+  packages/utils/errors:
+    devDependencies:
+      '@jest/globals':
+        specifier: 28.1.3
+        version: 28.1.3
+      '@swc/cli':
+        specifier: 0.1.63
+        version: 0.1.63(@swc/core@1.3.99(@swc/helpers@0.5.2))(chokidar@3.5.3)
+      '@swc/core':
+        specifier: 1.3.99
+        version: 1.3.99(@swc/helpers@0.5.2)
+      '@swc/jest':
+        specifier: 0.2.29
+        version: 0.2.29(@swc/core@1.3.99(@swc/helpers@0.5.2))
+      jest:
+        specifier: 28.1.3
+        version: 28.1.3(@types/node@20.6.2)
+
   packages/utils/helpers:
     dependencies:
+      '@lowdefy/errors':
+        specifier: 4.5.2
+        version: link:../errors
       lodash.merge:
         specifier: 4.6.2
         version: 4.6.2
@@ -2311,6 +2371,9 @@ importers:
 
   packages/utils/node-utils:
     dependencies:
+      '@lowdefy/errors':
+        specifier: 4.5.2
+        version: link:../errors
       '@lowdefy/helpers':
         specifier: 4.5.2
         version: link:../helpers

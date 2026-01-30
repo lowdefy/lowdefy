@@ -6,7 +6,7 @@
         "Action should have required property \"id\""
       ],
       "errorContains": [
-        "[Config Error] Action should have required property \"id\".",
+        "Action should have required property \"id\".",
         "lowdefy.yaml:22"
       ]
     }

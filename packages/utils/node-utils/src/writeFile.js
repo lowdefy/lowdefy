@@ -24,9 +24,7 @@ const writeFilePromise = promisify(fs.writeFile);
 
 async function writeFile(filePath, content) {
   if (!type.isString(filePath)) {
-    throw new Error(
-      `Could not write file, file path should be a string, received ${JSON.stringify(filePath)}.`
-    );
+    throw new Error('Could not write file, file path should be a string.');
   }
 
   try {

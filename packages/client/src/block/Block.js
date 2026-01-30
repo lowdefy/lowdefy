@@ -47,7 +47,7 @@ const Block = ({ block, Blocks, context, lowdefy, parentLoading }) => {
   }, [block.eval?.parseErrors, block.id, lowdefy._internal]);
 
   return (
-    <ErrorBoundary configKey={block.eval?.configKey} onError={handleError}>
+    <ErrorBoundary blockId={block.blockId} configKey={block.eval?.configKey} onError={handleError}>
       <MountEvents
         context={context}
         triggerEvent={async () => {

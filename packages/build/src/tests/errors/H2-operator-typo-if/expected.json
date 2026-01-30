@@ -6,7 +6,7 @@
         "_iff"
       ],
       "warningContains": [
-        "[Config Error] Operator type \"_iff\" was used but is not defined. Did you mean \"_if\"?",
+        "Operator type \"_iff\" was used but is not defined. Did you mean \"_if\"?",
         "lowdefy.yaml:21"
       ]
     }

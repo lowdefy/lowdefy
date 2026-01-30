@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigError } from '@lowdefy/node-utils';
+import { ConfigError } from '@lowdefy/errors/build';
 
 /**
  * Wraps a build step to collect errors instead of stopping immediately.
@@ -39,8 +39,9 @@ function tryBuildStep(stepFn, stepName, { components, context }) {
     if (error instanceof ConfigError && error.suppressed) {
       return;
     }
-    // Collect error - logging happens at checkpoints in index.js
-    context.errors.push(error.message);
+    // Collect error object - logging happens at checkpoints in index.js
+    // ConfigError instances have source and message properties
+    context.errors.push(error);
   }
 }
 

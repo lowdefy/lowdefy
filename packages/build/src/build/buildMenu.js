@@ -17,8 +17,8 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/node-utils';
-import collectConfigError from '../utils/collectConfigError.js';
+import { ConfigError } from '@lowdefy/errors/build';
+import collectExceptions from '../utils/collectExceptions.js';
 import createCheckDuplicateId from '../utils/createCheckDuplicateId.js';
 
 function buildDefaultMenu({ components, context }) {
@@ -106,20 +106,23 @@ function buildMenu({ components, context }) {
   components.menus.forEach((menu, menuIndex) => {
     const configKey = menu['~k'];
     if (type.isUndefined(menu.id)) {
-      collectConfigError({
-        message: 'Menu id missing.',
-        configKey,
+      collectExceptions(
         context,
-      });
+        new ConfigError({ message: 'Menu id missing.', configKey, context })
+      );
       failedMenuIndices.add(menuIndex);
       return;
     }
     if (!type.isString(menu.id)) {
-      collectConfigError({
-        message: `Menu id is not a string. Received ${JSON.stringify(menu.id)}.`,
-        configKey,
+      collectExceptions(
         context,
-      });
+        new ConfigError({
+          message: `Menu id is not a string.`,
+          received: menu.id,
+          configKey,
+          context,
+        })
+      );
       failedMenuIndices.add(menuIndex);
       return;
     }
@@ -140,7 +143,7 @@ function buildMenu({ components, context }) {
     });
   });
   missingPageWarnings.forEach((warning) => {
-    context.logger.configWarning({
+    context.logger.warn({
       message: `Page "${warning.pageId}" referenced in menu link "${warning.menuItemId}" not found.`,
       configKey: warning.configKey,
       prodError: true,

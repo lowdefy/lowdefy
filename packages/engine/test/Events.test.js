@@ -17,6 +17,7 @@
 */
 
 import { jest } from '@jest/globals';
+import { ConfigError } from '@lowdefy/errors/client';
 
 import testContext from './testContext.js';
 
@@ -263,7 +264,7 @@ test('triggerEvent error', async () => {
         },
         type: 'Error',
       },
-      error: new Error('Invalid action type "Error" at "button".'),
+      error: expect.any(ConfigError),
       index: 0,
     },
     responses: {
@@ -275,7 +276,7 @@ test('triggerEvent error', async () => {
           },
           type: 'Error',
         },
-        error: new Error('Invalid action type "Error" at "button".'),
+        error: expect.any(ConfigError),
         index: 0,
       },
     },

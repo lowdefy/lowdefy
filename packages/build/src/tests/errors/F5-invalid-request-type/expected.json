@@ -6,7 +6,7 @@
         "AxiosHtt"
       ],
       "errorContains": [
-        "[Config Error] Request type \"AxiosHtt\" was used but is not defined. Did you mean \"AxiosHttp\"?",
+        "Request type \"AxiosHtt\" was used but is not defined. Did you mean \"AxiosHttp\"?",
         "lowdefy.yaml:23"
       ]
     }

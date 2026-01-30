@@ -14,7 +14,7 @@
   limitations under the License.
 */
 import { serializer, type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/node-utils';
+import { ConfigError } from '@lowdefy/errors/build';
 import evaluateBuildOperators from './evaluateBuildOperators.js';
 import getKey from './getKey.js';
 import getRefContent from './getRefContent.js';
