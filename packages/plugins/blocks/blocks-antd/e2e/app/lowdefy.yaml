@@ -86,3 +86,8 @@ pages:
   # Step 4.2: Message Blocks
   - _ref: ../../src/blocks/Message/tests/Message.e2e.yaml
   - _ref: ../../src/blocks/Notification/tests/Notification.e2e.yaml
+  # Step 5.1: Navigation Blocks
+  - _ref: ../../src/blocks/Menu/tests/Menu.e2e.yaml
+  - _ref: ../../src/blocks/MobileMenu/tests/MobileMenu.e2e.yaml
+  - _ref: ../../src/blocks/PageHeaderMenu/tests/PageHeaderMenu.e2e.yaml
+  - _ref: ../../src/blocks/PageSiderMenu/tests/PageSiderMenu.e2e.yaml
