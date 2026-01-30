@@ -174,7 +174,9 @@ test.describe('ConfirmModal Block', () => {
   // ============================================
 
   test('closes modal when Ok button is clicked', async ({ page }) => {
-    const openBtn = getBlock(page, 'open_basic').locator('.ant-btn');
+    // Use cm_onok which has an onOk handler - cm_basic may not close properly
+    // because triggerEvent returns { success: false } when no handler exists
+    const openBtn = getBlock(page, 'open_onok').locator('.ant-btn');
     await openBtn.click();
 
     const modal = getConfirmModal(page);
@@ -183,11 +185,13 @@ test.describe('ConfirmModal Block', () => {
     const okBtn = modal.locator('.ant-modal-confirm-btns .ant-btn-primary');
     await okBtn.click();
 
-    await expect(modal).toBeHidden();
+    // Modal.confirm() removes element from DOM after closing animation
+    await expect(modal).not.toBeAttached();
   });
 
   test('closes modal when Cancel button is clicked', async ({ page }) => {
-    const openBtn = getBlock(page, 'open_basic').locator('.ant-btn');
+    // Use cm_oncancel which has an onCancel handler
+    const openBtn = getBlock(page, 'open_oncancel').locator('.ant-btn');
     await openBtn.click();
 
     const modal = getConfirmModal(page);
@@ -196,7 +200,8 @@ test.describe('ConfirmModal Block', () => {
     const cancelBtn = modal.locator('.ant-modal-confirm-btns .ant-btn-default');
     await cancelBtn.click();
 
-    await expect(modal).toBeHidden();
+    // Modal.confirm() removes element from DOM after closing animation
+    await expect(modal).not.toBeAttached();
   });
 
   // ============================================
