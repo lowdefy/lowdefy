@@ -80,12 +80,12 @@ test.describe('Selector Block', () => {
     const selector = getSelector(page, 'selector_no_allowclear');
     // Has a value but no clear button
     await expect(selector.locator('.ant-select-selection-item')).toHaveText('A');
-    await expect(selector.locator('.ant-select-clear')).not.toBeVisible();
+    await expect(selector.locator('.ant-select-clear')).toBeHidden();
   });
 
   test('hides arrow when showArrow is false', async ({ page }) => {
     const selector = getSelector(page, 'selector_no_arrow');
-    await expect(selector.locator('.ant-select-arrow')).not.toBeVisible();
+    await expect(selector.locator('.ant-select-arrow')).toBeHidden();
   });
 
   // ============================================
@@ -229,7 +229,7 @@ test.describe('Selector Block', () => {
     // Other options should be hidden
     await expect(getOption(page, 'selector_searchable', 3)).toBeVisible();
     await expect(getOption(page, 'selector_searchable', 3)).toHaveText('Blueberry');
-    await expect(getOption(page, 'selector_searchable', 0)).not.toBeVisible(); // Apple hidden
+    await expect(getOption(page, 'selector_searchable', 0)).toBeHidden(); // Apple hidden
   });
 
   test('cannot select disabled option', async ({ page }) => {

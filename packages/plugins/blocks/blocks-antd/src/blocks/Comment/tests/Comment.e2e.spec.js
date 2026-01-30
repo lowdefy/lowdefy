@@ -36,7 +36,9 @@ test.describe('Comment Block', () => {
   test('renders comment with datetime', async ({ page }) => {
     const comment = getComment(page, 'comment_with_datetime');
     await expect(comment.locator('.ant-comment-content-author-name')).toHaveText('Jane Smith');
-    await expect(comment.locator('.ant-comment-content-author-time')).toHaveText('2024-01-15 10:30');
+    await expect(comment.locator('.ant-comment-content-author-time')).toHaveText(
+      '2024-01-15 10:30'
+    );
   });
 
   test('renders comment with avatar from URL string', async ({ page }) => {

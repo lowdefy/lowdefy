@@ -143,7 +143,7 @@ test.describe('ParagraphInput Block', () => {
   test('hides edit button when editable is false', async ({ page }) => {
     const block = getBlock(page, 'paragraphinput_not_editable');
     const editBtn = block.getByRole('button', { name: 'Edit' }).first();
-    await expect(editBtn).not.toBeVisible();
+    await expect(editBtn).toBeHidden();
   });
 
   // ============================================

@@ -188,7 +188,7 @@ test.describe('AutoComplete Block', () => {
     await expect(getOption(page, 'ac_interaction', 3)).toBeVisible();
     await expect(getOption(page, 'ac_interaction', 3)).toHaveText('Blueberry');
     // Other options should not be visible
-    await expect(getOption(page, 'ac_interaction', 0)).not.toBeVisible();
+    await expect(getOption(page, 'ac_interaction', 0)).toBeHidden();
   });
 
   test('can select option from dropdown', async ({ page }) => {
@@ -235,7 +235,7 @@ test.describe('AutoComplete Block', () => {
 
     // Hover - clear button should not be visible
     await wrapper.hover();
-    await expect(wrapper.locator('.ant-select-clear')).not.toBeVisible();
+    await expect(wrapper.locator('.ant-select-clear')).toBeHidden();
   });
 
   test('can navigate options with keyboard', async ({ page }) => {
@@ -259,7 +259,7 @@ test.describe('AutoComplete Block', () => {
     await expect(dropdown).toBeVisible();
 
     await page.keyboard.press('Escape');
-    await expect(dropdown).not.toBeVisible();
+    await expect(dropdown).toBeHidden();
   });
 
   test('backfill shows highlighted option in input', async ({ page }) => {

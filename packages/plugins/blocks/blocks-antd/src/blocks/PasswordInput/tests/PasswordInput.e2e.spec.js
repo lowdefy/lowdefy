@@ -78,7 +78,7 @@ test.describe('PasswordInput Block', () => {
   test('hides visibility toggle when visibilityToggle is false', async ({ page }) => {
     const block = getBlock(page, 'passwordinput_no_toggle');
     const toggle = block.locator('.ant-input-password-icon');
-    await expect(toggle).not.toBeVisible();
+    await expect(toggle).toBeHidden();
   });
 
   // ============================================

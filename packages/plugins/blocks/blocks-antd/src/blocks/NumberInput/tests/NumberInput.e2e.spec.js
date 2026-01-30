@@ -76,7 +76,7 @@ test.describe('NumberInput Block', () => {
   test('hides controls when controls is false', async ({ page }) => {
     const block = getBlock(page, 'numberinput_no_controls');
     const handler = block.locator('.ant-input-number-handler-wrap');
-    await expect(handler).not.toBeVisible();
+    await expect(handler).toBeHidden();
   });
 
   test('shows controls when controls is true', async ({ page }) => {

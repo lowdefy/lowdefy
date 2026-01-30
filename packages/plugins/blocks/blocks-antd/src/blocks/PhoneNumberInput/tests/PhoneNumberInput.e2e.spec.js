@@ -168,15 +168,16 @@ test.describe('PhoneNumberInput Block', () => {
     const selector = getCodeSelector(page, 'phone_interaction');
     await selector.click();
 
-    // Type to search for United Kingdom
-    const searchInput = page.locator('.ant-select-dropdown:visible input.ant-select-selection-search-input, .ant-select-selection-search-input:focus');
+    // Type to search for United Kingdom (keyboard events go to the dropdown's search input)
     await page.keyboard.type('United Kingdom');
 
     // Wait for filtered results
     await page.waitForTimeout(300);
 
     // Select the UK option
-    const ukOption = page.locator('.ant-select-dropdown:visible .ant-select-item-option:visible').first();
+    const ukOption = page
+      .locator('.ant-select-dropdown:visible .ant-select-item-option:visible')
+      .first();
     await ukOption.click();
 
     // Verify UK is selected (+44)

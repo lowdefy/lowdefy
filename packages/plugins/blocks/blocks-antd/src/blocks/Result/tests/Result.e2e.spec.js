@@ -126,7 +126,8 @@ test.describe('Result Block', () => {
   // ============================================
 
   test('renders with content area', async ({ page }) => {
-    const block = getResult(page, 'result_with_content');
+    const result = getResult(page, 'result_with_content');
+    await expect(result).toBeVisible();
     const paragraph = getBlock(page, 'result_content_paragraph');
     await expect(paragraph).toBeVisible();
     await expect(paragraph).toContainText('Additional content');

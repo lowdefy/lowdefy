@@ -212,7 +212,7 @@ test.describe('DateRangeSelector Block', () => {
 
     // Hover - clear button should not be visible
     await picker.hover();
-    await expect(picker.locator('.ant-picker-clear')).not.toBeVisible();
+    await expect(picker.locator('.ant-picker-clear')).toBeHidden();
   });
 
   test('closes dropdown on Escape', async ({ page }) => {

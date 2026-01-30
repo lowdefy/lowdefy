@@ -70,7 +70,7 @@ test.describe('Popover Block', () => {
     await trigger.scrollIntoViewIfNeeded();
     const popover = page.locator('.ant-popover').filter({ hasText: 'Hover Popover' });
     // Popover should not be visible initially
-    await expect(popover).not.toBeVisible();
+    await expect(popover).toBeHidden();
     // Hover to show
     await trigger.hover();
     await expect(popover).toBeVisible();
@@ -84,7 +84,7 @@ test.describe('Popover Block', () => {
     await trigger.scrollIntoViewIfNeeded();
     const popover = page.locator('.ant-popover').filter({ hasText: 'Click Popover' });
     // Popover should not be visible initially
-    await expect(popover).not.toBeVisible();
+    await expect(popover).toBeHidden();
     // Click to show
     await trigger.click();
     await expect(popover).toBeVisible();

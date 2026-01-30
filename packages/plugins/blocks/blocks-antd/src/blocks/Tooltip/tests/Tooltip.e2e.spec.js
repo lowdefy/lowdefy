@@ -61,7 +61,7 @@ test.describe('Tooltip Block', () => {
     const trigger = getBlock(page, 'tooltip_trigger_hover_trigger');
     const tooltip = page.locator('.ant-tooltip').filter({ hasText: 'Hover tooltip' });
     // Tooltip should not be visible initially
-    await expect(tooltip).not.toBeVisible();
+    await expect(tooltip).toBeHidden();
     // Hover to show
     await trigger.hover();
     await expect(tooltip).toBeVisible();
@@ -71,7 +71,7 @@ test.describe('Tooltip Block', () => {
     const trigger = getBlock(page, 'tooltip_trigger_click_trigger');
     const tooltip = page.locator('.ant-tooltip').filter({ hasText: 'Click tooltip' });
     // Tooltip should not be visible initially
-    await expect(tooltip).not.toBeVisible();
+    await expect(tooltip).toBeHidden();
     // Click to show
     await trigger.click();
     await expect(tooltip).toBeVisible();
@@ -81,7 +81,7 @@ test.describe('Tooltip Block', () => {
     const input = page.locator('#tooltip_trigger_focus_trigger_input');
     const tooltip = page.locator('.ant-tooltip').filter({ hasText: 'Focus tooltip' });
     // Tooltip should not be visible initially
-    await expect(tooltip).not.toBeVisible();
+    await expect(tooltip).toBeHidden();
     // Focus to show
     await input.focus();
     await expect(tooltip).toBeVisible();

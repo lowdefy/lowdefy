@@ -176,7 +176,7 @@ test.describe('MonthSelector Block', () => {
 
     // Hover - clear button should not be visible
     await picker.hover();
-    await expect(picker.locator('.ant-picker-clear')).not.toBeVisible();
+    await expect(picker.locator('.ant-picker-clear')).toBeHidden();
   });
 
   test('closes dropdown on Escape', async ({ page }) => {
@@ -187,6 +187,6 @@ test.describe('MonthSelector Block', () => {
     await expect(dropdown).toBeVisible();
 
     await page.keyboard.press('Escape');
-    await expect(dropdown).not.toBeVisible();
+    await expect(dropdown).toBeHidden();
   });
 });

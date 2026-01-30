@@ -82,12 +82,12 @@ test.describe('MultipleSelector Block', () => {
     const selector = getSelector(page, 'ms_no_allowclear');
     // Has a value but no clear button
     await expect(selector.locator('.ant-select-selection-item-content').first()).toHaveText('A');
-    await expect(selector.locator('.ant-select-clear')).not.toBeVisible();
+    await expect(selector.locator('.ant-select-clear')).toBeHidden();
   });
 
   test('hides arrow when showArrow is false', async ({ page }) => {
     const selector = getSelector(page, 'ms_no_arrow');
-    await expect(selector.locator('.ant-select-arrow')).not.toBeVisible();
+    await expect(selector.locator('.ant-select-arrow')).toBeHidden();
   });
 
   test('limits displayed tags with maxTagCount', async ({ page }) => {
@@ -96,13 +96,21 @@ test.describe('MultipleSelector Block', () => {
 
     // Select 4 options (wait for each to be selected)
     await getOption(page, 'ms_max_tag_count', 0).click();
-    await expect(getOption(page, 'ms_max_tag_count', 0)).toHaveClass(/ant-select-item-option-selected/);
+    await expect(getOption(page, 'ms_max_tag_count', 0)).toHaveClass(
+      /ant-select-item-option-selected/
+    );
     await getOption(page, 'ms_max_tag_count', 1).click();
-    await expect(getOption(page, 'ms_max_tag_count', 1)).toHaveClass(/ant-select-item-option-selected/);
+    await expect(getOption(page, 'ms_max_tag_count', 1)).toHaveClass(
+      /ant-select-item-option-selected/
+    );
     await getOption(page, 'ms_max_tag_count', 2).click();
-    await expect(getOption(page, 'ms_max_tag_count', 2)).toHaveClass(/ant-select-item-option-selected/);
+    await expect(getOption(page, 'ms_max_tag_count', 2)).toHaveClass(
+      /ant-select-item-option-selected/
+    );
     await getOption(page, 'ms_max_tag_count', 3).click();
-    await expect(getOption(page, 'ms_max_tag_count', 3)).toHaveClass(/ant-select-item-option-selected/);
+    await expect(getOption(page, 'ms_max_tag_count', 3)).toHaveClass(
+      /ant-select-item-option-selected/
+    );
     await page.keyboard.press('Escape');
 
     // Should show 2 tags + overflow indicator (maxTagCount=2)
@@ -307,7 +315,7 @@ test.describe('MultipleSelector Block', () => {
     // Only Blueberry should be visible (index 3)
     await expect(getOption(page, 'ms_searchable', 3)).toBeVisible();
     await expect(getOption(page, 'ms_searchable', 3)).toHaveText('Blueberry');
-    await expect(getOption(page, 'ms_searchable', 0)).not.toBeVisible(); // Apple hidden
+    await expect(getOption(page, 'ms_searchable', 0)).toBeHidden(); // Apple hidden
   });
 
   test('cannot select disabled option', async ({ page }) => {

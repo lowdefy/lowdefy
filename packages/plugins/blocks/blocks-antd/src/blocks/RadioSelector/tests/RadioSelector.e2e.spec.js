@@ -125,9 +125,9 @@ test.describe('RadioSelector Block', () => {
     const disabledRadio = getRadioByIndex(page, 'rs_disabled_option', 1);
     const anotherEnabled = getRadioByIndex(page, 'rs_disabled_option', 2);
 
-    await expect(enabledRadio).not.toBeDisabled();
+    await expect(enabledRadio).toBeEnabled();
     await expect(disabledRadio).toBeDisabled();
-    await expect(anotherEnabled).not.toBeDisabled();
+    await expect(anotherEnabled).toBeEnabled();
   });
 
   // ============================================

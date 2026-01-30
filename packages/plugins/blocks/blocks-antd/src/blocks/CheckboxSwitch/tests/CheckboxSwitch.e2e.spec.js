@@ -21,8 +21,7 @@ import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
 const getCheckbox = (page, blockId) => page.locator(`#${blockId}_input`);
 
 // Helper to get the checkbox wrapper (for clicking)
-const getCheckboxWrapper = (page, blockId) =>
-  page.locator(`#bl-${blockId} .ant-checkbox-wrapper`);
+const getCheckboxWrapper = (page, blockId) => page.locator(`#bl-${blockId} .ant-checkbox-wrapper`);
 
 test.describe('CheckboxSwitch Block', () => {
   test.beforeEach(async ({ page }) => {

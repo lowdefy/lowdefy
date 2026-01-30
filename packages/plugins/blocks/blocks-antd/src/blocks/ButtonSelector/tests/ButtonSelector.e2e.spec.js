@@ -127,9 +127,9 @@ test.describe('ButtonSelector Block', () => {
     const disabledButton = getButtonInput(page, 'bs_disabled_option', 1);
     const anotherEnabled = getButtonInput(page, 'bs_disabled_option', 2);
 
-    await expect(enabledButton).not.toBeDisabled();
+    await expect(enabledButton).toBeEnabled();
     await expect(disabledButton).toBeDisabled();
-    await expect(anotherEnabled).not.toBeDisabled();
+    await expect(anotherEnabled).toBeEnabled();
   });
 
   // ============================================

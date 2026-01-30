@@ -124,9 +124,9 @@ test.describe('CheckboxSelector Block', () => {
     const disabledCheckbox = getCheckbox(page, 'cs_disabled_option', 1);
     const anotherEnabled = getCheckbox(page, 'cs_disabled_option', 2);
 
-    await expect(enabledCheckbox).not.toBeDisabled();
+    await expect(enabledCheckbox).toBeEnabled();
     await expect(disabledCheckbox).toBeDisabled();
-    await expect(anotherEnabled).not.toBeDisabled();
+    await expect(anotherEnabled).toBeEnabled();
   });
 
   // ============================================
