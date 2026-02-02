@@ -114,7 +114,7 @@ test('collectExceptions includes location information', () => {
 
   expect(context.errors).toHaveLength(1);
   expect(context.errors[0]).toBeInstanceOf(ConfigError);
-  expect(context.errors[0].source).toBe('pages/home.yaml:10');
+  expect(context.errors[0].source).toBe('/app/pages/home.yaml:10');
   expect(context.errors[0].message).toBe('Invalid block type');
 });
 

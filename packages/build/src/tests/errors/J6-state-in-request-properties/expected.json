@@ -7,7 +7,7 @@
       ],
       "warningContains": [
         "Found _state in request \"insert_contact\" on page \"page_1\"",
-        "Use _payload to pass state values"
+        "then reference it in request properties using _payload"
       ]
     },
     {
