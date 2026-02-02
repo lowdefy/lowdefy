@@ -25,36 +25,12 @@ export { goto, waitForReady, expectNavigation, waitForPage };
 export { waitForRequest, getRequestResponse };
 export { getState, getBlockState, expectState };
 
-// Try to import block helpers (optional peer dependency)
-let button, selector, textInput;
-try {
-  button = (await import('@lowdefy/blocks-antd/e2e/Button')).default;
-} catch (e) {
-  // blocks-antd not installed or Button e2e not available
-}
-try {
-  selector = (await import('@lowdefy/blocks-antd/e2e/Selector')).default;
-} catch (e) {
-  // blocks-antd not installed or Selector e2e not available
-}
-try {
-  textInput = (await import('@lowdefy/blocks-antd/e2e/TextInput')).default;
-} catch (e) {
-  // blocks-antd not installed or TextInput e2e not available
-}
+// Test prep utilities
+import { generateManifest, loadManifest } from './testPrep/generateManifest.js';
+export { generateManifest, loadManifest };
 
-export { button, selector, textInput };
-
-// Namespace for core helpers
-export const ldf = {
-  goto,
-  waitForReady,
-  expectNavigation,
-  waitForPage,
-  waitForRequest,
-  getRequestResponse,
-  getState,
-  getBlockState,
-  expectState,
-  block: getBlock,
-};
+// Proxy utilities
+import createHelperRegistry from './proxy/createHelperRegistry.js';
+import createBlockProxy from './proxy/createBlockProxy.js';
+import createPageManager from './proxy/createPageManager.js';
+export { createHelperRegistry, createBlockProxy, createPageManager };

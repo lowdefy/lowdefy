@@ -40,16 +40,33 @@ async function search(page, blockId, text) {
   await page.keyboard.type(text);
 }
 
-const assertions = {
-  isVisible: (page, blockId) => expect(locator(page, blockId)).toBeVisible(),
+// Assertions (flat)
+function isVisible(page, blockId) {
+  return expect(locator(page, blockId)).toBeVisible();
+}
 
-  hasValue: (page, blockId, value) =>
-    expect(locator(page, blockId).locator('.ant-select-selection-item')).toHaveText(value),
+function hasValue(page, blockId, value) {
+  return expect(locator(page, blockId).locator('.ant-select-selection-item')).toHaveText(value);
+}
 
-  isDisabled: (page, blockId) => expect(locator(page, blockId)).toHaveClass(/ant-select-disabled/),
+function isDisabled(page, blockId) {
+  return expect(locator(page, blockId)).toHaveClass(/ant-select-disabled/);
+}
 
-  hasPlaceholder: (page, blockId, text) =>
-    expect(locator(page, blockId).locator('.ant-select-selection-placeholder')).toHaveText(text),
+function hasPlaceholder(page, blockId, text) {
+  return expect(locator(page, blockId).locator('.ant-select-selection-placeholder')).toHaveText(
+    text
+  );
+}
+
+export default {
+  locator,
+  optionLocator,
+  select,
+  clear,
+  search,
+  isVisible,
+  hasValue,
+  isDisabled,
+  hasPlaceholder,
 };
-
-export default { locator, optionLocator, select, clear, search, assertions };

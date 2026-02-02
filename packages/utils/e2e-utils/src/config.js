@@ -14,19 +14,31 @@
   limitations under the License.
 */
 
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { defineConfig, devices } from '@playwright/test';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function createConfig({
   appDir = './',
+  buildDir = '.lowdefy',
   port = 3000,
   testDir = 'e2e',
   testMatch = '**/*.spec.js',
 } = {}) {
+  // Resolve absolute path for build directory
+  const absoluteBuildDir = path.resolve(appDir, buildDir);
+
+  // Set environment for fixtures to find build artifacts
+  process.env.LOWDEFY_BUILD_DIR = absoluteBuildDir;
+
   return defineConfig({
     testDir,
     testMatch,
     fullyParallel: true,
     reporter: 'list',
+    globalSetup: path.join(__dirname, 'globalSetup.js'),
     use: {
       baseURL: `http://localhost:${port}`,
       trace: 'on-first-retry',
@@ -38,10 +50,12 @@ function createConfig({
       },
     ],
     webServer: {
-      command: `npx lowdefy dev --port ${port}`,
+      // Start production server (build happens in globalSetup)
+      // NEXT_PUBLIC_LOWDEFY_E2E=true exposes window.lowdefy for state testing
+      command: `NEXT_PUBLIC_LOWDEFY_E2E=true npx lowdefy start --port ${port}`,
       url: `http://localhost:${port}`,
       reuseExistingServer: true,
-      timeout: 120000,
+      timeout: 60000,
       cwd: appDir,
     },
   });

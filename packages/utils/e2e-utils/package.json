@@ -23,7 +23,8 @@
   },
   "exports": {
     ".": "./dist/index.js",
-    "./config": "./dist/config.js"
+    "./config": "./dist/config.js",
+    "./fixtures": "./dist/fixtures/index.js"
   },
   "files": [
     "dist/*"

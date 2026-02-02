@@ -24,17 +24,33 @@ async function click(page, blockId) {
   await locator(page, blockId).click();
 }
 
-const assertions = {
-  isVisible: (page, blockId) => expect(locator(page, blockId)).toBeVisible(),
+// Assertions (flat)
+function isVisible(page, blockId) {
+  return expect(locator(page, blockId)).toBeVisible();
+}
 
-  hasText: (page, blockId, text) => expect(locator(page, blockId)).toHaveText(text),
+function hasText(page, blockId, text) {
+  return expect(locator(page, blockId)).toHaveText(text);
+}
 
-  isDisabled: (page, blockId) => expect(locator(page, blockId)).toBeDisabled(),
+function isDisabled(page, blockId) {
+  return expect(locator(page, blockId)).toBeDisabled();
+}
 
-  isLoading: (page, blockId) => expect(locator(page, blockId)).toHaveClass(/ant-btn-loading/),
+function isLoading(page, blockId) {
+  return expect(locator(page, blockId)).toHaveClass(/ant-btn-loading/);
+}
 
-  hasType: (page, blockId, type) =>
-    expect(locator(page, blockId)).toHaveClass(new RegExp(`ant-btn-${type}`)),
+function hasType(page, blockId, type) {
+  return expect(locator(page, blockId)).toHaveClass(new RegExp(`ant-btn-${type}`));
+}
+
+export default {
+  locator,
+  click,
+  isVisible,
+  hasText,
+  isDisabled,
+  isLoading,
+  hasType,
 };
-
-export default { locator, click, assertions };
