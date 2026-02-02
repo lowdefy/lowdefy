@@ -42,7 +42,7 @@ test.describe('Workflow Test - App Developer Style', () => {
     await page.waitForFunction(() => {
       const lowdefy = window.lowdefy;
       const pageId = lowdefy?.pageId;
-      return lowdefy?.contexts?.[pageId]?.state?.submitted === true;
+      return lowdefy?.contexts?.[`page:${pageId}`]?.state?.submitted === true;
     });
 
     // Verify the result
@@ -69,7 +69,7 @@ test.describe('Workflow Test - App Developer Style', () => {
     await page.waitForFunction(() => {
       const lowdefy = window.lowdefy;
       const pageId = lowdefy?.pageId;
-      return lowdefy?.contexts?.[pageId]?.state?.submitted === true;
+      return lowdefy?.contexts?.[`page:${pageId}`]?.state?.submitted === true;
     });
 
     // Verify ticket was created with null values

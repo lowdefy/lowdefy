@@ -21,7 +21,7 @@ async function waitForRequest(page, requestId) {
       const lowdefy = window.lowdefy;
       if (!lowdefy) return false;
       const pageId = lowdefy.pageId;
-      const requests = lowdefy.contexts?.[pageId]?.requests?.[reqId];
+      const requests = lowdefy.contexts?.[`page:${pageId}`]?.requests?.[reqId];
       return requests && requests.length > 0 && requests[0].loading === false;
     },
     requestId,
@@ -33,7 +33,7 @@ async function getRequestResponse(page, requestId) {
   return page.evaluate((reqId) => {
     const lowdefy = window.lowdefy;
     const pageId = lowdefy?.pageId;
-    const requests = lowdefy?.contexts?.[pageId]?.requests?.[reqId];
+    const requests = lowdefy?.contexts?.[`page:${pageId}`]?.requests?.[reqId];
     return requests?.[0]?.response;
   }, requestId);
 }

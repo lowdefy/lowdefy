@@ -29,8 +29,8 @@ function createPlaywrightConfig({ packageDir, port = 3001, testMatch = '**/tests
   const serverDevDir = path.join(monorepoRoot, 'packages/servers/server-dev');
 
   return defineConfig({
-    testDir: srcDir,
-    testMatch,
+    testDir: packageDir,
+    testMatch: ['src/**/tests/*.e2e.spec.js', 'e2e/tests/*.e2e.spec.js'],
     fullyParallel: true,
     reporter: 'list',
     outputDir: path.join(e2eDir, 'test-results'),

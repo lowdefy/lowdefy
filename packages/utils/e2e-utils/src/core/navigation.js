@@ -18,10 +18,11 @@ import { expect } from '@playwright/test';
 
 async function waitForReady(page) {
   // Wait for Lowdefy client to initialize (context exists)
+  // Context key is "page:{pageId}" not just pageId
   await page.waitForFunction(
     () => {
       const lowdefy = window.lowdefy;
-      return lowdefy && lowdefy.pageId && lowdefy.contexts[lowdefy.pageId];
+      return lowdefy && lowdefy.pageId && lowdefy.contexts[`page:${lowdefy.pageId}`];
     },
     { timeout: 30000 }
   );

@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_click",
+      "mcp__playwright__browser_press_key",
+      "Bash(pnpm e2e:*)",
+      "mcp__playwright__browser_snapshot",
+      "mcp__playwright__browser_evaluate",
+      "Bash(gh pr checkout:*)",
+      "Bash(git fetch:*)"
+    ]
+  }
+}

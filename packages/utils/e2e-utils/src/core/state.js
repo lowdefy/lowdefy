@@ -20,7 +20,7 @@ async function getState(page) {
   return page.evaluate(() => {
     const lowdefy = window.lowdefy;
     const pageId = lowdefy?.pageId;
-    return lowdefy?.contexts?.[pageId]?.state;
+    return lowdefy?.contexts?.[`page:${pageId}`]?.state;
   });
 }
 
