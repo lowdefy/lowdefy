@@ -48,7 +48,11 @@ class LowdefyError extends Error {
   }
 
   print() {
-    return formatErrorMessage(this);
+    const message = formatErrorMessage(this);
+    if (this.stack) {
+      return `${message}\n${this.stack}`;
+    }
+    return message;
   }
 
   /**

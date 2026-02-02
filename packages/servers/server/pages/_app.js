@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 
 import { ErrorBoundary } from '@lowdefy/block-utils';
@@ -44,8 +44,16 @@ function App({ Component, pageProps: { session, rootConfig, pageConfig } }) {
   const usageDataRef = useRef({});
   const lowdefyRef = useRef({ eventCallback: createLogUsage({ usageDataRef }) });
 
+  const handleError = useCallback((error) => {
+    if (error.log) {
+      error.log(lowdefyRef.current);
+    } else {
+      console.error(error.print ? error.print() : `[${error.name || 'Error'}] ${error.message}`);
+    }
+  }, []);
+
   return (
-    <ErrorBoundary fullPage>
+    <ErrorBoundary fullPage onError={handleError}>
       <Auth session={session}>
         {(auth) => {
           usageDataRef.current.user = auth.session?.hashed_id;

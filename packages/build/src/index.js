@@ -88,8 +88,18 @@ async function build(options) {
     // Schema errors mean structurally invalid data - stop before processing further
     if (context.errors.length > 0) {
       // Log all errors together before summary to ensure proper ordering
-      context.errors.forEach((err) => context.logger.error(err));
-      const error = new Error(`Build failed with ${context.errors.length} error(s).`);
+      context.errors.forEach((err) => {
+        if (err instanceof ConfigError || err.print) {
+          context.logger.error(err);
+        } else {
+          const lowdefyErr = new LowdefyError(err.message, { cause: err });
+          lowdefyErr.stack = err.stack;
+          context.logger.error(lowdefyErr);
+        }
+      });
+      const error = new Error(
+        `Build failed with ${context.errors.length} error(s). See above for details.`
+      );
       error.isFormatted = true;
       error.hideStack = true;
       throw error;
@@ -114,8 +124,19 @@ async function build(options) {
     // Check if there are any collected errors before writing
     if (context.errors.length > 0) {
       // Log all errors together before summary to ensure proper ordering
-      context.errors.forEach((err) => context.logger.error(err));
-      const error = new Error(`Build failed with ${context.errors.length} error(s).`);
+      context.errors.forEach((err) => {
+        if (err instanceof ConfigError || err.print) {
+          context.logger.error(err);
+        } else {
+          // Unexpected internal errors get wrapped as LowdefyError for proper formatting
+          const lowdefyErr = new LowdefyError(err.message, { cause: err });
+          lowdefyErr.stack = err.stack;
+          context.logger.error(lowdefyErr);
+        }
+      });
+      const error = new Error(
+        `Build failed with ${context.errors.length} error(s). See above for details.`
+      );
       // Mark this error as already formatted so stack trace isn't shown
       error.isFormatted = true;
       error.hideStack = true;
@@ -145,9 +166,11 @@ async function build(options) {
     if (err.isFormatted) {
       throw err;
     }
-    // Unexpected internal error - log as [Lowdefy Error] with stack trace
+    // Unexpected internal error - wrap as LowdefyError for proper formatting
     const logger = context?.logger ?? options.logger ?? console;
-    logger.error(LowdefyError.format(err));
+    const lowdefyErr = new LowdefyError(err.message, { cause: err });
+    lowdefyErr.stack = err.stack;
+    logger.error(lowdefyErr);
     const error = new Error('Build failed due to internal error. See above for details.');
     error.isFormatted = true;
     error.hideStack = true;

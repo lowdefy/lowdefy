@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React, { Suspense, useRef } from 'react';
+import React, { Suspense, useCallback, useRef } from 'react';
 import dynamic from 'next/dynamic';
 
 import { ErrorBoundary } from '@lowdefy/block-utils';
@@ -41,8 +41,17 @@ initSentryClient({
 
 function App({ Component }) {
   const lowdefyRef = useRef({});
+
+  const handleError = useCallback((error) => {
+    if (error.log) {
+      error.log(lowdefyRef.current);
+    } else {
+      console.error(error.print ? error.print() : `[${error.name || 'Error'}] ${error.message}`);
+    }
+  }, []);
+
   return (
-    <ErrorBoundary fullPage>
+    <ErrorBoundary fullPage onError={handleError}>
       <Suspense fallback="">
         <Auth>
           {(auth) => {

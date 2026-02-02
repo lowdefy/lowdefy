@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 import extractOperatorKey from '../../utils/extractOperatorKey.js';
 import traverseConfig from '../../utils/traverseConfig.js';
 
@@ -28,7 +30,7 @@ function validateStateReferences({ page, context }) {
     config: page,
     visitor: (obj) => {
       // Collect blockId if present, including the top-level key for dot-notation ids
-      if (obj.blockId) {
+      if (type.isString(obj.blockId)) {
         blockIds.add(obj.blockId);
         const topLevel = obj.blockId.split(/[.\[]/)[0];
         if (topLevel !== obj.blockId) {
