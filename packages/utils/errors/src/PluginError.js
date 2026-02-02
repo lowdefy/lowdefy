@@ -65,7 +65,7 @@ class PluginError extends Error {
     this.pluginType = pluginType;
     this.pluginName = pluginName;
     this.rawMessage = rawMessage; // Original message without location
-    this.received = received;
+    this.received = received ?? error?.received;
     this.location = location;
     this.configKey = error?.configKey ?? configKey ?? null;
 
