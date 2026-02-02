@@ -32,4 +32,11 @@ import LowdefyError from '../LowdefyError.js';
 import PluginError from '../PluginError.js';
 import ServiceError from '../ServiceError.js';
 
-export { ConfigError, ConfigWarning, deserializeError, LowdefyError, PluginError, ServiceError };
+export {
+  ConfigError,
+  ConfigWarning,
+  deserializeError,
+  LowdefyError,
+  PluginError,
+  ServiceError,
+};

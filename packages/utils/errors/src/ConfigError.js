@@ -34,6 +34,8 @@
  *   location: { source: 'pages/home.yaml:42', link: '/path/to/pages/home.yaml:42' }
  * });
  */
+import formatErrorMessage from './formatErrorMessage.js';
+
 class ConfigError extends Error {
   /**
    * Creates a ConfigError instance with formatted message.
@@ -75,6 +77,10 @@ class ConfigError extends Error {
     if (error?.stack) {
       this.stack = error.stack;
     }
+  }
+
+  print() {
+    return formatErrorMessage(this);
   }
 
   /**

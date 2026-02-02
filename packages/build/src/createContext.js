@@ -71,7 +71,13 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
   // Only wrap once - check for marker to prevent double-wrapping on rebuild
   if (!logger.warn._lowdefyWrapped) {
     const originalWarn = logger.warn.bind(logger);
-    const wrappedWarn = (warningOrParams) => {
+    const wrappedWarn = (warningOrParams, ...args) => {
+      // Pino-style call with merging object + message string: pass through directly
+      if (args.length > 0) {
+        originalWarn(warningOrParams, ...args);
+        return;
+      }
+
       // Get current context (updated each build)
       const ctx = logger._lowdefyContext;
       const seen = ctx?.seenSourceLines;
@@ -88,7 +94,7 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
         const dedupKey = warningOrParams.source ?? warningOrParams.message;
         if (seen?.has(dedupKey)) return;
         seen?.add(dedupKey);
-        originalWarn({ source: warningOrParams.source }, warningOrParams.message);
+        originalWarn({ source: warningOrParams.source }, warningOrParams.print());
         return;
       }
 
@@ -99,7 +105,7 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
         const dedupKey = warning.source ?? warning.message;
         if (seen?.has(dedupKey)) return;
         seen?.add(dedupKey);
-        originalWarn({ source: warning.source }, warning.message);
+        originalWarn({ source: warning.source }, warning.print());
       } catch (err) {
         if (err instanceof ConfigError) {
           collectExceptions(ctx, err);
@@ -111,6 +117,46 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
     wrappedWarn._lowdefyWrapped = true;
     logger.warn = wrappedWarn;
   }
+
+  // Wrap logger.error to format received values
+  if (!logger.error._lowdefyWrapped) {
+    const originalError = logger.error.bind(logger);
+    const wrappedError = (errorOrMessage, ...args) => {
+      // Pino-style call with merging object + message string: pass through directly
+      if (args.length > 0) {
+        originalError(errorOrMessage, ...args);
+        return;
+      }
+
+      // String message - pass through
+      if (typeof errorOrMessage === 'string') {
+        originalError(errorOrMessage);
+        return;
+      }
+
+      // Error object with print method - use it for formatting
+      if (errorOrMessage?.print) {
+        if (errorOrMessage.source) {
+          originalError({ source: errorOrMessage.source }, errorOrMessage.print());
+        } else {
+          originalError(errorOrMessage.print());
+        }
+        return;
+      }
+
+      // Error with source - log source separately then message
+      if (errorOrMessage?.source) {
+        originalError({ source: errorOrMessage.source }, errorOrMessage.message);
+        return;
+      }
+
+      // Pass through
+      originalError(errorOrMessage?.message ?? errorOrMessage);
+    };
+    wrappedError._lowdefyWrapped = true;
+    logger.error = wrappedError;
+  }
+
   context.logger = logger;
 
   return context;

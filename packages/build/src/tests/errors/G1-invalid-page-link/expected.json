@@ -3,13 +3,13 @@
     {
       "mode": "dev",
       "exactWarnings": [
-        "lowdefy.yaml:23\nPage \"nonExistentPage\" not found. Link on page \"home\" references non-existent page."
+        "lowdefy.yaml:23\n[Config Warning] Page \"nonExistentPage\" not found. Link on page \"home\" references non-existent page."
       ]
     },
     {
       "mode": "prod",
       "exactErrors": [
-        "lowdefy.yaml:23\nPage \"nonExistentPage\" not found. Link on page \"home\" references non-existent page."
+        "lowdefy.yaml:23\n[ConfigError] Page \"nonExistentPage\" not found. Link on page \"home\" references non-existent page."
       ],
       "expectThrow": true
     }

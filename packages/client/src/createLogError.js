@@ -44,7 +44,7 @@ function createLogError(lowdefy) {
       } catch {
         // Server logging failed - continue with local console
       }
-      console.error(`[${error.name}] ${error.message}`);
+      console.error(error.print());
       return;
     }
 
@@ -56,7 +56,7 @@ function createLogError(lowdefy) {
     }
 
     // Other errors - just log locally
-    console.error(`[${error.name || 'Error'}] ${error.message}`);
+    console.error(error.print ? error.print() : `[${error.name || 'Error'}] ${error.message}`);
   };
 }
 

@@ -16,17 +16,6 @@
 
 import pino from 'pino';
 
-function formatReceived(message, received) {
-  if (received === undefined) {
-    return message;
-  }
-  try {
-    return `${message} Received: ${JSON.stringify(received)}`;
-  } catch {
-    return `${message} Received: [unserializable]`;
-  }
-}
-
 const pinoLogger = pino({
   name: 'lowdefy_server',
   level: process.env.LOWDEFY_LOG_LEVEL ?? 'info',
@@ -50,22 +39,26 @@ function wrapLogger(logger) {
   const originalInfo = logger.info.bind(logger);
 
   logger.error = (errorOrMessage, ...args) => {
-    // If it's an Error object (has name property - covers Error instances and error-like objects)
-    if (errorOrMessage?.name) {
-      // Log source first if available
+    // Handle string messages directly
+    if (typeof errorOrMessage === 'string') {
+      originalError(errorOrMessage, ...args);
+      return;
+    }
+
+    // Handle error objects (Error instances or error-like objects with name or message)
+    if (errorOrMessage && (errorOrMessage.name || errorOrMessage.message !== undefined)) {
       if (errorOrMessage.source) {
         originalInfo(errorOrMessage.source);
       }
-      const errorName = errorOrMessage.name || 'Error';
-      // Handle undefined message (which JS converts to string "undefined")
-      const rawMessage = errorOrMessage.message;
-      const message =
-        rawMessage && rawMessage !== 'undefined' ? rawMessage : 'Unknown error';
-      const errorMessage = formatReceived(message, errorOrMessage.received);
-      originalError(`[${errorName}] ${errorMessage}`);
+      if (errorOrMessage.print) {
+        originalError(errorOrMessage.print());
+      } else {
+        originalError(`[${errorOrMessage.name || 'Error'}] ${errorOrMessage.message}`);
+      }
       return;
     }
-    // Pass through normal calls
+
+    // Pass through normal calls (including null/undefined)
     originalError(errorOrMessage, ...args);
   };
 

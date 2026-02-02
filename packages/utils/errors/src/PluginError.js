@@ -38,6 +38,8 @@
  * }
  * // error.message = "[Plugin Error] _if requires boolean test. Received: {...} at blocks.0.properties.visible."
  */
+import formatErrorMessage from './formatErrorMessage.js';
+
 class PluginError extends Error {
   /**
    * Creates a PluginError instance with formatted message.
@@ -55,7 +57,7 @@ class PluginError extends Error {
     const rawMessage = message ?? error?.message;
     let formattedMessage = rawMessage;
     if (location) {
-      formattedMessage += ` at ${location}.`;
+      formattedMessage = rawMessage != null ? `${rawMessage} at ${location}.` : `at ${location}.`;
     }
 
     super(formattedMessage, { cause: error });
@@ -77,6 +79,10 @@ class PluginError extends Error {
     }
   }
 
+  print() {
+    return formatErrorMessage(this);
+  }
+
   /**
    * Serializes the error for transport (e.g., client to server).
    * @returns {Object} Serialized error data with type marker
@@ -85,6 +91,7 @@ class PluginError extends Error {
     return {
       '~err': 'PluginError',
       message: this.message,
+      rawMessage: this.rawMessage,
       pluginType: this.pluginType,
       pluginName: this.pluginName,
       location: this.location,
@@ -101,14 +108,20 @@ class PluginError extends Error {
    * @returns {PluginError}
    */
   static deserialize(data) {
+    // Use rawMessage if available, fallback to message
+    const messageToUse = data.rawMessage || data.message;
     const error = new PluginError({
-      error: new Error(data.message),
+      message: messageToUse,
       pluginType: data.pluginType,
       pluginName: data.pluginName,
       configKey: data.configKey,
     });
     // Set location separately to preserve it without re-formatting message
     error.location = data.location;
+    // Preserve the formatted message if different from rawMessage
+    if (data.message && data.message !== messageToUse) {
+      error.message = data.message;
+    }
     if (data.stack) {
       error.stack = data.stack;
     }

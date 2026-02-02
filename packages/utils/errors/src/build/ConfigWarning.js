@@ -16,6 +16,7 @@
 
 import ConfigError from './ConfigError.js';
 import ConfigMessage from './ConfigMessage.js';
+import formatErrorMessage from '../formatErrorMessage.js';
 
 /**
  * Build-time configuration warning class.
@@ -67,6 +68,7 @@ class ConfigWarning {
     }
 
     // Store all properties for the logger
+    this.name = 'Config Warning';
     this.configKey = configKey ?? null;
     this.checkSlug = checkSlug;
     this.received = received;
@@ -109,6 +111,10 @@ class ConfigWarning {
 
     // Set message (no prefix - logger uses class name for display)
     this.message = message;
+  }
+
+  print() {
+    return formatErrorMessage(this);
   }
 }
 
