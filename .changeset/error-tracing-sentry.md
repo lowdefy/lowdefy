@@ -1,7 +1,7 @@
 ---
 '@lowdefy/api': minor
 '@lowdefy/build': minor
-'@lowdefy/cli': minor
+'lowdefy': minor
 '@lowdefy/client': minor
 '@lowdefy/errors': minor
 '@lowdefy/engine': minor
