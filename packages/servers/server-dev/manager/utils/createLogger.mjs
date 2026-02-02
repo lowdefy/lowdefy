@@ -16,28 +16,33 @@
 import pino from 'pino';
 
 function createLogger({ level = 'info' }) {
-  const logger = pino({
-    name: 'lowdefy build',
-    level,
-    base: { pid: undefined, hostname: undefined },
-    mixin: (context, level) => {
-      return {
-        ...context,
-        print: context.print ?? logger.levels.labels[level],
-      };
+  // Use synchronous destination so error/warn writes flush immediately to the CLI.
+  const destination = pino.destination({ dest: 1, sync: true });
+  const logger = pino(
+    {
+      name: 'lowdefy build',
+      level,
+      base: { pid: undefined, hostname: undefined },
+      mixin: (context, level) => {
+        return {
+          ...context,
+          print: context.print ?? logger.levels.labels[level],
+        };
+      },
+      serializers: {
+        err: (err) => ({
+          message: err.message,
+          name: err.name,
+          stack: err.stack,
+          source: err.source,
+          config: err.config,
+          configKey: err.configKey,
+          isServiceError: err.isServiceError,
+        }),
+      },
     },
-    serializers: {
-      err: (err) => ({
-        message: err.message,
-        name: err.name,
-        stack: err.stack,
-        source: err.source,
-        config: err.config,
-        configKey: err.configKey,
-        isServiceError: err.isServiceError,
-      }),
-    },
-  });
+    destination
+  );
   return logger;
 }
 

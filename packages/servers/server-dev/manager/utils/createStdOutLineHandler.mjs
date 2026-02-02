@@ -31,7 +31,7 @@ function createStdOutLineHandler({ context }) {
         logger.info({ print: 'info' }, resolvedSource);
       }
 
-      if (msg) {
+      if (msg && msg !== 'undefined') {
         const print = level === 30 ? 'info' : levelLabel;
         logger[levelLabel]({ print }, msg);
       }

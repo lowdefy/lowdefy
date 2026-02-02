@@ -27,7 +27,9 @@ function createStdOutLineHandler({ context }) {
         context.print.info(resolvedSource);
       }
 
-      context.print[print](msg);
+      if (msg != null && msg !== '' && msg !== 'undefined') {
+        context.print[print](msg);
+      }
     } catch (error) {
       context.print.log(line);
     }
