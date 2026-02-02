@@ -22,17 +22,16 @@ import { generateManifest } from './testPrep/generateManifest.js';
 async function globalSetup(config) {
   // Get app directory from webServer config or use current directory
   const appDir = config.webServer?.cwd || process.cwd();
-  const buildDir = process.env.LOWDEFY_BUILD_DIR || path.join(appDir, '.lowdefy');
+  const buildDir = process.env.LOWDEFY_BUILD_DIR || path.join(appDir, '.lowdefy/server/build');
 
   console.log('[e2e-utils] Building Lowdefy app...');
-
-  // Run the build
   execSync('npx lowdefy build', {
     cwd: appDir,
     stdio: 'inherit',
   });
+  console.log('[e2e-utils] Build complete.');
 
-  console.log('[e2e-utils] Build complete. Generating manifest...');
+  console.log('[e2e-utils] Generating manifest...');
 
   // Generate manifest from build artifacts
   generateManifest({ buildDir });
