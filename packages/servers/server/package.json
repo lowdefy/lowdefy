@@ -56,6 +56,7 @@
     "@lowdefy/client": "4.5.2",
     "@lowdefy/connection-axios-http": "4.5.2",
     "@lowdefy/connection-mongodb": "4.5.2",
+    "@lowdefy/errors": "4.5.2",
     "@lowdefy/helpers": "4.5.2",
     "@lowdefy/layout": "4.5.2",
     "@lowdefy/node-utils": "4.5.2",
