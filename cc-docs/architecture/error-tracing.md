@@ -82,6 +82,30 @@ Lowdefy uses a unified error system in `@lowdefy/errors` package:
 
 **Key principle:** Plugins throw errors without knowing about config keys. The interface layer catches all errors and adds `configKey` for location resolution - this helps developers trace any error back to its config source. ConfigError supports a simple string form (`new ConfigError('message')`) for plugin convenience.
 
+### Property Extraction from Wrapped Errors
+
+When wrapping an error via `new ConfigError({ error })` or `new PluginError({ error })`, both classes extract properties from the wrapped error as fallbacks:
+
+| Property | ConfigError | PluginError | ServiceError |
+|----------|-------------|-------------|--------------|
+| `configKey` | `params.configKey ?? error?.configKey` | `error?.configKey ?? params.configKey` | `params.configKey` |
+| `received` | `params.received ?? error?.received` | `params.received ?? error?.received` | N/A |
+| `message` | `params.message ?? error?.message` | `params.message ?? error?.message` | `params.message` |
+
+This means wrapping a plain error that already carries `received` or `configKey` preserves those properties automatically:
+
+```javascript
+// Plain error with received (e.g., from operator parser)
+const err = new Error('bad input');
+err.received = { _if: [true, 'a', 'b'] };
+err.configKey = 'abc123';
+
+// Wrapping preserves both properties
+const configError = new ConfigError({ error: err });
+configError.received; // { _if: [true, 'a', 'b'] }
+configError.configKey; // 'abc123'
+```
+
 ### Error Catch Layers
 
 ```
@@ -98,7 +122,7 @@ Lowdefy uses a unified error system in `@lowdefy/errors` package:
 │  ├─ Catches: All errors from plugin code                                    │
 │  ├─ Adds configKey to ALL errors for location tracing                       │
 │  ├─ ConfigError: adds configKey if not present, re-throws                   │
-│  ├─ ServiceError: creates with configKey via ServiceError.from(e, svc, key) │
+│  ├─ ServiceError: creates new ServiceError({ error, service, configKey })   │
 │  └─ Plain Error: wraps in PluginError (adds received, location, configKey)  │
 │                                                                             │
 │  Layer 3: BUILD VALIDATION (schema, refs, type checking)                    │
@@ -167,15 +191,16 @@ pages/home.yaml:15
 Client-side uses the base `ConfigError` from `@lowdefy/errors` (via `@lowdefy/helpers`):
 
 ```javascript
-import { ConfigError, PluginError, ServiceError } from '@lowdefy/helpers';
+import { ConfigError } from '@lowdefy/errors/client';
+import { PluginError, ServiceError } from '@lowdefy/errors/server';
 
-// ConfigError resolves location asynchronously from server
+// ConfigError - serialize and send to server for location resolution
 const error = new ConfigError({ message: 'Invalid operator', configKey });
-await error.resolve(lowdefy); // Fetches location from /api/client-error
-console.error(error.message); // Message already formatted with location
+// error.serialize() → POST /api/client-error → resolves source:line
+console.error(error.print()); // "[ConfigError] Invalid operator"
 
 // PluginError wraps plugin failures
-const pluginError = PluginError.from({
+const pluginError = new PluginError({
   error: originalError,
   pluginType: 'operator',
   pluginName: '_if',
@@ -186,8 +211,12 @@ const pluginError = PluginError.from({
 
 // ServiceError for network failures
 if (ServiceError.isServiceError(error)) {
-  const serviceError = ServiceError.from(error, 'connectionId', configKey);
-  console.error(serviceError.message); // Message already formatted
+  const serviceError = new ServiceError({
+    error,
+    service: 'connectionId',
+    configKey,
+  });
+  console.error(serviceError.print());
 }
 ```
 
@@ -207,7 +236,7 @@ try {
     throw error;
   }
   // Plain errors get wrapped in PluginError
-  throw PluginError.from({
+  throw new PluginError({
     error,
     pluginType: 'operator',
     pluginName: '_if',
@@ -224,22 +253,28 @@ try {
 try {
   return await requestResolver({ ... });
 } catch (error) {
-  // ConfigError - add configKey for location resolution
+  // Add configKey to any error for location tracing
+  if (!error.configKey) {
+    error.configKey = requestConfig['~k'];
+  }
+  // ConfigError - re-throw (already has configKey)
   if (error instanceof ConfigError) {
-    if (!error.configKey) {
-      error.configKey = requestConfig['~k'];
-    }
     throw error;
   }
-  // ServiceError - pass configKey to help trace which config caused the call
+  // ServiceError - wrap with service name and configKey
   if (ServiceError.isServiceError(error)) {
-    throw ServiceError.from(error, connectionId, requestConfig['~k']);
+    throw new ServiceError({
+      error,
+      service: connectionId,
+      configKey: requestConfig['~k'],
+    });
   }
   // Plain errors get wrapped in PluginError
-  throw PluginError.from({
+  throw new PluginError({
     error,
     pluginType: 'request',
     pluginName: requestType,
+    received: requestProperties,
     configKey: requestConfig['~k'],
   });
 }
@@ -519,30 +554,11 @@ const array = evaluateOperators({
 
 ### Client Error Logging
 
-Client errors use the `ConfigError` class from `@lowdefy/helpers` for standardized error handling with async location resolution.
-
-#### ConfigError Class (Client-Side)
-
-Located at `packages/utils/helpers/src/ConfigError.js`, this class:
-
-- Wraps errors with `configKey` for location resolution
-- Resolves location asynchronously from `/api/client-error` endpoint
-- Formats errors with source location and VSCode links
-- Handles graceful degradation when server is unreachable
-
-```javascript
-import { ConfigError } from '@lowdefy/helpers';
-
-// Wrap an error (preserves stack trace)
-const configError = ConfigError.from({ error: e, configKey: obj['~k'] });
-
-// Resolve location and log (non-blocking, 1s timeout)
-await configError.log(lowdefy);
-```
+Client errors use the `ConfigError` class from `@lowdefy/errors/client` for error handling with async location resolution via the `/api/client-error` endpoint.
 
 #### createLogError Factory
 
-Located at `packages/client/src/createLogError.js`, creates the `logError` function attached to `lowdefy._internal`:
+Located at `packages/client/src/createLogError.js`, creates the `logError` function:
 
 ```javascript
 function createLogError(lowdefy) {
@@ -554,26 +570,36 @@ function createLogError(lowdefy) {
     if (loggedErrors.has(errorKey)) return;
     loggedErrors.add(errorKey);
 
-    // Service errors log without location resolution
-    if (error.isServiceError === true) {
-      console.error(`[Service Error] ${error.message}`);
+    // Errors with serialize() - send to server for location resolution
+    if (error.serialize) {
+      const response = await fetch('/api/client-error', {
+        method: 'POST',
+        body: JSON.stringify(error.serialize()),
+      });
+      const { source } = await response.json();
+      if (source) console.info(source);  // "pages/home.yaml:15"
+      console.error(error.print());       // "[ConfigError] message. Received: ..."
       return;
     }
 
-    // Wrap in ConfigError and resolve location
-    const configError = error instanceof ConfigError
-      ? error
-      : ConfigError.from({ error, configKey: error.configKey });
+    // Plain errors with configKey - wrap in ConfigError for serialization
+    // ConfigError constructor extracts received/configKey from wrapped error
+    if (error.configKey) {
+      const configError = new ConfigError({ error });
+      await logError(configError);
+      return;
+    }
 
-    await configError.log(lowdefy);
+    // Other errors - log locally
+    console.error(error.print ? error.print() : `[${error.name}] ${error.message}`);
   };
 }
 ```
 
 **Key behaviors:**
 - **Deduplication**: Same error logged only once per session
-- **Service vs Config**: Service errors skip location resolution
-- **Non-blocking**: Location resolution has 1s timeout
+- **Location resolution**: Errors with `serialize()` are sent to server for `configKey → source:line` resolution
+- **Property forwarding**: Wrapping in `new ConfigError({ error })` preserves `received` and `configKey` from the original error
 - **Graceful degradation**: Logs without location if server unreachable
 
 #### Plugin/Core Boundary
@@ -585,14 +611,26 @@ Plugins throw plain errors without knowing about `configKey`. The core wraps the
 try {
   return operator({ params, ... });
 } catch (e) {
-  errors.push(ConfigError.from({ error: e, configKey }));
+  if (e instanceof ConfigError) {
+    if (!e.configKey) e.configKey = configKey;
+    errors.push(e);
+    return null;
+  }
+  errors.push(new PluginError({
+    error: e,
+    pluginType: 'operator',
+    pluginName: op,
+    received: { [key]: params },
+    location: operatorLocation,
+    configKey,
+  }));
   return null;
 }
 ```
 
 This maintains separation of concerns:
 - **Plugins**: Throw descriptive errors about what went wrong
-- **Core**: Attaches `configKey` and handles location resolution
+- **Core**: Attaches `configKey`, `received`, and location context
 
 ## Sentry Integration
 
@@ -835,8 +873,8 @@ Build failed with 3 error(s):
 
 **Decision:** Add `configKey` to ALL error types at the interface layer:
 - `ConfigError`: Add `configKey` if not present, then re-throw
-- `ServiceError`: Pass `configKey` via `ServiceError.from(error, service, configKey)`
-- Plain `Error`: Wrap in `PluginError` with `configKey`
+- `ServiceError`: Create `new ServiceError({ error, service, configKey })`
+- Plain `Error`: Wrap in `new PluginError({ error, ..., configKey })`
 
 **Rationale:**
 - Even infrastructure errors are triggered by specific config - developers want to know which request/connection caused the issue
@@ -844,15 +882,13 @@ Build failed with 3 error(s):
 - The service may be fine; the config might have wrong connection string
 - Adding location to ServiceError helps distinguish "MongoDB is down" from "this specific request to MongoDB failed"
 
-**Implementation:** `ServiceError.from()` accepts optional third parameter:
+**Implementation:** ServiceError constructor accepts `configKey`:
 ```javascript
-static from(error, service, configKey) {
-  const serviceError = new ServiceError({ ... });
-  if (configKey) {
-    serviceError.configKey = configKey;
-  }
-  return serviceError;
-}
+new ServiceError({
+  error,
+  service: connectionId,
+  configKey: requestConfig['~k'],
+});
 ```
 
 ### Why ConfigError String Overload?

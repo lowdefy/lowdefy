@@ -313,7 +313,7 @@ Add configKey to ANY error (for location tracing)
         ↓
 Then handle by type:
   - ConfigError  → re-throw (for location resolution)
-  - ServiceError → wrap with ServiceError.from()
+  - ServiceError → wrap with new ServiceError({ error, service, configKey })
   - Plain Error  → wrap in PluginError (add received value, location)
         ↓
 Error bubbles to top-level handler
@@ -376,7 +376,11 @@ try {
   }
 
   if (ServiceError.isServiceError(e)) {
-    throw ServiceError.from(e, connectionId, obj['~k']);
+    throw new ServiceError({
+      error: e,
+      service: connectionId,
+      configKey: obj['~k'],
+    });
   }
 
   // Plain errors get wrapped in PluginError with context
@@ -399,31 +403,39 @@ try {
 
 ### Service Errors
 
-Use `ServiceError` for external service failures. The `from()` method accepts an optional `configKey` to help trace which config triggered the service call:
+Use `ServiceError` for external service failures. The constructor accepts `configKey` to help trace which config triggered the service call:
 
 ```javascript
 import { ServiceError } from '@lowdefy/errors/server';
 
 // Check if error is service-related (network issues, timeouts, 5xx)
 if (ServiceError.isServiceError(error)) {
-  // Third parameter is configKey for location tracing
-  throw ServiceError.from(error, 'MongoDB', requestConfig['~k']);
+  throw new ServiceError({
+    error,
+    service: 'MongoDB',
+    configKey: requestConfig['~k'],
+  });
 }
 ```
 
 ### Client-Side Errors
 
-Client code uses `ConfigError` from `@lowdefy/errors/client` for async location resolution:
+Client code uses `ConfigError` from `@lowdefy/errors/client`. Errors with `serialize()` are sent to the server for location resolution. When wrapping a plain error, `received` and `configKey` are extracted from the wrapped error automatically:
 
 ```javascript
 import { ConfigError } from '@lowdefy/errors/client';
 
-// Wrap error with configKey
-const configError = ConfigError.from({ error: e, configKey: obj['~k'] });
+// Wrap error - received and configKey extracted from wrapped error
+const configError = new ConfigError({ error: e });
+// configError.received = e.received (if present)
+// configError.configKey = e.configKey (if present)
 
-// Resolve location asynchronously via /api/client-error endpoint
-await configError.resolve(lowdefy);
-console.error(configError.message); // Now includes source:line
+// Serialize and send to server for location resolution
+const response = await fetch('/api/client-error', {
+  method: 'POST',
+  body: JSON.stringify(configError.serialize()),
+});
+console.error(configError.print()); // "[ConfigError] message. Received: ..."
 ```
 
 See `cc-docs/architecture/error-tracing.md` for the complete error system.
