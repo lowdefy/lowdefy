@@ -22,6 +22,7 @@ import buildPage from './buildPage.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 import validateLinkReferences from './validateLinkReferences.js';
 import validatePayloadReferences from './validatePayloadReferences.js';
+import validateServerStateReferences from './validateServerStateReferences.js';
 import validateStateReferences from './validateStateReferences.js';
 
 function buildPages({ components, context }) {
@@ -78,6 +79,7 @@ function buildPages({ components, context }) {
     if (failedPageIndices.has(index)) return;
     validateStateReferences({ page, context });
     validatePayloadReferences({ page, context });
+    validateServerStateReferences({ page, context });
   });
 
   return components;
