@@ -57,8 +57,16 @@ function refReviver(key, value) {
   if (type.isObject(value)) {
     if (!type.isUndefined(value._ref)) {
       const result = this.parsedFiles[value._ref.id];
-      if (value._ref.ignoreBuildChecks !== undefined && type.isObject(result)) {
-        result['~ignoreBuildChecks'] = value._ref.ignoreBuildChecks;
+      if (value._ref.ignoreBuildChecks !== undefined) {
+        if (type.isObject(result)) {
+          result['~ignoreBuildChecks'] = value._ref.ignoreBuildChecks;
+        } else if (type.isArray(result)) {
+          result.forEach((item) => {
+            if (type.isObject(item)) {
+              item['~ignoreBuildChecks'] = value._ref.ignoreBuildChecks;
+            }
+          });
+        }
       }
       return result;
     }
