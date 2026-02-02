@@ -111,14 +111,13 @@ class ConfigMessage {
     const filePath = refEntry?.path ?? 'lowdefy.yaml';
     const lineNumber = operatorLocation.line;
 
-    const source = lineNumber ? `${filePath}:${lineNumber}` : filePath;
-    let link = null;
+    let resolvedPath = filePath;
     if (context?.directories?.config) {
-      link =
-        path.join(context.directories.config, filePath) + (lineNumber ? `:${lineNumber}` : '');
+      resolvedPath = path.join(context.directories.config, filePath);
     }
+    const source = lineNumber ? `${resolvedPath}:${lineNumber}` : resolvedPath;
 
-    return { source, link };
+    return { source, link: source };
   }
 
   /**
@@ -131,13 +130,13 @@ class ConfigMessage {
    * @returns {Object} Location object { source, link }
    */
   static resolveRawLocation({ filePath, lineNumber, configDirectory }) {
-    const source = lineNumber ? `${filePath}:${lineNumber}` : filePath;
-    let link = null;
+    let resolvedPath = filePath;
     if (configDirectory) {
-      link = path.join(configDirectory, filePath) + (lineNumber ? `:${lineNumber}` : '');
+      resolvedPath = path.join(configDirectory, filePath);
     }
+    const source = lineNumber ? `${resolvedPath}:${lineNumber}` : resolvedPath;
 
-    return { source, link };
+    return { source, link: source };
   }
 }
 

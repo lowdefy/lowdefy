@@ -141,13 +141,13 @@ describe('ConfigMessage.resolveLocation', () => {
     expect(result).toBeNull();
   });
 
-  test('resolves location from configKey', () => {
+  test('resolves location from configKey with absolute path', () => {
     const result = ConfigMessage.resolveLocation({
       configKey: 'abc123',
       context: { keyMap, refMap, directories: { config: '/app' } },
     });
     expect(result).toEqual({
-      source: 'pages/home.yaml:5',
+      source: '/app/pages/home.yaml:5',
       config: 'root.pages[0:home].blocks[0:header]',
       link: '/app/pages/home.yaml:5',
     });
@@ -163,22 +163,23 @@ describe('ConfigMessage.resolveOperatorLocation', () => {
     expect(result).toBeNull();
   });
 
-  test('resolves location from ref and line', () => {
+  test('resolves location from ref and line with relative path when no configDirectory', () => {
     const result = ConfigMessage.resolveOperatorLocation({
       operatorLocation: { ref: 'ref1', line: 25 },
       context: { refMap },
     });
     expect(result).toEqual({
       source: 'pages/home.yaml:25',
-      link: null,
+      link: 'pages/home.yaml:25',
     });
   });
 
-  test('includes configDirectory in link', () => {
+  test('resolves location with absolute path when configDirectory provided', () => {
     const result = ConfigMessage.resolveOperatorLocation({
       operatorLocation: { ref: 'ref1', line: 25 },
       context: { refMap, directories: { config: '/app' } },
     });
+    expect(result.source).toBe('/app/pages/home.yaml:25');
     expect(result.link).toBe('/app/pages/home.yaml:25');
   });
 
@@ -200,23 +201,24 @@ describe('ConfigMessage.resolveOperatorLocation', () => {
 });
 
 describe('ConfigMessage.resolveRawLocation', () => {
-  test('resolves location from filePath and lineNumber', () => {
+  test('resolves location with relative path when no configDirectory', () => {
     const result = ConfigMessage.resolveRawLocation({
       filePath: 'config.yaml',
       lineNumber: 15,
     });
     expect(result).toEqual({
       source: 'config.yaml:15',
-      link: null,
+      link: 'config.yaml:15',
     });
   });
 
-  test('includes configDirectory in link', () => {
+  test('resolves location with absolute path when configDirectory provided', () => {
     const result = ConfigMessage.resolveRawLocation({
       filePath: 'config.yaml',
       lineNumber: 15,
       configDirectory: '/myapp',
     });
+    expect(result.source).toBe('/myapp/config.yaml:15');
     expect(result.link).toBe('/myapp/config.yaml:15');
   });
 
