@@ -50,14 +50,13 @@ feat: Config-aware error tracing and Sentry integration
 - Error classes: `LowdefyError`, `ConfigError`, `ConfigWarning`, `PluginError`, `ServiceError`
 - `ConfigWarning` supports `prodError` flag to throw in production builds
 - `ServiceError.isServiceError()` detects network/timeout/5xx errors
-- `~ignoreBuildCheck` cascades through `_ref` to suppress warnings in referenced files
+- `~ignoreBuildChecks` cascades through descendants to suppress warnings/errors
 
 **Build Error Collection**
 
 - Errors collected in `context.errors[]` instead of throwing immediately
 - `tryBuildStep()` wrapper catches and collects errors from build steps
 - All errors logged together before summary message for proper ordering
-- `collectExceptions()` utility handles both errors and warnings
 
 **Sentry Integration (#1945)**
 

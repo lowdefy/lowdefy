@@ -28,19 +28,20 @@ refactor: Consolidate error classes into @lowdefy/errors package with environmen
 
 - Interface layer now adds configKey to ALL error types (not just PluginError):
   - ConfigError: adds configKey if not present, re-throws
-  - ServiceError: passes configKey via ServiceError.from(error, service, configKey)
+  - ServiceError: created via `new ServiceError({ error, service, configKey })`
   - Plain Error: wraps in PluginError with configKey
 - Helps developers trace any error back to its config source, including service/network errors
 
-**ServiceError.from() Signature**
+**Property Extraction from Wrapped Errors**
 
-- Now accepts optional third parameter for configKey:
+- ConfigError and PluginError now extract `received` and `configKey` from the wrapped error:
   ```javascript
-  ServiceError.from(error, 'MongoDB', requestConfig['~k'])
+  new ConfigError({ error: plainError }) // extracts plainError.received and plainError.configKey
+  new PluginError({ error: plainError }) // same extraction
   ```
 
 **Error Message Pattern**
 
-- All error classes format `message` in constructor - no `format()` method needed
-- Use `error.message` directly, not `error.format()`
-- `rawMessage` stores the original unformatted message
+- All error classes have `.print()` method using shared `formatErrorMessage()`
+- `formatErrorMessage()` appends `Received: <JSON>` when `error.received` is defined
+- `rawMessage` stores the original unformatted message on PluginError
