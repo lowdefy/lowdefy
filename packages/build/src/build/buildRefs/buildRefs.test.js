@@ -547,7 +547,7 @@ describe('vars', () => {
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     await expect(buildRefs({ context })).rejects.toThrow(
-      '"_var" operator takes a string or object with "key" field as arguments.'
+      '_var operator takes a string or object with "key" field as arguments.'
     );
   });
 
@@ -1398,7 +1398,7 @@ answer:
     });
     expect(mockLogWarn.mock.calls).toEqual([
       [
-        '_sum takes an array type as input. Received: {"_build.sum":"A"} at lowdefy.yaml:2.',
+        '_sum takes an array type as input.',
       ],
     ]);
   });
@@ -1424,7 +1424,7 @@ _build.sum: A`,
     });
     expect(mockLogWarn.mock.calls).toEqual([
       [
-        '_sum takes an array type as input. Received: {"_build.sum":"A"} at file.yaml:2.',
+        '_sum takes an array type as input.',
       ],
     ]);
   });

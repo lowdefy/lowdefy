@@ -95,7 +95,7 @@ test('menu id is not a string', () => {
     ],
   };
   expect(() => buildMenu({ components, context })).toThrow(
-    'Menu id is not a string. Received true.'
+    'Menu id is not a string.'
   );
 });
 

@@ -77,7 +77,7 @@ test('page id is not a string', () => {
     ],
   };
   expect(() => buildPages({ components, context })).toThrow(
-    'Page id is not a string at page 0. Received true.'
+    'Page id is not a string at page 0.'
   );
 });
 
@@ -134,7 +134,7 @@ test('block id is not a string', () => {
     ],
   };
   expect(() => buildPages({ components, context })).toThrow(
-    'Block id is not a string at page "page1". Received true.'
+    'Block id is not a string at page "page1".'
   );
 });
 
@@ -183,7 +183,7 @@ test('page type not a string', () => {
     ],
   };
   expect(() => buildPages({ components, context })).toThrow(
-    'Block type is not a string at "page1" on page "page1". Received 1.'
+    'Block type is not a string at "page1" on page "page1".'
   );
 });
 
@@ -204,7 +204,7 @@ test('block type not a string', () => {
     ],
   };
   expect(() => buildPages({ components, context })).toThrow(
-    'Block type is not a string at "blockId" on page "page1". Received 1.'
+    'Block type is not a string at "blockId" on page "page1".'
   );
 });
 
@@ -244,7 +244,7 @@ test('blocks not an array', () => {
     ],
   };
   expect(() => buildPages({ components, context })).toThrow(
-    'Blocks at page1 on page page1 is not an array. Received "block_1"'
+    'Blocks at page1 on page page1 is not an array.'
   );
 });
 
@@ -259,7 +259,7 @@ test('block not an object', () => {
     ],
   };
   expect(() => buildPages({ components, context })).toThrow(
-    'Expected block to be an object on page "page1". Received "block_1".'
+    'Expected block to be an object on page "page1".'
   );
 });
 
@@ -339,7 +339,7 @@ describe('block areas', () => {
       ],
     };
     expect(() => buildPages({ components, context })).toThrow(
-      'Expected blocks to be an array at page1 in area content on page page1. Received "string"'
+      'Expected blocks to be an array at page1 in area content on page page1.'
     );
   });
 

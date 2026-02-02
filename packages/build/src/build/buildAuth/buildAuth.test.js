@@ -291,7 +291,7 @@ test('buildAuth roles and public pages inconsistency', async () => {
     pages: [{ id: 'page1', type: 'Context' }],
   };
   expect(() => buildAuth({ components, context })).toThrow(
-    'Page "page1" is both protected by roles ["role1"] and public.'
+    'Page "page1" is both protected by roles and public.'
   );
 });
 

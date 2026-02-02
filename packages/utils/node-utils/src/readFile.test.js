@@ -32,6 +32,6 @@ test('readFile file not found throws', async () => {
 
 test('readFile error id filepath is not a string', async () => {
   await expect(readFile({})).rejects.toThrow(
-    'Could not read file, file path should be a string, received {}.'
+    'Could not read file, file path should be a string.'
   );
 });

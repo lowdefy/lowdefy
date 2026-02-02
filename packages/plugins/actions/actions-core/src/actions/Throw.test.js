@@ -20,13 +20,13 @@ const methods = { getBlockId: () => 'blockId', getPageId: () => 'pageId' };
 
 test('Throw no params', () => {
   expect(() => Throw({ methods })).toThrow(
-    'Throw action params should be an object. Received "undefined".'
+    'Throw action params should be an object.'
   );
 });
 
 test('Throw params.throw should be a boolean.', () => {
   expect(() => Throw({ methods, params: { throw: 'invalid' } })).toThrow(
-    'Throw action "throw" param should be an boolean. Received ""invalid"".'
+    'Throw action "throw" param should be a boolean.'
   );
 });
 

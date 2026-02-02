@@ -18,9 +18,11 @@ import { jest } from '@jest/globals';
 import path from 'path';
 
 class MockConfigError extends Error {
-  constructor({ error, filePath }) {
-    super(`[Config Error] Could not parse YAML.\n  ${filePath}\n  ${error.message}`);
+  constructor({ message, error, filePath, received }) {
+    const finalMessage = error instanceof Error ? `Could not parse YAML. ${error.message}` : message;
+    super(finalMessage);
     this.name = 'ConfigError';
+    this.received = received;
   }
 }
 
@@ -121,7 +123,7 @@ test('lowdefy.yaml is invalid yaml', async () => {
     return null;
   });
   await expect(getLowdefyYaml({ configDirectory, requiresLowdefyYaml: true })).rejects.toThrow(
-    '[Config Error] Could not parse YAML.'
+    'Could not parse YAML.'
   );
 });
 
@@ -155,7 +157,7 @@ test('Version is not a string', async () => {
     return null;
   });
   await expect(getLowdefyYaml({ configDirectory, requiresLowdefyYaml: true })).rejects.toThrow(
-    'Version number specified in "lowdefy.yaml" file should be a string. Received 1.'
+    'Version number specified in "lowdefy.yaml" file should be a string.'
   );
 });
 
