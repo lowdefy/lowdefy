@@ -84,7 +84,7 @@ describe('logClientError', () => {
       success: true,
       source: 'pages/home.yaml:8',
       config: 'root.pages[0:home].blocks[0:header]',
-      link: null,
+      link: 'pages/home.yaml:8',
     });
     const loggedError = mockLogger.error.mock.calls[0][0];
     expect(loggedError.name).toBe('ConfigError');
@@ -117,7 +117,7 @@ describe('logClientError', () => {
       success: true,
       source: 'pages/home.yaml:8',
       config: 'root.pages[0:home].blocks[0:header]',
-      link: null,
+      link: 'pages/home.yaml:8',
     });
     const loggedError = mockLogger.error.mock.calls[0][0];
     expect(loggedError.name).toBe('PluginError');

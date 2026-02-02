@@ -1,7 +1,7 @@
 ---
+'lowdefy': minor
 '@lowdefy/api': minor
 '@lowdefy/build': minor
-'lowdefy': minor
 '@lowdefy/client': minor
 '@lowdefy/errors': minor
 '@lowdefy/engine': minor
@@ -20,7 +20,6 @@
 '@lowdefy/operators-yaml': minor
 '@lowdefy/server': minor
 '@lowdefy/server-dev': minor
-'lowdefy': minor
 '@lowdefy/actions-core': minor
 '@lowdefy/blocks-basic': minor
 ---
