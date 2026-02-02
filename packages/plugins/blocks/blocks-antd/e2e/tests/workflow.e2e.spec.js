@@ -1,19 +1,3 @@
-/*
-  Copyright 2020-2024 Lowdefy, Inc
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-*/
-
 import { test, expect } from '@playwright/test';
 import { ldf, button, textInput, selector } from '@lowdefy/e2e-utils';
 
@@ -39,11 +23,7 @@ test.describe('Workflow Test - App Developer Style', () => {
     await button.click(page, 'submit_btn');
 
     // Wait for the simulated processing (SetState with submitted: true)
-    await page.waitForFunction(() => {
-      const lowdefy = window.lowdefy;
-      const pageId = lowdefy?.pageId;
-      return lowdefy?.contexts?.[`page:${pageId}`]?.state?.submitted === true;
-    });
+    await ldf.expectState(page, 'submitted', true);
 
     // Verify the result
     await ldf.expectState(page, 'ticket.status', 'open');
@@ -66,11 +46,7 @@ test.describe('Workflow Test - App Developer Style', () => {
     await button.click(page, 'submit_btn');
 
     // Wait for submission to complete
-    await page.waitForFunction(() => {
-      const lowdefy = window.lowdefy;
-      const pageId = lowdefy?.pageId;
-      return lowdefy?.contexts?.[`page:${pageId}`]?.state?.submitted === true;
-    });
+    await ldf.expectState(page, 'submitted', true);
 
     // Verify ticket was created with null values
     await ldf.expectState(page, 'ticket.title', null);
@@ -118,3 +94,6 @@ test.describe('Workflow Test - App Developer Style', () => {
     expect(titleState).toBe('Test title');
   });
 });
+
+// improve syntax (ldf.page(page)[block_id].fill('123');) to not have to think abt block type, then dont have to import block types, this relates to the "pre test" step in the beforeall setup
+// before all test setup

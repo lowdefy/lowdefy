@@ -29,10 +29,16 @@ async function getBlockState(page, blockId) {
   return state?.[blockId];
 }
 
-async function expectState(page, key, value) {
-  const state = await getState(page);
-  const actual = key.split('.').reduce((obj, k) => obj?.[k], state);
-  expect(actual).toEqual(value);
+async function expectState(page, key, value, { timeout = 5000 } = {}) {
+  await expect
+    .poll(
+      async () => {
+        const state = await getState(page);
+        return key.split('.').reduce((obj, k) => obj?.[k], state);
+      },
+      { timeout }
+    )
+    .toEqual(value);
 }
 
 export { getState, getBlockState, expectState };
