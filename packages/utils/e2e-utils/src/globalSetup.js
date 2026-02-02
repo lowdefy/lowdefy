@@ -25,7 +25,7 @@ async function globalSetup(config) {
   const buildDir = process.env.LOWDEFY_BUILD_DIR || path.join(appDir, '.lowdefy/server/build');
 
   console.log('[e2e-utils] Building Lowdefy app...');
-  execSync('npx lowdefy build', {
+  execSync('NEXT_PUBLIC_LOWDEFY_E2E=true npx lowdefy build', {
     cwd: appDir,
     stdio: 'inherit',
   });
