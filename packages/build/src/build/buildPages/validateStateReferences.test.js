@@ -143,3 +143,28 @@ test('validateStateReferences handles dot-notation blockId', () => {
   validateStateReferences({ page, context });
   expect(mockLogWarn).not.toHaveBeenCalled();
 });
+
+test('validateStateReferences does not warn for _state inside request.properties', () => {
+  const context = testContext({ logger });
+  const page = {
+    pageId: 'page_1',
+    requests: [
+      {
+        requestId: 'getUser',
+        properties: {
+          query: {
+            name: { _state: 'unknown_field', '~k': 'req-prop-key' },
+          },
+        },
+      },
+    ],
+    blocks: [
+      {
+        blockId: 'name',
+        type: 'TextInput',
+      },
+    ],
+  };
+  validateStateReferences({ page, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});

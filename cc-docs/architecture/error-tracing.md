@@ -324,13 +324,23 @@ Validates block, operator, request, and action types with suggestions:
 
 ### Reference Validations
 
-| Validator                   | Validates                              | Example Warning                                                          |
-| --------------------------- | -------------------------------------- | ------------------------------------------------------------------------ |
-| `validateStateReferences`   | `_state` references blockIds           | `_state references "userName" but no block with id "userName" exists`    |
-| `validatePayloadReferences` | `_payload` references payload keys     | `_payload references "query" but key not in request payload definition`  |
-| `validateStepReferences`    | `_step` references step IDs            | `_step references "step1" but no step with id "step1" exists in routine` |
-| `validateLinkReferences`    | `Link` action references pageIds       | `Link action references page "homePage" but page does not exist`         |
-| `validateRequestReferences` | `Request` action references requestIds | `Request "getData" not defined on page "home"`                           |
+| Validator                          | Validates                              | Example Warning                                                          |
+| ---------------------------------- | -------------------------------------- | ------------------------------------------------------------------------ |
+| `validateStateReferences`          | `_state` references blockIds           | `_state references "userName" but no block with id "userName" exists`    |
+| `validateServerStateReferences`    | `_state` not used in request properties | `_state is not available in request properties`                         |
+| `validatePayloadReferences`        | `_payload` references payload keys     | `_payload references "query" but key not in request payload definition`  |
+| `validateStepReferences`           | `_step` references step IDs            | `_step references "step1" but no step with id "step1" exists in routine` |
+| `validateLinkReferences`           | `Link` action references pageIds       | `Link action references page "homePage" but page does not exist`         |
+| `validateRequestReferences`        | `Request` action references requestIds | `Request "getData" not defined on page "home"`                           |
+
+#### Deduplication Between State Validators
+
+`validateStateReferences` and `validateServerStateReferences` have overlapping scope — both can encounter `_state` inside `request.properties`. To avoid duplicate warnings:
+
+- `validateServerStateReferences` uses `traverseConfig` to walk `request.properties`, find the first `_state` object, and report its exact `~k` (config key pointing to the correct YAML line).
+- `validateStateReferences` pre-collects all `~k` values inside `request.properties` subtrees and **skips** those objects when collecting `_state` refs. This means `_state` inside request properties only triggers the "not available in request properties" warning, not a misleading "undefined state reference" warning.
+
+**Implementation:** `packages/build/src/build/buildPages/validateStateReferences.js` and `packages/build/src/build/buildPages/validateServerStateReferences.js`
 
 #### Skip Condition Handling
 

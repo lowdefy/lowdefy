@@ -14,11 +14,27 @@
   limitations under the License.
 */
 
+import traverseConfig from '../../utils/traverseConfig.js';
+
 function validateServerStateReferences({ page, context }) {
   (page.requests ?? []).forEach((request) => {
     if (!request.properties) return;
-    const str = JSON.stringify(request.properties);
-    if (str.indexOf('"_state"') === -1) return;
+
+    let found = false;
+    let configKey = request['~k'];
+
+    traverseConfig({
+      config: request.properties,
+      visitor: (obj) => {
+        if (found) return;
+        if (obj._state !== undefined) {
+          found = true;
+          configKey = obj['~k'] ?? configKey;
+        }
+      },
+    });
+
+    if (!found) return;
 
     const message =
       `_state is not available in request properties. ` +
@@ -27,7 +43,7 @@ function validateServerStateReferences({ page, context }) {
       `To use a state value in a request, add it to the request "payload" using _state, ` +
       `then reference it in request properties using _payload.`;
 
-    context.logger.warn({ message, configKey: request['~k'], prodError: true });
+    context.logger.warn({ message, configKey, prodError: true });
   });
 }
 

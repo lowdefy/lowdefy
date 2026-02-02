@@ -26,6 +26,20 @@ function validateStateReferences({ page, context }) {
   const setStateKeys = new Set();
   const stateRefs = new Map(); // topLevelKey -> configKey (first occurrence)
 
+  // Collect ~k values inside request.properties subtrees so we can skip them
+  // when collecting _state refs — those are already handled by validateServerStateReferences
+  const requestPropertyKeys = new Set();
+  (page.requests ?? []).forEach((request) => {
+    if (request.properties) {
+      traverseConfig({
+        config: request.properties,
+        visitor: (obj) => {
+          if (obj['~k']) requestPropertyKeys.add(obj['~k']);
+        },
+      });
+    }
+  });
+
   traverseConfig({
     config: page,
     visitor: (obj) => {
@@ -46,8 +60,8 @@ function validateStateReferences({ page, context }) {
         });
       }
 
-      // Collect _state reference if present
-      if (obj._state !== undefined) {
+      // Collect _state reference if present (skip request.properties — handled separately)
+      if (obj._state !== undefined && !requestPropertyKeys.has(obj['~k'])) {
         const topLevelKey = extractOperatorKey({ operatorValue: obj._state });
         if (topLevelKey && !stateRefs.has(topLevelKey)) {
           stateRefs.set(topLevelKey, obj['~k']);
