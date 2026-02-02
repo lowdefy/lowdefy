@@ -14,7 +14,8 @@
   limitations under the License.
 */
 
-import { Throw, ThrowActionError } from './Throw.js';
+import { UserError } from '@lowdefy/errors';
+import Throw from './Throw.js';
 
 const methods = { getBlockId: () => 'blockId', getPageId: () => 'pageId' };
 
@@ -40,13 +41,14 @@ test('Throw params.throw false', () => {
 
 test('Throw params.throw true, no message or metaData', () => {
   const params = { throw: true };
-  expect(() => Throw({ methods, params })).toThrow(ThrowActionError);
+  expect(() => Throw({ methods, params })).toThrow(UserError);
   let error;
   try {
     Throw({ methods, params });
   } catch (e) {
     error = e;
   }
+  expect(error.name).toEqual('UserError');
   expect(error.message).toEqual('');
   expect(error.blockId).toEqual('blockId');
   expect(error.metaData).toEqual(undefined);
@@ -55,13 +57,14 @@ test('Throw params.throw true, no message or metaData', () => {
 
 test('Throw params.throw true, message and  no metaData', () => {
   const params = { throw: true, message: 'My error message' };
-  expect(() => Throw({ methods, params })).toThrow(ThrowActionError);
+  expect(() => Throw({ methods, params })).toThrow(UserError);
   let error;
   try {
     Throw({ methods, params });
   } catch (e) {
     error = e;
   }
+  expect(error.name).toEqual('UserError');
   expect(error.message).toEqual('My error message');
   expect(error.blockId).toEqual('blockId');
   expect(error.metaData).toEqual(undefined);
@@ -70,13 +73,14 @@ test('Throw params.throw true, message and  no metaData', () => {
 
 test('Throw params.throw true, message and  metaData string', () => {
   const params = { throw: true, message: 'My error message', metaData: 'Meta string' };
-  expect(() => Throw({ methods, params })).toThrow(ThrowActionError);
+  expect(() => Throw({ methods, params })).toThrow(UserError);
   let error;
   try {
     Throw({ methods, params });
   } catch (e) {
     error = e;
   }
+  expect(error.name).toEqual('UserError');
   expect(error.message).toEqual('My error message');
   expect(error.blockId).toEqual('blockId');
   expect(error.metaData).toEqual('Meta string');
@@ -85,13 +89,14 @@ test('Throw params.throw true, message and  metaData string', () => {
 
 test('Throw params.throw true, message and metaData object', () => {
   const params = { throw: true, message: 'My error message', metaData: { key: 'value' } };
-  expect(() => Throw({ methods, params })).toThrow(ThrowActionError);
+  expect(() => Throw({ methods, params })).toThrow(UserError);
   let error;
   try {
     Throw({ methods, params });
   } catch (e) {
     error = e;
   }
+  expect(error.name).toEqual('UserError');
   expect(error.message).toEqual('My error message');
   expect(error.blockId).toEqual('blockId');
   expect(error.metaData).toEqual({ key: 'value' });

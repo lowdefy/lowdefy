@@ -218,7 +218,7 @@ export default _myOperator;
 
 ### Actions
 
-Actions throw simple errors. The engine's action interface layer (Actions.js) catches and wraps them in `PluginError` with the `received` value:
+Actions throw simple errors. The engine's action interface layer (Actions.js) catches and wraps them in `PluginError` with the `received` value. For expected user-facing errors (validation, intentional throws), throw `UserError` instead — it logs to the browser console only and is never sent to the server terminal:
 
 ```javascript
 function MyAction({ methods: { setState }, params }) {
@@ -229,6 +229,20 @@ function MyAction({ methods: { setState }, params }) {
   setState(params);
 }
 export default MyAction;
+```
+
+```javascript
+import { UserError } from '@lowdefy/errors';
+
+function MyThrowAction({ params }) {
+  // UserError - logs to browser console only, never to terminal
+  throw new UserError(params.message, {
+    blockId: params.blockId,
+    metaData: params.metaData,
+    pageId: params.pageId,
+  });
+}
+export default MyThrowAction;
 ```
 
 ### Connections/Requests
@@ -269,6 +283,7 @@ import { ConfigError } from '@lowdefy/errors/client';
 | `ServiceError` | External service failures (network, timeout, 5xx) | Request/connection layer |
 | `ConfigError` | YAML config validation errors | Build validation, runtime |
 | `ConfigWarning` | Config inconsistencies (warning in dev, error in prod) | Build validation |
+| `UserError` | Expected user interaction (validation, throws), client-only | Browser console only |
 
 **Key principle:** Plugins throw errors without knowing about config keys. The interface layer catches errors and adds `configKey` for location resolution to ALL error types - this helps developers trace any error back to its config source.
 

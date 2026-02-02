@@ -49,5 +49,6 @@ import ConfigWarning from './ConfigWarning.js';
 import LowdefyError from './LowdefyError.js';
 import PluginError from './PluginError.js';
 import ServiceError from './ServiceError.js';
+import UserError from './UserError.js';
 
-export { ConfigError, ConfigWarning, LowdefyError, PluginError, ServiceError };
+export { ConfigError, ConfigWarning, LowdefyError, PluginError, ServiceError, UserError };

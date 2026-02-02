@@ -69,7 +69,8 @@ Lowdefy uses a unified error system in `@lowdefy/errors` package:
 ├── PluginError.js      # Plugin failures (operators, actions, blocks, requests)
 ├── ServiceError.js     # External service failures (network, timeout, 5xx)
 ├── ConfigError.js      # Config validation errors
-└── ConfigWarning.js    # Warnings (dev) / Errors (prod)
+├── ConfigWarning.js    # Warnings (dev) / Errors (prod)
+└── UserError.js        # Expected user-facing errors (client-side only)
 ```
 
 | Error Class      | Purpose                                          | Thrown By                      | Caught At                        | Prefix             |
@@ -79,6 +80,7 @@ Lowdefy uses a unified error system in `@lowdefy/errors` package:
 | `ServiceError`   | External service failures (network, timeout)     | Plugin interface layer         | Request handlers                 | `[Service Error]`  |
 | `ConfigError`    | Config validation errors (invalid YAML, schema)  | Build validation               | Build orchestrator               | `[Config Error]`   |
 | `ConfigWarning`  | Config inconsistencies (warning in dev only)     | Build validation               | Build orchestrator               | `[Config Warning]` |
+| `UserError`      | Expected user interaction (validation, throws)   | Actions (Validate, Throw)      | Browser console only             | `[UserError]`      |
 
 **Key principle:** Plugins throw errors without knowing about config keys. The interface layer catches all errors and adds `configKey` for location resolution - this helps developers trace any error back to its config source. ConfigError supports a simple string form (`new ConfigError('message')`) for plugin convenience.
 
@@ -611,6 +613,23 @@ function createLogError(lowdefy) {
 - **Location resolution**: Errors with `serialize()` are sent to server for `configKey → source:line` resolution
 - **Property forwarding**: Wrapping in `new ConfigError({ error })` preserves `received` and `configKey` from the original error
 - **Graceful degradation**: Logs without location if server unreachable
+
+#### UserError — Client-Only, Console-Only
+
+`UserError` represents expected user-facing errors (validation failures, intentional throws). It is **never sent to the server terminal** — it only logs to the browser console via `console.error(error.print())`.
+
+```
+UserError     → console.error() in browser only, NEVER sent to server terminal
+PluginError   → logError() → POST /api/client-error → server terminal
+ConfigError   → logError() → POST /api/client-error → server terminal
+ServiceError  → logError() → POST /api/client-error → server terminal
+```
+
+In `Actions.js`, `logActionError()` uses `instanceof UserError` to route errors:
+- `UserError` → `console.error(error.print())` (browser only)
+- Everything else → `logError(error)` (→ terminal)
+
+`UserError` is preserved through `callAction()`'s catch block (not wrapped in `PluginError`), so `instanceof` checks work correctly.
 
 #### Plugin/Core Boundary
 

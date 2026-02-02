@@ -14,21 +14,20 @@
   limitations under the License.
 */
 
-import { UserError } from '@lowdefy/errors/client';
+import formatErrorMessage from './formatErrorMessage.js';
 
-import getBlockMatcher from '../getBlockMatcher.js';
+class UserError extends Error {
+  constructor(message, { blockId, metaData, pageId } = {}) {
+    super(message);
+    this.name = 'UserError';
+    this.blockId = blockId;
+    this.metaData = metaData;
+    this.pageId = pageId;
+  }
 
-function createValidate({ context }) {
-  return function validate(params) {
-    const validationErrors = context._internal.RootAreas.validate(getBlockMatcher(params));
-    if (validationErrors.length > 0) {
-      throw new UserError(
-        `Your input has ${validationErrors.length} validation error${
-          validationErrors.length !== 1 ? 's' : ''
-        }.`
-      );
-    }
-  };
+  print() {
+    return formatErrorMessage(this);
+  }
 }
 
-export default createValidate;
+export default UserError;

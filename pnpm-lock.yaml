@@ -563,6 +563,9 @@ importers:
 
   packages/plugins/actions/actions-core:
     dependencies:
+      '@lowdefy/errors':
+        specifier: 4.5.2
+        version: link:../../../utils/errors
       '@lowdefy/helpers':
         specifier: 4.5.2
         version: link:../../../utils/helpers
