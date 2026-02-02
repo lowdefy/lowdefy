@@ -14,11 +14,25 @@
   limitations under the License.
 */
 
-// Monorepo-specific config
-export { default as createPlaywrightConfig } from './createPlaywrightConfig.js';
+import { expect } from '@playwright/test';
 
-// Re-export shared helpers from e2e-utils
-export { getBlock } from '@lowdefy/e2e-utils';
+async function getState(page) {
+  return page.evaluate(() => {
+    const lowdefy = window.lowdefy;
+    const pageId = lowdefy?.pageId;
+    return lowdefy?.contexts?.[pageId]?.state;
+  });
+}
 
-// Keep navigateToTestPage as it's specific to monorepo test structure
-export { default as navigateToTestPage } from './navigateToTestPage.js';
+async function getBlockState(page, blockId) {
+  const state = await getState(page);
+  return state?.[blockId];
+}
+
+async function expectState(page, key, value) {
+  const state = await getState(page);
+  const actual = key.split('.').reduce((obj, k) => obj?.[k], state);
+  expect(actual).toEqual(value);
+}
+
+export { getState, getBlockState, expectState };

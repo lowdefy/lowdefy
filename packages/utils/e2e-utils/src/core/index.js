@@ -14,11 +14,7 @@
   limitations under the License.
 */
 
-// Monorepo-specific config
-export { default as createPlaywrightConfig } from './createPlaywrightConfig.js';
-
-// Re-export shared helpers from e2e-utils
-export { getBlock } from '@lowdefy/e2e-utils';
-
-// Keep navigateToTestPage as it's specific to monorepo test structure
-export { default as navigateToTestPage } from './navigateToTestPage.js';
+export { getBlock } from './locators.js';
+export { goto, waitForReady, expectNavigation, waitForPage } from './navigation.js';
+export { waitForRequest, getRequestResponse } from './requests.js';
+export { getState, getBlockState, expectState } from './state.js';

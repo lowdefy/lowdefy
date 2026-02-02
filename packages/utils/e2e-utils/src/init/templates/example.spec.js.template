@@ -1,0 +1,28 @@
+import { test, expect } from '@playwright/test';
+import { ldf, button, textInput, selector } from '@lowdefy/e2e-utils';
+
+test('homepage loads', async ({ page }) => {
+  await ldf.goto(page, '/');
+
+  // Replace with your own assertions
+  await expect(page).toHaveTitle(/./);
+});
+
+// Example: Testing a form submission
+// Uncomment and modify for your app:
+//
+// test('submit contact form', async ({ page }) => {
+//   await ldf.goto(page, '/contact');
+//
+//   // Fill form fields
+//   await textInput.fill(page, 'name_input', 'John Doe');
+//   await textInput.fill(page, 'email_input', 'john@example.com');
+//   await selector.select(page, 'category', 'Support');
+//
+//   // Submit
+//   await button.click(page, 'submit_btn');
+//
+//   // Wait for request and verify
+//   await ldf.waitForRequest(page, 'send_message');
+//   await ldf.expectNavigation(page, '/thank-you');
+// });

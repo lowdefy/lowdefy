@@ -36,7 +36,10 @@
   "exports": {
     "./*": "./dist/*",
     "./blocks": "./dist/blocks.js",
-    "./types": "./dist/types.js"
+    "./types": "./dist/types.js",
+    "./e2e/Button": "./dist/blocks/Button/e2e.js",
+    "./e2e/Selector": "./dist/blocks/Selector/e2e.js",
+    "./e2e/TextInput": "./dist/blocks/TextInput/e2e.js"
   },
   "files": [
     "dist/*"
@@ -66,6 +69,7 @@
     "@emotion/jest": "11.10.5",
     "@lowdefy/block-dev": "4.5.2",
     "@lowdefy/block-dev-e2e": "4.5.2",
+    "@lowdefy/e2e-utils": "4.5.2",
     "@lowdefy/jest-yaml-transform": "4.5.2",
     "@playwright/test": "1.50.1",
     "@lowdefy/node-utils": "4.5.2",

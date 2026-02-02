@@ -1,0 +1,6 @@
+import { createConfig } from '@lowdefy/e2e-utils/config';
+
+export default createConfig({
+  appDir: './',
+  port: 3000,
+});

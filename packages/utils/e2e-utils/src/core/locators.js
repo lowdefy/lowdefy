@@ -15,9 +15,7 @@
 */
 
 function getBlock(page, blockId) {
-  // Use the framework-provided wrapper ID (bl-{blockId}) which is guaranteed
-  // to exist for all block types, applied by BlockLayout in packages/client
   return page.locator(`#bl-${blockId}`);
 }
 
-export default getBlock;
+export { getBlock };

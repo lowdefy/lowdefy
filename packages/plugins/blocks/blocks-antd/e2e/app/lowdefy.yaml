@@ -16,6 +16,8 @@ lowdefy: local
 name: blocks-antd E2E Tests
 
 pages:
+  # Workflow test for e2e-utils validation
+  - _ref: workflow-test.yaml
   - _ref: ../../src/blocks/Button/tests/Button.e2e.yaml
   - _ref: ../../src/blocks/Selector/tests/Selector.e2e.yaml
   # Step 1.1: Text Input Blocks

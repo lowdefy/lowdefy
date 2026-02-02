@@ -1,0 +1,122 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: workflow-test
+type: PageHeaderMenu
+properties:
+  title: Workflow Test
+
+blocks:
+  - id: form_card
+    type: Card
+    properties:
+      title: Create Ticket
+    blocks:
+      - id: title_input
+        type: TextInput
+        properties:
+          label: Title
+          placeholder: Enter ticket title
+
+      - id: description_input
+        type: TextArea
+        properties:
+          label: Description
+          placeholder: Describe the issue
+
+      - id: priority_selector
+        type: Selector
+        properties:
+          label: Priority
+          placeholder: Select priority
+          options:
+            - label: Low
+              value: low
+            - label: Medium
+              value: medium
+            - label: High
+              value: high
+
+      - id: submit_btn
+        type: Button
+        properties:
+          title: Submit Ticket
+          type: primary
+          block: true
+        events:
+          onClick:
+            - id: set_loading
+              type: SetState
+              params:
+                submitting: true
+            - id: simulate_request
+              type: Wait
+              params:
+                ms: 500
+            - id: set_submitted
+              type: SetState
+              params:
+                submitting: false
+                submitted: true
+                ticket:
+                  id: 12345
+                  title:
+                    _state: title_input
+                  description:
+                    _state: description_input
+                  priority:
+                    _state: priority_selector
+                  status: open
+
+  - id: result_card
+    type: Card
+    properties:
+      title: Result
+    visible:
+      _state: submitted
+    blocks:
+      - id: success_alert
+        type: Alert
+        properties:
+          type: success
+          message: Ticket Created!
+          description:
+            _nunjucks:
+              template: 'Ticket #{{ ticket.id }} created with priority {{ ticket.priority }}'
+              on:
+                _state: true
+
+      - id: ticket_id_display
+        type: Paragraph
+        properties:
+          content:
+            _nunjucks:
+              template: 'ID: {{ ticket.id }}'
+              on:
+                _state: true
+
+      - id: reset_btn
+        type: Button
+        properties:
+          title: Create Another
+        events:
+          onClick:
+            - id: reset_form
+              type: SetState
+              params:
+                title_input: null
+                description_input: null
+                priority_selector: null
+                submitted: false
+                ticket: null
