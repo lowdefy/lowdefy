@@ -17,7 +17,6 @@
 import { jest } from '@jest/globals';
 
 import createCliStdOutLineHandler from './cli/createStdOutLineHandler.js';
-import createDevStdOutLineHandler from './dev/createStdOutLineHandler.js';
 
 describe('createStdOutLineHandler (cli)', () => {
   test('logs source link for error and prints message', () => {
@@ -112,83 +111,5 @@ describe('createStdOutLineHandler (cli)', () => {
     handler('raw output line');
 
     expect(ui.log).toHaveBeenCalledWith('raw output line');
-  });
-});
-
-describe('createStdOutLineHandler (dev)', () => {
-  function makeLogger() {
-    return {
-      levels: {
-        labels: {
-          10: 'debug',
-          20: 'debug',
-          30: 'info',
-          40: 'warn',
-          50: 'error',
-        },
-      },
-      info: jest.fn(),
-      warn: jest.fn(),
-      error: jest.fn(),
-      debug: jest.fn(),
-      ui: {
-        log: jest.fn(),
-        info: jest.fn(),
-        warn: jest.fn(),
-        error: jest.fn(),
-        debug: jest.fn(),
-        link: jest.fn(),
-      },
-    };
-  }
-
-  test('logs link and message for errors', () => {
-    const logger = makeLogger();
-    const handler = createDevStdOutLineHandler({ context: { logger } });
-
-    handler(
-      JSON.stringify({
-        level: 50,
-        msg: 'Server error',
-        source: '/path/error.yaml:3',
-      })
-    );
-
-    expect(logger.ui.link).toHaveBeenCalledWith('/path/error.yaml:3');
-    expect(logger.ui.error).toHaveBeenCalledWith('Server error');
-  });
-
-  test('defaults info to log print style', () => {
-    const logger = makeLogger();
-    const handler = createDevStdOutLineHandler({ context: { logger } });
-
-    handler(
-      JSON.stringify({
-        level: 30,
-        msg: 'Server info',
-      })
-    );
-
-    expect(logger.ui.log).toHaveBeenCalledWith('Server info');
-  });
-
-  test('falls back to info on invalid json', () => {
-    const logger = makeLogger();
-    const handler = createDevStdOutLineHandler({ context: { logger } });
-
-    handler('raw output line');
-
-    expect(logger.ui.info).toHaveBeenCalledWith('raw output line');
-  });
-
-  test('ignores entries without level', () => {
-    const logger = makeLogger();
-    const handler = createDevStdOutLineHandler({ context: { logger } });
-
-    handler(JSON.stringify({ msg: 'missing level' }));
-
-    expect(logger.ui.info).not.toHaveBeenCalled();
-    expect(logger.ui.warn).not.toHaveBeenCalled();
-    expect(logger.ui.error).not.toHaveBeenCalled();
   });
 });

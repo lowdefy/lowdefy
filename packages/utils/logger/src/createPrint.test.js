@@ -72,14 +72,14 @@ describe('memoise', () => {
     jest.resetModules();
   });
   test('memoise print', async () => {
-    const { default: createPrint } = await import('@lowdefy/logger/cli');
+    const { default: createPrint } = await import('./cli/createPrint.js');
     const print1 = createPrint({ logLevel: 'info' });
     const print2 = createPrint({ logLevel: 'info' });
     expect(print1).toBe(print2);
   });
 
   test('Create ora print if process.env.CI is false', async () => {
-    const { default: createPrint } = await import('@lowdefy/logger/cli');
+    const { default: createPrint } = await import('./cli/createPrint.js');
     const realCI = process.env.CI;
     process.env.CI = 'false';
     const print = createPrint({ logLevel: 'info' });
@@ -89,7 +89,7 @@ describe('memoise', () => {
   });
 
   test('Create basic print if process.env.CI is true', async () => {
-    const { default: createPrint } = await import('@lowdefy/logger/cli');
+    const { default: createPrint } = await import('./cli/createPrint.js');
     const realCI = process.env.CI;
     process.env.CI = 'true';
     const print = createPrint({ logLevel: 'info' });
@@ -102,13 +102,14 @@ describe('memoise', () => {
 describe('ora print', () => {
   test('create print', async () => {
     const { default: ora } = await import('ora');
-    const { createOraPrint } = await import('@lowdefy/logger/cli');
+    const { createOraPrint } = await import('./cli/createPrint.js');
     const print = createOraPrint({ logLevel: 'info' });
     expect(print).toMatchInlineSnapshot(`
       Object {
         "debug": [Function],
         "error": [Function],
         "info": [Function],
+        "link": [Function],
         "log": [Function],
         "spin": [Function],
         "succeed": [Function],
@@ -130,7 +131,7 @@ describe('ora print', () => {
 
   test('timestamp, digits less than 10', async () => {
     const { default: ora } = await import('ora');
-    const { createOraPrint } = await import('@lowdefy/logger/cli');
+    const { createOraPrint } = await import('./cli/createPrint.js');
     mockGetHours.mockImplementation(() => 1);
     mockGetMinutes.mockImplementation(() => 2);
     mockGetSeconds.mockImplementation(() => 3);
@@ -142,7 +143,7 @@ describe('ora print', () => {
 
   test('timestamp, digits more than 10', async () => {
     const { default: ora } = await import('ora');
-    const { createOraPrint } = await import('@lowdefy/logger/cli');
+    const { createOraPrint } = await import('./cli/createPrint.js');
     mockGetHours.mockImplementation(() => 11);
     mockGetMinutes.mockImplementation(() => 22);
     mockGetSeconds.mockImplementation(() => 33);
@@ -153,49 +154,49 @@ describe('ora print', () => {
   });
 
   test('print error', async () => {
-    const { createOraPrint } = await import('@lowdefy/logger/cli');
+    const { createOraPrint } = await import('./cli/createPrint.js');
     const print = createOraPrint({ logLevel: 'info' });
     print.error('Test error');
     expect(mockOraFail.mock.calls).toEqual([['\x1b[31mTest error\x1b[0m']]);
   });
 
   test('print info', async () => {
-    const { createOraPrint } = await import('@lowdefy/logger/cli');
+    const { createOraPrint } = await import('./cli/createPrint.js');
     const print = createOraPrint({ logLevel: 'info' });
     print.info('Test info');
     expect(mockOraInfo.mock.calls).toEqual([['\x1b[34mTest info\x1b[0m']]);
   });
 
   test('print log', async () => {
-    const { createOraPrint } = await import('@lowdefy/logger/cli');
+    const { createOraPrint } = await import('./cli/createPrint.js');
     const print = createOraPrint({ logLevel: 'info' });
     print.log('Test log');
     expect(mockOraStopAndPersist.mock.calls).toEqual([[{ symbol: '∙', text: 'Test log' }]]);
   });
 
   test('print spin', async () => {
-    const { createOraPrint } = await import('@lowdefy/logger/cli');
+    const { createOraPrint } = await import('./cli/createPrint.js');
     const print = createOraPrint({ logLevel: 'info' });
     print.spin('Test spin');
     expect(mockOraStart.mock.calls).toEqual([['Test spin']]);
   });
 
   test('print succeed', async () => {
-    const { createOraPrint } = await import('@lowdefy/logger/cli');
+    const { createOraPrint } = await import('./cli/createPrint.js');
     const print = createOraPrint({ logLevel: 'info' });
     print.succeed('Test succeed');
     expect(mockOraSucceed.mock.calls).toEqual([['\x1b[32mTest succeed\x1b[0m']]);
   });
 
   test('print warn', async () => {
-    const { createOraPrint } = await import('@lowdefy/logger/cli');
+    const { createOraPrint } = await import('./cli/createPrint.js');
     const print = createOraPrint({ logLevel: 'info' });
     print.warn('Test warn');
     expect(mockOraWarn.mock.calls).toEqual([['\x1b[33mTest warn\x1b[0m']]);
   });
 
   test('print debug', async () => {
-    const { createOraPrint } = await import('@lowdefy/logger/cli');
+    const { createOraPrint } = await import('./cli/createPrint.js');
     const print = createOraPrint({ logLevel: 'debug' });
     print.debug('Test debug');
     expect(mockOraStopAndPersist.mock.calls).toEqual([
@@ -205,7 +206,7 @@ describe('ora print', () => {
 
   // TODO: Set spinner.isSpinning in mocks to test this
   test.skip('preserve spinner text if debug is called after spin', async () => {
-    const { createOraPrint } = await import('@lowdefy/logger/cli');
+    const { createOraPrint } = await import('./cli/createPrint.js');
     const print = createOraPrint({ logLevel: 'debug' });
     print.spin('Test spin');
     expect(mockOraStart.mock.calls).toEqual([['Test spin']]);
@@ -219,7 +220,7 @@ describe('ora print', () => {
   });
 
   test('Log level error', async () => {
-    const { createOraPrint } = await import('@lowdefy/logger/cli');
+    const { createOraPrint } = await import('./cli/createPrint.js');
     const print = createOraPrint({ logLevel: 'error' });
     print.error('Test error');
     expect(mockOraFail.mock.calls).toEqual([['\x1b[31mTest error\x1b[0m']]);
@@ -238,7 +239,7 @@ describe('ora print', () => {
   });
 
   test('Log level warn', async () => {
-    const { createOraPrint } = await import('@lowdefy/logger/cli');
+    const { createOraPrint } = await import('./cli/createPrint.js');
     const print = createOraPrint({ logLevel: 'warn' });
     print.error('Test error');
     expect(mockOraFail.mock.calls).toEqual([['\x1b[31mTest error\x1b[0m']]);
@@ -257,7 +258,7 @@ describe('ora print', () => {
   });
 
   test('Log level info', async () => {
-    const { createOraPrint } = await import('@lowdefy/logger/cli');
+    const { createOraPrint } = await import('./cli/createPrint.js');
     const print = createOraPrint({ logLevel: 'info' });
     print.error('Test error');
     expect(mockOraFail.mock.calls).toEqual([['\x1b[31mTest error\x1b[0m']]);
@@ -276,7 +277,7 @@ describe('ora print', () => {
   });
 
   test('Log level debug', async () => {
-    const { createOraPrint } = await import('@lowdefy/logger/cli');
+    const { createOraPrint } = await import('./cli/createPrint.js');
     const print = createOraPrint({ logLevel: 'debug' });
     print.error('Test error');
     expect(mockOraFail.mock.calls).toEqual([['\x1b[31mTest error\x1b[0m']]);
@@ -300,13 +301,14 @@ describe('ora print', () => {
 
 describe('basic print', () => {
   test('create print', async () => {
-    const { createBasicPrint } = await import('@lowdefy/logger/cli');
+    const { createBasicPrint } = await import('./cli/createPrint.js');
     const print = createBasicPrint({ logLevel: 'info' });
     expect(print).toMatchInlineSnapshot(`
       Object {
         "debug": [Function],
         "error": [MockFunction],
         "info": [MockFunction],
+        "link": [MockFunction],
         "log": [MockFunction],
         "spin": [MockFunction],
         "succeed": [MockFunction],
@@ -316,56 +318,56 @@ describe('basic print', () => {
   });
 
   test('print error', async () => {
-    const { createBasicPrint } = await import('@lowdefy/logger/cli');
+    const { createBasicPrint } = await import('./cli/createPrint.js');
     const print = createBasicPrint({ logLevel: 'info' });
     print.error('Test error');
     expect(mockConsoleError.mock.calls).toEqual([['Test error']]);
   });
 
   test('print info', async () => {
-    const { createBasicPrint } = await import('@lowdefy/logger/cli');
+    const { createBasicPrint } = await import('./cli/createPrint.js');
     const print = createBasicPrint({ logLevel: 'info' });
     print.info('Test info');
     expect(mockConsoleInfo.mock.calls).toEqual([['Test info']]);
   });
 
   test('print log', async () => {
-    const { createBasicPrint } = await import('@lowdefy/logger/cli');
+    const { createBasicPrint } = await import('./cli/createPrint.js');
     const print = createBasicPrint({ logLevel: 'info' });
     print.log('Test log');
     expect(mockConsoleLog.mock.calls).toEqual([['Test log']]);
   });
 
   test('print spin', async () => {
-    const { createBasicPrint } = await import('@lowdefy/logger/cli');
+    const { createBasicPrint } = await import('./cli/createPrint.js');
     const print = createBasicPrint({ logLevel: 'info' });
     print.spin('Test spin');
     expect(mockConsoleLog.mock.calls).toEqual([['Test spin']]);
   });
 
   test('print succeed', async () => {
-    const { createBasicPrint } = await import('@lowdefy/logger/cli');
+    const { createBasicPrint } = await import('./cli/createPrint.js');
     const print = createBasicPrint({ logLevel: 'info' });
     print.succeed('Test succeed');
     expect(mockConsoleLog.mock.calls).toEqual([['Test succeed']]);
   });
 
   test('print warn', async () => {
-    const { createBasicPrint } = await import('@lowdefy/logger/cli');
+    const { createBasicPrint } = await import('./cli/createPrint.js');
     const print = createBasicPrint({ logLevel: 'info' });
     print.warn('Test warn');
     expect(mockConsoleWarn.mock.calls).toEqual([['Test warn']]);
   });
 
   test('print debug', async () => {
-    const { createBasicPrint } = await import('@lowdefy/logger/cli');
+    const { createBasicPrint } = await import('./cli/createPrint.js');
     const print = createBasicPrint({ logLevel: 'debug' });
     print.debug('Test debug');
     expect(mockConsoleDebug.mock.calls).toEqual([['Test debug']]);
   });
 
   test('Log level error', async () => {
-    const { createBasicPrint } = await import('@lowdefy/logger/cli');
+    const { createBasicPrint } = await import('./cli/createPrint.js');
     const print = createBasicPrint({ logLevel: 'error' });
     print.error('Test error');
     expect(mockConsoleError.mock.calls).toEqual([['Test error']]);
@@ -382,7 +384,7 @@ describe('basic print', () => {
   });
 
   test('Log level warn', async () => {
-    const { createBasicPrint } = await import('@lowdefy/logger/cli');
+    const { createBasicPrint } = await import('./cli/createPrint.js');
     const print = createBasicPrint({ logLevel: 'warn' });
     print.error('Test error');
     expect(mockConsoleError.mock.calls).toEqual([['Test error']]);
@@ -399,7 +401,7 @@ describe('basic print', () => {
   });
 
   test('Log level info', async () => {
-    const { createBasicPrint } = await import('@lowdefy/logger/cli');
+    const { createBasicPrint } = await import('./cli/createPrint.js');
     const print = createBasicPrint({ logLevel: 'info' });
     print.error('Test error');
     expect(mockConsoleError.mock.calls).toEqual([['Test error']]);
@@ -416,7 +418,7 @@ describe('basic print', () => {
   });
 
   test('Log level debug', async () => {
-    const { createBasicPrint } = await import('@lowdefy/logger/cli');
+    const { createBasicPrint } = await import('./cli/createPrint.js');
     const print = createBasicPrint({ logLevel: 'debug' });
     print.error('Test error');
     expect(mockConsoleError.mock.calls).toEqual([['Test error']]);
