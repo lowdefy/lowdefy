@@ -15,6 +15,19 @@
 */
 
 function createStdOutLineHandler({ context }) {
+  const ui =
+    context?.logger?.ui ??
+    context?.print ?? {
+      log: (text) => console.log(text),
+      info: (text) => console.info(text),
+      warn: (text) => console.warn(text),
+      error: (text) => console.error(text),
+      debug: (text) => console.debug(text),
+      link: (text) => console.info(text),
+      spin: (text) => console.log(text),
+      succeed: (text) => console.log(text),
+    };
+
   function stdOutLineHandler(line) {
     try {
       const { print, msg, source, err } = JSON.parse(line);
@@ -24,14 +37,14 @@ function createStdOutLineHandler({ context }) {
 
       // Error/warn with source: show source link (blue) before the message
       if (resolvedSource && (print === 'error' || print === 'warn')) {
-        context.print.link(resolvedSource);
+        ui.link(resolvedSource);
       }
 
       if (msg != null && msg !== '' && msg !== 'undefined') {
-        context.print[print](msg);
+        ui[print]?.(msg);
       }
     } catch (error) {
-      context.print.log(line);
+      ui.log(line);
     }
   }
   return stdOutLineHandler;

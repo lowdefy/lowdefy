@@ -16,6 +16,7 @@
 
 function createStdOutLineHandler({ context }) {
   const { logger } = context;
+  const ui = logger?.ui;
   function stdOutLineHandler(line) {
     try {
       const { level, msg, print: serverPrint, source, err } = JSON.parse(line);
@@ -28,16 +29,28 @@ function createStdOutLineHandler({ context }) {
 
       // Error/warn with source: show source link (blue) before the message
       if (resolvedSource && level >= 40) {
-        logger.info({ print: 'link' }, resolvedSource);
+        if (ui?.link) {
+          ui.link(resolvedSource);
+        } else {
+          logger.info({ print: 'link' }, resolvedSource);
+        }
       }
 
       if (msg && msg !== 'undefined') {
         // Forward server's print style if specified; default info to 'log' (white)
         const print = serverPrint ?? (level === 30 ? 'log' : levelLabel);
-        logger[levelLabel]({ print }, msg);
+        if (ui?.[print]) {
+          ui[print](msg);
+        } else {
+          logger[levelLabel]({ print }, msg);
+        }
       }
     } catch (error) {
-      logger.info({ print: 'info' }, line);
+      if (ui?.info) {
+        ui.info(line);
+      } else {
+        logger.info({ print: 'info' }, line);
+      }
     }
   }
   return stdOutLineHandler;

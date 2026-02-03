@@ -26,7 +26,7 @@ function formatBrowserError(errorOrMessage) {
 }
 
 function createBrowserLogger() {
-  return {
+  const logger = {
     error: (errorOrMessage, ...args) => {
       if (args.length > 0) {
         console.error(errorOrMessage, ...args);
@@ -37,7 +37,21 @@ function createBrowserLogger() {
     warn: (...args) => console.warn(...args),
     info: (...args) => console.info(...args),
     debug: (...args) => console.debug(...args),
+    log: (...args) => console.log(...args),
   };
+
+  logger.ui = {
+    log: (text) => logger.log(text),
+    info: (text) => logger.info(text),
+    warn: (text) => logger.warn(text),
+    error: (text) => logger.error(text),
+    debug: (text) => logger.debug(text),
+    link: (text) => logger.info(text),
+    spin: (text) => logger.info(text),
+    succeed: (text) => logger.info(text),
+  };
+
+  return logger;
 }
 
 export default createBrowserLogger;

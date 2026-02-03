@@ -31,6 +31,27 @@ function createDevLogger({ level = 'info', name = 'lowdefy build' } = {}) {
       print: context.print ?? logger.levels.labels[levelNumber],
     }),
   });
+
+  const createUi = (target) => ({
+    log: (text) => target.info({ print: 'log' }, text),
+    info: (text) => target.info({ print: 'info' }, text),
+    warn: (text) => target.warn({ print: 'warn' }, text),
+    error: (text) => target.error({ print: 'error' }, text),
+    debug: (text) => target.debug({ print: 'debug' }, text),
+    link: (text) => target.info({ print: 'link' }, text),
+    spin: (text) => target.info({ print: 'spin' }, text),
+    succeed: (text) => target.info({ print: 'succeed' }, text),
+  });
+
+  logger.ui = createUi(logger);
+  if (logger.child) {
+    const originalChild = logger.child.bind(logger);
+    logger.child = (...args) => {
+      const child = originalChild(...args);
+      child.ui = createUi(child);
+      return child;
+    };
+  }
   return logger;
 }
 

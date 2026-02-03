@@ -14,8 +14,9 @@
   limitations under the License.
 */
 
+import createCliLogger from './createCliLogger.js';
 import createPrint, { createOraPrint, createBasicPrint } from './createPrint.js';
 import createStdOutLineHandler from './createStdOutLineHandler.js';
 
-export { createPrint, createOraPrint, createBasicPrint, createStdOutLineHandler };
-export default createPrint;
+export { createCliLogger, createPrint, createOraPrint, createBasicPrint, createStdOutLineHandler };
+export default createCliLogger;

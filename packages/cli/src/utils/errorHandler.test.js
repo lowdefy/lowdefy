@@ -17,13 +17,16 @@
 import { jest } from '@jest/globals';
 
 jest.unstable_mockModule('@lowdefy/logger/cli', () => {
-  const error = jest.fn();
-  const createPrint = () => ({
-    error,
-  });
+  const ui = {
+    error: jest.fn(),
+    info: jest.fn(),
+    link: jest.fn(),
+  };
+  const logger = { ui };
+  const createCliLogger = jest.fn(() => logger);
   return {
-    createPrint,
-    default: createPrint,
+    default: createCliLogger,
+    createCliLogger,
   };
 });
 
@@ -33,11 +36,14 @@ jest.unstable_mockModule('axios', () => ({
   },
 }));
 
+beforeEach(() => {
+  jest.clearAllMocks();
+});
+
 test('Print and log error with full context', async () => {
   const { default: errorHandler } = await import('./errorHandler.js');
   const { default: axios } = await import('axios');
-  const { default: createPrint } = await import('@lowdefy/logger/cli');
-  const print = createPrint();
+  const { default: createCliLogger } = await import('@lowdefy/logger/cli');
   const error = new Error('Test error');
   const context = {
     cliVersion: 'cliVersion',
@@ -46,7 +52,8 @@ test('Print and log error with full context', async () => {
     disableTelemetry: false,
   };
   await errorHandler({ context, error });
-  expect(print.error.mock.calls).toEqual([['Test error']]);
+  const logger = createCliLogger.mock.results[0].value;
+  expect(logger.ui.error.mock.calls).toEqual([['Test error']]);
   const axiosArguments = axios.request.mock.calls[0][0];
   expect(axiosArguments.headers).toEqual({
     'User-Agent': 'Lowdefy CLI vcliVersion',
@@ -65,15 +72,15 @@ test('Print and log error with full context', async () => {
 test('Print and log error with starting context', async () => {
   const { default: errorHandler } = await import('./errorHandler.js');
   const { default: axios } = await import('axios');
-  const { default: createPrint } = await import('@lowdefy/logger/cli');
-  const print = createPrint();
+  const { default: createCliLogger } = await import('@lowdefy/logger/cli');
   const error = new Error('Test error');
   const context = {
     cliVersion: 'cliVersion',
   };
   await errorHandler({ context, error });
 
-  expect(print.error.mock.calls).toEqual([['Test error']]);
+  const logger = createCliLogger.mock.results[0].value;
+  expect(logger.ui.error.mock.calls).toEqual([['Test error']]);
   const axiosArguments = axios.request.mock.calls[0][0];
   expect(axiosArguments.headers).toEqual({
     'User-Agent': 'Lowdefy CLI vcliVersion',
@@ -92,8 +99,7 @@ test('Print and log error with starting context', async () => {
 test('Do not log error if telemetry is disabled', async () => {
   const { default: errorHandler } = await import('./errorHandler.js');
   const { default: axios } = await import('axios');
-  const { default: createPrint } = await import('@lowdefy/logger/cli');
-  const print = createPrint();
+  const { default: createCliLogger } = await import('@lowdefy/logger/cli');
   const error = new Error('Test error');
   const context = {
     cliVersion: 'cliVersion',
@@ -103,15 +109,15 @@ test('Do not log error if telemetry is disabled', async () => {
   };
   await errorHandler({ context, error });
 
-  expect(print.error.mock.calls).toEqual([['Test error']]);
+  const logger = createCliLogger.mock.results[0].value;
+  expect(logger.ui.error.mock.calls).toEqual([['Test error']]);
   expect(axios.request.mock.calls).toEqual([]);
 });
 
 test('Pass if logError fails', async () => {
   const { default: errorHandler } = await import('./errorHandler.js');
   const { default: axios } = await import('axios');
-  const { default: createPrint } = await import('@lowdefy/logger/cli');
-  const print = createPrint();
+  const { default: createCliLogger } = await import('@lowdefy/logger/cli');
   let didThrow = false;
   axios.request.mockImplementationOnce(() => {
     didThrow = true;
@@ -124,7 +130,8 @@ test('Pass if logError fails', async () => {
     disableTelemetry: false,
   };
   await errorHandler({ context, error });
-  expect(print.error.mock.calls).toEqual([['Test error']]);
+  const logger = createCliLogger.mock.results[0].value;
+  expect(logger.ui.error.mock.calls).toEqual([['Test error']]);
   expect(axios.request.mock.calls.length).toBe(1);
   expect(didThrow).toBe(true);
 });

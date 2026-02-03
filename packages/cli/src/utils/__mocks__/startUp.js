@@ -21,10 +21,12 @@ async function mockStartUpImp({ context, options = {} }) {
   context.cliVersion = 'cliVersion';
   context.commandLineOptions = options;
 
-  context.print = {
-    info: jest.fn(),
-    succeed: jest.fn(),
-    log: jest.fn(),
+  context.logger = {
+    ui: {
+      info: jest.fn(),
+      succeed: jest.fn(),
+      log: jest.fn(),
+    },
   };
 
   context.configDirectory = options.configDirectory ?? 'configDirectory';

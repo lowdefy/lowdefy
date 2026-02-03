@@ -29,6 +29,28 @@ const defaultErrSerializer = (err) => {
   };
 };
 
+function attachUi(logger) {
+  if (logger.ui) return logger;
+  logger.ui = {
+    log: (text) => logger.info(text),
+    info: (text) => logger.info(text),
+    warn: (text) => logger.warn(text),
+    error: (text) => logger.error(text),
+    debug: (text) => logger.debug(text),
+    link: (text) => logger.info(text),
+    spin: (text) => logger.info(text),
+    succeed: (text) => logger.info(text),
+  };
+
+  if (logger.child && !logger.child._lowdefyWrapped) {
+    const originalChild = logger.child.bind(logger);
+    logger.child = (...args) => attachUi(originalChild(...args));
+    logger.child._lowdefyWrapped = true;
+  }
+
+  return logger;
+}
+
 function createNodeLogger({
   name = 'lowdefy',
   level = process.env.LOWDEFY_LOG_LEVEL ?? 'info',
@@ -37,7 +59,7 @@ function createNodeLogger({
   serializers,
   destination,
 } = {}) {
-  return pino(
+  const logger = pino(
     {
       name,
       level,
@@ -50,6 +72,7 @@ function createNodeLogger({
     },
     destination
   );
+  return attachUi(logger);
 }
 
 export default createNodeLogger;

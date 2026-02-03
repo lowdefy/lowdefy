@@ -19,15 +19,15 @@ import { spawnProcess } from '@lowdefy/node-utils';
 async function installServer({ context, directory }) {
   // Skip dependency installation for local development (monorepo already has deps installed)
   if (context.lowdefyVersion === 'local') {
-    context.print.log('Skipping dependency installation for local development.');
+    context.logger.ui.log('Skipping dependency installation for local development.');
     return;
   }
-  context.print.spin('Installing dependencies.');
+  context.logger.ui.spin('Installing dependencies.');
   try {
     await spawnProcess({
       command: context.pnpmCmd,
       args: ['install', '--no-frozen-lockfile'],
-      stdOutLineHandler: (line) => context.print.debug(line),
+      stdOutLineHandler: (line) => context.logger.ui.debug(line),
       processOptions: {
         cwd: directory,
         // https://nodejs.org/en/blog/vulnerability/april-2024-security-releases-2#command-injection-via-args-parameter-of-child_processspawn-without-shell-option-enabled-on-windows-cve-2024-27980---high
@@ -38,7 +38,7 @@ async function installServer({ context, directory }) {
     console.error(error);
     throw new Error('Dependency installation failed.');
   }
-  context.print.log('Dependencies install successfully.');
+  context.logger.ui.log('Dependencies install successfully.');
 }
 
 export default installServer;

@@ -21,7 +21,7 @@ import createDevStdOutLineHandler from './dev/createStdOutLineHandler.js';
 
 describe('createStdOutLineHandler (cli)', () => {
   test('logs source link for error and prints message', () => {
-    const print = {
+    const ui = {
       link: jest.fn(),
       error: jest.fn(),
       warn: jest.fn(),
@@ -31,7 +31,7 @@ describe('createStdOutLineHandler (cli)', () => {
       spin: jest.fn(),
       succeed: jest.fn(),
     };
-    const handler = createCliStdOutLineHandler({ context: { print } });
+    const handler = createCliStdOutLineHandler({ context: { logger: { ui } } });
 
     handler(
       JSON.stringify({
@@ -41,12 +41,12 @@ describe('createStdOutLineHandler (cli)', () => {
       })
     );
 
-    expect(print.link).toHaveBeenCalledWith('/path/file.yaml:10');
-    expect(print.error).toHaveBeenCalledWith('Boom');
+    expect(ui.link).toHaveBeenCalledWith('/path/file.yaml:10');
+    expect(ui.error).toHaveBeenCalledWith('Boom');
   });
 
   test('uses err.source when provided', () => {
-    const print = {
+    const ui = {
       link: jest.fn(),
       error: jest.fn(),
       warn: jest.fn(),
@@ -56,7 +56,7 @@ describe('createStdOutLineHandler (cli)', () => {
       spin: jest.fn(),
       succeed: jest.fn(),
     };
-    const handler = createCliStdOutLineHandler({ context: { print } });
+    const handler = createCliStdOutLineHandler({ context: { logger: { ui } } });
 
     handler(
       JSON.stringify({
@@ -67,12 +67,12 @@ describe('createStdOutLineHandler (cli)', () => {
       })
     );
 
-    expect(print.link).toHaveBeenCalledWith('/path/preferred.yaml:2');
-    expect(print.warn).toHaveBeenCalledWith('Warned');
+    expect(ui.link).toHaveBeenCalledWith('/path/preferred.yaml:2');
+    expect(ui.warn).toHaveBeenCalledWith('Warned');
   });
 
   test('does not log source link for non-error prints', () => {
-    const print = {
+    const ui = {
       link: jest.fn(),
       error: jest.fn(),
       warn: jest.fn(),
@@ -82,7 +82,7 @@ describe('createStdOutLineHandler (cli)', () => {
       spin: jest.fn(),
       succeed: jest.fn(),
     };
-    const handler = createCliStdOutLineHandler({ context: { print } });
+    const handler = createCliStdOutLineHandler({ context: { logger: { ui } } });
 
     handler(
       JSON.stringify({
@@ -92,12 +92,12 @@ describe('createStdOutLineHandler (cli)', () => {
       })
     );
 
-    expect(print.link).not.toHaveBeenCalled();
-    expect(print.info).toHaveBeenCalledWith('All good');
+    expect(ui.link).not.toHaveBeenCalled();
+    expect(ui.info).toHaveBeenCalledWith('All good');
   });
 
   test('falls back to log on invalid json', () => {
-    const print = {
+    const ui = {
       link: jest.fn(),
       error: jest.fn(),
       warn: jest.fn(),
@@ -107,11 +107,11 @@ describe('createStdOutLineHandler (cli)', () => {
       spin: jest.fn(),
       succeed: jest.fn(),
     };
-    const handler = createCliStdOutLineHandler({ context: { print } });
+    const handler = createCliStdOutLineHandler({ context: { logger: { ui } } });
 
     handler('raw output line');
 
-    expect(print.log).toHaveBeenCalledWith('raw output line');
+    expect(ui.log).toHaveBeenCalledWith('raw output line');
   });
 });
 
@@ -131,6 +131,14 @@ describe('createStdOutLineHandler (dev)', () => {
       warn: jest.fn(),
       error: jest.fn(),
       debug: jest.fn(),
+      ui: {
+        log: jest.fn(),
+        info: jest.fn(),
+        warn: jest.fn(),
+        error: jest.fn(),
+        debug: jest.fn(),
+        link: jest.fn(),
+      },
     };
   }
 
@@ -146,8 +154,8 @@ describe('createStdOutLineHandler (dev)', () => {
       })
     );
 
-    expect(logger.info).toHaveBeenCalledWith({ print: 'link' }, '/path/error.yaml:3');
-    expect(logger.error).toHaveBeenCalledWith({ print: 'error' }, 'Server error');
+    expect(logger.ui.link).toHaveBeenCalledWith('/path/error.yaml:3');
+    expect(logger.ui.error).toHaveBeenCalledWith('Server error');
   });
 
   test('defaults info to log print style', () => {
@@ -161,7 +169,7 @@ describe('createStdOutLineHandler (dev)', () => {
       })
     );
 
-    expect(logger.info).toHaveBeenCalledWith({ print: 'log' }, 'Server info');
+    expect(logger.ui.log).toHaveBeenCalledWith('Server info');
   });
 
   test('falls back to info on invalid json', () => {
@@ -170,7 +178,7 @@ describe('createStdOutLineHandler (dev)', () => {
 
     handler('raw output line');
 
-    expect(logger.info).toHaveBeenCalledWith({ print: 'info' }, 'raw output line');
+    expect(logger.ui.info).toHaveBeenCalledWith('raw output line');
   });
 
   test('ignores entries without level', () => {
@@ -179,8 +187,8 @@ describe('createStdOutLineHandler (dev)', () => {
 
     handler(JSON.stringify({ msg: 'missing level' }));
 
-    expect(logger.info).not.toHaveBeenCalled();
-    expect(logger.warn).not.toHaveBeenCalled();
-    expect(logger.error).not.toHaveBeenCalled();
+    expect(logger.ui.info).not.toHaveBeenCalled();
+    expect(logger.ui.warn).not.toHaveBeenCalled();
+    expect(logger.ui.error).not.toHaveBeenCalled();
   });
 });
