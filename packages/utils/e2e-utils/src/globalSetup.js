@@ -14,7 +14,6 @@
   limitations under the License.
 */
 
-import { execSync } from 'child_process';
 import path from 'path';
 
 import { generateManifest } from './testPrep/generateManifest.js';
@@ -24,13 +23,8 @@ async function globalSetup(config) {
   const appDir = config.webServer?.cwd || process.cwd();
   const buildDir = process.env.LOWDEFY_BUILD_DIR || path.join(appDir, '.lowdefy/server/build');
 
-  console.log('[e2e-utils] Building Lowdefy app...');
-  execSync('NEXT_PUBLIC_LOWDEFY_E2E=true npx lowdefy build', {
-    cwd: appDir,
-    stdio: 'inherit',
-  });
-  console.log('[e2e-utils] Build complete.');
-
+  // Build happens in webServer command (runs before globalSetup)
+  // Here we only generate the manifest from build artifacts
   console.log('[e2e-utils] Generating manifest...');
 
   // Generate manifest from build artifacts

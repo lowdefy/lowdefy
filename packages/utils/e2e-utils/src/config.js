@@ -51,9 +51,9 @@ function createConfig({
       },
     ],
     webServer: {
-      // Start production server (build happens in globalSetup)
+      // Build and start production server
       // NEXT_PUBLIC_LOWDEFY_E2E=true exposes window.lowdefy for state testing
-      command: `NEXT_PUBLIC_LOWDEFY_E2E=true ${cliCommand} start --port ${port}`,
+      command: `NEXT_PUBLIC_LOWDEFY_E2E=true ${cliCommand} build && ${cliCommand} start --port ${port}`,
       url: `http://localhost:${port}`,
       reuseExistingServer: true,
       timeout: 60000,
