@@ -42,8 +42,8 @@ test.describe('DateSelector Block', () => {
     const input = getInput(page, 'ds_with_value');
     await input.click();
 
-    // Select today's date
-    await page.locator('.ant-picker-cell-today').click();
+    // Select a date
+    await page.locator('.ant-picker-cell-in-view').first().click();
 
     // Input should have a value now (format YYYY-MM-DD)
     await expect(input).toHaveValue(/\d{4}-\d{2}-\d{2}/);
@@ -105,8 +105,8 @@ test.describe('DateSelector Block', () => {
     const dropdown = page.locator('.ant-picker-dropdown:visible');
     await expect(dropdown).toBeVisible();
 
-    // Click today's date
-    await page.locator('.ant-picker-cell-today').click();
+    // Click a date cell
+    await page.locator('.ant-picker-cell-in-view').first().click();
 
     const display = getBlock(page, 'ds_onchange_display');
     await expect(display).toHaveText('Date selected');
@@ -128,8 +128,8 @@ test.describe('DateSelector Block', () => {
     const input = getInput(page, 'ds_interaction');
     await input.click();
 
-    // Click today's date
-    await page.locator('.ant-picker-cell-today').click();
+    // Click a date cell
+    await page.locator('.ant-picker-cell-in-view').first().click();
 
     // Input should have a value now
     await expect(input).not.toHaveValue('');
@@ -141,7 +141,7 @@ test.describe('DateSelector Block', () => {
 
     // First select a date
     await input.click();
-    await page.locator('.ant-picker-cell-today').click();
+    await page.locator('.ant-picker-cell-in-view').first().click();
     await expect(input).not.toHaveValue('');
 
     // Hover to reveal clear button and clear
@@ -158,7 +158,7 @@ test.describe('DateSelector Block', () => {
 
     // Type a value first by selecting a date
     await input.click();
-    await page.locator('.ant-picker-cell-today').click();
+    await page.locator('.ant-picker-cell-in-view').first().click();
 
     // Hover - clear button should not be visible
     await picker.hover();

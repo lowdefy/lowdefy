@@ -42,8 +42,8 @@ test.describe('DateTimeSelector Block', () => {
     const input = getInput(page, 'dts_with_value');
     await input.click();
 
-    // Select today's date
-    await page.locator('.ant-picker-cell-today').click();
+    // Select a date
+    await page.locator('.ant-picker-cell-in-view').first().click();
 
     // Input should have a value now (format YYYY-MM-DD HH:mm)
     await expect(input).toHaveValue(/\d{4}-\d{2}-\d{2}/);
@@ -105,8 +105,8 @@ test.describe('DateTimeSelector Block', () => {
     const dropdown = page.locator('.ant-picker-dropdown:visible');
     await expect(dropdown).toBeVisible();
 
-    // Click today's date - this triggers onChange via onSelect
-    await page.locator('.ant-picker-cell-today').click();
+    // Click a date cell - this triggers onChange via onSelect
+    await page.locator('.ant-picker-cell-in-view').first().click();
 
     const display = getBlock(page, 'dts_onchange_display');
     await expect(display).toHaveText('DateTime selected');
@@ -137,8 +137,8 @@ test.describe('DateTimeSelector Block', () => {
     const input = getInput(page, 'dts_interaction');
     await input.click();
 
-    // Click today's date
-    await page.locator('.ant-picker-cell-today').click();
+    // Click a date cell
+    await page.locator('.ant-picker-cell-in-view').first().click();
 
     // Input should have a value now
     await expect(input).not.toHaveValue('');
@@ -150,7 +150,7 @@ test.describe('DateTimeSelector Block', () => {
 
     // First select a datetime
     await input.click();
-    await page.locator('.ant-picker-cell-today').click();
+    await page.locator('.ant-picker-cell-in-view').first().click();
     await expect(input).not.toHaveValue('');
 
     // Hover to reveal clear button and clear
@@ -167,7 +167,7 @@ test.describe('DateTimeSelector Block', () => {
 
     // Select a date first
     await input.click();
-    await page.locator('.ant-picker-cell-today').click();
+    await page.locator('.ant-picker-cell-in-view').first().click();
 
     // Hover - clear button should not be visible
     await picker.hover();
