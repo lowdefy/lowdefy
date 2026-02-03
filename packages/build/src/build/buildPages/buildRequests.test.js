@@ -16,7 +16,7 @@
 
 import { jest } from '@jest/globals';
 
-import buildPages from './buildPages.js';
+import buildPages from '../full/buildPages.js';
 import testContext from '../../test-utils/testContext.js';
 
 const mockLogWarn = jest.fn();

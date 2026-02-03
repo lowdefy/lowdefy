@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import jsMapParser from './jsMapParser.js';
+import jsMapParser from '../buildJs/jsMapParser.js';
 
 function buildJs({ components, context }) {
   components.pages = components.pages.map((page) => {

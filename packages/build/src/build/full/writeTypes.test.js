@@ -17,7 +17,7 @@
 import { jest } from '@jest/globals';
 
 import writeTypes from './writeTypes.js';
-import testContext from '../test-utils/testContext.js';
+import testContext from '../../test-utils/testContext.js';
 
 const mockWriteBuildArtifact = jest.fn();
 
