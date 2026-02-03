@@ -119,6 +119,7 @@ test('getRequestDetails params is true', async () => {
         response: {
           req_one: [
             {
+              actionId: 'a',
               blockId: 'button',
               loading: false,
               payload: {},
@@ -185,6 +186,7 @@ test('getRequestDetails params is req_one', async () => {
       b: {
         response: [
           {
+            actionId: 'a',
             blockId: 'button',
             loading: false,
             payload: {},
@@ -375,6 +377,7 @@ test('getRequestDetails params.all is true', async () => {
         response: {
           req_one: [
             {
+              actionId: 'a',
               blockId: 'button',
               loading: false,
               payload: {},
@@ -519,6 +522,7 @@ test('getRequestDetails params.key is req_one', async () => {
       b: {
         response: [
           {
+            actionId: 'a',
             blockId: 'button',
             loading: false,
             payload: {},

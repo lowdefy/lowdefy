@@ -193,6 +193,7 @@ class Actions {
       response = await this.actions[action.type]({
         globals: this.context._internal.lowdefy._internal.globals,
         methods: getActionMethods({
+          actionId: action.id,
           actions: responses,
           arrayIndices,
           blockId: block.blockId,
