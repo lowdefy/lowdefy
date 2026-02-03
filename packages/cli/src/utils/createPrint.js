@@ -38,6 +38,7 @@ const logLevelValues = {
   succeed: 33,
   spin: 32,
   log: 31,
+  link: 30,
   info: 30,
   debug: 20,
 };
@@ -62,6 +63,7 @@ function createOraPrint({ logLevel }) {
     {
       error: (text) => spinner.fail(red(text)),
       info: (text) => spinner.info(blue(text)),
+      link: (text) => spinner.info(blue(text)),
       log: (text) => spinner.stopAndPersist({ symbol: '∙', text }),
       spin: (text) => spinner.start(text),
       succeed: (text) => spinner.succeed(green(text)),
@@ -83,6 +85,7 @@ function createBasicPrint({ logLevel = 'info' }) {
     {
       error,
       info,
+      link: info,
       log,
       spin: log,
       succeed: log,

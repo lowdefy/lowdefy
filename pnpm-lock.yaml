@@ -80,7 +80,7 @@ importers:
         version: 0.2.29(@swc/core@1.3.99(@swc/helpers@0.5.2))
       jest:
         specifier: 28.1.3
-        version: 28.1.3(@types/node@16.18.101)
+        version: 28.1.3(@types/node@20.6.2)
 
   packages/build:
     dependencies:
@@ -181,6 +181,9 @@ importers:
       '@lowdefy/connection-stripe':
         specifier: 4.5.2
         version: link:../plugins/connections/connection-stripe
+      '@lowdefy/connection-test':
+        specifier: 4.5.2
+        version: link:../plugins/connections/connection-test
       '@lowdefy/operators-change-case':
         specifier: 4.5.2
         version: link:../plugins/operators/operators-change-case
@@ -228,7 +231,7 @@ importers:
         version: 0.2.29(@swc/core@1.3.99(@swc/helpers@0.5.2))
       jest:
         specifier: 28.1.3
-        version: 28.1.3(@types/node@20.6.2)
+        version: 28.1.3(@types/node@16.18.101)
 
   packages/cli:
     dependencies:
@@ -1490,6 +1493,12 @@ importers:
         specifier: 28.1.3
         version: 28.1.3(@types/node@20.6.2)
 
+  packages/plugins/connections/connection-test:
+    dependencies:
+      '@lowdefy/errors':
+        specifier: 4.5.2
+        version: link:../../../utils/errors
+
   packages/plugins/operators/operators-change-case:
     dependencies:
       '@lowdefy/helpers':
@@ -2032,6 +2041,9 @@ importers:
       '@lowdefy/connection-axios-http':
         specifier: 4.5.2
         version: link:../../plugins/connections/connection-axios-http
+      '@lowdefy/connection-test':
+        specifier: 4.5.2
+        version: link:../../plugins/connections/connection-test
       '@lowdefy/engine':
         specifier: 4.5.2
         version: link:../../engine

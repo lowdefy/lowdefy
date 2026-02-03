@@ -35,6 +35,7 @@ const defaultPackages = [
   '@lowdefy/blocks-qr',
   '@lowdefy/connection-axios-http',
   '@lowdefy/connection-elasticsearch',
+  '@lowdefy/connection-test',
   '@lowdefy/connection-google-sheets',
   '@lowdefy/connection-knex',
   '@lowdefy/connection-mongodb',

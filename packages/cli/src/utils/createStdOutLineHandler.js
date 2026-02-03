@@ -22,9 +22,9 @@ function createStdOutLineHandler({ context }) {
       // Extract source from err (pino error serialization) or top-level (merging object)
       const resolvedSource = err?.source ?? source;
 
-      // Error/warn with source: show source line (info/blue) before the message
+      // Error/warn with source: show source link (blue) before the message
       if (resolvedSource && (print === 'error' || print === 'warn')) {
-        context.print.info(resolvedSource);
+        context.print.link(resolvedSource);
       }
 
       if (msg != null && msg !== '' && msg !== 'undefined') {
