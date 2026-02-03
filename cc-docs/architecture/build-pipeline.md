@@ -249,10 +249,11 @@ context = {
   jsMap: { client: {}, server: {} },
   keyMap: {},
   refMap: {},
-  logger,
+  logger,               // Wrapped with ConfigWarning/ConfigError formatting
   readConfigFile,
   writeBuildArtifact,
   refResolver,
+  seenSourceLines,       // Set for deduplicating warnings by source:line
   stage: 'prod' | 'dev',
   typeCounters: {
     actions, auth, blocks, connections,
@@ -261,6 +262,10 @@ context = {
   typesMap
 }
 ```
+
+`createContext` wraps `logger.warn` and `logger.error` to handle `ConfigWarning`/`ConfigError` formatting with deduplication. It detects Pino loggers (via `logger.child`) vs console loggers and formats output accordingly:
+- **Pino**: `logger.warn({ source }, message)` (structured JSON)
+- **Console**: `logger.warn('message\n    at source')` (plain text)
 
 ## Build Flow Diagram
 
@@ -357,6 +362,103 @@ pages:
 | `packages/build/src/build/buildJs/buildJs.js` | JS extraction |
 | `packages/build/src/build/addKeys.js` | Path tracking |
 | `packages/build/src/build/buildTypes.js` | Type manifest |
+
+## Dev Mode: Shallow Build + JIT Page Build
+
+In development, the build uses a two-phase strategy for faster rebuilds.
+
+### Phase 1: Shallow Build (`shallowBuild`)
+
+**File:** `packages/build/src/build/shallowBuild.js`
+
+Runs the full build pipeline but stops `_ref` resolution at page content boundaries:
+
+```javascript
+const SHALLOW_STOP_PATHS = [
+  'pages.*.blocks',
+  'pages.*.areas',
+  'pages.*.events',
+  'pages.*.requests',
+  'pages.*.layout',
+];
+```
+
+When `buildRefs` encounters a `_ref` at one of these paths, it replaces it with a `_shallow` marker:
+
+```javascript
+// Instead of resolving the ref, buildRefs leaves:
+{ _shallow: true, _ref: { path: 'components/header.yaml', id: 'ref123' } }
+```
+
+The shallow build then:
+1. Strips `_shallow` markers before schema validation (restores after)
+2. Runs skeleton build steps (buildApp, buildAuth, buildConnections, buildApi, buildMenu)
+3. Creates a **page registry** with raw (unresolved) page content
+4. Creates a **file dependency map** for targeted invalidation
+5. Adds all types from installed packages (since page-level types aren't counted)
+6. Writes skeleton artifacts + `pageRegistry.json` + `jsMap.json`
+
+**Output:** `{ components, pageRegistry, fileDependencyMap, context }`
+
+### Phase 2: JIT Page Build (`buildPageJit`)
+
+**File:** `packages/build/src/build/buildPageJit.js`
+
+When a page is requested, resolves `_shallow` markers and runs page-specific build steps:
+
+```
+1. Look up page in pageRegistry
+2. resolveShallowRefs() — recursively resolve _shallow markers via recursiveBuild
+3. evaluateBuildOperators() + evaluateStaticOperators()
+4. addKeys() — add ~k tracking metadata
+5. buildPage() — validate blocks, process events, extract requests
+6. validatePageTypes() — check block/action/operator types exist
+7. validateLinkReferences(), validateStateReferences(), etc.
+8. jsMapParser() — extract _js functions (client + server)
+9. writePageJit() — write page JSON, request JSONs, updated keyMap/refMap/jsMap
+```
+
+`resolveShallowRefs` also sets `~r` (reference tracking) on resolved objects so that `addKeys` can trace them to the correct source file for error messages.
+
+### Supporting Modules
+
+| Module | File | Purpose |
+|--------|------|---------|
+| `createPageRegistry` | `build/createPageRegistry.js` | Extracts page metadata + raw content from shallow-built components |
+| `createFileDependencyMap` | `build/createFileDependencyMap.js` | Maps config files → page IDs for targeted invalidation |
+| `writePageRegistry` | `build/writePageRegistry.js` | Serializes page registry to `pageRegistry.json` |
+| `writePageJit` | `build/writePageJit.js` | Writes page/request JSONs + updated maps + JS files |
+| `pathMatcher` | `utils/pathMatcher.js` | Matches dot-notation paths against `SHALLOW_STOP_PATHS` patterns |
+| `getRefPositions` | `buildRefs/getRefPositions.js` | Finds ref positions in content tree for shallow ref tracking |
+
+### Dev Entry Point
+
+**File:** `packages/build/src/indexDev.js`
+
+```javascript
+export { default as shallowBuild } from './build/shallowBuild.js';
+export { default as buildPageJit } from './build/buildPageJit.js';
+export { default as createPageRegistry } from './build/createPageRegistry.js';
+export { default as createFileDependencyMap } from './build/createFileDependencyMap.js';
+export { default as createContext } from './createContext.js';
+```
+
+Imported by the dev server as `@lowdefy/build/dev`.
+
+### Build Output (Dev Mode)
+
+In dev mode, the build directory contains additional JIT artifacts:
+
+```
+.lowdefy/dev/build/
+├── pageRegistry.json      # Page metadata + raw content for JIT
+├── jsMap.json             # JS hash maps (restored by JIT build context)
+├── invalidatePages.json   # Page IDs to invalidate (cross-process)
+├── pages/{pageId}/        # Written by JIT build on first request
+│   ├── {pageId}.json
+│   └── requests/{requestId}.json
+└── ... (standard skeleton artifacts)
+```
 
 ## Customization Points
 
