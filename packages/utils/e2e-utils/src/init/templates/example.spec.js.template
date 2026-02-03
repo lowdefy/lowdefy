@@ -1,8 +1,7 @@
-import { test, expect } from '@playwright/test';
-import { ldf, button, textInput, selector } from '@lowdefy/e2e-utils';
+import { test, expect } from '@lowdefy/e2e-utils/fixtures';
 
-test('homepage loads', async ({ page }) => {
-  await ldf.goto(page, '/');
+test('homepage loads', async ({ page, ldf }) => {
+  await ldf.goto('/');
 
   // Replace with your own assertions
   await expect(page).toHaveTitle(/./);
@@ -11,18 +10,17 @@ test('homepage loads', async ({ page }) => {
 // Example: Testing a form submission
 // Uncomment and modify for your app:
 //
-// test('submit contact form', async ({ page }) => {
-//   await ldf.goto(page, '/contact');
+// test('submit contact form', async ({ ldf }) => {
+//   await ldf.goto('/contact');
 //
-//   // Fill form fields
-//   await textInput.fill(page, 'name_input', 'John Doe');
-//   await textInput.fill(page, 'email_input', 'john@example.com');
-//   await selector.select(page, 'category', 'Support');
+//   // Use polymorphic block API - automatically uses correct helper based on block type
+//   await ldf.blocks.name_input.fill('John Doe');
+//   await ldf.blocks.email_input.fill('john@example.com');
+//   await ldf.blocks.category.select('Support');
 //
-//   // Submit
-//   await button.click(page, 'submit_btn');
+//   // Click submit button
+//   await ldf.blocks.submit_btn.click();
 //
-//   // Wait for request and verify
-//   await ldf.waitForRequest(page, 'send_message');
-//   await ldf.expectNavigation(page, '/thank-you');
+//   // Verify state was updated
+//   await ldf.expectState('form_submitted', true);
 // });
