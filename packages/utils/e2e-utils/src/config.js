@@ -22,10 +22,11 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function createConfig({
   appDir = './',
-  buildDir = '.lowdefy/server/build', // Production build output location
+  buildDir = '.lowdefy/server/build',
   port = 3000,
   testDir = 'e2e',
   testMatch = '**/*.spec.js',
+  timeout = 180000, // 3 minutes for cold production builds
 } = {}) {
   const cliCommand = 'npx lowdefy';
   // Resolve absolute path for build directory
@@ -56,7 +57,7 @@ function createConfig({
       command: `NEXT_PUBLIC_LOWDEFY_E2E=true ${cliCommand} build && ${cliCommand} start --port ${port}`,
       url: `http://localhost:${port}`,
       reuseExistingServer: true,
-      timeout: 60000,
+      timeout,
       cwd: appDir,
     },
   });
