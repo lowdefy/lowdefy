@@ -38,6 +38,7 @@
   },
   "exports": {
     ".": "./dist/index.js",
+    "./dev": "./dist/indexDev.js",
     "./buildTestPage": "./dist/build/buildPages/buildTestPage.js"
   },
   "files": [

@@ -19,6 +19,7 @@ import { ConfigError, VALID_CHECK_SLUGS } from '@lowdefy/errors/build';
 
 import collectExceptions from '../utils/collectExceptions.js';
 import makeId from '../utils/makeId.js';
+import setNonEnumerableProperty from '../utils/setNonEnumerableProperty.js';
 
 function recArray({ array, nextKey, key, keyMap, keyMapId, context }) {
   array.forEach((item, index) => {
@@ -122,12 +123,7 @@ function recAddKeys({ object, key, keyMap, parentKeyMapId, context }) {
 
       entry['~ignoreBuildChecks'] = checks;
     }
-    Object.defineProperty(object, '~k', {
-      value: keyMapId,
-      enumerable: false,
-      writable: true,
-      configurable: true,
-    });
+    setNonEnumerableProperty(object, '~k', keyMapId);
     delete object['~r'];
     delete object['~l'];
     delete object['~ignoreBuildChecks'];

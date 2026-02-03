@@ -25,6 +25,20 @@ import createReadConfigFile from './utils/readConfigFile.js';
 import createWriteBuildArtifact from './utils/writeBuildArtifact.js';
 import defaultTypesMap from './defaultTypesMap.js';
 
+// Pino loggers accept (mergeObject, message) — console loggers do not.
+// Detect pino by checking for the child() method which is pino-specific.
+function isPinoLogger(logger) {
+  return typeof logger?.child === 'function';
+}
+
+function logWithSource(logFn, source, message) {
+  if (source) {
+    logFn(`${source}\n${message}`);
+  } else {
+    logFn(message);
+  }
+}
+
 function createContext({ customTypesMap, directories, logger, refResolver, stage = 'prod' }) {
   // Track seen source:line for deduplication (same file:line = same warning, even if different pages)
   const seenSourceLines = new Set();
@@ -67,6 +81,25 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
   // This allows the wrapper to use fresh seenSourceLines and context each build
   logger._lowdefyContext = context;
 
+  const usePinoStyle = isPinoLogger(logger);
+
+  function logWarning(logFn, warning) {
+    if (usePinoStyle) {
+      logFn({ source: warning.source }, warning.print());
+    } else {
+      logWithSource(logFn, warning.source, warning.print());
+    }
+  }
+
+  function logErrorFormatted(logFn, error) {
+    const message = error.print ? error.print() : error.message ?? error;
+    if (usePinoStyle && error.source) {
+      logFn({ source: error.source }, message);
+    } else {
+      logWithSource(logFn, error.source, message);
+    }
+  }
+
   // Wrap logger.warn to handle ConfigWarning or params with deduplication
   // Only wrap once - check for marker to prevent double-wrapping on rebuild
   if (!logger.warn._lowdefyWrapped) {
@@ -94,7 +127,7 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
         const dedupKey = warningOrParams.source ?? warningOrParams.message;
         if (seen?.has(dedupKey)) return;
         seen?.add(dedupKey);
-        originalWarn({ source: warningOrParams.source }, warningOrParams.print());
+        logWarning(originalWarn, warningOrParams);
         return;
       }
 
@@ -105,7 +138,7 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
         const dedupKey = warning.source ?? warning.message;
         if (seen?.has(dedupKey)) return;
         seen?.add(dedupKey);
-        originalWarn({ source: warning.source }, warning.print());
+        logWarning(originalWarn, warning);
       } catch (err) {
         if (err instanceof ConfigError) {
           collectExceptions(ctx, err);
@@ -136,17 +169,17 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
 
       // Error object with print method - use it for formatting
       if (errorOrMessage?.print) {
-        if (errorOrMessage.source) {
-          originalError({ source: errorOrMessage.source }, errorOrMessage.print());
-        } else {
-          originalError(errorOrMessage.print());
-        }
+        logErrorFormatted(originalError, errorOrMessage);
         return;
       }
 
-      // Error with source - log source separately then message
+      // Error with source - log source with message
       if (errorOrMessage?.source) {
-        originalError({ source: errorOrMessage.source }, errorOrMessage.message);
+        if (usePinoStyle) {
+          originalError({ source: errorOrMessage.source }, errorOrMessage.message);
+        } else {
+          logWithSource(originalError, errorOrMessage.source, errorOrMessage.message);
+        }
         return;
       }
 
