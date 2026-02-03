@@ -39,7 +39,7 @@
   "exports": {
     ".": "./dist/index.js",
     "./dev": "./dist/indexDev.js",
-    "./buildTestPage": "./dist/build/buildPages/buildTestPage.js"
+    "./buildTestPage": "./dist/build/full/buildTestPage.js"
   },
   "files": [
     "dist/*"
