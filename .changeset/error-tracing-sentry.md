@@ -22,6 +22,10 @@
 '@lowdefy/server-dev': minor
 '@lowdefy/actions-core': minor
 '@lowdefy/blocks-basic': minor
+'@lowdefy/connection-axios-http': patch
+'@lowdefy/connection-knex': patch
+'@lowdefy/connection-redis': patch
+'@lowdefy/connection-sendgrid': patch
 ---
 
 feat: Config-aware error tracing and Sentry integration
@@ -33,12 +37,14 @@ feat: Config-aware error tracing and Sentry integration
 - Build-time validation catches typos with "Did you mean?" suggestions
 - Service vs Config error classification
 
-**Operator Error Refactoring**
+**Plugin Error Refactoring**
 
 - Operators throw simple error messages without formatting
 - Parsers (WebParser, ServerParser, BuildParser) format errors with received value and location
 - Removed redundant "Operator Error:" prefix from error messages
 - Consistent error format: "{message} Received: {params} at {location}."
+- Actions and connections also simplified: removed inline `received` from error messages (interface layer adds it)
+- Connection plugins (axios-http, knex, redis, sendgrid) no longer expose raw response data in errors
 
 **Error Class Hierarchy**
 

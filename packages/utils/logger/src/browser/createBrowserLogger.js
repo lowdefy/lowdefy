@@ -42,6 +42,7 @@ function createBrowserLogger() {
 
   logger.ui = {
     log: (text) => logger.log(text),
+    dim: (text) => logger.log(text),
     info: (text) => logger.info(text),
     warn: (text) => logger.warn(text),
     error: (text) => logger.error(text),

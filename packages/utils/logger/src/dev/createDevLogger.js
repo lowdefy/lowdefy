@@ -34,6 +34,7 @@ function createDevLogger({ level = 'info', name = 'lowdefy build' } = {}) {
 
   const createUi = (target) => ({
     log: (text) => target.info({ print: 'log' }, text),
+    dim: (text) => target.info({ print: 'dim' }, text),
     info: (text) => target.info({ print: 'info' }, text),
     warn: (text) => target.warn({ print: 'warn' }, text),
     error: (text) => target.error({ print: 'error' }, text),

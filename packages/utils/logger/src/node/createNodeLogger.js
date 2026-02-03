@@ -32,14 +32,15 @@ const defaultErrSerializer = (err) => {
 function attachUi(logger) {
   if (logger.ui) return logger;
   logger.ui = {
-    log: (text) => logger.info(text),
-    info: (text) => logger.info(text),
-    warn: (text) => logger.warn(text),
-    error: (text) => logger.error(text),
-    debug: (text) => logger.debug(text),
-    link: (text) => logger.info(text),
-    spin: (text) => logger.info(text),
-    succeed: (text) => logger.info(text),
+    log: (text) => logger.info({ print: 'log' }, text),
+    dim: (text) => logger.info({ print: 'dim' }, text),
+    info: (text) => logger.info({ print: 'info' }, text),
+    warn: (text) => logger.warn({ print: 'warn' }, text),
+    error: (text) => logger.error({ print: 'error' }, text),
+    debug: (text) => logger.debug({ print: 'debug' }, text),
+    link: (text) => logger.info({ print: 'link' }, text),
+    spin: (text) => logger.info({ print: 'spin' }, text),
+    succeed: (text) => logger.info({ print: 'succeed' }, text),
   };
 
   if (logger.child && !logger.child._lowdefyWrapped) {

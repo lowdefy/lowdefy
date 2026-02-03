@@ -19,6 +19,7 @@ function createStdOutLineHandler({ context }) {
     context?.logger?.ui ??
     context?.print ?? {
       log: (text) => console.log(text),
+      dim: (text) => console.log(text),
       info: (text) => console.info(text),
       warn: (text) => console.warn(text),
       error: (text) => console.error(text),

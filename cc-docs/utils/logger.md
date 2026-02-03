@@ -33,14 +33,15 @@ The logger package provides environment-specific logger factories that share a c
 Every logger variant exposes `logger.ui` with the same methods:
 
 ```javascript
-logger.ui.log(text)      // General output (white)
-logger.ui.info(text)     // Informational (default color)
-logger.ui.warn(text)     // Warning (yellow)
-logger.ui.error(text)    // Error (red)
-logger.ui.debug(text)    // Debug output
-logger.ui.link(text)     // Source link (blue, clickable)
+logger.ui.log(text)      // General output (white ∙)
+logger.ui.dim(text)      // Low-priority trace (dim ∙) — e.g., request logs
+logger.ui.info(text)     // Informational (blue ℹ)
+logger.ui.warn(text)     // Warning (yellow ⚠)
+logger.ui.error(text)    // Error (red ✖)
+logger.ui.debug(text)    // Debug output (gray +)
+logger.ui.link(text)     // Source link (blue ℹ, clickable)
 logger.ui.spin(text)     // Spinner start/update
-logger.ui.succeed(text)  // Spinner success
+logger.ui.succeed(text)  // Spinner success (green ✔)
 ```
 
 The `.ui` methods are environment-aware:
@@ -123,6 +124,7 @@ Terminal output renderer with custom log levels and ora spinner integration:
 | `succeed` | 33 | Green check + text |
 | `spin` | 32 | Ora spinner |
 | `log` | 31 | White dot + text |
+| `dim` | 31 | White dot + dim text |
 | `link` | 30 | Blue text (clickable path) |
 | `info` | 30 | Default text |
 | `debug` | 20 | Gray text |
@@ -169,7 +171,7 @@ CLI process reads pipe
 
 | Event | Server/Manager Output | CLI Rendering |
 |-------|----------------------|---------------|
-| HTTP request | `{ print: 'log', msg: 'Request: ...' }` | White `∙ Request: ...` |
+| HTTP request | `{ print: 'dim', msg: 'Request: ...' }` | Dim `∙ Request: ...` |
 | Config error | `{ print: 'link', msg: 'file.yaml:10' }` then `{ print: 'error', msg: '[ConfigError] ...' }` | Blue link + Red error |
 | Build start | `{ print: 'spin', msg: 'Building...' }` | Ora spinner |
 | Build done | `{ print: 'succeed', msg: 'Build complete' }` | Green check |
