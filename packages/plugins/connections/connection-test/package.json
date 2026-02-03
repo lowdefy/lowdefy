@@ -14,5 +14,8 @@
   ],
   "dependencies": {
     "@lowdefy/errors": "4.5.2"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
