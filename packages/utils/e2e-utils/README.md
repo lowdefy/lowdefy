@@ -1,6 +1,6 @@
 # @lowdefy/e2e-utils
 
-Playwright testing utilities for Lowdefy applications.
+Playwright testing utilities for Lowdefy applications with a polymorphic block API.
 
 ## Installation
 
@@ -21,144 +21,355 @@ This creates:
 - `e2e/playwright.config.js` - Pre-configured Playwright config
 - `e2e/example.spec.js` - Starter test to copy from
 
-Then run tests:
+Run tests:
 
 ```bash
 pnpm e2e        # Run tests
 pnpm e2e:ui     # Run with Playwright UI
 ```
 
-## Core Helpers
+## Writing Tests
 
-Framework-level testing utilities:
+Import `test` from our fixtures - it includes the `ldf` helper automatically:
 
 ```javascript
-import { ldf } from '@lowdefy/e2e-utils';
+import { test, expect } from '@lowdefy/e2e-utils/fixtures';
 
-// Navigation
-await ldf.goto(page, '/dashboard');
-await ldf.waitForReady(page);
-await ldf.expectNavigation(page, /\/tickets\/\d+/);
-await ldf.waitForPage(page, '/settings');
-
-// Requests
-await ldf.waitForRequest(page, 'create_ticket');
-const response = await ldf.getRequestResponse(page, 'get_users');
-
-// State
-const state = await ldf.getState(page);
-const blockState = await ldf.getBlockState(page, 'my_input');
-await ldf.expectState(page, 'form.title', 'Bug report');
-
-// Block locator
-const block = ldf.block(page, 'my_block');
-await expect(block).toBeVisible();
+test('homepage loads', async ({ page, ldf }) => {
+  await ldf.goto('/');
+  await expect(page).toHaveTitle(/My App/);
+});
 ```
 
-## Block Helpers
+### Polymorphic Block API
 
-Block-specific interactions (requires `@lowdefy/blocks-antd`):
+The `ldf.blocks` API automatically detects block types and routes to the correct helper:
 
 ```javascript
-import { button, selector, textInput } from '@lowdefy/e2e-utils';
+test('submit form', async ({ ldf }) => {
+  await ldf.goto('/contact');
 
-// Button
-await button.click(page, 'submit_btn');
-await button.assertions.isVisible(page, 'submit_btn');
-await button.assertions.isDisabled(page, 'submit_btn');
-await button.assertions.isLoading(page, 'submit_btn');
-await button.assertions.hasText(page, 'submit_btn', 'Submit');
-await button.assertions.hasType(page, 'submit_btn', 'primary');
+  // No need to import block-specific helpers!
+  // ldf.blocks knows TextInput uses .fill(), Button uses .click(), etc.
+  await ldf.blocks.name_input.fill('John Doe');
+  await ldf.blocks.email_input.fill('john@example.com');
+  await ldf.blocks.category.select('Support');
+  await ldf.blocks.subscribe.check(true);
 
-// Selector
-await selector.select(page, 'priority', 'High');
-await selector.clear(page, 'priority');
-await selector.search(page, 'priority', 'Med');
-await selector.assertions.isVisible(page, 'priority');
-await selector.assertions.hasValue(page, 'priority', 'High');
-await selector.assertions.isDisabled(page, 'priority');
-await selector.assertions.hasPlaceholder(page, 'priority', 'Select...');
+  await ldf.blocks.submit_btn.click();
 
-// TextInput
-await textInput.fill(page, 'title', 'Bug report');
-await textInput.clear(page, 'title');
-await textInput.pressEnter(page, 'title');
-await textInput.assertions.isVisible(page, 'title');
-await textInput.assertions.hasValue(page, 'title', 'Bug report');
-await textInput.assertions.isDisabled(page, 'title');
-await textInput.assertions.hasPlaceholder(page, 'title', 'Enter title...');
+  // Verify state was updated
+  await ldf.expectState('form_submitted', true);
+});
+```
+
+### Available Methods
+
+**Navigation & State (on `ldf`):**
+```javascript
+await ldf.goto('/path');                    // Navigate and wait for Lowdefy ready
+await ldf.expectState('key', 'value');      // Assert state value
+await ldf.expectState('nested.key', true);  // Supports dot notation
+const state = await ldf.getState();         // Get full page state
+const value = await ldf.getBlockState('my_input');  // Get single block's state
+const block = ldf.block('my_block');        // Get Playwright locator for block
+```
+
+**Button (`ldf.blocks.{buttonId}`):**
+```javascript
+await ldf.blocks.submit_btn.click();
+await ldf.blocks.submit_btn.isVisible();
+await ldf.blocks.submit_btn.isDisabled();
+await ldf.blocks.submit_btn.isLoading();
+await ldf.blocks.submit_btn.hasText('Submit');
+await ldf.blocks.submit_btn.hasType('primary');
+```
+
+**TextInput (`ldf.blocks.{inputId}`):**
+```javascript
+await ldf.blocks.title.fill('Bug report');
+await ldf.blocks.title.clear();
+await ldf.blocks.title.pressEnter();
+await ldf.blocks.title.isVisible();
+await ldf.blocks.title.hasValue('Bug report');
+await ldf.blocks.title.isDisabled();
+await ldf.blocks.title.hasPlaceholder('Enter title...');
+```
+
+**Selector (`ldf.blocks.{selectorId}`):**
+```javascript
+await ldf.blocks.priority.select('High');
+await ldf.blocks.priority.clear();
+await ldf.blocks.priority.search('Med');
+await ldf.blocks.priority.isVisible();
+await ldf.blocks.priority.hasValue('High');
+await ldf.blocks.priority.isDisabled();
+await ldf.blocks.priority.hasPlaceholder('Select...');
 ```
 
 ## Complete Example
 
 ```javascript
-import { test, expect } from '@playwright/test';
-import { ldf, button, textInput, selector } from '@lowdefy/e2e-utils';
+import { test, expect } from '@lowdefy/e2e-utils/fixtures';
 
-test('create ticket workflow', async ({ page }) => {
-  // Navigate
-  await ldf.goto(page, '/tickets/new');
+test('create ticket workflow', async ({ page, ldf }) => {
+  // Navigate to form
+  await ldf.goto('/tickets/new');
 
-  // Fill form (block helpers)
-  await textInput.fill(page, 'title', 'Bug report');
-  await textInput.fill(page, 'description', 'Login not working');
-  await selector.select(page, 'priority', 'High');
+  // Fill form using polymorphic API
+  await ldf.blocks.title_input.fill('Bug report');
+  await ldf.blocks.description_input.fill('Login button not working');
+  await ldf.blocks.priority_selector.select('High');
+  await ldf.blocks.assignee_selector.select('John Doe');
 
-  // Submit and verify (framework helpers)
-  await button.click(page, 'submit_btn');
-  await ldf.waitForRequest(page, 'create_ticket');
-  await ldf.expectNavigation(page, /\/tickets\/\d+/);
-  await ldf.expectState(page, 'ticket.status', 'open');
+  // Submit
+  await ldf.blocks.submit_btn.click();
+
+  // Verify navigation and state
+  await expect(page).toHaveURL(/\/tickets\/\d+/);
+  await ldf.expectState('ticket.status', 'open');
 });
 ```
 
 ## Playwright Config
-
-Use `createConfig` for a pre-configured Playwright setup:
 
 ```javascript
 // e2e/playwright.config.js
 import { createConfig } from '@lowdefy/e2e-utils/config';
 
 export default createConfig({
-  appDir: './',      // Where lowdefy.yaml is
-  port: 3000,        // Dev server port
-  testDir: 'e2e',    // Test directory
+  appDir: './',           // Where lowdefy.yaml is (default: './')
+  port: 3000,             // Server port (default: 3000)
+  testDir: 'e2e',         // Test directory (default: 'e2e')
   testMatch: '**/*.spec.js',
+  timeout: 180000,        // WebServer timeout in ms (default: 180000)
 });
 ```
 
-## How It Works
+---
 
-These utilities access the Lowdefy client state via `window.lowdefy`, which is exposed in dev mode. This allows:
+# Technical Architecture
 
-- Waiting for the Lowdefy client to initialize
-- Checking request completion status
-- Accessing page state
-- Stable block selection via `#bl-{blockId}` IDs
+## Package Structure
 
-**Note:** Tests must run against the Lowdefy dev server (`npx lowdefy dev`).
-
-## LLM Test Generation
-
-These helpers are designed to be LLM-friendly. An LLM can read your `lowdefy.yaml` config and generate stable tests:
-
-```yaml
-# lowdefy.yaml
-blocks:
-  - id: title_input
-    type: TextInput
-  - id: priority
-    type: Selector
-  - id: submit_btn
-    type: Button
+```
+e2e-utils/src/
+├── config.js              # Playwright config generator
+├── index.js               # Direct exports (basic helpers)
+├── globalSetup.js         # Runs before all tests
+│
+├── fixtures/              # Playwright fixtures
+│   └── index.js           # Creates the `ldf` fixture
+│
+├── core/                  # Basic helper functions
+│   ├── locators.js        # getBlock()
+│   ├── navigation.js      # goto(), waitForReady()
+│   ├── state.js           # getState(), expectState()
+│   └── requests.js        # waitForRequest()
+│
+├── proxy/                 # Polymorphic block API
+│   ├── createPageManager.js    # The `ldf` object
+│   ├── createBlockProxy.js     # ldf.blocks['id'] routing
+│   └── createHelperRegistry.js # Loads block helpers dynamically
+│
+├── testPrep/              # Build manifest generation
+│   ├── generateManifest.js     # Creates e2e-manifest.json
+│   └── extractBlockMap.js      # Parses page configs
+│
+└── init/                  # CLI scaffolding
+    └── index.js           # `npx lowdefy-e2e init`
 ```
 
-LLM generates:
+## Execution Flow
+
+When you run `pnpm e2e`:
+
+```
+1. PLAYWRIGHT LOADS CONFIG
+   └── config.js sets up globalSetup and webServer
+
+2. GLOBAL SETUP RUNS
+   └── globalSetup.js generates e2e-manifest.json from build artifacts
+
+3. WEB SERVER STARTS
+   └── Runs: NEXT_PUBLIC_LOWDEFY_E2E=true lowdefy build && lowdefy start
+   └── Waits for http://localhost:3000 to respond
+
+4. TESTS RUN
+   └── Each test file executes
+   └── Fixtures inject `ldf` into tests
+
+5. WEB SERVER STOPS
+```
+
+## How Fixtures Work
+
+Playwright fixtures are dependency-injected test helpers. We extend Playwright's base `test`:
+
 ```javascript
-await textInput.fill(page, 'title_input', 'Bug report');
-await selector.select(page, 'priority', 'High');
-await button.click(page, 'submit_btn');
+// fixtures/index.js
+import { test as base } from '@playwright/test';
+
+export const test = base.extend({
+  // Worker-scoped (shared across tests)
+  helperRegistry: [async ({}, use) => { ... }, { scope: 'worker' }],
+  manifest: [async ({}, use) => { ... }, { scope: 'worker' }],
+
+  // Test-scoped (created fresh for each test)
+  ldf: async ({ page, manifest, helperRegistry }, use) => {
+    const pageManager = createPageManager({ page, manifest, helperRegistry });
+    await use(pageManager);  // ← This is injected into tests
+  },
+});
 ```
 
-Block IDs from config → stable, readable tests.
+When you write:
+```javascript
+test('my test', async ({ ldf }) => { ... });
+```
+
+Playwright:
+1. Creates `page` (built-in fixture)
+2. Creates `manifest` (our fixture - loads e2e-manifest.json)
+3. Creates `helperRegistry` (our fixture - caches block helpers)
+4. Passes all three to create `ldf` (pageManager)
+5. Injects `ldf` into your test function
+
+## The Manifest
+
+The manifest maps block IDs to their types and helper paths:
+
+```json
+{
+  "pages": {
+    "contact": {
+      "name_input": {
+        "type": "TextInput",
+        "helper": "@lowdefy/blocks-antd/e2e/TextInput"
+      },
+      "submit_btn": {
+        "type": "Button",
+        "helper": "@lowdefy/blocks-antd/e2e/Button"
+      }
+    }
+  }
+}
+```
+
+Generated from Lowdefy build artifacts:
+- `types.json` - Maps block types to packages
+- `pages/{pageId}/{pageId}.json` - Page configs with block definitions
+
+## How `ldf.blocks.submit_btn.click()` Works
+
+This uses JavaScript Proxy for dynamic routing:
+
+```
+ldf.blocks.submit_btn.click()
+    │       │          │
+    │       │          └── Method call
+    │       └── Block ID lookup
+    └── Blocks proxy
+
+Step 1: ldf.blocks
+        └── Returns createBlockProxy({ page, blockMap, helperRegistry })
+
+Step 2: .submit_btn
+        └── Proxy intercepts property access
+        └── Looks up blockMap['submit_btn'] → { type: 'Button', helper: '...' }
+        └── Returns another Proxy for method calls
+
+Step 3: .click()
+        └── Proxy intercepts method call
+        └── helperRegistry.get('@lowdefy/blocks-antd/e2e/Button')
+        └── Calls: buttonHelper.click(page, 'submit_btn')
+```
+
+## Block Helpers
+
+Each block type has an `e2e.js` file co-located with the component:
+
+```
+blocks-antd/src/blocks/
+├── Button/
+│   ├── Button.js      # React component
+│   ├── schema.json    # Properties schema
+│   └── e2e.js         # E2E helper
+├── TextInput/
+│   └── e2e.js
+└── Selector/
+    └── e2e.js
+```
+
+Example helper (`Button/e2e.js`):
+
+```javascript
+import { expect } from '@playwright/test';
+
+function locator(page, blockId) {
+  return page.locator(`#bl-${blockId} .ant-btn`);
+}
+
+async function click(page, blockId) {
+  await locator(page, blockId).click();
+}
+
+function isDisabled(page, blockId) {
+  return expect(locator(page, blockId)).toBeDisabled();
+}
+
+export default { locator, click, isDisabled, /* ... */ };
+```
+
+Each method receives `(page, blockId, ...args)` - the proxy handles this automatically.
+
+## Why `window.lowdefy`?
+
+Tests need access to Lowdefy's internal state (for `expectState`, `getState`, etc.).
+
+In dev mode, Lowdefy exposes `window.lowdefy`. For production builds (used by e2e tests), we set `NEXT_PUBLIC_LOWDEFY_E2E=true` to enable this:
+
+```javascript
+// packages/client/src/initLowdefyContext.js
+if (stage === 'dev' || process.env.NEXT_PUBLIC_LOWDEFY_E2E === 'true') {
+  window.lowdefy = lowdefy;
+}
+```
+
+This gives tests access to:
+- `window.lowdefy.pageId` - Current page ID
+- `window.lowdefy.contexts[pageId].state` - Page state
+- `window.lowdefy.contexts[pageId].requests` - Request status
+
+## Adding New Block Helpers
+
+To add e2e support for a new block type:
+
+1. Create `e2e.js` next to the block component:
+   ```
+   blocks-antd/src/blocks/DateSelector/e2e.js
+   ```
+
+2. Export methods that take `(page, blockId, ...args)`:
+   ```javascript
+   import { expect } from '@playwright/test';
+
+   function locator(page, blockId) {
+     return page.locator(`#bl-${blockId} .ant-picker`);
+   }
+
+   async function selectDate(page, blockId, date) {
+     // Implementation...
+   }
+
+   export default { locator, selectDate };
+   ```
+
+3. Add subpath export in `package.json`:
+   ```json
+   "exports": {
+     "./e2e/DateSelector": "./dist/blocks/DateSelector/e2e.js"
+   }
+   ```
+
+The manifest generator will automatically pick it up for pages using that block type.

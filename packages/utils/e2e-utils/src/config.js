@@ -40,7 +40,6 @@ function createConfig({
     testMatch,
     fullyParallel: true,
     reporter: 'list',
-    globalSetup: path.join(__dirname, 'globalSetup.js'),
     use: {
       baseURL: `http://localhost:${port}`,
       trace: 'on-first-retry',
