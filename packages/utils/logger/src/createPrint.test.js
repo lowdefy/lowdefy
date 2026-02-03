@@ -107,6 +107,7 @@ describe('ora print', () => {
     expect(print).toMatchInlineSnapshot(`
       Object {
         "debug": [Function],
+        "dim": [Function],
         "error": [Function],
         "info": [Function],
         "link": [Function],
@@ -306,6 +307,7 @@ describe('basic print', () => {
     expect(print).toMatchInlineSnapshot(`
       Object {
         "debug": [Function],
+        "dim": [MockFunction],
         "error": [MockFunction],
         "info": [MockFunction],
         "link": [MockFunction],
