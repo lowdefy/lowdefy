@@ -18,6 +18,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { defineConfig, devices } from '@playwright/test';
 
+import { getLowdefyCommand } from './utils/getLowdefyVersion.js';
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function createConfig({
@@ -27,7 +29,8 @@ function createConfig({
   testDir = 'e2e',
   testMatch = '**/*.spec.js',
 } = {}) {
-  const cliCommand = 'npx lowdefy';
+  // Use the same lowdefy version specified in lowdefy.yaml
+  const lowdefyCmd = getLowdefyCommand(path.resolve(appDir));
   // Resolve absolute path for build directory
   const absoluteBuildDir = path.resolve(appDir, buildDir);
 
@@ -53,7 +56,7 @@ function createConfig({
     webServer: {
       // Start production server (build happens in globalSetup)
       // NEXT_PUBLIC_LOWDEFY_E2E=true exposes window.lowdefy for state testing
-      command: `NEXT_PUBLIC_LOWDEFY_E2E=true ${cliCommand} start --port ${port}`,
+      command: `NEXT_PUBLIC_LOWDEFY_E2E=true ${lowdefyCmd} start --port ${port}`,
       url: `http://localhost:${port}`,
       reuseExistingServer: true,
       timeout: 60000,
