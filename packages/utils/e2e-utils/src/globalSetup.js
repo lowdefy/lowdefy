@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+/* eslint-disable no-console */
+
 import path from 'path';
 
 import { generateManifest } from './testPrep/generateManifest.js';
