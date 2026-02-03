@@ -42,8 +42,8 @@ test.describe('WeekSelector Block', () => {
     const input = getInput(page, 'ws_with_value');
     await input.click();
 
-    // Select a week (click today)
-    await page.locator('.ant-picker-cell-today').click();
+    // Select a week (click a date cell)
+    await page.locator('.ant-picker-cell-in-view').first().click();
 
     // Input should have a value now (format YYYY-wo)
     await expect(input).toHaveValue(/\d{4}-/);
@@ -105,9 +105,9 @@ test.describe('WeekSelector Block', () => {
     const dropdown = page.locator('.ant-picker-dropdown:visible');
     await expect(dropdown).toBeVisible();
 
-    // Click a week row (the today cell or any date cell)
-    const todayCell = page.locator('.ant-picker-cell-today');
-    await todayCell.click();
+    // Click a date cell to select the week
+    const dateCell = page.locator('.ant-picker-cell-in-view').first();
+    await dateCell.click();
 
     const display = getBlock(page, 'ws_onchange_display');
     await expect(display).toHaveText('Week selected');
@@ -138,9 +138,9 @@ test.describe('WeekSelector Block', () => {
     const input = getInput(page, 'ws_interaction');
     await input.click();
 
-    // Click today's date to select that week
-    const todayCell = page.locator('.ant-picker-cell-today');
-    await todayCell.click();
+    // Click a date cell to select that week
+    const dateCell = page.locator('.ant-picker-cell-in-view').first();
+    await dateCell.click();
 
     // Input should have a value now
     await expect(input).not.toHaveValue('');
@@ -152,7 +152,7 @@ test.describe('WeekSelector Block', () => {
 
     // First select a week
     await input.click();
-    await page.locator('.ant-picker-cell-today').click();
+    await page.locator('.ant-picker-cell-in-view').first().click();
     await expect(input).not.toHaveValue('');
 
     // Hover to reveal clear button and clear
@@ -169,8 +169,8 @@ test.describe('WeekSelector Block', () => {
 
     // Select a week first
     await input.click();
-    const todayCell = page.locator('.ant-picker-cell-today');
-    await todayCell.click();
+    const dateCell = page.locator('.ant-picker-cell-in-view').first();
+    await dateCell.click();
 
     // Hover - clear button should not be visible
     await picker.hover();
