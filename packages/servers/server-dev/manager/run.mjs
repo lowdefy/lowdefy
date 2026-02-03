@@ -16,9 +16,11 @@
 */
 
 import { wait } from '@lowdefy/helpers';
+import { LowdefyError } from '@lowdefy/errors';
 import opener from 'opener';
 import getContext from './getContext.mjs';
 import startServer from './processes/startServer.mjs';
+import checkPortAvailable from './utils/checkPortAvailable.mjs';
 
 /*
 The run script does the following:
@@ -85,6 +87,7 @@ try {
   // because chokidar sometimes doesn't fire this event, and it seems like there isn't an issue with not waiting.
   context.startWatchers();
 
+  await checkPortAvailable(context.options.port);
   startServer(context);
   await wait(800);
   if (process.env.LOWDEFY_SERVER_DEV_OPEN_BROWSER === 'true') {
@@ -97,8 +100,10 @@ try {
   if (error.isFormatted || error.hideStack) {
     context.logger.error(error.message);
   } else {
-    // Otherwise, show full error with stack trace
-    context.logger.error(error);
+    // Wrap unclassified errors as LowdefyError for proper formatting
+    const lowdefyErr = new LowdefyError(error.message, { cause: error });
+    lowdefyErr.stack = error.stack;
+    context.logger.error(lowdefyErr);
   }
   context.shutdownServer();
   process.exit();

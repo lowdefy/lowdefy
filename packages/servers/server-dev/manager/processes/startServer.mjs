@@ -17,12 +17,25 @@
 import { spawnProcess } from '@lowdefy/node-utils';
 import createStdOutLineHandler from '../utils/createStdOutLineHandler.mjs';
 
+function createStdErrLineHandler({ context }) {
+  const port = context.options.port;
+  return function stdErrLineHandler(line) {
+    if (line.includes('EADDRINUSE')) {
+      context.logger.error(
+        `Port ${port} is already in use. Stop the other process or use a different port with --port.`
+      );
+      return;
+    }
+    context.logger.error(line);
+  };
+}
+
 function startServer(context) {
   context.shutdownServer();
 
   const nextServer = spawnProcess({
     stdOutLineHandler: createStdOutLineHandler({ context }),
-    stdErrLineHandler: (line) => context.logger.error(line),
+    stdErrLineHandler: createStdErrLineHandler({ context }),
     command: 'node',
     args: [context.bin.next, 'start'],
     processOptions: {
