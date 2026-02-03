@@ -27,7 +27,8 @@ import { generateManifest, loadManifest } from '../testPrep/generateManifest.js'
 export const test = base.extend({
   // Worker-scoped fixtures (shared across tests in a worker)
   helperRegistry: [
-    async (_fixtures, use) => {
+    // eslint-disable-next-line no-empty-pattern
+    async ({}, use) => {
       const registry = createHelperRegistry();
       await use(registry);
     },
@@ -35,7 +36,8 @@ export const test = base.extend({
   ],
 
   manifest: [
-    async (_fixtures, use) => {
+    // eslint-disable-next-line no-empty-pattern
+    async ({}, use) => {
       // Load manifest from build directory
       // Generate lazily if it doesn't exist (webServer has built by now)
       const buildDir = process.env.LOWDEFY_BUILD_DIR || '.lowdefy/server/build';
