@@ -15,6 +15,5 @@
 */
 
 import createDevLogger from './createDevLogger.js';
-import createStdOutLineHandler from './createStdOutLineHandler.js';
 
-export { createDevLogger, createStdOutLineHandler };
+export { createDevLogger };

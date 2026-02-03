@@ -80,7 +80,7 @@ importers:
         version: 0.2.29(@swc/core@1.3.99(@swc/helpers@0.5.2))
       jest:
         specifier: 28.1.3
-        version: 28.1.3(@types/node@20.6.2)
+        version: 28.1.3(@types/node@16.18.101)
 
   packages/build:
     dependencies:
@@ -231,7 +231,7 @@ importers:
         version: 0.2.29(@swc/core@1.3.99(@swc/helpers@0.5.2))
       jest:
         specifier: 28.1.3
-        version: 28.1.3(@types/node@16.18.101)
+        version: 28.1.3(@types/node@20.6.2)
 
   packages/cli:
     dependencies:
@@ -241,6 +241,9 @@ importers:
       '@lowdefy/helpers':
         specifier: 4.5.2
         version: link:../utils/helpers
+      '@lowdefy/logger':
+        specifier: 4.5.2
+        version: link:../utils/logger
       '@lowdefy/node-utils':
         specifier: 4.5.2
         version: link:../utils/node-utils
@@ -308,6 +311,9 @@ importers:
       '@lowdefy/layout':
         specifier: 4.5.2
         version: link:../layout
+      '@lowdefy/logger':
+        specifier: 4.5.2
+        version: link:../utils/logger
       classnames:
         specifier: 2.3.2
         version: 2.3.2
@@ -1929,6 +1935,9 @@ importers:
       '@lowdefy/layout':
         specifier: 4.5.2
         version: link:../../layout
+      '@lowdefy/logger':
+        specifier: 4.5.2
+        version: link:../../utils/logger
       '@lowdefy/node-utils':
         specifier: 4.5.2
         version: link:../../utils/node-utils
@@ -2056,6 +2065,9 @@ importers:
       '@lowdefy/layout':
         specifier: 4.5.2
         version: link:../../layout
+      '@lowdefy/logger':
+        specifier: 4.5.2
+        version: link:../../utils/logger
       '@lowdefy/node-utils':
         specifier: 4.5.2
         version: link:../../utils/node-utils
@@ -2343,6 +2355,31 @@ importers:
       yaml:
         specifier: 2.3.4
         version: 2.3.4
+
+  packages/utils/logger:
+    dependencies:
+      ora:
+        specifier: 7.0.1
+        version: 7.0.1
+      pino:
+        specifier: 8.16.2
+        version: 8.16.2
+    devDependencies:
+      '@jest/globals':
+        specifier: 28.1.3
+        version: 28.1.3
+      '@swc/cli':
+        specifier: 0.1.63
+        version: 0.1.63(@swc/core@1.3.99(@swc/helpers@0.5.2))(chokidar@3.5.3)
+      '@swc/core':
+        specifier: 1.3.99
+        version: 1.3.99(@swc/helpers@0.5.2)
+      '@swc/jest':
+        specifier: 0.2.29
+        version: 0.2.29(@swc/core@1.3.99(@swc/helpers@0.5.2))
+      jest:
+        specifier: 28.1.3
+        version: 28.1.3(@types/node@20.6.2)
 
   packages/utils/node-utils:
     dependencies:

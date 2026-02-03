@@ -18,6 +18,7 @@ function wrapErrorLogger(logger, { includeSource = true } = {}) {
   if (logger.error._lowdefyWrapped) return logger;
 
   const originalError = logger.error.bind(logger);
+  const originalInfo = logger.info?.bind(logger);
 
   const wrappedError = (errorOrMessage, ...args) => {
     if (args.length > 0) {
@@ -30,23 +31,16 @@ function wrapErrorLogger(logger, { includeSource = true } = {}) {
       return;
     }
 
-    if (errorOrMessage?.print) {
-      if (includeSource && errorOrMessage.source) {
-        originalError({ err: errorOrMessage, source: errorOrMessage.source }, errorOrMessage.print());
-        return;
-      }
-      originalError({ err: errorOrMessage }, errorOrMessage.print());
-      return;
-    }
-
     if (errorOrMessage && (errorOrMessage.name || errorOrMessage.message !== undefined)) {
-      const name = errorOrMessage.name || 'Error';
-      const message = errorOrMessage.message ?? '';
-      if (includeSource && errorOrMessage.source) {
-        originalError({ err: errorOrMessage, source: errorOrMessage.source }, `[${name}] ${message}`);
-        return;
+      // Log source as separate blue link line
+      if (includeSource && errorOrMessage.source && originalInfo) {
+        originalInfo({ print: 'link' }, errorOrMessage.source);
       }
-      originalError({ err: errorOrMessage }, `[${name}] ${message}`);
+
+      const msg = errorOrMessage.print
+        ? errorOrMessage.print()
+        : `[${errorOrMessage.name || 'Error'}] ${errorOrMessage.message}`;
+      originalError(msg);
       return;
     }
 
