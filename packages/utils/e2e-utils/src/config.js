@@ -62,5 +62,53 @@ function createConfig({
   });
 }
 
-export { createConfig };
+function createMultiAppConfig({
+  apps = [],
+  testDir = 'e2e',
+  testMatch = '**/*.spec.js',
+  timeout = 180000,
+} = {}) {
+  const cliCommand = 'npx lowdefy';
+
+  // Set up projects for each app
+  const projects = apps.map((app) => {
+    const appBuildDir = path.resolve(app.appDir, '.lowdefy/server/build');
+
+    return {
+      name: app.name,
+      testDir: path.join(testDir, app.name),
+      testMatch,
+      use: {
+        baseURL: `http://localhost:${app.port}`,
+        ...devices['Desktop Chrome'],
+      },
+      // Store build dir in metadata for fixtures
+      metadata: {
+        buildDir: appBuildDir,
+      },
+    };
+  });
+
+  // Set up webServers for each app
+  const webServer = apps.map((app) => ({
+    command: `NEXT_PUBLIC_LOWDEFY_E2E=true ${cliCommand} build && ${cliCommand} start --port ${app.port}`,
+    url: `http://localhost:${app.port}`,
+    reuseExistingServer: true,
+    timeout,
+    cwd: app.appDir,
+  }));
+
+  return defineConfig({
+    testDir,
+    fullyParallel: true,
+    reporter: 'list',
+    use: {
+      trace: 'on-first-retry',
+    },
+    projects,
+    webServer,
+  });
+}
+
+export { createConfig, createMultiAppConfig };
 export default createConfig;

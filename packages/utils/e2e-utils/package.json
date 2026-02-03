@@ -13,6 +13,12 @@
   "bugs": {
     "url": "https://github.com/lowdefy/lowdefy/issues"
   },
+  "contributors": [
+    {
+      "name": "Machiel van der Walt",
+      "url": "https://github.com/machielvdw"
+    }
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/lowdefy/lowdefy.git"
@@ -36,14 +42,18 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@playwright/test": "1.50.1"
+    "prompts": "2.4.2"
   },
   "peerDependencies": {
-    "@lowdefy/blocks-antd": "^4.0.0"
+    "@lowdefy/blocks-antd": "4.5.2",
+    "@playwright/test": "^1.50.0"
   },
   "peerDependenciesMeta": {
     "@lowdefy/blocks-antd": {
       "optional": true
+    },
+    "@playwright/test": {
+      "optional": false
     }
   },
   "devDependencies": {
