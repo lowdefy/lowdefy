@@ -19,7 +19,7 @@ import path from 'path';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
-import createLogger from './utils/createLogger.mjs';
+import { createDevLogger as createLogger } from '@lowdefy/logger/dev';
 import checkMockUserWarning from './processes/checkMockUserWarning.mjs';
 import initialBuild from './processes/initialBuild.mjs';
 import installPlugins from './processes/installPlugins.mjs';

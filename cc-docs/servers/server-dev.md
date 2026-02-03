@@ -202,10 +202,12 @@ Cross-process communication uses files in the build directory:
 ```javascript
 function lowdefyBuild({ directories, logger, options, pageCache }) {
   return async () => {
+    logger.ui.spin('Building config...');
     const customTypesMap = await createCustomPluginTypesMap({ directories, logger });
     await pageCache.acquireSkeletonLock();
     try {
       const result = await shallowBuild({ customTypesMap, directories, logger, ... });
+      logger.ui.log('Built config.');
       return result; // { components, pageRegistry, fileDependencyMap, context }
     } finally {
       pageCache.invalidateAll();
@@ -316,6 +318,43 @@ The manager and server run in separate processes with separate `PageCache` insta
 4. On next page request, server's `checkPageInvalidations()` reads the file
 5. Server's `pageCache.invalidatePages()` clears affected pages
 6. Server's `cachedBuildContext` is set to `null` to refresh maps
+
+## Server Process and Logging
+
+### stdio: inherit
+
+The manager spawns the Next.js server with `stdio: ['ignore', 'inherit', 'pipe']`:
+
+- **stdout** is inherited — server pino JSON flows directly to the manager's stdout (which the CLI reads)
+- **stderr** is piped — the manager formats stderr lines through its own logger
+- **stdin** is ignored
+
+This eliminates the need for a dev stdout line handler to parse and re-emit server logs. The server's pino logger includes a `print` mixin that adds a `print` field to every JSON line, so the CLI can render each line correctly (error → red, link → blue, spin → spinner, etc.).
+
+```javascript
+// startServer.mjs
+const nextServer = spawn('node', [context.bin.next, 'start'], {
+  stdio: ['ignore', 'inherit', 'pipe'],
+  env: {
+    ...process.env,
+    LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
+    PORT: context.options.port,
+  },
+});
+```
+
+### Logger Setup
+
+The server-dev uses two loggers:
+
+| Logger | Package | Purpose |
+|--------|---------|---------|
+| Manager logger | `createDevLogger` from `@lowdefy/logger/dev` | Build orchestration, watcher output |
+| Server logger | `createNodeLogger` + `wrapErrorLogger` from `@lowdefy/logger/node` | HTTP request logs, runtime errors |
+
+Both emit pino JSON with `print` mixin to stdout. The CLI reads this JSON and renders it via `createStdOutLineHandler` → `createPrint` (ora spinners, colored output).
+
+See [@lowdefy/logger](../utils/logger.md) for details.
 
 ## Build Processes
 

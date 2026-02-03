@@ -15,7 +15,7 @@
 */
 
 import axios from 'axios';
-import createPrint from './createPrint.js';
+import createCliLogger from '@lowdefy/logger/cli';
 
 async function logError({ error, context = {} }) {
   try {
@@ -41,11 +41,16 @@ async function logError({ error, context = {} }) {
 }
 
 async function errorHandler({ context, error }) {
-  const print = createPrint({ logLevel: 'info' });
+  const logger = context?.logger ?? createCliLogger({ logLevel: 'info' });
+  const ui = logger.ui ?? logger;
   if (error.source) {
-    print.info(error.source);
+    if (ui.link) {
+      ui.link(error.source);
+    } else {
+      ui.info(error.source);
+    }
   }
-  print.error(error.print ? error.print() : error.message);
+  ui.error(error.print ? error.print() : error.message);
   if (!context.disableTelemetry) {
     await logError({ context, error });
   }

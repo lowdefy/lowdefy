@@ -16,7 +16,6 @@
 
 import fs from 'fs';
 import path from 'path';
-import { LowdefyError } from '@lowdefy/errors';
 import getLowdefyVersion from '../utils/getLowdefyVersion.mjs';
 import setupWatcher from '../utils/setupWatcher.mjs';
 
@@ -66,8 +65,7 @@ function lowdefyBuildWatcher(context) {
           // (which has its own PageCache) knows which pages to rebuild.
           const invalidationPath = path.join(context.directories.build, 'invalidatePages.json');
           fs.writeFileSync(invalidationPath, JSON.stringify([...affectedPages]));
-          context.logger.info(
-            { print: 'log' },
+          context.logger.ui.log(
             `Invalidated ${affectedPages.size} page(s): ${[...affectedPages].join(', ')}`
           );
         } else {
@@ -77,13 +75,7 @@ function lowdefyBuildWatcher(context) {
       }
       context.reloadClients();
     } catch (error) {
-      if (error.isFormatted || error.hideStack) {
-        context.logger.error(error.message);
-      } else {
-        const lowdefyErr = new LowdefyError(error.message, { cause: error });
-        lowdefyErr.stack = error.stack;
-        context.logger.error(lowdefyErr);
-      }
+      context.logger.error(error);
     }
   };
   return setupWatcher({

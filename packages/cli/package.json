@@ -41,6 +41,7 @@
   "dependencies": {
     "@lowdefy/errors": "4.5.2",
     "@lowdefy/helpers": "4.5.2",
+    "@lowdefy/logger": "4.5.2",
     "@lowdefy/node-utils": "4.5.2",
     "axios": "1.8.2",
     "commander": "11.1.0",

@@ -21,7 +21,7 @@ function shutdownServer(context) {
         `Existing next server with pid ${context.nextServer.pid}, killed: ${context.nextServer.killed}`
       );
       if (!context.nextServer.killed) {
-        context.logger.info({ print: 'spin' }, 'Shutting down server...');
+        context.logger.ui.spin('Shutting down server...');
         context.nextServer.kill();
         context.logger.debug(
           `Killed next server with pid ${context.nextServer.pid}, killed: ${context.nextServer.killed}`

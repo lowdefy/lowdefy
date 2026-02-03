@@ -104,6 +104,7 @@ test('Request call one request', async () => {
   const promise = button.triggerEvent({ name: 'onClick' });
   expect(context.requests.req_one).toEqual([
     {
+      actionId: 'a',
       blockId: 'button',
       loading: true,
       payload: {},
@@ -166,6 +167,7 @@ test('Request call all requests', async () => {
   expect(context.requests).toEqual({
     req_one: [
       {
+        actionId: 'a',
         blockId: 'button',
         loading: true,
         payload: {},
@@ -175,6 +177,7 @@ test('Request call all requests', async () => {
     ],
     req_two: [
       {
+        actionId: 'a',
         blockId: 'button',
         loading: true,
         payload: {
@@ -189,6 +192,7 @@ test('Request call all requests', async () => {
   expect(context.requests).toEqual({
     req_one: [
       {
+        actionId: 'a',
         blockId: 'button',
         loading: false,
         payload: {},
@@ -199,6 +203,7 @@ test('Request call all requests', async () => {
     ],
     req_two: [
       {
+        actionId: 'a',
         blockId: 'button',
         loading: false,
         payload: {
@@ -262,6 +267,7 @@ test('Request call array of requests', async () => {
   expect(context.requests).toEqual({
     req_one: [
       {
+        actionId: 'a',
         blockId: 'button',
         loading: true,
         payload: {},
@@ -271,6 +277,7 @@ test('Request call array of requests', async () => {
     ],
     req_two: [
       {
+        actionId: 'a',
         blockId: 'button',
         loading: true,
         payload: {
@@ -285,6 +292,7 @@ test('Request call array of requests', async () => {
   expect(context.requests).toEqual({
     req_one: [
       {
+        actionId: 'a',
         blockId: 'button',
         loading: false,
         payload: {},
@@ -295,6 +303,7 @@ test('Request call array of requests', async () => {
     ],
     req_two: [
       {
+        actionId: 'a',
         blockId: 'button',
         loading: false,
         payload: {
@@ -386,6 +395,7 @@ test('Request call request error', async () => {
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(context.requests.req_error).toEqual([
     {
+      actionId: 'a',
       blockId: 'button',
       error: expect.any(PluginError),
       loading: false,

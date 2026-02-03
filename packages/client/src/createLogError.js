@@ -15,9 +15,11 @@
 */
 
 import { ConfigError } from '@lowdefy/errors/client';
+import { createBrowserLogger } from '@lowdefy/logger/browser';
 
 function createLogError(lowdefy) {
   const loggedErrors = new Set();
+  const logger = createBrowserLogger();
 
   return async function logError(error) {
     const errorKey = `${error.message}:${error.configKey || ''}`;
@@ -38,13 +40,13 @@ function createLogError(lowdefy) {
         if (response.ok) {
           const { source } = await response.json();
           if (source) {
-            console.info(source);
+            logger.info(source);
           }
         }
       } catch {
         // Server logging failed - continue with local console
       }
-      console.error(error.print());
+      logger.error(error);
       return;
     }
 
@@ -56,7 +58,7 @@ function createLogError(lowdefy) {
     }
 
     // Other errors - just log locally
-    console.error(error.print ? error.print() : `[${error.name || 'Error'}] ${error.message}`);
+    logger.error(error);
   };
 }
 

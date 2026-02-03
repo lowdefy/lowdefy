@@ -16,7 +16,6 @@
 */
 
 import { wait } from '@lowdefy/helpers';
-import { LowdefyError } from '@lowdefy/errors';
 import opener from 'opener';
 import getContext from './getContext.mjs';
 import startServer from './processes/startServer.mjs';
@@ -96,15 +95,7 @@ try {
   }
   await new Promise(() => {});
 } catch (error) {
-  // If error is already formatted (from error collection), just show the message
-  if (error.isFormatted || error.hideStack) {
-    context.logger.error(error.message);
-  } else {
-    // Wrap unclassified errors as LowdefyError for proper formatting
-    const lowdefyErr = new LowdefyError(error.message, { cause: error });
-    lowdefyErr.stack = error.stack;
-    context.logger.error(lowdefyErr);
-  }
+  context.logger.error(error);
   context.shutdownServer();
   process.exit();
 }

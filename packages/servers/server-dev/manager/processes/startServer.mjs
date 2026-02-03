@@ -14,8 +14,7 @@
   limitations under the License.
 */
 
-import { spawnProcess } from '@lowdefy/node-utils';
-import createStdOutLineHandler from '../utils/createStdOutLineHandler.mjs';
+import { spawn } from 'child_process';
 
 function createStdErrLineHandler({ context }) {
   const port = context.options.port;
@@ -33,20 +32,25 @@ function createStdErrLineHandler({ context }) {
 function startServer(context) {
   context.shutdownServer();
 
-  const nextServer = spawnProcess({
-    stdOutLineHandler: createStdOutLineHandler({ context }),
-    stdErrLineHandler: createStdErrLineHandler({ context }),
-    command: 'node',
-    args: [context.bin.next, 'start'],
-    processOptions: {
-      env: {
-        ...process.env,
-        LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
-        PORT: context.options.port,
-      },
+  const nextServer = spawn('node', [context.bin.next, 'start'], {
+    stdio: ['ignore', 'inherit', 'pipe'],
+    env: {
+      ...process.env,
+      LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
+      PORT: context.options.port,
     },
-    returnProcess: true,
   });
+
+  const stdErrLineHandler = createStdErrLineHandler({ context });
+  nextServer.stderr.on('data', (data) => {
+    data
+      .toString('utf8')
+      .split('\n')
+      .forEach((line) => {
+        if (line) stdErrLineHandler(line);
+      });
+  });
+
   context.logger.debug(`Started next server with pid ${nextServer.pid}.`);
   nextServer.on('exit', (code, signal) => {
     context.logger.debug(`nextServer exit ${nextServer.pid}, signal: ${signal}, code: ${code}`);

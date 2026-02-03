@@ -14,60 +14,20 @@
   limitations under the License.
 */
 
-import pino from 'pino';
+import { createNodeLogger, wrapErrorLogger } from '@lowdefy/logger/node';
 
-const pinoLogger = pino({
+const logger = createNodeLogger({
   name: 'lowdefy_server',
   level: process.env.LOWDEFY_LOG_LEVEL ?? 'info',
   base: { pid: undefined, hostname: undefined },
-  serializers: {
-    err: (err) => ({
-      message: err.message,
-      name: err.name,
-      stack: err.stack,
-      source: err.source,
-      config: err.config,
-      configKey: err.configKey,
-      isServiceError: err.isServiceError,
-    }),
-  },
+  mixin: (context, level) => ({
+    ...context,
+    print: context.print ?? logger.levels.labels[level],
+  }),
 });
 
-// Wrap logger to handle error objects passed to logger.error(error)
-function wrapLogger(logger) {
-  const originalError = logger.error.bind(logger);
-  const originalInfo = logger.info.bind(logger);
-
-  logger.error = (errorOrMessage, ...args) => {
-    // Handle string messages directly
-    if (typeof errorOrMessage === 'string') {
-      originalError(errorOrMessage, ...args);
-      return;
-    }
-
-    // Handle error objects (Error instances or error-like objects with name or message)
-    if (errorOrMessage && (errorOrMessage.name || errorOrMessage.message !== undefined)) {
-      if (errorOrMessage.source) {
-        originalInfo(errorOrMessage.source);
-      }
-      if (errorOrMessage.print) {
-        originalError(errorOrMessage.print());
-      } else {
-        originalError(`[${errorOrMessage.name || 'Error'}] ${errorOrMessage.message}`);
-      }
-      return;
-    }
-
-    // Pass through normal calls (including null/undefined)
-    originalError(errorOrMessage, ...args);
-  };
-
-  return logger;
-}
-
 function createLogger(metadata = {}) {
-  const childLogger = pinoLogger.child(metadata);
-  return wrapLogger(childLogger);
+  return wrapErrorLogger(logger.child(metadata));
 }
 
 export default createLogger;

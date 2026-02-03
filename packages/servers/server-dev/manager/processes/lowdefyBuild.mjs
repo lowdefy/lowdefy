@@ -19,7 +19,7 @@ import createCustomPluginTypesMap from '../utils/createCustomPluginTypesMap.mjs'
 
 function lowdefyBuild({ directories, logger, options, pageCache }) {
   return async () => {
-    logger.info({ print: 'spin' }, 'Building config...');
+    logger.ui.spin('Building config...');
     const customTypesMap = await createCustomPluginTypesMap({ directories, logger });
 
     if (pageCache) {
@@ -35,7 +35,7 @@ function lowdefyBuild({ directories, logger, options, pageCache }) {
       });
 
       // Return result so getContext can store registries
-      logger.info({ print: 'log' }, 'Built config.');
+      logger.ui.log('Built config.');
       return result;
     } finally {
       if (pageCache) {

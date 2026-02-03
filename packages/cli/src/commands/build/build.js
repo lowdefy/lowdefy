@@ -22,7 +22,7 @@ import runLowdefyBuild from '../../utils/runLowdefyBuild.js';
 import runNextBuild from '../../utils/runNextBuild.js';
 
 async function build({ context }) {
-  context.print.info('Starting build.');
+  context.logger.ui.info('Starting build.');
 
   const directory = context.directories.server;
 
@@ -36,7 +36,7 @@ async function build({ context }) {
     await runNextBuild({ context, directory });
   }
   await context.sendTelemetry({ sendTypes: true });
-  context.print.succeed(`Build successful.`);
+  context.logger.ui.succeed(`Build successful.`);
 }
 
 export default build;
