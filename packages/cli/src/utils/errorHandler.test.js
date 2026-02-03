@@ -16,12 +16,14 @@
 
 import { jest } from '@jest/globals';
 
-jest.unstable_mockModule('./createPrint.js', () => {
+jest.unstable_mockModule('@lowdefy/logger/cli', () => {
   const error = jest.fn();
+  const createPrint = () => ({
+    error,
+  });
   return {
-    default: () => ({
-      error,
-    }),
+    createPrint,
+    default: createPrint,
   };
 });
 
@@ -34,7 +36,7 @@ jest.unstable_mockModule('axios', () => ({
 test('Print and log error with full context', async () => {
   const { default: errorHandler } = await import('./errorHandler.js');
   const { default: axios } = await import('axios');
-  const { default: createPrint } = await import('./createPrint.js');
+  const { default: createPrint } = await import('@lowdefy/logger/cli');
   const print = createPrint();
   const error = new Error('Test error');
   const context = {
@@ -63,7 +65,7 @@ test('Print and log error with full context', async () => {
 test('Print and log error with starting context', async () => {
   const { default: errorHandler } = await import('./errorHandler.js');
   const { default: axios } = await import('axios');
-  const { default: createPrint } = await import('./createPrint.js');
+  const { default: createPrint } = await import('@lowdefy/logger/cli');
   const print = createPrint();
   const error = new Error('Test error');
   const context = {
@@ -90,7 +92,7 @@ test('Print and log error with starting context', async () => {
 test('Do not log error if telemetry is disabled', async () => {
   const { default: errorHandler } = await import('./errorHandler.js');
   const { default: axios } = await import('axios');
-  const { default: createPrint } = await import('./createPrint.js');
+  const { default: createPrint } = await import('@lowdefy/logger/cli');
   const print = createPrint();
   const error = new Error('Test error');
   const context = {
@@ -108,7 +110,7 @@ test('Do not log error if telemetry is disabled', async () => {
 test('Pass if logError fails', async () => {
   const { default: errorHandler } = await import('./errorHandler.js');
   const { default: axios } = await import('axios');
-  const { default: createPrint } = await import('./createPrint.js');
+  const { default: createPrint } = await import('@lowdefy/logger/cli');
   const print = createPrint();
   let didThrow = false;
   axios.request.mockImplementationOnce(() => {

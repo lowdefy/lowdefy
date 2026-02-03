@@ -15,7 +15,7 @@
 */
 
 import axios from 'axios';
-import createPrint from './createPrint.js';
+import { createPrint } from '@lowdefy/logger/cli';
 
 async function logError({ error, context = {} }) {
   try {

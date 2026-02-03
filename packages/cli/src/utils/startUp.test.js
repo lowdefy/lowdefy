@@ -25,12 +25,16 @@ jest.unstable_mockModule('./getLowdefyYaml.js', () => ({
 jest.unstable_mockModule('./getCliJson.js', () => ({
   default: () => Promise.resolve({ appId: 'appId' }),
 }));
-jest.unstable_mockModule('./createPrint.js', () => ({
-  default: () => ({
+jest.unstable_mockModule('@lowdefy/logger/cli', () => {
+  const createPrint = () => ({
     error: jest.fn(),
     log: jest.fn(),
-  }),
-}));
+  });
+  return {
+    createPrint,
+    default: createPrint,
+  };
+});
 jest.mock('../../package.json', () => ({ version: 'cliVersion' }));
 jest.unstable_mockModule('./getSendTelemetry.js', () => ({ default: () => 'sendTelemetry' }));
 jest.unstable_mockModule('./validateVersion.js', () => ({

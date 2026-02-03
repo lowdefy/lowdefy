@@ -14,16 +14,24 @@
   limitations under the License.
 */
 
-import { createNodeLogger, wrapErrorLogger } from '@lowdefy/logger/node';
+import pino from 'pino';
 
-const logger = createNodeLogger({
-  name: 'lowdefy_server',
-  level: process.env.LOWDEFY_LOG_LEVEL ?? 'info',
-  base: { pid: undefined, hostname: undefined },
-});
+import createNodeLogger from '../node/createNodeLogger.js';
 
-function createLogger(metadata = {}) {
-  return wrapErrorLogger(logger.child(metadata));
+function createDevLogger({ level = 'info', name = 'lowdefy build' } = {}) {
+  const destination = pino.destination({ dest: 1, sync: true });
+  let logger;
+  logger = createNodeLogger({
+    name,
+    level,
+    base: { pid: undefined, hostname: undefined },
+    destination,
+    mixin: (context, levelNumber) => ({
+      ...context,
+      print: context.print ?? logger.levels.labels[levelNumber],
+    }),
+  });
+  return logger;
 }
 
-export default createLogger;
+export default createDevLogger;

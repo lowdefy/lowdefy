@@ -15,7 +15,7 @@
 */
 
 import { spawnProcess } from '@lowdefy/node-utils';
-import createStdOutLineHandler from '../utils/createStdOutLineHandler.mjs';
+import { createStdOutLineHandler } from '@lowdefy/logger/dev';
 
 function startServer(context) {
   context.shutdownServer();

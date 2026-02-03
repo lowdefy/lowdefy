@@ -62,6 +62,7 @@
     "@lowdefy/errors": "4.5.2",
     "@lowdefy/helpers": "4.5.2",
     "@lowdefy/layout": "4.5.2",
+    "@lowdefy/logger": "4.5.2",
     "@lowdefy/node-utils": "4.5.2",
     "@lowdefy/operators-change-case": "4.5.2",
     "@lowdefy/operators-diff": "4.5.2",

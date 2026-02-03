@@ -14,16 +14,6 @@
   limitations under the License.
 */
 
-import { createNodeLogger, wrapErrorLogger } from '@lowdefy/logger/node';
+import { createNodeLogger, wrapErrorLogger } from './node/index.js';
 
-const logger = createNodeLogger({
-  name: 'lowdefy_server',
-  level: process.env.LOWDEFY_LOG_LEVEL ?? 'info',
-  base: { pid: undefined, hostname: undefined },
-});
-
-function createLogger(metadata = {}) {
-  return wrapErrorLogger(logger.child(metadata));
-}
-
-export default createLogger;
+export { createNodeLogger, wrapErrorLogger };

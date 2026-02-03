@@ -18,7 +18,7 @@ import path from 'path';
 import { type } from '@lowdefy/helpers';
 
 import checkPnpmIsInstalled from './checkPnpmIsInstalled.js';
-import createPrint from './createPrint.js';
+import { createPrint } from '@lowdefy/logger/cli';
 import getCliJson from './getCliJson.js';
 import getDirectories from './getDirectories.js';
 import getLowdefyYaml from './getLowdefyYaml.js';

@@ -15,7 +15,7 @@
 */
 
 import { spawnProcess } from '@lowdefy/node-utils';
-import createStdOutLineHandler from './createStdOutLineHandler.js';
+import { createStdOutLineHandler } from '@lowdefy/logger/cli';
 
 async function runLowdefyBuild({ context, directory }) {
   context.print.spin('Running Lowdefy build.');

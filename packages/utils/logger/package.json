@@ -1,12 +1,13 @@
 {
-  "name": "lowdefy",
+  "name": "@lowdefy/logger",
   "version": "4.5.2",
   "license": "Apache-2.0",
-  "description": "Lowdefy CLI",
+  "description": "Lowdefy logging utilities for node, dev, cli, and browser",
   "homepage": "https://lowdefy.com",
   "keywords": [
     "lowdefy",
-    "cli"
+    "logger",
+    "utils"
   ],
   "bugs": {
     "url": "https://github.com/lowdefy/lowdefy/issues"
@@ -26,32 +27,25 @@
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
   "type": "module",
-  "bin": "./dist/index.js",
+  "exports": {
+    ".": "./dist/index.js",
+    "./node": "./dist/node/index.js",
+    "./dev": "./dist/dev/index.js",
+    "./cli": "./dist/cli/index.js",
+    "./browser": "./dist/browser/index.js"
+  },
   "files": [
     "dist/*"
   ],
-  "exports": "./dist/index.js",
   "scripts": {
-    "build": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start --copy-files",
-    "clean": "rm -rf dist && rm -rf .lowdefy",
-    "start": "node ./dist/index.js",
+    "build": "swc src --out-dir dist --config-file ../../../.swcrc --delete-dir-on-start",
+    "clean": "rm -rf dist",
     "prepublishOnly": "pnpm build",
-    "test": "FORCE_COLOR=3 node --experimental-vm-modules node_modules/jest/bin/jest.js"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --passWithNoTests"
   },
   "dependencies": {
-    "@lowdefy/errors": "4.5.2",
-    "@lowdefy/helpers": "4.5.2",
-    "@lowdefy/logger": "4.5.2",
-    "@lowdefy/node-utils": "4.5.2",
-    "axios": "1.8.2",
-    "commander": "11.1.0",
-    "decompress": "4.2.1",
-    "decompress-targz": "4.1.1",
-    "dotenv": "16.3.1",
     "ora": "7.0.1",
-    "semver": "7.5.4",
-    "uuid": "9.0.1",
-    "yaml": "2.3.4"
+    "pino": "8.16.2"
   },
   "devDependencies": {
     "@jest/globals": "28.1.3",
@@ -59,9 +53,6 @@
     "@swc/core": "1.3.99",
     "@swc/jest": "0.2.29",
     "jest": "28.1.3"
-  },
-  "engines": {
-    "node": ">=18"
   },
   "publishConfig": {
     "access": "public"
