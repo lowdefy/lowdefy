@@ -16,6 +16,11 @@
 
 function js(operatorContext) {
   const { jsMap, operators, params } = operatorContext;
+  if (!jsMap[params]) {
+    throw new Error(
+      `_js function not found. The function may not have been built yet. Received hash: ${params}`
+    );
+  }
   try {
     return jsMap[params]({
       actions: (p) => operators._actions({ ...operatorContext, params: p }),
