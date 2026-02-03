@@ -13,6 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import fs from 'fs';
 import path from 'path';
 import { createApiContext } from '@lowdefy/api';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
@@ -26,7 +27,7 @@ import getServerSession from './auth/getServerSession.js';
 import logError from './log/logError.js';
 import logRequest from './log/logRequest.js';
 import operators from '../../build/plugins/operators/server.js';
-import jsMap from '../../build/plugins/operators/serverJsMap.js';
+import staticJsMap from '../../build/plugins/operators/serverJsMap.js';
 import getAuthOptions from './auth/getAuthOptions.js';
 import setSentryUser from './sentry/setSentryUser.js';
 
@@ -39,12 +40,39 @@ try {
 
 const secrets = getSecretsFromEnv();
 
+// Dynamic JS map loading for JIT-built pages
+let cachedJsMapMtime = null;
+let cachedJsMap = staticJsMap;
+
+function loadDynamicJsMap(buildDirectory) {
+  const jsMapPath = path.join(buildDirectory, 'plugins', 'operators', 'serverJsMap.js');
+  try {
+    const stat = fs.statSync(jsMapPath);
+    if (cachedJsMapMtime && stat.mtimeMs === cachedJsMapMtime) {
+      return cachedJsMap;
+    }
+    cachedJsMapMtime = stat.mtimeMs;
+    // For server-side, we can read and eval the JS file
+    const content = fs.readFileSync(jsMapPath, 'utf8');
+    const fn = new Function('exports', content.replace('export default', 'exports.default ='));
+    const exports = {};
+    fn(exports);
+    cachedJsMap = { ...staticJsMap, ...(exports.default ?? {}) };
+    return cachedJsMap;
+  } catch {
+    return cachedJsMap;
+  }
+}
+
 function apiWrapper(handler) {
   return async function wrappedHandler(req, res) {
+    const buildDirectory = path.join(process.cwd(), 'build');
+    const jsMap = loadDynamicJsMap(buildDirectory);
+
     const context = {
       // Important to give absolute path so Next can trace build files
       rid: uuid(),
-      buildDirectory: path.join(process.cwd(), 'build'),
+      buildDirectory,
       configDirectory: process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd(),
       config,
       connections,

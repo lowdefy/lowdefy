@@ -32,6 +32,7 @@ import shutdownServer from './processes/shutdownServer.mjs';
 import startWatchers from './processes/startWatchers.mjs';
 
 import getNextBin from './utils/getNextBin.mjs';
+import PageCache from '../lib/server/pageCache.mjs';
 
 const argv = yargs(hideBin(process.argv)).array('watch').array('watchIgnore').argv;
 
@@ -59,13 +60,30 @@ async function getContext() {
           : [],
     },
     version: env.npm_package_version,
+
+    // JIT build state
+    pageCache: new PageCache(),
+    pageRegistry: null,
+    fileDependencyMap: null,
+    buildContext: null,
   };
 
   context.packageManagerCmd = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm';
   context.checkMockUserWarning = checkMockUserWarning(context);
   context.initialBuild = initialBuild(context);
   context.installPlugins = installPlugins(context);
-  context.lowdefyBuild = lowdefyBuild(context);
+
+  // Wrap lowdefyBuild to capture and store the shallow build result
+  const buildFn = lowdefyBuild(context);
+  context.lowdefyBuild = async () => {
+    const result = await buildFn();
+    if (result) {
+      context.pageRegistry = result.pageRegistry;
+      context.fileDependencyMap = result.fileDependencyMap;
+      context.buildContext = result.context;
+    }
+  };
+
   context.nextBuild = nextBuild(context);
   context.readDotEnv = readDotEnv(context);
   context.reloadClients = reloadClients(context);
