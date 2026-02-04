@@ -94,7 +94,7 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
         const dedupKey = warningOrParams.source ?? warningOrParams.message;
         if (seen?.has(dedupKey)) return;
         seen?.add(dedupKey);
-        originalWarn({ source: warningOrParams.source }, warningOrParams.print());
+        logger.ui.warn(warningOrParams);
         return;
       }
 
@@ -105,7 +105,7 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
         const dedupKey = warning.source ?? warning.message;
         if (seen?.has(dedupKey)) return;
         seen?.add(dedupKey);
-        originalWarn({ source: warning.source }, warning.print());
+        logger.ui.warn(warning);
       } catch (err) {
         if (err instanceof ConfigError) {
           collectExceptions(ctx, err);
@@ -134,24 +134,8 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
         return;
       }
 
-      // Error object with print method - use it for formatting
-      if (errorOrMessage?.print) {
-        if (errorOrMessage.source) {
-          originalError({ source: errorOrMessage.source }, errorOrMessage.print());
-        } else {
-          originalError(errorOrMessage.print());
-        }
-        return;
-      }
-
-      // Error with source - log source separately then message
-      if (errorOrMessage?.source) {
-        originalError({ source: errorOrMessage.source }, errorOrMessage.message);
-        return;
-      }
-
-      // Pass through
-      originalError(errorOrMessage?.message ?? errorOrMessage);
+      // Error/object - delegate formatting to logger.ui.error
+      logger.ui.error(errorOrMessage);
     };
     wrappedError._lowdefyWrapped = true;
     logger.error = wrappedError;

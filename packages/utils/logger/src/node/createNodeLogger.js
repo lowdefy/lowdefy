@@ -16,6 +16,8 @@
 
 import pino from 'pino';
 
+import formatUiMessage from '../formatUiMessage.js';
+
 const defaultErrSerializer = (err) => {
   if (!err) return err;
   return {
@@ -35,8 +37,18 @@ function attachUi(logger) {
     log: (text) => logger.info({ print: 'log' }, text),
     dim: (text) => logger.info({ print: 'dim' }, text),
     info: (text) => logger.info({ print: 'info' }, text),
-    warn: (text) => logger.warn({ print: 'warn' }, text),
-    error: (text) => logger.error({ print: 'error' }, text),
+    warn: (messageOrObj) => {
+      if (messageOrObj?.source) {
+        logger.info({ print: 'link' }, messageOrObj.source);
+      }
+      logger.warn({ print: 'warn' }, formatUiMessage(messageOrObj));
+    },
+    error: (messageOrObj) => {
+      if (messageOrObj?.source) {
+        logger.info({ print: 'link' }, messageOrObj.source);
+      }
+      logger.error({ print: 'error' }, formatUiMessage(messageOrObj));
+    },
     debug: (text) => logger.debug({ print: 'debug' }, text),
     link: (text) => logger.info({ print: 'link' }, text),
     spin: (text) => logger.info({ print: 'spin' }, text),
