@@ -21,7 +21,7 @@ const locator = (page, blockId) => page.locator(`#bl-${blockId} .ant-btn`);
 
 export default createBlockHelper({
   locator,
-  set: {
+  do: {
     click: (page, blockId) => locator(page, blockId).click(),
   },
   expect: {

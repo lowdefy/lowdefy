@@ -66,7 +66,7 @@ function createPageManager({ page, manifest, helperRegistry }) {
           page,
           blockMap: currentBlockMap,
           helperRegistry,
-          mode: 'set',
+          mode: 'do',
         });
       },
       state: (params) => setState(page, params),

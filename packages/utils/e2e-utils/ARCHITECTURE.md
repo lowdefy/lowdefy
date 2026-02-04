@@ -281,10 +281,10 @@ The factory merges these layers in order: common defaults → validation → blo
 
 ```javascript
 // createBlockHelper.js
-function createBlockHelper({ locator, set, expect: expectOverrides }) {
+function createBlockHelper({ locator, do: doMethods, expect: expectOverrides }) {
   return {
     locator,
-    set: { ...(set ?? {}) },
+    do: { ...(doMethods ?? {}) },
     expect: {
       // Common — derived from locator
       visible, hidden, disabled, enabled,
@@ -299,12 +299,12 @@ function createBlockHelper({ locator, set, expect: expectOverrides }) {
 
 #### Helper Shape
 
-The factory returns an object with sub-objects for `set` and `expect`:
+The factory returns an object with sub-objects for `do` and `expect`:
 
 ```javascript
 {
   locator,        // (page, blockId) → Playwright Locator
-  set: {
+  do: {
     fill,         // (page, blockId, val) → Promise  [text inputs]
     select,       // (page, blockId, val) → Promise  [selectors]
     click,        // (page, blockId) → Promise        [buttons]
@@ -376,7 +376,7 @@ const locator = (page, blockId) => page.locator(`#${blockId}_my-element`);
 
 export default createBlockHelper({
   locator,
-  set: {
+  do: {
     fill: (page, blockId, val) => locator(page, blockId).fill(val),
     clear: (page, blockId) => locator(page, blockId).clear(),
   },
@@ -394,7 +394,7 @@ To override a common method (e.g., Selector uses CSS class for disabled):
 ```javascript
 export default createBlockHelper({
   locator,
-  set: { /* ... */ },
+  do: { /* ... */ },
   expect: {
     // Override the default disabled/enabled (which use toBeDisabled()/toBeEnabled())
     disabled: (page, blockId) => expect(locator(page, blockId)).toHaveClass(/ant-select-disabled/),

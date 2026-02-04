@@ -22,7 +22,7 @@ import {
   expectValidationSuccess,
 } from '../core/validation.js';
 
-function createBlockHelper({ locator, set, expect: expectOverrides }) {
+function createBlockHelper({ locator, do: doMethods, expect: expectOverrides }) {
   const commonExpect = {
     visible: (page, blockId) => expect(locator(page, blockId)).toBeVisible(),
     hidden: (page, blockId) => expect(locator(page, blockId)).toBeHidden(),
@@ -40,7 +40,7 @@ function createBlockHelper({ locator, set, expect: expectOverrides }) {
 
   return {
     locator,
-    set: { ...(set ?? {}) },
+    do: { ...(doMethods ?? {}) },
     expect: {
       ...commonExpect,
       ...validationExpect,
