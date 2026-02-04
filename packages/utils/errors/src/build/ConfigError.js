@@ -102,18 +102,17 @@ class ConfigError extends BaseConfigError {
       return;
     }
 
-    // Resolve location based on available info
+    // Resolve location based on available info, falling through if a method returns null
     let location = null;
     const configDir = configDirectory ?? context?.directories?.config;
 
     if (configKey && context?.keyMap) {
-      // Mode 1: Use configKey -> keyMap -> refMap path (standard case after addKeys)
       location = ConfigMessage.resolveLocation({ configKey, context });
-    } else if (operatorLocation && context?.refMap) {
-      // Mode 2: Use operatorLocation directly with refMap (early build stages)
+    }
+    if (!location && operatorLocation && context?.refMap) {
       location = ConfigMessage.resolveOperatorLocation({ operatorLocation, context });
-    } else if (filePath) {
-      // Mode 3: Use raw filePath/lineNumber (YAML parse errors, etc.)
+    }
+    if (!location && filePath) {
       location = ConfigMessage.resolveRawLocation({
         filePath,
         lineNumber: finalLineNumber,

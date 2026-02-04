@@ -108,7 +108,9 @@ class ConfigMessage {
     if (!operatorLocation) return null;
 
     const refEntry = context?.refMap?.[operatorLocation.ref];
-    const filePath = refEntry?.path ?? 'lowdefy.yaml';
+    if (!refEntry?.path) return null;
+
+    const filePath = refEntry.path;
     const lineNumber = operatorLocation.line;
 
     let resolvedPath = filePath;
