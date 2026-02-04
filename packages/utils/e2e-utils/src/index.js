@@ -51,3 +51,7 @@ import createHelperRegistry from './proxy/createHelperRegistry.js';
 import createBlockProxy from './proxy/createBlockProxy.js';
 import createPageManager from './proxy/createPageManager.js';
 export { createBlockHelper, createHelperRegistry, createBlockProxy, createPageManager };
+
+// Mocking utilities
+import { createMockManager, loadStaticMocks } from './mocking/index.js';
+export { createMockManager, loadStaticMocks };

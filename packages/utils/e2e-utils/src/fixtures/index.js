@@ -22,6 +22,7 @@ import { test as base, expect } from '@playwright/test';
 import createHelperRegistry from '../proxy/createHelperRegistry.js';
 import createPageManager from '../proxy/createPageManager.js';
 import { generateManifest, loadManifest } from '../testPrep/generateManifest.js';
+import { createMockManager, loadStaticMocks } from '../mocking/index.js';
 
 // Create test with ldf fixture
 export const test = base.extend({
@@ -31,6 +32,16 @@ export const test = base.extend({
     async ({}, use) => {
       const registry = createHelperRegistry();
       await use(registry);
+    },
+    { scope: 'worker' },
+  ],
+
+  staticMocks: [
+    // eslint-disable-next-line no-empty-pattern
+    async ({}, use) => {
+      const mocksFile = process.env.LOWDEFY_E2E_MOCKS_FILE;
+      const mocks = loadStaticMocks(mocksFile);
+      await use(mocks);
     },
     { scope: 'worker' },
   ],
@@ -113,9 +124,12 @@ export const test = base.extend({
   ],
 
   // Test-scoped fixture - provides the ldf helper
-  ldf: async ({ page, manifest, helperRegistry }, use) => {
-    const pageManager = createPageManager({ page, manifest, helperRegistry });
+  ldf: async ({ page, manifest, helperRegistry, staticMocks }, use) => {
+    const mockManager = createMockManager({ page });
+    await mockManager.applyStaticMocks(staticMocks);
+    const pageManager = createPageManager({ page, manifest, helperRegistry, mockManager });
     await use(pageManager);
+    await mockManager.cleanup();
   },
 });
 

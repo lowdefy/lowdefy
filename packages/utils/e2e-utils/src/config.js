@@ -14,12 +14,14 @@
   limitations under the License.
 */
 
+import fs from 'fs';
 import path from 'path';
 import { defineConfig, devices } from '@playwright/test';
 
 function createConfig({
   appDir = './',
   buildDir = '.lowdefy/server/build',
+  mocksFile = 'e2e/mocks.yaml',
   port = 3000,
   testDir = 'e2e',
   testMatch = '**/*.spec.js',
@@ -31,6 +33,12 @@ function createConfig({
 
   // Set environment for fixtures to find build artifacts
   process.env.LOWDEFY_BUILD_DIR = absoluteBuildDir;
+
+  // Set environment for mocks file if it exists
+  const absoluteMocksFile = path.resolve(appDir, mocksFile);
+  if (fs.existsSync(absoluteMocksFile)) {
+    process.env.LOWDEFY_E2E_MOCKS_FILE = absoluteMocksFile;
+  }
 
   return defineConfig({
     testDir,

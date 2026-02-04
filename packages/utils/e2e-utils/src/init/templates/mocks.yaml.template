@@ -1,0 +1,19 @@
+# E2E Request Mocks
+# Define mocked responses for requests that can't run in test environments
+# (Atlas Search, vector search, external APIs, etc.)
+
+mocks:
+  # Example: Mock a MongoDB Atlas Search request
+  # atlas_search:
+  #   response:
+  #     - _id: doc-1
+  #       title: Search Result
+  #       score: 0.95
+
+  # Example: Mock an external API endpoint
+  # external_api:
+  #   type: api
+  #   method: POST
+  #   response:
+  #     results: []
+  #     total: 0

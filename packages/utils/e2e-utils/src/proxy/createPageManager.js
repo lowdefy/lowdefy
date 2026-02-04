@@ -23,7 +23,7 @@ import { expectUrl, expectUrlQuery, setUrlQuery } from '../core/url.js';
 
 import createBlockProxy from './createBlockProxy.js';
 
-function createPageManager({ page, manifest, helperRegistry }) {
+function createPageManager({ page, manifest, helperRegistry, mockManager }) {
   let currentBlockMap = null;
   let currentPageId = null;
 
@@ -103,6 +103,12 @@ function createPageManager({ page, manifest, helperRegistry }) {
 
     // Direct block locator access (for custom assertions)
     block: (blockId) => getBlock(page, blockId),
+
+    // Mocking (per-test overrides)
+    mock: {
+      request: (requestId, options) => mockManager?.mockRequest(requestId, options),
+      api: (apiId, options) => mockManager?.mockApi(apiId, options),
+    },
   };
 }
 

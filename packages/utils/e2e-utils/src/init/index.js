@@ -59,6 +59,7 @@ function generateSingleAppSetup(cwd) {
   const templates = [
     { src: 'playwright.config.js.template', dest: 'playwright.config.js' },
     { src: 'example.spec.js.template', dest: 'example.spec.js' },
+    { src: 'mocks.yaml.template', dest: 'mocks.yaml' },
   ];
 
   for (const { src, dest } of templates) {
@@ -123,6 +124,15 @@ ${appsConfig},
     console.log('Created e2e/playwright.config.js');
   } else {
     console.log('Skipped e2e/playwright.config.js (already exists)');
+  }
+
+  // Copy mocks template
+  const mocksPath = path.join(e2eDir, 'mocks.yaml');
+  if (!fs.existsSync(mocksPath)) {
+    fs.copyFileSync(path.join(__dirname, 'templates', 'mocks.yaml.template'), mocksPath);
+    console.log('Created e2e/mocks.yaml');
+  } else {
+    console.log('Skipped e2e/mocks.yaml (already exists)');
   }
 
   // Create test directories and example specs for each app

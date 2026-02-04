@@ -16,6 +16,19 @@
 
 import { expect } from '@playwright/test';
 
+function objectContains(actual, expected) {
+  if (actual === expected) return true;
+  if (actual == null || expected == null) return false;
+  if (typeof expected !== 'object') return actual === expected;
+
+  for (const key of Object.keys(expected)) {
+    if (!objectContains(actual[key], expected[key])) {
+      return false;
+    }
+  }
+  return true;
+}
+
 async function getRequestState(page, requestId) {
   return page.evaluate((reqId) => {
     const lowdefy = window.lowdefy;
@@ -30,7 +43,7 @@ async function getRequestResponse(page, { requestId }) {
   return state?.response;
 }
 
-async function expectRequest(page, { requestId, loading, response, timeout = 30000 }) {
+async function expectRequest(page, { requestId, loading, response, payload, timeout = 30000 }) {
   await expect
     .poll(
       async () => {
@@ -44,6 +57,11 @@ async function expectRequest(page, { requestId, loading, response, timeout = 300
         if (response !== undefined) {
           const matches = JSON.stringify(state.response) === JSON.stringify(response);
           if (!matches) return { response: state.response };
+        }
+
+        if (payload !== undefined) {
+          const payloadMatches = objectContains(state.payload, payload);
+          if (!payloadMatches) return { payload: state.payload };
         }
 
         return true;
