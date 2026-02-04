@@ -88,15 +88,17 @@ class ConfigWarning {
       return;
     }
 
-    // Resolve location based on available info
+    // Resolve location based on available info, falling through if a method returns null
     let location = null;
     const configDir = configDirectory ?? context?.directories?.config;
 
     if (configKey && context?.keyMap) {
       location = ConfigMessage.resolveLocation({ configKey, context });
-    } else if (operatorLocation && context?.refMap) {
+    }
+    if (!location && operatorLocation && context?.refMap) {
       location = ConfigMessage.resolveOperatorLocation({ operatorLocation, context });
-    } else if (filePath) {
+    }
+    if (!location && filePath) {
       location = ConfigMessage.resolveRawLocation({
         filePath,
         lineNumber,

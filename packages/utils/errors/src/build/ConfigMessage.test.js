@@ -183,12 +183,12 @@ describe('ConfigMessage.resolveOperatorLocation', () => {
     expect(result.link).toBe('/app/pages/home.yaml:25');
   });
 
-  test('defaults to lowdefy.yaml when ref not found', () => {
+  test('returns null when ref not found in refMap', () => {
     const result = ConfigMessage.resolveOperatorLocation({
       operatorLocation: { ref: 'notfound', line: 10 },
       context: { refMap },
     });
-    expect(result.source).toBe('lowdefy.yaml:10');
+    expect(result).toBeNull();
   });
 
   test('handles missing line number', () => {
