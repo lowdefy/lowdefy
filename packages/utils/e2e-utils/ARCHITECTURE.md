@@ -187,10 +187,11 @@ ldf = {
   goto(path)              // navigates and waits for Lowdefy to initialize
   waitForPage(path)       // waits for navigation to a different page
 
-  // Mutations
-  set: {
+  // Actions
+  do: {
     blocks[blockId]       // → Proxy (mode: 'set')
-      .value('John')           → helper.set.value(page, blockId, 'John')
+      .fill('John')            → helper.set.fill(page, blockId, 'John')
+      .select('Option')        → helper.set.select(page, blockId, 'Option')
       .click()                 → helper.set.click(page, blockId)
       .clear()                 → helper.set.clear(page, blockId)
     state({ key, value }) // sets Lowdefy state directly via window.lowdefy
@@ -228,36 +229,36 @@ ldf = {
 ### 3.2 The Proxy Chain (What Happens When You Call a Block Method)
 
 ```javascript
-await ldf.set.blocks['name_input'].value('John');
+await ldf.do.blocks['name_input'].fill('John');
 ```
 
 Step by step:
 
 ```
-1. ldf.set
+1. ldf.do
    → Returns the "set" object from createPageManager
 
-2. ldf.set.blocks
+2. ldf.do.blocks
    → Getter triggers ensurePageLoaded() check
    → Returns createBlockProxy({ page, blockMap, helperRegistry, mode: 'set' })
 
-3. ldf.set.blocks['name_input']
+3. ldf.do.blocks['name_input']
    → Outer Proxy trap fires
    → Looks up blockMap['name_input']
    → Finds: { type: 'TextInput', helper: '@lowdefy/blocks-antd/e2e/TextInput' }
    → Returns inner Proxy for method calls
 
-4. ldf.set.blocks['name_input'].value
+4. ldf.do.blocks['name_input'].fill
    → Inner Proxy trap fires
    → Returns an async function (not executed yet)
 
-5. ldf.set.blocks['name_input'].value('John')
+5. ldf.do.blocks['name_input'].fill('John')
    → The async function executes:
      a. helperRegistry.get('@lowdefy/blocks-antd/e2e/TextInput')
         → First call: import('@lowdefy/blocks-antd/e2e/TextInput')
         → Subsequent calls: returns from cache
-     b. Looks up helper.set.value (sub-object: helper[mode][methodName])
-     c. Calls helper.set.value(page, 'name_input', 'John')
+     b. Looks up helper.set.fill (sub-object: helper[mode][methodName])
+     c. Calls helper.set.fill(page, 'name_input', 'John')
         → Playwright fills the input element
 ```
 
@@ -272,7 +273,7 @@ Block helpers are created using the `createBlockHelper` factory, which auto-prov
 | Common | `visible`, `hidden` | Factory (from locator) | Yes |
 | Common overridable | `disabled`, `enabled` | Factory default, block can override | Yes |
 | Universal | `validationError`, `validationWarning`, `validationSuccess` | Factory (from `core/validation.js`) | No |
-| Block-specific | `value`, `click`, `clear`, `loading`, `text`, etc. | Block `e2e.js` | Varies |
+| Block-specific | `fill`, `select`, `click`, `clear`, `loading`, `text`, etc. | Block `e2e.js` | Varies |
 
 The factory merges these layers in order: common defaults → validation → block overrides. Block overrides spread last, so a block like Selector can replace the default `disabled` implementation.
 
@@ -304,7 +305,9 @@ The factory returns an object with sub-objects for `set` and `expect`:
 {
   locator,        // (page, blockId) → Playwright Locator
   set: {
-    value,        // (page, blockId, val) → Promise
+    fill,         // (page, blockId, val) → Promise  [text inputs]
+    select,       // (page, blockId, val) → Promise  [selectors]
+    click,        // (page, blockId) → Promise        [buttons]
     clear,        // (page, blockId) → Promise
   },
   expect: {
@@ -323,7 +326,7 @@ The proxy looks up methods by mode: `helper[mode][methodName]`. This replaces th
 All methods receive `(page, blockId, ...args)`:
 - `page` — the Playwright Page object
 - `blockId` — the Lowdefy block ID
-- `...args` — values passed directly (e.g., `'John'` from `.value('John')`)
+- `...args` — values passed directly (e.g., `'John'` from `.fill('John')`)
 
 ### 3.4 State and Validation Access
 
@@ -374,7 +377,7 @@ const locator = (page, blockId) => page.locator(`#${blockId}_my-element`);
 export default createBlockHelper({
   locator,
   set: {
-    value: (page, blockId, val) => locator(page, blockId).fill(val),
+    fill: (page, blockId, val) => locator(page, blockId).fill(val),
     clear: (page, blockId) => locator(page, blockId).clear(),
   },
   expect: {

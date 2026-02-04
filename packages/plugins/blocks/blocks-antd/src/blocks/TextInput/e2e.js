@@ -22,7 +22,7 @@ const locator = (page, blockId) => page.locator(`#${blockId}_input`);
 export default createBlockHelper({
   locator,
   set: {
-    value: (page, blockId, val) => locator(page, blockId).fill(val),
+    fill: (page, blockId, val) => locator(page, blockId).fill(val),
     clear: (page, blockId) => locator(page, blockId).clear(),
     enterPressed: (page, blockId) => locator(page, blockId).press('Enter'),
   },

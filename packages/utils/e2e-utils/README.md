@@ -41,24 +41,26 @@ test('homepage loads', async ({ page, ldf }) => {
 });
 ```
 
-### Block Interactions (`ldf.set.blocks`)
+### Block Interactions (`ldf.do.blocks`)
 
-Set block values using a uniform API - `.value()` works for any block type:
+Interact with blocks using Playwright-style action verbs:
 
 ```javascript
 test('submit form', async ({ ldf }) => {
   await ldf.goto('/contact');
 
-  // .value() works for TextInput, Selector, DateSelector, etc.
-  await ldf.set.blocks['name_input'].value('John Doe');
-  await ldf.set.blocks['email_input'].value('john@example.com');
-  await ldf.set.blocks['category'].value('Support');
+  // Text inputs use .fill()
+  await ldf.do.blocks['name_input'].fill('John Doe');
+  await ldf.do.blocks['email_input'].fill('john@example.com');
 
-  // Button uses .click()
-  await ldf.set.blocks['submit_btn'].click();
+  // Selectors use .select()
+  await ldf.do.blocks['category'].select('Support');
+
+  // Buttons use .click()
+  await ldf.do.blocks['submit_btn'].click();
 
   // Clear an input
-  await ldf.set.blocks['name_input'].clear();
+  await ldf.do.blocks['name_input'].clear();
 });
 ```
 
@@ -70,7 +72,7 @@ Common assertions like `visible`, `hidden`, `disabled`, `enabled` are auto-provi
 test('validates required fields', async ({ ldf }) => {
   await ldf.goto('/contact');
 
-  await ldf.set.blocks['submit_btn'].click();
+  await ldf.do.blocks['submit_btn'].click();
 
   // Common assertions - available on every block
   await ldf.expect.blocks['name_input'].visible();
@@ -103,14 +105,14 @@ await ldf.expect.request({ requestId: 'send_message', loading: false });
 await ldf.expect.request({ requestId: 'send_message', response: { success: true } });
 ```
 
-### Mutations (`ldf.set`)
+### Mutations (`ldf.do`)
 
 ```javascript
 // Set state directly (useful for test setup)
-await ldf.set.state({ key: 'form.mode', value: 'edit' });
+await ldf.do.state({ key: 'form.mode', value: 'edit' });
 
 // Set URL query params
-await ldf.set.urlQuery({ key: 'filter', value: 'active' });
+await ldf.do.urlQuery({ key: 'filter', value: 'active' });
 ```
 
 ### Read Operations (`ldf.get`)
@@ -131,12 +133,12 @@ test('create ticket workflow', async ({ page, ldf }) => {
   await ldf.goto('/tickets/new');
 
   // Fill form
-  await ldf.set.blocks['title_input'].value('Bug report');
-  await ldf.set.blocks['description_input'].value('Login button not working');
-  await ldf.set.blocks['priority_selector'].value('High');
+  await ldf.do.blocks['title_input'].fill('Bug report');
+  await ldf.do.blocks['description_input'].fill('Login button not working');
+  await ldf.do.blocks['priority_selector'].select('High');
 
   // Submit
-  await ldf.set.blocks['submit_btn'].click();
+  await ldf.do.blocks['submit_btn'].click();
 
   // Verify
   await ldf.expect.request({ requestId: 'create_ticket', loading: false });
@@ -174,7 +176,7 @@ const locator = (page, blockId) => page.locator(`#${blockId}_input`);
 export default createBlockHelper({
   locator,
   set: {
-    value: (page, blockId, val) => locator(page, blockId).fill(val),
+    fill: (page, blockId, val) => locator(page, blockId).fill(val),
     clear: (page, blockId) => locator(page, blockId).clear(),
   },
   expect: {

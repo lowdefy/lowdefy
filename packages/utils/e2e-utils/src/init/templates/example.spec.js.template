@@ -12,10 +12,10 @@ test('homepage loads', async ({ page, ldf }) => {
 // test('submit contact form', async ({ ldf }) => {
 //   await ldf.goto('/contact');
 //
-//   await ldf.set.blocks['name_input'].value('John Doe');
-//   await ldf.set.blocks['email_input'].value('john@example.com');
-//   await ldf.set.blocks['category'].value('Support');
-//   await ldf.set.blocks['submit_btn'].click();
+//   await ldf.do.blocks['name_input'].fill('John Doe');
+//   await ldf.do.blocks['email_input'].fill('john@example.com');
+//   await ldf.do.blocks['category'].select('Support');
+//   await ldf.do.blocks['submit_btn'].click();
 //
 //   await ldf.expect.state({ key: 'form_submitted', value: true });
 // });
@@ -24,7 +24,7 @@ test('homepage loads', async ({ page, ldf }) => {
 //
 // test('validates required fields', async ({ ldf }) => {
 //   await ldf.goto('/contact');
-//   await ldf.set.blocks['submit_btn'].click();
+//   await ldf.do.blocks['submit_btn'].click();
 //
 //   await ldf.expect.blocks['name_input'].validationError();
 //   await ldf.expect.blocks['email_input'].validationError({ message: 'Required' });

@@ -58,8 +58,8 @@ function createPageManager({ page, manifest, helperRegistry }) {
       return currentPageId;
     },
 
-    // Mutations (ldf.set.*)
-    set: {
+    // Actions (ldf.do.*)
+    do: {
       get blocks() {
         ensurePageLoaded();
         return createBlockProxy({
