@@ -16,6 +16,7 @@
 
 function createMockManager({ page }) {
   const activeMocks = new Map();
+  const capturedRequests = new Map();
 
   async function mockRequest(requestId, { response, error }) {
     const key = `request:${requestId}`;
@@ -26,6 +27,22 @@ function createMockManager({ page }) {
 
     const pattern = `**/api/request/*/${requestId}`;
     const handler = async (route) => {
+      // Capture the request body for assertions
+      const postData = route.request().postData();
+      let payload = null;
+      if (postData) {
+        try {
+          const parsed = JSON.parse(postData);
+          payload = parsed.payload;
+        } catch {
+          payload = postData;
+        }
+      }
+      capturedRequests.set(requestId, {
+        payload,
+        timestamp: Date.now(),
+      });
+
       if (error) {
         await route.fulfill({
           status: 500,
@@ -95,11 +112,21 @@ function createMockManager({ page }) {
     activeMocks.clear();
   }
 
+  function getCapturedRequest(requestId) {
+    return capturedRequests.get(requestId) ?? null;
+  }
+
+  function clearCapturedRequests() {
+    capturedRequests.clear();
+  }
+
   return {
     mockRequest,
     mockApi,
     applyStaticMocks,
     cleanup,
+    getCapturedRequest,
+    clearCapturedRequests,
   };
 }
 

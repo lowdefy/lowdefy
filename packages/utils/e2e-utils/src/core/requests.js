@@ -43,7 +43,7 @@ async function getRequestResponse(page, { requestId }) {
   return state?.response;
 }
 
-async function expectRequest(page, { requestId, loading, response, payload, timeout = 30000 }) {
+async function expectRequest(page, { requestId, loading, response, payload, timeout = 30000 }, mockManager) {
   await expect
     .poll(
       async () => {
@@ -59,9 +59,14 @@ async function expectRequest(page, { requestId, loading, response, payload, time
           if (!matches) return { response: state.response };
         }
 
+        // For payload assertions, use captured HTTP request body from mock manager
         if (payload !== undefined) {
-          const payloadMatches = objectContains(state.payload, payload);
-          if (!payloadMatches) return { payload: state.payload };
+          const captured = mockManager?.getCapturedRequest(requestId);
+          if (!captured) {
+            return { error: 'No captured request - ensure request is mocked to capture payload' };
+          }
+          const payloadMatches = objectContains(captured.payload, payload);
+          if (!payloadMatches) return { payload: captured.payload };
         }
 
         return true;

@@ -34,6 +34,8 @@ function createBlockProxy({ page, blockMap, helperRegistry, mode = 'set' }) {
           {
             get(_, methodName) {
               if (typeof methodName !== 'string') return undefined;
+              // Prevent Promise unwrapping - proxy is not a thenable
+              if (methodName === 'then') return undefined;
 
               return async (...args) => {
                 const helper = await helperRegistry.get(blockInfo.helper);

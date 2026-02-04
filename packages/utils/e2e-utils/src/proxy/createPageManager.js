@@ -79,7 +79,7 @@ function createPageManager({ page, manifest, helperRegistry, mockManager }) {
       state: (params) => expectState(page, params),
       url: (params) => expectUrl(page, params),
       urlQuery: (params) => expectUrlQuery(page, params),
-      request: (params) => expectRequest(page, params),
+      request: (params) => expectRequest(page, params, mockManager),
 
       // Block-level assertions
       get blocks() {
@@ -108,6 +108,8 @@ function createPageManager({ page, manifest, helperRegistry, mockManager }) {
     mock: {
       request: (requestId, options) => mockManager?.mockRequest(requestId, options),
       api: (apiId, options) => mockManager?.mockApi(apiId, options),
+      getCapturedRequest: (requestId) => mockManager?.getCapturedRequest(requestId),
+      clearCapturedRequests: () => mockManager?.clearCapturedRequests(),
     },
   };
 }
