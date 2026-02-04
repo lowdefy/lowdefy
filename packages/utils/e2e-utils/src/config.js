@@ -28,14 +28,15 @@ function createConfig({
   timeout = 180000, // 3 minutes for cold production builds
 } = {}) {
   const cliCommand = 'npx lowdefy';
-  // Resolve absolute path for build directory
-  const absoluteBuildDir = path.resolve(appDir, buildDir);
+  // Resolve absolute paths for all directories
+  const absoluteAppDir = path.resolve(appDir);
+  const absoluteBuildDir = path.resolve(absoluteAppDir, buildDir);
 
   // Set environment for fixtures to find build artifacts
   process.env.LOWDEFY_BUILD_DIR = absoluteBuildDir;
 
   // Set environment for mocks file if it exists
-  const absoluteMocksFile = path.resolve(appDir, mocksFile);
+  const absoluteMocksFile = path.resolve(absoluteAppDir, mocksFile);
   if (fs.existsSync(absoluteMocksFile)) {
     process.env.LOWDEFY_E2E_MOCKS_FILE = absoluteMocksFile;
   }
@@ -62,7 +63,7 @@ function createConfig({
       url: `http://localhost:${port}`,
       reuseExistingServer: true,
       timeout,
-      cwd: appDir,
+      cwd: absoluteAppDir,
     },
   });
 }
