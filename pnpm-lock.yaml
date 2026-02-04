@@ -1911,6 +1911,9 @@ importers:
       '@lowdefy/blocks-basic':
         specifier: 4.5.2
         version: link:../../plugins/blocks/blocks-basic
+      '@lowdefy/blocks-demo':
+        specifier: workspace:*
+        version: link:../../../plugins/blocks-demo
       '@lowdefy/blocks-loaders':
         specifier: 4.5.2
         version: link:../../plugins/blocks/blocks-loaders
@@ -2029,6 +2032,9 @@ importers:
       '@lowdefy/blocks-color-selectors':
         specifier: 4.5.2
         version: link:../../plugins/blocks/blocks-color-selectors
+      '@lowdefy/blocks-demo':
+        specifier: workspace:*
+        version: link:../../../plugins/blocks-demo
       '@lowdefy/blocks-echarts':
         specifier: 4.5.2
         version: link:../../plugins/blocks/blocks-echarts
@@ -2451,6 +2457,37 @@ importers:
       '@swc/core':
         specifier: 1.3.99
         version: 1.3.99(@swc/helpers@0.5.2)
+
+  plugins/blocks-demo:
+    dependencies:
+      '@lowdefy/block-utils':
+        specifier: 4.5.2
+        version: link:../../packages/utils/block-utils
+      '@lowdefy/helpers':
+        specifier: 4.5.2
+        version: link:../../packages/utils/helpers
+      react:
+        specifier: 18.2.0
+        version: 18.2.0
+    devDependencies:
+      '@swc/cli':
+        specifier: 0.1.63
+        version: 0.1.63(@swc/core@1.3.99(@swc/helpers@0.5.2))(chokidar@3.5.3)
+      '@swc/core':
+        specifier: 1.3.99
+        version: 1.3.99(@swc/helpers@0.5.2)
+      '@swc/jest':
+        specifier: 0.2.29
+        version: 0.2.29(@swc/core@1.3.99(@swc/helpers@0.5.2))
+      copyfiles:
+        specifier: 2.4.1
+        version: 2.4.1
+      jest:
+        specifier: 28.1.3
+        version: 28.1.3(@types/node@20.6.2)
+      jest-environment-jsdom:
+        specifier: 28.1.3
+        version: 28.1.3
 
 packages:
 
@@ -8322,10 +8359,6 @@ packages:
 
   punycode@1.3.2:
     resolution: {integrity: sha512-RofWgt/7fL5wP1Y7fxE7/EmTLzQVnB0ycyibJ0OOHIlJqTNzglYFxVwETOcIoJqJmpDXJ9xImDv+Fq34F/d4Dw==}
-
-  punycode@2.1.1:
-    resolution: {integrity: sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==}
-    engines: {node: '>=6'}
 
   punycode@2.3.0:
     resolution: {integrity: sha512-rRV+zQD8tVFys26lAGR9WUuS4iUAngJScM+ZRSKtvl5tKeZ2t5bvdNFdNHBW9FWR4guGHlgmsZ1G7BSm2wTbuA==}
@@ -17742,8 +17775,6 @@ snapshots:
 
   punycode@1.3.2: {}
 
-  punycode@2.1.1: {}
-
   punycode@2.3.0: {}
 
   qs@6.11.2:
@@ -19340,7 +19371,7 @@ snapshots:
 
   uri-js@4.4.1:
     dependencies:
-      punycode: 2.1.1
+      punycode: 2.3.0
 
   url-join@4.0.1: {}
 

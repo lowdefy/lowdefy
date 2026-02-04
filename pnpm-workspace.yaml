@@ -4,3 +4,4 @@ packages:
   - packages/servers/*
   - packages/utils/*
   - packages/ides/*
+  - plugins/*
