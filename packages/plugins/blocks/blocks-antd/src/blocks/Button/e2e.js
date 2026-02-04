@@ -14,43 +14,22 @@
   limitations under the License.
 */
 
+import { createBlockHelper } from '@lowdefy/e2e-utils';
 import { expect } from '@playwright/test';
 
-function locator(page, blockId) {
-  return page.locator(`#bl-${blockId} .ant-btn`);
-}
+const locator = (page, blockId) => page.locator(`#bl-${blockId} .ant-btn`);
 
-async function click(page, blockId) {
-  await locator(page, blockId).click();
-}
-
-// Assertions (flat)
-function isVisible(page, blockId) {
-  return expect(locator(page, blockId)).toBeVisible();
-}
-
-function hasText(page, blockId, text) {
-  return expect(locator(page, blockId)).toHaveText(text);
-}
-
-function isDisabled(page, blockId) {
-  return expect(locator(page, blockId)).toBeDisabled();
-}
-
-function isLoading(page, blockId) {
-  return expect(locator(page, blockId)).toHaveClass(/ant-btn-loading/);
-}
-
-function hasType(page, blockId, type) {
-  return expect(locator(page, blockId)).toHaveClass(new RegExp(`ant-btn-${type}`));
-}
-
-export default {
+export default createBlockHelper({
   locator,
-  click,
-  isVisible,
-  hasText,
-  isDisabled,
-  isLoading,
-  hasType,
-};
+  set: {
+    click: (page, blockId) => locator(page, blockId).click(),
+  },
+  expect: {
+    loading: (page, blockId) => expect(locator(page, blockId)).toHaveClass(/ant-btn-loading/),
+    notLoading: (page, blockId) =>
+      expect(locator(page, blockId)).not.toHaveClass(/ant-btn-loading/),
+    text: (page, blockId, text) => expect(locator(page, blockId)).toHaveText(text),
+    type: (page, blockId, type) =>
+      expect(locator(page, blockId)).toHaveClass(new RegExp(`ant-btn-${type}`)),
+  },
+});

@@ -17,20 +17,37 @@
 // Core helpers
 import { getBlock } from './core/locators.js';
 import { goto, waitForReady, expectNavigation, waitForPage } from './core/navigation.js';
-import { waitForRequest, getRequestResponse } from './core/requests.js';
-import { getState, getBlockState, expectState } from './core/state.js';
+import { getRequestState, getRequestResponse, expectRequest } from './core/requests.js';
+import { getState, getBlockState, setState, expectState } from './core/state.js';
+import {
+  getValidation,
+  expectValidationStatus,
+  expectValidationError,
+  expectValidationWarning,
+  expectValidationSuccess,
+} from './core/validation.js';
+import { expectUrl, expectUrlQuery, setUrlQuery } from './core/url.js';
 
 export { getBlock };
 export { goto, waitForReady, expectNavigation, waitForPage };
-export { waitForRequest, getRequestResponse };
-export { getState, getBlockState, expectState };
+export { getRequestState, getRequestResponse, expectRequest };
+export { getState, getBlockState, setState, expectState };
+export {
+  getValidation,
+  expectValidationStatus,
+  expectValidationError,
+  expectValidationWarning,
+  expectValidationSuccess,
+};
+export { expectUrl, expectUrlQuery, setUrlQuery };
 
 // Test prep utilities
 import { generateManifest, loadManifest } from './testPrep/generateManifest.js';
 export { generateManifest, loadManifest };
 
 // Proxy utilities
+import createBlockHelper from './proxy/createBlockHelper.js';
 import createHelperRegistry from './proxy/createHelperRegistry.js';
 import createBlockProxy from './proxy/createBlockProxy.js';
 import createPageManager from './proxy/createPageManager.js';
-export { createHelperRegistry, createBlockProxy, createPageManager };
+export { createBlockHelper, createHelperRegistry, createBlockProxy, createPageManager };

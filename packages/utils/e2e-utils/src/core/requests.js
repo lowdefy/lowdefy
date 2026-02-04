@@ -14,28 +14,43 @@
   limitations under the License.
 */
 
-async function waitForRequest(page, requestId) {
-  // Wait for request to complete (loading === false)
-  await page.waitForFunction(
-    (reqId) => {
-      const lowdefy = window.lowdefy;
-      if (!lowdefy) return false;
-      const pageId = lowdefy.pageId;
-      const requests = lowdefy.contexts?.[`page:${pageId}`]?.requests?.[reqId];
-      return requests && requests.length > 0 && requests[0].loading === false;
-    },
-    requestId,
-    { timeout: 30000 }
-  );
-}
+import { expect } from '@playwright/test';
 
-async function getRequestResponse(page, requestId) {
+async function getRequestState(page, requestId) {
   return page.evaluate((reqId) => {
     const lowdefy = window.lowdefy;
     const pageId = lowdefy?.pageId;
     const requests = lowdefy?.contexts?.[`page:${pageId}`]?.requests?.[reqId];
-    return requests?.[0]?.response;
+    return requests?.[0];
   }, requestId);
 }
 
-export { waitForRequest, getRequestResponse };
+async function getRequestResponse(page, { requestId }) {
+  const state = await getRequestState(page, requestId);
+  return state?.response;
+}
+
+async function expectRequest(page, { requestId, loading, response, timeout = 30000 }) {
+  await expect
+    .poll(
+      async () => {
+        const state = await getRequestState(page, requestId);
+        if (!state) return { error: 'Request not found' };
+
+        if (loading !== undefined && state.loading !== loading) {
+          return { loading: state.loading };
+        }
+
+        if (response !== undefined) {
+          const matches = JSON.stringify(state.response) === JSON.stringify(response);
+          if (!matches) return { response: state.response };
+        }
+
+        return true;
+      },
+      { timeout }
+    )
+    .toBe(true);
+}
+
+export { getRequestState, getRequestResponse, expectRequest };

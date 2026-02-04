@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-function createBlockProxy({ page, blockMap, helperRegistry }) {
+function createBlockProxy({ page, blockMap, helperRegistry, mode = 'set' }) {
   return new Proxy(
     {},
     {
@@ -29,7 +29,6 @@ function createBlockProxy({ page, blockMap, helperRegistry }) {
           );
         }
 
-        // Return a proxy that routes method calls to the helper
         return new Proxy(
           {},
           {
@@ -44,16 +43,24 @@ function createBlockProxy({ page, blockMap, helperRegistry }) {
                       `Add e2e.js to: ${blockInfo.helper.replace('/e2e/', '/src/blocks/')}/e2e.js`
                   );
                 }
-                if (typeof helper[methodName] !== 'function') {
-                  const available = Object.keys(helper)
-                    .filter((k) => typeof helper[k] === 'function')
+
+                const methods = helper[mode];
+                if (!methods) {
+                  throw new Error(`Block type "${blockInfo.type}" has no ${mode} methods defined.`);
+                }
+
+                const method = methods[methodName];
+                if (typeof method !== 'function') {
+                  const available = Object.keys(methods)
+                    .filter((k) => typeof methods[k] === 'function')
                     .join(', ');
                   throw new Error(
-                    `Block type "${blockInfo.type}" has no method "${methodName}".\n` +
-                      `Available methods: ${available || '(none)'}`
+                    `Block type "${blockInfo.type}" has no ${mode} method "${methodName}".\n` +
+                      `Available ${mode} methods: ${available || '(none)'}`
                   );
                 }
-                return helper[methodName](page, blockId, ...args);
+
+                return method(page, blockId, ...args);
               };
             },
           }

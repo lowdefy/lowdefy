@@ -14,48 +14,21 @@
   limitations under the License.
 */
 
+import { createBlockHelper } from '@lowdefy/e2e-utils';
 import { expect } from '@playwright/test';
 
-function locator(page, blockId) {
-  return page.locator(`#${blockId}_input`);
-}
+const locator = (page, blockId) => page.locator(`#${blockId}_input`);
 
-async function fill(page, blockId, value) {
-  await locator(page, blockId).fill(value);
-}
-
-async function clear(page, blockId) {
-  await locator(page, blockId).clear();
-}
-
-async function pressEnter(page, blockId) {
-  await locator(page, blockId).press('Enter');
-}
-
-// Assertions (flat)
-function isVisible(page, blockId) {
-  return expect(locator(page, blockId)).toBeVisible();
-}
-
-function hasValue(page, blockId, value) {
-  return expect(locator(page, blockId)).toHaveValue(value);
-}
-
-function isDisabled(page, blockId) {
-  return expect(locator(page, blockId)).toBeDisabled();
-}
-
-function hasPlaceholder(page, blockId, text) {
-  return expect(locator(page, blockId)).toHaveAttribute('placeholder', text);
-}
-
-export default {
+export default createBlockHelper({
   locator,
-  fill,
-  clear,
-  pressEnter,
-  isVisible,
-  hasValue,
-  isDisabled,
-  hasPlaceholder,
-};
+  set: {
+    value: (page, blockId, val) => locator(page, blockId).fill(val),
+    clear: (page, blockId) => locator(page, blockId).clear(),
+    enterPressed: (page, blockId) => locator(page, blockId).press('Enter'),
+  },
+  expect: {
+    value: (page, blockId, val) => expect(locator(page, blockId)).toHaveValue(val),
+    placeholder: (page, blockId, text) =>
+      expect(locator(page, blockId)).toHaveAttribute('placeholder', text),
+  },
+});

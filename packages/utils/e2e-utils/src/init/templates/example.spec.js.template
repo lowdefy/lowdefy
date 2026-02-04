@@ -7,20 +7,25 @@ test('homepage loads', async ({ page, ldf }) => {
   await expect(page).toHaveTitle(/./);
 });
 
-// Example: Testing a form submission
-// Uncomment and modify for your app:
+// Example: Testing a form
 //
 // test('submit contact form', async ({ ldf }) => {
 //   await ldf.goto('/contact');
 //
-//   // Use polymorphic block API - automatically uses correct helper based on block type
-//   await ldf.blocks.name_input.fill('John Doe');
-//   await ldf.blocks.email_input.fill('john@example.com');
-//   await ldf.blocks.category.select('Support');
+//   await ldf.set.blocks['name_input'].value('John Doe');
+//   await ldf.set.blocks['email_input'].value('john@example.com');
+//   await ldf.set.blocks['category'].value('Support');
+//   await ldf.set.blocks['submit_btn'].click();
 //
-//   // Click submit button
-//   await ldf.blocks.submit_btn.click();
+//   await ldf.expect.state({ key: 'form_submitted', value: true });
+// });
 //
-//   // Verify state was updated
-//   await ldf.expectState('form_submitted', true);
+// Example: Testing validation
+//
+// test('validates required fields', async ({ ldf }) => {
+//   await ldf.goto('/contact');
+//   await ldf.set.blocks['submit_btn'].click();
+//
+//   await ldf.expect.blocks['name_input'].validationError();
+//   await ldf.expect.blocks['email_input'].validationError({ message: 'Required' });
 // });

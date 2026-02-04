@@ -15,8 +15,11 @@
 */
 
 import { getBlock } from '../core/locators.js';
-import { waitForReady } from '../core/navigation.js';
-import { getState, getBlockState, expectState } from '../core/state.js';
+import { waitForReady, waitForPage } from '../core/navigation.js';
+import { getState, getBlockState, setState, expectState } from '../core/state.js';
+import { getRequestResponse, expectRequest } from '../core/requests.js';
+import { getValidation } from '../core/validation.js';
+import { expectUrl, expectUrlQuery, setUrlQuery } from '../core/url.js';
 
 import createBlockProxy from './createBlockProxy.js';
 
@@ -24,7 +27,14 @@ function createPageManager({ page, manifest, helperRegistry }) {
   let currentBlockMap = null;
   let currentPageId = null;
 
+  function ensurePageLoaded() {
+    if (!currentBlockMap) {
+      throw new Error('Call goto() before accessing blocks');
+    }
+  }
+
   return {
+    // Navigation (control flow)
     async goto(path) {
       await page.goto(path);
       await waitForReady(page);
@@ -38,22 +48,61 @@ function createPageManager({ page, manifest, helperRegistry }) {
       }
     },
 
-    get blocks() {
-      if (!currentBlockMap) {
-        throw new Error('Call goto() before accessing blocks');
-      }
-      return createBlockProxy({ page, blockMap: currentBlockMap, helperRegistry });
+    async waitForPage(path) {
+      await waitForPage(page, path);
+      currentPageId = await page.evaluate(() => window.lowdefy?.pageId);
+      currentBlockMap = manifest.pages[currentPageId];
     },
 
     get pageId() {
       return currentPageId;
     },
 
-    // Core helpers
+    // Mutations (ldf.set.*)
+    set: {
+      get blocks() {
+        ensurePageLoaded();
+        return createBlockProxy({
+          page,
+          blockMap: currentBlockMap,
+          helperRegistry,
+          mode: 'set',
+        });
+      },
+      state: (params) => setState(page, params),
+      urlQuery: (params) => setUrlQuery(page, params),
+    },
+
+    // Assertions (ldf.expect.*)
+    expect: {
+      // Page-level assertions
+      state: (params) => expectState(page, params),
+      url: (params) => expectUrl(page, params),
+      urlQuery: (params) => expectUrlQuery(page, params),
+      request: (params) => expectRequest(page, params),
+
+      // Block-level assertions
+      get blocks() {
+        ensurePageLoaded();
+        return createBlockProxy({
+          page,
+          blockMap: currentBlockMap,
+          helperRegistry,
+          mode: 'expect',
+        });
+      },
+    },
+
+    // Read operations (ldf.get.*)
+    get: {
+      state: () => getState(page),
+      blockState: (params) => getBlockState(page, params),
+      validation: (params) => getValidation(page, params.blockId),
+      requestResponse: (params) => getRequestResponse(page, params),
+    },
+
+    // Direct block locator access (for custom assertions)
     block: (blockId) => getBlock(page, blockId),
-    getState: () => getState(page),
-    getBlockState: (blockId) => getBlockState(page, blockId),
-    expectState: (key, value, opts) => expectState(page, key, value, opts),
   };
 }
 

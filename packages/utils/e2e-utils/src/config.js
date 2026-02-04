@@ -15,10 +15,7 @@
 */
 
 import path from 'path';
-import { fileURLToPath } from 'url';
 import { defineConfig, devices } from '@playwright/test';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function createConfig({
   appDir = './',

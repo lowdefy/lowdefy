@@ -24,12 +24,26 @@ async function getState(page) {
   });
 }
 
-async function getBlockState(page, blockId) {
+async function getBlockState(page, { blockId }) {
   const state = await getState(page);
   return state?.[blockId];
 }
 
-async function expectState(page, key, value, { timeout = 5000 } = {}) {
+async function setState(page, { key, value }) {
+  await page.evaluate(
+    ({ k, v }) => {
+      const lowdefy = window.lowdefy;
+      const pageId = lowdefy?.pageId;
+      const context = lowdefy?.contexts?.[`page:${pageId}`];
+      if (context?.methods?.setState) {
+        context.methods.setState({ [k]: v });
+      }
+    },
+    { k: key, v: value }
+  );
+}
+
+async function expectState(page, { key, value, timeout = 5000 }) {
   await expect
     .poll(
       async () => {
@@ -41,4 +55,4 @@ async function expectState(page, key, value, { timeout = 5000 } = {}) {
     .toEqual(value);
 }
 
-export { getState, getBlockState, expectState };
+export { getState, getBlockState, setState, expectState };

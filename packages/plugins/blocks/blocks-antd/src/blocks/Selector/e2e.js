@@ -14,59 +14,35 @@
   limitations under the License.
 */
 
+import { createBlockHelper } from '@lowdefy/e2e-utils';
 import { expect } from '@playwright/test';
 
-function locator(page, blockId) {
-  return page.locator(`.ant-select:has(#${blockId}_input)`);
-}
+const locator = (page, blockId) => page.locator(`.ant-select:has(#${blockId}_input)`);
 
-function optionLocator(page, blockId, index) {
-  return page.locator(`#${blockId}_${index}`);
-}
-
-async function select(page, blockId, value) {
-  await locator(page, blockId).click();
-  await page.locator(`.ant-select-item-option-content:has-text("${value}")`).click();
-}
-
-async function clear(page, blockId) {
-  const selector = locator(page, blockId);
-  await selector.hover();
-  await selector.locator('.ant-select-clear').click();
-}
-
-async function search(page, blockId, text) {
-  await locator(page, blockId).click();
-  await page.keyboard.type(text);
-}
-
-// Assertions (flat)
-function isVisible(page, blockId) {
-  return expect(locator(page, blockId)).toBeVisible();
-}
-
-function hasValue(page, blockId, value) {
-  return expect(locator(page, blockId).locator('.ant-select-selection-item')).toHaveText(value);
-}
-
-function isDisabled(page, blockId) {
-  return expect(locator(page, blockId)).toHaveClass(/ant-select-disabled/);
-}
-
-function hasPlaceholder(page, blockId, text) {
-  return expect(locator(page, blockId).locator('.ant-select-selection-placeholder')).toHaveText(
-    text
-  );
-}
-
-export default {
+export default createBlockHelper({
   locator,
-  optionLocator,
-  select,
-  clear,
-  search,
-  isVisible,
-  hasValue,
-  isDisabled,
-  hasPlaceholder,
-};
+  set: {
+    value: async (page, blockId, val) => {
+      await locator(page, blockId).click();
+      await page.locator(`.ant-select-item-option-content:has-text("${val}")`).click();
+    },
+    clear: async (page, blockId) => {
+      const sel = locator(page, blockId);
+      await sel.hover();
+      await sel.locator('.ant-select-clear').click();
+    },
+    search: async (page, blockId, text) => {
+      await locator(page, blockId).click();
+      await page.keyboard.type(text);
+    },
+  },
+  expect: {
+    disabled: (page, blockId) => expect(locator(page, blockId)).toHaveClass(/ant-select-disabled/),
+    enabled: (page, blockId) =>
+      expect(locator(page, blockId)).not.toHaveClass(/ant-select-disabled/),
+    value: (page, blockId, val) =>
+      expect(locator(page, blockId).locator('.ant-select-selection-item')).toHaveText(val),
+    placeholder: (page, blockId, text) =>
+      expect(locator(page, blockId).locator('.ant-select-selection-placeholder')).toHaveText(text),
+  },
+});
