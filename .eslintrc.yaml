@@ -57,3 +57,9 @@ overrides:
     rules:
       # Disable import/named as eslint-plugin-import can't resolve Playwright's TypeScript exports
       import/named: "off"
+  # Playwright e2e utilities and block helpers
+  - files:
+      - "packages/utils/e2e-utils/src/**/*.js"
+      - "packages/plugins/blocks/*/src/blocks/*/e2e.js"
+    rules:
+      import/named: "off"
