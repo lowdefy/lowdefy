@@ -32,6 +32,7 @@ import json from 'react-syntax-highlighter/dist/cjs/languages/hljs/json.js';
 import yaml from 'react-syntax-highlighter/dist/cjs/languages/hljs/yaml.js';
 import markdown from 'react-syntax-highlighter/dist/cjs/languages/hljs/markdown.js';
 import handlebars from 'react-syntax-highlighter/dist/cjs/languages/hljs/handlebars.js';
+import schema from './schema.js';
 
 SyntaxHighlighter.registerLanguage('handlebars', handlebars.default);
 SyntaxHighlighter.registerLanguage('nunjucks', handlebars.default);
@@ -86,4 +87,5 @@ MarkdownWithCode.meta = {
   styles: [],
 };
 
+MarkdownWithCode.schema = schema;
 export default MarkdownWithCode;

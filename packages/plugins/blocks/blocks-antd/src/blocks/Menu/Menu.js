@@ -18,6 +18,7 @@ import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 import { Menu } from 'antd';
 import { type, get } from '@lowdefy/helpers';
+import schema from './schema.js';
 
 const getDefaultMenu = (menus, menuId = 'default', links) => {
   if (type.isArray(links)) return links;
@@ -269,4 +270,5 @@ MenuComp.meta = {
   styles: ['blocks/Menu/style.less'],
 };
 
+MenuComp.schema = schema;
 export default MenuComp;

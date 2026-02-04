@@ -18,6 +18,7 @@ import React, { useState } from 'react';
 import { Typography } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
+import schema from './schema.js';
 
 const Title = Typography.Title;
 
@@ -143,4 +144,5 @@ TitleInput.meta = {
   styles: ['blocks/TitleInput/style.less'],
 };
 
+TitleInput.schema = schema;
 export default TitleInput;

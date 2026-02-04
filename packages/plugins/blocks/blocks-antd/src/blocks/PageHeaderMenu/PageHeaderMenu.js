@@ -25,6 +25,7 @@ import Header from '../Header/Header.js';
 import Layout from '../Layout/Layout.js';
 import Menu from '../Menu/Menu.js';
 import MobileMenu from '../MobileMenu/MobileMenu.js';
+import schema from './schema.js';
 
 const PageHeaderMenu = ({
   basePath,
@@ -252,4 +253,5 @@ PageHeaderMenu.meta = {
   styles: ['blocks/PageHeaderMenu/style.less'],
 };
 
+PageHeaderMenu.schema = schema;
 export default PageHeaderMenu;

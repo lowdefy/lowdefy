@@ -17,6 +17,7 @@
 import React from 'react';
 import { Result } from 'antd';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import schema from './schema.js';
 
 const ResultBlock = ({ blockId, components: { Icon }, events, content, methods, properties }) => (
   <Result
@@ -42,4 +43,5 @@ ResultBlock.meta = {
   styles: ['blocks/Result/style.less'],
 };
 
+ResultBlock.schema = schema;
 export default ResultBlock;

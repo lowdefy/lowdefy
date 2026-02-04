@@ -17,6 +17,7 @@
 import React from 'react';
 import { type } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-utils';
+import schema from './schema.js';
 
 const Spinner = ({ properties, methods }) => {
   let size = properties.size ?? 20;
@@ -70,4 +71,5 @@ Spinner.meta = {
   styles: ['blocks/Spinner/style.less'],
 };
 
+Spinner.schema = schema;
 export default Spinner;

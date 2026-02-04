@@ -20,6 +20,7 @@ import { blockDefaultProps } from '@lowdefy/block-utils';
 import { type, serializer } from '@lowdefy/helpers';
 
 import Label from '../Label/Label.js';
+import schema from './schema.js';
 
 const SwitchBlock = ({
   blockId,
@@ -109,4 +110,5 @@ SwitchBlock.meta = {
   styles: ['blocks/Switch/style.less'],
 };
 
+SwitchBlock.schema = schema;
 export default SwitchBlock;

@@ -17,6 +17,7 @@
 import React from 'react';
 import * as docsearchReact from '@docsearch/react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
+import schema from './schema.js';
 const { DocSearch } = docsearchReact;
 
 const DocSearchBlock = ({ properties }) => {
@@ -41,4 +42,5 @@ DocSearchBlock.meta = {
   styles: [],
 };
 
+DocSearchBlock.schema = schema;
 export default DocSearchBlock;

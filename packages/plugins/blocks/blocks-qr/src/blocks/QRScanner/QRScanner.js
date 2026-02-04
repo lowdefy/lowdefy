@@ -17,6 +17,7 @@
 import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 import { Html5Qrcode } from 'html5-qrcode';
+import schema from './schema.js';
 
 const codes = {
   QR_CODE: 0,
@@ -100,4 +101,5 @@ QRScanner.meta = {
   styles: [],
 };
 
+QRScanner.schema = schema;
 export default QRScanner;

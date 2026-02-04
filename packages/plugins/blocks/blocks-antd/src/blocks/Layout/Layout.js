@@ -17,6 +17,7 @@
 import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 import { Layout } from 'antd';
+import schema from './schema.js';
 
 const LayoutBlock = ({ blockId, content, properties, methods }) => (
   <Layout id={blockId} className={methods.makeCssClass(properties.style)}>
@@ -31,4 +32,5 @@ LayoutBlock.meta = {
   styles: ['blocks/Layout/style.less'],
 };
 
+LayoutBlock.schema = schema;
 export default LayoutBlock;

@@ -22,6 +22,7 @@ import { blockDefaultProps } from '@lowdefy/block-utils';
 
 import Label from '../Label/Label.js';
 import disabledDate from '../../disabledDate.js';
+import schema from './schema.js';
 
 const DateTimeSelector = ({
   blockId,
@@ -121,4 +122,5 @@ DateTimeSelector.meta = {
   styles: ['blocks/DateTimeSelector/style.less'],
 };
 
+DateTimeSelector.schema = schema;
 export default DateTimeSelector;

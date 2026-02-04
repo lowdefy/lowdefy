@@ -18,6 +18,7 @@ import React, { useState, useEffect } from 'react';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 import { get } from '@lowdefy/helpers';
 import { Modal } from 'antd';
+import schema from './schema.js';
 
 const triggerSetOpen = ({ methods, setOpen, state }) => {
   if (!state) {
@@ -98,4 +99,5 @@ ModalBlock.meta = {
   styles: ['blocks/Modal/style.less'],
 };
 
+ModalBlock.schema = schema;
 export default ModalBlock;

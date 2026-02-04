@@ -19,6 +19,7 @@ import { blockDefaultProps } from '@lowdefy/block-utils';
 import ReactMarkdown from 'react-markdown';
 
 import gfm from 'remark-gfm';
+import schema from './schema.js';
 
 const Markdown = ({ blockId, properties, methods }) => (
   <div id={blockId} className={methods.makeCssClass(properties.style)}>
@@ -39,4 +40,5 @@ Markdown.meta = {
   styles: ['codeblock.less'],
 };
 
+Markdown.schema = schema;
 export default Markdown;

@@ -18,6 +18,7 @@ import React from 'react';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 import { Typography } from 'antd';
+import schema from './schema.js';
 
 const Paragraph = Typography.Paragraph;
 
@@ -112,4 +113,5 @@ ParagraphBlock.meta = {
   styles: ['blocks/Paragraph/style.less'],
 };
 
+ParagraphBlock.schema = schema;
 export default ParagraphBlock;

@@ -21,6 +21,7 @@ import ReactMarkdown from 'react-markdown';
 
 import gfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
+import schema from './schema.js';
 
 class DangerousMarkdown extends React.Component {
   constructor(props) {
@@ -53,4 +54,5 @@ DangerousMarkdown.meta = {
   styles: ['codeblock.less'],
 };
 
+DangerousMarkdown.schema = schema;
 export default DangerousMarkdown;

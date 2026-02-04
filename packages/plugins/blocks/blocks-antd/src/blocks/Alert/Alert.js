@@ -18,6 +18,7 @@ import React from 'react';
 import { Alert } from 'antd';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
+import schema from './schema.js';
 
 const AlertBlock = ({ blockId, content, events, components: { Icon }, methods, properties }) => {
   const additionalProps = {};
@@ -57,4 +58,5 @@ AlertBlock.meta = {
   styles: ['blocks/Alert/style.less'],
 };
 
+AlertBlock.schema = schema;
 export default AlertBlock;

@@ -24,6 +24,7 @@ import classNames from 'classnames';
 import CSSMotion from 'rc-motion';
 
 import labelLogic from './labelLogic.js';
+import schema from './schema.js';
 
 const validationKeyMap = {
   error: 'errors',
@@ -120,4 +121,5 @@ Label.meta = {
   styles: ['blocks/Label/style.less'],
 };
 
+Label.schema = schema;
 export default Label;

@@ -18,6 +18,7 @@ import React, { useEffect } from 'react';
 import { message } from 'antd';
 import { type } from '@lowdefy/helpers';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import schema from './schema.js';
 
 const MessageBlock = ({ blockId, components: { Icon }, events, methods, properties }) => {
   useEffect(() => {
@@ -48,4 +49,5 @@ MessageBlock.meta = {
   styles: ['blocks/Message/style.less'],
 };
 
+MessageBlock.schema = schema;
 export default MessageBlock;

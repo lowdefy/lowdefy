@@ -22,6 +22,7 @@ import { DatePicker } from 'antd';
 
 import Label from '../Label/Label.js';
 import disabledDate from '../../disabledDate.js';
+import schema from './schema.js';
 
 const DateSelector = ({
   blockId,
@@ -92,4 +93,5 @@ DateSelector.meta = {
   styles: ['blocks/DateSelector/style.less'],
 };
 
+DateSelector.schema = schema;
 export default DateSelector;

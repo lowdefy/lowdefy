@@ -17,6 +17,7 @@
 import React from 'react';
 import { Layout } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-utils';
+import schema from './schema.js';
 
 const Header = Layout.Header;
 
@@ -39,4 +40,5 @@ HeaderBlock.meta = {
   styles: ['blocks/Header/style.less'],
 };
 
+HeaderBlock.schema = schema;
 export default HeaderBlock;

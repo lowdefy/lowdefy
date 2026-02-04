@@ -17,6 +17,7 @@
 import React, { useState, useEffect } from 'react';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 import { Tabs } from 'antd';
+import schema from './schema.js';
 
 const getTabs = ({ content, properties }) => {
   let tabs = properties.tabs;
@@ -90,4 +91,5 @@ TabsBlock.meta = {
   styles: ['blocks/Tabs/style.less'],
 };
 
+TabsBlock.schema = schema;
 export default TabsBlock;

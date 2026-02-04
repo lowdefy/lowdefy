@@ -19,6 +19,7 @@ import React from 'react';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 import { Descriptions } from 'antd';
 import { type } from '@lowdefy/helpers';
+import schema from './schema.js';
 
 const DescriptionsBlock = ({ blockId, content, properties, methods }) => {
   let dataItem = properties.items || [];
@@ -83,4 +84,5 @@ DescriptionsBlock.meta = {
   styles: ['blocks/Descriptions/style.less'],
 };
 
+DescriptionsBlock.schema = schema;
 export default DescriptionsBlock;

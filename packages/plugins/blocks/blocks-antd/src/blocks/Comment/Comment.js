@@ -20,6 +20,7 @@ import { type } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
 import Avatar from '../Avatar/Avatar.js';
+import schema from './schema.js';
 
 const CommentBlock = ({ blockId, components, content, properties, methods }) => {
   let avatar = {};
@@ -54,4 +55,5 @@ CommentBlock.meta = {
   styles: ['blocks/Comment/style.less'],
 };
 
+CommentBlock.schema = schema;
 export default CommentBlock;

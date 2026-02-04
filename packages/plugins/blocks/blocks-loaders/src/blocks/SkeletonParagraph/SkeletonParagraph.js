@@ -18,6 +18,7 @@ import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
 import Skeleton from '../Skeleton/Skeleton.js';
+import schema from './schema.js';
 
 const SkeletonParagraph = ({ properties, methods }) => {
   const lines = [...Array(properties.lines ?? 4).keys()];
@@ -48,4 +49,5 @@ SkeletonParagraph.meta = {
   styles: ['blocks/SkeletonParagraph/style.less'],
 };
 
+SkeletonParagraph.schema = schema;
 export default SkeletonParagraph;

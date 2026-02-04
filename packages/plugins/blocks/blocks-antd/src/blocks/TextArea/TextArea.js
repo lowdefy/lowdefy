@@ -21,6 +21,7 @@ import { Input } from 'antd';
 
 import Label from '../Label/Label.js';
 import useRunAfterUpdate from '../../useRunAfterUpdate.js';
+import schema from './schema.js';
 
 const TextAreaComp = Input.TextArea;
 
@@ -100,4 +101,5 @@ TextAreaBlock.meta = {
   styles: ['blocks/TextArea/style.less'],
 };
 
+TextAreaBlock.schema = schema;
 export default TextAreaBlock;

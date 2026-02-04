@@ -18,6 +18,7 @@ import React from 'react';
 import { Statistic } from 'antd';
 import { type } from '@lowdefy/helpers';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import schema from './schema.js';
 
 const StatisticBlock = ({ blockId, components: { Icon }, events, properties, methods }) => {
   const additionalProps = {};
@@ -68,4 +69,5 @@ StatisticBlock.meta = {
   styles: ['blocks/Statistic/style.less'],
 };
 
+StatisticBlock.schema = schema;
 export default StatisticBlock;

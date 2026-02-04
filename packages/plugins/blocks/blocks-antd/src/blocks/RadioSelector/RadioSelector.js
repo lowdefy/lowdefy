@@ -22,6 +22,7 @@ import { type } from '@lowdefy/helpers';
 import Label from '../Label/Label.js';
 import getValueIndex from '../../getValueIndex.js';
 import getUniqueValues from '../../getUniqueValues.js';
+import schema from './schema.js';
 
 const RadioGroup = Radio.Group;
 
@@ -110,4 +111,5 @@ RadioSelector.meta = {
   styles: ['blocks/RadioSelector/style.less'],
 };
 
+RadioSelector.schema = schema;
 export default RadioSelector;

@@ -18,6 +18,7 @@ import React, { useState, useEffect } from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 import { get } from '@lowdefy/helpers';
 import { Layout } from 'antd';
+import schema from './schema.js';
 
 const Sider = Layout.Sider;
 
@@ -66,4 +67,5 @@ SiderBlock.meta = {
   styles: ['blocks/Sider/style.less'],
 };
 
+SiderBlock.schema = schema;
 export default SiderBlock;

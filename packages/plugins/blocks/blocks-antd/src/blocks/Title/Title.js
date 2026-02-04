@@ -18,6 +18,7 @@ import React from 'react';
 import { Typography } from 'antd';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
+import schema from './schema.js';
 
 const Title = Typography.Title;
 
@@ -117,4 +118,5 @@ TitleBlock.meta = {
   styles: ['blocks/Title/style.less'],
 };
 
+TitleBlock.schema = schema;
 export default TitleBlock;

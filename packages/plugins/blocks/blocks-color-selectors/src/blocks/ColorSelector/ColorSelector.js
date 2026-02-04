@@ -19,6 +19,7 @@ import { blockDefaultProps } from '@lowdefy/block-utils';
 import Label from '@lowdefy/blocks-antd/blocks/Label/Label.js';
 
 import ColorPicker from './ColorPicker.js';
+import schema from './schema.js';
 
 const ColorSelector = ({
   blockId,
@@ -72,4 +73,5 @@ ColorSelector.meta = {
   styles: ['blocks/ColorSelector/style.less'],
 };
 
+ColorSelector.schema = schema;
 export default ColorSelector;

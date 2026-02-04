@@ -18,6 +18,7 @@ import React, { useState } from 'react';
 import { Typography } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
+import schema from './schema.js';
 
 const Paragraph = Typography.Paragraph;
 
@@ -147,4 +148,5 @@ ParagraphInput.meta = {
   styles: ['blocks/ParagraphInput/style.less'],
 };
 
+ParagraphInput.schema = schema;
 export default ParagraphInput;

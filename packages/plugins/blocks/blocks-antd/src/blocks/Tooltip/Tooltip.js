@@ -17,6 +17,7 @@
 import React from 'react';
 import { Tooltip } from 'antd';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import schema from './schema.js';
 
 const TooltipBlock = ({ blockId, content, properties, methods }) => (
   <Tooltip
@@ -49,4 +50,5 @@ TooltipBlock.meta = {
   styles: ['blocks/Tooltip/style.less'],
 };
 
+TooltipBlock.schema = schema;
 export default TooltipBlock;

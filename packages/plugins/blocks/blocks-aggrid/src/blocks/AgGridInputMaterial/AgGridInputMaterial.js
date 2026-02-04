@@ -18,6 +18,7 @@ import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
 import AgGridInput from '../../AgGridInput.js';
+import schema from './schema.js';
 
 const AgGridInputMaterial = ({
   blockId,
@@ -58,4 +59,5 @@ AgGridInputMaterial.meta = {
   styles: ['blocks/AgGridInputMaterial/style.less'],
 };
 
+AgGridInputMaterial.schema = schema;
 export default AgGridInputMaterial;

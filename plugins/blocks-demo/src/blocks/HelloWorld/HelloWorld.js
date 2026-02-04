@@ -16,10 +16,34 @@
 
 import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
+import schema from './schema.js';
+
+const VALID_VARIANTS = ['default', 'outlined', 'filled'];
+
+const variantStyles = {
+  default: {
+    backgroundColor: '#f0f5ff',
+    border: '1px solid #d6e4ff',
+  },
+  outlined: {
+    backgroundColor: 'transparent',
+    border: '2px solid #1d39c4',
+  },
+  filled: {
+    backgroundColor: '#1d39c4',
+    border: '1px solid #1d39c4',
+    color: '#ffffff',
+  },
+};
 
 const HelloWorld = ({ blockId, events, methods, properties }) => {
   if (properties.throwError) {
     throw new Error(`HelloWorld error: ${properties.throwError}`);
+  }
+  const variant = properties.variant ?? 'default';
+  console.log('checking variant');
+  if (!VALID_VARIANTS.includes(variant)) {
+    throw new Error(`Invalid variant "${variant}". Expected one of: ${VALID_VARIANTS.join(', ')}.`);
   }
   return (
     <div
@@ -32,9 +56,8 @@ const HelloWorld = ({ blockId, events, methods, properties }) => {
         {
           padding: '24px',
           borderRadius: '8px',
-          backgroundColor: '#f0f5ff',
-          border: '1px solid #d6e4ff',
           cursor: events.onClick && 'pointer',
+          ...variantStyles[variant],
         },
         properties.style,
       ])}
@@ -69,5 +92,6 @@ HelloWorld.meta = {
   icons: [],
   styles: [],
 };
+HelloWorld.schema = schema;
 
 export default HelloWorld;

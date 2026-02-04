@@ -18,6 +18,7 @@ import React from 'react';
 import { Tag } from 'antd';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
+import schema from './schema.js';
 
 const TagBlock = ({
   blockId,
@@ -65,4 +66,5 @@ TagBlock.meta = {
   styles: ['blocks/Tag/style.less'],
 };
 
+TagBlock.schema = schema;
 export default TagBlock;

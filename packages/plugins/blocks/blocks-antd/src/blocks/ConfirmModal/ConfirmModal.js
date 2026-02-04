@@ -17,6 +17,7 @@
 import React, { useEffect } from 'react';
 import { Modal } from 'antd';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import schema from './schema.js';
 
 const ConfirmModal = ({ blockId, events, content, components: { Icon }, methods, properties }) => {
   useEffect(() => {
@@ -90,4 +91,5 @@ ConfirmModal.meta = {
   styles: ['blocks/ConfirmModal/style.less'],
 };
 
+ConfirmModal.schema = schema;
 export default ConfirmModal;

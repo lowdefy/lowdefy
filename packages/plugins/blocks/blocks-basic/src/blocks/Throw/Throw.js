@@ -16,6 +16,7 @@
 
 import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
+import schema from './schema.js';
 
 const Throw = ({ properties }) => {
   const message = properties.message || 'Intentional error thrown by Throw block';
@@ -28,5 +29,6 @@ Throw.meta = {
   icons: [],
   styles: [],
 };
+Throw.schema = schema;
 
 export default Throw;

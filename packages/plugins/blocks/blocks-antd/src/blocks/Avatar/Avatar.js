@@ -17,6 +17,7 @@
 import React from 'react';
 import { Avatar } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-utils';
+import schema from './schema.js';
 
 const AvatarBlock = ({ blockId, events, components: { Icon }, methods, properties }) => (
   <Avatar
@@ -51,4 +52,5 @@ AvatarBlock.meta = {
   styles: ['blocks/Avatar/style.less'],
 };
 
+AvatarBlock.schema = schema;
 export default AvatarBlock;

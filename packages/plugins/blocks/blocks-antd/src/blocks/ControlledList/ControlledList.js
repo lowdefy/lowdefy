@@ -20,6 +20,7 @@ import { List, Typography } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
 import Button from '../Button/Button.js';
+import schema from './schema.js';
 
 const ControlledListBlock = ({
   blockId,
@@ -154,4 +155,5 @@ ControlledListBlock.meta = {
   styles: ['blocks/ControlledList/style.less'],
 };
 
+ControlledListBlock.schema = schema;
 export default ControlledListBlock;

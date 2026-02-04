@@ -18,6 +18,7 @@ import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
 import AgGrid from '../../AgGrid.js';
+import schema from './schema.js';
 
 const AgGridAlpineDark = ({ blockId, events, loading, methods, properties }) => (
   <div
@@ -39,4 +40,5 @@ AgGridAlpineDark.meta = {
   styles: ['blocks/AgGridAlpineDark/style.less'],
 };
 
+AgGridAlpineDark.schema = schema;
 export default AgGridAlpineDark;

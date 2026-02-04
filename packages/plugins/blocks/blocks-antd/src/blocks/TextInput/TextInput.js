@@ -20,6 +20,7 @@ import { blockDefaultProps } from '@lowdefy/block-utils';
 
 import Label from '../Label/Label.js';
 import useRunAfterUpdate from '../../useRunAfterUpdate.js';
+import schema from './schema.js';
 
 const TextInput = ({
   blockId,
@@ -146,4 +147,5 @@ TextInput.meta = {
   styles: ['blocks/TextInput/style.less'],
 };
 
+TextInput.schema = schema;
 export default TextInput;

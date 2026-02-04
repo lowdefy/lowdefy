@@ -16,6 +16,7 @@
 
 import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
+import schema from './schema.js';
 
 const Box = ({ blockId, content, events, methods, properties }) => {
   return (
@@ -40,5 +41,6 @@ Box.meta = {
   icons: [],
   styles: [],
 };
+Box.schema = schema;
 
 export default Box;

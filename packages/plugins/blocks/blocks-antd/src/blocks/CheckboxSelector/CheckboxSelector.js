@@ -22,6 +22,7 @@ import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 import Label from '../Label/Label.js';
 import getValueIndex from '../../getValueIndex.js';
 import getUniqueValues from '../../getUniqueValues.js';
+import schema from './schema.js';
 
 const CheckboxSelector = ({
   blockId,
@@ -111,4 +112,5 @@ CheckboxSelector.meta = {
   styles: ['blocks/CheckboxSelector/style.less'],
 };
 
+CheckboxSelector.schema = schema;
 export default CheckboxSelector;

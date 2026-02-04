@@ -20,6 +20,7 @@ import { get, type } from '@lowdefy/helpers';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 
 import color from '../../color.js';
+import schema from './schema.js';
 
 const ButtonBlock = ({
   blockId,
@@ -86,4 +87,5 @@ ButtonBlock.meta = {
   styles: ['blocks/Button/style.less'],
 };
 
+ButtonBlock.schema = schema;
 export default ButtonBlock;

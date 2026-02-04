@@ -19,6 +19,7 @@ import { Checkbox, Space } from 'antd';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 
 import Label from '../Label/Label.js';
+import schema from './schema.js';
 
 const CheckboxSwitch = ({
   blockId,
@@ -78,4 +79,5 @@ CheckboxSwitch.meta = {
   styles: ['blocks/CheckboxSwitch/style.less'],
 };
 
+CheckboxSwitch.schema = schema;
 export default CheckboxSwitch;

@@ -16,6 +16,7 @@
 
 import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
+import schema from './schema.js';
 
 const IconBlock = ({ components: { Icon }, ...props }) => <Icon {...props} />;
 
@@ -25,5 +26,6 @@ IconBlock.meta = {
   icons: [],
   styles: [],
 };
+IconBlock.schema = schema;
 
 export default IconBlock;

@@ -18,6 +18,7 @@ import React from 'react';
 import { Affix } from 'antd';
 import { get } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-utils';
+import schema from './schema.js';
 
 const AffixBlock = ({ blockId, content, methods, properties, rename }) => (
   <Affix
@@ -43,4 +44,5 @@ AffixBlock.meta = {
   styles: ['blocks/Affix/style.less'],
 };
 
+AffixBlock.schema = schema;
 export default AffixBlock;

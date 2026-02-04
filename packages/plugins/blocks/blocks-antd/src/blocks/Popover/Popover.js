@@ -17,6 +17,7 @@
 import React, { useState } from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 import { Popover } from 'antd';
+import schema from './schema.js';
 
 const PopoverBlock = ({ blockId, content, methods, properties }) => {
   const [elementId] = useState((0 | (Math.random() * 9e2)) + 1e2);
@@ -41,4 +42,5 @@ PopoverBlock.meta = {
   styles: ['blocks/Popover/style.less'],
 };
 
+PopoverBlock.schema = schema;
 export default PopoverBlock;

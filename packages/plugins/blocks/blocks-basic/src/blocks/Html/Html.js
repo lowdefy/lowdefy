@@ -16,6 +16,7 @@
 
 import React from 'react';
 import { blockDefaultProps, HtmlComponent } from '@lowdefy/block-utils';
+import schema from './schema.js';
 
 const HtmlBlock = ({ blockId, events, properties, methods }) => (
   <HtmlComponent
@@ -34,5 +35,6 @@ HtmlBlock.meta = {
   icons: [],
   styles: [],
 };
+HtmlBlock.schema = schema;
 
 export default HtmlBlock;

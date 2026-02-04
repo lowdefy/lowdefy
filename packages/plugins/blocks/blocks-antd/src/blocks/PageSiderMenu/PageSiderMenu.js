@@ -28,6 +28,7 @@ import Layout from '../Layout/Layout.js';
 import Menu from '../Menu/Menu.js';
 import MobileMenu from '../MobileMenu/MobileMenu.js';
 import Sider from '../Sider/Sider.js';
+import schema from './schema.js';
 
 const PageSiderMenu = ({
   basePath,
@@ -368,4 +369,5 @@ PageSiderMenu.meta = {
   styles: ['blocks/PageSiderMenu/style.less'],
 };
 
+PageSiderMenu.schema = schema;
 export default PageSiderMenu;

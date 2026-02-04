@@ -16,6 +16,7 @@
 
 import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
+import schema from './schema.js';
 
 const Span = ({ blockId, content, events, methods, properties }) => (
   <span
@@ -37,5 +38,6 @@ Span.meta = {
   icons: [],
   styles: [],
 };
+Span.schema = schema;
 
 export default Span;

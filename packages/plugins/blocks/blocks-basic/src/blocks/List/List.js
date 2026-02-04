@@ -17,6 +17,7 @@
 import React, { useEffect } from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 import Box from '../Box/Box.js';
+import schema from './schema.js';
 
 const List = ({ blockId, events, list, methods, properties }) => {
   useEffect(() => {
@@ -58,5 +59,6 @@ List.meta = {
   icons: [],
   styles: [],
 };
+List.schema = schema;
 
 export default List;

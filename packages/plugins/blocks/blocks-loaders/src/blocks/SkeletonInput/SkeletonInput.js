@@ -18,6 +18,7 @@ import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
 import Skeleton from '../Skeleton/Skeleton.js';
+import schema from './schema.js';
 
 const SkeletonInput = ({ properties, methods }) => {
   let inputHeight;
@@ -62,4 +63,5 @@ SkeletonInput.meta = {
   styles: ['blocks/SkeletonInput/style.less'],
 };
 
+SkeletonInput.schema = schema;
 export default SkeletonInput;

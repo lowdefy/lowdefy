@@ -16,6 +16,7 @@
 
 import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
+import schema from './schema.js';
 
 const ProgressBar = ({ blockId, methods, style, properties }) => {
   const {
@@ -54,4 +55,5 @@ ProgressBar.meta = {
   styles: ['blocks/ProgressBar/style.less'],
 };
 
+ProgressBar.schema = schema;
 export default ProgressBar;

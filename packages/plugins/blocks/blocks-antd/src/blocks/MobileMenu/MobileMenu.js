@@ -21,6 +21,7 @@ import { mergeObjects, get } from '@lowdefy/helpers';
 import Button from '../Button/Button.js';
 import Drawer from '../Drawer/Drawer.js';
 import Menu from '../Menu/Menu.js';
+import schema from './schema.js';
 
 const MobileMenu = ({
   basePath,
@@ -123,4 +124,5 @@ MobileMenu.meta = {
   styles: ['blocks/MobileMenu/style.less'],
 };
 
+MobileMenu.schema = schema;
 export default MobileMenu;

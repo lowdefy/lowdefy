@@ -17,6 +17,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Carousel } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-utils';
+import schema from './schema.js';
 
 const getSlides = ({ content, properties }) => {
   let slides = properties.slides;
@@ -85,4 +86,5 @@ CarouselBlock.meta = {
   styles: ['blocks/Carousel/style.less'],
 };
 
+CarouselBlock.schema = schema;
 export default CarouselBlock;

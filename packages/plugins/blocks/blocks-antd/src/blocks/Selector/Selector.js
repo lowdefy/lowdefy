@@ -22,6 +22,7 @@ import { Select } from 'antd';
 import Label from '../Label/Label.js';
 import getValueIndex from '../../getValueIndex.js';
 import getUniqueValues from '../../getUniqueValues.js';
+import schema from './schema.js';
 
 const Option = Select.Option;
 
@@ -159,4 +160,5 @@ Selector.meta = {
   styles: ['blocks/Selector/style.less'],
 };
 
+Selector.schema = schema;
 export default Selector;

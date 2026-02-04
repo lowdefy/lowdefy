@@ -17,6 +17,7 @@
 import React from 'react';
 import { get } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-utils';
+import schema from './schema.js';
 
 const AnchorBlock = ({ blockId, events, components: { Icon, Link }, methods, properties }) => {
   const disabled = properties.disabled || get(events, 'onClick.loading');
@@ -58,5 +59,6 @@ AnchorBlock.meta = {
   icons: ['AiOutlineLoading3Quarters'],
   styles: [],
 };
+AnchorBlock.schema = schema;
 
 export default AnchorBlock;

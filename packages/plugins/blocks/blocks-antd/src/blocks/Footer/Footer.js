@@ -17,6 +17,7 @@
 import React from 'react';
 import { Layout } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-utils';
+import schema from './schema.js';
 
 const Footer = Layout.Footer;
 
@@ -36,4 +37,5 @@ FooterBlock.meta = {
   styles: ['blocks/Footer/style.less'],
 };
 
+FooterBlock.schema = schema;
 export default FooterBlock;

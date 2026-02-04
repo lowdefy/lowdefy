@@ -20,6 +20,7 @@ import { blockDefaultProps } from '@lowdefy/block-utils';
 
 import Label from '../Label/Label.js';
 import useRunAfterUpdate from '../../useRunAfterUpdate.js';
+import schema from './schema.js';
 
 const PasswordInput = ({
   blockId,
@@ -89,4 +90,5 @@ PasswordInput.meta = {
   styles: ['blocks/PasswordInput/style.less'],
 };
 
+PasswordInput.schema = schema;
 export default PasswordInput;

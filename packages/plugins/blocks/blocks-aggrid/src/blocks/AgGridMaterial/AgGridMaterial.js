@@ -18,6 +18,7 @@ import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
 import AgGrid from '../../AgGrid.js';
+import schema from './schema.js';
 
 const AgGridMaterial = ({ blockId, events, loading, methods, properties }) => (
   <div
@@ -39,4 +40,5 @@ AgGridMaterial.meta = {
   styles: ['blocks/AgGridMaterial/style.less'],
 };
 
+AgGridMaterial.schema = schema;
 export default AgGridMaterial;

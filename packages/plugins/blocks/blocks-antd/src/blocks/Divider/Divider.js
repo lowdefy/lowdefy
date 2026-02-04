@@ -17,6 +17,7 @@
 import React from 'react';
 import { Divider } from 'antd';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import schema from './schema.js';
 
 const DividerBlock = ({ blockId, properties, methods }) => (
   <Divider
@@ -38,4 +39,5 @@ DividerBlock.meta = {
   styles: ['blocks/Divider/style.less'],
 };
 
+DividerBlock.schema = schema;
 export default DividerBlock;

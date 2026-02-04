@@ -18,6 +18,7 @@ import React from 'react';
 import { type, get } from '@lowdefy/helpers';
 import { Breadcrumb } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-utils';
+import schema from './schema.js';
 
 const BreadcrumbBlock = ({
   blockId,
@@ -85,4 +86,5 @@ BreadcrumbBlock.meta = {
   styles: ['blocks/Breadcrumb/style.less'],
 };
 
+BreadcrumbBlock.schema = schema;
 export default BreadcrumbBlock;

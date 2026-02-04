@@ -19,6 +19,7 @@ import { type } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
 import Skeleton from '../Skeleton/Skeleton.js';
+import schema from './schema.js';
 
 const SkeletonAvatar = ({ properties, methods }) => {
   let size = properties.size ?? 32;
@@ -56,4 +57,5 @@ SkeletonAvatar.meta = {
   styles: ['blocks/SkeletonAvatar/style.less'],
 };
 
+SkeletonAvatar.schema = schema;
 export default SkeletonAvatar;

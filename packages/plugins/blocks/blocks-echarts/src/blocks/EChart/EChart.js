@@ -18,6 +18,7 @@ import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 import { registerTheme } from 'echarts';
 import ReactECharts from 'echarts-for-react';
+import schema from './schema.js';
 
 class EChart extends React.Component {
   constructor(props) {
@@ -117,4 +118,5 @@ EChart.meta = {
   styles: [],
 };
 
+EChart.schema = schema;
 export default EChart;

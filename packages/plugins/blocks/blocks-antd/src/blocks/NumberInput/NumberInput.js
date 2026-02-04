@@ -19,6 +19,7 @@ import { blockDefaultProps } from '@lowdefy/block-utils';
 import { InputNumber } from 'antd';
 
 import Label from '../Label/Label.js';
+import schema from './schema.js';
 
 const NumberInput = ({
   blockId,
@@ -89,4 +90,5 @@ NumberInput.meta = {
   styles: ['blocks/NumberInput/style.less'],
 };
 
+NumberInput.schema = schema;
 export default NumberInput;

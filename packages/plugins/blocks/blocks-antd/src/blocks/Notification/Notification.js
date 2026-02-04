@@ -20,6 +20,7 @@ import { notification } from 'antd';
 import { type } from '@lowdefy/helpers';
 
 import Button from '../Button/Button.js';
+import schema from './schema.js';
 
 const NotificationBlock = ({ blockId, components: { Icon }, events, methods, properties }) => {
   useEffect(() => {
@@ -66,4 +67,5 @@ NotificationBlock.meta = {
   styles: ['blocks/Notification/style.less'],
 };
 
+NotificationBlock.schema = schema;
 export default NotificationBlock;

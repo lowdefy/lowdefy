@@ -22,6 +22,7 @@ import { type } from '@lowdefy/helpers';
 import Label from '../Label/Label.js';
 import getValueIndex from '../../getValueIndex.js';
 import getUniqueValues from '../../getUniqueValues.js';
+import schema from './schema.js';
 
 const ButtonSelector = ({
   blockId,
@@ -103,4 +104,5 @@ ButtonSelector.meta = {
   styles: ['blocks/ButtonSelector/style.less'],
 };
 
+ButtonSelector.schema = schema;
 export default ButtonSelector;

@@ -16,6 +16,7 @@
 
 import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
+import schema from './schema.js';
 
 const ImgBlock = ({ blockId, events, properties, methods }) => {
   const { style, ...allProps } = properties;
@@ -39,5 +40,6 @@ ImgBlock.meta = {
   icons: [],
   styles: [],
 };
+ImgBlock.schema = schema;
 
 export default ImgBlock;

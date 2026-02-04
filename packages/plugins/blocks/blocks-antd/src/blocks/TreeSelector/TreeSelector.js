@@ -17,6 +17,7 @@
 import React, { useState, useEffect } from 'react';
 import { Tree } from 'antd';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import schema from './schema.js';
 
 const transformData = (data, valueMap, prefix = '') => {
   return data.map(({ children, disabled, disableCheckbox, label, value }, i) => {
@@ -101,4 +102,5 @@ TreeSelector.meta = {
   styles: ['blocks/TreeSelector/style.less'],
 };
 
+TreeSelector.schema = schema;
 export default TreeSelector;

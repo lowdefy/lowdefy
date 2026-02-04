@@ -22,6 +22,7 @@ import moment from 'moment';
 
 import disabledDate from '../../disabledDate.js';
 import Label from '../Label/Label.js';
+import schema from './schema.js';
 
 const WeekPicker = DatePicker.WeekPicker;
 
@@ -93,4 +94,5 @@ WeekSelector.meta = {
   styles: ['blocks/WeekSelector/style.less'],
 };
 
+WeekSelector.schema = schema;
 export default WeekSelector;

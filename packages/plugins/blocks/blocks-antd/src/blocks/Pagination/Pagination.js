@@ -18,6 +18,7 @@ import React, { useState, useEffect } from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 import { Pagination } from 'antd';
 import { type } from '@lowdefy/helpers';
+import schema from './schema.js';
 
 const createChangeHandler =
   ({ eventName, methods, setState }) =>
@@ -98,4 +99,5 @@ PaginationBlock.meta = {
   icons: [],
   styles: ['blocks/Pagination/style.less'],
 };
+PaginationBlock.schema = schema;
 export default PaginationBlock;

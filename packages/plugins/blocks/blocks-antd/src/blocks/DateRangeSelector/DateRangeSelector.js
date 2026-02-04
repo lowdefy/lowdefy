@@ -22,6 +22,7 @@ import { type } from '@lowdefy/helpers';
 
 import Label from '../Label/Label.js';
 import disabledDate from '../../disabledDate.js';
+import schema from './schema.js';
 
 const RangePicker = DatePicker.RangePicker;
 
@@ -107,4 +108,5 @@ DateRangeSelector.meta = {
   styles: ['blocks/DateRangeSelector/style.less'],
 };
 
+DateRangeSelector.schema = schema;
 export default DateRangeSelector;

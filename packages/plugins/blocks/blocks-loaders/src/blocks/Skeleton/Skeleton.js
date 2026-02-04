@@ -16,6 +16,7 @@
 
 import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
+import schema from './schema.js';
 
 const Skeleton = ({ properties, methods }) => {
   return (
@@ -33,4 +34,5 @@ Skeleton.meta = {
   styles: ['blocks/Skeleton/style.less'],
 };
 
+Skeleton.schema = schema;
 export default Skeleton;

@@ -18,6 +18,7 @@ import React from 'react';
 import { Timeline } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 import { get, mergeObjects, serializer, type } from '@lowdefy/helpers';
+import schema from './schema.js';
 
 // TODO: need to pass value to list blocks to render item level settings.
 const TimelineList = ({ blockId, components: { Icon }, events, list, methods, properties }) => {
@@ -85,4 +86,5 @@ TimelineList.meta = {
   styles: ['blocks/TimelineList/style.less'],
 };
 
+TimelineList.schema = schema;
 export default TimelineList;

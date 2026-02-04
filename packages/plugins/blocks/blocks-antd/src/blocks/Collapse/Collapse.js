@@ -18,6 +18,7 @@ import React from 'react';
 import { Collapse } from 'antd';
 import { serializer, type } from '@lowdefy/helpers';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import schema from './schema.js';
 
 const CollapseBlock = ({ blockId, events, content, components: { Icon }, methods, properties }) => {
   const panels =
@@ -78,4 +79,5 @@ CollapseBlock.meta = {
   styles: ['blocks/Collapse/style.less'],
 };
 
+CollapseBlock.schema = schema;
 export default CollapseBlock;

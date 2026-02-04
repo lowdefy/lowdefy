@@ -22,6 +22,7 @@ import { type } from '@lowdefy/helpers';
 
 import Label from '../Label/Label.js';
 import disabledDate from '../../disabledDate.js';
+import schema from './schema.js';
 
 const MonthPicker = DatePicker.MonthPicker;
 
@@ -93,4 +94,5 @@ MonthSelector.meta = {
   styles: ['blocks/MonthSelector/style.less'],
 };
 
+MonthSelector.schema = schema;
 export default MonthSelector;

@@ -17,6 +17,7 @@
 import React from 'react';
 import { Progress } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-utils';
+import schema from './schema.js';
 
 const ProgressBlock = ({ blockId, properties }) => (
   <Progress
@@ -44,4 +45,5 @@ ProgressBlock.meta = {
   styles: ['blocks/Progress/style.less'],
 };
 
+ProgressBlock.schema = schema;
 export default ProgressBlock;

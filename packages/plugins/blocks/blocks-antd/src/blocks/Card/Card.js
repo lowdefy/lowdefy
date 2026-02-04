@@ -17,6 +17,7 @@
 import React from 'react';
 import { Card } from 'antd';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import schema from './schema.js';
 
 const CardBlock = ({ blockId, content, properties, methods, events }) => (
   <Card
@@ -47,4 +48,5 @@ CardBlock.meta = {
   styles: ['blocks/Card/style.less'],
 };
 
+CardBlock.schema = schema;
 export default CardBlock;

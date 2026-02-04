@@ -18,6 +18,7 @@ import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
 import Skeleton from '../Skeleton/Skeleton.js';
+import schema from './schema.js';
 
 const SkeletonButton = ({ properties, methods }) => {
   let height;
@@ -53,4 +54,5 @@ SkeletonButton.meta = {
   styles: ['blocks/SkeletonButton/style.less'],
 };
 
+SkeletonButton.schema = schema;
 export default SkeletonButton;

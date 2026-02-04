@@ -18,6 +18,7 @@ import React from 'react';
 import DOMPurify from 'dompurify';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
+import schema from './schema.js';
 
 class DangerousHtml extends React.Component {
   constructor(props) {
@@ -66,5 +67,6 @@ DangerousHtml.meta = {
   icons: [],
   styles: [],
 };
+DangerousHtml.schema = schema;
 
 export default DangerousHtml;

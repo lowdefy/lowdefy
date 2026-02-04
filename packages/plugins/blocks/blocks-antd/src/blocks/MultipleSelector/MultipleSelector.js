@@ -23,6 +23,7 @@ import getUniqueValues from '../../getUniqueValues.js';
 import getValueIndex from '../../getValueIndex.js';
 import Label from '../Label/Label.js';
 import Tag from '../Tag/Tag.js';
+import schema from './schema.js';
 
 const Option = Select.Option;
 
@@ -197,4 +198,5 @@ MultipleSelector.meta = {
   styles: ['blocks/MultipleSelector/style.less'],
 };
 
+MultipleSelector.schema = schema;
 export default MultipleSelector;

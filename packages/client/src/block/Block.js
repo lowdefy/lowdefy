@@ -20,6 +20,7 @@ import { ErrorBoundary } from '@lowdefy/block-utils';
 
 import CategorySwitch from './CategorySwitch.js';
 import MountEvents from '../MountEvents.js';
+import validateBlockProperties from './validateBlockProperties.js';
 
 const Block = ({ block, Blocks, context, lowdefy, parentLoading }) => {
   const [updates, setUpdate] = useState(0);
@@ -30,6 +31,7 @@ const Block = ({ block, Blocks, context, lowdefy, parentLoading }) => {
     if (lowdefy._internal.logError) {
       lowdefy._internal.logError(error);
     }
+    validateBlockProperties({ block, lowdefy });
   };
 
   // Log parse errors to server

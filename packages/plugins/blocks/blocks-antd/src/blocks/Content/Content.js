@@ -17,6 +17,7 @@
 import React from 'react';
 import { Layout } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-utils';
+import schema from './schema.js';
 
 const Content = Layout.Content;
 
@@ -33,4 +34,5 @@ ContentBlock.meta = {
   styles: ['blocks/Content/style.less'],
 };
 
+ContentBlock.schema = schema;
 export default ContentBlock;

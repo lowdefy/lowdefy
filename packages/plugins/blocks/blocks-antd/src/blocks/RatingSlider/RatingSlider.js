@@ -22,6 +22,7 @@ import classNames from 'classnames';
 
 import CheckboxSelector from '../CheckboxSelector/CheckboxSelector.js';
 import Label from '../Label/Label.js';
+import schema from './schema.js';
 
 const includeMarks = (minMax, minMin, step = 1) => {
   const marks = {};
@@ -241,4 +242,5 @@ RatingSlider.meta = {
   styles: ['blocks/RatingSlider/style.less'],
 };
 
+RatingSlider.schema = schema;
 export default RatingSlider;

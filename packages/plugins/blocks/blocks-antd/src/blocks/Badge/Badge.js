@@ -18,6 +18,7 @@ import React from 'react';
 import { type } from '@lowdefy/helpers';
 import { Badge } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-utils';
+import schema from './schema.js';
 
 const BadgeBlock = ({ blockId, events, content, components: { Icon }, properties }) => (
   <Badge
@@ -49,4 +50,5 @@ BadgeBlock.meta = {
   styles: ['blocks/Badge/style.less'],
 };
 
+BadgeBlock.schema = schema;
 export default BadgeBlock;

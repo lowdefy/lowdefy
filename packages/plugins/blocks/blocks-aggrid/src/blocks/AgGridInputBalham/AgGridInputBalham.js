@@ -18,6 +18,7 @@ import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
 import AgGridInput from '../../AgGridInput.js';
+import schema from './schema.js';
 
 const AgGridInputBalham = ({
   blockId,
@@ -58,4 +59,5 @@ AgGridInputBalham.meta = {
   styles: ['blocks/AgGridInputBalham/style.less'],
 };
 
+AgGridInputBalham.schema = schema;
 export default AgGridInputBalham;

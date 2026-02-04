@@ -22,6 +22,7 @@ import regions from './regions.js';
 import Label from '../Label/Label.js';
 import getValueIndex from '../../getValueIndex.js';
 import getUniqueValues from '../../getUniqueValues.js';
+import schema from './schema.js';
 
 const Option = Select.Option;
 
@@ -274,4 +275,5 @@ PhoneNumberInput.meta = {
   styles: ['blocks/PhoneNumberInput/style.less'],
 };
 
+PhoneNumberInput.schema = schema;
 export default PhoneNumberInput;

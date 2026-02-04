@@ -18,6 +18,7 @@ import React, { useState, useEffect } from 'react';
 import { Drawer } from 'antd';
 import { get } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-utils';
+import schema from './schema.js';
 
 const handleClose = async ({ methods, rename, setOpen }) => {
   const response = await methods.triggerEvent({
@@ -117,4 +118,5 @@ DrawerBlock.meta = {
   styles: ['blocks/Drawer/style.less'],
 };
 
+DrawerBlock.schema = schema;
 export default DrawerBlock;

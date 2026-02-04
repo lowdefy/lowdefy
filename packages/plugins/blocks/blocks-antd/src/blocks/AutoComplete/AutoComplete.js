@@ -20,6 +20,7 @@ import { blockDefaultProps } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
 import Label from '../Label/Label.js';
+import schema from './schema.js';
 
 const Option = AutoComplete.Option;
 
@@ -101,4 +102,5 @@ AutoCompleteInput.meta = {
   styles: ['blocks/AutoComplete/style.less'],
 };
 
+AutoCompleteInput.schema = schema;
 export default AutoCompleteInput;
