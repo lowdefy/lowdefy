@@ -127,40 +127,65 @@ function createRunBuild(build, fixturesDir) {
     const warnings = [];
     let pendingLogLine = null; // Captures log line to combine with next warn/error
 
+    function formatMessage(messageOrObj) {
+      if (typeof messageOrObj === 'string') return messageOrObj;
+      if (messageOrObj?.print && typeof messageOrObj.print === 'function') {
+        return messageOrObj.print();
+      }
+      if (messageOrObj && (messageOrObj.name || messageOrObj.message !== undefined)) {
+        const name = messageOrObj.name || 'Error';
+        const message = messageOrObj.message ?? '';
+        return `[${name}] ${message}`;
+      }
+      return String(messageOrObj);
+    }
+
     const logger = {
       info: jest.fn(),
       log: jest.fn(),
       warn: jest.fn((objOrMsg, maybeMsg) => {
-        // Handle pino-style calls: logger.warn({ source }, message) or logger.warn(message)
-        let source = null;
+        // Handle pino-style calls: logger.warn({ print }, message) or logger.warn(message)
         let message = objOrMsg;
         if (typeof objOrMsg === 'object' && objOrMsg !== null) {
-          source = objOrMsg.source ?? null;
           message = maybeMsg ?? '';
         }
-        // Format as "source\nmessage" or just "message"
-        const formatted = source ? `${source}\n${message}` : message;
-        warnings.push(formatted);
+        if (message) warnings.push(message);
       }),
       error: jest.fn((objOrMsg, maybeMsg) => {
-        // Handle pino-style calls:
-        // - logger.error(Error) - Error object (pino serializes into err field)
-        // - logger.error({ source }, message) - merging object
-        let source = null;
+        // Handle pino-style calls
         let message;
         if (objOrMsg instanceof Error) {
-          source = objOrMsg.source ?? null;
           message = objOrMsg.message;
         } else if (typeof objOrMsg === 'object' && objOrMsg !== null) {
-          source = objOrMsg.source ?? null;
           message = maybeMsg ?? '';
         } else {
           message = objOrMsg;
         }
-        // Format as "source\nmessage" or just "message"
+        if (message) errors.push(message);
+      }),
+      succeed: jest.fn(),
+    };
+
+    // Add ui methods that handle ConfigWarning/ConfigError objects
+    logger.ui = {
+      warn: (messageOrObj) => {
+        const source = messageOrObj?.source ?? null;
+        const message = formatMessage(messageOrObj);
+        const formatted = source ? `${source}\n${message}` : message;
+        warnings.push(formatted);
+      },
+      error: (messageOrObj) => {
+        const source = messageOrObj?.source ?? null;
+        const message = formatMessage(messageOrObj);
         const formatted = source ? `${source}\n${message}` : message;
         errors.push(formatted);
-      }),
+      },
+      link: jest.fn(),
+      log: jest.fn(),
+      info: jest.fn(),
+      dim: jest.fn(),
+      debug: jest.fn(),
+      spin: jest.fn(),
       succeed: jest.fn(),
     };
 
