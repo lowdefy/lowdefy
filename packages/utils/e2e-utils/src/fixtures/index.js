@@ -38,15 +38,74 @@ export const test = base.extend({
   manifest: [
     // eslint-disable-next-line no-empty-pattern
     async ({}, use) => {
-      // Load manifest from build directory
-      // Generate lazily if it doesn't exist (webServer has built by now)
       const buildDir = process.env.LOWDEFY_BUILD_DIR || '.lowdefy/server/build';
       const manifestPath = path.join(buildDir, 'e2e-manifest.json');
+      const lockPath = path.join(buildDir, 'e2e-manifest.lock');
+      const lockTimeout = 30000;
+      const lockStaleMs = 60000;
 
-      if (!fs.existsSync(manifestPath)) {
-        generateManifest({ buildDir });
-      }
+      const isLockStale = () => {
+        try {
+          const stat = fs.statSync(lockPath);
+          return Date.now() - stat.mtimeMs > lockStaleMs;
+        } catch {
+          return false;
+        }
+      };
 
+      const removeStaleLock = () => {
+        try {
+          if (isLockStale()) {
+            fs.unlinkSync(lockPath);
+            return true;
+          }
+        } catch {
+          // Another process may have removed it
+        }
+        return false;
+      };
+
+      const ensureManifest = async () => {
+        if (fs.existsSync(manifestPath)) {
+          return;
+        }
+
+        const start = Date.now();
+        while (Date.now() - start < lockTimeout) {
+          try {
+            fs.writeFileSync(lockPath, `${process.pid}:${Date.now()}`, { flag: 'wx' });
+
+            try {
+              if (!fs.existsSync(manifestPath)) {
+                generateManifest({ buildDir });
+              }
+            } finally {
+              try {
+                fs.unlinkSync(lockPath);
+              } catch {
+                // Ignore
+              }
+            }
+            return;
+          } catch (err) {
+            if (err.code === 'EEXIST') {
+              removeStaleLock();
+              await new Promise((r) => setTimeout(r, 100));
+            } else {
+              throw err;
+            }
+          }
+        }
+
+        if (!fs.existsSync(manifestPath)) {
+          throw new Error(
+            `Timed out waiting for e2e manifest generation after ${lockTimeout}ms. ` +
+              `Lock file may be stale: ${lockPath}`
+          );
+        }
+      };
+
+      await ensureManifest();
       const manifest = loadManifest({ buildDir });
       await use(manifest);
     },

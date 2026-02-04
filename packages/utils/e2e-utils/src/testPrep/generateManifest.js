@@ -44,7 +44,11 @@ function generateManifest({ buildDir = '.lowdefy' }) {
   }
 
   const manifestPath = path.join(buildDir, 'e2e-manifest.json');
-  fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
+  const tempPath = path.join(buildDir, `e2e-manifest.${process.pid}.tmp`);
+
+  // Write to temp file first, then rename atomically to prevent race conditions
+  fs.writeFileSync(tempPath, JSON.stringify(manifest, null, 2));
+  fs.renameSync(tempPath, manifestPath);
 
   return manifest;
 }
