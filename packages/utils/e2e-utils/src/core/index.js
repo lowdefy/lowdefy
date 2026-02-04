@@ -16,5 +16,12 @@
 
 export { getBlock } from './locators.js';
 export { goto, waitForReady, expectNavigation, waitForPage } from './navigation.js';
-export { waitForRequest, getRequestResponse } from './requests.js';
-export { getState, getBlockState, expectState } from './state.js';
+export { getRequestState, getRequestResponse, expectRequest } from './requests.js';
+export { getState, getBlockState, setState, expectState } from './state.js';
+export {
+  getValidation,
+  expectValidationError,
+  expectValidationWarning,
+  expectValidationSuccess,
+} from './validation.js';
+export { expectUrl, expectUrlQuery, setUrlQuery } from './url.js';
