@@ -83,6 +83,7 @@ function getBuildContext(buildDirectory, configDirectory) {
   const refMap = readJsonFile(path.join(buildDirectory, 'refMap.json')) ?? {};
   const keyMap = readJsonFile(path.join(buildDirectory, 'keyMap.json')) ?? {};
   const jsMap = readJsonFile(path.join(buildDirectory, 'jsMap.json')) ?? { client: {}, server: {} };
+  const connectionIds = readJsonFile(path.join(buildDirectory, 'connectionIds.json')) ?? [];
 
   cachedBuildContext = createContext({
     directories: {
@@ -93,11 +94,14 @@ function getBuildContext(buildDirectory, configDirectory) {
     stage: 'dev',
   });
 
-  // Restore refMap, keyMap, and jsMap from skeleton build
+  // Restore refMap, keyMap, jsMap, and connectionIds from skeleton build
   Object.assign(cachedBuildContext.refMap, refMap);
   Object.assign(cachedBuildContext.keyMap, keyMap);
   cachedBuildContext.jsMap.client = jsMap.client ?? {};
   cachedBuildContext.jsMap.server = jsMap.server ?? {};
+  for (const id of connectionIds) {
+    cachedBuildContext.connectionIds.add(id);
+  }
 
   return cachedBuildContext;
 }

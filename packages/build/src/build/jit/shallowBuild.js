@@ -217,6 +217,10 @@ async function shallowBuild(options) {
     await writeGlobal({ components, context });
     await writeLogger({ components, context });
     await writeMaps({ context });
+    await context.writeBuildArtifact(
+      'connectionIds.json',
+      JSON.stringify([...context.connectionIds])
+    );
     await writeMenus({ components, context });
     await writeJs({ context });
     await context.writeBuildArtifact('jsMap.json', JSON.stringify(context.jsMap));
