@@ -47,7 +47,7 @@ function createMockManager({ page }) {
         await route.fulfill({
           status: 500,
           contentType: 'application/json',
-          body: JSON.stringify({ success: false, message: error }),
+          body: JSON.stringify({ name: 'Error', message: error }),
         });
       } else {
         await route.fulfill({
@@ -80,7 +80,7 @@ function createMockManager({ page }) {
         await route.fulfill({
           status: 500,
           contentType: 'application/json',
-          body: JSON.stringify({ success: false, message: error }),
+          body: JSON.stringify({ name: 'Error', message: error }),
         });
       } else {
         await route.fulfill({
