@@ -26,6 +26,8 @@ function createConfig({
   testDir = 'e2e',
   testMatch = '**/*.spec.js',
   timeout = 180000, // 3 minutes for cold production builds
+  screenshot = 'only-on-failure', // 'off', 'on', or 'only-on-failure'
+  outputDir = 'e2e/test-results',
 } = {}) {
   const cliCommand = 'npx lowdefy';
   // Resolve absolute paths for all directories
@@ -46,9 +48,11 @@ function createConfig({
     testMatch,
     fullyParallel: true,
     reporter: 'list',
+    outputDir,
     use: {
       baseURL: `http://localhost:${port}`,
       trace: 'on-first-retry',
+      screenshot,
     },
     projects: [
       {
@@ -73,6 +77,8 @@ function createMultiAppConfig({
   testDir = 'e2e',
   testMatch = '**/*.spec.js',
   timeout = 180000,
+  screenshot = 'only-on-failure',
+  outputDir = 'e2e/test-results',
 } = {}) {
   const cliCommand = 'npx lowdefy';
 
@@ -108,8 +114,10 @@ function createMultiAppConfig({
     testDir,
     fullyParallel: true,
     reporter: 'list',
+    outputDir,
     use: {
       trace: 'on-first-retry',
+      screenshot,
     },
     projects,
     webServer,
