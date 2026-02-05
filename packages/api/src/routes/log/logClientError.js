@@ -17,6 +17,7 @@
 import { resolveConfigLocation } from '@lowdefy/errors/build';
 import { ConfigError, deserializeError } from '@lowdefy/errors/server';
 
+import formatValidationError from './formatValidationError.js';
 import validateBlockProperties from './validateBlockProperties.js';
 
 async function logClientError(context, data) {
@@ -30,7 +31,6 @@ async function logClientError(context, data) {
     try {
       const blockSchemas = await context.readConfigFile('plugins/blockSchemas.json');
       const schema = blockSchemas?.[error.blockType];
-
       if (schema) {
         const validationErrors = validateBlockProperties({
           blockType: error.blockType,
@@ -39,11 +39,8 @@ async function logClientError(context, data) {
         });
 
         if (validationErrors) {
-          const details = validationErrors
-            .map((err) => `${err.instancePath || '/'} ${err.message}`)
-            .join('; ');
           error = new ConfigError({
-            message: `Block "${error.blockType}" has invalid properties: ${details}.`,
+            message: formatValidationError(validationErrors[0], error.blockType, error.properties),
             configKey: error.configKey,
           });
         }
