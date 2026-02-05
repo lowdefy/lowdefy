@@ -79,7 +79,7 @@ function createPageManager({ page, manifest, helperRegistry, mockManager }) {
       state: (params) => expectState(page, params),
       url: (params) => expectUrl(page, params),
       urlQuery: (params) => expectUrlQuery(page, params),
-      request: (params) => expectRequest(page, params, mockManager),
+      request: (params) => expectRequest(page, params),
 
       // Block-level assertions
       get blocks() {

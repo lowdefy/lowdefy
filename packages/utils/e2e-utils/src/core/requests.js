@@ -43,7 +43,7 @@ async function getRequestResponse(page, { requestId }) {
   return state?.response;
 }
 
-async function expectRequest(page, { requestId, loading, response, payload, timeout = 30000 }, mockManager) {
+async function expectRequest(page, { requestId, loading, response, payload, timeout = 30000 }) {
   await expect
     .poll(
       async () => {
@@ -59,14 +59,11 @@ async function expectRequest(page, { requestId, loading, response, payload, time
           if (!matches) return { response: state.response };
         }
 
-        // For payload assertions, use captured HTTP request body from mock manager
+        // Payload is stored in the request state by the Lowdefy engine.
+        // It's the evaluated payload from the request config (client-side).
         if (payload !== undefined) {
-          const captured = mockManager?.getCapturedRequest(requestId);
-          if (!captured) {
-            return { error: 'No captured request - ensure request is mocked to capture payload' };
-          }
-          const payloadMatches = objectContains(captured.payload, payload);
-          if (!payloadMatches) return { payload: captured.payload };
+          const payloadMatches = objectContains(state.payload, payload);
+          if (!payloadMatches) return { payload: state.payload };
         }
 
         return true;
