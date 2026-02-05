@@ -1,39 +1,39 @@
 export default {
-  "type": "object",
-  "properties": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "author": {
-        "type": "string",
-        "description": "Comment author title. Overrides the \"author\" content area."
+  type: 'object',
+  properties: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      author: {
+        type: 'string',
+        description: 'Comment author title. Overrides the "author" content area.',
       },
-      "avatar": {
-        "oneOf": [
+      avatar: {
+        oneOf: [
           {
-            "type": "string",
-            "description": "Source URL of a avatar image."
+            type: 'string',
+            description: 'Source URL of a avatar image.',
           },
           {
-            "type": "object",
-            "description": "Avatar block properties.",
-            "docs": {
-              "displayType": "avatar"
-            }
-          }
-        ]
+            type: 'object',
+            description: 'Avatar block properties.',
+            docs: {
+              displayType: 'avatar',
+            },
+          },
+        ],
       },
-      "content": {
-        "type": "string",
-        "description": "Comment content. Overrides the \"content\" content area."
+      content: {
+        type: 'string',
+        description: 'Comment content. Overrides the "content" content area.',
       },
-      "datetime": {
-        "type": ["object", "string"],
-        "description": "Comment date and time.",
-        "docs": {
-          "displayType": "string"
-        }
-      }
-    }
-  }
+      datetime: {
+        type: ['object', 'string'],
+        description: 'Comment date and time.',
+        docs: {
+          displayType: 'string',
+        },
+      },
+    },
+  },
 };

@@ -1,166 +1,166 @@
 export default {
-  "type": "object",
-  "properties": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "checkable": {
-        "type": "boolean",
-        "default": false,
-        "description": "Make nodes checkboxes."
+  type: 'object',
+  properties: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      checkable: {
+        type: 'boolean',
+        default: false,
+        description: 'Make nodes checkboxes.',
       },
-      "inputStyle": {
-        "type": "object",
-        "description": "Css style to applied to input.",
-        "docs": {
-          "displayType": "yaml"
-        }
+      inputStyle: {
+        type: 'object',
+        description: 'Css style to applied to input.',
+        docs: {
+          displayType: 'yaml',
+        },
       },
-      "optionsStyle": {
-        "type": "object",
-        "description": "Css style to applied to option elements.",
-        "docs": {
-          "displayType": "yaml"
-        }
+      optionsStyle: {
+        type: 'object',
+        description: 'Css style to applied to option elements.',
+        docs: {
+          displayType: 'yaml',
+        },
       },
-      "disabled": {
-        "type": "boolean",
-        "default": false,
-        "description": "Disable the block if true."
+      disabled: {
+        type: 'boolean',
+        default: false,
+        description: 'Disable the block if true.',
       },
-      "showLine": {
-        "type": "boolean",
-        "default": false,
-        "description": "Show a connecting line if true."
+      showLine: {
+        type: 'boolean',
+        default: false,
+        description: 'Show a connecting line if true.',
       },
-      "selectable": {
-        "type": "boolean",
-        "default": true,
-        "description": "Selectable if true."
+      selectable: {
+        type: 'boolean',
+        default: true,
+        description: 'Selectable if true.',
       },
-      "options": {
-        "default": [],
-        "oneOf": [
+      options: {
+        default: [],
+        oneOf: [
           {
-            "type": "array",
-            "description": "Options can either be an array of label, value pairs.",
-            "items": {
-              "type": "object",
-              "required": ["value"],
-              "properties": {
-                "label": {
-                  "type": "string",
-                  "description": "Value label shown to user - supports html."
+            type: 'array',
+            description: 'Options can either be an array of label, value pairs.',
+            items: {
+              type: 'object',
+              required: ['value'],
+              properties: {
+                label: {
+                  type: 'string',
+                  description: 'Value label shown to user - supports html.',
                 },
-                "value": {
-                  "description": "Value selected. Can be of any type.",
-                  "oneOf": [
+                value: {
+                  description: 'Value selected. Can be of any type.',
+                  oneOf: [
                     {
-                      "type": "string"
+                      type: 'string',
                     },
                     {
-                      "type": "number"
+                      type: 'number',
                     },
                     {
-                      "type": "boolean"
+                      type: 'boolean',
                     },
                     {
-                      "type": "object"
+                      type: 'object',
                     },
                     {
-                      "type": "array"
-                    }
+                      type: 'array',
+                    },
                   ],
-                  "docs": {
-                    "displayType": "yaml"
-                  }
+                  docs: {
+                    displayType: 'yaml',
+                  },
                 },
-                "disabled": {
-                  "type": "boolean",
-                  "description": "Disable the node if true.",
-                  "default": false
+                disabled: {
+                  type: 'boolean',
+                  description: 'Disable the node if true.',
+                  default: false,
                 },
-                "disableCheckbox": {
-                  "type": "boolean",
-                  "description": "Disable the checkbox if true.",
-                  "default": false
+                disableCheckbox: {
+                  type: 'boolean',
+                  description: 'Disable the checkbox if true.',
+                  default: false,
                 },
-                "style": {
-                  "type": "object",
-                  "description": "Css style to applied to option.",
-                  "docs": {
-                    "displayType": "yaml"
-                  }
+                style: {
+                  type: 'object',
+                  description: 'Css style to applied to option.',
+                  docs: {
+                    displayType: 'yaml',
+                  },
                 },
-                "children": {
-                  "type": "array",
-                  "description": "Options can either be an array of label, value pairs.",
-                  "items": {
-                    "type": "object",
-                    "required": ["value"],
-                    "properties": {
-                      "label": {
-                        "type": "string",
-                        "description": "Value label shown to user - supports html."
+                children: {
+                  type: 'array',
+                  description: 'Options can either be an array of label, value pairs.',
+                  items: {
+                    type: 'object',
+                    required: ['value'],
+                    properties: {
+                      label: {
+                        type: 'string',
+                        description: 'Value label shown to user - supports html.',
                       },
-                      "value": {
-                        "description": "Value selected. Can be of any type.",
-                        "oneOf": [
+                      value: {
+                        description: 'Value selected. Can be of any type.',
+                        oneOf: [
                           {
-                            "type": "string"
+                            type: 'string',
                           },
                           {
-                            "type": "number"
+                            type: 'number',
                           },
                           {
-                            "type": "boolean"
+                            type: 'boolean',
                           },
                           {
-                            "type": "object"
+                            type: 'object',
                           },
                           {
-                            "type": "array"
-                          }
+                            type: 'array',
+                          },
                         ],
-                        "docs": {
-                          "displayType": "yaml"
-                        }
+                        docs: {
+                          displayType: 'yaml',
+                        },
                       },
-                      "disabled": {
-                        "type": "boolean",
-                        "description": "Disable the node if true.",
-                        "default": false
+                      disabled: {
+                        type: 'boolean',
+                        description: 'Disable the node if true.',
+                        default: false,
                       },
-                      "disableCheckbox": {
-                        "type": "boolean",
-                        "description": "Disable the checkbox if true.",
-                        "default": false
+                      disableCheckbox: {
+                        type: 'boolean',
+                        description: 'Disable the checkbox if true.',
+                        default: false,
                       },
-                      "style": {
-                        "type": "object",
-                        "description": "Css style to applied to option.",
-                        "docs": {
-                          "displayType": "yaml"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        ]
-      }
-    }
+                      style: {
+                        type: 'object',
+                        description: 'Css style to applied to option.',
+                        docs: {
+                          displayType: 'yaml',
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        ],
+      },
+    },
   },
-  "events": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "onChange": {
-        "type": "array",
-        "description": "Trigger action when selection is changed."
-      }
-    }
-  }
+  events: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      onChange: {
+        type: 'array',
+        description: 'Trigger action when selection is changed.',
+      },
+    },
+  },
 };

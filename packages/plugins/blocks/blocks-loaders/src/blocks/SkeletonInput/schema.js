@@ -1,62 +1,62 @@
 export default {
-  "type": "object",
-  "properties": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "labelStyle": {
-        "type": "object",
-        "description": "Css style object to apply to the label skeleton.",
-        "docs": {
-          "displayType": "yaml"
-        }
+  type: 'object',
+  properties: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      labelStyle: {
+        type: 'object',
+        description: 'Css style object to apply to the label skeleton.',
+        docs: {
+          displayType: 'yaml',
+        },
       },
-      "inputStyle": {
-        "type": "object",
-        "description": "Css style object to apply to the input skeleton.",
-        "docs": {
-          "displayType": "yaml"
-        }
+      inputStyle: {
+        type: 'object',
+        description: 'Css style object to apply to the input skeleton.',
+        docs: {
+          displayType: 'yaml',
+        },
       },
-      "size": {
-        "type": "string",
-        "default": "medium",
-        "description": "Size of the skeleton.",
-        "enum": ["small", "medium", "large"]
+      size: {
+        type: 'string',
+        default: 'medium',
+        description: 'Size of the skeleton.',
+        enum: ['small', 'medium', 'large'],
       },
-      "width": {
-        "type": ["number", "string"],
-        "description": "Width of the skeleton.",
-        "docs": {
-          "displayType": "string"
-        }
+      width: {
+        type: ['number', 'string'],
+        description: 'Width of the skeleton.',
+        docs: {
+          displayType: 'string',
+        },
       },
-      "labelHeight": {
-        "type": ["number", "string"],
-        "description": "Height of the skeleton.",
-        "docs": {
-          "displayType": "string"
-        }
+      labelHeight: {
+        type: ['number', 'string'],
+        description: 'Height of the skeleton.',
+        docs: {
+          displayType: 'string',
+        },
       },
-      "labelWidth": {
-        "type": ["number", "string"],
-        "description": "Width of the skeleton.",
-        "docs": {
-          "displayType": "string"
-        }
+      labelWidth: {
+        type: ['number', 'string'],
+        description: 'Width of the skeleton.',
+        docs: {
+          displayType: 'string',
+        },
       },
-      "inputHeight": {
-        "type": ["number", "string"],
-        "description": "Height of the skeleton.",
-        "docs": {
-          "displayType": "string"
-        }
-      }
-    }
+      inputHeight: {
+        type: ['number', 'string'],
+        description: 'Height of the skeleton.',
+        docs: {
+          displayType: 'string',
+        },
+      },
+    },
   },
-  "events": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {}
-  }
+  events: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {},
+  },
 };

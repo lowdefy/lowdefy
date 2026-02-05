@@ -1,33 +1,34 @@
 export default {
-  "type": "object",
-  "properties": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "html": {
-        "type": "string",
-        "description": "Content to be rendered as Html.",
-        "docs": {
-          "displayType": "text-area"
-        }
+  type: 'object',
+  properties: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      html: {
+        type: 'string',
+        description: 'Content to be rendered as Html.',
+        docs: {
+          displayType: 'text-area',
+        },
       },
-      "style": {
-        "type": "object",
-        "description": "Css style object to apply to Html div.",
-        "docs": {
-          "displayType": "yaml"
-        }
-      }
-    }
+      style: {
+        type: 'object',
+        description: 'Css style object to apply to Html div.',
+        docs: {
+          displayType: 'yaml',
+        },
+      },
+    },
   },
-  "events": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "onTextSelection": {
-        "type": "array",
-        "description": "Trigger action when text is selected and pass selected text to the event object."
-      }
-    }
-  }
+  events: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      onTextSelection: {
+        type: 'array',
+        description:
+          'Trigger action when text is selected and pass selected text to the event object.',
+      },
+    },
+  },
 };

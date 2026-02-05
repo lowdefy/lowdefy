@@ -1,34 +1,34 @@
 export default {
-  "type": "object",
-  "properties": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "content": {
-        "type": "string",
-        "description": "Box content string. Overrides the \"content\" content area."
+  type: 'object',
+  properties: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      content: {
+        type: 'string',
+        description: 'Box content string. Overrides the "content" content area.',
       },
-      "style": {
-        "type": "object",
-        "description": "Css style object to apply to Box div.",
-        "docs": {
-          "displayType": "yaml"
-        }
-      }
-    }
+      style: {
+        type: 'object',
+        description: 'Css style object to apply to Box div.',
+        docs: {
+          displayType: 'yaml',
+        },
+      },
+    },
   },
-  "events": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "onClick": {
-        "type": "array",
-        "description": "Trigger actions when the Box is clicked."
+  events: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      onClick: {
+        type: 'array',
+        description: 'Trigger actions when the Box is clicked.',
       },
-      "onPaste": {
-        "type": "array",
-        "description": "Trigger actions when the element is focused and a paste event is triggered."
-      }
-    }
-  }
+      onPaste: {
+        type: 'array',
+        description: 'Trigger actions when the element is focused and a paste event is triggered.',
+      },
+    },
+  },
 };

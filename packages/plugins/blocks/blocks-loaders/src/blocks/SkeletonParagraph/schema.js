@@ -1,33 +1,33 @@
 export default {
-  "type": "object",
-  "properties": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "style": {
-        "type": "object",
-        "description": "Css style object to apply to the skeleton.",
-        "docs": {
-          "displayType": "yaml"
-        }
+  type: 'object',
+  properties: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      style: {
+        type: 'object',
+        description: 'Css style object to apply to the skeleton.',
+        docs: {
+          displayType: 'yaml',
+        },
       },
-      "lines": {
-        "type": "number",
-        "default": 4,
-        "description": "Number of paragraph lines of the skeleton."
+      lines: {
+        type: 'number',
+        default: 4,
+        description: 'Number of paragraph lines of the skeleton.',
       },
-      "width": {
-        "type": ["number", "string"],
-        "description": "Width of the skeleton.",
-        "docs": {
-          "displayType": "string"
-        }
-      }
-    }
+      width: {
+        type: ['number', 'string'],
+        description: 'Width of the skeleton.',
+        docs: {
+          displayType: 'string',
+        },
+      },
+    },
   },
-  "events": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {}
-  }
+  events: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {},
+  },
 };

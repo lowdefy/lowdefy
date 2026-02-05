@@ -1,16 +1,16 @@
 export default {
-  "type": "object",
-  "properties": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "style": {
-        "type": "object",
-        "description": "Css style object to applied to footer.",
-        "docs": {
-          "displayType": "yaml"
-        }
-      }
-    }
-  }
+  type: 'object',
+  properties: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      style: {
+        type: 'object',
+        description: 'Css style object to applied to footer.',
+        docs: {
+          displayType: 'yaml',
+        },
+      },
+    },
+  },
 };

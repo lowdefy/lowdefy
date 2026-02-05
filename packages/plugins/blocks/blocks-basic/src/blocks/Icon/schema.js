@@ -1,63 +1,64 @@
 export default {
-  "type": "object",
-  "properties": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "color": {
-        "type": "string",
-        "description": "Primary icon color.",
-        "docs": {
-          "displayType": "color"
-        }
+  type: 'object',
+  properties: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      color: {
+        type: 'string',
+        description: 'Primary icon color.',
+        docs: {
+          displayType: 'color',
+        },
       },
-      "name": {
-        "type": "string",
-        "default": "AiOutlineCloseCircle",
-        "description": "Name of icon to be displayed."
+      name: {
+        type: 'string',
+        default: 'AiOutlineCloseCircle',
+        description: 'Name of icon to be displayed.',
       },
-      "rotate": {
-        "type": "number",
-        "description": "Number of degrees to rotate the icon."
+      rotate: {
+        type: 'number',
+        description: 'Number of degrees to rotate the icon.',
       },
-      "size": {
-        "type": ["string", "number"],
-        "description": "Size of the icon.",
-        "docs": {
-          "displayType": "number"
-        }
+      size: {
+        type: ['string', 'number'],
+        description: 'Size of the icon.',
+        docs: {
+          displayType: 'number',
+        },
       },
-      "spin": {
-        "type": "boolean",
-        "default": false,
-        "description": "Continuously spin icon with animation."
+      spin: {
+        type: 'boolean',
+        default: false,
+        description: 'Continuously spin icon with animation.',
       },
-      "title": {
-        "type": "string",
-        "description": "Icon hover title for accessibility."
+      title: {
+        type: 'string',
+        description: 'Icon hover title for accessibility.',
       },
-      "style": {
-        "type": "object",
-        "description": "CSS style object.",
-        "docs": {
-          "displayType": "yaml"
-        }
+      style: {
+        type: 'object',
+        description: 'CSS style object.',
+        docs: {
+          displayType: 'yaml',
+        },
       },
-      "disableLoadingIcon": {
-        "type": "boolean",
-        "default": false,
-        "description": "While loading after the icon has been clicked, don't render the loading icon."
-      }
-    }
+      disableLoadingIcon: {
+        type: 'boolean',
+        default: false,
+        description:
+          "While loading after the icon has been clicked, don't render the loading icon.",
+      },
+    },
   },
-  "events": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "onClick": {
-        "type": "array",
-        "description": "Trigger actions when icon is clicked."
-      }
-    }
-  }
+  events: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      onClick: {
+        type: 'array',
+        description: 'Trigger actions when icon is clicked.',
+      },
+    },
+  },
 };

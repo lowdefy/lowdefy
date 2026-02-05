@@ -1,73 +1,73 @@
 export default {
-  "type": "object",
-  "properties": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "option": {
-        "type": "object",
-        "description": "EChart settings object.",
-        "docs": {
-          "displayType": "yaml"
-        }
+  type: 'object',
+  properties: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      option: {
+        type: 'object',
+        description: 'EChart settings object.',
+        docs: {
+          displayType: 'yaml',
+        },
       },
-      "theme": {
-        "type": "object",
-        "description": "EChart theme object.",
-        "docs": {
-          "displayType": "yaml"
-        }
+      theme: {
+        type: 'object',
+        description: 'EChart theme object.',
+        docs: {
+          displayType: 'yaml',
+        },
       },
-      "width": {
-        "type": ["number", "string"],
-        "default": "auto",
-        "description": "Specify chart width explicitly, in pixel.",
-        "docs": {
-          "displayType": "string"
-        }
+      width: {
+        type: ['number', 'string'],
+        default: 'auto',
+        description: 'Specify chart width explicitly, in pixel.',
+        docs: {
+          displayType: 'string',
+        },
       },
-      "height": {
-        "type": ["number", "string"],
-        "default": "auto",
-        "description": "Specify chart height explicitly, in pixel.",
-        "docs": {
-          "displayType": "string"
-        }
+      height: {
+        type: ['number', 'string'],
+        default: 'auto',
+        description: 'Specify chart height explicitly, in pixel.',
+        docs: {
+          displayType: 'string',
+        },
       },
-      "init": {
-        "type": "object",
-        "description": "EChart init object.",
-        "properties": {
-          "renderer": {
-            "type": "string",
-            "enum": ["canvas", "svg"],
-            "default": "canvas",
-            "description": "Chart renderer."
+      init: {
+        type: 'object',
+        description: 'EChart init object.',
+        properties: {
+          renderer: {
+            type: 'string',
+            enum: ['canvas', 'svg'],
+            default: 'canvas',
+            description: 'Chart renderer.',
           },
-          "locale": {
-            "type": "string",
-            "enum": ["EN", "ZH"],
-            "default": "EN",
-            "description": "Specify the locale."
-          }
-        }
+          locale: {
+            type: 'string',
+            enum: ['EN', 'ZH'],
+            default: 'EN',
+            description: 'Specify the locale.',
+          },
+        },
       },
-      "style": {
-        "type": "object",
-        "description": "Css style object to apply to EChart div.",
-        "docs": {
-          "displayType": "yaml"
-        }
-      }
-    }
+      style: {
+        type: 'object',
+        description: 'Css style object to apply to EChart div.',
+        docs: {
+          displayType: 'yaml',
+        },
+      },
+    },
   },
-  "events": {
-    "type": "object",
-    "properties": {
-      "click": {
-        "type": "array",
-        "description": "Trigger actions when the element is clicked."
-      }
-    }
-  }
+  events: {
+    type: 'object',
+    properties: {
+      click: {
+        type: 'array',
+        description: 'Trigger actions when the element is clicked.',
+      },
+    },
+  },
 };

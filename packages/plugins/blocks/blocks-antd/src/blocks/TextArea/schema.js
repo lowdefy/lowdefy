@@ -1,172 +1,177 @@
 export default {
-  "type": "object",
-  "properties": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "allowClear": {
-        "type": "boolean",
-        "default": false,
-        "description": "Allow the user to clear their input."
+  type: 'object',
+  properties: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      allowClear: {
+        type: 'boolean',
+        default: false,
+        description: 'Allow the user to clear their input.',
       },
-      "autoFocus": {
-        "type": "boolean",
-        "default": false,
-        "description": "Autofocus to the block on page load."
+      autoFocus: {
+        type: 'boolean',
+        default: false,
+        description: 'Autofocus to the block on page load.',
       },
-      "autoSize": {
-        "oneOf": [
+      autoSize: {
+        oneOf: [
           {
-            "type": "boolean",
-            "default": false,
-            "description": "Automatically extend the block number of rows."
+            type: 'boolean',
+            default: false,
+            description: 'Automatically extend the block number of rows.',
           },
           {
-            "type": "object",
-            "description": "Automatically extend the block number of rows, with a set minimum and maximum row amount.",
-            "properties": {
-              "minRows": {
-                "type": "integer",
-                "description": "Minimum number of rows the block can be."
+            type: 'object',
+            description:
+              'Automatically extend the block number of rows, with a set minimum and maximum row amount.',
+            properties: {
+              minRows: {
+                type: 'integer',
+                description: 'Minimum number of rows the block can be.',
               },
-              "maxRows": {
-                "type": "integer",
-                "description": "Maximum number of rows the block can be."
-              }
-            }
-          }
+              maxRows: {
+                type: 'integer',
+                description: 'Maximum number of rows the block can be.',
+              },
+            },
+          },
         ],
-        "description": "autoSize can either be a boolean value, or an object with minimum and maximum rows.  Defining autoSize disables any prefix or suffix defined."
+        description:
+          'autoSize can either be a boolean value, or an object with minimum and maximum rows.  Defining autoSize disables any prefix or suffix defined.',
       },
-      "bordered": {
-        "type": "boolean",
-        "default": true,
-        "description": "Whether or not the textarea has a border style."
+      bordered: {
+        type: 'boolean',
+        default: true,
+        description: 'Whether or not the textarea has a border style.',
       },
-      "disabled": {
-        "type": "boolean",
-        "default": false,
-        "description": "Disable the block if true."
+      disabled: {
+        type: 'boolean',
+        default: false,
+        description: 'Disable the block if true.',
       },
-      "inputStyle": {
-        "type": "object",
-        "description": "Css style to applied to input.",
-        "docs": {
-          "displayType": "yaml"
-        }
+      inputStyle: {
+        type: 'object',
+        description: 'Css style to applied to input.',
+        docs: {
+          displayType: 'yaml',
+        },
       },
-      "label": {
-        "type": "object",
-        "description": "Label properties.",
-        "additionalProperties": false,
-        "properties": {
-          "align": {
-            "type": "string",
-            "enum": ["left", "right"],
-            "default": "left",
-            "description": "Align label left or right when inline."
+      label: {
+        type: 'object',
+        description: 'Label properties.',
+        additionalProperties: false,
+        properties: {
+          align: {
+            type: 'string',
+            enum: ['left', 'right'],
+            default: 'left',
+            description: 'Align label left or right when inline.',
           },
-          "colon": {
-            "type": "boolean",
-            "default": true,
-            "description": "Append label with colon."
+          colon: {
+            type: 'boolean',
+            default: true,
+            description: 'Append label with colon.',
           },
-          "extra": {
-            "type": "string",
-            "description": "Extra text to display beneath the content - supports html."
+          extra: {
+            type: 'string',
+            description: 'Extra text to display beneath the content - supports html.',
           },
-          "title": {
-            "type": "string",
-            "description": "Label title - supports html."
+          title: {
+            type: 'string',
+            description: 'Label title - supports html.',
           },
-          "span": {
-            "type": "number",
-            "description": "Label inline span."
+          span: {
+            type: 'number',
+            description: 'Label inline span.',
           },
-          "disabled": {
-            "type": "boolean",
-            "default": false,
-            "description": "Hide input label."
+          disabled: {
+            type: 'boolean',
+            default: false,
+            description: 'Hide input label.',
           },
-          "hasFeedback": {
-            "type": "boolean",
-            "default": true,
-            "description": "Display feedback extra from validation, this does not disable validation."
+          hasFeedback: {
+            type: 'boolean',
+            default: true,
+            description:
+              'Display feedback extra from validation, this does not disable validation.',
           },
-          "inline": {
-            "type": "boolean",
-            "default": false,
-            "description": "Render input and label inline."
+          inline: {
+            type: 'boolean',
+            default: false,
+            description: 'Render input and label inline.',
           },
-          "extraStyle": {
-            "type": "object",
-            "description": "Css style to applied to label extra.",
-            "docs": {
-              "displayType": "yaml"
-            }
+          extraStyle: {
+            type: 'object',
+            description: 'Css style to applied to label extra.',
+            docs: {
+              displayType: 'yaml',
+            },
           },
-          "feedbackStyle": {
-            "type": "object",
-            "description": "Css style to applied to label feedback.",
-            "docs": {
-              "displayType": "yaml"
-            }
-          }
-        }
+          feedbackStyle: {
+            type: 'object',
+            description: 'Css style to applied to label feedback.',
+            docs: {
+              displayType: 'yaml',
+            },
+          },
+        },
       },
-      "maxLength": {
-        "type": "integer",
-        "description": "The max number of input characters."
+      maxLength: {
+        type: 'integer',
+        description: 'The max number of input characters.',
       },
-      "placeholder": {
-        "type": "string",
-        "description": "Placeholder text inside the block before user types input."
+      placeholder: {
+        type: 'string',
+        description: 'Placeholder text inside the block before user types input.',
       },
-      "rows": {
-        "type": "integer",
-        "minimum": 1,
-        "description": "Number of rows in the block, should be greater or equal to 1. Defining rows disables any prefix."
+      rows: {
+        type: 'integer',
+        minimum: 1,
+        description:
+          'Number of rows in the block, should be greater or equal to 1. Defining rows disables any prefix.',
       },
-      "size": {
-        "type": "string",
-        "enum": ["small", "middle", "large"],
-        "default": "middle",
-        "description": "Size of the block."
+      size: {
+        type: 'string',
+        enum: ['small', 'middle', 'large'],
+        default: 'middle',
+        description: 'Size of the block.',
       },
-      "showCount": {
-        "type": ["boolean", "object"],
-        "default": false,
-        "description": "Show input character count.",
-        "docs": {
-          "displayType": "boolean"
-        }
+      showCount: {
+        type: ['boolean', 'object'],
+        default: false,
+        description: 'Show input character count.',
+        docs: {
+          displayType: 'boolean',
+        },
       },
-      "title": {
-        "type": "string",
-        "description": "Title to describe the input component, if no title is specified the block id is displayed - supports html."
-      }
-    }
+      title: {
+        type: 'string',
+        description:
+          'Title to describe the input component, if no title is specified the block id is displayed - supports html.',
+      },
+    },
   },
-  "events": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "onBlur": {
-        "type": "array",
-        "description": "Trigger action event occurs when text input loses focus."
+  events: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      onBlur: {
+        type: 'array',
+        description: 'Trigger action event occurs when text input loses focus.',
       },
-      "onChange": {
-        "type": "array",
-        "description": "Trigger action when text input is changed."
+      onChange: {
+        type: 'array',
+        description: 'Trigger action when text input is changed.',
       },
-      "onFocus": {
-        "type": "array",
-        "description": "Trigger action when text input gets focus."
+      onFocus: {
+        type: 'array',
+        description: 'Trigger action when text input gets focus.',
       },
-      "onPressEnter": {
-        "type": "array",
-        "description": "Trigger action when enter is pressed while text input is focused."
-      }
-    }
-  }
+      onPressEnter: {
+        type: 'array',
+        description: 'Trigger action when enter is pressed while text input is focused.',
+      },
+    },
+  },
 };
