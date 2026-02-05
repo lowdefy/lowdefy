@@ -50,8 +50,20 @@ class PluginError extends Error {
    * @param {*} [params.received] - The input that caused the error
    * @param {string} [params.location] - Where in the config the error occurred
    * @param {string} [params.configKey] - Config key (~k) for location resolution
+   * @param {string} [params.blockType] - Block type name (e.g., 'Box', 'Button') for block errors
+   * @param {Object} [params.properties] - Evaluated block properties for server-side validation
    */
-  constructor({ error, message, pluginType, pluginName, received, location, configKey }) {
+  constructor({
+    error,
+    message,
+    pluginType,
+    pluginName,
+    received,
+    location,
+    configKey,
+    blockType,
+    properties,
+  }) {
     // Store raw message - logger formats received value
     // Accept either error object or direct message string
     const rawMessage = message ?? error?.message;
@@ -68,6 +80,8 @@ class PluginError extends Error {
     this.received = received !== undefined ? received : error?.received;
     this.location = location;
     this.configKey = error?.configKey ?? configKey ?? null;
+    this.blockType = blockType ?? null;
+    this.properties = properties ?? null;
 
     // Location info (set by server-side resolution)
     this.source = null;
@@ -88,7 +102,7 @@ class PluginError extends Error {
    * @returns {Object} Serialized error data with type marker
    */
   serialize() {
-    return {
+    const data = {
       '~err': 'PluginError',
       message: this.message,
       rawMessage: this.rawMessage,
@@ -98,6 +112,11 @@ class PluginError extends Error {
       configKey: this.configKey,
       stack: this.stack,
     };
+    if (this.pluginType === 'block') {
+      data.blockType = this.blockType;
+      data.properties = this.properties;
+    }
+    return data;
   }
 
   /**
@@ -115,6 +134,8 @@ class PluginError extends Error {
       pluginType: data.pluginType,
       pluginName: data.pluginName,
       configKey: data.configKey,
+      blockType: data.blockType,
+      properties: data.properties,
     });
     // Set location separately to preserve it without re-formatting message
     error.location = data.location;

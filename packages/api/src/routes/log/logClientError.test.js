@@ -214,4 +214,181 @@ describe('logClientError', () => {
     expect(loggedError.name).toBe('ConfigError');
     expect(loggedError.message).toBe('Test error');
   });
+
+  test('converts block PluginError to ConfigError when properties fail schema validation', async () => {
+    const blockSchemas = {
+      Box: {
+        properties: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            content: { type: 'string' },
+            style: { type: 'object' },
+          },
+        },
+      },
+    };
+    const mockLogger = {
+      error: jest.fn(),
+      warn: jest.fn(),
+    };
+    const context = {
+      logger: mockLogger,
+      readConfigFile: jest.fn((file) => {
+        if (file === 'plugins/blockSchemas.json') return Promise.resolve(blockSchemas);
+        if (file === 'keyMap.json') return Promise.resolve(keyMap);
+        if (file === 'refMap.json') return Promise.resolve(refMap);
+      }),
+    };
+
+    const result = await logClientError(context, {
+      '~err': 'PluginError',
+      message: 'Block render failed',
+      pluginType: 'block',
+      pluginName: 'header',
+      blockType: 'Box',
+      properties: { content: 123, unknownProp: true },
+      configKey: 'key-123',
+    });
+
+    expect(result).toEqual({
+      success: true,
+      source: 'pages/home.yaml:8',
+      config: 'root.pages[0:home].blocks[0:header]',
+      link: 'pages/home.yaml:8',
+    });
+    const loggedError = mockLogger.error.mock.calls[0][0];
+    expect(loggedError.name).toBe('ConfigError');
+    expect(loggedError.message).toContain('Block "Box" has invalid properties');
+  });
+
+  test('keeps block PluginError when properties pass schema validation', async () => {
+    const blockSchemas = {
+      Box: {
+        properties: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            content: { type: 'string' },
+            style: { type: 'object' },
+          },
+        },
+      },
+    };
+    const mockLogger = {
+      error: jest.fn(),
+      warn: jest.fn(),
+    };
+    const context = {
+      logger: mockLogger,
+      readConfigFile: jest.fn((file) => {
+        if (file === 'plugins/blockSchemas.json') return Promise.resolve(blockSchemas);
+        if (file === 'keyMap.json') return Promise.resolve(keyMap);
+        if (file === 'refMap.json') return Promise.resolve(refMap);
+      }),
+    };
+
+    const result = await logClientError(context, {
+      '~err': 'PluginError',
+      message: 'Block render failed',
+      pluginType: 'block',
+      pluginName: 'header',
+      blockType: 'Box',
+      properties: { content: 'hello' },
+      configKey: 'key-123',
+    });
+
+    const loggedError = mockLogger.error.mock.calls[0][0];
+    expect(loggedError.name).toBe('PluginError');
+    expect(loggedError.message).toBe('Block render failed');
+  });
+
+  test('keeps block PluginError when blockType has no schema', async () => {
+    const blockSchemas = {};
+    const mockLogger = {
+      error: jest.fn(),
+      warn: jest.fn(),
+    };
+    const context = {
+      logger: mockLogger,
+      readConfigFile: jest.fn((file) => {
+        if (file === 'plugins/blockSchemas.json') return Promise.resolve(blockSchemas);
+        if (file === 'keyMap.json') return Promise.resolve(keyMap);
+        if (file === 'refMap.json') return Promise.resolve(refMap);
+      }),
+    };
+
+    const result = await logClientError(context, {
+      '~err': 'PluginError',
+      message: 'Block render failed',
+      pluginType: 'block',
+      pluginName: 'header',
+      blockType: 'CustomBlock',
+      properties: { anything: true },
+      configKey: 'key-123',
+    });
+
+    const loggedError = mockLogger.error.mock.calls[0][0];
+    expect(loggedError.name).toBe('PluginError');
+  });
+
+  test('keeps block PluginError when blockSchemas.json fails to load', async () => {
+    const mockLogger = {
+      error: jest.fn(),
+      warn: jest.fn(),
+    };
+    const context = {
+      logger: mockLogger,
+      readConfigFile: jest.fn((file) => {
+        if (file === 'plugins/blockSchemas.json') {
+          return Promise.reject(new Error('File not found'));
+        }
+        if (file === 'keyMap.json') return Promise.resolve(keyMap);
+        if (file === 'refMap.json') return Promise.resolve(refMap);
+      }),
+    };
+
+    const result = await logClientError(context, {
+      '~err': 'PluginError',
+      message: 'Block render failed',
+      pluginType: 'block',
+      pluginName: 'header',
+      blockType: 'Box',
+      properties: { content: 123 },
+      configKey: 'key-123',
+    });
+
+    const loggedError = mockLogger.error.mock.calls[0][0];
+    expect(loggedError.name).toBe('PluginError');
+    expect(mockLogger.warn).toHaveBeenCalledWith({
+      event: 'warn_block_schema_load_failed',
+      error: 'File not found',
+    });
+  });
+
+  test('skips block validation when blockType is missing from PluginError', async () => {
+    const mockLogger = {
+      error: jest.fn(),
+      warn: jest.fn(),
+    };
+    const context = {
+      logger: mockLogger,
+      readConfigFile: jest.fn((file) => {
+        if (file === 'keyMap.json') return Promise.resolve(keyMap);
+        if (file === 'refMap.json') return Promise.resolve(refMap);
+      }),
+    };
+
+    const result = await logClientError(context, {
+      '~err': 'PluginError',
+      message: 'Block render failed',
+      pluginType: 'block',
+      pluginName: 'header',
+      configKey: 'key-123',
+    });
+
+    const loggedError = mockLogger.error.mock.calls[0][0];
+    expect(loggedError.name).toBe('PluginError');
+    expect(context.readConfigFile).not.toHaveBeenCalledWith('plugins/blockSchemas.json');
+  });
 });

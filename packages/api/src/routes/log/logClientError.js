@@ -15,13 +15,43 @@
 */
 
 import { resolveConfigLocation } from '@lowdefy/errors/build';
-import { deserializeError } from '@lowdefy/errors/server';
+import { ConfigError, deserializeError } from '@lowdefy/errors/server';
+
+import validateBlockProperties from './validateBlockProperties.js';
 
 async function logClientError(context, data) {
   const { logger } = context;
 
   // Deserialize the error from the client
-  const error = deserializeError(data);
+  let error = deserializeError(data);
+
+  // Validate block properties against schema if this is a block PluginError
+  if (error.name === 'PluginError' && error.pluginType === 'block' && error.blockType) {
+    try {
+      const blockSchemas = await context.readConfigFile('plugins/blockSchemas.json');
+      const schema = blockSchemas?.[error.blockType];
+
+      if (schema) {
+        const validationErrors = validateBlockProperties({
+          blockType: error.blockType,
+          properties: error.properties,
+          schema,
+        });
+
+        if (validationErrors) {
+          const details = validationErrors
+            .map((err) => `${err.instancePath || '/'} ${err.message}`)
+            .join('; ');
+          error = new ConfigError({
+            message: `Block "${error.blockType}" has invalid properties: ${details}.`,
+            configKey: error.configKey,
+          });
+        }
+      }
+    } catch (err) {
+      logger.warn({ event: 'warn_block_schema_load_failed', error: err.message });
+    }
+  }
 
   // Resolve config location if error has configKey
   if (error.configKey) {
