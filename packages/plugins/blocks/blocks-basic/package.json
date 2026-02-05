@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/blocks-basic",
-  "version": "4.5.2",
+  "version": "0.0.0-experimental-20260204143249",
   "license": "Apache-2.0",
   "description": "Basic html Lowdefy blocks.",
   "homepage": "https://lowdefy.com",
@@ -34,7 +34,8 @@
   "exports": {
     "./*": "./dist/*",
     "./blocks": "./dist/blocks.js",
-    "./types": "./dist/types.js"
+    "./types": "./dist/types.js",
+    "./e2e/List": "./dist/blocks/List/e2e.js"
   },
   "files": [
     "dist/*"
@@ -49,17 +50,18 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@lowdefy/block-utils": "4.5.2",
-    "@lowdefy/helpers": "4.5.2",
+    "@lowdefy/block-utils": "0.0.0-experimental-20260204143249",
+    "@lowdefy/helpers": "0.0.0-experimental-20260204143249",
     "dompurify": "3.2.4",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
   "devDependencies": {
     "@emotion/jest": "11.10.5",
-    "@lowdefy/block-dev": "4.5.2",
-    "@lowdefy/block-dev-e2e": "4.5.2",
-    "@lowdefy/jest-yaml-transform": "4.5.2",
+    "@lowdefy/block-dev": "0.0.0-experimental-20260204143249",
+    "@lowdefy/block-dev-e2e": "0.0.0-experimental-20260204143249",
+    "@lowdefy/e2e-utils": "0.0.0-experimental-20260204143249",
+    "@lowdefy/jest-yaml-transform": "0.0.0-experimental-20260204143249",
     "@playwright/test": "1.50.1",
     "@swc/cli": "0.1.63",
     "@swc/core": "1.3.99",
