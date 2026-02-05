@@ -16,7 +16,7 @@
 
 import { validate } from '@lowdefy/ajv';
 
-function validateBlockProperties({ blockType, properties, schema }) {
+function validateBlockProperties({ properties, schema }) {
   if (!schema?.properties) {
     return null;
   }

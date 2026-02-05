@@ -14,6 +14,9 @@ const defaultTypesMap = {
     server: {},
   },
   requests: {},
+  schemas: {
+    blocks: {},
+  },
   styles: {
     packages: {},
     blocks: {},

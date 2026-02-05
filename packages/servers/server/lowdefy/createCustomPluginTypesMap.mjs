@@ -47,6 +47,9 @@ async function createCustomPluginTypesMap({ directories }) {
       server: {},
     },
     requests: {},
+    schemas: {
+      blocks: {},
+    },
     styles: {
       packages: {},
       blocks: {},
@@ -64,6 +67,18 @@ async function createCustomPluginTypesMap({ directories }) {
       version: plugin.version,
       typePrefix: plugin.typePrefix,
     });
+
+    // Import schemas from the plugin (build package can't resolve custom plugins)
+    try {
+      const packageSchemas = await import(`${plugin.name}/schemas`);
+      for (const [blockType, schema] of Object.entries(packageSchemas)) {
+        if (blockType !== 'default') {
+          customTypesMap.schemas.blocks[`${plugin.typePrefix ?? ''}${blockType}`] = schema;
+        }
+      }
+    } catch {
+      // Package doesn't export schemas — skip
+    }
   }
 
   return customTypesMap;

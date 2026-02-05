@@ -17,6 +17,9 @@
 async function writeBlockSchemaMap({ components, context }) {
   const schemas = {};
 
+  // Use schemas from typesMap (pre-loaded by server for custom plugins)
+  const typesMapSchemas = context.typesMap.schemas?.blocks ?? {};
+
   // Group blocks by package
   const blocksByPackage = {};
   for (const block of components.imports.blocks) {
@@ -28,15 +31,18 @@ async function writeBlockSchemaMap({ components, context }) {
 
   // Import schemas from each package
   for (const [packageName, blocks] of Object.entries(blocksByPackage)) {
+    let packageSchemas;
     try {
-      const packageSchemas = await import(`${packageName}/schemas`);
-      for (const block of blocks) {
-        if (packageSchemas[block.originalTypeName]) {
-          schemas[block.typeName] = packageSchemas[block.originalTypeName];
-        }
-      }
+      packageSchemas = await import(`${packageName}/schemas`);
     } catch {
-      // Package doesn't export schemas — skip
+      // Package not resolvable from build context (custom plugins) — skip
+    }
+    for (const block of blocks) {
+      if (packageSchemas?.[block.originalTypeName]) {
+        schemas[block.typeName] = packageSchemas[block.originalTypeName];
+      } else if (typesMapSchemas[block.typeName]) {
+        schemas[block.typeName] = typesMapSchemas[block.typeName];
+      }
     }
   }
 
