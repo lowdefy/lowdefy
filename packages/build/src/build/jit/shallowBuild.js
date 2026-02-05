@@ -226,6 +226,10 @@ async function shallowBuild(options) {
     await context.writeBuildArtifact('jsMap.json', JSON.stringify(context.jsMap));
     await writePluginImports({ components, context });
     await writePageRegistry({ pageRegistry, context });
+    await context.writeBuildArtifact(
+      'customTypesMap.json',
+      JSON.stringify(options.customTypesMap ?? {})
+    );
     await copyPublicFolder({ components, context });
 
     return { components, pageRegistry, fileDependencyMap, context };
