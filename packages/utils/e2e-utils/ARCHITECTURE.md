@@ -219,10 +219,8 @@ ldf = {
     blockState({ blockId })    // returns state for one block
     validation({ blockId })    // returns validation object
     requestResponse({ requestId }) // returns request response
+    block(blockId)             // raw Playwright locator for custom assertions
   },
-
-  // Escape hatch
-  block(blockId)          // raw Playwright locator for custom assertions
 }
 ```
 

@@ -122,6 +122,10 @@ const state = await ldf.get.state();
 const blockState = await ldf.get.blockState({ blockId: 'name_input' });
 const validation = await ldf.get.validation({ blockId: 'email_input' });
 const response = await ldf.get.requestResponse({ requestId: 'fetch_users' });
+
+// Get raw Playwright locator for custom assertions
+const locator = ldf.get.block('submit_btn');
+await expect(locator).toHaveAttribute('data-loading', 'true');
 ```
 
 ## Complete Example

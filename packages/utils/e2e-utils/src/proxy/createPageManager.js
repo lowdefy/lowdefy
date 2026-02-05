@@ -99,10 +99,8 @@ function createPageManager({ page, manifest, helperRegistry, mockManager }) {
       blockState: (params) => getBlockState(page, params),
       validation: (params) => getValidation(page, params.blockId),
       requestResponse: (params) => getRequestResponse(page, params),
+      block: (blockId) => getBlock(page, blockId),
     },
-
-    // Direct block locator access (for custom assertions)
-    block: (blockId) => getBlock(page, blockId),
 
     // Mocking (per-test overrides)
     mock: {
