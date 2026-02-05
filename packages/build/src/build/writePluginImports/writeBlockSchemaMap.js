@@ -38,10 +38,11 @@ async function writeBlockSchemaMap({ components, context }) {
       // Package not resolvable from build context (custom plugins) — skip
     }
     for (const block of blocks) {
-      if (packageSchemas?.[block.originalTypeName]) {
-        schemas[block.typeName] = packageSchemas[block.originalTypeName];
-      } else if (typesMapSchemas[block.typeName]) {
+      // Custom plugin schemas (pre-loaded by server) take priority over default package schemas
+      if (typesMapSchemas[block.typeName]) {
         schemas[block.typeName] = typesMapSchemas[block.typeName];
+      } else if (packageSchemas?.[block.originalTypeName]) {
+        schemas[block.typeName] = packageSchemas[block.originalTypeName];
       }
     }
   }
