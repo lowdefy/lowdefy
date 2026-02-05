@@ -16,6 +16,10 @@
 
 import { ConfigError } from '@lowdefy/errors/client';
 
+function formatZodErrors(issues) {
+  return (issues ?? []).map((issue) => `${issue.path.join('.')}: ${issue.message}`).join('; ');
+}
+
 async function validateBlockProperties({ block, lowdefy }) {
   const Component = lowdefy._internal.blockComponents[block.type];
 
@@ -23,17 +27,17 @@ async function validateBlockProperties({ block, lowdefy }) {
     return;
   }
 
-  const { validate } = await import('@lowdefy/ajv');
+  // Dynamic import for zero bundle impact until error occurs
+  const { z } = await import('zod');
 
-  const result = validate({
-    schema: Component.schema.properties,
-    data: block.eval?.properties ?? {},
-    returnErrors: true,
-  });
+  const zodSchema = z.fromJSONSchema(Component.schema.properties);
+  const result = zodSchema.safeParse(block.eval?.properties ?? {});
 
-  if (!result.valid) {
+  if (!result.success) {
+    const errorDetails = formatZodErrors(result.error.issues);
+    const message = `Block "${block.blockId}" of type "${block.type}" has invalid properties: ${errorDetails}`;
     const configError = new ConfigError({
-      message: `Block "${block.blockId}" of type "${block.type}" has invalid properties.`,
+      message,
       configKey: block.eval?.configKey,
     });
     lowdefy._internal.logError(configError);
