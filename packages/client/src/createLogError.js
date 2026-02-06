@@ -32,6 +32,7 @@ function createLogError(lowdefy) {
     }
 
     // Serialize and send to server for logging with location resolution
+    // Only log the errors returned from the server, not the raw client error
     if (error.serialize) {
       try {
         const response = await fetch(`${lowdefy.basePath}/api/client-error`, {
@@ -42,20 +43,14 @@ function createLogError(lowdefy) {
         });
         if (response.ok) {
           const result = await response.json();
-          if (result.errors?.length > 0) {
-            for (const serialized of result.errors) {
-              logger.error(deserializeError(serialized));
-            }
-            return;
+          for (const serialized of result.errors ?? []) {
+            logger.error(deserializeError(serialized));
           }
         }
       } catch (err) {
-        // Log server error if we got one, otherwise log original
-        if (err['~err']) {
-          logger.error(err);
-        }
+        // Server unavailable - error was not logged anywhere
+        logger.error(error);
       }
-      logger.error(error);
       return;
     }
 
