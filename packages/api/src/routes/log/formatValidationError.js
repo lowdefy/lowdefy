@@ -38,7 +38,8 @@ function formatValidationError(err, blockType, properties) {
 
   if (err.keyword === 'type') {
     const expected = err.params.type;
-    return `Block "${blockType}" property "${propName}" must be type "${expected}". Received ${formatValue(received)} (${typeof received}).`;
+    const receivedType = received === null ? 'null' : typeof received;
+    return `Block "${blockType}" property "${propName}" must be type "${expected}". Received ${formatValue(received)} (${receivedType}).`;
   }
   if (err.keyword === 'enum') {
     const allowed = err.params.allowedValues.map(formatValue).join(', ');
