@@ -18,16 +18,9 @@ import { ConfigError, deserializeError } from '@lowdefy/errors/client';
 import { createBrowserLogger } from '@lowdefy/logger/browser';
 
 function createLogError(lowdefy) {
-  const loggedErrors = new Set();
   const logger = createBrowserLogger();
 
   return async function logError(error) {
-    const errorKey = `${error.message}:${error.configKey || ''}`;
-    if (loggedErrors.has(errorKey)) {
-      return;
-    }
-    loggedErrors.add(errorKey);
-
     // If error already has source, it came from the server and was already logged there
     // Just log locally on the client
     if (error.source) {

@@ -105,6 +105,7 @@ class Actions {
   }
 
   async callActions({ actions, arrayIndices, block, catchActions, event, eventName, progress }) {
+    this.loggedActionErrors.clear();
     const startTimestamp = new Date();
     const responses = {};
     try {

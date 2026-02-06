@@ -26,7 +26,6 @@ async function request({ url, method = 'GET', body }) {
   });
   if (!res.ok) {
     const errorBody = await res.json();
-    console.log('Error Response: ', res, errorBody);
     if (errorBody['~err']) {
       throw deserializeError(errorBody);
     }
