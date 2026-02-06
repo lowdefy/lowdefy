@@ -24,9 +24,10 @@ async function logClientError(context, data) {
   const { logger } = context;
 
   // Deserialize the error from the client
-  let error = deserializeError(data);
+  const error = deserializeError(data);
 
   // Validate block properties against schema if this is a block PluginError
+  let errors = [error];
   if (error.name === 'PluginError' && error.pluginType === 'block' && error.blockType) {
     try {
       const blockSchemas = await context.readConfigFile('plugins/blockSchemas.json');
@@ -39,10 +40,13 @@ async function logClientError(context, data) {
         });
 
         if (validationErrors) {
-          error = new ConfigError({
-            message: formatValidationError(validationErrors[0], error.blockType, error.properties),
-            configKey: error.configKey,
-          });
+          errors = validationErrors.map(
+            (validationError) =>
+              new ConfigError({
+                message: formatValidationError(validationError, error.blockType, error.properties),
+                configKey: error.configKey,
+              })
+          );
         }
       }
     } catch (err) {
@@ -50,8 +54,9 @@ async function logClientError(context, data) {
     }
   }
 
-  // Resolve config location if error has configKey
-  if (error.configKey) {
+  // Resolve config location for errors with configKey
+  const configKey = errors[0].configKey;
+  if (configKey) {
     try {
       const [keyMap, refMap] = await Promise.all([
         context.readConfigFile('keyMap.json'),
@@ -59,31 +64,35 @@ async function logClientError(context, data) {
       ]);
 
       const location = resolveConfigLocation({
-        configKey: error.configKey,
+        configKey,
         keyMap,
         refMap,
         configDirectory: context.configDirectory,
       });
 
       if (location) {
-        error.source = location.source;
-        error.config = location.config;
-        error.link = location.link;
+        for (const err of errors) {
+          err.source = location.source;
+          err.config = location.config;
+          err.link = location.link;
+        }
       }
     } catch (err) {
       logger.warn({ event: 'warn_maps_load_failed', error: err.message });
     }
   }
 
-  // Log error - logger handles formatting
-  logger.error(error);
+  // Log errors - logger handles formatting
+  for (const err of errors) {
+    logger.error(err);
+  }
 
   return {
     success: true,
-    source: error.source ?? null,
-    config: error.config ?? null,
-    link: error.link ?? null,
-    error: error.serialize ? error.serialize() : null,
+    source: errors[0].source ?? null,
+    config: errors[0].config ?? null,
+    link: errors[0].link ?? null,
+    errors: errors.map((err) => (err.serialize ? err.serialize() : null)).filter(Boolean),
   };
 }
 

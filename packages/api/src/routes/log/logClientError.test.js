@@ -48,12 +48,10 @@ describe('logClientError', () => {
       message: 'Test error',
     });
 
-    expect(result).toEqual({
-      success: true,
-      source: null,
-      config: null,
-      link: null,
-    });
+    expect(result.success).toBe(true);
+    expect(result.source).toBeNull();
+    expect(result.errors).toHaveLength(1);
+    expect(result.errors[0].message).toBe('Test error');
     expect(mockLogger.error).toHaveBeenCalledTimes(1);
     const loggedError = mockLogger.error.mock.calls[0][0];
     expect(loggedError.name).toBe('ConfigError');
@@ -80,12 +78,12 @@ describe('logClientError', () => {
       configKey: 'key-123',
     });
 
-    expect(result).toEqual({
-      success: true,
-      source: 'pages/home.yaml:8',
-      config: 'root.pages[0:home].blocks[0:header]',
-      link: 'pages/home.yaml:8',
-    });
+    expect(result.success).toBe(true);
+    expect(result.source).toBe('pages/home.yaml:8');
+    expect(result.config).toBe('root.pages[0:home].blocks[0:header]');
+    expect(result.errors).toHaveLength(1);
+    expect(result.errors[0].message).toBe('Test error');
+    expect(result.errors[0].source).toBe('pages/home.yaml:8');
     const loggedError = mockLogger.error.mock.calls[0][0];
     expect(loggedError.name).toBe('ConfigError');
     expect(loggedError.message).toBe('Test error');
@@ -113,12 +111,10 @@ describe('logClientError', () => {
       pluginName: '_if',
     });
 
-    expect(result).toEqual({
-      success: true,
-      source: 'pages/home.yaml:8',
-      config: 'root.pages[0:home].blocks[0:header]',
-      link: 'pages/home.yaml:8',
-    });
+    expect(result.success).toBe(true);
+    expect(result.source).toBe('pages/home.yaml:8');
+    expect(result.errors).toHaveLength(1);
+    expect(result.errors[0].message).toBe('Operator failed');
     const loggedError = mockLogger.error.mock.calls[0][0];
     expect(loggedError.name).toBe('PluginError');
     expect(loggedError.message).toBe('Operator failed');
@@ -141,12 +137,10 @@ describe('logClientError', () => {
       service: 'MongoDB',
     });
 
-    expect(result).toEqual({
-      success: true,
-      source: null,
-      config: null,
-      link: null,
-    });
+    expect(result.success).toBe(true);
+    expect(result.source).toBeNull();
+    expect(result.errors).toHaveLength(1);
+    expect(result.errors[0].message).toBe('MongoDB: Connection refused');
     const loggedError = mockLogger.error.mock.calls[0][0];
     expect(loggedError.name).toBe('ServiceError');
     expect(loggedError.message).toBe('MongoDB: Connection refused');
@@ -172,16 +166,13 @@ describe('logClientError', () => {
       configKey: 'non-existent-key',
     });
 
-    expect(result).toEqual({
-      success: true,
-      source: null,
-      config: null,
-      link: null,
-    });
+    expect(result.success).toBe(true);
+    expect(result.source).toBeNull();
+    expect(result.errors).toHaveLength(1);
     const loggedError = mockLogger.error.mock.calls[0][0];
     expect(loggedError.name).toBe('ConfigError');
     expect(loggedError.message).toBe('Test error');
-    expect(loggedError.source).toBeNull();
+    expect(loggedError.source).toBeUndefined();
   });
 
   test('handles error when loading maps', async () => {
@@ -200,12 +191,9 @@ describe('logClientError', () => {
       configKey: 'key-123',
     });
 
-    expect(result).toEqual({
-      success: true,
-      source: null,
-      config: null,
-      link: null,
-    });
+    expect(result.success).toBe(true);
+    expect(result.source).toBeNull();
+    expect(result.errors).toHaveLength(1);
     expect(mockLogger.warn).toHaveBeenCalledWith({
       event: 'warn_maps_load_failed',
       error: 'File not found',
@@ -251,15 +239,19 @@ describe('logClientError', () => {
       configKey: 'key-123',
     });
 
-    expect(result).toEqual({
-      success: true,
-      source: 'pages/home.yaml:8',
-      config: 'root.pages[0:home].blocks[0:header]',
-      link: 'pages/home.yaml:8',
+    expect(result.success).toBe(true);
+    expect(result.source).toBe('pages/home.yaml:8');
+    expect(result.errors).toHaveLength(2);
+    expect(mockLogger.error).toHaveBeenCalledTimes(2);
+    const loggedMessages = mockLogger.error.mock.calls.map((call) => call[0].message);
+    expect(loggedMessages).toContain('Block "Box" property "unknownProp" is not allowed.');
+    expect(loggedMessages).toContain(
+      'Block "Box" property "content" must be type "string". Received 123 (number).'
+    );
+    mockLogger.error.mock.calls.forEach((call) => {
+      expect(call[0].name).toBe('ConfigError');
+      expect(call[0].source).toBe('pages/home.yaml:8');
     });
-    const loggedError = mockLogger.error.mock.calls[0][0];
-    expect(loggedError.name).toBe('ConfigError');
-    expect(loggedError.message).toContain('Block "Box" has invalid properties');
   });
 
   test('keeps block PluginError when properties pass schema validation', async () => {

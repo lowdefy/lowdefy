@@ -39,8 +39,10 @@ function createLogError(lowdefy) {
         });
         if (response.ok) {
           const result = await response.json();
-          if (result.error) {
-            logger.error(deserializeError(result.error));
+          if (result.errors?.length > 0) {
+            for (const serialized of result.errors) {
+              logger.error(deserializeError(serialized));
+            }
             return;
           }
         }
