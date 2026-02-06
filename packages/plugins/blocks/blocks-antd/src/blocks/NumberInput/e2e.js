@@ -17,21 +17,18 @@
 import { createBlockHelper } from '@lowdefy/e2e-utils';
 import { expect } from '@playwright/test';
 
-const locator = (page, blockId) => page.locator(`#${blockId}`);
+const locator = (page, blockId) => page.locator(`#${blockId}_input`);
 
 export default createBlockHelper({
   locator,
-  get: {
-    // Get the block ID for a nested block within a list item
-    // Usage: ldf.get.blocks['myList'].itemBlockId(0, 'edit_btn') => 'myList.0.edit_btn'
-    itemBlockId: (page, blockId, index, nestedBlockId) => `${blockId}.${index}.${nestedBlockId}`,
+  do: {
+    fill: (page, blockId, val) => locator(page, blockId).fill(String(val)),
+    clear: (page, blockId) => locator(page, blockId).clear(),
+    enterPressed: (page, blockId) => locator(page, blockId).press('Enter'),
   },
   expect: {
-    itemCount: (page, blockId, count) =>
-      expect(locator(page, blockId).locator('> div')).toHaveCount(count),
-    empty: (page, blockId) =>
-      expect(locator(page, blockId).locator('> div')).toHaveCount(0),
-    notEmpty: (page, blockId) =>
-      expect(locator(page, blockId).locator('> div').first()).toBeVisible(),
+    value: (page, blockId, val) => expect(locator(page, blockId)).toHaveValue(String(val)),
+    placeholder: (page, blockId, text) =>
+      expect(locator(page, blockId)).toHaveAttribute('placeholder', text),
   },
 });
