@@ -47,6 +47,7 @@
     "./e2e/Selector": "./dist/blocks/Selector/e2e.js",
     "./e2e/Statistic": "./dist/blocks/Statistic/e2e.js",
     "./e2e/TextArea": "./dist/blocks/TextArea/e2e.js",
+    "./e2e/NumberInput": "./dist/blocks/NumberInput/e2e.js",
     "./e2e/TextInput": "./dist/blocks/TextInput/e2e.js"
   },
   "files": [
