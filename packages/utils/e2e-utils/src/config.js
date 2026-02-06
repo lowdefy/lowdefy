@@ -27,7 +27,7 @@ function createConfig({
   testMatch = '**/*.spec.js',
   timeout = 180000, // 3 minutes for cold production builds
   screenshot = 'only-on-failure', // 'off', 'on', or 'only-on-failure'
-  outputDir = 'e2e/test-results',
+  outputDir = 'test-results',
 } = {}) {
   const cliCommand = 'npx lowdefy';
   // Resolve absolute paths for all directories
@@ -78,7 +78,7 @@ function createMultiAppConfig({
   testMatch = '**/*.spec.js',
   timeout = 180000,
   screenshot = 'only-on-failure',
-  outputDir = 'e2e/test-results',
+  outputDir = 'test-results',
 } = {}) {
   const cliCommand = 'npx lowdefy';
 

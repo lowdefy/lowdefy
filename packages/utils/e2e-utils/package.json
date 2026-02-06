@@ -42,21 +42,15 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
+    "@lowdefy/blocks-antd": "4.5.2",
+    "@lowdefy/blocks-basic": "4.5.2",
     "js-yaml": "4.1.0",
     "prompts": "2.4.2"
   },
   "peerDependencies": {
-    "@lowdefy/blocks-antd": "4.5.2",
-    "@lowdefy/blocks-basic": "4.5.2",
     "@playwright/test": "^1.50.0"
   },
   "peerDependenciesMeta": {
-    "@lowdefy/blocks-antd": {
-      "optional": true
-    },
-    "@lowdefy/blocks-basic": {
-      "optional": true
-    },
     "@playwright/test": {
       "optional": false
     }
