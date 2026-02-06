@@ -75,7 +75,11 @@ function apiWrapper(handler) {
       return response;
     } catch (error) {
       await logError({ error, context });
-      res.status(500).json({ name: error.name, message: error.message });
+      const serialized = error.serialize
+        ? error.serialize()
+        : { name: error.name, message: error.message };
+
+      res.status(500).json(serialized);
     }
   };
 }

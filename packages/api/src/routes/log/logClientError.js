@@ -83,6 +83,7 @@ async function logClientError(context, data) {
     source: error.source ?? null,
     config: error.config ?? null,
     link: error.link ?? null,
+    error: error.serialize ? error.serialize() : null,
   };
 }
 

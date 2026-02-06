@@ -63,11 +63,9 @@ async function logError({ context, error }) {
       error.config = location.config;
     }
 
-    // Human-readable output: source (info/blue) then message (error/red)
+    // LowdefyError gets special handling (includes stack trace)
     if (isLowdefyError) {
       context.logger.error(error);
-    } else if (location) {
-      context.logger.info(location.source);
     }
 
     // Structured logging (consistent with client error schema + production fields)

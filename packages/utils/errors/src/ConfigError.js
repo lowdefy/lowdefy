@@ -50,8 +50,8 @@ class ConfigError extends Error {
     // Support both string and object parameter
     const isString = typeof messageOrParams === 'string';
     const error = isString ? null : messageOrParams.error;
-    const message = isString ? messageOrParams : (messageOrParams.message ?? error?.message);
-    const configKey = isString ? null : (messageOrParams.configKey ?? error?.configKey);
+    const message = isString ? messageOrParams : messageOrParams.message ?? error?.message;
+    const configKey = isString ? null : messageOrParams.configKey ?? error?.configKey;
     const location = isString ? null : messageOrParams.location;
     const checkSlug = isString ? undefined : messageOrParams.checkSlug;
     const received = isString
@@ -96,6 +96,7 @@ class ConfigError extends Error {
       '~err': 'ConfigError',
       message: this.message,
       configKey: this.configKey,
+      source: this.source,
     };
   }
 
@@ -105,10 +106,12 @@ class ConfigError extends Error {
    * @returns {ConfigError}
    */
   static deserialize(data) {
-    return new ConfigError({
+    const error = new ConfigError({
       message: data.message,
       configKey: data.configKey,
     });
+    error.source = data.source;
+    return error;
   }
 }
 

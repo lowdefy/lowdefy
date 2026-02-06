@@ -31,16 +31,8 @@ function createStdOutLineHandler({ context }) {
 
   function stdOutLineHandler(line) {
     try {
-      const { print, msg, source, err } = JSON.parse(line);
-
-      // Extract source from err (pino error serialization) or top-level (merging object)
-      const resolvedSource = err?.source ?? source;
-
-      // Error/warn with source: show source link (blue) before the message
-      if (resolvedSource && (print === 'error' || print === 'warn')) {
-        ui.link(resolvedSource);
-      }
-
+      const { print, msg } = JSON.parse(line);
+      // Source is now included in error.print() via formatErrorMessage
       if (msg != null && msg !== '' && msg !== 'undefined') {
         ui[print]?.(msg);
       }

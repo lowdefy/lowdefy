@@ -55,6 +55,15 @@ class LowdefyError extends BaseLowdefyError {
     }
     console.error(this.print());
   }
+
+  /**
+   * Deserializes error data back into a client LowdefyError.
+   * @param {Object} data - Serialized error data
+   * @returns {LowdefyError}
+   */
+  static deserialize(data) {
+    return new LowdefyError(data.message);
+  }
 }
 
 export default LowdefyError;

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigError } from '@lowdefy/errors/client';
+import { ConfigError, deserializeError } from '@lowdefy/errors/client';
 import { createBrowserLogger } from '@lowdefy/logger/browser';
 
 function createLogError(lowdefy) {
@@ -28,6 +28,13 @@ function createLogError(lowdefy) {
     }
     loggedErrors.add(errorKey);
 
+    // If error already has source, it came from the server and was already logged there
+    // Just log locally on the client
+    if (error.source) {
+      logger.error(error);
+      return;
+    }
+
     // Serialize and send to server for logging with location resolution
     if (error.serialize) {
       try {
@@ -38,13 +45,17 @@ function createLogError(lowdefy) {
           credentials: 'same-origin',
         });
         if (response.ok) {
-          const { source } = await response.json();
-          if (source) {
-            logger.info(source);
+          const result = await response.json();
+          if (result.error) {
+            logger.error(deserializeError(result.error));
+            return;
           }
         }
-      } catch {
-        // Server logging failed - continue with local console
+      } catch (err) {
+        // Log server error if we got one, otherwise log original
+        if (err['~err']) {
+          logger.error(err);
+        }
       }
       logger.error(error);
       return;

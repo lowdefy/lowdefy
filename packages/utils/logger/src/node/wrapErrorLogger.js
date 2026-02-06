@@ -14,11 +14,10 @@
   limitations under the License.
 */
 
-function wrapErrorLogger(logger, { includeSource = true } = {}) {
+function wrapErrorLogger(logger) {
   if (logger.error._lowdefyWrapped) return logger;
 
   const originalError = logger.error.bind(logger);
-  const originalInfo = logger.info?.bind(logger);
 
   const wrappedError = (errorOrMessage, ...args) => {
     if (args.length > 0) {
@@ -32,11 +31,7 @@ function wrapErrorLogger(logger, { includeSource = true } = {}) {
     }
 
     if (errorOrMessage && (errorOrMessage.name || errorOrMessage.message !== undefined)) {
-      // Log source as separate blue link line
-      if (includeSource && errorOrMessage.source && originalInfo) {
-        originalInfo({ print: 'link' }, errorOrMessage.source);
-      }
-
+      // Source is now included in error.print() via formatErrorMessage
       const msg = errorOrMessage.print
         ? errorOrMessage.print()
         : `[${errorOrMessage.name || 'Error'}] ${errorOrMessage.message}`;

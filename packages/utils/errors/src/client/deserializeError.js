@@ -14,32 +14,30 @@
   limitations under the License.
 */
 
-/**
- * @lowdefy/errors/client - Client-side error classes.
- *
- * Use this entry point for client-side (browser) code that needs async location resolution.
- *
- * @example
- * import { ConfigError, PluginError } from '@lowdefy/errors/client';
- *
- * const error = new ConfigError({ message: 'Invalid operator', configKey });
- * await error.resolve(lowdefy);
- */
-
 import ConfigError from './ConfigError.js';
-import ConfigWarning from '../ConfigWarning.js';
-import deserializeError from './deserializeError.js';
 import LowdefyError from './LowdefyError.js';
 import PluginError from '../PluginError.js';
 import ServiceError from '../ServiceError.js';
-import UserError from '../UserError.js';
 
-export {
+const errorTypes = {
   ConfigError,
-  ConfigWarning,
-  deserializeError,
   LowdefyError,
   PluginError,
   ServiceError,
-  UserError,
 };
+
+/**
+ * Deserializes error data back into the appropriate error class.
+ * Uses client-side error classes for async location resolution.
+ * @param {Object} data - Serialized error data with ~err type marker
+ * @returns {Error} The deserialized error instance
+ */
+function deserializeError(data) {
+  const ErrorClass = errorTypes[data['~err']];
+  if (!ErrorClass) {
+    throw new Error(`Unknown error type: ${data['~err']}`);
+  }
+  return ErrorClass.deserialize(data);
+}
+
+export default deserializeError;

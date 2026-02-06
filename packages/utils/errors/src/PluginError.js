@@ -110,6 +110,7 @@ class PluginError extends Error {
       pluginName: this.pluginName,
       location: this.location,
       configKey: this.configKey,
+      source: this.source,
       stack: this.stack,
     };
     if (this.pluginType === 'block') {
@@ -139,6 +140,7 @@ class PluginError extends Error {
     });
     // Set location separately to preserve it without re-formatting message
     error.location = data.location;
+    error.source = data.source;
     // Preserve the formatted message if different from rawMessage
     if (data.message && data.message !== messageToUse) {
       error.message = data.message;

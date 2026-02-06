@@ -27,12 +27,20 @@ function formatErrorMessage(error, { includePrefix = true } = {}) {
     }
   }
 
-  if (includePrefix) {
-    const name = error?.name || 'Error';
-    return `[${name}] ${message}`;
+  const parts = [];
+
+  if (error?.source) {
+    parts.push(error.source);
   }
 
-  return message;
+  if (includePrefix) {
+    const name = error?.name || 'Error';
+    parts.push(`[${name}] ${message}`);
+  } else {
+    parts.push(message);
+  }
+
+  return parts.join('\n');
 }
 
 export default formatErrorMessage;
