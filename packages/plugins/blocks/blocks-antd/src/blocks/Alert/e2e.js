@@ -17,7 +17,7 @@
 import { createBlockHelper } from '@lowdefy/e2e-utils';
 import { expect } from '@playwright/test';
 
-const locator = (page, blockId) => page.locator(`#${blockId}`);
+const locator = (page, blockId) => page.locator(`#bl-${blockId} .ant-alert`);
 
 export default createBlockHelper({
   locator,
