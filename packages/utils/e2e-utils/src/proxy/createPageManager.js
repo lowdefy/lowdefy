@@ -100,6 +100,15 @@ function createPageManager({ page, manifest, helperRegistry, mockManager }) {
       validation: (params) => getValidation(page, params.blockId),
       requestResponse: (params) => getRequestResponse(page, params),
       block: (blockId) => getBlock(page, blockId),
+      get blocks() {
+        ensurePageLoaded();
+        return createBlockProxy({
+          page,
+          blockMap: currentBlockMap,
+          helperRegistry,
+          mode: 'get',
+        });
+      },
     },
 
     // Mocking (per-test overrides)

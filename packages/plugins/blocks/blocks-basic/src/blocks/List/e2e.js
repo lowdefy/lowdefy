@@ -21,11 +21,6 @@ const locator = (page, blockId) => page.locator(`#${blockId}`);
 
 export default createBlockHelper({
   locator,
-  get: {
-    // Get the block ID for a nested block within a list item
-    // Usage: ldf.get.blocks['myList'].itemBlockId(0, 'edit_btn') => 'myList.0.edit_btn'
-    itemBlockId: (page, blockId, index, nestedBlockId) => `${blockId}.${index}.${nestedBlockId}`,
-  },
   expect: {
     itemCount: (page, blockId, count) =>
       expect(locator(page, blockId).locator('> div')).toHaveCount(count),
