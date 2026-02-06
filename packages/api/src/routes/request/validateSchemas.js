@@ -22,18 +22,45 @@ function validateSchemas(
   { logger },
   { connection, connectionProperties, requestConfig, requestResolver, requestProperties }
 ) {
-  try {
-    validate({ schema: connection.schema, data: connectionProperties });
-    validate({ schema: requestResolver.schema, data: requestProperties });
-  } catch (error) {
-    const configKey = requestConfig['~k'];
-    const err = new ConfigError({ message: error.message, configKey });
+  const configKey = requestConfig['~k'];
+  const allErrors = [];
+
+  const connectionResult = validate({
+    schema: connection.schema,
+    data: connectionProperties,
+    returnErrors: true,
+  });
+  if (!connectionResult.valid) {
+    allErrors.push(...connectionResult.errors);
+  }
+
+  const requestResult = validate({
+    schema: requestResolver.schema,
+    data: requestProperties,
+    returnErrors: true,
+  });
+  if (!requestResult.valid) {
+    allErrors.push(...requestResult.errors);
+  }
+
+  if (allErrors.length === 0) {
+    return;
+  }
+
+  const errors = allErrors.map((error) => new ConfigError({ message: error.message, configKey }));
+
+  for (const err of errors) {
     logger.debug(
       { params: { id: requestConfig.requestId, type: requestConfig.type, configKey }, err },
       err.message
     );
-    throw err;
   }
+
+  const primaryError = errors[0];
+  if (errors.length > 1) {
+    primaryError.additionalErrors = errors.slice(1);
+  }
+  throw primaryError;
 }
 
 export default validateSchemas;

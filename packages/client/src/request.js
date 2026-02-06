@@ -27,7 +27,13 @@ async function request({ url, method = 'GET', body }) {
   if (!res.ok) {
     const errorBody = await res.json();
     if (errorBody['~err']) {
-      throw deserializeError(errorBody);
+      const error = deserializeError(errorBody);
+      if (errorBody.additionalErrors?.length > 0) {
+        error.additionalErrors = errorBody.additionalErrors.map((e) =>
+          e['~err'] ? deserializeError(e) : new Error(e.message)
+        );
+      }
+      throw error;
     }
     throw new Error(errorBody.message || 'Request error');
   }

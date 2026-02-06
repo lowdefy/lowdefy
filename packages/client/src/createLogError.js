@@ -25,6 +25,9 @@ function createLogError(lowdefy) {
     // Just log locally on the client
     if (error.source) {
       logger.error(error);
+      for (const additionalError of error.additionalErrors ?? []) {
+        logger.error(additionalError);
+      }
       return;
     }
 
