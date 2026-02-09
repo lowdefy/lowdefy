@@ -1,11 +1,11 @@
 ---
-description: "Clean up and deduplicate code in a PR according to Lowdefy coding standards. Analyzes diff, linked issues, review conversation, and applies targeted improvements."
+description: "Clean up and deduplicate code in a PR according to Lowdefy coding standards. Analyzes diff, linked issues, review conversation, applies targeted improvements, updates tests, and removes redundant test cases."
 argument-hint: "<pr-number>"
 ---
 
 # PR Cleanup
 
-Analyze a pull request's changes, understand its objective from linked issues and conversation history, then clean up and deduplicate the code to match Lowdefy coding standards.
+Analyze a pull request's changes, understand its objective from linked issues and conversation history, then clean up and deduplicate the code to match Lowdefy coding standards. Also update relevant test cases to reflect cleanup changes and remove redundant tests.
 
 ## Arguments
 
@@ -81,13 +81,25 @@ If `CURRENT_USER == PR_AUTHOR`:
 gh pr diff $PR_NUMBER --name-only
 ```
 
-Filter to relevant source files. For each changed `.js` file:
+Separate changed files into two groups:
 
+**Source files** (non-test `.js` files):
 1. **Read the full current file** (not just the diff) for context
 2. **Read the diff** for that specific file
 3. **Identify the package** the file belongs to
 
-Group files by package for pattern consistency checks.
+**Test files** (`.test.js` files):
+1. **Read each changed test file** in full
+2. **Map each test file to its source file** (e.g., `buildConnections.test.js` → `buildConnections.js`)
+3. **Note any source files that were changed but have no corresponding test changes** - these may need test updates
+
+**Also find test files for changed source files that weren't included in the PR:**
+```bash
+# For each changed source file, check if a co-located test file exists
+# e.g., if src/buildConnections.js changed, check for src/buildConnections.test.js
+```
+
+Group all files by package for pattern consistency checks.
 
 ### 6. Audit Against Lowdefy Standards
 
@@ -137,6 +149,18 @@ Check each changed file against these categories. **Only flag issues in changed/
 - [ ] ES5 trailing commas
 - [ ] No `console.log` / `console.warn` without reason
 
+#### 6.7 Test Quality
+
+For each test file (both changed and co-located with changed source files):
+
+- [ ] **Test names are descriptive** - explain scenario and expected outcome (e.g., `'buildConnections throws when connection id is missing'` not `'test error'`)
+- [ ] **Tests match current source behavior** - if source code was changed, verify tests still exercise the right code paths and assertions match the new behavior
+- [ ] **No redundant tests** - flag tests that assert the same behavior in different ways without adding coverage value
+- [ ] **No dead tests** - flag tests that test removed code paths, deleted parameters, or obsolete behavior
+- [ ] **Test structure follows patterns** - dynamic imports for ES module mocking (`jest.unstable_mockModule`), co-located test files
+- [ ] **Mock setup matches source changes** - if function signatures, imports, or dependencies changed in source, verify mocks still match
+- [ ] **No snapshot tests for changed logic** - if logic changed, snapshots should be updated or replaced with explicit assertions
+
 ### 7. Identify Deduplication Opportunities
 
 Search for duplicate patterns **within the PR's changed files**:
@@ -153,6 +177,14 @@ Check for:
 - **Similar error messages** - standardize format
 - **Redundant imports** - consolidate
 - **Repeated object transformations** - extract helper
+
+**Test deduplication:**
+
+- **Duplicate test cases** - tests that assert the same behavior with trivially different inputs (keep one, parameterize if >2 variations needed)
+- **Overlapping coverage** - multiple tests that exercise the same code path without testing different edge cases
+- **Redundant setup/teardown** - repeated mock configurations that can be shared via `beforeEach` or helper functions
+- **Tests for removed code** - tests that reference functions, parameters, or behaviors that no longer exist after PR changes
+- **Copy-pasted test blocks** - near-identical test cases that differ only in a value or two (use `test.each` or parameterize)
 
 **Also cross-reference with existing codebase:**
 
@@ -189,6 +221,11 @@ Group findings by severity:
 ### Deduplication
 - {Repeated code that can be consolidated}
 
+### Test Updates
+- {Tests that need updating to match source changes}
+- {Redundant/duplicate tests to remove}
+- {Dead tests referencing removed code}
+
 ### Style (auto-fixable)
 - {Formatting, import order, trailing commas}
 ```
@@ -209,20 +246,31 @@ Options:
 
 ### 10. Apply Cleanup Changes
 
-Based on user selection, apply fixes:
+Based on user selection, apply fixes in this order:
 
+**10a. Source code cleanup:**
 1. **Read each file** before editing
 2. **Apply changes** using Edit tool
 3. **Verify** the edit preserved functionality
-4. **Run package tests** if available:
+
+**10b. Test cleanup (apply AFTER source changes so tests validate the cleaned code):**
+1. **Update tests that no longer match source** - fix assertions, update mock setups, adjust expected values to reflect source changes
+2. **Remove redundant tests** - delete tests that duplicate coverage without adding value
+3. **Remove dead tests** - delete tests for code paths that no longer exist
+4. **Consolidate copy-pasted tests** - use `test.each` or shared helpers where tests differ only by input/output values
+5. **Update test names** - ensure descriptive names that explain scenario and expected outcome
+
+**10c. Verify:**
+1. **Run package tests** to confirm all changes are correct:
    ```bash
    pnpm --filter=@lowdefy/{package} test
    ```
+2. If tests fail after cleanup, investigate and fix - do NOT revert source cleanup to make old tests pass. The tests should match the cleaned source, not the other way around.
 
 After all changes:
 
 ```bash
-# Run prettier on changed files
+# Run prettier on changed files (source AND test files)
 npx prettier --write {changed_files}
 
 # Run eslint fix on changed files
@@ -236,10 +284,18 @@ Present completion summary:
 ```markdown
 ## Cleanup Complete
 
-**Files modified:** {list}
-**Changes made:**
+**Source files modified:** {list}
+**Test files modified:** {list}
+
+**Source changes:**
 - {change 1}
 - {change 2}
+
+**Test changes:**
+- {tests updated to match source changes}
+- {redundant tests removed}
+- {dead tests removed}
+- {tests consolidated}
 
 **Tests:** {passed/failed/skipped}
 
@@ -257,6 +313,10 @@ Present completion summary:
 - Check for existing utilities before creating new ones
 - Run tests after changes
 - Only modify code that the PR already touches
+- Update tests to match any source changes made during cleanup
+- Remove tests that test removed/changed code paths and no longer serve a purpose
+- Consolidate near-identical tests using `test.each` or shared helpers
+- Ensure tests pass after all cleanup is complete
 
 **DO NOT:**
 - Change code outside the PR's scope
@@ -266,6 +326,9 @@ Present completion summary:
 - Skip user confirmation before making changes
 - Ignore conversation context from linked issues
 - Add comments, docstrings, or type annotations to unchanged code
+- Remove tests that cover valid edge cases just because they look similar - verify they truly duplicate coverage
+- Revert source cleanup to make old tests pass - fix the tests instead
+- Modify test files for source code that wasn't changed in the PR
 
 **Pattern Reference:**
 
