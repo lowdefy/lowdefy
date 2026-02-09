@@ -9,6 +9,9 @@ export const metadata: Metadata = {
   title: 'Lowdefy - Config-First Web Stack for AI and Humans',
   description:
     'Build full-stack web apps with YAML config. AI outputs production-ready code. Easy to review, secure by design, connects to any data source.',
+  icons: {
+    icon: '/favicon.ico',
+  },
   openGraph: {
     title: 'Lowdefy - Config-First Web Stack for AI and Humans',
     description:
