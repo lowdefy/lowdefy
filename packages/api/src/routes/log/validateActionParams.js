@@ -14,4 +14,23 @@
   limitations under the License.
 */
 
-export { default as PdfMake } from './actions/PdfMake/PdfMake.js';
+import { validate } from '@lowdefy/ajv';
+
+function validateActionParams({ params, schema }) {
+  if (!schema?.params) {
+    return null;
+  }
+
+  const { valid, errors } = validate({
+    schema: schema.params,
+    data: params ?? {},
+    returnErrors: true,
+  });
+
+  if (!valid) {
+    return errors;
+  }
+  return null;
+}
+
+export default validateActionParams;

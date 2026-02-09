@@ -15,7 +15,7 @@
 */
 
 import pdfMake from 'pdfmake';
-import vfs from '../fonts/vfs_fonts.js';
+import vfs from '../../fonts/vfs_fonts.js';
 
 async function PdfMake({ params }) {
   const { docDefinition, tableLayouts, filename, fonts } = params;

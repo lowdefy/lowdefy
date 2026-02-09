@@ -14,4 +14,4 @@
   limitations under the License.
 */
 
-export { default as PdfMake } from './actions/PdfMake/PdfMake.js';
+export { default as PdfMake } from './actions/PdfMake/schema.js';

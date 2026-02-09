@@ -17,7 +17,9 @@
 import { resolveConfigLocation } from '@lowdefy/errors/build';
 import { ConfigError, deserializeError } from '@lowdefy/errors/server';
 
+import formatActionValidationError from './formatActionValidationError.js';
 import formatValidationError from './formatValidationError.js';
+import validateActionParams from './validateActionParams.js';
 import validateBlockProperties from './validateBlockProperties.js';
 
 async function logClientError(context, data) {
@@ -51,6 +53,36 @@ async function logClientError(context, data) {
       }
     } catch (err) {
       logger.warn({ event: 'warn_block_schema_load_failed', error: err.message });
+    }
+  }
+
+  // Validate action params against schema if this is an action PluginError
+  if (error.name === 'PluginError' && error.pluginType === 'action' && error.pluginName) {
+    try {
+      const actionSchemas = await context.readConfigFile('plugins/actionSchemas.json');
+      const schema = actionSchemas?.[error.pluginName];
+      if (schema) {
+        const validationErrors = validateActionParams({
+          params: error.received,
+          schema,
+        });
+
+        if (validationErrors) {
+          errors = validationErrors.map(
+            (validationError) =>
+              new ConfigError({
+                message: formatActionValidationError(
+                  validationError,
+                  error.pluginName,
+                  error.received
+                ),
+                configKey: error.configKey,
+              })
+          );
+        }
+      }
+    } catch (err) {
+      logger.warn({ event: 'warn_action_schema_load_failed', error: err.message });
     }
   }
 

@@ -383,4 +383,179 @@ describe('logClientError', () => {
     expect(loggedError.name).toBe('PluginError');
     expect(context.readConfigFile).not.toHaveBeenCalledWith('plugins/blockSchemas.json');
   });
+
+  test('converts action PluginError to ConfigError when params fail schema validation', async () => {
+    const actionSchemas = {
+      Wait: {
+        params: {
+          type: 'object',
+          required: ['ms'],
+          properties: {
+            ms: { type: 'integer' },
+          },
+          additionalProperties: false,
+        },
+      },
+    };
+    const mockLogger = {
+      error: jest.fn(),
+      warn: jest.fn(),
+    };
+    const context = {
+      logger: mockLogger,
+      readConfigFile: jest.fn((file) => {
+        if (file === 'plugins/actionSchemas.json') return Promise.resolve(actionSchemas);
+        if (file === 'keyMap.json') return Promise.resolve(keyMap);
+        if (file === 'refMap.json') return Promise.resolve(refMap);
+      }),
+    };
+
+    const result = await logClientError(context, {
+      '~err': 'PluginError',
+      message: 'Wait action "ms" param should be an integer.',
+      pluginType: 'action',
+      pluginName: 'Wait',
+      received: { ms: 'abc' },
+      configKey: 'key-123',
+    });
+
+    expect(result.success).toBe(true);
+    expect(result.source).toBe('pages/home.yaml:8');
+    expect(result.errors.length).toBeGreaterThanOrEqual(1);
+    expect(mockLogger.error).toHaveBeenCalled();
+    const loggedMessages = mockLogger.error.mock.calls.map((call) => call[0].message);
+    expect(loggedMessages).toContain(
+      'Action "Wait" param "ms" must be type "integer". Received "abc" (string).'
+    );
+    mockLogger.error.mock.calls.forEach((call) => {
+      expect(call[0].name).toBe('ConfigError');
+      expect(call[0].source).toBe('pages/home.yaml:8');
+    });
+  });
+
+  test('keeps action PluginError when params pass schema validation', async () => {
+    const actionSchemas = {
+      Wait: {
+        params: {
+          type: 'object',
+          required: ['ms'],
+          properties: {
+            ms: { type: 'integer' },
+          },
+          additionalProperties: false,
+        },
+      },
+    };
+    const mockLogger = {
+      error: jest.fn(),
+      warn: jest.fn(),
+    };
+    const context = {
+      logger: mockLogger,
+      readConfigFile: jest.fn((file) => {
+        if (file === 'plugins/actionSchemas.json') return Promise.resolve(actionSchemas);
+        if (file === 'keyMap.json') return Promise.resolve(keyMap);
+        if (file === 'refMap.json') return Promise.resolve(refMap);
+      }),
+    };
+
+    const result = await logClientError(context, {
+      '~err': 'PluginError',
+      message: 'Some unexpected error',
+      pluginType: 'action',
+      pluginName: 'Wait',
+      received: { ms: 1000 },
+      configKey: 'key-123',
+    });
+
+    const loggedError = mockLogger.error.mock.calls[0][0];
+    expect(loggedError.name).toBe('PluginError');
+    expect(loggedError.message).toBe('Some unexpected error');
+  });
+
+  test('keeps action PluginError when actionType has no schema', async () => {
+    const actionSchemas = {};
+    const mockLogger = {
+      error: jest.fn(),
+      warn: jest.fn(),
+    };
+    const context = {
+      logger: mockLogger,
+      readConfigFile: jest.fn((file) => {
+        if (file === 'plugins/actionSchemas.json') return Promise.resolve(actionSchemas);
+        if (file === 'keyMap.json') return Promise.resolve(keyMap);
+        if (file === 'refMap.json') return Promise.resolve(refMap);
+      }),
+    };
+
+    const result = await logClientError(context, {
+      '~err': 'PluginError',
+      message: 'Action failed',
+      pluginType: 'action',
+      pluginName: 'CustomAction',
+      received: { anything: true },
+      configKey: 'key-123',
+    });
+
+    const loggedError = mockLogger.error.mock.calls[0][0];
+    expect(loggedError.name).toBe('PluginError');
+  });
+
+  test('keeps action PluginError when actionSchemas.json fails to load', async () => {
+    const mockLogger = {
+      error: jest.fn(),
+      warn: jest.fn(),
+    };
+    const context = {
+      logger: mockLogger,
+      readConfigFile: jest.fn((file) => {
+        if (file === 'plugins/actionSchemas.json') {
+          return Promise.reject(new Error('File not found'));
+        }
+        if (file === 'keyMap.json') return Promise.resolve(keyMap);
+        if (file === 'refMap.json') return Promise.resolve(refMap);
+      }),
+    };
+
+    const result = await logClientError(context, {
+      '~err': 'PluginError',
+      message: 'Action failed',
+      pluginType: 'action',
+      pluginName: 'Wait',
+      received: { ms: 'abc' },
+      configKey: 'key-123',
+    });
+
+    const loggedError = mockLogger.error.mock.calls[0][0];
+    expect(loggedError.name).toBe('PluginError');
+    expect(mockLogger.warn).toHaveBeenCalledWith({
+      event: 'warn_action_schema_load_failed',
+      error: 'File not found',
+    });
+  });
+
+  test('skips action validation when pluginName is missing from PluginError', async () => {
+    const mockLogger = {
+      error: jest.fn(),
+      warn: jest.fn(),
+    };
+    const context = {
+      logger: mockLogger,
+      readConfigFile: jest.fn((file) => {
+        if (file === 'keyMap.json') return Promise.resolve(keyMap);
+        if (file === 'refMap.json') return Promise.resolve(refMap);
+      }),
+    };
+
+    const result = await logClientError(context, {
+      '~err': 'PluginError',
+      message: 'Action failed',
+      pluginType: 'action',
+      configKey: 'key-123',
+    });
+
+    const loggedError = mockLogger.error.mock.calls[0][0];
+    expect(loggedError.name).toBe('PluginError');
+    expect(context.readConfigFile).not.toHaveBeenCalledWith('plugins/actionSchemas.json');
+  });
 });

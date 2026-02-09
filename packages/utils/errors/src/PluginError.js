@@ -117,6 +117,9 @@ class PluginError extends Error {
       data.blockType = this.blockType;
       data.properties = this.properties;
     }
+    if (this.pluginType === 'action') {
+      data.received = this.received;
+    }
     return data;
   }
 
@@ -137,6 +140,7 @@ class PluginError extends Error {
       configKey: data.configKey,
       blockType: data.blockType,
       properties: data.properties,
+      received: data.received,
     });
     // Set location separately to preserve it without re-formatting message
     error.location = data.location;

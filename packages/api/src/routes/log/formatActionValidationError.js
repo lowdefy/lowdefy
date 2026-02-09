@@ -32,32 +32,26 @@ function formatValue(value) {
   return JSON.stringify(value);
 }
 
-function formatValidationError(err, blockType, properties) {
-  const propName = err.instancePath ? err.instancePath.slice(1).replace(/\//g, '.') : 'root';
-  const received = getValueAtPath(properties, err.instancePath);
+function formatActionValidationError(err, actionType, params) {
+  const paramName = err.instancePath ? err.instancePath.slice(1).replace(/\//g, '.') : 'root';
+  const received = getValueAtPath(params, err.instancePath);
 
   if (err.keyword === 'type') {
     const expected = err.params.type;
     const receivedType = received === null ? 'null' : typeof received;
-    return `Block "${blockType}" property "${propName}" must be type "${expected}". Received ${formatValue(
-      received
-    )} (${receivedType}).`;
+    return `Action "${actionType}" param "${paramName}" must be type "${expected}". Received ${formatValue(received)} (${receivedType}).`;
   }
   if (err.keyword === 'enum') {
     const allowed = err.params.allowedValues.map(formatValue).join(', ');
-    return `Block "${blockType}" property "${propName}" must be one of [${allowed}]. Received ${formatValue(
-      received
-    )}.`;
+    return `Action "${actionType}" param "${paramName}" must be one of [${allowed}]. Received ${formatValue(received)}.`;
   }
   if (err.keyword === 'additionalProperties') {
-    return `Block "${blockType}" property "${err.params.additionalProperty}" is not allowed.`;
+    return `Action "${actionType}" param "${err.params.additionalProperty}" is not allowed.`;
   }
   if (err.keyword === 'required') {
-    return `Block "${blockType}" required property "${err.params.missingProperty}" is missing.`;
+    return `Action "${actionType}" required param "${err.params.missingProperty}" is missing.`;
   }
-  return `Block "${blockType}" property "${propName}" ${err.message}. Received ${formatValue(
-    received
-  )}.`;
+  return `Action "${actionType}" param "${paramName}" ${err.message}. Received ${formatValue(received)}.`;
 }
 
-export default formatValidationError;
+export default formatActionValidationError;
