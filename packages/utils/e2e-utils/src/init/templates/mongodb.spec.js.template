@@ -1,0 +1,43 @@
+import { test, expect } from './fixtures.js';
+
+test('database seeding example', async ({ ldf, mdb }) => {
+  // Seed test data
+  await mdb.seed('users', [
+    { _id: 'user-1', name: 'Test User', email: 'test@example.com' },
+  ]);
+
+  await ldf.goto('/users');
+
+  // Assert data is displayed
+  await ldf.expect.blocks['user_name'].text('Test User');
+});
+
+// Example: Testing with database assertions
+//
+// test('creates new record in database', async ({ ldf, mdb }) => {
+//   await ldf.goto('/users/new');
+//
+//   await ldf.do.blocks['name_input'].fill('Jane Doe');
+//   await ldf.do.blocks['email_input'].fill('jane@example.com');
+//   await ldf.do.blocks['save_btn'].click();
+//
+//   // Assert record was created in database
+//   await mdb.expect('users', {
+//     filter: { email: 'jane@example.com' },
+//     count: 1,
+//   });
+// });
+//
+// Example: Snapshot testing with YAML
+//
+// test('user list matches snapshot', async ({ ldf, mdb }) => {
+//   await mdb.seed('users', [
+//     { _id: 'user-1', name: 'Alice', role: 'admin' },
+//     { _id: 'user-2', name: 'Bob', role: 'user' },
+//   ]);
+//
+//   await ldf.goto('/users');
+//
+//   // Compare current data against YAML snapshot
+//   await mdb.expectSnapshot('users', 'snaps/users-list.yaml');
+// });

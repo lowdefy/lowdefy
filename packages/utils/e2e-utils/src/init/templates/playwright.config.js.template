@@ -1,6 +1,7 @@
 import { createConfig } from '@lowdefy/e2e-utils/config';
 
 export default createConfig({
-  appDir: './',
+  appDir: '../', // Go up from e2e/ to app root
+  testDir: '.', // Tests are in same dir as config
   port: 3000,
 });

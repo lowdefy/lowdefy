@@ -18,249 +18,161 @@
 
 /* eslint-disable no-console */
 
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import prompts from 'prompts';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-function detectLowdefyApps(appsDir) {
-  const entries = fs.readdirSync(appsDir, { withFileTypes: true });
-  const apps = [];
-
-  for (const entry of entries) {
-    if (entry.isDirectory()) {
-      const appPath = path.join(appsDir, entry.name);
-      const lowdefyPath = path.join(appPath, 'lowdefy.yaml');
-
-      if (fs.existsSync(lowdefyPath)) {
-        apps.push({
-          name: entry.name,
-          path: `apps/${entry.name}`,
-        });
-      }
-    }
-  }
-
-  return apps;
-}
-
-function generateSingleAppSetup(cwd) {
-  const e2eDir = path.join(cwd, 'e2e');
-
-  // Create e2e directory
-  if (!fs.existsSync(e2eDir)) {
-    fs.mkdirSync(e2eDir, { recursive: true });
-    console.log('Created e2e/');
-  }
-
-  // Copy templates
-  const templates = [
-    { src: 'playwright.config.js.template', dest: 'playwright.config.js' },
-    { src: 'example.spec.js.template', dest: 'example.spec.js' },
-    { src: 'mocks.yaml.template', dest: 'mocks.yaml' },
-  ];
-
-  for (const { src, dest } of templates) {
-    const srcPath = path.join(__dirname, 'templates', src);
-    const destPath = path.join(e2eDir, dest);
-    if (!fs.existsSync(destPath)) {
-      fs.copyFileSync(srcPath, destPath);
-      console.log(`Created e2e/${dest}`);
-    } else {
-      console.log(`Skipped e2e/${dest} (already exists)`);
-    }
-  }
-
-  // Update package.json
-  updatePackageJson(cwd);
-
-  console.log('\n✓ E2E testing setup complete!\n');
-  console.log('Next steps:');
-  console.log('  1. Install dependencies: pnpm add -D @lowdefy/e2e-utils @playwright/test@^1.50.0');
-  console.log('  2. Install browsers: npx playwright install chromium');
-  console.log('  3. Run tests: pnpm e2e');
-  console.log('  4. Or use UI mode: pnpm e2e:ui');
-}
-
-function generateMultiAppSetup(cwd, selectedApps) {
-  const e2eDir = path.join(cwd, 'e2e');
-
-  // Create e2e directory
-  if (!fs.existsSync(e2eDir)) {
-    fs.mkdirSync(e2eDir, { recursive: true });
-    console.log('Created e2e/');
-  }
-
-  // Assign ports starting from 3000
-  const appsWithPorts = selectedApps.map((app, index) => ({
-    ...app,
-    port: 3000 + index,
-  }));
-
-  // Generate playwright.config.js
-  const configPath = path.join(e2eDir, 'playwright.config.js');
-  if (!fs.existsSync(configPath)) {
-    const appsConfig = appsWithPorts
-      .map(
-        (app) => `    {
-      name: '${app.name}',
-      appDir: '${app.path}',
-      port: ${app.port},
-    }`
-      )
-      .join(',\n');
-
-    const configContent = `import { createMultiAppConfig } from '@lowdefy/e2e-utils/config';
-
-export default createMultiAppConfig({
-  apps: [
-${appsConfig},
-  ],
-});
-`;
-    fs.writeFileSync(configPath, configContent);
-    console.log('Created e2e/playwright.config.js');
-  } else {
-    console.log('Skipped e2e/playwright.config.js (already exists)');
-  }
-
-  // Copy mocks template
-  const mocksPath = path.join(e2eDir, 'mocks.yaml');
-  if (!fs.existsSync(mocksPath)) {
-    fs.copyFileSync(path.join(__dirname, 'templates', 'mocks.yaml.template'), mocksPath);
-    console.log('Created e2e/mocks.yaml');
-  } else {
-    console.log('Skipped e2e/mocks.yaml (already exists)');
-  }
-
-  // Create test directories and example specs for each app
-  const exampleTemplate = fs.readFileSync(
-    path.join(__dirname, 'templates', 'example.spec.js.template'),
-    'utf8'
-  );
-
-  for (const app of appsWithPorts) {
-    const appTestDir = path.join(e2eDir, app.name);
-    if (!fs.existsSync(appTestDir)) {
-      fs.mkdirSync(appTestDir, { recursive: true });
-      console.log(`Created e2e/${app.name}/`);
-    }
-
-    const specPath = path.join(appTestDir, 'example.spec.js');
-    if (!fs.existsSync(specPath)) {
-      fs.writeFileSync(specPath, exampleTemplate);
-      console.log(`Created e2e/${app.name}/example.spec.js`);
-    } else {
-      console.log(`Skipped e2e/${app.name}/example.spec.js (already exists)`);
-    }
-  }
-
-  // Update package.json
-  updatePackageJson(cwd);
-
-  console.log('\n✓ E2E testing setup complete!\n');
-  console.log('Next steps:');
-  console.log('  1. Install dependencies: pnpm add -D @lowdefy/e2e-utils @playwright/test@^1.50.0');
-  console.log('  2. Install browsers: npx playwright install chromium');
-  console.log('  3. Run all apps: pnpm e2e');
-  console.log('  4. Run specific app: pnpm e2e -- --project=<app-name>');
-  console.log('  5. Or use UI mode: pnpm e2e:ui');
-}
-
-function updatePackageJson(cwd) {
-  const pkgPath = path.join(cwd, 'package.json');
-  if (fs.existsSync(pkgPath)) {
-    const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
-    let updated = false;
-
-    pkg.scripts = pkg.scripts || {};
-    if (!pkg.scripts.e2e) {
-      pkg.scripts.e2e = 'playwright test';
-      updated = true;
-    }
-    if (!pkg.scripts['e2e:ui']) {
-      pkg.scripts['e2e:ui'] = 'playwright test --ui';
-      updated = true;
-    }
-
-    if (updated) {
-      fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n');
-      console.log('Updated package.json with e2e scripts');
-    }
-  }
-}
+import detectApps from './detectApps.js';
+import generateFiles from './generateFiles.js';
+import installDeps, { detectPackageManager, buildInstallCommand } from './installDeps.js';
+import updateGitignore from './updateGitignore.js';
 
 async function init() {
   const cwd = process.cwd();
 
   console.log('Setting up Lowdefy e2e testing...\n');
 
-  // Detect project structure
-  const appsDir = path.join(cwd, 'apps');
-  const hasAppsDir = fs.existsSync(appsDir);
-  const hasRootLowdefy = fs.existsSync(path.join(cwd, 'lowdefy.yaml'));
+  // Step 1: Detect Lowdefy apps
+  const apps = detectApps(cwd);
 
-  let projectType = 'single';
-  let selectedApps = [];
+  if (apps.length === 0) {
+    console.log('No Lowdefy app found.');
+    console.log('\nMake sure you run this command from a directory containing:');
+    console.log('  - A lowdefy.yaml file (single app)');
+    console.log('  - An app/ folder with lowdefy.yaml');
+    console.log('  - An apps/ folder with subdirectories containing lowdefy.yaml');
+    process.exit(1);
+  }
 
-  // Check for multi-app structure
-  if (hasAppsDir && !hasRootLowdefy) {
-    const apps = detectLowdefyApps(appsDir);
+  // Step 2: Select apps if multiple found
+  let selectedApps = apps;
 
-    if (apps.length > 0) {
-      console.log(`Found ${apps.length} Lowdefy app(s) in apps/ directory.\n`);
+  if (apps.length > 1) {
+    console.log(`Found ${apps.length} Lowdefy app(s):\n`);
+    for (const app of apps) {
+      console.log(`  - ${app.name} (${app.path})`);
+    }
+    console.log('');
 
-      const response = await prompts({
-        type: 'select',
-        name: 'projectType',
-        message: 'What type of setup do you want?',
-        choices: [
-          { title: 'Multi-app (test multiple apps)', value: 'multi' },
-          { title: 'Single app (configure manually)', value: 'single' },
-        ],
-      });
+    const appResponse = await prompts({
+      type: 'multiselect',
+      name: 'apps',
+      message: 'Which apps do you want to set up e2e testing for?',
+      choices: apps.map((app) => ({
+        title: `${app.name} (${app.path})`,
+        value: app,
+        selected: true,
+      })),
+      min: 1,
+    });
 
-      // Handle Ctrl+C
-      if (!response.projectType) {
-        console.log('\nSetup cancelled.');
-        process.exit(0);
-      }
+    // Handle Ctrl+C
+    if (!appResponse.apps) {
+      console.log('\nSetup cancelled.');
+      process.exit(0);
+    }
 
-      projectType = response.projectType;
+    selectedApps = appResponse.apps;
+  } else {
+    console.log(`Found Lowdefy app: ${apps[0].name} (${apps[0].path})\n`);
+  }
 
-      if (projectType === 'multi') {
-        const appResponse = await prompts({
-          type: 'multiselect',
-          name: 'apps',
-          message: 'Which apps do you want to test?',
-          choices: apps.map((app) => ({
-            title: app.name,
-            value: app,
-            selected: true,
-          })),
-          min: 1,
-        });
+  // Step 3: Ask about MongoDB support
+  const mongoResponse = await prompts({
+    type: 'confirm',
+    name: 'useMongoDB',
+    message: 'Would you like to add MongoDB testing support?',
+    initial: false,
+  });
 
-        // Handle Ctrl+C
-        if (!appResponse.apps) {
-          console.log('\nSetup cancelled.');
-          process.exit(0);
-        }
+  // Handle Ctrl+C
+  if (mongoResponse.useMongoDB === undefined) {
+    console.log('\nSetup cancelled.');
+    process.exit(0);
+  }
 
-        selectedApps = appResponse.apps;
-      }
+  const useMongoDB = mongoResponse.useMongoDB;
 
-      console.log('');
+  // Step 4: Generate files for each selected app
+  for (const app of selectedApps) {
+    generateFiles({ cwd, app, useMongoDB });
+  }
+
+  // Step 5: Update .gitignore
+  updateGitignore(cwd);
+
+  // Step 6: Ask about dependency installation
+  const installResponse = await prompts({
+    type: 'confirm',
+    name: 'install',
+    message: 'Would you like to install dependencies now?',
+    initial: true,
+  });
+
+  // Handle Ctrl+C
+  if (installResponse.install === undefined) {
+    console.log('\nSetup cancelled.');
+    process.exit(0);
+  }
+
+  if (installResponse.install) {
+    // Step 7: Ask about version preference
+    const versionResponse = await prompts({
+      type: 'select',
+      name: 'version',
+      message: 'Which version do you want to install?',
+      choices: [
+        { title: 'Stable (recommended for production)', value: 'stable' },
+        { title: 'Experimental (latest features, may have breaking changes)', value: 'experimental' },
+      ],
+    });
+
+    // Handle Ctrl+C
+    if (!versionResponse.version) {
+      console.log('\nSetup cancelled.');
+      process.exit(0);
+    }
+
+    const useExperimental = versionResponse.version === 'experimental';
+
+    // Step 8: Install dependencies
+    installDeps({ cwd, useExperimental, useMongoDB });
+  } else {
+    // Print manual install instructions
+    const packageManager = detectPackageManager(cwd);
+    const stableCmd = buildInstallCommand({ packageManager, useExperimental: false, useMongoDB });
+    const experimentalCmd = buildInstallCommand({
+      packageManager,
+      useExperimental: true,
+      useMongoDB,
+    });
+
+    console.log('\nTo install dependencies manually:');
+    console.log(`\n  Stable:       ${stableCmd}`);
+    console.log(`  Experimental: ${experimentalCmd}`);
+    console.log('\n  Then run: npx playwright install chromium');
+  }
+
+  // Step 9: Print completion summary
+  console.log('\n✓ E2E testing setup complete!\n');
+
+  if (selectedApps.length === 1) {
+    const app = selectedApps[0];
+    console.log(`Run tests from ${app.path}:`);
+    console.log(`  cd ${app.path}`);
+    console.log('  pnpm e2e');
+    console.log('  pnpm e2e:ui  # for UI mode');
+  } else {
+    console.log('Run tests from each app directory:');
+    for (const app of selectedApps) {
+      console.log(`\n  ${app.name}:`);
+      console.log(`    cd ${app.path} && pnpm e2e`);
     }
   }
 
-  // Generate config based on project type
-  if (projectType === 'multi' && selectedApps.length > 0) {
-    generateMultiAppSetup(cwd, selectedApps);
-  } else {
-    generateSingleAppSetup(cwd);
+  if (useMongoDB) {
+    console.log('\nMongoDB testing setup:');
+    console.log('  1. Copy .env.e2e to .env.e2e.local');
+    console.log('  2. Set MDB_E2E_URI to your test database');
+    console.log('  3. See mongodb.spec.js for example tests');
   }
 }
 
