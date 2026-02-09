@@ -50,7 +50,6 @@
     "@lowdefy/blocks-antd": "4.5.2",
     "@lowdefy/blocks-basic": "4.5.2",
     "@lowdefy/blocks-color-selectors": "4.5.2",
-    "@lowdefy/blocks-demo": "workspace:*",
     "@lowdefy/blocks-echarts": "4.5.2",
     "@lowdefy/blocks-loaders": "4.5.2",
     "@lowdefy/blocks-markdown": "4.5.2",

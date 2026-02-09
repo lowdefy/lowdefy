@@ -51,7 +51,6 @@
     "@lowdefy/block-utils": "4.5.2",
     "@lowdefy/blocks-antd": "4.5.2",
     "@lowdefy/blocks-basic": "4.5.2",
-    "@lowdefy/blocks-demo": "workspace:*",
     "@lowdefy/blocks-loaders": "4.5.2",
     "@lowdefy/blocks-markdown": "4.5.2",
     "@lowdefy/client": "4.5.2",
