@@ -5,7 +5,7 @@ import { CodeOutlined, BranchesOutlined, BugOutlined, WarningOutlined } from '@a
 const problems = [
   {
     icon: CodeOutlined,
-    title: 'AI generates 5,000 lines you can\'t review',
+    title: 'AI generates 500 lines you can\'t review',
     description: 'Every prompt produces a wall of code. No one has time to audit it all, so bugs and vulnerabilities slip through.',
   },
   {

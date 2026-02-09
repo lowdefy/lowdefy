@@ -382,23 +382,25 @@ export function ProtectedRoute({ action, resource, children }: ProtectedRoutePro
   return <>{children}</>;
 }`,
     lowdefy: {
-      content: `# lowdefy.yaml - Auth config
+      content: `# lowdefy.yaml - Auth & roles
 auth:
-  authPages:
-    signIn: /login
   providers:
     - id: google
       type: GoogleProvider
-  userFields:
-    roles: roles
+  pages:
+    protected: true
+    public:
+      - login
+    roles:
+      admin:
+        - admin-settings
+        - users
+      editor:
+        - content
 
 # pages/admin-settings.yaml
 id: admin_settings
 type: PageHeaderMenu
-auth:
-  public: false
-  roles:
-    - admin
 
 blocks:
   - id: settings_form
@@ -410,16 +412,10 @@ blocks:
         type: TextInput
         properties:
           title: Site Name
-
-  - id: danger_zone
-    type: Card
-    visible:
-      _array.includes:
-        on:
-          _user: roles
-        value: super_admin
-    properties:
-      title: Danger Zone`,
+      - id: save
+        type: Button
+        properties:
+          title: Save`,
     },
   },
   {

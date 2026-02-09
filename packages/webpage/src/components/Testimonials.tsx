@@ -52,7 +52,7 @@ export default function Testimonials() {
                   alt={testimonial.author}
                   width={40}
                   height={40}
-                  className="w-10 h-10 object-cover"
+                  className="w-10 h-10 rounded-full object-cover"
                 />
                 <div>
                   <div className="font-medium text-slate-900 dark:text-white">{testimonial.author}</div>

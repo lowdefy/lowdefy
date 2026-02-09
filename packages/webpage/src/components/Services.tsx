@@ -146,15 +146,24 @@ export default function Services() {
                 <p className="text-slate-500 dark:text-slate-300 text-sm italic mb-4">
                   &ldquo;When people, processes, and technology resonate together, magic happens.&rdquo;
                 </p>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-cyan-400 flex items-center justify-center text-white font-semibold">
-                    R
-                  </div>
+                <Link
+                  href="https://www.linkedin.com/in/gervwyk/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 group"
+                >
+                  <Image
+                    src="/images/profiles/gerrie_van_wyk.webp"
+                    alt="Gerrie van Wyk"
+                    width={40}
+                    height={40}
+                    className="w-10 h-10 rounded-full object-cover"
+                  />
                   <div>
-                    <div className="text-slate-900 dark:text-white font-medium text-sm">Resonancy</div>
-                    <div className="text-slate-500 dark:text-slate-400 text-xs">Lowdefy&apos;s Services Partner</div>
+                    <div className="text-slate-900 dark:text-white font-medium text-sm group-hover:text-primary-400 transition-colors">Gerrie van Wyk</div>
+                    <div className="text-slate-500 dark:text-slate-400 text-xs">Co-founder, Resonancy &amp; Lowdefy</div>
                   </div>
-                </div>
+                </Link>
               </div>
             </div>
           </div>

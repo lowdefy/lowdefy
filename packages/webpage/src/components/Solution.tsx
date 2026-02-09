@@ -5,7 +5,7 @@ import { CheckCircleOutlined, CompressOutlined, SafetyCertificateOutlined, SyncO
 const solutions = [
   {
     icon: CompressOutlined,
-    title: '50 lines of config vs 5,000 lines of code',
+    title: '50 lines of config vs 500 lines of code',
     description: 'Declarative YAML replaces thousands of lines of boilerplate. Review entire apps at a glance.',
   },
   {
