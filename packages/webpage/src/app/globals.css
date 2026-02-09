@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary-500 to-cyan-400 bg-clip-text text-transparent;
+  }
+}
+
+/* Syntax highlighting for YAML */
+.yaml-key { color: #7dd3fc; }
+.yaml-value { color: #fef08a; }
+.yaml-string { color: #a5f3fc; }
+.yaml-comment { color: #64748b; }
+
+/* Dark scrollbar for code blocks */
+.scrollbar-dark::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrollbar-dark::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-dark::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 3px;
+}
+
+.scrollbar-dark::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+.scrollbar-dark::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Firefox */
+.scrollbar-dark {
+  scrollbar-width: thin;
+  scrollbar-color: #475569 transparent;
+}
