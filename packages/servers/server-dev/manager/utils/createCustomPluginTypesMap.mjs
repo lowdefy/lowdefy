@@ -48,6 +48,7 @@ async function createCustomPluginTypesMap({ directories, logger }) {
     },
     requests: {},
     schemas: {
+      actions: {},
       blocks: {},
     },
     styles: {
@@ -79,9 +80,13 @@ async function createCustomPluginTypesMap({ directories, logger }) {
     // Import schemas from the plugin (build package can't resolve custom plugins)
     try {
       const packageSchemas = await import(`${plugin.name}/schemas`);
-      for (const [blockType, schema] of Object.entries(packageSchemas)) {
-        if (blockType !== 'default') {
-          customTypesMap.schemas.blocks[`${plugin.typePrefix ?? ''}${blockType}`] = schema;
+      for (const [typeName, schema] of Object.entries(packageSchemas)) {
+        if (typeName === 'default') continue;
+        const prefixedName = `${plugin.typePrefix ?? ''}${typeName}`;
+        if (customTypesMap.actions[prefixedName]) {
+          customTypesMap.schemas.actions[prefixedName] = schema;
+        } else {
+          customTypesMap.schemas.blocks[prefixedName] = schema;
         }
       }
     } catch {
