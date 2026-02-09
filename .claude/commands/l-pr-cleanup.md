@@ -107,7 +107,7 @@ Check each changed file against these categories. **Only flag issues in changed/
 
 #### 6.1 File Structure
 
-- [ ] License header present (Copyright 2020-2024 Lowdefy, Inc)
+- [ ] License header present (Copyright 2020-{CURRENT_YEAR} Lowdefy, Inc)
 - [ ] One function per file, filename matches function name
 - [ ] ES Module imports with `.js` extensions
 - [ ] Import order: external packages, `@lowdefy/*`, local imports
