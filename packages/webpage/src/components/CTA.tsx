@@ -11,7 +11,7 @@ export default function CTA() {
           Ready to build faster?
         </h2>
         <p className="text-lg text-primary-100 mb-8 max-w-2xl mx-auto">
-          Get started with Lowdefy in minutes. No signup required—just run one command.
+          Get started with Lowdefy in minutes. No signup required, just run one command.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">

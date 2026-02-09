@@ -6,19 +6,128 @@
   html {
     scroll-behavior: smooth;
   }
+
+  body {
+    @apply bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100;
+  }
 }
 
 @layer components {
   .text-gradient {
-    @apply bg-gradient-to-r from-primary-500 to-cyan-400 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-primary-400 to-cyan-400 bg-clip-text text-transparent;
   }
 }
 
-/* Syntax highlighting for YAML */
-.yaml-key { color: #7dd3fc; }
-.yaml-value { color: #fef08a; }
-.yaml-string { color: #a5f3fc; }
-.yaml-comment { color: #64748b; }
+/* Grid pattern background */
+.bg-grid {
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+:is(.dark .bg-grid) {
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
+}
+
+/* Dense grid for accent areas */
+.bg-grid-dense {
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.06) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+:is(.dark .bg-grid-dense) {
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.04) 1px, transparent 1px);
+}
+
+/* Glow effect for key elements */
+.glow-blue {
+  box-shadow: 0 0 40px rgba(25, 144, 255, 0.08), 0 0 80px rgba(25, 144, 255, 0.03);
+}
+
+:is(.dark .glow-blue) {
+  box-shadow: 0 0 40px rgba(25, 144, 255, 0.15), 0 0 80px rgba(25, 144, 255, 0.05);
+}
+
+.glow-cyan {
+  box-shadow: 0 0 40px rgba(34, 211, 186, 0.08), 0 0 80px rgba(34, 211, 186, 0.03);
+}
+
+:is(.dark .glow-cyan) {
+  box-shadow: 0 0 40px rgba(34, 211, 186, 0.15), 0 0 80px rgba(34, 211, 186, 0.05);
+}
+
+/* Engineering bracket corners for cards */
+.bracket-corners {
+  position: relative;
+}
+
+.bracket-corners::before,
+.bracket-corners::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  pointer-events: none;
+}
+
+.bracket-corners::before {
+  top: -1px;
+  left: -1px;
+  border-top: 2px solid rgba(25, 144, 255, 0.4);
+  border-left: 2px solid rgba(25, 144, 255, 0.4);
+}
+
+.bracket-corners::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 2px solid rgba(25, 144, 255, 0.4);
+  border-right: 2px solid rgba(25, 144, 255, 0.4);
+}
+
+.bracket-corners-red::before {
+  border-color: rgba(248, 113, 113, 0.4);
+}
+
+.bracket-corners-red::after {
+  border-color: rgba(248, 113, 113, 0.4);
+}
+
+.bracket-corners-green::before {
+  border-color: rgba(74, 222, 128, 0.4);
+}
+
+.bracket-corners-green::after {
+  border-color: rgba(74, 222, 128, 0.4);
+}
+
+.bracket-corners-cyan::before {
+  border-color: rgba(34, 211, 238, 0.4);
+}
+
+.bracket-corners-cyan::after {
+  border-color: rgba(34, 211, 238, 0.4);
+}
+
+/* Syntax highlighting for YAML — light mode */
+.yaml-key { color: #0369a1; }
+.yaml-value { color: #a16207; }
+.yaml-string { color: #0e7490; }
+.yaml-comment { color: #94a3b8; }
+.yaml-dash { color: #64748b; }
+
+/* Syntax highlighting for YAML — dark mode */
+:is(.dark .yaml-key) { color: #7dd3fc; }
+:is(.dark .yaml-value) { color: #fef08a; }
+:is(.dark .yaml-string) { color: #a5f3fc; }
+:is(.dark .yaml-comment) { color: #64748b; }
+:is(.dark .yaml-dash) { color: #94a3b8; }
 
 /* Dark scrollbar for code blocks */
 .scrollbar-dark::-webkit-scrollbar {

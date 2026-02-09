@@ -1,40 +1,41 @@
 'use client';
 
-import { WarningOutlined, ClockCircleOutlined, SafetyOutlined, AppstoreOutlined } from '@ant-design/icons';
+import { CodeOutlined, BranchesOutlined, BugOutlined, WarningOutlined } from '@ant-design/icons';
 
 const problems = [
   {
-    icon: ClockCircleOutlined,
-    title: 'Slow development cycles',
-    description: 'Traditional full-stack development takes months. Business requirements change faster than code ships.',
+    icon: CodeOutlined,
+    title: 'AI generates 5,000 lines you can\'t review',
+    description: 'Every prompt produces a wall of code. No one has time to audit it all, so bugs and vulnerabilities slip through.',
+  },
+  {
+    icon: BranchesOutlined,
+    title: 'Every AI session creates a new codebase to maintain',
+    description: 'There\'s no consistency between sessions. Each generation is a unique snowflake of dependencies and patterns.',
+  },
+  {
+    icon: BugOutlined,
+    title: 'Security vulnerabilities baked into generated code',
+    description: 'SQL injection, XSS, broken auth. LLMs don\'t audit their output. Neither do most teams.',
   },
   {
     icon: WarningOutlined,
-    title: 'AI-generated code is hard to review',
-    description: 'LLMs produce thousands of lines of code. Who reviews it? Who maintains it?',
-  },
-  {
-    icon: SafetyOutlined,
-    title: 'Security is an afterthought',
-    description: 'Generated code often has vulnerabilities. SQL injection, XSS, broken auth—waiting to be exploited.',
-  },
-  {
-    icon: AppstoreOutlined,
-    title: 'Integration complexity',
-    description: 'Connecting databases, APIs, and auth systems requires deep expertise and endless boilerplate.',
+    title: 'Framework updates break everything, across every project',
+    description: 'When Next.js ships a breaking change, you have to fix every AI-generated codebase individually.',
   },
 ];
 
 export default function Problem() {
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-50">
+    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-slate-950 bg-grid">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">
-            Building web apps is broken
+          <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-4 font-mono">
+            AI writes code fast.{' '}
+            <span className="text-red-400">But who maintains it?</span>
           </h2>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            Whether you&apos;re coding by hand or prompting AI, the same problems persist.
+          <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+            Vibe-coding produces working prototypes. But production needs maintainability, security, and consistency.
           </p>
         </div>
 
@@ -42,13 +43,13 @@ export default function Problem() {
           {problems.map((problem) => (
             <div
               key={problem.title}
-              className="p-6 bg-white rounded-xl border border-slate-200 hover:border-slate-300 transition-colors"
+              className="p-6 bg-slate-50 dark:bg-slate-900 border border-red-500/20 hover:border-red-500/40 transition-colors bracket-corners bracket-corners-red"
             >
-              <div className="w-12 h-12 rounded-lg bg-red-50 flex items-center justify-center mb-4">
-                <problem.icon style={{ fontSize: 24, color: '#ef4444' }} />
+              <div className="w-12 h-12 bg-red-500/10 flex items-center justify-center mb-4">
+                <problem.icon style={{ fontSize: 24, color: '#f87171' }} />
               </div>
-              <h3 className="font-semibold text-slate-900 mb-2">{problem.title}</h3>
-              <p className="text-sm text-slate-600">{problem.description}</p>
+              <h3 className="font-semibold text-slate-900 dark:text-white mb-2">{problem.title}</h3>
+              <p className="text-sm text-slate-600 dark:text-slate-400">{problem.description}</p>
             </div>
           ))}
         </div>

@@ -11,7 +11,6 @@ const footerLinks = {
   resources: [
     { name: 'GitHub', href: 'https://github.com/lowdefy/lowdefy' },
     { name: 'Discord', href: 'https://discord.gg/lowdefy' },
-    { name: 'Blog', href: '/blog' },
     { name: 'Changelog', href: 'https://github.com/lowdefy/lowdefy/releases' },
   ],
   company: [
@@ -24,7 +23,7 @@ const footerLinks = {
 
 export default function Footer() {
   return (
-    <footer className="bg-slate-50 border-t border-slate-200">
+    <footer className="bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {/* Brand */}
@@ -35,59 +34,66 @@ export default function Footer() {
                 alt="Lowdefy"
                 width={120}
                 height={30}
-                className="h-7 w-auto"
+                className="h-7 w-auto block dark:hidden"
+              />
+              <Image
+                src="/images/logo-white.svg"
+                alt="Lowdefy"
+                width={120}
+                height={30}
+                className="h-7 w-auto hidden dark:block"
               />
             </Link>
-            <p className="text-sm text-slate-600 mb-4">
+            <p className="text-sm text-slate-500 mb-4">
               The config-first web stack for AI and humans.
             </p>
             <div className="flex items-center gap-4">
               <Link
                 href="https://github.com/lowdefy/lowdefy"
-                className="text-slate-400 hover:text-slate-600 transition-colors"
+                className="text-slate-600 hover:text-slate-400 transition-colors"
               >
                 <Image
                   src="/images/social/github.svg"
                   alt="GitHub"
                   width={20}
                   height={20}
-                  className="w-5 h-5"
+                  className="w-5 h-5 dark:invert opacity-50 hover:opacity-80 transition-opacity"
                 />
               </Link>
               <Link
                 href="https://discord.gg/lowdefy"
-                className="text-slate-400 hover:text-slate-600 transition-colors"
+                className="text-slate-600 hover:text-slate-400 transition-colors"
               >
                 <Image
                   src="/images/social/discord.svg"
                   alt="Discord"
                   width={20}
                   height={20}
-                  className="w-5 h-5"
+                  className="w-5 h-5 dark:invert opacity-50 hover:opacity-80 transition-opacity"
                 />
               </Link>
               <Link
                 href="https://x.com/lowaboratories"
-                className="text-slate-400 hover:text-slate-600 transition-colors"
+                className="text-slate-600 hover:text-slate-400 transition-colors"
               >
                 <Image
                   src="/images/social/x.svg"
                   alt="X"
                   width={20}
                   height={20}
-                  className="w-5 h-5"
+                  className="w-5 h-5 dark:invert opacity-50 hover:opacity-80 transition-opacity"
                 />
               </Link>
               <Link
                 href="https://www.youtube.com/@lowdefy"
-                className="text-slate-400 hover:text-slate-600 transition-colors"
+                className="text-slate-600 hover:text-slate-400 transition-colors"
               >
                 <Image
                   src="/images/social/youtube.svg"
                   alt="YouTube"
                   width={20}
                   height={20}
-                  className="w-5 h-5"
+                  className="w-5 h-5 dark:invert opacity-50 hover:opacity-80 transition-opacity"
                 />
               </Link>
             </div>
@@ -95,13 +101,13 @@ export default function Footer() {
 
           {/* Product Links */}
           <div>
-            <h3 className="font-semibold text-slate-900 mb-4">Product</h3>
+            <h3 className="font-semibold text-slate-700 dark:text-slate-300 mb-4">Product</h3>
             <ul className="space-y-2">
               {footerLinks.product.map((link) => (
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-sm text-slate-600 hover:text-slate-900 transition-colors"
+                    className="text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors"
                   >
                     {link.name}
                   </Link>
@@ -112,13 +118,13 @@ export default function Footer() {
 
           {/* Resources Links */}
           <div>
-            <h3 className="font-semibold text-slate-900 mb-4">Resources</h3>
+            <h3 className="font-semibold text-slate-700 dark:text-slate-300 mb-4">Resources</h3>
             <ul className="space-y-2">
               {footerLinks.resources.map((link) => (
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-sm text-slate-600 hover:text-slate-900 transition-colors"
+                    className="text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors"
                   >
                     {link.name}
                   </Link>
@@ -129,13 +135,13 @@ export default function Footer() {
 
           {/* Company Links */}
           <div>
-            <h3 className="font-semibold text-slate-900 mb-4">Company</h3>
+            <h3 className="font-semibold text-slate-700 dark:text-slate-300 mb-4">Company</h3>
             <ul className="space-y-2">
               {footerLinks.company.map((link) => (
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-sm text-slate-600 hover:text-slate-900 transition-colors"
+                    className="text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors"
                   >
                     {link.name}
                   </Link>
@@ -145,19 +151,19 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-slate-200">
+        <div className="mt-12 pt-8 border-t border-slate-200 dark:border-slate-800/50">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-sm text-slate-500">
-              © {new Date().getFullYear()} Lowdefy, Inc. All rights reserved.
+            <p className="text-sm text-slate-500 dark:text-slate-600">
+              &copy; {new Date().getFullYear()} Lowdefy, Inc. All rights reserved.
             </p>
-            <div className="flex items-center gap-4 text-sm text-slate-500">
-              <span>Open Source • Apache 2.0 License</span>
-              <span className="text-slate-300">•</span>
+            <div className="flex items-center gap-4 text-sm text-slate-500 dark:text-slate-600">
+              <span>Open Source &bull; Apache 2.0 License</span>
+              <span className="text-slate-300 dark:text-slate-700">&bull;</span>
               <Link
                 href="https://resonancy.io"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-slate-700 transition-colors"
+                className="hover:text-slate-700 dark:hover:text-slate-400 transition-colors"
               >
                 Powered by Resonancy
               </Link>

@@ -5,14 +5,11 @@ import {
   Problem,
   Solution,
   Comparison,
-  Features,
-  Connectors,
-  Plugins,
-  UseCases,
+  Stack,
   Services,
   Testimonials,
-  CTA,
   Footer,
+  SectionDivider,
 } from '@/components';
 
 export default function Home() {
@@ -22,16 +19,18 @@ export default function Home() {
       <main>
         <Hero />
         <Logos />
+        <SectionDivider accent="red" />
         <Problem />
+        <SectionDivider accent="green" />
         <Solution />
+        <SectionDivider accent="primary" />
         <Comparison />
-        <Features />
-        <Connectors />
-        <Plugins />
-        <UseCases />
+        <SectionDivider accent="cyan" />
+        <Stack />
+        <SectionDivider accent="cyan" />
         <Services />
+        <SectionDivider accent="primary" />
         <Testimonials />
-        <CTA />
       </main>
       <Footer />
     </>
