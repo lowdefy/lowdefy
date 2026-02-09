@@ -14,12 +14,14 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 function getValueAtPath(obj, instancePath) {
   if (!instancePath) return obj;
   const keys = instancePath.split('/').filter(Boolean);
   let value = obj;
   for (const key of keys) {
-    if (value == null) return undefined;
+    if (type.isNone(value)) return undefined;
     value = value[key];
   }
   return value;
@@ -32,32 +34,32 @@ function formatValue(value) {
   return JSON.stringify(value);
 }
 
-function formatValidationError(err, blockType, properties) {
-  const propName = err.instancePath ? err.instancePath.slice(1).replace(/\//g, '.') : 'root';
-  const received = getValueAtPath(properties, err.instancePath);
+function formatValidationError({ err, pluginLabel, pluginName, fieldLabel, data }) {
+  const fieldName = err.instancePath ? err.instancePath.slice(1).replace(/\//g, '.') : 'root';
+  const received = getValueAtPath(data, err.instancePath);
 
   if (err.keyword === 'type') {
     const expected = err.params.type;
     const receivedType = received === null ? 'null' : typeof received;
-    return `Block "${blockType}" property "${propName}" must be type "${expected}". Received ${formatValue(
+    return `${pluginLabel} "${pluginName}" ${fieldLabel} "${fieldName}" must be type "${expected}". Received ${formatValue(
       received
     )} (${receivedType}).`;
   }
   if (err.keyword === 'enum') {
     const allowed = err.params.allowedValues.map(formatValue).join(', ');
-    return `Block "${blockType}" property "${propName}" must be one of [${allowed}]. Received ${formatValue(
+    return `${pluginLabel} "${pluginName}" ${fieldLabel} "${fieldName}" must be one of [${allowed}]. Received ${formatValue(
       received
     )}.`;
   }
   if (err.keyword === 'additionalProperties') {
-    return `Block "${blockType}" property "${err.params.additionalProperty}" is not allowed.`;
+    return `${pluginLabel} "${pluginName}" ${fieldLabel} "${err.params.additionalProperty}" is not allowed.`;
   }
   if (err.keyword === 'required') {
-    return `Block "${blockType}" required property "${err.params.missingProperty}" is missing.`;
+    return `${pluginLabel} "${pluginName}" required ${fieldLabel} "${err.params.missingProperty}" is missing.`;
   }
-  return `Block "${blockType}" property "${propName}" ${err.message}. Received ${formatValue(
-    received
-  )}.`;
+  return `${pluginLabel} "${pluginName}" ${fieldLabel} "${fieldName}" ${
+    err.message
+  }. Received ${formatValue(received)}.`;
 }
 
 export default formatValidationError;

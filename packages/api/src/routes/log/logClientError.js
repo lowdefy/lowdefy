@@ -17,10 +17,35 @@
 import { resolveConfigLocation } from '@lowdefy/errors/build';
 import { ConfigError, deserializeError } from '@lowdefy/errors/server';
 
-import formatActionValidationError from './formatActionValidationError.js';
 import formatValidationError from './formatValidationError.js';
-import validateActionParams from './validateActionParams.js';
-import validateBlockProperties from './validateBlockProperties.js';
+import validatePluginSchema from './validatePluginSchema.js';
+
+const validationConfigs = [
+  {
+    pluginType: 'block',
+    guard: (error) => error.blockType,
+    schemaFile: 'plugins/blockSchemas.json',
+    schemaLookup: (error) => error.blockType,
+    schemaKey: 'properties',
+    pluginLabel: 'Block',
+    fieldLabel: 'property',
+    pluginName: (error) => error.blockType,
+    data: (error) => error.properties,
+    warnEvent: 'warn_block_schema_load_failed',
+  },
+  {
+    pluginType: 'action',
+    guard: (error) => error.pluginName,
+    schemaFile: 'plugins/actionSchemas.json',
+    schemaLookup: (error) => error.pluginName,
+    schemaKey: 'params',
+    pluginLabel: 'Action',
+    fieldLabel: 'param',
+    pluginName: (error) => error.pluginName,
+    data: (error) => error.received,
+    warnEvent: 'warn_action_schema_load_failed',
+  },
+];
 
 async function logClientError(context, data) {
   const { logger } = context;
@@ -28,61 +53,41 @@ async function logClientError(context, data) {
   // Deserialize the error from the client
   const error = deserializeError(data);
 
-  // Validate block properties against schema if this is a block PluginError
+  // Validate plugin data against schema if this is a PluginError
   let errors = [error];
-  if (error.name === 'PluginError' && error.pluginType === 'block' && error.blockType) {
-    try {
-      const blockSchemas = await context.readConfigFile('plugins/blockSchemas.json');
-      const schema = blockSchemas?.[error.blockType];
-      if (schema) {
-        const validationErrors = validateBlockProperties({
-          blockType: error.blockType,
-          properties: error.properties,
-          schema,
-        });
+  if (error.name === 'PluginError') {
+    for (const config of validationConfigs) {
+      if (error.pluginType !== config.pluginType || !config.guard(error)) continue;
 
-        if (validationErrors) {
-          errors = validationErrors.map(
-            (validationError) =>
-              new ConfigError({
-                message: formatValidationError(validationError, error.blockType, error.properties),
-                configKey: error.configKey,
-              })
-          );
+      try {
+        const schemas = await context.readConfigFile(config.schemaFile);
+        const schema = schemas?.[config.schemaLookup(error)];
+        if (schema) {
+          const validationErrors = validatePluginSchema({
+            data: config.data(error),
+            schema,
+            schemaKey: config.schemaKey,
+          });
+
+          if (validationErrors) {
+            errors = validationErrors.map(
+              (validationError) =>
+                new ConfigError({
+                  message: formatValidationError({
+                    err: validationError,
+                    pluginLabel: config.pluginLabel,
+                    pluginName: config.pluginName(error),
+                    fieldLabel: config.fieldLabel,
+                    data: config.data(error),
+                  }),
+                  configKey: error.configKey,
+                })
+            );
+          }
         }
+      } catch (err) {
+        logger.warn({ event: config.warnEvent, error: err.message });
       }
-    } catch (err) {
-      logger.warn({ event: 'warn_block_schema_load_failed', error: err.message });
-    }
-  }
-
-  // Validate action params against schema if this is an action PluginError
-  if (error.name === 'PluginError' && error.pluginType === 'action' && error.pluginName) {
-    try {
-      const actionSchemas = await context.readConfigFile('plugins/actionSchemas.json');
-      const schema = actionSchemas?.[error.pluginName];
-      if (schema) {
-        const validationErrors = validateActionParams({
-          params: error.received,
-          schema,
-        });
-
-        if (validationErrors) {
-          errors = validationErrors.map(
-            (validationError) =>
-              new ConfigError({
-                message: formatActionValidationError(
-                  validationError,
-                  error.pluginName,
-                  error.received
-                ),
-                configKey: error.configKey,
-              })
-          );
-        }
-      }
-    } catch (err) {
-      logger.warn({ event: 'warn_action_schema_load_failed', error: err.message });
     }
   }
 

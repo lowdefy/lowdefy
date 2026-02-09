@@ -16,14 +16,14 @@
 
 import { validate } from '@lowdefy/ajv';
 
-function validateActionParams({ params, schema }) {
-  if (!schema?.params) {
+function validatePluginSchema({ data, schema, schemaKey }) {
+  if (!schema?.[schemaKey]) {
     return null;
   }
 
   const { valid, errors } = validate({
-    schema: schema.params,
-    data: params ?? {},
+    schema: schema[schemaKey],
+    data: data ?? {},
     returnErrors: true,
   });
 
@@ -33,4 +33,4 @@ function validateActionParams({ params, schema }) {
   return null;
 }
 
-export default validateActionParams;
+export default validatePluginSchema;
