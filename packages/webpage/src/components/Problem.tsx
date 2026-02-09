@@ -5,22 +5,22 @@ import { CodeOutlined, BranchesOutlined, BugOutlined, WarningOutlined } from '@a
 const problems = [
   {
     icon: CodeOutlined,
-    title: 'AI generates 500 lines you can\'t review',
+    title: 'AI generates 5000 lines of code that you can\'t review',
     description: 'Every prompt produces a wall of code. No one has time to audit it all, so bugs and vulnerabilities slip through.',
   },
   {
     icon: BranchesOutlined,
-    title: 'Every AI session creates a new codebase to maintain',
+    title: 'Every AI session creates new standards, destroying quality',
     description: 'There\'s no consistency between sessions. Each generation is a unique snowflake of dependencies and patterns.',
   },
   {
     icon: BugOutlined,
-    title: 'Security vulnerabilities baked into generated code',
+    title: 'Security vulnerabilities are often an afterthought',
     description: 'SQL injection, XSS, broken auth. LLMs don\'t audit their output. Neither do most teams.',
   },
   {
     icon: WarningOutlined,
-    title: 'Framework updates break everything, across every project',
+    title: 'Dependency updates break everything, across every project',
     description: 'When Next.js ships a breaking change, you have to fix every AI-generated codebase individually.',
   },
 ];
@@ -31,8 +31,8 @@ export default function Problem() {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-4 font-mono">
-            AI writes code fast.{' '}
-            <span className="text-red-400">But who maintains it?</span>
+            AI writes code fast{' '}
+            <span className="text-red-400">but the maintenance doesn&apos;t scale</span>
           </h2>
           <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
             Vibe-coding produces working prototypes. But production needs maintainability, security, and consistency.

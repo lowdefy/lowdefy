@@ -105,13 +105,11 @@ export default function Hero() {
               <div className="w-2.5 h-2.5 bg-green-500/80"></div>
               <span className="ml-4 text-slate-400 dark:text-slate-500 text-sm font-mono">lowdefy.yaml</span>
             </div>
-            <pre className="p-6 text-sm overflow-x-auto scrollbar-dark">
+            <pre className="p-6 text-xs overflow-x-auto scrollbar-dark">
               <code>
-                <span className="text-slate-400 dark:text-slate-600"># Copy to lowdefy.yaml, run: npx lowdefy@latest dev</span>
-                {'\n'}
                 <span className="text-sky-700 dark:text-primary-400">lowdefy:</span>
                 <span className="text-amber-700 dark:text-yellow-300"> &apos;{latestVersion}&apos;</span>
-                {'\n\n'}
+                {'\n'}
                 <span className="text-sky-700 dark:text-primary-400">pages:</span>
                 {'\n'}
                 <span className="text-slate-600">  - </span>
@@ -170,34 +168,43 @@ export default function Hero() {
                 <span className="text-cyan-700 dark:text-cyan-400">message:</span>
                 {'\n'}
                 <span className="text-slate-600">                </span>
-                <span className="text-cyan-700 dark:text-cyan-400">_if:</span>
+                <span className="text-cyan-700 dark:text-cyan-400">_js:</span>
+                <span className="text-green-700 dark:text-green-400"> |</span>
                 {'\n'}
-                <span className="text-slate-600">                  </span>
-                <span className="text-cyan-700 dark:text-cyan-400">test:</span>
+                <span className="text-slate-600">{'                  '}</span>
+                <span className="text-green-700 dark:text-green-400">{'const n = state(\'name\');'}</span>
                 {'\n'}
-                <span className="text-slate-600">                    </span>
-                <span className="text-cyan-700 dark:text-cyan-400">_state:</span>
-                <span className="text-green-700 dark:text-green-400"> name</span>
+                <span className="text-slate-600">{'                  '}</span>
+                <span className="text-green-700 dark:text-green-400">{'return n ? `Hello, ${n}!` : \'Type your name\';'}</span>
                 {'\n'}
-                <span className="text-slate-600">                  </span>
-                <span className="text-cyan-700 dark:text-cyan-400">then:</span>
+                <span className="text-slate-600">      - </span>
+                <span className="text-cyan-700 dark:text-cyan-400">id:</span>
+                <span className="text-green-700 dark:text-green-400"> submit</span>
                 {'\n'}
-                <span className="text-slate-600">                    </span>
-                <span className="text-cyan-700 dark:text-cyan-400">_string.concat:</span>
+                <span className="text-slate-600">        </span>
+                <span className="text-cyan-700 dark:text-cyan-400">type:</span>
+                <span className="text-green-700 dark:text-green-400"> Button</span>
                 {'\n'}
-                <span className="text-slate-600">                      </span>
-                <span className="text-green-700 dark:text-green-400">- Hello, </span>
+                <span className="text-slate-600">        </span>
+                <span className="text-cyan-700 dark:text-cyan-400">properties:</span>
                 {'\n'}
-                <span className="text-slate-600">                      - </span>
-                <span className="text-cyan-700 dark:text-cyan-400">_state:</span>
-                <span className="text-green-700 dark:text-green-400"> name</span>
+                <span className="text-slate-600">          </span>
+                <span className="text-cyan-700 dark:text-cyan-400">title:</span>
+                <span className="text-green-700 dark:text-green-400"> Save</span>
                 {'\n'}
-                <span className="text-slate-600">                      </span>
-                <span className="text-green-700 dark:text-green-400">- &quot;!&quot;</span>
+                <span className="text-slate-600">        </span>
+                <span className="text-cyan-700 dark:text-cyan-400">events:</span>
                 {'\n'}
-                <span className="text-slate-600">                  </span>
-                <span className="text-cyan-700 dark:text-cyan-400">else:</span>
-                <span className="text-green-700 dark:text-green-400"> Type your name above!</span>
+                <span className="text-slate-600">          </span>
+                <span className="text-cyan-700 dark:text-cyan-400">onClick:</span>
+                {'\n'}
+                <span className="text-slate-600">            - </span>
+                <span className="text-cyan-700 dark:text-cyan-400">id:</span>
+                <span className="text-green-700 dark:text-green-400"> validate</span>
+                {'\n'}
+                <span className="text-slate-600">              </span>
+                <span className="text-cyan-700 dark:text-cyan-400">type:</span>
+                <span className="text-green-700 dark:text-green-400"> Validate</span>
               </code>
             </pre>
           </div>

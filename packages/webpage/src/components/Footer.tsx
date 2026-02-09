@@ -5,7 +5,6 @@ const footerLinks = {
   product: [
     { name: 'Documentation', href: 'https://docs.lowdefy.com' },
     { name: 'Getting Started', href: 'https://docs.lowdefy.com/getting-started' },
-    { name: 'Examples', href: 'https://docs.lowdefy.com/examples' },
     { name: 'Blocks', href: 'https://docs.lowdefy.com/blocks' },
   ],
   resources: [

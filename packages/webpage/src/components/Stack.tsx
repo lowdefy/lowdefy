@@ -25,18 +25,17 @@ const features = [
 ];
 
 const connectors = [
-  { name: 'MongoDB', icon: '/images/connectors/MongoDB.png' },
-  { name: 'PostgreSQL', icon: '/images/connectors/PostgreSQL.png' },
-  { name: 'MySQL', icon: '/images/connectors/MySQL.png' },
-  { name: 'Google Sheets', icon: '/images/connectors/GoogleSheets.png' },
-  { name: 'REST API', icon: '/images/connectors/AxiosHttp.png' },
-  { name: 'Elasticsearch', icon: '/images/connectors/Elasticsearch.png' },
-  { name: 'AWS S3', icon: '/images/connectors/AWSS3.png' },
-  { name: 'SendGrid', icon: '/images/connectors/Sendgrid.png' },
-  { name: 'MS SQL', icon: '/images/connectors/MSSQL.png' },
-  { name: 'MariaDB', icon: '/images/connectors/MariaDB.png' },
-  { name: 'SQLite', icon: '/images/connectors/SQLite.png' },
-  { name: 'Stripe', icon: '/images/connectors/Stripe.png' },
+  { name: 'MongoDB', icon: '/images/connectors/MongoDB.png', href: 'https://docs.lowdefy.com/MongoDB' },
+  { name: 'PostgreSQL', icon: '/images/connectors/PostgreSQL.png', href: 'https://docs.lowdefy.com/Knex' },
+  { name: 'MySQL', icon: '/images/connectors/MySQL.png', href: 'https://docs.lowdefy.com/Knex' },
+  { name: 'Google Sheets', icon: '/images/connectors/GoogleSheets.png', href: 'https://docs.lowdefy.com/GoogleSheet' },
+  { name: 'REST API', icon: '/images/connectors/AxiosHttp.png', href: 'https://docs.lowdefy.com/AxiosHttp' },
+  { name: 'Elasticsearch', icon: '/images/connectors/Elasticsearch.png', href: 'https://docs.lowdefy.com/Elasticsearch' },
+  { name: 'AWS S3', icon: '/images/connectors/AWSS3.png', href: 'https://docs.lowdefy.com/AWSS3' },
+  { name: 'SendGrid', icon: '/images/connectors/Sendgrid.png', href: 'https://docs.lowdefy.com/SendGridMail' },
+  { name: 'MS SQL', icon: '/images/connectors/MSSQL.png', href: 'https://docs.lowdefy.com/Knex' },
+  { name: 'SQLite', icon: '/images/connectors/SQLite.png', href: 'https://docs.lowdefy.com/Knex' },
+  { name: 'Stripe', icon: '/images/connectors/Stripe.png', href: 'https://docs.lowdefy.com/Stripe' },
 ];
 
 const useCases = [
@@ -94,20 +93,36 @@ export default function Stack() {
             </div>
             <div className="grid grid-cols-3 gap-3">
               {connectors.map((connector) => (
-                <div
+                <a
                   key={connector.name}
-                  className="flex flex-col items-center gap-2 p-2 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
+                  href={connector.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex flex-col items-center gap-2 p-2 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group"
                 >
                   <Image
                     src={connector.icon}
                     alt={connector.name}
                     width={32}
                     height={32}
-                    className="w-8 h-8 object-contain"
+                    className="w-6 h-6 object-contain"
                   />
-                  <span className="text-[10px] text-slate-500 dark:text-slate-500 text-center leading-tight">{connector.name}</span>
-                </div>
+                  <span className="text-[10px] text-slate-500 dark:text-slate-500 text-center leading-tight group-hover:text-cyan-400 transition-colors">{connector.name}</span>
+                </a>
               ))}
+              <a
+                href="https://docs.lowdefy.com/plugins"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-col items-center gap-2 p-2 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group"
+              >
+                <div className="w-6 h-6 flex items-center justify-center text-slate-400 group-hover:text-cyan-400 transition-colors">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M12 5v14M5 12h14" />
+                  </svg>
+                </div>
+                <span className="text-[10px] text-slate-500 text-center leading-tight group-hover:text-cyan-400 transition-colors">Plugins</span>
+              </a>
             </div>
           </div>
 

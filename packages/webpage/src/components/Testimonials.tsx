@@ -92,7 +92,7 @@ export default function Testimonials() {
           </div>
 
           <p className="mt-8 text-sm text-slate-500">
-            Open source &bull; Apache 2.0 &bull; Forever free
+            Open source &bull; Apache 2.0
           </p>
         </div>
       </div>

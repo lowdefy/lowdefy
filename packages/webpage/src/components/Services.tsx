@@ -41,17 +41,6 @@ export default function Services() {
         <div className="grid lg:grid-cols-2 gap-12 items-start">
           {/* Left - Content */}
           <div>
-            <div className="flex items-center gap-3 mb-6">
-              <span className="text-slate-500 text-sm font-medium">Services by</span>
-              <Image
-                src="/images/resonancy-wordmark.svg"
-                alt="Resonancy"
-                width={140}
-                height={35}
-                className="h-7 w-auto dark:invert"
-              />
-            </div>
-
             <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-4">
               Too many apps?
             </h2>
@@ -104,6 +93,16 @@ export default function Services() {
 
           {/* Right - Stats/Social proof */}
           <div className="lg:pl-8">
+            <div className="flex flex-col items-end mb-4">
+              <span className="text-slate-500 text-sm font-medium mb-1">Services by</span>
+              <Image
+                src="/images/resonancy-wordmark.svg"
+                alt="Resonancy"
+                width={140}
+                height={35}
+                className="h-7 w-auto dark:invert"
+              />
+            </div>
             <div className="bg-white dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-900/50 p-8 border border-slate-200 dark:border-slate-800 bracket-corners bracket-corners-cyan">
               <div className="grid grid-cols-2 gap-4 mb-6 pb-6 border-b border-slate-200 dark:border-slate-700">
                 <div className="text-center">
@@ -129,8 +128,8 @@ export default function Services() {
                 <p className="text-slate-700 dark:text-slate-300 text-sm font-medium mb-4">What we deliver:</p>
                 <ul className="space-y-2">
                   {[
-                    'One unified app replacing your stack',
-                    'Full ownership. Your code, your servers',
+                    'One unified app replacing your SaaS dependency',
+                    'A custom solution tailored to your business',
                     'AI, data science & integrations included',
                     'Ongoing support & managed hosting',
                   ].map((item) => (

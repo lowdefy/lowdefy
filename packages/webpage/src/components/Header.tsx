@@ -8,7 +8,6 @@ import { useGitHubStats, formatStars } from '@/hooks/useGitHubStats';
 
 const navigation = [
   { name: 'Docs', href: 'https://docs.lowdefy.com' },
-  { name: 'Examples', href: 'https://docs.lowdefy.com/examples' },
   { name: 'Discord', href: 'https://discord.gg/lowdefy' },
 ];
 
@@ -53,13 +52,14 @@ export default function Header() {
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800/50">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <Link href="/" className="flex items-center gap-2">
-            <Image src="/images/logo.svg" alt="Lowdefy" width={120} height={30} className="h-7 w-auto block dark:hidden" />
-            <Image src="/images/logo-white.svg" alt="Lowdefy" width={120} height={30} className="h-7 w-auto hidden dark:block" />
-          </Link>
+          <div className="flex items-center gap-8">
+            <Link href="/" className="flex items-center gap-2">
+              <Image src="/images/logo.svg" alt="Lowdefy" width={120} height={30} className="h-7 w-auto block dark:hidden" />
+              <Image src="/images/logo-white.svg" alt="Lowdefy" width={120} height={30} className="h-7 w-auto hidden dark:block" />
+            </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center gap-8">
             {navigation.map((item) => (
               <Link
                 key={item.name}
@@ -69,6 +69,7 @@ export default function Header() {
                 {item.name}
               </Link>
             ))}
+            </div>
           </div>
 
           <div className="hidden md:flex items-center gap-3">

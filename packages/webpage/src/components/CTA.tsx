@@ -34,7 +34,7 @@ export default function CTA() {
         </div>
 
         <p className="mt-8 text-sm text-primary-200">
-          Open source • Apache 2.0 • Forever free
+          Open source • Apache 2.0
         </p>
       </div>
     </section>

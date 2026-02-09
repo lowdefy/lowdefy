@@ -1387,7 +1387,7 @@ export default function Comparison() {
               </div>
               <span className="text-xs text-slate-400 dark:text-slate-600 font-mono">{activeExample.generatedLines}</span>
             </div>
-            <pre className="p-6 text-sm text-slate-700 dark:text-slate-300 h-[500px] overflow-auto scrollbar-dark">
+            <pre className="p-6 text-xs text-slate-700 dark:text-slate-300 h-[500px] overflow-auto scrollbar-dark">
               <code>{activeExample.generated}</code>
             </pre>
             <div className="px-6 py-4 bg-red-50 dark:bg-red-500/10 border-t border-red-200 dark:border-red-500/20">
@@ -1410,7 +1410,7 @@ export default function Comparison() {
               </div>
               <span className="text-xs text-slate-400 dark:text-slate-600 font-mono">{activeExample.lowdefyLines}</span>
             </div>
-            <pre className="p-6 text-sm h-[500px] overflow-auto scrollbar-dark">
+            <pre className="p-6 text-xs h-[500px] overflow-auto scrollbar-dark">
               <code>
                 <YamlHighlight content={activeExample.lowdefy.content} />
               </code>

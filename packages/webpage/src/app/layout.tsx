@@ -63,9 +63,6 @@ export const metadata: Metadata = {
     creator: '@lowaboratories',
     images: ['/opengraph-image'],
   },
-  verification: {
-    google: 'GOOGLE_SITE_VERIFICATION_PLACEHOLDER',
-  },
 };
 
 const jsonLd = {
