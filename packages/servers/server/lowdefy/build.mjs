@@ -37,8 +37,6 @@ async function run() {
     server: serverDirectory,
   };
 
-  const customTypesMap = await createCustomPluginTypesMap({ directories });
-
   let logger;
   logger = createNodeLogger({
     name: 'lowdefy_build',
@@ -49,6 +47,8 @@ async function run() {
       print: context.print ?? logger.levels.labels[level],
     }),
   });
+
+  const customTypesMap = await createCustomPluginTypesMap({ directories, logger });
 
   await build({
     customTypesMap,

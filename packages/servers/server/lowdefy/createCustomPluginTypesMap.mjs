@@ -30,7 +30,7 @@ async function getPluginDefinitions({ directories }) {
   return get(lowdefy, 'plugins', { default: [] });
 }
 
-async function createCustomPluginTypesMap({ directories }) {
+async function createCustomPluginTypesMap({ directories, logger }) {
   const customTypesMap = {
     actions: {},
     auth: {
@@ -48,6 +48,7 @@ async function createCustomPluginTypesMap({ directories }) {
     },
     requests: {},
     schemas: {
+      actions: {},
       blocks: {},
     },
     styles: {
@@ -59,7 +60,15 @@ async function createCustomPluginTypesMap({ directories }) {
   const pluginDefinitions = await getPluginDefinitions({ directories });
 
   for (const plugin of pluginDefinitions) {
-    const { default: types } = await import(`${plugin.name}/types`);
+    let types;
+    try {
+      types = (await import(`${plugin.name}/types`)).default;
+    } catch (e) {
+      logger.error(`Failed to import plugin "${plugin.name}".`);
+      logger.debug(e);
+      logger.info('If the plugin was added while the server was running, restart the server.');
+      throw new Error(`Failed to import plugin "${plugin.name}".`);
+    }
     createPluginTypesMap({
       packageTypes: types,
       typesMap: customTypesMap,
@@ -71,9 +80,13 @@ async function createCustomPluginTypesMap({ directories }) {
     // Import schemas from the plugin (build package can't resolve custom plugins)
     try {
       const packageSchemas = await import(`${plugin.name}/schemas`);
-      for (const [blockType, schema] of Object.entries(packageSchemas)) {
-        if (blockType !== 'default') {
-          customTypesMap.schemas.blocks[`${plugin.typePrefix ?? ''}${blockType}`] = schema;
+      for (const [typeName, schema] of Object.entries(packageSchemas)) {
+        if (typeName === 'default') continue;
+        const prefixedName = `${plugin.typePrefix ?? ''}${typeName}`;
+        if (customTypesMap.actions[prefixedName]) {
+          customTypesMap.schemas.actions[prefixedName] = schema;
+        } else {
+          customTypesMap.schemas.blocks[prefixedName] = schema;
         }
       }
     } catch {
