@@ -95,6 +95,93 @@ describe('createStdOutLineHandler (cli)', () => {
     expect(ui.info).toHaveBeenCalledWith('All good');
   });
 
+  test('derives print level from pino numeric level when print is absent', () => {
+    const ui = {
+      link: jest.fn(),
+      error: jest.fn(),
+      warn: jest.fn(),
+      info: jest.fn(),
+      log: jest.fn(),
+      debug: jest.fn(),
+      spin: jest.fn(),
+      succeed: jest.fn(),
+    };
+    const handler = createCliStdOutLineHandler({ context: { logger: { ui } } });
+
+    handler(JSON.stringify({ level: 30, msg: 'Info from pino' }));
+    expect(ui.info).toHaveBeenCalledWith('Info from pino');
+
+    handler(JSON.stringify({ level: 40, msg: 'Warn from pino' }));
+    expect(ui.warn).toHaveBeenCalledWith('Warn from pino');
+
+    handler(JSON.stringify({ level: 50, msg: 'Error from pino' }));
+    expect(ui.error).toHaveBeenCalledWith('Error from pino');
+
+    handler(JSON.stringify({ level: 20, msg: 'Debug from pino' }));
+    expect(ui.debug).toHaveBeenCalledWith('Debug from pino');
+  });
+
+  test('shows source link when print derived from pino level', () => {
+    const ui = {
+      link: jest.fn(),
+      error: jest.fn(),
+      warn: jest.fn(),
+      info: jest.fn(),
+      log: jest.fn(),
+      debug: jest.fn(),
+      spin: jest.fn(),
+      succeed: jest.fn(),
+    };
+    const handler = createCliStdOutLineHandler({ context: { logger: { ui } } });
+
+    handler(
+      JSON.stringify({
+        level: 50,
+        msg: 'Boom',
+        source: '/path/file.yaml:10',
+      })
+    );
+
+    expect(ui.link).toHaveBeenCalledWith('/path/file.yaml:10');
+    expect(ui.error).toHaveBeenCalledWith('Boom');
+  });
+
+  test('print field takes precedence over pino level', () => {
+    const ui = {
+      link: jest.fn(),
+      error: jest.fn(),
+      warn: jest.fn(),
+      info: jest.fn(),
+      log: jest.fn(),
+      debug: jest.fn(),
+      spin: jest.fn(),
+      succeed: jest.fn(),
+    };
+    const handler = createCliStdOutLineHandler({ context: { logger: { ui } } });
+
+    handler(JSON.stringify({ print: 'succeed', level: 30, msg: 'Done' }));
+    expect(ui.succeed).toHaveBeenCalledWith('Done');
+    expect(ui.info).not.toHaveBeenCalled();
+  });
+
+  test('logs raw JSON line when msg is missing', () => {
+    const ui = {
+      link: jest.fn(),
+      error: jest.fn(),
+      warn: jest.fn(),
+      info: jest.fn(),
+      log: jest.fn(),
+      debug: jest.fn(),
+      spin: jest.fn(),
+      succeed: jest.fn(),
+    };
+    const handler = createCliStdOutLineHandler({ context: { logger: { ui } } });
+
+    const line = JSON.stringify({ level: 30, some: 'data' });
+    handler(line);
+    expect(ui.log).toHaveBeenCalledWith(line);
+  });
+
   test('falls back to log on invalid json', () => {
     const ui = {
       link: jest.fn(),

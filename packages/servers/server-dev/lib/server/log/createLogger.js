@@ -20,10 +20,6 @@ const logger = createNodeLogger({
   name: 'lowdefy_server',
   level: process.env.LOWDEFY_LOG_LEVEL ?? 'info',
   base: { pid: undefined, hostname: undefined },
-  mixin: (context, level) => ({
-    ...context,
-    print: context.print ?? logger.levels.labels[level],
-  }),
 });
 
 function createLogger(metadata = {}) {
