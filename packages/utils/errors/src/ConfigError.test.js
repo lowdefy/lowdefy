@@ -121,6 +121,7 @@ test('ConfigError serialize returns message and configKey', () => {
     '~err': 'ConfigError',
     message: 'Test error',
     configKey: 'abc123',
+    source: null,
   });
 });
 
