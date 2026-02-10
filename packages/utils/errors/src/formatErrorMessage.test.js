@@ -98,3 +98,28 @@ test('formatErrorMessage skips prefix for error without received', () => {
 test('formatErrorMessage returns string unchanged even with includePrefix false', () => {
   expect(formatErrorMessage('plain message', { includePrefix: false })).toBe('plain message');
 });
+
+test('formatErrorMessage prepends source on separate line when present', () => {
+  const error = { name: 'ConfigError', message: 'invalid block type', source: 'pages/home.yaml:42' };
+  expect(formatErrorMessage(error)).toBe('pages/home.yaml:42\n[ConfigError] invalid block type');
+});
+
+test('formatErrorMessage prepends source without prefix when includePrefix is false', () => {
+  const error = { name: 'ConfigError', message: 'bad config', source: 'config.yaml:10' };
+  expect(formatErrorMessage(error, { includePrefix: false })).toBe('config.yaml:10\nbad config');
+});
+
+test('formatErrorMessage does not prepend source when source is falsy', () => {
+  const error = { name: 'Error', message: 'no source', source: null };
+  expect(formatErrorMessage(error)).toBe('[Error] no source');
+});
+
+test('formatErrorMessage with source and received value', () => {
+  const error = {
+    name: 'PluginError',
+    message: 'expected string',
+    received: 42,
+    source: 'file.yaml:5',
+  };
+  expect(formatErrorMessage(error)).toBe('file.yaml:5\n[PluginError] expected string Received: 42');
+});

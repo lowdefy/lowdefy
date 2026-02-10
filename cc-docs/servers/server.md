@@ -306,6 +306,7 @@ const logger = pino({
 | `pages/[pageId].js` | Dynamic page route |
 | `pages/api/request/[pageId]/[requestId].js` | Request handler |
 | `lowdefy/build.mjs` | Build orchestration |
+| `lowdefy/createCustomPluginTypesMap.mjs` | Custom plugin types + schemas resolution |
 | `next.config.js` | Next.js config |
 
 ## Environment Variables

@@ -214,3 +214,99 @@ describe('ServiceError.enhanceMessage', () => {
     expect(enhanced).toBe('Unknown error');
   });
 });
+
+describe('ServiceError.serialize', () => {
+  test('serialize returns type marker and fields', () => {
+    const error = new ServiceError({
+      message: 'Connection refused',
+      service: 'MongoDB',
+      code: 'ECONNREFUSED',
+      statusCode: 503,
+    });
+    expect(error.serialize()).toEqual({
+      '~err': 'ServiceError',
+      message: 'MongoDB: Connection refused',
+      service: 'MongoDB',
+      code: 'ECONNREFUSED',
+      statusCode: 503,
+      source: undefined,
+    });
+  });
+
+  test('serialize handles minimal fields', () => {
+    const error = new ServiceError({ message: 'Timeout' });
+    const serialized = error.serialize();
+
+    expect(serialized['~err']).toBe('ServiceError');
+    expect(serialized.message).toBe('Timeout');
+    expect(serialized.service).toBeUndefined();
+    expect(serialized.code).toBeUndefined();
+    expect(serialized.statusCode).toBeUndefined();
+  });
+});
+
+describe('ServiceError.deserialize', () => {
+  test('deserialize creates ServiceError from data', () => {
+    const data = {
+      '~err': 'ServiceError',
+      message: 'MongoDB: Connection refused',
+      service: 'MongoDB',
+      code: 'ECONNREFUSED',
+      statusCode: 503,
+      source: 'requests.yaml:10',
+    };
+    const error = ServiceError.deserialize(data);
+
+    expect(error instanceof ServiceError).toBe(true);
+    expect(error.name).toBe('ServiceError');
+    expect(error.message).toBe('MongoDB: Connection refused');
+    expect(error.service).toBe('MongoDB');
+    expect(error.code).toBe('ECONNREFUSED');
+    expect(error.statusCode).toBe(503);
+    expect(error.source).toBe('requests.yaml:10');
+  });
+
+  test('deserialize does not double-prefix service name', () => {
+    const original = new ServiceError({
+      message: 'Connection refused',
+      service: 'MongoDB',
+      code: 'ECONNREFUSED',
+    });
+    const serialized = original.serialize();
+    const restored = ServiceError.deserialize(serialized);
+
+    // Message should contain "MongoDB:" once, not "MongoDB: MongoDB:"
+    expect(restored.message).toBe('MongoDB: Connection refused');
+    expect(restored.service).toBe('MongoDB');
+  });
+
+  test('deserialize roundtrip preserves all fields', () => {
+    const original = new ServiceError({
+      message: 'Server error',
+      service: 'API',
+      code: 'ECONNRESET',
+      statusCode: 500,
+    });
+    const json = JSON.stringify(original.serialize());
+    const restored = ServiceError.deserialize(JSON.parse(json));
+
+    expect(restored.service).toBe('API');
+    expect(restored.code).toBe('ECONNRESET');
+    expect(restored.statusCode).toBe(500);
+  });
+});
+
+describe('ServiceError.print', () => {
+  test('print formats error with prefix', () => {
+    const error = new ServiceError({
+      message: 'Connection refused',
+      service: 'MongoDB',
+    });
+    expect(error.print()).toBe('[ServiceError] MongoDB: Connection refused');
+  });
+
+  test('print formats error without service', () => {
+    const error = new ServiceError({ message: 'Timeout' });
+    expect(error.print()).toBe('[ServiceError] Timeout');
+  });
+});

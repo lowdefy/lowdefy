@@ -699,6 +699,7 @@ const nextConfig = {
 | `manager/run.mjs` | Entry point |
 | `manager/getContext.mjs` | Context factory with JIT build state |
 | `manager/processes/lowdefyBuild.mjs` | Calls `shallowBuild`, captures result |
+| `manager/utils/createCustomPluginTypesMap.mjs` | Custom plugin types + schemas resolution |
 | `manager/watchers/lowdefyBuildWatcher.mjs` | Targeted invalidation or full rebuild |
 | `lib/server/jitPageBuilder.js` | JIT page build on API request |
 | `lib/server/pageCache.mjs` | PageCache class (compiled tracking, locks) |

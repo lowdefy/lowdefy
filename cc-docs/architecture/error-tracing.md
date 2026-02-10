@@ -108,6 +108,89 @@ configError.received; // { _if: [true, 'a', 'b'] }
 configError.configKey; // 'abc123'
 ```
 
+### PluginError Conditional Serialization
+
+PluginError's `serialize()` method includes different data depending on `pluginType`, minimizing payload size:
+
+| `pluginType` | Extra Fields Serialized | Purpose |
+|---|---|---|
+| `block` | `blockType`, `properties` | Server validates properties against block schema |
+| `action` | `received` | Server validates params against action schema |
+| `operator` | `received` | Server validates params against operator schema |
+| Other | *(none)* | Only base fields (message, pluginName, configKey, etc.) |
+
+```javascript
+// PluginError.serialize() - packages/utils/errors/src/PluginError.js
+serialize() {
+  const data = {
+    '~err': 'PluginError',
+    message: this.message,
+    rawMessage: this.rawMessage,
+    pluginType: this.pluginType,
+    pluginName: this.pluginName,
+    location: this.location,
+    configKey: this.configKey,
+    source: this.source,
+  };
+  if (this.pluginType === 'block') {
+    data.blockType = this.blockType;
+    data.properties = this.properties;
+  }
+  if (this.pluginType === 'action' || this.pluginType === 'operator') {
+    data.received = this.received;
+  }
+  return data;
+}
+```
+
+This selective serialization enables server-side post-hoc validation — block errors carry properties, action/operator errors carry received params, so the server can validate against plugin schemas and convert `PluginError` to `ConfigError` when schema violations are found.
+
+### Error Deserialization
+
+`deserializeError` in `@lowdefy/errors/client` maps `~err` type markers to error classes:
+
+```javascript
+// packages/utils/errors/src/client/deserializeError.js
+const errorTypes = { ConfigError, LowdefyError, PluginError, ServiceError };
+
+function deserializeError(data) {
+  const ErrorClass = errorTypes[data['~err']];
+  return ErrorClass.deserialize(data);
+}
+```
+
+Used by:
+- `createLogError.js` — deserializes the array of resolved errors returned by `/api/client-error`
+- `request.js` — deserializes server error responses with `~err` marker
+
+### ErrorBoundary Block Wrapping
+
+`ErrorBoundary` (`packages/utils/block-utils/src/ErrorBoundary.js`) wraps unknown block errors as `PluginError` with block context for server-side schema validation:
+
+```javascript
+componentDidCatch(error) {
+  // Preserve known error types (ConfigError, PluginError, ServiceError, LowdefyError)
+  if (error instanceof ConfigError || error instanceof PluginError || ...) {
+    onError(error);
+    return;
+  }
+
+  // Wrap unknown errors as PluginError with block context
+  wrappedError = new PluginError({
+    error,
+    pluginType: 'block',
+    pluginName: blockId,
+    blockType,
+    properties,        // Evaluated block properties for schema validation
+    location: blockId,
+    configKey,
+  });
+  onError(wrappedError);
+}
+```
+
+This ensures that when a block component throws an unhandled error, the `PluginError` carries `blockType` and `properties` so the server can validate the properties against the block's schema and produce helpful `ConfigError` messages.
+
 ### Error Catch Layers
 
 ```
@@ -582,20 +665,28 @@ function createLogError(lowdefy) {
     if (loggedErrors.has(errorKey)) return;
     loggedErrors.add(errorKey);
 
-    // Errors with serialize() - send to server for location resolution
+    // Error already resolved by server (has source) - log locally only
+    if (error.source) {
+      console.error(error.print());
+      return;
+    }
+
+    // Errors with serialize() - send to server for location resolution + validation
     if (error.serialize) {
       const response = await fetch('/api/client-error', {
         method: 'POST',
         body: JSON.stringify(error.serialize()),
       });
-      const { source } = await response.json();
-      if (source) console.info(source);  // "pages/home.yaml:15"
-      console.error(error.print());       // "[ConfigError] message. Received: ..."
+      const result = await response.json();
+      // Server returns array of resolved errors (may include validation errors)
+      (result.errors ?? []).forEach((errData) => {
+        const resolved = deserializeError(errData);
+        console.error(resolved.print());
+      });
       return;
     }
 
     // Plain errors with configKey - wrap in ConfigError for serialization
-    // ConfigError constructor extracts received/configKey from wrapped error
     if (error.configKey) {
       const configError = new ConfigError({ error });
       await logError(configError);
@@ -610,9 +701,84 @@ function createLogError(lowdefy) {
 
 **Key behaviors:**
 - **Deduplication**: Same error logged only once per session
-- **Location resolution**: Errors with `serialize()` are sent to server for `configKey → source:line` resolution
-- **Property forwarding**: Wrapping in `new ConfigError({ error })` preserves `received` and `configKey` from the original error
+- **Server-side validation**: Errors sent to server may be re-classified (e.g., `PluginError` → `ConfigError` if schema validation fails)
+- **Error deserialization**: Server returns an array of resolved errors that are deserialized back into proper error objects
+- **Source detection**: Errors already resolved by the server (with `source` property) skip re-sending
 - **Graceful degradation**: Logs without location if server unreachable
+
+#### Block Parse Error Logging
+
+`Block.js` monitors `block.eval.parseErrors` and logs them to the server:
+
+```javascript
+useEffect(() => {
+  if (block.eval?.parseErrors && lowdefy._internal.logError) {
+    block.eval.parseErrors.forEach((error) => {
+      const errorKey = `${block.id}:${error.message}`;
+      if (!loggedErrorsRef.current.has(errorKey)) {
+        loggedErrorsRef.current.add(errorKey);
+        lowdefy._internal.logError(error);
+      }
+    });
+  }
+}, [block.eval?.parseErrors, block.id, lowdefy._internal]);
+```
+
+This ensures operator/action parse errors from block evaluation are reported to the server terminal.
+
+#### Server-Side Error Deserialization in Requests
+
+`packages/client/src/request.js` now deserializes server errors:
+
+```javascript
+if (!res.ok) {
+  const errorBody = await res.json();
+  if (errorBody['~err']) {
+    throw deserializeError(errorBody);  // Preserves error type + configKey
+  }
+  throw new Error(errorBody.message || 'Request error');
+}
+```
+
+This enables typed error objects (ConfigError, PluginError, ServiceError) to flow from server API responses back to the client, preserving context for debugging.
+
+#### Server-Side Post-Hoc Validation (logClientError)
+
+When a `PluginError` reaches the server via `/api/client-error`, the server validates the received data against plugin schemas using AJV. If schema validation fails, the `PluginError` is replaced with human-friendly `ConfigError` messages.
+
+**Flow:**
+
+```
+Client PluginError.serialize() → POST /api/client-error
+  → deserialize error
+  → match pluginType to validation config (block/action/operator)
+  → load schema from build artifact (blockSchemas.json, etc.)
+  → validate data against schema using @lowdefy/ajv
+  → if invalid: replace PluginError with ConfigError[] (one per validation error)
+  → resolve configKey → source:line for all errors
+  → return serialized errors array to client
+```
+
+**Validation configs** in `logClientError.js`:
+
+| Plugin Type | Schema File | Schema Key | Data Extracted | Plugin Label |
+|---|---|---|---|---|
+| `block` | `plugins/blockSchemas.json` | `properties` | `error.properties` | Block |
+| `action` | `plugins/actionSchemas.json` | `params` | `error.received` | Action |
+| `operator` | `plugins/operatorSchemas.json` | `params` | `Object.values(error.received)[0]` | Operator |
+
+**Format examples** (`formatValidationError.js`):
+
+```
+Block "Button" property "disabled" must be type "boolean". Received "yes" (string).
+Action "SetState" param "state" is not allowed.
+Operator "_if" required param "then" is missing.
+```
+
+**Key files:**
+- `packages/api/src/routes/log/logClientError.js` — Orchestrates validation + location resolution
+- `packages/api/src/routes/log/validatePluginSchema.js` — AJV validation wrapper
+- `packages/api/src/routes/log/formatValidationError.js` — Human-friendly error formatting
 
 #### UserError — Client-Only, Console-Only
 
@@ -821,6 +987,27 @@ Build failed with 3 error(s):
 
 **Test impact:** Tests that check `context.errors` array don't exist, so `collectConfigError` throws immediately if no array present (backward compatible).
 
+### Why Post-Hoc Server-Side Validation?
+
+**Problem:** When a plugin (block, operator, action) fails at runtime, the error message is often a raw JavaScript error (e.g., `Cannot read property 'toLowerCase' of undefined`). Developers need to understand what config property caused the issue — not just what JS method failed.
+
+**Decision:** When a `PluginError` reaches the server via `/api/client-error`, validate the actual runtime data (block properties, operator params, action params) against the plugin's JSON schema. If schema validation fails, replace the `PluginError` with descriptive `ConfigError` messages.
+
+**Why post-hoc (after failure) instead of pre-execution?**
+- **Zero overhead on success** — validation only runs when an error already occurred
+- **No bundle impact** — schema files and AJV stay on the server; client bundle is unaffected
+- **Works for all plugin types** — blocks, operators, and actions all go through the same path
+- **Accurate data** — validates the actual evaluated/runtime values, not build-time templates
+
+**Trade-off:**
+- Pro: Turns cryptic runtime errors into actionable config fix suggestions
+- Pro: Zero performance cost on the happy path
+- Pro: Schema files are the same ones used in build-time validation — single source of truth
+- Con: Requires a round-trip to the server after an error occurs
+- Con: If schema is missing, falls back to the original PluginError (graceful degradation)
+
+**Implementation:** PR #1979 — `packages/api/src/routes/log/logClientError.js`
+
 ### Why Track Line Numbers?
 
 **Problem:** Original implementation only tracked file paths, not line numbers. For large files, this wasn't precise enough.
@@ -980,8 +1167,20 @@ constructor(messageOrParams) {
 
 ### Client
 
-- `packages/client/src/createLogError.js` - Error logging with deduplication
+- `packages/client/src/createLogError.js` - Error logging with deduplication and server deserialization
+- `packages/client/src/request.js` - Deserializes `~err` server errors
+- `packages/client/src/Block.js` - Parse error logging with deduplication
 - `packages/operators/src/webParser.js` - Wraps operator errors with ConfigError
+
+### API (Server-Side Validation)
+
+- `packages/api/src/routes/log/logClientError.js` - Post-hoc schema validation orchestrator
+- `packages/api/src/routes/log/validatePluginSchema.js` - AJV schema validation wrapper
+- `packages/api/src/routes/log/formatValidationError.js` - Human-friendly error message formatting
+
+### Block Utils
+
+- `packages/utils/block-utils/src/ErrorBoundary.js` - Wraps unknown block errors as PluginError
 
 ### Sentry Integration
 
@@ -993,3 +1192,4 @@ constructor(messageOrParams) {
 - Issue #1940 - Original feature request (config-aware error tracing)
 - PR #1944 - Implementation
 - Issue #1945 - Sentry integration
+- PR #1979 - Server-side plugin validation (post-hoc schema validation, conditional PluginError serialization, ErrorBoundary block wrapping)

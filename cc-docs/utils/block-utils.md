@@ -86,7 +86,7 @@ const sanitized = renderHtml('<script>alert("xss")</script><p>Safe content</p>')
 
 ### ErrorBoundary
 
-React error boundary for catching render errors:
+React error boundary for catching render errors. Wraps unknown block errors as `PluginError` with block context for server-side schema validation:
 
 ```javascript
 import { ErrorBoundary } from '@lowdefy/block-utils';
@@ -96,6 +96,11 @@ import { ErrorBoundary } from '@lowdefy/block-utils';
   name="ComponentName"
   message="Something went wrong"
   description="Please try again"
+  blockId="my_button"
+  blockType="Button"
+  properties={evaluatedProperties}
+  configKey={block['~k']}
+  onError={logError}
   fallback={(error) => <CustomError error={error} />}
 >
   <RiskyComponent />
@@ -112,6 +117,13 @@ import { ErrorBoundary } from '@lowdefy/block-utils';
 | `message` | string | Error message |
 | `name` | string | Component name for debugging |
 | `description` | string | Error description |
+| `blockId` | string | Block ID (used in PluginError wrapping) |
+| `blockType` | string | Block type name (e.g., 'Button') for schema validation |
+| `properties` | object | Evaluated block properties (sent to server for validation) |
+| `configKey` | string | Config key for error location resolution |
+| `onError` | function | Error callback (receives wrapped error) |
+
+**Error wrapping behavior:** Known error types (`ConfigError`, `PluginError`, `ServiceError`, `LowdefyError`) are passed through unchanged. Unknown errors are wrapped as `PluginError` with `pluginType: 'block'`, carrying `blockType` and `properties` so the server can validate against the block's JSON schema.
 
 ### HtmlComponent
 
