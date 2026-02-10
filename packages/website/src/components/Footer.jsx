@@ -95,6 +95,18 @@ export default function Footer() {
                   className="w-5 h-5 dark:invert opacity-50 hover:opacity-80 transition-opacity"
                 />
               </Link>
+              <Link
+                href="https://www.linkedin.com/company/lowdefy-inc/"
+                className="text-slate-600 hover:text-slate-400 transition-colors"
+              >
+                <Image
+                  src="/images/social/linkedin.svg"
+                  alt="LinkedIn"
+                  width={20}
+                  height={20}
+                  className="w-5 h-5 dark:invert opacity-50 hover:opacity-80 transition-opacity"
+                />
+              </Link>
             </div>
           </div>
 
