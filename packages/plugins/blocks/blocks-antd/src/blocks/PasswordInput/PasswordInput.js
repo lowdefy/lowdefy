@@ -52,7 +52,7 @@ const PasswordInput = ({
               disabled={properties.disabled || loading}
               onChange={(event) => {
                 methods.setValue(event.target.value);
-                methods.triggerEvent({ name: 'onChange' });
+                methods.triggerEvent({ name: 'onChange', event: { value: event.target.value } });
                 const cStart = event.target.selectionStart;
                 const cEnd = event.target.selectionEnd;
                 runAfterUpdate(() => {

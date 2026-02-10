@@ -153,10 +153,12 @@ export default function Footer() {
         <div className="mt-12 pt-8 border-t border-slate-200 dark:border-slate-800/50">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="text-sm text-slate-500 dark:text-slate-600">
-              &copy; {new Date().getFullYear()} Lowdefy, Inc. All rights reserved.
+              &copy; {new Date().getFullYear()} Lowdefy. All rights reserved.
             </p>
             <div className="flex items-center gap-4 text-sm text-slate-500 dark:text-slate-600">
-              <span>Open Source &bull; Apache 2.0 License</span>
+              <span>Open Source</span>
+              <span className="text-slate-300 dark:text-slate-700">&bull;</span>
+              <span>Apache 2.0 License</span>
               <span className="text-slate-300 dark:text-slate-700">&bull;</span>
               <Link
                 href="https://resonancy.io"

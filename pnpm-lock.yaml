@@ -1932,6 +1932,9 @@ importers:
       react-icons:
         specifier: 4.12.0
         version: 4.12.0(react@18.2.0)
+      uuid:
+        specifier: 13.0.0
+        version: 13.0.0
     devDependencies:
       '@lowdefy/build':
         specifier: 4.5.2
@@ -2074,6 +2077,9 @@ importers:
       swr:
         specifier: 2.2.4
         version: 2.2.4(react@18.2.0)
+      uuid:
+        specifier: 13.0.0
+        version: 13.0.0
       yaml:
         specifier: 2.3.4
         version: 2.3.4

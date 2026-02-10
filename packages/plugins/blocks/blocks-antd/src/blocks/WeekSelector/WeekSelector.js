@@ -70,12 +70,11 @@ const WeekSelector = ({
                 />
               }
               onChange={(newVal) => {
-                methods.setValue(
-                  !newVal
-                    ? null
-                    : moment.utc(newVal.add(newVal.utcOffset(), 'minutes')).startOf('week').toDate()
-                );
-                methods.triggerEvent({ name: 'onChange' });
+                const val = !newVal
+                  ? null
+                  : moment.utc(newVal.add(newVal.utcOffset(), 'minutes')).startOf('week').toDate();
+                methods.setValue(val);
+                methods.triggerEvent({ name: 'onChange', event: { value: val } });
               }}
               value={value && type.isDate(value) ? moment.utc(value).startOf('week') : null}
             />

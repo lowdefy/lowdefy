@@ -68,8 +68,8 @@ export default function Testimonials() {
           <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-4 font-mono">
             Ready to build faster?
           </h2>
-          <p className="text-lg text-slate-600 dark:text-slate-400 mb-8 max-w-2xl mx-auto">
-            Get started with Lowdefy in minutes. No signup required&mdash;just run one command.
+          <p className="text-lg text-slate-600 dark:text-slate-400 mb-8 max-w-3xl mx-auto">
+            Get started with Lowdefy in minutes. No signup required, just run one command.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">

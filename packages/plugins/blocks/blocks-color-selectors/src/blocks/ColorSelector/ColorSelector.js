@@ -50,7 +50,7 @@ const ColorSelector = ({
             ])}
             onChange={(newColor) => {
               methods.setValue(newColor);
-              methods.triggerEvent({ name: 'onChange' });
+              methods.triggerEvent({ name: 'onChange', event: { value: newColor } });
             }}
             size={properties.size}
             value={value}
