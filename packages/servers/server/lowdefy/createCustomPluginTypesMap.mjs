@@ -50,6 +50,7 @@ async function createCustomPluginTypesMap({ directories, logger }) {
     schemas: {
       actions: {},
       blocks: {},
+      operators: {},
     },
     styles: {
       packages: {},
