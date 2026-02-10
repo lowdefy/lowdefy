@@ -9,7 +9,7 @@ const footerLinks = {
   ],
   resources: [
     { name: 'GitHub', href: 'https://github.com/lowdefy/lowdefy' },
-    { name: 'Discord', href: 'https://discord.gg/lowdefy' },
+    { name: 'Discord', href: 'https://discord.gg/WmcJgXt' },
     { name: 'Changelog', href: 'https://github.com/lowdefy/lowdefy/releases' },
   ],
   company: [
@@ -60,7 +60,7 @@ export default function Footer() {
                 />
               </Link>
               <Link
-                href="https://discord.gg/lowdefy"
+                href="https://discord.gg/WmcJgXt"
                 className="text-slate-600 hover:text-slate-400 transition-colors"
               >
                 <Image

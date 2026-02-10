@@ -8,7 +8,7 @@ import { useGitHubStats, formatStars } from '@/hooks/useGitHubStats';
 
 const navigation = [
   { name: 'Docs', href: 'https://docs.lowdefy.com' },
-  { name: 'Discord', href: 'https://discord.gg/lowdefy' },
+  { name: 'Discord', href: 'https://discord.gg/WmcJgXt' },
 ];
 
 function ThemeToggle() {

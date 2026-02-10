@@ -115,14 +115,14 @@
   border-color: rgba(34, 211, 238, 0.4);
 }
 
-/* Syntax highlighting for YAML — light mode */
+/* Syntax highlighting for YAML -light mode */
 .yaml-key { color: #0369a1; }
 .yaml-value { color: #a16207; }
 .yaml-string { color: #0e7490; }
 .yaml-comment { color: #94a3b8; }
 .yaml-dash { color: #64748b; }
 
-/* Syntax highlighting for YAML — dark mode */
+/* Syntax highlighting for YAML -dark mode */
 :is(.dark .yaml-key) { color: #7dd3fc; }
 :is(.dark .yaml-value) { color: #fef08a; }
 :is(.dark .yaml-string) { color: #a5f3fc; }
