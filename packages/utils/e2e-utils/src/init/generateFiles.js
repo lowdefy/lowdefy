@@ -78,6 +78,7 @@ function generateFiles({ cwd, app, useMongoDB }) {
     { src: 'playwright.config.js.template', dest: 'playwright.config.js' },
     { src: 'example.spec.js.template', dest: 'example.spec.js' },
     { src: 'mocks.yaml.template', dest: 'mocks.yaml' },
+    { src: 'README.md.template', dest: 'README.md' },
   ];
 
   for (const { src, dest } of baseTemplates) {
