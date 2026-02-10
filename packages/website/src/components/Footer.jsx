@@ -72,7 +72,7 @@ export default function Footer() {
                 />
               </Link>
               <Link
-                href="https://x.com/lowaboratories"
+                href="https://x.com/lowdefy"
                 className="text-slate-600 hover:text-slate-400 transition-colors"
               >
                 <Image

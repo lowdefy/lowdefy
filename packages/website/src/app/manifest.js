@@ -1,6 +1,4 @@
-import type { MetadataRoute } from 'next';
-
-export default function manifest(): MetadataRoute.Manifest {
+export default function manifest() {
   return {
     name: 'Lowdefy - Config-First Web Stack for AI and Humans',
     short_name: 'Lowdefy',

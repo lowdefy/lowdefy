@@ -35,7 +35,7 @@ const values = [
     icon: RocketOutlined,
     title: 'Ship Fast, Iterate Faster',
     description:
-      'Internal tools shouldn\'t take months. Our config-first approach means you can go from idea to production in days.',
+      "Internal tools shouldn't take months. Our config-first approach means you can go from idea to production in days.",
   },
 ];
 
@@ -93,7 +93,7 @@ const team = [
 const milestones = [
   { year: '2020', event: 'Lowdefy founded, first commit' },
   { year: '2021', event: 'v1.0 released, open-source launch' },
-  { year: '2023', event: 'v4.0,rebuilt on Next.js & Auth.js' },
+  { year: '2023', event: 'v4.0, rebuilt on Next.js & Auth.js' },
   { year: '2024', event: '70+ blocks, 150+ operators, plugin ecosystem' },
   { year: '2025', event: 'AI-native config generation, growing community' },
 ];
@@ -109,13 +109,12 @@ export default function About() {
         <section className="px-4 sm:px-6 lg:px-8 pb-20">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-4xl sm:text-5xl font-bold text-slate-900 dark:text-white mb-6 font-mono">
-              Building the config webstack{' '}
-              <span className="text-gradient">for everyone</span>
+              Building the config webstack <span className="text-gradient">for everyone</span>
             </h1>
             <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
-              Lowdefy is an open-source framework that makes it possible to build web apps
-              using simple YAML or JSON configuration. A higher-order language between code and
-              natural language,designed for both humans and AI.
+              Lowdefy is an open-source framework that makes it possible to build web apps using
+              simple YAML or JSON configuration. A higher-order language between code and natural
+              language, designed for both humans and AI.
             </p>
           </div>
         </section>
@@ -141,18 +140,18 @@ export default function About() {
             <div className="space-y-4 text-slate-600 dark:text-slate-400 leading-relaxed">
               <p>
                 Lowdefy started with a frustration: building internal tools and business apps took
-                too long. Every project needed the same UI components, the same database connections,
-                the same auth setup,but developers kept rebuilding from scratch.
+                too long. Every project needed the same UI components, the same database
+                connections, the same auth setup, but developers kept rebuilding from scratch.
               </p>
               <p>
-                We asked: what if you could describe an entire web application in configuration?
-                Not a drag-and-drop builder with limitations, but a real framework where config
-                handles the 80% and code handles the rest.
+                We asked: what if you could describe an entire web application in configuration? Not
+                a drag-and-drop builder with limitations, but a real framework where config handles
+                the 80% and code handles the rest.
               </p>
               <p>
-                Built on Next.js and Auth.js, Lowdefy applications are real web apps,deployable
-                anywhere, version-controlled in Git, and extensible through a plugin ecosystem.
-                The config-first approach also makes Lowdefy uniquely suited for AI-assisted
+                Built on Next.js and Auth.js, Lowdefy applications are real web apps, deployable
+                anywhere, version-controlled in Git, and extensible through a plugin ecosystem. The
+                config-first approach also makes Lowdefy uniquely suited for AI-assisted
                 development, where LLMs can generate and review structured configuration naturally.
               </p>
               <p>
@@ -204,7 +203,9 @@ export default function About() {
                   <div key={milestone.year} className="flex items-start gap-6 relative">
                     <div className="w-[15px] h-[15px] rounded-full bg-cyan-500/20 border-2 border-cyan-500 flex-shrink-0 mt-1 z-10" />
                     <div>
-                      <span className="text-sm font-mono font-bold text-cyan-500">{milestone.year}</span>
+                      <span className="text-sm font-mono font-bold text-cyan-500">
+                        {milestone.year}
+                      </span>
                       <p className="text-slate-600 dark:text-slate-400 mt-1">{milestone.event}</p>
                     </div>
                   </div>
@@ -277,8 +278,9 @@ export default function About() {
                 Join the Community
               </h3>
               <p className="text-slate-600 dark:text-slate-400 text-sm mb-6 leading-relaxed">
-                Lowdefy is shaped by its community. Whether you contribute code, report bugs, write plugins,
-                or help others on Discord,you&apos;re part of what makes this project great.
+                Lowdefy is shaped by its community. Whether you contribute code, report bugs, write
+                plugins, or help others on Discord, you&apos;re part of what makes this project
+                great.
               </p>
               <div className="flex flex-wrap gap-3">
                 <Link
@@ -309,15 +311,27 @@ export default function About() {
                 </h3>
               </div>
               <p className="text-slate-600 dark:text-slate-400 text-sm mb-4 leading-relaxed">
-                <Link href="https://resonancy.io" target="_blank" rel="noopener noreferrer" className="text-cyan-500 hover:text-cyan-400 transition-colors font-medium">
+                <Link
+                  href="https://resonancy.io"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-cyan-500 hover:text-cyan-400 transition-colors font-medium"
+                >
                   Resonancy
                 </Link>
-                , founded by the Lowdefy team,builds purpose-built business applications on Lowdefy.
-                10+ years of experience, 50+ internal tools deployed.
+                , founded by the Lowdefy team, builds purpose-built business applications on
+                Lowdefy. 10+ years of experience, 50+ internal tools deployed.
               </p>
               <ul className="space-y-2 mb-6">
-                {['Custom internal tools & admin panels', 'Data integration & workflow automation', 'AI, data science & managed hosting'].map((item) => (
-                  <li key={item} className="flex items-center gap-2 text-slate-600 dark:text-slate-400 text-sm">
+                {[
+                  'Custom internal tools & admin panels',
+                  'Data integration & workflow automation',
+                  'AI, data science & managed hosting',
+                ].map((item) => (
+                  <li
+                    key={item}
+                    className="flex items-center gap-2 text-slate-600 dark:text-slate-400 text-sm"
+                  >
                     <span className="text-cyan-500">&bull;</span>
                     {item}
                   </li>
@@ -340,10 +354,12 @@ export default function About() {
   );
 }
 
-function Stat({ value, label }: { value: string; label: string }) {
+function Stat({ value, label }) {
   return (
     <div className="text-center">
-      <div className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white font-mono">{value}</div>
+      <div className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white font-mono">
+        {value}
+      </div>
       <div className="text-sm text-slate-500 dark:text-slate-400 mt-1">{label}</div>
     </div>
   );

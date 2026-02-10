@@ -5,23 +5,27 @@ import { CodeOutlined, BranchesOutlined, BugOutlined, WarningOutlined } from '@a
 const problems = [
   {
     icon: CodeOutlined,
-    title: 'AI generates 5000 lines of code that you can\'t review',
-    description: 'Every prompt produces a wall of code. No one has time to audit it all, so bugs and vulnerabilities slip through.',
+    title: "AI generates 5000 lines of code that you can't review",
+    description:
+      'Every prompt produces a wall of code. No one has time to audit it all, so bugs and vulnerabilities slip through.',
   },
   {
     icon: BranchesOutlined,
     title: 'Every AI session creates new standards, destroying quality',
-    description: 'There\'s no consistency between sessions. Each generation is a unique snowflake of dependencies and patterns.',
+    description:
+      "There's no consistency between sessions. Each generation is a unique snowflake of dependencies and patterns.",
   },
   {
     icon: BugOutlined,
     title: 'Security vulnerabilities are often an afterthought',
-    description: 'SQL injection, XSS, broken auth. LLMs don\'t audit their output. Neither do most teams.',
+    description:
+      "SQL injection, XSS, broken auth. LLMs don't audit their output. Neither do most teams.",
   },
   {
     icon: WarningOutlined,
     title: 'Dependency updates break everything, across every project',
-    description: 'When Next.js ships a breaking change, you have to fix every AI-generated codebase individually.',
+    description:
+      'When Next.js ships a breaking change, you have to fix every AI-generated codebase individually.',
   },
 ];
 
@@ -35,7 +39,8 @@ export default function Problem() {
             <span className="text-red-400">but the maintenance doesn&apos;t scale</span>
           </h2>
           <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-            Vibe-coding produces working prototypes. But production needs maintainability, security, and consistency.
+            Vibe-coding produces working prototypes. But production needs maintainability, security,
+            and consistency.
           </p>
         </div>
 

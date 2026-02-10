@@ -2,18 +2,11 @@
 
 import { useState, useEffect } from 'react';
 
-interface GitHubStats {
-  stars: number;
-  latestVersion: string;
-  loading: boolean;
-  error: string | null;
-}
-
 const CACHE_KEY = 'lowdefy-github-stats';
 const CACHE_DURATION = 10 * 60 * 1000; // 10 minutes
 
-export function useGitHubStats(): GitHubStats {
-  const [stats, setStats] = useState<GitHubStats>({
+export function useGitHubStats() {
+  const [stats, setStats] = useState({
     stars: 2600,
     latestVersion: '4.5.2',
     loading: true,
@@ -51,10 +44,7 @@ export function useGitHubStats(): GitHubStats {
         };
 
         // Cache the results
-        localStorage.setItem(
-          CACHE_KEY,
-          JSON.stringify({ data: newStats, timestamp: Date.now() })
-        );
+        localStorage.setItem(CACHE_KEY, JSON.stringify({ data: newStats, timestamp: Date.now() }));
 
         setStats({ ...newStats, loading: false, error: null });
       } catch (error) {
@@ -68,7 +58,7 @@ export function useGitHubStats(): GitHubStats {
   return stats;
 }
 
-export function formatStars(count: number): string {
+export function formatStars(count) {
   if (count >= 1000) {
     return `${(count / 1000).toFixed(1)}k`;
   }
