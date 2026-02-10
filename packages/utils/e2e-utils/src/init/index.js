@@ -121,7 +121,10 @@ async function init() {
       message: 'Which version do you want to install?',
       choices: [
         { title: 'Stable (recommended for production)', value: 'stable' },
-        { title: 'Experimental (latest features, may have breaking changes)', value: 'experimental' },
+        {
+          title: 'Experimental (latest features, may have breaking changes)',
+          value: 'experimental',
+        },
       ],
     });
 

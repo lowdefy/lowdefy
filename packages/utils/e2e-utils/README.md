@@ -18,6 +18,7 @@ npx lowdefy-e2e init
 ```
 
 This creates:
+
 - `e2e/playwright.config.js` - Pre-configured Playwright config
 - `e2e/example.spec.js` - Starter test to copy from
 
@@ -221,11 +222,11 @@ api:
 import { createConfig } from '@lowdefy/e2e-utils/config';
 
 export default createConfig({
-  appDir: './',           // Where lowdefy.yaml is (default: './')
-  port: 3000,             // Server port (default: 3000)
-  testDir: 'e2e',         // Test directory (default: 'e2e')
+  appDir: './', // Where lowdefy.yaml is (default: './')
+  port: 3000, // Server port (default: 3000)
+  testDir: 'e2e', // Test directory (default: 'e2e')
   testMatch: '**/*.spec.js',
-  timeout: 180000,        // WebServer timeout in ms (default: 180000)
+  timeout: 180000, // WebServer timeout in ms (default: 180000)
 });
 ```
 
@@ -255,6 +256,7 @@ export default createBlockHelper({
 ```
 
 Add the subpath export in `package.json`:
+
 ```json
 "exports": {
   "./e2e/MyBlock": "./dist/blocks/MyBlock/e2e.js"

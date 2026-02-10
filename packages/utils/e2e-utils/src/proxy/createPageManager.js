@@ -92,8 +92,7 @@ function createPageManager({ page, manifest, helperRegistry, mockManager }) {
       return {
         expect: {
           toFinish: (opts) => expectRequest(page, { requestId, loading: false, ...opts }),
-          toHaveResponse: (response, opts) =>
-            expectRequest(page, { requestId, response, ...opts }),
+          toHaveResponse: (response, opts) => expectRequest(page, { requestId, response, ...opts }),
           toHavePayload: (payload, opts) => expectRequest(page, { requestId, payload, ...opts }),
         },
         response: () => getRequestResponse(page, { requestId }),
