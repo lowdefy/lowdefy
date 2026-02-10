@@ -11,6 +11,7 @@ Shared utility packages used throughout Lowdefy.
 | `@lowdefy/ajv` | JSON Schema validation | Universal |
 | `@lowdefy/block-utils` | Block runtime utilities | Browser |
 | `@lowdefy/block-dev` | Block testing utilities | Node.js |
+| `@lowdefy/e2e-utils` | Playwright e2e testing for apps | Node.js |
 | `@lowdefy/nunjucks` | Template engine wrapper | Universal |
 | `@lowdefy/jest-yaml-transform` | YAML Jest transformer | Node.js |
 
@@ -118,5 +119,6 @@ All packages are at version 4.4.0 and follow the monorepo versioning.
 - [ajv.md](./ajv.md) - Schema validation
 - [block-utils.md](./block-utils.md) - Block runtime utilities
 - [block-dev.md](./block-dev.md) - Block testing
+- [e2e-utils.md](./e2e-utils.md) - Playwright e2e testing
 - [nunjucks.md](./nunjucks.md) - Template engine
 - [jest-yaml-transform.md](./jest-yaml-transform.md) - YAML transformer

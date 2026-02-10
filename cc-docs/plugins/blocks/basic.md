@@ -137,3 +137,47 @@ Use basic blocks when:
 - Want minimal styling
 - Embedding external content
 - Custom CSS framework
+
+## E2E Testing Helpers
+
+### List Block
+
+The List block has an e2e helper for testing list rendering:
+
+```javascript
+// src/blocks/List/e2e.js
+import { createBlockHelper } from '@lowdefy/e2e-utils';
+import { expect } from '@playwright/test';
+
+const locator = (page, blockId) => page.locator(`#bl-${blockId}`);
+
+export default createBlockHelper({
+  locator,
+  expect: {
+    itemCount: async (page, blockId, count) => {
+      const items = locator(page, blockId).locator('[id^="bl-"][id$=".$"]');
+      await expect(items).toHaveCount(count);
+    },
+  },
+});
+```
+
+Usage in tests:
+```javascript
+await ldf.block('items_list').expect.itemCount(5);
+```
+
+### Package Export
+
+```json
+{
+  "exports": {
+    "./e2e/List": "./dist/blocks/List/e2e.js"
+  }
+}
+```
+
+## See Also
+
+- [e2e-utils.md](../../utils/e2e-utils.md) - E2E testing utilities
+- [antd.md](./antd.md) - Full-featured UI blocks
