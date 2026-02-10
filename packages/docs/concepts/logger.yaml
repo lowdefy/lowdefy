@@ -38,7 +38,7 @@ _ref:
             SENTRY_DSN=https://your-dsn@sentry.io/project
             ```
 
-            That's it! With just this environment variable, Sentry will capture errors from both client and server with sensible defaults.
+            With this environment variable set, Sentry will capture errors from both client and server with sensible defaults.
 
             ### Client-Side Configuration
 
@@ -126,6 +126,23 @@ _ref:
             ```
 
             This will upload source maps to Sentry during the Next.js build process.
+
+            ### Environment Variables
+
+            | Variable | Description |
+            |----------|-------------|
+            | `SENTRY_DSN` | Sentry Data Source Name (DSN) for server-side error capture |
+            | `NEXT_PUBLIC_SENTRY_DSN` | The same DSN exposed to the client for browser error capture |
+            | `SENTRY_AUTH_TOKEN` | (Optional) Auth token for source map uploads during build |
+
+            Example `.env` file:
+
+            ```
+            # .env
+            SENTRY_DSN=https://abc123@o123456.ingest.sentry.io/1234567
+            NEXT_PUBLIC_SENTRY_DSN=https://abc123@o123456.ingest.sentry.io/1234567
+            SENTRY_AUTH_TOKEN=your-auth-token
+            ```
 
             ### Disabling Sentry
 
