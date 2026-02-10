@@ -17,11 +17,11 @@ import {
 
 const features = [
   { icon: AppstoreOutlined, title: '70+ UI Components', href: 'https://docs.lowdefy.com/blocks' },
-  { icon: SafetyOutlined, title: 'Auth.js + RBAC', href: 'https://docs.lowdefy.com/authentication' },
+  { icon: SafetyOutlined, title: 'Auth.js + RBAC', href: 'https://docs.lowdefy.com/users-introduction' },
   { icon: ApartmentOutlined, title: '50+ Operators', href: 'https://docs.lowdefy.com/operators' },
   { icon: ThunderboltOutlined, title: 'Events & Actions', href: 'https://docs.lowdefy.com/events-and-actions' },
-  { icon: CloudOutlined, title: 'Deploy Anywhere', href: 'https://docs.lowdefy.com/deployment' },
-  { icon: DashboardOutlined, title: 'Plugin Ecosystem', href: 'https://docs.lowdefy.com/plugins' },
+  { icon: CloudOutlined, title: 'Deploy Anywhere', href: 'https://docs.lowdefy.com/vercel' },
+  { icon: DashboardOutlined, title: 'Plugin Ecosystem', href: 'https://docs.lowdefy.com/plugins-introduction' },
 ];
 
 const connectors = [
@@ -111,7 +111,7 @@ export default function Stack() {
                 </a>
               ))}
               <a
-                href="https://docs.lowdefy.com/plugins"
+                href="https://docs.lowdefy.com/plugins-introduction"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex flex-col items-center gap-2 p-2 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group"

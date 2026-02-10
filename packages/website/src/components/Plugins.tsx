@@ -164,7 +164,7 @@ export default function Plugins() {
 
             <div className="pt-4">
               <a
-                href="https://docs.lowdefy.com/plugins"
+                href="https://docs.lowdefy.com/plugins-introduction"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 text-primary-400 hover:text-primary-300 transition-colors font-medium"

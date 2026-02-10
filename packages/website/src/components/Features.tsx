@@ -19,7 +19,7 @@ const features = [
     icon: SafetyOutlined,
     title: 'Built-in Auth',
     description: 'OpenID Connect, OAuth, JWT. Role-based access control out of the box.',
-    href: 'https://docs.lowdefy.com/authentication',
+    href: 'https://docs.lowdefy.com/users-introduction',
   },
   {
     icon: DashboardOutlined,
@@ -31,13 +31,13 @@ const features = [
     icon: CodeOutlined,
     title: 'Escape Hatches',
     description: 'Write custom JavaScript when you need it. Full flexibility, zero lock-in.',
-    href: 'https://docs.lowdefy.com/custom-blocks',
+    href: 'https://docs.lowdefy.com/plugins-dev',
   },
   {
     icon: CloudOutlined,
     title: 'Deploy Anywhere',
     description: 'Vercel, AWS, Docker, or self-hosted. Your app, your infrastructure.',
-    href: 'https://docs.lowdefy.com/deployment',
+    href: 'https://docs.lowdefy.com/vercel',
   },
 ];
 
