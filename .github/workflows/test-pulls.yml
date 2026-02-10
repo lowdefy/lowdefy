@@ -22,11 +22,11 @@ jobs:
           node-version: ${{ matrix.node }}
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
-      - name: Build (all packages)
-        if: matrix.os != 'windows-latest'
+      - name: Build
         run: pnpm build
+        if: matrix.os != 'windows-latest'
       - name: Build (skip website on Windows)
+        run: pnpm -r --filter='!@lowdefy/website' --filter='!@lowdefy/lowdefy' build
         if: matrix.os == 'windows-latest'
-        run: pnpm -r --filter='!@lowdefy/website' build
       - run: pnpm test
       - uses: codecov/codecov-action@v3
