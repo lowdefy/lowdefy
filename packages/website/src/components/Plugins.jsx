@@ -1,6 +1,13 @@
 'use client';
 
-import { InboxOutlined, AppstoreOutlined, DatabaseOutlined, FunctionOutlined, PlayCircleOutlined, FolderOutlined } from '@ant-design/icons';
+import {
+  InboxOutlined,
+  AppstoreOutlined,
+  DatabaseOutlined,
+  FunctionOutlined,
+  PlayCircleOutlined,
+  FolderOutlined,
+} from '@ant-design/icons';
 
 const pluginTypes = [
   {
@@ -38,9 +45,7 @@ export default function Plugins() {
             <InboxOutlined style={{ fontSize: 14 }} />
             Plugin Ecosystem
           </div>
-          <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-            Extend with npm packages
-          </h2>
+          <h2 className="text-3xl sm:text-4xl font-bold mb-4">Extend with npm packages</h2>
           <p className="text-lg text-slate-400 max-w-2xl mx-auto">
             Add plugins in your config. Tree-shaking bundles only what you use. Build custom plugins
             and publish to npm.
@@ -65,43 +70,43 @@ export default function Plugins() {
                 {'\n'}
                 <span className="text-primary-400">plugins:</span>
                 {'\n'}
-                <span className="text-slate-500">  # UI components</span>
+                <span className="text-slate-500"> # UI components</span>
                 {'\n'}
-                <span className="text-slate-400">  - </span>
+                <span className="text-slate-400"> - </span>
                 <span className="text-cyan-400">name:</span>
                 <span className="text-green-400"> &apos;@lowdefy/blocks-antd&apos;</span>
                 {'\n'}
-                <span className="text-slate-400">    </span>
+                <span className="text-slate-400"> </span>
                 <span className="text-cyan-400">version:</span>
                 <span className="text-yellow-300"> &apos;4.5.2&apos;</span>
                 {'\n\n'}
-                <span className="text-slate-500">  # Data grids</span>
+                <span className="text-slate-500"> # Data grids</span>
                 {'\n'}
-                <span className="text-slate-400">  - </span>
+                <span className="text-slate-400"> - </span>
                 <span className="text-cyan-400">name:</span>
                 <span className="text-green-400"> &apos;@lowdefy/blocks-aggrid&apos;</span>
                 {'\n'}
-                <span className="text-slate-400">    </span>
+                <span className="text-slate-400"> </span>
                 <span className="text-cyan-400">version:</span>
                 <span className="text-yellow-300"> &apos;4.5.2&apos;</span>
                 {'\n\n'}
-                <span className="text-slate-500">  # Database connection</span>
+                <span className="text-slate-500"> # Database connection</span>
                 {'\n'}
-                <span className="text-slate-400">  - </span>
+                <span className="text-slate-400"> - </span>
                 <span className="text-cyan-400">name:</span>
                 <span className="text-green-400"> &apos;@lowdefy/connection-mongodb&apos;</span>
                 {'\n'}
-                <span className="text-slate-400">    </span>
+                <span className="text-slate-400"> </span>
                 <span className="text-cyan-400">version:</span>
                 <span className="text-yellow-300"> &apos;4.5.2&apos;</span>
                 {'\n\n'}
-                <span className="text-slate-500">  # Custom plugin from npm</span>
+                <span className="text-slate-500"> # Custom plugin from npm</span>
                 {'\n'}
-                <span className="text-slate-400">  - </span>
+                <span className="text-slate-400"> - </span>
                 <span className="text-cyan-400">name:</span>
                 <span className="text-purple-400"> &apos;@acme/custom-blocks&apos;</span>
                 {'\n'}
-                <span className="text-slate-400">    </span>
+                <span className="text-slate-400"> </span>
                 <span className="text-cyan-400">version:</span>
                 <span className="text-yellow-300"> &apos;1.0.0&apos;</span>
               </code>
@@ -130,9 +135,7 @@ export default function Plugins() {
 
           {/* Plugin Types */}
           <div className="space-y-4">
-            <p className="text-slate-400 mb-6">
-              Four plugin types extend every layer of your app:
-            </p>
+            <p className="text-slate-400 mb-6">Four plugin types extend every layer of your app:</p>
             {pluginTypes.map((plugin) => (
               <div
                 key={plugin.name}

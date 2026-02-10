@@ -20,47 +20,51 @@
 
 /* Grid pattern background */
 .bg-grid {
-  background-image:
-    linear-gradient(rgba(148, 163, 184, 0.08) 1px, transparent 1px),
+  background-image: linear-gradient(rgba(148, 163, 184, 0.08) 1px, transparent 1px),
     linear-gradient(90deg, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
   background-size: 64px 64px;
 }
 
 :is(.dark .bg-grid) {
-  background-image:
-    linear-gradient(rgba(148, 163, 184, 0.05) 1px, transparent 1px),
+  background-image: linear-gradient(rgba(148, 163, 184, 0.05) 1px, transparent 1px),
     linear-gradient(90deg, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
 }
 
 /* Dense grid for accent areas */
 .bg-grid-dense {
-  background-image:
-    linear-gradient(rgba(148, 163, 184, 0.06) 1px, transparent 1px),
+  background-image: linear-gradient(rgba(148, 163, 184, 0.06) 1px, transparent 1px),
     linear-gradient(90deg, rgba(148, 163, 184, 0.06) 1px, transparent 1px);
   background-size: 32px 32px;
 }
 
 :is(.dark .bg-grid-dense) {
-  background-image:
-    linear-gradient(rgba(148, 163, 184, 0.04) 1px, transparent 1px),
+  background-image: linear-gradient(rgba(148, 163, 184, 0.04) 1px, transparent 1px),
     linear-gradient(90deg, rgba(148, 163, 184, 0.04) 1px, transparent 1px);
 }
 
 /* Glow effect for key elements */
 .glow-blue {
-  box-shadow: 0 0 40px rgba(25, 144, 255, 0.08), 0 0 80px rgba(25, 144, 255, 0.03);
+  box-shadow:
+    0 0 40px rgba(25, 144, 255, 0.08),
+    0 0 80px rgba(25, 144, 255, 0.03);
 }
 
 :is(.dark .glow-blue) {
-  box-shadow: 0 0 40px rgba(25, 144, 255, 0.15), 0 0 80px rgba(25, 144, 255, 0.05);
+  box-shadow:
+    0 0 40px rgba(25, 144, 255, 0.15),
+    0 0 80px rgba(25, 144, 255, 0.05);
 }
 
 .glow-cyan {
-  box-shadow: 0 0 40px rgba(34, 211, 186, 0.08), 0 0 80px rgba(34, 211, 186, 0.03);
+  box-shadow:
+    0 0 40px rgba(34, 211, 186, 0.08),
+    0 0 80px rgba(34, 211, 186, 0.03);
 }
 
 :is(.dark .glow-cyan) {
-  box-shadow: 0 0 40px rgba(34, 211, 186, 0.15), 0 0 80px rgba(34, 211, 186, 0.05);
+  box-shadow:
+    0 0 40px rgba(34, 211, 186, 0.15),
+    0 0 80px rgba(34, 211, 186, 0.05);
 }
 
 /* Engineering bracket corners for cards */
@@ -116,18 +120,38 @@
 }
 
 /* Syntax highlighting for YAML -light mode */
-.yaml-key { color: #0369a1; }
-.yaml-value { color: #a16207; }
-.yaml-string { color: #0e7490; }
-.yaml-comment { color: #94a3b8; }
-.yaml-dash { color: #64748b; }
+.yaml-key {
+  color: #0369a1;
+}
+.yaml-value {
+  color: #a16207;
+}
+.yaml-string {
+  color: #0e7490;
+}
+.yaml-comment {
+  color: #94a3b8;
+}
+.yaml-dash {
+  color: #64748b;
+}
 
 /* Syntax highlighting for YAML -dark mode */
-:is(.dark .yaml-key) { color: #7dd3fc; }
-:is(.dark .yaml-value) { color: #fef08a; }
-:is(.dark .yaml-string) { color: #a5f3fc; }
-:is(.dark .yaml-comment) { color: #64748b; }
-:is(.dark .yaml-dash) { color: #94a3b8; }
+:is(.dark .yaml-key) {
+  color: #7dd3fc;
+}
+:is(.dark .yaml-value) {
+  color: #fef08a;
+}
+:is(.dark .yaml-string) {
+  color: #a5f3fc;
+}
+:is(.dark .yaml-comment) {
+  color: #64748b;
+}
+:is(.dark .yaml-dash) {
+  color: #94a3b8;
+}
 
 /* Dark scrollbar for code blocks */
 .scrollbar-dark::-webkit-scrollbar {

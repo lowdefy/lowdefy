@@ -1293,7 +1293,7 @@ blocks:
   },
 ];
 
-function YamlHighlight({ content }: { content: string }) {
+function YamlHighlight({ content }) {
   const lines = content.split('\n');
 
   return (
@@ -1345,7 +1345,7 @@ function YamlHighlight({ content }: { content: string }) {
 
 export default function Comparison() {
   const [activeTab, setActiveTab] = useState(examples[0].id);
-  const activeExample = examples.find((e) => e.id === activeTab)!;
+  const activeExample = examples.find((e) => e.id === activeTab);
 
   return (
     <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-slate-950 bg-grid">
@@ -1355,8 +1355,8 @@ export default function Comparison() {
             Code generators vs <span className="text-gradient">Lowdefy</span>
           </h2>
           <p className="text-lg text-slate-600 dark:text-slate-400 max-w-3xl mx-auto">
-            Lovable, v0, and other code generators produce raw React.
-            Lowdefy produces reviewable, schema-validated config.
+            Lovable, v0, and other code generators produce raw React. Lowdefy produces reviewable,
+            schema-validated config.
           </p>
         </div>
 
@@ -1383,9 +1383,13 @@ export default function Comparison() {
                 <div className="w-8 h-8 bg-red-500/10 flex items-center justify-center">
                   <CloseOutlined style={{ fontSize: 20, color: '#f87171' }} />
                 </div>
-                <span className="font-semibold text-slate-900 dark:text-white">Code Generators</span>
+                <span className="font-semibold text-slate-900 dark:text-white">
+                  Code Generators
+                </span>
               </div>
-              <span className="text-xs text-slate-400 dark:text-slate-600 font-mono">{activeExample.generatedLines}</span>
+              <span className="text-xs text-slate-400 dark:text-slate-600 font-mono">
+                {activeExample.generatedLines}
+              </span>
             </div>
             <pre className="p-6 text-xs text-slate-700 dark:text-slate-300 h-[500px] overflow-auto scrollbar-dark">
               <code>{activeExample.generated}</code>
@@ -1408,7 +1412,9 @@ export default function Comparison() {
                 </div>
                 <span className="font-semibold text-slate-900 dark:text-white">Lowdefy Config</span>
               </div>
-              <span className="text-xs text-slate-400 dark:text-slate-600 font-mono">{activeExample.lowdefyLines}</span>
+              <span className="text-xs text-slate-400 dark:text-slate-600 font-mono">
+                {activeExample.lowdefyLines}
+              </span>
             </div>
             <pre className="p-6 text-xs h-[500px] overflow-auto scrollbar-dark">
               <code>

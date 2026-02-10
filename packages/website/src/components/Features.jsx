@@ -1,12 +1,20 @@
 'use client';
 
-import { AppstoreOutlined, ApartmentOutlined, SafetyOutlined, DashboardOutlined, CodeOutlined, CloudOutlined } from '@ant-design/icons';
+import {
+  AppstoreOutlined,
+  ApartmentOutlined,
+  SafetyOutlined,
+  DashboardOutlined,
+  CodeOutlined,
+  CloudOutlined,
+} from '@ant-design/icons';
 
 const features = [
   {
     icon: AppstoreOutlined,
     title: '60+ UI Components',
-    description: 'Ant Design, AG Grid, ECharts, and more. Production-ready blocks for any interface.',
+    description:
+      'Ant Design, AG Grid, ECharts, and more. Production-ready blocks for any interface.',
     href: 'https://docs.lowdefy.com/blocks',
   },
   {

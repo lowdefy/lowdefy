@@ -8,7 +8,8 @@ const channels = [
   {
     icon: MessageOutlined,
     title: 'Discord Community',
-    description: 'Join our Discord for questions, discussions, and community support. The fastest way to get help.',
+    description:
+      'Join our Discord for questions, discussions, and community support. The fastest way to get help.',
     action: 'Join Discord',
     href: 'https://discord.gg/WmcJgXt',
     accent: 'cyan',
@@ -51,7 +52,8 @@ export default function Contact() {
               Get in Touch
             </h1>
             <p className="text-lg text-slate-600 dark:text-slate-400">
-              Whether you need help, want to contribute, or have a business inquiry,we&apos;d love to hear from you.
+              Whether you need help, want to contribute, or have a business inquiry, we&apos;d love
+              to hear from you.
             </p>
           </div>
         </section>
@@ -65,10 +67,21 @@ export default function Contact() {
                 href={channel.href}
                 target={channel.href.startsWith('mailto:') ? undefined : '_blank'}
                 rel={channel.href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
-                className={`group p-6 border border-slate-200 dark:border-slate-800 hover:border-${channel.accent === 'cyan' ? 'cyan' : 'primary'}-500/40 bg-white dark:bg-slate-900/50 transition-all hover:shadow-lg hover:shadow-slate-200/50 dark:hover:shadow-slate-900/50`}
+                className={`group p-6 border border-slate-200 dark:border-slate-800 hover:border-${
+                  channel.accent === 'cyan' ? 'cyan' : 'primary'
+                }-500/40 bg-white dark:bg-slate-900/50 transition-all hover:shadow-lg hover:shadow-slate-200/50 dark:hover:shadow-slate-900/50`}
               >
-                <div className={`w-10 h-10 bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-4 group-hover:bg-${channel.accent === 'cyan' ? 'cyan' : 'primary'}-500/10 transition-colors`}>
-                  <channel.icon style={{ fontSize: 20, color: channel.accent === 'cyan' ? '#22d3ee' : '#1990ff' }} />
+                <div
+                  className={`w-10 h-10 bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-4 group-hover:bg-${
+                    channel.accent === 'cyan' ? 'cyan' : 'primary'
+                  }-500/10 transition-colors`}
+                >
+                  <channel.icon
+                    style={{
+                      fontSize: 20,
+                      color: channel.accent === 'cyan' ? '#22d3ee' : '#1990ff',
+                    }}
+                  />
                 </div>
                 <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
                   {channel.title}
@@ -91,11 +104,16 @@ export default function Contact() {
               Need a Custom Solution?
             </h2>
             <p className="text-slate-600 dark:text-slate-400 mb-8 max-w-xl mx-auto leading-relaxed">
-              <Link href="https://resonancy.io" target="_blank" rel="noopener noreferrer" className="text-cyan-500 hover:text-cyan-400 transition-colors font-medium">
+              <Link
+                href="https://resonancy.io"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-cyan-500 hover:text-cyan-400 transition-colors font-medium"
+              >
                 Resonancy
               </Link>
-              , founded by the Lowdefy team,builds purpose-built business applications.
-              From internal tools to full platforms, delivered in weeks not months.
+              , founded by the Lowdefy team, builds purpose-built business applications. From
+              internal tools to full platforms, delivered in weeks not months.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link

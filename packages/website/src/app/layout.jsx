@@ -1,4 +1,3 @@
-import type { Metadata } from 'next';
 import { Inter, JetBrains_Mono } from 'next/font/google';
 import PostHogProvider from '@/providers/PostHogProvider';
 import './globals.css';
@@ -6,7 +5,7 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const jetbrainsMono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono' });
 
-export const metadata: Metadata = {
+export const metadata = {
   metadataBase: new URL('https://lowdefy.com'),
   title: 'Lowdefy - Config-First Web Stack for AI and Humans',
   description:
@@ -56,8 +55,8 @@ export const metadata: Metadata = {
     title: 'Lowdefy - Config-First Web Stack for AI and Humans',
     description:
       'Build full-stack web apps with YAML config. AI outputs production-ready code. Easy to review, secure by design.',
-    site: '@lowaboratories',
-    creator: '@lowaboratories',
+    site: '@lowdefy',
+    creator: '@lowdefy',
     images: ['/opengraph-image'],
   },
 };
@@ -76,7 +75,7 @@ const jsonLd = {
       },
       sameAs: [
         'https://github.com/lowdefy/lowdefy',
-        'https://x.com/lowaboratories',
+        'https://x.com/lowdefy',
         'https://discord.gg/WmcJgXt',
         'https://www.youtube.com/@lowdefy',
       ],
@@ -116,9 +115,13 @@ const jsonLd = {
 
 const themeScript = `(function(){try{var d=document.documentElement;var s=localStorage.getItem('theme');var m=window.matchMedia('(prefers-color-scheme: dark)');function a(v){d.classList.toggle('dark',v==='dark'||(v!=='light'&&m.matches))}a(s);m.addEventListener('change',function(){if(!localStorage.getItem('theme'))a()})}catch(e){}})()`;
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${inter.variable} ${jetbrainsMono.variable}`}
+      suppressHydrationWarning
+    >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <script

@@ -2,7 +2,14 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRightOutlined, AppstoreOutlined, ApiOutlined, PartitionOutlined, ThunderboltOutlined, CheckCircleOutlined } from '@ant-design/icons';
+import {
+  ArrowRightOutlined,
+  AppstoreOutlined,
+  ApiOutlined,
+  PartitionOutlined,
+  ThunderboltOutlined,
+  CheckCircleOutlined,
+} from '@ant-design/icons';
 
 const painPoints = [
   'Teams losing time to clunky or disconnected systems',
@@ -47,15 +54,21 @@ export default function Services() {
 
             <p className="text-lg text-slate-600 dark:text-slate-400 mb-6">
               Most teams run 10+ business apps that don&apos;t talk to each other. Resonancy builds
-              one purpose-built solution that replaces them all, built on Lowdefy, delivered in weeks.
+              one purpose-built solution that replaces them all, built on Lowdefy, delivered in
+              weeks.
             </p>
 
             {/* Pain points */}
             <div className="mb-8 p-4 bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 bracket-corners bracket-corners-red">
-              <p className="text-red-600 dark:text-red-400 text-sm font-medium mb-3">Sound familiar?</p>
+              <p className="text-red-600 dark:text-red-400 text-sm font-medium mb-3">
+                Sound familiar?
+              </p>
               <ul className="space-y-2">
                 {painPoints.map((point) => (
-                  <li key={point} className="flex items-start gap-2 text-slate-600 dark:text-slate-400 text-sm">
+                  <li
+                    key={point}
+                    className="flex items-start gap-2 text-slate-600 dark:text-slate-400 text-sm"
+                  >
                     <span className="text-red-500 dark:text-red-400 mt-0.5">•</span>
                     {point}
                   </li>
@@ -73,8 +86,12 @@ export default function Services() {
                     <solution.icon style={{ fontSize: 20, color: '#22d3ee' }} />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-slate-900 dark:text-white text-sm">{solution.title}</h3>
-                    <p className="text-slate-600 dark:text-slate-400 text-xs mt-1">{solution.description}</p>
+                    <h3 className="font-semibold text-slate-900 dark:text-white text-sm">
+                      {solution.title}
+                    </h3>
+                    <p className="text-slate-600 dark:text-slate-400 text-xs mt-1">
+                      {solution.description}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -107,25 +124,33 @@ export default function Services() {
               <div className="grid grid-cols-2 gap-4 mb-6 pb-6 border-b border-slate-200 dark:border-slate-700">
                 <div className="text-center">
                   <div className="text-4xl font-bold text-slate-900 dark:text-white mb-1">10+</div>
-                  <div className="text-sm text-slate-500 dark:text-slate-400">Years building business apps</div>
+                  <div className="text-sm text-slate-500 dark:text-slate-400">
+                    Years building business apps
+                  </div>
                 </div>
                 <div className="text-center border-l border-slate-200 dark:border-slate-700">
                   <div className="text-4xl font-bold text-slate-900 dark:text-white mb-1">50+</div>
-                  <div className="text-sm text-slate-500 dark:text-slate-400">Internal tools deployed</div>
+                  <div className="text-sm text-slate-500 dark:text-slate-400">
+                    Internal tools deployed
+                  </div>
                 </div>
               </div>
 
               <div className="mb-6 p-4 bg-slate-50 dark:bg-slate-800/50">
-                <p className="text-slate-700 dark:text-slate-300 text-sm mb-2">Built on open source</p>
+                <p className="text-slate-700 dark:text-slate-300 text-sm mb-2">
+                  Built on open source
+                </p>
                 <p className="text-slate-500 dark:text-slate-400 text-xs">
-                  We build on Lowdefy, our own open source stack. Quick starter modules get you live fast,
-                  then we customize for your exact workflows.
+                  We build on Lowdefy, our own open source stack. Quick starter modules get you live
+                  fast, then we customize for your exact workflows.
                 </p>
               </div>
 
               {/* What you get */}
               <div className="mb-6">
-                <p className="text-slate-700 dark:text-slate-300 text-sm font-medium mb-4">What we deliver:</p>
+                <p className="text-slate-700 dark:text-slate-300 text-sm font-medium mb-4">
+                  What we deliver:
+                </p>
                 <ul className="space-y-2">
                   {[
                     'One unified app replacing your SaaS dependency',
@@ -133,7 +158,10 @@ export default function Services() {
                     'AI, data science & integrations included',
                     'Ongoing support & managed hosting',
                   ].map((item) => (
-                    <li key={item} className="flex items-center gap-2 text-slate-600 dark:text-slate-400 text-sm">
+                    <li
+                      key={item}
+                      className="flex items-center gap-2 text-slate-600 dark:text-slate-400 text-sm"
+                    >
                       <CheckCircleOutlined style={{ fontSize: 16, color: '#4ade80' }} />
                       {item}
                     </li>
@@ -143,7 +171,8 @@ export default function Services() {
 
               <div className="border-t border-slate-200 dark:border-slate-700 pt-6">
                 <p className="text-slate-500 dark:text-slate-300 text-sm italic mb-4">
-                  &ldquo;When people, processes, and technology resonate together, magic happens.&rdquo;
+                  &ldquo;When people, processes, and technology resonate together, magic
+                  happens.&rdquo;
                 </p>
                 <Link
                   href="https://www.linkedin.com/in/gervwyk/"
@@ -159,8 +188,12 @@ export default function Services() {
                     className="w-10 h-10 rounded-full object-cover"
                   />
                   <div>
-                    <div className="text-slate-900 dark:text-white font-medium text-sm group-hover:text-primary-400 transition-colors">Gerrie van Wyk</div>
-                    <div className="text-slate-500 dark:text-slate-400 text-xs">Co-founder, Resonancy &amp; Lowdefy</div>
+                    <div className="text-slate-900 dark:text-white font-medium text-sm group-hover:text-primary-400 transition-colors">
+                      Gerrie van Wyk
+                    </div>
+                    <div className="text-slate-500 dark:text-slate-400 text-xs">
+                      Co-founder, Resonancy &amp; Lowdefy
+                    </div>
                   </div>
                 </Link>
               </div>

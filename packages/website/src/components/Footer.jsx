@@ -72,7 +72,7 @@ export default function Footer() {
                 />
               </Link>
               <Link
-                href="https://x.com/lowaboratories"
+                href="https://x.com/lowdefy"
                 className="text-slate-600 hover:text-slate-400 transition-colors"
               >
                 <Image
@@ -90,6 +90,18 @@ export default function Footer() {
                 <Image
                   src="/images/social/youtube.svg"
                   alt="YouTube"
+                  width={20}
+                  height={20}
+                  className="w-5 h-5 dark:invert opacity-50 hover:opacity-80 transition-opacity"
+                />
+              </Link>
+              <Link
+                href="https://www.linkedin.com/company/lowdefy-inc/"
+                className="text-slate-600 hover:text-slate-400 transition-colors"
+              >
+                <Image
+                  src="/images/social/linkedin.svg"
+                  alt="LinkedIn"
                   width={20}
                   height={20}
                   className="w-5 h-5 dark:invert opacity-50 hover:opacity-80 transition-opacity"
