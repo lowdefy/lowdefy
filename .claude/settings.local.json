@@ -8,7 +8,8 @@
       "mcp__playwright__browser_snapshot",
       "mcp__playwright__browser_evaluate",
       "Bash(gh pr checkout:*)",
-      "Bash(git fetch:*)"
+      "Bash(git fetch:*)",
+      "Bash(gh issue view:*)"
     ]
   }
 }
