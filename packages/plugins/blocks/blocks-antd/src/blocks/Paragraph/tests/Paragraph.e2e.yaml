@@ -1,0 +1,153 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: paragraph
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: para_basic
+    type: Paragraph
+    properties:
+      content: This is a basic paragraph.
+
+  - id: para_html
+    type: Paragraph
+    properties:
+      content: '<strong>Bold</strong> and <em>italic</em> text.'
+
+  # ============================================
+  # STYLE TESTS
+  # ============================================
+
+  - id: para_code
+    type: Paragraph
+    properties:
+      content: Code paragraph
+      code: true
+
+  - id: para_italic
+    type: Paragraph
+    properties:
+      content: Italic paragraph
+      italic: true
+
+  - id: para_strong
+    type: Paragraph
+    properties:
+      content: Strong paragraph
+      strong: true
+
+  - id: para_underline
+    type: Paragraph
+    properties:
+      content: Underline paragraph
+      underline: true
+
+  - id: para_delete
+    type: Paragraph
+    properties:
+      content: Delete paragraph
+      delete: true
+
+  - id: para_mark
+    type: Paragraph
+    properties:
+      content: Marked paragraph
+      mark: true
+
+  - id: para_disabled
+    type: Paragraph
+    properties:
+      content: Disabled paragraph
+      disabled: true
+
+  # ============================================
+  # TYPE TESTS
+  # ============================================
+
+  - id: para_secondary
+    type: Paragraph
+    properties:
+      content: Secondary paragraph
+      type: secondary
+
+  - id: para_success
+    type: Paragraph
+    properties:
+      content: Success paragraph
+      type: success
+
+  - id: para_warning
+    type: Paragraph
+    properties:
+      content: Warning paragraph
+      type: warning
+
+  - id: para_danger
+    type: Paragraph
+    properties:
+      content: Danger paragraph
+      type: danger
+
+  # ============================================
+  # COPYABLE TESTS
+  # ============================================
+
+  - id: para_copyable
+    type: Paragraph
+    properties:
+      content: Copy this paragraph
+      copyable: true
+
+  - id: para_copyable_event
+    type: Paragraph
+    properties:
+      content: Copy me
+      copyable:
+        text: Custom copy text
+    events:
+      onCopy:
+        - id: set_oncopy
+          type: SetState
+          params:
+            para_oncopy_fired: true
+
+  - id: oncopy_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: para_oncopy_fired
+              - true
+          then: Copy fired
+          else: ''
+
+  # ============================================
+  # ELLIPSIS TESTS
+  # ============================================
+
+  - id: para_ellipsis
+    type: Paragraph
+    properties:
+      content: This is a very long paragraph that should be truncated with ellipsis when it exceeds a certain number of rows. The content continues to demonstrate the ellipsis functionality.
+      ellipsis:
+        rows: 2
+      style:
+        width: 300px

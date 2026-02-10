@@ -1,0 +1,188 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: ratingslider
+type: Box
+
+events:
+  onInit:
+    - id: set_defaults
+      type: SetState
+      params:
+        ratingslider_with_value: 7
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: ratingslider_basic
+    type: RatingSlider
+    properties:
+      title: Basic Rating Slider
+
+  - id: ratingslider_with_value
+    type: RatingSlider
+    properties:
+      title: With Value
+
+  # ============================================
+  # PROPERTY TESTS
+  # ============================================
+
+  - id: ratingslider_disabled
+    type: RatingSlider
+    properties:
+      title: Disabled Rating
+      disabled: true
+
+  - id: ratingslider_minmax
+    type: RatingSlider
+    properties:
+      title: Min 1 Max 5
+      min: 1
+      max: 5
+
+  - id: ratingslider_step
+    type: RatingSlider
+    properties:
+      title: Step 0.5
+      step: 0.5
+      min: 0
+      max: 5
+
+  - id: ratingslider_no_icons
+    type: RatingSlider
+    properties:
+      title: No Icons
+      disableIcons: true
+
+  - id: ratingslider_custom_icons
+    type: RatingSlider
+    properties:
+      title: Custom Icons
+      minIcon: AiOutlineDislike
+      maxIcon: AiOutlineLike
+
+  - id: ratingslider_with_color
+    type: RatingSlider
+    properties:
+      title: Custom Color
+      color: '#1890ff'
+
+  - id: ratingslider_hide_marks
+    type: RatingSlider
+    properties:
+      title: Hide Marks
+      showMarks: false
+
+  - id: ratingslider_hide_dots
+    type: RatingSlider
+    properties:
+      title: Hide Dots
+      showDots: false
+
+  - id: ratingslider_tooltip_never
+    type: RatingSlider
+    properties:
+      title: Tooltip Never
+      tooltipVisible: never
+
+  - id: ratingslider_tooltip_always
+    type: RatingSlider
+    properties:
+      title: Tooltip Always
+      tooltipVisible: always
+
+  # ============================================
+  # N/A CHECKBOX TESTS
+  # ============================================
+
+  - id: ratingslider_with_na
+    type: RatingSlider
+    properties:
+      title: With N/A Option
+
+  - id: ratingslider_custom_na_label
+    type: RatingSlider
+    properties:
+      title: Custom N/A Label
+      notApplicableLabel: Not Applicable
+
+  - id: ratingslider_disable_na
+    type: RatingSlider
+    properties:
+      title: Disable N/A
+      disableNotApplicable: true
+
+  - id: ratingslider_required
+    type: RatingSlider
+    required: true
+    properties:
+      title: Required (No N/A)
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  - id: ratingslider_onchange
+    type: RatingSlider
+    properties:
+      title: OnChange Test
+    events:
+      onChange:
+        - id: set_onchange
+          type: SetState
+          params:
+            ratingslider_onchange_value:
+              _event: value
+
+  - id: onchange_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: ratingslider_onchange_value
+              - null
+          then:
+            _string.concat:
+              - 'Value: '
+              - _state: ratingslider_onchange_value
+          else: ''
+
+  # ============================================
+  # INTERACTION TESTS
+  # ============================================
+
+  - id: ratingslider_interaction
+    type: RatingSlider
+    properties:
+      title: Interaction Test
+
+  - id: interaction_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: ratingslider_interaction
+              - null
+          then:
+            _string.concat:
+              - 'Rating: '
+              - _state: ratingslider_interaction
+          else: ''

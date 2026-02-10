@@ -1,0 +1,136 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: dateselector
+type: Box
+
+events:
+  onInit:
+    - id: set_defaults
+      type: SetState
+      params:
+        ds_with_value:
+          _date: '2024-06-15'
+        ds_clearable:
+          _date: '2024-01-01'
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: ds_basic
+    type: DateSelector
+    properties:
+      title: Basic Date
+
+  - id: ds_with_value
+    type: DateSelector
+    properties:
+      title: With Value
+
+  # ============================================
+  # PROPERTY TESTS
+  # ============================================
+
+  - id: ds_disabled
+    type: DateSelector
+    properties:
+      title: Disabled
+      disabled: true
+
+  - id: ds_small
+    type: DateSelector
+    properties:
+      title: Small Size
+      size: small
+
+  - id: ds_large
+    type: DateSelector
+    properties:
+      title: Large Size
+      size: large
+
+  - id: ds_placeholder
+    type: DateSelector
+    properties:
+      title: Custom Placeholder
+      placeholder: Pick a date...
+
+  - id: ds_borderless
+    type: DateSelector
+    properties:
+      title: Borderless
+      bordered: false
+
+  - id: ds_no_allowclear
+    type: DateSelector
+    properties:
+      title: No Allow Clear
+      allowClear: false
+
+  - id: ds_with_title
+    type: DateSelector
+    properties:
+      title: Date with Title
+
+  - id: ds_with_label
+    type: DateSelector
+    properties:
+      title: Date Label
+      label:
+        extra: Select a date from the calendar
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  - id: ds_onchange
+    type: DateSelector
+    properties:
+      title: OnChange Test
+    events:
+      onChange:
+        - id: set_onchange
+          type: SetState
+          params:
+            ds_onchange_value:
+              _event: value
+
+  - id: ds_onchange_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: ds_onchange_value
+              - null
+          then: Date selected
+          else: ''
+
+  # ============================================
+  # INTERACTION TESTS
+  # ============================================
+
+  - id: ds_interaction
+    type: DateSelector
+    properties:
+      title: Interaction Test
+
+  - id: ds_clearable
+    type: DateSelector
+    properties:
+      title: Clearable
+      allowClear: true

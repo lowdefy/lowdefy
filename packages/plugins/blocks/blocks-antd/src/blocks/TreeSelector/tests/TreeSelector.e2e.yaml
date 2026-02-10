@@ -1,0 +1,211 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: treeselector
+type: Box
+
+events:
+  onInit:
+    - id: set_defaults
+      type: SetState
+      params:
+        ts_with_value:
+          - child1
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: ts_basic
+    type: TreeSelector
+    properties:
+      options:
+        - value: parent1
+          label: Parent 1
+          children:
+            - value: child1
+              label: Child 1
+            - value: child2
+              label: Child 2
+        - value: parent2
+          label: Parent 2
+
+  - id: ts_with_value
+    type: TreeSelector
+    properties:
+      options:
+        - value: parent1
+          label: Parent 1
+          children:
+            - value: child1
+              label: Child 1
+            - value: child2
+              label: Child 2
+        - value: parent2
+          label: Parent 2
+
+  # ============================================
+  # PROPERTY TESTS
+  # ============================================
+
+  - id: ts_disabled
+    type: TreeSelector
+    properties:
+      disabled: true
+      options:
+        - value: item1
+          label: Item 1
+        - value: item2
+          label: Item 2
+
+  - id: ts_show_line
+    type: TreeSelector
+    properties:
+      showLine: true
+      options:
+        - value: parent
+          label: Parent
+          children:
+            - value: child1
+              label: Child 1
+            - value: child2
+              label: Child 2
+
+  - id: ts_not_selectable
+    type: TreeSelector
+    properties:
+      selectable: false
+      options:
+        - value: item1
+          label: Item 1
+        - value: item2
+          label: Item 2
+
+  - id: ts_checkable
+    type: TreeSelector
+    properties:
+      checkable: true
+      options:
+        - value: item1
+          label: Item 1
+        - value: item2
+          label: Item 2
+        - value: item3
+          label: Item 3
+
+  - id: ts_default_expand_all
+    type: TreeSelector
+    properties:
+      defaultExpandAll: true
+      options:
+        - value: parent1
+          label: Parent 1
+          children:
+            - value: child1
+              label: Child 1
+        - value: parent2
+          label: Parent 2
+          children:
+            - value: child2
+              label: Child 2
+
+  # ============================================
+  # OPTIONS TESTS
+  # ============================================
+
+  - id: ts_deep_nesting
+    type: TreeSelector
+    properties:
+      options:
+        - value: level1
+          label: Level 1
+          children:
+            - value: level2
+              label: Level 2
+              children:
+                - value: level3
+                  label: Level 3
+
+  - id: ts_disabled_node
+    type: TreeSelector
+    properties:
+      options:
+        - value: enabled1
+          label: Enabled Node
+        - value: disabled1
+          label: Disabled Node
+          disabled: true
+        - value: enabled2
+          label: Another Enabled
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  - id: ts_onchange
+    type: TreeSelector
+    properties:
+      options:
+        - value: parent
+          label: Parent
+          children:
+            - value: apple
+              label: Apple
+            - value: banana
+              label: Banana
+    events:
+      onChange:
+        - id: set_onchange
+          type: SetState
+          params:
+            ts_onchange_value:
+              _state: ts_onchange
+
+  - id: ts_onchange_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: ts_onchange_value
+              - null
+          then:
+            _string.concat:
+              - 'Selected: '
+              - _json.stringify:
+                  - _state: ts_onchange_value
+          else: ''
+
+  # ============================================
+  # INTERACTION TESTS
+  # ============================================
+
+  - id: ts_interaction
+    type: TreeSelector
+    properties:
+      options:
+        - value: fruits
+          label: Fruits
+          children:
+            - value: apple
+              label: Apple
+            - value: banana
+              label: Banana
+        - value: vegetables
+          label: Vegetables
+          children:
+            - value: carrot
+              label: Carrot

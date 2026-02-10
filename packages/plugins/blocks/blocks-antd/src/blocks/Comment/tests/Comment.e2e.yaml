@@ -1,0 +1,129 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: comment
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: comment_basic
+    type: Comment
+    properties:
+      author: John Doe
+      content: This is a comment
+
+  - id: comment_with_datetime
+    type: Comment
+    properties:
+      author: Jane Smith
+      content: Comment with date
+      datetime: '2024-01-15 10:30'
+
+  # ============================================
+  # AVATAR TESTS
+  # ============================================
+
+  - id: comment_avatar_string
+    type: Comment
+    properties:
+      author: User One
+      avatar: https://via.placeholder.com/40
+      content: Comment with avatar URL
+
+  - id: comment_avatar_object
+    type: Comment
+    properties:
+      author: User Two
+      avatar:
+        content: UT
+        style:
+          backgroundColor: '#1890ff'
+      content: Comment with custom avatar
+
+  - id: comment_avatar_from_author
+    type: Comment
+    properties:
+      author: Michael
+      content: Avatar shows first two letters of author name
+
+  # ============================================
+  # CONTENT AREAS
+  # ============================================
+
+  - id: comment_with_actions
+    type: Comment
+    properties:
+      author: Commenter
+      content: Comment with actions
+    areas:
+      actions:
+        blocks:
+          - id: comment_action_like
+            type: Button
+            properties:
+              title: Like
+              type: link
+              size: small
+          - id: comment_action_reply
+            type: Button
+            properties:
+              title: Reply
+              type: link
+              size: small
+
+  - id: comment_with_children
+    type: Comment
+    properties:
+      author: Parent
+      content: This is a parent comment
+    areas:
+      children:
+        blocks:
+          - id: comment_child
+            type: Comment
+            properties:
+              author: Child
+              content: This is a nested reply
+
+  - id: comment_content_area
+    type: Comment
+    properties:
+      author: Rich Content
+    areas:
+      content:
+        blocks:
+          - id: comment_content_block
+            type: Paragraph
+            properties:
+              content: This comment uses the content area instead of property
+
+  # ============================================
+  # AUTHOR AREA
+  # ============================================
+
+  - id: comment_author_area
+    type: Comment
+    properties:
+      content: Comment with custom author block
+    areas:
+      author:
+        blocks:
+          - id: comment_author_block
+            type: Anchor
+            properties:
+              title: Custom Author Link
+              href: '#'

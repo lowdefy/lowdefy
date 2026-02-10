@@ -1,0 +1,206 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: collapse
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: collapse_basic
+    type: Collapse
+    properties:
+      panels:
+        - key: panel1
+          title: Panel 1
+        - key: panel2
+          title: Panel 2
+        - key: panel3
+          title: Panel 3
+    areas:
+      panel1:
+        blocks:
+          - id: collapse_basic_panel1_content
+            type: Span
+            properties:
+              content: Content of panel 1
+      panel2:
+        blocks:
+          - id: collapse_basic_panel2_content
+            type: Span
+            properties:
+              content: Content of panel 2
+      panel3:
+        blocks:
+          - id: collapse_basic_panel3_content
+            type: Span
+            properties:
+              content: Content of panel 3
+
+  # ============================================
+  # ACCORDION MODE
+  # ============================================
+
+  - id: collapse_accordion
+    type: Collapse
+    properties:
+      accordion: true
+      panels:
+        - key: acc1
+          title: Accordion Panel 1
+        - key: acc2
+          title: Accordion Panel 2
+    areas:
+      acc1:
+        blocks:
+          - id: collapse_accordion_panel1_content
+            type: Span
+            properties:
+              content: Only one panel open at a time
+      acc2:
+        blocks:
+          - id: collapse_accordion_panel2_content
+            type: Span
+            properties:
+              content: Accordion panel 2 content
+
+  # ============================================
+  # STYLE TESTS
+  # ============================================
+
+  - id: collapse_borderless
+    type: Collapse
+    properties:
+      bordered: false
+      panels:
+        - key: borderless1
+          title: Borderless Panel
+    areas:
+      borderless1:
+        blocks:
+          - id: collapse_borderless_content
+            type: Span
+            properties:
+              content: No border
+
+  # ============================================
+  # ICON POSITION
+  # ============================================
+
+  - id: collapse_icon_right
+    type: Collapse
+    properties:
+      expandIconPosition: right
+      panels:
+        - key: iconright1
+          title: Icon on Right
+    areas:
+      iconright1:
+        blocks:
+          - id: collapse_icon_right_content
+            type: Span
+            properties:
+              content: Expand icon is on the right
+
+  # ============================================
+  # DISABLED PANEL
+  # ============================================
+
+  - id: collapse_disabled
+    type: Collapse
+    properties:
+      panels:
+        - key: enabled
+          title: Enabled Panel
+        - key: disabled
+          title: Disabled Panel
+          disabled: true
+    areas:
+      enabled:
+        blocks:
+          - id: collapse_enabled_content
+            type: Span
+            properties:
+              content: This panel works
+      disabled:
+        blocks:
+          - id: collapse_disabled_content
+            type: Span
+            properties:
+              content: Cannot open this
+
+  # ============================================
+  # DEFAULT ACTIVE KEY
+  # ============================================
+
+  - id: collapse_default_active
+    type: Collapse
+    properties:
+      defaultActiveKey: second
+      panels:
+        - key: first
+          title: First Panel
+        - key: second
+          title: Second Panel (Default Open)
+    areas:
+      first:
+        blocks:
+          - id: collapse_default_first_content
+            type: Span
+            properties:
+              content: First panel content
+      second:
+        blocks:
+          - id: collapse_default_second_content
+            type: Span
+            properties:
+              content: This is open by default
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  - id: collapse_onchange
+    type: Collapse
+    properties:
+      panels:
+        - key: change1
+          title: Click to trigger onChange
+    events:
+      onChange:
+        - id: set_changed
+          type: SetState
+          params:
+            collapse_changed: true
+    areas:
+      change1:
+        blocks:
+          - id: collapse_onchange_content
+            type: Span
+            properties:
+              content: Panel content
+
+  - id: onchange_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: collapse_changed
+              - true
+          then: Collapse changed!
+          else: ''

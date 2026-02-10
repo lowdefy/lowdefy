@@ -1,0 +1,266 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: mobilemenu
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: mm_basic
+    type: MobileMenu
+    properties:
+      theme: light
+      links:
+        - id: mm_link1
+          type: MenuLink
+          properties:
+            title: Home
+        - id: mm_link2
+          type: MenuLink
+          properties:
+            title: About
+        - id: mm_link3
+          type: MenuLink
+          properties:
+            title: Contact
+
+  # ============================================
+  # THEME TESTS
+  # ============================================
+
+  - id: mm_dark
+    type: MobileMenu
+    properties:
+      theme: dark
+      links:
+        - id: mm_dark_link1
+          type: MenuLink
+          properties:
+            title: Dark Item 1
+        - id: mm_dark_link2
+          type: MenuLink
+          properties:
+            title: Dark Item 2
+
+  # ============================================
+  # PROPERTY TESTS
+  # ============================================
+
+  - id: mm_with_drawer
+    type: MobileMenu
+    properties:
+      theme: light
+      drawer:
+        title: Custom Drawer Title
+        placement: right
+      links:
+        - id: mm_drawer_link1
+          type: MenuLink
+          properties:
+            title: Drawer Item 1
+        - id: mm_drawer_link2
+          type: MenuLink
+          properties:
+            title: Drawer Item 2
+
+  - id: mm_with_groups
+    type: MobileMenu
+    properties:
+      theme: light
+      links:
+        - id: mm_group
+          type: MenuGroup
+          properties:
+            title: Settings
+          links:
+            - id: mm_sub1
+              type: MenuLink
+              properties:
+                title: General
+            - id: mm_sub2
+              type: MenuLink
+              properties:
+                title: Security
+
+  # ============================================
+  # METHOD TESTS
+  # ============================================
+
+  - id: mm_methods
+    type: MobileMenu
+    properties:
+      theme: light
+      links:
+        - id: mm_method_link1
+          type: MenuLink
+          properties:
+            title: Method Item
+
+  - id: open_mm_methods
+    type: Button
+    properties:
+      title: Open Menu
+    events:
+      onClick:
+        - id: open_menu
+          type: CallMethod
+          params:
+            blockId: mm_methods
+            method: setOpen
+            args:
+              - open: true
+
+  - id: close_mm_methods
+    type: Button
+    properties:
+      title: Close Menu
+    events:
+      onClick:
+        - id: close_menu
+          type: CallMethod
+          params:
+            blockId: mm_methods
+            method: setOpen
+            args:
+              - open: false
+
+  - id: toggle_mm_methods
+    type: Button
+    properties:
+      title: Toggle Menu
+    events:
+      onClick:
+        - id: toggle_menu
+          type: CallMethod
+          params:
+            blockId: mm_methods
+            method: toggleOpen
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  - id: mm_events
+    type: MobileMenu
+    properties:
+      theme: light
+      links:
+        - id: mm_event_link1
+          type: MenuLink
+          properties:
+            title: Event Item 1
+        - id: mm_event_link2
+          type: MenuLink
+          properties:
+            title: Event Item 2
+    events:
+      onToggleDrawer:
+        - id: set_toggle_fired
+          type: SetState
+          params:
+            mm_toggle_fired: true
+      onMenuItemClick:
+        - id: set_item_clicked
+          type: SetState
+          params:
+            mm_item_clicked:
+              _event: key
+
+  - id: ontoggle_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: mm_toggle_fired
+              - true
+          then: Toggle fired
+          else: ''
+
+  - id: onclick_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: mm_item_clicked
+              - null
+          then:
+            _string.concat:
+              - 'Clicked: '
+              - _state: mm_item_clicked
+          else: ''
+
+  # ============================================
+  # ITEM TARGETING TESTS
+  # ============================================
+
+  - id: mm_targeting
+    type: MobileMenu
+    properties:
+      theme: light
+      links:
+        - id: mm_target_home
+          type: MenuLink
+          properties:
+            title: Home
+        - id: mm_target_dashboard
+          pageId: mm_dashboard_page
+          type: MenuLink
+          properties:
+            title: Dashboard
+        - id: mm_target_users
+          type: MenuLink
+          properties:
+            title: Users
+        - id: mm_settings_group
+          type: MenuGroup
+          properties:
+            title: Settings
+          links:
+            - id: mm_general_settings
+              type: MenuLink
+              properties:
+                title: General
+            - id: mm_security_settings
+              type: MenuLink
+              properties:
+                title: Security
+    events:
+      onMenuItemClick:
+        - id: set_mm_targeting_clicked
+          type: SetState
+          params:
+            mm_targeting_clicked_key:
+              _event: key
+
+  - id: mm_targeting_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: mm_targeting_clicked_key
+              - null
+          then:
+            _string.concat:
+              - 'Clicked: '
+              - _state: mm_targeting_clicked_key
+          else: ''

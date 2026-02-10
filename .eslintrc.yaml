@@ -48,3 +48,12 @@ rules:
 parserOptions:
   sourceType: module
   ecmaVersion: latest
+overrides:
+  # Playwright e2e tests
+  - files:
+      - "**/*.e2e.spec.js"
+    extends:
+      - plugin:playwright/recommended
+    rules:
+      # Disable import/named as eslint-plugin-import can't resolve Playwright's TypeScript exports
+      import/named: "off"

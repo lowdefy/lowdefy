@@ -1,0 +1,199 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: list
+type: Box
+
+events:
+  onInit:
+    - id: set_defaults
+      type: SetState
+      params:
+        # State keys must match blockIds for List blocks
+        list_basic:
+          - Item 1
+          - Item 2
+          - Item 3
+        list_direction_row:
+          - Row 1
+          - Row 2
+          - Row 3
+        list_direction_column:
+          - Col 1
+          - Col 2
+          - Col 3
+        list_styled:
+          - Styled 1
+          - Styled 2
+        list_wrap:
+          - Wrap 1
+          - Wrap 2
+          - Wrap 3
+        list_scroll:
+          - Scroll 1
+          - Scroll 2
+          - Scroll 3
+        list_clickable:
+          - Click Item
+        # list_empty is intentionally not set (undefined = empty list)
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: list_basic
+    type: List
+    blocks:
+      - id: list_basic_item
+        type: Span
+        properties:
+          content:
+            _state: list_basic.$
+
+  # ============================================
+  # PROPERTY TESTS
+  # ============================================
+
+  # Direction row (flexbox)
+  - id: list_direction_row
+    type: List
+    properties:
+      direction: row
+    blocks:
+      - id: list_direction_row_item
+        type: Span
+        properties:
+          content:
+            _state: list_direction_row.$
+          style:
+            padding: 5px
+            border: 1px solid gray
+
+  # Direction column
+  - id: list_direction_column
+    type: List
+    properties:
+      direction: column
+    blocks:
+      - id: list_direction_column_item
+        type: Span
+        properties:
+          content:
+            _state: list_direction_column.$
+          style:
+            padding: 5px
+            border: 1px solid gray
+
+  # Custom style
+  - id: list_styled
+    type: List
+    properties:
+      style:
+        backgroundColor: rgb(240, 240, 240)
+        padding: 10px
+    blocks:
+      - id: list_styled_item
+        type: Span
+        properties:
+          content:
+            _state: list_styled.$
+
+  # Wrap property (nowrap)
+  - id: list_wrap
+    type: List
+    properties:
+      direction: row
+      wrap: nowrap
+      style:
+        width: 200px
+    blocks:
+      - id: list_wrap_item
+        type: Span
+        properties:
+          content:
+            _state: list_wrap.$
+          style:
+            minWidth: 100px
+            padding: 5px
+            border: 1px solid gray
+
+  # Scroll property
+  - id: list_scroll
+    type: List
+    properties:
+      direction: row
+      wrap: nowrap
+      scroll: true
+      style:
+        width: 200px
+    blocks:
+      - id: list_scroll_item
+        type: Span
+        properties:
+          content:
+            _state: list_scroll.$
+          style:
+            minWidth: 100px
+            padding: 5px
+            border: 1px solid gray
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  - id: list_clickable
+    type: List
+    properties:
+      style:
+        cursor: pointer
+        padding: 10px
+        border: 1px solid gray
+    events:
+      onClick:
+        - id: set_clicked
+          type: SetState
+          params:
+            list_clicked: true
+    blocks:
+      - id: list_clickable_item
+        type: Span
+        properties:
+          content:
+            _state: list_clickable.$
+
+  - id: onclick_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: list_clicked
+              - true
+          then: List clicked!
+          else: ''
+
+  # ============================================
+  # EMPTY LIST
+  # ============================================
+
+  - id: list_empty
+    type: List
+    blocks:
+      - id: list_empty_item
+        type: Span
+        properties:
+          content:
+            _state: list_empty.$
