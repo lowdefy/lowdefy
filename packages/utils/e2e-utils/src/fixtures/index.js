@@ -30,7 +30,10 @@ export const test = base.extend({
   helperRegistry: [
     // eslint-disable-next-line no-empty-pattern
     async ({}, use) => {
-      const registry = createHelperRegistry();
+      const buildDir = process.env.LOWDEFY_BUILD_DIR || '.lowdefy/server/build';
+      // serverDir is the parent of buildDir (e.g., .lowdefy/server)
+      const serverDir = path.dirname(buildDir);
+      const registry = createHelperRegistry({ serverDir });
       await use(registry);
     },
     { scope: 'worker' },

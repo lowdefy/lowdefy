@@ -14,14 +14,23 @@
   limitations under the License.
 */
 
-function createHelperRegistry() {
+import { createRequire } from 'module';
+import path from 'path';
+
+function createHelperRegistry({ serverDir }) {
   const cache = new Map();
+
+  // Create require function that resolves from the server's node_modules
+  // This allows e2e helpers to be imported from packages installed in .lowdefy/server
+  const serverRequire = createRequire(path.join(serverDir, 'package.json'));
 
   return {
     async get(helperPath) {
       if (!cache.has(helperPath)) {
         try {
-          const module = await import(helperPath);
+          // Use serverRequire to resolve from server's node_modules
+          const resolvedPath = serverRequire.resolve(helperPath);
+          const module = await import(resolvedPath);
           cache.set(helperPath, module.default ?? module);
         } catch (e) {
           cache.set(helperPath, null);

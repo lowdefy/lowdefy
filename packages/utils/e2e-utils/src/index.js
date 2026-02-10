@@ -48,9 +48,9 @@ export { generateManifest, loadManifest };
 // Proxy utilities
 import createBlockHelper from './proxy/createBlockHelper.js';
 import createHelperRegistry from './proxy/createHelperRegistry.js';
-import createBlockProxy from './proxy/createBlockProxy.js';
+import createBlockMethodProxy from './proxy/createBlockMethodProxy.js';
 import createPageManager from './proxy/createPageManager.js';
-export { createBlockHelper, createHelperRegistry, createBlockProxy, createPageManager };
+export { createBlockHelper, createHelperRegistry, createBlockMethodProxy, createPageManager };
 
 // Mocking utilities
 import { createMockManager, loadStaticMocks } from './mocking/index.js';
