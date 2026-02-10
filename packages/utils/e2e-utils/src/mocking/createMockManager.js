@@ -18,14 +18,18 @@ function createMockManager({ page }) {
   const activeMocks = new Map();
   const capturedRequests = new Map();
 
-  async function mockRequest(requestId, { response, error }) {
-    const key = `request:${requestId}`;
+  async function mockRequest(requestId, { response, error, pageId }) {
+    const key = pageId ? `request:${pageId}:${requestId}` : `request:${requestId}`;
 
     if (activeMocks.has(key)) {
       await page.unroute(activeMocks.get(key).pattern);
     }
 
-    const pattern = `**/api/request/*/${requestId}`;
+    // If pageId is provided, match only that page's requests
+    // Otherwise, match all pages (wildcard)
+    const pattern = pageId
+      ? `**/api/request/${pageId}/${requestId}`
+      : `**/api/request/*/${requestId}`;
     const handler = async (route) => {
       // Capture the request body for assertions
       const postData = route.request().postData();
@@ -96,12 +100,82 @@ function createMockManager({ page }) {
   }
 
   async function applyStaticMocks(mocks) {
-    for (const [id, config] of Object.entries(mocks ?? {})) {
-      if (config.type === 'api') {
-        await mockApi(id, config);
-      } else {
-        await mockRequest(id, config);
-      }
+    // New format: { requests: [...], api: [...] }
+    const { requests = [], api = [] } = mocks ?? {};
+
+    // Apply request mocks
+    for (const config of requests) {
+      // Playwright glob: * matches single segment, ** matches multiple
+      // User wildcards like fetch_* should stay as-is (matches fetch_users, fetch_items)
+      const requestPattern = config.requestId;
+      const pagePattern = config.pageId ?? '*';
+
+      const pattern = `**/api/request/${pagePattern}/${requestPattern}`;
+      const key = `static:request:${config.pageId ?? '*'}:${config.requestId}`;
+
+      const handler = async (route) => {
+        const postData = route.request().postData();
+        let payload = null;
+        if (postData) {
+          try {
+            const parsed = JSON.parse(postData);
+            payload = parsed.payload;
+          } catch {
+            payload = postData;
+          }
+        }
+        capturedRequests.set(config.requestId, {
+          payload,
+          timestamp: Date.now(),
+        });
+
+        if (config.error) {
+          await route.fulfill({
+            status: 500,
+            contentType: 'application/json',
+            body: JSON.stringify({ name: 'Error', message: config.error }),
+          });
+        } else {
+          await route.fulfill({
+            status: 200,
+            contentType: 'application/json',
+            body: JSON.stringify({ success: true, response: config.response }),
+          });
+        }
+      };
+
+      await page.route(pattern, handler);
+      activeMocks.set(key, { pattern, handler });
+    }
+
+    // Apply API mocks
+    for (const config of api) {
+      const pattern = `**/api/endpoints/${config.endpointId}`;
+      const key = `static:api:${config.endpointId}`;
+
+      const handler = async (route) => {
+        if (config.method && route.request().method() !== config.method.toUpperCase()) {
+          await route.continue();
+          return;
+        }
+
+        if (config.error) {
+          await route.fulfill({
+            status: 500,
+            contentType: 'application/json',
+            body: JSON.stringify({ name: 'Error', message: config.error }),
+          });
+        } else {
+          await route.fulfill({
+            status: 200,
+            contentType: 'application/json',
+            body: JSON.stringify({ success: true, response: config.response }),
+          });
+        }
+      };
+
+      await page.route(pattern, handler);
+      activeMocks.set(key, { pattern, handler });
     }
   }
 

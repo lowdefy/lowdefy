@@ -1,10 +1,10 @@
 import { test, expect } from '@lowdefy/e2e-utils/fixtures';
 
-test('homepage loads', async ({ page, ldf }) => {
+test('homepage loads', async ({ ldf }) => {
   await ldf.goto('/');
 
   // Replace with your own assertions
-  await expect(page).toHaveTitle(/./);
+  await expect(ldf.page).toHaveTitle(/./);
 });
 
 // Example: Testing a form
@@ -12,22 +12,22 @@ test('homepage loads', async ({ page, ldf }) => {
 // test('submit contact form', async ({ ldf }) => {
 //   await ldf.goto('/contact');
 //
-//   await ldf.do.blocks['name_input'].fill('John Doe');
-//   await ldf.do.blocks['email_input'].fill('john@example.com');
-//   await ldf.do.blocks['category'].select('Support');
-//   await ldf.do.blocks['submit_btn'].click();
+//   await ldf.block('name_input').do.fill('John Doe');
+//   await ldf.block('email_input').do.fill('john@example.com');
+//   await ldf.block('category').do.select('Support');
+//   await ldf.block('submit_btn').do.click();
 //
-//   await ldf.expect.state({ key: 'form_submitted', value: true });
+//   await ldf.state('form_submitted').expect.toBe(true);
 // });
 //
 // Example: Testing validation
 //
 // test('validates required fields', async ({ ldf }) => {
 //   await ldf.goto('/contact');
-//   await ldf.do.blocks['submit_btn'].click();
+//   await ldf.block('submit_btn').do.click();
 //
-//   await ldf.expect.blocks['name_input'].validationError();
-//   await ldf.expect.blocks['email_input'].validationError({ message: 'Required' });
+//   await ldf.block('name_input').expect.validationError();
+//   await ldf.block('email_input').expect.validationError({ message: 'Required' });
 // });
 //
 // Example: Request mocking (define static mocks in e2e/mocks.yaml)
@@ -35,14 +35,11 @@ test('homepage loads', async ({ page, ldf }) => {
 // test('displays search results', async ({ ldf }) => {
 //   // Static mocks from mocks.yaml are applied automatically
 //   await ldf.goto('/search');
-//   await ldf.do.blocks['search_input'].fill('widget');
-//   await ldf.do.blocks['search_btn'].click();
+//   await ldf.block('search_input').do.fill('widget');
+//   await ldf.block('search_btn').do.click();
 //
 //   // Assert on the payload sent to the request
-//   await ldf.expect.request({
-//     requestId: 'search_products',
-//     payload: { query: 'widget' },
-//   });
+//   await ldf.request('search_products').expect.toHavePayload({ query: 'widget' });
 // });
 //
 // test('handles search error', async ({ ldf }) => {
@@ -50,7 +47,7 @@ test('homepage loads', async ({ page, ldf }) => {
 //   await ldf.mock.request('search_products', { error: 'Service unavailable' });
 //
 //   await ldf.goto('/search');
-//   await ldf.do.blocks['search_btn'].click();
+//   await ldf.block('search_btn').do.click();
 //
-//   await ldf.expect.blocks['error_message'].visible();
+//   await ldf.block('error_message').expect.visible();
 // });

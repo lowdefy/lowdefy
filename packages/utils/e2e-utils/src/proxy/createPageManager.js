@@ -17,11 +17,11 @@
 import { getBlock } from '../core/locators.js';
 import { waitForReady, waitForPage } from '../core/navigation.js';
 import { getState, getBlockState, setState, expectState } from '../core/state.js';
-import { getRequestResponse, expectRequest } from '../core/requests.js';
+import { getRequestState, getRequestResponse, expectRequest } from '../core/requests.js';
 import { getValidation } from '../core/validation.js';
 import { expectUrl, expectUrlQuery, setUrlQuery } from '../core/url.js';
 
-import createBlockProxy from './createBlockProxy.js';
+import createBlockMethodProxy from './createBlockMethodProxy.js';
 
 function createPageManager({ page, manifest, helperRegistry, mockManager }) {
   let currentBlockMap = null;
@@ -34,6 +34,9 @@ function createPageManager({ page, manifest, helperRegistry, mockManager }) {
   }
 
   return {
+    // Raw Playwright page
+    page,
+
     // Navigation (control flow)
     async goto(path) {
       await page.goto(path);
@@ -58,62 +61,95 @@ function createPageManager({ page, manifest, helperRegistry, mockManager }) {
       return currentPageId;
     },
 
-    // Actions (ldf.do.*)
-    do: {
-      get blocks() {
-        ensurePageLoaded();
-        return createBlockProxy({
-          page,
-          blockMap: currentBlockMap,
-          helperRegistry,
-          mode: 'do',
-        });
-      },
-      state: (params) => setState(page, params),
-      urlQuery: (params) => setUrlQuery(page, params),
-    },
+    // Block locator - ldf.block('id').do.*/expect.*/locator()/state()/validation()
+    block(blockId) {
+      ensurePageLoaded();
+      const blockInfo = currentBlockMap[blockId];
+      if (!blockInfo) {
+        const available = Object.keys(currentBlockMap).join(', ');
+        throw new Error(
+          `Block "${blockId}" not found on page. Available blocks: ${available || '(none)'}`
+        );
+      }
 
-    // Assertions (ldf.expect.*)
-    expect: {
-      // Page-level assertions
-      state: (params) => expectState(page, params),
-      url: (params) => expectUrl(page, params),
-      urlQuery: (params) => expectUrlQuery(page, params),
-      request: (params) => expectRequest(page, params),
-
-      // Block-level assertions
-      get blocks() {
-        ensurePageLoaded();
-        return createBlockProxy({
+      return {
+        do: createBlockMethodProxy({ page, blockId, blockInfo, helperRegistry, mode: 'do' }),
+        expect: createBlockMethodProxy({
           page,
-          blockMap: currentBlockMap,
+          blockId,
+          blockInfo,
           helperRegistry,
           mode: 'expect',
-        });
-      },
+        }),
+        locator: () => getBlock(page, blockId),
+        state: () => getBlockState(page, { blockId }),
+        validation: () => getValidation(page, blockId),
+      };
     },
 
-    // Read operations (ldf.get.*)
-    get: {
-      state: () => getState(page),
-      blockState: (params) => getBlockState(page, params),
-      validation: (params) => getValidation(page, params.blockId),
-      requestResponse: (params) => getRequestResponse(page, params),
-      block: (blockId) => getBlock(page, blockId),
-      get blocks() {
-        ensurePageLoaded();
-        return createBlockProxy({
-          page,
-          blockMap: currentBlockMap,
-          helperRegistry,
-          mode: 'get',
-        });
-      },
+    // Request locator - ldf.request('id').expect.*/response()/state()
+    request(requestId) {
+      return {
+        expect: {
+          toFinish: (opts) => expectRequest(page, { requestId, loading: false, ...opts }),
+          toHaveResponse: (response, opts) =>
+            expectRequest(page, { requestId, response, ...opts }),
+          toHavePayload: (payload, opts) => expectRequest(page, { requestId, payload, ...opts }),
+        },
+        response: () => getRequestResponse(page, { requestId }),
+        state: () => getRequestState(page, requestId),
+      };
+    },
+
+    // State locator - ldf.state('key').do.*/expect.*/value() or ldf.state().value()
+    state(key) {
+      if (!key) {
+        return {
+          value: () => getState(page),
+        };
+      }
+
+      return {
+        do: {
+          set: (value) => setState(page, { key, value }),
+        },
+        expect: {
+          toBe: (value, opts) => expectState(page, { key, value, ...opts }),
+        },
+        value: () => getState(page).then((s) => key.split('.').reduce((o, k) => o?.[k], s)),
+      };
+    },
+
+    // URL locator - ldf.url().expect.*/value()
+    url() {
+      return {
+        expect: {
+          toBe: (path, opts) => expectUrl(page, { path, ...opts }),
+          toMatch: (pattern, opts) => expectUrl(page, { pattern, ...opts }),
+        },
+        value: () => page.url(),
+      };
+    },
+
+    // URL query locator - ldf.urlQuery('key').do.*/expect.*/value()
+    urlQuery(key) {
+      return {
+        do: {
+          set: (value) => setUrlQuery(page, { key, value }),
+        },
+        expect: {
+          toBe: (value, opts) => expectUrlQuery(page, { key, value, ...opts }),
+        },
+        value: () => new URL(page.url()).searchParams.get(key),
+      };
     },
 
     // Mocking (per-test overrides)
     mock: {
-      request: (requestId, options) => mockManager?.mockRequest(requestId, options),
+      request: (requestId, options) => {
+        const pageId = options?.pageId ?? currentPageId;
+        return mockManager?.mockRequest(requestId, { ...options, pageId });
+      },
       api: (apiId, options) => mockManager?.mockApi(apiId, options),
       getCapturedRequest: (requestId) => mockManager?.getCapturedRequest(requestId),
       clearCapturedRequests: () => mockManager?.clearCapturedRequests(),

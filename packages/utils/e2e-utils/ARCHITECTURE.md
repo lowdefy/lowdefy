@@ -55,7 +55,7 @@ This does two things:
 
 ### 1.2 The E2E Flag
 
-`NEXT_PUBLIC_LOWDEFY_E2E=true` tells the Lowdefy runtime to expose `window.lowdefy` in the browser. Without this, the internal state (contexts, requests, validation) is not accessible and `ldf.expect.state()`, `ldf.get.validation()`, etc. would not work.
+`NEXT_PUBLIC_LOWDEFY_E2E=true` tells the Lowdefy runtime to expose `window.lowdefy` in the browser. Without this, the internal state (contexts, requests, validation) is not accessible and `ldf.state()`, `ldf.block().validation()`, etc. would not work.
 
 ### 1.3 Manifest Generation (Lazy)
 
@@ -114,7 +114,7 @@ export const test = base.extend({
 
 Playwright's `base.extend()` lets us define custom fixtures alongside built-in ones like `page` and `browser`. Each fixture declares its dependencies and Playwright handles the wiring.
 
-### 2.2 Our Three Fixtures
+### 2.2 Our Fixtures
 
 ```
 Worker scope (created once per Playwright worker process, shared across tests):
@@ -126,25 +126,30 @@ Worker scope (created once per Playwright worker process, shared across tests):
 │  helperRegistry    Lazy-loading cache for block e2e modules. │
 │                    First access does import(), then cached    │
 │                    for all subsequent tests in this worker.   │
+│                                                              │
+│  staticMocks       Loads mocks.yaml once per worker.         │
+│                    Applied to every test automatically.       │
 └──────────────────────────────────────────────────────────────┘
 
 Test scope (created fresh for every test):
 ┌──────────────────────────────────────────────────────────────┐
 │  ldf                The main test API. Created by            │
 │                     createPageManager() with { page,         │
-│                     manifest, helperRegistry }.               │
+│                     manifest, helperRegistry, mockManager }.  │
 │                                                              │
 │                     Depends on:                               │
 │                       page (built-in) ← fresh browser page   │
 │                       manifest (worker) ← block lookup       │
 │                       helperRegistry (worker) ← module cache │
+│                       mockManager (test) ← request mocking   │
 └──────────────────────────────────────────────────────────────┘
 ```
 
-**Why worker scope for manifest and helperRegistry?**
+**Why worker scope for manifest, helperRegistry, and staticMocks?**
 
 - The manifest is the same for all tests — no need to re-read it per test
 - The helper registry caches `import()` calls — once `@lowdefy/blocks-antd/e2e/TextInput` is imported, it stays cached for all tests in that worker
+- Static mocks are loaded once and applied to every test
 - This makes tests fast after the first one
 
 **Why test scope for ldf?**
@@ -152,6 +157,7 @@ Test scope (created fresh for every test):
 - Each test gets its own `page` (fresh browser tab)
 - `ldf` wraps that specific page, so it must be per-test
 - Internal state (`currentPageId`, `currentBlockMap`) is test-specific
+- Mock manager tracks per-test route handlers
 
 ### 2.3 The Fixture Lifecycle
 
@@ -159,16 +165,18 @@ Test scope (created fresh for every test):
 Worker starts
   ├── manifest fixture runs → loads e2e-manifest.json
   ├── helperRegistry fixture runs → creates empty cache
+  ├── staticMocks fixture runs → loads mocks.yaml
   │
   ├── Test 1 starts
   │   ├── Playwright creates fresh page (browser tab)
-  │   ├── ldf fixture runs → createPageManager({ page, manifest, helperRegistry })
+  │   ├── mockManager created, static mocks applied
+  │   ├── ldf fixture runs → createPageManager({ page, manifest, helperRegistry, mockManager })
   │   ├── Test body executes
-  │   └── ldf fixture tears down, page closes
+  │   └── mockManager.cleanup(), page closes
   │
   ├── Test 2 starts
   │   ├── Fresh page created
-  │   ├── New ldf created (but reuses same manifest & helperRegistry)
+  │   ├── New mockManager and ldf created (reuses manifest, helperRegistry, staticMocks)
   │   ├── Test body executes
   │   └── Tear down
   │
@@ -179,47 +187,79 @@ Worker starts
 
 ## Phase 3: Runtime (Test Execution)
 
-### 3.1 The `ldf` Object Structure
+### 3.1 The `ldf` Object Structure (Locator-First API)
 
 ```javascript
 ldf = {
+  // Raw Playwright page
+  page,                       // Direct access to Playwright page object
+
   // Navigation
-  goto(path)              // navigates and waits for Lowdefy to initialize
-  waitForPage(path)       // waits for navigation to a different page
+  goto(path),                 // Navigates and waits for Lowdefy to initialize
+  waitForPage(path),          // Waits for navigation to a different page
+  pageId,                     // Current page ID (getter)
 
-  // Actions
-  do: {
-    blocks[blockId]       // → Proxy (mode: 'set')
-      .fill('John')            → helper.set.fill(page, blockId, 'John')
-      .select('Option')        → helper.set.select(page, blockId, 'Option')
-      .click()                 → helper.set.click(page, blockId)
-      .clear()                 → helper.set.clear(page, blockId)
-    state({ key, value }) // sets Lowdefy state directly via window.lowdefy
-    urlQuery({ key, value }) // manipulates URL query params
+  // Block locator - ldf.block('id').*
+  block(blockId) → {
+    do: {                     // → Proxy (mode: 'do')
+      fill('John'),               → helper.do.fill(page, blockId, 'John')
+      select('Option'),           → helper.do.select(page, blockId, 'Option')
+      click(),                    → helper.do.click(page, blockId)
+      clear(),                    → helper.do.clear(page, blockId)
+    },
+    expect: {                 // → Proxy (mode: 'expect')
+      visible(),                  → helper.expect.visible(page, blockId)
+      hidden(),                   → helper.expect.hidden(page, blockId)
+      disabled(),                 → helper.expect.disabled(page, blockId)
+      enabled(),                  → helper.expect.enabled(page, blockId)
+      validationError(),          → helper.expect.validationError(page, blockId)
+      value('John'),              → helper.expect.value(page, blockId, 'John')
+    },
+    locator(),                // Raw Playwright locator
+    state(),                  // Block's state value
+    validation(),             // Block's validation object
   },
 
-  // Assertions
-  expect: {
-    blocks[blockId]       // → Proxy (mode: 'expect')
-      .visible()               → helper.expect.visible(page, blockId)       [auto-provided]
-      .hidden()                → helper.expect.hidden(page, blockId)        [auto-provided]
-      .disabled()              → helper.expect.disabled(page, blockId)      [auto, overridable]
-      .enabled()               → helper.expect.enabled(page, blockId)       [auto, overridable]
-      .validationError()       → helper.expect.validationError(page, blockId) [auto-provided]
-      .value('John')           → helper.expect.value(page, blockId, 'John') [block-specific]
-    state({ key, value }) // polls Lowdefy state until it matches
-    url({ path, pattern }) // asserts current URL
-    urlQuery({ key, value }) // asserts URL query param
-    request({ requestId, loading, response }) // asserts request state
+  // Request locator - ldf.request('id').*
+  request(requestId) → {
+    expect: {
+      toFinish(opts),             // Waits for loading: false
+      toHaveResponse(response),   // Asserts response matches
+      toHavePayload(payload),     // Asserts payload sent
+    },
+    response(),               // Raw response data
+    state(),                  // Full request state object
   },
 
-  // Reads (for when you need the value, not an assertion)
-  get: {
-    state()                    // returns full page state
-    blockState({ blockId })    // returns state for one block
-    validation({ blockId })    // returns validation object
-    requestResponse({ requestId }) // returns request response
-    block(blockId)             // raw Playwright locator for custom assertions
+  // State locator - ldf.state('key').* or ldf.state().*
+  state(key?) → {
+    do: { set(value) },       // Sets state (only with key)
+    expect: { toBe(value) },  // Asserts state value (only with key)
+    value(),                  // Raw state value (or full state if no key)
+  },
+
+  // URL locator - ldf.url().*
+  url() → {
+    expect: {
+      toBe(path),                 // Exact path match
+      toMatch(pattern),           // Regex pattern match
+    },
+    value(),                  // Current URL string
+  },
+
+  // URL query locator - ldf.urlQuery('key').*
+  urlQuery(key) → {
+    do: { set(value) },       // Sets query param
+    expect: { toBe(value) },  // Asserts query param value
+    value(),                  // Raw query param value
+  },
+
+  // Mocking
+  mock: {
+    request(requestId, opts), // Mock a request (defaults to current pageId)
+    api(apiId, opts),         // Mock an API endpoint
+    getCapturedRequest(id),   // Get captured request payload
+    clearCapturedRequests(),  // Clear all captured requests
   },
 }
 ```
@@ -227,36 +267,32 @@ ldf = {
 ### 3.2 The Proxy Chain (What Happens When You Call a Block Method)
 
 ```javascript
-await ldf.do.blocks['name_input'].fill('John');
+await ldf.block('name_input').do.fill('John');
 ```
 
 Step by step:
 
 ```
-1. ldf.do
-   → Returns the "set" object from createPageManager
-
-2. ldf.do.blocks
-   → Getter triggers ensurePageLoaded() check
-   → Returns createBlockProxy({ page, blockMap, helperRegistry, mode: 'set' })
-
-3. ldf.do.blocks['name_input']
-   → Outer Proxy trap fires
+1. ldf.block('name_input')
+   → ensurePageLoaded() check
    → Looks up blockMap['name_input']
    → Finds: { type: 'TextInput', helper: '@lowdefy/blocks-antd/e2e/TextInput' }
-   → Returns inner Proxy for method calls
+   → Returns object with { do, expect, locator, state, validation }
 
-4. ldf.do.blocks['name_input'].fill
-   → Inner Proxy trap fires
+2. ldf.block('name_input').do
+   → Returns createBlockMethodProxy({ page, blockId, blockInfo, helperRegistry, mode: 'do' })
+
+3. ldf.block('name_input').do.fill
+   → Proxy trap fires
    → Returns an async function (not executed yet)
 
-5. ldf.do.blocks['name_input'].fill('John')
+4. ldf.block('name_input').do.fill('John')
    → The async function executes:
      a. helperRegistry.get('@lowdefy/blocks-antd/e2e/TextInput')
         → First call: import('@lowdefy/blocks-antd/e2e/TextInput')
         → Subsequent calls: returns from cache
-     b. Looks up helper.set.fill (sub-object: helper[mode][methodName])
-     c. Calls helper.set.fill(page, 'name_input', 'John')
+     b. Looks up helper.do.fill
+     c. Calls helper.do.fill(page, 'name_input', 'John')
         → Playwright fills the input element
 ```
 
@@ -319,7 +355,7 @@ The factory returns an object with sub-objects for `do` and `expect`:
 }
 ```
 
-The proxy looks up methods by mode: `helper[mode][methodName]`. This replaces the old `set_`/`expect_` prefix convention with structured sub-objects.
+The proxy looks up methods by mode: `helper[mode][methodName]`.
 
 All methods receive `(page, blockId, ...args)`:
 - `page` — the Playwright Page object
@@ -328,7 +364,7 @@ All methods receive `(page, blockId, ...args)`:
 
 ### 3.4 State and Validation Access
 
-Methods under `ldf.expect.state()`, `ldf.get.state()`, `ldf.get.validation()`, etc. work by evaluating JavaScript inside the browser via `page.evaluate()`:
+Methods like `ldf.state().value()`, `ldf.block().validation()`, etc. work by evaluating JavaScript inside the browser via `page.evaluate()`:
 
 ```javascript
 // How state is read from the browser
@@ -356,6 +392,46 @@ await expect.poll(async () => {
   return key.split('.').reduce((obj, k) => obj?.[k], state);
 }, { timeout: 5000 }).toEqual(expectedValue);
 ```
+
+### 3.5 Request Mocking
+
+Mocking intercepts Lowdefy requests and API calls using Playwright's `page.route()`.
+
+#### Inline Mocks (Per-Test)
+
+```javascript
+// Mock defaults to current page
+await ldf.mock.request('search_products', { response: [{ id: 1 }] });
+
+// Explicit pageId
+await ldf.mock.request('search_products', { pageId: 'search-page', response: [] });
+
+// Mock API endpoint
+await ldf.mock.api('external_api', { response: { status: 'ok' }, method: 'POST' });
+```
+
+#### Static Mocks (mocks.yaml)
+
+Static mocks are loaded once per worker and applied to every test:
+
+```yaml
+# e2e/mocks.yaml
+requests:
+  - requestId: atlas_search
+    response: [{ _id: 'doc-1', title: 'Result' }]
+
+  # Wildcards supported
+  - requestId: fetch_*
+    pageId: admin-*
+    response: []
+
+api:
+  - endpointId: external_api
+    method: POST
+    response: { status: ok }
+```
+
+Wildcards use Playwright's glob matching (`*` matches any characters in a single path segment).
 
 ---
 
@@ -422,6 +498,7 @@ export default createBlockHelper({
 | `lowdefy build` | Before tests | Node.js (Playwright webServer) | Compiles YAML → JSON, produces types.json + page configs |
 | `lowdefy start` | Before tests | Node.js + browser | Starts the production server |
 | Manifest generation | First worker init | Node.js (Playwright fixture) | Reads build artifacts → produces e2e-manifest.json |
+| Static mocks load | First worker init | Node.js (Playwright fixture) | Reads mocks.yaml → applies to all tests |
 | Helper import | First block access | Node.js (Playwright) | `import('@lowdefy/blocks-antd/e2e/TextInput')` |
 | Block methods | During test | Node.js → browser | Playwright locators interact with DOM |
 | State/validation reads | During test | Browser (page.evaluate) | Reads from `window.lowdefy` internals |

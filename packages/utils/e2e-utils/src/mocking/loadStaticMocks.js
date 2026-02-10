@@ -19,12 +19,16 @@ import yaml from 'js-yaml';
 
 function loadStaticMocks(mocksFile) {
   if (!mocksFile || !fs.existsSync(mocksFile)) {
-    return {};
+    return { requests: [], api: [] };
   }
 
   const content = fs.readFileSync(mocksFile, 'utf8');
   const parsed = yaml.load(content);
-  return parsed?.mocks ?? {};
+
+  return {
+    requests: parsed?.requests ?? [],
+    api: parsed?.api ?? [],
+  };
 }
 
 export default loadStaticMocks;

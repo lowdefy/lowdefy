@@ -35,13 +35,13 @@ Import `test` from our fixtures - it includes the `ldf` helper automatically:
 ```javascript
 import { test, expect } from '@lowdefy/e2e-utils/fixtures';
 
-test('homepage loads', async ({ page, ldf }) => {
+test('homepage loads', async ({ ldf }) => {
   await ldf.goto('/');
-  await expect(page).toHaveTitle(/My App/);
+  await expect(ldf.page).toHaveTitle(/My App/);
 });
 ```
 
-### Block Interactions (`ldf.do.blocks`)
+### Block Interactions (`ldf.block('id').do.*`)
 
 Interact with blocks using Playwright-style action verbs:
 
@@ -50,21 +50,21 @@ test('submit form', async ({ ldf }) => {
   await ldf.goto('/contact');
 
   // Text inputs use .fill()
-  await ldf.do.blocks['name_input'].fill('John Doe');
-  await ldf.do.blocks['email_input'].fill('john@example.com');
+  await ldf.block('name_input').do.fill('John Doe');
+  await ldf.block('email_input').do.fill('john@example.com');
 
   // Selectors use .select()
-  await ldf.do.blocks['category'].select('Support');
+  await ldf.block('category').do.select('Support');
 
   // Buttons use .click()
-  await ldf.do.blocks['submit_btn'].click();
+  await ldf.block('submit_btn').do.click();
 
   // Clear an input
-  await ldf.do.blocks['name_input'].clear();
+  await ldf.block('name_input').do.clear();
 });
 ```
 
-### Block Assertions (`ldf.expect.blocks`)
+### Block Assertions (`ldf.block('id').expect.*`)
 
 Common assertions like `visible`, `hidden`, `disabled`, `enabled` are auto-provided for every block. Validation assertions work automatically too:
 
@@ -72,60 +72,98 @@ Common assertions like `visible`, `hidden`, `disabled`, `enabled` are auto-provi
 test('validates required fields', async ({ ldf }) => {
   await ldf.goto('/contact');
 
-  await ldf.do.blocks['submit_btn'].click();
+  await ldf.block('submit_btn').do.click();
 
   // Common assertions - available on every block
-  await ldf.expect.blocks['name_input'].visible();
-  await ldf.expect.blocks['submit_btn'].disabled();
+  await ldf.block('name_input').expect.visible();
+  await ldf.block('submit_btn').expect.disabled();
 
   // Validation - available on every block
-  await ldf.expect.blocks['name_input'].validationError();
-  await ldf.expect.blocks['email_input'].validationError({ message: 'Email is required' });
+  await ldf.block('name_input').expect.validationError();
+  await ldf.block('email_input').expect.validationError({ message: 'Email is required' });
 
   // Block-specific assertions
-  await ldf.expect.blocks['name_input'].value('');
-  await ldf.expect.blocks['submit_btn'].loading();
+  await ldf.block('name_input').expect.value('');
+  await ldf.block('submit_btn').expect.loading();
 });
 ```
 
-### Page-Level Assertions (`ldf.expect`)
+### State (`ldf.state()`)
 
 ```javascript
-// State
-await ldf.expect.state({ key: 'submitted', value: true });
-await ldf.expect.state({ key: 'form.email', value: 'john@example.com' });
+// Assert state values
+await ldf.state('submitted').expect.toBe(true);
+await ldf.state('form.email').expect.toBe('john@example.com');
 
-// URL
-await ldf.expect.url({ path: '/thank-you' });
-await ldf.expect.url({ pattern: /\/tickets\/\d+/ });
-await ldf.expect.urlQuery({ key: 'filter', value: 'active' });
-
-// Requests
-await ldf.expect.request({ requestId: 'send_message', loading: false });
-await ldf.expect.request({ requestId: 'send_message', response: { success: true } });
-```
-
-### Mutations (`ldf.do`)
-
-```javascript
 // Set state directly (useful for test setup)
-await ldf.do.state({ key: 'form.mode', value: 'edit' });
+await ldf.state('form.mode').do.set('edit');
 
-// Set URL query params
-await ldf.do.urlQuery({ key: 'filter', value: 'active' });
+// Get raw state value
+const email = await ldf.state('form.email').value();
+const fullState = await ldf.state().value();
 ```
 
-### Read Operations (`ldf.get`)
+### URL (`ldf.url()` / `ldf.urlQuery()`)
 
 ```javascript
-const state = await ldf.get.state();
-const blockState = await ldf.get.blockState({ blockId: 'name_input' });
-const validation = await ldf.get.validation({ blockId: 'email_input' });
-const response = await ldf.get.requestResponse({ requestId: 'fetch_users' });
+// Assert URL
+await ldf.url().expect.toBe('/thank-you');
+await ldf.url().expect.toMatch(/\/tickets\/\d+/);
 
-// Get raw Playwright locator for custom assertions
-const locator = ldf.get.block('submit_btn');
+// Query params
+await ldf.urlQuery('filter').expect.toBe('active');
+await ldf.urlQuery('page').do.set('2');
+
+// Get raw values
+const currentUrl = ldf.url().value();
+const filterValue = ldf.urlQuery('filter').value();
+```
+
+### Requests (`ldf.request()`)
+
+```javascript
+// Wait for request to finish
+await ldf.request('send_message').expect.toFinish();
+
+// Assert response
+await ldf.request('fetch_users').expect.toHaveResponse([{ id: 1 }]);
+
+// Assert payload sent to request
+await ldf.request('search').expect.toHavePayload({ query: 'widget' });
+
+// Get raw response
+const response = await ldf.request('fetch_users').response();
+```
+
+### Mocking Requests
+
+```javascript
+// Mock for this test only (defaults to current page)
+await ldf.mock.request('search_products', { response: [{ id: 1 }] });
+
+// Mock with error
+await ldf.mock.request('fetch_data', { error: 'Service unavailable' });
+
+// Mock specific page's request
+await ldf.mock.request('fetch_data', { pageId: 'admin-dashboard', response: [] });
+
+// Mock API endpoints
+await ldf.mock.api('external_api', { response: { status: 'ok' }, method: 'POST' });
+```
+
+### Raw Playwright Access
+
+```javascript
+// Raw Playwright page for custom assertions
+await expect(ldf.page).toHaveTitle(/My App/);
+
+// Raw block locator for custom assertions
+const locator = ldf.block('submit_btn').locator();
 await expect(locator).toHaveAttribute('data-loading', 'true');
+
+// Block state and validation
+const blockState = await ldf.block('name_input').state();
+const validation = await ldf.block('email_input').validation();
 ```
 
 ## Complete Example
@@ -133,22 +171,47 @@ await expect(locator).toHaveAttribute('data-loading', 'true');
 ```javascript
 import { test, expect } from '@lowdefy/e2e-utils/fixtures';
 
-test('create ticket workflow', async ({ page, ldf }) => {
+test('create ticket workflow', async ({ ldf }) => {
   await ldf.goto('/tickets/new');
 
   // Fill form
-  await ldf.do.blocks['title_input'].fill('Bug report');
-  await ldf.do.blocks['description_input'].fill('Login button not working');
-  await ldf.do.blocks['priority_selector'].select('High');
+  await ldf.block('title_input').do.fill('Bug report');
+  await ldf.block('description_input').do.fill('Login button not working');
+  await ldf.block('priority_selector').do.select('High');
 
   // Submit
-  await ldf.do.blocks['submit_btn'].click();
+  await ldf.block('submit_btn').do.click();
 
   // Verify
-  await ldf.expect.request({ requestId: 'create_ticket', loading: false });
-  await ldf.expect.url({ pattern: /\/tickets\/\d+/ });
-  await ldf.expect.state({ key: 'ticket.status', value: 'open' });
+  await ldf.request('create_ticket').expect.toFinish();
+  await ldf.url().expect.toMatch(/\/tickets\/\d+/);
+  await ldf.state('ticket.status').expect.toBe('open');
 });
+```
+
+## Static Mocks (mocks.yaml)
+
+Define mocks that apply to all tests:
+
+```yaml
+# e2e/mocks.yaml
+requests:
+  # Mock Atlas Search (can't run in tests)
+  - requestId: atlas_search
+    response:
+      - _id: doc-1
+        title: Search Result
+
+  # Mock with pageId and wildcards
+  - requestId: fetch_*
+    pageId: admin-*
+    response: []
+
+api:
+  - endpointId: external_api
+    method: POST
+    response:
+      status: ok
 ```
 
 ## Playwright Config
