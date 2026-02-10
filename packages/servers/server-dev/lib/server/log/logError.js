@@ -14,7 +14,9 @@
   limitations under the License.
 */
 
+import { ConfigError, PluginError } from '@lowdefy/errors/server';
 import { resolveErrorConfigLocation } from '@lowdefy/errors/build';
+import { formatValidationError, validatePluginSchema } from '@lowdefy/api';
 
 import captureSentryError from '../sentry/captureSentryError.js';
 
@@ -35,6 +37,52 @@ async function logError({ context, error }) {
     if (location) {
       error.source = location.source;
       error.config = location.config;
+    }
+
+    // Validate operator schema if this is an operator PluginError
+    if (error instanceof PluginError && error.pluginType === 'operator' && error.pluginName) {
+      try {
+        const schemas = await context.readConfigFile('plugins/operatorSchemas.json');
+        const schema = schemas?.[error.pluginName];
+        if (schema) {
+          // Extract params from received: { _if: params }
+          const params = error.received ? Object.values(error.received)[0] : null;
+          const validationErrors = validatePluginSchema({
+            data: params,
+            schema,
+            schemaKey: 'params',
+          });
+
+          if (validationErrors) {
+            for (const validationError of validationErrors) {
+              const configError = new ConfigError({
+                message: formatValidationError({
+                  err: validationError,
+                  pluginLabel: 'Operator',
+                  pluginName: error.pluginName,
+                  fieldLabel: 'param',
+                  data: params,
+                }),
+                configKey: error.configKey,
+              });
+              if (location) {
+                configError.source = location.source;
+                configError.config = location.config;
+              }
+              context.logger.error(configError);
+            }
+
+            captureSentryError({
+              error,
+              context,
+              configLocation: location,
+            });
+            return;
+          }
+        }
+      } catch (err) {
+        // Schema loading failed, continue with normal error logging
+      }
     }
 
     // Log error - logger handles source, name prefix, and received formatting

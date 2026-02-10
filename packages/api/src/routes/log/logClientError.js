@@ -45,6 +45,23 @@ const validationConfigs = [
     data: (error) => error.received,
     warnEvent: 'warn_action_schema_load_failed',
   },
+  {
+    pluginType: 'operator',
+    guard: (error) => error.pluginName,
+    schemaFile: 'plugins/operatorSchemas.json',
+    schemaLookup: (error) => error.pluginName,
+    schemaKey: 'params',
+    pluginLabel: 'Operator',
+    fieldLabel: 'param',
+    pluginName: (error) => error.pluginName,
+    data: (error) => {
+      // received is { _if: params } — extract just the params value
+      if (!error.received) return null;
+      const values = Object.values(error.received);
+      return values.length > 0 ? values[0] : null;
+    },
+    warnEvent: 'warn_operator_schema_load_failed',
+  },
 ];
 
 async function logClientError(context, data) {

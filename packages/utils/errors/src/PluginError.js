@@ -117,7 +117,7 @@ class PluginError extends Error {
       data.blockType = this.blockType;
       data.properties = this.properties;
     }
-    if (this.pluginType === 'action') {
+    if (this.pluginType === 'action' || this.pluginType === 'operator') {
       data.received = this.received;
     }
     return data;

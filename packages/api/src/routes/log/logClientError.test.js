@@ -558,4 +558,224 @@ describe('logClientError', () => {
     expect(loggedError.name).toBe('PluginError');
     expect(context.readConfigFile).not.toHaveBeenCalledWith('plugins/actionSchemas.json');
   });
+
+  test('converts operator PluginError to ConfigError when params fail schema validation', async () => {
+    const operatorSchemas = {
+      _if: {
+        params: {
+          type: 'object',
+          required: ['test'],
+          properties: {
+            test: { type: 'boolean' },
+            then: {},
+            else: {},
+          },
+          additionalProperties: false,
+        },
+      },
+    };
+    const mockLogger = {
+      error: jest.fn(),
+      warn: jest.fn(),
+    };
+    const context = {
+      logger: mockLogger,
+      readConfigFile: jest.fn((file) => {
+        if (file === 'plugins/operatorSchemas.json') return Promise.resolve(operatorSchemas);
+        if (file === 'keyMap.json') return Promise.resolve(keyMap);
+        if (file === 'refMap.json') return Promise.resolve(refMap);
+      }),
+    };
+
+    const result = await logClientError(context, {
+      '~err': 'PluginError',
+      message: '_if takes a boolean type for parameter test.',
+      pluginType: 'operator',
+      pluginName: '_if',
+      received: { _if: { test: 'not_boolean', then: 'yes' } },
+      configKey: 'key-123',
+    });
+
+    expect(result.success).toBe(true);
+    expect(result.source).toBe('pages/home.yaml:8');
+    expect(result.errors.length).toBeGreaterThanOrEqual(1);
+    expect(mockLogger.error).toHaveBeenCalled();
+    const loggedMessages = mockLogger.error.mock.calls.map((call) => call[0].message);
+    expect(loggedMessages).toContain(
+      'Operator "_if" param "test" must be type "boolean". Received "not_boolean" (string).'
+    );
+    mockLogger.error.mock.calls.forEach((call) => {
+      expect(call[0].name).toBe('ConfigError');
+      expect(call[0].source).toBe('pages/home.yaml:8');
+    });
+  });
+
+  test('keeps operator PluginError when params pass schema validation', async () => {
+    const operatorSchemas = {
+      _if: {
+        params: {
+          type: 'object',
+          required: ['test'],
+          properties: {
+            test: { type: 'boolean' },
+            then: {},
+            else: {},
+          },
+          additionalProperties: false,
+        },
+      },
+    };
+    const mockLogger = {
+      error: jest.fn(),
+      warn: jest.fn(),
+    };
+    const context = {
+      logger: mockLogger,
+      readConfigFile: jest.fn((file) => {
+        if (file === 'plugins/operatorSchemas.json') return Promise.resolve(operatorSchemas);
+        if (file === 'keyMap.json') return Promise.resolve(keyMap);
+        if (file === 'refMap.json') return Promise.resolve(refMap);
+      }),
+    };
+
+    const result = await logClientError(context, {
+      '~err': 'PluginError',
+      message: 'Some unexpected error',
+      pluginType: 'operator',
+      pluginName: '_if',
+      received: { _if: { test: true, then: 'yes' } },
+      configKey: 'key-123',
+    });
+
+    const loggedError = mockLogger.error.mock.calls[0][0];
+    expect(loggedError.name).toBe('PluginError');
+    expect(loggedError.message).toBe('Some unexpected error');
+  });
+
+  test('keeps operator PluginError when operator has no schema', async () => {
+    const operatorSchemas = {};
+    const mockLogger = {
+      error: jest.fn(),
+      warn: jest.fn(),
+    };
+    const context = {
+      logger: mockLogger,
+      readConfigFile: jest.fn((file) => {
+        if (file === 'plugins/operatorSchemas.json') return Promise.resolve(operatorSchemas);
+        if (file === 'keyMap.json') return Promise.resolve(keyMap);
+        if (file === 'refMap.json') return Promise.resolve(refMap);
+      }),
+    };
+
+    const result = await logClientError(context, {
+      '~err': 'PluginError',
+      message: 'Operator failed',
+      pluginType: 'operator',
+      pluginName: '_custom_op',
+      received: { _custom_op: { anything: true } },
+      configKey: 'key-123',
+    });
+
+    const loggedError = mockLogger.error.mock.calls[0][0];
+    expect(loggedError.name).toBe('PluginError');
+  });
+
+  test('keeps operator PluginError when operatorSchemas.json fails to load', async () => {
+    const mockLogger = {
+      error: jest.fn(),
+      warn: jest.fn(),
+    };
+    const context = {
+      logger: mockLogger,
+      readConfigFile: jest.fn((file) => {
+        if (file === 'plugins/operatorSchemas.json') {
+          return Promise.reject(new Error('File not found'));
+        }
+        if (file === 'keyMap.json') return Promise.resolve(keyMap);
+        if (file === 'refMap.json') return Promise.resolve(refMap);
+      }),
+    };
+
+    const result = await logClientError(context, {
+      '~err': 'PluginError',
+      message: 'Operator failed',
+      pluginType: 'operator',
+      pluginName: '_if',
+      received: { _if: { test: 'bad' } },
+      configKey: 'key-123',
+    });
+
+    const loggedError = mockLogger.error.mock.calls[0][0];
+    expect(loggedError.name).toBe('PluginError');
+    expect(mockLogger.warn).toHaveBeenCalledWith({
+      event: 'warn_operator_schema_load_failed',
+      error: 'File not found',
+    });
+  });
+
+  test('skips operator validation when pluginName is missing from PluginError', async () => {
+    const mockLogger = {
+      error: jest.fn(),
+      warn: jest.fn(),
+    };
+    const context = {
+      logger: mockLogger,
+      readConfigFile: jest.fn((file) => {
+        if (file === 'keyMap.json') return Promise.resolve(keyMap);
+        if (file === 'refMap.json') return Promise.resolve(refMap);
+      }),
+    };
+
+    const result = await logClientError(context, {
+      '~err': 'PluginError',
+      message: 'Operator failed',
+      pluginType: 'operator',
+      configKey: 'key-123',
+    });
+
+    const loggedError = mockLogger.error.mock.calls[0][0];
+    expect(loggedError.name).toBe('PluginError');
+    expect(context.readConfigFile).not.toHaveBeenCalledWith('plugins/operatorSchemas.json');
+  });
+
+  test('extracts params from operator received value for validation', async () => {
+    const operatorSchemas = {
+      _eq: {
+        params: {
+          type: 'array',
+          minItems: 2,
+          maxItems: 2,
+        },
+      },
+    };
+    const mockLogger = {
+      error: jest.fn(),
+      warn: jest.fn(),
+    };
+    const context = {
+      logger: mockLogger,
+      readConfigFile: jest.fn((file) => {
+        if (file === 'plugins/operatorSchemas.json') return Promise.resolve(operatorSchemas);
+        if (file === 'keyMap.json') return Promise.resolve(keyMap);
+        if (file === 'refMap.json') return Promise.resolve(refMap);
+      }),
+    };
+
+    const result = await logClientError(context, {
+      '~err': 'PluginError',
+      message: '_eq takes an array of length 2 as input.',
+      pluginType: 'operator',
+      pluginName: '_eq',
+      received: { _eq: [1, 2, 3] },
+      configKey: 'key-123',
+    });
+
+    expect(result.success).toBe(true);
+    expect(mockLogger.error).toHaveBeenCalled();
+    const loggedMessages = mockLogger.error.mock.calls.map((call) => call[0].message);
+    expect(loggedMessages.some((m) => m.includes('_eq'))).toBe(true);
+    mockLogger.error.mock.calls.forEach((call) => {
+      expect(call[0].name).toBe('ConfigError');
+    });
+  });
 });
