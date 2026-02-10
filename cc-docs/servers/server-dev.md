@@ -61,6 +61,7 @@ Additional operators:
 ```
 server-dev/
 ├── lib/
+│   ├── build/            # Build artifact loaders (deserialize JSON)
 │   ├── server/           # Server utilities
 │   └── client/           # Client utilities (extended)
 │       ├── App.js        # Dev app wrapper

@@ -548,6 +548,7 @@ this.areas = serializer.copy(areas || []);
 | `~e`   | Error     | Preserves Error objects            |
 | `~r`   | Reference | Build-time file reference tracking |
 | `~k`   | Key       | Build-time key tracking            |
+| `~arr` | Array     | Preserves `~k`/`~r`/`~l` on arrays |
 
 **Custom revivers/replacers** for special types (e.g., MongoDB ObjectId):
 

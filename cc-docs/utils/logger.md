@@ -145,6 +145,8 @@ handler('{"print":"spin","msg":"Building..."}');
 
 Handles `source` and `err.source` fields for error/warn lines — renders the source as a separate `ui.link()` call before the message.
 
+**Print level resolution:** Uses `print` field if present, otherwise maps pino's numeric `level` (10=trace, 20=debug, 30=info, 40=warn, 50=error) to a UI method, defaulting to `'info'`. This ensures server logs without an explicit `print` field (e.g., default pino output) still appear in the terminal.
+
 ### createBrowserLogger (`/browser`)
 
 Maps to `console.*` methods. Formats errors using `.print()` or `[Name] message`. The `.ui` property maps `link`/`spin`/`succeed` to `console.info`/`console.log`.
