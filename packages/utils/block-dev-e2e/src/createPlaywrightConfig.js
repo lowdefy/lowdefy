@@ -25,7 +25,7 @@ function createPlaywrightConfig({ packageDir, port = 3001 }) {
   // packageDir is like: /path/to/lowdefy/packages/plugins/blocks/blocks-basic
   const monorepoRoot = path.resolve(packageDir, '../../../../');
   const cliPath = path.join(monorepoRoot, 'packages/cli/dist/index.js');
-  const serverDevDir = path.join(monorepoRoot, 'packages/servers/server-dev');
+  const serverDir = path.join(monorepoRoot, 'packages/servers/server');
 
   return defineConfig({
     testDir: packageDir,
@@ -44,10 +44,10 @@ function createPlaywrightConfig({ packageDir, port = 3001 }) {
       },
     ],
     webServer: {
-      command: `node ${cliPath} dev --config-directory ${appDir} --dev-directory ${serverDevDir} --port ${port} --no-open`,
+      command: `node ${cliPath} build --config-directory ${appDir} --server-directory ${serverDir} && node ${cliPath} start --config-directory ${appDir} --server-directory ${serverDir} --port ${port}`,
       url: `http://localhost:${port}`,
       reuseExistingServer: true,
-      timeout: 120000,
+      timeout: 180000,
     },
   });
 }
