@@ -13,23 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import { serializer } from '@lowdefy/helpers';
+import raw from '../../build/auth.json';
 
-import { getServerSession as getNextAuthServerSession } from 'next-auth/next';
-
-import authJson from '../../build/auth.js';
-import getMockSession from './getMockSession.js';
-
-async function getServerSession({ authOptions, req, res }) {
-  // Check for mock user first (dev server only)
-  const mockSession = await getMockSession();
-  if (mockSession) {
-    return mockSession;
-  }
-
-  if (authJson.configured === true) {
-    return getNextAuthServerSession(req, res, authOptions);
-  }
-  return undefined;
-}
-
-export default getServerSession;
+export default serializer.deserialize(raw);

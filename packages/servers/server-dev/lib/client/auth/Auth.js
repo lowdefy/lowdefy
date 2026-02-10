@@ -19,7 +19,7 @@ import React from 'react';
 import AuthConfigured from './AuthConfigured.js';
 import AuthNotConfigured from './AuthNotConfigured.js';
 
-import authConfig from '../../../build/auth.json';
+import authConfig from '../../build/auth.js';
 
 function Auth({ children, session }) {
   if (authConfig.configured === true) {

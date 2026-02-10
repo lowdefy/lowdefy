@@ -16,14 +16,7 @@
 
 import * as Sentry from '@sentry/nextjs';
 
-function loadLoggerConfig() {
-  try {
-    // Dynamic require to handle missing file gracefully
-    return require('../../../build/logger.json');
-  } catch {
-    return {};
-  }
-}
+import loggerConfig from '../../build/logger.js';
 
 function initSentryServer() {
   // No-op if SENTRY_DSN not set
@@ -31,7 +24,6 @@ function initSentryServer() {
     return;
   }
 
-  const loggerConfig = loadLoggerConfig();
   const sentryConfig = loggerConfig.sentry || {};
 
   // No-op if server logging is explicitly disabled

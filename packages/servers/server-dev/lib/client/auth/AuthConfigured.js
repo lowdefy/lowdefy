@@ -18,7 +18,7 @@
 import React, { useEffect, useRef } from 'react';
 import { getSession, SessionProvider, signIn, signOut, useSession } from 'next-auth/react';
 
-import lowdefyConfig from '../../../build/config.json';
+import lowdefyConfig from '../../build/config.js';
 
 function Session({ children }) {
   const wasAuthenticated = useRef(false);

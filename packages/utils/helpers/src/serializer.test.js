@@ -645,3 +645,325 @@ test('copy preserves non-enumerable ~l values on arrays', () => {
   expect(Object.keys(res.items)).toEqual(['0', '1']);
   expect(Object.keys(res.items[0])).toEqual(['id']);
 });
+
+// ~arr marker tests
+
+test('serialize wraps array with ~l in ~arr marker', () => {
+  const items = [1, 2, 3];
+  Object.defineProperty(items, '~l', {
+    value: 10,
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  const object = { items };
+  const res = serializer.serialize(object);
+  expect(res).toEqual({ items: { '~arr': [1, 2, 3], '~l': 10 } });
+});
+
+test('serialize wraps array with ~l and dates in ~arr marker', () => {
+  const items = [new Date(0), new Date(100)];
+  Object.defineProperty(items, '~l', {
+    value: 5,
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  const object = { items };
+  const res = serializer.serialize(object);
+  expect(res).toEqual({ items: { '~arr': [{ '~d': 0 }, { '~d': 100 }], '~l': 5 } });
+});
+
+test('serialize does not wrap array without ~l in ~arr marker', () => {
+  const object = { items: [1, 2, 3] };
+  const res = serializer.serialize(object);
+  expect(res).toEqual({ items: [1, 2, 3] });
+});
+
+test('deserialize restores ~arr marker to array with ~l', () => {
+  const object = { items: { '~arr': [1, 2, 3], '~l': 10 } };
+  const res = serializer.deserialize(object);
+  expect(Array.isArray(res.items)).toBe(true);
+  expect(res.items).toEqual([1, 2, 3]);
+  expect(res.items['~l']).toEqual(10);
+  expect(Object.keys(res.items)).toEqual(['0', '1', '2']);
+});
+
+test('deserialize restores ~arr marker with dates', () => {
+  const object = { items: { '~arr': [{ '~d': 0 }, { '~d': 100 }], '~l': 5 } };
+  const res = serializer.deserialize(object);
+  expect(Array.isArray(res.items)).toBe(true);
+  expect(res.items).toEqual([new Date(0), new Date(100)]);
+  expect(res.items['~l']).toEqual(5);
+});
+
+test('deserialize restores ~arr marker without ~l', () => {
+  const object = { items: { '~arr': [1, 2, 3] } };
+  const res = serializer.deserialize(object);
+  expect(Array.isArray(res.items)).toBe(true);
+  expect(res.items).toEqual([1, 2, 3]);
+  expect(res.items['~l']).toBeUndefined();
+});
+
+test('deserializeFromString restores ~arr marker to array with ~l', () => {
+  const str = '{"items":{"~arr":[1,2,3],"~l":10}}';
+  const res = serializer.deserializeFromString(str);
+  expect(Array.isArray(res.items)).toBe(true);
+  expect(res.items).toEqual([1, 2, 3]);
+  expect(res.items['~l']).toEqual(10);
+  expect(Object.keys(res.items)).toEqual(['0', '1', '2']);
+});
+
+test('serializeToString wraps array with ~l in ~arr marker', () => {
+  const items = [1, 2, 3];
+  Object.defineProperty(items, '~l', {
+    value: 10,
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  const object = { items };
+  const res = serializer.serializeToString(object);
+  expect(res).toEqual('{"items":{"~arr":[1,2,3],"~l":10}}');
+});
+
+test('serialize and deserialize round-trip preserves ~l on nested arrays', () => {
+  const inner = [{ id: 'a' }];
+  Object.defineProperty(inner, '~l', {
+    value: 7,
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  const object = { nested: { items: inner } };
+  const serialized = serializer.serialize(object);
+  const deserialized = serializer.deserialize(serialized);
+  expect(Array.isArray(deserialized.nested.items)).toBe(true);
+  expect(deserialized.nested.items).toEqual([{ id: 'a' }]);
+  expect(deserialized.nested.items['~l']).toEqual(7);
+});
+
+// Error round-trip and custom error names
+
+test('serialize and deserialize round-trip for Error', () => {
+  const object = { err: new Error('round trip') };
+  const res = serializer.copy(object);
+  expect(res.err).toBeInstanceOf(Error);
+  expect(res.err.message).toEqual('round trip');
+  expect(res.err.name).toEqual('Error');
+});
+
+test('serialize converts Error with custom name', () => {
+  const err = new TypeError('bad type');
+  const object = { err };
+  const res = serializer.serialize(object);
+  expect(res).toEqual({
+    err: { '~e': { name: 'TypeError', message: 'bad type', value: 'TypeError: bad type' } },
+  });
+});
+
+test('deserialize revives ~e with custom error name', () => {
+  const object = {
+    err: { '~e': { name: 'TypeError', message: 'bad type', value: 'TypeError: bad type' } },
+  };
+  const res = serializer.deserialize(object);
+  expect(res.err).toBeInstanceOf(Error);
+  expect(res.err.message).toEqual('bad type');
+  expect(res.err.name).toEqual('TypeError');
+});
+
+test('copy round-trip for Error with custom name preserves name', () => {
+  const err = new RangeError('out of range');
+  const object = { err };
+  const res = serializer.copy(object);
+  expect(res.err).toBeInstanceOf(Error);
+  expect(res.err.message).toEqual('out of range');
+  expect(res.err.name).toEqual('RangeError');
+});
+
+// ~l combined with ~k and ~r
+
+test('serialize with ~l and ~k on same object', () => {
+  const object = { x: 1 };
+  Object.defineProperty(object, '~l', {
+    value: 42,
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  Object.defineProperty(object, '~k', {
+    value: 'key1',
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  const res = serializer.serialize(object);
+  expect(res).toEqual({ x: 1, '~l': 42, '~k': 'key1' });
+});
+
+test('deserialize with ~l and ~k on same object', () => {
+  const object = { x: 1, '~l': 42, '~k': 'key1' };
+  const res = serializer.deserialize(object);
+  expect(res).toEqual({ x: 1 });
+  expect(res['~l']).toEqual(42);
+  expect(res['~k']).toEqual('key1');
+  expect(Object.keys(res)).toEqual(['x']);
+});
+
+test('serialize wraps array with ~k in ~arr marker', () => {
+  const items = [1, 2, 3];
+  Object.defineProperty(items, '~k', {
+    value: 'arrKey',
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  const object = { items };
+  const res = serializer.serialize(object);
+  expect(res).toEqual({ items: { '~arr': [1, 2, 3], '~k': 'arrKey' } });
+});
+
+test('serialize wraps array with ~r in ~arr marker', () => {
+  const items = [1, 2, 3];
+  Object.defineProperty(items, '~r', {
+    value: 'arrRef',
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  const object = { items };
+  const res = serializer.serialize(object);
+  expect(res).toEqual({ items: { '~arr': [1, 2, 3], '~r': 'arrRef' } });
+});
+
+test('serialize wraps array with ~l, ~k, and ~r in ~arr marker', () => {
+  const items = [1, 2];
+  Object.defineProperty(items, '~l', {
+    value: 5,
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  Object.defineProperty(items, '~k', {
+    value: 'arrKey',
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  Object.defineProperty(items, '~r', {
+    value: 'arrRef',
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  const object = { items };
+  const res = serializer.serialize(object);
+  expect(res).toEqual({ items: { '~arr': [1, 2], '~l': 5, '~k': 'arrKey', '~r': 'arrRef' } });
+});
+
+test('deserialize restores ~arr marker with ~k to array', () => {
+  const object = { items: { '~arr': [1, 2, 3], '~k': 'arrKey' } };
+  const res = serializer.deserialize(object);
+  expect(Array.isArray(res.items)).toBe(true);
+  expect(res.items).toEqual([1, 2, 3]);
+  expect(res.items['~k']).toEqual('arrKey');
+  expect(Object.keys(res.items)).toEqual(['0', '1', '2']);
+});
+
+test('deserialize restores ~arr marker with ~r to array', () => {
+  const object = { items: { '~arr': [1, 2, 3], '~r': 'arrRef' } };
+  const res = serializer.deserialize(object);
+  expect(Array.isArray(res.items)).toBe(true);
+  expect(res.items).toEqual([1, 2, 3]);
+  expect(res.items['~r']).toEqual('arrRef');
+  expect(Object.keys(res.items)).toEqual(['0', '1', '2']);
+});
+
+test('deserialize restores ~arr marker with ~l, ~k, and ~r to array', () => {
+  const object = { items: { '~arr': [1, 2], '~l': 5, '~k': 'arrKey', '~r': 'arrRef' } };
+  const res = serializer.deserialize(object);
+  expect(Array.isArray(res.items)).toBe(true);
+  expect(res.items).toEqual([1, 2]);
+  expect(res.items['~l']).toEqual(5);
+  expect(res.items['~k']).toEqual('arrKey');
+  expect(res.items['~r']).toEqual('arrRef');
+  expect(Object.keys(res.items)).toEqual(['0', '1']);
+});
+
+test('copy preserves ~k and ~r on arrays', () => {
+  const items = [{ id: 'a' }, { id: 'b' }];
+  Object.defineProperty(items, '~k', {
+    value: 'arrKey',
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  Object.defineProperty(items, '~r', {
+    value: 'arrRef',
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  const object = { items };
+  const res = serializer.copy(object);
+  expect(Array.isArray(res.items)).toBe(true);
+  expect(res.items).toEqual([{ id: 'a' }, { id: 'b' }]);
+  expect(res.items['~k']).toEqual('arrKey');
+  expect(res.items['~r']).toEqual('arrRef');
+  expect(Object.keys(res.items)).toEqual(['0', '1']);
+});
+
+test('copy preserves ~l, ~k, and ~r together on arrays', () => {
+  const items = [1, 2];
+  Object.defineProperty(items, '~l', {
+    value: 5,
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  Object.defineProperty(items, '~k', {
+    value: 'arrKey',
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  Object.defineProperty(items, '~r', {
+    value: 'arrRef',
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  const object = { items };
+  const res = serializer.copy(object);
+  expect(res.items['~l']).toEqual(5);
+  expect(res.items['~k']).toEqual('arrKey');
+  expect(res.items['~r']).toEqual('arrRef');
+  expect(Object.keys(res.items)).toEqual(['0', '1']);
+});
+
+test('copy preserves ~l and ~k and ~r together', () => {
+  const object = { x: 1 };
+  Object.defineProperty(object, '~l', {
+    value: 10,
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  Object.defineProperty(object, '~k', {
+    value: 'mykey',
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  Object.defineProperty(object, '~r', {
+    value: 'myref',
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  const res = serializer.copy(object);
+  expect(res['~l']).toEqual(10);
+  expect(res['~k']).toEqual('mykey');
+  expect(res['~r']).toEqual('myref');
+  expect(Object.keys(res)).toEqual(['x']);
+});

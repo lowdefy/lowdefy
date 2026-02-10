@@ -21,14 +21,8 @@ import { ErrorBoundary } from '@lowdefy/block-utils';
 
 import Auth from '../lib/client/auth/Auth.js';
 import initSentryClient from '../lib/client/sentry/initSentryClient.js';
+import loggerConfig from '../lib/build/logger.js';
 import setSentryUser from '../lib/client/sentry/setSentryUser.js';
-
-let loggerConfig = {};
-try {
-  loggerConfig = require('../build/logger.json');
-} catch {
-  // logger.json may not exist if Sentry is not configured
-}
 
 // Must be in _app due to next specifications.
 import '../build/plugins/styles.less';

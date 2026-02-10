@@ -104,7 +104,7 @@ async function recursiveBuild({
     });
 
     const reviver = (_, value) => {
-      if (!type.isObject(value)) return value;
+      if (!type.isObject(value) && !type.isArray(value)) return value;
       // Only set ~r if not already present to preserve original file references from nested imports.
       // Use child file's ref ID (parsedRefDef.id) not parent's (refDef.id) for correct error tracing.
       if (value['~r'] === undefined) {
