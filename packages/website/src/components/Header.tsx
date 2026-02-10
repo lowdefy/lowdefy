@@ -8,7 +8,7 @@ import { useGitHubStats, formatStars } from '@/hooks/useGitHubStats';
 
 const navigation = [
   { name: 'Docs', href: 'https://docs.lowdefy.com' },
-  { name: 'Discord', href: 'https://discord.gg/lowdefy' },
+  { name: 'Discord', href: 'https://discord.gg/WmcJgXt' },
 ];
 
 function ThemeToggle() {
@@ -84,7 +84,7 @@ export default function Header() {
             </Link>
             <ThemeToggle />
             <Link
-              href="https://docs.lowdefy.com/getting-started"
+              href="https://docs.lowdefy.com/tutorial-start"
               className="px-4 py-2 text-sm font-semibold text-white bg-primary-500 hover:bg-primary-600 transition-colors"
             >
               Get Started
@@ -118,7 +118,7 @@ export default function Header() {
                 </Link>
               ))}
               <Link
-                href="https://docs.lowdefy.com/getting-started"
+                href="https://docs.lowdefy.com/tutorial-start"
                 className="inline-flex justify-center px-4 py-2 text-sm font-semibold text-white bg-primary-500 rounded-lg"
                 onClick={() => setMobileMenuOpen(false)}
               >

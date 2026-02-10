@@ -74,7 +74,7 @@ export default function Testimonials() {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
-              href="https://docs.lowdefy.com/getting-started"
+              href="https://docs.lowdefy.com/tutorial-start"
               className="inline-flex items-center gap-2 px-6 py-3 text-base font-semibold text-white bg-primary-500 hover:bg-primary-600 transition-colors"
             >
               Get Started

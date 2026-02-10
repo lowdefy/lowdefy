@@ -38,9 +38,6 @@ export const metadata: Metadata = {
       'max-video-preview': -1,
     },
   },
-  icons: {
-    icon: '/favicon.ico',
-  },
   alternates: {
     canonical: 'https://lowdefy.com',
   },
@@ -80,7 +77,7 @@ const jsonLd = {
       sameAs: [
         'https://github.com/lowdefy/lowdefy',
         'https://x.com/lowaboratories',
-        'https://discord.gg/lowdefy',
+        'https://discord.gg/WmcJgXt',
         'https://www.youtube.com/@lowdefy',
       ],
     },
