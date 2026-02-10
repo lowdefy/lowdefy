@@ -1,0 +1,195 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: tooltip
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: tooltip_basic
+    type: Tooltip
+    properties:
+      title: Basic tooltip text
+    blocks:
+      - id: tooltip_basic_trigger
+        type: Button
+        properties:
+          title: Hover me
+
+  # ============================================
+  # PLACEMENT TESTS
+  # ============================================
+
+  - id: tooltip_placement_top
+    type: Tooltip
+    properties:
+      title: Top tooltip
+      placement: top
+    blocks:
+      - id: tooltip_placement_top_trigger
+        type: Button
+        properties:
+          title: Top
+
+  - id: tooltip_placement_bottom
+    type: Tooltip
+    properties:
+      title: Bottom tooltip
+      placement: bottom
+    blocks:
+      - id: tooltip_placement_bottom_trigger
+        type: Button
+        properties:
+          title: Bottom
+
+  - id: tooltip_placement_left
+    type: Tooltip
+    properties:
+      title: Left tooltip
+      placement: left
+    blocks:
+      - id: tooltip_placement_left_trigger
+        type: Button
+        properties:
+          title: Left
+
+  - id: tooltip_placement_right
+    type: Tooltip
+    properties:
+      title: Right tooltip
+      placement: right
+    blocks:
+      - id: tooltip_placement_right_trigger
+        type: Button
+        properties:
+          title: Right
+
+  # ============================================
+  # TRIGGER TESTS
+  # ============================================
+
+  - id: tooltip_trigger_hover
+    type: Tooltip
+    properties:
+      title: Hover tooltip
+      trigger: hover
+    blocks:
+      - id: tooltip_trigger_hover_trigger
+        type: Button
+        properties:
+          title: Hover trigger
+
+  - id: tooltip_trigger_click
+    type: Tooltip
+    properties:
+      title: Click tooltip
+      trigger: click
+    blocks:
+      - id: tooltip_trigger_click_trigger
+        type: Button
+        properties:
+          title: Click trigger
+
+  - id: tooltip_trigger_focus
+    type: Tooltip
+    properties:
+      title: Focus tooltip
+      trigger: focus
+    blocks:
+      - id: tooltip_trigger_focus_trigger
+        type: TextInput
+        properties:
+          label:
+            disabled: true
+
+  # ============================================
+  # STYLE TESTS
+  # ============================================
+
+  - id: tooltip_color
+    type: Tooltip
+    properties:
+      title: Colored tooltip
+      color: '#52c41a'
+    blocks:
+      - id: tooltip_color_trigger
+        type: Button
+        properties:
+          title: Green tooltip
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  - id: tooltip_onvisiblechange
+    type: Tooltip
+    properties:
+      title: Event tooltip
+      trigger: click
+    events:
+      onVisibleChange:
+        - id: set_visible_changed
+          type: SetState
+          params:
+            tooltip_visible_changed: true
+    blocks:
+      - id: tooltip_onvisiblechange_trigger
+        type: Button
+        properties:
+          title: Click for event
+
+  - id: onvisiblechange_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: tooltip_visible_changed
+              - true
+          then: Visibility changed!
+          else: ''
+
+  # ============================================
+  # HTML CONTENT
+  # ============================================
+
+  - id: tooltip_html_title
+    type: Tooltip
+    properties:
+      title: '<strong>Bold</strong> and <em>italic</em>'
+    blocks:
+      - id: tooltip_html_title_trigger
+        type: Button
+        properties:
+          title: HTML tooltip
+
+  # ============================================
+  # DEFAULT VISIBLE (at end to avoid blocking other elements)
+  # ============================================
+
+  - id: tooltip_default_visible
+    type: Tooltip
+    properties:
+      title: Visible by default
+      defaultVisible: true
+      placement: bottom
+    blocks:
+      - id: tooltip_default_visible_trigger
+        type: Button
+        properties:
+          title: Default visible

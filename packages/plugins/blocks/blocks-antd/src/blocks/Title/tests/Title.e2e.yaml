@@ -1,0 +1,180 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: title
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: title_basic
+    type: Title
+    properties:
+      content: Basic Title
+
+  - id: title_html
+    type: Title
+    properties:
+      content: '<strong>Bold</strong> and <em>italic</em>'
+
+  # ============================================
+  # LEVEL TESTS
+  # ============================================
+
+  - id: title_level1
+    type: Title
+    properties:
+      content: Level 1 Title
+      level: 1
+
+  - id: title_level2
+    type: Title
+    properties:
+      content: Level 2 Title
+      level: 2
+
+  - id: title_level3
+    type: Title
+    properties:
+      content: Level 3 Title
+      level: 3
+
+  - id: title_level4
+    type: Title
+    properties:
+      content: Level 4 Title
+      level: 4
+
+  - id: title_level5
+    type: Title
+    properties:
+      content: Level 5 Title
+      level: 5
+
+  # ============================================
+  # STYLE TESTS
+  # ============================================
+
+  - id: title_code
+    type: Title
+    properties:
+      content: Code Title
+      code: true
+
+  - id: title_italic
+    type: Title
+    properties:
+      content: Italic Title
+      italic: true
+
+  - id: title_underline
+    type: Title
+    properties:
+      content: Underline Title
+      underline: true
+
+  - id: title_delete
+    type: Title
+    properties:
+      content: Delete Title
+      delete: true
+
+  - id: title_mark
+    type: Title
+    properties:
+      content: Marked Title
+      mark: true
+
+  - id: title_disabled
+    type: Title
+    properties:
+      content: Disabled Title
+      disabled: true
+
+  # ============================================
+  # TYPE TESTS
+  # ============================================
+
+  - id: title_secondary
+    type: Title
+    properties:
+      content: Secondary Title
+      type: secondary
+
+  - id: title_success
+    type: Title
+    properties:
+      content: Success Title
+      type: success
+
+  - id: title_warning
+    type: Title
+    properties:
+      content: Warning Title
+      type: warning
+
+  - id: title_danger
+    type: Title
+    properties:
+      content: Danger Title
+      type: danger
+
+  # ============================================
+  # COPYABLE TESTS
+  # ============================================
+
+  - id: title_copyable
+    type: Title
+    properties:
+      content: Copy this title
+      copyable: true
+
+  - id: title_copyable_event
+    type: Title
+    properties:
+      content: Copy me
+      copyable:
+        text: Custom copy text
+    events:
+      onCopy:
+        - id: set_oncopy
+          type: SetState
+          params:
+            title_oncopy_fired: true
+
+  - id: oncopy_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: title_oncopy_fired
+              - true
+          then: Copy fired
+          else: ''
+
+  # ============================================
+  # ELLIPSIS TESTS
+  # ============================================
+
+  - id: title_ellipsis
+    type: Title
+    properties:
+      content: This is a very long title that should be truncated with ellipsis when it exceeds a certain width
+      ellipsis: true
+      style:
+        width: 200px

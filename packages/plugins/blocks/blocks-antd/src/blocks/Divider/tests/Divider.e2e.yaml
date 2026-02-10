@@ -1,0 +1,107 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: divider
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: divider_basic
+    type: Divider
+
+  - id: divider_with_title
+    type: Divider
+    properties:
+      title: Section Title
+
+  # ============================================
+  # TYPE TESTS
+  # ============================================
+
+  - id: divider_horizontal
+    type: Divider
+    properties:
+      type: horizontal
+
+  - id: divider_vertical_container
+    type: Box
+    properties:
+      style:
+        display: flex
+        alignItems: center
+        height: 50px
+    blocks:
+      - id: text_before
+        type: Span
+        properties:
+          content: Left
+
+      - id: divider_vertical
+        type: Divider
+        properties:
+          type: vertical
+
+      - id: text_after
+        type: Span
+        properties:
+          content: Right
+
+  # ============================================
+  # STYLE TESTS
+  # ============================================
+
+  - id: divider_dashed
+    type: Divider
+    properties:
+      dashed: true
+
+  - id: divider_plain
+    type: Divider
+    properties:
+      title: Plain Title
+      plain: true
+
+  # ============================================
+  # ORIENTATION TESTS
+  # ============================================
+
+  - id: divider_left
+    type: Divider
+    properties:
+      title: Left Aligned
+      orientation: left
+
+  - id: divider_center
+    type: Divider
+    properties:
+      title: Center Aligned
+      orientation: center
+
+  - id: divider_right
+    type: Divider
+    properties:
+      title: Right Aligned
+      orientation: right
+
+  # ============================================
+  # HTML TITLE
+  # ============================================
+
+  - id: divider_html
+    type: Divider
+    properties:
+      title: '<strong>Bold</strong> Title'

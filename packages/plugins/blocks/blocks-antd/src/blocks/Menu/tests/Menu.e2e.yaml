@@ -1,0 +1,394 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: menu
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: menu_basic
+    type: Menu
+    properties:
+      mode: vertical
+      theme: light
+      links:
+        - id: link1
+          type: MenuLink
+          properties:
+            title: Home
+        - id: link2
+          type: MenuLink
+          properties:
+            title: About
+        - id: link3
+          type: MenuLink
+          properties:
+            title: Contact
+
+  # ============================================
+  # MODE TESTS
+  # ============================================
+
+  - id: menu_horizontal
+    type: Menu
+    properties:
+      mode: horizontal
+      theme: light
+      links:
+        - id: h_link1
+          type: MenuLink
+          properties:
+            title: Dashboard
+        - id: h_link2
+          type: MenuLink
+          properties:
+            title: Settings
+
+  - id: menu_inline
+    type: Menu
+    properties:
+      mode: inline
+      theme: light
+      links:
+        - id: i_link1
+          type: MenuLink
+          properties:
+            title: Profile
+        - id: i_group
+          type: MenuGroup
+          properties:
+            title: Settings
+          links:
+            - id: i_sublink1
+              type: MenuLink
+              properties:
+                title: General
+            - id: i_sublink2
+              type: MenuLink
+              properties:
+                title: Security
+
+  # ============================================
+  # THEME TESTS
+  # ============================================
+
+  - id: menu_dark
+    type: Menu
+    properties:
+      mode: vertical
+      theme: dark
+      links:
+        - id: d_link1
+          type: MenuLink
+          properties:
+            title: Dark Item 1
+        - id: d_link2
+          type: MenuLink
+          properties:
+            title: Dark Item 2
+
+  # ============================================
+  # MENU ITEM TYPES
+  # ============================================
+
+  - id: menu_with_divider
+    type: Menu
+    properties:
+      mode: vertical
+      theme: light
+      links:
+        - id: div_link1
+          type: MenuLink
+          properties:
+            title: Before Divider
+        - id: div1
+          type: MenuDivider
+        - id: div_link2
+          type: MenuLink
+          properties:
+            title: After Divider
+
+  - id: menu_with_groups
+    type: Menu
+    properties:
+      mode: inline
+      theme: light
+      defaultOpenKeys:
+        - group1
+      links:
+        - id: group1
+          type: MenuGroup
+          properties:
+            title: Group 1
+          links:
+            - id: g1_link1
+              type: MenuLink
+              properties:
+                title: Group 1 Item 1
+            - id: g1_link2
+              type: MenuLink
+              properties:
+                title: Group 1 Item 2
+        - id: group2
+          type: MenuGroup
+          properties:
+            title: Group 2
+          links:
+            - id: g2_link1
+              type: MenuLink
+              properties:
+                title: Group 2 Item 1
+
+  # ============================================
+  # PROPERTY TESTS
+  # ============================================
+
+  - id: menu_with_icons
+    type: Menu
+    properties:
+      mode: vertical
+      theme: light
+      links:
+        - id: icon_link1
+          type: MenuLink
+          properties:
+            title: Home
+            icon: AiOutlineHome
+        - id: icon_link2
+          type: MenuLink
+          properties:
+            title: Settings
+            icon: AiOutlineSetting
+
+  - id: menu_danger_item
+    type: Menu
+    properties:
+      mode: vertical
+      theme: light
+      links:
+        - id: normal_link
+          type: MenuLink
+          properties:
+            title: Normal Item
+        - id: danger_link
+          type: MenuLink
+          properties:
+            title: Delete
+            danger: true
+
+  - id: menu_selected
+    type: Menu
+    properties:
+      mode: vertical
+      theme: light
+      selectedKeys:
+        - selected_link
+      links:
+        - id: selected_link
+          type: MenuLink
+          properties:
+            title: Selected Item
+        - id: unselected_link
+          type: MenuLink
+          properties:
+            title: Unselected Item
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  - id: menu_onclick
+    type: Menu
+    properties:
+      mode: vertical
+      theme: light
+      links:
+        - id: click_link1
+          type: MenuLink
+          properties:
+            title: Click Me
+        - id: click_link2
+          type: MenuLink
+          properties:
+            title: Or Me
+    events:
+      onClick:
+        - id: set_clicked_key
+          type: SetState
+          params:
+            menu_clicked_key:
+              _event: key
+
+  - id: onclick_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: menu_clicked_key
+              - null
+          then:
+            _string.concat:
+              - 'Clicked: '
+              - _state: menu_clicked_key
+          else: ''
+
+  - id: menu_onselect
+    type: Menu
+    properties:
+      mode: vertical
+      theme: light
+      links:
+        - id: select_link1
+          type: MenuLink
+          properties:
+            title: Select Me
+        - id: select_link2
+          type: MenuLink
+          properties:
+            title: Or Select Me
+    events:
+      onSelect:
+        - id: set_selected_key
+          type: SetState
+          params:
+            menu_selected_key:
+              _event: key
+
+  - id: onselect_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: menu_selected_key
+              - null
+          then:
+            _string.concat:
+              - 'Selected: '
+              - _state: menu_selected_key
+          else: ''
+
+  - id: menu_ontoggle
+    type: Menu
+    properties:
+      mode: inline
+      theme: light
+      links:
+        - id: toggle_group
+          type: MenuGroup
+          properties:
+            title: Toggle Group
+          links:
+            - id: toggle_sublink
+              type: MenuLink
+              properties:
+                title: Sub Item
+    events:
+      onToggleMenuGroup:
+        - id: set_toggle_fired
+          type: SetState
+          params:
+            menu_toggle_fired: true
+
+  - id: ontoggle_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: menu_toggle_fired
+              - true
+          then: Toggle fired
+          else: ''
+
+  # ============================================
+  # ITEM TARGETING TESTS
+  # ============================================
+
+  - id: menu_targeting
+    type: Menu
+    properties:
+      mode: inline
+      theme: light
+      defaultOpenKeys:
+        - settings_group
+      links:
+        - id: target_home
+          type: MenuLink
+          properties:
+            title: Home
+        - id: target_dashboard
+          pageId: dashboard_page
+          type: MenuLink
+          properties:
+            title: Dashboard
+        - id: target_users
+          type: MenuLink
+          properties:
+            title: Users
+        - id: settings_group
+          type: MenuGroup
+          properties:
+            title: Settings
+          links:
+            - id: general_settings
+              type: MenuLink
+              properties:
+                title: General
+            - id: security_settings
+              type: MenuLink
+              properties:
+                title: Security
+            - id: advanced_group
+              type: MenuGroup
+              properties:
+                title: Advanced
+              links:
+                - id: advanced_option1
+                  type: MenuLink
+                  properties:
+                    title: Option 1
+                - id: advanced_option2
+                  type: MenuLink
+                  properties:
+                    title: Option 2
+    events:
+      onClick:
+        - id: set_targeting_clicked
+          type: SetState
+          params:
+            targeting_clicked_key:
+              _event: key
+
+  - id: targeting_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: targeting_clicked_key
+              - null
+          then:
+            _string.concat:
+              - 'Clicked: '
+              - _state: targeting_clicked_key
+          else: ''

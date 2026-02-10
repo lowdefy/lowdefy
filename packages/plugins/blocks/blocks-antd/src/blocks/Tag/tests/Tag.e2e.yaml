@@ -1,0 +1,131 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: tag
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: tag_basic
+    type: Tag
+    properties:
+      title: Basic Tag
+
+  - id: tag_no_title
+    type: Tag
+
+  # ============================================
+  # PROPERTY TESTS
+  # ============================================
+
+  - id: tag_color_preset
+    type: Tag
+    properties:
+      title: Success Tag
+      color: success
+
+  - id: tag_color_warning
+    type: Tag
+    properties:
+      title: Warning Tag
+      color: warning
+
+  - id: tag_color_error
+    type: Tag
+    properties:
+      title: Error Tag
+      color: error
+
+  - id: tag_color_processing
+    type: Tag
+    properties:
+      title: Processing Tag
+      color: processing
+
+  - id: tag_color_custom
+    type: Tag
+    properties:
+      title: Custom Color
+      color: '#ff5500'
+
+  - id: tag_closable
+    type: Tag
+    properties:
+      title: Closable Tag
+      closable: true
+
+  - id: tag_with_icon
+    type: Tag
+    properties:
+      title: With Icon
+      icon: AiOutlineUser
+
+  - id: tag_html_title
+    type: Tag
+    properties:
+      title: '<strong>Bold</strong> Tag'
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  - id: tag_onclick
+    type: Tag
+    properties:
+      title: Click Me
+    events:
+      onClick:
+        - id: set_onclick
+          type: SetState
+          params:
+            tag_onclick_fired: true
+
+  - id: onclick_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: tag_onclick_fired
+              - true
+          then: Tag clicked
+          else: ''
+
+  - id: tag_onclose
+    type: Tag
+    properties:
+      title: Close Me
+      closable: true
+    events:
+      onClose:
+        - id: set_onclose
+          type: SetState
+          params:
+            tag_onclose_fired: true
+
+  - id: onclose_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: tag_onclose_fired
+              - true
+          then: Tag closed
+          else: ''

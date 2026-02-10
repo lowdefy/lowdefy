@@ -1,0 +1,218 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: textarea
+type: Box
+
+events:
+  onInit:
+    - id: set_defaults
+      type: SetState
+      params:
+        textarea_with_value: Initial multiline text
+        textarea_allowclear: Clear this text
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: textarea_basic
+    type: TextArea
+    properties:
+      title: Basic TextArea
+
+  - id: textarea_with_value
+    type: TextArea
+    properties:
+      title: With Value
+
+  # ============================================
+  # PROPERTY TESTS
+  # ============================================
+
+  - id: textarea_placeholder
+    type: TextArea
+    properties:
+      title: Placeholder Test
+      placeholder: Enter your message here
+
+  - id: textarea_disabled
+    type: TextArea
+    properties:
+      title: Disabled TextArea
+      disabled: true
+
+  - id: textarea_borderless
+    type: TextArea
+    properties:
+      title: Borderless TextArea
+      bordered: false
+
+  - id: textarea_allowclear
+    type: TextArea
+    properties:
+      title: Allow Clear
+      allowClear: true
+
+  - id: textarea_maxlength
+    type: TextArea
+    properties:
+      title: Max Length
+      maxLength: 100
+
+  - id: textarea_showcount
+    type: TextArea
+    properties:
+      title: Show Count
+      showCount: true
+      maxLength: 200
+
+  - id: textarea_rows
+    type: TextArea
+    properties:
+      title: Fixed Rows
+      rows: 5
+
+  - id: textarea_autosize
+    type: TextArea
+    properties:
+      title: Auto Size
+      autoSize:
+        minRows: 2
+        maxRows: 6
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  - id: textarea_onchange
+    type: TextArea
+    properties:
+      title: OnChange Test
+    events:
+      onChange:
+        - id: set_onchange
+          type: SetState
+          params:
+            textarea_onchange_value:
+              _event: value
+
+  - id: onchange_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: textarea_onchange_value
+              - null
+          then:
+            _string.concat:
+              - 'Value: '
+              - _state: textarea_onchange_value
+          else: ''
+
+  - id: textarea_onblur
+    type: TextArea
+    properties:
+      title: OnBlur Test
+    events:
+      onBlur:
+        - id: set_onblur
+          type: SetState
+          params:
+            textarea_onblur_fired: true
+
+  - id: onblur_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: textarea_onblur_fired
+              - true
+          then: Blur fired
+          else: ''
+
+  - id: textarea_onfocus
+    type: TextArea
+    properties:
+      title: OnFocus Test
+    events:
+      onFocus:
+        - id: set_onfocus
+          type: SetState
+          params:
+            textarea_onfocus_fired: true
+
+  - id: onfocus_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: textarea_onfocus_fired
+              - true
+          then: Focus fired
+          else: ''
+
+  - id: textarea_onpressenter
+    type: TextArea
+    properties:
+      title: OnPressEnter Test
+    events:
+      onPressEnter:
+        - id: set_onpressenter
+          type: SetState
+          params:
+            textarea_onpressenter_fired: true
+
+  - id: onpressenter_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: textarea_onpressenter_fired
+              - true
+          then: Enter pressed
+          else: ''
+
+  # ============================================
+  # INTERACTION TESTS
+  # ============================================
+
+  - id: textarea_typing
+    type: TextArea
+    properties:
+      title: Typing Test
+
+  - id: typing_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: textarea_typing
+              - null
+          then:
+            _string.concat:
+              - 'Typed: '
+              - _state: textarea_typing
+          else: ''

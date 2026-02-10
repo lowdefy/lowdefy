@@ -1,0 +1,332 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: multiple_selector
+type: Box
+
+events:
+  onInit:
+    - id: set_defaults
+      type: SetState
+      params:
+        ms_with_value:
+          - Option 2
+          - Option 3
+        ms_no_allowclear:
+          - A
+        ms_onclear:
+          - Apple
+        ms_clearable:
+          - B
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: ms_basic
+    type: MultipleSelector
+    properties:
+      options:
+        - Option 1
+        - Option 2
+        - Option 3
+
+  - id: ms_with_value
+    type: MultipleSelector
+    properties:
+      options:
+        - Option 1
+        - Option 2
+        - Option 3
+
+  # ============================================
+  # PROPERTY TESTS
+  # ============================================
+
+  - id: ms_placeholder
+    type: MultipleSelector
+    properties:
+      placeholder: Choose items
+      options:
+        - A
+        - B
+        - C
+
+  - id: ms_disabled
+    type: MultipleSelector
+    properties:
+      disabled: true
+      options:
+        - A
+        - B
+        - C
+
+  - id: ms_small
+    type: MultipleSelector
+    properties:
+      size: small
+      options:
+        - A
+        - B
+        - C
+
+  - id: ms_large
+    type: MultipleSelector
+    properties:
+      size: large
+      options:
+        - A
+        - B
+        - C
+
+  - id: ms_borderless
+    type: MultipleSelector
+    properties:
+      bordered: false
+      options:
+        - A
+        - B
+        - C
+
+  - id: ms_no_allowclear
+    type: MultipleSelector
+    properties:
+      allowClear: false
+      options:
+        - A
+        - B
+        - C
+
+  - id: ms_no_arrow
+    type: MultipleSelector
+    properties:
+      showArrow: false
+      options:
+        - A
+        - B
+        - C
+
+  - id: ms_max_tag_count
+    type: MultipleSelector
+    properties:
+      maxTagCount: 2
+      options:
+        - A
+        - B
+        - C
+        - D
+        - E
+
+  # ============================================
+  # OPTIONS TESTS
+  # ============================================
+
+  - id: ms_object_options
+    type: MultipleSelector
+    properties:
+      options:
+        - value: opt1
+          label: First Option
+        - value: opt2
+          label: Second Option
+        - value: opt3
+          label: Third Option
+
+  - id: ms_disabled_option
+    type: MultipleSelector
+    properties:
+      options:
+        - value: enabled1
+          label: Enabled Option
+        - value: disabled1
+          label: Disabled Option
+          disabled: true
+        - value: enabled2
+          label: Another Enabled
+
+  - id: ms_empty_options
+    type: MultipleSelector
+    properties:
+      options: []
+      notFoundContent: No items available
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  - id: ms_onchange
+    type: MultipleSelector
+    properties:
+      options:
+        - Apple
+        - Banana
+        - Cherry
+    events:
+      onChange:
+        - id: set_onchange
+          type: SetState
+          params:
+            ms_onchange_value:
+              _state: ms_onchange
+
+  - id: ms_onchange_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: ms_onchange_value
+              - null
+          then:
+            _string.concat:
+              - 'Selected: '
+              - _json.stringify:
+                  - _state: ms_onchange_value
+          else: ''
+
+  - id: ms_onclear
+    type: MultipleSelector
+    properties:
+      options:
+        - Apple
+        - Banana
+        - Cherry
+    events:
+      onClear:
+        - id: set_onclear
+          type: SetState
+          params:
+            ms_onclear_fired: true
+
+  - id: ms_onclear_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: ms_onclear_fired
+              - true
+          then: Clear fired
+          else: ''
+
+  - id: ms_onblur
+    type: MultipleSelector
+    properties:
+      options:
+        - A
+        - B
+        - C
+    events:
+      onBlur:
+        - id: set_onblur
+          type: SetState
+          params:
+            ms_onblur_fired: true
+
+  - id: ms_onblur_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: ms_onblur_fired
+              - true
+          then: Blur fired
+          else: ''
+
+  - id: ms_onfocus
+    type: MultipleSelector
+    properties:
+      options:
+        - A
+        - B
+        - C
+    events:
+      onFocus:
+        - id: set_onfocus
+          type: SetState
+          params:
+            ms_onfocus_fired: true
+
+  - id: ms_onfocus_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: ms_onfocus_fired
+              - true
+          then: Focus fired
+          else: ''
+
+  - id: ms_onsearch
+    type: MultipleSelector
+    properties:
+      options:
+        - Apple
+        - Apricot
+        - Banana
+        - Blueberry
+        - Cherry
+    events:
+      onSearch:
+        - id: set_onsearch
+          type: SetState
+          params:
+            ms_search_value:
+              _event: value
+
+  - id: ms_onsearch_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: ms_search_value
+              - null
+          then:
+            _string.concat:
+              - 'Search: '
+              - _state: ms_search_value
+          else: ''
+
+  # ============================================
+  # INTERACTION TESTS
+  # ============================================
+
+  - id: ms_clearable
+    type: MultipleSelector
+    properties:
+      allowClear: true
+      options:
+        - A
+        - B
+        - C
+
+  - id: ms_searchable
+    type: MultipleSelector
+    properties:
+      options:
+        - Apple
+        - Apricot
+        - Banana
+        - Blueberry
+        - Cherry
+        - Cranberry

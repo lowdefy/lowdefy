@@ -1,0 +1,209 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: carousel
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: carousel_basic
+    type: Carousel
+    areas:
+      slide1:
+        blocks:
+          - id: carousel_basic_slide1
+            type: Span
+            properties:
+              content: Slide 1 Content
+      slide2:
+        blocks:
+          - id: carousel_basic_slide2
+            type: Span
+            properties:
+              content: Slide 2 Content
+      slide3:
+        blocks:
+          - id: carousel_basic_slide3
+            type: Span
+            properties:
+              content: Slide 3 Content
+
+  # ============================================
+  # DOT CONFIGURATION
+  # ============================================
+
+  - id: carousel_no_dots
+    type: Carousel
+    properties:
+      dots: false
+    areas:
+      slide1:
+        blocks:
+          - id: carousel_no_dots_slide1
+            type: Span
+            properties:
+              content: No Dots Slide
+
+  - id: carousel_dots_left
+    type: Carousel
+    properties:
+      dotPosition: left
+    areas:
+      slide1:
+        blocks:
+          - id: carousel_dots_left_slide1
+            type: Span
+            properties:
+              content: Left Dots
+      slide2:
+        blocks:
+          - id: carousel_dots_left_slide2
+            type: Span
+            properties:
+              content: Left Dots 2
+
+  - id: carousel_dots_top
+    type: Carousel
+    properties:
+      dotPosition: top
+    areas:
+      slide1:
+        blocks:
+          - id: carousel_dots_top_slide1
+            type: Span
+            properties:
+              content: Top Dots
+      slide2:
+        blocks:
+          - id: carousel_dots_top_slide2
+            type: Span
+            properties:
+              content: Top Dots 2
+
+  # ============================================
+  # ARROWS
+  # ============================================
+
+  - id: carousel_arrows
+    type: Carousel
+    properties:
+      arrows: true
+    areas:
+      slide1:
+        blocks:
+          - id: carousel_arrows_slide1
+            type: Span
+            properties:
+              content: Arrow Slide 1
+      slide2:
+        blocks:
+          - id: carousel_arrows_slide2
+            type: Span
+            properties:
+              content: Arrow Slide 2
+      slide3:
+        blocks:
+          - id: carousel_arrows_slide3
+            type: Span
+            properties:
+              content: Arrow Slide 3
+
+  # ============================================
+  # EFFECT
+  # ============================================
+
+  - id: carousel_fade
+    type: Carousel
+    properties:
+      effect: fade
+    areas:
+      slide1:
+        blocks:
+          - id: carousel_fade_slide1
+            type: Span
+            properties:
+              content: Fade Slide 1
+      slide2:
+        blocks:
+          - id: carousel_fade_slide2
+            type: Span
+            properties:
+              content: Fade Slide 2
+
+  # ============================================
+  # VERTICAL
+  # ============================================
+
+  - id: carousel_vertical
+    type: Carousel
+    properties:
+      vertical: true
+    areas:
+      slide1:
+        blocks:
+          - id: carousel_vertical_slide1
+            type: Span
+            properties:
+              content: Vertical Slide 1
+      slide2:
+        blocks:
+          - id: carousel_vertical_slide2
+            type: Span
+            properties:
+              content: Vertical Slide 2
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  - id: carousel_afterchange
+    type: Carousel
+    events:
+      afterChange:
+        - id: set_afterchange
+          type: SetState
+          params:
+            carousel_current_slide:
+              _event: current.key
+    areas:
+      slide1:
+        blocks:
+          - id: carousel_afterchange_slide1
+            type: Span
+            properties:
+              content: Slide A
+      slide2:
+        blocks:
+          - id: carousel_afterchange_slide2
+            type: Span
+            properties:
+              content: Slide B
+
+  - id: afterchange_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: carousel_current_slide
+              - null
+          then:
+            _string.concat:
+              - 'Current: '
+              - _state: carousel_current_slide
+          else: ''

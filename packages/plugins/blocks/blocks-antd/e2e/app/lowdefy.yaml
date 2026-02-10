@@ -1,0 +1,95 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+lowdefy: local
+name: blocks-antd E2E Tests
+
+pages:
+  - _ref: ../../src/blocks/Button/tests/Button.e2e.yaml
+  - _ref: ../../src/blocks/Selector/tests/Selector.e2e.yaml
+  # Step 1.1: Text Input Blocks
+  - _ref: ../../src/blocks/TextInput/tests/TextInput.e2e.yaml
+  - _ref: ../../src/blocks/PasswordInput/tests/PasswordInput.e2e.yaml
+  - _ref: ../../src/blocks/TextArea/tests/TextArea.e2e.yaml
+  - _ref: ../../src/blocks/NumberInput/tests/NumberInput.e2e.yaml
+  - _ref: ../../src/blocks/TitleInput/tests/TitleInput.e2e.yaml
+  - _ref: ../../src/blocks/ParagraphInput/tests/ParagraphInput.e2e.yaml
+  # Step 1.2: Selector Variants
+  - _ref: ../../src/blocks/MultipleSelector/tests/MultipleSelector.e2e.yaml
+  - _ref: ../../src/blocks/CheckboxSelector/tests/CheckboxSelector.e2e.yaml
+  - _ref: ../../src/blocks/RadioSelector/tests/RadioSelector.e2e.yaml
+  - _ref: ../../src/blocks/TreeSelector/tests/TreeSelector.e2e.yaml
+  - _ref: ../../src/blocks/AutoComplete/tests/AutoComplete.e2e.yaml
+  - _ref: ../../src/blocks/ButtonSelector/tests/ButtonSelector.e2e.yaml
+  # Step 1.3: Date/Time Inputs
+  - _ref: ../../src/blocks/DateSelector/tests/DateSelector.e2e.yaml
+  - _ref: ../../src/blocks/DateTimeSelector/tests/DateTimeSelector.e2e.yaml
+  - _ref: ../../src/blocks/DateRangeSelector/tests/DateRangeSelector.e2e.yaml
+  - _ref: ../../src/blocks/MonthSelector/tests/MonthSelector.e2e.yaml
+  - _ref: ../../src/blocks/WeekSelector/tests/WeekSelector.e2e.yaml
+  # Step 1.4: Slider/Toggle Inputs
+  - _ref: ../../src/blocks/Slider/tests/Slider.e2e.yaml
+  - _ref: ../../src/blocks/RatingSlider/tests/RatingSlider.e2e.yaml
+  - _ref: ../../src/blocks/Switch/tests/Switch.e2e.yaml
+  - _ref: ../../src/blocks/CheckboxSwitch/tests/CheckboxSwitch.e2e.yaml
+  # Step 1.5: Special Inputs
+  - _ref: ../../src/blocks/PhoneNumberInput/tests/PhoneNumberInput.e2e.yaml
+  - _ref: ../../src/blocks/Tag/tests/Tag.e2e.yaml
+  # Step 2.1: Text Display
+  - _ref: ../../src/blocks/Title/tests/Title.e2e.yaml
+  - _ref: ../../src/blocks/Paragraph/tests/Paragraph.e2e.yaml
+  - _ref: ../../src/blocks/Divider/tests/Divider.e2e.yaml
+  - _ref: ../../src/blocks/Avatar/tests/Avatar.e2e.yaml
+  # Step 2.2: Status Display
+  - _ref: ../../src/blocks/Alert/tests/Alert.e2e.yaml
+  - _ref: ../../src/blocks/Badge/tests/Badge.e2e.yaml
+  - _ref: ../../src/blocks/Progress/tests/Progress.e2e.yaml
+  - _ref: ../../src/blocks/Statistic/tests/Statistic.e2e.yaml
+  - _ref: ../../src/blocks/Result/tests/Result.e2e.yaml
+  - _ref: ../../src/blocks/Breadcrumb/tests/Breadcrumb.e2e.yaml
+  # Step 2.3: Utility Display
+  - _ref: ../../src/blocks/Tooltip/tests/Tooltip.e2e.yaml
+  - _ref: ../../src/blocks/Popover/tests/Popover.e2e.yaml
+  - _ref: ../../src/blocks/Comment/tests/Comment.e2e.yaml
+  - _ref: ../../src/blocks/TimelineList/tests/TimelineList.e2e.yaml
+  # Step 3.1: Core Layout
+  - _ref: ../../src/blocks/Layout/tests/Layout.e2e.yaml
+  - _ref: ../../src/blocks/Header/tests/Header.e2e.yaml
+  - _ref: ../../src/blocks/Footer/tests/Footer.e2e.yaml
+  - _ref: ../../src/blocks/Sider/tests/Sider.e2e.yaml
+  - _ref: ../../src/blocks/Content/tests/Content.e2e.yaml
+  # Step 3.2: Container Blocks
+  - _ref: ../../src/blocks/Card/tests/Card.e2e.yaml
+  - _ref: ../../src/blocks/Collapse/tests/Collapse.e2e.yaml
+  - _ref: ../../src/blocks/Tabs/tests/Tabs.e2e.yaml
+  - _ref: ../../src/blocks/Descriptions/tests/Descriptions.e2e.yaml
+  # Step 3.3: List/Page Containers
+  - _ref: ../../src/blocks/ControlledList/tests/ControlledList.e2e.yaml
+  - _ref: ../../src/blocks/Carousel/tests/Carousel.e2e.yaml
+  - _ref: ../../src/blocks/Pagination/tests/Pagination.e2e.yaml
+  - _ref: ../../src/blocks/Affix/tests/Affix.e2e.yaml
+  # Step 4.1: Modal Blocks
+  - _ref: ../../src/blocks/Modal/tests/Modal.e2e.yaml
+  - _ref: ../../src/blocks/ConfirmModal/tests/ConfirmModal.e2e.yaml
+  - _ref: ../../src/blocks/Drawer/tests/Drawer.e2e.yaml
+  # Step 4.2: Message Blocks
+  - _ref: ../../src/blocks/Message/tests/Message.e2e.yaml
+  - _ref: ../../src/blocks/Notification/tests/Notification.e2e.yaml
+  # Step 5.1: Navigation Blocks
+  - _ref: ../../src/blocks/Menu/tests/Menu.e2e.yaml
+  - _ref: ../../src/blocks/MobileMenu/tests/MobileMenu.e2e.yaml
+  - _ref: ../../src/blocks/PageHeaderMenu/tests/PageHeaderMenu.e2e.yaml
+  - _ref: ../../src/blocks/PageSiderMenu/tests/PageSiderMenu.e2e.yaml
+  # Step 6: Form Components
+  - _ref: ../../src/blocks/Label/tests/Label.e2e.yaml
