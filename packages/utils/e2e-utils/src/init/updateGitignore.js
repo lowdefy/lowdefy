@@ -21,8 +21,8 @@ import path from 'path';
 
 const E2E_GITIGNORE_ENTRIES = [
   '# E2E Testing',
-  'test-results/',
-  'playwright-report/',
+  '**/test-results/',
+  '**/playwright-report/',
   '.mdb-e2e-state.json',
 ];
 
