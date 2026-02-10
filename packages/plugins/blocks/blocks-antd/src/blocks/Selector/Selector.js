@@ -38,9 +38,6 @@ const Selector = ({
 }) => {
   const [fetchState, setFetch] = useState(false);
   const [elementId] = useState((0 | (Math.random() * 9e2)) + 1e2);
-  if (!properties.options) {
-    throw new Error(`YOUR OPTIONS ARE UNDEFINED!!!!!!!`);
-  }
   const uniqueValueOptions = getUniqueValues(properties.options || []);
   return (
     <Label
@@ -62,7 +59,7 @@ const Selector = ({
               autoFocus={properties.autoFocus}
               getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
               disabled={properties.disabled || loading}
-              placeholder={get(properties, 'placeholder', { default: 'Select item TESTING1234' })}
+              placeholder={get(properties, 'placeholder', { default: 'Select item' })}
               status={validation.status}
               suffixIcon={
                 properties.suffixIcon && (
