@@ -73,7 +73,7 @@ const TextInput = ({
                   }
 
                   methods.setValue(input);
-                  methods.triggerEvent({ name: 'onChange' });
+                  methods.triggerEvent({ name: 'onChange', event: { value: input } });
                   const cStart = event.target.selectionStart;
                   const cEnd = event.target.selectionEnd;
                   runAfterUpdate(() => {

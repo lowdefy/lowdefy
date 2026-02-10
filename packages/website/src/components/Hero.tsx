@@ -52,7 +52,7 @@ export default function Hero() {
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 mb-8">
               <Link
-                href="https://docs.lowdefy.com/getting-started"
+                href="https://docs.lowdefy.com/tutorial-start"
                 className="inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold text-white bg-primary-500 hover:bg-primary-600 transition-colors"
               >
                 Get Started

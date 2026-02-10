@@ -82,14 +82,13 @@ const DateRangeSelector = ({
                 />
               }
               onChange={(newVal) => {
-                methods.setValue(
-                  !newVal
-                    ? null
-                    : newVal.map((val) =>
-                        moment.utc(val.add(val.utcOffset(), 'minutes')).startOf('day').toDate()
-                      )
-                );
-                methods.triggerEvent({ name: 'onChange' });
+                const val = !newVal
+                  ? null
+                  : newVal.map((val) =>
+                      moment.utc(val.add(val.utcOffset(), 'minutes')).startOf('day').toDate()
+                    );
+                methods.setValue(val);
+                methods.triggerEvent({ name: 'onChange', event: { value: val } });
               }}
               value={rangeValue(value)}
             />
