@@ -175,9 +175,9 @@ All options can be set via environment variables:
 
 ### Logging
 
-The CLI uses `createCliLogger` from `@lowdefy/logger/cli` which wraps `createPrint` (ora spinners, colored terminal output). The logger is available as `context.logger` with a `.ui` property for terminal-specific methods (`spin`, `succeed`, `link`, etc.).
+The CLI uses `createCliLogger` from `@lowdefy/logger/cli` which wraps `createPrint` (ora spinners, colored terminal output). The logger is available as `context.logger` with four level methods (`error`, `warn`, `info`, `debug`), six color sub-methods each (`.red()`, `.blue()`, etc.), and options for spin/succeed (`logger.info(msg, { spin: true })`).
 
-When running the dev server, the CLI pipes the manager process stdout through `createStdOutLineHandler` which parses pino JSON lines and routes them to `context.logger.ui[print](msg)` for rendering.
+When running the dev server, the CLI pipes the manager process stdout through `createStdOutLineHandler` which parses pino JSON lines and routes them to `logger[level](msg, { color/spin/succeed })` for rendering.
 
 See [@lowdefy/logger](../utils/logger.md) for the full logging architecture.
 
