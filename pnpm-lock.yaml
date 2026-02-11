@@ -2065,9 +2065,6 @@ importers:
       '@lowdefy/connection-axios-http':
         specifier: 4.5.2
         version: link:../../plugins/connections/connection-axios-http
-      '@lowdefy/connection-test':
-        specifier: 4.5.2
-        version: link:../../plugins/connections/connection-test
       '@lowdefy/engine':
         specifier: 4.5.2
         version: link:../../engine
