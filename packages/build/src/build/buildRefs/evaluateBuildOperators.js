@@ -17,10 +17,18 @@
 import { BuildParser } from '@lowdefy/operators';
 import operators from '@lowdefy/operators-js/operators/build';
 
-async function evaluateBuildOperators({ context, input, refDef }) {
+import collectDynamicIdentifiers from '../collectDynamicIdentifiers.js';
+import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
+
+// Validate and collect dynamic identifiers once at module load
+validateOperatorsDynamic({ operators });
+const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
+
+function evaluateBuildOperators({ context, input, refDef }) {
   const operatorsParser = new BuildParser({
     env: process.env,
     operators,
+    dynamicIdentifiers,
   });
 
   const { output, errors } = operatorsParser.parse({
@@ -29,9 +37,15 @@ async function evaluateBuildOperators({ context, input, refDef }) {
     operatorPrefix: '_build.',
   });
   if (errors.length > 0) {
-    await context.logger.warn('Build operator errors.');
-    const promises = errors.map((error) => context.logger.warn(error.message));
-    await promises;
+    errors.forEach((error) => {
+      context.logger.warn({
+        message: error.message,
+        received: error.received,
+        operatorLocation: error.operatorLocation,
+        filePath: refDef.path,
+        lineNumber: error.operatorLocation?.line,
+      });
+    });
   }
   return output;
 }

@@ -16,11 +16,16 @@
 
 import { execSync } from 'child_process';
 
-function checkPnpmIsInstalled({ print, pnpmCmd }) {
+function checkPnpmIsInstalled({ logger, pnpmCmd }) {
+  const ui =
+    logger?.ui ??
+    logger ?? {
+      error: (message) => console.error(message),
+    };
   try {
     execSync(`${pnpmCmd} --version`, { stdio: 'ignore' });
   } catch (e) {
-    print.error(`
+    ui.error(`
 -------------------------------------------------------------
   The package manager "pnpm" is required to run Lowdefy.
   Install pnpm as describe here:

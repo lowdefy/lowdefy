@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { ConfigurationError } from '../../context/errors.js';
+import { ConfigError } from '@lowdefy/errors/server';
 
 async function getRequestConfig({ logger, readConfigFile }, { pageId, requestId }) {
   const request = await readConfigFile(`pages/${pageId}/requests/${requestId}.json`);
   if (!request) {
-    const err = new ConfigurationError(`Request "${requestId}" does not exist.`);
+    const err = new ConfigError({ message: `Request "${requestId}" does not exist.` });
     logger.debug({ params: { pageId, requestId }, err }, err.message);
     throw err;
   }

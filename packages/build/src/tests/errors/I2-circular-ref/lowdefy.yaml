@@ -1,0 +1,16 @@
+# I2: Circular _ref
+# ==================
+# Tests that circular file references throw an error with the reference chain.
+#
+# This fixture creates a circular reference:
+#   lowdefy.yaml -> a.yaml -> b.yaml -> a.yaml (circular!)
+#
+# Expected error:
+#   Circular reference detected: a.yaml -> b.yaml -> a.yaml
+#
+# The error shows the full chain of file references that create the cycle.
+
+lowdefy: local
+
+pages:
+  _ref: a.yaml

@@ -1,0 +1,170 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: logger
+    pageTitle: Logger
+    section: Concepts
+    filePath: concepts/logger.yaml
+    content:
+      - id: md1
+        type: Markdown
+        properties:
+          content: |
+            Lowdefy provides built-in error logging and monitoring capabilities. When properly configured, errors from both client and server are captured and sent to external logging services.
+
+            ## Sentry Integration
+
+            [Sentry](https://sentry.io) is a popular error tracking and performance monitoring platform. Lowdefy has built-in Sentry integration that captures errors with rich context including page IDs, block IDs, and config file locations.
+
+            ### Quick Start
+
+            To enable Sentry, set the `SENTRY_DSN` environment variable:
+
+            ```
+            SENTRY_DSN=https://your-dsn@sentry.io/project
+            ```
+
+            With this environment variable set, Sentry will capture errors from both client and server with sensible defaults.
+
+            ### Client-Side Configuration
+
+            For client-side error capture, you also need to expose the DSN to the browser:
+
+            ```
+            NEXT_PUBLIC_SENTRY_DSN=https://your-dsn@sentry.io/project
+            ```
+
+            ### Configuration Options
+
+            You can customize Sentry behavior using the `logger` configuration in your `lowdefy.yaml`:
+
+            ```yaml
+            lowdefy: 4.5.2
+
+            logger:
+              sentry:
+                # Enable/disable client-side logging (default: true)
+                client: true
+                # Enable/disable server-side logging (default: true)
+                server: true
+                # Sample rate for performance traces (default: 0.1)
+                tracesSampleRate: 0.1
+                # Sample rate for session replay (default: 0)
+                replaysSessionSampleRate: 0
+                # Sample rate for replay on errors (default: 0.1)
+                replaysOnErrorSampleRate: 0.1
+                # Enable user feedback widget (default: false)
+                feedback: false
+                # Override environment detection (default: auto from NODE_ENV)
+                environment: production
+                # User fields to include in error reports (default: ['id', '_id'])
+                userFields:
+                  - id
+                  - _id
+            ```
+
+            ### Default Configuration
+
+            If you only set `SENTRY_DSN` without any `logger.sentry` configuration, these defaults are used:
+
+            | Option | Default | Description |
+            |--------|---------|-------------|
+            | `client` | `true` | Client-side error capture enabled |
+            | `server` | `true` | Server-side error capture enabled |
+            | `tracesSampleRate` | `0.1` | 10% of transactions traced |
+            | `replaysSessionSampleRate` | `0` | Session replay disabled by default |
+            | `replaysOnErrorSampleRate` | `0.1` | 10% of error sessions replayed |
+            | `feedback` | `false` | User feedback widget disabled |
+            | `userFields` | `['id', '_id']` | Only user ID fields logged |
+
+            ### User Context
+
+            For authenticated users, Sentry automatically captures user context based on the `userFields` configuration. By default, only `id` and `_id` fields from the user session are included to avoid logging PII (personally identifiable information).
+
+            To include additional fields:
+
+            ```yaml
+            logger:
+              sentry:
+                userFields:
+                  - id
+                  - _id
+                  - organization_id
+            ```
+
+      - id: warning_pii
+        type: Alert
+        properties:
+          type: warning
+          icon: AiFillWarning
+          description: Be careful not to include personally identifiable information (PII) like email addresses in userFields unless required and compliant with your privacy policy.
+
+      - id: md2
+        type: Markdown
+        properties:
+          content: |
+            ### Source Maps
+
+            To enable readable stack traces in Sentry, set the `SENTRY_AUTH_TOKEN` environment variable during build:
+
+            ```
+            SENTRY_AUTH_TOKEN=your-auth-token
+            ```
+
+            This will upload source maps to Sentry during the Next.js build process.
+
+            ### Environment Variables
+
+            | Variable | Description |
+            |----------|-------------|
+            | `SENTRY_DSN` | Sentry Data Source Name (DSN) for server-side error capture |
+            | `NEXT_PUBLIC_SENTRY_DSN` | The same DSN exposed to the client for browser error capture |
+            | `SENTRY_AUTH_TOKEN` | (Optional) Auth token for source map uploads during build |
+
+            Example `.env` file:
+
+            ```
+            # .env
+            SENTRY_DSN=https://abc123@o123456.ingest.sentry.io/1234567
+            NEXT_PUBLIC_SENTRY_DSN=https://abc123@o123456.ingest.sentry.io/1234567
+            SENTRY_AUTH_TOKEN=your-auth-token
+            ```
+
+            ### Disabling Sentry
+
+            To disable Sentry for specific environments:
+
+            - **Disable client only:** Set `logger.sentry.client: false`
+            - **Disable server only:** Set `logger.sentry.server: false`
+            - **Disable completely:** Remove the `SENTRY_DSN` environment variable
+
+            ### Error Context
+
+            When errors are captured, Lowdefy automatically includes:
+
+            - **Page ID:** The current page where the error occurred
+            - **Block ID:** The block that triggered the error (if applicable)
+            - **Config Location:** The source file and line number in your YAML config
+            - **User Context:** Configured user fields for authenticated sessions
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Secrets
+            previous_page_id: secrets
+            next_page_title: Lists
+            next_page_id: lists

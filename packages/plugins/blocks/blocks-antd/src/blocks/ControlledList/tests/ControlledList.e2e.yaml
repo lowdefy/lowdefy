@@ -1,0 +1,161 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: controlledlist
+type: Box
+
+events:
+  onInit:
+    - id: set_defaults
+      type: SetState
+      params:
+        controlledlist_with_items:
+          - name: Item 1
+          - name: Item 2
+          - name: Item 3
+        controlledlist_minitems:
+          - name: Item 1
+        controlledlist_remove:
+          - name: Item A
+          - name: Item B
+          - name: Item C
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: controlledlist_basic
+    type: ControlledList
+    properties:
+      title: Basic List
+
+  - id: controlledlist_with_items
+    type: ControlledList
+    properties:
+      title: List With Items
+    areas:
+      content:
+        blocks:
+          - id: controlledlist_with_items_text
+            type: Span
+            properties:
+              content:
+                _string.concat:
+                  - 'Item: '
+                  - _state: controlledlist_with_items.$.name
+
+  # ============================================
+  # STYLE TESTS
+  # ============================================
+
+  - id: controlledlist_small
+    type: ControlledList
+    properties:
+      title: Small Size List
+      size: small
+
+  - id: controlledlist_large
+    type: ControlledList
+    properties:
+      title: Large Size List
+      size: large
+
+  # ============================================
+  # ADD BUTTON TESTS
+  # ============================================
+
+  - id: controlledlist_add_front
+    type: ControlledList
+    properties:
+      title: Add to Front
+      addToFront: true
+
+  - id: controlledlist_hide_add
+    type: ControlledList
+    properties:
+      title: Hidden Add Button
+      hideAddButton: true
+
+  - id: controlledlist_custom_add
+    type: ControlledList
+    properties:
+      title: Custom Add Button
+      addItemButton:
+        title: New Entry
+        type: primary
+
+  # ============================================
+  # EMPTY STATE
+  # ============================================
+
+  - id: controlledlist_nodata
+    type: ControlledList
+    properties:
+      title: Empty List
+      noDataTitle: No items available
+
+  # ============================================
+  # MIN ITEMS
+  # ============================================
+
+  - id: controlledlist_minitems
+    type: ControlledList
+    properties:
+      title: Min Items List
+      minItems: 2
+    areas:
+      content:
+        blocks:
+          - id: controlledlist_minitems_text
+            type: Span
+            properties:
+              content:
+                _string.concat:
+                  - 'Name: '
+                  - _state: controlledlist_minitems.$.name
+
+  # ============================================
+  # INTERACTION TESTS
+  # ============================================
+
+  - id: controlledlist_add
+    type: ControlledList
+    properties:
+      title: Add Items List
+    areas:
+      content:
+        blocks:
+          - id: controlledlist_add_text
+            type: Span
+            properties:
+              content:
+                _string.concat:
+                  - 'Index: '
+                  - _index: true
+
+  - id: controlledlist_remove
+    type: ControlledList
+    properties:
+      title: Remove Items List
+    areas:
+      content:
+        blocks:
+          - id: controlledlist_remove_text
+            type: Span
+            properties:
+              content:
+                _string.concat:
+                  - 'Item: '
+                  - _state: controlledlist_remove.$.name

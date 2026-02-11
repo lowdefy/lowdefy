@@ -1,0 +1,21 @@
+# C2: Menu Link to Missing Page
+# ==============================
+# Tests that menu links referencing non-existent pages warn in dev mode.
+#
+# Expected warning (dev mode):
+#   [Config Error] Page "nonExistentPage" referenced in menu link "badLink" not found.
+#
+# The error points to line 15 where the menu link is defined.
+
+lowdefy: local
+
+menus:
+  - id: default
+    links:
+      - id: badLink
+        type: MenuLink
+        pageId: nonExistentPage
+
+pages:
+  - id: home
+    type: Box

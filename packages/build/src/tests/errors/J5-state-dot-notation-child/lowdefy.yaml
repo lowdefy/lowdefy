@@ -1,0 +1,36 @@
+# J5: State Reference to Parent Key of Dot-Notation Block ID
+# ==========================================================
+# Tests that _state referencing a parent key (e.g. "filter") does NOT warn
+# when a child block with a dot-notation id exists (e.g. "filter.search").
+#
+# Block ids like "filter.search" and "filter.category" create state under
+# the "filter" parent key. A _state: filter reference should be valid.
+#
+# Expected: NO warning should be shown.
+
+lowdefy: local
+
+pages:
+  - id: testing
+    type: PageHeaderMenu
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Test Page
+      - id: filter.search
+        type: TextInput
+        properties:
+          title: Search
+      - id: filter.category
+        type: Selector
+        properties:
+          title: Category
+          options:
+            - label: Option 1
+              value: option_1
+      - id: results
+        type: Paragraph
+        properties:
+          content:
+            _state: filter

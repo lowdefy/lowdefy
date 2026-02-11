@@ -81,20 +81,20 @@ test('location calls getFromObject', async () => {
 test('_location throw on no window', async () => {
   const location = (await import('./location.js')).default;
   expect(() => location({ ...input, globals: {} })).toThrow(
-    'Operator Error: Browser window.location not available for _location. Received: "origin" at location.'
+    'Browser window.location not available for _location.'
   );
 });
 
 test('_location throw on no location', async () => {
   const location = (await import('./location.js')).default;
   expect(() => location({ ...input, globals: { window: {} } })).toThrow(
-    'Operator Error: Browser window.location not available for _location. Received: "origin" at location.'
+    'Browser window.location not available for _location.'
   );
 });
 
 test('_location throw invalid param', async () => {
   const location = (await import('./location.js')).default;
   expect(() => location({ ...input, globals, params: 'invalid' })).toThrow(
-    'Operator Error: _location only returns values for basePath, hash, homePageId, host, hostname, href, origin, pageId, pathname, port, protocol, search. Received: "invalid" at location.'
+    '_location only returns values for basePath, hash, homePageId, host, hostname, href, origin, pageId, pathname, port, protocol, search.'
   );
 });

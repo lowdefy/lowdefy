@@ -1,0 +1,24 @@
+{
+  "tests": [
+    {
+      "mode": "dev",
+      "warnings": [
+        "_state is not available in request properties"
+      ],
+      "warningContains": [
+        "Found _state in request \"insert_contact\" on page \"page_1\"",
+        "then reference it in request properties using _payload"
+      ]
+    },
+    {
+      "mode": "prod",
+      "errors": [
+        "_state is not available in request properties"
+      ],
+      "errorContains": [
+        "Found _state in request \"insert_contact\" on page \"page_1\""
+      ],
+      "expectThrow": true
+    }
+  ]
+}

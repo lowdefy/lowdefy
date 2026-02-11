@@ -173,6 +173,14 @@ All options can be set via environment variables:
 | `runCommand.js` | Command wrapper with error handling |
 | `createPluginTypesMap.js` | Generate plugin type maps |
 
+### Logging
+
+The CLI uses `createCliLogger` from `@lowdefy/logger/cli` which wraps `createPrint` (ora spinners, colored terminal output). The logger is available as `context.logger` with a `.ui` property for terminal-specific methods (`spin`, `succeed`, `link`, etc.).
+
+When running the dev server, the CLI pipes the manager process stdout through `createStdOutLineHandler` which parses pino JSON lines and routes them to `context.logger.ui[print](msg)` for rendering.
+
+See [@lowdefy/logger](../utils/logger.md) for the full logging architecture.
+
 ## Design Decisions
 
 ### Why Download Server Packages?

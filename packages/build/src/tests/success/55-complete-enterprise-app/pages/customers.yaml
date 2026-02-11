@@ -1,0 +1,143 @@
+id: customers
+type: PageHeaderMenu
+properties:
+  title: Customers
+requests:
+  - id: getCustomers
+    type: MongoDBFind
+    connectionId: db
+    payload:
+      search:
+        _state: searchQuery
+      status:
+        _state: statusFilter
+    properties:
+      query:
+        $and:
+          - $or:
+              - name:
+                  $regex:
+                    _payload: search
+                  $options: i
+              - email:
+                  $regex:
+                    _payload: search
+                  $options: i
+          - status:
+              _if:
+                test:
+                  _payload: status
+                then:
+                  _payload: status
+                else:
+                  $exists: true
+      options:
+        sort:
+          createdAt: -1
+        limit: 50
+events:
+  onInit:
+    - id: loadCustomers
+      type: Request
+      params: getCustomers
+areas:
+  content:
+    blocks:
+      - id: toolbar
+        type: Box
+        blocks:
+          - id: searchQuery
+            type: TextInput
+            layout:
+              span: 8
+            properties:
+              placeholder: Search customers...
+              prefix: AiOutlineSearch
+            events:
+              onChange:
+                debounce:
+                  ms: 300
+                try:
+                  - id: search
+                    type: Request
+                    params: getCustomers
+          - id: statusFilter
+            type: Selector
+            layout:
+              span: 4
+            properties:
+              placeholder: Filter by status
+              allowClear: true
+              options:
+                - value: active
+                  label: Active
+                - value: inactive
+                  label: Inactive
+                - value: pending
+                  label: Pending
+            events:
+              onChange:
+                - id: filter
+                  type: Request
+                  params: getCustomers
+          - id: addBtn
+            type: Button
+            layout:
+              span: 4
+            properties:
+              title: Add Customer
+              type: primary
+              icon: AiOutlinePlus
+            events:
+              onClick:
+                - id: goToAdd
+                  type: Link
+                  params:
+                    pageId: customer-detail
+      - id: customerList
+        type: List
+        properties:
+          data:
+            _request: getCustomers
+        blocks:
+          - id: customerCard
+            type: Card
+            properties:
+              hoverable: true
+              title:
+                _state: customerList.$.name
+            events:
+              onClick:
+                - id: goToDetail
+                  type: Link
+                  params:
+                    pageId: customer-detail
+                    urlQuery:
+                      id:
+                        _state: customerList.$._id
+            blocks:
+              - id: email
+                type: Paragraph
+                properties:
+                  content:
+                    _state: customerList.$.email
+              - id: status
+                type: Tag
+                properties:
+                  title:
+                    _state: customerList.$.status
+                  color:
+                    _if:
+                      test:
+                        _eq:
+                          - _state: customerList.$.status
+                          - active
+                      then: green
+                      else:
+                        _if:
+                          test:
+                            _eq:
+                              - _state: customerList.$.status
+                              - pending
+                          then: orange
+                          else: red

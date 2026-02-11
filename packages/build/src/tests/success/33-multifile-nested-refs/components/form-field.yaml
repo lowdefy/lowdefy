@@ -1,0 +1,4 @@
+id: '{{ id }}_field'
+type: TextInput
+properties:
+  title: '{{ label }}'

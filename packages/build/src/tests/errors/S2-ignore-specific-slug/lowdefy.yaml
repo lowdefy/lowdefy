@@ -1,0 +1,23 @@
+# S2: Suppress Specific Check with ~ignoreBuildChecks: ['state-refs']
+# ====================================================================
+# Tests that ~ignoreBuildChecks with an array suppresses only specified checks.
+#
+# The block has an undefined _state reference which would normally warn,
+# but ~ignoreBuildChecks: ['state-refs'] is set on the block to suppress
+# only state reference warnings.
+#
+# Expected: NO warning should be shown for state-refs.
+
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: stateRef
+        type: Paragraph
+        ~ignoreBuildChecks:
+          - state-refs
+        properties:
+          content:
+            _state: undefinedKey

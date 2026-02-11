@@ -15,13 +15,13 @@
 */
 
 import validateAuthConfig from './validateAuthConfig.js';
-import testContext from '../../test/testContext.js';
+import testContext from '../../test-utils/testContext.js';
 
 const context = testContext();
 
-test('validateAuthConfig no auth defined', async () => {
+test('validateAuthConfig no auth defined', () => {
   const components = {};
-  const result = await validateAuthConfig({ components, context });
+  const result = validateAuthConfig({ components, context });
   expect(result).toEqual({
     auth: {
       api: {
@@ -40,16 +40,16 @@ test('validateAuthConfig no auth defined', async () => {
   });
 });
 
-test('validateAuthConfig auth not an object', async () => {
+test('validateAuthConfig auth not an object', () => {
   const components = {
     auth: 'auth',
   };
-  await expect(validateAuthConfig({ components, context })).rejects.toThrow(
+  expect(() => validateAuthConfig({ components, context })).toThrow(
     'lowdefy.auth is not an object.'
   );
 });
 
-test('validateAuthConfig invalid auth config', async () => {
+test('validateAuthConfig invalid auth config', () => {
   let components = {
     auth: {
       pages: {
@@ -57,7 +57,7 @@ test('validateAuthConfig invalid auth config', async () => {
       },
     },
   };
-  await expect(validateAuthConfig({ components, context })).rejects.toThrow(
+  expect(() => validateAuthConfig({ components, context })).toThrow(
     'App "auth.pages.protected.$" should be an array of strings.'
   );
   components = {
@@ -67,12 +67,12 @@ test('validateAuthConfig invalid auth config', async () => {
       },
     },
   };
-  await expect(validateAuthConfig({ components, context })).rejects.toThrow(
+  expect(() => validateAuthConfig({ components, context })).toThrow(
     'App "auth.pages.roles" should be an object.'
   );
 });
 
-test('validateAuthConfig config error when both protected and public pages are both arrays', async () => {
+test('validateAuthConfig config error when both protected and public pages are both arrays', () => {
   const components = {
     auth: {
       pages: {
@@ -81,12 +81,12 @@ test('validateAuthConfig config error when both protected and public pages are b
       },
     },
   };
-  await expect(validateAuthConfig({ components, context })).rejects.toThrow(
+  expect(() => validateAuthConfig({ components, context })).toThrow(
     'Protected and public pages are mutually exclusive. When protected pages are listed, all unlisted pages are public by default and vice versa.'
   );
 });
 
-test('validateAuthConfig config error when both protected and public pages are true', async () => {
+test('validateAuthConfig config error when both protected and public pages are true', () => {
   const components = {
     auth: {
       pages: {
@@ -95,12 +95,12 @@ test('validateAuthConfig config error when both protected and public pages are t
       },
     },
   };
-  await expect(validateAuthConfig({ components, context })).rejects.toThrow(
+  expect(() => validateAuthConfig({ components, context })).toThrow(
     'Protected and public pages are mutually exclusive. When protected pages are listed, all unlisted pages are public by default and vice versa.'
   );
 });
 
-test('validateAuthConfig config error when protected or public are false.', async () => {
+test('validateAuthConfig config error when protected or public are false.', () => {
   let components = {
     auth: {
       pages: {
@@ -108,7 +108,7 @@ test('validateAuthConfig config error when protected or public are false.', asyn
       },
     },
   };
-  await expect(validateAuthConfig({ components, context })).rejects.toThrow(
+  expect(() => validateAuthConfig({ components, context })).toThrow(
     'Protected pages can not be set to false.'
   );
   components = {
@@ -118,7 +118,68 @@ test('validateAuthConfig config error when protected or public are false.', asyn
       },
     },
   };
-  await expect(validateAuthConfig({ components, context })).rejects.toThrow(
+  expect(() => validateAuthConfig({ components, context })).toThrow(
     'Public pages can not be set to false.'
   );
+});
+
+test('validateAuthConfig throws when auth providers configured but NEXTAUTH_SECRET not set', () => {
+  const originalEnv = process.env.NEXTAUTH_SECRET;
+  delete process.env.NEXTAUTH_SECRET;
+
+  const components = {
+    auth: {
+      providers: [
+        {
+          id: 'google',
+          type: 'GoogleProvider',
+          properties: {
+            clientId: 'test-id',
+            clientSecret: 'test-secret',
+          },
+        },
+      ],
+    },
+  };
+
+  try {
+    expect(() => validateAuthConfig({ components, context })).toThrow(
+      'Auth providers are configured but NEXTAUTH_SECRET environment variable is not set.'
+    );
+  } finally {
+    if (originalEnv !== undefined) {
+      process.env.NEXTAUTH_SECRET = originalEnv;
+    }
+  }
+});
+
+test('validateAuthConfig passes when auth providers configured and NEXTAUTH_SECRET is set', () => {
+  const originalEnv = process.env.NEXTAUTH_SECRET;
+  process.env.NEXTAUTH_SECRET = 'test-secret-value';
+
+  const components = {
+    auth: {
+      providers: [
+        {
+          id: 'google',
+          type: 'GoogleProvider',
+          properties: {
+            clientId: 'test-id',
+            clientSecret: 'test-secret',
+          },
+        },
+      ],
+    },
+  };
+
+  try {
+    const result = validateAuthConfig({ components, context });
+    expect(result.auth.providers).toHaveLength(1);
+  } finally {
+    if (originalEnv !== undefined) {
+      process.env.NEXTAUTH_SECRET = originalEnv;
+    } else {
+      delete process.env.NEXTAUTH_SECRET;
+    }
+  }
 });

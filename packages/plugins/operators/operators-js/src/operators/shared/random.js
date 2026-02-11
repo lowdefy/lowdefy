@@ -32,63 +32,45 @@ function getRandomFloat(min, max) {
   return Math.random() * (Math.ceil(max) - Math.floor(min)) + Math.floor(min);
 }
 
-function evaluateDefaultNumber({ key, defaultValue, params, location }) {
+function evaluateDefaultNumber({ key, defaultValue, params }) {
   if (type.isUndefined(params[key])) {
     params[key] = defaultValue;
   }
   if (!type.isNumber(params[key])) {
-    throw new Error(
-      `Operator Error: _random.${key} takes an number type. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`_random.${key} takes a number type.`);
   }
 }
 
-function _random({ location, params }) {
+function _random({ params }) {
   if (!type.isString(params) && !type.isObject(params)) {
-    throw new Error(
-      `Operator Error: _random takes an string or object type. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`_random takes a string or object type.`);
   }
   if (!type.isObject(params)) {
     params = { type: params };
   }
   if (!typesEnum.includes(params.type)) {
-    throw new Error(
-      `Operator Error: _random type can be either 'string', 'integer' or 'float'. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`_random type can be either 'string', 'integer' or 'float'.`);
   }
   if (params.type === 'float') {
-    evaluateDefaultNumber({ key: 'min', defaultValue: 0, params, location });
-    evaluateDefaultNumber({ key: 'max', defaultValue: params.min + 1, params, location });
+    evaluateDefaultNumber({ key: 'min', defaultValue: 0, params });
+    evaluateDefaultNumber({ key: 'max', defaultValue: params.min + 1, params });
     if (params.max < params.min) {
-      throw new Error(
-        `Operator Error: _random.min must be less than _random.max. Received: ${JSON.stringify(
-          params
-        )} at ${location}.`
-      );
+      throw new Error(`_random.min must be less than _random.max.`);
     }
     return getRandomFloat(params.min, params.max);
   }
   if (params.type === 'integer') {
-    evaluateDefaultNumber({ key: 'min', defaultValue: 0, params, location });
-    evaluateDefaultNumber({ key: 'max', defaultValue: params.min + 100, params, location });
+    evaluateDefaultNumber({ key: 'min', defaultValue: 0, params });
+    evaluateDefaultNumber({ key: 'max', defaultValue: params.min + 100, params });
     if (params.max < params.min) {
-      throw new Error(
-        `Operator Error: _random.min must be less than _random.max. Received: ${JSON.stringify(
-          params
-        )} at ${location}.`
-      );
+      throw new Error(`_random.min must be less than _random.max.`);
     }
     return getRandomInt(params.min, params.max);
   }
-  evaluateDefaultNumber({ key: 'length', defaultValue: 8, params, location });
+  evaluateDefaultNumber({ key: 'length', defaultValue: 8, params });
   return generateRandomString(params.length);
 }
+
+_random.dynamic = true;
 
 export default _random;

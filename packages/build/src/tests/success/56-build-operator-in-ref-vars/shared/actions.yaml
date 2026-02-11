@@ -1,0 +1,5 @@
+# Actions loaded via _ref into _build.array.concat
+- id: action3
+  type: SetState
+  params:
+    key3: value3

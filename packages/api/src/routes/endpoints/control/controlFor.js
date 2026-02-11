@@ -14,21 +14,22 @@
   limitations under the License.
 */
 
+import { PluginError } from '@lowdefy/errors/server';
 import runRoutine from '../runRoutine.js';
 
 async function controlFor(context, routineContext, { control }) {
-  const { logger, evaluateOperators } = context;
+  const { endpointId, logger, evaluateOperators } = context;
   const { items } = routineContext;
 
   const itemName = control[':for'];
   if (!itemName) {
-    throw new Error('Invalid :for - missing variable name in :for.');
+    throw new Error(`Invalid :for in endpoint "${endpointId}" - missing variable name in :for.`);
   }
 
   const array = evaluateOperators({
     input: control[':in'],
     items,
-    location: 'controlFor',
+    location: control['~k'] ?? ':for',
   });
 
   logger.debug({
@@ -38,11 +39,15 @@ async function controlFor(context, routineContext, { control }) {
   });
 
   if (!Array.isArray(array)) {
-    throw new Error('Invalid :for - evaluated :in to non-array.');
+    throw new PluginError({
+      message: `Invalid :for in endpoint "${endpointId}" - :in must evaluate to an array.`,
+      received: array,
+      configKey: control['~k'],
+    });
   }
 
   if (!control[':do']) {
-    throw new Error('Invalid :for - missing :do.');
+    throw new Error(`Invalid :for in endpoint "${endpointId}" - missing :do.`);
   }
 
   for (const [index, item] of array.entries()) {

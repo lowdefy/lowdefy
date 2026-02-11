@@ -16,6 +16,8 @@
 
 import React, { Component } from 'react';
 
+import { ConfigError, LowdefyError, PluginError, ServiceError } from '@lowdefy/errors/client';
+
 import ErrorPage from './ErrorPage.js';
 
 class ErrorBoundary extends Component {
@@ -29,6 +31,42 @@ class ErrorBoundary extends Component {
 
   static getDerivedStateFromError(error) {
     return { hasError: true, error };
+  }
+
+  componentDidCatch(error) {
+    const { blockId, configKey, onError } = this.props;
+
+    // Preserve known error types
+    if (
+      error instanceof ConfigError ||
+      error instanceof PluginError ||
+      error instanceof LowdefyError ||
+      error instanceof ServiceError
+    ) {
+      if (onError) {
+        onError(error);
+      }
+      return;
+    }
+
+    // Wrap unknown errors based on context
+    let wrappedError;
+    if (blockId) {
+      wrappedError = new PluginError({
+        error,
+        pluginType: 'block',
+        pluginName: blockId,
+        location: blockId,
+        configKey,
+      });
+    } else {
+      wrappedError = new LowdefyError(error.message, { cause: error });
+      wrappedError.stack = error.stack;
+    }
+
+    if (onError) {
+      onError(wrappedError);
+    }
   }
 
   render() {

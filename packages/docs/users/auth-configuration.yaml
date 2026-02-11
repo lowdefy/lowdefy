@@ -92,6 +92,57 @@ _ref:
 
                 The  `auth.advanced.cookies` section can be used to overwrite the NextAuth cookie options. This is an advanced option and using it is not recommended as you may break authentication or introduce security flaws into your application. See [here](https://next-auth.js.org/configuration/options#cookies) for more details.
 
+                ## Mock User for Testing (Dev Server Only)
+
+                When developing and testing Lowdefy apps, you can bypass the login flow by configuring a mock user. This is useful for testing authenticated flows without going through OAuth login.
+
+                The mock user can be configured in two ways:
+
+                ### Environment Variable
+
+                Set the `LOWDEFY_DEV_USER` environment variable to a JSON string containing the mock user object:
+
+                ```bash
+                LOWDEFY_DEV_USER='{"sub":"test-user","email":"test@example.com","roles":["admin"]}'
+                ```
+
+                ### Config File
+
+                Add the `auth.dev.mockUser` section to your `lowdefy.yaml`:
+
+                ###### Configure a mock user for development
+                ```yaml
+                lowdefy: {{ version }}
+
+                auth:
+                  providers:
+                    - id: google
+                      type: GoogleProvider
+                      properties:
+                        clientId:
+                          _secret: GOOGLE_CLIENT_ID
+                        clientSecret:
+                          _secret: GOOGLE_CLIENT_SECRET
+                  dev:
+                    mockUser:
+                      sub: test-user
+                      email: test@example.com
+                      name: Test User
+                      roles:
+                        - admin
+                ```
+
+                When a mock user is configured:
+                - The environment variable takes precedence over the config file if both are set
+                - A warning is logged at dev server startup: "Mock user active - login bypassed"
+                - The mock user goes through the normal session callback, so `userFields` mappings and custom callbacks still apply
+                - The `_user` operator returns values from the mock user
+                - Protected pages are accessible based on the mock user's roles
+
+                > **Note:** Mock users only work with the development server (`lowdefy dev`). The production server ignores mock user configuration for security.
+
+                > **Note:** Auth must be configured (at least one provider) for mock users to work, since the mock user is processed through the NextAuth session callback.
+
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:

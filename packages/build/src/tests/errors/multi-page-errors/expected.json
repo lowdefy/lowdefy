@@ -1,0 +1,38 @@
+{
+  "tests": [
+    {
+      "mode": "dev",
+      "warnings": [
+        "undefinedState1",
+        "undefinedState2",
+        "undefinedState3"
+      ],
+      "warningContains": [
+        "_state references \"undefinedState1\" on page \"page1\"",
+        "lowdefy.yaml:19",
+        "_state references \"undefinedState2\" on page \"page2\"",
+        "lowdefy.yaml:28",
+        "_state references \"undefinedState3\" on page \"page3\"",
+        "lowdefy.yaml:37"
+      ]
+    },
+    {
+      "mode": "prod",
+      "errors": [
+        "undefinedState1",
+        "undefinedState2",
+        "undefinedState3"
+      ],
+      "errorContains": [
+        "_state references \"undefinedState1\" on page \"page1\"",
+        "lowdefy.yaml:19",
+        "_state references \"undefinedState2\" on page \"page2\"",
+        "lowdefy.yaml:28",
+        "_state references \"undefinedState3\" on page \"page3\"",
+        "lowdefy.yaml:37"
+      ],
+      "errorCount": 3,
+      "expectThrow": true
+    }
+  ]
+}

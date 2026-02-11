@@ -15,6 +15,7 @@
 */
 
 import { expect, jest } from '@jest/globals';
+import { PluginError } from '@lowdefy/errors/client';
 
 import testContext from './testContext.js';
 
@@ -519,6 +520,7 @@ test('trigger request from event end to end and parse payload', async () => {
   expect(context.requests).toEqual({
     req_one: [
       {
+        actionId: 'click',
         blockId: 'button',
         loading: false,
         payload: {
@@ -535,6 +537,7 @@ test('trigger request from event end to end and parse payload', async () => {
   expect(context.requests).toEqual({
     req_one: [
       {
+        actionId: 'click',
         blockId: 'button',
         loading: false,
         payload: {
@@ -545,6 +548,7 @@ test('trigger request from event end to end and parse payload', async () => {
         responseTime: expect.any(Number),
       },
       {
+        actionId: 'click',
         blockId: 'button',
         loading: false,
         payload: {

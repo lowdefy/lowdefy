@@ -35,8 +35,19 @@ function lowdefyBuildWatcher(context) {
       }
     }
 
-    await context.lowdefyBuild();
-    context.reloadClients();
+    try {
+      await context.lowdefyBuild();
+      context.reloadClients();
+    } catch (error) {
+      // If error is already formatted (from error collection), just show the message
+      if (error.isFormatted || error.hideStack) {
+        context.logger.error(error.message);
+      } else {
+        // Otherwise, show full error with stack trace
+        context.logger.error(error);
+      }
+      // Don't crash the watcher - keep it running so user can fix errors and rebuild
+    }
   };
   return setupWatcher({
     callback,

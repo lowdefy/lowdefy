@@ -17,22 +17,21 @@
 import callEndpoint from './routes/endpoints/callEndpoint.js';
 import callRequest from './routes/request/callRequest.js';
 import createApiContext from './context/createApiContext.js';
+import createSessionCallback from './routes/auth/callbacks/createSessionCallback.js';
 import getHomeAndMenus from './routes/rootConfig/getHomeAndMenus.js';
 import getNextAuthConfig from './routes/auth/getNextAuthConfig.js';
 import getPageConfig from './routes/page/getPageConfig.js';
 import getRootConfig from './routes/rootConfig/getRootConfig.js';
-
-import { ConfigurationError, RequestError, ServerError } from './context/errors.js';
+import logClientError from './routes/log/logClientError.js';
 
 export {
   callEndpoint,
   callRequest,
-  ConfigurationError,
   createApiContext,
+  createSessionCallback,
   getHomeAndMenus,
   getNextAuthConfig,
   getPageConfig,
   getRootConfig,
-  RequestError,
-  ServerError,
+  logClientError,
 };

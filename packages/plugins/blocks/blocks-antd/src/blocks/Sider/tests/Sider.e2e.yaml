@@ -1,0 +1,162 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: sider
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: sider_basic
+    type: Layout
+    areas:
+      content:
+        blocks:
+          - id: sider_basic_sider
+            type: Sider
+            properties:
+              initialCollapsed: false
+            areas:
+              content:
+                blocks:
+                  - id: sider_basic_content
+                    type: Span
+                    properties:
+                      content: Sider content
+
+  # ============================================
+  # THEME TESTS
+  # ============================================
+
+  - id: sider_theme_light
+    type: Layout
+    areas:
+      content:
+        blocks:
+          - id: sider_theme_light_sider
+            type: Sider
+            properties:
+              theme: light
+              initialCollapsed: false
+            areas:
+              content:
+                blocks:
+                  - id: sider_theme_light_content
+                    type: Span
+                    properties:
+                      content: Light sider
+
+  - id: sider_theme_dark
+    type: Layout
+    areas:
+      content:
+        blocks:
+          - id: sider_theme_dark_sider
+            type: Sider
+            properties:
+              theme: dark
+              initialCollapsed: false
+            areas:
+              content:
+                blocks:
+                  - id: sider_theme_dark_content
+                    type: Span
+                    properties:
+                      content: Dark sider
+
+  # ============================================
+  # COLLAPSED TESTS
+  # ============================================
+
+  - id: sider_collapsed
+    type: Layout
+    areas:
+      content:
+        blocks:
+          - id: sider_collapsed_sider
+            type: Sider
+            properties:
+              initialCollapsed: true
+              collapsible: true
+            areas:
+              content:
+                blocks:
+                  - id: sider_collapsed_content
+                    type: Span
+                    properties:
+                      content: Collapsed sider
+
+  - id: sider_expanded
+    type: Layout
+    areas:
+      content:
+        blocks:
+          - id: sider_expanded_sider
+            type: Sider
+            properties:
+              initialCollapsed: false
+              collapsible: true
+            areas:
+              content:
+                blocks:
+                  - id: sider_expanded_content
+                    type: Span
+                    properties:
+                      content: Expanded sider
+
+  # ============================================
+  # WIDTH TESTS
+  # ============================================
+
+  - id: sider_custom_width
+    type: Layout
+    areas:
+      content:
+        blocks:
+          - id: sider_custom_width_sider
+            type: Sider
+            properties:
+              width: 300
+              initialCollapsed: false
+            areas:
+              content:
+                blocks:
+                  - id: sider_custom_width_content
+                    type: Span
+                    properties:
+                      content: Wide sider
+
+  # ============================================
+  # COLLAPSIBLE TESTS
+  # ============================================
+
+  - id: sider_collapsible
+    type: Layout
+    areas:
+      content:
+        blocks:
+          - id: sider_collapsible_sider
+            type: Sider
+            properties:
+              collapsible: true
+              initialCollapsed: false
+            areas:
+              content:
+                blocks:
+                  - id: sider_collapsible_content
+                    type: Span
+                    properties:
+                      content: Collapsible sider

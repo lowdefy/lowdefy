@@ -27,11 +27,7 @@ const breakpoints = {
 function _media({ arrayIndices, location, params, globals }) {
   const { window } = globals;
   if (!window?.innerWidth) {
-    throw new Error(
-      `Operator Error: device window width not available for _media. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`device window width not available for _media.`);
   }
   let size;
   switch (true) {
@@ -67,5 +63,7 @@ function _media({ arrayIndices, location, params, globals }) {
     params,
   });
 }
+
+_media.dynamic = true;
 
 export default _media;

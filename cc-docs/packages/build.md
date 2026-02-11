@@ -146,8 +146,8 @@ Build artifacts go to `.lowdefy/build/`:
 ├── global.json        # Global state defaults
 ├── menus.json         # Navigation menus
 ├── types.json         # Type definitions map
-├── keyMap.json        # Block key tracking for error reporting
-├── refMap.json        # Reference file tracking for debugging
+├── keyMap.json        # Config key → source location mapping (for error tracing)
+├── refMap.json        # Ref ID → source file mapping (for error tracing)
 ├── api/               # API endpoint configs (one per endpoint)
 ├── connections/       # Connection configs (one per connection)
 ├── pages/             # Page configs (one per page)
@@ -155,6 +155,35 @@ Build artifacts go to `.lowdefy/build/`:
 ├── plugins/           # Plugin import manifests
 └── js/                # Compiled JavaScript functions
 ```
+
+### Error Tracing Artifacts
+
+`keyMap.json` and `refMap.json` enable config-aware error tracing:
+
+```javascript
+// keyMap.json - maps internal keys to config locations
+{
+  "abc123": {
+    "key": "pages.0.blocks.0.type",
+    "~r": "ref1",    // Reference to refMap entry
+    "~l": 15         // Line number in source file
+  }
+}
+
+// refMap.json - maps ref IDs to source files
+{
+  "ref1": { "path": "pages/home.yaml" }
+}
+```
+
+Used by `resolveConfigLocation()` to produce human-readable errors:
+```
+[Config Error] Block type "Buton" not found.
+  pages/home.yaml:15 at pages.0.blocks.0.type
+  /Users/dev/myapp/pages/home.yaml:15   ← clickable VSCode link
+```
+
+See [architecture/error-tracing.md](../architecture/error-tracing.md) for details.
 
 ## Design Decisions
 
@@ -203,6 +232,39 @@ Block and operator types are resolved at build time:
 | `.json` | JSON |
 | `.json5` | JSON5 (comments allowed) |
 | `.njk` | Nunjucks template |
+
+## Build Utilities
+
+Located in `packages/build/src/utils/`:
+
+| Utility | Purpose |
+|---------|---------|
+| `traverseConfig.js` | Depth-first config traversal for validation |
+| `findSimilarString.js` | "Did you mean?" suggestions using Levenshtein distance |
+| `createCheckDuplicateId.js` | Factory for duplicate ID detection |
+| `createCounter.js` | Factory for counting type usage |
+
+**Error formatting pattern:**
+```javascript
+import { ConfigError } from '@lowdefy/node-utils';
+
+// Fatal error - stops build
+throw new ConfigError({
+  message: `Block type "${type}" not found.`,
+  configKey: block['~k'],
+  context,
+  checkSlug: 'types',  // For ~ignoreBuildChecks suppression
+});
+
+// Warning - logs but continues build
+context.logger.configWarning({
+  message: `Deprecated feature used.`,
+  configKey: obj['~k'],
+  checkSlug: 'state-refs',  // For ~ignoreBuildChecks suppression
+});
+```
+
+Errors and warnings can be suppressed using `~ignoreBuildChecks` in config. See [architecture/error-tracing.md](../architecture/error-tracing.md) for details.
 
 ## Entry Points
 

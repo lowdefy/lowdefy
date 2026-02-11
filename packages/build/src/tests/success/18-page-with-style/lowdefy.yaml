@@ -1,0 +1,18 @@
+# 18: Page with Style Properties
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    style:
+      backgroundColor: '#f0f0f0'
+      padding: 20
+      minHeight: 100vh
+    blocks:
+      - id: styled
+        type: Title
+        style:
+          color: blue
+          fontSize: 24
+        properties:
+          content: Styled Title

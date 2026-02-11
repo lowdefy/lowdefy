@@ -69,13 +69,13 @@ test('secret get all is not allowed', async () => {
   const secret = (await import('./secret.js')).default;
 
   expect(() => secret({ params: true })).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: Getting all secrets is not allowed. Received: true at undefined."`
+    `"Getting all secrets is not allowed."`
   );
   expect(() => secret({ params: { all: true } })).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: Getting all secrets is not allowed. Received: {\\"all\\":true} at undefined."`
+    `"Getting all secrets is not allowed."`
   );
   expect(() => secret({ params: { all: 'yes' } })).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: Getting all secrets is not allowed. Received: {\\"all\\":\\"yes\\"} at undefined."`
+    `"Getting all secrets is not allowed."`
   );
 });
 

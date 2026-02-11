@@ -1,0 +1,30 @@
+# 57: Static operator with dynamic child in _ref vars
+# ===================================================
+# Tests that static operators (like _switch) containing dynamic operators
+# (like _url_query) in _ref vars are NOT evaluated at build time.
+#
+# The ~dyn marker must propagate correctly even when ~r is set (by copyVarValue).
+# Without proper handling, _switch would be evaluated and throw an error because
+# _url_query is not resolved at build time.
+
+lowdefy: local
+
+pages:
+  - _ref:
+      path: pages/login.yaml
+      vars:
+        pageId: login
+        errorMessage:
+          _switch:
+            branches:
+              - if:
+                  _eq:
+                    - _url_query: error
+                    - EmailCreateAccount
+                then: Access denied.
+              - if:
+                  _eq:
+                    - _url_query: error
+                    - Verification
+                then: Link expired.
+            default: An error occurred.

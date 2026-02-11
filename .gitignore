@@ -4,8 +4,9 @@
 **/node_modules/*
 **/.lowdefy/*
 **/.next/*
+**/playwright-report/*
+**/test-results/*
 **/.env
-**/lowdefy.yaml
 
 .turbo
 
@@ -38,3 +39,5 @@ packages/website/public/sitemap.xml
 lerna-debug.log
 
 *.vsix
+
+temp.md

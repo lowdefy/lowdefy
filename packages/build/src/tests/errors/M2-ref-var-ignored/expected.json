@@ -1,0 +1,12 @@
+{
+  "tests": [
+    {
+      "mode": "dev",
+      "noWarnings": ["undefinedBlockId"]
+    },
+    {
+      "mode": "prod",
+      "noErrors": ["undefinedBlockId"]
+    }
+  ]
+}

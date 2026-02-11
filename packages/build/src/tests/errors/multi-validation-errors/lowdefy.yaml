@@ -1,0 +1,37 @@
+# Multiple Validation Errors Test
+# Tests that multiple validation errors are collected and reported together.
+#
+# Expected errors:
+# 1. _state references "undefinedState" - no input block
+# 2. _state references "anotherUndefined" - no input block
+# 3. _payload references "undefinedPayload" - no payload key
+
+lowdefy: local
+
+connections:
+  - id: testApi
+    type: AxiosHttp
+    properties:
+      baseURL: http://example.com
+
+pages:
+  - id: home
+    type: Box
+    requests:
+      - id: testRequest
+        type: AxiosHttp
+        connectionId: testApi
+        payload:
+          userId:
+            _state: undefinedState
+        properties:
+          url: /users
+          params:
+            id:
+              _payload: undefinedPayload
+    blocks:
+      - id: display1
+        type: Paragraph
+        properties:
+          content:
+            _state: anotherUndefined

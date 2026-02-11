@@ -15,20 +15,41 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { ConfigError } from '@lowdefy/errors/build';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 import buildEndpoint from './buildEndpoint.js';
 
 function buildApi({ components, context }) {
   if (components.api && !type.isArray(components.api)) {
-    throw new Error(`Api is not an array. Received ${JSON.stringify(components.api)}.`);
+    throw new ConfigError({
+      message: 'Api is not an array.',
+      received: components.api,
+      context,
+    });
   }
   const api = type.isArray(components.api) ? components.api : [];
   const checkDuplicateEndpointId = createCheckDuplicateId({
     message: 'Duplicate endpointId "{{ id }}".',
+    context,
   });
-  api.map((endpoint, index) =>
-    buildEndpoint({ endpoint, index, context, checkDuplicateEndpointId })
-  );
+
+  // Wrap each endpoint build to collect errors instead of stopping on first error
+  api.forEach((endpoint, index) => {
+    try {
+      buildEndpoint({ endpoint, index, context, checkDuplicateEndpointId });
+    } catch (error) {
+      // Skip suppressed ConfigErrors (via ~ignoreBuildChecks: true)
+      if (error instanceof ConfigError && error.suppressed) {
+        return;
+      }
+      // Collect error object if context.errors exists, otherwise throw (for backward compat with tests)
+      if (context?.errors) {
+        context.errors.push(error);
+      } else {
+        throw error;
+      }
+    }
+  });
 
   return components;
 }

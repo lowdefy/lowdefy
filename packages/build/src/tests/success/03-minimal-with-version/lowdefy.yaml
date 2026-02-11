@@ -1,0 +1,7 @@
+# 03: Minimal Config with Version
+lowdefy: local
+version: 1.0.0
+
+pages:
+  - id: home
+    type: Box

@@ -1,0 +1,25 @@
+# 13: Page with Multiple Named Areas
+lowdefy: local
+
+pages:
+  - id: home
+    type: PageHeaderMenu
+    areas:
+      header:
+        blocks:
+          - id: logo
+            type: Title
+            properties:
+              content: My App
+      content:
+        blocks:
+          - id: main
+            type: Paragraph
+            properties:
+              content: Main content
+      footer:
+        blocks:
+          - id: copyright
+            type: Paragraph
+            properties:
+              content: © 2024

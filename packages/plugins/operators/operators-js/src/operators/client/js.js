@@ -15,7 +15,7 @@
 */
 
 function js(operatorContext) {
-  const { jsMap, operators, location, params } = operatorContext;
+  const { jsMap, operators, params } = operatorContext;
   try {
     return jsMap[params]({
       actions: (p) => operators._actions({ ...operatorContext, params: p }),
@@ -29,12 +29,10 @@ function js(operatorContext) {
       user: (p) => operators._user({ ...operatorContext, params: p }),
     });
   } catch (error) {
-    throw new Error(
-      `Operator Error: ${error.message} at ${location}. Received function: ${jsMap[
-        params
-      ].toString()}`
-    );
+    throw new Error(`${error.message} Function: ${jsMap[params].toString()}`);
   }
 }
+
+js.dynamic = true;
 
 export default js;

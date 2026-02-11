@@ -252,7 +252,7 @@ test('request throws an error with response body', async () => {
     from: { name: 'a@b.om', email: 'a.cc@mm.co' },
   };
   await expect(() => SendGridMailSend({ request, connection })).rejects.toThrow(
-    '["Test error 1.","Test error 2."]'
+    'SendGrid request failed.'
   );
 });
 

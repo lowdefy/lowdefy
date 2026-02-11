@@ -14,6 +14,7 @@
   limitations under the License.
 */
 import { jest } from '@jest/globals';
+import { PluginError, UserError } from '@lowdefy/errors/client';
 
 import testContext from '../../test/testContext.js';
 
@@ -99,23 +100,26 @@ test('Validate required field', async () => {
         id: 'validate',
         type: 'Validate',
       },
-      error: {
-        error: new Error('Your input has 1 validation error.'),
-        index: 0,
-        type: 'Validate',
-      },
+      error: expect.any(UserError),
+      index: 0,
     },
     responses: {
       validate: {
-        type: 'Validate',
+        action: {
+          id: 'validate',
+          type: 'Validate',
+        },
+        error: expect.any(UserError),
         index: 0,
-        error: new Error('Your input has 1 validation error.'),
       },
     },
     success: false,
     startTimestamp: { date: 0 },
     endTimestamp: { date: 0 },
   });
+  expect(button.Events.events.onClick.history[0].error.error.message).toContain(
+    'Your input has 1 validation error'
+  );
   expect(text1.eval.validation).toEqual({
     errors: ['This field is required'],
     status: 'error',
@@ -225,23 +229,26 @@ test('Validate all fields', async () => {
         id: 'validate',
         type: 'Validate',
       },
-      error: {
-        error: new Error('Your input has 2 validation errors.'),
-        index: 0,
-        type: 'Validate',
-      },
+      error: expect.any(UserError),
+      index: 0,
     },
     responses: {
       validate: {
-        type: 'Validate',
+        action: {
+          id: 'validate',
+          type: 'Validate',
+        },
+        error: expect.any(UserError),
         index: 0,
-        error: new Error('Your input has 2 validation errors.'),
       },
     },
     success: false,
     startTimestamp: { date: 0 },
     endTimestamp: { date: 0 },
   });
+  expect(button.Events.events.onClick.history[0].error.error.message).toContain(
+    'Your input has 2 validation error'
+  );
   expect(text1.eval.validation).toEqual({
     errors: ['text1 does not match pattern "text1"'],
     status: 'error',
@@ -277,23 +284,26 @@ test('Validate all fields', async () => {
         id: 'validate',
         type: 'Validate',
       },
-      error: {
-        error: new Error('Your input has 1 validation error.'),
-        index: 0,
-        type: 'Validate',
-      },
+      error: expect.any(UserError),
+      index: 0,
     },
     responses: {
       validate: {
-        type: 'Validate',
+        action: {
+          id: 'validate',
+          type: 'Validate',
+        },
+        error: expect.any(UserError),
         index: 0,
-        error: new Error('Your input has 1 validation error.'),
       },
     },
     success: false,
     startTimestamp: { date: 0 },
     endTimestamp: { date: 0 },
   });
+  expect(button.Events.events.onClick.history[0].error.error.message).toContain(
+    'Your input has 1 validation error'
+  );
   expect(text1.eval.validation).toEqual({
     errors: [],
     status: 'success',
@@ -413,23 +423,27 @@ test('Validate only one field', async () => {
         params: 'text1',
         type: 'Validate',
       },
-      error: {
-        error: new Error('Your input has 1 validation error.'),
-        index: 0,
-        type: 'Validate',
-      },
+      error: expect.any(UserError),
+      index: 0,
     },
     responses: {
       validate: {
-        type: 'Validate',
+        action: {
+          id: 'validate',
+          params: 'text1',
+          type: 'Validate',
+        },
+        error: expect.any(UserError),
         index: 0,
-        error: new Error('Your input has 1 validation error.'),
       },
     },
     success: false,
     startTimestamp: { date: 0 },
     endTimestamp: { date: 0 },
   });
+  expect(button.Events.events.onClick.history[0].error.error.message).toContain(
+    'Your input has 1 validation error'
+  );
   expect(text1.eval.validation).toEqual({
     errors: ['text1 does not match pattern "text1"'],
     status: 'error',
@@ -571,23 +585,27 @@ test('Validate list of fields', async () => {
         params: ['text1', 'text2'],
         type: 'Validate',
       },
-      error: {
-        error: new Error('Your input has 1 validation error.'),
-        index: 0,
-        type: 'Validate',
-      },
+      error: expect.any(UserError),
+      index: 0,
     },
     responses: {
       validate: {
-        type: 'Validate',
+        action: {
+          id: 'validate',
+          params: ['text1', 'text2'],
+          type: 'Validate',
+        },
+        error: expect.any(UserError),
         index: 0,
-        error: new Error('Your input has 1 validation error.'),
       },
     },
     success: false,
     startTimestamp: { date: 0 },
     endTimestamp: { date: 0 },
   });
+  expect(button.Events.events.onClick.history[0].error.error.message).toContain(
+    'Your input has 1 validation error'
+  );
   expect(displayMessage.mock.calls).toMatchInlineSnapshot(`
     Array [
       Array [
@@ -679,23 +697,27 @@ test('Invalid Validate params', async () => {
         params: 1,
         type: 'Validate',
       },
-      error: {
-        error: new Error('Invalid validate params.'),
-        index: 0,
-        type: 'Validate',
-      },
+      error: expect.any(PluginError),
+      index: 0,
     },
     responses: {
       validate: {
-        type: 'Validate',
+        action: {
+          id: 'validate',
+          params: 1,
+          type: 'Validate',
+        },
+        error: expect.any(PluginError),
         index: 0,
-        error: new Error('Invalid validate params.'),
       },
     },
     success: false,
     startTimestamp: { date: 0 },
     endTimestamp: { date: 0 },
   });
+  expect(button.Events.events.onClick.history[0].error.error.rawMessage).toContain(
+    'Invalid validate params.'
+  );
   expect(displayMessage.mock.calls).toMatchInlineSnapshot(`
     Array [
       Array [
@@ -833,14 +855,15 @@ test('Validate on nested objects using params.regex string', async () => {
     blockId: 'button',
     bounced: false,
     error: {
-      error: { type: 'Validate', error: new Error('Your input has 1 validation error.'), index: 0 },
       action: { id: 'validate', type: 'Validate', params: { regex: '^obj.*1$' } },
+      error: expect.any(UserError),
+      index: 0,
     },
     eventName: 'onClick',
     responses: {
       validate: {
-        type: 'Validate',
-        error: new Error('Your input has 1 validation error.'),
+        action: { id: 'validate', type: 'Validate', params: { regex: '^obj.*1$' } },
+        error: expect.any(UserError),
         index: 0,
       },
     },
@@ -848,6 +871,9 @@ test('Validate on nested objects using params.regex string', async () => {
     startTimestamp: { date: 0 },
     success: false,
   });
+  expect(button.Events.events.onClick.history[0].error.error.message).toContain(
+    'Your input has 1 validation error'
+  );
   expect(text1.eval.validation).toEqual({
     errors: ['text1 does not match pattern "text1"'],
     status: 'error',
@@ -926,18 +952,15 @@ test('Validate on nested objects using params.regex array', async () => {
     blockId: 'button',
     bounced: false,
     error: {
-      error: {
-        type: 'Validate',
-        error: new Error('Your input has 2 validation errors.'),
-        index: 0,
-      },
       action: { id: 'validate', type: 'Validate', params: { regex: ['^obj.*1$'] } },
+      error: expect.any(UserError),
+      index: 0,
     },
     eventName: 'onClick',
     responses: {
       validate: {
-        type: 'Validate',
-        error: new Error('Your input has 2 validation errors.'),
+        action: { id: 'validate', type: 'Validate', params: { regex: ['^obj.*1$'] } },
+        error: expect.any(UserError),
         index: 0,
       },
     },
@@ -945,6 +968,9 @@ test('Validate on nested objects using params.regex array', async () => {
     startTimestamp: { date: 0 },
     success: false,
   });
+  expect(button.Events.events.onClick.history[0].error.error.message).toContain(
+    'Your input has 2 validation error'
+  );
   expect(text1.eval.validation).toEqual({
     errors: ['text1 does not match pattern "text1"'],
     status: 'error',
@@ -1034,23 +1060,24 @@ test('Validate on nested objects using params.regex array and blockIds', async (
     blockId: 'button',
     bounced: false,
     error: {
-      error: {
-        type: 'Validate',
-        error: new Error('Your input has 2 validation errors.'),
-        index: 0,
-      },
       action: {
         id: 'validate',
         type: 'Validate',
         params: { regex: ['^obj.*t1$'], blockIds: ['text2'] },
       },
+      error: expect.any(UserError),
+      index: 0,
     },
     event: undefined,
     eventName: 'onClick',
     responses: {
       validate: {
-        type: 'Validate',
-        error: new Error('Your input has 2 validation errors.'),
+        action: {
+          id: 'validate',
+          type: 'Validate',
+          params: { regex: ['^obj.*t1$'], blockIds: ['text2'] },
+        },
+        error: expect.any(UserError),
         index: 0,
       },
     },
@@ -1058,6 +1085,9 @@ test('Validate on nested objects using params.regex array and blockIds', async (
     startTimestamp: { date: 0 },
     success: false,
   });
+  expect(button.Events.events.onClick.history[0].error.error.message).toContain(
+    'Your input has 2 validation error'
+  );
   expect(text1.eval.validation).toEqual({
     errors: ['text1 does not match pattern "text1"'],
     status: 'error',

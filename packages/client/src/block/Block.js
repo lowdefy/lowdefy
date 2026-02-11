@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { ErrorBoundary } from '@lowdefy/block-utils';
 
@@ -23,10 +23,31 @@ import MountEvents from '../MountEvents.js';
 
 const Block = ({ block, Blocks, context, lowdefy, parentLoading }) => {
   const [updates, setUpdate] = useState(0);
+  const loggedErrorsRef = useRef(new Set());
   lowdefy._internal.updaters[block.id] = () => setUpdate(updates + 1);
 
+  const handleError = (error) => {
+    if (lowdefy._internal.logError) {
+      lowdefy._internal.logError(error);
+    }
+  };
+
+  // Log parse errors to server
+  useEffect(() => {
+    if (block.eval?.parseErrors && lowdefy._internal.logError) {
+      block.eval.parseErrors.forEach((error) => {
+        // Use error message as key to avoid duplicate logs
+        const errorKey = `${block.id}:${error.message}`;
+        if (!loggedErrorsRef.current.has(errorKey)) {
+          loggedErrorsRef.current.add(errorKey);
+          lowdefy._internal.logError(error);
+        }
+      });
+    }
+  }, [block.eval?.parseErrors, block.id, lowdefy._internal]);
+
   return (
-    <ErrorBoundary>
+    <ErrorBoundary blockId={block.blockId} configKey={block.eval?.configKey} onError={handleError}>
       <MountEvents
         context={context}
         triggerEvent={async () => {

@@ -222,8 +222,133 @@ test('unknown control', async () => {
   expect(res.error).toEqual(new Error('Unexpected control.'));
 });
 
-test.todo('_payload operator');
-test.todo('_state operator');
-test.todo('_secrets operator');
-test.todo('_user operator');
-test.todo('_js operator');
+test('_payload operator in request properties', async () => {
+  const routine = {
+    requestId: 'test_request',
+    type: 'TestRequest',
+    id: 'request:test_endpoint:test_request',
+    connectionId: 'test',
+    properties: {
+      response: { _payload: 'value' },
+    },
+  };
+  const { res, context } = await runTest({ routine, payload: { value: 'from_payload' } });
+  expect(res.status).toEqual('continue');
+  expect(context.steps).toEqual({ test_request: 'from_payload' });
+});
+
+test('_payload operator with nested path', async () => {
+  const routine = {
+    requestId: 'test_request',
+    type: 'TestRequest',
+    id: 'request:test_endpoint:test_request',
+    connectionId: 'test',
+    properties: {
+      response: { _payload: 'nested.deep.value' },
+    },
+  };
+  const { res, context } = await runTest({
+    routine,
+    payload: { nested: { deep: { value: 'deeply_nested' } } },
+  });
+  expect(res.status).toEqual('continue');
+  expect(context.steps).toEqual({ test_request: 'deeply_nested' });
+});
+
+test('_step operator accesses previous step result', async () => {
+  const routine = [
+    {
+      requestId: 'first_request',
+      type: 'TestRequest',
+      id: 'request:test_endpoint:first_request',
+      connectionId: 'test',
+      properties: {
+        response: 'first_value',
+      },
+    },
+    {
+      requestId: 'second_request',
+      type: 'TestRequest',
+      id: 'request:test_endpoint:second_request',
+      connectionId: 'test',
+      properties: {
+        response: { _step: 'first_request' },
+      },
+    },
+  ];
+  const { res, context } = await runTest({ routine });
+  expect(res.status).toEqual('continue');
+  expect(context.steps).toEqual({ first_request: 'first_value', second_request: 'first_value' });
+});
+
+test('_secret operator in request properties', async () => {
+  const routine = {
+    requestId: 'test_request',
+    type: 'TestRequest',
+    id: 'request:test_endpoint:test_request',
+    connectionId: 'test',
+    properties: {
+      response: { _secret: 'REQUEST' },
+    },
+  };
+  const { res, context } = await runTest({ routine });
+  expect(res.status).toEqual('continue');
+  expect(context.steps).toEqual({ test_request: 'requestSecret' });
+});
+
+test('_user operator in request properties', async () => {
+  const routine = {
+    requestId: 'test_request',
+    type: 'TestRequest',
+    id: 'request:test_endpoint:test_request',
+    connectionId: 'test',
+    properties: {
+      response: { _user: 'id' },
+    },
+  };
+  const { res, context } = await runTest({ routine });
+  expect(res.status).toEqual('continue');
+  expect(context.steps).toEqual({ test_request: 'id' });
+});
+
+test('_sum operator computes sum of payload values', async () => {
+  const routine = {
+    requestId: 'test_request',
+    type: 'TestRequest',
+    id: 'request:test_endpoint:test_request',
+    connectionId: 'test',
+    properties: {
+      response: {
+        _sum: [{ _payload: 'a' }, { _payload: 'b' }],
+      },
+    },
+  };
+  const { res, context } = await runTest({ routine, payload: { a: 10, b: 5 } });
+  expect(res.status).toEqual('continue');
+  expect(context.steps).toEqual({ test_request: 15 });
+});
+
+test('combined operators in request properties', async () => {
+  const routine = {
+    requestId: 'test_request',
+    type: 'TestRequest',
+    id: 'request:test_endpoint:test_request',
+    connectionId: 'test',
+    properties: {
+      response: {
+        fromPayload: { _payload: 'input' },
+        fromSecret: { _secret: 'REQUEST' },
+        fromUser: { _user: 'id' },
+      },
+    },
+  };
+  const { res, context } = await runTest({ routine, payload: { input: 'test_input' } });
+  expect(res.status).toEqual('continue');
+  expect(context.steps).toEqual({
+    test_request: {
+      fromPayload: 'test_input',
+      fromSecret: 'requestSecret',
+      fromUser: 'id',
+    },
+  });
+});

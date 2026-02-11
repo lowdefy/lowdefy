@@ -1,0 +1,14 @@
+{
+  "tests": [
+    {
+      "mode": "dev",
+      "warnings": [
+        "_iff"
+      ],
+      "warningContains": [
+        "Operator type \"_iff\" was used but is not defined. Did you mean \"_if\"?",
+        "lowdefy.yaml:21"
+      ]
+    }
+  ]
+}

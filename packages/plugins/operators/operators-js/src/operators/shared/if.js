@@ -14,18 +14,16 @@
   limitations under the License.
 */
 
-function _if({ location, params }) {
+function _if({ params }) {
   if (params.test === true) {
     return params.then;
   }
   if (params.test === false) {
     return params.else;
   }
-  throw new Error(
-    `Operator Error: _if takes a boolean type for parameter test. Received: ${JSON.stringify(
-      params
-    )} at ${location}.`
-  );
+  throw new Error(`_if takes a boolean type for parameter test.`);
 }
+
+_if.dynamic = false;
 
 export default _if;

@@ -1,0 +1,22 @@
+id: settings
+type: Box
+properties:
+  title: Settings
+blocks:
+  - _ref: blocks/page-header.yaml
+  - id: settingsForm
+    type: Card
+    properties:
+      title: User Settings
+    blocks:
+      - _ref: components/form-field.yaml
+        vars:
+          id: username
+          label: Username
+          type: text
+      - _ref: components/form-field.yaml
+        vars:
+          id: email
+          label: Email
+          type: email
+  - _ref: blocks/page-footer.yaml

@@ -19,7 +19,7 @@ import { createApiContext } from '@lowdefy/api';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
 import { v4 as uuid } from 'uuid';
 
-import config from '../../build/config.json';
+import config from '../build/config.js';
 import connections from '../../build/plugins/connections.js';
 import createLogger from './log/createLogger.js';
 import fileCache from './fileCache.js';
@@ -29,6 +29,8 @@ import logRequest from './log/logRequest.js';
 import operators from '../../build/plugins/operators/server.js';
 import jsMap from '../../build/plugins/operators/serverJsMap.js';
 import getAuthOptions from './auth/getAuthOptions.js';
+import loggerConfig from '../build/logger.js';
+import setSentryUser from './sentry/setSentryUser.js';
 
 const secrets = getSecretsFromEnv();
 
@@ -54,6 +56,11 @@ function apiWrapper(handler) {
       context.authOptions = getAuthOptions(context);
       if (!req.url.startsWith('/api/auth')) {
         context.session = await getServerSession(context);
+        // Set Sentry user context for authenticated requests
+        setSentryUser({
+          user: context.session?.user,
+          sentryConfig: loggerConfig.sentry,
+        });
       }
       createApiContext(context);
       logRequest({ context });
@@ -61,7 +68,7 @@ function apiWrapper(handler) {
       const response = await handler({ context, req, res });
       return response;
     } catch (error) {
-      logError({ error, context });
+      await logError({ error, context });
       res.status(500).json({ name: error.name, message: error.message });
     }
   };

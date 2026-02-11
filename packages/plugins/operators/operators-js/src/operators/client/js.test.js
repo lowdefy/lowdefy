@@ -86,9 +86,5 @@ test('js throw when invalid javascript function', async () => {
       location: rootLocation,
       params: 'c1',
     })
-  ).toThrow(
-    `Operator Error: c1 is not a proper JavaScript function at root. Received function: ${validMap[
-      'c1'
-    ].toString()}`
-  );
+  ).toThrow('c1 is not a proper JavaScript function');
 });

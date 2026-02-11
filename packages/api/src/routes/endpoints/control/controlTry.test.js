@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { RequestError } from '../../../context/errors.js';
+import { PluginError } from '@lowdefy/errors/server';
 
 import runTest from '../test/runTest.js';
 
@@ -117,13 +117,16 @@ test('try catch with unsuccessful try', async () => {
     ],
     [
       {
-        err: new RequestError('Try and fail'),
+        err: new PluginError({
+          error: new Error('Try and fail'),
+          location: 'test/try_fail',
+        }),
         params: {
           id: 'try_fail',
           type: 'TestRequestError',
         },
       },
-      'Try and fail',
+      'Try and fail at test/try_fail.',
     ],
     [
       {
@@ -236,13 +239,16 @@ test('try only, fail', async () => {
     ],
     [
       {
-        err: new RequestError('Try and fail'),
+        err: new PluginError({
+          error: new Error('Try and fail'),
+          location: 'test/try_fail',
+        }),
         params: {
           id: 'try_fail',
           type: 'TestRequestError',
         },
       },
-      'Try and fail',
+      'Try and fail at test/try_fail.',
     ],
   ]);
   expect(res.response).toEqual(undefined);
@@ -372,13 +378,16 @@ test('try with finally, try fail', async () => {
     ],
     [
       {
-        err: new RequestError('Try and fail'),
+        err: new PluginError({
+          error: new Error('Try and fail'),
+          location: 'test/try_fail',
+        }),
         params: {
           id: 'try_fail',
           type: 'TestRequestError',
         },
       },
-      'Try and fail',
+      'Try and fail at test/try_fail.',
     ],
     [
       {
@@ -553,13 +562,16 @@ test('try catch finally, try fail', async () => {
     ],
     [
       {
-        err: new RequestError('Try and fail'),
+        err: new PluginError({
+          error: new Error('Try and fail'),
+          location: 'test/try_fail',
+        }),
         params: {
           id: 'try_fail',
           type: 'TestRequestError',
         },
       },
-      'Try and fail',
+      'Try and fail at test/try_fail.',
     ],
     [
       {
@@ -671,13 +683,16 @@ test('try catch finally, try and catch fail', async () => {
     ],
     [
       {
-        err: new RequestError('Try and fail'),
+        err: new PluginError({
+          error: new Error('Try and fail'),
+          location: 'test/try_fail',
+        }),
         params: {
           id: 'try_fail',
           type: 'TestRequestError',
         },
       },
-      'Try and fail',
+      'Try and fail at test/try_fail.',
     ],
     [
       {
@@ -700,13 +715,16 @@ test('try catch finally, try and catch fail', async () => {
     ],
     [
       {
-        err: new RequestError('Fallback thing fail'),
+        err: new PluginError({
+          error: new Error('Fallback thing fail'),
+          location: 'test/catch_error',
+        }),
         params: {
           id: 'catch_error',
           type: 'TestRequestError',
         },
       },
-      'Fallback thing fail',
+      'Fallback thing fail at test/catch_error.',
     ],
     [
       {

@@ -26,4 +26,6 @@ function _state({ arrayIndices, location, params, state }) {
   });
 }
 
+_state.dynamic = true;
+
 export default _state;

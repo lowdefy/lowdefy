@@ -17,7 +17,7 @@
 import { jest } from '@jest/globals';
 
 import buildApi from './buildApi.js';
-import testContext from '../../test/testContext.js';
+import testContext from '../../test-utils/testContext.js';
 
 const mockLogWarn = jest.fn();
 const mockLog = jest.fn();
@@ -44,7 +44,7 @@ test('api is not an array', () => {
   const components = {
     api: 'api',
   };
-  expect(() => buildApi({ components, context })).toThrow('Api is not an array. Received "api".');
+  expect(() => buildApi({ components, context })).toThrow('Api is not an array.');
 });
 
 test('api endpoint does not have an id', () => {
@@ -68,7 +68,7 @@ test('api endpoint id is not a string', () => {
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    'Endpoint id is not a string at endpoint 0. Received true.'
+    'Endpoint id is not a string at endpoint 0.'
   );
 });
 
@@ -102,7 +102,7 @@ test('api endpoint id contains "."', () => {
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    `Endpoint id "api1.test" at endpoint "api1.test" should not include a period (".").`
+    `Endpoint id "api1.test" should not include a period (".").`
   );
 });
 
@@ -115,7 +115,7 @@ test('api type missing', () => {
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    'Endpoint type is not defined at "api1" on endpoint "api1".'
+    'Endpoint type is not defined at "api1".'
   );
 });
 
@@ -129,7 +129,7 @@ test('api type not a string', () => {
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    'Endpoint type is not a string at "api1" on endpoint "api1". Received 1.'
+    'Endpoint type is not a string at "api1".'
   );
 });
 

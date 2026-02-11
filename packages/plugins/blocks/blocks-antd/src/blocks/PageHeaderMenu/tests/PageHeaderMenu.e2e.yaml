@@ -1,0 +1,110 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: pageheadermenu
+type: PageHeaderMenu
+properties:
+  header:
+    theme: dark
+  menu:
+    links:
+      - id: phm_link1
+        type: MenuLink
+        properties:
+          title: Dashboard
+      - id: phm_link2
+        type: MenuLink
+        properties:
+          title: Settings
+      - id: phm_link3
+        type: MenuLink
+        properties:
+          title: Help
+  breadcrumb:
+    list:
+      - Home
+      - Dashboard
+  logo:
+    alt: Test Logo
+
+areas:
+  header:
+    blocks:
+      - id: header_content
+        type: Span
+        properties:
+          content: Header Content
+  content:
+    blocks:
+      # ============================================
+      # BASIC RENDERING
+      # ============================================
+
+      - id: basic_content
+        type: Title
+        properties:
+          content: Page Content
+          level: 3
+
+      # ============================================
+      # EVENT TESTS
+      # ============================================
+
+      - id: onclick_display
+        type: Span
+        properties:
+          content:
+            _if:
+              test:
+                _ne:
+                  - _state: phm_breadcrumb_clicked
+                  - null
+              then:
+                _string.concat:
+                  - 'Breadcrumb clicked: '
+                  - _state: phm_breadcrumb_clicked
+              else: ''
+
+      # ============================================
+      # MENU ITEM TARGETING DISPLAY
+      # ============================================
+
+      - id: menu_click_display
+        type: Span
+        properties:
+          content:
+            _if:
+              test:
+                _ne:
+                  - _state: phm_menu_clicked
+                  - null
+              then:
+                _string.concat:
+                  - 'Menu clicked: '
+                  - _state: phm_menu_clicked
+              else: ''
+
+events:
+  onBreadcrumbClick:
+    - id: set_breadcrumb_clicked
+      type: SetState
+      params:
+        phm_breadcrumb_clicked:
+          _event: link
+  onMenuItemClick:
+    - id: set_menu_clicked
+      type: SetState
+      params:
+        phm_menu_clicked:
+          _event: key

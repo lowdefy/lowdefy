@@ -85,6 +85,6 @@ test('_media height', () => {
 
 test('_media throw on no innerWidth', () => {
   expect(() => media({ params: true, location: 'locationId', globals: { window: {} } })).toThrow(
-    'Operator Error: device window width not available for _media. Received: true at locationId.'
+    'device window width not available for _media.'
   );
 });

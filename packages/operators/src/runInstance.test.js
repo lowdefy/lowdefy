@@ -127,10 +127,9 @@ test('nameAndSpread - spread args must be an array', () => {
       params: { on: functions, x: 1, y: 2, z: 'x' },
       instanceType: 'object',
     })
-  ).toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _op.nameAndSpread takes an array as input argument for z.
-              Received: {\\"_op.nameAndSpread\\":{\\"on\\":{\\"property\\":42},\\"x\\":1,\\"y\\":2,\\"z\\":\\"x\\"}} at locationId."
-  `);
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"_op.nameAndSpread takes an array as input argument for z."`
+  );
 });
 
 test('property', () => {
@@ -169,9 +168,7 @@ test('error', () => {
       params: [functions],
       instanceType: 'object',
     })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _op.error - Function error. Received: {\\"_op.error\\":[{\\"property\\":42}]} at locationId."`
-  );
+  ).toThrowErrorMatchingInlineSnapshot(`"_op.error - Function error."`);
 });
 
 test('typeCheck', () => {
@@ -204,10 +201,9 @@ test('typeCheck', () => {
       params: ['x'],
       instanceType: 'object',
     })
-  ).toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _op.typeCheck must be evaluated on an object instance. For named args provide an object instance to the \\"on\\" property, for listed args provide and object instance as the first element in the operator argument array.
-        Received: {\\"_op.typeCheck\\":[\\"x\\"]} at locationId."
-  `);
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"_op.typeCheck must be evaluated on an object instance. For named args provide an object instance to the \\"on\\" property, for listed args provide an object instance as the first element in the operator argument array."`
+  );
 });
 
 test('combination', () => {
@@ -239,10 +235,9 @@ test('combination', () => {
       methodName: 'combination',
       params: 'x',
     })
-  ).toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _op.combination accepts one of the following types: array, object.
-          Received: {\\"_op.combination\\":\\"x\\"} at locationId."
-  `);
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"_op.combination accepts one of the following types: array, object."`
+  );
 });
 
 test('calling an undefined function', () => {
@@ -255,10 +250,9 @@ test('calling an undefined function', () => {
       params: [],
       instanceType: 'object',
     })
-  ).toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _op.x is not supported, use one of the following: singleArg, namedArgs, spreadArgs, nameAndSpread, property, typeCheck, combination, error, noFunction, returnInstance.
-          Received: {\\"_op.x\\":[]} at locationId."
-  `);
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"_op.x is not supported, use one of the following: singleArg, namedArgs, spreadArgs, nameAndSpread, property, typeCheck, combination, error, noFunction, returnInstance."`
+  );
 });
 
 test('calling an undefined instance function', () => {
@@ -271,8 +265,7 @@ test('calling an undefined instance function', () => {
       params: [{}],
       instanceType: 'object',
     })
-  ).toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _op must be evaluated using one of the following: singleArg, namedArgs, spreadArgs, nameAndSpread, property, typeCheck, combination, error, noFunction, returnInstance.
-          Received: {\\"_op.noFunction\\":[{}]} at locationId."
-  `);
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"_op must be evaluated using one of the following: singleArg, namedArgs, spreadArgs, nameAndSpread, property, typeCheck, combination, error, noFunction, returnInstance."`
+  );
 });

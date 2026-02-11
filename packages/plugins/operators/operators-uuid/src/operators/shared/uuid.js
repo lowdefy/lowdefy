@@ -42,4 +42,6 @@ function _uuid({ params, location, methodName }) {
   });
 }
 
+_uuid.dynamic = true;
+
 export default _uuid;

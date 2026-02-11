@@ -17,14 +17,18 @@
 import runRoutine from '../runRoutine.js';
 
 async function controlSwitch(context, routineContext, { control }) {
-  const { logger, evaluateOperators } = context;
+  const { endpointId, logger, evaluateOperators } = context;
   const { items } = routineContext;
   const cases = control[':switch'];
   logger.debug({
     event: 'debug_control_switch',
   });
   for (const caseObj of cases) {
-    const evaluatedCase = evaluateOperators({ input: caseObj[':case'], items, location: 'TODO' });
+    const evaluatedCase = evaluateOperators({
+      input: caseObj[':case'],
+      items,
+      location: caseObj['~k'] ?? control['~k'] ?? ':switch',
+    });
     logger.debug({
       event: 'debug_control_switch_case',
       case: {
@@ -37,7 +41,7 @@ async function controlSwitch(context, routineContext, { control }) {
         event: 'debug_control_switch_run_then',
       });
       if (!caseObj[':then']) {
-        throw new Error('Invalid switch :case - missing :then');
+        throw new Error(`Invalid :switch :case in endpoint "${endpointId}" - missing :then.`);
       }
       return runRoutine(context, routineContext, { routine: caseObj[':then'] });
     }

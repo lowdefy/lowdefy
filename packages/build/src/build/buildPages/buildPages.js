@@ -17,15 +17,71 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { ConfigError } from '@lowdefy/errors/build';
 import buildPage from './buildPage.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
+import validateLinkReferences from './validateLinkReferences.js';
+import validatePayloadReferences from './validatePayloadReferences.js';
+import validateServerStateReferences from './validateServerStateReferences.js';
+import validateStateReferences from './validateStateReferences.js';
 
 function buildPages({ components, context }) {
   const pages = type.isArray(components.pages) ? components.pages : [];
   const checkDuplicatePageId = createCheckDuplicateId({
     message: 'Duplicate pageId "{{ id }}".',
+    context,
   });
-  pages.map((page, index) => buildPage({ page, index, context, checkDuplicatePageId }));
+
+  // Initialize linkActionRefs to collect Link action references across all pages
+  context.linkActionRefs = [];
+
+  // Track which pages failed to build so we skip them in validation
+  const failedPageIndices = new Set();
+
+  // Wrap each page build to collect errors instead of stopping on first error
+  pages.forEach((page, index) => {
+    try {
+      const result = buildPage({ page, index, context, checkDuplicatePageId });
+      // buildPage returns { failed: true } when validation fails
+      if (result?.failed) {
+        failedPageIndices.add(index);
+      }
+    } catch (error) {
+      // Skip suppressed ConfigErrors (via ~ignoreBuildChecks: true)
+      if (error instanceof ConfigError && error.suppressed) {
+        return;
+      }
+      // Collect error object if context.errors exists, otherwise throw (for backward compat with tests)
+      if (context?.errors) {
+        context.errors.push(error);
+        failedPageIndices.add(index);
+      } else {
+        throw error;
+      }
+    }
+  });
+
+  // Validate that all Link actions reference existing pages
+  // Only include pages that built successfully
+  const pageIds = pages
+    .filter((_, index) => !failedPageIndices.has(index))
+    .map((page) => page.pageId);
+  validateLinkReferences({
+    linkActionRefs: context.linkActionRefs,
+    pageIds,
+    context,
+  });
+
+  // Validate that _state references use defined block IDs
+  // and _payload references use defined payload keys
+  // Skip pages that failed to build
+  pages.forEach((page, index) => {
+    if (failedPageIndices.has(index)) return;
+    validateStateReferences({ page, context });
+    validatePayloadReferences({ page, context });
+    validateServerStateReferences({ page, context });
+  });
+
   return components;
 }
 

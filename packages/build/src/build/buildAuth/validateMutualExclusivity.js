@@ -17,22 +17,34 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { ConfigError } from '@lowdefy/errors/build';
 
-function validateMutualExclusivity({ components, entity }) {
+function validateMutualExclusivity({ components, context, entity }) {
+  const configKey = components.auth[entity]?.['~k'] || components.auth?.['~k'];
   if (
     (components.auth[entity].protected === true && components.auth[entity].public === true) ||
     (type.isArray(components.auth[entity].protected) &&
       type.isArray(components.auth[entity].public))
   ) {
-    throw new Error(
-      `Protected and public ${entity} are mutually exclusive. When protected ${entity} are listed, all unlisted ${entity} are public by default and vice versa.`
-    );
+    throw new ConfigError({
+      message: `Protected and public ${entity} are mutually exclusive. When protected ${entity} are listed, all unlisted ${entity} are public by default and vice versa.`,
+      configKey,
+      context,
+    });
   }
   if (components.auth[entity].protected === false) {
-    throw new Error(`Protected ${entity} can not be set to false.`);
+    throw new ConfigError({
+      message: `Protected ${entity} can not be set to false.`,
+      configKey,
+      context,
+    });
   }
   if (components.auth[entity].public === false) {
-    throw new Error(`Public ${entity} can not be set to false.`);
+    throw new ConfigError({
+      message: `Public ${entity} can not be set to false.`,
+      configKey,
+      context,
+    });
   }
 }
 

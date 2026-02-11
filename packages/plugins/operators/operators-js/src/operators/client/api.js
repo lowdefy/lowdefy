@@ -16,13 +16,9 @@
 
 import { get, type } from '@lowdefy/helpers';
 
-function _api({ params, apiResponses, location }) {
+function _api({ params, apiResponses }) {
   if (!type.isString(params)) {
-    throw new Error(
-      `Operator Error: _api accepts a string value. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`_api accepts a string value.`);
   }
 
   const splitKey = params.split('.');
@@ -41,5 +37,7 @@ function _api({ params, apiResponses, location }) {
 
   return null;
 }
+
+_api.dynamic = true;
 
 export default _api;

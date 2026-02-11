@@ -17,7 +17,7 @@
 import path from 'path';
 import { createApiContext, getPageConfig, getRootConfig } from '@lowdefy/api';
 
-import config from '../build/config.json';
+import config from '../lib/build/config.js';
 import fileCache from '../lib/server/fileCache.js';
 import Page from '../lib/client/Page.js';
 

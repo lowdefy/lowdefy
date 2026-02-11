@@ -1,0 +1,14 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": [
+        "Block should have required property \"id\""
+      ],
+      "errorContains": [
+        "Block should have required property \"id\".",
+        "lowdefy.yaml:16"
+      ]
+    }
+  ]
+}

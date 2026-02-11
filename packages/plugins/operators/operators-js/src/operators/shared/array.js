@@ -112,4 +112,6 @@ function _array({ params, location, methodName }) {
   });
 }
 
+_array.dynamic = false;
+
 export default _array;

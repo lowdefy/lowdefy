@@ -18,6 +18,7 @@
 
 import buildRoutine from './buildRoutine/buildRoutine.js';
 import validateEndpoint from './validateEndpoint.js';
+import validateStepReferences from './validateStepReferences.js';
 
 function buildEndpoint({ endpoint, index, context, checkDuplicateEndpointId }) {
   validateEndpoint({ endpoint, index, checkDuplicateEndpointId });
@@ -27,6 +28,9 @@ function buildEndpoint({ endpoint, index, context, checkDuplicateEndpointId }) {
     endpointId: endpoint.endpointId,
     typeCounters: context.typeCounters,
   });
+
+  // Validate that _step references point to defined step IDs
+  validateStepReferences({ endpoint, context });
 
   endpoint.id = `endpoint:${endpoint.endpointId}`;
 }

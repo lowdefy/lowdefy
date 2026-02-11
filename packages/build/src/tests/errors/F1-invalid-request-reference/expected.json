@@ -1,0 +1,17 @@
+{
+  "tests": [
+    {
+      "mode": "dev",
+      "exactWarnings": [
+        "{{fixturesDir}}/F1-invalid-request-reference/lowdefy.yaml:29\n[Config Warning] Request \"nonExistentRequest\" not defined on page \"home\"."
+      ]
+    },
+    {
+      "mode": "prod",
+      "exactErrors": [
+        "{{fixturesDir}}/F1-invalid-request-reference/lowdefy.yaml:29\n[ConfigError] Request \"nonExistentRequest\" not defined on page \"home\"."
+      ],
+      "expectThrow": true
+    }
+  ]
+}

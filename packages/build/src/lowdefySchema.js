@@ -9,6 +9,29 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
+        '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
+        '~r': {},
+        '~l': {},
         async: {
           type: 'boolean',
           errorMessage: {
@@ -43,6 +66,29 @@ export default {
       type: 'object',
       additionalProperties: false,
       properties: {
+        '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
+        '~r': {},
+        '~l': {},
         html: {
           type: 'object',
           errorMessage: {
@@ -72,6 +118,29 @@ export default {
         type: 'App "auth" should be an object.',
       },
       properties: {
+        '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
+        '~r': {},
+        '~l': {},
         advanced: {
           type: 'object',
           properties: {
@@ -115,6 +184,29 @@ export default {
             type: 'App "config.auth.api" should be an object.',
           },
           properties: {
+            '~ignoreBuildChecks': {
+              oneOf: [
+                { const: true },
+                {
+                  type: 'array',
+                  items: {
+                    type: 'string',
+                    enum: [
+                      'state-refs',
+                      'payload-refs',
+                      'step-refs',
+                      'link-refs',
+                      'request-refs',
+                      'connection-refs',
+                      'types',
+                      'schema',
+                    ],
+                  },
+                },
+              ],
+            },
+            '~r': {},
+            '~l': {},
             protected: {
               type: ['array', 'boolean'],
               errorMessage: {
@@ -166,6 +258,29 @@ export default {
           type: 'object',
           additionalProperties: false,
           properties: {
+            '~ignoreBuildChecks': {
+              oneOf: [
+                { const: true },
+                {
+                  type: 'array',
+                  items: {
+                    type: 'string',
+                    enum: [
+                      'state-refs',
+                      'payload-refs',
+                      'step-refs',
+                      'link-refs',
+                      'request-refs',
+                      'connection-refs',
+                      'types',
+                      'schema',
+                    ],
+                  },
+                },
+              ],
+            },
+            '~r': {},
+            '~l': {},
             signIn: {
               type: 'string',
               default: '/auth/signin',
@@ -267,6 +382,29 @@ export default {
             type: 'App "config.auth.pages" should be an object.',
           },
           properties: {
+            '~ignoreBuildChecks': {
+              oneOf: [
+                { const: true },
+                {
+                  type: 'array',
+                  items: {
+                    type: 'string',
+                    enum: [
+                      'state-refs',
+                      'payload-refs',
+                      'step-refs',
+                      'link-refs',
+                      'request-refs',
+                      'connection-refs',
+                      'types',
+                      'schema',
+                    ],
+                  },
+                },
+              ],
+            },
+            '~r': {},
+            '~l': {},
             protected: {
               type: ['array', 'boolean'],
               errorMessage: {
@@ -354,6 +492,20 @@ export default {
         userFields: {
           type: 'object',
         },
+        dev: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            '~ignoreBuildChecks': {},
+            '~r': {},
+            '~l': {},
+            mockUser: {
+              type: 'object',
+              description:
+                'Mock user object for e2e testing in dev server. Any JSON structure accepted.',
+            },
+          },
+        },
       },
     },
     block: {
@@ -361,6 +513,29 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
+        '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
+        '~r': {},
+        '~l': {},
         id: {
           type: 'string',
           errorMessage: {
@@ -448,6 +623,29 @@ export default {
                   type: 'object',
                   additionalProperties: false,
                   properties: {
+                    '~ignoreBuildChecks': {
+                      oneOf: [
+                        { const: true },
+                        {
+                          type: 'array',
+                          items: {
+                            type: 'string',
+                            enum: [
+                              'state-refs',
+                              'payload-refs',
+                              'step-refs',
+                              'link-refs',
+                              'request-refs',
+                              'connection-refs',
+                              'types',
+                              'schema',
+                            ],
+                          },
+                        },
+                      ],
+                    },
+                    '~r': {},
+                    '~l': {},
                     try: {
                       type: 'array',
                       items: {
@@ -464,6 +662,29 @@ export default {
                       type: 'object',
                       additionalProperties: false,
                       properties: {
+                        '~ignoreBuildChecks': {
+                          oneOf: [
+                            { const: true },
+                            {
+                              type: 'array',
+                              items: {
+                                type: 'string',
+                                enum: [
+                                  'state-refs',
+                                  'payload-refs',
+                                  'step-refs',
+                                  'link-refs',
+                                  'request-refs',
+                                  'connection-refs',
+                                  'types',
+                                  'schema',
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                        '~r': {},
+                        '~l': {},
                         immediate: {
                           type: 'boolean',
                           errorMessage: {
@@ -526,6 +747,29 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
+        '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
+        '~r': {},
+        '~l': {},
         id: {
           type: 'string',
           errorMessage: {
@@ -561,6 +805,29 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
+        '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
+        '~r': {},
+        '~l': {},
         id: {
           type: 'string',
           errorMessage: {
@@ -593,6 +860,29 @@ export default {
       additionalProperties: false,
       required: ['id'],
       properties: {
+        '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
+        '~r': {},
+        '~l': {},
         id: {
           type: 'string',
           errorMessage: {
@@ -627,6 +917,29 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
+        '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
+        '~r': {},
+        '~l': {},
         id: {
           type: 'string',
           errorMessage: {
@@ -678,6 +991,29 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
+        '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
+        '~r': {},
+        '~l': {},
         id: {
           type: 'string',
           errorMessage: {
@@ -734,6 +1070,29 @@ export default {
       additionalProperties: false,
       required: ['name', 'version'],
       properties: {
+        '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
+        '~r': {},
+        '~l': {},
         name: {
           type: 'string',
           errorMessage: {
@@ -766,6 +1125,29 @@ export default {
       additionalProperties: false,
       required: ['id', 'type', 'connectionId'],
       properties: {
+        '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
+        '~r': {},
+        '~l': {},
         id: {
           type: 'string',
           errorMessage: {
@@ -810,6 +1192,29 @@ export default {
   additionalProperties: false,
   required: ['lowdefy'],
   properties: {
+    '~ignoreBuildChecks': {
+      oneOf: [
+        { const: true },
+        {
+          type: 'array',
+          items: {
+            type: 'string',
+            enum: [
+              'state-refs',
+              'payload-refs',
+              'step-refs',
+              'link-refs',
+              'request-refs',
+              'connection-refs',
+              'types',
+              'schema',
+            ],
+          },
+        },
+      ],
+    },
+    '~r': {},
+    '~l': {},
     name: {
       type: 'string',
       errorMessage: {
@@ -853,6 +1258,29 @@ export default {
       },
       additionalProperties: false,
       properties: {
+        '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
+        '~r': {},
+        '~l': {},
         basePath: {
           type: 'string',
           description: 'App base path to apply to all routes. Base path must start with "/".',
@@ -919,6 +1347,127 @@ export default {
       },
       errorMessage: {
         type: 'App "pages" should be an array.',
+      },
+    },
+    logger: {
+      type: 'object',
+      additionalProperties: false,
+      errorMessage: {
+        type: 'App "logger" should be an object.',
+      },
+      properties: {
+        '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
+        '~r': {},
+        '~l': {},
+        sentry: {
+          type: 'object',
+          additionalProperties: false,
+          errorMessage: {
+            type: 'App "logger.sentry" should be an object.',
+          },
+          properties: {
+            '~ignoreBuildChecks': {
+              oneOf: [
+                { const: true },
+                {
+                  type: 'array',
+                  items: {
+                    type: 'string',
+                    enum: [
+                      'state-refs',
+                      'payload-refs',
+                      'step-refs',
+                      'link-refs',
+                      'request-refs',
+                      'connection-refs',
+                      'types',
+                      'schema',
+                    ],
+                  },
+                },
+              ],
+            },
+            '~r': {},
+            '~l': {},
+            client: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'App "logger.sentry.client" should be a boolean.',
+              },
+            },
+            server: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'App "logger.sentry.server" should be a boolean.',
+              },
+            },
+            tracesSampleRate: {
+              type: 'number',
+              minimum: 0,
+              maximum: 1,
+              errorMessage: {
+                type: 'App "logger.sentry.tracesSampleRate" should be a number between 0 and 1.',
+              },
+            },
+            replaysSessionSampleRate: {
+              type: 'number',
+              minimum: 0,
+              maximum: 1,
+              errorMessage: {
+                type: 'App "logger.sentry.replaysSessionSampleRate" should be a number between 0 and 1.',
+              },
+            },
+            replaysOnErrorSampleRate: {
+              type: 'number',
+              minimum: 0,
+              maximum: 1,
+              errorMessage: {
+                type: 'App "logger.sentry.replaysOnErrorSampleRate" should be a number between 0 and 1.',
+              },
+            },
+            feedback: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'App "logger.sentry.feedback" should be a boolean.',
+              },
+            },
+            environment: {
+              type: 'string',
+              errorMessage: {
+                type: 'App "logger.sentry.environment" should be a string.',
+              },
+            },
+            userFields: {
+              type: 'array',
+              items: {
+                type: 'string',
+              },
+              errorMessage: {
+                type: 'App "logger.sentry.userFields" should be an array of strings.',
+              },
+            },
+          },
+        },
       },
     },
   },

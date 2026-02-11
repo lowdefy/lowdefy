@@ -1,0 +1,18 @@
+# E3: Missing Block ID
+# =====================
+# Tests that blocks without an id throw an error with location.
+#
+# Expected error:
+#   [Config Error] Block id missing at page "home".
+#
+# The error points to line 16 where the block without id is defined.
+
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - type: Button
+        properties:
+          title: No ID

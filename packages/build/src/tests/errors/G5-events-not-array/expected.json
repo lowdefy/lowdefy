@@ -1,0 +1,14 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": [
+        "must be array"
+      ],
+      "errorContains": [
+        "must be array",
+        "lowdefy.yaml:21"
+      ]
+    }
+  ]
+}

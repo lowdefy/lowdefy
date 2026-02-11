@@ -61,6 +61,7 @@ Additional operators:
 ```
 server-dev/
 ├── lib/
+│   ├── build/            # Build artifact loaders (deserialize JSON)
 │   ├── server/           # Server utilities
 │   └── client/           # Client utilities (extended)
 │       ├── App.js        # Dev app wrapper
@@ -156,6 +157,43 @@ const context = {
   startWatchers
 };
 ```
+
+## Server Process and Logging
+
+### stdio: inherit
+
+The manager spawns the Next.js server with `stdio: ['ignore', 'inherit', 'pipe']`:
+
+- **stdout** is inherited — server pino JSON flows directly to the manager's stdout (which the CLI reads)
+- **stderr** is piped — the manager formats stderr lines through its own logger
+- **stdin** is ignored
+
+This eliminates the need for a dev stdout line handler to parse and re-emit server logs. The server's pino logger includes a `print` mixin that adds a `print` field to every JSON line, so the CLI can render each line correctly (error → red, link → blue, spin → spinner, etc.).
+
+```javascript
+// startServer.mjs
+const nextServer = spawn('node', [context.bin.next, 'start'], {
+  stdio: ['ignore', 'inherit', 'pipe'],
+  env: {
+    ...process.env,
+    LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
+    PORT: context.options.port,
+  },
+});
+```
+
+### Logger Setup
+
+The server-dev uses two loggers:
+
+| Logger | Package | Purpose |
+|--------|---------|---------|
+| Manager logger | `createDevLogger` from `@lowdefy/logger/dev` | Build orchestration, watcher output |
+| Server logger | `createNodeLogger` + `wrapErrorLogger` from `@lowdefy/logger/node` | HTTP request logs, runtime errors |
+
+Both emit pino JSON with `print` mixin to stdout. The CLI reads this JSON and renders it via `createStdOutLineHandler` → `createPrint` (ora spinners, colored output).
+
+See [@lowdefy/logger](../utils/logger.md) for details.
 
 ## Build Processes
 
@@ -464,6 +502,37 @@ const nextConfig = {
 | Plugin change | nextBuildWatcher | Next build | Hard restart |
 | package.json | nextBuildWatcher | Install + build | Hard restart |
 
+## Mock User for Testing
+
+The dev server supports mock users for testing, bypassing the login flow.
+
+### Configuration
+
+**Environment Variable (takes precedence):**
+```bash
+LOWDEFY_DEV_USER='{"sub":"test-user","email":"test@example.com","roles":["admin"]}'
+```
+
+**Config File:**
+```yaml
+auth:
+  dev:
+    mockUser:
+      sub: test-user
+      email: test@example.com
+```
+
+### Key Files
+
+| File | Purpose |
+|------|---------|
+| `lib/server/auth/getMockSession.js` | Core mock session logic |
+| `lib/server/auth/checkMockUserWarning.js` | Startup warning |
+| `lib/server/auth/getServerSession.js` | Server-side integration |
+| `pages/api/auth/[...nextauth].js` | Client-side integration |
+
+See [Auth System Architecture](../architecture/auth-system.md#mock-user-for-testing-dev-server-only) for full details.
+
 ## Environment Variables
 
 | Variable | Purpose |
@@ -472,3 +541,4 @@ const nextConfig = {
 | `LOWDEFY_DIRECTORY_CONFIG` | Config directory path |
 | `PORT` | Server port (default: 3000) |
 | `LOWDEFY_BUILD_REF_RESOLVER` | Custom ref resolver |
+| `LOWDEFY_DEV_USER` | Mock user JSON for testing |

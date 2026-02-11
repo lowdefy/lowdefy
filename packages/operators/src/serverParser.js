@@ -45,8 +45,7 @@ class ServerParser {
     const errors = [];
     const reviver = (_, value) => {
       if (!type.isObject(value)) return value;
-      // TODO: pass ~k in errors.
-      // const _k = value['~k'];
+      const configKey = value['~k'];
       delete value['~k'];
       if (Object.keys(value).length !== 1) return value;
 
@@ -55,6 +54,7 @@ class ServerParser {
 
       const [op, methodName] = `_${key.substring(operatorPrefix.length)}`.split('.');
       if (type.isUndefined(this.operators[op])) return value;
+      const params = value[key];
       try {
         const res = this.operators[op]({
           args,
@@ -66,7 +66,7 @@ class ServerParser {
           methodName,
           operatorPrefix,
           operators: this.operators,
-          params: value[key],
+          params,
           parser: this,
           payload: this.payload,
           runtime: 'node',
@@ -77,9 +77,15 @@ class ServerParser {
         });
         return res;
       } catch (e) {
-        errors.push(e);
+        const message = e.message || `Operator ${op} threw an error`;
+        const formattedError = new Error(message);
+        formattedError.stack = e.stack;
+        formattedError.configKey = e.configKey ?? configKey;
+        formattedError.received = { [key]: params };
+        formattedError.operatorLocation = location;
+        errors.push(formattedError);
         if (this.verbose) {
-          console.error(e);
+          console.error(formattedError);
         }
         return null;
       }

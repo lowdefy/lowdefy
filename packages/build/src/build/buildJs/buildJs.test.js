@@ -15,7 +15,7 @@
 */
 
 import buildJs from './buildJs.js';
-import testContext from '../../test/testContext.js';
+import testContext from '../../test-utils/testContext.js';
 
 test('buildJs default', async () => {
   const context = testContext();

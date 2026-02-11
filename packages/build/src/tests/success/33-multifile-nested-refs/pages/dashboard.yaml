@@ -1,0 +1,20 @@
+id: dashboard
+type: Box
+properties:
+  title: Dashboard
+blocks:
+  - _ref: blocks/page-header.yaml
+  - id: metrics
+    type: Box
+    blocks:
+      - _ref: components/metric-card.yaml
+        vars:
+          id: users
+          title: Total Users
+          value: '1,234'
+      - _ref: components/metric-card.yaml
+        vars:
+          id: orders
+          title: Total Orders
+          value: '5,678'
+  - _ref: blocks/page-footer.yaml

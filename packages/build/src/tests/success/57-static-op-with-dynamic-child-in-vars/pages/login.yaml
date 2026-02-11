@@ -1,0 +1,10 @@
+# Login page template
+id:
+  _var: pageId
+type: Box
+blocks:
+  - id: error_message
+    type: Paragraph
+    properties:
+      content:
+        _var: errorMessage

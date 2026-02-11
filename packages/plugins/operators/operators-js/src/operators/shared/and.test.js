@@ -35,18 +35,10 @@ test('_and true', () => {
   expect(_and({ params: [true, true], location })).toEqual(true);
 });
 test('_and errors', () => {
-  expect(() => _and({ params: 'hello', location })).toThrow(
-    'Operator Error: _and takes an array type. Received: "hello" at location.'
-  );
-  expect(() => _and({ params: null, location })).toThrow(
-    'Operator Error: _and takes an array type. Received: null at location.'
-  );
-  expect(() => _and({ params: true, location })).toThrow(
-    'Operator Error: _and takes an array type. Received: true at location.'
-  );
-  expect(() => _and({ params: false, location })).toThrow(
-    'Operator Error: _and takes an array type. Received: false at location.'
-  );
+  expect(() => _and({ params: 'hello', location })).toThrow('_and takes an array type.');
+  expect(() => _and({ params: null, location })).toThrow('_and takes an array type.');
+  expect(() => _and({ params: true, location })).toThrow('_and takes an array type.');
+  expect(() => _and({ params: false, location })).toThrow('_and takes an array type.');
 });
 
 test('_and evaluated in ServerParser', () => {

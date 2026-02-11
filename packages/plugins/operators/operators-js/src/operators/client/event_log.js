@@ -26,4 +26,6 @@ function _event_log({ arrayIndices, eventLog, location, params }) {
   });
 }
 
+_event_log.dynamic = true;
+
 export default _event_log;

@@ -229,6 +229,7 @@ _ref:
                   path: pages/page1.yaml
                   transformer: transformers/addFooter.js
             ```
+
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:

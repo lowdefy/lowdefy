@@ -25,4 +25,6 @@ function _item({ location, params, items }) {
   });
 }
 
+_item.dynamic = true;
+
 export default _item;

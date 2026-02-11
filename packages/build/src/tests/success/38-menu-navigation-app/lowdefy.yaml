@@ -1,0 +1,185 @@
+# 38: Complex Menu Navigation Application
+lowdefy: local
+name: Menu Navigation Demo
+
+menus:
+  - id: default
+    links:
+      - id: home
+        type: MenuLink
+        pageId: home
+        properties:
+          title: Home
+          icon: AiOutlineHome
+      - id: products
+        type: MenuGroup
+        properties:
+          title: Products
+          icon: AiOutlineShop
+        links:
+          - id: all-products
+            type: MenuLink
+            pageId: products
+            properties:
+              title: All Products
+          - id: categories
+            type: MenuGroup
+            properties:
+              title: Categories
+            links:
+              - id: electronics
+                type: MenuLink
+                pageId: electronics
+                properties:
+                  title: Electronics
+              - id: clothing
+                type: MenuLink
+                pageId: clothing
+                properties:
+                  title: Clothing
+          - id: featured
+            type: MenuLink
+            pageId: featured
+            properties:
+              title: Featured
+      - id: services
+        type: MenuGroup
+        properties:
+          title: Services
+          icon: AiOutlineTool
+        links:
+          - id: consulting
+            type: MenuLink
+            pageId: consulting
+            properties:
+              title: Consulting
+          - id: support
+            type: MenuLink
+            pageId: support
+            properties:
+              title: Support
+      - id: about
+        type: MenuLink
+        pageId: about
+        properties:
+          title: About
+          icon: AiOutlineInfo
+      - id: contact
+        type: MenuLink
+        pageId: contact
+        properties:
+          title: Contact
+          icon: AiOutlineMail
+  - id: footer
+    links:
+      - id: privacy
+        type: MenuLink
+        pageId: privacy
+        properties:
+          title: Privacy Policy
+      - id: terms
+        type: MenuLink
+        pageId: terms
+        properties:
+          title: Terms of Service
+
+pages:
+  - id: home
+    type: Box
+    properties:
+      title: Home
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Welcome
+  - id: products
+    type: Box
+    properties:
+      title: Products
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: All Products
+  - id: electronics
+    type: Box
+    properties:
+      title: Electronics
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Electronics Category
+  - id: clothing
+    type: Box
+    properties:
+      title: Clothing
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Clothing Category
+  - id: featured
+    type: Box
+    properties:
+      title: Featured
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Featured Products
+  - id: consulting
+    type: Box
+    properties:
+      title: Consulting
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Consulting Services
+  - id: support
+    type: Box
+    properties:
+      title: Support
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Support Services
+  - id: about
+    type: Box
+    properties:
+      title: About
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: About Us
+  - id: contact
+    type: Box
+    properties:
+      title: Contact
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Contact Us
+  - id: privacy
+    type: Box
+    properties:
+      title: Privacy Policy
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Privacy Policy
+  - id: terms
+    type: Box
+    properties:
+      title: Terms
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Terms of Service

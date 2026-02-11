@@ -46,14 +46,10 @@ const changeCase = {
   trainCase,
 };
 
-const prep = (args, { location }) => {
+const prep = (args) => {
   const options = args[1];
   if (!type.isNone(options) && !type.isObject(options)) {
-    throw new Error(
-      `Operator Error: options must be an object. Received ${JSON.stringify(
-        options
-      )} at ${location}.`
-    );
+    throw new Error(`options must be an object.`);
   }
   return args;
 };
@@ -119,5 +115,7 @@ function change_case({ params, location, methodName }) {
     params,
   });
 }
+
+change_case.dynamic = false;
 
 export default change_case;

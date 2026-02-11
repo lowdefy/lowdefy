@@ -1,0 +1,25 @@
+# 56: _build Operator Inside _ref vars
+# =====================================
+# Tests that _build operators inside vars of a _ref are correctly evaluated.
+# The _build.array.concat should produce an array that passes schema validation.
+#
+# Structure:
+# lowdefy.yaml
+#   └── pages: [_ref: pages/page-template.yaml]
+#                   └── vars.events.onClick: _build.array.concat with _ref
+
+lowdefy: local
+
+pages:
+  - _ref:
+      path: pages/page-template.yaml
+      vars:
+        pageId: testPage
+        events:
+          onClick:
+            _build.array.concat:
+              - - id: action1
+                  type: SetState
+                  params:
+                    key1: value1
+              - _ref: shared/actions.yaml

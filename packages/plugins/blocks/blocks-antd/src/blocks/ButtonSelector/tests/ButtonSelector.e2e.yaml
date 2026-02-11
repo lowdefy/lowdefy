@@ -1,0 +1,188 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: button_selector
+type: Box
+
+events:
+  onInit:
+    - id: set_defaults
+      type: SetState
+      params:
+        bs_with_value: Option 2
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: bs_basic
+    type: ButtonSelector
+    properties:
+      options:
+        - Option 1
+        - Option 2
+        - Option 3
+
+  - id: bs_with_value
+    type: ButtonSelector
+    properties:
+      options:
+        - Option 1
+        - Option 2
+        - Option 3
+
+  # ============================================
+  # PROPERTY TESTS
+  # ============================================
+
+  - id: bs_disabled
+    type: ButtonSelector
+    properties:
+      disabled: true
+      options:
+        - A
+        - B
+        - C
+
+  - id: bs_small
+    type: ButtonSelector
+    properties:
+      size: small
+      options:
+        - A
+        - B
+        - C
+
+  - id: bs_large
+    type: ButtonSelector
+    properties:
+      size: large
+      options:
+        - A
+        - B
+        - C
+
+  - id: bs_solid
+    type: ButtonSelector
+    properties:
+      buttonStyle: solid
+      options:
+        - A
+        - B
+        - C
+
+  - id: bs_outline
+    type: ButtonSelector
+    properties:
+      buttonStyle: outline
+      options:
+        - A
+        - B
+        - C
+
+  - id: bs_with_title
+    type: ButtonSelector
+    properties:
+      title: Select an option
+      options:
+        - A
+        - B
+        - C
+
+  - id: bs_with_label
+    type: ButtonSelector
+    properties:
+      label:
+        title: Choose one
+        colon: true
+        extra: Click a button to select
+      options:
+        - A
+        - B
+        - C
+
+  # ============================================
+  # OPTIONS TESTS
+  # ============================================
+
+  - id: bs_object_options
+    type: ButtonSelector
+    properties:
+      options:
+        - value: opt1
+          label: First Option
+        - value: opt2
+          label: Second Option
+        - value: opt3
+          label: Third Option
+
+  - id: bs_disabled_option
+    type: ButtonSelector
+    properties:
+      options:
+        - value: enabled1
+          label: Enabled Option
+        - value: disabled1
+          label: Disabled Option
+          disabled: true
+        - value: enabled2
+          label: Another Enabled
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  - id: bs_onchange
+    type: ButtonSelector
+    properties:
+      options:
+        - Apple
+        - Banana
+        - Cherry
+    events:
+      onChange:
+        - id: set_onchange
+          type: SetState
+          params:
+            bs_onchange_value:
+              _state: bs_onchange
+
+  - id: bs_onchange_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: bs_onchange_value
+              - null
+          then:
+            _string.concat:
+              - 'Selected: '
+              - _state: bs_onchange_value
+          else: ''
+
+  # ============================================
+  # INTERACTION TESTS
+  # ============================================
+
+  - id: bs_interaction
+    type: ButtonSelector
+    properties:
+      options:
+        - A
+        - B
+        - C
+        - D

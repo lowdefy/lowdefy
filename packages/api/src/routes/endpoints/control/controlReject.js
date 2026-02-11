@@ -17,9 +17,10 @@
 async function controlReject(context, routineContext, { control }) {
   const { evaluateOperators } = context;
   const { items } = routineContext;
+  const location = control['~k'] ?? ':reject';
 
-  const message = evaluateOperators({ input: control[':reject'], items, location: 'TODO' });
-  const cause = evaluateOperators({ input: control[':cause'], items, location: 'TODO' });
+  const message = evaluateOperators({ input: control[':reject'], items, location });
+  const cause = evaluateOperators({ input: control[':cause'], items, location });
   const error = new Error(message, { cause });
 
   context.logger.warn({

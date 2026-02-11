@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigurationError } from '../../context/errors.js';
+import { ConfigError } from '@lowdefy/errors/server';
 
 function authorizeApiEndpoint({ authorize, logger }, { endpointConfig }) {
   if (!authorize(endpointConfig)) {
@@ -23,7 +23,9 @@ function authorizeApiEndpoint({ authorize, logger }, { endpointConfig }) {
       authorized: false,
       auth_config: endpointConfig.auth,
     });
-    throw new ConfigurationError(`API Endpoint "${endpointConfig.endpointId}" does not exist.`);
+    throw new ConfigError({
+      message: `API Endpoint "${endpointConfig.endpointId}" does not exist.`,
+    });
   }
   logger.debug({
     event: 'debug_api_authorize',

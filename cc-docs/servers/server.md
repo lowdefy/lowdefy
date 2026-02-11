@@ -59,6 +59,11 @@ lowdefy build
 ```
 server/
 ├── lib/
+│   ├── build/            # Build artifact loaders (deserialize JSON)
+│   │   ├── app.js
+│   │   ├── auth.js
+│   │   ├── config.js
+│   │   └── logger.js
 │   ├── server/           # Server utilities
 │   │   ├── apiWrapper.js
 │   │   ├── serverSidePropsWrapper.js
@@ -277,6 +282,18 @@ function readConfigFile(filePath) {
 
   return parsed;
 }
+```
+
+## Build Artifact Loading
+
+**Files:** `lib/build/app.js`, `lib/build/auth.js`, `lib/build/config.js`, `lib/build/logger.js`
+
+Build artifacts are loaded via JS modules that deserialize the raw JSON using `serializer.deserialize()`. This restores `~arr` wrapper markers back to arrays with non-enumerable `~k`, `~r`, `~l` properties, enabling runtime error tracing to resolve config locations.
+
+```javascript
+import { serializer } from '@lowdefy/helpers';
+import raw from '../../build/app.json';
+export default serializer.deserialize(raw);
 ```
 
 ## Logging

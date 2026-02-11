@@ -14,12 +14,16 @@
   limitations under the License.
 */
 
+import { serializer } from '@lowdefy/helpers';
+
 async function getPageConfig({ authorize, readConfigFile }, { pageId }) {
   const pageConfig = await readConfigFile(`pages/${pageId}/${pageId}.json`);
   if (pageConfig && authorize(pageConfig)) {
     // eslint-disable-next-line no-unused-vars
     const { auth, ...rest } = pageConfig;
-    return { ...rest };
+    // Use serializer.serialize to ensure ~k keys (non-enumerable after deserialize)
+    // are made enumerable again for JSON transfer to client
+    return serializer.serialize(rest);
   }
   return null;
 }

@@ -26,4 +26,6 @@ function _event({ arrayIndices, event, location, params }) {
   });
 }
 
+_event.dynamic = true;
+
 export default _event;

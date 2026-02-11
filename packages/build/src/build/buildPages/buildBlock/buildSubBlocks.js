@@ -15,21 +15,24 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { ConfigError } from '@lowdefy/errors/build';
 
 import buildBlock from './buildBlock.js';
 
 function buildSubBlocks(block, pageContext) {
+  const { context } = pageContext;
   if (type.isObject(block.areas)) {
     Object.keys(block.areas).forEach((key) => {
       if (type.isNone(block.areas[key].blocks)) {
         block.areas[key].blocks = [];
       }
       if (!type.isArray(block.areas[key].blocks)) {
-        throw new Error(
-          `Expected blocks to be an array at ${block.blockId} in area ${key} on page ${
-            pageContext.pageId
-          }. Received ${JSON.stringify(block.areas[key].blocks)}`
-        );
+        throw new ConfigError({
+          message: `Expected blocks to be an array at ${block.blockId} in area ${key} on page ${pageContext.pageId}.`,
+          received: block.areas[key].blocks,
+          configKey: block.areas[key]['~k'] ?? block['~k'],
+          context,
+        });
       }
       block.areas[key].blocks.map((blk) => buildBlock(blk, pageContext));
     });

@@ -1,0 +1,190 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: slider
+type: Box
+
+events:
+  onInit:
+    - id: set_defaults
+      type: SetState
+      params:
+        slider_with_value: 50
+        slider_range_value:
+          - 20
+          - 80
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: slider_basic
+    type: Slider
+    properties:
+      title: Basic Slider
+
+  - id: slider_with_value
+    type: Slider
+    properties:
+      title: With Value
+
+  # ============================================
+  # PROPERTY TESTS
+  # ============================================
+
+  - id: slider_disabled
+    type: Slider
+    properties:
+      title: Disabled Slider
+      disabled: true
+
+  - id: slider_minmax
+    type: Slider
+    properties:
+      title: Min/Max Slider
+      min: 0
+      max: 200
+
+  - id: slider_step
+    type: Slider
+    properties:
+      title: Step 10
+      step: 10
+      min: 0
+      max: 100
+
+  - id: slider_dots
+    type: Slider
+    properties:
+      title: With Dots
+      dots: true
+      step: 20
+      min: 0
+      max: 100
+
+  - id: slider_marks
+    type: Slider
+    properties:
+      title: With Marks
+      marks:
+        0: '0'
+        25: '25%'
+        50: '50%'
+        75: '75%'
+        100: '100%'
+      min: 0
+      max: 100
+
+  - id: slider_vertical
+    type: Slider
+    properties:
+      title: Vertical Slider
+      vertical: true
+      min: 0
+      max: 100
+      inputStyle:
+        height: 200px
+
+  - id: slider_range
+    type: Slider
+    properties:
+      title: Range Slider
+      range: true
+      min: 0
+      max: 100
+
+  - id: slider_range_value
+    type: Slider
+    properties:
+      title: Range With Value
+      range: true
+      min: 0
+      max: 100
+
+  - id: slider_reverse
+    type: Slider
+    properties:
+      title: Reverse Slider
+      reverse: true
+      min: 0
+      max: 100
+
+  - id: slider_tooltip_hidden
+    type: Slider
+    properties:
+      title: Tooltip Hidden
+      tooltip:
+        open: false
+      min: 0
+      max: 100
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  - id: slider_onchange
+    type: Slider
+    properties:
+      title: OnChange Test
+      min: 0
+      max: 100
+    events:
+      onChange:
+        - id: set_onchange
+          type: SetState
+          params:
+            slider_onchange_value:
+              _event: value
+
+  - id: onchange_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: slider_onchange_value
+              - null
+          then:
+            _string.concat:
+              - 'Value: '
+              - _state: slider_onchange_value
+          else: ''
+
+  # ============================================
+  # INTERACTION TESTS
+  # ============================================
+
+  - id: slider_interaction
+    type: Slider
+    properties:
+      title: Interaction Test
+      min: 0
+      max: 100
+
+  - id: interaction_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: slider_interaction
+              - null
+          then:
+            _string.concat:
+              - 'Slider: '
+              - _state: slider_interaction
+          else: ''

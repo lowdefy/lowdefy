@@ -14,21 +14,37 @@
   limitations under the License.
 */
 
-function logError({ context, error }) {
-  try {
-    const { user = {} } = context;
+import { resolveErrorConfigLocation } from '@lowdefy/errors/build';
 
-    context.logger.error({
-      err: error,
-      user: {
-        id: user.id,
-        roles: user.roles,
-        sub: user.sub,
-        session_id: user.session_id,
-      },
-      url: context.req.url,
-      method: context.req.method,
-      resolvedUrl: context.nextContext?.resolvedUrl,
+import captureSentryError from '../sentry/captureSentryError.js';
+
+async function logError({ context, error }) {
+  try {
+    const isServiceError = error?.isServiceError === true;
+
+    // For service errors, don't resolve config location (not a config issue)
+    const location = isServiceError
+      ? null
+      : await resolveErrorConfigLocation({
+          error,
+          readConfigFile: context.readConfigFile,
+          configDirectory: context.configDirectory,
+        });
+
+    // Attach resolved location to error for display layer
+    if (location) {
+      error.source = location.source;
+      error.config = location.config;
+    }
+
+    // Log error - logger handles source, name prefix, and received formatting
+    context.logger.error(error);
+
+    // Capture error to Sentry (no-op if Sentry not configured)
+    captureSentryError({
+      error,
+      context,
+      configLocation: location,
     });
   } catch (e) {
     console.error(error);

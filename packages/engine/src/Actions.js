@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { ConfigError, PluginError, UserError } from '@lowdefy/errors/client';
 import { type } from '@lowdefy/helpers';
 import getActionMethods from './actions/getActionMethods.js';
 
@@ -24,7 +25,32 @@ class Actions {
     this.callActionLoop = this.callActionLoop.bind(this);
     this.callActions = this.callActions.bind(this);
     this.displayMessage = this.displayMessage.bind(this);
+    this.logActionError = this.logActionError.bind(this);
     this.actions = context._internal.lowdefy._internal.actions;
+    this.loggedActionErrors = new Set();
+  }
+
+  logActionError({ error, action }) {
+    const logError = this.context._internal.lowdefy._internal.logError;
+    const actionId = action?.id || '';
+
+    // Deduplicate by error message + action id
+    const errorKey = `${error?.message || ''}:${actionId}`;
+    if (this.loggedActionErrors.has(errorKey)) {
+      return;
+    }
+    this.loggedActionErrors.add(errorKey);
+
+    // User-facing errors log to browser console only, never to terminal
+    if (error instanceof UserError) {
+      console.error(error.print());
+      return;
+    }
+
+    // ConfigError, PluginError, ServiceError - use logError (-> terminal)
+    if (logError) {
+      logError(error);
+    }
   }
 
   async callAsyncAction({ action, arrayIndices, block, event, index, responses }) {
@@ -38,9 +64,10 @@ class Actions {
         responses,
       });
       responses[action.id] = response;
-    } catch (error) {
-      responses[action.id] = error;
-      console.error(error);
+    } catch (err) {
+      // err is already {error, action, index} from callAction
+      responses[action.id] = err;
+      this.logActionError(err);
     }
   }
 
@@ -69,12 +96,10 @@ class Actions {
           });
           responses[action.id] = response;
         }
-      } catch (error) {
-        responses[action.id] = error;
-        throw {
-          error,
-          action,
-        };
+      } catch (err) {
+        // err is already {error, action, index} from callAction
+        responses[action.id] = err;
+        throw err;
       }
     }
   }
@@ -85,7 +110,7 @@ class Actions {
     try {
       await this.callActionLoop({ actions, arrayIndices, block, event, responses, progress });
     } catch (error) {
-      console.error(error);
+      this.logActionError(error);
       try {
         await this.callActionLoop({
           actions: catchActions,
@@ -96,7 +121,7 @@ class Actions {
           progress,
         });
       } catch (errorCatch) {
-        console.error(errorCatch);
+        this.logActionError(errorCatch);
         return {
           blockId: block.blockId,
           bounced: false,
@@ -136,11 +161,11 @@ class Actions {
 
   async callAction({ action, arrayIndices, block, event, index, progress, responses }) {
     if (!this.actions[action.type]) {
-      throw {
-        error: new Error(`Invalid action type "${action.type}" at "${block.blockId}".`),
-        type: action.type,
-        index,
-      };
+      const error = new ConfigError({
+        message: `Invalid action type "${action.type}" at "${block.blockId}".`,
+        configKey: action['~k'],
+      });
+      throw { error, action, index };
     }
     const { output: parsedAction, errors: parserErrors } = this.context._internal.parser.parse({
       actions: responses,
@@ -150,7 +175,8 @@ class Actions {
       location: block.blockId,
     });
     if (parserErrors.length > 0) {
-      throw { error: parserErrors[0], type: action.type, index };
+      // Parser errors already have configKey from operator
+      throw { error: parserErrors[0], action, index };
     }
     if (parsedAction.skip === true) {
       return { type: action.type, skipped: true, index };
@@ -167,6 +193,7 @@ class Actions {
       response = await this.actions[action.type]({
         globals: this.context._internal.lowdefy._internal.globals,
         methods: getActionMethods({
+          actionId: action.id,
           actions: responses,
           arrayIndices,
           blockId: block.blockId,
@@ -178,7 +205,19 @@ class Actions {
       if (progress) {
         progress();
       }
-    } catch (error) {
+    } catch (err) {
+      const error =
+        err instanceof ConfigError || err instanceof PluginError || err instanceof UserError
+          ? err
+          : new PluginError({
+              error: err,
+              pluginType: 'action',
+              pluginName: action.type,
+              received: parsedAction.params,
+              location: block.blockId,
+              configKey: action['~k'],
+            });
+
       responses[action.id] = { error, index, type: action.type };
       const { output: parsedMessages, errors: parserErrors } = this.context._internal.parser.parse({
         actions: responses,
@@ -189,21 +228,17 @@ class Actions {
       });
       if (parserErrors.length > 0) {
         // this condition is very unlikely since parser errors usually occur in the first parse.
-        throw { error: parserErrors[0], type: action.type, index };
+        throw { error: parserErrors[0], action, index };
       }
       closeLoading();
       this.displayMessage({
-        defaultMessage: error.message,
+        defaultMessage: err.message,
         duration: 6,
         hideExplicitly: true,
         message: (parsedMessages || {}).error,
         status: 'error',
       });
-      throw {
-        type: action.type,
-        error,
-        index,
-      };
+      throw { error, action, index };
     }
     closeLoading();
     this.displayMessage({

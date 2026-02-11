@@ -1,0 +1,51 @@
+id: login
+type: Result
+properties:
+  title: Enterprise CRM
+  subTitle: Please sign in to continue
+  status: info
+areas:
+  extra:
+    blocks:
+      - id: googleBtn
+        type: Button
+        properties:
+          title: Sign in with Google
+          icon: AiOutlineGoogle
+          block: true
+        events:
+          onClick:
+            - id: googleLogin
+              type: Login
+              params:
+                providerId: google
+      - id: divider
+        type: Divider
+        properties:
+          orientation: center
+          content: or
+      - id: emailInput
+        type: TextInput
+        properties:
+          title: Email
+          placeholder: your@email.com
+      - id: passwordInput
+        type: PasswordInput
+        properties:
+          title: Password
+      - id: credentialsBtn
+        type: Button
+        properties:
+          title: Sign In
+          type: primary
+          block: true
+        events:
+          onClick:
+            - id: credentialsLogin
+              type: Login
+              params:
+                providerId: credentials
+                email:
+                  _state: emailInput
+                password:
+                  _state: passwordInput

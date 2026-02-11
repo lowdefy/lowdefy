@@ -1,0 +1,27 @@
+# M2: Ref Template _var with ~ignoreBuildCheck
+# =============================================
+# Tests that ~ignoreBuildCheck suppresses warnings when values
+# are passed via _var in _ref templates.
+#
+# The ~ignoreBuildCheck flag is on the same object as _state in vars.
+# When _var copies this value, the flag should be preserved and
+# the warning should be suppressed.
+#
+# Expected: NO warning should be shown for undefinedBlockId.
+
+lowdefy: local
+
+connections:
+  - id: testApi
+    type: AxiosHttp
+    properties:
+      baseURL: http://example.com
+
+pages:
+  - _ref:
+      path: page-template.yaml
+      vars:
+        # The ~ignoreBuildCheck flag should suppress the warning
+        stateValue:
+          _state: undefinedBlockId
+          ~ignoreBuildChecks: true

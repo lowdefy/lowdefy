@@ -34,12 +34,12 @@ test('DisplayMessage with all params', () => {
 
 test('DisplayMessage params is not object', () => {
   expect(() => DisplayMessage({ methods, params: 'Message content.' })).toThrow(
-    'Invalid DisplayMessage, check action params. Params must be an object, received ""Message content."".'
+    'Invalid DisplayMessage, check action params. Params must be an object.'
   );
   expect(() => DisplayMessage({ methods, params: null })).toThrow(
-    'Invalid DisplayMessage, check action params. Params must be an object, received "null".'
+    'Invalid DisplayMessage, check action params. Params must be an object.'
   );
   expect(() => DisplayMessage({ methods })).toThrow(
-    'Invalid DisplayMessage, check action params. Params must be an object, received "undefined".'
+    'Invalid DisplayMessage, check action params. Params must be an object.'
   );
 });

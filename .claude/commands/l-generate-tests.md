@@ -139,7 +139,7 @@ test('_operatorName throws on invalid params', () => {
   expect(() => _operatorName({
     location: 'test.location',
     params: 'invalid',
-  })).toThrow('Operator Error: _operatorName');
+  })).toThrow('_operatorName');
 });
 ```
 
