@@ -1,0 +1,233 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: timelinelist
+type: Box
+
+events:
+  onInit:
+    - id: set_defaults
+      type: SetState
+      params:
+        # State keys must match blockIds for List blocks
+        timeline_basic:
+          - Event 1
+          - Event 2
+          - Event 3
+        timeline_colors:
+          - First item
+          - Second item
+          - Third item
+        timeline_mode:
+          - Left item
+          - Right item
+          - Another left
+        timeline_labels:
+          - Content 1
+          - Content 2
+          - Content 3
+        timeline_icons:
+          - Icon event 1
+          - Icon event 2
+        timeline_pending:
+          - Completed 1
+          - Completed 2
+        timeline_reverse:
+          - First
+          - Second
+          - Third
+        timeline_custom_fields:
+          - Custom item 1
+          - Custom item 2
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: timeline_basic
+    type: TimelineList
+    blocks:
+      - id: timeline_basic_item
+        type: Span
+        properties:
+          content:
+            _state: timeline_basic.$
+
+  # ============================================
+  # COLOR TESTS
+  # ============================================
+
+  - id: timeline_colors
+    type: TimelineList
+    properties:
+      data:
+        - color: green
+        - color: red
+        - color: blue
+    blocks:
+      - id: timeline_colors_item
+        type: Span
+        properties:
+          content:
+            _state: timeline_colors.$
+
+  # ============================================
+  # MODE TESTS
+  # ============================================
+
+  - id: timeline_mode_left
+    type: TimelineList
+    properties:
+      mode: left
+    blocks:
+      - id: timeline_mode_left_item
+        type: Span
+        properties:
+          content:
+            _state: timeline_mode.$
+
+  - id: timeline_mode_right
+    type: TimelineList
+    properties:
+      mode: right
+    blocks:
+      - id: timeline_mode_right_item
+        type: Span
+        properties:
+          content:
+            _state: timeline_mode.$
+
+  - id: timeline_mode_alternate
+    type: TimelineList
+    properties:
+      mode: alternate
+    blocks:
+      - id: timeline_mode_alternate_item
+        type: Span
+        properties:
+          content:
+            _state: timeline_mode.$
+
+  # ============================================
+  # LABEL TESTS
+  # ============================================
+
+  - id: timeline_labels
+    type: TimelineList
+    properties:
+      mode: left
+      data:
+        - label: '2024-01-01'
+        - label: '2024-01-02'
+        - label: '2024-01-03'
+    blocks:
+      - id: timeline_labels_item
+        type: Span
+        properties:
+          content:
+            _state: timeline_labels.$
+
+  # ============================================
+  # ICON TESTS
+  # ============================================
+
+  - id: timeline_icons
+    type: TimelineList
+    properties:
+      data:
+        - icon: AiOutlineCheck
+          color: green
+        - icon: AiOutlineClose
+          color: red
+    blocks:
+      - id: timeline_icons_item
+        type: Span
+        properties:
+          content:
+            _state: timeline_icons.$
+
+  # ============================================
+  # PENDING TESTS
+  # ============================================
+
+  - id: timeline_pending
+    type: TimelineList
+    properties:
+      pending: true
+    blocks:
+      - id: timeline_pending_item
+        type: Span
+        properties:
+          content:
+            _state: timeline_pending.$
+
+  - id: timeline_pending_text
+    type: TimelineList
+    properties:
+      pending: Loading more...
+    blocks:
+      - id: timeline_pending_text_item
+        type: Span
+        properties:
+          content:
+            _state: timeline_pending.$
+
+  # ============================================
+  # REVERSE TESTS
+  # ============================================
+
+  - id: timeline_reverse
+    type: TimelineList
+    properties:
+      reverse: true
+    blocks:
+      - id: timeline_reverse_item
+        type: Span
+        properties:
+          content:
+            _state: timeline_reverse.$
+
+  # ============================================
+  # EMPTY LIST
+  # ============================================
+
+  - id: timeline_empty
+    type: TimelineList
+    blocks:
+      - id: timeline_empty_item
+        type: Span
+        properties:
+          content:
+            _state: timeline_empty.$
+
+  # ============================================
+  # CUSTOM FIELD MAPPING
+  # ============================================
+
+  - id: timeline_custom_fields
+    type: TimelineList
+    properties:
+      colorField: status_color
+      labelField: date
+      data:
+        - status_color: green
+          date: 'Jan 1'
+        - status_color: blue
+          date: 'Jan 2'
+    blocks:
+      - id: timeline_custom_fields_item
+        type: Span
+        properties:
+          content: Custom item

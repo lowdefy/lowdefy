@@ -1,0 +1,165 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: breadcrumb
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: breadcrumb_basic
+    type: Breadcrumb
+    properties:
+      list:
+        - Home
+        - Products
+        - Category
+        - Item
+
+  - id: breadcrumb_with_labels
+    type: Breadcrumb
+    properties:
+      list:
+        - label: Home
+        - label: Products
+        - label: Details
+
+  # ============================================
+  # SEPARATOR TESTS
+  # ============================================
+
+  - id: breadcrumb_custom_separator
+    type: Breadcrumb
+    properties:
+      separator: '>'
+      list:
+        - Home
+        - Products
+        - Item
+
+  - id: breadcrumb_arrow_separator
+    type: Breadcrumb
+    properties:
+      separator: '→'
+      list:
+        - First
+        - Second
+        - Third
+
+  # ============================================
+  # ICON TESTS
+  # ============================================
+
+  - id: breadcrumb_with_icons
+    type: Breadcrumb
+    properties:
+      list:
+        - label: Home
+          icon: AiOutlineHome
+        - label: Settings
+          icon: AiOutlineSetting
+        - label: Profile
+          icon: AiOutlineUser
+
+  # ============================================
+  # LINK TESTS
+  # ============================================
+
+  - id: breadcrumb_with_links
+    type: Breadcrumb
+    properties:
+      list:
+        - label: Home
+          pageId: breadcrumb
+        - label: Products
+          url: '#products'
+        - label: Current
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  - id: breadcrumb_onclick
+    type: Breadcrumb
+    properties:
+      list:
+        - Home
+        - Products
+        - Category
+    events:
+      onClick:
+        - id: set_onclick
+          type: SetState
+          params:
+            breadcrumb_clicked_link:
+              _event: link
+            breadcrumb_clicked_index:
+              _event: index
+
+  - id: onclick_link_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: breadcrumb_clicked_link
+              - null
+          then:
+            _string.concat:
+              - 'Link: '
+              - _state: breadcrumb_clicked_link
+          else: ''
+
+  - id: onclick_index_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: breadcrumb_clicked_index
+              - null
+          then:
+            _string.concat:
+              - 'Index: '
+              - _state: breadcrumb_clicked_index
+          else: ''
+
+  # ============================================
+  # STYLE TESTS
+  # ============================================
+
+  - id: breadcrumb_with_style
+    type: Breadcrumb
+    properties:
+      style:
+        fontSize: 16px
+        fontWeight: bold
+      list:
+        - Home
+        - Products
+
+  - id: breadcrumb_item_style
+    type: Breadcrumb
+    properties:
+      list:
+        - label: Home
+          style:
+            color: blue
+        - label: Current
+          style:
+            fontWeight: bold

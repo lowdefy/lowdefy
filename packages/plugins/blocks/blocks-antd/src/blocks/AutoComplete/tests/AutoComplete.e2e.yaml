@@ -1,0 +1,305 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: auto_complete
+type: Box
+
+events:
+  onInit:
+    - id: set_defaults
+      type: SetState
+      params:
+        ac_with_value: Apple
+        ac_onclear: Banana
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: ac_basic
+    type: AutoComplete
+    properties:
+      options:
+        - Apple
+        - Apricot
+        - Banana
+        - Blueberry
+        - Cherry
+
+  - id: ac_with_value
+    type: AutoComplete
+    properties:
+      options:
+        - Apple
+        - Apricot
+        - Banana
+        - Blueberry
+        - Cherry
+
+  # ============================================
+  # PROPERTY TESTS
+  # ============================================
+
+  - id: ac_placeholder
+    type: AutoComplete
+    properties:
+      placeholder: Start typing...
+      options:
+        - A
+        - B
+        - C
+
+  - id: ac_disabled
+    type: AutoComplete
+    properties:
+      disabled: true
+      options:
+        - A
+        - B
+        - C
+
+  - id: ac_small
+    type: AutoComplete
+    properties:
+      size: small
+      options:
+        - A
+        - B
+        - C
+
+  - id: ac_large
+    type: AutoComplete
+    properties:
+      size: large
+      options:
+        - A
+        - B
+        - C
+
+  - id: ac_borderless
+    type: AutoComplete
+    properties:
+      bordered: false
+      options:
+        - A
+        - B
+        - C
+
+  - id: ac_no_allowclear
+    type: AutoComplete
+    properties:
+      allowClear: false
+      options:
+        - A
+        - B
+        - C
+
+  - id: ac_default_open
+    type: AutoComplete
+    properties:
+      defaultOpen: true
+      options:
+        - A
+        - B
+        - C
+
+  - id: ac_backfill
+    type: AutoComplete
+    properties:
+      backfill: true
+      options:
+        - Apple
+        - Apricot
+        - Avocado
+
+  - id: ac_with_title
+    type: AutoComplete
+    properties:
+      title: Search fruits
+      options:
+        - Apple
+        - Banana
+        - Cherry
+
+  - id: ac_with_label
+    type: AutoComplete
+    properties:
+      label:
+        title: Fruit name
+        colon: true
+        extra: Type to search or select
+      options:
+        - Apple
+        - Banana
+        - Cherry
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  - id: ac_onchange
+    type: AutoComplete
+    properties:
+      options:
+        - Apple
+        - Banana
+        - Cherry
+    events:
+      onChange:
+        - id: set_onchange
+          type: SetState
+          params:
+            ac_onchange_value:
+              _state: ac_onchange
+
+  - id: ac_onchange_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: ac_onchange_value
+              - null
+          then:
+            _string.concat:
+              - 'Value: '
+              - _state: ac_onchange_value
+          else: ''
+
+  - id: ac_onclear
+    type: AutoComplete
+    properties:
+      options:
+        - Apple
+        - Banana
+        - Cherry
+    events:
+      onClear:
+        - id: set_onclear
+          type: SetState
+          params:
+            ac_onclear_fired: true
+
+  - id: ac_onclear_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: ac_onclear_fired
+              - true
+          then: Clear fired
+          else: ''
+
+  - id: ac_onblur
+    type: AutoComplete
+    properties:
+      options:
+        - A
+        - B
+        - C
+    events:
+      onBlur:
+        - id: set_onblur
+          type: SetState
+          params:
+            ac_onblur_fired: true
+
+  - id: ac_onblur_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: ac_onblur_fired
+              - true
+          then: Blur fired
+          else: ''
+
+  - id: ac_onfocus
+    type: AutoComplete
+    properties:
+      options:
+        - A
+        - B
+        - C
+    events:
+      onFocus:
+        - id: set_onfocus
+          type: SetState
+          params:
+            ac_onfocus_fired: true
+
+  - id: ac_onfocus_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: ac_onfocus_fired
+              - true
+          then: Focus fired
+          else: ''
+
+  - id: ac_onsearch
+    type: AutoComplete
+    properties:
+      options:
+        - Apple
+        - Apricot
+        - Banana
+        - Blueberry
+        - Cherry
+    events:
+      onSearch:
+        - id: set_onsearch
+          type: SetState
+          params:
+            ac_search_value:
+              _event: value
+
+  - id: ac_onsearch_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: ac_search_value
+              - null
+          then:
+            _string.concat:
+              - 'Search: '
+              - _state: ac_search_value
+          else: ''
+
+  # ============================================
+  # INTERACTION TESTS
+  # ============================================
+
+  - id: ac_interaction
+    type: AutoComplete
+    properties:
+      options:
+        - Apple
+        - Apricot
+        - Banana
+        - Blueberry
+        - Cherry
+        - Cranberry

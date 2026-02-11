@@ -1,0 +1,493 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: modal
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: modal_basic
+    type: Modal
+    properties:
+      title: Basic Modal
+    areas:
+      content:
+        blocks:
+          - id: modal_basic_content
+            type: Paragraph
+            properties:
+              content: This is the modal content.
+
+  - id: open_basic
+    type: Button
+    properties:
+      title: Open Basic Modal
+    events:
+      onClick:
+        - id: open_modal
+          type: CallMethod
+          params:
+            blockId: modal_basic
+            method: setOpen
+            args:
+              - open: true
+
+  # ============================================
+  # PROPERTY TESTS
+  # ============================================
+
+  # Custom title
+  - id: modal_custom_title
+    type: Modal
+    properties:
+      title: <strong>Custom HTML Title</strong>
+    areas:
+      content:
+        blocks:
+          - id: modal_custom_title_content
+            type: Paragraph
+            properties:
+              content: Modal with custom title.
+
+  - id: open_custom_title
+    type: Button
+    properties:
+      title: Open Custom Title Modal
+    events:
+      onClick:
+        - id: open_modal
+          type: CallMethod
+          params:
+            blockId: modal_custom_title
+            method: setOpen
+            args:
+              - open: true
+
+  # Centered modal
+  - id: modal_centered
+    type: Modal
+    properties:
+      title: Centered Modal
+      centered: true
+    areas:
+      content:
+        blocks:
+          - id: modal_centered_content
+            type: Paragraph
+            properties:
+              content: This modal is centered vertically.
+
+  - id: open_centered
+    type: Button
+    properties:
+      title: Open Centered Modal
+    events:
+      onClick:
+        - id: open_modal
+          type: CallMethod
+          params:
+            blockId: modal_centered
+            method: setOpen
+            args:
+              - open: true
+
+  # No close button
+  - id: modal_no_close
+    type: Modal
+    properties:
+      title: No Close Button
+      closable: false
+    areas:
+      content:
+        blocks:
+          - id: modal_no_close_content
+            type: Paragraph
+            properties:
+              content: This modal has no close button.
+
+  - id: open_no_close
+    type: Button
+    properties:
+      title: Open No Close Modal
+    events:
+      onClick:
+        - id: open_modal
+          type: CallMethod
+          params:
+            blockId: modal_no_close
+            method: setOpen
+            args:
+              - open: true
+
+  # Custom button text
+  - id: modal_custom_buttons
+    type: Modal
+    properties:
+      title: Custom Buttons
+      okText: Confirm
+      cancelText: Dismiss
+    areas:
+      content:
+        blocks:
+          - id: modal_custom_buttons_content
+            type: Paragraph
+            properties:
+              content: Modal with custom button text.
+
+  - id: open_custom_buttons
+    type: Button
+    properties:
+      title: Open Custom Buttons Modal
+    events:
+      onClick:
+        - id: open_modal
+          type: CallMethod
+          params:
+            blockId: modal_custom_buttons
+            method: setOpen
+            args:
+              - open: true
+
+  # Custom width
+  - id: modal_custom_width
+    type: Modal
+    properties:
+      title: Custom Width
+      width: 800
+    areas:
+      content:
+        blocks:
+          - id: modal_custom_width_content
+            type: Paragraph
+            properties:
+              content: This modal is 800px wide.
+
+  - id: open_custom_width
+    type: Button
+    properties:
+      title: Open Wide Modal
+    events:
+      onClick:
+        - id: open_modal
+          type: CallMethod
+          params:
+            blockId: modal_custom_width
+            method: setOpen
+            args:
+              - open: true
+
+  # No footer
+  - id: modal_no_footer
+    type: Modal
+    properties:
+      title: No Footer
+      footer: false
+    areas:
+      content:
+        blocks:
+          - id: modal_no_footer_content
+            type: Paragraph
+            properties:
+              content: This modal has no footer.
+
+  - id: open_no_footer
+    type: Button
+    properties:
+      title: Open No Footer Modal
+    events:
+      onClick:
+        - id: open_modal
+          type: CallMethod
+          params:
+            blockId: modal_no_footer
+            method: setOpen
+            args:
+              - open: true
+
+  # Mask not closable
+  - id: modal_mask_not_closable
+    type: Modal
+    properties:
+      title: Mask Not Closable
+      maskClosable: false
+    areas:
+      content:
+        blocks:
+          - id: modal_mask_not_closable_content
+            type: Paragraph
+            properties:
+              content: Click on mask does not close this modal.
+
+  - id: open_mask_not_closable
+    type: Button
+    properties:
+      title: Open Mask Not Closable Modal
+    events:
+      onClick:
+        - id: open_modal
+          type: CallMethod
+          params:
+            blockId: modal_mask_not_closable
+            method: setOpen
+            args:
+              - open: true
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  # onOk event
+  - id: modal_onok
+    type: Modal
+    properties:
+      title: OnOk Event Test
+    events:
+      onOk:
+        - id: set_ok_fired
+          type: SetState
+          params:
+            modal_ok_fired: true
+    areas:
+      content:
+        blocks:
+          - id: modal_onok_content
+            type: Paragraph
+            properties:
+              content: Click Ok to test onOk event.
+
+  - id: open_onok
+    type: Button
+    properties:
+      title: Open OnOk Modal
+    events:
+      onClick:
+        - id: open_modal
+          type: CallMethod
+          params:
+            blockId: modal_onok
+            method: setOpen
+            args:
+              - open: true
+
+  - id: onok_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: modal_ok_fired
+              - true
+          then: Ok fired
+          else: ''
+
+  # onCancel event
+  - id: modal_oncancel
+    type: Modal
+    properties:
+      title: OnCancel Event Test
+    events:
+      onCancel:
+        - id: set_cancel_fired
+          type: SetState
+          params:
+            modal_cancel_fired: true
+    areas:
+      content:
+        blocks:
+          - id: modal_oncancel_content
+            type: Paragraph
+            properties:
+              content: Click Cancel to test onCancel event.
+
+  - id: open_oncancel
+    type: Button
+    properties:
+      title: Open OnCancel Modal
+    events:
+      onClick:
+        - id: open_modal
+          type: CallMethod
+          params:
+            blockId: modal_oncancel
+            method: setOpen
+            args:
+              - open: true
+
+  - id: oncancel_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: modal_cancel_fired
+              - true
+          then: Cancel fired
+          else: ''
+
+  # onOpen event
+  - id: modal_onopen
+    type: Modal
+    properties:
+      title: OnOpen Event Test
+    events:
+      onOpen:
+        - id: set_open_fired
+          type: SetState
+          params:
+            modal_open_fired: true
+    areas:
+      content:
+        blocks:
+          - id: modal_onopen_content
+            type: Paragraph
+            properties:
+              content: Modal has onOpen event.
+
+  - id: open_onopen
+    type: Button
+    properties:
+      title: Open OnOpen Modal
+    events:
+      onClick:
+        - id: open_modal
+          type: CallMethod
+          params:
+            blockId: modal_onopen
+            method: setOpen
+            args:
+              - open: true
+
+  - id: onopen_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: modal_open_fired
+              - true
+          then: Open fired
+          else: ''
+
+  # onClose event
+  - id: modal_onclose
+    type: Modal
+    properties:
+      title: OnClose Event Test
+    events:
+      onClose:
+        - id: set_close_fired
+          type: SetState
+          params:
+            modal_close_fired: true
+    areas:
+      content:
+        blocks:
+          - id: modal_onclose_content
+            type: Paragraph
+            properties:
+              content: Modal has onClose event.
+
+  - id: open_onclose
+    type: Button
+    properties:
+      title: Open OnClose Modal
+    events:
+      onClick:
+        - id: open_modal
+          type: CallMethod
+          params:
+            blockId: modal_onclose
+            method: setOpen
+            args:
+              - open: true
+
+  - id: onclose_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: modal_close_fired
+              - true
+          then: Close fired
+          else: ''
+
+  # ============================================
+  # METHOD TESTS
+  # ============================================
+
+  # toggleOpen method
+  - id: modal_toggle
+    type: Modal
+    properties:
+      title: Toggle Modal
+    areas:
+      content:
+        blocks:
+          - id: modal_toggle_content
+            type: Paragraph
+            properties:
+              content: Test toggleOpen method.
+
+  - id: toggle_modal
+    type: Button
+    properties:
+      title: Toggle Modal
+    events:
+      onClick:
+        - id: toggle
+          type: CallMethod
+          params:
+            blockId: modal_toggle
+            method: toggleOpen
+
+  # Custom footer area
+  - id: modal_custom_footer
+    type: Modal
+    properties:
+      title: Custom Footer Modal
+    areas:
+      content:
+        blocks:
+          - id: modal_custom_footer_content
+            type: Paragraph
+            properties:
+              content: This modal has a custom footer.
+      footer:
+        blocks:
+          - id: custom_footer_text
+            type: Paragraph
+            properties:
+              content: Custom footer content
+
+  - id: open_custom_footer
+    type: Button
+    properties:
+      title: Open Custom Footer Modal
+    events:
+      onClick:
+        - id: open_modal
+          type: CallMethod
+          params:
+            blockId: modal_custom_footer
+            method: setOpen
+            args:
+              - open: true

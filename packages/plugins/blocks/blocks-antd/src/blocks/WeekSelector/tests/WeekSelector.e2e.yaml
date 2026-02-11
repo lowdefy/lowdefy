@@ -1,0 +1,136 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: weekselector
+type: Box
+
+events:
+  onInit:
+    - id: set_defaults
+      type: SetState
+      params:
+        ws_with_value:
+          _date: '2024-06-10'
+        ws_clearable:
+          _date: '2024-01-08'
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: ws_basic
+    type: WeekSelector
+    properties:
+      title: Basic Week
+
+  - id: ws_with_value
+    type: WeekSelector
+    properties:
+      title: With Value
+
+  # ============================================
+  # PROPERTY TESTS
+  # ============================================
+
+  - id: ws_disabled
+    type: WeekSelector
+    properties:
+      title: Disabled
+      disabled: true
+
+  - id: ws_small
+    type: WeekSelector
+    properties:
+      title: Small Size
+      size: small
+
+  - id: ws_large
+    type: WeekSelector
+    properties:
+      title: Large Size
+      size: large
+
+  - id: ws_placeholder
+    type: WeekSelector
+    properties:
+      title: Custom Placeholder
+      placeholder: Pick a week...
+
+  - id: ws_borderless
+    type: WeekSelector
+    properties:
+      title: Borderless
+      bordered: false
+
+  - id: ws_no_allowclear
+    type: WeekSelector
+    properties:
+      title: No Allow Clear
+      allowClear: false
+
+  - id: ws_with_title
+    type: WeekSelector
+    properties:
+      title: Week with Title
+
+  - id: ws_with_label
+    type: WeekSelector
+    properties:
+      title: Week Label
+      label:
+        extra: Select a week from the calendar
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  - id: ws_onchange
+    type: WeekSelector
+    properties:
+      title: OnChange Test
+    events:
+      onChange:
+        - id: set_onchange
+          type: SetState
+          params:
+            ws_onchange_value:
+              _event: value
+
+  - id: ws_onchange_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: ws_onchange_value
+              - null
+          then: Week selected
+          else: ''
+
+  # ============================================
+  # INTERACTION TESTS
+  # ============================================
+
+  - id: ws_interaction
+    type: WeekSelector
+    properties:
+      title: Interaction Test
+
+  - id: ws_clearable
+    type: WeekSelector
+    properties:
+      title: Clearable
+      allowClear: true

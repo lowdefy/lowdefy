@@ -1,0 +1,199 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: radio_selector
+type: Box
+
+events:
+  onInit:
+    - id: set_defaults
+      type: SetState
+      params:
+        rs_with_value: Option 2
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: rs_basic
+    type: RadioSelector
+    properties:
+      options:
+        - Option 1
+        - Option 2
+        - Option 3
+
+  - id: rs_with_value
+    type: RadioSelector
+    properties:
+      options:
+        - Option 1
+        - Option 2
+        - Option 3
+
+  # ============================================
+  # PROPERTY TESTS
+  # ============================================
+
+  - id: rs_disabled
+    type: RadioSelector
+    properties:
+      disabled: true
+      options:
+        - A
+        - B
+        - C
+
+  - id: rs_vertical
+    type: RadioSelector
+    properties:
+      direction: vertical
+      options:
+        - A
+        - B
+        - C
+
+  - id: rs_horizontal
+    type: RadioSelector
+    properties:
+      direction: horizontal
+      options:
+        - A
+        - B
+        - C
+
+  - id: rs_no_wrap
+    type: RadioSelector
+    properties:
+      wrap: false
+      options:
+        - Option 1
+        - Option 2
+        - Option 3
+        - Option 4
+        - Option 5
+
+  - id: rs_align_center
+    type: RadioSelector
+    properties:
+      align: center
+      options:
+        - A
+        - B
+        - C
+
+  - id: rs_align_end
+    type: RadioSelector
+    properties:
+      align: end
+      options:
+        - A
+        - B
+        - C
+
+  - id: rs_with_title
+    type: RadioSelector
+    properties:
+      title: Select your option
+      options:
+        - A
+        - B
+        - C
+
+  - id: rs_with_label
+    type: RadioSelector
+    properties:
+      label:
+        title: Choose one
+        colon: true
+        extra: Select exactly one option
+      options:
+        - A
+        - B
+        - C
+
+  # ============================================
+  # OPTIONS TESTS
+  # ============================================
+
+  - id: rs_object_options
+    type: RadioSelector
+    properties:
+      options:
+        - value: opt1
+          label: First Option
+        - value: opt2
+          label: Second Option
+        - value: opt3
+          label: Third Option
+
+  - id: rs_disabled_option
+    type: RadioSelector
+    properties:
+      options:
+        - value: enabled1
+          label: Enabled Option
+        - value: disabled1
+          label: Disabled Option
+          disabled: true
+        - value: enabled2
+          label: Another Enabled
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  - id: rs_onchange
+    type: RadioSelector
+    properties:
+      options:
+        - Apple
+        - Banana
+        - Cherry
+    events:
+      onChange:
+        - id: set_onchange
+          type: SetState
+          params:
+            rs_onchange_value:
+              _state: rs_onchange
+
+  - id: rs_onchange_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: rs_onchange_value
+              - null
+          then:
+            _string.concat:
+              - 'Selected: '
+              - _state: rs_onchange_value
+          else: ''
+
+  # ============================================
+  # INTERACTION TESTS
+  # ============================================
+
+  - id: rs_interaction
+    type: RadioSelector
+    properties:
+      options:
+        - A
+        - B
+        - C
+        - D

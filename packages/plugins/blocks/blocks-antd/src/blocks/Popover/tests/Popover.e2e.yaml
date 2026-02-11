@@ -1,0 +1,249 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: popover
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: popover_basic
+    type: Popover
+    properties:
+      title: Popover Title
+    areas:
+      content:
+        blocks:
+          - id: popover_basic_trigger
+            type: Button
+            properties:
+              title: Hover me
+      popover:
+        blocks:
+          - id: popover_basic_content
+            type: Span
+            properties:
+              content: Popover content here
+
+  # ============================================
+  # PLACEMENT TESTS
+  # ============================================
+
+  - id: popover_placement_top
+    type: Popover
+    properties:
+      title: Top Popover
+      placement: top
+    areas:
+      content:
+        blocks:
+          - id: popover_placement_top_trigger
+            type: Button
+            properties:
+              title: Top
+      popover:
+        blocks:
+          - id: popover_placement_top_content
+            type: Span
+            properties:
+              content: Top content
+
+  - id: popover_placement_bottom
+    type: Popover
+    properties:
+      title: Bottom Popover
+      placement: bottom
+    areas:
+      content:
+        blocks:
+          - id: popover_placement_bottom_trigger
+            type: Button
+            properties:
+              title: Bottom
+      popover:
+        blocks:
+          - id: popover_placement_bottom_content
+            type: Span
+            properties:
+              content: Bottom content
+
+  - id: popover_placement_left
+    type: Popover
+    properties:
+      title: Left Popover
+      placement: left
+    areas:
+      content:
+        blocks:
+          - id: popover_placement_left_trigger
+            type: Button
+            properties:
+              title: Left
+      popover:
+        blocks:
+          - id: popover_placement_left_content
+            type: Span
+            properties:
+              content: Left content
+
+  - id: popover_placement_right
+    type: Popover
+    properties:
+      title: Right Popover
+      placement: right
+    areas:
+      content:
+        blocks:
+          - id: popover_placement_right_trigger
+            type: Button
+            properties:
+              title: Right
+      popover:
+        blocks:
+          - id: popover_placement_right_content
+            type: Span
+            properties:
+              content: Right content
+
+  # ============================================
+  # TRIGGER TESTS
+  # ============================================
+
+  - id: popover_trigger_hover
+    type: Popover
+    properties:
+      title: Hover Popover
+      trigger: hover
+    areas:
+      content:
+        blocks:
+          - id: popover_trigger_hover_trigger
+            type: Button
+            properties:
+              title: Hover trigger
+      popover:
+        blocks:
+          - id: popover_trigger_hover_content
+            type: Span
+            properties:
+              content: Hover content
+
+  - id: popover_trigger_click
+    type: Popover
+    properties:
+      title: Click Popover
+      trigger: click
+    areas:
+      content:
+        blocks:
+          - id: popover_trigger_click_trigger
+            type: Button
+            properties:
+              title: Click trigger
+      popover:
+        blocks:
+          - id: popover_trigger_click_content
+            type: Span
+            properties:
+              content: Click content
+
+  # ============================================
+  # STYLE TESTS
+  # ============================================
+
+  - id: popover_color
+    type: Popover
+    properties:
+      title: Colored Popover
+      color: '#1890ff'
+    areas:
+      content:
+        blocks:
+          - id: popover_color_trigger
+            type: Button
+            properties:
+              title: Blue popover
+      popover:
+        blocks:
+          - id: popover_color_content
+            type: Span
+            properties:
+              content: Blue content
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  - id: popover_onopenchange
+    type: Popover
+    properties:
+      title: Event Popover
+      trigger: click
+    events:
+      onOpenChange:
+        - id: set_open_changed
+          type: SetState
+          params:
+            popover_open_changed: true
+    areas:
+      content:
+        blocks:
+          - id: popover_onopenchange_trigger
+            type: Button
+            properties:
+              title: Click for event
+      popover:
+        blocks:
+          - id: popover_onopenchange_content
+            type: Span
+            properties:
+              content: Event content
+
+  - id: onopenchange_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: popover_open_changed
+              - true
+          then: Open changed!
+          else: ''
+
+  # ============================================
+  # DEFAULT OPEN (at end to avoid blocking other elements)
+  # ============================================
+
+  - id: popover_default_open
+    type: Popover
+    properties:
+      title: Default Open
+      defaultOpen: true
+      placement: bottom
+    areas:
+      content:
+        blocks:
+          - id: popover_default_open_trigger
+            type: Button
+            properties:
+              title: Default open
+      popover:
+        blocks:
+          - id: popover_default_open_content
+            type: Span
+            properties:
+              content: Open by default

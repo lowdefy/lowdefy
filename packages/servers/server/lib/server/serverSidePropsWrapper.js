@@ -18,7 +18,7 @@ import path from 'path';
 import { createApiContext } from '@lowdefy/api';
 import { v4 as uuid } from 'uuid';
 
-import config from '../../build/config.json';
+import config from '../build/config.js';
 import createLogger from './log/createLogger.js';
 import fileCache from './fileCache.js';
 import getServerSession from './auth/getServerSession.js';

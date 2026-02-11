@@ -17,7 +17,7 @@
 import { createSessionCallback } from '@lowdefy/api';
 import { serializer } from '@lowdefy/helpers';
 
-import authJson from '../../../build/auth.json';
+import authJson from '../../build/auth.js';
 import callbacks from '../../../build/plugins/auth/callbacks.js';
 
 async function getMockSession() {

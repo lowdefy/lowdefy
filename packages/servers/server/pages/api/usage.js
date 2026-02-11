@@ -17,7 +17,7 @@
 // TODO
 // import crypto from 'crypto';
 
-import appJson from '../../build/app.json';
+import appJson from '../../lib/build/app.js';
 import packageJson from '../../package.json';
 import apiWrapper from '../../lib/server/apiWrapper.js';
 // import validateLicense from '../../lib/server/validateLicense.js';

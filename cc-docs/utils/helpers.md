@@ -217,7 +217,7 @@ const deserialized = serializer.deserialize(serialized);
 | `deserializeFromString(str)` | Parse JSON string |
 | `copy(data, options)` | Deep copy with type handling |
 
-### Internal Property Handling (~r, ~k, ~l)
+### Internal Property Handling (~r, ~k, ~l, ~arr)
 
 The serializer specially handles non-enumerable internal properties used throughout Lowdefy:
 
@@ -226,11 +226,14 @@ The serializer specially handles non-enumerable internal properties used through
 | `~r` | Reference ID - tracks which file an object came from |
 | `~k` | Key map ID - links objects to their config location |
 | `~l` | Line number - tracks source line numbers in YAML files |
+| `~arr` | Array wrapper - preserves `~k`, `~r`, `~l` on arrays through JSON round-trips |
 
 These properties are:
 - Non-enumerable (hidden from `Object.keys()`, spread operators)
 - Preserved through `serializer.copy()` and `serializer.serialize()`
 - Restored as non-enumerable after `serializer.deserialize()`
+
+**Array serialization:** Arrays can carry `~k`, `~r`, and `~l` metadata. Since JSON can't store non-enumerable properties on arrays, the serializer wraps them as `{ "~arr": [...items], "~k": "...", "~r": "...", "~l": ... }` during serialization and unwraps them on deserialization. Servers import build artifacts through `serializer.deserialize()` (in `lib/build/*.js`) to restore these markers at runtime.
 
 **Why this matters:**
 ```javascript

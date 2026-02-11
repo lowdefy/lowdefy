@@ -1,0 +1,175 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: pagesidermenu
+type: PageSiderMenu
+properties:
+  header:
+    theme: dark
+  sider:
+    theme: light
+    initialCollapsed: false
+    collapsible: true
+  menu:
+    links:
+      - id: psm_link1
+        type: MenuLink
+        properties:
+          title: Dashboard
+          icon: AiOutlineDashboard
+      - id: psm_link2
+        type: MenuLink
+        properties:
+          title: Users
+          icon: AiOutlineUser
+      - id: psm_group
+        type: MenuGroup
+        properties:
+          title: Settings
+          icon: AiOutlineSetting
+        links:
+          - id: psm_sub1
+            type: MenuLink
+            properties:
+              title: General
+          - id: psm_sub2
+            type: MenuLink
+            properties:
+              title: Security
+  breadcrumb:
+    list:
+      - Home
+      - Dashboard
+  logo:
+    alt: Test Logo
+
+areas:
+  header:
+    blocks:
+      - id: header_content
+        type: Span
+        properties:
+          content: Header Content Area
+  sider:
+    blocks:
+      - id: sider_content
+        type: Span
+        properties:
+          content: Sider Content
+  content:
+    blocks:
+      - id: main_content
+        type: Title
+        properties:
+          content: Main Content Area
+          level: 3
+
+      # ============================================
+      # METHOD TESTS
+      # ============================================
+
+      - id: toggle_sider_btn
+        type: Button
+        properties:
+          title: Toggle Sider
+        events:
+          onClick:
+            - id: toggle_sider
+              type: CallMethod
+              params:
+                blockId: pagesidermenu
+                method: toggleSiderOpen
+
+      - id: open_sider_btn
+        type: Button
+        properties:
+          title: Open Sider
+        events:
+          onClick:
+            - id: open_sider
+              type: CallMethod
+              params:
+                blockId: pagesidermenu
+                method: setSiderOpen
+                args:
+                  - open: true
+
+      - id: close_sider_btn
+        type: Button
+        properties:
+          title: Close Sider
+        events:
+          onClick:
+            - id: close_sider
+              type: CallMethod
+              params:
+                blockId: pagesidermenu
+                method: setSiderOpen
+                args:
+                  - open: false
+
+      # ============================================
+      # EVENT DISPLAYS
+      # ============================================
+
+      - id: breadcrumb_display
+        type: Span
+        properties:
+          content:
+            _if:
+              test:
+                _ne:
+                  - _state: psm_breadcrumb_clicked
+                  - null
+              then:
+                _string.concat:
+                  - 'Breadcrumb: '
+                  - _state: psm_breadcrumb_clicked
+              else: ''
+
+      - id: menuitem_display
+        type: Span
+        properties:
+          content:
+            _if:
+              test:
+                _ne:
+                  - _state: psm_menuitem_clicked
+                  - null
+              then:
+                _string.concat:
+                  - 'Menu clicked: '
+                  - _state: psm_menuitem_clicked
+              else: ''
+
+  footer:
+    blocks:
+      - id: footer_content
+        type: Span
+        properties:
+          content: Footer Content Area
+
+events:
+  onBreadcrumbClick:
+    - id: set_breadcrumb_clicked
+      type: SetState
+      params:
+        psm_breadcrumb_clicked:
+          _event: link
+  onMenuItemClick:
+    - id: set_menu_clicked
+      type: SetState
+      params:
+        psm_menuitem_clicked:
+          _event: key

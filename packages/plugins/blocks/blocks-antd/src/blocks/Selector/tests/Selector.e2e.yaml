@@ -1,0 +1,326 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: selector
+type: Box
+
+events:
+  onInit:
+    - id: set_defaults
+      type: SetState
+      params:
+        selector_with_value: Option 2
+        selector_no_allowclear: A
+        selector_onclear: Apple
+        selector_clearable: B
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: selector_basic
+    type: Selector
+    properties:
+      options:
+        - Option 1
+        - Option 2
+        - Option 3
+
+  - id: selector_with_value
+    type: Selector
+    properties:
+      options:
+        - Option 1
+        - Option 2
+        - Option 3
+
+  # ============================================
+  # PROPERTY TESTS
+  # ============================================
+
+  - id: selector_placeholder
+    type: Selector
+    properties:
+      placeholder: Choose an item
+      options:
+        - A
+        - B
+        - C
+
+  - id: selector_disabled
+    type: Selector
+    properties:
+      disabled: true
+      options:
+        - A
+        - B
+        - C
+
+  - id: selector_small
+    type: Selector
+    properties:
+      size: small
+      options:
+        - A
+        - B
+        - C
+
+  - id: selector_large
+    type: Selector
+    properties:
+      size: large
+      options:
+        - A
+        - B
+        - C
+
+  - id: selector_borderless
+    type: Selector
+    properties:
+      bordered: false
+      options:
+        - A
+        - B
+        - C
+
+  - id: selector_no_allowclear
+    type: Selector
+    properties:
+      allowClear: false
+      options:
+        - A
+        - B
+        - C
+
+  - id: selector_no_search
+    type: Selector
+    properties:
+      showSearch: false
+      options:
+        - A
+        - B
+        - C
+
+  - id: selector_no_arrow
+    type: Selector
+    properties:
+      showArrow: false
+      options:
+        - A
+        - B
+        - C
+
+  # ============================================
+  # OPTIONS TESTS
+  # ============================================
+
+  - id: selector_object_options
+    type: Selector
+    properties:
+      options:
+        - value: opt1
+          label: First Option
+        - value: opt2
+          label: Second Option
+        - value: opt3
+          label: Third Option
+
+  - id: selector_disabled_option
+    type: Selector
+    properties:
+      options:
+        - value: enabled1
+          label: Enabled Option
+        - value: disabled1
+          label: Disabled Option
+          disabled: true
+        - value: enabled2
+          label: Another Enabled
+
+  - id: selector_empty_options
+    type: Selector
+    properties:
+      options: []
+      notFoundContent: No items available
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  - id: selector_onchange
+    type: Selector
+    properties:
+      options:
+        - Apple
+        - Banana
+        - Cherry
+    events:
+      onChange:
+        - id: set_onchange
+          type: SetState
+          params:
+            onchange_value:
+              _event: value
+
+  - id: onchange_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: onchange_value
+              - null
+          then:
+            _string.concat:
+              - 'Selected: '
+              - _state: onchange_value
+          else: ''
+
+  - id: selector_onclear
+    type: Selector
+    properties:
+      options:
+        - Apple
+        - Banana
+        - Cherry
+    events:
+      onClear:
+        - id: set_onclear
+          type: SetState
+          params:
+            onclear_fired: true
+
+  - id: onclear_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: onclear_fired
+              - true
+          then: Clear fired
+          else: ''
+
+  - id: selector_onblur
+    type: Selector
+    properties:
+      options:
+        - A
+        - B
+        - C
+    events:
+      onBlur:
+        - id: set_onblur
+          type: SetState
+          params:
+            onblur_fired: true
+
+  - id: onblur_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: onblur_fired
+              - true
+          then: Blur fired
+          else: ''
+
+  - id: selector_onfocus
+    type: Selector
+    properties:
+      options:
+        - A
+        - B
+        - C
+    events:
+      onFocus:
+        - id: set_onfocus
+          type: SetState
+          params:
+            onfocus_fired: true
+
+  - id: onfocus_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: onfocus_fired
+              - true
+          then: Focus fired
+          else: ''
+
+  - id: selector_onsearch
+    type: Selector
+    properties:
+      showSearch: true
+      options:
+        - Apple
+        - Apricot
+        - Banana
+        - Blueberry
+        - Cherry
+    events:
+      onSearch:
+        - id: set_onsearch
+          type: SetState
+          params:
+            search_value:
+              _event: value
+
+  - id: onsearch_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: search_value
+              - null
+          then:
+            _string.concat:
+              - 'Search: '
+              - _state: search_value
+          else: ''
+
+  # ============================================
+  # INTERACTION TESTS
+  # ============================================
+
+  - id: selector_clearable
+    type: Selector
+    properties:
+      allowClear: true
+      options:
+        - A
+        - B
+        - C
+
+  - id: selector_searchable
+    type: Selector
+    properties:
+      showSearch: true
+      options:
+        - Apple
+        - Apricot
+        - Banana
+        - Blueberry
+        - Cherry
+        - Cranberry

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ function _function({ actions, arrayIndices, event, location, operatorPrefix, par
       operatorPrefix: `_${operatorPrefix}`,
     });
     if (errors.length > 0) {
-      throw new Error(errors[0]);
+      throw errors[0];
     }
     return output;
   };

@@ -226,6 +226,8 @@ After all components are built:
 3. Attach `~k` property pointing to keyMap entry
 4. Remove `~r` property (no longer needed)
 
+Arrays use the `~arr` serializer wrapper to preserve `~k`, `~r`, and `~l` through JSON round-trips. Servers deserialize build artifacts with `serializer.deserialize()` to restore these markers at runtime.
+
 **Purpose:** Enable runtime error messages with exact YAML locations.
 
 ## Types Manifest

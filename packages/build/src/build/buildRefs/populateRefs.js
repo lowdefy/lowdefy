@@ -41,7 +41,7 @@ function copyVarValue(value, sourceRefId) {
   // Copy the value, preserving ~l and setting ~r to the source file
   return serializer.copy(value, {
     reviver: (_, v) => {
-      if (type.isObject(v)) {
+      if (type.isObject(v) || type.isArray(v)) {
         // Preserve the source file's ref ID by setting it explicitly
         // This prevents recursiveBuild from overwriting it with the template's ref ID
         if (sourceRefId && v['~r'] === undefined) {

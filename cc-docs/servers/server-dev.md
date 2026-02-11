@@ -61,6 +61,7 @@ Additional operators:
 ```
 server-dev/
 ├── lib/
+│   ├── build/                # Build artifact loaders (deserialize JSON)
 │   ├── server/               # Server utilities
 │   │   ├── jitPageBuilder.js # JIT page build on request
 │   │   ├── pageCache.mjs     # PageCache class (shared by manager and server)
