@@ -79,8 +79,13 @@ async function createCustomPluginTypesMap({ directories, logger }) {
     });
 
     // Import schemas from the plugin (build package can't resolve custom plugins)
+    let packageSchemas;
     try {
-      const packageSchemas = await import(`${plugin.name}/schemas`);
+      packageSchemas = await import(`${plugin.name}/schemas`);
+    } catch {
+      logger.debug(`No schemas export found for plugin "${plugin.name}".`);
+    }
+    if (packageSchemas) {
       for (const [typeName, schema] of Object.entries(packageSchemas)) {
         if (typeName === 'default') continue;
         const prefixedName = `${plugin.typePrefix ?? ''}${typeName}`;
@@ -90,8 +95,6 @@ async function createCustomPluginTypesMap({ directories, logger }) {
           customTypesMap.schemas.blocks[prefixedName] = schema;
         }
       }
-    } catch {
-      // Package doesn't export schemas — skip
     }
   }
 
