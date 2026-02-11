@@ -64,7 +64,7 @@ _ref:
                 properties:
                   src:
                     _user: image
-                ````
+                ```
 
                 ###### Insert user name and id (sub) when inserting a document in MongoDB:
                 ```yaml
@@ -79,7 +79,7 @@ _ref:
                         _user: name
                       id:
                         _user: sub
-                ````
+                ```
 
                 ######  Setting all the data from the provider to the user object (Use this in development to see the data from the provider - it is not recommended to do this in production):
                 ```yaml
