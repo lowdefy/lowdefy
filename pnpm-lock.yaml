@@ -184,6 +184,9 @@ importers:
       '@lowdefy/connection-stripe':
         specifier: 4.5.2
         version: link:../plugins/connections/connection-stripe
+      '@lowdefy/connection-test':
+        specifier: 4.5.2
+        version: link:../plugins/connections/connection-test
       '@lowdefy/operators-change-case':
         specifier: 4.5.2
         version: link:../plugins/operators/operators-change-case
@@ -241,6 +244,9 @@ importers:
       '@lowdefy/helpers':
         specifier: 4.5.2
         version: link:../utils/helpers
+      '@lowdefy/logger':
+        specifier: 4.5.2
+        version: link:../utils/logger
       '@lowdefy/node-utils':
         specifier: 4.5.2
         version: link:../utils/node-utils
@@ -308,6 +314,9 @@ importers:
       '@lowdefy/layout':
         specifier: 4.5.2
         version: link:../layout
+      '@lowdefy/logger':
+        specifier: 4.5.2
+        version: link:../utils/logger
       classnames:
         specifier: 2.3.2
         version: 2.3.2
@@ -566,6 +575,9 @@ importers:
 
   packages/plugins/actions/actions-core:
     dependencies:
+      '@lowdefy/errors':
+        specifier: 4.5.2
+        version: link:../../../utils/errors
       '@lowdefy/helpers':
         specifier: 4.5.2
         version: link:../../../utils/helpers
@@ -851,6 +863,9 @@ importers:
       '@lowdefy/block-dev-e2e':
         specifier: 4.5.2
         version: link:../../../utils/block-dev-e2e
+      '@lowdefy/e2e-utils':
+        specifier: 4.5.2
+        version: link:../../../utils/e2e-utils
       '@lowdefy/jest-yaml-transform':
         specifier: 4.5.2
         version: link:../../../utils/jest-yaml-transform
@@ -1505,6 +1520,12 @@ importers:
         specifier: 28.1.3
         version: 28.1.3(@types/node@16.18.126)
 
+  packages/plugins/connections/connection-test:
+    dependencies:
+      '@lowdefy/errors':
+        specifier: 4.5.2
+        version: link:../../../utils/errors
+
   packages/plugins/operators/operators-change-case:
     dependencies:
       '@lowdefy/helpers':
@@ -1926,12 +1947,18 @@ importers:
       '@lowdefy/connection-mongodb':
         specifier: 4.5.2
         version: link:../../plugins/connections/connection-mongodb
+      '@lowdefy/errors':
+        specifier: 4.5.2
+        version: link:../../utils/errors
       '@lowdefy/helpers':
         specifier: 4.5.2
         version: link:../../utils/helpers
       '@lowdefy/layout':
         specifier: 4.5.2
         version: link:../../layout
+      '@lowdefy/logger':
+        specifier: 4.5.2
+        version: link:../../utils/logger
       '@lowdefy/node-utils':
         specifier: 4.5.2
         version: link:../../utils/node-utils
@@ -2044,6 +2071,9 @@ importers:
       '@lowdefy/connection-axios-http':
         specifier: 4.5.2
         version: link:../../plugins/connections/connection-axios-http
+      '@lowdefy/connection-test':
+        specifier: 4.5.2
+        version: link:../../plugins/connections/connection-test
       '@lowdefy/engine':
         specifier: 4.5.2
         version: link:../../engine
@@ -2053,6 +2083,9 @@ importers:
       '@lowdefy/layout':
         specifier: 4.5.2
         version: link:../../layout
+      '@lowdefy/logger':
+        specifier: 4.5.2
+        version: link:../../utils/logger
       '@lowdefy/node-utils':
         specifier: 4.5.2
         version: link:../../utils/node-utils
@@ -2296,11 +2329,17 @@ importers:
   packages/utils/e2e-utils:
     dependencies:
       '@lowdefy/blocks-antd':
-        specifier: ^4.0.0
+        specifier: 4.5.2
         version: link:../../plugins/blocks/blocks-antd
+      '@lowdefy/blocks-basic':
+        specifier: 4.5.2
+        version: link:../../plugins/blocks/blocks-basic
       '@playwright/test':
-        specifier: ^1.50.0
-        version: 1.50.1
+        specifier: 1.50.0
+        version: 1.50.0
+      js-yaml:
+        specifier: 4.1.0
+        version: 4.1.0
       prompts:
         specifier: 2.4.2
         version: 2.4.2
@@ -2378,6 +2417,31 @@ importers:
       yaml:
         specifier: 2.3.4
         version: 2.3.4
+
+  packages/utils/logger:
+    dependencies:
+      ora:
+        specifier: 7.0.1
+        version: 7.0.1
+      pino:
+        specifier: 8.16.2
+        version: 8.16.2
+    devDependencies:
+      '@jest/globals':
+        specifier: 28.1.3
+        version: 28.1.3
+      '@swc/cli':
+        specifier: 0.1.63
+        version: 0.1.63(@swc/core@1.3.99(@swc/helpers@0.5.2))(chokidar@3.5.3)
+      '@swc/core':
+        specifier: 1.3.99
+        version: 1.3.99(@swc/helpers@0.5.2)
+      '@swc/jest':
+        specifier: 0.2.29
+        version: 0.2.29(@swc/core@1.3.99(@swc/helpers@0.5.2))
+      jest:
+        specifier: 28.1.3
+        version: 28.1.3(@types/node@16.18.126)
 
   packages/utils/node-utils:
     dependencies:
@@ -3589,6 +3653,11 @@ packages:
   '@pkgr/core@0.1.2':
     resolution: {integrity: sha512-fdDH1LSGfZdTH2sxdpVMw31BanV28K/Gry0cVFxaNP77neJSkd82mM8ErPNYs9e+0O7SdHBLTDzDgwUuy18RnQ==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
+
+  '@playwright/test@1.50.0':
+    resolution: {integrity: sha512-ZGNXbt+d65EGjBORQHuYKj+XhCewlwpnSd/EDuLPZGSiEWmgOJB5RmMCCYGy5aMfTs9wx61RivfDKi8H/hcMvw==}
+    engines: {node: '>=18'}
+    hasBin: true
 
   '@playwright/test@1.50.1':
     resolution: {integrity: sha512-Jii3aBg+CEDpgnuDxEp/h7BimHcUTDlpEtce89xEumlJ5ef2hqepZ+PWp1DDpYC/VO9fmWVI1IlEaoI5fK9FXQ==}
@@ -7762,8 +7831,18 @@ packages:
     resolution: {integrity: sha512-HRDzbaKjC+AOWVXxAU/x54COGeIv9eb+6CkDSQoNTt4XyWoIJvuPsXizxu/Fr23EiekbtZwmh1IcIG/l/a10GQ==}
     engines: {node: '>=8'}
 
+  playwright-core@1.50.0:
+    resolution: {integrity: sha512-CXkSSlr4JaZs2tZHI40DsZUN/NIwgaUPsyLuOAaIZp2CyF2sN5MM5NJsyB188lFSSozFxQ5fPT4qM+f0tH/6wQ==}
+    engines: {node: '>=18'}
+    hasBin: true
+
   playwright-core@1.50.1:
     resolution: {integrity: sha512-ra9fsNWayuYumt+NiM069M6OkcRb1FZSK8bgi66AtpFoWkg2+y0bJSNmkFrWhMbEBbVKC/EruAHH3g0zmtwGmQ==}
+    engines: {node: '>=18'}
+    hasBin: true
+
+  playwright@1.50.0:
+    resolution: {integrity: sha512-+GinGfGTrd2IfX1TA4N2gNmeIksSb+IAe589ZH+FlmpV3MYTx6+buChGIuDLQwrGNCw2lWibqV50fU510N7S+w==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -11093,6 +11172,10 @@ snapshots:
     optional: true
 
   '@pkgr/core@0.1.2': {}
+
+  '@playwright/test@1.50.0':
+    dependencies:
+      playwright: 1.50.0
 
   '@playwright/test@1.50.1':
     dependencies:
@@ -16230,7 +16313,15 @@ snapshots:
     dependencies:
       find-up: 4.1.0
 
+  playwright-core@1.50.0: {}
+
   playwright-core@1.50.1: {}
+
+  playwright@1.50.0:
+    dependencies:
+      playwright-core: 1.50.0
+    optionalDependencies:
+      fsevents: 2.3.2
 
   playwright@1.50.1:
     dependencies:

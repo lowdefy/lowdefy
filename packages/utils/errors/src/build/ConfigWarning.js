@@ -16,6 +16,7 @@
 
 import ConfigError from './ConfigError.js';
 import ConfigMessage from './ConfigMessage.js';
+import formatErrorMessage from '../formatErrorMessage.js';
 
 /**
  * Build-time configuration warning class.
@@ -67,6 +68,7 @@ class ConfigWarning {
     }
 
     // Store all properties for the logger
+    this.name = 'Config Warning';
     this.configKey = configKey ?? null;
     this.checkSlug = checkSlug;
     this.received = received;
@@ -86,15 +88,17 @@ class ConfigWarning {
       return;
     }
 
-    // Resolve location based on available info
+    // Resolve location based on available info, falling through if a method returns null
     let location = null;
     const configDir = configDirectory ?? context?.directories?.config;
 
     if (configKey && context?.keyMap) {
       location = ConfigMessage.resolveLocation({ configKey, context });
-    } else if (operatorLocation && context?.refMap) {
+    }
+    if (!location && operatorLocation && context?.refMap) {
       location = ConfigMessage.resolveOperatorLocation({ operatorLocation, context });
-    } else if (filePath) {
+    }
+    if (!location && filePath) {
       location = ConfigMessage.resolveRawLocation({
         filePath,
         lineNumber,
@@ -109,6 +113,10 @@ class ConfigWarning {
 
     // Set message (no prefix - logger uses class name for display)
     this.message = message;
+  }
+
+  print() {
+    return formatErrorMessage(this);
   }
 }
 

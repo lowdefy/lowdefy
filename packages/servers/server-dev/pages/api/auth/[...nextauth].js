@@ -17,7 +17,7 @@
 import NextAuth from 'next-auth';
 
 import apiWrapper from '../../../lib/server/apiWrapper.js';
-import authJson from '../../../build/auth.json';
+import authJson from '../../../lib/build/auth.js';
 import getMockSession from '../../../lib/server/auth/getMockSession.js';
 
 async function handler({ context, req, res }) {

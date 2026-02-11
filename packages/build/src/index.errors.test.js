@@ -124,7 +124,8 @@ describe('Build Error Tests', () => {
         // Check exact warning format (for testing 2-line format)
         if (testCase.exactWarnings) {
           for (const exactWarning of testCase.exactWarnings) {
-            const found = result.warnings.some((warn) => warn === exactWarning);
+            const normalizedExpected = exactWarning.replace(/\{\{fixturesDir\}\}/g, fixturesDir);
+            const found = result.warnings.some((warn) => warn === normalizedExpected);
             expect(found).toBe(true);
           }
         }
@@ -132,7 +133,8 @@ describe('Build Error Tests', () => {
         // Check exact error format (for testing 2-line format)
         if (testCase.exactErrors) {
           for (const exactError of testCase.exactErrors) {
-            const found = result.errors.some((err) => err === exactError);
+            const normalizedExpected = exactError.replace(/\{\{fixturesDir\}\}/g, fixturesDir);
+            const found = result.errors.some((err) => err === normalizedExpected);
             expect(found).toBe(true);
           }
         }

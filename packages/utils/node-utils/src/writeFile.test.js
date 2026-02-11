@@ -54,7 +54,7 @@ test('writeFile should create directories if they do not exist', async () => {
 
 test('readFile error id filepath is not a string', async () => {
   await expect(writeFile(true, `Test Write File`)).rejects.toThrow(
-    'Could not write file, file path should be a string, received true.'
+    'Could not write file, file path should be a string.'
   );
 });
 

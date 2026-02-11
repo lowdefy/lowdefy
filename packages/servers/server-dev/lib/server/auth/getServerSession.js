@@ -16,7 +16,7 @@
 
 import { getServerSession as getNextAuthServerSession } from 'next-auth/next';
 
-import authJson from '../../../build/auth.json';
+import authJson from '../../build/auth.js';
 import getMockSession from './getMockSession.js';
 
 async function getServerSession({ authOptions, req, res }) {

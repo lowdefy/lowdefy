@@ -46,6 +46,7 @@
     "@lowdefy/errors": "4.5.2",
     "@lowdefy/helpers": "4.5.2",
     "@lowdefy/layout": "4.5.2",
+    "@lowdefy/logger": "4.5.2",
     "classnames": "2.3.2",
     "react": "18.2.0",
     "react-dom": "18.2.0"

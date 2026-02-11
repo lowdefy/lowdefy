@@ -45,7 +45,7 @@ test('invalid control', () => {
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    'Invalid control type(s) for endpoint api1. Received "[":invalid"]"'
+    'Invalid control type(s) for endpoint api1.'
   );
 });
 
@@ -60,7 +60,7 @@ test('missing required controls', () => {
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    'Missing required control type(s) for endpoint test_missing_control. Missing [":then"]'
+    'Missing required control type(s) for endpoint test_missing_control.'
   );
 });
 
@@ -75,7 +75,7 @@ test('throw more than one control', () => {
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    'More than one control type found for endpoint test_multiple_controls. Received [":if",":try"]'
+    'More than one control type found for endpoint test_multiple_controls.'
   );
 });
 
@@ -90,7 +90,7 @@ test('throw invalid control with a valid control', () => {
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    'Invalid control type(s) for endpoint test_invalid_control. Received [":invalid",":catch"]'
+    'Invalid control type(s) for endpoint test_invalid_control.'
   );
 });
 
@@ -105,7 +105,7 @@ test('throw switch not an array', () => {
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    'Type given for :switch control is invalid at endpoint test_invalid_switch. Received true'
+    'Type given for :switch control is invalid at endpoint test_invalid_switch.'
   );
 });
 
@@ -120,7 +120,7 @@ test('throw missing :case for :switch control', () => {
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    'Missing required control type(s) for endpoint test_missing_case. Missing [":case"]'
+    'Missing required control type(s) for endpoint test_missing_case.'
   );
 });
 

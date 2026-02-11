@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigError, PluginError } from '@lowdefy/errors/client';
+import { ConfigError, PluginError, UserError } from '@lowdefy/errors/client';
 import { type } from '@lowdefy/helpers';
 import getActionMethods from './actions/getActionMethods.js';
 
@@ -30,10 +30,6 @@ class Actions {
     this.loggedActionErrors = new Set();
   }
 
-  // Log action errors appropriately:
-  // - ConfigError/PluginError: use logError for config tracing
-  // - Throw errors: log as regular error (intentional, no config trace)
-  // - Other errors: log as regular error
   logActionError({ error, action }) {
     const logError = this.context._internal.lowdefy._internal.logError;
     const actionId = action?.id || '';
@@ -45,27 +41,16 @@ class Actions {
     }
     this.loggedActionErrors.add(errorKey);
 
-    // Throw errors are intentional - don't log config location
-    if (action?.type === 'Throw' || error?.name === 'ThrowError') {
-      console.error(`[Throw Action] ${error?.message || 'Action error'}`);
+    // User-facing errors log to browser console only, never to terminal
+    if (error instanceof UserError) {
+      console.error(error.print());
       return;
     }
 
-    // ConfigError, PluginError, or errors with isServiceError flag - use logError
-    if (
-      (error instanceof ConfigError ||
-        error instanceof PluginError ||
-        error?.configKey ||
-        error?.isServiceError) &&
-      logError
-    ) {
+    // ConfigError, PluginError, ServiceError - use logError (-> terminal)
+    if (logError) {
       logError(error);
-      return;
     }
-
-    // Other errors - log with action type
-    const actionType = action?.type || 'Unknown';
-    console.error(`[${actionType} Action] ${error?.message || 'Action error'}`);
   }
 
   async callAsyncAction({ action, arrayIndices, block, event, index, responses }) {
@@ -208,6 +193,7 @@ class Actions {
       response = await this.actions[action.type]({
         globals: this.context._internal.lowdefy._internal.globals,
         methods: getActionMethods({
+          actionId: action.id,
           actions: responses,
           arrayIndices,
           blockId: block.blockId,
@@ -220,9 +206,8 @@ class Actions {
         progress();
       }
     } catch (err) {
-      // Wrap plain Error in PluginError (but preserve ConfigError)
       const error =
-        err instanceof ConfigError || err instanceof PluginError
+        err instanceof ConfigError || err instanceof PluginError || err instanceof UserError
           ? err
           : new PluginError({
               error: err,

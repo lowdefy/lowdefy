@@ -4,7 +4,7 @@ Test configurations for validating error tracing functionality (Issue #1940). Th
 
 ## Build-Time Error Tests (Automated)
 
-**Location:** `packages/build/src/build-errors/`
+**Location:** `packages/build/src/tests/errors/`
 
 End-to-end tests for all build-time errors are automated in `packages/build/src/index.errors.test.js`. Each error type has its own fixture directory with documented YAML files.
 
@@ -25,6 +25,7 @@ pnpm test -- --testPathPattern='index.errors.test.js'
 | B1   | Auth config not object      | Error                | `B1-auth-not-object/`              |
 | B2   | Auth provider missing id    | Error                | `B2-auth-provider-missing-id/`     |
 | B3   | Public/protected conflict   | Error                | `B3-public-protected-conflict/`    |
+| B4   | Missing NextAuth secret     | Error                | `B4-missing-nextauth-secret/`      |
 | C1   | Duplicate menu id           | Error                | `C1-duplicate-menu-id/`            |
 | C2   | Menu link to missing page   | Warn                 | `C2-menu-missing-page/`            |
 | D1   | Duplicate page id           | Error                | `D1-duplicate-page-id/`            |
@@ -39,6 +40,7 @@ pnpm test -- --testPathPattern='index.errors.test.js'
 | F4   | Request id with period      | Error                | `F4-request-id-with-period/`       |
 | F5   | Invalid request type        | Error                | `F5-invalid-request-type/`         |
 | F6   | Non-existent connectionId   | Error                | `F6-nonexistent-connection/`       |
+| F7   | Non-existent connection (ignored) | Suppressed     | `F7-nonexistent-connection-ignored/` |
 | G1   | Invalid page link           | Warn Dev, Error Prod | `G1-invalid-page-link/`            |
 | G2   | Duplicate action id         | Error                | `G2-duplicate-action-id/`          |
 | G3   | Missing action id           | Error                | `G3-missing-action-id/`            |
@@ -46,12 +48,42 @@ pnpm test -- --testPathPattern='index.errors.test.js'
 | G5   | Events not array            | Error                | `G5-events-not-array/`             |
 | H1   | Operator typo (_staet)      | Warn                 | `H1-operator-typo-state/`          |
 | H2   | Operator typo (_iff)        | Warn                 | `H2-operator-typo-if/`             |
+| H3   | Operator typo (ignored)     | Suppressed           | `H3-operator-typo-ignored/`        |
+| H4   | Action type (ignored)       | Suppressed           | `H4-action-type-ignored/`          |
+| H5   | Block type (ignored)        | Suppressed           | `H5-block-type-ignored/`           |
+| H6   | Connection type (ignored)   | Suppressed           | `H6-connection-type-ignored/`      |
+| H7   | Request type (ignored)      | Suppressed           | `H7-request-type-ignored/`         |
 | I1   | Missing \_ref file          | Error                | `I1-missing-ref-file/`             |
 | I2   | Circular \_ref              | Error                | `I2-circular-ref/`                 |
 | J1   | Undefined state reference   | Warn                 | `J1-undefined-state/`              |
+| J2   | Undefined state (ignored)   | Suppressed           | `J2-undefined-state-ignored/`      |
+| J3   | Undefined state in request  | Warn                 | `J3-undefined-state-in-request/`   |
+| J4   | Undefined state in ref default | Warn              | `J4-undefined-state-in-ref-default/` |
+| J5   | State dot-notation child    | Warn                 | `J5-state-dot-notation-child/`     |
+| J6   | \_state in request properties | Warn Dev, Error Prod | `J6-state-in-request-properties/`  |
+| J7   | \_state in request props (no dup) | Warn Dev, Error Prod | `J7-state-in-request-properties-no-duplicate/` |
 | K1   | Undefined payload reference | Warn                 | `K1-undefined-payload/`            |
+| K2   | Undefined payload (ignored) | Suppressed           | `K2-undefined-payload-ignored/`    |
 | L1   | Undefined step reference    | Warn                 | `L1-undefined-step/`               |
+| L2   | Undefined step (ignored)    | Suppressed           | `L2-undefined-step-ignored/`       |
+| M1   | \_ref var wrong location    | Error                | `M1-ref-var-wrong-location/`       |
+| M2   | \_ref var (ignored)         | Suppressed           | `M2-ref-var-ignored/`              |
+| M3   | \_ref nunjucks template     | Error                | `M3-ref-njk-template/`             |
+| M4   | \_ref nunjucks (ignored)    | Suppressed           | `M4-ref-njk-ignored/`              |
+| N1   | Dedup warnings same page    | Warn                 | `N1-dedup-warnings/`               |
+| N2   | Dedup warnings multi-file   | Warn                 | `N2-dedup-multi-file/`             |
+| S1   | Ignore all checks           | Suppressed           | `S1-ignore-all-checks/`            |
+| S2   | Ignore specific slug        | Suppressed           | `S2-ignore-specific-slug/`         |
+| S3   | Ignore inherited            | Suppressed           | `S3-ignore-inherited/`             |
+| S4   | Ignore invalid slug         | Error                | `S4-ignore-invalid-slug/`          |
+| S5   | Ignore old property migration | Suppressed         | `S5-ignore-old-property-migration/` |
+| S6   | Ignore not matching         | Warn                 | `S6-ignore-not-matching/`          |
+| S7   | Ignore cascades into \_ref  | Suppressed           | `S7-ignore-cascades-into-ref/`     |
+| S8   | Ignore cascades into \_ref array | Suppressed      | `S8-ignore-cascades-into-ref-array/` |
 | -    | Multi-file error tracking   | Error                | `multi-file-error/`                |
+| -    | Multi-page errors           | Error                | `multi-page-errors/`               |
+| -    | Multi-page schema errors    | Error                | `multi-page-schema-errors/`        |
+| -    | Multi-validation errors     | Error                | `multi-validation-errors/`         |
 
 Each fixture includes YAML comments documenting the expected error message and line number.
 

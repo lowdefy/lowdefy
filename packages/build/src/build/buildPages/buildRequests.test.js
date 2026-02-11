@@ -50,7 +50,7 @@ test('requests not an array', () => {
     ],
   };
   expect(() => buildPages({ components, context })).toThrow(
-    'Requests is not an array at "page_1" on page "page_1". Received "requests"'
+    'Requests is not an array at "page_1" on page "page_1".'
   );
 });
 
@@ -80,7 +80,7 @@ test('request id not a string', () => {
     ],
   };
   expect(() => buildPages({ components, context })).toThrow(
-    'Request id is not a string at page "page_1". Received true.'
+    'Request id is not a string at page "page_1".'
   );
 });
 
@@ -160,7 +160,7 @@ test('request type is not a string', () => {
     ],
   };
   expect(() => buildPages({ components, context })).toThrow(
-    'Request type is not a string at request "request" at page "page_1". Received undefined.'
+    'Request type is not a string at request "request" at page "page_1".'
   );
 });
 
@@ -409,7 +409,7 @@ test('request connectionId is not a string', () => {
     ],
   };
   expect(() => buildPages({ components, context })).toThrow(
-    'Request "my_request" at page "page_1" connectionId is not a string. Received 123.'
+    'Request "my_request" at page "page_1" connectionId is not a string.'
   );
 });
 

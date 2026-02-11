@@ -496,7 +496,7 @@ export default {
           type: 'object',
           additionalProperties: false,
           properties: {
-            '~ignoreBuildCheck': {},
+            '~ignoreBuildChecks': {},
             '~r': {},
             '~l': {},
             mockUser: {

@@ -34,7 +34,7 @@ import path from 'path';
  *   configDirectory: '/Users/dev/myapp'
  * });
  * // Returns: {
- * //   source: 'pages/home.yaml:5',
+ * //   source: '/Users/dev/myapp/pages/home.yaml:5',
  * //   config: 'root.pages[0:home].blocks[0:header]',
  * //   link: '/Users/dev/myapp/pages/home.yaml:5'
  * // }
@@ -50,23 +50,20 @@ function resolveConfigLocation({ configKey, keyMap, refMap, configDirectory }) {
   const refEntry = refMap?.[refId];
   const filePath = refEntry?.path || 'lowdefy.yaml';
 
-  // source: filepath:line (e.g., "lowdefy.yaml:16")
-  const source = lineNumber ? `${filePath}:${lineNumber}` : filePath;
-
   // config: the config path (e.g., "root.pages[0:home].blocks[0:header]")
   const config = keyEntry.key;
 
-  // Absolute path for clickable links in VSCode terminal
-  let link = null;
+  // Use absolute path when configDirectory is available for clickable terminal links
+  let resolvedPath = filePath;
   if (configDirectory) {
-    const absolutePath = path.resolve(configDirectory, filePath);
-    link = lineNumber ? `${absolutePath}:${lineNumber}` : absolutePath;
+    resolvedPath = path.resolve(configDirectory, filePath);
   }
+  const source = lineNumber ? `${resolvedPath}:${lineNumber}` : resolvedPath;
 
   return {
     source,
     config,
-    link,
+    link: source,
   };
 }
 

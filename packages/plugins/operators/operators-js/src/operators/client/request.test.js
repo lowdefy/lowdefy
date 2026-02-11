@@ -101,7 +101,7 @@ test('_request true gives null', () => {
   expect(res.errors.length).toBe(1);
   expect(res.errors[0].rawMessage).toBe('_request accepts a string value.');
   expect(res.errors[0].message).toBe(
-    '[Plugin Error] _request accepts a string value. Received: {"_request":true} at locationId.'
+    '_request accepts a string value. at locationId.'
   );
 });
 
@@ -129,7 +129,7 @@ test('_request null', () => {
   expect(res.errors.length).toBe(1);
   expect(res.errors[0].rawMessage).toBe('_request accepts a string value.');
   expect(res.errors[0].message).toBe(
-    '[Plugin Error] _request accepts a string value. Received: {"_request":null} at locationId.'
+    '_request accepts a string value. at locationId.'
   );
 });
 

@@ -43,7 +43,6 @@ function getEventType(error) {
 async function logError({ context, error }) {
   try {
     const { headers = {}, user = {} } = context;
-    const message = error?.message || 'Unknown error';
     const eventType = getEventType(error);
     const isServiceError = error instanceof ServiceError || error?.isServiceError === true;
     const isLowdefyError = error instanceof LowdefyError;
@@ -79,7 +78,7 @@ async function logError({ context, error }) {
         // Core error schema (consistent with client)
         event: eventType,
         errorName,
-        errorMessage: message,
+        errorMessage: error.message,
         isServiceError,
         pageId: context.pageId || null,
         timestamp: new Date().toISOString(),
@@ -123,7 +122,7 @@ async function logError({ context, error }) {
           'cf-visitor': headers['cf-visitor'],
         },
       },
-      `[${errorName}] ${message}`
+      error.print ? error.print() : `[${errorName}] ${error.message}`
     );
 
     // Capture error to Sentry (no-op if Sentry not configured)

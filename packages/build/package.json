@@ -79,6 +79,7 @@
     "@lowdefy/blocks-qr": "4.5.2",
     "@lowdefy/connection-axios-http": "4.5.2",
     "@lowdefy/connection-elasticsearch": "4.5.2",
+    "@lowdefy/connection-test": "4.5.2",
     "@lowdefy/connection-google-sheets": "4.5.2",
     "@lowdefy/connection-knex": "4.5.2",
     "@lowdefy/connection-mongodb": "4.5.2",

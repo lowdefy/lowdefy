@@ -15,7 +15,7 @@
 */
 
 import { spawnProcess } from '@lowdefy/node-utils';
-import createStdOutLineHandler from '../../utils/createStdOutLineHandler.js';
+import { createStdOutLineHandler } from '@lowdefy/logger/cli';
 
 async function runStart({ context, directory }) {
   await spawnProcess({

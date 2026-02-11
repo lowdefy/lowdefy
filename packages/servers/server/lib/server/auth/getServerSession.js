@@ -16,7 +16,7 @@
 
 import { getServerSession as getNextAuthServerSession } from 'next-auth/next';
 
-import authJson from '../../../build/auth.json';
+import authJson from '../../build/auth.js';
 
 function getServerSession({ authOptions, req, res }) {
   if (authJson.configured === true) {

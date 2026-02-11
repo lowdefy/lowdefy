@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 
 import { ErrorBoundary } from '@lowdefy/block-utils';
@@ -22,14 +22,8 @@ import { ErrorBoundary } from '@lowdefy/block-utils';
 import Auth from '../lib/client/auth/Auth.js';
 import createLogUsage from '../lib/client/createLogUsage.js';
 import initSentryClient from '../lib/client/sentry/initSentryClient.js';
+import loggerConfig from '../lib/build/logger.js';
 import setSentryUser from '../lib/client/sentry/setSentryUser.js';
-
-let loggerConfig = {};
-try {
-  loggerConfig = require('../build/logger.json');
-} catch {
-  // logger.json may not exist if Sentry is not configured
-}
 
 // Must be in _app due to next specifications.
 import '../build/plugins/styles.less';
@@ -44,8 +38,16 @@ function App({ Component, pageProps: { session, rootConfig, pageConfig } }) {
   const usageDataRef = useRef({});
   const lowdefyRef = useRef({ eventCallback: createLogUsage({ usageDataRef }) });
 
+  const handleError = useCallback((error) => {
+    if (error.log) {
+      error.log(lowdefyRef.current);
+    } else {
+      console.error(error.print ? error.print() : `[${error.name || 'Error'}] ${error.message}`);
+    }
+  }, []);
+
   return (
-    <ErrorBoundary fullPage>
+    <ErrorBoundary fullPage onError={handleError}>
       <Auth session={session}>
         {(auth) => {
           usageDataRef.current.user = auth.session?.hashed_id;

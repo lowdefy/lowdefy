@@ -59,10 +59,7 @@ test('_operator.name invalid', () => {
   const res = parser.parse({ input, location });
   expect(res.output).toEqual({ a: null });
   expect(res.errors.length).toBe(1);
-  expect(res.errors[0].rawMessage).toBe('_operator - Invalid operator name.');
-  expect(res.errors[0].message).toBe(
-    '[Plugin Error] _operator - Invalid operator name. Received: {"_operator":{"name":"_a"}} at location.'
-  );
+  expect(res.errors[0].message).toBe('_operator - Invalid operator name.');
 });
 
 test('_operator.name not allowed to include "experimental"', () => {
@@ -71,10 +68,7 @@ test('_operator.name not allowed to include "experimental"', () => {
   const res = parser.parse({ input, location });
   expect(res.output).toEqual({ a: null });
   expect(res.errors.length).toBe(1);
-  expect(res.errors[0].rawMessage).toBe('Experimental operators cannot be used with _operator.');
-  expect(res.errors[0].message).toBe(
-    '[Plugin Error] Experimental operators cannot be used with _operator. Received: {"_operator":{"name":"_experimental_op"}} at location.'
-  );
+  expect(res.errors[0].message).toBe('Experimental operators cannot be used with _operator.');
 });
 
 test('_operator.name not a string', () => {
@@ -83,10 +77,7 @@ test('_operator.name not a string', () => {
   const res = parser.parse({ input, location });
   expect(res.output).toEqual({ a: null });
   expect(res.errors.length).toBe(1);
-  expect(res.errors[0].rawMessage).toBe('_operator.name must be a valid operator name as string.');
-  expect(res.errors[0].message).toBe(
-    '[Plugin Error] _operator.name must be a valid operator name as string. Received: {"_operator":{"name":1}} at location.'
-  );
+  expect(res.errors[0].message).toBe('_operator.name must be a valid operator name as string.');
 });
 
 test('_operator with value not a object', () => {
@@ -95,10 +86,7 @@ test('_operator with value not a object', () => {
   const res = parser.parse({ input, location });
   expect(res.output).toEqual({ a: null });
   expect(res.errors.length).toBe(1);
-  expect(res.errors[0].rawMessage).toBe('_operator.name must be a valid operator name as string.');
-  expect(res.errors[0].message).toBe(
-    '[Plugin Error] _operator.name must be a valid operator name as string. Received: {"_operator":"a"} at location.'
-  );
+  expect(res.errors[0].message).toBe('_operator.name must be a valid operator name as string.');
 });
 
 test('_operator cannot be set to _operator', () => {
@@ -107,11 +95,8 @@ test('_operator cannot be set to _operator', () => {
   const res = parser.parse({ input, location });
   expect(res.output).toEqual({ a: null });
   expect(res.errors.length).toBe(1);
-  expect(res.errors[0].rawMessage).toBe(
-    '_operator.name cannot be set to _operator to avoid infinite loop reference.'
-  );
   expect(res.errors[0].message).toBe(
-    '[Plugin Error] _operator.name cannot be set to _operator to avoid infinite loop reference. Received: {"_operator":{"name":"_operator"}} at location.'
+    '_operator.name cannot be set to _operator to avoid infinite loop reference.'
   );
 });
 

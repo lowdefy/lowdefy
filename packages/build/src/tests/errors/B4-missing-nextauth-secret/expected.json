@@ -10,7 +10,7 @@
       ],
       "errorContains": [
         "Auth providers are configured but NEXTAUTH_SECRET environment variable is not set.",
-        "lowdefy.yaml:13"
+        "lowdefy.yaml:14"
       ]
     }
   ]

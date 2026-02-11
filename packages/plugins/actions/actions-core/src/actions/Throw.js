@@ -15,16 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-
-class ThrowActionError extends Error {
-  constructor(message, { blockId, metaData, pageId }) {
-    super(message);
-    this.blockId = blockId;
-    this.metaData = metaData;
-    this.name = 'ThrowError';
-    this.pageId = pageId;
-  }
-}
+import { UserError } from '@lowdefy/errors';
 
 function Throw({ methods: { getBlockId, getPageId }, params }) {
   if (!type.isObject(params)) {
@@ -34,7 +25,7 @@ function Throw({ methods: { getBlockId, getPageId }, params }) {
     throw new Error('Throw action "throw" param should be a boolean.');
   }
   if (params.throw === true) {
-    throw new ThrowActionError(params.message, {
+    throw new UserError(params.message, {
       blockId: getBlockId(),
       metaData: params.metaData,
       pageId: getPageId(),
@@ -43,4 +34,3 @@ function Throw({ methods: { getBlockId, getPageId }, params }) {
 }
 
 export default Throw;
-export { Throw, ThrowActionError };

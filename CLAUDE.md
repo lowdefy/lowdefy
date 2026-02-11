@@ -58,6 +58,10 @@ Example: If `connection.id.toLowerCase()` crashes because `id` is undefined, the
 
 **The urge to add a guard clause is a red flag that you're treating symptoms, not causes. The WHY needs to be understood before adding.**
 
+### Build Does the Work, Runtime Stays Simple
+
+Build validates, sets defaults, and always writes all artifacts (even as `{}`). Runtime should never need try/catch on imports, existence checks, or fallback defaults for build artifacts.
+
 ### Core Philosophy
 
 Clarity over brevity. Explicit code over clever code.
@@ -147,9 +151,11 @@ Use `createCheckDuplicateId` utility: `createCheckDuplicateId({ message: 'Duplic
 
 ### Required License Header
 
+Modified files should always have the Apache license header with the end date set to the current year.
+
 ```javascript
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -218,7 +224,7 @@ export default _myOperator;
 
 ### Actions
 
-Actions throw simple errors. The engine's action interface layer (Actions.js) catches and wraps them in `PluginError` with the `received` value:
+Actions throw simple errors. The engine's action interface layer (Actions.js) catches and wraps them in `PluginError` with the `received` value. For expected user-facing errors (validation, intentional throws), throw `UserError` instead — it logs to the browser console only and is never sent to the server terminal:
 
 ```javascript
 function MyAction({ methods: { setState }, params }) {
@@ -229,6 +235,20 @@ function MyAction({ methods: { setState }, params }) {
   setState(params);
 }
 export default MyAction;
+```
+
+```javascript
+import { UserError } from '@lowdefy/errors';
+
+function MyThrowAction({ params }) {
+  // UserError - logs to browser console only, never to terminal
+  throw new UserError(params.message, {
+    blockId: params.blockId,
+    metaData: params.metaData,
+    pageId: params.pageId,
+  });
+}
+export default MyThrowAction;
 ```
 
 ### Connections/Requests
@@ -269,6 +289,7 @@ import { ConfigError } from '@lowdefy/errors/client';
 | `ServiceError` | External service failures (network, timeout, 5xx) | Request/connection layer |
 | `ConfigError` | YAML config validation errors | Build validation, runtime |
 | `ConfigWarning` | Config inconsistencies (warning in dev, error in prod) | Build validation |
+| `UserError` | Expected user interaction (validation, throws), client-only | Browser console only |
 
 **Key principle:** Plugins throw errors without knowing about config keys. The interface layer catches errors and adds `configKey` for location resolution to ALL error types - this helps developers trace any error back to its config source.
 
@@ -313,7 +334,7 @@ Add configKey to ANY error (for location tracing)
         ↓
 Then handle by type:
   - ConfigError  → re-throw (for location resolution)
-  - ServiceError → wrap with ServiceError.from()
+  - ServiceError → wrap with new ServiceError({ error, service, configKey })
   - Plain Error  → wrap in PluginError (add received value, location)
         ↓
 Error bubbles to top-level handler
@@ -376,7 +397,11 @@ try {
   }
 
   if (ServiceError.isServiceError(e)) {
-    throw ServiceError.from(e, connectionId, obj['~k']);
+    throw new ServiceError({
+      error: e,
+      service: connectionId,
+      configKey: obj['~k'],
+    });
   }
 
   // Plain errors get wrapped in PluginError with context
@@ -399,31 +424,39 @@ try {
 
 ### Service Errors
 
-Use `ServiceError` for external service failures. The `from()` method accepts an optional `configKey` to help trace which config triggered the service call:
+Use `ServiceError` for external service failures. The constructor accepts `configKey` to help trace which config triggered the service call:
 
 ```javascript
 import { ServiceError } from '@lowdefy/errors/server';
 
 // Check if error is service-related (network issues, timeouts, 5xx)
 if (ServiceError.isServiceError(error)) {
-  // Third parameter is configKey for location tracing
-  throw ServiceError.from(error, 'MongoDB', requestConfig['~k']);
+  throw new ServiceError({
+    error,
+    service: 'MongoDB',
+    configKey: requestConfig['~k'],
+  });
 }
 ```
 
 ### Client-Side Errors
 
-Client code uses `ConfigError` from `@lowdefy/errors/client` for async location resolution:
+Client code uses `ConfigError` from `@lowdefy/errors/client`. Errors with `serialize()` are sent to the server for location resolution. When wrapping a plain error, `received` and `configKey` are extracted from the wrapped error automatically:
 
 ```javascript
 import { ConfigError } from '@lowdefy/errors/client';
 
-// Wrap error with configKey
-const configError = ConfigError.from({ error: e, configKey: obj['~k'] });
+// Wrap error - received and configKey extracted from wrapped error
+const configError = new ConfigError({ error: e });
+// configError.received = e.received (if present)
+// configError.configKey = e.configKey (if present)
 
-// Resolve location asynchronously via /api/client-error endpoint
-await configError.resolve(lowdefy);
-console.error(configError.message); // Now includes source:line
+// Serialize and send to server for location resolution
+const response = await fetch('/api/client-error', {
+  method: 'POST',
+  body: JSON.stringify(configError.serialize()),
+});
+console.error(configError.print()); // "[ConfigError] message. Received: ..."
 ```
 
 See `cc-docs/architecture/error-tracing.md` for the complete error system.
@@ -515,6 +548,7 @@ this.areas = serializer.copy(areas || []);
 | `~e`   | Error     | Preserves Error objects            |
 | `~r`   | Reference | Build-time file reference tracking |
 | `~k`   | Key       | Build-time key tracking            |
+| `~arr` | Array     | Preserves `~k`/`~r`/`~l` on arrays |
 
 **Custom revivers/replacers** for special types (e.g., MongoDB ObjectId):
 

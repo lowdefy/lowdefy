@@ -27,6 +27,7 @@
     "clean": "pnpm -r clean",
     "prettier": "prettier --config .prettierrc --write **/*.js",
     "test": "pnpm -r --filter='!@lowdefy/blocks-*' --filter='!@lowdefy/plugin-aws' --filter='!@lowdefy/connection-mongodb' test",
+    "e2e": "pnpm -r --workspace-concurrency=1 e2e",
     "update-packages": "pnpm up -i -r --latest",
     "app:build": "pnpm build:turbo && pnpm -r --filter=lowdefy start build --config-directory ../../app --server-directory ../servers/server",
     "app:dev": "pnpm build:turbo && pnpm -r --filter=lowdefy start dev --config-directory ../../app --dev-directory ../servers/server-dev",

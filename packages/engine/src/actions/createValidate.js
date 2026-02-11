@@ -14,18 +14,19 @@
   limitations under the License.
 */
 
+import { UserError } from '@lowdefy/errors/client';
+
 import getBlockMatcher from '../getBlockMatcher.js';
 
 function createValidate({ context }) {
   return function validate(params) {
     const validationErrors = context._internal.RootAreas.validate(getBlockMatcher(params));
     if (validationErrors.length > 0) {
-      const error = new Error(
+      throw new UserError(
         `Your input has ${validationErrors.length} validation error${
           validationErrors.length !== 1 ? 's' : ''
         }.`
       );
-      throw error;
     }
   };
 }

@@ -38,7 +38,7 @@ const globals = { document, window };
 
 test('ScrollTo with no params', () => {
   expect(() => ScrollTo({ globals })).toThrow(
-    'Invalid ScrollTo, check action params. Received "undefined".'
+    'Invalid ScrollTo, check action params.'
   );
 });
 

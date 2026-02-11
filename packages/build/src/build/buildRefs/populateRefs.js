@@ -41,7 +41,7 @@ function copyVarValue(value, sourceRefId) {
   // Copy the value, preserving ~l and setting ~r to the source file
   return serializer.copy(value, {
     reviver: (_, v) => {
-      if (type.isObject(v)) {
+      if (type.isObject(v) || type.isArray(v)) {
         // Preserve the source file's ref ID by setting it explicitly
         // This prevents recursiveBuild from overwriting it with the template's ref ID
         if (sourceRefId && v['~r'] === undefined) {
@@ -57,8 +57,16 @@ function refReviver(key, value) {
   if (type.isObject(value)) {
     if (!type.isUndefined(value._ref)) {
       const result = this.parsedFiles[value._ref.id];
-      if (value._ref.ignoreBuildChecks !== undefined && type.isObject(result)) {
-        result['~ignoreBuildChecks'] = value._ref.ignoreBuildChecks;
+      if (value._ref.ignoreBuildChecks !== undefined) {
+        if (type.isObject(result)) {
+          result['~ignoreBuildChecks'] = value._ref.ignoreBuildChecks;
+        } else if (type.isArray(result)) {
+          result.forEach((item) => {
+            if (type.isObject(item)) {
+              item['~ignoreBuildChecks'] = value._ref.ignoreBuildChecks;
+            }
+          });
+        }
       }
       return result;
     }

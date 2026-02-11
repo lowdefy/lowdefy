@@ -18,7 +18,7 @@ import { createApiContext } from '@lowdefy/api';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
 import { v4 as uuid } from 'uuid';
 
-import config from '../../build/config.json';
+import config from '../build/config.js';
 import connections from '../../build/plugins/connections.js';
 import createLogger from './log/createLogger.js';
 import fileCache from './fileCache.js';
@@ -28,14 +28,8 @@ import logRequest from './log/logRequest.js';
 import operators from '../../build/plugins/operators/server.js';
 import jsMap from '../../build/plugins/operators/serverJsMap.js';
 import getAuthOptions from './auth/getAuthOptions.js';
+import loggerConfig from '../build/logger.js';
 import setSentryUser from './sentry/setSentryUser.js';
-
-let loggerConfig = {};
-try {
-  loggerConfig = require('../../build/logger.json');
-} catch {
-  // logger.json may not exist if logger is not configured
-}
 
 const secrets = getSecretsFromEnv();
 

@@ -34,6 +34,8 @@
  *   location: { source: 'pages/home.yaml:42', link: '/path/to/pages/home.yaml:42' }
  * });
  */
+import formatErrorMessage from './formatErrorMessage.js';
+
 class ConfigError extends Error {
   /**
    * Creates a ConfigError instance with formatted message.
@@ -52,7 +54,11 @@ class ConfigError extends Error {
     const configKey = isString ? null : (messageOrParams.configKey ?? error?.configKey);
     const location = isString ? null : messageOrParams.location;
     const checkSlug = isString ? undefined : messageOrParams.checkSlug;
-    const received = isString ? undefined : messageOrParams.received;
+    const received = isString
+      ? undefined
+      : messageOrParams.received !== undefined
+        ? messageOrParams.received
+        : error?.received;
     const operatorLocation = isString ? null : messageOrParams.operatorLocation;
 
     // Message without prefix - logger uses error.name for display
@@ -75,6 +81,10 @@ class ConfigError extends Error {
     if (error?.stack) {
       this.stack = error.stack;
     }
+  }
+
+  print() {
+    return formatErrorMessage(this);
   }
 
   /**

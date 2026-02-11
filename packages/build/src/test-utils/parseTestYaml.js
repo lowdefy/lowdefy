@@ -52,8 +52,16 @@ function addLineNumbersAndRefs(node, content, refCounter) {
           }
           obj[key] = mapResult;
         } else if (isSeq(value)) {
-          // Don't add ~l to arrays - only objects need line numbers for error reporting
-          obj[key] = addLineNumbersAndRefs(value, content, refCounter);
+          const arrResult = addLineNumbersAndRefs(value, content, refCounter);
+          if (keyLineNumber) {
+            Object.defineProperty(arrResult, '~l', {
+              value: keyLineNumber,
+              enumerable: false,
+              writable: true,
+              configurable: true,
+            });
+          }
+          obj[key] = arrResult;
         } else if (isScalar(value)) {
           obj[key] = value.value;
         } else {
@@ -66,8 +74,16 @@ function addLineNumbersAndRefs(node, content, refCounter) {
 
   if (isSeq(node)) {
     const arr = [];
-    // Note: We don't add ~l to arrays to keep serialized output simpler.
-    // Line numbers on arrays aren't needed for error reporting - objects are the error sources.
+    const refId = String(refCounter.next++);
+    arr['~r'] = refId;
+    if (node.range) {
+      Object.defineProperty(arr, '~l', {
+        value: getLineNumber(content, node.range[0]),
+        enumerable: false,
+        writable: true,
+        configurable: true,
+      });
+    }
     for (const item of node.items) {
       if (isMap(item)) {
         arr.push(addLineNumbersAndRefs(item, content, refCounter));

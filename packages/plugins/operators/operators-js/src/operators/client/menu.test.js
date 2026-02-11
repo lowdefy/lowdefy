@@ -134,7 +134,7 @@ test('_menu null', () => {
   expect(res.errors.length).toBe(1);
   expect(res.errors[0].rawMessage).toBe('_menu must be of type string, number or object.');
   expect(res.errors[0].message).toBe(
-    '[Plugin Error] _menu must be of type string, number or object. Received: {"_menu":null} at locationId.'
+    '_menu must be of type string, number or object. at locationId.'
   );
 });
 
@@ -174,7 +174,7 @@ test('_menu params object value not string', () => {
   expect(res.errors.length).toBe(1);
   expect(res.errors[0].rawMessage).toBe('_menu.value must be of type string.');
   expect(res.errors[0].message).toBe(
-    '[Plugin Error] _menu.value must be of type string. Received: {"_menu":{"value":1}} at locationId.'
+    '_menu.value must be of type string. at locationId.'
   );
 });
 
@@ -190,7 +190,7 @@ test('_menu params object index not number', () => {
   expect(res.errors.length).toBe(1);
   expect(res.errors[0].rawMessage).toBe('_menu.index must be of type number.');
   expect(res.errors[0].message).toBe(
-    '[Plugin Error] _menu.index must be of type number. Received: {"_menu":{"index":"a"}} at locationId.'
+    '_menu.index must be of type number. at locationId.'
   );
 });
 
@@ -251,6 +251,6 @@ test('_menu param object invalid', () => {
   expect(res.errors.length).toBe(1);
   expect(res.errors[0].rawMessage).toBe('_menu must be of type string, number or object.');
   expect(res.errors[0].message).toBe(
-    '[Plugin Error] _menu must be of type string, number or object. Received: {"_menu":{"other":true}} at locationId.'
+    '_menu must be of type string, number or object. at locationId.'
   );
 });

@@ -1,4 +1,5 @@
 ---
+'lowdefy': minor
 '@lowdefy/api': minor
 '@lowdefy/build': minor
 '@lowdefy/client': minor
@@ -19,9 +20,12 @@
 '@lowdefy/operators-yaml': minor
 '@lowdefy/server': minor
 '@lowdefy/server-dev': minor
-'lowdefy': minor
 '@lowdefy/actions-core': minor
 '@lowdefy/blocks-basic': minor
+'@lowdefy/connection-axios-http': patch
+'@lowdefy/connection-knex': patch
+'@lowdefy/connection-redis': patch
+'@lowdefy/connection-sendgrid': patch
 ---
 
 feat: Config-aware error tracing and Sentry integration
@@ -33,12 +37,14 @@ feat: Config-aware error tracing and Sentry integration
 - Build-time validation catches typos with "Did you mean?" suggestions
 - Service vs Config error classification
 
-**Operator Error Refactoring**
+**Plugin Error Refactoring**
 
 - Operators throw simple error messages without formatting
 - Parsers (WebParser, ServerParser, BuildParser) format errors with received value and location
 - Removed redundant "Operator Error:" prefix from error messages
 - Consistent error format: "{message} Received: {params} at {location}."
+- Actions and connections also simplified: removed inline `received` from error messages (interface layer adds it)
+- Connection plugins (axios-http, knex, redis, sendgrid) no longer expose raw response data in errors
 
 **Error Class Hierarchy**
 
@@ -49,14 +55,13 @@ feat: Config-aware error tracing and Sentry integration
 - Error classes: `LowdefyError`, `ConfigError`, `ConfigWarning`, `PluginError`, `ServiceError`
 - `ConfigWarning` supports `prodError` flag to throw in production builds
 - `ServiceError.isServiceError()` detects network/timeout/5xx errors
-- `~ignoreBuildCheck` cascades through `_ref` to suppress warnings in referenced files
+- `~ignoreBuildChecks` cascades through descendants to suppress warnings/errors
 
 **Build Error Collection**
 
 - Errors collected in `context.errors[]` instead of throwing immediately
 - `tryBuildStep()` wrapper catches and collects errors from build steps
 - All errors logged together before summary message for proper ordering
-- `collectExceptions()` utility handles both errors and warnings
 
 **Sentry Integration (#1945)**
 

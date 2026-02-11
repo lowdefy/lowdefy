@@ -44,7 +44,7 @@ function createPlaywrightConfig({ packageDir, port = 3001 }) {
       },
     ],
     webServer: {
-      command: `node ${cliPath} build --config-directory ${appDir} --server-directory ${serverDir} && node ${cliPath} start --config-directory ${appDir} --server-directory ${serverDir} --port ${port}`,
+      command: `node ${cliPath} build --config-directory ${appDir} --server-directory ${serverDir} && node ${cliPath} start --config-directory ${appDir} --server-directory ${serverDir} --port ${port} --log-level warn`,
       url: `http://localhost:${port}`,
       reuseExistingServer: true,
       timeout: 180000,

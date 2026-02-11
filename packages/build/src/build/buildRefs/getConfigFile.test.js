@@ -67,7 +67,7 @@ test('getConfigFile error includes line number in source', async () => {
     await getConfigFile({ context, refDef, referencedFrom: 'pages/home.yaml' });
     throw new Error('Expected error to be thrown');
   } catch (error) {
-    expect(error.source).toBe('pages/home.yaml:25');
+    expect(error.source).toBe('/test/config/pages/home.yaml:25');
   }
 });
 
@@ -132,7 +132,7 @@ test('getConfigFile includes all error details in message and source', async () 
     await getConfigFile({ context, refDef, referencedFrom: 'pages/test.yaml' });
     throw new Error('Expected error to be thrown');
   } catch (error) {
-    expect(error.source).toBe('pages/test.yaml:42');
+    expect(error.source).toBe('/test/config/pages/test.yaml:42');
     expect(error.message).toContain('Referenced file does not exist: "../missing.yaml"');
     expect(error.message).toContain('Resolved to: /test/missing.yaml'); // path.resolve normalizes ../
     expect(error.message).toContain('Did you mean "missing.yaml"?');

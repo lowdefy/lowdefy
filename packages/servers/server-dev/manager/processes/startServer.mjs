@@ -14,26 +14,29 @@
   limitations under the License.
 */
 
-import { spawnProcess } from '@lowdefy/node-utils';
-import createStdOutLineHandler from '../utils/createStdOutLineHandler.mjs';
+import { spawn } from 'child_process';
 
 function startServer(context) {
   context.shutdownServer();
 
-  const nextServer = spawnProcess({
-    stdOutLineHandler: createStdOutLineHandler({ context }),
-    stdErrLineHandler: (line) => context.logger.error(line),
-    command: 'node',
-    args: [context.bin.next, 'start'],
-    processOptions: {
-      env: {
-        ...process.env,
-        LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
-        PORT: context.options.port,
-      },
+  const nextServer = spawn('node', [context.bin.next, 'start'], {
+    stdio: ['ignore', 'inherit', 'pipe'],
+    env: {
+      ...process.env,
+      LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
+      PORT: context.options.port,
     },
-    returnProcess: true,
   });
+
+  nextServer.stderr.on('data', (data) => {
+    data
+      .toString('utf8')
+      .split('\n')
+      .forEach((line) => {
+        if (line) context.logger.error(line);
+      });
+  });
+
   context.logger.debug(`Started next server with pid ${nextServer.pid}.`);
   nextServer.on('exit', (code, signal) => {
     context.logger.debug(`nextServer exit ${nextServer.pid}, signal: ${signal}, code: ${code}`);

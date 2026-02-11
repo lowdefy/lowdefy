@@ -21,15 +21,15 @@ function createStdOutLineHandler({ context }) {
     // Matches next build output of form: ┌ λ /           261 B        403 kB
     const match = line.match(/┌ λ \/\s*\d* [a-zA-Z]*\s*(\d* [a-zA-Z]*)/u);
     if (match) {
-      context.print.info(`Home page first load JS size: ${match[1]}.`);
+      context.logger.ui.info(`Home page first load JS size: ${match[1]}.`);
     }
-    context.print.debug(line);
+    context.logger.ui.debug(line);
   }
   return stdOutLineHandler;
 }
 
 async function runNextBuild({ context, directory }) {
-  context.print.spin('Running Next build.');
+  context.logger.ui.spin('Running Next build.');
   try {
     await spawnProcess({
       command: context.pnpmCmd,
@@ -48,7 +48,7 @@ async function runNextBuild({ context, directory }) {
   } catch (error) {
     throw new Error('Next build failed.');
   }
-  context.print.log('Next build successful.');
+  context.logger.ui.log('Next build successful.');
 }
 
 export default runNextBuild;
