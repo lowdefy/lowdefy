@@ -29,6 +29,10 @@ function buildTestPage({ pageConfig, connectionIds = [] }) {
       log: () => {},
       warn: () => {},
       error: () => {},
+      ui: {
+        warn: () => {},
+        error: () => {},
+      },
     },
     stage: 'test',
   });

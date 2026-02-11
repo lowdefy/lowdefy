@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,9 +14,18 @@
   limitations under the License.
 */
 
+// Map pino numeric levels to print method names
+const pinoLevelToPrint = {
+  10: 'debug', // trace
+  20: 'debug',
+  30: 'info',
+  40: 'warn',
+  50: 'error',
+  60: 'error', // fatal
+};
+
 function createStdOutLineHandler({ context }) {
-  const ui =
-    context?.logger?.ui ??
+  const ui = context?.logger?.ui ??
     context?.print ?? {
       log: (text) => console.log(text),
       dim: (text) => console.log(text),
@@ -31,11 +40,20 @@ function createStdOutLineHandler({ context }) {
 
   function stdOutLineHandler(line) {
     try {
-      const { print, msg } = JSON.parse(line);
-      // Source is now included in error.print() via formatErrorMessage
-      if (msg != null && msg !== '' && msg !== 'undefined') {
-        ui[print]?.(msg);
+      const { print, level, msg, source, err } = JSON.parse(line);
+      const printLevel = print ?? pinoLevelToPrint[level] ?? 'info';
+
+      if (msg == null || msg === '' || msg === 'undefined') {
+        ui.log(line);
+        return;
       }
+
+      const resolvedSource = err?.source ?? source;
+      if (resolvedSource && (printLevel === 'error' || printLevel === 'warn')) {
+        ui.link(resolvedSource);
+      }
+
+      ui[printLevel]?.(msg);
     } catch (error) {
       ui.log(line);
     }

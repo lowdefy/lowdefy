@@ -58,6 +58,10 @@ Example: If `connection.id.toLowerCase()` crashes because `id` is undefined, the
 
 **The urge to add a guard clause is a red flag that you're treating symptoms, not causes. The WHY needs to be understood before adding.**
 
+### Build Does the Work, Runtime Stays Simple
+
+Build validates, sets defaults, and always writes all artifacts (even as `{}`). Runtime should never need try/catch on imports, existence checks, or fallback defaults for build artifacts.
+
 ### Core Philosophy
 
 Clarity over brevity. Explicit code over clever code.
@@ -147,9 +151,11 @@ Use `createCheckDuplicateId` utility: `createCheckDuplicateId({ message: 'Duplic
 
 ### Required License Header
 
+Modified files should always have the Apache license header with the end date set to the current year.
+
 ```javascript
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -542,6 +548,7 @@ this.areas = serializer.copy(areas || []);
 | `~e`   | Error     | Preserves Error objects            |
 | `~r`   | Reference | Build-time file reference tracking |
 | `~k`   | Key       | Build-time key tracking            |
+| `~arr` | Array     | Preserves `~k`/`~r`/`~l` on arrays |
 
 **Custom revivers/replacers** for special types (e.g., MongoDB ObjectId):
 

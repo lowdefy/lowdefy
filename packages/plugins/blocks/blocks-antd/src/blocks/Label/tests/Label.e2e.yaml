@@ -1,0 +1,247 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: label
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # Note: Using Span as content to avoid nested Label from TextInput
+  # ============================================
+
+  - id: label_basic
+    type: Label
+    properties:
+      title: Basic Label
+    blocks:
+      - id: label_basic_content
+        type: Span
+        properties:
+          content: Content here
+
+  - id: label_no_title
+    type: Label
+    blocks:
+      - id: label_no_title_content
+        type: Span
+        properties:
+          content: No title content
+
+  # ============================================
+  # COLON TESTS
+  # ============================================
+
+  - id: label_with_colon
+    type: Label
+    properties:
+      title: With Colon
+      colon: true
+    blocks:
+      - id: label_colon_content
+        type: Span
+        properties:
+          content: Colon content
+
+  - id: label_no_colon
+    type: Label
+    properties:
+      title: No Colon
+      colon: false
+    blocks:
+      - id: label_no_colon_content
+        type: Span
+        properties:
+          content: No colon content
+
+  # ============================================
+  # DISABLED TEST
+  # ============================================
+
+  - id: label_disabled
+    type: Label
+    properties:
+      title: This Should Not Appear
+      disabled: true
+    blocks:
+      - id: label_disabled_content
+        type: Span
+        properties:
+          content: Disabled content
+
+  # ============================================
+  # EXTRA TEXT TESTS
+  # ============================================
+
+  - id: label_with_extra
+    type: Label
+    properties:
+      title: With Extra
+      extra: This is helpful extra text
+    blocks:
+      - id: label_extra_content
+        type: Span
+        properties:
+          content: Extra content
+
+  - id: label_extra_html
+    type: Label
+    properties:
+      title: Extra with HTML
+      extra: <strong>Bold</strong> extra text
+    blocks:
+      - id: label_extra_html_content
+        type: Span
+        properties:
+          content: HTML extra content
+
+  # ============================================
+  # INLINE LAYOUT TESTS
+  # ============================================
+
+  - id: label_inline
+    type: Label
+    properties:
+      title: Inline Label
+      inline: true
+    blocks:
+      - id: label_inline_content
+        type: Span
+        properties:
+          content: Inline content
+
+  - id: label_inline_with_span
+    type: Label
+    properties:
+      title: Span Label
+      inline: true
+      span: 8
+    blocks:
+      - id: label_span_content
+        type: Span
+        properties:
+          content: Span content
+
+  # ============================================
+  # ALIGN TESTS
+  # ============================================
+
+  - id: label_align_left
+    type: Label
+    properties:
+      title: Left Aligned
+      inline: true
+      align: left
+    blocks:
+      - id: label_align_left_content
+        type: Span
+        properties:
+          content: Left aligned content
+
+  - id: label_align_right
+    type: Label
+    properties:
+      title: Right Aligned
+      inline: true
+      align: right
+    blocks:
+      - id: label_align_right_content
+        type: Span
+        properties:
+          content: Right aligned content
+
+  # ============================================
+  # SIZE TESTS - Use actual inputs with label disabled
+  # ============================================
+
+  - id: label_size_small
+    type: Label
+    properties:
+      title: Small Label
+      size: small
+    blocks:
+      - id: label_small_input
+        type: TextInput
+        properties:
+          size: small
+          label:
+            disabled: true
+
+  - id: label_size_default
+    type: Label
+    properties:
+      title: Default Label
+      size: default
+    blocks:
+      - id: label_default_input
+        type: TextInput
+        properties:
+          label:
+            disabled: true
+
+  - id: label_size_large
+    type: Label
+    properties:
+      title: Large Label
+      size: large
+    blocks:
+      - id: label_large_input
+        type: TextInput
+        properties:
+          size: large
+          label:
+            disabled: true
+
+  # ============================================
+  # TITLE WITH HTML
+  # ============================================
+
+  - id: label_html_title
+    type: Label
+    properties:
+      title: <em>Italic</em> Title
+    blocks:
+      - id: label_html_title_content
+        type: Span
+        properties:
+          content: HTML title content
+
+  # ============================================
+  # REQUIRED INDICATOR
+  # ============================================
+
+  - id: label_required
+    type: Label
+    required: true
+    properties:
+      title: Required Field
+    blocks:
+      - id: label_required_content
+        type: Span
+        properties:
+          content: Required content
+
+  # ============================================
+  # CONTENT AREA TEST
+  # ============================================
+
+  - id: label_with_content
+    type: Label
+    properties:
+      title: Content Area
+    blocks:
+      - id: nested_content
+        type: Span
+        properties:
+          content: Nested content block

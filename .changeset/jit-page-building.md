@@ -22,7 +22,6 @@ feat: JIT page building for dev server
 - `/api/page/[pageId]` endpoint triggers JIT build if page not cached
 - `/api/js/[env]` endpoint serves operator JS maps
 - Build error page component displays errors inline in the browser
-- Port-in-use check with clear error message before starting server
 
 **Operator JS Hash Check (`@lowdefy/operators-js`)**
 

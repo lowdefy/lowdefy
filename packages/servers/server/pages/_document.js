@@ -17,8 +17,8 @@
 import React from 'react';
 import Document, { Html, Head, Main, NextScript } from 'next/document';
 
-import appJson from '../build/app.json';
-import lowdefyConfig from '../build/config.json';
+import appJson from '../lib/build/app.js';
+import lowdefyConfig from '../lib/build/config.js';
 
 const basePath = lowdefyConfig.basePath ?? '';
 

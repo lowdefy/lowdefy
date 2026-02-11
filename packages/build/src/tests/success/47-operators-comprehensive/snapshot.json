@@ -3,41 +3,50 @@
     "html": {
       "appendBody": "",
       "appendHead": "",
-      "~k": "3n"
+      "~k": "48"
     },
     "git_sha": "test-git-sha-for-snapshots",
-    "~k": "3m"
+    "~k": "47"
   },
   "auth.json": {
     "api": {
       "roles": {
-        "~k": "4m"
+        "~k": "5b"
       },
-      "~k": "4l"
+      "~k": "5a"
     },
     "authPages": {
-      "~k": "4n"
+      "~k": "5c"
     },
     "pages": {
       "roles": {
-        "~k": "4p"
+        "~k": "5e"
       },
-      "~k": "4o"
+      "~k": "5d"
     },
-    "callbacks": [],
-    "events": [],
-    "providers": [],
+    "callbacks": {
+      "~arr": [],
+      "~k": "5f"
+    },
+    "events": {
+      "~arr": [],
+      "~k": "5g"
+    },
+    "providers": {
+      "~arr": [],
+      "~k": "5h"
+    },
     "session": {
-      "~k": "4q"
+      "~k": "5i"
     },
     "theme": {
-      "~k": "4r"
+      "~k": "5j"
     },
     "configured": false,
-    "~k": "4k"
+    "~k": "59"
   },
   "config.json": {
-    "~k": "3p"
+    "~k": "4a"
   },
   "global.json": {
     "settings": {
@@ -51,16 +60,16 @@
           "id": 1,
           "name": "Alice",
           "active": true,
-          "~k": "6"
+          "~k": "7"
         },
         {
           "id": 2,
           "name": "Bob",
           "active": false,
-          "~k": "7"
+          "~k": "8"
         }
       ],
-      "~l": 9
+      "~k": "6"
     },
     "~k": "4"
   },
@@ -81,1418 +90,1734 @@
       "~l": 6
     },
     "6": {
-      "key": "root.global.users[0:1]",
+      "key": "root.global.users",
       "~k_parent": "4",
-      "~l": 10
+      "~l": 9
     },
     "7": {
-      "key": "root.global.users[1:2]",
-      "~k_parent": "4",
-      "~l": 13
+      "key": "root.global.users[0:1]",
+      "~k_parent": "6",
+      "~l": 10
     },
     "8": {
-      "key": "root.pages[0:home:Box]",
-      "~k_parent": "3",
-      "~l": 18
+      "key": "root.global.users[1:2]",
+      "~k_parent": "6",
+      "~l": 13
     },
     "9": {
-      "key": "root.pages[0:home:Box].properties",
-      "~k_parent": "8",
-      "~l": 20
+      "key": "root.pages",
+      "~k_parent": "3",
+      "~l": 17
     },
     "10": {
-      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[1:filteredUsers:List].blocks[0:userName:Paragraph].properties.content",
-      "~k_parent": "z",
-      "~l": 75
+      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[1:filteredUsers:List].properties.data._array.filter.callback",
+      "~k_parent": "y",
+      "~l": 66
     },
     "11": {
-      "key": "root.pages[0:home:Box].blocks[3:mathDemo:Card]",
-      "~k_parent": "8",
-      "~l": 79
+      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[1:filteredUsers:List].properties.data._array.filter.callback._function",
+      "~k_parent": "10",
+      "~l": 67
     },
     "12": {
-      "key": "root.pages[0:home:Box].blocks[3:mathDemo:Card].properties",
+      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[1:filteredUsers:List].properties.data._array.filter.callback._function.__eq",
       "~k_parent": "11",
-      "~l": 81
+      "~l": 68
     },
     "13": {
-      "key": "root.pages[0:home:Box].blocks[3:mathDemo:Card].blocks[0:sumResult:Statistic]",
-      "~k_parent": "11",
-      "~l": 84
+      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[1:filteredUsers:List].properties.data._array.filter.callback._function.__eq[0]",
+      "~k_parent": "12",
+      "~l": 69
     },
     "14": {
-      "key": "root.pages[0:home:Box].blocks[3:mathDemo:Card].blocks[0:sumResult:Statistic].properties",
-      "~k_parent": "13",
-      "~l": 86
+      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[1:filteredUsers:List].blocks",
+      "~k_parent": "u",
+      "~l": 71
     },
     "15": {
-      "key": "root.pages[0:home:Box].blocks[3:mathDemo:Card].blocks[1:productResult:Statistic]",
-      "~k_parent": "11",
-      "~l": 93
+      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[1:filteredUsers:List].blocks[0:userName:Paragraph]",
+      "~k_parent": "14",
+      "~l": 72
     },
     "16": {
-      "key": "root.pages[0:home:Box].blocks[3:mathDemo:Card].blocks[1:productResult:Statistic].properties",
+      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[1:filteredUsers:List].blocks[0:userName:Paragraph].properties",
       "~k_parent": "15",
-      "~l": 95
+      "~l": 74
     },
     "17": {
-      "key": "root.pages[0:home:Box].blocks[3:mathDemo:Card].blocks[2:divideResult:Statistic]",
-      "~k_parent": "11",
-      "~l": 102
+      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[1:filteredUsers:List].blocks[0:userName:Paragraph].properties.content",
+      "~k_parent": "16",
+      "~l": 75
     },
     "18": {
-      "key": "root.pages[0:home:Box].blocks[3:mathDemo:Card].blocks[2:divideResult:Statistic].properties",
-      "~k_parent": "17",
-      "~l": 104
+      "key": "root.pages[0:home:Box].blocks[3:mathDemo:Card]",
+      "~k_parent": "c",
+      "~l": 79
     },
     "19": {
-      "key": "root.pages[0:home:Box].blocks[4:stringDemo:Card]",
-      "~k_parent": "8",
-      "~l": 112
+      "key": "root.pages[0:home:Box].blocks[3:mathDemo:Card].properties",
+      "~k_parent": "18",
+      "~l": 81
     },
     "20": {
-      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card].blocks[1:gtResult:Tag]",
-      "~k_parent": "1t",
-      "~l": 165
+      "key": "root.pages[0:home:Box].blocks[5:objectDemo:Card].blocks[0:objectKeys:Paragraph].properties.content._json.stringify",
+      "~k_parent": "1z",
+      "~l": 145
     },
     "21": {
-      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card].blocks[1:gtResult:Tag].visible",
+      "key": "root.pages[0:home:Box].blocks[5:objectDemo:Card].blocks[0:objectKeys:Paragraph].properties.content._json.stringify._object",
       "~k_parent": "20",
-      "~l": 167
+      "~l": 146
     },
     "22": {
-      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card].blocks[1:gtResult:Tag].visible._gt[0]",
+      "key": "root.pages[0:home:Box].blocks[5:objectDemo:Card].blocks[0:objectKeys:Paragraph].properties.content._json.stringify._object.keys",
       "~k_parent": "21",
-      "~l": 169
+      "~l": 147
     },
     "23": {
-      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card].blocks[1:gtResult:Tag].properties",
-      "~k_parent": "20",
-      "~l": 171
+      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card]",
+      "~k_parent": "c",
+      "~l": 151
     },
     "24": {
-      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card].blocks[2:value1:TextInput]",
-      "~k_parent": "1t",
-      "~l": 174
+      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card].properties",
+      "~k_parent": "23",
+      "~l": 153
     },
     "25": {
-      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card].blocks[2:value1:TextInput].properties",
-      "~k_parent": "24",
-      "~l": 176
+      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card].blocks",
+      "~k_parent": "23",
+      "~l": 155
     },
     "26": {
-      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card].blocks[3:value2:TextInput]",
-      "~k_parent": "1t",
-      "~l": 178
+      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card].blocks[0:eqResult:Tag]",
+      "~k_parent": "25",
+      "~l": 156
     },
     "27": {
-      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card].blocks[3:value2:TextInput].properties",
+      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card].blocks[0:eqResult:Tag].visible",
       "~k_parent": "26",
-      "~l": 180
+      "~l": 158
     },
     "28": {
-      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card].blocks[4:numberInput:NumberInput]",
-      "~k_parent": "1t",
-      "~l": 182
+      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card].blocks[0:eqResult:Tag].visible._eq",
+      "~k_parent": "27",
+      "~l": 159
     },
     "29": {
-      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card].blocks[4:numberInput:NumberInput].properties",
+      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card].blocks[0:eqResult:Tag].visible._eq[0]",
       "~k_parent": "28",
-      "~l": 184
+      "~l": 160
     },
     "30": {
-      "key": "root.pages[0:home:Box].blocks[8:typeDemo:Card].blocks[0:isString:Tag].properties",
-      "~k_parent": "2w",
-      "~l": 241
+      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].blocks[1:orResult:Alert].visible._or[1]",
+      "~k_parent": "2y",
+      "~l": 207
     },
     "31": {
-      "key": "root.pages[0:home:Box].blocks[8:typeDemo:Card].blocks[1:typeInput:TextInput]",
-      "~k_parent": "2u",
-      "~l": 243
+      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].blocks[1:orResult:Alert].properties",
+      "~k_parent": "2w",
+      "~l": 208
     },
     "32": {
-      "key": "root.pages[0:home:Box].blocks[8:typeDemo:Card].blocks[1:typeInput:TextInput].properties",
-      "~k_parent": "31",
-      "~l": 245
+      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].blocks[2:notResult:Alert]",
+      "~k_parent": "2p",
+      "~l": 211
     },
     "33": {
-      "key": "root.pages[0:home:Box].blocks[9:dateDemo:Card]",
-      "~k_parent": "8",
-      "~l": 249
+      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].blocks[2:notResult:Alert].visible",
+      "~k_parent": "32",
+      "~l": 213
     },
     "34": {
-      "key": "root.pages[0:home:Box].blocks[9:dateDemo:Card].properties",
+      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].blocks[2:notResult:Alert].visible._not",
       "~k_parent": "33",
-      "~l": 251
+      "~l": 214
     },
     "35": {
-      "key": "root.pages[0:home:Box].blocks[9:dateDemo:Card].blocks[0:currentDate:Paragraph]",
-      "~k_parent": "33",
-      "~l": 254
+      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].blocks[2:notResult:Alert].properties",
+      "~k_parent": "32",
+      "~l": 216
     },
     "36": {
-      "key": "root.pages[0:home:Box].blocks[9:dateDemo:Card].blocks[0:currentDate:Paragraph].properties",
-      "~k_parent": "35",
-      "~l": 256
+      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].blocks[3:checkbox1:Switch]",
+      "~k_parent": "2p",
+      "~l": 219
     },
     "37": {
-      "key": "root.pages[0:home:Box].blocks[9:dateDemo:Card].blocks[1:formattedDate:Paragraph]",
-      "~k_parent": "33",
-      "~l": 259
+      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].blocks[3:checkbox1:Switch].properties",
+      "~k_parent": "36",
+      "~l": 221
     },
     "38": {
-      "key": "root.pages[0:home:Box].blocks[9:dateDemo:Card].blocks[1:formattedDate:Paragraph].properties",
-      "~k_parent": "37",
-      "~l": 261
+      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].blocks[4:checkbox2:Switch]",
+      "~k_parent": "2p",
+      "~l": 223
     },
     "39": {
-      "key": "root.pages[0:home:Box].blocks[9:dateDemo:Card].blocks[1:formattedDate:Paragraph].properties.content",
+      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].blocks[4:checkbox2:Switch].properties",
       "~k_parent": "38",
-      "~l": 262
+      "~l": 225
     },
     "40": {
-      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[1:filteredUsers:List].areas.content",
+      "key": "root.pages[1:404:Result].areas.extra.blocks",
       "~k_parent": "3z"
     },
     "41": {
-      "key": "root.pages[0:home:Box].blocks[3:mathDemo:Card].areas",
-      "~k_parent": "11"
+      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button]",
+      "~k_parent": "40"
     },
     "42": {
-      "key": "root.pages[0:home:Box].blocks[3:mathDemo:Card].areas.content",
+      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].properties",
       "~k_parent": "41"
     },
     "43": {
-      "key": "root.pages[0:home:Box].blocks[4:stringDemo:Card].areas",
-      "~k_parent": "19"
+      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].events",
+      "~k_parent": "41"
     },
     "44": {
-      "key": "root.pages[0:home:Box].blocks[4:stringDemo:Card].areas.content",
+      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].events.onClick",
       "~k_parent": "43"
     },
     "45": {
-      "key": "root.pages[0:home:Box].blocks[5:objectDemo:Card].areas",
-      "~k_parent": "1l"
+      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].events.onClick[0:home:Link]",
+      "~k_parent": "44"
     },
     "46": {
-      "key": "root.pages[0:home:Box].blocks[5:objectDemo:Card].areas.content",
+      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].events.onClick[0:home:Link].params",
       "~k_parent": "45"
     },
     "47": {
-      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card].areas",
-      "~k_parent": "1t"
-    },
-    "48": {
-      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card].areas.content",
-      "~k_parent": "47"
-    },
-    "49": {
-      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].areas",
-      "~k_parent": "2a"
-    },
-    "50": {
-      "key": "root.types.auth.callbacks",
-      "~k_parent": "4y"
-    },
-    "51": {
-      "key": "root.types.auth.events",
-      "~k_parent": "4y"
-    },
-    "52": {
-      "key": "root.types.auth.providers",
-      "~k_parent": "4y"
-    },
-    "53": {
-      "key": "root.types.blocks",
-      "~k_parent": "4v"
-    },
-    "54": {
-      "key": "root.types.blocks.Box",
-      "~k_parent": "53"
-    },
-    "55": {
-      "key": "root.types.blocks.Switch",
-      "~k_parent": "53"
-    },
-    "56": {
-      "key": "root.types.blocks.Title",
-      "~k_parent": "53"
-    },
-    "57": {
-      "key": "root.types.blocks.Card",
-      "~k_parent": "53"
-    },
-    "58": {
-      "key": "root.types.blocks.Statistic",
-      "~k_parent": "53"
-    },
-    "59": {
-      "key": "root.types.blocks.List",
-      "~k_parent": "53"
-    },
-    "60": {
-      "key": "root.types.operators.client",
-      "~k_parent": "5z"
-    },
-    "61": {
-      "key": "root.types.operators.client._if",
-      "~k_parent": "60"
-    },
-    "62": {
-      "key": "root.types.operators.client._state",
-      "~k_parent": "60"
-    },
-    "63": {
-      "key": "root.types.operators.client._array",
-      "~k_parent": "60"
-    },
-    "64": {
-      "key": "root.types.operators.client._global",
-      "~k_parent": "60"
-    },
-    "65": {
-      "key": "root.types.operators.client._function",
-      "~k_parent": "60"
-    },
-    "66": {
-      "key": "root.types.operators.client._eq",
-      "~k_parent": "60"
-    },
-    "67": {
-      "key": "root.types.operators.client._args",
-      "~k_parent": "60"
-    },
-    "68": {
-      "key": "root.types.operators.client._string",
-      "~k_parent": "60"
-    },
-    "69": {
-      "key": "root.types.operators.client._json",
-      "~k_parent": "60"
-    },
-    "70": {
-      "key": "root.imports.blocks[15]",
-      "~k_parent": "6i"
-    },
-    "71": {
-      "key": "root.imports.blocks[16]",
-      "~k_parent": "6i"
-    },
-    "72": {
-      "key": "root.imports.blocks[17]",
-      "~k_parent": "6i"
-    },
-    "73": {
-      "key": "root.imports.blocks[18]",
-      "~k_parent": "6i"
-    },
-    "74": {
-      "key": "root.imports.blocks[19]",
-      "~k_parent": "6i"
-    },
-    "75": {
-      "key": "root.imports.blocks[20]",
-      "~k_parent": "6i"
-    },
-    "76": {
-      "key": "root.imports.blocks[21]",
-      "~k_parent": "6i"
-    },
-    "77": {
-      "key": "root.imports.blocks[22]",
-      "~k_parent": "6i"
-    },
-    "78": {
-      "key": "root.imports.blocks[23]",
-      "~k_parent": "6i"
-    },
-    "79": {
-      "key": "root.imports.blocks[24]",
-      "~k_parent": "6i"
-    },
-    "80": {
-      "key": "root.imports.icons[23]",
-      "~k_parent": "6i"
-    },
-    "81": {
-      "key": "root.imports.icons[24]",
-      "~k_parent": "6i"
-    },
-    "82": {
-      "key": "root.imports.icons[25]",
-      "~k_parent": "6i"
-    },
-    "83": {
-      "key": "root.imports.icons[26]",
-      "~k_parent": "6i"
-    },
-    "84": {
-      "key": "root.imports.icons[27]",
-      "~k_parent": "6i"
-    },
-    "85": {
-      "key": "root.imports.operators",
-      "~k_parent": "6i"
-    },
-    "86": {
-      "key": "root.imports.operators.client[0]",
-      "~k_parent": "85"
-    },
-    "87": {
-      "key": "root.imports.operators.client[1]",
-      "~k_parent": "85"
-    },
-    "88": {
-      "key": "root.imports.operators.client[2]",
-      "~k_parent": "85"
-    },
-    "89": {
-      "key": "root.imports.operators.client[3]",
-      "~k_parent": "85"
-    },
-    "a": {
-      "key": "root.pages[0:home:Box].blocks[0:showAdvanced:Switch]",
-      "~k_parent": "8",
-      "~l": 24
-    },
-    "b": {
-      "key": "root.pages[0:home:Box].blocks[0:showAdvanced:Switch].properties",
-      "~k_parent": "a",
-      "~l": 26
-    },
-    "c": {
-      "key": "root.pages[0:home:Box].blocks[1:conditionalBlock:Box]",
-      "~k_parent": "8",
-      "~l": 30
-    },
-    "d": {
-      "key": "root.pages[0:home:Box].blocks[1:conditionalBlock:Box].visible",
-      "~k_parent": "c",
-      "~l": 32
-    },
-    "e": {
-      "key": "root.pages[0:home:Box].blocks[1:conditionalBlock:Box].visible._if",
-      "~k_parent": "d",
-      "~l": 33
-    },
-    "f": {
-      "key": "root.pages[0:home:Box].blocks[1:conditionalBlock:Box].visible._if.test",
-      "~k_parent": "e",
-      "~l": 34
-    },
-    "g": {
-      "key": "root.pages[0:home:Box].blocks[1:conditionalBlock:Box].blocks[0:advancedTitle:Title]",
-      "~k_parent": "c",
-      "~l": 39
-    },
-    "h": {
-      "key": "root.pages[0:home:Box].blocks[1:conditionalBlock:Box].blocks[0:advancedTitle:Title].properties",
-      "~k_parent": "g",
-      "~l": 41
-    },
-    "i": {
-      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card]",
-      "~k_parent": "8",
-      "~l": 45
-    },
-    "j": {
-      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].properties",
-      "~k_parent": "i",
-      "~l": 47
-    },
-    "k": {
-      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[0:arrayLength:Statistic]",
-      "~k_parent": "i",
-      "~l": 50
-    },
-    "l": {
-      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[0:arrayLength:Statistic].properties",
-      "~k_parent": "k",
-      "~l": 52
-    },
-    "m": {
-      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[0:arrayLength:Statistic].properties.value",
-      "~k_parent": "l",
-      "~l": 54
-    },
-    "n": {
-      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[0:arrayLength:Statistic].properties.value._array",
-      "~k_parent": "m",
-      "~l": 55
-    },
-    "o": {
-      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[0:arrayLength:Statistic].properties.value._array.length",
-      "~k_parent": "n",
-      "~l": 56
-    },
-    "p": {
-      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[1:filteredUsers:List]",
-      "~k_parent": "i",
-      "~l": 58
-    },
-    "q": {
-      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[1:filteredUsers:List].properties",
-      "~k_parent": "p",
-      "~l": 60
-    },
-    "r": {
-      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[1:filteredUsers:List].properties.data",
-      "~k_parent": "q",
-      "~l": 61
-    },
-    "s": {
-      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[1:filteredUsers:List].properties.data._array",
-      "~k_parent": "r",
-      "~l": 62
-    },
-    "t": {
-      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[1:filteredUsers:List].properties.data._array.filter",
-      "~k_parent": "s",
-      "~l": 63
-    },
-    "u": {
-      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[1:filteredUsers:List].properties.data._array.filter.on",
-      "~k_parent": "t",
-      "~l": 64
-    },
-    "v": {
-      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[1:filteredUsers:List].properties.data._array.filter.callback",
-      "~k_parent": "t",
-      "~l": 66
-    },
-    "w": {
-      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[1:filteredUsers:List].properties.data._array.filter.callback._function",
-      "~k_parent": "v",
-      "~l": 67
-    },
-    "x": {
-      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[1:filteredUsers:List].properties.data._array.filter.callback._function.__eq[0]",
-      "~k_parent": "w",
-      "~l": 69
-    },
-    "y": {
-      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[1:filteredUsers:List].blocks[0:userName:Paragraph]",
-      "~k_parent": "p",
-      "~l": 72
-    },
-    "z": {
-      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[1:filteredUsers:List].blocks[0:userName:Paragraph].properties",
-      "~k_parent": "y",
-      "~l": 74
-    },
-    "1a": {
-      "key": "root.pages[0:home:Box].blocks[4:stringDemo:Card].properties",
-      "~k_parent": "19",
-      "~l": 114
-    },
-    "1b": {
-      "key": "root.pages[0:home:Box].blocks[4:stringDemo:Card].blocks[0:upperCase:Paragraph]",
-      "~k_parent": "19",
-      "~l": 117
-    },
-    "1c": {
-      "key": "root.pages[0:home:Box].blocks[4:stringDemo:Card].blocks[0:upperCase:Paragraph].properties",
-      "~k_parent": "1b",
-      "~l": 119
-    },
-    "1d": {
-      "key": "root.pages[0:home:Box].blocks[4:stringDemo:Card].blocks[0:upperCase:Paragraph].properties.content",
-      "~k_parent": "1c",
-      "~l": 120
-    },
-    "1e": {
-      "key": "root.pages[0:home:Box].blocks[4:stringDemo:Card].blocks[0:upperCase:Paragraph].properties.content._string.toUpperCase",
-      "~k_parent": "1d",
-      "~l": 121
-    },
-    "1f": {
-      "key": "root.pages[0:home:Box].blocks[4:stringDemo:Card].blocks[1:stringLength:Statistic]",
-      "~k_parent": "19",
-      "~l": 123
-    },
-    "1g": {
-      "key": "root.pages[0:home:Box].blocks[4:stringDemo:Card].blocks[1:stringLength:Statistic].properties",
-      "~k_parent": "1f",
-      "~l": 125
-    },
-    "1h": {
-      "key": "root.pages[0:home:Box].blocks[4:stringDemo:Card].blocks[1:stringLength:Statistic].properties.value",
-      "~k_parent": "1g",
-      "~l": 127
-    },
-    "1i": {
-      "key": "root.pages[0:home:Box].blocks[4:stringDemo:Card].blocks[1:stringLength:Statistic].properties.value._string.length",
-      "~k_parent": "1h",
-      "~l": 128
-    },
-    "1j": {
-      "key": "root.pages[0:home:Box].blocks[4:stringDemo:Card].blocks[2:textInput:TextInput]",
-      "~k_parent": "19",
-      "~l": 130
-    },
-    "1k": {
-      "key": "root.pages[0:home:Box].blocks[4:stringDemo:Card].blocks[2:textInput:TextInput].properties",
-      "~k_parent": "1j",
-      "~l": 132
-    },
-    "1l": {
-      "key": "root.pages[0:home:Box].blocks[5:objectDemo:Card]",
-      "~k_parent": "8",
-      "~l": 136
-    },
-    "1m": {
-      "key": "root.pages[0:home:Box].blocks[5:objectDemo:Card].properties",
-      "~k_parent": "1l",
-      "~l": 138
-    },
-    "1n": {
-      "key": "root.pages[0:home:Box].blocks[5:objectDemo:Card].blocks[0:objectKeys:Paragraph]",
-      "~k_parent": "1l",
-      "~l": 141
-    },
-    "1o": {
-      "key": "root.pages[0:home:Box].blocks[5:objectDemo:Card].blocks[0:objectKeys:Paragraph].properties",
-      "~k_parent": "1n",
-      "~l": 143
-    },
-    "1p": {
-      "key": "root.pages[0:home:Box].blocks[5:objectDemo:Card].blocks[0:objectKeys:Paragraph].properties.content",
-      "~k_parent": "1o",
-      "~l": 144
-    },
-    "1q": {
-      "key": "root.pages[0:home:Box].blocks[5:objectDemo:Card].blocks[0:objectKeys:Paragraph].properties.content._json.stringify",
-      "~k_parent": "1p",
-      "~l": 145
-    },
-    "1r": {
-      "key": "root.pages[0:home:Box].blocks[5:objectDemo:Card].blocks[0:objectKeys:Paragraph].properties.content._json.stringify._object",
-      "~k_parent": "1q",
-      "~l": 146
-    },
-    "1s": {
-      "key": "root.pages[0:home:Box].blocks[5:objectDemo:Card].blocks[0:objectKeys:Paragraph].properties.content._json.stringify._object.keys",
-      "~k_parent": "1r",
-      "~l": 147
-    },
-    "1t": {
-      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card]",
-      "~k_parent": "8",
-      "~l": 151
-    },
-    "1u": {
-      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card].properties",
-      "~k_parent": "1t",
-      "~l": 153
-    },
-    "1v": {
-      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card].blocks[0:eqResult:Tag]",
-      "~k_parent": "1t",
-      "~l": 156
-    },
-    "1w": {
-      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card].blocks[0:eqResult:Tag].visible",
-      "~k_parent": "1v",
-      "~l": 158
-    },
-    "1x": {
-      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card].blocks[0:eqResult:Tag].visible._eq[0]",
-      "~k_parent": "1w",
-      "~l": 160
-    },
-    "1y": {
-      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card].blocks[0:eqResult:Tag].visible._eq[1]",
-      "~k_parent": "1w",
-      "~l": 161
-    },
-    "1z": {
-      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card].blocks[0:eqResult:Tag].properties",
-      "~k_parent": "1v",
-      "~l": 162
-    },
-    "2a": {
-      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card]",
-      "~k_parent": "8",
-      "~l": 188
-    },
-    "2b": {
-      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].properties",
-      "~k_parent": "2a",
-      "~l": 190
-    },
-    "2c": {
-      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].blocks[0:andResult:Alert]",
-      "~k_parent": "2a",
-      "~l": 193
-    },
-    "2d": {
-      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].blocks[0:andResult:Alert].visible",
-      "~k_parent": "2c",
-      "~l": 195
-    },
-    "2e": {
-      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].blocks[0:andResult:Alert].visible._and[0]",
-      "~k_parent": "2d",
-      "~l": 197
-    },
-    "2f": {
-      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].blocks[0:andResult:Alert].visible._and[1]",
-      "~k_parent": "2d",
-      "~l": 198
-    },
-    "2g": {
-      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].blocks[0:andResult:Alert].properties",
-      "~k_parent": "2c",
-      "~l": 199
-    },
-    "2h": {
-      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].blocks[1:orResult:Alert]",
-      "~k_parent": "2a",
-      "~l": 202
-    },
-    "2i": {
-      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].blocks[1:orResult:Alert].visible",
-      "~k_parent": "2h",
-      "~l": 204
-    },
-    "2j": {
-      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].blocks[1:orResult:Alert].visible._or[0]",
-      "~k_parent": "2i",
-      "~l": 206
-    },
-    "2k": {
-      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].blocks[1:orResult:Alert].visible._or[1]",
-      "~k_parent": "2i",
-      "~l": 207
-    },
-    "2l": {
-      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].blocks[1:orResult:Alert].properties",
-      "~k_parent": "2h",
-      "~l": 208
-    },
-    "2m": {
-      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].blocks[2:notResult:Alert]",
-      "~k_parent": "2a",
-      "~l": 211
-    },
-    "2n": {
-      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].blocks[2:notResult:Alert].visible",
-      "~k_parent": "2m",
-      "~l": 213
-    },
-    "2o": {
-      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].blocks[2:notResult:Alert].visible._not",
-      "~k_parent": "2n",
-      "~l": 214
-    },
-    "2p": {
-      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].blocks[2:notResult:Alert].properties",
-      "~k_parent": "2m",
-      "~l": 216
-    },
-    "2q": {
-      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].blocks[3:checkbox1:Switch]",
-      "~k_parent": "2a",
-      "~l": 219
-    },
-    "2r": {
-      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].blocks[3:checkbox1:Switch].properties",
-      "~k_parent": "2q",
-      "~l": 221
-    },
-    "2s": {
-      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].blocks[4:checkbox2:Switch]",
-      "~k_parent": "2a",
-      "~l": 223
-    },
-    "2t": {
-      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].blocks[4:checkbox2:Switch].properties",
-      "~k_parent": "2s",
-      "~l": 225
-    },
-    "2u": {
-      "key": "root.pages[0:home:Box].blocks[8:typeDemo:Card]",
-      "~k_parent": "8",
-      "~l": 229
-    },
-    "2v": {
-      "key": "root.pages[0:home:Box].blocks[8:typeDemo:Card].properties",
-      "~k_parent": "2u",
-      "~l": 231
-    },
-    "2w": {
-      "key": "root.pages[0:home:Box].blocks[8:typeDemo:Card].blocks[0:isString:Tag]",
-      "~k_parent": "2u",
-      "~l": 234
-    },
-    "2x": {
-      "key": "root.pages[0:home:Box].blocks[8:typeDemo:Card].blocks[0:isString:Tag].visible",
-      "~k_parent": "2w",
-      "~l": 236
-    },
-    "2y": {
-      "key": "root.pages[0:home:Box].blocks[8:typeDemo:Card].blocks[0:isString:Tag].visible._type",
-      "~k_parent": "2x",
-      "~l": 237
-    },
-    "2z": {
-      "key": "root.pages[0:home:Box].blocks[8:typeDemo:Card].blocks[0:isString:Tag].visible._type.on",
-      "~k_parent": "2y",
-      "~l": 239
-    },
-    "3a": {
-      "key": "root.pages[0:home:Box].blocks[9:dateDemo:Card].blocks[1:formattedDate:Paragraph].properties.content._moment",
-      "~k_parent": "39",
-      "~l": 263
-    },
-    "3c": {
-      "key": "root.pages[1:404:Result]",
-      "~k_parent": "3"
-    },
-    "3d": {
-      "key": "root.pages[1:404:Result].style",
-      "~k_parent": "3c"
-    },
-    "3e": {
-      "key": "root.pages[1:404:Result].properties",
-      "~k_parent": "3c"
-    },
-    "3f": {
-      "key": "root.pages[1:404:Result].areas",
-      "~k_parent": "3c"
-    },
-    "3g": {
-      "key": "root.pages[1:404:Result].areas.extra",
-      "~k_parent": "3f"
-    },
-    "3h": {
-      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button]",
-      "~k_parent": "3g"
-    },
-    "3i": {
-      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].properties",
-      "~k_parent": "3h"
-    },
-    "3j": {
-      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].events",
-      "~k_parent": "3h"
-    },
-    "3k": {
-      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].events.onClick[0:home:Link]",
-      "~k_parent": "3j"
-    },
-    "3l": {
-      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].events.onClick[0:home:Link].params",
-      "~k_parent": "3k"
-    },
-    "3m": {
       "key": "root.app",
       "~k_parent": "3"
     },
-    "3n": {
+    "48": {
       "key": "root.app.html",
-      "~k_parent": "3m"
+      "~k_parent": "47"
     },
-    "3o": {
+    "49": {
       "key": "root.logger",
       "~k_parent": "3"
     },
-    "3p": {
-      "key": "root.config",
-      "~k_parent": "3"
-    },
-    "3r": {
-      "key": "root.pages[0:home:Box]",
-      "~k_parent": "3"
-    },
-    "3s": {
-      "key": "root.pages[0:home:Box].auth",
-      "~k_parent": "3r"
-    },
-    "3t": {
-      "key": "root.pages[0:home:Box].areas",
-      "~k_parent": "3r"
-    },
-    "3u": {
-      "key": "root.pages[0:home:Box].areas.content",
-      "~k_parent": "3t"
-    },
-    "3v": {
-      "key": "root.pages[0:home:Box].blocks[1:conditionalBlock:Box].areas",
-      "~k_parent": "c"
-    },
-    "3w": {
-      "key": "root.pages[0:home:Box].blocks[1:conditionalBlock:Box].areas.content",
-      "~k_parent": "3v"
-    },
-    "3x": {
-      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].areas",
-      "~k_parent": "i"
-    },
-    "3y": {
-      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].areas.content",
-      "~k_parent": "3x"
-    },
-    "3z": {
-      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[1:filteredUsers:List].areas",
-      "~k_parent": "p"
-    },
-    "4a": {
-      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].areas.content",
-      "~k_parent": "49"
-    },
-    "4b": {
-      "key": "root.pages[0:home:Box].blocks[8:typeDemo:Card].areas",
-      "~k_parent": "2u"
-    },
-    "4c": {
-      "key": "root.pages[0:home:Box].blocks[8:typeDemo:Card].areas.content",
-      "~k_parent": "4b"
-    },
-    "4d": {
-      "key": "root.pages[0:home:Box].blocks[9:dateDemo:Card].areas",
-      "~k_parent": "33"
-    },
-    "4e": {
+    "50": {
       "key": "root.pages[0:home:Box].blocks[9:dateDemo:Card].areas.content",
+      "~k_parent": "4z"
+    },
+    "51": {
+      "key": "root.pages[0:home:Box].blocks[9:dateDemo:Card].blocks[0:currentDate:Paragraph].properties",
+      "~k_parent": "3n"
+    },
+    "52": {
+      "key": "root.pages[0:home:Box].blocks[9:dateDemo:Card].blocks[1:formattedDate:Paragraph].properties.content._moment",
+      "~k_parent": "3r"
+    },
+    "53": {
+      "key": "root.pages[0:home:Box].requests",
       "~k_parent": "4d"
     },
-    "4f": {
-      "key": "root.pages[0:home:Box].blocks[9:dateDemo:Card].blocks[0:currentDate:Paragraph].properties",
-      "~k_parent": "35"
-    },
-    "4g": {
-      "key": "root.pages[0:home:Box].blocks[9:dateDemo:Card].blocks[1:formattedDate:Paragraph].properties.content._moment",
-      "~k_parent": "39"
-    },
-    "4h": {
+    "54": {
       "key": "root.pages[1:404:Result]",
-      "~k_parent": "3"
+      "~k_parent": "4c"
     },
-    "4i": {
+    "55": {
       "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].events.onClick",
-      "~k_parent": "3j"
+      "~k_parent": "43"
     },
-    "4j": {
+    "56": {
+      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].events.onClick.catch",
+      "~k_parent": "55"
+    },
+    "57": {
       "key": "root.pages[1:404:Result].auth",
-      "~k_parent": "4h"
+      "~k_parent": "54"
     },
-    "4k": {
+    "58": {
+      "key": "root.pages[1:404:Result].requests",
+      "~k_parent": "54"
+    },
+    "59": {
       "key": "root.auth",
       "~k_parent": "3"
     },
+    "60": {
+      "key": "root.types.blocks.Title",
+      "~k_parent": "5x"
+    },
+    "61": {
+      "key": "root.types.blocks.Card",
+      "~k_parent": "5x"
+    },
+    "62": {
+      "key": "root.types.blocks.Statistic",
+      "~k_parent": "5x"
+    },
+    "63": {
+      "key": "root.types.blocks.List",
+      "~k_parent": "5x"
+    },
+    "64": {
+      "key": "root.types.blocks.Paragraph",
+      "~k_parent": "5x"
+    },
+    "65": {
+      "key": "root.types.blocks.TextInput",
+      "~k_parent": "5x"
+    },
+    "66": {
+      "key": "root.types.blocks.Tag",
+      "~k_parent": "5x"
+    },
+    "67": {
+      "key": "root.types.blocks.NumberInput",
+      "~k_parent": "5x"
+    },
+    "68": {
+      "key": "root.types.blocks.Alert",
+      "~k_parent": "5x"
+    },
+    "69": {
+      "key": "root.types.blocks.Result",
+      "~k_parent": "5x"
+    },
+    "70": {
+      "key": "root.types.operators.client._eq",
+      "~k_parent": "6u"
+    },
+    "71": {
+      "key": "root.types.operators.client._args",
+      "~k_parent": "6u"
+    },
+    "72": {
+      "key": "root.types.operators.client._string",
+      "~k_parent": "6u"
+    },
+    "73": {
+      "key": "root.types.operators.client._json",
+      "~k_parent": "6u"
+    },
+    "74": {
+      "key": "root.types.operators.client._object",
+      "~k_parent": "6u"
+    },
+    "75": {
+      "key": "root.types.operators.client._gt",
+      "~k_parent": "6u"
+    },
+    "76": {
+      "key": "root.types.operators.client._and",
+      "~k_parent": "6u"
+    },
+    "77": {
+      "key": "root.types.operators.client._or",
+      "~k_parent": "6u"
+    },
+    "78": {
+      "key": "root.types.operators.client._not",
+      "~k_parent": "6u"
+    },
+    "79": {
+      "key": "root.types.operators.client._type",
+      "~k_parent": "6u"
+    },
+    "80": {
+      "key": "root.imports.blocks[15]",
+      "~k_parent": "7k"
+    },
+    "81": {
+      "key": "root.imports.blocks[16]",
+      "~k_parent": "7k"
+    },
+    "82": {
+      "key": "root.imports.blocks[17]",
+      "~k_parent": "7k"
+    },
+    "83": {
+      "key": "root.imports.blocks[18]",
+      "~k_parent": "7k"
+    },
+    "84": {
+      "key": "root.imports.blocks[19]",
+      "~k_parent": "7k"
+    },
+    "85": {
+      "key": "root.imports.blocks[20]",
+      "~k_parent": "7k"
+    },
+    "86": {
+      "key": "root.imports.blocks[21]",
+      "~k_parent": "7k"
+    },
+    "87": {
+      "key": "root.imports.blocks[22]",
+      "~k_parent": "7k"
+    },
+    "88": {
+      "key": "root.imports.blocks[23]",
+      "~k_parent": "7k"
+    },
+    "89": {
+      "key": "root.imports.blocks[24]",
+      "~k_parent": "7k"
+    },
+    "90": {
+      "key": "root.imports.icons[10].icons",
+      "~k_parent": "8z"
+    },
+    "91": {
+      "key": "root.imports.icons[11]",
+      "~k_parent": "8e"
+    },
+    "92": {
+      "key": "root.imports.icons[11].icons",
+      "~k_parent": "91"
+    },
+    "93": {
+      "key": "root.imports.icons[12]",
+      "~k_parent": "8e"
+    },
+    "94": {
+      "key": "root.imports.icons[12].icons",
+      "~k_parent": "93"
+    },
+    "95": {
+      "key": "root.imports.icons[13]",
+      "~k_parent": "8e"
+    },
+    "96": {
+      "key": "root.imports.icons[13].icons",
+      "~k_parent": "95"
+    },
+    "97": {
+      "key": "root.imports.icons[14]",
+      "~k_parent": "8e"
+    },
+    "98": {
+      "key": "root.imports.icons[14].icons",
+      "~k_parent": "97"
+    },
+    "99": {
+      "key": "root.imports.icons[15]",
+      "~k_parent": "8e"
+    },
+    "a": {
+      "key": "root.pages[0:home:Box]",
+      "~k_parent": "9",
+      "~l": 18
+    },
+    "b": {
+      "key": "root.pages[0:home:Box].properties",
+      "~k_parent": "a",
+      "~l": 20
+    },
+    "c": {
+      "key": "root.pages[0:home:Box].blocks",
+      "~k_parent": "a",
+      "~l": 22
+    },
+    "d": {
+      "key": "root.pages[0:home:Box].blocks[0:showAdvanced:Switch]",
+      "~k_parent": "c",
+      "~l": 24
+    },
+    "e": {
+      "key": "root.pages[0:home:Box].blocks[0:showAdvanced:Switch].properties",
+      "~k_parent": "d",
+      "~l": 26
+    },
+    "f": {
+      "key": "root.pages[0:home:Box].blocks[1:conditionalBlock:Box]",
+      "~k_parent": "c",
+      "~l": 30
+    },
+    "g": {
+      "key": "root.pages[0:home:Box].blocks[1:conditionalBlock:Box].visible",
+      "~k_parent": "f",
+      "~l": 32
+    },
+    "h": {
+      "key": "root.pages[0:home:Box].blocks[1:conditionalBlock:Box].visible._if",
+      "~k_parent": "g",
+      "~l": 33
+    },
+    "i": {
+      "key": "root.pages[0:home:Box].blocks[1:conditionalBlock:Box].visible._if.test",
+      "~k_parent": "h",
+      "~l": 34
+    },
+    "j": {
+      "key": "root.pages[0:home:Box].blocks[1:conditionalBlock:Box].blocks",
+      "~k_parent": "f",
+      "~l": 38
+    },
+    "k": {
+      "key": "root.pages[0:home:Box].blocks[1:conditionalBlock:Box].blocks[0:advancedTitle:Title]",
+      "~k_parent": "j",
+      "~l": 39
+    },
+    "l": {
+      "key": "root.pages[0:home:Box].blocks[1:conditionalBlock:Box].blocks[0:advancedTitle:Title].properties",
+      "~k_parent": "k",
+      "~l": 41
+    },
+    "m": {
+      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card]",
+      "~k_parent": "c",
+      "~l": 45
+    },
+    "n": {
+      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].properties",
+      "~k_parent": "m",
+      "~l": 47
+    },
+    "o": {
+      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks",
+      "~k_parent": "m",
+      "~l": 49
+    },
+    "p": {
+      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[0:arrayLength:Statistic]",
+      "~k_parent": "o",
+      "~l": 50
+    },
+    "q": {
+      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[0:arrayLength:Statistic].properties",
+      "~k_parent": "p",
+      "~l": 52
+    },
+    "r": {
+      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[0:arrayLength:Statistic].properties.value",
+      "~k_parent": "q",
+      "~l": 54
+    },
+    "s": {
+      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[0:arrayLength:Statistic].properties.value._array",
+      "~k_parent": "r",
+      "~l": 55
+    },
+    "t": {
+      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[0:arrayLength:Statistic].properties.value._array.length",
+      "~k_parent": "s",
+      "~l": 56
+    },
+    "u": {
+      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[1:filteredUsers:List]",
+      "~k_parent": "o",
+      "~l": 58
+    },
+    "v": {
+      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[1:filteredUsers:List].properties",
+      "~k_parent": "u",
+      "~l": 60
+    },
+    "w": {
+      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[1:filteredUsers:List].properties.data",
+      "~k_parent": "v",
+      "~l": 61
+    },
+    "x": {
+      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[1:filteredUsers:List].properties.data._array",
+      "~k_parent": "w",
+      "~l": 62
+    },
+    "y": {
+      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[1:filteredUsers:List].properties.data._array.filter",
+      "~k_parent": "x",
+      "~l": 63
+    },
+    "z": {
+      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[1:filteredUsers:List].properties.data._array.filter.on",
+      "~k_parent": "y",
+      "~l": 64
+    },
+    "1a": {
+      "key": "root.pages[0:home:Box].blocks[3:mathDemo:Card].blocks",
+      "~k_parent": "18",
+      "~l": 83
+    },
+    "1b": {
+      "key": "root.pages[0:home:Box].blocks[3:mathDemo:Card].blocks[0:sumResult:Statistic]",
+      "~k_parent": "1a",
+      "~l": 84
+    },
+    "1c": {
+      "key": "root.pages[0:home:Box].blocks[3:mathDemo:Card].blocks[0:sumResult:Statistic].properties",
+      "~k_parent": "1b",
+      "~l": 86
+    },
+    "1d": {
+      "key": "root.pages[0:home:Box].blocks[3:mathDemo:Card].blocks[1:productResult:Statistic]",
+      "~k_parent": "1a",
+      "~l": 93
+    },
+    "1e": {
+      "key": "root.pages[0:home:Box].blocks[3:mathDemo:Card].blocks[1:productResult:Statistic].properties",
+      "~k_parent": "1d",
+      "~l": 95
+    },
+    "1f": {
+      "key": "root.pages[0:home:Box].blocks[3:mathDemo:Card].blocks[2:divideResult:Statistic]",
+      "~k_parent": "1a",
+      "~l": 102
+    },
+    "1g": {
+      "key": "root.pages[0:home:Box].blocks[3:mathDemo:Card].blocks[2:divideResult:Statistic].properties",
+      "~k_parent": "1f",
+      "~l": 104
+    },
+    "1h": {
+      "key": "root.pages[0:home:Box].blocks[4:stringDemo:Card]",
+      "~k_parent": "c",
+      "~l": 112
+    },
+    "1i": {
+      "key": "root.pages[0:home:Box].blocks[4:stringDemo:Card].properties",
+      "~k_parent": "1h",
+      "~l": 114
+    },
+    "1j": {
+      "key": "root.pages[0:home:Box].blocks[4:stringDemo:Card].blocks",
+      "~k_parent": "1h",
+      "~l": 116
+    },
+    "1k": {
+      "key": "root.pages[0:home:Box].blocks[4:stringDemo:Card].blocks[0:upperCase:Paragraph]",
+      "~k_parent": "1j",
+      "~l": 117
+    },
+    "1l": {
+      "key": "root.pages[0:home:Box].blocks[4:stringDemo:Card].blocks[0:upperCase:Paragraph].properties",
+      "~k_parent": "1k",
+      "~l": 119
+    },
+    "1m": {
+      "key": "root.pages[0:home:Box].blocks[4:stringDemo:Card].blocks[0:upperCase:Paragraph].properties.content",
+      "~k_parent": "1l",
+      "~l": 120
+    },
+    "1n": {
+      "key": "root.pages[0:home:Box].blocks[4:stringDemo:Card].blocks[0:upperCase:Paragraph].properties.content._string.toUpperCase",
+      "~k_parent": "1m",
+      "~l": 121
+    },
+    "1o": {
+      "key": "root.pages[0:home:Box].blocks[4:stringDemo:Card].blocks[1:stringLength:Statistic]",
+      "~k_parent": "1j",
+      "~l": 123
+    },
+    "1p": {
+      "key": "root.pages[0:home:Box].blocks[4:stringDemo:Card].blocks[1:stringLength:Statistic].properties",
+      "~k_parent": "1o",
+      "~l": 125
+    },
+    "1q": {
+      "key": "root.pages[0:home:Box].blocks[4:stringDemo:Card].blocks[1:stringLength:Statistic].properties.value",
+      "~k_parent": "1p",
+      "~l": 127
+    },
+    "1r": {
+      "key": "root.pages[0:home:Box].blocks[4:stringDemo:Card].blocks[1:stringLength:Statistic].properties.value._string.length",
+      "~k_parent": "1q",
+      "~l": 128
+    },
+    "1s": {
+      "key": "root.pages[0:home:Box].blocks[4:stringDemo:Card].blocks[2:textInput:TextInput]",
+      "~k_parent": "1j",
+      "~l": 130
+    },
+    "1t": {
+      "key": "root.pages[0:home:Box].blocks[4:stringDemo:Card].blocks[2:textInput:TextInput].properties",
+      "~k_parent": "1s",
+      "~l": 132
+    },
+    "1u": {
+      "key": "root.pages[0:home:Box].blocks[5:objectDemo:Card]",
+      "~k_parent": "c",
+      "~l": 136
+    },
+    "1v": {
+      "key": "root.pages[0:home:Box].blocks[5:objectDemo:Card].properties",
+      "~k_parent": "1u",
+      "~l": 138
+    },
+    "1w": {
+      "key": "root.pages[0:home:Box].blocks[5:objectDemo:Card].blocks",
+      "~k_parent": "1u",
+      "~l": 140
+    },
+    "1x": {
+      "key": "root.pages[0:home:Box].blocks[5:objectDemo:Card].blocks[0:objectKeys:Paragraph]",
+      "~k_parent": "1w",
+      "~l": 141
+    },
+    "1y": {
+      "key": "root.pages[0:home:Box].blocks[5:objectDemo:Card].blocks[0:objectKeys:Paragraph].properties",
+      "~k_parent": "1x",
+      "~l": 143
+    },
+    "1z": {
+      "key": "root.pages[0:home:Box].blocks[5:objectDemo:Card].blocks[0:objectKeys:Paragraph].properties.content",
+      "~k_parent": "1y",
+      "~l": 144
+    },
+    "2a": {
+      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card].blocks[0:eqResult:Tag].visible._eq[1]",
+      "~k_parent": "28",
+      "~l": 161
+    },
+    "2b": {
+      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card].blocks[0:eqResult:Tag].properties",
+      "~k_parent": "26",
+      "~l": 162
+    },
+    "2c": {
+      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card].blocks[1:gtResult:Tag]",
+      "~k_parent": "25",
+      "~l": 165
+    },
+    "2d": {
+      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card].blocks[1:gtResult:Tag].visible",
+      "~k_parent": "2c",
+      "~l": 167
+    },
+    "2e": {
+      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card].blocks[1:gtResult:Tag].visible._gt",
+      "~k_parent": "2d",
+      "~l": 168
+    },
+    "2f": {
+      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card].blocks[1:gtResult:Tag].visible._gt[0]",
+      "~k_parent": "2e",
+      "~l": 169
+    },
+    "2g": {
+      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card].blocks[1:gtResult:Tag].properties",
+      "~k_parent": "2c",
+      "~l": 171
+    },
+    "2h": {
+      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card].blocks[2:value1:TextInput]",
+      "~k_parent": "25",
+      "~l": 174
+    },
+    "2i": {
+      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card].blocks[2:value1:TextInput].properties",
+      "~k_parent": "2h",
+      "~l": 176
+    },
+    "2j": {
+      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card].blocks[3:value2:TextInput]",
+      "~k_parent": "25",
+      "~l": 178
+    },
+    "2k": {
+      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card].blocks[3:value2:TextInput].properties",
+      "~k_parent": "2j",
+      "~l": 180
+    },
+    "2l": {
+      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card].blocks[4:numberInput:NumberInput]",
+      "~k_parent": "25",
+      "~l": 182
+    },
+    "2m": {
+      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card].blocks[4:numberInput:NumberInput].properties",
+      "~k_parent": "2l",
+      "~l": 184
+    },
+    "2n": {
+      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card]",
+      "~k_parent": "c",
+      "~l": 188
+    },
+    "2o": {
+      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].properties",
+      "~k_parent": "2n",
+      "~l": 190
+    },
+    "2p": {
+      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].blocks",
+      "~k_parent": "2n",
+      "~l": 192
+    },
+    "2q": {
+      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].blocks[0:andResult:Alert]",
+      "~k_parent": "2p",
+      "~l": 193
+    },
+    "2r": {
+      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].blocks[0:andResult:Alert].visible",
+      "~k_parent": "2q",
+      "~l": 195
+    },
+    "2s": {
+      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].blocks[0:andResult:Alert].visible._and",
+      "~k_parent": "2r",
+      "~l": 196
+    },
+    "2t": {
+      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].blocks[0:andResult:Alert].visible._and[0]",
+      "~k_parent": "2s",
+      "~l": 197
+    },
+    "2u": {
+      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].blocks[0:andResult:Alert].visible._and[1]",
+      "~k_parent": "2s",
+      "~l": 198
+    },
+    "2v": {
+      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].blocks[0:andResult:Alert].properties",
+      "~k_parent": "2q",
+      "~l": 199
+    },
+    "2w": {
+      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].blocks[1:orResult:Alert]",
+      "~k_parent": "2p",
+      "~l": 202
+    },
+    "2x": {
+      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].blocks[1:orResult:Alert].visible",
+      "~k_parent": "2w",
+      "~l": 204
+    },
+    "2y": {
+      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].blocks[1:orResult:Alert].visible._or",
+      "~k_parent": "2x",
+      "~l": 205
+    },
+    "2z": {
+      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].blocks[1:orResult:Alert].visible._or[0]",
+      "~k_parent": "2y",
+      "~l": 206
+    },
+    "3a": {
+      "key": "root.pages[0:home:Box].blocks[8:typeDemo:Card]",
+      "~k_parent": "c",
+      "~l": 229
+    },
+    "3b": {
+      "key": "root.pages[0:home:Box].blocks[8:typeDemo:Card].properties",
+      "~k_parent": "3a",
+      "~l": 231
+    },
+    "3c": {
+      "key": "root.pages[0:home:Box].blocks[8:typeDemo:Card].blocks",
+      "~k_parent": "3a",
+      "~l": 233
+    },
+    "3d": {
+      "key": "root.pages[0:home:Box].blocks[8:typeDemo:Card].blocks[0:isString:Tag]",
+      "~k_parent": "3c",
+      "~l": 234
+    },
+    "3e": {
+      "key": "root.pages[0:home:Box].blocks[8:typeDemo:Card].blocks[0:isString:Tag].visible",
+      "~k_parent": "3d",
+      "~l": 236
+    },
+    "3f": {
+      "key": "root.pages[0:home:Box].blocks[8:typeDemo:Card].blocks[0:isString:Tag].visible._type",
+      "~k_parent": "3e",
+      "~l": 237
+    },
+    "3g": {
+      "key": "root.pages[0:home:Box].blocks[8:typeDemo:Card].blocks[0:isString:Tag].visible._type.on",
+      "~k_parent": "3f",
+      "~l": 239
+    },
+    "3h": {
+      "key": "root.pages[0:home:Box].blocks[8:typeDemo:Card].blocks[0:isString:Tag].properties",
+      "~k_parent": "3d",
+      "~l": 241
+    },
+    "3i": {
+      "key": "root.pages[0:home:Box].blocks[8:typeDemo:Card].blocks[1:typeInput:TextInput]",
+      "~k_parent": "3c",
+      "~l": 243
+    },
+    "3j": {
+      "key": "root.pages[0:home:Box].blocks[8:typeDemo:Card].blocks[1:typeInput:TextInput].properties",
+      "~k_parent": "3i",
+      "~l": 245
+    },
+    "3k": {
+      "key": "root.pages[0:home:Box].blocks[9:dateDemo:Card]",
+      "~k_parent": "c",
+      "~l": 249
+    },
+    "3l": {
+      "key": "root.pages[0:home:Box].blocks[9:dateDemo:Card].properties",
+      "~k_parent": "3k",
+      "~l": 251
+    },
+    "3m": {
+      "key": "root.pages[0:home:Box].blocks[9:dateDemo:Card].blocks",
+      "~k_parent": "3k",
+      "~l": 253
+    },
+    "3n": {
+      "key": "root.pages[0:home:Box].blocks[9:dateDemo:Card].blocks[0:currentDate:Paragraph]",
+      "~k_parent": "3m",
+      "~l": 254
+    },
+    "3o": {
+      "key": "root.pages[0:home:Box].blocks[9:dateDemo:Card].blocks[0:currentDate:Paragraph].properties",
+      "~k_parent": "3n",
+      "~l": 256
+    },
+    "3p": {
+      "key": "root.pages[0:home:Box].blocks[9:dateDemo:Card].blocks[1:formattedDate:Paragraph]",
+      "~k_parent": "3m",
+      "~l": 259
+    },
+    "3q": {
+      "key": "root.pages[0:home:Box].blocks[9:dateDemo:Card].blocks[1:formattedDate:Paragraph].properties",
+      "~k_parent": "3p",
+      "~l": 261
+    },
+    "3r": {
+      "key": "root.pages[0:home:Box].blocks[9:dateDemo:Card].blocks[1:formattedDate:Paragraph].properties.content",
+      "~k_parent": "3q",
+      "~l": 262
+    },
+    "3s": {
+      "key": "root.pages[0:home:Box].blocks[9:dateDemo:Card].blocks[1:formattedDate:Paragraph].properties.content._moment",
+      "~k_parent": "3r",
+      "~l": 263
+    },
+    "3u": {
+      "key": "root.pages",
+      "~k_parent": "3"
+    },
+    "3v": {
+      "key": "root.pages[1:404:Result]",
+      "~k_parent": "3u"
+    },
+    "3w": {
+      "key": "root.pages[1:404:Result].style",
+      "~k_parent": "3v"
+    },
+    "3x": {
+      "key": "root.pages[1:404:Result].properties",
+      "~k_parent": "3v"
+    },
+    "3y": {
+      "key": "root.pages[1:404:Result].areas",
+      "~k_parent": "3v"
+    },
+    "3z": {
+      "key": "root.pages[1:404:Result].areas.extra",
+      "~k_parent": "3y"
+    },
+    "4a": {
+      "key": "root.config",
+      "~k_parent": "3"
+    },
+    "4c": {
+      "key": "root.pages",
+      "~k_parent": "3"
+    },
+    "4d": {
+      "key": "root.pages[0:home:Box]",
+      "~k_parent": "4c"
+    },
+    "4e": {
+      "key": "root.pages[0:home:Box].auth",
+      "~k_parent": "4d"
+    },
+    "4f": {
+      "key": "root.pages[0:home:Box].areas",
+      "~k_parent": "4d"
+    },
+    "4g": {
+      "key": "root.pages[0:home:Box].areas.content",
+      "~k_parent": "4f"
+    },
+    "4h": {
+      "key": "root.pages[0:home:Box].blocks[1:conditionalBlock:Box].areas",
+      "~k_parent": "f"
+    },
+    "4i": {
+      "key": "root.pages[0:home:Box].blocks[1:conditionalBlock:Box].areas.content",
+      "~k_parent": "4h"
+    },
+    "4j": {
+      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].areas",
+      "~k_parent": "m"
+    },
+    "4k": {
+      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].areas.content",
+      "~k_parent": "4j"
+    },
     "4l": {
-      "key": "root.auth.api",
-      "~k_parent": "4k"
+      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[1:filteredUsers:List].areas",
+      "~k_parent": "u"
     },
     "4m": {
-      "key": "root.auth.api.roles",
+      "key": "root.pages[0:home:Box].blocks[2:arrayDemo:Card].blocks[1:filteredUsers:List].areas.content",
       "~k_parent": "4l"
     },
     "4n": {
-      "key": "root.auth.authPages",
-      "~k_parent": "4k"
+      "key": "root.pages[0:home:Box].blocks[3:mathDemo:Card].areas",
+      "~k_parent": "18"
     },
     "4o": {
-      "key": "root.auth.pages",
-      "~k_parent": "4k"
+      "key": "root.pages[0:home:Box].blocks[3:mathDemo:Card].areas.content",
+      "~k_parent": "4n"
     },
     "4p": {
-      "key": "root.auth.pages.roles",
-      "~k_parent": "4o"
+      "key": "root.pages[0:home:Box].blocks[4:stringDemo:Card].areas",
+      "~k_parent": "1h"
     },
     "4q": {
-      "key": "root.auth.session",
-      "~k_parent": "4k"
+      "key": "root.pages[0:home:Box].blocks[4:stringDemo:Card].areas.content",
+      "~k_parent": "4p"
     },
     "4r": {
-      "key": "root.auth.theme",
-      "~k_parent": "4k"
+      "key": "root.pages[0:home:Box].blocks[5:objectDemo:Card].areas",
+      "~k_parent": "1u"
     },
     "4s": {
-      "key": "root.menus[0:default]",
-      "~k_parent": "3"
+      "key": "root.pages[0:home:Box].blocks[5:objectDemo:Card].areas.content",
+      "~k_parent": "4r"
     },
     "4t": {
-      "key": "root.menus[0:default].links[0:0:MenuLink]",
-      "~k_parent": "4s"
+      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card].areas",
+      "~k_parent": "23"
     },
     "4u": {
-      "key": "root.menus[0:default].links[0:0:MenuLink].auth",
+      "key": "root.pages[0:home:Box].blocks[6:comparisonDemo:Card].areas.content",
       "~k_parent": "4t"
     },
     "4v": {
-      "key": "root.types",
-      "~k_parent": "3"
+      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].areas",
+      "~k_parent": "2n"
     },
     "4w": {
-      "key": "root.types.actions",
+      "key": "root.pages[0:home:Box].blocks[7:logicalDemo:Card].areas.content",
       "~k_parent": "4v"
     },
     "4x": {
-      "key": "root.types.actions.Link",
-      "~k_parent": "4w"
+      "key": "root.pages[0:home:Box].blocks[8:typeDemo:Card].areas",
+      "~k_parent": "3a"
     },
     "4y": {
-      "key": "root.types.auth",
-      "~k_parent": "4v"
+      "key": "root.pages[0:home:Box].blocks[8:typeDemo:Card].areas.content",
+      "~k_parent": "4x"
     },
     "4z": {
-      "key": "root.types.auth.adapters",
-      "~k_parent": "4y"
+      "key": "root.pages[0:home:Box].blocks[9:dateDemo:Card].areas",
+      "~k_parent": "3k"
     },
     "5a": {
-      "key": "root.types.blocks.Paragraph",
-      "~k_parent": "53"
+      "key": "root.auth.api",
+      "~k_parent": "59"
     },
     "5b": {
-      "key": "root.types.blocks.TextInput",
-      "~k_parent": "53"
+      "key": "root.auth.api.roles",
+      "~k_parent": "5a"
     },
     "5c": {
-      "key": "root.types.blocks.Tag",
-      "~k_parent": "53"
+      "key": "root.auth.authPages",
+      "~k_parent": "59"
     },
     "5d": {
-      "key": "root.types.blocks.NumberInput",
-      "~k_parent": "53"
+      "key": "root.auth.pages",
+      "~k_parent": "59"
     },
     "5e": {
-      "key": "root.types.blocks.Alert",
-      "~k_parent": "53"
+      "key": "root.auth.pages.roles",
+      "~k_parent": "5d"
     },
     "5f": {
-      "key": "root.types.blocks.Result",
-      "~k_parent": "53"
+      "key": "root.auth.callbacks",
+      "~k_parent": "59"
     },
     "5g": {
-      "key": "root.types.blocks.Button",
-      "~k_parent": "53"
+      "key": "root.auth.events",
+      "~k_parent": "59"
     },
     "5h": {
-      "key": "root.types.blocks.Anchor",
-      "~k_parent": "53"
+      "key": "root.auth.providers",
+      "~k_parent": "59"
     },
     "5i": {
-      "key": "root.types.blocks.DangerousHtml",
-      "~k_parent": "53"
+      "key": "root.auth.session",
+      "~k_parent": "59"
     },
     "5j": {
-      "key": "root.types.blocks.Html",
-      "~k_parent": "53"
+      "key": "root.auth.theme",
+      "~k_parent": "59"
     },
     "5k": {
-      "key": "root.types.blocks.Icon",
-      "~k_parent": "53"
+      "key": "root.menus",
+      "~k_parent": "3"
     },
     "5l": {
-      "key": "root.types.blocks.Img",
-      "~k_parent": "53"
+      "key": "root.menus[0:default]",
+      "~k_parent": "5k"
     },
     "5m": {
-      "key": "root.types.blocks.Span",
-      "~k_parent": "53"
+      "key": "root.menus[0:default].links",
+      "~k_parent": "5l"
     },
     "5n": {
-      "key": "root.types.blocks.Throw",
-      "~k_parent": "53"
+      "key": "root.menus[0:default].links[0:0:MenuLink]",
+      "~k_parent": "5m"
     },
     "5o": {
-      "key": "root.types.blocks.ProgressBar",
-      "~k_parent": "53"
+      "key": "root.menus[0:default].links[0:0:MenuLink].auth",
+      "~k_parent": "5n"
     },
     "5p": {
-      "key": "root.types.blocks.Skeleton",
-      "~k_parent": "53"
+      "key": "root.types",
+      "~k_parent": "3"
     },
     "5q": {
-      "key": "root.types.blocks.SkeletonAvatar",
-      "~k_parent": "53"
+      "key": "root.types.actions",
+      "~k_parent": "5p"
     },
     "5r": {
-      "key": "root.types.blocks.SkeletonButton",
-      "~k_parent": "53"
+      "key": "root.types.actions.Link",
+      "~k_parent": "5q"
     },
     "5s": {
-      "key": "root.types.blocks.SkeletonInput",
-      "~k_parent": "53"
+      "key": "root.types.auth",
+      "~k_parent": "5p"
     },
     "5t": {
-      "key": "root.types.blocks.SkeletonParagraph",
-      "~k_parent": "53"
+      "key": "root.types.auth.adapters",
+      "~k_parent": "5s"
     },
     "5u": {
-      "key": "root.types.blocks.Spinner",
-      "~k_parent": "53"
+      "key": "root.types.auth.callbacks",
+      "~k_parent": "5s"
     },
     "5v": {
-      "key": "root.types.blocks.Message",
-      "~k_parent": "53"
+      "key": "root.types.auth.events",
+      "~k_parent": "5s"
     },
     "5w": {
-      "key": "root.types.connections",
-      "~k_parent": "4v"
+      "key": "root.types.auth.providers",
+      "~k_parent": "5s"
     },
     "5x": {
-      "key": "root.types.requests",
-      "~k_parent": "4v"
+      "key": "root.types.blocks",
+      "~k_parent": "5p"
     },
     "5y": {
-      "key": "root.types.api",
-      "~k_parent": "4v"
+      "key": "root.types.blocks.Box",
+      "~k_parent": "5x"
     },
     "5z": {
-      "key": "root.types.operators",
-      "~k_parent": "4v"
+      "key": "root.types.blocks.Switch",
+      "~k_parent": "5x"
     },
     "6a": {
-      "key": "root.types.operators.client._object",
-      "~k_parent": "60"
+      "key": "root.types.blocks.Button",
+      "~k_parent": "5x"
     },
     "6b": {
-      "key": "root.types.operators.client._gt",
-      "~k_parent": "60"
+      "key": "root.types.blocks.Anchor",
+      "~k_parent": "5x"
     },
     "6c": {
-      "key": "root.types.operators.client._and",
-      "~k_parent": "60"
+      "key": "root.types.blocks.DangerousHtml",
+      "~k_parent": "5x"
     },
     "6d": {
-      "key": "root.types.operators.client._or",
-      "~k_parent": "60"
+      "key": "root.types.blocks.Html",
+      "~k_parent": "5x"
     },
     "6e": {
-      "key": "root.types.operators.client._not",
-      "~k_parent": "60"
+      "key": "root.types.blocks.Icon",
+      "~k_parent": "5x"
     },
     "6f": {
-      "key": "root.types.operators.client._type",
-      "~k_parent": "60"
+      "key": "root.types.blocks.Img",
+      "~k_parent": "5x"
     },
     "6g": {
-      "key": "root.types.operators.client._moment",
-      "~k_parent": "60"
+      "key": "root.types.blocks.Span",
+      "~k_parent": "5x"
     },
     "6h": {
-      "key": "root.types.operators.server",
-      "~k_parent": "5z"
+      "key": "root.types.blocks.Throw",
+      "~k_parent": "5x"
     },
     "6i": {
+      "key": "root.types.blocks.ProgressBar",
+      "~k_parent": "5x"
+    },
+    "6j": {
+      "key": "root.types.blocks.Skeleton",
+      "~k_parent": "5x"
+    },
+    "6k": {
+      "key": "root.types.blocks.SkeletonAvatar",
+      "~k_parent": "5x"
+    },
+    "6l": {
+      "key": "root.types.blocks.SkeletonButton",
+      "~k_parent": "5x"
+    },
+    "6m": {
+      "key": "root.types.blocks.SkeletonInput",
+      "~k_parent": "5x"
+    },
+    "6n": {
+      "key": "root.types.blocks.SkeletonParagraph",
+      "~k_parent": "5x"
+    },
+    "6o": {
+      "key": "root.types.blocks.Spinner",
+      "~k_parent": "5x"
+    },
+    "6p": {
+      "key": "root.types.blocks.Message",
+      "~k_parent": "5x"
+    },
+    "6q": {
+      "key": "root.types.connections",
+      "~k_parent": "5p"
+    },
+    "6r": {
+      "key": "root.types.requests",
+      "~k_parent": "5p"
+    },
+    "6s": {
+      "key": "root.types.api",
+      "~k_parent": "5p"
+    },
+    "6t": {
+      "key": "root.types.operators",
+      "~k_parent": "5p"
+    },
+    "6u": {
+      "key": "root.types.operators.client",
+      "~k_parent": "6t"
+    },
+    "6v": {
+      "key": "root.types.operators.client._if",
+      "~k_parent": "6u"
+    },
+    "6w": {
+      "key": "root.types.operators.client._state",
+      "~k_parent": "6u"
+    },
+    "6x": {
+      "key": "root.types.operators.client._array",
+      "~k_parent": "6u"
+    },
+    "6y": {
+      "key": "root.types.operators.client._global",
+      "~k_parent": "6u"
+    },
+    "6z": {
+      "key": "root.types.operators.client._function",
+      "~k_parent": "6u"
+    },
+    "7a": {
+      "key": "root.types.operators.client._moment",
+      "~k_parent": "6u"
+    },
+    "7b": {
+      "key": "root.types.operators.server",
+      "~k_parent": "6t"
+    },
+    "7c": {
       "key": "root.imports",
       "~k_parent": "3"
     },
-    "6j": {
-      "key": "root.imports.actions[0]",
-      "~k_parent": "6i"
-    },
-    "6k": {
-      "key": "root.imports.auth",
-      "~k_parent": "6i"
-    },
-    "6l": {
-      "key": "root.imports.blocks[0]",
-      "~k_parent": "6i"
-    },
-    "6m": {
-      "key": "root.imports.blocks[1]",
-      "~k_parent": "6i"
-    },
-    "6n": {
-      "key": "root.imports.blocks[2]",
-      "~k_parent": "6i"
-    },
-    "6o": {
-      "key": "root.imports.blocks[3]",
-      "~k_parent": "6i"
-    },
-    "6p": {
-      "key": "root.imports.blocks[4]",
-      "~k_parent": "6i"
-    },
-    "6q": {
-      "key": "root.imports.blocks[5]",
-      "~k_parent": "6i"
-    },
-    "6r": {
-      "key": "root.imports.blocks[6]",
-      "~k_parent": "6i"
-    },
-    "6s": {
-      "key": "root.imports.blocks[7]",
-      "~k_parent": "6i"
-    },
-    "6t": {
-      "key": "root.imports.blocks[8]",
-      "~k_parent": "6i"
-    },
-    "6u": {
-      "key": "root.imports.blocks[9]",
-      "~k_parent": "6i"
-    },
-    "6v": {
-      "key": "root.imports.blocks[10]",
-      "~k_parent": "6i"
-    },
-    "6w": {
-      "key": "root.imports.blocks[11]",
-      "~k_parent": "6i"
-    },
-    "6x": {
-      "key": "root.imports.blocks[12]",
-      "~k_parent": "6i"
-    },
-    "6y": {
-      "key": "root.imports.blocks[13]",
-      "~k_parent": "6i"
-    },
-    "6z": {
-      "key": "root.imports.blocks[14]",
-      "~k_parent": "6i"
-    },
-    "7a": {
-      "key": "root.imports.blocks[25]",
-      "~k_parent": "6i"
-    },
-    "7b": {
-      "key": "root.imports.blocks[26]",
-      "~k_parent": "6i"
-    },
-    "7c": {
-      "key": "root.imports.blocks[27]",
-      "~k_parent": "6i"
-    },
     "7d": {
-      "key": "root.imports.icons[0]",
-      "~k_parent": "6i"
+      "key": "root.imports.actions",
+      "~k_parent": "7c"
     },
     "7e": {
-      "key": "root.imports.icons[1]",
-      "~k_parent": "6i"
+      "key": "root.imports.actions[0]",
+      "~k_parent": "7d"
     },
     "7f": {
-      "key": "root.imports.icons[2]",
-      "~k_parent": "6i"
+      "key": "root.imports.auth",
+      "~k_parent": "7c"
     },
     "7g": {
-      "key": "root.imports.icons[3]",
-      "~k_parent": "6i"
+      "key": "root.imports.auth.adapters",
+      "~k_parent": "7f"
     },
     "7h": {
-      "key": "root.imports.icons[4]",
-      "~k_parent": "6i"
+      "key": "root.imports.auth.callbacks",
+      "~k_parent": "7f"
     },
     "7i": {
-      "key": "root.imports.icons[5]",
-      "~k_parent": "6i"
+      "key": "root.imports.auth.events",
+      "~k_parent": "7f"
     },
     "7j": {
-      "key": "root.imports.icons[6]",
-      "~k_parent": "6i"
+      "key": "root.imports.auth.providers",
+      "~k_parent": "7f"
     },
     "7k": {
-      "key": "root.imports.icons[7]",
-      "~k_parent": "6i"
+      "key": "root.imports.blocks",
+      "~k_parent": "7c"
     },
     "7l": {
-      "key": "root.imports.icons[8]",
-      "~k_parent": "6i"
+      "key": "root.imports.blocks[0]",
+      "~k_parent": "7k"
     },
     "7m": {
-      "key": "root.imports.icons[9]",
-      "~k_parent": "6i"
+      "key": "root.imports.blocks[1]",
+      "~k_parent": "7k"
     },
     "7n": {
-      "key": "root.imports.icons[10]",
-      "~k_parent": "6i"
+      "key": "root.imports.blocks[2]",
+      "~k_parent": "7k"
     },
     "7o": {
-      "key": "root.imports.icons[11]",
-      "~k_parent": "6i"
+      "key": "root.imports.blocks[3]",
+      "~k_parent": "7k"
     },
     "7p": {
-      "key": "root.imports.icons[12]",
-      "~k_parent": "6i"
+      "key": "root.imports.blocks[4]",
+      "~k_parent": "7k"
     },
     "7q": {
-      "key": "root.imports.icons[13]",
-      "~k_parent": "6i"
+      "key": "root.imports.blocks[5]",
+      "~k_parent": "7k"
     },
     "7r": {
-      "key": "root.imports.icons[14]",
-      "~k_parent": "6i"
+      "key": "root.imports.blocks[6]",
+      "~k_parent": "7k"
     },
     "7s": {
-      "key": "root.imports.icons[15]",
-      "~k_parent": "6i"
+      "key": "root.imports.blocks[7]",
+      "~k_parent": "7k"
     },
     "7t": {
-      "key": "root.imports.icons[16]",
-      "~k_parent": "6i"
+      "key": "root.imports.blocks[8]",
+      "~k_parent": "7k"
     },
     "7u": {
-      "key": "root.imports.icons[17]",
-      "~k_parent": "6i"
+      "key": "root.imports.blocks[9]",
+      "~k_parent": "7k"
     },
     "7v": {
-      "key": "root.imports.icons[18]",
-      "~k_parent": "6i"
+      "key": "root.imports.blocks[10]",
+      "~k_parent": "7k"
     },
     "7w": {
-      "key": "root.imports.icons[19]",
-      "~k_parent": "6i"
+      "key": "root.imports.blocks[11]",
+      "~k_parent": "7k"
     },
     "7x": {
-      "key": "root.imports.icons[20]",
-      "~k_parent": "6i"
+      "key": "root.imports.blocks[12]",
+      "~k_parent": "7k"
     },
     "7y": {
-      "key": "root.imports.icons[21]",
-      "~k_parent": "6i"
+      "key": "root.imports.blocks[13]",
+      "~k_parent": "7k"
     },
     "7z": {
-      "key": "root.imports.icons[22]",
-      "~k_parent": "6i"
+      "key": "root.imports.blocks[14]",
+      "~k_parent": "7k"
     },
     "8a": {
-      "key": "root.imports.operators.client[4]",
-      "~k_parent": "85"
+      "key": "root.imports.blocks[25]",
+      "~k_parent": "7k"
     },
     "8b": {
-      "key": "root.imports.operators.client[5]",
-      "~k_parent": "85"
+      "key": "root.imports.blocks[26]",
+      "~k_parent": "7k"
     },
     "8c": {
-      "key": "root.imports.operators.client[6]",
-      "~k_parent": "85"
+      "key": "root.imports.blocks[27]",
+      "~k_parent": "7k"
     },
     "8d": {
-      "key": "root.imports.operators.client[7]",
-      "~k_parent": "85"
+      "key": "root.imports.connections",
+      "~k_parent": "7c"
     },
     "8e": {
-      "key": "root.imports.operators.client[8]",
-      "~k_parent": "85"
+      "key": "root.imports.icons",
+      "~k_parent": "7c"
     },
     "8f": {
-      "key": "root.imports.operators.client[9]",
-      "~k_parent": "85"
+      "key": "root.imports.icons[0]",
+      "~k_parent": "8e"
     },
     "8g": {
-      "key": "root.imports.operators.client[10]",
-      "~k_parent": "85"
+      "key": "root.imports.icons[0].icons",
+      "~k_parent": "8f"
     },
     "8h": {
-      "key": "root.imports.operators.client[11]",
-      "~k_parent": "85"
+      "key": "root.imports.icons[1]",
+      "~k_parent": "8e"
     },
     "8i": {
-      "key": "root.imports.operators.client[12]",
-      "~k_parent": "85"
+      "key": "root.imports.icons[1].icons",
+      "~k_parent": "8h"
     },
     "8j": {
-      "key": "root.imports.operators.client[13]",
-      "~k_parent": "85"
+      "key": "root.imports.icons[2]",
+      "~k_parent": "8e"
     },
     "8k": {
-      "key": "root.imports.operators.client[14]",
-      "~k_parent": "85"
+      "key": "root.imports.icons[2].icons",
+      "~k_parent": "8j"
     },
     "8l": {
+      "key": "root.imports.icons[3]",
+      "~k_parent": "8e"
+    },
+    "8m": {
+      "key": "root.imports.icons[3].icons",
+      "~k_parent": "8l"
+    },
+    "8n": {
+      "key": "root.imports.icons[4]",
+      "~k_parent": "8e"
+    },
+    "8o": {
+      "key": "root.imports.icons[4].icons",
+      "~k_parent": "8n"
+    },
+    "8p": {
+      "key": "root.imports.icons[5]",
+      "~k_parent": "8e"
+    },
+    "8q": {
+      "key": "root.imports.icons[5].icons",
+      "~k_parent": "8p"
+    },
+    "8r": {
+      "key": "root.imports.icons[6]",
+      "~k_parent": "8e"
+    },
+    "8s": {
+      "key": "root.imports.icons[6].icons",
+      "~k_parent": "8r"
+    },
+    "8t": {
+      "key": "root.imports.icons[7]",
+      "~k_parent": "8e"
+    },
+    "8u": {
+      "key": "root.imports.icons[7].icons",
+      "~k_parent": "8t"
+    },
+    "8v": {
+      "key": "root.imports.icons[8]",
+      "~k_parent": "8e"
+    },
+    "8w": {
+      "key": "root.imports.icons[8].icons",
+      "~k_parent": "8v"
+    },
+    "8x": {
+      "key": "root.imports.icons[9]",
+      "~k_parent": "8e"
+    },
+    "8y": {
+      "key": "root.imports.icons[9].icons",
+      "~k_parent": "8x"
+    },
+    "8z": {
+      "key": "root.imports.icons[10]",
+      "~k_parent": "8e"
+    },
+    "9a": {
+      "key": "root.imports.icons[15].icons",
+      "~k_parent": "99"
+    },
+    "9b": {
+      "key": "root.imports.icons[16]",
+      "~k_parent": "8e"
+    },
+    "9c": {
+      "key": "root.imports.icons[16].icons",
+      "~k_parent": "9b"
+    },
+    "9d": {
+      "key": "root.imports.icons[17]",
+      "~k_parent": "8e"
+    },
+    "9e": {
+      "key": "root.imports.icons[17].icons",
+      "~k_parent": "9d"
+    },
+    "9f": {
+      "key": "root.imports.icons[18]",
+      "~k_parent": "8e"
+    },
+    "9g": {
+      "key": "root.imports.icons[18].icons",
+      "~k_parent": "9f"
+    },
+    "9h": {
+      "key": "root.imports.icons[19]",
+      "~k_parent": "8e"
+    },
+    "9i": {
+      "key": "root.imports.icons[19].icons",
+      "~k_parent": "9h"
+    },
+    "9j": {
+      "key": "root.imports.icons[20]",
+      "~k_parent": "8e"
+    },
+    "9k": {
+      "key": "root.imports.icons[20].icons",
+      "~k_parent": "9j"
+    },
+    "9l": {
+      "key": "root.imports.icons[21]",
+      "~k_parent": "8e"
+    },
+    "9m": {
+      "key": "root.imports.icons[21].icons",
+      "~k_parent": "9l"
+    },
+    "9n": {
+      "key": "root.imports.icons[22]",
+      "~k_parent": "8e"
+    },
+    "9o": {
+      "key": "root.imports.icons[22].icons",
+      "~k_parent": "9n"
+    },
+    "9p": {
+      "key": "root.imports.icons[23]",
+      "~k_parent": "8e"
+    },
+    "9q": {
+      "key": "root.imports.icons[23].icons",
+      "~k_parent": "9p"
+    },
+    "9r": {
+      "key": "root.imports.icons[24]",
+      "~k_parent": "8e"
+    },
+    "9s": {
+      "key": "root.imports.icons[24].icons",
+      "~k_parent": "9r"
+    },
+    "9t": {
+      "key": "root.imports.icons[25]",
+      "~k_parent": "8e"
+    },
+    "9u": {
+      "key": "root.imports.icons[25].icons",
+      "~k_parent": "9t"
+    },
+    "9v": {
+      "key": "root.imports.icons[26]",
+      "~k_parent": "8e"
+    },
+    "9w": {
+      "key": "root.imports.icons[26].icons",
+      "~k_parent": "9v"
+    },
+    "9x": {
+      "key": "root.imports.icons[27]",
+      "~k_parent": "8e"
+    },
+    "9y": {
+      "key": "root.imports.icons[27].icons",
+      "~k_parent": "9x"
+    },
+    "9z": {
+      "key": "root.imports.requests",
+      "~k_parent": "7c"
+    },
+    "a0": {
+      "key": "root.imports.operators",
+      "~k_parent": "7c"
+    },
+    "a1": {
+      "key": "root.imports.operators.client",
+      "~k_parent": "a0"
+    },
+    "a2": {
+      "key": "root.imports.operators.client[0]",
+      "~k_parent": "a1"
+    },
+    "a3": {
+      "key": "root.imports.operators.client[1]",
+      "~k_parent": "a1"
+    },
+    "a4": {
+      "key": "root.imports.operators.client[2]",
+      "~k_parent": "a1"
+    },
+    "a5": {
+      "key": "root.imports.operators.client[3]",
+      "~k_parent": "a1"
+    },
+    "a6": {
+      "key": "root.imports.operators.client[4]",
+      "~k_parent": "a1"
+    },
+    "a7": {
+      "key": "root.imports.operators.client[5]",
+      "~k_parent": "a1"
+    },
+    "a8": {
+      "key": "root.imports.operators.client[6]",
+      "~k_parent": "a1"
+    },
+    "a9": {
+      "key": "root.imports.operators.client[7]",
+      "~k_parent": "a1"
+    },
+    "aa": {
+      "key": "root.imports.operators.client[8]",
+      "~k_parent": "a1"
+    },
+    "ab": {
+      "key": "root.imports.operators.client[9]",
+      "~k_parent": "a1"
+    },
+    "ac": {
+      "key": "root.imports.operators.client[10]",
+      "~k_parent": "a1"
+    },
+    "ad": {
+      "key": "root.imports.operators.client[11]",
+      "~k_parent": "a1"
+    },
+    "ae": {
+      "key": "root.imports.operators.client[12]",
+      "~k_parent": "a1"
+    },
+    "af": {
+      "key": "root.imports.operators.client[13]",
+      "~k_parent": "a1"
+    },
+    "ag": {
+      "key": "root.imports.operators.client[14]",
+      "~k_parent": "a1"
+    },
+    "ah": {
       "key": "root.imports.operators.client[15]",
-      "~k_parent": "85"
+      "~k_parent": "a1"
+    },
+    "ai": {
+      "key": "root.imports.operators.server",
+      "~k_parent": "a0"
+    },
+    "aj": {
+      "key": "root.imports.styles",
+      "~k_parent": "7c"
     }
   },
   "logger.json": {
-    "~k": "3o"
+    "~k": "49"
   },
-  "menus.json": [
-    {
-      "id": "menu:default",
-      "links": [
-        {
-          "id": "menuitem:default:0",
-          "type": "MenuLink",
-          "pageId": "home",
-          "auth": {
-            "public": true,
-            "~k": "4u"
-          },
-          "menuItemId": "0",
-          "~k": "4t"
-        }
-      ],
-      "menuId": "default",
-      "~k": "4s"
-    }
-  ],
+  "menus.json": {
+    "~arr": [
+      {
+        "id": "menu:default",
+        "links": {
+          "~arr": [
+            {
+              "id": "menuitem:default:0",
+              "type": "MenuLink",
+              "pageId": "home",
+              "auth": {
+                "public": true,
+                "~k": "5o"
+              },
+              "menuItemId": "0",
+              "~k": "5n"
+            }
+          ],
+          "~k": "5m"
+        },
+        "menuId": "default",
+        "~k": "5l"
+      }
+    ],
+    "~k": "5k"
+  },
   "pages/404/404.json": {
     "id": "page:404",
     "type": "Result",
     "style": {
       "minHeight": "100vh",
-      "~k": "3d"
+      "~k": "3w"
     },
     "properties": {
       "status": "info",
       "title": "404",
       "subTitle": "Sorry, the page you are visiting does not exist.",
-      "~k": "3e"
+      "~k": "3x"
     },
     "areas": {
       "extra": {
-        "blocks": [
-          {
-            "id": "block:404:home:0",
-            "type": "Button",
-            "properties": {
-              "title": "Go to home page",
-              "~k": "3i"
-            },
-            "events": {
-              "onClick": {
-                "try": [
-                  {
-                    "id": "home",
-                    "type": "Link",
-                    "params": {
-                      "home": true,
-                      "~k": "3l"
-                    },
-                    "~k": "3k"
-                  }
-                ],
-                "catch": [],
-                "~k": "4i"
+        "blocks": {
+          "~arr": [
+            {
+              "id": "block:404:home:0",
+              "type": "Button",
+              "properties": {
+                "title": "Go to home page",
+                "~k": "42"
               },
-              "~k": "3j"
-            },
-            "~k": "3h",
-            "blockId": "home"
-          }
-        ],
-        "~k": "3g"
+              "events": {
+                "onClick": {
+                  "try": {
+                    "~arr": [
+                      {
+                        "id": "home",
+                        "type": "Link",
+                        "params": {
+                          "home": true,
+                          "~k": "46"
+                        },
+                        "~k": "45"
+                      }
+                    ],
+                    "~k": "44"
+                  },
+                  "catch": {
+                    "~arr": [],
+                    "~k": "56"
+                  },
+                  "~k": "55"
+                },
+                "~k": "43"
+              },
+              "~k": "41",
+              "blockId": "home"
+            }
+          ],
+          "~k": "40"
+        },
+        "~k": "3z"
       },
-      "~k": "3f"
+      "~k": "3y"
     },
     "auth": {
       "public": true,
-      "~k": "4j"
+      "~k": "57"
     },
     "pageId": "404",
     "blockId": "404",
-    "requests": [],
-    "~k": "4h"
+    "requests": {
+      "~arr": [],
+      "~k": "58"
+    },
+    "~k": "54"
   },
   "pages/home/home.json": {
     "id": "page:home",
     "type": "Box",
     "properties": {
       "title": "Operators Demo",
-      "~k": "9"
+      "~k": "b"
     },
     "auth": {
       "public": true,
-      "~k": "3s"
+      "~k": "4e"
     },
     "pageId": "home",
     "blockId": "home",
@@ -1505,9 +1830,9 @@
               "type": "Switch",
               "properties": {
                 "title": "Show Advanced Options",
-                "~k": "b"
+                "~k": "e"
               },
-              "~k": "a",
+              "~k": "d",
               "blockId": "showAdvanced"
             },
             {
@@ -1517,15 +1842,15 @@
                 "_if": {
                   "test": {
                     "_state": "showAdvanced",
-                    "~k": "f"
+                    "~k": "i"
                   },
                   "then": true,
                   "else": false,
-                  "~k": "e"
+                  "~k": "h"
                 },
-                "~k": "d"
+                "~k": "g"
               },
-              "~k": "c",
+              "~k": "f",
               "blockId": "conditionalBlock",
               "areas": {
                 "content": {
@@ -1536,17 +1861,17 @@
                         "type": "Title",
                         "properties": {
                           "content": "Advanced Options",
-                          "~k": "h"
+                          "~k": "l"
                         },
-                        "~k": "g",
+                        "~k": "k",
                         "blockId": "advancedTitle"
                       }
                     ],
-                    "~l": 38
+                    "~k": "j"
                   },
-                  "~k": "3w"
+                  "~k": "4i"
                 },
-                "~k": "3v"
+                "~k": "4h"
               }
             },
             {
@@ -1554,9 +1879,9 @@
               "type": "Card",
               "properties": {
                 "title": "Array Operations",
-                "~k": "j"
+                "~k": "n"
               },
-              "~k": "i",
+              "~k": "m",
               "blockId": "arrayDemo",
               "areas": {
                 "content": {
@@ -1571,15 +1896,15 @@
                             "_array": {
                               "length": {
                                 "_global": "users",
-                                "~k": "o"
+                                "~k": "t"
                               },
-                              "~k": "n"
+                              "~k": "s"
                             },
-                            "~k": "m"
+                            "~k": "r"
                           },
-                          "~k": "l"
+                          "~k": "q"
                         },
-                        "~k": "k",
+                        "~k": "p",
                         "blockId": "arrayLength"
                       },
                       {
@@ -1591,7 +1916,7 @@
                               "filter": {
                                 "on": {
                                   "_global": "users",
-                                  "~k": "u"
+                                  "~k": "z"
                                 },
                                 "callback": {
                                   "_function": {
@@ -1599,25 +1924,25 @@
                                       "~arr": [
                                         {
                                           "__args": "0.active",
-                                          "~k": "x"
+                                          "~k": "13"
                                         },
                                         true
                                       ],
-                                      "~l": 68
+                                      "~k": "12"
                                     },
-                                    "~k": "w"
+                                    "~k": "11"
                                   },
-                                  "~k": "v"
+                                  "~k": "10"
                                 },
-                                "~k": "t"
+                                "~k": "y"
                               },
-                              "~k": "s"
+                              "~k": "x"
                             },
-                            "~k": "r"
+                            "~k": "w"
                           },
-                          "~k": "q"
+                          "~k": "v"
                         },
-                        "~k": "p",
+                        "~k": "u",
                         "blockId": "filteredUsers",
                         "areas": {
                           "content": {
@@ -1629,27 +1954,27 @@
                                   "properties": {
                                     "content": {
                                       "_state": "filteredUsers.$.name",
-                                      "~k": "10"
+                                      "~k": "17"
                                     },
-                                    "~k": "z"
+                                    "~k": "16"
                                   },
-                                  "~k": "y",
+                                  "~k": "15",
                                   "blockId": "userName"
                                 }
                               ],
-                              "~l": 71
+                              "~k": "14"
                             },
-                            "~k": "40"
+                            "~k": "4m"
                           },
-                          "~k": "3z"
+                          "~k": "4l"
                         }
                       }
                     ],
-                    "~l": 49
+                    "~k": "o"
                   },
-                  "~k": "3y"
+                  "~k": "4k"
                 },
-                "~k": "3x"
+                "~k": "4j"
               }
             },
             {
@@ -1657,9 +1982,9 @@
               "type": "Card",
               "properties": {
                 "title": "Math Operations",
-                "~k": "12"
+                "~k": "19"
               },
-              "~k": "11",
+              "~k": "18",
               "blockId": "mathDemo",
               "areas": {
                 "content": {
@@ -1671,9 +1996,9 @@
                         "properties": {
                           "title": "Sum",
                           "value": 60,
-                          "~k": "14"
+                          "~k": "1c"
                         },
-                        "~k": "13",
+                        "~k": "1b",
                         "blockId": "sumResult"
                       },
                       {
@@ -1682,9 +2007,9 @@
                         "properties": {
                           "title": "Product",
                           "value": 24,
-                          "~k": "16"
+                          "~k": "1e"
                         },
-                        "~k": "15",
+                        "~k": "1d",
                         "blockId": "productResult"
                       },
                       {
@@ -1693,17 +2018,17 @@
                         "properties": {
                           "title": "Division",
                           "value": 25,
-                          "~k": "18"
+                          "~k": "1g"
                         },
-                        "~k": "17",
+                        "~k": "1f",
                         "blockId": "divideResult"
                       }
                     ],
-                    "~l": 83
+                    "~k": "1a"
                   },
-                  "~k": "42"
+                  "~k": "4o"
                 },
-                "~k": "41"
+                "~k": "4n"
               }
             },
             {
@@ -1711,9 +2036,9 @@
               "type": "Card",
               "properties": {
                 "title": "String Operations",
-                "~k": "1a"
+                "~k": "1i"
               },
-              "~k": "19",
+              "~k": "1h",
               "blockId": "stringDemo",
               "areas": {
                 "content": {
@@ -1726,13 +2051,13 @@
                           "content": {
                             "_string.toUpperCase": {
                               "_state": "textInput",
-                              "~k": "1e"
+                              "~k": "1n"
                             },
-                            "~k": "1d"
+                            "~k": "1m"
                           },
-                          "~k": "1c"
+                          "~k": "1l"
                         },
-                        "~k": "1b",
+                        "~k": "1k",
                         "blockId": "upperCase"
                       },
                       {
@@ -1743,13 +2068,13 @@
                           "value": {
                             "_string.length": {
                               "_state": "textInput",
-                              "~k": "1i"
+                              "~k": "1r"
                             },
-                            "~k": "1h"
+                            "~k": "1q"
                           },
-                          "~k": "1g"
+                          "~k": "1p"
                         },
-                        "~k": "1f",
+                        "~k": "1o",
                         "blockId": "stringLength"
                       },
                       {
@@ -1757,17 +2082,17 @@
                         "type": "TextInput",
                         "properties": {
                           "title": "Enter Text",
-                          "~k": "1k"
+                          "~k": "1t"
                         },
-                        "~k": "1j",
+                        "~k": "1s",
                         "blockId": "textInput"
                       }
                     ],
-                    "~l": 116
+                    "~k": "1j"
                   },
-                  "~k": "44"
+                  "~k": "4q"
                 },
-                "~k": "43"
+                "~k": "4p"
               }
             },
             {
@@ -1775,9 +2100,9 @@
               "type": "Card",
               "properties": {
                 "title": "Object Operations",
-                "~k": "1m"
+                "~k": "1v"
               },
-              "~k": "1l",
+              "~k": "1u",
               "blockId": "objectDemo",
               "areas": {
                 "content": {
@@ -1792,25 +2117,25 @@
                               "_object": {
                                 "keys": {
                                   "_global": "settings",
-                                  "~k": "1s"
+                                  "~k": "22"
                                 },
-                                "~k": "1r"
+                                "~k": "21"
                               },
-                              "~k": "1q"
+                              "~k": "20"
                             },
-                            "~k": "1p"
+                            "~k": "1z"
                           },
-                          "~k": "1o"
+                          "~k": "1y"
                         },
-                        "~k": "1n",
+                        "~k": "1x",
                         "blockId": "objectKeys"
                       }
                     ],
-                    "~l": 140
+                    "~k": "1w"
                   },
-                  "~k": "46"
+                  "~k": "4s"
                 },
-                "~k": "45"
+                "~k": "4r"
               }
             },
             {
@@ -1818,9 +2143,9 @@
               "type": "Card",
               "properties": {
                 "title": "Comparisons",
-                "~k": "1u"
+                "~k": "24"
               },
-              "~k": "1t",
+              "~k": "23",
               "blockId": "comparisonDemo",
               "areas": {
                 "content": {
@@ -1834,23 +2159,23 @@
                             "~arr": [
                               {
                                 "_state": "value1",
-                                "~k": "1x"
+                                "~k": "29"
                               },
                               {
                                 "_state": "value2",
-                                "~k": "1y"
+                                "~k": "2a"
                               }
                             ],
-                            "~l": 159
+                            "~k": "28"
                           },
-                          "~k": "1w"
+                          "~k": "27"
                         },
                         "properties": {
                           "title": "Values are equal",
                           "color": "green",
-                          "~k": "1z"
+                          "~k": "2b"
                         },
-                        "~k": "1v",
+                        "~k": "26",
                         "blockId": "eqResult"
                       },
                       {
@@ -1861,20 +2186,20 @@
                             "~arr": [
                               {
                                 "_state": "numberInput",
-                                "~k": "22"
+                                "~k": "2f"
                               },
                               50
                             ],
-                            "~l": 168
+                            "~k": "2e"
                           },
-                          "~k": "21"
+                          "~k": "2d"
                         },
                         "properties": {
                           "title": "Greater than 50",
                           "color": "blue",
-                          "~k": "23"
+                          "~k": "2g"
                         },
-                        "~k": "20",
+                        "~k": "2c",
                         "blockId": "gtResult"
                       },
                       {
@@ -1882,9 +2207,9 @@
                         "type": "TextInput",
                         "properties": {
                           "title": "Value 1",
-                          "~k": "25"
+                          "~k": "2i"
                         },
-                        "~k": "24",
+                        "~k": "2h",
                         "blockId": "value1"
                       },
                       {
@@ -1892,9 +2217,9 @@
                         "type": "TextInput",
                         "properties": {
                           "title": "Value 2",
-                          "~k": "27"
+                          "~k": "2k"
                         },
-                        "~k": "26",
+                        "~k": "2j",
                         "blockId": "value2"
                       },
                       {
@@ -1902,17 +2227,17 @@
                         "type": "NumberInput",
                         "properties": {
                           "title": "Number",
-                          "~k": "29"
+                          "~k": "2m"
                         },
-                        "~k": "28",
+                        "~k": "2l",
                         "blockId": "numberInput"
                       }
                     ],
-                    "~l": 155
+                    "~k": "25"
                   },
-                  "~k": "48"
+                  "~k": "4u"
                 },
-                "~k": "47"
+                "~k": "4t"
               }
             },
             {
@@ -1920,9 +2245,9 @@
               "type": "Card",
               "properties": {
                 "title": "Logical Operations",
-                "~k": "2b"
+                "~k": "2o"
               },
-              "~k": "2a",
+              "~k": "2n",
               "blockId": "logicalDemo",
               "areas": {
                 "content": {
@@ -1936,23 +2261,23 @@
                             "~arr": [
                               {
                                 "_state": "checkbox1",
-                                "~k": "2e"
+                                "~k": "2t"
                               },
                               {
                                 "_state": "checkbox2",
-                                "~k": "2f"
+                                "~k": "2u"
                               }
                             ],
-                            "~l": 196
+                            "~k": "2s"
                           },
-                          "~k": "2d"
+                          "~k": "2r"
                         },
                         "properties": {
                           "type": "success",
                           "message": "Both checkboxes are checked!",
-                          "~k": "2g"
+                          "~k": "2v"
                         },
-                        "~k": "2c",
+                        "~k": "2q",
                         "blockId": "andResult"
                       },
                       {
@@ -1963,23 +2288,23 @@
                             "~arr": [
                               {
                                 "_state": "checkbox1",
-                                "~k": "2j"
+                                "~k": "2z"
                               },
                               {
                                 "_state": "checkbox2",
-                                "~k": "2k"
+                                "~k": "30"
                               }
                             ],
-                            "~l": 205
+                            "~k": "2y"
                           },
-                          "~k": "2i"
+                          "~k": "2x"
                         },
                         "properties": {
                           "type": "info",
                           "message": "At least one checkbox is checked",
-                          "~k": "2l"
+                          "~k": "31"
                         },
-                        "~k": "2h",
+                        "~k": "2w",
                         "blockId": "orResult"
                       },
                       {
@@ -1988,16 +2313,16 @@
                         "visible": {
                           "_not": {
                             "_state": "checkbox1",
-                            "~k": "2o"
+                            "~k": "34"
                           },
-                          "~k": "2n"
+                          "~k": "33"
                         },
                         "properties": {
                           "type": "warning",
                           "message": "Checkbox 1 is not checked",
-                          "~k": "2p"
+                          "~k": "35"
                         },
-                        "~k": "2m",
+                        "~k": "32",
                         "blockId": "notResult"
                       },
                       {
@@ -2005,9 +2330,9 @@
                         "type": "Switch",
                         "properties": {
                           "title": "Checkbox 1",
-                          "~k": "2r"
+                          "~k": "37"
                         },
-                        "~k": "2q",
+                        "~k": "36",
                         "blockId": "checkbox1"
                       },
                       {
@@ -2015,17 +2340,17 @@
                         "type": "Switch",
                         "properties": {
                           "title": "Checkbox 2",
-                          "~k": "2t"
+                          "~k": "39"
                         },
-                        "~k": "2s",
+                        "~k": "38",
                         "blockId": "checkbox2"
                       }
                     ],
-                    "~l": 192
+                    "~k": "2p"
                   },
-                  "~k": "4a"
+                  "~k": "4w"
                 },
-                "~k": "49"
+                "~k": "4v"
               }
             },
             {
@@ -2033,9 +2358,9 @@
               "type": "Card",
               "properties": {
                 "title": "Type Checking",
-                "~k": "2v"
+                "~k": "3b"
               },
-              "~k": "2u",
+              "~k": "3a",
               "blockId": "typeDemo",
               "areas": {
                 "content": {
@@ -2049,17 +2374,17 @@
                             "type": "string",
                             "on": {
                               "_state": "typeInput",
-                              "~k": "2z"
+                              "~k": "3g"
                             },
-                            "~k": "2y"
+                            "~k": "3f"
                           },
-                          "~k": "2x"
+                          "~k": "3e"
                         },
                         "properties": {
                           "title": "Is String",
-                          "~k": "30"
+                          "~k": "3h"
                         },
-                        "~k": "2w",
+                        "~k": "3d",
                         "blockId": "isString"
                       },
                       {
@@ -2067,17 +2392,17 @@
                         "type": "TextInput",
                         "properties": {
                           "title": "Type Input",
-                          "~k": "32"
+                          "~k": "3j"
                         },
-                        "~k": "31",
+                        "~k": "3i",
                         "blockId": "typeInput"
                       }
                     ],
-                    "~l": 233
+                    "~k": "3c"
                   },
-                  "~k": "4c"
+                  "~k": "4y"
                 },
-                "~k": "4b"
+                "~k": "4x"
               }
             },
             {
@@ -2085,9 +2410,9 @@
               "type": "Card",
               "properties": {
                 "title": "Date Operations",
-                "~k": "34"
+                "~k": "3l"
               },
-              "~k": "33",
+              "~k": "3k",
               "blockId": "dateDemo",
               "areas": {
                 "content": {
@@ -2101,7 +2426,7 @@
                             "~d": 1705320000000
                           }
                         },
-                        "~k": "35",
+                        "~k": "3n",
                         "blockId": "currentDate"
                       },
                       {
@@ -2115,30 +2440,33 @@
                                 "~d": 1705320000000
                               }
                             },
-                            "~k": "39"
+                            "~k": "3r"
                           },
-                          "~k": "38"
+                          "~k": "3q"
                         },
-                        "~k": "37",
+                        "~k": "3p",
                         "blockId": "formattedDate"
                       }
                     ],
-                    "~l": 253
+                    "~k": "3m"
                   },
-                  "~k": "4e"
+                  "~k": "50"
                 },
-                "~k": "4d"
+                "~k": "4z"
               }
             }
           ],
-          "~l": 22
+          "~k": "c"
         },
-        "~k": "3u"
+        "~k": "4g"
       },
-      "~k": "3t"
+      "~k": "4f"
     },
-    "requests": [],
-    "~k": "3r"
+    "requests": {
+      "~arr": [],
+      "~k": "53"
+    },
+    "~k": "4d"
   },
   "plugins/actions.js": "import {  as Link } from '@lowdefy/actions-core/actions';\nexport default {\n  Link,\n  };",
   "plugins/auth/adapters.js": "export default {\n  };",
@@ -2163,266 +2491,266 @@
       "Link": {
         "package": "@lowdefy/actions-core",
         "count": 1,
-        "~k": "4x"
+        "~k": "5r"
       },
-      "~k": "4w"
+      "~k": "5q"
     },
     "auth": {
       "adapters": {
-        "~k": "4z"
+        "~k": "5t"
       },
       "callbacks": {
-        "~k": "50"
+        "~k": "5u"
       },
       "events": {
-        "~k": "51"
+        "~k": "5v"
       },
       "providers": {
-        "~k": "52"
+        "~k": "5w"
       },
-      "~k": "4y"
+      "~k": "5s"
     },
     "blocks": {
       "Box": {
         "package": "@lowdefy/blocks-basic",
         "count": 3,
-        "~k": "54"
+        "~k": "5y"
       },
       "Switch": {
         "package": "@lowdefy/blocks-antd",
         "count": 3,
-        "~k": "55"
+        "~k": "5z"
       },
       "Title": {
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "56"
+        "~k": "60"
       },
       "Card": {
         "package": "@lowdefy/blocks-antd",
         "count": 8,
-        "~k": "57"
+        "~k": "61"
       },
       "Statistic": {
         "package": "@lowdefy/blocks-antd",
         "count": 5,
-        "~k": "58"
+        "~k": "62"
       },
       "List": {
         "package": "@lowdefy/blocks-basic",
         "count": 2,
-        "~k": "59"
+        "~k": "63"
       },
       "Paragraph": {
         "package": "@lowdefy/blocks-basic",
         "count": 5,
-        "~k": "5a"
+        "~k": "64"
       },
       "TextInput": {
         "package": "@lowdefy/blocks-antd",
         "count": 4,
-        "~k": "5b"
+        "~k": "65"
       },
       "Tag": {
         "package": "@lowdefy/blocks-antd",
         "count": 3,
-        "~k": "5c"
+        "~k": "66"
       },
       "NumberInput": {
         "package": "@lowdefy/blocks-antd",
         "count": 1,
-        "~k": "5d"
+        "~k": "67"
       },
       "Alert": {
         "package": "@lowdefy/blocks-antd",
         "count": 3,
-        "~k": "5e"
+        "~k": "68"
       },
       "Result": {
         "package": "@lowdefy/blocks-antd",
         "count": 1,
-        "~k": "5f"
+        "~k": "69"
       },
       "Button": {
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "5g"
+        "~k": "6a"
       },
       "Anchor": {
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "5h"
+        "~k": "6b"
       },
       "DangerousHtml": {
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "5i"
+        "~k": "6c"
       },
       "Html": {
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "5j"
+        "~k": "6d"
       },
       "Icon": {
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "5k"
+        "~k": "6e"
       },
       "Img": {
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "5l"
+        "~k": "6f"
       },
       "Span": {
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "5m"
+        "~k": "6g"
       },
       "Throw": {
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "5n"
+        "~k": "6h"
       },
       "ProgressBar": {
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
-        "~k": "5o"
+        "~k": "6i"
       },
       "Skeleton": {
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
-        "~k": "5p"
+        "~k": "6j"
       },
       "SkeletonAvatar": {
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
-        "~k": "5q"
+        "~k": "6k"
       },
       "SkeletonButton": {
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
-        "~k": "5r"
+        "~k": "6l"
       },
       "SkeletonInput": {
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
-        "~k": "5s"
+        "~k": "6m"
       },
       "SkeletonParagraph": {
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
-        "~k": "5t"
+        "~k": "6n"
       },
       "Spinner": {
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
-        "~k": "5u"
+        "~k": "6o"
       },
       "Message": {
         "package": "@lowdefy/blocks-antd",
         "count": 1,
-        "~k": "5v"
+        "~k": "6p"
       },
-      "~k": "53"
-    },
-    "connections": {
-      "~k": "5w"
-    },
-    "requests": {
       "~k": "5x"
     },
+    "connections": {
+      "~k": "6q"
+    },
+    "requests": {
+      "~k": "6r"
+    },
     "api": {
-      "~k": "5y"
+      "~k": "6s"
     },
     "operators": {
       "client": {
         "_if": {
           "package": "@lowdefy/operators-js",
           "count": 1,
-          "~k": "61"
+          "~k": "6v"
         },
         "_state": {
           "package": "@lowdefy/operators-js",
           "count": 13,
-          "~k": "62"
+          "~k": "6w"
         },
         "_array": {
           "package": "@lowdefy/operators-js",
           "count": 2,
-          "~k": "63"
+          "~k": "6x"
         },
         "_global": {
           "package": "@lowdefy/operators-js",
           "count": 3,
-          "~k": "64"
+          "~k": "6y"
         },
         "_function": {
           "package": "@lowdefy/operators-js",
           "count": 1,
-          "~k": "65"
+          "~k": "6z"
         },
         "_eq": {
           "package": "@lowdefy/operators-js",
           "count": 2,
-          "~k": "66"
+          "~k": "70"
         },
         "_args": {
           "package": "@lowdefy/operators-js",
           "count": 1,
-          "~k": "67"
+          "~k": "71"
         },
         "_string": {
           "package": "@lowdefy/operators-js",
           "count": 2,
-          "~k": "68"
+          "~k": "72"
         },
         "_json": {
           "package": "@lowdefy/operators-js",
           "count": 1,
-          "~k": "69"
+          "~k": "73"
         },
         "_object": {
           "package": "@lowdefy/operators-js",
           "count": 1,
-          "~k": "6a"
+          "~k": "74"
         },
         "_gt": {
           "package": "@lowdefy/operators-js",
           "count": 1,
-          "~k": "6b"
+          "~k": "75"
         },
         "_and": {
           "package": "@lowdefy/operators-js",
           "count": 1,
-          "~k": "6c"
+          "~k": "76"
         },
         "_or": {
           "package": "@lowdefy/operators-js",
           "count": 1,
-          "~k": "6d"
+          "~k": "77"
         },
         "_not": {
           "package": "@lowdefy/operators-js",
           "count": 2,
-          "~k": "6e"
+          "~k": "78"
         },
         "_type": {
           "package": "@lowdefy/operators-js",
           "count": 2,
-          "~k": "6f"
+          "~k": "79"
         },
         "_moment": {
           "package": "@lowdefy/operators-moment",
           "count": 1,
-          "~k": "6g"
+          "~k": "7a"
         },
-        "~k": "60"
+        "~k": "6u"
       },
       "server": {
-        "~k": "6h"
+        "~k": "7b"
       },
-      "~k": "5z"
+      "~k": "6t"
     },
-    "~k": "4v"
+    "~k": "5p"
   }
 }

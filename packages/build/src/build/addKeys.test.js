@@ -55,88 +55,115 @@ pages:
     3: {
       '~k_parent': '2',
       '~r': '2',
-      '~l': 3,
-      key: 'root.pages[0:A:Box]',
+      '~l': 2,
+      key: 'root.pages',
     },
     4: {
       '~k_parent': '3',
       '~r': '3',
+      '~l': 3,
+      key: 'root.pages[0:A:Box]',
+    },
+    5: {
+      '~k_parent': '4',
+      '~r': '4',
+      '~l': 5,
+      key: 'root.pages[0:A:Box].blocks',
+    },
+    6: {
+      '~k_parent': '5',
+      '~r': '5',
       '~l': 6,
       key: 'root.pages[0:A:Box].blocks[0:A1:Button]',
     },
-    5: {
-      '~k_parent': '3',
-      '~r': '4',
+    7: {
+      '~k_parent': '5',
+      '~r': '6',
       '~l': 8,
       key: 'root.pages[0:A:Box].blocks[1:A2:Button]',
     },
-    6: {
-      '~k_parent': '2',
-      '~r': '5',
+    8: {
+      '~k_parent': '3',
+      '~r': '7',
       '~l': 10,
       key: 'root.pages[1:B:Box]',
-    },
-    7: {
-      '~k_parent': '6',
-      '~r': '6',
-      '~l': 13,
-      key: 'root.pages[1:B:Box].blocks[0:B1:Button]',
-    },
-    8: {
-      '~k_parent': '6',
-      '~r': '7',
-      '~l': 15,
-      key: 'root.pages[1:B:Box].blocks[1:B2:Button]',
     },
     9: {
       '~k_parent': '8',
       '~r': '8',
+      '~l': 12,
+      key: 'root.pages[1:B:Box].blocks',
+    },
+    a: {
+      '~k_parent': '9',
+      '~r': '9',
+      '~l': 13,
+      key: 'root.pages[1:B:Box].blocks[0:B1:Button]',
+    },
+    b: {
+      '~k_parent': '9',
+      '~r': '10',
+      '~l': 15,
+      key: 'root.pages[1:B:Box].blocks[1:B2:Button]',
+    },
+    c: {
+      '~k_parent': 'b',
+      '~r': '11',
       '~l': 17,
       key: 'root.pages[1:B:Box].blocks[1:B2:Button].properties',
     },
   });
   expect(JSON.parse(serializer.serializeToString(components))).toEqual({
     '~k': '2',
-    pages: [
-      {
-        '~k': '3',
-        blocks: [
-          {
-            '~k': '4',
-            id: 'A1',
-            type: 'Button',
-          },
-          {
+    pages: {
+      '~arr': [
+        {
+          '~k': '4',
+          blocks: {
+            '~arr': [
+              {
+                '~k': '6',
+                id: 'A1',
+                type: 'Button',
+              },
+              {
+                '~k': '7',
+                id: 'A2',
+                type: 'Button',
+              },
+            ],
             '~k': '5',
-            id: 'A2',
-            type: 'Button',
           },
-        ],
-        id: 'A',
-        type: 'Box',
-      },
-      {
-        '~k': '6',
-        blocks: [
-          {
-            '~k': '7',
-            id: 'B1',
-            type: 'Button',
+          id: 'A',
+          type: 'Box',
+        },
+        {
+          '~k': '8',
+          blocks: {
+            '~arr': [
+              {
+                '~k': 'a',
+                id: 'B1',
+                type: 'Button',
+              },
+              {
+                '~k': 'b',
+                id: 'B2',
+                type: 'Button',
+                properties: {
+                  '~k': 'c',
+                  title: 'X',
+                },
+              },
+            ],
+            '~k': '9',
           },
-          {
-            '~k': '8',
-            id: 'B2',
-            type: 'Button',
-            properties: {
-              '~k': '9',
-              title: 'X',
-            },
-          },
-        ],
-        id: 'B',
-        type: 'Box',
-      },
-    ],
+          id: 'B',
+          type: 'Box',
+        },
+      ],
+      '~k': '3',
+    },
   });
 });
 
@@ -165,53 +192,101 @@ pages:
       '~k_parent': '1',
     },
     3: {
-      key: 'root.pages[0:A1:Selector]',
+      key: 'root.pages',
       '~r': '2',
-      '~l': 3,
+      '~l': 2,
       '~k_parent': '2',
     },
     4: {
-      key: 'root.pages[0:A1:Selector].properties',
+      key: 'root.pages[0:A1:Selector]',
       '~r': '3',
-      '~l': 5,
+      '~l': 3,
       '~k_parent': '3',
     },
     5: {
-      key: 'root.pages[0:A1:Selector].properties.options[0]',
+      key: 'root.pages[0:A1:Selector].properties',
       '~r': '4',
-      '~l': 7,
+      '~l': 5,
       '~k_parent': '4',
     },
     6: {
-      key: 'root.pages[0:A1:Selector].properties.options[0]._array.concat[0]',
+      key: 'root.pages[0:A1:Selector].properties.options',
       '~r': '5',
-      '~l': 8,
+      '~l': 6,
       '~k_parent': '5',
     },
     7: {
-      key: 'root.pages[0:A1:Selector].properties.options[0]._array.concat[0]',
+      key: 'root.pages[0:A1:Selector].properties.options[0]',
       '~r': '6',
+      '~l': 7,
+      '~k_parent': '6',
+    },
+    8: {
+      key: 'root.pages[0:A1:Selector].properties.options[0]._array.concat',
+      '~r': '7',
+      '~l': 7,
+      '~k_parent': '7',
+    },
+    9: {
+      key: 'root.pages[0:A1:Selector].properties.options[0]._array.concat[0]',
+      '~r': '8',
+      '~l': 8,
+      '~k_parent': '8',
+    },
+    a: {
+      key: 'root.pages[0:A1:Selector].properties.options[0]._array.concat[0][0]',
+      '~r': '9',
+      '~l': 8,
+      '~k_parent': '9',
+    },
+    b: {
+      key: 'root.pages[0:A1:Selector].properties.options[0]._array.concat[1]',
+      '~r': '10',
       '~l': 9,
-      '~k_parent': '5',
+      '~k_parent': '8',
+    },
+    c: {
+      key: 'root.pages[0:A1:Selector].properties.options[0]._array.concat[1][0]',
+      '~r': '11',
+      '~l': 9,
+      '~k_parent': 'b',
     },
   });
   expect(JSON.parse(serializer.serializeToString(components))).toEqual({
-    pages: [
-      {
-        id: 'A1',
-        type: 'Selector',
-        properties: {
-          options: [
-            {
-              '_array.concat': [[{ value: 'A', '~k': '6' }], [{ value: 'B', '~k': '7' }]],
-              '~k': '5',
+    pages: {
+      '~arr': [
+        {
+          id: 'A1',
+          type: 'Selector',
+          properties: {
+            options: {
+              '~arr': [
+                {
+                  '_array.concat': {
+                    '~arr': [
+                      {
+                        '~arr': [{ value: 'A', '~k': 'a' }],
+                        '~k': '9',
+                      },
+                      {
+                        '~arr': [{ value: 'B', '~k': 'c' }],
+                        '~k': 'b',
+                      },
+                    ],
+                    '~k': '8',
+                  },
+                  '~k': '7',
+                },
+              ],
+              '~k': '6',
             },
-          ],
+            '~k': '5',
+          },
           '~k': '4',
         },
-        '~k': '3',
-      },
-    ],
+      ],
+      '~k': '3',
+    },
     '~k': '2',
   });
 });
@@ -232,13 +307,15 @@ pages:
           content: Hello
 `);
 
+  const pagesArr = components.pages;
   const page = components.pages[0];
+  const blocksArr = page.blocks;
   const block = page.blocks[0];
   const props = block.properties;
 
   addKeys({ components, context });
 
-  // Verify ~r and ~l are removed from components after processing
+  // Verify ~r and ~l are removed from objects after processing
   expect(components['~r']).toBeUndefined();
   expect(components['~l']).toBeUndefined();
   expect(page['~r']).toBeUndefined();
@@ -248,9 +325,19 @@ pages:
   expect(props['~r']).toBeUndefined();
   expect(props['~l']).toBeUndefined();
 
-  // Verify ~k is added
+  // Verify ~r and ~l are removed from arrays after processing
+  expect(pagesArr['~r']).toBeUndefined();
+  expect(pagesArr['~l']).toBeUndefined();
+  expect(blocksArr['~r']).toBeUndefined();
+  expect(blocksArr['~l']).toBeUndefined();
+
+  // Verify ~k is added to objects
   expect(components['~k']).toBe('2');
-  expect(page['~k']).toBe('3');
-  expect(block['~k']).toBe('4');
-  expect(props['~k']).toBe('5');
+  expect(page['~k']).toBe('4');
+  expect(block['~k']).toBe('6');
+  expect(props['~k']).toBe('7');
+
+  // Verify ~k is added to arrays
+  expect(pagesArr['~k']).toBe('3');
+  expect(blocksArr['~k']).toBe('5');
 });

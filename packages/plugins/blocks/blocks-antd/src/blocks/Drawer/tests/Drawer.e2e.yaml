@@ -1,0 +1,526 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: drawer
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: drawer_basic
+    type: Drawer
+    properties:
+      title: Basic Drawer
+    areas:
+      content:
+        blocks:
+          - id: drawer_basic_content
+            type: Paragraph
+            properties:
+              content: This is the drawer content.
+
+  - id: open_basic
+    type: Button
+    properties:
+      title: Open Basic Drawer
+    events:
+      onClick:
+        - id: open_drawer
+          type: CallMethod
+          params:
+            blockId: drawer_basic
+            method: setOpen
+            args:
+              - open: true
+
+  # ============================================
+  # PLACEMENT TESTS
+  # ============================================
+
+  # Right placement (default)
+  - id: drawer_right
+    type: Drawer
+    properties:
+      title: Right Drawer
+      placement: right
+    areas:
+      content:
+        blocks:
+          - id: drawer_right_content
+            type: Paragraph
+            properties:
+              content: Drawer from the right.
+
+  - id: open_right
+    type: Button
+    properties:
+      title: Open Right Drawer
+    events:
+      onClick:
+        - id: open_drawer
+          type: CallMethod
+          params:
+            blockId: drawer_right
+            method: setOpen
+            args:
+              - open: true
+
+  # Left placement
+  - id: drawer_left
+    type: Drawer
+    properties:
+      title: Left Drawer
+      placement: left
+    areas:
+      content:
+        blocks:
+          - id: drawer_left_content
+            type: Paragraph
+            properties:
+              content: Drawer from the left.
+
+  - id: open_left
+    type: Button
+    properties:
+      title: Open Left Drawer
+    events:
+      onClick:
+        - id: open_drawer
+          type: CallMethod
+          params:
+            blockId: drawer_left
+            method: setOpen
+            args:
+              - open: true
+
+  # Top placement
+  - id: drawer_top
+    type: Drawer
+    properties:
+      title: Top Drawer
+      placement: top
+      height: 300
+    areas:
+      content:
+        blocks:
+          - id: drawer_top_content
+            type: Paragraph
+            properties:
+              content: Drawer from the top.
+
+  - id: open_top
+    type: Button
+    properties:
+      title: Open Top Drawer
+    events:
+      onClick:
+        - id: open_drawer
+          type: CallMethod
+          params:
+            blockId: drawer_top
+            method: setOpen
+            args:
+              - open: true
+
+  # Bottom placement
+  - id: drawer_bottom
+    type: Drawer
+    properties:
+      title: Bottom Drawer
+      placement: bottom
+      height: 300
+    areas:
+      content:
+        blocks:
+          - id: drawer_bottom_content
+            type: Paragraph
+            properties:
+              content: Drawer from the bottom.
+
+  - id: open_bottom
+    type: Button
+    properties:
+      title: Open Bottom Drawer
+    events:
+      onClick:
+        - id: open_drawer
+          type: CallMethod
+          params:
+            blockId: drawer_bottom
+            method: setOpen
+            args:
+              - open: true
+
+  # ============================================
+  # PROPERTY TESTS
+  # ============================================
+
+  # Custom width
+  - id: drawer_custom_width
+    type: Drawer
+    properties:
+      title: Wide Drawer
+      width: 500
+    areas:
+      content:
+        blocks:
+          - id: drawer_custom_width_content
+            type: Paragraph
+            properties:
+              content: This drawer is 500px wide.
+
+  - id: open_custom_width
+    type: Button
+    properties:
+      title: Open Wide Drawer
+    events:
+      onClick:
+        - id: open_drawer
+          type: CallMethod
+          params:
+            blockId: drawer_custom_width
+            method: setOpen
+            args:
+              - open: true
+
+  # No close button
+  - id: drawer_no_close
+    type: Drawer
+    properties:
+      title: No Close Button
+      closable: false
+    areas:
+      content:
+        blocks:
+          - id: drawer_no_close_content
+            type: Paragraph
+            properties:
+              content: This drawer has no close button.
+
+  - id: open_no_close
+    type: Button
+    properties:
+      title: Open No Close Drawer
+    events:
+      onClick:
+        - id: open_drawer
+          type: CallMethod
+          params:
+            blockId: drawer_no_close
+            method: setOpen
+            args:
+              - open: true
+
+  # Mask not closable
+  - id: drawer_mask_not_closable
+    type: Drawer
+    properties:
+      title: Mask Not Closable
+      maskClosable: false
+    areas:
+      content:
+        blocks:
+          - id: drawer_mask_not_closable_content
+            type: Paragraph
+            properties:
+              content: Click on mask does not close this drawer.
+
+  - id: open_mask_not_closable
+    type: Button
+    properties:
+      title: Open Mask Not Closable
+    events:
+      onClick:
+        - id: open_drawer
+          type: CallMethod
+          params:
+            blockId: drawer_mask_not_closable
+            method: setOpen
+            args:
+              - open: true
+
+  # No mask
+  - id: drawer_no_mask
+    type: Drawer
+    properties:
+      title: No Mask Drawer
+      mask: false
+    areas:
+      content:
+        blocks:
+          - id: drawer_no_mask_content
+            type: Paragraph
+            properties:
+              content: This drawer has no mask.
+
+  - id: open_no_mask
+    type: Button
+    properties:
+      title: Open No Mask Drawer
+    events:
+      onClick:
+        - id: open_drawer
+          type: CallMethod
+          params:
+            blockId: drawer_no_mask
+            method: setOpen
+            args:
+              - open: true
+
+  # Extra area
+  - id: drawer_with_extra
+    type: Drawer
+    properties:
+      title: Drawer with Extra
+    areas:
+      content:
+        blocks:
+          - id: drawer_with_extra_content
+            type: Paragraph
+            properties:
+              content: Drawer content.
+      extra:
+        blocks:
+          - id: extra_button
+            type: Button
+            properties:
+              title: Extra Button
+              size: small
+
+  - id: open_with_extra
+    type: Button
+    properties:
+      title: Open With Extra
+    events:
+      onClick:
+        - id: open_drawer
+          type: CallMethod
+          params:
+            blockId: drawer_with_extra
+            method: setOpen
+            args:
+              - open: true
+
+  # ============================================
+  # METHOD TESTS
+  # ============================================
+
+  # toggleOpen method
+  - id: drawer_toggle
+    type: Drawer
+    properties:
+      title: Toggle Drawer
+    areas:
+      content:
+        blocks:
+          - id: drawer_toggle_content
+            type: Paragraph
+            properties:
+              content: Test toggleOpen method.
+
+  - id: toggle_drawer
+    type: Button
+    properties:
+      title: Toggle Drawer
+    events:
+      onClick:
+        - id: toggle
+          type: CallMethod
+          params:
+            blockId: drawer_toggle
+            method: toggleOpen
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  # onOpen event
+  - id: drawer_onopen
+    type: Drawer
+    properties:
+      title: OnOpen Test
+    events:
+      onOpen:
+        - id: set_open_fired
+          type: SetState
+          params:
+            drawer_open_fired: true
+    areas:
+      content:
+        blocks:
+          - id: drawer_onopen_content
+            type: Paragraph
+            properties:
+              content: Drawer has onOpen event.
+
+  - id: open_onopen
+    type: Button
+    properties:
+      title: Open OnOpen Test
+    events:
+      onClick:
+        - id: open_drawer
+          type: CallMethod
+          params:
+            blockId: drawer_onopen
+            method: setOpen
+            args:
+              - open: true
+
+  - id: onopen_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: drawer_open_fired
+              - true
+          then: Open fired
+          else: ''
+
+  # onClose event
+  - id: drawer_onclose
+    type: Drawer
+    properties:
+      title: OnClose Test
+    events:
+      onClose:
+        - id: set_close_fired
+          type: SetState
+          params:
+            drawer_close_fired: true
+    areas:
+      content:
+        blocks:
+          - id: drawer_onclose_content
+            type: Paragraph
+            properties:
+              content: Drawer has onClose event.
+
+  - id: open_onclose
+    type: Button
+    properties:
+      title: Open OnClose Test
+    events:
+      onClick:
+        - id: open_drawer
+          type: CallMethod
+          params:
+            blockId: drawer_onclose
+            method: setOpen
+            args:
+              - open: true
+
+  - id: onclose_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: drawer_close_fired
+              - true
+          then: Close fired
+          else: ''
+
+  # onToggle event
+  - id: drawer_ontoggle
+    type: Drawer
+    properties:
+      title: OnToggle Test
+    events:
+      onToggle:
+        - id: set_toggle_fired
+          type: SetState
+          params:
+            drawer_toggle_fired: true
+    areas:
+      content:
+        blocks:
+          - id: drawer_ontoggle_content
+            type: Paragraph
+            properties:
+              content: Drawer has onToggle event.
+
+  - id: open_ontoggle
+    type: Button
+    properties:
+      title: Open OnToggle Test
+    events:
+      onClick:
+        - id: toggle_drawer
+          type: CallMethod
+          params:
+            blockId: drawer_ontoggle
+            method: toggleOpen
+
+  - id: ontoggle_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: drawer_toggle_fired
+              - true
+          then: Toggle fired
+          else: ''
+
+  # afterClose event
+  - id: drawer_afterclose
+    type: Drawer
+    properties:
+      title: AfterClose Test
+    events:
+      afterClose:
+        - id: set_afterclose_fired
+          type: SetState
+          params:
+            drawer_afterclose_fired: true
+    areas:
+      content:
+        blocks:
+          - id: drawer_afterclose_content
+            type: Paragraph
+            properties:
+              content: Drawer has afterClose event.
+
+  - id: open_afterclose
+    type: Button
+    properties:
+      title: Open AfterClose Test
+    events:
+      onClick:
+        - id: open_drawer
+          type: CallMethod
+          params:
+            blockId: drawer_afterclose
+            method: setOpen
+            args:
+              - open: true
+
+  - id: afterclose_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: drawer_afterclose_fired
+              - true
+          then: AfterClose fired
+          else: ''

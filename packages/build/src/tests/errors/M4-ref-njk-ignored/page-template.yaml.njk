@@ -6,10 +6,10 @@ requests:
     type: AxiosHttp
     connectionId: testApi
     payload:
-      # ~ignoreBuildCheck suppresses the undefined state warning
+      # ~ignoreBuildChecks suppresses the undefined state warning
       userData:
         _state: {{ blockId }}
-        ~ignoreBuildCheck: true
+        ~ignoreBuildChecks: true
     properties:
       url: /api/test
 blocks:

@@ -1,0 +1,136 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: monthselector
+type: Box
+
+events:
+  onInit:
+    - id: set_defaults
+      type: SetState
+      params:
+        ms_with_value:
+          _date: '2024-06-01'
+        ms_clearable:
+          _date: '2024-01-01'
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: ms_basic
+    type: MonthSelector
+    properties:
+      title: Basic Month
+
+  - id: ms_with_value
+    type: MonthSelector
+    properties:
+      title: With Value
+
+  # ============================================
+  # PROPERTY TESTS
+  # ============================================
+
+  - id: ms_disabled
+    type: MonthSelector
+    properties:
+      title: Disabled
+      disabled: true
+
+  - id: ms_small
+    type: MonthSelector
+    properties:
+      title: Small Size
+      size: small
+
+  - id: ms_large
+    type: MonthSelector
+    properties:
+      title: Large Size
+      size: large
+
+  - id: ms_placeholder
+    type: MonthSelector
+    properties:
+      title: Custom Placeholder
+      placeholder: Pick a month...
+
+  - id: ms_borderless
+    type: MonthSelector
+    properties:
+      title: Borderless
+      bordered: false
+
+  - id: ms_no_allowclear
+    type: MonthSelector
+    properties:
+      title: No Allow Clear
+      allowClear: false
+
+  - id: ms_with_title
+    type: MonthSelector
+    properties:
+      title: Month with Title
+
+  - id: ms_with_label
+    type: MonthSelector
+    properties:
+      title: Month Label
+      label:
+        extra: Select a month from the calendar
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  - id: ms_onchange
+    type: MonthSelector
+    properties:
+      title: OnChange Test
+    events:
+      onChange:
+        - id: set_onchange
+          type: SetState
+          params:
+            ms_onchange_value:
+              _event: value
+
+  - id: ms_onchange_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: ms_onchange_value
+              - null
+          then: Month selected
+          else: ''
+
+  # ============================================
+  # INTERACTION TESTS
+  # ============================================
+
+  - id: ms_interaction
+    type: MonthSelector
+    properties:
+      title: Interaction Test
+
+  - id: ms_clearable
+    type: MonthSelector
+    properties:
+      title: Clearable
+      allowClear: true

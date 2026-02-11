@@ -133,7 +133,7 @@ _ref:
 
             ###### Setting a key-value pair only if key does not exist:
 
-            ````yaml
+            ```yaml
             id: redisRequest
             type: Redis
             connectionId: redis

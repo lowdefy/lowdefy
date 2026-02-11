@@ -1,0 +1,276 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: tabs
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: tabs_basic
+    type: Tabs
+    properties:
+      tabs:
+        - key: tab1
+          title: Tab 1
+        - key: tab2
+          title: Tab 2
+        - key: tab3
+          title: Tab 3
+    areas:
+      tab1:
+        blocks:
+          - id: tabs_basic_tab1_content
+            type: Span
+            properties:
+              content: Content of Tab 1
+      tab2:
+        blocks:
+          - id: tabs_basic_tab2_content
+            type: Span
+            properties:
+              content: Content of Tab 2
+      tab3:
+        blocks:
+          - id: tabs_basic_tab3_content
+            type: Span
+            properties:
+              content: Content of Tab 3
+
+  # ============================================
+  # SIZE TESTS
+  # ============================================
+
+  - id: tabs_small
+    type: Tabs
+    properties:
+      size: small
+      tabs:
+        - key: small1
+          title: Small Tab
+    areas:
+      small1:
+        blocks:
+          - id: tabs_small_content
+            type: Span
+            properties:
+              content: Small size
+
+  - id: tabs_large
+    type: Tabs
+    properties:
+      size: large
+      tabs:
+        - key: large1
+          title: Large Tab
+    areas:
+      large1:
+        blocks:
+          - id: tabs_large_content
+            type: Span
+            properties:
+              content: Large size
+
+  # ============================================
+  # TAB TYPE
+  # ============================================
+
+  - id: tabs_card
+    type: Tabs
+    properties:
+      tabType: card
+      tabs:
+        - key: card1
+          title: Card Tab 1
+        - key: card2
+          title: Card Tab 2
+    areas:
+      card1:
+        blocks:
+          - id: tabs_card_tab1_content
+            type: Span
+            properties:
+              content: Card style tab
+      card2:
+        blocks:
+          - id: tabs_card_tab2_content
+            type: Span
+            properties:
+              content: Card tab 2
+
+  # ============================================
+  # TAB POSITION
+  # ============================================
+
+  - id: tabs_position_left
+    type: Tabs
+    properties:
+      tabPosition: left
+      tabs:
+        - key: left1
+          title: Left Tab
+    areas:
+      left1:
+        blocks:
+          - id: tabs_position_left_content
+            type: Span
+            properties:
+              content: Tabs on the left
+
+  - id: tabs_position_right
+    type: Tabs
+    properties:
+      tabPosition: right
+      tabs:
+        - key: right1
+          title: Right Tab
+    areas:
+      right1:
+        blocks:
+          - id: tabs_position_right_content
+            type: Span
+            properties:
+              content: Tabs on the right
+
+  # ============================================
+  # DISABLED TAB
+  # ============================================
+
+  - id: tabs_disabled
+    type: Tabs
+    properties:
+      tabs:
+        - key: enabled
+          title: Enabled Tab
+        - key: disabled
+          title: Disabled Tab
+          disabled: true
+    areas:
+      enabled:
+        blocks:
+          - id: tabs_disabled_enabled_content
+            type: Span
+            properties:
+              content: This tab is enabled
+      disabled:
+        blocks:
+          - id: tabs_disabled_content
+            type: Span
+            properties:
+              content: Cannot access this tab
+
+  # ============================================
+  # DEFAULT ACTIVE TAB
+  # ============================================
+
+  - id: tabs_default_active
+    type: Tabs
+    properties:
+      defaultActiveKey: second
+      tabs:
+        - key: first
+          title: First Tab
+        - key: second
+          title: Second Tab (Default)
+    areas:
+      first:
+        blocks:
+          - id: tabs_default_first_content
+            type: Span
+            properties:
+              content: First tab content
+      second:
+        blocks:
+          - id: tabs_default_second_content
+            type: Span
+            properties:
+              content: This tab is active by default
+
+  # ============================================
+  # TAB WITH ICON
+  # ============================================
+
+  - id: tabs_with_icon
+    type: Tabs
+    properties:
+      tabs:
+        - key: home
+          title: Home
+          icon: AiOutlineHome
+        - key: settings
+          title: Settings
+          icon: AiOutlineSetting
+    areas:
+      home:
+        blocks:
+          - id: tabs_icon_home_content
+            type: Span
+            properties:
+              content: Home tab with icon
+      settings:
+        blocks:
+          - id: tabs_icon_settings_content
+            type: Span
+            properties:
+              content: Settings tab with icon
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  - id: tabs_onchange
+    type: Tabs
+    properties:
+      tabs:
+        - key: change1
+          title: Tab A
+        - key: change2
+          title: Tab B
+    events:
+      onChange:
+        - id: set_tab_changed
+          type: SetState
+          params:
+            tabs_active_key:
+              _event: activeKey
+    areas:
+      change1:
+        blocks:
+          - id: tabs_onchange_tab1_content
+            type: Span
+            properties:
+              content: Tab A content
+      change2:
+        blocks:
+          - id: tabs_onchange_tab2_content
+            type: Span
+            properties:
+              content: Tab B content
+
+  - id: onchange_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: tabs_active_key
+              - null
+          then:
+            _string.concat:
+              - 'Active: '
+              - _state: tabs_active_key
+          else: ''

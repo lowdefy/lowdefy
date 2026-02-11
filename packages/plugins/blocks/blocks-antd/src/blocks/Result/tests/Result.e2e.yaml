@@ -1,0 +1,126 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: result
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: result_basic
+    type: Result
+    properties:
+      title: Operation Completed
+
+  - id: result_with_subtitle
+    type: Result
+    properties:
+      title: Submission Successful
+      subTitle: Your request has been processed.
+
+  # ============================================
+  # STATUS TESTS
+  # ============================================
+
+  - id: result_success
+    type: Result
+    properties:
+      status: success
+      title: Success!
+      subTitle: Operation completed successfully.
+
+  - id: result_error
+    type: Result
+    properties:
+      status: error
+      title: Error
+      subTitle: Something went wrong.
+
+  - id: result_info
+    type: Result
+    properties:
+      status: info
+      title: Information
+      subTitle: Here is some information.
+
+  - id: result_warning
+    type: Result
+    properties:
+      status: warning
+      title: Warning
+      subTitle: Please review carefully.
+
+  - id: result_404
+    type: Result
+    properties:
+      status: '404'
+      title: Page Not Found
+      subTitle: The page you are looking for does not exist.
+
+  - id: result_403
+    type: Result
+    properties:
+      status: '403'
+      title: Access Denied
+      subTitle: You do not have permission to access this page.
+
+  - id: result_500
+    type: Result
+    properties:
+      status: '500'
+      title: Server Error
+      subTitle: Internal server error occurred.
+
+  # ============================================
+  # ICON TESTS
+  # ============================================
+
+  - id: result_custom_icon
+    type: Result
+    properties:
+      title: Custom Icon Result
+      icon: AiOutlineSmile
+
+  # ============================================
+  # CONTENT AREA TESTS
+  # ============================================
+
+  - id: result_with_content
+    type: Result
+    properties:
+      status: success
+      title: Payment Successful
+      subTitle: 'Order number: 2017182818828182881'
+    areas:
+      content:
+        blocks:
+          - id: result_content_paragraph
+            type: Paragraph
+            properties:
+              content: Additional content can be placed here.
+
+  - id: result_with_extra
+    type: Result
+    properties:
+      status: success
+      title: Order Placed
+    areas:
+      extra:
+        blocks:
+          - id: result_extra_button
+            type: Button
+            properties:
+              title: Go Home

@@ -1,0 +1,362 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: notification
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: notif_basic
+    type: Notification
+    properties:
+      message: Basic Notification
+      description: This is a basic notification description.
+      status: info
+
+  - id: open_basic
+    type: Button
+    properties:
+      title: Show Basic Notification
+    events:
+      onClick:
+        - id: open_notification
+          type: CallMethod
+          params:
+            blockId: notif_basic
+            method: open
+
+  # ============================================
+  # STATUS TYPES
+  # ============================================
+
+  # Success status
+  - id: notif_success
+    type: Notification
+    properties:
+      message: Success!
+      description: Operation completed successfully.
+      status: success
+
+  - id: open_success
+    type: Button
+    properties:
+      title: Show Success
+    events:
+      onClick:
+        - id: open_notification
+          type: CallMethod
+          params:
+            blockId: notif_success
+            method: open
+
+  # Error status
+  - id: notif_error
+    type: Notification
+    properties:
+      message: Error
+      description: An error occurred.
+      status: error
+
+  - id: open_error
+    type: Button
+    properties:
+      title: Show Error
+    events:
+      onClick:
+        - id: open_notification
+          type: CallMethod
+          params:
+            blockId: notif_error
+            method: open
+
+  # Warning status
+  - id: notif_warning
+    type: Notification
+    properties:
+      message: Warning
+      description: Please be careful.
+      status: warning
+
+  - id: open_warning
+    type: Button
+    properties:
+      title: Show Warning
+    events:
+      onClick:
+        - id: open_notification
+          type: CallMethod
+          params:
+            blockId: notif_warning
+            method: open
+
+  # Info status
+  - id: notif_info
+    type: Notification
+    properties:
+      message: Information
+      description: Here is some helpful information.
+      status: info
+
+  - id: open_info
+    type: Button
+    properties:
+      title: Show Info
+    events:
+      onClick:
+        - id: open_notification
+          type: CallMethod
+          params:
+            blockId: notif_info
+            method: open
+
+  # ============================================
+  # PLACEMENT TESTS
+  # ============================================
+
+  # Top Right (default)
+  - id: notif_top_right
+    type: Notification
+    properties:
+      message: Top Right
+      description: Default placement.
+      placement: topRight
+
+  - id: open_top_right
+    type: Button
+    properties:
+      title: Show Top Right
+    events:
+      onClick:
+        - id: open_notification
+          type: CallMethod
+          params:
+            blockId: notif_top_right
+            method: open
+
+  # Top Left
+  - id: notif_top_left
+    type: Notification
+    properties:
+      message: Top Left
+      description: Notification at top left.
+      placement: topLeft
+
+  - id: open_top_left
+    type: Button
+    properties:
+      title: Show Top Left
+    events:
+      onClick:
+        - id: open_notification
+          type: CallMethod
+          params:
+            blockId: notif_top_left
+            method: open
+
+  # Bottom Right
+  - id: notif_bottom_right
+    type: Notification
+    properties:
+      message: Bottom Right
+      description: Notification at bottom right.
+      placement: bottomRight
+
+  - id: open_bottom_right
+    type: Button
+    properties:
+      title: Show Bottom Right
+    events:
+      onClick:
+        - id: open_notification
+          type: CallMethod
+          params:
+            blockId: notif_bottom_right
+            method: open
+
+  # Bottom Left
+  - id: notif_bottom_left
+    type: Notification
+    properties:
+      message: Bottom Left
+      description: Notification at bottom left.
+      placement: bottomLeft
+
+  - id: open_bottom_left
+    type: Button
+    properties:
+      title: Show Bottom Left
+    events:
+      onClick:
+        - id: open_notification
+          type: CallMethod
+          params:
+            blockId: notif_bottom_left
+            method: open
+
+  # ============================================
+  # PROPERTY TESTS
+  # ============================================
+
+  # With custom icon
+  - id: notif_custom_icon
+    type: Notification
+    properties:
+      message: Custom Icon
+      description: Notification with custom icon.
+      icon: AiOutlineSmile
+
+  - id: open_custom_icon
+    type: Button
+    properties:
+      title: Show With Icon
+    events:
+      onClick:
+        - id: open_notification
+          type: CallMethod
+          params:
+            blockId: notif_custom_icon
+            method: open
+
+  # With button
+  - id: notif_with_button
+    type: Notification
+    properties:
+      message: With Button
+      description: Notification with action button.
+      button:
+        title: Action
+        type: primary
+        size: small
+
+  - id: open_with_button
+    type: Button
+    properties:
+      title: Show With Button
+    events:
+      onClick:
+        - id: open_notification
+          type: CallMethod
+          params:
+            blockId: notif_with_button
+            method: open
+
+  # ============================================
+  # RUNTIME OVERRIDE TESTS
+  # ============================================
+
+  - id: notif_runtime
+    type: Notification
+    properties:
+      message: Default
+      description: Default description
+      status: info
+
+  - id: open_runtime_success
+    type: Button
+    properties:
+      title: Open as Success
+    events:
+      onClick:
+        - id: open_notification
+          type: CallMethod
+          params:
+            blockId: notif_runtime
+            method: open
+            args:
+              - status: success
+                message: Runtime Success
+                description: Success message at runtime
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  # onClose event (set short duration)
+  - id: notif_onclose
+    type: Notification
+    properties:
+      message: OnClose Test
+      description: Notification will close soon.
+      duration: 1
+    events:
+      onClose:
+        - id: set_close_fired
+          type: SetState
+          params:
+            notif_close_fired: true
+
+  - id: open_onclose
+    type: Button
+    properties:
+      title: Show OnClose Test
+    events:
+      onClick:
+        - id: open_notification
+          type: CallMethod
+          params:
+            blockId: notif_onclose
+            method: open
+
+  - id: onclose_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: notif_close_fired
+              - true
+          then: Close fired
+          else: ''
+
+  # onClick event
+  - id: notif_onclick
+    type: Notification
+    properties:
+      message: Click Me
+      description: Click on this notification.
+      duration: 10
+    events:
+      onClick:
+        - id: set_click_fired
+          type: SetState
+          params:
+            notif_click_fired: true
+
+  - id: open_onclick
+    type: Button
+    properties:
+      title: Show OnClick Test
+    events:
+      onClick:
+        - id: open_notification
+          type: CallMethod
+          params:
+            blockId: notif_onclick
+            method: open
+
+  - id: onclick_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: notif_click_fired
+              - true
+          then: Click fired
+          else: ''

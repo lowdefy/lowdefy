@@ -21,17 +21,39 @@ import collectExceptions from '../utils/collectExceptions.js';
 import makeId from '../utils/makeId.js';
 import setNonEnumerableProperty from '../utils/setNonEnumerableProperty.js';
 
-function recArray({ array, nextKey, key, keyMap, keyMapId, context }) {
+function recArray({ array, arrayKey, keyMap, parentKeyMapId, context }) {
+  let arrayKeyMapId;
+
+  if (array['~k']) {
+    arrayKeyMapId = array['~k'];
+  } else {
+    arrayKeyMapId = makeId.next();
+    const entry = {
+      key: arrayKey,
+      '~k_parent': parentKeyMapId,
+    };
+    if (array['~r'] !== undefined) entry['~r'] = array['~r'];
+    if (array['~l'] !== undefined) entry['~l'] = array['~l'];
+    keyMap[arrayKeyMapId] = entry;
+    Object.defineProperty(array, '~k', {
+      value: arrayKeyMapId,
+      enumerable: false,
+      writable: true,
+      configurable: true,
+    });
+    delete array['~r'];
+    delete array['~l'];
+  }
+
   array.forEach((item, index) => {
     if (type.isObject(item)) {
-      let path = `${key}.${nextKey}[${index}]`;
+      let path = `${arrayKey}[${index}]`;
       // TODO: Convert all artifacts to not modify id.
       const id =
         item.blockId ??
         item.menuId ??
         item.menuItemId ??
         item.requestId ??
-        item.connectionId ??
         item.connectionId ??
         item.id;
       if (id) {
@@ -44,12 +66,18 @@ function recArray({ array, nextKey, key, keyMap, keyMapId, context }) {
         object: item,
         key: path,
         keyMap: keyMap,
-        parentKeyMapId: keyMapId,
+        parentKeyMapId: arrayKeyMapId,
         context,
       });
     }
     if (type.isArray(item)) {
-      recArray({ array: item, nextKey, key, keyMap, keyMapId, context });
+      recArray({
+        array: item,
+        arrayKey: `${arrayKey}[${index}]`,
+        keyMap,
+        parentKeyMapId: arrayKeyMapId,
+        context,
+      });
     }
   });
 }
@@ -75,22 +103,7 @@ function recAddKeys({ object, key, keyMap, parentKeyMapId, context }) {
     // Add entry to keyMap BEFORE validation so errors can resolve location
     keyMap[keyMapId] = entry;
 
-    // Migration error for old property name
-    if (object['~ignoreBuildCheck'] !== undefined) {
-      collectExceptions(
-        context,
-        new ConfigError({
-          message:
-            '~ignoreBuildCheck has been renamed to ~ignoreBuildChecks. ' +
-            'Use ~ignoreBuildChecks: true to suppress all checks, or ' +
-            "~ignoreBuildChecks: ['state-refs', 'types'] to suppress specific checks.",
-          configKey: keyMapId,
-          context,
-        })
-      );
-    }
-
-    // Handle new ~ignoreBuildChecks property
+    // Handle ~ignoreBuildChecks property
     if (object['~ignoreBuildChecks'] !== undefined) {
       const checks = object['~ignoreBuildChecks'];
 
@@ -141,7 +154,13 @@ function recAddKeys({ object, key, keyMap, parentKeyMapId, context }) {
       });
     }
     if (type.isArray(object[nextKey])) {
-      recArray({ array: object[nextKey], nextKey, key: storedKey, keyMap, keyMapId, context });
+      recArray({
+        array: object[nextKey],
+        arrayKey: `${storedKey}.${nextKey}`,
+        keyMap,
+        parentKeyMapId: keyMapId,
+        context,
+      });
     }
   });
 }

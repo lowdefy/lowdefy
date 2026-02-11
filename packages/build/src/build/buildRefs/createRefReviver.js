@@ -22,7 +22,7 @@ import setNonEnumerableProperty from '../../utils/setNonEnumerableProperty.js';
 // that don't already have it, preserving original file references.
 function createRefReviver(refId) {
   return (_, value) => {
-    if (!type.isObject(value)) return value;
+    if (!type.isObject(value) && !type.isArray(value)) return value;
     if (value['~r'] === undefined) {
       setNonEnumerableProperty(value, '~r', refId);
     }

@@ -1,0 +1,72 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: box
+type: Box
+properties:
+  style:
+    padding: 20px
+
+blocks:
+  # Test 1: Basic Box renders
+  - id: box_basic
+    type: Box
+
+  # Test 2: Box with content property
+  - id: box_content
+    type: Box
+    properties:
+      content: Hello from Box
+
+  # Test 3: Box with style property
+  - id: box_styled
+    type: Box
+    properties:
+      content: Styled Box
+      style:
+        backgroundColor: rgb(0, 128, 255)
+        color: white
+        padding: 10px
+
+  # Test 4: Box with nested child block
+  - id: box_with_children
+    type: Box
+    blocks:
+      - id: child_span
+        type: Span
+        properties:
+          content: Child content
+
+  # Test 5: Box with onClick event using SetState
+  - id: box_clickable
+    type: Box
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: clicked
+              - true
+          then: Clicked!
+          else: Click me
+      style:
+        cursor: pointer
+        padding: 10px
+        border: 1px solid gray
+    events:
+      onClick:
+        - id: set_clicked
+          type: SetState
+          params:
+            clicked: true

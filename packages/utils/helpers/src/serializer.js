@@ -78,9 +78,13 @@ const makeReplacer = (customReplacer, isoStringDates) => (key, value) => {
       }
       return item;
     });
-    // Preserve ~l on arrays by wrapping in a marker object
-    if (newValue['~l']) {
-      return { '~arr': mappedArray, '~l': newValue['~l'] };
+    // Preserve ~l, ~k, ~r on arrays by wrapping in a marker object
+    if (newValue['~l'] !== undefined || newValue['~k'] !== undefined || newValue['~r'] !== undefined) {
+      const wrapper = { '~arr': mappedArray };
+      if (newValue['~r'] !== undefined) wrapper['~r'] = newValue['~r'];
+      if (newValue['~k'] !== undefined) wrapper['~k'] = newValue['~k'];
+      if (newValue['~l'] !== undefined) wrapper['~l'] = newValue['~l'];
+      return wrapper;
     }
     return mappedArray;
   }
@@ -93,6 +97,22 @@ const makeReviver = (customReviver) => (key, value) => {
     // Restore arrays that were wrapped with ~arr marker
     if (type.isArray(newValue['~arr'])) {
       const arr = newValue['~arr'];
+      if (newValue['~r']) {
+        Object.defineProperty(arr, '~r', {
+          value: newValue['~r'],
+          enumerable: false,
+          writable: true,
+          configurable: true,
+        });
+      }
+      if (newValue['~k']) {
+        Object.defineProperty(arr, '~k', {
+          value: newValue['~k'],
+          enumerable: false,
+          writable: true,
+          configurable: true,
+        });
+      }
       if (newValue['~l']) {
         Object.defineProperty(arr, '~l', {
           value: newValue['~l'],

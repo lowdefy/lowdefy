@@ -1,0 +1,72 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: affix
+type: Box
+properties:
+  style:
+    height: 2000px
+    paddingTop: 200px
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: affix_basic
+    type: Affix
+    properties:
+      offsetTop: 10
+    areas:
+      content:
+        blocks:
+          - id: affix_basic_button
+            type: Button
+            properties:
+              title: Affix Button
+
+  # ============================================
+  # OFFSET TOP
+  # ============================================
+
+  - id: affix_offset_top
+    type: Affix
+    properties:
+      offsetTop: 50
+    areas:
+      content:
+        blocks:
+          - id: affix_offset_top_content
+            type: Span
+            properties:
+              content: Offset Top 50px
+
+  # ============================================
+  # CUSTOM STYLE
+  # ============================================
+
+  - id: affix_styled
+    type: Affix
+    properties:
+      offsetTop: 100
+      style:
+        zIndex: 100
+    areas:
+      content:
+        blocks:
+          - id: affix_styled_content
+            type: Alert
+            properties:
+              message: Styled Affix Alert
+              type: info

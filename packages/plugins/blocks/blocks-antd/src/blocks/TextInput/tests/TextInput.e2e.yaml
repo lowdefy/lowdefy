@@ -1,0 +1,287 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: textinput
+type: Box
+
+events:
+  onInit:
+    - id: set_defaults
+      type: SetState
+      params:
+        textinput_with_value: Initial Value
+        textinput_allowclear: Clear me
+        textinput_maxlength: abc
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: textinput_basic
+    type: TextInput
+    properties:
+      title: Basic Input
+
+  - id: textinput_with_value
+    type: TextInput
+    properties:
+      title: With Value
+
+  # ============================================
+  # PROPERTY TESTS
+  # ============================================
+
+  - id: textinput_placeholder
+    type: TextInput
+    properties:
+      title: Placeholder Test
+      placeholder: Enter text here
+
+  - id: textinput_disabled
+    type: TextInput
+    properties:
+      title: Disabled Input
+      disabled: true
+
+  - id: textinput_small
+    type: TextInput
+    properties:
+      title: Small Input
+      size: small
+
+  - id: textinput_large
+    type: TextInput
+    properties:
+      title: Large Input
+      size: large
+
+  - id: textinput_borderless
+    type: TextInput
+    properties:
+      title: Borderless Input
+      bordered: false
+
+  - id: textinput_allowclear
+    type: TextInput
+    properties:
+      title: Allow Clear
+      allowClear: true
+
+  - id: textinput_maxlength
+    type: TextInput
+    properties:
+      title: Max Length
+      maxLength: 10
+
+  - id: textinput_showcount
+    type: TextInput
+    properties:
+      title: Show Count
+      showCount: true
+      maxLength: 20
+
+  - id: textinput_prefix
+    type: TextInput
+    properties:
+      title: With Prefix
+      prefix: $
+
+  - id: textinput_suffix
+    type: TextInput
+    properties:
+      title: With Suffix
+      suffix: USD
+
+  - id: textinput_prefixicon
+    type: TextInput
+    properties:
+      title: With Prefix Icon
+      prefixIcon: AiOutlineUser
+
+  - id: textinput_suffixicon
+    type: TextInput
+    properties:
+      title: With Suffix Icon
+      suffixIcon: AiOutlineSearch
+
+  - id: textinput_label_inline
+    type: TextInput
+    properties:
+      title: Inline Label
+      label:
+        inline: true
+
+  - id: textinput_label_extra
+    type: TextInput
+    properties:
+      title: Label with Extra
+      label:
+        extra: Additional help text
+
+  - id: textinput_label_colon
+    type: TextInput
+    properties:
+      title: No Colon
+      label:
+        colon: false
+
+  # ============================================
+  # TYPE TESTS
+  # ============================================
+
+  - id: textinput_type_email
+    type: TextInput
+    properties:
+      title: Email Input
+      type: email
+      placeholder: email@example.com
+
+  - id: textinput_type_tel
+    type: TextInput
+    properties:
+      title: Phone Input
+      type: tel
+      placeholder: +1 234 567 8900
+
+  - id: textinput_type_url
+    type: TextInput
+    properties:
+      title: URL Input
+      type: url
+      placeholder: https://example.com
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  - id: textinput_onchange
+    type: TextInput
+    properties:
+      title: OnChange Test
+    events:
+      onChange:
+        - id: set_onchange
+          type: SetState
+          params:
+            textinput_onchange_value:
+              _event: value
+
+  - id: onchange_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: textinput_onchange_value
+              - null
+          then:
+            _string.concat:
+              - 'Value: '
+              - _state: textinput_onchange_value
+          else: ''
+
+  - id: textinput_onblur
+    type: TextInput
+    properties:
+      title: OnBlur Test
+    events:
+      onBlur:
+        - id: set_onblur
+          type: SetState
+          params:
+            textinput_onblur_fired: true
+
+  - id: onblur_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: textinput_onblur_fired
+              - true
+          then: Blur fired
+          else: ''
+
+  - id: textinput_onfocus
+    type: TextInput
+    properties:
+      title: OnFocus Test
+    events:
+      onFocus:
+        - id: set_onfocus
+          type: SetState
+          params:
+            textinput_onfocus_fired: true
+
+  - id: onfocus_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: textinput_onfocus_fired
+              - true
+          then: Focus fired
+          else: ''
+
+  - id: textinput_onpressenter
+    type: TextInput
+    properties:
+      title: OnPressEnter Test
+    events:
+      onPressEnter:
+        - id: set_onpressenter
+          type: SetState
+          params:
+            textinput_onpressenter_fired: true
+
+  - id: onpressenter_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: textinput_onpressenter_fired
+              - true
+          then: Enter pressed
+          else: ''
+
+  # ============================================
+  # INTERACTION TESTS
+  # ============================================
+
+  - id: textinput_typing
+    type: TextInput
+    properties:
+      title: Typing Test
+
+  - id: typing_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: textinput_typing
+              - null
+          then:
+            _string.concat:
+              - 'Typed: '
+              - _state: textinput_typing
+          else: ''

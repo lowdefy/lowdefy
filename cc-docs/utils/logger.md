@@ -143,6 +143,8 @@ handler('{"print":"spin","msg":"Building..."}');
 
 Errors and warnings are rendered using their `.print()` method (which includes source information via `formatErrorMessage`). The handler maps `print` field values to `ui.*` methods.
 
+**Print level resolution:** Uses `print` field if present, otherwise maps pino's numeric `level` (10=trace, 20=debug, 30=info, 40=warn, 50=error) to a UI method, defaulting to `'info'`. This ensures server logs without an explicit `print` field (e.g., default pino output) still appear in the terminal.
+
 ### createBrowserLogger (`/browser`)
 
 Maps to `console.*` methods. Formats errors using `.print()` or `[Name] message`. The `.ui` property maps `link`/`spin`/`succeed` to `console.info`/`console.log`.
