@@ -64,9 +64,8 @@ async function logError({ context, error }) {
     }
 
     // Human-readable output: source (info/blue) then message (error/red)
-    // LowdefyError shows with stack trace
     if (isLowdefyError) {
-      context.logger.error(LowdefyError.format(error));
+      context.logger.error(error);
     } else if (location) {
       context.logger.info(location.source);
     }

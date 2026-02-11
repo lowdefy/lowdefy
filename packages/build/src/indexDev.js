@@ -14,24 +14,8 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
-
-import writeTypes from './writeTypes.js';
-import testContext from '../test-utils/testContext.js';
-
-const mockWriteBuildArtifact = jest.fn();
-
-const context = testContext({ writeBuildArtifact: mockWriteBuildArtifact });
-
-beforeEach(() => {
-  mockWriteBuildArtifact.mockReset();
-});
-
-test('writeTypes', async () => {
-  const components = {};
-  components.types = {
-    type: 'value',
-  };
-  await writeTypes({ components, context });
-  expect(mockWriteBuildArtifact.mock.calls).toEqual([['types.json', '{"type":"value"}']]);
-});
+export { default as shallowBuild } from './build/jit/shallowBuild.js';
+export { default as buildPageJit } from './build/jit/buildPageJit.js';
+export { default as createPageRegistry } from './build/jit/createPageRegistry.js';
+export { default as createFileDependencyMap } from './build/jit/createFileDependencyMap.js';
+export { default as createContext } from './createContext.js';

@@ -21,6 +21,7 @@ import { ConfigError } from '@lowdefy/errors/build';
 
 import createContext from './createContext.js';
 import createPluginTypesMap from './utils/createPluginTypesMap.js';
+import logCollectedErrors from './utils/logCollectedErrors.js';
 import makeId from './utils/makeId.js';
 import tryBuildStep from './utils/tryBuildStep.js';
 
@@ -31,16 +32,16 @@ import buildAuth from './build/buildAuth/buildAuth.js';
 import buildConnections from './build/buildConnections.js';
 import buildApi from './build/buildApi/buildApi.js';
 import buildImports from './build/buildImports/buildImports.js';
-import buildJs from './build/buildJs/buildJs.js';
+import buildJs from './build/full/buildJs.js';
 import buildLogger from './build/buildLogger.js';
 import buildMenu from './build/buildMenu.js';
-import buildPages from './build/buildPages/buildPages.js';
+import buildPages from './build/full/buildPages.js';
 import buildRefs from './build/buildRefs/buildRefs.js';
 import buildTypes from './build/buildTypes.js';
 import cleanBuildDirectory from './build/cleanBuildDirectory.js';
 import copyPublicFolder from './build/copyPublicFolder.js';
 import testSchema from './build/testSchema.js';
-import updateServerPackageJson from './build/updateServerPackageJson.js';
+import updateServerPackageJson from './build/full/updateServerPackageJson.js';
 import validateConfig from './build/validateConfig.js';
 import writeApp from './build/writeApp.js';
 import writeAuth from './build/writeAuth.js';
@@ -52,10 +53,10 @@ import writeJs from './build/buildJs/writeJs.js';
 import writeLogger from './build/writeLogger.js';
 import writeMaps from './build/writeMaps.js';
 import writeMenus from './build/writeMenus.js';
-import writePages from './build/writePages.js';
+import writePages from './build/full/writePages.js';
 import writePluginImports from './build/writePluginImports/writePluginImports.js';
-import writeRequests from './build/writeRequests.js';
-import writeTypes from './build/writeTypes.js';
+import writeRequests from './build/full/writeRequests.js';
+import writeTypes from './build/full/writeTypes.js';
 
 async function build(options) {
   // Reset makeId counter for each build (dev server may run multiple builds)
@@ -86,24 +87,7 @@ async function build(options) {
     tryBuildStep(testSchema, 'testSchema', { components, context });
 
     // Schema errors mean structurally invalid data - stop before processing further
-    if (context.errors.length > 0) {
-      // Log all errors together before summary to ensure proper ordering
-      context.errors.forEach((err) => {
-        if (err instanceof ConfigError || err.print) {
-          context.logger.error(err);
-        } else {
-          const lowdefyErr = new LowdefyError(err.message, { cause: err });
-          lowdefyErr.stack = err.stack;
-          context.logger.error(lowdefyErr);
-        }
-      });
-      const error = new Error(
-        `Build failed with ${context.errors.length} error(s). See above for details.`
-      );
-      error.isFormatted = true;
-      error.hideStack = true;
-      throw error;
-    }
+    logCollectedErrors(context);
 
     tryBuildStep(buildApp, 'buildApp', { components, context });
     tryBuildStep(buildLogger, 'buildLogger', { components, context });
@@ -122,26 +106,7 @@ async function build(options) {
     // Final addKeys pass to ensure all objects (including those created by build steps) have ~k
     tryBuildStep(addKeys, 'addKeys', { components, context });
     // Check if there are any collected errors before writing
-    if (context.errors.length > 0) {
-      // Log all errors together before summary to ensure proper ordering
-      context.errors.forEach((err) => {
-        if (err instanceof ConfigError || err.print) {
-          context.logger.error(err);
-        } else {
-          // Unexpected internal errors get wrapped as LowdefyError for proper formatting
-          const lowdefyErr = new LowdefyError(err.message, { cause: err });
-          lowdefyErr.stack = err.stack;
-          context.logger.error(lowdefyErr);
-        }
-      });
-      const error = new Error(
-        `Build failed with ${context.errors.length} error(s). See above for details.`
-      );
-      // Mark this error as already formatted so stack trace isn't shown
-      error.isFormatted = true;
-      error.hideStack = true;
-      throw error;
-    }
+    logCollectedErrors(context);
 
     // Write steps - only if no errors
     await cleanBuildDirectory({ context });

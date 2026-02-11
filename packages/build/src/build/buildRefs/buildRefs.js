@@ -19,12 +19,13 @@ import makeRefDefinition from './makeRefDefinition.js';
 import evaluateBuildOperators from './evaluateBuildOperators.js';
 import evaluateStaticOperators from './evaluateStaticOperators.js';
 
-async function buildRefs({ context }) {
+async function buildRefs({ context, shallowOptions }) {
   const refDef = makeRefDefinition('lowdefy.yaml', null, context.refMap);
   let components = await recursiveBuild({
     context,
     refDef,
     count: 0,
+    shallowOptions,
   });
   // First: evaluate _build.* operators (e.g., _build.env)
   components = await evaluateBuildOperators({

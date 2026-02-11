@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import fs from 'fs';
 import path from 'path';
 import getLowdefyVersion from '../utils/getLowdefyVersion.mjs';
 import setupWatcher from '../utils/setupWatcher.mjs';
@@ -23,9 +24,13 @@ function lowdefyBuildWatcher(context) {
     path.isAbsolute(item) ? item : path.resolve(context.directories.config, item);
 
   const callback = async (filePaths) => {
-    const lowdefyYamlModified = filePaths
+    const changedFiles = filePaths
       .flat()
-      .some((filePath) => filePath.includes('lowdefy.yaml') || filePath.includes('lowdefy.yml'));
+      .map((filePath) => path.relative(context.directories.config, filePath));
+
+    const lowdefyYamlModified = changedFiles.some(
+      (filePath) => filePath === 'lowdefy.yaml' || filePath === 'lowdefy.yml'
+    );
     if (lowdefyYamlModified) {
       const lowdefyVersion = await getLowdefyVersion(context);
       if (lowdefyVersion !== context.version && lowdefyVersion !== 'local') {
@@ -36,17 +41,41 @@ function lowdefyBuildWatcher(context) {
     }
 
     try {
-      await context.lowdefyBuild();
+      // Check if only page-level files changed (targeted invalidation)
+      const isSkeletonChange =
+        lowdefyYamlModified ||
+        changedFiles.some(
+          (f) =>
+            !context.fileDependencyMap?.has(f) &&
+            !f.startsWith('pages/') &&
+            !f.startsWith('./')
+        );
+
+      if (isSkeletonChange || !context.pageCache) {
+        // Full skeleton rebuild
+        await context.lowdefyBuild();
+      } else {
+        // Targeted invalidation: only clear affected pages
+        const affectedPages = context.pageCache.invalidateByFiles(
+          changedFiles,
+          context.fileDependencyMap
+        );
+        if (affectedPages.size > 0) {
+          // Write invalidated page IDs to a file so the Next.js server process
+          // (which has its own PageCache) knows which pages to rebuild.
+          const invalidationPath = path.join(context.directories.build, 'invalidatePages.json');
+          fs.writeFileSync(invalidationPath, JSON.stringify([...affectedPages]));
+          context.logger.ui.log(
+            `Invalidated ${affectedPages.size} page(s): ${[...affectedPages].join(', ')}`
+          );
+        } else {
+          // Unknown file changed - do full rebuild to be safe
+          await context.lowdefyBuild();
+        }
+      }
       context.reloadClients();
     } catch (error) {
-      // If error is already formatted (from error collection), just show the message
-      if (error.isFormatted || error.hideStack) {
-        context.logger.error(error.message);
-      } else {
-        // Otherwise, show full error with stack trace
-        context.logger.error(error);
-      }
-      // Don't crash the watcher - keep it running so user can fix errors and rebuild
+      context.logger.error(error);
     }
   };
   return setupWatcher({
