@@ -98,7 +98,18 @@ function apiWrapper(handler) {
       return response;
     } catch (error) {
       await logError({ error, context });
-      res.status(500).json({ name: error.name, message: error.message });
+      for (const additionalError of error.additionalErrors ?? []) {
+        await logError({ error: additionalError, context });
+      }
+      const serialized = error.serialize
+        ? error.serialize()
+        : { name: error.name, message: error.message };
+      if (error.additionalErrors?.length > 0) {
+        serialized.additionalErrors = error.additionalErrors.map((e) =>
+          e.serialize ? e.serialize() : { name: e.name, message: e.message }
+        );
+      }
+      res.status(500).json(serialized);
     }
   };
 }

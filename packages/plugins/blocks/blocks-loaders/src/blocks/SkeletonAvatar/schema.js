@@ -1,0 +1,33 @@
+export default {
+  type: 'object',
+  properties: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      style: {
+        type: 'object',
+        description: 'Css style object to apply to the skeleton.',
+        docs: {
+          displayType: 'yaml',
+        },
+      },
+      size: {
+        type: 'string',
+        default: 'medium',
+        description: 'Size of the skeleton.',
+        enum: ['small', 'medium', 'large'],
+      },
+      shape: {
+        type: 'string',
+        default: 'round',
+        description: 'Shape of the skeleton.',
+        enum: ['square', 'round'],
+      },
+    },
+  },
+  events: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {},
+  },
+};

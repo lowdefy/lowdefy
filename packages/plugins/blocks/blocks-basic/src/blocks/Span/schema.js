@@ -1,0 +1,30 @@
+export default {
+  type: 'object',
+  properties: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      content: {
+        type: 'string',
+        description: 'Span content string. Overrides the "content" content area.',
+      },
+      style: {
+        type: 'object',
+        description: 'Css style object to apply to Span div.',
+        docs: {
+          displayType: 'yaml',
+        },
+      },
+    },
+  },
+  events: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      onClick: {
+        type: 'array',
+        description: 'Trigger actions when the Span is clicked.',
+      },
+    },
+  },
+};

@@ -34,7 +34,7 @@ class ErrorBoundary extends Component {
   }
 
   componentDidCatch(error) {
-    const { blockId, configKey, onError } = this.props;
+    const { blockId, blockType, configKey, onError, properties } = this.props;
 
     // Preserve known error types
     if (
@@ -56,6 +56,8 @@ class ErrorBoundary extends Component {
         error,
         pluginType: 'block',
         pluginName: blockId,
+        blockType,
+        properties,
         location: blockId,
         configKey,
       });

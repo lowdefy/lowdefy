@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { deserializeError } from '@lowdefy/errors/client';
+
 async function request({ url, method = 'GET', body }) {
   const res = await fetch(url, {
     method,
@@ -23,9 +25,17 @@ async function request({ url, method = 'GET', body }) {
     body: JSON.stringify(body),
   });
   if (!res.ok) {
-    const body = await res.json();
-    console.log('Error Response: ', res, body);
-    throw new Error(body.message || 'Request error');
+    const errorBody = await res.json();
+    if (errorBody['~err']) {
+      const error = deserializeError(errorBody);
+      if (errorBody.additionalErrors?.length > 0) {
+        error.additionalErrors = errorBody.additionalErrors.map((e) =>
+          e['~err'] ? deserializeError(e) : new Error(e.message)
+        );
+      }
+      throw error;
+    }
+    throw new Error(errorBody.message || 'Request error');
   }
   return res.json();
 }

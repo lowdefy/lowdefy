@@ -85,6 +85,19 @@ class ConfigError extends BaseConfigError {
     console.error(this.message);
   }
 
+  /**
+   * Deserializes error data back into a client ConfigError.
+   * @param {Object} data - Serialized error data
+   * @returns {ConfigError}
+   */
+  static deserialize(data) {
+    const error = new ConfigError({
+      message: data.message,
+      configKey: data.configKey,
+    });
+    error.source = data.source;
+    return error;
+  }
 }
 
 export default ConfigError;

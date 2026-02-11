@@ -14,13 +14,23 @@
   limitations under the License.
 */
 
-import pdfMake from 'pdfmake';
-import vfs from '../fonts/vfs_fonts.js';
+import { validate } from '@lowdefy/ajv';
 
-async function PdfMake({ params }) {
-  const { docDefinition, tableLayouts, filename, fonts } = params;
-  await pdfMake.createPdf(docDefinition, tableLayouts, fonts, vfs).download(filename);
-  return;
+function validatePluginSchema({ data, schema, schemaKey }) {
+  if (!schema?.[schemaKey]) {
+    return null;
+  }
+
+  const { valid, errors } = validate({
+    schema: schema[schemaKey],
+    data: data ?? {},
+    returnErrors: true,
+  });
+
+  if (!valid) {
+    return errors;
+  }
+  return null;
 }
 
-export default PdfMake;
+export default validatePluginSchema;

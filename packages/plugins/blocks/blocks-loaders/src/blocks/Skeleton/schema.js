@@ -1,0 +1,35 @@
+export default {
+  type: 'object',
+  properties: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      style: {
+        type: 'object',
+        description: 'Css style object to apply to the skeleton.',
+        docs: {
+          displayType: 'yaml',
+        },
+      },
+      height: {
+        type: ['number', 'string'],
+        description: 'Height of the skeleton.',
+        docs: {
+          displayType: 'string',
+        },
+      },
+      width: {
+        type: ['number', 'string'],
+        description: 'Width of the skeleton.',
+        docs: {
+          displayType: 'string',
+        },
+      },
+    },
+  },
+  events: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {},
+  },
+};

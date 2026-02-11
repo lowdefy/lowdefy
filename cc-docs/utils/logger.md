@@ -72,16 +72,14 @@ const logger = createNodeLogger({
 
 ### wrapErrorLogger (`/node`)
 
-Wraps a pino logger's `.error()` method to format Lowdefy error objects. When an error has a `.source` property, it emits a separate `{ print: 'link' }` line before the error message — the CLI renders this as a blue clickable link.
+Wraps a pino logger's `.error()` method to format Lowdefy error objects using `error.print()`. Source information is embedded in the formatted message by `formatErrorMessage` (in `@lowdefy/errors`), so the wrapper only needs to call `error.print()` and log the result.
 
 ```javascript
 import { wrapErrorLogger } from '@lowdefy/logger/node';
 
-const wrapped = wrapErrorLogger(logger, { includeSource: true });
+const wrapped = wrapErrorLogger(logger);
 wrapped.error(someError);
-// Output (two pino JSON lines):
-//   { print: 'link', msg: 'pages/home.yaml:15' }
-//   { print: 'error', msg: '[ConfigError] Block type not found.' }
+// Output: pino JSON line with the formatted error message from error.print()
 ```
 
 **Guard:** `_lowdefyWrapped` flag prevents double-wrapping when `wrapErrorLogger` is called multiple times.
@@ -143,7 +141,7 @@ handler('{"print":"spin","msg":"Building..."}');
 // → ui.spin('Building...')
 ```
 
-Handles `source` and `err.source` fields for error/warn lines — renders the source as a separate `ui.link()` call before the message.
+Errors and warnings are rendered using their `.print()` method (which includes source information via `formatErrorMessage`). The handler maps `print` field values to `ui.*` methods.
 
 **Print level resolution:** Uses `print` field if present, otherwise maps pino's numeric `level` (10=trace, 20=debug, 30=info, 40=warn, 50=error) to a UI method, defaulting to `'info'`. This ensures server logs without an explicit `print` field (e.g., default pino output) still appear in the terminal.
 

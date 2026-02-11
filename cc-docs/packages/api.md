@@ -128,7 +128,7 @@ Client Action (Endpoint)
 | `evaluateOperators.js` | Resolve operators in connection/request properties |
 | `checkConnectionRead.js` | Verify read permissions on connection |
 | `checkConnectionWrite.js` | Verify write permissions on connection |
-| `validateSchemas.js` | Validate properties against connection/request schemas |
+| `validateSchemas.js` | Pre-execution validation of connection/request properties against schemas |
 | `callRequestResolver.js` | Execute the actual resolver function |
 
 ### `/routes/endpoints/`
@@ -138,6 +138,14 @@ Client Action (Endpoint)
 | `callEndpoint.js` | Main entry point for endpoint execution |
 | `runRoutine.js` | Execute routine steps sequentially |
 | `control/` | Control flow operators (if, try, etc.) |
+
+### `/routes/log/`
+
+| Module | Purpose |
+|--------|---------|
+| `logClientError.js` | Post-hoc schema validation + location resolution for client errors |
+| `validatePluginSchema.js` | AJV validation wrapper (returns null or error array) |
+| `formatValidationError.js` | Human-friendly error messages for type/enum/additionalProperties/required |
 
 ### `/routes/auth/`
 
@@ -239,17 +247,27 @@ try {
 
 **Server route:** `packages/api/src/routes/log/logClientError.js`
 
-Processes client errors and:
-1. Extracts `configKey` from error
-2. Resolves location using `resolveConfigLocation`
-3. Formats error with file:line information
-4. Logs to console with structured data
-5. Optionally sends to Sentry with config context
+Processes client errors:
+1. Deserializes the error from `~err` marker using `deserializeError()`
+2. If `PluginError`: validates received data against plugin schemas (post-hoc validation)
+   - Block errors: validates `error.properties` against `blockSchemas.json`
+   - Action errors: validates `error.received` against `actionSchemas.json`
+   - Operator errors: validates `Object.values(error.received)[0]` against `operatorSchemas.json`
+3. If schema validation fails: replaces `PluginError` with `ConfigError[]` (one per validation error)
+4. Resolves `configKey` → source:line using `keyMap.json`/`refMap.json`
+5. Logs all errors and returns serialized errors array to client
+
+**Supporting modules:**
+
+| Module | Purpose |
+|--------|---------|
+| `validatePluginSchema.js` | Lightweight AJV wrapper returning null or error array |
+| `formatValidationError.js` | Converts AJV errors to human-friendly messages (type, enum, additionalProperties, required) |
 
 **Output format:**
 
 ```
-[Config Error] Block type "Buton" not found
+[Config Error] Block "Button" property "disabled" must be type "boolean". Received "yes" (string).
   pages/home.yaml:15 at root.pages[0:home].blocks[0:header]
   /Users/dev/app/pages/home.yaml:15
 ```

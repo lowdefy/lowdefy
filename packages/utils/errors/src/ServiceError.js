@@ -170,6 +170,7 @@ class ServiceError extends Error {
       service: this.service,
       code: this.code,
       statusCode: this.statusCode,
+      source: this.source,
     };
   }
 
@@ -188,6 +189,7 @@ class ServiceError extends Error {
     });
     // Set service separately to preserve it without re-prefixing the message
     error.service = data.service;
+    error.source = data.source;
     return error;
   }
 }

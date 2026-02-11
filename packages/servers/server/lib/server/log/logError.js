@@ -21,6 +21,7 @@ import {
   ServiceError,
 } from '@lowdefy/errors/server';
 import { resolveErrorConfigLocation } from '@lowdefy/errors/build';
+import { formatValidationError, validatePluginSchema } from '@lowdefy/api';
 
 import captureSentryError from '../sentry/captureSentryError.js';
 
@@ -43,7 +44,6 @@ function getEventType(error) {
 async function logError({ context, error }) {
   try {
     const { headers = {}, user = {} } = context;
-    const eventType = getEventType(error);
     const isServiceError = error instanceof ServiceError || error?.isServiceError === true;
     const isLowdefyError = error instanceof LowdefyError;
 
@@ -63,14 +63,63 @@ async function logError({ context, error }) {
       error.config = location.config;
     }
 
-    // Human-readable output: source (info/blue) then message (error/red)
+    // Validate operator schema if this is an operator PluginError
+    if (
+      error instanceof PluginError &&
+      error.pluginType === 'operator' &&
+      error.pluginName
+    ) {
+      try {
+        const schemas = await context.readConfigFile('plugins/operatorSchemas.json');
+        const schema = schemas?.[error.pluginName];
+        if (schema) {
+          // Extract params from received: { _if: params }
+          const params = error.received ? Object.values(error.received)[0] : null;
+          const validationErrors = validatePluginSchema({
+            data: params,
+            schema,
+            schemaKey: 'params',
+          });
+
+          if (validationErrors) {
+            for (const validationError of validationErrors) {
+              const configError = new ConfigError({
+                message: formatValidationError({
+                  err: validationError,
+                  pluginLabel: 'Operator',
+                  pluginName: error.pluginName,
+                  fieldLabel: 'param',
+                  data: params,
+                }),
+                configKey: error.configKey,
+              });
+              if (location) {
+                configError.source = location.source;
+                configError.config = location.config;
+              }
+              context.logger.error(configError);
+            }
+
+            captureSentryError({
+              error,
+              context,
+              configLocation: location,
+            });
+            return;
+          }
+        }
+      } catch (err) {
+        // Schema loading failed, continue with normal error logging
+      }
+    }
+
+    // LowdefyError gets special handling (includes stack trace)
     if (isLowdefyError) {
       context.logger.error(error);
-    } else if (location) {
-      context.logger.info(location.source);
     }
 
     // Structured logging (consistent with client error schema + production fields)
+    const eventType = getEventType(error);
     const errorName = error?.name || 'Error';
     context.logger.error(
       {

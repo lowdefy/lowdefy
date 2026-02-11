@@ -30,6 +30,7 @@
   "exports": {
     "./operators/client": "./dist/operatorsClient.js",
     "./operators/server": "./dist/operatorsServer.js",
+    "./schemas": "./dist/schemas.js",
     "./types": "./dist/types.js"
   },
   "files": [

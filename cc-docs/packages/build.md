@@ -66,7 +66,7 @@ async function build(options) {
   await writeMaps({ components, context });
   await writeMenus({ components, context });
   await writeTypes({ components, context });
-  await writePluginImports({ components, context });
+  await writePluginImports({ components, context });  // Also writes schema maps
   await writeJs({ components, context });
   await updateServerPackageJson({ components, context });
   await copyPublicFolder({ components, context });
@@ -88,6 +88,9 @@ async function build(options) {
 | `buildJs/` | Compile custom JavaScript functions |
 | `buildTypes.js` | Resolve and validate block/operator types |
 | `buildImports/` | Track which plugins need to be imported |
+| `buildImports/writeBlockSchemaMap.js` | Collects block schemas into `blockSchemas.json` |
+| `buildImports/writeActionSchemaMap.js` | Collects action schemas into `actionSchemas.json` |
+| `buildImports/writeOperatorSchemaMap.js` | Collects operator schemas into `operatorSchemas.json` |
 | `shallowBuild.js` | Dev-only: skeleton build with `_shallow` markers |
 | `buildPageJit.js` | Dev-only: resolve page content on demand |
 | `createPageRegistry.js` | Dev-only: extract page metadata for JIT |
@@ -156,7 +159,10 @@ Build artifacts go to `.lowdefy/build/`:
 ├── connections/       # Connection configs (one per connection)
 ├── pages/             # Page configs (one per page)
 ├── requests/          # Request configs (one per request)
-├── plugins/           # Plugin import manifests
+├── plugins/           # Plugin import manifests + schema maps
+│   ├── blockSchemas.json    # Block property schemas (for runtime validation)
+│   ├── actionSchemas.json   # Action param schemas
+│   └── operatorSchemas.json # Operator param schemas
 └── js/                # Compiled JavaScript functions
 ```
 

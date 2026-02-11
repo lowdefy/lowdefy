@@ -67,7 +67,7 @@ import Client from '@lowdefy/client';
 
 | Module | Purpose |
 |--------|---------|
-| `Block.js` | Renders individual blocks with their components |
+| `Block.js` | Renders individual blocks; logs parse errors to server with deduplication |
 | (in engine) | Block state, events, and lifecycle |
 
 ### API Communication
@@ -76,14 +76,14 @@ import Client from '@lowdefy/client';
 |--------|---------|
 | `createCallRequest.js` | Creates function to call data requests |
 | `createCallAPI.js` | Creates function to call custom endpoints |
-| `request.js` | HTTP request utilities |
+| `request.js` | HTTP request utilities; deserializes `~err` server errors into typed error objects |
 
 ### Context Initialization
 
 | Module | Purpose |
 |--------|---------|
 | `initLowdefyContext.js` | Sets up the global lowdefy context |
-| `createLogError.js` | Creates error logging function with deduplication |
+| `createLogError.js` | Creates error logging function with deduplication; sends to server, deserializes response |
 | `setupLink.js` | Configures navigation links |
 | `createLinkComponent.js` | Creates the Link component for navigation |
 | `createIcon.js` | Creates icon rendering function |

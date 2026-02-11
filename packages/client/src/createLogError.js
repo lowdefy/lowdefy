@@ -14,21 +14,25 @@
   limitations under the License.
 */
 
-import { ConfigError } from '@lowdefy/errors/client';
+import { ConfigError, deserializeError } from '@lowdefy/errors/client';
 import { createBrowserLogger } from '@lowdefy/logger/browser';
 
 function createLogError(lowdefy) {
-  const loggedErrors = new Set();
   const logger = createBrowserLogger();
 
   return async function logError(error) {
-    const errorKey = `${error.message}:${error.configKey || ''}`;
-    if (loggedErrors.has(errorKey)) {
+    // If error already has source, it came from the server and was already logged there
+    // Just log locally on the client
+    if (error.source) {
+      logger.error(error);
+      for (const additionalError of error.additionalErrors ?? []) {
+        logger.error(additionalError);
+      }
       return;
     }
-    loggedErrors.add(errorKey);
 
     // Serialize and send to server for logging with location resolution
+    // Only log the errors returned from the server, not the raw client error
     if (error.serialize) {
       try {
         const response = await fetch(`${lowdefy.basePath}/api/client-error`, {
@@ -38,15 +42,15 @@ function createLogError(lowdefy) {
           credentials: 'same-origin',
         });
         if (response.ok) {
-          const { source } = await response.json();
-          if (source) {
-            logger.info(source);
+          const result = await response.json();
+          for (const serialized of result.errors ?? []) {
+            logger.error(deserializeError(serialized));
           }
         }
-      } catch {
-        // Server logging failed - continue with local console
+      } catch (err) {
+        // Server unavailable - error was not logged anywhere
+        logger.error(error);
       }
-      logger.error(error);
       return;
     }
 

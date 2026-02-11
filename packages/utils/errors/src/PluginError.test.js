@@ -194,3 +194,24 @@ test('PluginError deserialize handles missing stack', () => {
   // Will have its own stack from construction
   expect(error.stack).toContain('Error');
 });
+
+test('PluginError serialize includes received for operator pluginType', () => {
+  const original = new Error('_if requires boolean test.');
+  const error = new PluginError({
+    error: original,
+    pluginType: 'operator',
+    pluginName: '_if',
+    received: { _if: { test: 'not_boolean' } },
+    configKey: 'key789',
+  });
+  const serialized = error.serialize();
+
+  expect(serialized['~err']).toBe('PluginError');
+  expect(serialized.pluginType).toBe('operator');
+  expect(serialized.pluginName).toBe('_if');
+  expect(serialized.received).toEqual({ _if: { test: 'not_boolean' } });
+  expect(serialized.configKey).toBe('key789');
+  // Should not include block-specific fields
+  expect(serialized.blockType).toBeUndefined();
+  expect(serialized.properties).toBeUndefined();
+});

@@ -22,16 +22,20 @@ import getHomeAndMenus from './routes/rootConfig/getHomeAndMenus.js';
 import getNextAuthConfig from './routes/auth/getNextAuthConfig.js';
 import getPageConfig from './routes/page/getPageConfig.js';
 import getRootConfig from './routes/rootConfig/getRootConfig.js';
+import formatValidationError from './routes/log/formatValidationError.js';
 import logClientError from './routes/log/logClientError.js';
+import validatePluginSchema from './routes/log/validatePluginSchema.js';
 
 export {
   callEndpoint,
   callRequest,
   createApiContext,
   createSessionCallback,
+  formatValidationError,
   getHomeAndMenus,
   getNextAuthConfig,
   getPageConfig,
   getRootConfig,
   logClientError,
+  validatePluginSchema,
 };

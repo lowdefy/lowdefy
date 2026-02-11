@@ -1,0 +1,22 @@
+export default {
+  type: 'object',
+  properties: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      style: {
+        type: 'object',
+        description: 'Css style object to applied to header.',
+        docs: {
+          displayType: 'yaml',
+        },
+      },
+      theme: {
+        type: 'string',
+        enum: ['light', 'dark'],
+        default: 'dark',
+        description: 'Page theme.',
+      },
+    },
+  },
+};
