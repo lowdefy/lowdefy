@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import formatUiMessage from '../formatUiMessage.js';
+
 function formatBrowserError(errorOrMessage) {
   if (typeof errorOrMessage === 'string') return errorOrMessage;
   if (errorOrMessage?.print) return errorOrMessage.print();
@@ -44,8 +46,14 @@ function createBrowserLogger() {
     log: (text) => logger.log(text),
     dim: (text) => logger.log(text),
     info: (text) => logger.info(text),
-    warn: (text) => logger.warn(text),
-    error: (text) => logger.error(text),
+    warn: (messageOrObj) => {
+      if (messageOrObj?.source) logger.info(messageOrObj.source);
+      logger.warn(formatUiMessage(messageOrObj));
+    },
+    error: (messageOrObj) => {
+      if (messageOrObj?.source) logger.info(messageOrObj.source);
+      logger.error(formatUiMessage(messageOrObj));
+    },
     debug: (text) => logger.debug(text),
     link: (text) => logger.info(text),
     spin: (text) => logger.info(text),

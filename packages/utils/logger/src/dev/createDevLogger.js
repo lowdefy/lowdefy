@@ -16,6 +16,7 @@
 
 import pino from 'pino';
 
+import formatUiMessage from '../formatUiMessage.js';
 import createNodeLogger from '../node/createNodeLogger.js';
 
 function createDevLogger({ level = 'info', name = 'lowdefy build' } = {}) {
@@ -36,8 +37,18 @@ function createDevLogger({ level = 'info', name = 'lowdefy build' } = {}) {
     log: (text) => target.info({ print: 'log' }, text),
     dim: (text) => target.info({ print: 'dim' }, text),
     info: (text) => target.info({ print: 'info' }, text),
-    warn: (text) => target.warn({ print: 'warn' }, text),
-    error: (text) => target.error({ print: 'error' }, text),
+    warn: (messageOrObj) => {
+      if (messageOrObj?.source) {
+        target.info({ print: 'link' }, messageOrObj.source);
+      }
+      target.warn({ print: 'warn' }, formatUiMessage(messageOrObj));
+    },
+    error: (messageOrObj) => {
+      if (messageOrObj?.source) {
+        target.info({ print: 'link' }, messageOrObj.source);
+      }
+      target.error({ print: 'error' }, formatUiMessage(messageOrObj));
+    },
     debug: (text) => target.debug({ print: 'debug' }, text),
     link: (text) => target.info({ print: 'link' }, text),
     spin: (text) => target.info({ print: 'spin' }, text),
