@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -31,33 +31,91 @@ const defaultErrSerializer = (err) => {
   };
 };
 
-function attachUi(logger) {
-  if (logger.ui) return logger;
-  logger.ui = {
-    log: (text) => logger.info({ print: 'log' }, text),
-    dim: (text) => logger.info({ print: 'dim' }, text),
-    info: (text) => logger.info({ print: 'info' }, text),
-    warn: (messageOrObj) => {
-      if (messageOrObj?.source) {
-        logger.info({ print: 'link' }, messageOrObj.source);
-      }
-      logger.warn({ print: 'warn' }, formatUiMessage(messageOrObj));
-    },
-    error: (messageOrObj) => {
-      if (messageOrObj?.source) {
-        logger.info({ print: 'link' }, messageOrObj.source);
-      }
-      logger.error({ print: 'error' }, formatUiMessage(messageOrObj));
-    },
-    debug: (text) => logger.debug({ print: 'debug' }, text),
-    link: (text) => logger.info({ print: 'link' }, text),
-    spin: (text) => logger.info({ print: 'spin' }, text),
-    succeed: (text) => logger.info({ print: 'succeed' }, text),
-  };
+const colorNames = ['red', 'green', 'yellow', 'blue', 'gray', 'white'];
 
+function buildMergeObj(options) {
+  if (!options) return {};
+  const merge = {};
+  if (options.color) merge.color = options.color;
+  if (options.spin) merge.spin = true;
+  if (options.succeed) merge.succeed = true;
+  return merge;
+}
+
+function attachLevelMethods(logger) {
+  const levels = ['error', 'warn', 'info', 'debug'];
+
+  for (const level of levels) {
+    const original = logger[level].bind(logger);
+    const isErrorLevel = level === 'error' || level === 'warn';
+
+    const wrapper = (first, second, ...rest) => {
+      // Pino-native pass-through: (mergeObj, msg, ...rest)
+      if (typeof second === 'string') {
+        return original(first, second, ...rest);
+      }
+
+      // Error object handling (warn/error only)
+      if (
+        isErrorLevel &&
+        typeof first !== 'string' &&
+        first &&
+        (first.name || first.message !== undefined)
+      ) {
+        if (first.source) {
+          logger.info({ color: 'blue' }, first.source);
+        }
+        const msg = formatUiMessage(first);
+        const merge = buildMergeObj(second);
+        return original(merge, msg);
+      }
+
+      // Plain object (not an error): pino merge-object pass-through
+      if (typeof first === 'object' && first !== null) {
+        return original(first);
+      }
+
+      // String message: (msg) or (msg, { color, spin, succeed })
+      const merge = buildMergeObj(second);
+      return original(merge, first);
+    };
+
+    // Attach color sub-methods
+    for (const color of colorNames) {
+      wrapper[color] = (first, second, ...rest) => {
+        if (typeof second === 'string') {
+          return original({ ...first, color }, second, ...rest);
+        }
+        if (
+          isErrorLevel &&
+          typeof first !== 'string' &&
+          first &&
+          (first.name || first.message !== undefined)
+        ) {
+          if (first.source) {
+            logger.info({ color: 'blue' }, first.source);
+          }
+          const msg = formatUiMessage(first);
+          return original({ color }, msg);
+        }
+        // Plain object (not an error): pino merge-object pass-through
+        if (typeof first === 'object' && first !== null) {
+          return original({ ...first, color });
+        }
+
+        const merge = buildMergeObj(second);
+        merge.color = color;
+        return original(merge, first);
+      };
+    }
+
+    logger[level] = wrapper;
+  }
+
+  // Wrap child to propagate level methods
   if (logger.child && !logger.child._lowdefyWrapped) {
     const originalChild = logger.child.bind(logger);
-    logger.child = (...args) => attachUi(originalChild(...args));
+    logger.child = (...args) => attachLevelMethods(originalChild(...args));
     logger.child._lowdefyWrapped = true;
   }
 
@@ -85,7 +143,7 @@ function createNodeLogger({
     },
     destination
   );
-  return attachUi(logger);
+  return attachLevelMethods(logger);
 }
 
 export default createNodeLogger;

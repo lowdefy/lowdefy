@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { createNodeLogger, wrapErrorLogger } from '@lowdefy/logger/node';
+import { createNodeLogger } from '@lowdefy/logger/node';
 
 // TODO: Pino does not serialize error.cause properties if the cause object is not an Error (or Error-like)
 const logger = createNodeLogger({
@@ -24,7 +24,7 @@ const logger = createNodeLogger({
 });
 
 function createLogger(metadata = {}) {
-  return wrapErrorLogger(logger.child(metadata));
+  return logger.child(metadata);
 }
 
 export default createLogger;

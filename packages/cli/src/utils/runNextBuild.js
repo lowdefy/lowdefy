@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -21,15 +21,15 @@ function createStdOutLineHandler({ context }) {
     // Matches next build output of form: ┌ λ /           261 B        403 kB
     const match = line.match(/┌ λ \/\s*\d* [a-zA-Z]*\s*(\d* [a-zA-Z]*)/u);
     if (match) {
-      context.logger.ui.info(`Home page first load JS size: ${match[1]}.`);
+      context.logger.info(`Home page first load JS size: ${match[1]}.`);
     }
-    context.logger.ui.debug(line);
+    context.logger.debug(line);
   }
   return stdOutLineHandler;
 }
 
 async function runNextBuild({ context, directory }) {
-  context.logger.ui.spin('Running Next build.');
+  context.logger.info('Running Next build.', { spin: true });
   try {
     await spawnProcess({
       command: context.pnpmCmd,
@@ -48,7 +48,7 @@ async function runNextBuild({ context, directory }) {
   } catch (error) {
     throw new Error('Next build failed.');
   }
-  context.logger.ui.log('Next build successful.');
+  context.logger.info('Next build successful.');
 }
 
 export default runNextBuild;

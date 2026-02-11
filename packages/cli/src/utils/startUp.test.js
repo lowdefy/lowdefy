@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -26,17 +26,12 @@ jest.unstable_mockModule('./getCliJson.js', () => ({
   default: () => Promise.resolve({ appId: 'appId' }),
 }));
 jest.unstable_mockModule('@lowdefy/logger/cli', () => {
-  const ui = {
+  const logger = {
     error: jest.fn(),
-    log: jest.fn(),
-    info: jest.fn(),
     warn: jest.fn(),
+    info: jest.fn(),
     debug: jest.fn(),
-    spin: jest.fn(),
-    succeed: jest.fn(),
-    link: jest.fn(),
   };
-  const logger = { ui };
   const createCliLogger = jest.fn(() => logger);
   return {
     default: createCliLogger,
@@ -84,7 +79,7 @@ test('startUp, options empty', async () => {
     sendTelemetry: 'sendTelemetry',
   });
   expect(validateVersion).toHaveBeenCalledTimes(1);
-  expect(logger.ui.log.mock.calls).toEqual([
+  expect(logger.info.mock.calls).toEqual([
     ["Running 'lowdefy test'. Lowdefy app version lowdefyVersion."],
   ]);
 });
@@ -116,7 +111,7 @@ test('startUp, options undefined', async () => {
     sendTelemetry: 'sendTelemetry',
   });
   expect(validateVersion).toHaveBeenCalledTimes(1);
-  expect(logger.ui.log.mock.calls).toEqual([
+  expect(logger.info.mock.calls).toEqual([
     ["Running 'lowdefy test'. Lowdefy app version lowdefyVersion."],
   ]);
 });
@@ -180,7 +175,7 @@ test('startUp, no lowdefyVersion returned', async () => {
     sendTelemetry: 'sendTelemetry',
   });
   expect(validateVersion).toHaveBeenCalledTimes(1);
-  expect(logger.ui.log.mock.calls).toEqual([["Running 'lowdefy test'."]]);
+  expect(logger.info.mock.calls).toEqual([["Running 'lowdefy test'."]]);
 });
 
 test('startUp, requiresLowdefyYaml false with command "init"', async () => {
@@ -218,5 +213,5 @@ test('startUp, requiresLowdefyYaml false with command "init"', async () => {
     sendTelemetry: 'sendTelemetry',
   });
   expect(validateVersion).toHaveBeenCalledTimes(1);
-  expect(logger.ui.log.mock.calls).toEqual([["Running 'lowdefy init'."]]);
+  expect(logger.info.mock.calls).toEqual([["Running 'lowdefy init'."]]);
 });

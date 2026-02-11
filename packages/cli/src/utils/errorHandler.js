@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -42,15 +42,7 @@ async function logError({ error, context = {} }) {
 
 async function errorHandler({ context, error }) {
   const logger = context?.logger ?? createCliLogger({ logLevel: 'info' });
-  const ui = logger.ui ?? logger;
-  if (error.source) {
-    if (ui.link) {
-      ui.link(error.source);
-    } else {
-      ui.info(error.source);
-    }
-  }
-  ui.error(error.print ? error.print() : error.message);
+  logger.error(error);
   if (!context.disableTelemetry) {
     await logError({ context, error });
   }

@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-// Map pino numeric levels to print method names
-const pinoLevelToPrint = {
+// Map pino numeric levels to level names
+const pinoLevelToName = {
   10: 'debug', // trace
   20: 'debug',
   30: 'info',
@@ -25,37 +25,51 @@ const pinoLevelToPrint = {
 };
 
 function createStdOutLineHandler({ context }) {
-  const ui = context?.logger?.ui ??
-    context?.print ?? {
-      log: (text) => console.log(text),
-      dim: (text) => console.log(text),
-      info: (text) => console.info(text),
-      warn: (text) => console.warn(text),
-      error: (text) => console.error(text),
-      debug: (text) => console.debug(text),
-      link: (text) => console.info(text),
-      spin: (text) => console.log(text),
-      succeed: (text) => console.log(text),
-    };
+  const logger = context?.logger ?? {
+    error: (text) => console.error(text),
+    warn: (text) => console.warn(text),
+    info: (text) => console.info(text),
+    debug: (text) => console.debug(text),
+  };
+
+  // Ensure color sub-methods exist for fallback logger
+  if (!logger.info.blue) {
+    logger.info.blue = logger.info;
+  }
 
   function stdOutLineHandler(line) {
     try {
-      const { print, level, msg, source, err } = JSON.parse(line);
-      const printLevel = print ?? pinoLevelToPrint[level] ?? 'info';
+      const parsed = JSON.parse(line);
+      const { level, color, spin, succeed, source, err } = parsed;
+      const msg = typeof parsed.msg === 'string' ? parsed.msg : JSON.stringify(parsed.msg);
+      const levelName = pinoLevelToName[level] ?? 'info';
 
       if (msg == null || msg === '' || msg === 'undefined') {
-        ui.log(line);
+        logger.info(line);
         return;
       }
 
       const resolvedSource = err?.source ?? source;
-      if (resolvedSource && (printLevel === 'error' || printLevel === 'warn')) {
-        ui.link(resolvedSource);
+      if (resolvedSource && (levelName === 'error' || levelName === 'warn')) {
+        logger.info.blue(resolvedSource);
       }
 
-      ui[printLevel]?.(msg);
+      if (spin) {
+        logger.info(msg, { spin: true });
+        return;
+      }
+      if (succeed) {
+        logger.info(msg, { succeed: true });
+        return;
+      }
+
+      if (color) {
+        logger[levelName](msg, { color });
+      } else {
+        logger[levelName](msg);
+      }
     } catch (error) {
-      ui.log(line);
+      logger.info(line);
     }
   }
   return stdOutLineHandler;

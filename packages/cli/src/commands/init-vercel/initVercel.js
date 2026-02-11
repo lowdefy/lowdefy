@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import url from 'url';
 import { readFile, writeFile } from '@lowdefy/node-utils';
 
 async function initVercel({ context }) {
-  context.logger.ui.log('Initializing Vercel deployment.');
+  context.logger.info('Initializing Vercel deployment.');
 
   const installScript = await readFile(
     url.fileURLToPath(new URL('./vercel.install.sh', import.meta.url))
@@ -28,13 +28,13 @@ async function initVercel({ context }) {
     path.join(context.directories.config, 'deploy', 'vercel.install.sh'),
     installScript
   );
-  context.logger.ui.log("Created 'vercel.install.sh'.");
+  context.logger.info("Created 'vercel.install.sh'.");
   const readMe = await readFile(url.fileURLToPath(new URL('./README.md', import.meta.url)));
   await writeFile(path.join(context.directories.config, 'deploy', 'README.md'), readMe);
-  context.logger.ui.log("Created 'README.md'.");
+  context.logger.info("Created 'README.md'.");
 
   await context.sendTelemetry();
-  context.logger.ui.succeed('Vercel deployment initialized.');
+  context.logger.info('Vercel deployment initialized.', { succeed: true });
 }
 
 export default initVercel;

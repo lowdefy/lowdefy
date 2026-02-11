@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -52,9 +52,9 @@ async function startUp({ context, options = {}, command }) {
   context.sendTelemetry = getSendTelemetry(context);
 
   if (type.isNone(lowdefyVersion)) {
-    context.logger.ui.log(`Running 'lowdefy ${context.command}'.`);
+    context.logger.info(`Running 'lowdefy ${context.command}'.`);
   } else {
-    context.logger.ui.log(
+    context.logger.info(
       `Running 'lowdefy ${context.command}'. Lowdefy app version ${lowdefyVersion}.`
     );
   }

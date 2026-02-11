@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -17,11 +17,21 @@
 import ora from 'ora';
 
 const reset = '\x1b[0m';
-const red = (text) => `\x1b[31m${text}${reset}`;
-const green = (text) => `\x1b[32m${text}${reset}`;
-const yellow = (text) => `\x1b[33m${text}${reset}`;
-const blue = (text) => `\x1b[34m${text}${reset}`;
-const dim = (text) => `\x1b[2m${text}${reset}`;
+const colors = {
+  red: (text) => `\x1b[31m${text}${reset}`,
+  green: (text) => `\x1b[32m${text}${reset}`,
+  yellow: (text) => `\x1b[33m${text}${reset}`,
+  blue: (text) => `\x1b[34m${text}${reset}`,
+  gray: (text) => `\x1b[2m${text}${reset}`,
+  white: (text) => text,
+};
+
+const defaultColors = {
+  error: 'red',
+  warn: 'yellow',
+  info: 'white',
+  debug: 'gray',
+};
 
 function getTime() {
   const time = new Date(Date.now());
@@ -31,15 +41,12 @@ function getTime() {
   return `${h > 9 ? '' : '0'}${h}:${m > 9 ? '' : '0'}${m}:${s > 9 ? '' : '0'}${s}`;
 }
 
-// Same levels as pino with added custom levels
+// Standard pino levels + spin/succeed at info level
 const logLevelValues = {
   error: 50,
   warn: 40,
-  succeed: 33,
-  spin: 32,
-  log: 31,
-  dim: 31,
-  link: 30,
+  succeed: 30,
+  spin: 30,
   info: 30,
   debug: 20,
 };
@@ -57,43 +64,43 @@ function filterLevels(logger, level) {
 function createOraPrint({ logLevel }) {
   const spinner = ora({
     spinner: 'random',
-    prefixText: () => dim(getTime()),
+    prefixText: () => colors.gray(getTime()),
     color: 'blue',
   });
   return filterLevels(
     {
-      error: (text) => spinner.fail(red(text)),
-      info: (text) => spinner.info(blue(text)),
-      link: (text) => spinner.info(blue(text)),
-      log: (text) => spinner.stopAndPersist({ symbol: '∙', text }),
-      dim: (text) => spinner.stopAndPersist({ symbol: '∙', text: dim(text) }),
-      spin: (text) => spinner.start(text),
-      succeed: (text) => spinner.succeed(green(text)),
-      warn: (text) => spinner.warn(yellow(text)),
-      debug: (text) => {
+      error: (text, { color } = {}) => spinner.fail(colors[color ?? defaultColors.error](text)),
+      warn: (text, { color } = {}) => spinner.warn(colors[color ?? defaultColors.warn](text)),
+      info: (text, { color } = {}) =>
+        spinner.stopAndPersist({
+          symbol: '∙',
+          text: colors[color ?? defaultColors.info](text),
+        }),
+      debug: (text, { color } = {}) => {
         if (spinner.isSpinning) {
           spinner.stopAndPersist({ symbol: '∙' });
         }
-        spinner.stopAndPersist({ symbol: dim('+'), text: dim(text) });
+        spinner.stopAndPersist({
+          symbol: colors.gray('+'),
+          text: colors[color ?? defaultColors.debug](text),
+        });
       },
+      spin: (text) => spinner.start(text),
+      succeed: (text) => spinner.succeed(colors.green(text)),
     },
     logLevel
   );
 }
 
 function createBasicPrint({ logLevel = 'info' }) {
-  const { error, info, log, warn, debug } = console;
   return filterLevels(
     {
-      error,
-      info,
-      dim: log,
-      link: info,
-      log,
-      spin: log,
-      succeed: log,
-      warn,
-      debug,
+      error: (text) => console.error(text),
+      warn: (text) => console.warn(text),
+      info: (text) => console.log(text),
+      debug: (text) => console.debug(text),
+      spin: (text) => console.log(text),
+      succeed: (text) => console.log(text),
     },
     logLevel
   );

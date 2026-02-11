@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ function shutdownServer(context) {
         `Existing next server with pid ${context.nextServer.pid}, killed: ${context.nextServer.killed}`
       );
       if (!context.nextServer.killed) {
-        context.logger.ui.spin('Shutting down server...');
+        context.logger.info('Shutting down server...', { spin: true });
         context.nextServer.kill();
         context.logger.debug(
           `Killed next server with pid ${context.nextServer.pid}, killed: ${context.nextServer.killed}`

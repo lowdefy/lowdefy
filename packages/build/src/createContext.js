@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -94,7 +94,7 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
         const dedupKey = warningOrParams.source ?? warningOrParams.message;
         if (seen?.has(dedupKey)) return;
         seen?.add(dedupKey);
-        logger.ui.warn(warningOrParams);
+        originalWarn(warningOrParams);
         return;
       }
 
@@ -105,7 +105,7 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
         const dedupKey = warning.source ?? warning.message;
         if (seen?.has(dedupKey)) return;
         seen?.add(dedupKey);
-        logger.ui.warn(warning);
+        originalWarn(warning);
       } catch (err) {
         if (err instanceof ConfigError) {
           collectExceptions(ctx, err);
@@ -115,6 +115,9 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
       }
     };
     wrappedWarn._lowdefyWrapped = true;
+    for (const color of ['red', 'green', 'yellow', 'blue', 'gray', 'white']) {
+      wrappedWarn[color] = logger.warn[color];
+    }
     logger.warn = wrappedWarn;
   }
 
@@ -134,10 +137,13 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
         return;
       }
 
-      // Error/object - delegate formatting to logger.ui.error
-      logger.ui.error(errorOrMessage);
+      // Error/object - delegate formatting to original error (handles error objects)
+      originalError(errorOrMessage);
     };
     wrappedError._lowdefyWrapped = true;
+    for (const color of ['red', 'green', 'yellow', 'blue', 'gray', 'white']) {
+      wrappedError[color] = logger.error[color];
+    }
     logger.error = wrappedError;
   }
 

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import { jest } from '@jest/globals';
 jest.unstable_mockModule('ora', () => {
   const mockOraConstructor = jest.fn(() => ({
     fail: mockOraFail,
-    info: mockOraInfo,
     start: mockOraStart,
     stopAndPersist: mockOraStopAndPersist,
     succeed: mockOraSucceed,
@@ -32,23 +31,18 @@ jest.unstable_mockModule('ora', () => {
 });
 
 const mockOraFail = jest.fn();
-const mockOraInfo = jest.fn();
 const mockOraStart = jest.fn();
 const mockOraStopAndPersist = jest.fn();
 const mockOraSucceed = jest.fn();
 const mockOraWarn = jest.fn();
 mockOraStart.mockImplementation(() => ({ stopAndPersist: mockOraStopAndPersist }));
 
-// ora.mockImplementation();
-
 // mock console
 const mockConsoleError = jest.fn();
-const mockConsoleInfo = jest.fn();
 const mockConsoleLog = jest.fn();
 const mockConsoleWarn = jest.fn();
 const mockConsoleDebug = jest.fn();
 console.error = mockConsoleError;
-console.info = mockConsoleInfo;
 console.log = mockConsoleLog;
 console.warn = mockConsoleWarn;
 console.debug = mockConsoleDebug;
@@ -57,7 +51,6 @@ console.debug = mockConsoleDebug;
 const mockGetHours = jest.fn();
 const mockGetMinutes = jest.fn();
 const mockGetSeconds = jest.fn();
-// const realNow = Date.now;
 // eslint-disable-next-line no-global-assign
 Date = jest.fn(() => ({
   getHours: mockGetHours,
@@ -84,7 +77,9 @@ describe('memoise', () => {
     process.env.CI = 'false';
     const print = createPrint({ logLevel: 'info' });
     print.info('Test');
-    expect(mockOraInfo.mock.calls).toEqual([['\x1b[34mTest\x1b[0m']]);
+    expect(mockOraStopAndPersist.mock.calls).toEqual([
+      [{ symbol: '∙', text: 'Test' }],
+    ]);
     process.env.CI = realCI;
   });
 
@@ -93,41 +88,19 @@ describe('memoise', () => {
     const realCI = process.env.CI;
     process.env.CI = 'true';
     const print = createPrint({ logLevel: 'info' });
-    print.log('Test log');
+    print.info('Test log');
     expect(mockConsoleLog.mock.calls).toEqual([['Test log']]);
     process.env.CI = realCI;
   });
 });
 
 describe('ora print', () => {
-  test('create print', async () => {
-    const { default: ora } = await import('ora');
+  test('create print has 6 methods', async () => {
     const { createOraPrint } = await import('./cli/createPrint.js');
     const print = createOraPrint({ logLevel: 'info' });
-    expect(print).toMatchInlineSnapshot(`
-      Object {
-        "debug": [Function],
-        "dim": [Function],
-        "error": [Function],
-        "info": [Function],
-        "link": [Function],
-        "log": [Function],
-        "spin": [Function],
-        "succeed": [Function],
-        "warn": [Function],
-      }
-    `);
-    expect(ora.mock.calls).toMatchInlineSnapshot(`
-      Array [
-        Array [
-          Object {
-            "color": "blue",
-            "prefixText": [Function],
-            "spinner": "random",
-          },
-        ],
-      ]
-    `);
+    expect(Object.keys(print).sort()).toEqual([
+      'debug', 'error', 'info', 'spin', 'succeed', 'warn',
+    ]);
   });
 
   test('timestamp, digits less than 10', async () => {
@@ -154,25 +127,36 @@ describe('ora print', () => {
     expect(res).toEqual('\x1b[2m11:22:33\x1b[0m');
   });
 
-  test('print error', async () => {
+  test('print error applies default red color', async () => {
     const { createOraPrint } = await import('./cli/createPrint.js');
     const print = createOraPrint({ logLevel: 'info' });
     print.error('Test error');
     expect(mockOraFail.mock.calls).toEqual([['\x1b[31mTest error\x1b[0m']]);
   });
 
-  test('print info', async () => {
+  test('print error with color override', async () => {
+    const { createOraPrint } = await import('./cli/createPrint.js');
+    const print = createOraPrint({ logLevel: 'info' });
+    print.error('Test error', { color: 'blue' });
+    expect(mockOraFail.mock.calls).toEqual([['\x1b[34mTest error\x1b[0m']]);
+  });
+
+  test('print info applies default white (identity) color', async () => {
     const { createOraPrint } = await import('./cli/createPrint.js');
     const print = createOraPrint({ logLevel: 'info' });
     print.info('Test info');
-    expect(mockOraInfo.mock.calls).toEqual([['\x1b[34mTest info\x1b[0m']]);
+    expect(mockOraStopAndPersist.mock.calls).toEqual([
+      [{ symbol: '∙', text: 'Test info' }],
+    ]);
   });
 
-  test('print log', async () => {
+  test('print info with color override', async () => {
     const { createOraPrint } = await import('./cli/createPrint.js');
     const print = createOraPrint({ logLevel: 'info' });
-    print.log('Test log');
-    expect(mockOraStopAndPersist.mock.calls).toEqual([[{ symbol: '∙', text: 'Test log' }]]);
+    print.info('Test info', { color: 'blue' });
+    expect(mockOraStopAndPersist.mock.calls).toEqual([
+      [{ symbol: '∙', text: '\x1b[34mTest info\x1b[0m' }],
+    ]);
   });
 
   test('print spin', async () => {
@@ -189,33 +173,18 @@ describe('ora print', () => {
     expect(mockOraSucceed.mock.calls).toEqual([['\x1b[32mTest succeed\x1b[0m']]);
   });
 
-  test('print warn', async () => {
+  test('print warn applies default yellow color', async () => {
     const { createOraPrint } = await import('./cli/createPrint.js');
     const print = createOraPrint({ logLevel: 'info' });
     print.warn('Test warn');
     expect(mockOraWarn.mock.calls).toEqual([['\x1b[33mTest warn\x1b[0m']]);
   });
 
-  test('print debug', async () => {
+  test('print debug applies default gray color', async () => {
     const { createOraPrint } = await import('./cli/createPrint.js');
     const print = createOraPrint({ logLevel: 'debug' });
     print.debug('Test debug');
     expect(mockOraStopAndPersist.mock.calls).toEqual([
-      [{ symbol: '\x1b[2m+\x1b[0m', text: '\x1b[2mTest debug\x1b[0m' }],
-    ]);
-  });
-
-  // TODO: Set spinner.isSpinning in mocks to test this
-  test.skip('preserve spinner text if debug is called after spin', async () => {
-    const { createOraPrint } = await import('./cli/createPrint.js');
-    const print = createOraPrint({ logLevel: 'debug' });
-    print.spin('Test spin');
-    expect(mockOraStart.mock.calls).toEqual([['Test spin']]);
-    expect(mockOraStopAndPersist.mock.calls).toEqual([]);
-    print.debug('Test debug');
-    expect(mockOraStart.mock.calls).toEqual([['Test spin']]);
-    expect(mockOraStopAndPersist.mock.calls).toEqual([
-      [{ symbol: '∙' }],
       [{ symbol: '\x1b[2m+\x1b[0m', text: '\x1b[2mTest debug\x1b[0m' }],
     ]);
   });
@@ -231,10 +200,8 @@ describe('ora print', () => {
     expect(mockOraSucceed.mock.calls).toEqual([]);
     print.spin('Test spin');
     expect(mockOraStart.mock.calls).toEqual([]);
-    print.log('Test log');
-    expect(mockOraStopAndPersist.mock.calls).toEqual([]);
     print.info('Test info');
-    expect(mockOraInfo.mock.calls).toEqual([]);
+    expect(mockOraStopAndPersist.mock.calls).toEqual([]);
     print.debug('Test debug');
     expect(mockOraStopAndPersist.mock.calls).toEqual([]);
   });
@@ -250,10 +217,8 @@ describe('ora print', () => {
     expect(mockOraSucceed.mock.calls).toEqual([]);
     print.spin('Test spin');
     expect(mockOraStart.mock.calls).toEqual([]);
-    print.log('Test log');
-    expect(mockOraStopAndPersist.mock.calls).toEqual([]);
     print.info('Test info');
-    expect(mockOraInfo.mock.calls).toEqual([]);
+    expect(mockOraStopAndPersist.mock.calls).toEqual([]);
     print.debug('Test debug');
     expect(mockOraStopAndPersist.mock.calls).toEqual([]);
   });
@@ -269,12 +234,10 @@ describe('ora print', () => {
     expect(mockOraSucceed.mock.calls).toEqual([['\x1b[32mTest succeed\x1b[0m']]);
     print.spin('Test spin');
     expect(mockOraStart.mock.calls).toEqual([['Test spin']]);
-    print.log('Test log');
-    expect(mockOraStopAndPersist.mock.calls).toEqual([[{ symbol: '∙', text: 'Test log' }]]);
     print.info('Test info');
-    expect(mockOraInfo.mock.calls).toEqual([['\x1b[34mTest info\x1b[0m']]);
+    expect(mockOraStopAndPersist.mock.calls).toEqual([[{ symbol: '∙', text: 'Test info' }]]);
     print.debug('Test debug');
-    expect(mockOraStopAndPersist.mock.calls).toEqual([[{ symbol: '∙', text: 'Test log' }]]);
+    expect(mockOraStopAndPersist.mock.calls).toEqual([[{ symbol: '∙', text: 'Test info' }]]);
   });
 
   test('Log level debug', async () => {
@@ -288,35 +251,23 @@ describe('ora print', () => {
     expect(mockOraSucceed.mock.calls).toEqual([['\x1b[32mTest succeed\x1b[0m']]);
     print.spin('Test spin');
     expect(mockOraStart.mock.calls).toEqual([['Test spin']]);
-    print.log('Test log');
-    expect(mockOraStopAndPersist.mock.calls).toEqual([[{ symbol: '∙', text: 'Test log' }]]);
     print.info('Test info');
-    expect(mockOraInfo.mock.calls).toEqual([['\x1b[34mTest info\x1b[0m']]);
+    expect(mockOraStopAndPersist.mock.calls).toEqual([[{ symbol: '∙', text: 'Test info' }]]);
     print.debug('Test debug');
     expect(mockOraStopAndPersist.mock.calls).toEqual([
-      [{ symbol: '∙', text: 'Test log' }],
+      [{ symbol: '∙', text: 'Test info' }],
       [{ symbol: '\x1b[2m+\x1b[0m', text: '\x1b[2mTest debug\x1b[0m' }],
     ]);
   });
 });
 
 describe('basic print', () => {
-  test('create print', async () => {
+  test('create print has 6 methods', async () => {
     const { createBasicPrint } = await import('./cli/createPrint.js');
     const print = createBasicPrint({ logLevel: 'info' });
-    expect(print).toMatchInlineSnapshot(`
-      Object {
-        "debug": [Function],
-        "dim": [MockFunction],
-        "error": [MockFunction],
-        "info": [MockFunction],
-        "link": [MockFunction],
-        "log": [MockFunction],
-        "spin": [MockFunction],
-        "succeed": [MockFunction],
-        "warn": [MockFunction],
-      }
-    `);
+    expect(Object.keys(print).sort()).toEqual([
+      'debug', 'error', 'info', 'spin', 'succeed', 'warn',
+    ]);
   });
 
   test('print error', async () => {
@@ -330,14 +281,7 @@ describe('basic print', () => {
     const { createBasicPrint } = await import('./cli/createPrint.js');
     const print = createBasicPrint({ logLevel: 'info' });
     print.info('Test info');
-    expect(mockConsoleInfo.mock.calls).toEqual([['Test info']]);
-  });
-
-  test('print log', async () => {
-    const { createBasicPrint } = await import('./cli/createPrint.js');
-    const print = createBasicPrint({ logLevel: 'info' });
-    print.log('Test log');
-    expect(mockConsoleLog.mock.calls).toEqual([['Test log']]);
+    expect(mockConsoleLog.mock.calls).toEqual([['Test info']]);
   });
 
   test('print spin', async () => {
@@ -377,10 +321,8 @@ describe('basic print', () => {
     expect(mockConsoleWarn.mock.calls).toEqual([]);
     print.succeed('Test succeed');
     print.spin('Test spin');
-    print.log('Test log');
-    expect(mockConsoleLog.mock.calls).toEqual([]);
     print.info('Test info');
-    expect(mockConsoleInfo.mock.calls).toEqual([]);
+    expect(mockConsoleLog.mock.calls).toEqual([]);
     print.debug('Test debug');
     expect(mockConsoleDebug.mock.calls).toEqual([]);
   });
@@ -394,10 +336,8 @@ describe('basic print', () => {
     expect(mockConsoleWarn.mock.calls).toEqual([['Test warn']]);
     print.succeed('Test succeed');
     print.spin('Test spin');
-    print.log('Test log');
-    expect(mockConsoleLog.mock.calls).toEqual([]);
     print.info('Test info');
-    expect(mockConsoleInfo.mock.calls).toEqual([]);
+    expect(mockConsoleLog.mock.calls).toEqual([]);
     print.debug('Test debug');
     expect(mockConsoleDebug.mock.calls).toEqual([]);
   });
@@ -411,10 +351,8 @@ describe('basic print', () => {
     expect(mockConsoleWarn.mock.calls).toEqual([['Test warn']]);
     print.succeed('Test succeed');
     print.spin('Test spin');
-    print.log('Test log');
-    expect(mockConsoleLog.mock.calls).toEqual([['Test succeed'], ['Test spin'], ['Test log']]);
     print.info('Test info');
-    expect(mockConsoleInfo.mock.calls).toEqual([['Test info']]);
+    expect(mockConsoleLog.mock.calls).toEqual([['Test succeed'], ['Test spin'], ['Test info']]);
     print.debug('Test debug');
     expect(mockConsoleDebug.mock.calls).toEqual([]);
   });
@@ -428,10 +366,8 @@ describe('basic print', () => {
     expect(mockConsoleWarn.mock.calls).toEqual([['Test warn']]);
     print.succeed('Test succeed');
     print.spin('Test spin');
-    print.log('Test log');
-    expect(mockConsoleLog.mock.calls).toEqual([['Test succeed'], ['Test spin'], ['Test log']]);
     print.info('Test info');
-    expect(mockConsoleInfo.mock.calls).toEqual([['Test info']]);
+    expect(mockConsoleLog.mock.calls).toEqual([['Test succeed'], ['Test spin'], ['Test info']]);
     print.debug('Test debug');
     expect(mockConsoleDebug.mock.calls).toEqual([['Test debug']]);
   });

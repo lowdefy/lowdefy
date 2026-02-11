@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ import { spawnProcess } from '@lowdefy/node-utils';
 
 function installPlugins({ logger, packageManagerCmd }) {
   return async () => {
-    logger.ui.spin('Installing plugins...');
+    logger.info('Installing plugins...', { spin: true });
     await spawnProcess({
       processOptions: {
         // https://nodejs.org/en/blog/vulnerability/april-2024-security-releases-2#command-injection-via-args-parameter-of-child_processspawn-without-shell-option-enabled-on-windows-cve-2024-27980---high
@@ -28,7 +28,7 @@ function installPlugins({ logger, packageManagerCmd }) {
       args: ['install', '--no-frozen-lockfile'],
       stdOutLineHandler: (line) => logger.debug(line),
     });
-    logger.ui.log('Installed plugins.');
+    logger.info('Installed plugins.');
   };
 }
 

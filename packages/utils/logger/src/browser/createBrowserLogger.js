@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -34,30 +34,39 @@ function createBrowserLogger() {
         console.error(errorOrMessage, ...args);
         return;
       }
+      if (
+        typeof errorOrMessage !== 'string' &&
+        errorOrMessage &&
+        (errorOrMessage.name || errorOrMessage.message !== undefined)
+      ) {
+        if (errorOrMessage.source) {
+          console.info(errorOrMessage.source);
+        }
+        console.error(formatBrowserError(errorOrMessage));
+        return;
+      }
       console.error(formatBrowserError(errorOrMessage));
     },
-    warn: (...args) => console.warn(...args),
+    warn: (messageOrObj, ...args) => {
+      if (args.length > 0) {
+        console.warn(messageOrObj, ...args);
+        return;
+      }
+      if (
+        typeof messageOrObj !== 'string' &&
+        messageOrObj &&
+        (messageOrObj.name || messageOrObj.message !== undefined)
+      ) {
+        if (messageOrObj.source) {
+          console.info(messageOrObj.source);
+        }
+        console.warn(formatUiMessage(messageOrObj));
+        return;
+      }
+      console.warn(formatUiMessage(messageOrObj));
+    },
     info: (...args) => console.info(...args),
     debug: (...args) => console.debug(...args),
-    log: (...args) => console.log(...args),
-  };
-
-  logger.ui = {
-    log: (text) => logger.log(text),
-    dim: (text) => logger.log(text),
-    info: (text) => logger.info(text),
-    warn: (messageOrObj) => {
-      if (messageOrObj?.source) logger.info(messageOrObj.source);
-      logger.warn(formatUiMessage(messageOrObj));
-    },
-    error: (messageOrObj) => {
-      if (messageOrObj?.source) logger.info(messageOrObj.source);
-      logger.error(formatUiMessage(messageOrObj));
-    },
-    debug: (text) => logger.debug(text),
-    link: (text) => logger.info(text),
-    spin: (text) => logger.info(text),
-    succeed: (text) => logger.info(text),
   };
 
   return logger;

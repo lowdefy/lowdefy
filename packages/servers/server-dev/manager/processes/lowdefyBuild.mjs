@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import createCustomPluginTypesMap from '../utils/createCustomPluginTypesMap.mjs'
 
 function lowdefyBuild({ directories, logger, options, pageCache }) {
   return async () => {
-    logger.ui.spin('Building config...');
+    logger.info('Building config...', { spin: true });
     const customTypesMap = await createCustomPluginTypesMap({ directories, logger });
 
     if (pageCache) {
@@ -35,7 +35,7 @@ function lowdefyBuild({ directories, logger, options, pageCache }) {
       });
 
       // Return result so getContext can store registries
-      logger.ui.log('Built config.');
+      logger.info('Built config.');
       return result;
     } finally {
       if (pageCache) {

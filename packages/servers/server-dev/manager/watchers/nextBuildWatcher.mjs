@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -86,13 +86,13 @@ async function nextBuildWatcher(context) {
       })
     );
     if (!build) {
-      context.logger.ui.succeed('Reloaded app.');
+      context.logger.info('Reloaded app.', { succeed: true });
       return;
     }
 
     context.shutdownServer();
     if (install) {
-      context.logger.ui.warn('Plugin dependencies have changed and will be reinstalled.');
+      context.logger.warn('Plugin dependencies have changed and will be reinstalled.');
       await context.installPlugins();
     }
     await context.nextBuild();

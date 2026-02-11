@@ -2062,9 +2062,18 @@ importers:
       '@lowdefy/client':
         specifier: 4.5.2
         version: link:../../client
+      '@lowdefy/community-plugin-mongodb':
+        specifier: 2.3.0
+        version: 2.3.0(@aws-sdk/credential-providers@3.425.0)(next@13.5.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(nodemailer@6.9.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(socks@2.7.1)
+      '@lowdefy/community-plugin-nodemailer':
+        specifier: 1.1.4
+        version: 1.1.4(next@13.5.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@lowdefy/connection-axios-http':
         specifier: 4.5.2
         version: link:../../plugins/connections/connection-axios-http
+      '@lowdefy/connection-test':
+        specifier: workspace:*
+        version: link:../../plugins/connections/connection-test
       '@lowdefy/engine':
         specifier: 4.5.2
         version: link:../../engine
@@ -3458,6 +3467,12 @@ packages:
 
   '@js-joda/core@5.5.3':
     resolution: {integrity: sha512-7dqNYwG8gCt4hfg5PKgM7xLEcgSBcx/UgC92OMnhMmvAnq11QzDFPrxUkNR/u5kn17WWLZ8beZ4A3Qrz4pZcmQ==}
+
+  '@lowdefy/community-plugin-mongodb@2.3.0':
+    resolution: {integrity: sha512-YkoqlIUQ+7Rt6hlZVx8FEUF8ykAsoR/GI+pjtfNRF+sEFcRfpPWT0kUj1hac+Yfm9xfs+t2a1heshH/+OZkI2g==}
+
+  '@lowdefy/community-plugin-nodemailer@1.1.4':
+    resolution: {integrity: sha512-ifUHPVK3CP7DpJEnTXzmJ7gxCXXJ8tGVyKZ9dlogE6Wr+0OpaFJx/8pnPG20+6tkbSyV3BvxgDZHeXjuvEZ+UA==}
 
   '@manypkg/find-root@1.1.0':
     resolution: {integrity: sha512-mki5uBvhHzO8kYYix/WRy2WX8S3B5wdVSc9D6KcU5lQNglP2yt58/VfLuAK49glRXChosY8ap2oJ1qgma3GUVA==}
@@ -11663,6 +11678,37 @@ snapshots:
 
   '@js-joda/core@5.5.3': {}
 
+  '@lowdefy/community-plugin-mongodb@2.3.0(@aws-sdk/credential-providers@3.425.0)(next@13.5.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(nodemailer@6.9.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(socks@2.7.1)':
+    dependencies:
+      '@lowdefy/connection-mongodb': link:packages/plugins/connections/connection-mongodb
+      '@lowdefy/helpers': link:packages/utils/helpers
+      mongodb: 6.3.0(@aws-sdk/credential-providers@3.425.0)(socks@2.7.1)
+      next-auth: 4.24.5(next@13.5.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(nodemailer@6.9.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      saslprep: 1.0.3
+      uuid: 9.0.1
+    transitivePeerDependencies:
+      - '@aws-sdk/credential-providers'
+      - '@mongodb-js/zstd'
+      - gcp-metadata
+      - kerberos
+      - mongodb-client-encryption
+      - next
+      - nodemailer
+      - react
+      - react-dom
+      - snappy
+      - socks
+
+  '@lowdefy/community-plugin-nodemailer@1.1.4(next@13.5.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@lowdefy/nunjucks': link:packages/utils/nunjucks
+      next-auth: 4.24.5(next@13.5.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(nodemailer@6.9.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      nodemailer: 6.9.7
+    transitivePeerDependencies:
+      - next
+      - react
+      - react-dom
+
   '@manypkg/find-root@1.1.0':
     dependencies:
       '@babel/runtime': 7.23.5
@@ -17284,8 +17330,7 @@ snapshots:
 
   node-releases@2.0.13: {}
 
-  nodemailer@6.9.7:
-    optional: true
+  nodemailer@6.9.7: {}
 
   nodemon@3.1.0:
     dependencies:

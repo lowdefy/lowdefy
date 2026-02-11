@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -65,7 +65,7 @@ function lowdefyBuildWatcher(context) {
           // (which has its own PageCache) knows which pages to rebuild.
           const invalidationPath = path.join(context.directories.build, 'invalidatePages.json');
           fs.writeFileSync(invalidationPath, JSON.stringify([...affectedPages]));
-          context.logger.ui.log(
+          context.logger.info(
             `Invalidated ${affectedPages.size} page(s): ${[...affectedPages].join(', ')}`
           );
         } else {

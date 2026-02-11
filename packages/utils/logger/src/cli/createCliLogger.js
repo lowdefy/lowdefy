@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,44 +15,84 @@
 */
 
 import createPrint from './createPrint.js';
+import formatUiMessage from '../formatUiMessage.js';
 
-function safeStringify(value) {
-  if (typeof value === 'string') return value;
-  if (value == null) return String(value);
-  try {
-    return JSON.stringify(value);
-  } catch {
-    return String(value);
-  }
-}
-
-function formatMessage(message, args) {
-  if (args.length === 0) return safeStringify(message);
-  return [message, ...args].map(safeStringify).join(' ');
-}
-
-function formatError(errorOrMessage, args) {
-  if (args.length > 0) return formatMessage(errorOrMessage, args);
-  if (typeof errorOrMessage === 'string') return errorOrMessage;
-  if (errorOrMessage?.print) return errorOrMessage.print();
-  if (errorOrMessage && (errorOrMessage.name || errorOrMessage.message !== undefined)) {
-    const name = errorOrMessage.name || 'Error';
-    const message = errorOrMessage.message ?? '';
-    return `[${name}] ${message}`;
-  }
-  return safeStringify(errorOrMessage);
-}
+const colorNames = ['red', 'green', 'yellow', 'blue', 'gray', 'white'];
 
 function createCliLogger({ logLevel } = {}) {
-  const ui = createPrint({ logLevel });
+  const print = createPrint({ logLevel });
+
+  function createLevelMethod(level) {
+    const isErrorLevel = level === 'error' || level === 'warn';
+
+    const method = (first, options) => {
+      // Handle spin/succeed options
+      if (options?.spin) {
+        print.spin(typeof first === 'string' ? first : formatUiMessage(first));
+        return;
+      }
+      if (options?.succeed) {
+        print.succeed(typeof first === 'string' ? first : formatUiMessage(first));
+        return;
+      }
+
+      // Error object handling (warn/error only)
+      if (
+        isErrorLevel &&
+        typeof first !== 'string' &&
+        first &&
+        (first.name || first.message !== undefined)
+      ) {
+        if (first.source) {
+          logger.info.blue(first.source);
+        }
+        print[level](formatUiMessage(first), { color: options?.color });
+        return;
+      }
+
+      // String message
+      const text = typeof first === 'string' ? first : formatUiMessage(first);
+      print[level](text, { color: options?.color });
+    };
+
+    // Attach color sub-methods
+    for (const color of colorNames) {
+      method[color] = (first, options) => {
+        if (options?.spin) {
+          print.spin(typeof first === 'string' ? first : formatUiMessage(first));
+          return;
+        }
+        if (options?.succeed) {
+          print.succeed(typeof first === 'string' ? first : formatUiMessage(first));
+          return;
+        }
+
+        if (
+          isErrorLevel &&
+          typeof first !== 'string' &&
+          first &&
+          (first.name || first.message !== undefined)
+        ) {
+          if (first.source) {
+            logger.info.blue(first.source);
+          }
+          print[level](formatUiMessage(first), { color });
+          return;
+        }
+
+        const text = typeof first === 'string' ? first : formatUiMessage(first);
+        print[level](text, { color });
+      };
+    }
+
+    return method;
+  }
 
   const logger = {
-    ui,
-    error: (errorOrMessage, ...args) => ui.error(formatError(errorOrMessage, args)),
-    warn: (message, ...args) => ui.warn(formatMessage(message, args)),
-    info: (message, ...args) => ui.info(formatMessage(message, args)),
-    debug: (message, ...args) => ui.debug(formatMessage(message, args)),
-    log: (message, ...args) => ui.log(formatMessage(message, args)),
+    error: createLevelMethod('error'),
+    warn: createLevelMethod('warn'),
+    info: createLevelMethod('info'),
+    debug: createLevelMethod('debug'),
     child: () => logger,
     isLevelEnabled: () => true,
   };
