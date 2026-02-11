@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ function copyTemplate(templateName, destPath) {
   return false;
 }
 
-function updatePackageJson(appPath, cwd) {
+function updatePackageJson({ appPath, cwd, useMongoDB }) {
   const pkgPath = path.join(cwd, appPath, 'package.json');
   if (!fs.existsSync(pkgPath)) {
     console.log(`  ⚠ No package.json found at ${appPath}/package.json`);
@@ -51,6 +51,17 @@ function updatePackageJson(appPath, cwd) {
   if (!pkg.scripts['e2e:ui']) {
     pkg.scripts['e2e:ui'] = 'playwright test --ui --config=e2e/playwright.config.js';
     updated = true;
+  }
+
+  // mongodb-memory-server uses a postinstall script to download the MongoDB binary.
+  // pnpm v10+ blocks postinstall scripts by default, so we need to explicitly allow it.
+  if (useMongoDB) {
+    const allowedBuilds = pkg.pnpm?.onlyBuiltDependencies ?? [];
+    if (!allowedBuilds.includes('mongodb-memory-server')) {
+      pkg.pnpm = pkg.pnpm || {};
+      pkg.pnpm.onlyBuiltDependencies = [...allowedBuilds, 'mongodb-memory-server'];
+      updated = true;
+    }
   }
 
   if (updated) {
@@ -126,7 +137,7 @@ function generateFiles({ cwd, app, useMongoDB }) {
   }
 
   // Update package.json with e2e scripts
-  updatePackageJson(app.path, cwd);
+  updatePackageJson({ appPath: app.path, cwd, useMongoDB });
 }
 
 export default generateFiles;
