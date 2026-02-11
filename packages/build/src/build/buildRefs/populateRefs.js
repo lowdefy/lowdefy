@@ -14,30 +14,86 @@
   limitations under the License.
 */
 
-import { get, type } from '@lowdefy/helpers';
+import { get, serializer, type } from '@lowdefy/helpers';
+
+/**
+ * Copies a _var value while preserving source location markers.
+ *
+ * When _var copies a value from vars into a template, we need to preserve
+ * the ~r (ref ID) and ~l (line number) from WHERE THE VALUE IS DEFINED
+ * (the source file), not where _var is used (the template).
+ *
+ * The issue is that serializer.copy loses non-enumerable properties, and
+ * recursiveBuild.js then sets ~r to the template file for objects without ~r.
+ *
+ * This function preserves the source location by making ~r enumerable on
+ * the copied value, so it survives through subsequent serializer.copy calls.
+ *
+ * @param {*} value - The value to copy from vars
+ * @param {string} sourceRefId - The ref ID of the source file where the var is defined
+ * @returns {*} The copied value with preserved source location markers
+ */
+function copyVarValue(value, sourceRefId) {
+  if (!type.isObject(value) && !type.isArray(value)) {
+    return value;
+  }
+
+  // Copy the value, preserving ~l and setting ~r to the source file
+  return serializer.copy(value, {
+    reviver: (_, v) => {
+      if (type.isObject(v) || type.isArray(v)) {
+        // Preserve the source file's ref ID by setting it explicitly
+        // This prevents recursiveBuild from overwriting it with the template's ref ID
+        if (sourceRefId && v['~r'] === undefined) {
+          v['~r'] = sourceRefId;
+        }
+      }
+      return v;
+    },
+  });
+}
 
 function refReviver(key, value) {
   if (type.isObject(value)) {
     if (!type.isUndefined(value._ref)) {
-      return this.parsedFiles[value._ref.id];
+      const result = this.parsedFiles[value._ref.id];
+      if (value._ref.ignoreBuildChecks !== undefined) {
+        if (type.isObject(result)) {
+          result['~ignoreBuildChecks'] = value._ref.ignoreBuildChecks;
+        } else if (type.isArray(result)) {
+          result.forEach((item) => {
+            if (type.isObject(item)) {
+              item['~ignoreBuildChecks'] = value._ref.ignoreBuildChecks;
+            }
+          });
+        }
+      }
+      return result;
     }
     if (value._var) {
       if (type.isString(value._var)) {
-        return JSON.parse(JSON.stringify(get(this.vars, value._var, { default: null })));
+        const varValue = get(this.vars, value._var, { default: null });
+        return copyVarValue(varValue, this.sourceRefId);
       }
       if (type.isObject(value._var) && type.isString(value._var.key)) {
-        return JSON.parse(
-          JSON.stringify(
-            get(this.vars, value._var.key, {
-              default: type.isNone(value._var.default) ? null : value._var.default,
-            })
-          )
-        );
+        const varKey = value._var.key;
+        const varFromParent = get(this.vars, varKey);
+
+        // Check if var was explicitly provided (even if null) vs not provided at all (undefined)
+        // - Var provided (including null): use parent's sourceRefId for location
+        // - Var not provided (undefined): use default, preserve template's location
+        if (!type.isUndefined(varFromParent)) {
+          // Var was explicitly provided from parent file - use parent's location
+          return copyVarValue(varFromParent, this.sourceRefId);
+        }
+
+        // Using default value defined in template - preserve template's location markers
+        // Pass null for sourceRefId so we don't override the template file's ~r
+        const defaultValue = type.isNone(value._var.default) ? null : value._var.default;
+        return copyVarValue(defaultValue, null);
       }
       throw new Error(
-        `"_var" operator takes a string or object with "key" field as arguments. Received "${JSON.stringify(
-          value
-        )}"`
+        '_var operator takes a string or object with "key" field as arguments.'
       );
     }
   }
@@ -45,10 +101,11 @@ function refReviver(key, value) {
 }
 
 function populateRefs({ parsedFiles, refDef, toPopulate }) {
-  return JSON.parse(
-    JSON.stringify(toPopulate),
-    refReviver.bind({ parsedFiles, vars: refDef.vars })
-  );
+  // Use serializer.copy to preserve non-enumerable properties like ~r, ~k, ~l
+  // sourceRefId is the PARENT file's ref ID where vars are defined (not the template's ID)
+  return serializer.copy(toPopulate, {
+    reviver: refReviver.bind({ parsedFiles, vars: refDef.vars, sourceRefId: refDef.parent }),
+  });
 }
 
 export default populateRefs;

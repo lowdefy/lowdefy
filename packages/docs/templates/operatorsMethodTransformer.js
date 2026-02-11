@@ -15,11 +15,10 @@
 */
 
 function transformer(obj) {
-  // console.log(JSON.stringify(obj, null, 2));
   if (!obj.methods) {
     return obj.page;
   }
-  const contentArray = obj.page.blocks[1].areas.content.blocks[0].blocks[1].blocks;
+  const contentArray = obj.page.blocks[0].areas.content.blocks[0].blocks[1].blocks;
   const operatorName = obj.page.properties.title;
 
   contentArray.push({
@@ -31,7 +30,6 @@ function transformer(obj) {
   });
 
   obj.methods.forEach((method) => {
-    // console.log(method);
     contentArray.push({
       id: `${method.name}_link`,
       type: 'Anchor',
@@ -55,7 +53,6 @@ function transformer(obj) {
 
   // const methodsBlocks = [];
   obj.methods.forEach((method) => {
-    // console.log(method);
     contentArray.push({
       id: `${method.name}_title`,
       type: 'Markdown',

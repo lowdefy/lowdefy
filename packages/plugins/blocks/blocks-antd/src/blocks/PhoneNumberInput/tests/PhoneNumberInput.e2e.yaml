@@ -1,0 +1,228 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: phonenumberinput
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: phone_basic
+    type: PhoneNumberInput
+    properties:
+      title: Basic Phone Input
+
+  - id: phone_with_placeholder
+    type: PhoneNumberInput
+    properties:
+      title: With Placeholder
+      placeholder: Enter phone number
+
+  # ============================================
+  # PROPERTY TESTS
+  # ============================================
+
+  - id: phone_disabled
+    type: PhoneNumberInput
+    properties:
+      title: Disabled Phone
+      disabled: true
+
+  - id: phone_small
+    type: PhoneNumberInput
+    properties:
+      title: Small Size
+      size: small
+
+  - id: phone_large
+    type: PhoneNumberInput
+    properties:
+      title: Large Size
+      size: large
+
+  - id: phone_default_region
+    type: PhoneNumberInput
+    properties:
+      title: Default Region US
+      defaultRegion: US
+
+  - id: phone_allowed_regions
+    type: PhoneNumberInput
+    properties:
+      title: Limited Regions
+      allowedRegions:
+        - US
+        - GB
+        - ZA
+
+  - id: phone_no_flags
+    type: PhoneNumberInput
+    properties:
+      title: No Flags
+      showFlags: false
+
+  - id: phone_allowclear
+    type: PhoneNumberInput
+    properties:
+      title: Allow Clear
+      allowClear: true
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  - id: phone_onchange
+    type: PhoneNumberInput
+    properties:
+      title: OnChange Test
+    events:
+      onChange:
+        - id: set_onchange
+          type: SetState
+          params:
+            phone_onchange_value:
+              _event: value
+
+  - id: onchange_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: phone_onchange_value
+              - null
+          then:
+            _string.concat:
+              - 'Phone: '
+              - _state: phone_onchange_value.phone_number
+          else: ''
+
+  - id: phone_oninputchange
+    type: PhoneNumberInput
+    properties:
+      title: OnInputChange Test
+    events:
+      onInputChange:
+        - id: set_oninputchange
+          type: SetState
+          params:
+            phone_oninputchange_fired: true
+
+  - id: oninputchange_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: phone_oninputchange_fired
+              - true
+          then: Input changed
+          else: ''
+
+  - id: phone_oncodechange
+    type: PhoneNumberInput
+    properties:
+      title: OnCodeChange Test
+    events:
+      onCodeChange:
+        - id: set_oncodechange
+          type: SetState
+          params:
+            phone_oncodechange_fired: true
+
+  - id: oncodechange_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: phone_oncodechange_fired
+              - true
+          then: Code changed
+          else: ''
+
+  - id: phone_onblur
+    type: PhoneNumberInput
+    properties:
+      title: OnBlur Test
+    events:
+      onBlur:
+        - id: set_onblur
+          type: SetState
+          params:
+            phone_onblur_fired: true
+
+  - id: onblur_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: phone_onblur_fired
+              - true
+          then: Blur fired
+          else: ''
+
+  - id: phone_onfocus
+    type: PhoneNumberInput
+    properties:
+      title: OnFocus Test
+    events:
+      onFocus:
+        - id: set_onfocus
+          type: SetState
+          params:
+            phone_onfocus_fired: true
+
+  - id: onfocus_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: phone_onfocus_fired
+              - true
+          then: Focus fired
+          else: ''
+
+  # ============================================
+  # INTERACTION TESTS
+  # ============================================
+
+  - id: phone_interaction
+    type: PhoneNumberInput
+    properties:
+      title: Interaction Test
+
+  - id: interaction_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: phone_interaction
+              - null
+          then:
+            _string.concat:
+              - 'Input: '
+              - _state: phone_interaction.input
+          else: ''

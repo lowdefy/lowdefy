@@ -21,7 +21,7 @@ import _json from './json.js';
 import _not from './not.js';
 import _payload from '../server/payload.js';
 import _operator from './operator.js';
-import _state from '../client/state.js';
+import _state from '../shared/state.js';
 
 const operators = {
   _args,
@@ -58,11 +58,8 @@ test('_operator.name invalid', () => {
   const parser = new ServerParser({ operators, payload });
   const res = parser.parse({ input, location });
   expect(res.output).toEqual({ a: null });
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _operator - Invalid operator name. Received: {"name":"_a"} at location.],
-    ]
-  `);
+  expect(res.errors.length).toBe(1);
+  expect(res.errors[0].message).toBe('_operator - Invalid operator name.');
 });
 
 test('_operator.name not allowed to include "experimental"', () => {
@@ -70,11 +67,8 @@ test('_operator.name not allowed to include "experimental"', () => {
   const parser = new ServerParser({ operators, payload });
   const res = parser.parse({ input, location });
   expect(res.output).toEqual({ a: null });
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: Experimental operators cannot be used with _operator. Received: {"name":"_experimental_op"} at location.],
-    ]
-  `);
+  expect(res.errors.length).toBe(1);
+  expect(res.errors[0].message).toBe('Experimental operators cannot be used with _operator.');
 });
 
 test('_operator.name not a string', () => {
@@ -82,11 +76,8 @@ test('_operator.name not a string', () => {
   const parser = new ServerParser({ operators, payload });
   const res = parser.parse({ input, location });
   expect(res.output).toEqual({ a: null });
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _operator.name must be a valid operator name as string. Received: {"name":1} at location.],
-    ]
-  `);
+  expect(res.errors.length).toBe(1);
+  expect(res.errors[0].message).toBe('_operator.name must be a valid operator name as string.');
 });
 
 test('_operator with value not a object', () => {
@@ -94,11 +85,8 @@ test('_operator with value not a object', () => {
   const parser = new ServerParser({ operators, payload });
   const res = parser.parse({ input, location });
   expect(res.output).toEqual({ a: null });
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _operator.name must be a valid operator name as string. Received: "a" at location.],
-    ]
-  `);
+  expect(res.errors.length).toBe(1);
+  expect(res.errors[0].message).toBe('_operator.name must be a valid operator name as string.');
 });
 
 test('_operator cannot be set to _operator', () => {
@@ -106,11 +94,10 @@ test('_operator cannot be set to _operator', () => {
   const parser = new ServerParser({ operators, payload });
   const res = parser.parse({ input, location });
   expect(res.output).toEqual({ a: null });
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _operator.name cannot be set to _operator to infinite avoid loop reference. Received: {"name":"_operator"} at location.],
-    ]
-  `);
+  expect(res.errors.length).toBe(1);
+  expect(res.errors[0].message).toBe(
+    '_operator.name cannot be set to _operator to avoid infinite loop reference.'
+  );
 });
 
 test('_operator, _not with no params', () => {

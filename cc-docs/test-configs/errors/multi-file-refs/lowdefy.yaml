@@ -1,0 +1,34 @@
+# Multi-File Error Tracing Test Config
+# Tests that errors in referenced files show correct file paths (not parent file paths)
+# Issue: https://github.com/lowdefy/lowdefy/issues/1947
+
+lowdefy: 4.0.0
+
+name: multi-file-error-tracing-test
+
+# Main config with global settings
+global:
+  title: Multi-File Error Tracing Test
+
+# Connection referenced by child pages
+connections:
+  - id: testDb
+    type: MongoDBCollection
+    properties:
+      databaseUri: mongodb://localhost:27017
+      databaseName: test
+      collection: users
+
+# Import pages from separate files
+pages:
+  # Page with undefined request reference (should show pages/home.yaml:X)
+  - _ref: pages/home.yaml
+
+  # Page with non-existent connection (should show pages/products.yaml:X)
+  - _ref: pages/products.yaml
+
+  # Page with invalid block type (should show pages/about.yaml:X)
+  - _ref: pages/about.yaml
+
+  # Page with invalid action type (should show pages/contact.yaml:X)
+  - _ref: pages/contact.yaml

@@ -1,0 +1,21 @@
+# H7: Invalid Request Type with ~ignoreBuildCheck
+# ================================================
+# Tests that invalid request type errors are suppressed with ~ignoreBuildChecks: true.
+# The ~ignoreBuildCheck flag is on the request object.
+#
+# Expected: NO error should be shown for NonExistentRequest.
+
+lowdefy: local
+
+connections:
+  - id: testApi
+    type: AxiosHttp
+
+pages:
+  - id: home
+    type: Box
+    requests:
+      - id: ignoredRequest
+        type: NonExistentRequest
+        connectionId: testApi
+        ~ignoreBuildChecks: true

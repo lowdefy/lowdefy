@@ -18,14 +18,13 @@ import path from 'path';
 import { type } from '@lowdefy/helpers';
 
 import checkPnpmIsInstalled from './checkPnpmIsInstalled.js';
-import createPrint from './createPrint.js';
+import { createCliLogger } from '@lowdefy/logger/cli';
 import getCliJson from './getCliJson.js';
 import getDirectories from './getDirectories.js';
 import getLowdefyYaml from './getLowdefyYaml.js';
 import getOptions from './getOptions.js';
 import getSendTelemetry from './getSendTelemetry.js';
 import readDotEnv from './readDotEnv.js';
-import validateLicense from './validateLicense.js';
 import validateVersion from './validateVersion.js';
 
 async function startUp({ context, options = {}, command }) {
@@ -43,20 +42,19 @@ async function startUp({ context, options = {}, command }) {
   context.appId = appId;
 
   context.options = getOptions(context);
-  context.print = createPrint({ logLevel: context.options.logLevel });
+  context.logger = createCliLogger({ logLevel: context.options.logLevel });
 
   context.directories = getDirectories(context);
 
   context.pnpmCmd = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm';
-  checkPnpmIsInstalled(context);
+  checkPnpmIsInstalled({ logger: context.logger, pnpmCmd: context.pnpmCmd });
   await validateVersion(context);
-  context.license = await validateLicense(context);
   context.sendTelemetry = getSendTelemetry(context);
 
   if (type.isNone(lowdefyVersion)) {
-    context.print.log(`Running 'lowdefy ${context.command}'.`);
+    context.logger.ui.log(`Running 'lowdefy ${context.command}'.`);
   } else {
-    context.print.log(
+    context.logger.ui.log(
       `Running 'lowdefy ${context.command}'. Lowdefy app version ${lowdefyVersion}.`
     );
   }

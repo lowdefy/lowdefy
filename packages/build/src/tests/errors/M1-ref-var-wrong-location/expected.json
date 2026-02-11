@@ -1,0 +1,25 @@
+{
+  "tests": [
+    {
+      "mode": "dev",
+      "warnings": [
+        "undefinedBlockId"
+      ],
+      "warningContains": [
+        "_state references \"undefinedBlockId\" on page \"templatePage\"",
+        "lowdefy.yaml:30"
+      ]
+    },
+    {
+      "mode": "prod",
+      "errors": [
+        "undefinedBlockId"
+      ],
+      "errorContains": [
+        "_state references \"undefinedBlockId\" on page \"templatePage\"",
+        "lowdefy.yaml:30"
+      ],
+      "expectThrow": true
+    }
+  ]
+}

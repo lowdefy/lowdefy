@@ -1,0 +1,13 @@
+{
+  "enabledPlugins": {
+    "r@resonancy": true
+  },
+  "extraKnownMarketplaces": {
+    "resonancy": {
+      "source": {
+        "source": "github",
+        "repo": "TECHMRM/claude-plugins"
+      }
+    }
+  }
+}

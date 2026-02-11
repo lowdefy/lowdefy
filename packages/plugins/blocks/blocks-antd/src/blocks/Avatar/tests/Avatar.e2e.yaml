@@ -1,0 +1,125 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: avatar
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: avatar_basic
+    type: Avatar
+
+  - id: avatar_with_text
+    type: Avatar
+    properties:
+      content: JD
+
+  - id: avatar_with_image
+    type: Avatar
+    properties:
+      src: https://api.dicebear.com/7.x/avataaars/svg?seed=test
+      alt: Test Avatar
+
+  # ============================================
+  # SHAPE TESTS
+  # ============================================
+
+  - id: avatar_circle
+    type: Avatar
+    properties:
+      content: C
+      shape: circle
+
+  - id: avatar_square
+    type: Avatar
+    properties:
+      content: S
+      shape: square
+
+  # ============================================
+  # SIZE TESTS
+  # ============================================
+
+  - id: avatar_small
+    type: Avatar
+    properties:
+      content: SM
+      size: small
+
+  - id: avatar_default
+    type: Avatar
+    properties:
+      content: DF
+      size: default
+
+  - id: avatar_large
+    type: Avatar
+    properties:
+      content: LG
+      size: large
+
+  - id: avatar_number_size
+    type: Avatar
+    properties:
+      content: 64
+      size: 64
+
+  # ============================================
+  # ICON TESTS
+  # ============================================
+
+  - id: avatar_with_icon
+    type: Avatar
+    properties:
+      icon: AiOutlineUser
+
+  # ============================================
+  # COLOR TESTS
+  # ============================================
+
+  - id: avatar_with_color
+    type: Avatar
+    properties:
+      content: AB
+      color: '#1890ff'
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  - id: avatar_onclick
+    type: Avatar
+    properties:
+      content: Click
+    events:
+      onClick:
+        - id: set_onclick
+          type: SetState
+          params:
+            avatar_onclick_fired: true
+
+  - id: onclick_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: avatar_onclick_fired
+              - true
+          then: Avatar clicked
+          else: ''

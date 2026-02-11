@@ -19,11 +19,7 @@ import { get, type } from '@lowdefy/helpers';
 function _type({ location, params, state }) {
   const typeName = type.isObject(params) ? params.type : params;
   if (!type.isString(typeName)) {
-    throw new Error(
-      `Operator Error: _type.type must be a string. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`_type.type must be a string.`);
   }
 
   const on = Object.prototype.hasOwnProperty.call(params, 'on')
@@ -54,12 +50,10 @@ function _type({ location, params, state }) {
     case 'primitive':
       return type.isPrimitive(on);
     default:
-      throw new Error(
-        `Operator Error: "${typeName}" is not a valid _type test. Received: ${JSON.stringify(
-          params
-        )} at ${location}.`
-      );
+      throw new Error(`"${typeName}" is not a valid _type test.`);
   }
 }
+
+_type.dynamic = true;
 
 export default _type;

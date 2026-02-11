@@ -21,14 +21,15 @@ function js(operatorContext) {
       payload: (p) => operators._payload({ ...operatorContext, params: p }),
       secret: (p) => operators._secret({ ...operatorContext, params: p }),
       user: (p) => operators._user({ ...operatorContext, params: p }),
+      item: (p) => operators._item({ ...operatorContext, params: p }),
+      step: (p) => operators._step({ ...operatorContext, params: p }),
+      state: (p) => operators._state({ ...operatorContext, params: p }),
     });
   } catch (error) {
-    throw new Error(
-      `Operator Error: ${error.message} at ${location}. Received function: ${jsMap[
-        params
-      ].toString()}`
-    );
+    throw new Error(`${error.message} Function: ${jsMap[params].toString()}`);
   }
 }
+
+js.dynamic = true;
 
 export default js;

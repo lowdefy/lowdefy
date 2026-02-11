@@ -177,7 +177,7 @@ test('invalid parameters type', async () => {
     },
   };
   await expect(Redis({ request, connection })).rejects.toThrow(
-    'Invalid parameters, command "get" parameters should be an array, received "key".'
+    'Invalid parameters, command "get" parameters should be an array.'
   );
 });
 

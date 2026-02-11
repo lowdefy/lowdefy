@@ -17,7 +17,7 @@
 import { jest } from '@jest/globals';
 
 import addDefaultPages from './addDefaultPages.js';
-import testContext from '../../test/testContext.js';
+import testContext from '../../test-utils/testContext.js';
 
 const mockLogWarn = jest.fn();
 
@@ -203,9 +203,7 @@ test('addDefaultPages, with a page not an object', () => {
   const components = {
     pages: [null],
   };
-  expect(() => addDefaultPages({ components, context })).toThrow(
-    'pages[0] is not an object. Received null'
-  );
+  expect(() => addDefaultPages({ components, context })).toThrow('pages[0] is not an object.');
 });
 
 test('addDefaultPages, pages are copied', () => {

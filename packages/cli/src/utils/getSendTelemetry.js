@@ -22,15 +22,7 @@ async function getTypes({ directories }) {
   return JSON.parse(await readFile(path.join(directories.build, 'types.json')));
 }
 
-function getSendTelemetry({
-  appId,
-  cliVersion,
-  command,
-  directories,
-  license,
-  lowdefyVersion,
-  options,
-}) {
+function getSendTelemetry({ appId, cliVersion, command, directories, lowdefyVersion, options }) {
   if (options.disableTelemetry) {
     return () => {};
   }
@@ -51,7 +43,6 @@ function getSendTelemetry({
           app_id: appId,
           cli_version: cliVersion,
           command,
-          license_id: license?.id,
           lowdefy_version: lowdefyVersion,
           types,
         },

@@ -26,4 +26,6 @@ function _global({ arrayIndices, location, lowdefyGlobal, params }) {
   });
 }
 
+_global.dynamic = true;
+
 export default _global;

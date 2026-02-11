@@ -17,7 +17,12 @@
 import axios from 'axios';
 import semver from 'semver';
 
-async function validateVersion({ cliVersion, lowdefyVersion, print, requiresLowdefyYaml }) {
+async function validateVersion({ cliVersion, lowdefyVersion, logger, requiresLowdefyYaml }) {
+  const ui =
+    logger?.ui ??
+    logger ?? {
+      warn: (message) => console.warn(message),
+    };
   if (!requiresLowdefyYaml) {
     return;
   }
@@ -42,7 +47,7 @@ async function validateVersion({ cliVersion, lowdefyVersion, print, requiresLowd
 ---------------------------------------------------`);
   }
   if (isExperimentalVersion(cliVersion) || isExperimentalVersion(lowdefyVersion)) {
-    print.warn(`
+    ui.warn(`
 ---------------------------------------------------
   You are using an experimental version of Lowdefy.
   Features may change at any time.
@@ -56,7 +61,7 @@ async function validateVersion({ cliVersion, lowdefyVersion, print, requiresLowd
     const latestVersion = packageInfo.data['dist-tags'].latest;
 
     if (cliVersion !== latestVersion) {
-      print.warn(`
+      ui.warn(`
 -------------------------------------------------------------
   You are not using the latest version of the Lowdefy CLI.
   Please update to version ${latestVersion}.
@@ -64,7 +69,7 @@ async function validateVersion({ cliVersion, lowdefyVersion, print, requiresLowd
 -------------------------------------------------------------`);
     }
     if (lowdefyVersion && lowdefyVersion !== latestVersion) {
-      print.warn(`
+      ui.warn(`
 -------------------------------------------------------------
   Your app is not using the latest Lowdefy version, ${lowdefyVersion}.
   Please update your app to version ${latestVersion}.
@@ -73,7 +78,7 @@ async function validateVersion({ cliVersion, lowdefyVersion, print, requiresLowd
 -------------------------------------------------------------`);
     }
   } catch (error) {
-    print.warn('Failed to check for latest Lowdefy version.');
+    ui.warn('Failed to check for latest Lowdefy version.');
   }
 }
 

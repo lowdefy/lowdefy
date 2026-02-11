@@ -16,22 +16,16 @@
 
 import { type } from '@lowdefy/helpers';
 
-function _gte({ params, location }) {
+function _gte({ params }) {
   if (!type.isArray(params)) {
-    throw new Error(
-      `Operator Error: _gte takes an array type as input. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`_gte takes an array type as input.`);
   }
   if (params.length !== 2) {
-    throw new Error(
-      `Operator Error: _gte takes an array of length 2 as input. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`_gte takes an array of length 2 as input.`);
   }
   return params[0] >= params[1];
 }
+
+_gte.dynamic = false;
 
 export default _gte;

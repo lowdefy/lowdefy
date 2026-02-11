@@ -13,14 +13,14 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { ConfigurationError } from '../../context/errors.js';
+import { ConfigError } from '@lowdefy/errors/server';
 
 function getConnection({ connections, logger }, { connectionConfig }) {
   const connection = connections[connectionConfig.type];
   if (!connection) {
-    const err = new ConfigurationError(
-      `Connection type "${connectionConfig.type}" can not be found.`
-    );
+    const err = new ConfigError({
+      message: `Connection type "${connectionConfig.type}" can not be found.`,
+    });
     logger.debug(
       { params: { id: connectionConfig.connectionId, type: connectionConfig.type }, err },
       err.message

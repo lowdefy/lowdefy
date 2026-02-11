@@ -17,6 +17,7 @@
 */
 
 import { jest } from '@jest/globals';
+import { ConfigError } from '@lowdefy/errors/client';
 
 import testContext from './testContext.js';
 
@@ -98,7 +99,7 @@ test('init Events', async () => {
     lowdefy,
     pageConfig,
   });
-  const { button } = context._internal.RootBlocks.map;
+  const { button } = context._internal.RootAreas.map;
   expect(button.Events.events).toEqual({
     onClick: {
       actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
@@ -125,7 +126,7 @@ test('triggerEvent no event defined', async () => {
     lowdefy,
     pageConfig,
   });
-  const { button } = context._internal.RootBlocks.map;
+  const { button } = context._internal.RootAreas.map;
   const promise = button.triggerEvent({ name: 'onClick' });
   expect(button.Events.events).toEqual({});
   const res = await promise;
@@ -159,7 +160,7 @@ test('triggerEvent x1', async () => {
     lowdefy,
     pageConfig,
   });
-  const { button } = context._internal.RootBlocks.map;
+  const { button } = context._internal.RootAreas.map;
   const promise = button.triggerEvent({ name: 'onClick', event: { x: 1 } });
   expect(button.Events.events).toEqual({
     onClick: {
@@ -215,7 +216,7 @@ test('triggerEvent, 2 actions', async () => {
     lowdefy,
     pageConfig,
   });
-  const { button } = context._internal.RootBlocks.map;
+  const { button } = context._internal.RootAreas.map;
   await button.triggerEvent({ name: 'onClick', event: { x: 1 } });
   expect(button.Events.events.onClick.history[0].event).toEqual({ x: 1 });
   expect(Object.keys(button.Events.events.onClick.history[0].responses).length).toEqual(2);
@@ -246,7 +247,7 @@ test('triggerEvent error', async () => {
     lowdefy,
     pageConfig,
   });
-  const { button } = context._internal.RootBlocks.map;
+  const { button } = context._internal.RootAreas.map;
   await button.triggerEvent({ name: 'onClick', event: { x: 1 } });
   expect(button.Events.events.onClick.history[0]).toEqual({
     blockId: 'button',
@@ -263,17 +264,20 @@ test('triggerEvent error', async () => {
         },
         type: 'Error',
       },
-      error: {
-        error: new Error('Invalid action type "Error" at "button".'),
-        index: 0,
-        type: 'Error',
-      },
+      error: expect.any(ConfigError),
+      index: 0,
     },
     responses: {
       e: {
-        type: 'Error',
+        action: {
+          id: 'e',
+          params: {
+            a: 'a',
+          },
+          type: 'Error',
+        },
+        error: expect.any(ConfigError),
         index: 0,
-        error: new Error('Invalid action type "Error" at "button".'),
       },
     },
     success: false,
@@ -297,7 +301,7 @@ test('registerEvent then triggerEvent x1', async () => {
     lowdefy,
     pageConfig,
   });
-  const { button } = context._internal.RootBlocks.map;
+  const { button } = context._internal.RootAreas.map;
   button.Events.registerEvent({
     name: 'onClick',
     actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
@@ -359,7 +363,7 @@ test('triggerEvent skip', async () => {
     lowdefy,
     pageConfig,
   });
-  const { button } = context._internal.RootBlocks.map;
+  const { button } = context._internal.RootAreas.map;
   await button.triggerEvent({ name: 'onClick', event: { x: 1 } });
   expect(button.Events.events).toMatchInlineSnapshot(`
     Object {
@@ -479,7 +483,7 @@ test('triggerEvent skip tests === true', async () => {
     lowdefy,
     pageConfig,
   });
-  const { button } = context._internal.RootBlocks.map;
+  const { button } = context._internal.RootAreas.map;
   await button.triggerEvent({ name: 'onClick', event: { x: 1 } });
   expect(button.Events.events).toMatchInlineSnapshot(`
     Object {
@@ -591,7 +595,7 @@ test('triggerEvent skip tests === true', async () => {
 //     lowdefy,
 //     pageConfig,
 //   });
-//   const { button } = context._internal.RootBlocks.map;
+//   const { button } = context._internal.RootAreas.map;
 //   button.Events.registerEvent({
 //     name: 'registered',
 //     actions: null,
@@ -624,7 +628,7 @@ test('triggerEvent skip tests === true', async () => {
 //     lowdefy,
 //     pageConfig,
 //   });
-//   const { button } = context._internal.RootBlocks.map;
+//   const { button } = context._internal.RootAreas.map;
 //   expect(button.Events.events).toEqual({
 //     onClick: { actions: [], history: [], loading: false, catchActions: [], debounce: undefined },
 //   });
@@ -651,7 +655,7 @@ test('Actions try catch arrays', async () => {
     lowdefy,
     pageConfig,
   });
-  const { button } = context._internal.RootBlocks.map;
+  const { button } = context._internal.RootAreas.map;
   expect(button.Events.events).toEqual({
     onClick: {
       actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
@@ -687,7 +691,7 @@ test('Actions try catch arrays and debounce.immediate == true (leading edge)', a
     lowdefy,
     pageConfig,
   });
-  const { button } = context._internal.RootBlocks.map;
+  const { button } = context._internal.RootAreas.map;
   expect(button.Events.events).toEqual({
     onClick: {
       actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
@@ -800,7 +804,7 @@ test('Actions try catch arrays and debounce.immediate == undefined (trailing edg
     lowdefy,
     pageConfig,
   });
-  const { button } = context._internal.RootBlocks.map;
+  const { button } = context._internal.RootAreas.map;
   expect(button.Events.events).toEqual({
     onClick: {
       actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
@@ -909,7 +913,7 @@ test('Actions try catch arrays and debounce.immediate == false default ms (trail
     lowdefy,
     pageConfig,
   });
-  const { button } = context._internal.RootBlocks.map;
+  const { button } = context._internal.RootAreas.map;
   expect(button.Events.events).toEqual({
     onClick: {
       actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],

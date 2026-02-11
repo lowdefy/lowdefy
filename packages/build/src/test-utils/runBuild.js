@@ -1,0 +1,239 @@
+/*
+  Copyright 2020-2024 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import { jest } from '@jest/globals';
+import path from 'path';
+
+/**
+ * Custom types map for testing - includes common types used in fixtures.
+ * Contains all basic blocks, loaders, common actions, operators, and connections.
+ */
+const testTypesMap = {
+  actions: {
+    Link: { package: '@lowdefy/actions-core' },
+    SetState: { package: '@lowdefy/actions-core' },
+    Request: { package: '@lowdefy/actions-core' },
+    Reset: { package: '@lowdefy/actions-core' },
+    Throw: { package: '@lowdefy/actions-core' },
+    Log: { package: '@lowdefy/actions-core' },
+    Return: { package: '@lowdefy/api' },
+  },
+  blocks: {
+    Anchor: { package: '@lowdefy/blocks-basic' },
+    Box: { package: '@lowdefy/blocks-basic' },
+    Button: { package: '@lowdefy/blocks-basic' },
+    DangerousHtml: { package: '@lowdefy/blocks-basic' },
+    Html: { package: '@lowdefy/blocks-basic' },
+    Icon: { package: '@lowdefy/blocks-basic' },
+    Img: { package: '@lowdefy/blocks-basic' },
+    List: { package: '@lowdefy/blocks-basic' },
+    Message: { package: '@lowdefy/blocks-antd' },
+    Paragraph: { package: '@lowdefy/blocks-basic' },
+    ProgressBar: { package: '@lowdefy/blocks-loaders' },
+    Result: { package: '@lowdefy/blocks-antd' },
+    Skeleton: { package: '@lowdefy/blocks-loaders' },
+    SkeletonAvatar: { package: '@lowdefy/blocks-loaders' },
+    SkeletonButton: { package: '@lowdefy/blocks-loaders' },
+    SkeletonInput: { package: '@lowdefy/blocks-loaders' },
+    SkeletonParagraph: { package: '@lowdefy/blocks-loaders' },
+    Span: { package: '@lowdefy/blocks-basic' },
+    Spinner: { package: '@lowdefy/blocks-loaders' },
+    TextInput: { package: '@lowdefy/blocks-antd' },
+    Throw: { package: '@lowdefy/blocks-basic' },
+    Title: { package: '@lowdefy/blocks-basic' },
+  },
+  connections: {
+    AxiosHttp: { package: '@lowdefy/connection-axios-http' },
+    MongoDBCollection: { package: '@lowdefy/connection-mongodb' },
+  },
+  requests: {
+    AxiosHttp: { package: '@lowdefy/connection-axios-http' },
+    MongoDBInsertOne: { package: '@lowdefy/connection-mongodb' },
+  },
+  auth: {
+    adapters: {},
+    callbacks: {},
+    events: {},
+    providers: {
+      GoogleProvider: { package: 'next-auth' },
+    },
+  },
+  operators: {
+    client: {
+      _state: { package: '@lowdefy/operators-js' },
+      _if: { package: '@lowdefy/operators-js' },
+      _eq: { package: '@lowdefy/operators-js' },
+      _not: { package: '@lowdefy/operators-js' },
+      _type: { package: '@lowdefy/operators-js' },
+      _payload: { package: '@lowdefy/operators-js' },
+      _step: { package: '@lowdefy/operators-js' },
+    },
+    server: {
+      _payload: { package: '@lowdefy/operators-js' },
+      _step: { package: '@lowdefy/operators-js' },
+    },
+  },
+  controls: {
+    Endpoint: { package: '@lowdefy/api' },
+    Log: { package: '@lowdefy/api' },
+    Return: { package: '@lowdefy/api' },
+  },
+};
+
+/**
+ * Creates a runBuild helper function for testing build errors.
+ *
+ * @param {Function} build - The build function (imported after mocking writeBuildArtifact)
+ * @param {string} fixturesDir - Absolute path to the fixtures directory
+ * @returns {Function} runBuild helper function
+ *
+ * @example
+ * // In test file:
+ * jest.unstable_mockModule('./utils/writeBuildArtifact.js', () => ({
+ *   default: () => jest.fn(),
+ * }));
+ * const { default: build } = await import('./index.js');
+ * const runBuild = createRunBuild(build, path.join(__dirname, 'build-errors'));
+ *
+ * // Then in tests:
+ * const result = await runBuild('A1-invalid-connection-type', 'prod');
+ * expect(result.errors).toContain('...');
+ */
+function createRunBuild(build, fixturesDir) {
+  /**
+   * Runs build with a specific fixture directory and stage.
+   * Returns captured errors, warnings, and the thrown error (if any).
+   *
+   * @param {string} fixtureDir - Name of the fixture directory (e.g., 'A1-invalid-connection-type')
+   * @param {string} [stage='prod'] - Build stage ('dev' or 'prod')
+   * @returns {Promise<{errors: string[], warnings: string[], thrownError: Error|null, logger: Object}>}
+   */
+  return async function runBuild(fixtureDir, stage = 'prod') {
+    const configDir = path.join(fixturesDir, fixtureDir);
+    const errors = [];
+    const warnings = [];
+    let pendingLogLine = null; // Captures log line to combine with next warn/error
+
+    function formatMessage(messageOrObj) {
+      if (typeof messageOrObj === 'string') return messageOrObj;
+      if (messageOrObj?.print && typeof messageOrObj.print === 'function') {
+        return messageOrObj.print();
+      }
+      if (messageOrObj && (messageOrObj.name || messageOrObj.message !== undefined)) {
+        const name = messageOrObj.name || 'Error';
+        const message = messageOrObj.message ?? '';
+        return `[${name}] ${message}`;
+      }
+      return String(messageOrObj);
+    }
+
+    const logger = {
+      info: jest.fn(),
+      log: jest.fn(),
+      warn: jest.fn((objOrMsg, maybeMsg) => {
+        // Handle pino-style calls: logger.warn({ print }, message) or logger.warn(message)
+        let message = objOrMsg;
+        if (typeof objOrMsg === 'object' && objOrMsg !== null) {
+          message = maybeMsg ?? '';
+        }
+        if (message) warnings.push(message);
+      }),
+      error: jest.fn((objOrMsg, maybeMsg) => {
+        // Handle pino-style calls
+        let message;
+        if (objOrMsg instanceof Error) {
+          message = objOrMsg.message;
+        } else if (typeof objOrMsg === 'object' && objOrMsg !== null) {
+          message = maybeMsg ?? '';
+        } else {
+          message = objOrMsg;
+        }
+        if (message) errors.push(message);
+      }),
+      succeed: jest.fn(),
+    };
+
+    // Add ui methods that handle ConfigWarning/ConfigError objects
+    logger.ui = {
+      warn: (messageOrObj) => {
+        const source = messageOrObj?.source ?? null;
+        const message = formatMessage(messageOrObj);
+        const formatted = source ? `${source}\n${message}` : message;
+        warnings.push(formatted);
+      },
+      error: (messageOrObj) => {
+        const source = messageOrObj?.source ?? null;
+        const message = formatMessage(messageOrObj);
+        const formatted = source ? `${source}\n${message}` : message;
+        errors.push(formatted);
+      },
+      link: jest.fn(),
+      log: jest.fn(),
+      info: jest.fn(),
+      dim: jest.fn(),
+      debug: jest.fn(),
+      spin: jest.fn(),
+      succeed: jest.fn(),
+    };
+
+    let thrownError = null;
+    try {
+      await build({
+        customTypesMap: testTypesMap,
+        directories: {
+          config: configDir,
+          build: path.join(configDir, '.lowdefy'),
+          server: path.join(configDir, '.lowdefy', 'server'),
+        },
+        logger,
+        stage,
+      });
+    } catch (err) {
+      thrownError = err;
+      // Extract errors embedded in the thrown message (format: "✖ [Config Error] ...")
+      // This handles the case where errors are bundled in the thrown message to avoid interleaving
+      // Each error is multi-line: message line + indented location lines
+      if (err.message) {
+        const lines = err.message.split('\n');
+        let currentError = null;
+        for (const line of lines) {
+          if (line.startsWith('✖ [Config Error]')) {
+            // Start of a new error - save previous if exists
+            if (currentError !== null) {
+              errors.push(currentError);
+            }
+            currentError = line.slice(2); // Remove "✖ " prefix
+          } else if (currentError !== null && line.startsWith('  ')) {
+            // Continuation line (indented) - append to current error
+            currentError += '\n' + line;
+          } else if (currentError !== null) {
+            // Non-continuation line - save current error and reset
+            errors.push(currentError);
+            currentError = null;
+          }
+        }
+        // Don't forget the last error
+        if (currentError !== null) {
+          errors.push(currentError);
+        }
+      }
+    }
+
+    return { errors, warnings, thrownError, logger };
+  };
+}
+
+export { testTypesMap, createRunBuild };

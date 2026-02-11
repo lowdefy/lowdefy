@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { ConfigError, PluginError } from '@lowdefy/errors/client';
 import { applyArrayIndices, serializer, type } from '@lowdefy/helpers';
 
 class WebParser {
@@ -37,12 +38,11 @@ class WebParser {
       throw new Error('Operator parser location must be a string.');
     }
     const errors = [];
-    const { basePath, home, inputs, lowdefyGlobal, menus, pageId, user, _internal } =
+    const { apiResponses, basePath, home, inputs, lowdefyGlobal, menus, pageId, user, _internal } =
       this.context._internal.lowdefy;
     const reviver = (_, value) => {
       if (!type.isObject(value)) return value;
-      // TODO: pass ~k in errors.
-      // const _k = value['~k'];
+      const configKey = value['~k'];
       delete value['~k'];
 
       if (Object.keys(value).length !== 1) return value;
@@ -53,11 +53,14 @@ class WebParser {
       const [op, methodName] = `_${key.substring(operatorPrefix.length)}`.split('.');
       if (type.isUndefined(this.operators[op])) return value;
 
+      const params = value[key];
+      const operatorLocation = applyArrayIndices(arrayIndices, location);
       try {
         const res = this.operators[op]({
           actions,
           args,
           arrayIndices,
+          apiResponses,
           basePath,
           event,
           eventLog: this.context.eventLog,
@@ -65,14 +68,14 @@ class WebParser {
           home,
           input: inputs[this.context.id],
           jsMap: this.context.jsMap,
-          location: applyArrayIndices(arrayIndices, location),
+          location: operatorLocation,
           lowdefyGlobal,
           menus,
           methodName,
           operatorPrefix,
           operators: this.operators,
           pageId,
-          params: value[key],
+          params,
           parser: this,
           requests: this.context.requests,
           runtime: 'browser',
@@ -81,8 +84,25 @@ class WebParser {
         });
         return res;
       } catch (e) {
-        errors.push(e);
-        console.error(e);
+        // ConfigError from plugin - add configKey and re-throw structure
+        if (e instanceof ConfigError) {
+          if (!e.configKey) {
+            e.configKey = configKey;
+          }
+          errors.push(e);
+          return null;
+        }
+        // Plain error from plugin - wrap in PluginError
+        errors.push(
+          new PluginError({
+            error: e,
+            pluginType: 'operator',
+            pluginName: op,
+            received: { [key]: params },
+            location: operatorLocation,
+            configKey: e.configKey ?? configKey,
+          })
+        );
         return null;
       }
     };

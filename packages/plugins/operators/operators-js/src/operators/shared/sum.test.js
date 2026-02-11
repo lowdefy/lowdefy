@@ -36,12 +36,12 @@ test('_sum ignores non number parameters', () => {
 
 test('_sum invalid parameters', () => {
   expect(() => sum({ params: null, location: 'locationId' })).toThrow(
-    'Operator Error: _sum takes an array type as input. Received: null at locationId.'
+    '_sum takes an array type as input.'
   );
   expect(() => sum({ params: 'a', location: 'locationId' })).toThrow(
-    'Operator Error: _sum takes an array type as input. Received: "a" at locationId.'
+    '_sum takes an array type as input.'
   );
   expect(() => sum({ params: false, location: 'locationId' })).toThrow(
-    'Operator Error: _sum takes an array type as input. Received: false at locationId.'
+    '_sum takes an array type as input.'
   );
 });

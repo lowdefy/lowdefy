@@ -1,0 +1,25 @@
+# H2: Operator Typo (_iff)
+# =========================
+# Tests that unknown operators throw an error with a "Did you mean?" suggestion.
+# This example uses "_iff" which is a typo for "_if".
+#
+# Expected warning:
+#   [Config Warning] Operator type "_iff" was used but is not defined.
+#   Did you mean "_if"?
+#
+# The error points to line 19 where the operator is used.
+
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: typoBlock
+        type: Paragraph
+        properties:
+          content:
+            _iff:
+              test: true
+              then: yes
+              else: no

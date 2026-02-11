@@ -1,0 +1,161 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: alert
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: alert_basic
+    type: Alert
+    properties:
+      message: Basic Alert Message
+
+  - id: alert_with_description
+    type: Alert
+    properties:
+      message: Alert Title
+      description: This is a detailed description of the alert.
+
+  # ============================================
+  # TYPE TESTS
+  # ============================================
+
+  - id: alert_success
+    type: Alert
+    properties:
+      message: Success Alert
+      type: success
+
+  - id: alert_info
+    type: Alert
+    properties:
+      message: Info Alert
+      type: info
+
+  - id: alert_warning
+    type: Alert
+    properties:
+      message: Warning Alert
+      type: warning
+
+  - id: alert_error
+    type: Alert
+    properties:
+      message: Error Alert
+      type: error
+
+  # ============================================
+  # ICON TESTS
+  # ============================================
+
+  - id: alert_with_icon
+    type: Alert
+    properties:
+      message: Alert with Icon
+      showIcon: true
+
+  - id: alert_no_icon
+    type: Alert
+    properties:
+      message: Alert without Icon
+      showIcon: false
+
+  - id: alert_custom_icon
+    type: Alert
+    properties:
+      message: Alert with Custom Icon
+      icon: AiOutlineBell
+
+  # ============================================
+  # CLOSABLE TESTS
+  # ============================================
+
+  - id: alert_closable
+    type: Alert
+    properties:
+      message: Closable Alert
+      closable: true
+
+  - id: alert_close_text
+    type: Alert
+    properties:
+      message: Alert with Close Text
+      closable: true
+      closeText: Dismiss
+
+  # ============================================
+  # BANNER TESTS
+  # ============================================
+
+  - id: alert_banner
+    type: Alert
+    properties:
+      message: Banner Alert
+      banner: true
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  - id: alert_onclose
+    type: Alert
+    properties:
+      message: Alert with onClose
+      closable: true
+    events:
+      onClose:
+        - id: set_onclose
+          type: SetState
+          params:
+            alert_onclose_fired: true
+
+  - id: onclose_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: alert_onclose_fired
+              - true
+          then: Close fired
+          else: ''
+
+  - id: alert_afterclose
+    type: Alert
+    properties:
+      message: Alert with afterClose
+      closable: true
+    events:
+      afterClose:
+        - id: set_afterclose
+          type: SetState
+          params:
+            alert_afterclose_fired: true
+
+  - id: afterclose_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: alert_afterclose_fired
+              - true
+          then: After close fired
+          else: ''

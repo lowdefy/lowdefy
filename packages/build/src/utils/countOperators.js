@@ -16,20 +16,39 @@
 
 import { type } from '@lowdefy/helpers';
 
-function countOperators(obj, { counter }) {
-  function getOperatorsReviver(_, value) {
-    if (type.isObject(value) && Object.keys(value).length === 1) {
-      const key = Object.keys(value)[0];
-      const [op] = key.split('.');
-      const operator = op.replace(/^(_+)/gm, '_');
-      if (operator.length > 1 && operator[0] === '_') {
-        counter.increment(operator);
-      }
-    }
-    return value;
+function walkAndCount(value, counter, parentConfigKey) {
+  if (type.isArray(value)) {
+    value.forEach((item) => walkAndCount(item, counter, parentConfigKey));
+    return;
   }
 
-  JSON.parse(JSON.stringify(obj), getOperatorsReviver);
+  if (!type.isObject(value)) {
+    return;
+  }
+
+  const configKey = value['~k'] || parentConfigKey;
+  const keys = Object.keys(value);
+
+  // Check if this object is an operator (single key starting with _, ignoring ~ prefixed keys)
+  // This allows ~ignoreBuildCheck to be on the same object as an operator
+  const nonTildeKeys = keys.filter((k) => !k.startsWith('~'));
+  if (nonTildeKeys.length === 1) {
+    const key = nonTildeKeys[0];
+    const [op] = key.split('.');
+    const operator = op.replace(/^(_+)/gm, '_');
+    if (operator.length > 1 && operator[0] === '_') {
+      counter.increment(operator, configKey);
+    }
+  }
+
+  // Recurse into all values
+  keys.forEach((key) => {
+    walkAndCount(value[key], counter, configKey);
+  });
+}
+
+function countOperators(obj, { counter }) {
+  walkAndCount(obj, counter, null);
 }
 
 export default countOperators;

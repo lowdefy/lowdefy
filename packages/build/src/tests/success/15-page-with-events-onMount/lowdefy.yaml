@@ -1,0 +1,17 @@
+# 15: Page with onMount Event
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    events:
+      onMount:
+        - id: mountAction
+          type: SetState
+          params:
+            mounted: true
+      onMountAsync:
+        - id: asyncMount
+          type: SetState
+          params:
+            asyncMounted: true

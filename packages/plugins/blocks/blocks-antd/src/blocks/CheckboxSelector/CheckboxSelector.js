@@ -67,7 +67,7 @@ const CheckboxSelector = ({
                 );
               });
               methods.setValue(val);
-              methods.triggerEvent({ name: 'onChange' });
+              methods.triggerEvent({ name: 'onChange', event: { value: val } });
             }}
             value={getValueIndex(value, uniqueValueOptions, true)}
           >

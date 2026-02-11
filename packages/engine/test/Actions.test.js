@@ -17,6 +17,7 @@
 */
 
 import { jest } from '@jest/globals';
+import { PluginError } from '@lowdefy/errors/client';
 
 import testContext from './testContext.js';
 
@@ -372,7 +373,7 @@ test('action error in error messages from same action id', async () => {
   expect(displayMessage.mock.calls).toEqual([
     [
       {
-        content: 'Result one: one response - Result two: Error: Test error',
+        content: 'Result one: one response - Result two: PluginError: Test error at blockId.',
         duration: 6,
         status: 'error',
       },
@@ -421,16 +422,16 @@ test('action error in error parser', async () => {
     event: {},
     eventName,
   });
-  expect(res.responses.two.error).toEqual(
-    new Error(
-      'Operator Error: _divide takes an array of 2 numbers. Received: [3,{"name":"Error"}] at blockId.'
-    )
-  );
-  expect(res.error.error.error).toEqual(
-    new Error(
-      'Operator Error: _divide takes an array of 2 numbers. Received: [3,{"name":"Error"}] at blockId.'
-    )
-  );
+  expect(res.responses.two.error).toBeInstanceOf(PluginError);
+  expect(res.responses.two.error.rawMessage).toBe('_divide takes an array of 2 numbers.');
+  // Message includes location but not [Plugin Error] prefix or Received - logger formats those
+  expect(res.responses.two.error.message).toBe('_divide takes an array of 2 numbers. at blockId.');
+  // Received value contains the _divide operator with params - second param is the error from nested parsing
+  expect(res.responses.two.error.received._divide[0]).toBe(3);
+  expect(res.responses.two.error.received._divide[1].name).toBe('PluginError');
+  expect(res.error.error).toBeInstanceOf(PluginError);
+  expect(res.error.error.rawMessage).toBe('_divide takes an array of 2 numbers.');
+  expect(res.error.error.message).toBe('_divide takes an array of 2 numbers. at blockId.');
 });
 
 test('error with messages undefined', async () => {
@@ -539,23 +540,25 @@ test('action throws a error', async () => {
         params: 'params',
         type: 'ActionError',
       },
-      error: {
-        error: new Error('Test error'),
-        index: 0,
-        type: 'ActionError',
-      },
+      error: expect.any(PluginError),
+      index: 0,
     },
     responses: {
       test: {
-        type: 'ActionError',
+        action: {
+          id: 'test',
+          params: 'params',
+          type: 'ActionError',
+        },
+        error: expect.any(PluginError),
         index: 0,
-        error: new Error('Test error'),
       },
     },
     success: false,
     startTimestamp: { date: 0 },
     endTimestamp: { date: 0 },
   });
+  expect(res.error.error.rawMessage).toContain('Test error');
   expect(actions.ActionError.mock.calls.length).toBe(1);
 });
 
@@ -593,23 +596,25 @@ test('actions after a error are not called throws a error', async () => {
         params: 'params',
         type: 'ActionError',
       },
-      error: {
-        error: new Error('Test error'),
-        index: 0,
-        type: 'ActionError',
-      },
+      error: expect.any(PluginError),
+      index: 0,
     },
     responses: {
       test: {
-        type: 'ActionError',
+        action: {
+          id: 'test',
+          params: 'params',
+          type: 'ActionError',
+        },
+        error: expect.any(PluginError),
         index: 0,
-        error: new Error('Test error'),
       },
     },
     success: false,
     startTimestamp: { date: 0 },
     endTimestamp: { date: 0 },
   });
+  expect(res.error.error.rawMessage).toContain('Test error');
   expect(actions.ActionError.mock.calls.length).toBe(1);
   expect(actions.ActionSync.mock.calls.length).toBe(0);
 });
@@ -645,17 +650,18 @@ test('Invalid action type', async () => {
         params: 'params',
         type: 'Invalid',
       },
-      error: {
-        error: new Error('Invalid action type "Invalid" at "blockId".'),
-        index: 0,
-        type: 'Invalid',
-      },
+      error: expect.any(Error),
+      index: 0,
     },
     responses: {
       test: {
-        type: 'Invalid',
+        action: {
+          id: 'test',
+          params: 'params',
+          type: 'Invalid',
+        },
+        error: expect.any(Error),
         index: 0,
-        error: new Error('Invalid action type "Invalid" at "blockId".'),
       },
     },
     success: false,
@@ -684,40 +690,46 @@ test('Parser error in action', async () => {
     event: {},
     eventName,
   });
-  expect(res).toEqual({
-    blockId: 'blockId',
-    bounced: false,
-    event: {},
-    eventName: 'eventName',
-    error: {
-      action: {
-        id: 'test',
-        params: {
-          _state: [],
-        },
-        type: 'ActionSync',
-      },
-      error: {
-        error: new Error(
-          'Operator Error: _state params must be of type string, integer, boolean or object. Received: [] at blockId.'
-        ),
-        index: 0,
-        type: 'ActionSync',
-      },
-    },
-    responses: {
-      test: {
-        type: 'ActionSync',
-        index: 0,
-        error: new Error(
-          'Operator Error: _state params must be of type string, integer, boolean or object. Received: [] at blockId.'
-        ),
-      },
-    },
-    success: false,
-    startTimestamp: { date: 0 },
-    endTimestamp: { date: 0 },
+  expect(res.blockId).toBe('blockId');
+  expect(res.bounced).toBe(false);
+  expect(res.event).toEqual({});
+  expect(res.eventName).toBe('eventName');
+  expect(res.success).toBe(false);
+  expect(res.startTimestamp).toEqual({ date: 0 });
+  expect(res.endTimestamp).toEqual({ date: 0 });
+
+  // Check error structure
+  expect(res.error.action).toEqual({
+    id: 'test',
+    params: { _state: [] },
+    type: 'ActionSync',
   });
+  expect(res.error.index).toBe(0);
+  expect(res.error.error).toBeInstanceOf(PluginError);
+  expect(res.error.error.rawMessage).toBe(
+    '_state params must be of type string, integer, boolean or object.'
+  );
+  // Message includes location but not [Plugin Error] prefix or Received - logger formats those
+  expect(res.error.error.message).toBe(
+    '_state params must be of type string, integer, boolean or object. at blockId.'
+  );
+  expect(res.error.error.received).toEqual({ _state: [] });
+
+  // Check responses structure
+  expect(res.responses.test.action).toEqual({
+    id: 'test',
+    params: { _state: [] },
+    type: 'ActionSync',
+  });
+  expect(res.responses.test.index).toBe(0);
+  expect(res.responses.test.error).toBeInstanceOf(PluginError);
+  expect(res.responses.test.error.rawMessage).toBe(
+    '_state params must be of type string, integer, boolean or object.'
+  );
+  expect(res.responses.test.error.message).toBe(
+    '_state params must be of type string, integer, boolean or object. at blockId.'
+  );
+  expect(res.responses.test.error.received).toEqual({ _state: [] });
 });
 
 test('Display default loading and success messages when value == true ', async () => {
@@ -993,11 +1005,8 @@ test('Call catchActions when actions throws error', async () => {
         },
         type: 'ActionError',
       },
-      error: {
-        error: new Error('Test error'),
-        index: 0,
-        type: 'ActionError',
-      },
+      error: expect.any(PluginError),
+      index: 0,
     },
     event: {},
     eventName: 'eventName',
@@ -1008,9 +1017,15 @@ test('Call catchActions when actions throws error', async () => {
         type: 'ActionAsync',
       },
       try_error: {
-        error: new Error('Test error'),
+        action: {
+          id: 'try_error',
+          messages: {
+            error: false,
+          },
+          type: 'ActionError',
+        },
+        error: expect.any(PluginError),
         index: 0,
-        type: 'ActionError',
       },
     },
     startTimestamp: {
@@ -1018,6 +1033,7 @@ test('Call catchActions when actions throws error', async () => {
     },
     success: false,
   });
+  expect(res.error.error.rawMessage).toContain('Test error');
   expect(actions.ActionAsync.mock.calls.length).toBe(1);
 });
 
@@ -1077,11 +1093,8 @@ test('Call catchActions when actions throws error and catchActions throws error'
         },
         type: 'ActionError',
       },
-      error: {
-        error: new Error('Test error'),
-        index: 0,
-        type: 'ActionError',
-      },
+      error: expect.any(PluginError),
+      index: 0,
     },
     errorCatch: {
       action: {
@@ -1091,11 +1104,8 @@ test('Call catchActions when actions throws error and catchActions throws error'
         },
         type: 'CatchActionError',
       },
-      error: {
-        error: new Error('Test catch error'),
-        index: 1,
-        type: 'CatchActionError',
-      },
+      error: expect.any(PluginError),
+      index: 1,
     },
     event: {},
     eventName: 'eventName',
@@ -1106,14 +1116,26 @@ test('Call catchActions when actions throws error and catchActions throws error'
         type: 'ActionAsync',
       },
       try_error: {
-        error: new Error('Test error'),
+        action: {
+          id: 'try_error',
+          messages: {
+            error: false,
+          },
+          type: 'ActionError',
+        },
+        error: expect.any(PluginError),
         index: 0,
-        type: 'ActionError',
       },
       catch_error: {
-        error: new Error('Test catch error'),
+        action: {
+          id: 'catch_error',
+          messages: {
+            error: false,
+          },
+          type: 'CatchActionError',
+        },
+        error: expect.any(PluginError),
         index: 1,
-        type: 'CatchActionError',
       },
     },
     startTimestamp: {
@@ -1121,6 +1143,8 @@ test('Call catchActions when actions throws error and catchActions throws error'
     },
     success: false,
   });
+  expect(res.error.error.rawMessage).toContain('Test error');
+  expect(res.errorCatch.error.rawMessage).toContain('Test catch error');
   expect(actions.ActionAsync.mock.calls.length).toBe(1);
 });
 
@@ -1239,8 +1263,8 @@ test('call async: true with error', async () => {
         index: 1,
       },
       test1: {
-        type: 'ActionAsyncError',
-        error: new Error('Test error'),
+        action: { id: 'test1', type: 'ActionAsyncError', async: true, params: { ms: 100 } },
+        error: expect.any(PluginError),
         index: 0,
       },
     },
@@ -1248,6 +1272,7 @@ test('call async: true with error', async () => {
     startTimestamp: { date: 0 },
     endTimestamp: { date: 0 },
   });
+  expect(res.responses.test1.error.rawMessage).toContain('Test error');
 });
 
 test('call 2 actions, first with async: false', async () => {

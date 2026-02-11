@@ -37,9 +37,7 @@ async function AxiosHttp({ request, connection }) {
   } catch (error) {
     if (error.response) {
       throw new Error(
-        `${error.message}; Http response "${error.response.status}: ${
-          error.response.statusText
-        }"; Data: ${JSON.stringify(error.response.data)}.`
+        `${error.message}; Http response "${error.response.status}: ${error.response.statusText}".`
       );
     }
     throw error;

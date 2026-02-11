@@ -1,0 +1,14 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": [
+        "Action \"type\" should be a string"
+      ],
+      "errorContains": [
+        "Action \"type\" should be a string.",
+        "lowdefy.yaml:24"
+      ]
+    }
+  ]
+}

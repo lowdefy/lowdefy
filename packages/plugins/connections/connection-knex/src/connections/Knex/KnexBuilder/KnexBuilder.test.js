@@ -116,7 +116,7 @@ test('KnexBuilder, more than one method', async () => {
     query: [{ select: ['*'], where: ['name', 'steve'] }],
   };
   await expect(KnexBuilder({ request, connection })).rejects.toThrow(
-    'Invalid query, more than one method defined in a method object, received ["select","where"].'
+    'Invalid query, more than one method defined in a method object.'
   );
 });
 
@@ -126,7 +126,7 @@ test('KnexBuilder, method args not an array', async () => {
     query: [{ select: '*' }],
   };
   await expect(KnexBuilder({ request, connection })).rejects.toThrow(
-    'Invalid query, method "select" arguments should be an array, received "*".'
+    'Invalid query, method "select" arguments should be an array.'
   );
 });
 

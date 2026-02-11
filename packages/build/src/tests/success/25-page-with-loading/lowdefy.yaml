@@ -1,0 +1,16 @@
+# 25: Page with Loading Property
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    loading: false
+    blocks:
+      - id: spinner
+        type: Spinner
+        loading: true
+      - id: content
+        type: Paragraph
+        loading: false
+        properties:
+          content: Content

@@ -60,6 +60,27 @@ connections:
         _secret: MONGODB_URI
       read: false
       write: true
+  - id: companies
+    type: MongoDBCollection
+    properties:
+      collection: example-companies
+      databaseUri:
+        _secret: MONGODB_URI
+      read: false
+      write: false
+  - id: files
+    type: AwsS3Bucket
+    properties:
+      accessKeyId:
+        _secret: UPLOADS_S3_ACCESS_KEY_ID
+      secretAccessKey:
+        _secret: UPLOADS_S3_SECRET_ACCESS_KEY
+      region:
+        _secret: UPLOADS_S3_REGION
+      bucket:
+        _secret: UPLOADS_S3_BUCKET
+      write: false
+      read: false
 menus:
   _ref: menus.yaml
 

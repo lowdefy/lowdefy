@@ -1,0 +1,86 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: layout
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: layout_basic
+    type: Layout
+    areas:
+      content:
+        blocks:
+          - id: layout_basic_content
+            type: Span
+            properties:
+              content: Layout content
+
+  # ============================================
+  # STYLE TESTS
+  # ============================================
+
+  - id: layout_with_style
+    type: Layout
+    properties:
+      style:
+        backgroundColor: '#f0f0f0'
+        minHeight: 100px
+    areas:
+      content:
+        blocks:
+          - id: layout_with_style_content
+            type: Span
+            properties:
+              content: Styled layout
+
+  # ============================================
+  # NESTED LAYOUT
+  # ============================================
+
+  - id: layout_nested
+    type: Layout
+    areas:
+      content:
+        blocks:
+          - id: layout_nested_header
+            type: Header
+            areas:
+              content:
+                blocks:
+                  - id: layout_nested_header_content
+                    type: Span
+                    properties:
+                      content: Header
+          - id: layout_nested_content
+            type: Content
+            areas:
+              content:
+                blocks:
+                  - id: layout_nested_main
+                    type: Span
+                    properties:
+                      content: Main content
+          - id: layout_nested_footer
+            type: Footer
+            areas:
+              content:
+                blocks:
+                  - id: layout_nested_footer_content
+                    type: Span
+                    properties:
+                      content: Footer

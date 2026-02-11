@@ -26,4 +26,6 @@ function _index({ arrayIndices, location, params }) {
   });
 }
 
+_index.dynamic = true;
+
 export default _index;

@@ -43,7 +43,7 @@ const meta = {
   max: { spreadArgs: true, validTypes: ['array'] },
   min: { spreadArgs: true, validTypes: ['array'] },
   pow: { namedArgs: ['base', 'exponent'], validTypes: ['object', 'array'] },
-  random: { noArgs: true },
+  random: { noArgs: true, dynamic: true },
   round: { singleArg: true, validTypes: ['number'] },
   sign: { singleArg: true, validTypes: ['number'] },
   sin: { singleArg: true, validTypes: ['number'] },
@@ -72,5 +72,8 @@ function _math({ params, location, methodName }) {
     params,
   });
 }
+
+_math.dynamic = false;
+_math.meta = meta;
 
 export default _math;

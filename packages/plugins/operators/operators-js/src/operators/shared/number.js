@@ -61,4 +61,6 @@ function _number({ params, location, methodName }) {
   });
 }
 
+_number.dynamic = false;
+
 export default _number;

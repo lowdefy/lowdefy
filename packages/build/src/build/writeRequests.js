@@ -13,11 +13,23 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { serializer } from '@lowdefy/helpers';
+import { serializer, type } from '@lowdefy/helpers';
+import { ConfigError } from '@lowdefy/errors/build';
 
 async function writeRequestsOnPage({ page, context }) {
+  const requests = page.requests ?? [];
+
+  if (!type.isArray(requests)) {
+    throw new ConfigError({
+      message: `Page requests must be an array.`,
+      received: requests,
+      configKey: page['~k'],
+      context,
+    });
+  }
+
   return Promise.all(
-    page.requests.map(async (request) => {
+    requests.map(async (request) => {
       await context.writeBuildArtifact(
         `pages/${page.pageId}/requests/${request.requestId}.json`,
         serializer.serializeToString(request ?? {})

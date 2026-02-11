@@ -32,7 +32,6 @@ test('get default method,', async () => {
     'content-type': 'application/json; charset=utf-8',
     date: expect.any(String),
     etag: expect.any(String),
-    'content-length': expect.any(String),
   });
   expect(res.data).toMatchObject({
     args: {},
@@ -60,7 +59,6 @@ test('get specify method', async () => {
     'content-type': 'application/json; charset=utf-8',
     date: expect.any(String),
     etag: expect.any(String),
-    'content-length': expect.any(String),
   });
   expect(res.data).toMatchObject({
     args: {},
@@ -91,7 +89,6 @@ test('get with params', async () => {
     'content-type': 'application/json; charset=utf-8',
     date: expect.any(String),
     etag: expect.any(String),
-    'content-length': expect.any(String),
   });
   expect(res.data).toMatchObject({
     args: {
@@ -116,7 +113,7 @@ test('axios error', async () => {
   };
   const connection = {};
   await expect(AxiosHttp({ request, connection })).rejects.toThrow(
-    'Request failed with status code 404; Http response "404: Not Found"; Data: "".'
+    'Request failed with status code 404; Http response "404: Not Found".'
   );
 });
 

@@ -14,10 +14,12 @@
   limitations under the License.
 */
 
+import createCallAPI from './createCallAPI.js';
 import createAuthMethods from './auth/createAuthMethods.js';
 import createCallRequest from './createCallRequest.js';
 import createIcon from './createIcon.js';
 import createLinkComponent from './createLinkComponent.js';
+import createLogError from './createLogError.js';
 import setupLink from './setupLink.js';
 
 function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, types, window }) {
@@ -49,17 +51,20 @@ function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, 
       router,
       updaters: {},
     };
+    lowdefy.apiResponses = {};
     lowdefy.basePath = router.basePath;
     lowdefy.contexts = {};
     lowdefy.inputs = {};
     lowdefy.lowdefyGlobal = config.rootConfig.lowdefyGlobal;
 
+    lowdefy._internal.callAPI = createCallAPI(lowdefy);
     lowdefy._internal.auth = createAuthMethods(lowdefy, auth);
     lowdefy._internal.callRequest = createCallRequest(lowdefy);
     lowdefy._internal.components.Link = createLinkComponent(lowdefy, Components.Link);
     lowdefy._internal.link = setupLink(lowdefy);
     lowdefy._internal.updateBlock = (blockId) =>
       lowdefy._internal.updaters[blockId] && lowdefy._internal.updaters[blockId]();
+    lowdefy._internal.logError = createLogError(lowdefy);
 
     if (stage === 'dev') {
       window.lowdefy = lowdefy;

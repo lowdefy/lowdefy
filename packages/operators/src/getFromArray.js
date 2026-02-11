@@ -29,25 +29,13 @@ function getFromArray({ params, array, key, operator, location }) {
     if (type.isString(params.value)) return array.find((item) => item[key] === params.value);
     if (type.isNumber(params.index)) return array[params.index];
     if (!type.isNone(params.value) && !type.isString(params.value)) {
-      throw new Error(
-        `Operator Error: ${operator}.value must be of type string. Received: ${JSON.stringify(
-          params
-        )} at ${location}.`
-      );
+      throw new Error(`${operator}.value must be of type string.`);
     }
     if (!type.isNone(params.index) && !type.isNumber(params.index)) {
-      throw new Error(
-        `Operator Error: ${operator}.index must be of type number. Received: ${JSON.stringify(
-          params
-        )} at ${location}.`
-      );
+      throw new Error(`${operator}.index must be of type number.`);
     }
   }
-  throw new Error(
-    `Operator Error: ${operator} must be of type string, number or object. Received: ${JSON.stringify(
-      params
-    )} at ${location}.`
-  );
+  throw new Error(`${operator} must be of type string, number or object.`);
 }
 
 export default getFromArray;

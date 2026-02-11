@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import { ConfigurationError } from '../../context/errors.js';
+import { ConfigError } from '@lowdefy/errors/server';
 
 function getRequestResolver({ logger }, { connection, requestConfig }) {
   const requestResolver = connection.requests[requestConfig.type];
 
   if (!requestResolver) {
-    const err = new ConfigurationError(`Request type "${requestConfig.type}" can not be found.`);
+    const err = new ConfigError({ message: `Request type "${requestConfig.type}" can not be found.` });
     logger.debug(
       { params: { id: requestConfig.requestId, type: requestConfig.type }, err },
       err.message

@@ -1,0 +1,74 @@
+id: dashboard
+type: PageHeaderMenu
+properties:
+  title: Dashboard
+requests:
+  - id: getStats
+    type: AxiosHttp
+    connectionId: api
+    properties:
+      url: /stats
+events:
+  onInitAsync:
+    - id: loadStats
+      type: Request
+      params: getStats
+areas:
+  content:
+    blocks:
+      - id: welcomeTitle
+        type: Title
+        properties:
+          content:
+            _nunjucks: 'Welcome back, {{ user.name }}!'
+            user:
+              _user: true
+      - id: statsRow
+        type: Box
+        blocks:
+          - id: totalCustomers
+            type: Card
+            layout:
+              span: 6
+            blocks:
+              - id: customerStat
+                type: Statistic
+                properties:
+                  title: Total Customers
+                  value:
+                    _request: getStats.totalCustomers
+          - id: totalOrders
+            type: Card
+            layout:
+              span: 6
+            blocks:
+              - id: orderStat
+                type: Statistic
+                properties:
+                  title: Total Orders
+                  value:
+                    _request: getStats.totalOrders
+          - id: revenue
+            type: Card
+            layout:
+              span: 6
+            blocks:
+              - id: revenueStat
+                type: Statistic
+                properties:
+                  title: Revenue
+                  prefix: $
+                  value:
+                    _request: getStats.revenue
+          - id: growth
+            type: Card
+            layout:
+              span: 6
+            blocks:
+              - id: growthStat
+                type: Statistic
+                properties:
+                  title: Growth
+                  suffix: '%'
+                  value:
+                    _request: getStats.growth

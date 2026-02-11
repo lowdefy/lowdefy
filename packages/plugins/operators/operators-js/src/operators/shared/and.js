@@ -16,15 +16,13 @@
 
 import { type } from '@lowdefy/helpers';
 
-function _and({ params, location }) {
+function _and({ params }) {
   if (!type.isArray(params)) {
-    throw new Error(
-      `Operator Error: _and takes an array type. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`_and takes an array type.`);
   }
   return !!params.reduce((acc, el) => acc && el, true);
 }
+
+_and.dynamic = false;
 
 export default _and;

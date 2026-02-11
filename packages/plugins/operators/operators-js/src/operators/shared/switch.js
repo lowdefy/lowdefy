@@ -16,21 +16,13 @@
 
 import { type } from '@lowdefy/helpers';
 
-function _switch({ location, params }) {
+function _switch({ params }) {
   if (!type.isArray(params.branches)) {
-    throw new Error(
-      `Operator Error: switch takes an array type as input for the branches. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`_switch takes an array type as input for the branches.`);
   }
   for (const branch of params.branches) {
     if (!type.isBoolean(branch.if)) {
-      throw new Error(
-        `Operator Error: switch takes a boolean type for parameter "if". Received: ${JSON.stringify(
-          params
-        )} at ${location}.`
-      );
+      throw new Error(`_switch takes a boolean type for parameter "if".`);
     }
     if (branch.if === true) {
       return branch.then;
@@ -38,5 +30,7 @@ function _switch({ location, params }) {
   }
   return params.default;
 }
+
+_switch.dynamic = false;
 
 export default _switch;

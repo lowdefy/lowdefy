@@ -19,12 +19,14 @@ import { get } from '@lowdefy/helpers';
 import getRefPath from './getRefPath.js';
 import makeId from '../../utils/makeId.js';
 
-function makeRefDefinition(refDefinition, parent, refMap) {
-  const id = makeId();
+function makeRefDefinition(refDefinition, parent, refMap, lineNumber) {
+  const id = makeId.next();
   const refDef = {
     parent,
+    lineNumber,
   };
   refMap[id] = refDef;
+  const ignoreBuildChecks = get(refDefinition, '~ignoreBuildChecks');
   return {
     ...refDef,
     id,
@@ -34,6 +36,7 @@ function makeRefDefinition(refDefinition, parent, refMap) {
     resolver: get(refDefinition, 'resolver'),
     transformer: get(refDefinition, 'transformer'),
     vars: get(refDefinition, 'vars', { default: {} }),
+    ...(ignoreBuildChecks !== undefined && { ignoreBuildChecks }),
   };
 }
 

@@ -1,0 +1,32 @@
+# 34: Complete CRUD Application
+lowdefy: local
+name: User Management App
+
+connections:
+  - id: db
+    type: MongoDBCollection
+    properties:
+      databaseUri: mongodb://localhost:27017/crud_app
+      collection: users
+      write: true
+
+menus:
+  - id: default
+    links:
+      - id: users
+        type: MenuLink
+        pageId: users
+        properties:
+          title: Users
+          icon: AiOutlineUser
+      - id: create
+        type: MenuLink
+        pageId: create-user
+        properties:
+          title: Add User
+          icon: AiOutlinePlus
+
+pages:
+  - _ref: pages/users.yaml
+  - _ref: pages/create-user.yaml
+  - _ref: pages/edit-user.yaml

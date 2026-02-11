@@ -56,5 +56,5 @@ test('link method throws', () => {
       methods,
       params: 'page-id',
     })
-  ).toThrow('Invalid Link, check action params. Received ""page-id"".');
+  ).toThrow('Invalid Link, check action params.');
 });

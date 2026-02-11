@@ -1,0 +1,136 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: datetimeselector
+type: Box
+
+events:
+  onInit:
+    - id: set_defaults
+      type: SetState
+      params:
+        dts_with_value:
+          _date: '2024-06-15T10:30:00'
+        dts_clearable:
+          _date: '2024-01-01T09:00:00'
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: dts_basic
+    type: DateTimeSelector
+    properties:
+      title: Basic DateTime
+
+  - id: dts_with_value
+    type: DateTimeSelector
+    properties:
+      title: With Value
+
+  # ============================================
+  # PROPERTY TESTS
+  # ============================================
+
+  - id: dts_disabled
+    type: DateTimeSelector
+    properties:
+      title: Disabled
+      disabled: true
+
+  - id: dts_small
+    type: DateTimeSelector
+    properties:
+      title: Small Size
+      size: small
+
+  - id: dts_large
+    type: DateTimeSelector
+    properties:
+      title: Large Size
+      size: large
+
+  - id: dts_placeholder
+    type: DateTimeSelector
+    properties:
+      title: Custom Placeholder
+      placeholder: Pick date and time...
+
+  - id: dts_borderless
+    type: DateTimeSelector
+    properties:
+      title: Borderless
+      bordered: false
+
+  - id: dts_no_allowclear
+    type: DateTimeSelector
+    properties:
+      title: No Allow Clear
+      allowClear: false
+
+  - id: dts_with_title
+    type: DateTimeSelector
+    properties:
+      title: DateTime with Title
+
+  - id: dts_with_label
+    type: DateTimeSelector
+    properties:
+      title: DateTime Label
+      label:
+        extra: Select date and time
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  - id: dts_onchange
+    type: DateTimeSelector
+    properties:
+      title: OnChange Test
+    events:
+      onChange:
+        - id: set_onchange
+          type: SetState
+          params:
+            dts_onchange_value:
+              _event: value
+
+  - id: dts_onchange_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: dts_onchange_value
+              - null
+          then: DateTime selected
+          else: ''
+
+  # ============================================
+  # INTERACTION TESTS
+  # ============================================
+
+  - id: dts_interaction
+    type: DateTimeSelector
+    properties:
+      title: Interaction Test
+
+  - id: dts_clearable
+    type: DateTimeSelector
+    properties:
+      title: Clearable
+      allowClear: true

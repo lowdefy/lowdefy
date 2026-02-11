@@ -19,12 +19,13 @@
 - _ref: concepts/events-and-actions.yaml
 - _ref: concepts/operators.yaml
 - _ref: concepts/secrets.yaml
+- _ref: concepts/logger.yaml
 - _ref: concepts/lists.yaml
 - _ref: concepts/hosting-files.yaml
 - _ref: concepts/custom-html.yaml
 - _ref: concepts/custom-styling.yaml
 - _ref: concepts/cli.yaml
-- _ref: concepts/licenses.yaml
+- _ref: concepts/api.yaml
 
 - _ref: deployment/docker.yaml
 - _ref: deployment/node-server.yaml
@@ -39,7 +40,7 @@
 - _ref: users/users-introduction.yaml
 - _ref: users/auth-providers.yaml
 - _ref: users/login-and-logout.yaml
-- _ref: users/protected-pages.yaml
+- _ref: users/protected-pages-apis.yaml
 - _ref: users/roles.yaml
 - _ref: users/user-object.yaml
 - _ref: users/auth-configuration.yaml
@@ -159,6 +160,7 @@
 - _ref: connections/SQLite.yaml
 - _ref: connections/Stripe.yaml
 
+- _ref: actions/CallAPI.yaml
 - _ref: actions/CallMethod.yaml
 - _ref: actions/CopyToClipboard.yaml
 - _ref: actions/DisplayMessage.yaml
@@ -183,6 +185,7 @@
 
 - _ref: operators/_actions.yaml
 - _ref: operators/_and.yaml
+- _ref: operators/_api.yaml
 - _ref: operators/_args.yaml
 - _ref: operators/_array.yaml
 - _ref: operators/_base64.yaml
@@ -204,8 +207,10 @@
 - _ref: operators/_index.yaml
 - _ref: operators/_input.yaml
 - _ref: operators/_intl.yaml
+- _ref: operators/_item.yaml
 - _ref: operators/_js.yaml
 - _ref: operators/_json.yaml
+- _ref: operators/_jsonata.yaml
 - _ref: operators/_location.yaml
 - _ref: operators/_log.yaml
 - _ref: operators/_lt.yaml
@@ -230,6 +235,7 @@
 - _ref: operators/_request_details.yaml
 - _ref: operators/_secret.yaml
 - _ref: operators/_state.yaml
+- _ref: operators/_step.yaml
 - _ref: operators/_string.yaml
 - _ref: operators/_subtract.yaml
 - _ref: operators/_sum.yaml
@@ -241,6 +247,19 @@
 - _ref: operators/_uuid.yaml
 - _ref: operators/_var.yaml
 - _ref: operators/_yaml.yaml
+
+- _ref: controls/for.yaml
+- _ref: controls/if.yaml
+- _ref: controls/log.yaml
+- _ref: controls/parallel.yaml
+- _ref: controls/parallel_for.yaml
+- _ref: controls/reject.yaml
+- _ref: controls/return.yaml
+- _ref: controls/set_state.yaml
+- _ref: controls/switch.yaml
+- _ref: controls/throw.yaml
+- _ref: controls/try.yaml
+# - _ref: controls/while.yaml # TODO: Add back when while control implemented
 
 - _ref: migration/v3-to-v4.yaml
 

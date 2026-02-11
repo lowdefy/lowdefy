@@ -59,8 +59,8 @@ test('Reset one field', async () => {
     pageConfig,
   });
   expect(context.state).toEqual({ textInput: 'init' });
-  const button = context._internal.RootBlocks.map['button'];
-  const textInput = context._internal.RootBlocks.map['textInput'];
+  const button = context._internal.RootAreas.map['button'];
+  const textInput = context._internal.RootAreas.map['textInput'];
   textInput.setValue('1');
   expect(context.state).toEqual({ textInput: '1' });
   button.triggerEvent({ name: 'onClick' });
@@ -105,8 +105,8 @@ test('Reset on primitive array after adding item', async () => {
     pageConfig,
   });
   expect(context.state).toEqual({ list: ['init'] });
-  const button = context._internal.RootBlocks.map['button'];
-  const list = context._internal.RootBlocks.map['list'];
+  const button = context._internal.RootAreas.map['button'];
+  const list = context._internal.RootAreas.map['list'];
   list.pushItem();
   expect(context.state).toEqual({ list: ['init', null] });
   button.triggerEvent({ name: 'onClick' });
@@ -152,8 +152,8 @@ test('Reset on object array after removing item', async () => {
     pageConfig,
   });
 
-  const button = context._internal.RootBlocks.map['button'];
-  const list = context._internal.RootBlocks.map['list'];
+  const button = context._internal.RootAreas.map['button'];
+  const list = context._internal.RootAreas.map['list'];
 
   expect(context.state).toEqual({ list: [{ textInput: 'init' }] });
   list.removeItem(0);

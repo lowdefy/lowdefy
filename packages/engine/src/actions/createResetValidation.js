@@ -18,7 +18,7 @@ import getBlockMatcher from '../getBlockMatcher.js';
 
 function createResetValidation({ context }) {
   return function resetValidation(params) {
-    context._internal.RootBlocks.resetValidation(getBlockMatcher(params));
+    context._internal.RootAreas.resetValidation(getBlockMatcher(params));
   };
 }
 

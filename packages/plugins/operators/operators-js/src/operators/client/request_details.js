@@ -26,4 +26,6 @@ function _request_details({ params, requests, arrayIndices, location }) {
   });
 }
 
+_request_details.dynamic = true;
+
 export default _request_details;

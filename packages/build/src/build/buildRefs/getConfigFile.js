@@ -14,23 +14,43 @@
   limitations under the License.
 */
 
+import path from 'path';
 import { type } from '@lowdefy/helpers';
+import { ConfigError } from '@lowdefy/errors/build';
 
 async function getConfigFile({ context, refDef, referencedFrom }) {
   if (!type.isString(refDef.path)) {
-    throw new Error(
-      `Invalid _ref definition ${JSON.stringify({
-        _ref: refDef.original,
-      })} in file ${referencedFrom}`
-    );
+    throw new ConfigError({
+      message: 'Invalid _ref definition.',
+      received: { _ref: refDef.original },
+      filePath: referencedFrom,
+      lineNumber: refDef.lineNumber,
+      configDirectory: context.directories.config,
+    });
   }
 
   const content = await context.readConfigFile(refDef.path);
 
   if (content === null) {
-    throw new Error(
-      `Tried to reference file "${refDef.path}" from "${referencedFrom}", but file does not exist.`
-    );
+    const absolutePath = path.resolve(context.directories.config, refDef.path);
+
+    let message = `Referenced file does not exist: "${refDef.path}". Resolved to: ${absolutePath}`;
+
+    // Help with common mistakes
+    if (refDef.path.startsWith('../')) {
+      const suggestedPath = refDef.path.replace(/^(\.\.\/)+/, '');
+      message += ` Tip: Paths in _ref are resolved from config root. Did you mean "${suggestedPath}"?`;
+    } else if (refDef.path.startsWith('./')) {
+      const suggestedPath = refDef.path.substring(2);
+      message += ` Tip: Remove "./" prefix - paths are resolved from config root. Did you mean "${suggestedPath}"?`;
+    }
+
+    throw new ConfigError({
+      message,
+      filePath: referencedFrom,
+      lineNumber: refDef.lineNumber,
+      configDirectory: context.directories.config,
+    });
   }
 
   return content;

@@ -20,4 +20,6 @@ function _log({ params }) {
   return params;
 }
 
+_log.dynamic = true;
+
 export default _log;

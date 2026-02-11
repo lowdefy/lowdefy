@@ -14,6 +14,7 @@
   limitations under the License.
 */
 import { jest } from '@jest/globals';
+import { UserError } from '@lowdefy/errors/client';
 
 import testContext from '../../test/testContext.js';
 
@@ -100,9 +101,9 @@ test('RestValidation after required field', async () => {
     pageConfig,
     operators: lowdefy._internal.operators,
   });
-  const button = context._internal.RootBlocks.map['button'];
-  const reset = context._internal.RootBlocks.map['reset'];
-  const text1 = context._internal.RootBlocks.map['text1'];
+  const button = context._internal.RootAreas.map['button'];
+  const reset = context._internal.RootAreas.map['reset'];
+  const text1 = context._internal.RootAreas.map['text1'];
   expect(text1.eval.validation).toEqual({
     errors: ['This field is required'],
     status: null,
@@ -119,23 +120,26 @@ test('RestValidation after required field', async () => {
         id: 'validate',
         type: 'Validate',
       },
-      error: {
-        error: new Error('Your input has 1 validation error.'),
-        index: 0,
-        type: 'Validate',
-      },
+      error: expect.any(UserError),
+      index: 0,
     },
     responses: {
       validate: {
-        type: 'Validate',
+        action: {
+          id: 'validate',
+          type: 'Validate',
+        },
+        error: expect.any(UserError),
         index: 0,
-        error: new Error('Your input has 1 validation error.'),
       },
     },
     success: false,
     startTimestamp: { date: 0 },
     endTimestamp: { date: 0 },
   });
+  expect(button.Events.events.onClick.history[0].error.error.message).toContain(
+    'Your input has 1 validation error'
+  );
   expect(text1.eval.validation).toEqual({
     errors: ['This field is required'],
     status: 'error',
@@ -164,19 +168,19 @@ test('RestValidation after required field', async () => {
         id: 'validate',
         type: 'Validate',
       },
-      error: {
-        error: new Error('Your input has 1 validation error.'),
-        index: 0,
-        type: 'Validate',
-      },
+      error: expect.any(UserError),
+      index: 0,
     },
     event: undefined,
     eventName: 'onClick',
     responses: {
       validate: {
-        error: new Error('Your input has 1 validation error.'),
+        action: {
+          id: 'validate',
+          type: 'Validate',
+        },
+        error: expect.any(UserError),
         index: 0,
-        type: 'Validate',
       },
     },
     startTimestamp: {

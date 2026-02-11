@@ -1,0 +1,14 @@
+{
+  "tests": [
+    {
+      "mode": "dev",
+      "warnings": [
+        "_staet"
+      ],
+      "warningContains": [
+        "Operator type \"_staet\" was used but is not defined. Did you mean \"_state\"?",
+        "lowdefy.yaml:21"
+      ]
+    }
+  ]
+}

@@ -16,22 +16,16 @@
 
 import { type } from '@lowdefy/helpers';
 
-function _lt({ params, location }) {
+function _lt({ params }) {
   if (!type.isArray(params)) {
-    throw new Error(
-      `Operator Error: _lt takes an array type as input. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`_lt takes an array type as input.`);
   }
   if (params.length !== 2) {
-    throw new Error(
-      `Operator Error: _lt takes an array of length 2 as input. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`_lt takes an array of length 2 as input.`);
   }
   return params[0] < params[1];
 }
+
+_lt.dynamic = false;
 
 export default _lt;

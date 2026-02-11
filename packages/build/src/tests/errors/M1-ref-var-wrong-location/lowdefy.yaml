@@ -1,0 +1,31 @@
+# M1: Ref Template _var Location Test
+# ====================================
+# Tests error location when _ref templates use _var to pass
+# values that contain operators like _state.
+#
+# When _var copies a value from vars, the location markers (~r, ~l)
+# correctly point to where the value is DEFINED (this file), not
+# where _var is used (the template file).
+#
+# Expected behavior:
+#   Error location: lowdefy.yaml:30 (this file, line where stateValue: is defined)
+#   The error correctly identifies WHERE the value is defined.
+
+lowdefy: local
+
+connections:
+  - id: testApi
+    type: AxiosHttp
+    properties:
+      baseURL: http://example.com
+
+pages:
+  - _ref:
+      path: page-template.yaml
+      vars:
+        # This _state reference to undefinedBlockId will be passed to the template.
+        # The ~k marker will be set to THIS location (lowdefy.yaml:32).
+        # When the template uses _var to get this value, the error should
+        # ideally point to the template, but the bug makes it point here.
+        stateValue:
+          _state: undefinedBlockId

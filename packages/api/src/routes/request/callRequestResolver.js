@@ -14,30 +14,67 @@
   limitations under the License.
 */
 
-import { RequestError } from '../../context/errors.js';
+import { ConfigError, PluginError, ServiceError } from '@lowdefy/errors/server';
 
 async function callRequestResolver(
-  { logger },
-  { blockId, connectionProperties, payload, requestConfig, requestProperties, requestResolver }
+  { blockId, endpointId, logger, pageId, payload },
+  { connectionProperties, requestConfig, requestProperties, requestResolver }
 ) {
   try {
     const response = await requestResolver({
       blockId,
+      endpointId,
       connection: connectionProperties,
       connectionId: requestConfig.connectionId,
-      pageId: requestConfig.pageId,
+      pageId,
       payload,
       request: requestProperties,
       requestId: requestConfig.requestId,
     });
     return response;
   } catch (error) {
-    const err = new RequestError(error.message);
+    // Add configKey to any error for location tracing
+    if (!error.configKey) {
+      error.configKey = requestConfig['~k'];
+    }
+
+    if (error instanceof ConfigError) {
+      logger.debug(
+        { params: { id: requestConfig.requestId, type: requestConfig.type }, err: error },
+        error.message
+      );
+      throw error;
+    }
+
+    // Check if this is a service error (network, timeout, 5xx)
+    if (ServiceError.isServiceError(error)) {
+      const serviceError = new ServiceError({
+        error,
+        service: requestConfig.connectionId,
+        configKey: requestConfig['~k'],
+      });
+      logger.debug(
+        { params: { id: requestConfig.requestId, type: requestConfig.type }, err: serviceError },
+        serviceError.message
+      );
+      throw serviceError;
+    }
+
+    // Wrap other errors in PluginError (request/connection logic error)
+    const pluginError = new PluginError({
+      error,
+      pluginType: 'request',
+      pluginName: requestConfig.type,
+      received: requestProperties,
+      location: `${requestConfig.connectionId}/${requestConfig.requestId}`,
+      configKey: requestConfig['~k'],
+    });
+
     logger.debug(
-      { params: { id: requestConfig.requestId, type: requestConfig.type }, err },
-      err.message
+      { params: { id: requestConfig.requestId, type: requestConfig.type }, err: pluginError },
+      pluginError.message
     );
-    throw err;
+    throw pluginError;
   }
 }
 

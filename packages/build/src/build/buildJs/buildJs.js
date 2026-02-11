@@ -18,11 +18,16 @@ import jsMapParser from './jsMapParser.js';
 
 function buildJs({ components, context }) {
   components.pages = components.pages.map((page) => {
-    const pageRequests = [...page.requests];
+    const pageRequests = [...(page.requests ?? [])];
     delete page.requests;
     const cleanPage = jsMapParser({ input: page, jsMap: context.jsMap, env: 'client' });
     const cleanRequests = jsMapParser({ input: pageRequests, jsMap: context.jsMap, env: 'server' });
     return { ...cleanPage, requests: cleanRequests };
+  });
+  components.api = jsMapParser({
+    input: components.api,
+    jsMap: context.jsMap,
+    env: 'server',
   });
   components.connections = jsMapParser({
     input: components.connections,

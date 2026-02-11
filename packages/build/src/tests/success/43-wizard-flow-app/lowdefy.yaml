@@ -1,0 +1,154 @@
+# 43: Wizard Flow Application
+lowdefy: local
+
+pages:
+  - id: wizard
+    type: Box
+    properties:
+      title: Setup Wizard
+    events:
+      onInit:
+        - id: initStep
+          type: SetState
+          params:
+            currentStep: 0
+    blocks:
+      - id: steps
+        type: Progress
+        properties:
+          percent:
+            _product:
+              - _divide:
+                  - _state: currentStep
+                  - 3
+              - 100
+      - id: step1
+        type: Card
+        visible:
+          _eq:
+            - _state: currentStep
+            - 0
+        properties:
+          title: Step 1 - Personal Info
+        blocks:
+          - id: firstName
+            type: TextInput
+            required: true
+            properties:
+              title: First Name
+          - id: lastName
+            type: TextInput
+            required: true
+            properties:
+              title: Last Name
+          - id: nextBtn1
+            type: Button
+            properties:
+              title: Next
+              type: primary
+            events:
+              onClick:
+                - id: validate1
+                  type: Validate
+                - id: goStep2
+                  type: SetState
+                  params:
+                    currentStep: 1
+      - id: step2
+        type: Card
+        visible:
+          _eq:
+            - _state: currentStep
+            - 1
+        properties:
+          title: Step 2 - Contact Info
+        blocks:
+          - id: email
+            type: TextInput
+            required: true
+            properties:
+              title: Email
+          - id: phone
+            type: TextInput
+            properties:
+              title: Phone
+          - id: backBtn2
+            type: Button
+            properties:
+              title: Back
+            events:
+              onClick:
+                - id: goBack1
+                  type: SetState
+                  params:
+                    currentStep: 0
+          - id: nextBtn2
+            type: Button
+            properties:
+              title: Next
+              type: primary
+            events:
+              onClick:
+                - id: validate2
+                  type: Validate
+                - id: goStep3
+                  type: SetState
+                  params:
+                    currentStep: 2
+      - id: step3
+        type: Card
+        visible:
+          _eq:
+            - _state: currentStep
+            - 2
+        properties:
+          title: Step 3 - Confirmation
+        blocks:
+          - id: summary
+            type: Descriptions
+            properties:
+              items:
+                - label: Name
+                  value:
+                    _nunjucks: '{{ first }} {{ last }}'
+                    first:
+                      _state: firstName
+                    last:
+                      _state: lastName
+                - label: Email
+                  value:
+                    _state: email
+                - label: Phone
+                  value:
+                    _state: phone
+          - id: backBtn3
+            type: Button
+            properties:
+              title: Back
+            events:
+              onClick:
+                - id: goBack2
+                  type: SetState
+                  params:
+                    currentStep: 1
+          - id: submitBtn
+            type: Button
+            properties:
+              title: Submit
+              type: primary
+            events:
+              onClick:
+                - id: complete
+                  type: SetState
+                  params:
+                    currentStep: 3
+      - id: complete
+        type: Result
+        visible:
+          _eq:
+            - _state: currentStep
+            - 3
+        properties:
+          status: success
+          title: Setup Complete!
+          subTitle: Your account has been created.

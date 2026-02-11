@@ -40,6 +40,14 @@ const createIcon = (Icons) => {
   const AiOutlineLoading3Quarters = Icons['AiOutlineLoading3Quarters'];
   const AiOutlineExclamationCircle = Icons['AiOutlineExclamationCircle'];
 
+  const formatTitle = (title) => {
+    if (!title || !type.isString(title)) {
+      return '';
+    }
+    let spacedTitle = title.replace(/([A-Z])/g, ' $1').trim();
+    return spacedTitle.substring(spacedTitle.indexOf(' ') + 1);
+  };
+
   const IconBlock = ({ blockId, events, methods, onClick, properties, ...props }) => {
     const propertiesObj = type.isString(properties) ? { name: properties } : properties;
     const spin =
@@ -53,7 +61,7 @@ const createIcon = (Icons) => {
       }),
       rotate: propertiesObj.rotate,
       color: propertiesObj.color,
-      title: propertiesObj.name,
+      title: propertiesObj.title ?? formatTitle(propertiesObj.name),
       size: propertiesObj.size,
       // twoToneColor: propertiesObj.color, // TODO: track https://github.com/react-icons/react-icons/issues/508
       ...omit(props, lowdefyProps),

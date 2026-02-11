@@ -17,7 +17,7 @@
 import { jest } from '@jest/globals';
 
 import writeJs from './writeJs.js';
-import testContext from '../../test/testContext.js';
+import testContext from '../../test-utils/testContext.js';
 
 const mockWriteBuildArtifact = jest.fn();
 
@@ -52,8 +52,8 @@ export default {
       'plugins/operators/serverJsMap.js',
       `
 export default {
-  'C': ({ payload, secrets, user }) => { return 10; },
-  'D': ({ payload, secrets, user }) => { return 1; },
+  'C': ({ item, payload, secrets, state, step, user }) => { return 10; },
+  'D': ({ item, payload, secrets, state, step, user }) => { return 1; },
   };`,
     ],
   ]);
@@ -95,7 +95,7 @@ export default {
       'plugins/operators/serverJsMap.js',
       `
 export default {
-  'C': ({ payload, secrets, user }) => { let array = [1, 2, 3, 4, 5, 6];
+  'C': ({ item, payload, secrets, state, step, user }) => { let array = [1, 2, 3, 4, 5, 6];
       if (array.length > 3) {
         array.splice(3);
       }

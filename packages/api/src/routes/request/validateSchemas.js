@@ -16,7 +16,7 @@
 
 import { validate } from '@lowdefy/ajv';
 
-import { ConfigurationError } from '../../context/errors.js';
+import { ConfigError } from '@lowdefy/errors/server';
 
 function validateSchemas(
   { logger },
@@ -26,9 +26,10 @@ function validateSchemas(
     validate({ schema: connection.schema, data: connectionProperties });
     validate({ schema: requestResolver.schema, data: requestProperties });
   } catch (error) {
-    const err = new ConfigurationError(error.message);
+    const configKey = requestConfig['~k'];
+    const err = new ConfigError({ message: error.message, configKey });
     logger.debug(
-      { params: { id: requestConfig.requestId, type: requestConfig.type }, err },
+      { params: { id: requestConfig.requestId, type: requestConfig.type, configKey }, err },
       err.message
     );
     throw err;

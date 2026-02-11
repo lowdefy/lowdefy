@@ -17,7 +17,7 @@
 import { jest } from '@jest/globals';
 
 import writeAuth from './writeAuth.js';
-import testContext from '../test/testContext.js';
+import testContext from '../test-utils/testContext.js';
 
 const mockWriteBuildArtifact = jest.fn();
 

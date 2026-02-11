@@ -1,0 +1,19 @@
+# 17: Page with Responsive Layout
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: responsive
+        type: Box
+        layout:
+          span: 24
+          sm:
+            span: 12
+          md:
+            span: 8
+          lg:
+            span: 6
+          xl:
+            span: 4

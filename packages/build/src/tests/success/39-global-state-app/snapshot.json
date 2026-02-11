@@ -1,0 +1,2037 @@
+{
+  "app.json": {
+    "html": {
+      "appendBody": "",
+      "appendHead": "",
+      "~k": "2l"
+    },
+    "git_sha": "test-git-sha-for-snapshots",
+    "~k": "2k"
+  },
+  "auth.json": {
+    "api": {
+      "roles": {
+        "~k": "3n"
+      },
+      "~k": "3m"
+    },
+    "authPages": {
+      "~k": "3o"
+    },
+    "pages": {
+      "roles": {
+        "~k": "3q"
+      },
+      "~k": "3p"
+    },
+    "callbacks": {
+      "~arr": [],
+      "~k": "3r"
+    },
+    "events": {
+      "~arr": [],
+      "~k": "3s"
+    },
+    "providers": {
+      "~arr": [],
+      "~k": "3t"
+    },
+    "session": {
+      "~k": "3u"
+    },
+    "theme": {
+      "~k": "3v"
+    },
+    "configured": false,
+    "~k": "3l"
+  },
+  "config.json": {
+    "~k": "2n"
+  },
+  "global.json": {
+    "theme": "light",
+    "language": "en",
+    "notifications": true,
+    "user": {
+      "preferences": {
+        "fontSize": "medium",
+        "compactMode": false,
+        "~k": "6"
+      },
+      "~k": "5"
+    },
+    "cart": {
+      "items": {
+        "~arr": [],
+        "~k": "8"
+      },
+      "total": 0,
+      "~k": "7"
+    },
+    "settings": {
+      "currency": "USD",
+      "timezone": "UTC",
+      "~k": "9"
+    },
+    "~k": "4"
+  },
+  "keyMap.json": {
+    "3": {
+      "key": "root",
+      "~k_parent": "2",
+      "~l": 2
+    },
+    "4": {
+      "key": "root.global",
+      "~k_parent": "3",
+      "~l": 5
+    },
+    "5": {
+      "key": "root.global.user",
+      "~k_parent": "4",
+      "~l": 9
+    },
+    "6": {
+      "key": "root.global.user.preferences",
+      "~k_parent": "5",
+      "~l": 10
+    },
+    "7": {
+      "key": "root.global.cart",
+      "~k_parent": "4",
+      "~l": 13
+    },
+    "8": {
+      "key": "root.global.cart.items",
+      "~k_parent": "7",
+      "~l": 14
+    },
+    "9": {
+      "key": "root.global.settings",
+      "~k_parent": "4",
+      "~l": 16
+    },
+    "10": {
+      "key": "root.pages[1:settings:Box].blocks[0:themeSelect:Selector].events.onChange[0:updateTheme:SetGlobal]",
+      "~k_parent": "z",
+      "~l": 63
+    },
+    "11": {
+      "key": "root.pages[1:settings:Box].blocks[0:themeSelect:Selector].events.onChange[0:updateTheme:SetGlobal].params",
+      "~k_parent": "10",
+      "~l": 65
+    },
+    "12": {
+      "key": "root.pages[1:settings:Box].blocks[0:themeSelect:Selector].events.onChange[0:updateTheme:SetGlobal].params.theme",
+      "~k_parent": "11",
+      "~l": 66
+    },
+    "13": {
+      "key": "root.pages[1:settings:Box].blocks[1:langSelect:Selector]",
+      "~k_parent": "s",
+      "~l": 68
+    },
+    "14": {
+      "key": "root.pages[1:settings:Box].blocks[1:langSelect:Selector].properties",
+      "~k_parent": "13",
+      "~l": 70
+    },
+    "15": {
+      "key": "root.pages[1:settings:Box].blocks[1:langSelect:Selector].properties.options",
+      "~k_parent": "14",
+      "~l": 72
+    },
+    "16": {
+      "key": "root.pages[1:settings:Box].blocks[1:langSelect:Selector].properties.options[0]",
+      "~k_parent": "15",
+      "~l": 73
+    },
+    "17": {
+      "key": "root.pages[1:settings:Box].blocks[1:langSelect:Selector].properties.options[1]",
+      "~k_parent": "15",
+      "~l": 75
+    },
+    "18": {
+      "key": "root.pages[1:settings:Box].blocks[1:langSelect:Selector].properties.options[2]",
+      "~k_parent": "15",
+      "~l": 77
+    },
+    "19": {
+      "key": "root.pages[1:settings:Box].blocks[1:langSelect:Selector].events",
+      "~k_parent": "13",
+      "~l": 79
+    },
+    "20": {
+      "key": "root.pages[2:cart:Box].blocks[3:clearCart:Button].events",
+      "~k_parent": "1y",
+      "~l": 126
+    },
+    "21": {
+      "key": "root.pages[2:cart:Box].blocks[3:clearCart:Button].events.onClick",
+      "~k_parent": "20",
+      "~l": 127
+    },
+    "22": {
+      "key": "root.pages[2:cart:Box].blocks[3:clearCart:Button].events.onClick[0:clear:SetGlobal]",
+      "~k_parent": "21",
+      "~l": 128
+    },
+    "23": {
+      "key": "root.pages[2:cart:Box].blocks[3:clearCart:Button].events.onClick[0:clear:SetGlobal].params",
+      "~k_parent": "22",
+      "~l": 130
+    },
+    "24": {
+      "key": "root.pages[2:cart:Box].blocks[3:clearCart:Button].events.onClick[0:clear:SetGlobal].params.cart",
+      "~k_parent": "23",
+      "~l": 131
+    },
+    "25": {
+      "key": "root.pages[2:cart:Box].blocks[3:clearCart:Button].events.onClick[0:clear:SetGlobal].params.cart.items",
+      "~k_parent": "24",
+      "~l": 132
+    },
+    "27": {
+      "key": "root.pages",
+      "~k_parent": "3"
+    },
+    "28": {
+      "key": "root.pages[3:404:Result]",
+      "~k_parent": "27"
+    },
+    "29": {
+      "key": "root.pages[3:404:Result].style",
+      "~k_parent": "28"
+    },
+    "30": {
+      "key": "root.pages[1:settings:Box].areas",
+      "~k_parent": "2y"
+    },
+    "31": {
+      "key": "root.pages[1:settings:Box].areas.content",
+      "~k_parent": "30"
+    },
+    "32": {
+      "key": "root.pages[1:settings:Box].blocks[0:themeSelect:Selector].events.onChange",
+      "~k_parent": "y"
+    },
+    "33": {
+      "key": "root.pages[1:settings:Box].blocks[0:themeSelect:Selector].events.onChange.catch",
+      "~k_parent": "32"
+    },
+    "34": {
+      "key": "root.pages[1:settings:Box].blocks[1:langSelect:Selector].events.onChange",
+      "~k_parent": "19"
+    },
+    "35": {
+      "key": "root.pages[1:settings:Box].blocks[1:langSelect:Selector].events.onChange.catch",
+      "~k_parent": "34"
+    },
+    "36": {
+      "key": "root.pages[1:settings:Box].blocks[2:notifSwitch:Switch].events.onChange",
+      "~k_parent": "1g"
+    },
+    "37": {
+      "key": "root.pages[1:settings:Box].blocks[2:notifSwitch:Switch].events.onChange.catch",
+      "~k_parent": "36"
+    },
+    "38": {
+      "key": "root.pages[1:settings:Box].requests",
+      "~k_parent": "2y"
+    },
+    "39": {
+      "key": "root.pages[2:cart:Box]",
+      "~k_parent": "2p"
+    },
+    "40": {
+      "key": "root.menus[0:default].links[0:0:MenuLink].auth",
+      "~k_parent": "3z"
+    },
+    "41": {
+      "key": "root.menus[0:default].links[1:1:MenuLink]",
+      "~k_parent": "3y"
+    },
+    "42": {
+      "key": "root.menus[0:default].links[1:1:MenuLink].auth",
+      "~k_parent": "41"
+    },
+    "43": {
+      "key": "root.menus[0:default].links[2:2:MenuLink]",
+      "~k_parent": "3y"
+    },
+    "44": {
+      "key": "root.menus[0:default].links[2:2:MenuLink].auth",
+      "~k_parent": "43"
+    },
+    "45": {
+      "key": "root.types",
+      "~k_parent": "3"
+    },
+    "46": {
+      "key": "root.types.actions",
+      "~k_parent": "45"
+    },
+    "47": {
+      "key": "root.types.actions.SetGlobal",
+      "~k_parent": "46"
+    },
+    "48": {
+      "key": "root.types.actions.Link",
+      "~k_parent": "46"
+    },
+    "49": {
+      "key": "root.types.auth",
+      "~k_parent": "45"
+    },
+    "50": {
+      "key": "root.types.blocks.SkeletonParagraph",
+      "~k_parent": "4e"
+    },
+    "51": {
+      "key": "root.types.blocks.Spinner",
+      "~k_parent": "4e"
+    },
+    "52": {
+      "key": "root.types.blocks.Message",
+      "~k_parent": "4e"
+    },
+    "53": {
+      "key": "root.types.connections",
+      "~k_parent": "45"
+    },
+    "54": {
+      "key": "root.types.requests",
+      "~k_parent": "45"
+    },
+    "55": {
+      "key": "root.types.api",
+      "~k_parent": "45"
+    },
+    "56": {
+      "key": "root.types.operators",
+      "~k_parent": "45"
+    },
+    "57": {
+      "key": "root.types.operators.client",
+      "~k_parent": "56"
+    },
+    "58": {
+      "key": "root.types.operators.client._global",
+      "~k_parent": "57"
+    },
+    "59": {
+      "key": "root.types.operators.client._state",
+      "~k_parent": "57"
+    },
+    "60": {
+      "key": "root.imports.blocks[12]",
+      "~k_parent": "5n"
+    },
+    "61": {
+      "key": "root.imports.blocks[13]",
+      "~k_parent": "5n"
+    },
+    "62": {
+      "key": "root.imports.blocks[14]",
+      "~k_parent": "5n"
+    },
+    "63": {
+      "key": "root.imports.blocks[15]",
+      "~k_parent": "5n"
+    },
+    "64": {
+      "key": "root.imports.blocks[16]",
+      "~k_parent": "5n"
+    },
+    "65": {
+      "key": "root.imports.blocks[17]",
+      "~k_parent": "5n"
+    },
+    "66": {
+      "key": "root.imports.blocks[18]",
+      "~k_parent": "5n"
+    },
+    "67": {
+      "key": "root.imports.blocks[19]",
+      "~k_parent": "5n"
+    },
+    "68": {
+      "key": "root.imports.blocks[20]",
+      "~k_parent": "5n"
+    },
+    "69": {
+      "key": "root.imports.blocks[21]",
+      "~k_parent": "5n"
+    },
+    "70": {
+      "key": "root.imports.icons[11]",
+      "~k_parent": "6d"
+    },
+    "71": {
+      "key": "root.imports.icons[11].icons",
+      "~k_parent": "70"
+    },
+    "72": {
+      "key": "root.imports.icons[12]",
+      "~k_parent": "6d"
+    },
+    "73": {
+      "key": "root.imports.icons[12].icons",
+      "~k_parent": "72"
+    },
+    "74": {
+      "key": "root.imports.icons[13]",
+      "~k_parent": "6d"
+    },
+    "75": {
+      "key": "root.imports.icons[13].icons",
+      "~k_parent": "74"
+    },
+    "76": {
+      "key": "root.imports.icons[14]",
+      "~k_parent": "6d"
+    },
+    "77": {
+      "key": "root.imports.icons[14].icons",
+      "~k_parent": "76"
+    },
+    "78": {
+      "key": "root.imports.icons[15]",
+      "~k_parent": "6d"
+    },
+    "79": {
+      "key": "root.imports.icons[15].icons",
+      "~k_parent": "78"
+    },
+    "80": {
+      "key": "root.imports.operators.client",
+      "~k_parent": "7z"
+    },
+    "81": {
+      "key": "root.imports.operators.client[0]",
+      "~k_parent": "80"
+    },
+    "82": {
+      "key": "root.imports.operators.client[1]",
+      "~k_parent": "80"
+    },
+    "83": {
+      "key": "root.imports.operators.client[2]",
+      "~k_parent": "80"
+    },
+    "84": {
+      "key": "root.imports.operators.client[3]",
+      "~k_parent": "80"
+    },
+    "85": {
+      "key": "root.imports.operators.client[4]",
+      "~k_parent": "80"
+    },
+    "86": {
+      "key": "root.imports.operators.server",
+      "~k_parent": "7z"
+    },
+    "87": {
+      "key": "root.imports.styles",
+      "~k_parent": "5e"
+    },
+    "a": {
+      "key": "root.pages",
+      "~k_parent": "3",
+      "~l": 20
+    },
+    "b": {
+      "key": "root.pages[0:home:Box]",
+      "~k_parent": "a",
+      "~l": 21
+    },
+    "c": {
+      "key": "root.pages[0:home:Box].properties",
+      "~k_parent": "b",
+      "~l": 23
+    },
+    "d": {
+      "key": "root.pages[0:home:Box].events",
+      "~k_parent": "b",
+      "~l": 25
+    },
+    "e": {
+      "key": "root.pages[0:home:Box].events.onInit",
+      "~k_parent": "d",
+      "~l": 26
+    },
+    "f": {
+      "key": "root.pages[0:home:Box].events.onInit[0:loadUserPrefs:SetGlobal]",
+      "~k_parent": "e",
+      "~l": 27
+    },
+    "g": {
+      "key": "root.pages[0:home:Box].events.onInit[0:loadUserPrefs:SetGlobal].params",
+      "~k_parent": "f",
+      "~l": 29
+    },
+    "h": {
+      "key": "root.pages[0:home:Box].blocks",
+      "~k_parent": "b",
+      "~l": 32
+    },
+    "i": {
+      "key": "root.pages[0:home:Box].blocks[0:themeDisplay:Paragraph]",
+      "~k_parent": "h",
+      "~l": 33
+    },
+    "j": {
+      "key": "root.pages[0:home:Box].blocks[0:themeDisplay:Paragraph].properties",
+      "~k_parent": "i",
+      "~l": 35
+    },
+    "k": {
+      "key": "root.pages[0:home:Box].blocks[0:themeDisplay:Paragraph].properties.content",
+      "~k_parent": "j",
+      "~l": 36
+    },
+    "l": {
+      "key": "root.pages[0:home:Box].blocks[0:themeDisplay:Paragraph].properties.content.theme",
+      "~k_parent": "k",
+      "~l": 38
+    },
+    "m": {
+      "key": "root.pages[0:home:Box].blocks[1:langDisplay:Paragraph]",
+      "~k_parent": "h",
+      "~l": 40
+    },
+    "n": {
+      "key": "root.pages[0:home:Box].blocks[1:langDisplay:Paragraph].properties",
+      "~k_parent": "m",
+      "~l": 42
+    },
+    "o": {
+      "key": "root.pages[0:home:Box].blocks[1:langDisplay:Paragraph].properties.content",
+      "~k_parent": "n",
+      "~l": 43
+    },
+    "p": {
+      "key": "root.pages[0:home:Box].blocks[1:langDisplay:Paragraph].properties.content.lang",
+      "~k_parent": "o",
+      "~l": 45
+    },
+    "q": {
+      "key": "root.pages[1:settings:Box]",
+      "~k_parent": "a",
+      "~l": 47
+    },
+    "r": {
+      "key": "root.pages[1:settings:Box].properties",
+      "~k_parent": "q",
+      "~l": 49
+    },
+    "s": {
+      "key": "root.pages[1:settings:Box].blocks",
+      "~k_parent": "q",
+      "~l": 51
+    },
+    "t": {
+      "key": "root.pages[1:settings:Box].blocks[0:themeSelect:Selector]",
+      "~k_parent": "s",
+      "~l": 52
+    },
+    "u": {
+      "key": "root.pages[1:settings:Box].blocks[0:themeSelect:Selector].properties",
+      "~k_parent": "t",
+      "~l": 54
+    },
+    "v": {
+      "key": "root.pages[1:settings:Box].blocks[0:themeSelect:Selector].properties.options",
+      "~k_parent": "u",
+      "~l": 56
+    },
+    "w": {
+      "key": "root.pages[1:settings:Box].blocks[0:themeSelect:Selector].properties.options[0]",
+      "~k_parent": "v",
+      "~l": 57
+    },
+    "x": {
+      "key": "root.pages[1:settings:Box].blocks[0:themeSelect:Selector].properties.options[1]",
+      "~k_parent": "v",
+      "~l": 59
+    },
+    "y": {
+      "key": "root.pages[1:settings:Box].blocks[0:themeSelect:Selector].events",
+      "~k_parent": "t",
+      "~l": 61
+    },
+    "z": {
+      "key": "root.pages[1:settings:Box].blocks[0:themeSelect:Selector].events.onChange",
+      "~k_parent": "y",
+      "~l": 62
+    },
+    "1a": {
+      "key": "root.pages[1:settings:Box].blocks[1:langSelect:Selector].events.onChange",
+      "~k_parent": "19",
+      "~l": 80
+    },
+    "1b": {
+      "key": "root.pages[1:settings:Box].blocks[1:langSelect:Selector].events.onChange[0:updateLang:SetGlobal]",
+      "~k_parent": "1a",
+      "~l": 81
+    },
+    "1c": {
+      "key": "root.pages[1:settings:Box].blocks[1:langSelect:Selector].events.onChange[0:updateLang:SetGlobal].params",
+      "~k_parent": "1b",
+      "~l": 83
+    },
+    "1d": {
+      "key": "root.pages[1:settings:Box].blocks[1:langSelect:Selector].events.onChange[0:updateLang:SetGlobal].params.language",
+      "~k_parent": "1c",
+      "~l": 84
+    },
+    "1e": {
+      "key": "root.pages[1:settings:Box].blocks[2:notifSwitch:Switch]",
+      "~k_parent": "s",
+      "~l": 86
+    },
+    "1f": {
+      "key": "root.pages[1:settings:Box].blocks[2:notifSwitch:Switch].properties",
+      "~k_parent": "1e",
+      "~l": 88
+    },
+    "1g": {
+      "key": "root.pages[1:settings:Box].blocks[2:notifSwitch:Switch].events",
+      "~k_parent": "1e",
+      "~l": 90
+    },
+    "1h": {
+      "key": "root.pages[1:settings:Box].blocks[2:notifSwitch:Switch].events.onChange",
+      "~k_parent": "1g",
+      "~l": 91
+    },
+    "1i": {
+      "key": "root.pages[1:settings:Box].blocks[2:notifSwitch:Switch].events.onChange[0:updateNotif:SetGlobal]",
+      "~k_parent": "1h",
+      "~l": 92
+    },
+    "1j": {
+      "key": "root.pages[1:settings:Box].blocks[2:notifSwitch:Switch].events.onChange[0:updateNotif:SetGlobal].params",
+      "~k_parent": "1i",
+      "~l": 94
+    },
+    "1k": {
+      "key": "root.pages[1:settings:Box].blocks[2:notifSwitch:Switch].events.onChange[0:updateNotif:SetGlobal].params.notifications",
+      "~k_parent": "1j",
+      "~l": 95
+    },
+    "1l": {
+      "key": "root.pages[2:cart:Box]",
+      "~k_parent": "a",
+      "~l": 97
+    },
+    "1m": {
+      "key": "root.pages[2:cart:Box].properties",
+      "~k_parent": "1l",
+      "~l": 99
+    },
+    "1n": {
+      "key": "root.pages[2:cart:Box].blocks",
+      "~k_parent": "1l",
+      "~l": 101
+    },
+    "1o": {
+      "key": "root.pages[2:cart:Box].blocks[0:cartTitle:Title]",
+      "~k_parent": "1n",
+      "~l": 102
+    },
+    "1p": {
+      "key": "root.pages[2:cart:Box].blocks[0:cartTitle:Title].properties",
+      "~k_parent": "1o",
+      "~l": 104
+    },
+    "1q": {
+      "key": "root.pages[2:cart:Box].blocks[1:itemCount:Statistic]",
+      "~k_parent": "1n",
+      "~l": 106
+    },
+    "1r": {
+      "key": "root.pages[2:cart:Box].blocks[1:itemCount:Statistic].properties",
+      "~k_parent": "1q",
+      "~l": 108
+    },
+    "1s": {
+      "key": "root.pages[2:cart:Box].blocks[1:itemCount:Statistic].properties.value",
+      "~k_parent": "1r",
+      "~l": 110
+    },
+    "1t": {
+      "key": "root.pages[2:cart:Box].blocks[1:itemCount:Statistic].properties.value._array",
+      "~k_parent": "1s",
+      "~l": 111
+    },
+    "1u": {
+      "key": "root.pages[2:cart:Box].blocks[1:itemCount:Statistic].properties.value._array.length",
+      "~k_parent": "1t",
+      "~l": 112
+    },
+    "1v": {
+      "key": "root.pages[2:cart:Box].blocks[2:total:Statistic]",
+      "~k_parent": "1n",
+      "~l": 114
+    },
+    "1w": {
+      "key": "root.pages[2:cart:Box].blocks[2:total:Statistic].properties",
+      "~k_parent": "1v",
+      "~l": 116
+    },
+    "1x": {
+      "key": "root.pages[2:cart:Box].blocks[2:total:Statistic].properties.value",
+      "~k_parent": "1w",
+      "~l": 119
+    },
+    "1y": {
+      "key": "root.pages[2:cart:Box].blocks[3:clearCart:Button]",
+      "~k_parent": "1n",
+      "~l": 121
+    },
+    "1z": {
+      "key": "root.pages[2:cart:Box].blocks[3:clearCart:Button].properties",
+      "~k_parent": "1y",
+      "~l": 123
+    },
+    "2a": {
+      "key": "root.pages[3:404:Result].properties",
+      "~k_parent": "28"
+    },
+    "2b": {
+      "key": "root.pages[3:404:Result].areas",
+      "~k_parent": "28"
+    },
+    "2c": {
+      "key": "root.pages[3:404:Result].areas.extra",
+      "~k_parent": "2b"
+    },
+    "2d": {
+      "key": "root.pages[3:404:Result].areas.extra.blocks",
+      "~k_parent": "2c"
+    },
+    "2e": {
+      "key": "root.pages[3:404:Result].areas.extra.blocks[0:home:Button]",
+      "~k_parent": "2d"
+    },
+    "2f": {
+      "key": "root.pages[3:404:Result].areas.extra.blocks[0:home:Button].properties",
+      "~k_parent": "2e"
+    },
+    "2g": {
+      "key": "root.pages[3:404:Result].areas.extra.blocks[0:home:Button].events",
+      "~k_parent": "2e"
+    },
+    "2h": {
+      "key": "root.pages[3:404:Result].areas.extra.blocks[0:home:Button].events.onClick",
+      "~k_parent": "2g"
+    },
+    "2i": {
+      "key": "root.pages[3:404:Result].areas.extra.blocks[0:home:Button].events.onClick[0:home:Link]",
+      "~k_parent": "2h"
+    },
+    "2j": {
+      "key": "root.pages[3:404:Result].areas.extra.blocks[0:home:Button].events.onClick[0:home:Link].params",
+      "~k_parent": "2i"
+    },
+    "2k": {
+      "key": "root.app",
+      "~k_parent": "3"
+    },
+    "2l": {
+      "key": "root.app.html",
+      "~k_parent": "2k"
+    },
+    "2m": {
+      "key": "root.logger",
+      "~k_parent": "3"
+    },
+    "2n": {
+      "key": "root.config",
+      "~k_parent": "3"
+    },
+    "2p": {
+      "key": "root.pages",
+      "~k_parent": "3"
+    },
+    "2q": {
+      "key": "root.pages[0:home:Box]",
+      "~k_parent": "2p"
+    },
+    "2r": {
+      "key": "root.pages[0:home:Box].events.onInit",
+      "~k_parent": "d"
+    },
+    "2s": {
+      "key": "root.pages[0:home:Box].events.onInit[0:loadUserPrefs:SetGlobal].params",
+      "~k_parent": "f"
+    },
+    "2t": {
+      "key": "root.pages[0:home:Box].events.onInit.catch",
+      "~k_parent": "2r"
+    },
+    "2u": {
+      "key": "root.pages[0:home:Box].auth",
+      "~k_parent": "2q"
+    },
+    "2v": {
+      "key": "root.pages[0:home:Box].areas",
+      "~k_parent": "2q"
+    },
+    "2w": {
+      "key": "root.pages[0:home:Box].areas.content",
+      "~k_parent": "2v"
+    },
+    "2x": {
+      "key": "root.pages[0:home:Box].requests",
+      "~k_parent": "2q"
+    },
+    "2y": {
+      "key": "root.pages[1:settings:Box]",
+      "~k_parent": "2p"
+    },
+    "2z": {
+      "key": "root.pages[1:settings:Box].auth",
+      "~k_parent": "2y"
+    },
+    "3a": {
+      "key": "root.pages[2:cart:Box].auth",
+      "~k_parent": "39"
+    },
+    "3b": {
+      "key": "root.pages[2:cart:Box].areas",
+      "~k_parent": "39"
+    },
+    "3c": {
+      "key": "root.pages[2:cart:Box].areas.content",
+      "~k_parent": "3b"
+    },
+    "3d": {
+      "key": "root.pages[2:cart:Box].blocks[3:clearCart:Button].events.onClick",
+      "~k_parent": "20"
+    },
+    "3e": {
+      "key": "root.pages[2:cart:Box].blocks[3:clearCart:Button].events.onClick.catch",
+      "~k_parent": "3d"
+    },
+    "3f": {
+      "key": "root.pages[2:cart:Box].requests",
+      "~k_parent": "39"
+    },
+    "3g": {
+      "key": "root.pages[3:404:Result]",
+      "~k_parent": "2p"
+    },
+    "3h": {
+      "key": "root.pages[3:404:Result].areas.extra.blocks[0:home:Button].events.onClick",
+      "~k_parent": "2g"
+    },
+    "3i": {
+      "key": "root.pages[3:404:Result].areas.extra.blocks[0:home:Button].events.onClick.catch",
+      "~k_parent": "3h"
+    },
+    "3j": {
+      "key": "root.pages[3:404:Result].auth",
+      "~k_parent": "3g"
+    },
+    "3k": {
+      "key": "root.pages[3:404:Result].requests",
+      "~k_parent": "3g"
+    },
+    "3l": {
+      "key": "root.auth",
+      "~k_parent": "3"
+    },
+    "3m": {
+      "key": "root.auth.api",
+      "~k_parent": "3l"
+    },
+    "3n": {
+      "key": "root.auth.api.roles",
+      "~k_parent": "3m"
+    },
+    "3o": {
+      "key": "root.auth.authPages",
+      "~k_parent": "3l"
+    },
+    "3p": {
+      "key": "root.auth.pages",
+      "~k_parent": "3l"
+    },
+    "3q": {
+      "key": "root.auth.pages.roles",
+      "~k_parent": "3p"
+    },
+    "3r": {
+      "key": "root.auth.callbacks",
+      "~k_parent": "3l"
+    },
+    "3s": {
+      "key": "root.auth.events",
+      "~k_parent": "3l"
+    },
+    "3t": {
+      "key": "root.auth.providers",
+      "~k_parent": "3l"
+    },
+    "3u": {
+      "key": "root.auth.session",
+      "~k_parent": "3l"
+    },
+    "3v": {
+      "key": "root.auth.theme",
+      "~k_parent": "3l"
+    },
+    "3w": {
+      "key": "root.menus",
+      "~k_parent": "3"
+    },
+    "3x": {
+      "key": "root.menus[0:default]",
+      "~k_parent": "3w"
+    },
+    "3y": {
+      "key": "root.menus[0:default].links",
+      "~k_parent": "3x"
+    },
+    "3z": {
+      "key": "root.menus[0:default].links[0:0:MenuLink]",
+      "~k_parent": "3y"
+    },
+    "4a": {
+      "key": "root.types.auth.adapters",
+      "~k_parent": "49"
+    },
+    "4b": {
+      "key": "root.types.auth.callbacks",
+      "~k_parent": "49"
+    },
+    "4c": {
+      "key": "root.types.auth.events",
+      "~k_parent": "49"
+    },
+    "4d": {
+      "key": "root.types.auth.providers",
+      "~k_parent": "49"
+    },
+    "4e": {
+      "key": "root.types.blocks",
+      "~k_parent": "45"
+    },
+    "4f": {
+      "key": "root.types.blocks.Box",
+      "~k_parent": "4e"
+    },
+    "4g": {
+      "key": "root.types.blocks.Paragraph",
+      "~k_parent": "4e"
+    },
+    "4h": {
+      "key": "root.types.blocks.Selector",
+      "~k_parent": "4e"
+    },
+    "4i": {
+      "key": "root.types.blocks.Switch",
+      "~k_parent": "4e"
+    },
+    "4j": {
+      "key": "root.types.blocks.Title",
+      "~k_parent": "4e"
+    },
+    "4k": {
+      "key": "root.types.blocks.Statistic",
+      "~k_parent": "4e"
+    },
+    "4l": {
+      "key": "root.types.blocks.Button",
+      "~k_parent": "4e"
+    },
+    "4m": {
+      "key": "root.types.blocks.Result",
+      "~k_parent": "4e"
+    },
+    "4n": {
+      "key": "root.types.blocks.Anchor",
+      "~k_parent": "4e"
+    },
+    "4o": {
+      "key": "root.types.blocks.DangerousHtml",
+      "~k_parent": "4e"
+    },
+    "4p": {
+      "key": "root.types.blocks.Html",
+      "~k_parent": "4e"
+    },
+    "4q": {
+      "key": "root.types.blocks.Icon",
+      "~k_parent": "4e"
+    },
+    "4r": {
+      "key": "root.types.blocks.Img",
+      "~k_parent": "4e"
+    },
+    "4s": {
+      "key": "root.types.blocks.List",
+      "~k_parent": "4e"
+    },
+    "4t": {
+      "key": "root.types.blocks.Span",
+      "~k_parent": "4e"
+    },
+    "4u": {
+      "key": "root.types.blocks.Throw",
+      "~k_parent": "4e"
+    },
+    "4v": {
+      "key": "root.types.blocks.ProgressBar",
+      "~k_parent": "4e"
+    },
+    "4w": {
+      "key": "root.types.blocks.Skeleton",
+      "~k_parent": "4e"
+    },
+    "4x": {
+      "key": "root.types.blocks.SkeletonAvatar",
+      "~k_parent": "4e"
+    },
+    "4y": {
+      "key": "root.types.blocks.SkeletonButton",
+      "~k_parent": "4e"
+    },
+    "4z": {
+      "key": "root.types.blocks.SkeletonInput",
+      "~k_parent": "4e"
+    },
+    "5a": {
+      "key": "root.types.operators.client._array",
+      "~k_parent": "57"
+    },
+    "5b": {
+      "key": "root.types.operators.client._not",
+      "~k_parent": "57"
+    },
+    "5c": {
+      "key": "root.types.operators.client._type",
+      "~k_parent": "57"
+    },
+    "5d": {
+      "key": "root.types.operators.server",
+      "~k_parent": "56"
+    },
+    "5e": {
+      "key": "root.imports",
+      "~k_parent": "3"
+    },
+    "5f": {
+      "key": "root.imports.actions",
+      "~k_parent": "5e"
+    },
+    "5g": {
+      "key": "root.imports.actions[0]",
+      "~k_parent": "5f"
+    },
+    "5h": {
+      "key": "root.imports.actions[1]",
+      "~k_parent": "5f"
+    },
+    "5i": {
+      "key": "root.imports.auth",
+      "~k_parent": "5e"
+    },
+    "5j": {
+      "key": "root.imports.auth.adapters",
+      "~k_parent": "5i"
+    },
+    "5k": {
+      "key": "root.imports.auth.callbacks",
+      "~k_parent": "5i"
+    },
+    "5l": {
+      "key": "root.imports.auth.events",
+      "~k_parent": "5i"
+    },
+    "5m": {
+      "key": "root.imports.auth.providers",
+      "~k_parent": "5i"
+    },
+    "5n": {
+      "key": "root.imports.blocks",
+      "~k_parent": "5e"
+    },
+    "5o": {
+      "key": "root.imports.blocks[0]",
+      "~k_parent": "5n"
+    },
+    "5p": {
+      "key": "root.imports.blocks[1]",
+      "~k_parent": "5n"
+    },
+    "5q": {
+      "key": "root.imports.blocks[2]",
+      "~k_parent": "5n"
+    },
+    "5r": {
+      "key": "root.imports.blocks[3]",
+      "~k_parent": "5n"
+    },
+    "5s": {
+      "key": "root.imports.blocks[4]",
+      "~k_parent": "5n"
+    },
+    "5t": {
+      "key": "root.imports.blocks[5]",
+      "~k_parent": "5n"
+    },
+    "5u": {
+      "key": "root.imports.blocks[6]",
+      "~k_parent": "5n"
+    },
+    "5v": {
+      "key": "root.imports.blocks[7]",
+      "~k_parent": "5n"
+    },
+    "5w": {
+      "key": "root.imports.blocks[8]",
+      "~k_parent": "5n"
+    },
+    "5x": {
+      "key": "root.imports.blocks[9]",
+      "~k_parent": "5n"
+    },
+    "5y": {
+      "key": "root.imports.blocks[10]",
+      "~k_parent": "5n"
+    },
+    "5z": {
+      "key": "root.imports.blocks[11]",
+      "~k_parent": "5n"
+    },
+    "6a": {
+      "key": "root.imports.blocks[22]",
+      "~k_parent": "5n"
+    },
+    "6b": {
+      "key": "root.imports.blocks[23]",
+      "~k_parent": "5n"
+    },
+    "6c": {
+      "key": "root.imports.connections",
+      "~k_parent": "5e"
+    },
+    "6d": {
+      "key": "root.imports.icons",
+      "~k_parent": "5e"
+    },
+    "6e": {
+      "key": "root.imports.icons[0]",
+      "~k_parent": "6d"
+    },
+    "6f": {
+      "key": "root.imports.icons[0].icons",
+      "~k_parent": "6e"
+    },
+    "6g": {
+      "key": "root.imports.icons[1]",
+      "~k_parent": "6d"
+    },
+    "6h": {
+      "key": "root.imports.icons[1].icons",
+      "~k_parent": "6g"
+    },
+    "6i": {
+      "key": "root.imports.icons[2]",
+      "~k_parent": "6d"
+    },
+    "6j": {
+      "key": "root.imports.icons[2].icons",
+      "~k_parent": "6i"
+    },
+    "6k": {
+      "key": "root.imports.icons[3]",
+      "~k_parent": "6d"
+    },
+    "6l": {
+      "key": "root.imports.icons[3].icons",
+      "~k_parent": "6k"
+    },
+    "6m": {
+      "key": "root.imports.icons[4]",
+      "~k_parent": "6d"
+    },
+    "6n": {
+      "key": "root.imports.icons[4].icons",
+      "~k_parent": "6m"
+    },
+    "6o": {
+      "key": "root.imports.icons[5]",
+      "~k_parent": "6d"
+    },
+    "6p": {
+      "key": "root.imports.icons[5].icons",
+      "~k_parent": "6o"
+    },
+    "6q": {
+      "key": "root.imports.icons[6]",
+      "~k_parent": "6d"
+    },
+    "6r": {
+      "key": "root.imports.icons[6].icons",
+      "~k_parent": "6q"
+    },
+    "6s": {
+      "key": "root.imports.icons[7]",
+      "~k_parent": "6d"
+    },
+    "6t": {
+      "key": "root.imports.icons[7].icons",
+      "~k_parent": "6s"
+    },
+    "6u": {
+      "key": "root.imports.icons[8]",
+      "~k_parent": "6d"
+    },
+    "6v": {
+      "key": "root.imports.icons[8].icons",
+      "~k_parent": "6u"
+    },
+    "6w": {
+      "key": "root.imports.icons[9]",
+      "~k_parent": "6d"
+    },
+    "6x": {
+      "key": "root.imports.icons[9].icons",
+      "~k_parent": "6w"
+    },
+    "6y": {
+      "key": "root.imports.icons[10]",
+      "~k_parent": "6d"
+    },
+    "6z": {
+      "key": "root.imports.icons[10].icons",
+      "~k_parent": "6y"
+    },
+    "7a": {
+      "key": "root.imports.icons[16]",
+      "~k_parent": "6d"
+    },
+    "7b": {
+      "key": "root.imports.icons[16].icons",
+      "~k_parent": "7a"
+    },
+    "7c": {
+      "key": "root.imports.icons[17]",
+      "~k_parent": "6d"
+    },
+    "7d": {
+      "key": "root.imports.icons[17].icons",
+      "~k_parent": "7c"
+    },
+    "7e": {
+      "key": "root.imports.icons[18]",
+      "~k_parent": "6d"
+    },
+    "7f": {
+      "key": "root.imports.icons[18].icons",
+      "~k_parent": "7e"
+    },
+    "7g": {
+      "key": "root.imports.icons[19]",
+      "~k_parent": "6d"
+    },
+    "7h": {
+      "key": "root.imports.icons[19].icons",
+      "~k_parent": "7g"
+    },
+    "7i": {
+      "key": "root.imports.icons[20]",
+      "~k_parent": "6d"
+    },
+    "7j": {
+      "key": "root.imports.icons[20].icons",
+      "~k_parent": "7i"
+    },
+    "7k": {
+      "key": "root.imports.icons[21]",
+      "~k_parent": "6d"
+    },
+    "7l": {
+      "key": "root.imports.icons[21].icons",
+      "~k_parent": "7k"
+    },
+    "7m": {
+      "key": "root.imports.icons[22]",
+      "~k_parent": "6d"
+    },
+    "7n": {
+      "key": "root.imports.icons[22].icons",
+      "~k_parent": "7m"
+    },
+    "7o": {
+      "key": "root.imports.icons[23]",
+      "~k_parent": "6d"
+    },
+    "7p": {
+      "key": "root.imports.icons[23].icons",
+      "~k_parent": "7o"
+    },
+    "7q": {
+      "key": "root.imports.icons[24]",
+      "~k_parent": "6d"
+    },
+    "7r": {
+      "key": "root.imports.icons[24].icons",
+      "~k_parent": "7q"
+    },
+    "7s": {
+      "key": "root.imports.icons[25]",
+      "~k_parent": "6d"
+    },
+    "7t": {
+      "key": "root.imports.icons[25].icons",
+      "~k_parent": "7s"
+    },
+    "7u": {
+      "key": "root.imports.icons[26]",
+      "~k_parent": "6d"
+    },
+    "7v": {
+      "key": "root.imports.icons[26].icons",
+      "~k_parent": "7u"
+    },
+    "7w": {
+      "key": "root.imports.icons[27]",
+      "~k_parent": "6d"
+    },
+    "7x": {
+      "key": "root.imports.icons[27].icons",
+      "~k_parent": "7w"
+    },
+    "7y": {
+      "key": "root.imports.requests",
+      "~k_parent": "5e"
+    },
+    "7z": {
+      "key": "root.imports.operators",
+      "~k_parent": "5e"
+    }
+  },
+  "logger.json": {
+    "~k": "2m"
+  },
+  "menus.json": {
+    "~arr": [
+      {
+        "id": "menu:default",
+        "links": {
+          "~arr": [
+            {
+              "id": "menuitem:default:0",
+              "type": "MenuLink",
+              "pageId": "home",
+              "auth": {
+                "public": true,
+                "~k": "40"
+              },
+              "menuItemId": "0",
+              "~k": "3z"
+            },
+            {
+              "id": "menuitem:default:1",
+              "type": "MenuLink",
+              "pageId": "settings",
+              "auth": {
+                "public": true,
+                "~k": "42"
+              },
+              "menuItemId": "1",
+              "~k": "41"
+            },
+            {
+              "id": "menuitem:default:2",
+              "type": "MenuLink",
+              "pageId": "cart",
+              "auth": {
+                "public": true,
+                "~k": "44"
+              },
+              "menuItemId": "2",
+              "~k": "43"
+            }
+          ],
+          "~k": "3y"
+        },
+        "menuId": "default",
+        "~k": "3x"
+      }
+    ],
+    "~k": "3w"
+  },
+  "pages/404/404.json": {
+    "id": "page:404",
+    "type": "Result",
+    "style": {
+      "minHeight": "100vh",
+      "~k": "29"
+    },
+    "properties": {
+      "status": "info",
+      "title": "404",
+      "subTitle": "Sorry, the page you are visiting does not exist.",
+      "~k": "2a"
+    },
+    "areas": {
+      "extra": {
+        "blocks": {
+          "~arr": [
+            {
+              "id": "block:404:home:0",
+              "type": "Button",
+              "properties": {
+                "title": "Go to home page",
+                "~k": "2f"
+              },
+              "events": {
+                "onClick": {
+                  "try": {
+                    "~arr": [
+                      {
+                        "id": "home",
+                        "type": "Link",
+                        "params": {
+                          "home": true,
+                          "~k": "2j"
+                        },
+                        "~k": "2i"
+                      }
+                    ],
+                    "~k": "2h"
+                  },
+                  "catch": {
+                    "~arr": [],
+                    "~k": "3i"
+                  },
+                  "~k": "3h"
+                },
+                "~k": "2g"
+              },
+              "~k": "2e",
+              "blockId": "home"
+            }
+          ],
+          "~k": "2d"
+        },
+        "~k": "2c"
+      },
+      "~k": "2b"
+    },
+    "auth": {
+      "public": true,
+      "~k": "3j"
+    },
+    "pageId": "404",
+    "blockId": "404",
+    "requests": {
+      "~arr": [],
+      "~k": "3k"
+    },
+    "~k": "3g"
+  },
+  "pages/cart/cart.json": {
+    "id": "page:cart",
+    "type": "Box",
+    "properties": {
+      "title": "Shopping Cart",
+      "~k": "1m"
+    },
+    "auth": {
+      "public": true,
+      "~k": "3a"
+    },
+    "pageId": "cart",
+    "blockId": "cart",
+    "areas": {
+      "content": {
+        "blocks": {
+          "~arr": [
+            {
+              "id": "block:cart:cartTitle:0",
+              "type": "Title",
+              "properties": {
+                "content": "Your Cart",
+                "~k": "1p"
+              },
+              "~k": "1o",
+              "blockId": "cartTitle"
+            },
+            {
+              "id": "block:cart:itemCount:0",
+              "type": "Statistic",
+              "properties": {
+                "title": "Items",
+                "value": {
+                  "_array": {
+                    "length": {
+                      "_global": "cart.items",
+                      "~k": "1u"
+                    },
+                    "~k": "1t"
+                  },
+                  "~k": "1s"
+                },
+                "~k": "1r"
+              },
+              "~k": "1q",
+              "blockId": "itemCount"
+            },
+            {
+              "id": "block:cart:total:0",
+              "type": "Statistic",
+              "properties": {
+                "title": "Total",
+                "prefix": "$",
+                "value": {
+                  "_global": "cart.total",
+                  "~k": "1x"
+                },
+                "~k": "1w"
+              },
+              "~k": "1v",
+              "blockId": "total"
+            },
+            {
+              "id": "block:cart:clearCart:0",
+              "type": "Button",
+              "properties": {
+                "title": "Clear Cart",
+                "danger": true,
+                "~k": "1z"
+              },
+              "events": {
+                "onClick": {
+                  "try": {
+                    "~arr": [
+                      {
+                        "id": "clear",
+                        "type": "SetGlobal",
+                        "params": {
+                          "cart": {
+                            "items": {
+                              "~arr": [],
+                              "~k": "25"
+                            },
+                            "total": 0,
+                            "~k": "24"
+                          },
+                          "~k": "23"
+                        },
+                        "~k": "22"
+                      }
+                    ],
+                    "~k": "21"
+                  },
+                  "catch": {
+                    "~arr": [],
+                    "~k": "3e"
+                  },
+                  "~k": "3d"
+                },
+                "~k": "20"
+              },
+              "~k": "1y",
+              "blockId": "clearCart"
+            }
+          ],
+          "~k": "1n"
+        },
+        "~k": "3c"
+      },
+      "~k": "3b"
+    },
+    "requests": {
+      "~arr": [],
+      "~k": "3f"
+    },
+    "~k": "39"
+  },
+  "pages/home/home.json": {
+    "id": "page:home",
+    "type": "Box",
+    "properties": {
+      "title": "Home",
+      "~k": "c"
+    },
+    "events": {
+      "onInit": {
+        "try": {
+          "~arr": [
+            {
+              "id": "loadUserPrefs",
+              "type": "SetGlobal",
+              "params": {
+                "lastVisited": {
+                  "~d": 1705320000000
+                }
+              },
+              "~k": "f"
+            }
+          ],
+          "~k": "e"
+        },
+        "catch": {
+          "~arr": [],
+          "~k": "2t"
+        },
+        "~k": "2r"
+      },
+      "~k": "d"
+    },
+    "auth": {
+      "public": true,
+      "~k": "2u"
+    },
+    "pageId": "home",
+    "blockId": "home",
+    "areas": {
+      "content": {
+        "blocks": {
+          "~arr": [
+            {
+              "id": "block:home:themeDisplay:0",
+              "type": "Paragraph",
+              "properties": {
+                "content": {
+                  "_nunjucks": "Current theme: {{ theme }}",
+                  "theme": {
+                    "_global": "theme",
+                    "~k": "l"
+                  },
+                  "~k": "k"
+                },
+                "~k": "j"
+              },
+              "~k": "i",
+              "blockId": "themeDisplay"
+            },
+            {
+              "id": "block:home:langDisplay:0",
+              "type": "Paragraph",
+              "properties": {
+                "content": {
+                  "_nunjucks": "Language: {{ lang }}",
+                  "lang": {
+                    "_global": "language",
+                    "~k": "p"
+                  },
+                  "~k": "o"
+                },
+                "~k": "n"
+              },
+              "~k": "m",
+              "blockId": "langDisplay"
+            }
+          ],
+          "~k": "h"
+        },
+        "~k": "2w"
+      },
+      "~k": "2v"
+    },
+    "requests": {
+      "~arr": [],
+      "~k": "2x"
+    },
+    "~k": "2q"
+  },
+  "pages/settings/settings.json": {
+    "id": "page:settings",
+    "type": "Box",
+    "properties": {
+      "title": "Settings",
+      "~k": "r"
+    },
+    "auth": {
+      "public": true,
+      "~k": "2z"
+    },
+    "pageId": "settings",
+    "blockId": "settings",
+    "areas": {
+      "content": {
+        "blocks": {
+          "~arr": [
+            {
+              "id": "block:settings:themeSelect:0",
+              "type": "Selector",
+              "properties": {
+                "title": "Theme",
+                "options": {
+                  "~arr": [
+                    {
+                      "value": "light",
+                      "label": "Light",
+                      "~k": "w"
+                    },
+                    {
+                      "value": "dark",
+                      "label": "Dark",
+                      "~k": "x"
+                    }
+                  ],
+                  "~k": "v"
+                },
+                "~k": "u"
+              },
+              "events": {
+                "onChange": {
+                  "try": {
+                    "~arr": [
+                      {
+                        "id": "updateTheme",
+                        "type": "SetGlobal",
+                        "params": {
+                          "theme": {
+                            "_state": "themeSelect",
+                            "~k": "12"
+                          },
+                          "~k": "11"
+                        },
+                        "~k": "10"
+                      }
+                    ],
+                    "~k": "z"
+                  },
+                  "catch": {
+                    "~arr": [],
+                    "~k": "33"
+                  },
+                  "~k": "32"
+                },
+                "~k": "y"
+              },
+              "~k": "t",
+              "blockId": "themeSelect"
+            },
+            {
+              "id": "block:settings:langSelect:0",
+              "type": "Selector",
+              "properties": {
+                "title": "Language",
+                "options": {
+                  "~arr": [
+                    {
+                      "value": "en",
+                      "label": "English",
+                      "~k": "16"
+                    },
+                    {
+                      "value": "es",
+                      "label": "Spanish",
+                      "~k": "17"
+                    },
+                    {
+                      "value": "fr",
+                      "label": "French",
+                      "~k": "18"
+                    }
+                  ],
+                  "~k": "15"
+                },
+                "~k": "14"
+              },
+              "events": {
+                "onChange": {
+                  "try": {
+                    "~arr": [
+                      {
+                        "id": "updateLang",
+                        "type": "SetGlobal",
+                        "params": {
+                          "language": {
+                            "_state": "langSelect",
+                            "~k": "1d"
+                          },
+                          "~k": "1c"
+                        },
+                        "~k": "1b"
+                      }
+                    ],
+                    "~k": "1a"
+                  },
+                  "catch": {
+                    "~arr": [],
+                    "~k": "35"
+                  },
+                  "~k": "34"
+                },
+                "~k": "19"
+              },
+              "~k": "13",
+              "blockId": "langSelect"
+            },
+            {
+              "id": "block:settings:notifSwitch:0",
+              "type": "Switch",
+              "properties": {
+                "title": "Enable Notifications",
+                "~k": "1f"
+              },
+              "events": {
+                "onChange": {
+                  "try": {
+                    "~arr": [
+                      {
+                        "id": "updateNotif",
+                        "type": "SetGlobal",
+                        "params": {
+                          "notifications": {
+                            "_state": "notifSwitch",
+                            "~k": "1k"
+                          },
+                          "~k": "1j"
+                        },
+                        "~k": "1i"
+                      }
+                    ],
+                    "~k": "1h"
+                  },
+                  "catch": {
+                    "~arr": [],
+                    "~k": "37"
+                  },
+                  "~k": "36"
+                },
+                "~k": "1g"
+              },
+              "~k": "1e",
+              "blockId": "notifSwitch"
+            }
+          ],
+          "~k": "s"
+        },
+        "~k": "31"
+      },
+      "~k": "30"
+    },
+    "requests": {
+      "~arr": [],
+      "~k": "38"
+    },
+    "~k": "2y"
+  },
+  "plugins/actions.js": "import {  as SetGlobal } from '@lowdefy/actions-core/actions';\nimport {  as Link } from '@lowdefy/actions-core/actions';\nexport default {\n  SetGlobal,\n  Link,\n  };",
+  "plugins/auth/adapters.js": "export default {\n  };",
+  "plugins/auth/callbacks.js": "export default {\n  };",
+  "plugins/auth/events.js": "export default {\n  };",
+  "plugins/auth/providers.js": "export default {\n  };",
+  "plugins/blocks.js": "import {  as Box } from '@lowdefy/blocks-basic/blocks';\nimport {  as Paragraph } from '@lowdefy/blocks-basic/blocks';\nimport {  as Selector } from '@lowdefy/blocks-antd/blocks';\nimport {  as Switch } from '@lowdefy/blocks-antd/blocks';\nimport {  as Title } from '@lowdefy/blocks-basic/blocks';\nimport {  as Statistic } from '@lowdefy/blocks-antd/blocks';\nimport {  as Button } from '@lowdefy/blocks-basic/blocks';\nimport {  as Result } from '@lowdefy/blocks-antd/blocks';\nimport {  as Anchor } from '@lowdefy/blocks-basic/blocks';\nimport {  as DangerousHtml } from '@lowdefy/blocks-basic/blocks';\nimport {  as Html } from '@lowdefy/blocks-basic/blocks';\nimport {  as Icon } from '@lowdefy/blocks-basic/blocks';\nimport {  as Img } from '@lowdefy/blocks-basic/blocks';\nimport {  as List } from '@lowdefy/blocks-basic/blocks';\nimport {  as Span } from '@lowdefy/blocks-basic/blocks';\nimport {  as Throw } from '@lowdefy/blocks-basic/blocks';\nimport {  as ProgressBar } from '@lowdefy/blocks-loaders/blocks';\nimport {  as Skeleton } from '@lowdefy/blocks-loaders/blocks';\nimport {  as SkeletonAvatar } from '@lowdefy/blocks-loaders/blocks';\nimport {  as SkeletonButton } from '@lowdefy/blocks-loaders/blocks';\nimport {  as SkeletonInput } from '@lowdefy/blocks-loaders/blocks';\nimport {  as SkeletonParagraph } from '@lowdefy/blocks-loaders/blocks';\nimport {  as Spinner } from '@lowdefy/blocks-loaders/blocks';\nimport {  as Message } from '@lowdefy/blocks-antd/blocks';\nexport default {\n  Box,\n  Paragraph,\n  Selector,\n  Switch,\n  Title,\n  Statistic,\n  Button,\n  Result,\n  Anchor,\n  DangerousHtml,\n  Html,\n  Icon,\n  Img,\n  List,\n  Span,\n  Throw,\n  ProgressBar,\n  Skeleton,\n  SkeletonAvatar,\n  SkeletonButton,\n  SkeletonInput,\n  SkeletonParagraph,\n  Spinner,\n  Message,\n  };",
+  "plugins/connections.js": "export default {\n  };",
+  "plugins/icons.js": "import { AiOutlineExclamationCircle, AiOutlineLoading3Quarters } from 'react-icons/ai';\nexport default {\n  AiOutlineExclamationCircle,\n  AiOutlineLoading3Quarters,\n};",
+  "plugins/operators/client.js": "import {  as _global } from '@lowdefy/operators-js/operators/client';\nimport {  as _state } from '@lowdefy/operators-js/operators/client';\nimport {  as _array } from '@lowdefy/operators-js/operators/client';\nimport {  as _not } from '@lowdefy/operators-js/operators/client';\nimport {  as _type } from '@lowdefy/operators-js/operators/client';\nexport default {\n  _global,\n  _state,\n  _array,\n  _not,\n  _type,\n  };",
+  "plugins/operators/clientJsMap.js": "\nexport default {\n  };",
+  "plugins/operators/server.js": "export default {\n  };",
+  "plugins/operators/serverJsMap.js": "\nexport default {\n  };",
+  "plugins/styles.less": "@import '@lowdefy/layout/style.less';\n@import '@lowdefy/client/style.less';\n\n",
+  "refMap.json": {
+    "1": {
+      "parent": null
+    }
+  },
+  "types.json": {
+    "actions": {
+      "SetGlobal": {
+        "package": "@lowdefy/actions-core",
+        "count": 5,
+        "~k": "47"
+      },
+      "Link": {
+        "package": "@lowdefy/actions-core",
+        "count": 1,
+        "~k": "48"
+      },
+      "~k": "46"
+    },
+    "auth": {
+      "adapters": {
+        "~k": "4a"
+      },
+      "callbacks": {
+        "~k": "4b"
+      },
+      "events": {
+        "~k": "4c"
+      },
+      "providers": {
+        "~k": "4d"
+      },
+      "~k": "49"
+    },
+    "blocks": {
+      "Box": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 4,
+        "~k": "4f"
+      },
+      "Paragraph": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 2,
+        "~k": "4g"
+      },
+      "Selector": {
+        "package": "@lowdefy/blocks-antd",
+        "count": 2,
+        "~k": "4h"
+      },
+      "Switch": {
+        "package": "@lowdefy/blocks-antd",
+        "count": 1,
+        "~k": "4i"
+      },
+      "Title": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "4j"
+      },
+      "Statistic": {
+        "package": "@lowdefy/blocks-antd",
+        "count": 2,
+        "~k": "4k"
+      },
+      "Button": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 2,
+        "~k": "4l"
+      },
+      "Result": {
+        "package": "@lowdefy/blocks-antd",
+        "count": 1,
+        "~k": "4m"
+      },
+      "Anchor": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "4n"
+      },
+      "DangerousHtml": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "4o"
+      },
+      "Html": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "4p"
+      },
+      "Icon": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "4q"
+      },
+      "Img": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "4r"
+      },
+      "List": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "4s"
+      },
+      "Span": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "4t"
+      },
+      "Throw": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "4u"
+      },
+      "ProgressBar": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "4v"
+      },
+      "Skeleton": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "4w"
+      },
+      "SkeletonAvatar": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "4x"
+      },
+      "SkeletonButton": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "4y"
+      },
+      "SkeletonInput": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "4z"
+      },
+      "SkeletonParagraph": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "50"
+      },
+      "Spinner": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "51"
+      },
+      "Message": {
+        "package": "@lowdefy/blocks-antd",
+        "count": 1,
+        "~k": "52"
+      },
+      "~k": "4e"
+    },
+    "connections": {
+      "~k": "53"
+    },
+    "requests": {
+      "~k": "54"
+    },
+    "api": {
+      "~k": "55"
+    },
+    "operators": {
+      "client": {
+        "_global": {
+          "package": "@lowdefy/operators-js",
+          "count": 4,
+          "~k": "58"
+        },
+        "_state": {
+          "package": "@lowdefy/operators-js",
+          "count": 3,
+          "~k": "59"
+        },
+        "_array": {
+          "package": "@lowdefy/operators-js",
+          "count": 1,
+          "~k": "5a"
+        },
+        "_not": {
+          "package": "@lowdefy/operators-js",
+          "count": 1,
+          "~k": "5b"
+        },
+        "_type": {
+          "package": "@lowdefy/operators-js",
+          "count": 1,
+          "~k": "5c"
+        },
+        "~k": "57"
+      },
+      "server": {
+        "~k": "5d"
+      },
+      "~k": "56"
+    },
+    "~k": "45"
+  }
+}

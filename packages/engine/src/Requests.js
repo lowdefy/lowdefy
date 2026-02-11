@@ -30,11 +30,11 @@ class Requests {
     });
   }
 
-  callRequests({ actions, arrayIndices, blockId, event, params } = {}) {
+  callRequests({ actionId, actions, arrayIndices, blockId, event, params } = {}) {
     if (type.isObject(params) && params.all === true) {
       return Promise.all(
         Object.keys(this.requestConfig).map((requestId) =>
-          this.callRequest({ arrayIndices, blockId, event, requestId })
+          this.callRequest({ actionId, arrayIndices, blockId, event, requestId })
         )
       );
     }
@@ -44,13 +44,13 @@ class Requests {
     if (type.isArray(params)) requestIds = params;
 
     const requests = requestIds.map((requestId) =>
-      this.callRequest({ actions, requestId, blockId, event, arrayIndices })
+      this.callRequest({ actionId, actions, requestId, blockId, event, arrayIndices })
     );
     this.context._internal.update(); // update to render request reset
     return Promise.all(requests);
   }
 
-  async callRequest({ actions, arrayIndices, blockId, event, requestId }) {
+  async callRequest({ actionId, actions, arrayIndices, blockId, event, requestId }) {
     const requestConfig = this.requestConfig[requestId];
     if (!this.context.requests[requestId]) {
       this.context.requests[requestId] = [];
@@ -66,6 +66,7 @@ class Requests {
       });
       throw error;
     }
+    // evaluate operators
     const { output: payload, errors: parserErrors } = this.context._internal.parser.parse({
       actions,
       event,
@@ -77,6 +78,7 @@ class Requests {
       throw parserErrors[0];
     }
     const request = {
+      actionId,
       blockId,
       loading: true,
       payload,
@@ -93,6 +95,7 @@ class Requests {
 
     try {
       const response = await this.context._internal.lowdefy._internal.callRequest({
+        actionId: request.actionId,
         blockId: request.blockId,
         pageId: this.context.pageId,
         payload: serializer.serialize(request.payload),

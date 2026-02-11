@@ -15,20 +15,44 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { ConfigError, VALID_CHECK_SLUGS } from '@lowdefy/errors/build';
 
+import collectExceptions from '../utils/collectExceptions.js';
 import makeId from '../utils/makeId.js';
 
-function recArray({ array, nextKey, key, keyMap, keyMapId }) {
+function recArray({ array, arrayKey, keyMap, parentKeyMapId, context }) {
+  let arrayKeyMapId;
+
+  if (array['~k']) {
+    arrayKeyMapId = array['~k'];
+  } else {
+    arrayKeyMapId = makeId.next();
+    const entry = {
+      key: arrayKey,
+      '~k_parent': parentKeyMapId,
+    };
+    if (array['~r'] !== undefined) entry['~r'] = array['~r'];
+    if (array['~l'] !== undefined) entry['~l'] = array['~l'];
+    keyMap[arrayKeyMapId] = entry;
+    Object.defineProperty(array, '~k', {
+      value: arrayKeyMapId,
+      enumerable: false,
+      writable: true,
+      configurable: true,
+    });
+    delete array['~r'];
+    delete array['~l'];
+  }
+
   array.forEach((item, index) => {
     if (type.isObject(item)) {
-      let path = `${key}.${nextKey}[${index}]`;
+      let path = `${arrayKey}[${index}]`;
       // TODO: Convert all artifacts to not modify id.
       const id =
         item.blockId ??
         item.menuId ??
         item.menuItemId ??
         item.requestId ??
-        item.connectionId ??
         item.connectionId ??
         item.id;
       if (id) {
@@ -41,47 +65,119 @@ function recArray({ array, nextKey, key, keyMap, keyMapId }) {
         object: item,
         key: path,
         keyMap: keyMap,
-        parentKeyMapId: keyMapId,
+        parentKeyMapId: arrayKeyMapId,
+        context,
       });
     }
     if (type.isArray(item)) {
-      recArray({ array: item, nextKey, key, keyMap, keyMapId });
+      recArray({
+        array: item,
+        arrayKey: `${arrayKey}[${index}]`,
+        keyMap,
+        parentKeyMapId: arrayKeyMapId,
+        context,
+      });
     }
   });
 }
 
-function recAddKeys({ object, key, keyMap, parentKeyMapId }) {
-  const keyMapId = makeId();
-  keyMap[keyMapId] = {
-    key,
-    '~r': object['~r'],
-    '~k_parent': parentKeyMapId,
-  };
-  Object.defineProperty(object, '~k', {
-    value: keyMapId,
-    enumerable: false,
-    writable: true,
-    configurable: true,
-  });
-  delete object['~r'];
+function recAddKeys({ object, key, keyMap, parentKeyMapId, context }) {
+  let keyMapId;
+  let storedKey = key;
+
+  // Skip objects that already have a ~k (already processed)
+  if (object['~k']) {
+    keyMapId = object['~k'];
+    // Use the stored key from keyMap for correct child paths
+    storedKey = keyMap[keyMapId]?.key ?? key;
+  } else {
+    keyMapId = makeId.next();
+    const entry = {
+      key,
+      '~k_parent': parentKeyMapId,
+    };
+    if (object['~r'] !== undefined) entry['~r'] = object['~r'];
+    if (object['~l'] !== undefined) entry['~l'] = object['~l'];
+
+    // Add entry to keyMap BEFORE validation so errors can resolve location
+    keyMap[keyMapId] = entry;
+
+    // Handle ~ignoreBuildChecks property
+    if (object['~ignoreBuildChecks'] !== undefined) {
+      const checks = object['~ignoreBuildChecks'];
+
+      if (Array.isArray(checks)) {
+        const validSlugs = Object.keys(VALID_CHECK_SLUGS);
+        const invalid = checks.filter((slug) => !validSlugs.includes(slug));
+        if (invalid.length > 0) {
+          collectExceptions(
+            context,
+            new ConfigError({
+              message: `Invalid check slug(s): "${invalid.join(
+                '", "'
+              )}". Valid slugs: ${validSlugs.join(', ')}`,
+              configKey: keyMapId,
+              context,
+            })
+          );
+        }
+      } else if (checks !== true) {
+        collectExceptions(
+          context,
+          new ConfigError({
+            message: `~ignoreBuildChecks must be true or an array of check slugs.`,
+            received: checks,
+            configKey: keyMapId,
+            context,
+          })
+        );
+      }
+
+      entry['~ignoreBuildChecks'] = checks;
+    }
+    Object.defineProperty(object, '~k', {
+      value: keyMapId,
+      enumerable: false,
+      writable: true,
+      configurable: true,
+    });
+    delete object['~r'];
+    delete object['~l'];
+    delete object['~ignoreBuildChecks'];
+  }
+
+  // Always recurse into children (they may be new objects without keys)
   Object.keys(object).forEach((nextKey) => {
     if (type.isObject(object[nextKey])) {
       recAddKeys({
         object: object[nextKey],
-        key: `${key}.${nextKey}`,
+        key: `${storedKey}.${nextKey}`,
         keyMap: keyMap,
         parentKeyMapId: keyMapId,
+        context,
       });
     }
     if (type.isArray(object[nextKey])) {
-      recArray({ array: object[nextKey], nextKey, key, keyMap, keyMapId });
+      recArray({
+        array: object[nextKey],
+        arrayKey: `${storedKey}.${nextKey}`,
+        keyMap,
+        parentKeyMapId: keyMapId,
+        context,
+      });
     }
   });
 }
 
 function addKeys({ components, context }) {
-  const keyMapId = makeId(true);
-  recAddKeys({ object: components, key: 'root', keyMap: context.keyMap, parentKeyMapId: keyMapId });
+  const keyMapId = makeId.next();
+  recAddKeys({
+    object: components,
+    key: 'root',
+    keyMap: context.keyMap,
+    parentKeyMapId: keyMapId,
+    context,
+  });
 }
 
 export default addKeys;

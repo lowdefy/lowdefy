@@ -19,7 +19,8 @@ import path from 'path';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
-import createLogger from './utils/createLogger.mjs';
+import { createDevLogger as createLogger } from '@lowdefy/logger/dev';
+import checkMockUserWarning from './processes/checkMockUserWarning.mjs';
 import initialBuild from './processes/initialBuild.mjs';
 import installPlugins from './processes/installPlugins.mjs';
 import lowdefyBuild from './processes/lowdefyBuild.mjs';
@@ -57,15 +58,11 @@ async function getContext() {
           ? JSON.parse(env.LOWDEFY_SERVER_DEV_WATCH_IGNORE)
           : [],
     },
-    license: {
-      entitlements: env.LOWDEFY_LICENSE_ENTITLEMENTS
-        ? JSON.parse(env.LOWDEFY_LICENSE_ENTITLEMENTS)
-        : [],
-    },
     version: env.npm_package_version,
   };
 
   context.packageManagerCmd = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm';
+  context.checkMockUserWarning = checkMockUserWarning(context);
   context.initialBuild = initialBuild(context);
   context.installPlugins = installPlugins(context);
   context.lowdefyBuild = lowdefyBuild(context);

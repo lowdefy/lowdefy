@@ -1,0 +1,4 @@
+# Part of I2: Circular _ref test
+# This file references b.yaml, which references back to a.yaml, creating a cycle.
+
+_ref: b.yaml

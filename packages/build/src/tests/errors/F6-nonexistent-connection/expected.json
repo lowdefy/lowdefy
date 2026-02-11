@@ -1,0 +1,14 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": [
+        "nonExistentConnection"
+      ],
+      "errorContains": [
+        "Request \"badConnectionRequest\" at page \"home\" references non-existent connection \"nonExistentConnection\".",
+        "lowdefy.yaml:17"
+      ]
+    }
+  ]
+}

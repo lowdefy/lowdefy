@@ -1,0 +1,19 @@
+- id: api
+  type: AxiosHttp
+  properties:
+    baseURL: https://api.enterprise.com
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+- id: db
+  type: MongoDBCollection
+  properties:
+    databaseUri: mongodb://localhost:27017/enterprise_crm
+    collection: customers
+    write: true
+- id: ordersDb
+  type: MongoDBCollection
+  properties:
+    databaseUri: mongodb://localhost:27017/enterprise_crm
+    collection: orders
+    write: true

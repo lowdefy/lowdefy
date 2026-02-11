@@ -85,4 +85,6 @@ function mql({ params, location, methodName }) {
   });
 }
 
+mql.dynamic = false;
+
 export default mql;

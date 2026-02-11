@@ -9,11 +9,12 @@ export default {
     '<rootDir>/src/index.js',
     '<rootDir>/src/blocks.js',
     '<rootDir>/src/types.js',
+    '\\.e2e\\.spec\\.js$',
   ],
   coverageReporters: [['lcov', { projectRoot: '../../../..' }], 'text', 'clover'],
   errorOnDeprecated: true,
   testEnvironment: 'jsdom',
-  testPathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/src/test'],
+  testPathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/src/test', '\\.e2e\\.spec\\.js$'],
   transform: {
     '^.+\\.(t|j)sx?$': ['@swc/jest', { configFile: '../../../../.swcrc.test' }],
     '\\.yaml$': '@lowdefy/jest-yaml-transform',

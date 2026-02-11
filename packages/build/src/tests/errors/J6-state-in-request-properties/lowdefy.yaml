@@ -1,0 +1,29 @@
+lowdefy: local
+
+connections:
+  - id: mongodb
+    type: MongoDBCollection
+    properties:
+      databaseUri: mongodb://localhost:27017
+      databaseName: test
+      collection: contacts
+
+pages:
+  - id: page_1
+    type: Box
+    requests:
+      - id: insert_contact
+        type: MongoDBInsertOne
+        connectionId: mongodb
+        payload:
+          valid_key:
+            _state: valid_key
+        properties:
+          doc:
+            name:
+              _state: user_name
+    blocks:
+      - id: valid_key
+        type: TextInput
+      - id: user_name
+        type: TextInput

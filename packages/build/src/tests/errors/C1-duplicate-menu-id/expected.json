@@ -1,0 +1,14 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": [
+        "Duplicate menuId"
+      ],
+      "errorContains": [
+        "Duplicate menuId \"default\".",
+        "lowdefy.yaml:20"
+      ]
+    }
+  ]
+}

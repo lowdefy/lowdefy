@@ -18,32 +18,16 @@
 
 import { type } from '@lowdefy/helpers';
 import buildAuthPlugins from './buildAuthPlugins.js';
+import buildApiAuth from './buildApiAuth.js';
 import buildPageAuth from './buildPageAuth.js';
 import validateAuthConfig from './validateAuthConfig.js';
 
-let warningLogged = false;
-
 function buildAuth({ components, context }) {
   const configured = !type.isNone(components.auth);
-
-  if (configured && !context.entitlements.includes('AUTH')) {
-    if (!warningLogged) {
-      context.logger.warn(`
-┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-┃ Authentication configured without a license key. ┃
-┠──────────────────────────────────────────────────┨
-┃ Paid features can not be used in production      ┃
-┃ without a valid license.                         ┃
-┃                                                  ┃
-┃ See https://docs.lowdefy.com/licenses.            ┃
-┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛`);
-      warningLogged = true;
-    }
-  }
-
-  validateAuthConfig({ components });
+  validateAuthConfig({ components, context });
   components.auth.configured = configured;
-  buildPageAuth({ components });
+  buildApiAuth({ components, context });
+  buildPageAuth({ components, context });
   buildAuthPlugins({ components, context });
 
   return components;

@@ -98,6 +98,11 @@
           pageId: page-and-app-state
           properties:
             title: Page and App State
+        - id: lowdefy-api
+          type: MenuLink
+          pageId: lowdefy-api
+          properties:
+            title: APIs
         - id: references-and-templates
           type: MenuLink
           pageId: references-and-templates
@@ -118,6 +123,11 @@
           pageId: secrets
           properties:
             title: Secrets
+        - id: logger
+          type: MenuLink
+          pageId: logger
+          properties:
+            title: Logger
         - id: lists
           type: MenuLink
           pageId: lists
@@ -143,11 +153,6 @@
           pageId: cli
           properties:
             title: The CLI
-        - id: licenses
-          type: MenuLink
-          pageId: licenses
-          properties:
-            title: Licenses
 
     - id: deployment
       type: MenuGroup
@@ -214,11 +219,11 @@
           pageId: users-introduction
           properties:
             title: Introduction
-        - id: protected-pages
+        - id: protected-pages-apis
           type: MenuLink
-          pageId: protected-pages
+          pageId: protected-pages-apis
           properties:
-            title: Protected Pages
+            title: Protected Pages and APIs
         - id: roles
           type: MenuLink
           pageId: roles
@@ -643,6 +648,9 @@
         title: Actions
         icon: AiOutlineThunderbolt
       links:
+        - id: CallAPI
+          type: MenuLink
+          pageId: CallAPI
         - id: CallMethod
           type: MenuLink
           pageId: CallMethod
@@ -715,6 +723,9 @@
         - id: _and
           type: MenuLink
           pageId: _and
+        - id: _api
+          type: MenuLink
+          pageId: _api
         - id: _args
           type: MenuLink
           pageId: _args
@@ -778,12 +789,18 @@
         - id: _intl
           type: MenuLink
           pageId: _intl
+        - id: _item
+          type: MenuLink
+          pageId: _item
         - id: _js
           type: MenuLink
           pageId: _js
         - id: _json
           type: MenuLink
           pageId: _json
+        - id: _jsonata
+          type: MenuLink
+          pageId: _jsonata
         - id: _location
           type: MenuLink
           pageId: _location
@@ -856,6 +873,9 @@
         - id: _state
           type: MenuLink
           pageId: _state
+        - id: _step
+          type: MenuLink
+          pageId: _step
         - id: _string
           type: MenuLink
           pageId: _string
@@ -889,6 +909,48 @@
         - id: _yaml
           type: MenuLink
           pageId: _yaml
+    - id: controls-menu-group
+      type: MenuGroup
+      properties:
+        title: Controls
+        icon: MdAltRoute
+      links:
+        - id: :for
+          type: MenuLink
+          pageId: :for
+        - id: :if
+          type: MenuLink
+          pageId: :if
+        - id: :log
+          type: MenuLink
+          pageId: :log
+        - id: :parallel
+          type: MenuLink
+          pageId: :parallel
+        - id: :parallel_for
+          type: MenuLink
+          pageId: :parallel_for
+        - id: :reject
+          type: MenuLink
+          pageId: :reject
+        - id: :return
+          type: MenuLink
+          pageId: :return
+        - id: :set_state
+          type: MenuLink
+          pageId: :set_state
+        - id: :switch
+          type: MenuLink
+          pageId: :switch
+        - id: :throw
+          type: MenuLink
+          pageId: :throw
+        - id: :try
+          type: MenuLink
+          pageId: :try
+        # - id: :while # TODO: Add back when while control implemented
+        #   type: MenuLink
+        #   pageId: :while
     - id: migration
       type: MenuGroup
       properties:

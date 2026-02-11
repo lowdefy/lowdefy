@@ -1,0 +1,167 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: progress
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: progress_basic
+    type: Progress
+    properties:
+      percent: 50
+
+  - id: progress_zero
+    type: Progress
+    properties:
+      percent: 0
+
+  - id: progress_complete
+    type: Progress
+    properties:
+      percent: 100
+
+  # ============================================
+  # TYPE TESTS
+  # ============================================
+
+  - id: progress_line
+    type: Progress
+    properties:
+      type: line
+      percent: 50
+
+  - id: progress_circle
+    type: Progress
+    properties:
+      type: circle
+      percent: 75
+
+  - id: progress_dashboard
+    type: Progress
+    properties:
+      type: dashboard
+      percent: 60
+
+  # ============================================
+  # STATUS TESTS
+  # ============================================
+
+  - id: progress_success
+    type: Progress
+    properties:
+      percent: 100
+      status: success
+
+  - id: progress_exception
+    type: Progress
+    properties:
+      percent: 70
+      status: exception
+
+  - id: progress_active
+    type: Progress
+    properties:
+      percent: 50
+      status: active
+
+  - id: progress_normal
+    type: Progress
+    properties:
+      percent: 50
+      status: normal
+
+  # ============================================
+  # SHOW INFO TESTS
+  # ============================================
+
+  - id: progress_show_info
+    type: Progress
+    properties:
+      percent: 50
+      showInfo: true
+
+  - id: progress_hide_info
+    type: Progress
+    properties:
+      percent: 50
+      showInfo: false
+
+  # ============================================
+  # STROKE TESTS
+  # ============================================
+
+  - id: progress_stroke_linecap_round
+    type: Progress
+    properties:
+      type: circle
+      percent: 75
+      strokeLinecap: round
+
+  - id: progress_stroke_linecap_square
+    type: Progress
+    properties:
+      type: circle
+      percent: 75
+      strokeLinecap: square
+
+  - id: progress_custom_stroke_color
+    type: Progress
+    properties:
+      percent: 50
+      strokeColor: '#52c41a'
+
+  - id: progress_custom_stroke_width
+    type: Progress
+    properties:
+      percent: 50
+      strokeWidth: 20
+
+  - id: progress_custom_trail_color
+    type: Progress
+    properties:
+      percent: 50
+      trailColor: '#e0e0e0'
+
+  # ============================================
+  # CIRCLE/DASHBOARD OPTIONS
+  # ============================================
+
+  - id: progress_circle_width
+    type: Progress
+    properties:
+      type: circle
+      percent: 75
+      width: 80
+
+  - id: progress_dashboard_gap
+    type: Progress
+    properties:
+      type: dashboard
+      percent: 75
+      gapDegree: 90
+      gapPosition: bottom
+
+  # ============================================
+  # STEPS TESTS
+  # ============================================
+
+  - id: progress_steps
+    type: Progress
+    properties:
+      percent: 60
+      steps: 5

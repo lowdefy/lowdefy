@@ -20,4 +20,6 @@ function _menu({ params, menus, location }) {
   return getFromArray({ params, array: menus, key: 'menuId', operator: '_menu', location });
 }
 
+_menu.dynamic = true;
+
 export default _menu;

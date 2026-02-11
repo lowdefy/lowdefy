@@ -1,0 +1,77 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: header
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: header_basic
+    type: Header
+    areas:
+      content:
+        blocks:
+          - id: header_basic_content
+            type: Span
+            properties:
+              content: Header content
+
+  # ============================================
+  # THEME TESTS
+  # ============================================
+
+  - id: header_theme_light
+    type: Header
+    properties:
+      theme: light
+    areas:
+      content:
+        blocks:
+          - id: header_theme_light_content
+            type: Span
+            properties:
+              content: Light theme header
+
+  - id: header_theme_dark
+    type: Header
+    properties:
+      theme: dark
+    areas:
+      content:
+        blocks:
+          - id: header_theme_dark_content
+            type: Span
+            properties:
+              content: Dark theme header
+
+  # ============================================
+  # STYLE TESTS
+  # ============================================
+
+  - id: header_with_style
+    type: Header
+    properties:
+      style:
+        padding: 20px
+        borderBottom: 1px solid #e8e8e8
+    areas:
+      content:
+        blocks:
+          - id: header_with_style_content
+            type: Span
+            properties:
+              content: Styled header

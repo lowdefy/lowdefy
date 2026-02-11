@@ -25,7 +25,7 @@ _ref:
         properties:
           type: info
           showIcon: false
-          message: The menu items are filtered according to pages the user is authorized to see. This can be controlled by making pages public or private, or by assigning roles to authenticated users. See <a href = "/protected-pages">protected pages</a> and <a href = "/roles">roles</a> for more on how to set this up.
+          message: The menu items are filtered according to pages the user is authorized to see. This can be controlled by making pages public or private, or by assigning roles to authenticated users. See <a href = "/protected-pages-apis">protected pages and APIs</a> and <a href = "/roles">roles</a> for more on how to set this up.
 
       - id: md1
         type: MarkdownWithCode
@@ -112,7 +112,7 @@ _ref:
                       icon: AiOutlineControl
             ```
 
-            We can make use of [protected pages](/protected-pages) and [roles](/roles) to filter the menu items according to the pages that the user has access to.
+            We can make use of [protected pages and APIs](/protected-pages-apis) and [roles](/roles) to filter the menu items according to the pages that the user has access to.
 
             ###### lowdefy.yaml
             ```yaml

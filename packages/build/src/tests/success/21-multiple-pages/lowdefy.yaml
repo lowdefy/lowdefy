@@ -1,0 +1,24 @@
+# 21: Multiple Pages
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    properties:
+      title: Home
+  - id: about
+    type: Box
+    properties:
+      title: About
+  - id: contact
+    type: Box
+    properties:
+      title: Contact
+  - id: products
+    type: Box
+    properties:
+      title: Products
+  - id: services
+    type: Box
+    properties:
+      title: Services

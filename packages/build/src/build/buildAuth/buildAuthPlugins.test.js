@@ -15,7 +15,7 @@
 */
 
 import buildAuthPlugins from './buildAuthPlugins.js';
-import testContext from '../../test/testContext.js';
+import testContext from '../../test-utils/testContext.js';
 
 test('Count adapter type', () => {
   const context = testContext();
@@ -144,7 +144,7 @@ test('Adapter validation', () => {
       },
       context,
     })
-  ).toThrow('Auth adapter id is not a string. Received true.');
+  ).toThrow('Auth adapter id is not a string.');
   expect(() =>
     buildAuthPlugins({
       components: {
@@ -159,7 +159,7 @@ test('Adapter validation', () => {
       },
       context,
     })
-  ).toThrow('Auth adapter type is not a string at adapter "adapter". Received undefined.');
+  ).toThrow('Auth adapter type is not a string at adapter "adapter".');
 });
 
 test('Provider validation', () => {
@@ -198,7 +198,7 @@ test('Provider validation', () => {
       },
       context,
     })
-  ).toThrow('Auth provider id is not a string. Received true.');
+  ).toThrow('Auth provider id is not a string.');
   expect(() =>
     buildAuthPlugins({
       components: {
@@ -215,7 +215,7 @@ test('Provider validation', () => {
       },
       context,
     })
-  ).toThrow('Auth provider type is not a string at provider "provider". Received undefined.');
+  ).toThrow('Auth provider type is not a string at provider "provider".');
 });
 
 test('Callback validation', () => {
@@ -254,7 +254,7 @@ test('Callback validation', () => {
       },
       context,
     })
-  ).toThrow('Auth callback id is not a string. Received true.');
+  ).toThrow('Auth callback id is not a string.');
   expect(() =>
     buildAuthPlugins({
       components: {
@@ -271,7 +271,7 @@ test('Callback validation', () => {
       },
       context,
     })
-  ).toThrow('Auth callback type is not a string at callback "callback". Received undefined.');
+  ).toThrow('Auth callback type is not a string at callback "callback".');
 });
 
 test('Events validation', () => {
@@ -310,7 +310,7 @@ test('Events validation', () => {
       },
       context,
     })
-  ).toThrow('Auth event id is not a string. Received true.');
+  ).toThrow('Auth event id is not a string.');
   expect(() =>
     buildAuthPlugins({
       components: {
@@ -327,5 +327,5 @@ test('Events validation', () => {
       },
       context,
     })
-  ).toThrow('Auth event type is not a string at event "event". Received undefined.');
+  ).toThrow('Auth event type is not a string at event "event".');
 });

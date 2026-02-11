@@ -1,0 +1,17 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "deleteEnv": [
+        "NEXTAUTH_SECRET"
+      ],
+      "errors": [
+        "NEXTAUTH_SECRET"
+      ],
+      "errorContains": [
+        "Auth providers are configured but NEXTAUTH_SECRET environment variable is not set.",
+        "lowdefy.yaml:14"
+      ]
+    }
+  ]
+}

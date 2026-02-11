@@ -14,29 +14,16 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
-
 import testSchema from './testSchema.js';
-import testContext from '../test/testContext.js';
+import testContext from '../test-utils/testContext.js';
 
-const mockLogWarn = jest.fn();
-
-const logger = {
-  warn: mockLogWarn,
-};
-
-const context = testContext({ logger });
-
-beforeEach(() => {
-  mockLogWarn.mockReset();
-});
+const context = testContext();
 
 test('empty components', () => {
   const components = {
     lowdefy: '1.0.0',
   };
-  testSchema({ components, context });
-  expect(mockLogWarn.mock.calls).toEqual([]);
+  expect(() => testSchema({ components, context })).not.toThrow();
 });
 
 test('page auth config', () => {
@@ -49,8 +36,7 @@ test('page auth config', () => {
       },
     },
   };
-  testSchema({ components, context });
-  expect(mockLogWarn.mock.calls).toEqual([]);
+  expect(() => testSchema({ components, context })).not.toThrow();
 });
 
 test('app schema', () => {
@@ -85,8 +71,7 @@ test('app schema', () => {
       },
     ],
   };
-  testSchema({ components, context });
-  expect(mockLogWarn.mock.calls).toEqual([]);
+  expect(() => testSchema({ components, context })).not.toThrow();
 });
 
 test('invalid schema', () => {
@@ -94,18 +79,12 @@ test('invalid schema', () => {
     lowdefy: '1.0.0',
     global: 'global',
   };
-  testSchema({ components, context });
-  expect(mockLogWarn.mock.calls).toEqual([
-    ['Schema not valid.'],
-    [
-      `Schema Error
-App "global" should be an object.
-- global`,
-    ],
-  ]);
+  expect(() => testSchema({ components, context })).toThrow(
+    'App "global" should be an object.'
+  );
 });
 
-test('multiple schema errors', () => {
+test('multiple schema errors throws on first error', () => {
   const components = {
     lowdefy: '1.0.0',
     pages: [
@@ -122,34 +101,10 @@ test('multiple schema errors', () => {
       },
     ],
   };
-  testSchema({ components, context });
-  expect(mockLogWarn.mock.calls).toEqual([
-    ['Schema not valid.'],
-    [
-      `Schema Error
-Block should have required property "id".
-- pages
- - [0]`,
-    ],
-    [
-      `Schema Error
-Block should have required property "type".
-- pages
- - [0]`,
-    ],
-    [
-      `Schema Error
-Block "id" should be a string.
-- pages
- - [1:1:_ERROR_MISSING_TYPE_].id`,
-    ],
-    [
-      `Schema Error
-Block should have required property "type".
-- pages
- - [1:1:_ERROR_MISSING_TYPE_]`,
-    ],
-  ]);
+  // Without context.errors array, throws on first error
+  expect(() => testSchema({ components, context })).toThrow(
+    'Block should have required property "id".'
+  );
 });
 
 test('nested schema error', () => {
@@ -185,35 +140,9 @@ test('nested schema error', () => {
       },
     ],
   };
-  testSchema({ components, context });
-  expect(mockLogWarn.mock.calls).toEqual([
-    ['Schema not valid.'],
-    [
-      `Schema Error
-Action should have required property "type".
-- pages
- - [0:page_1:PageHeaderMenu].blocks
-  - [0:box_1:Box].areas.footer.blocks
-   - [0:button:Button].events.onClick
-    - [0:set_state:_ERROR_MISSING_TYPE_]`,
-    ],
-    [
-      `Schema Error
-must be object
-- pages
- - [0:page_1:PageHeaderMenu].blocks
-  - [0:box_1:Box].areas.footer.blocks
-   - [0:button:Button].events.onClick`,
-    ],
-    [
-      `Schema Error
-must match a schema in anyOf
-- pages
- - [0:page_1:PageHeaderMenu].blocks
-  - [0:box_1:Box].areas.footer.blocks
-   - [0:button:Button].events.onClick`,
-    ],
-  ]);
+  expect(() => testSchema({ components, context })).toThrow(
+    'Action should have required property "type".'
+  );
 });
 
 test('nested schema error 2', () => {
@@ -243,18 +172,9 @@ test('nested schema error 2', () => {
       },
     ],
   };
-  testSchema({ components, context });
-  expect(mockLogWarn.mock.calls).toEqual([
-    ['Schema not valid.'],
-    [
-      `Schema Error
-Block "blocks" should be an array.
-- pages
- - [0:page_1:PageHeaderMenu].blocks
-  - [0:box_1:Box].areas.footer.blocks
-   - [0:box_2:Box].blocks`,
-    ],
-  ]);
+  expect(() => testSchema({ components, context })).toThrow(
+    'Block "blocks" should be an array.'
+  );
 });
 
 test('connections schema error', () => {
@@ -279,22 +199,9 @@ test('connections schema error', () => {
       },
     ],
   };
-  testSchema({ components, context });
-  expect(mockLogWarn.mock.calls).toEqual([
-    ['Schema not valid.'],
-    [
-      `Schema Error
-Connection should have required property "type".
-- connections
- - [0:email-surveys:_ERROR_MISSING_TYPE_]`,
-    ],
-    [
-      `Schema Error
-Connection should have required property "id".
-- connections
- - [1:_ERROR_MISSING_ID_:MongoDBCollection]`,
-    ],
-  ]);
+  expect(() => testSchema({ components, context })).toThrow(
+    'Connection should have required property "type".'
+  );
 });
 
 test('requests schema error', () => {
@@ -346,31 +253,9 @@ test('requests schema error', () => {
       },
     ],
   };
-  testSchema({ components, context });
-  expect(mockLogWarn.mock.calls).toEqual([
-    ['Schema not valid.'],
-    [
-      `Schema Error
-Request should have required property "id".
-- pages
- - [0:page_1:PageHeaderMenu].requests
-  - [0:_ERROR_MISSING_ID_:MongoDBAggregation]`,
-    ],
-    [
-      `Schema Error
-Request should have required property "type".
-- pages
- - [0:page_1:PageHeaderMenu].requests
-  - [1:request_1:_ERROR_MISSING_TYPE_]`,
-    ],
-    [
-      `Schema Error
-Request "properties" should be an object.
-- pages
- - [0:page_1:PageHeaderMenu].requests
-  - [2:request_1:MongoDBAggregation].properties`,
-    ],
-  ]);
+  expect(() => testSchema({ components, context })).toThrow(
+    'Request should have required property "id".'
+  );
 });
 
 test('menus schema error', () => {
@@ -397,59 +282,9 @@ test('menus schema error', () => {
       },
     ],
   };
-  testSchema({ components, context });
-  expect(mockLogWarn.mock.calls).toEqual([
-    ['Schema not valid.'],
-    [
-      `Schema Error
-must NOT have additional properties
-- menus
- - [0:default:_ERROR_MISSING_TYPE_].links
-  - [0:_ERROR_MISSING_ID_:MenuLink]`,
-    ],
-    [
-      `Schema Error
-MenuGroup should have required property "id".
-- menus
- - [0:default:_ERROR_MISSING_TYPE_].links
-  - [0:_ERROR_MISSING_ID_:MenuLink]`,
-    ],
-    [
-      `Schema Error
-MenuLink should have required property "id".
-- menus
- - [0:default:_ERROR_MISSING_TYPE_].links
-  - [0:_ERROR_MISSING_ID_:MenuLink]`,
-    ],
-    [
-      `Schema Error
-must match a schema in anyOf
-- menus
- - [0:default:_ERROR_MISSING_TYPE_].links
-  - [0:_ERROR_MISSING_ID_:MenuLink]`,
-    ],
-    [
-      `Schema Error
-MenuGroup should have required property "type".
-- menus
- - [0:default:_ERROR_MISSING_TYPE_].links
-  - [1:menu-2:_ERROR_MISSING_TYPE_]`,
-    ],
-    [
-      `Schema Error
-MenuLink should have required property "type".
-- menus
- - [0:default:_ERROR_MISSING_TYPE_].links
-  - [1:menu-2:_ERROR_MISSING_TYPE_]`,
-    ],
-    [
-      `Schema Error
-must match a schema in anyOf
-- menus
- - [0:default:_ERROR_MISSING_TYPE_].links
-  - [1:menu-2:_ERROR_MISSING_TYPE_]`,
-    ],
-  ]);
+  expect(() => testSchema({ components, context })).toThrow(
+    'must NOT have additional properties - "pageId"'
+  );
 });
 
 test('missing lowdefy version schema error', () => {
@@ -478,13 +313,7 @@ test('missing lowdefy version schema error', () => {
       },
     ],
   };
-  testSchema({ components, context });
-  expect(mockLogWarn.mock.calls).toEqual([
-    ['Schema not valid.'],
-    [
-      `Schema Error
-Lowdefy configuration should have required property "lowdefy".
-`,
-    ],
-  ]);
+  expect(() => testSchema({ components, context })).toThrow(
+    'Lowdefy configuration should have required property "lowdefy".'
+  );
 });

@@ -36,12 +36,12 @@ test('_product ignores non number parameters', () => {
 
 test('_product invalid parameters', () => {
   expect(() => product({ params: null, location: 'locationId' })).toThrow(
-    'Operator Error: _product takes an array type as input. Received: null at locationId.'
+    '_product takes an array type as input.'
   );
   expect(() => product({ params: 'a', location: 'locationId' })).toThrow(
-    'Operator Error: _product takes an array type as input. Received: "a" at locationId.'
+    '_product takes an array type as input.'
   );
   expect(() => product({ params: false, location: 'locationId' })).toThrow(
-    'Operator Error: _product takes an array type as input. Received: false at locationId.'
+    '_product takes an array type as input.'
   );
 });

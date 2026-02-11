@@ -1,0 +1,22 @@
+# 31: Multi-file App with Shared Blocks via _ref
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - _ref: blocks/header.yaml
+      - id: content
+        type: Paragraph
+        properties:
+          content: Home page content
+      - _ref: blocks/footer.yaml
+  - id: about
+    type: Box
+    blocks:
+      - _ref: blocks/header.yaml
+      - id: content
+        type: Paragraph
+        properties:
+          content: About page content
+      - _ref: blocks/footer.yaml

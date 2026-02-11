@@ -40,4 +40,6 @@ function _diff({ params, location, methodName }) {
   });
 }
 
+_diff.dynamic = false;
+
 export default _diff;

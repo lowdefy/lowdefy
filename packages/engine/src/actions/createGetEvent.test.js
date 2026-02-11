@@ -14,6 +14,7 @@
   limitations under the License.
 */
 import { jest } from '@jest/globals';
+import { PluginError } from '@lowdefy/errors/client';
 
 import testContext from '../../test/testContext.js';
 
@@ -67,7 +68,7 @@ test('getEvent params is true', async () => {
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootBlocks.map['button'];
+  const button = context._internal.RootAreas.map['button'];
   const res = await button.triggerEvent({ name: 'onClick', event: { some: 'data' } });
   expect(res).toEqual({
     blockId: 'button',
@@ -113,7 +114,7 @@ test('getEvent params is some', async () => {
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootBlocks.map['button'];
+  const button = context._internal.RootAreas.map['button'];
   const res = await button.triggerEvent({ name: 'onClick', event: { some: 'data' } });
   expect(res).toEqual({
     blockId: 'button',
@@ -156,7 +157,7 @@ test('getEvent params is none', async () => {
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootBlocks.map['button'];
+  const button = context._internal.RootAreas.map['button'];
   const res = await button.triggerEvent({ name: 'onClick', event: { some: 'data' } });
   expect(res).toEqual({
     blockId: 'button',
@@ -164,28 +165,24 @@ test('getEvent params is none', async () => {
     endTimestamp: { date: 0 },
     error: {
       action: { id: 'a', type: 'Action' },
-      error: {
-        error: new Error(
-          'Method Error: getEvent params must be of type string, integer, boolean or object. Received: undefined at button.'
-        ),
-        index: 0,
-        type: 'Action',
-      },
+      error: expect.any(PluginError),
+      index: 0,
     },
     event: { some: 'data' },
     eventName: 'onClick',
     responses: {
       a: {
-        error: new Error(
-          'Method Error: getEvent params must be of type string, integer, boolean or object. Received: undefined at button.'
-        ),
+        action: { id: 'a', type: 'Action' },
+        error: expect.any(PluginError),
         index: 0,
-        type: 'Action',
       },
     },
     startTimestamp: { date: 0 },
     success: false,
   });
+  expect(res.error.error.rawMessage).toContain(
+    'params must be of type string, integer, boolean or object'
+  );
 });
 
 test('getEvent params.key is null', async () => {
@@ -215,7 +212,7 @@ test('getEvent params.key is null', async () => {
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootBlocks.map['button'];
+  const button = context._internal.RootAreas.map['button'];
   const res = await button.triggerEvent({ name: 'onClick', event: { some: 'data' } });
   expect(res).toEqual({
     blockId: 'button',
@@ -261,7 +258,7 @@ test('getEvent params.all is true', async () => {
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootBlocks.map['button'];
+  const button = context._internal.RootAreas.map['button'];
   const res = await button.triggerEvent({ name: 'onClick', event: { some: 'data' } });
   expect(res).toEqual({
     blockId: 'button',
@@ -307,7 +304,7 @@ test('getEvent params.key is not string or int', async () => {
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootBlocks.map['button'];
+  const button = context._internal.RootAreas.map['button'];
   const res = await button.triggerEvent({ name: 'onClick', event: { some: 'data' } });
   expect(res).toEqual({
     blockId: 'button',
@@ -323,26 +320,26 @@ test('getEvent params.key is not string or int', async () => {
         },
         type: 'Action',
       },
-      error: {
-        error: new Error(
-          'Method Error: getEvent params.key must be of type string or integer. Received: {"key":{}} at button.'
-        ),
-        index: 0,
-        type: 'Action',
-      },
+      error: expect.any(PluginError),
+      index: 0,
     },
     responses: {
       a: {
-        error: new Error(
-          'Method Error: getEvent params.key must be of type string or integer. Received: {"key":{}} at button.'
-        ),
+        action: {
+          id: 'a',
+          params: {
+            key: {},
+          },
+          type: 'Action',
+        },
+        error: expect.any(PluginError),
         index: 0,
-        type: 'Action',
       },
     },
     startTimestamp: { date: 0 },
     success: false,
   });
+  expect(res.error.error.rawMessage).toContain('params.key must be of type string or integer');
 });
 
 test('getEvent params.key is some', async () => {
@@ -371,7 +368,7 @@ test('getEvent params.key is some', async () => {
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootBlocks.map['button'];
+  const button = context._internal.RootAreas.map['button'];
   const res = await button.triggerEvent({ name: 'onClick', event: { some: 'data' } });
   expect(res).toEqual({
     blockId: 'button',

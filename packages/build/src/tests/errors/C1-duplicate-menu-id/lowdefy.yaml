@@ -1,0 +1,32 @@
+# C1: Duplicate Menu ID
+# ======================
+# Tests that duplicate menu ids throw an error with location.
+#
+# Expected error:
+#   [Config Error] Duplicate menuId "default".
+#
+# The error points to line 20 where the duplicate menu is defined.
+
+lowdefy: local
+
+menus:
+  - id: default
+    links:
+      - id: home
+        pageId: home
+        type: MenuLink
+        properties:
+          title: Home
+  - id: default
+    links:
+      - id: about
+        pageId: about
+        type: MenuLink
+        properties:
+          title: About
+
+pages:
+  - id: home
+    type: Box
+  - id: about
+    type: Box

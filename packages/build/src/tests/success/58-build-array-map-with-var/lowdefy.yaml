@@ -1,0 +1,13 @@
+lowdefy: 4.0.0
+
+pages:
+  - _ref:
+      path: pages/component.yaml
+      vars:
+        columns:
+          - id: column-1
+            label: First
+          - id: column-2
+            label: Second
+          - id: column-3
+            label: Third

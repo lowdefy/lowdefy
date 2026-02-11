@@ -17,43 +17,56 @@
 import { WebParser } from '@lowdefy/operators';
 
 import Actions from './Actions.js';
-import Blocks from './Blocks.js';
+import Areas from './Areas.js';
 import Requests from './Requests.js';
 import State from './State.js';
 
-const blockData = ({
-  areas,
-  blockId,
-  blocks,
-  events,
-  field,
-  id,
-  layout,
-  pageId,
-  properties,
-  requests,
-  required,
-  style,
-  type,
-  validate,
-  visible,
-}) => ({
-  areas,
-  blockId,
-  blocks,
-  events,
-  field,
-  id,
-  layout,
-  pageId,
-  properties,
-  requests,
-  required,
-  style,
-  type,
-  validate,
-  visible,
-});
+const blockData = (config) => {
+  const {
+    areas,
+    blockId,
+    blocks,
+    events,
+    field,
+    id,
+    layout,
+    pageId,
+    properties,
+    requests,
+    required,
+    style,
+    type,
+    validate,
+    visible,
+  } = config;
+  const result = {
+    areas,
+    blockId,
+    blocks,
+    events,
+    field,
+    id,
+    layout,
+    pageId,
+    properties,
+    requests,
+    required,
+    style,
+    type,
+    validate,
+    visible,
+  };
+  // Preserve ~k (configKey) for error tracing - it's non-enumerable so must be copied explicitly
+  if (config['~k']) {
+    Object.defineProperty(result, '~k', {
+      value: config['~k'],
+      enumerable: false,
+      writable: true,
+      configurable: true,
+    });
+  }
+  return result;
+};
 
 function getContext({
   config,
@@ -92,18 +105,18 @@ function getContext({
   _internal.State = new State(ctx);
   _internal.Actions = new Actions(ctx);
   _internal.Requests = new Requests(ctx);
-  _internal.RootBlocks = new Blocks({
+  _internal.RootAreas = new Areas({
     areas: { root: { blocks: [_internal.rootBlock] } },
     context: ctx,
   });
-  _internal.RootBlocks.init();
+  _internal.RootAreas.init();
   _internal.update = () => {
-    _internal.RootBlocks.update();
+    _internal.RootAreas.update();
   };
   _internal.runOnInit = async (progress) => {
     progress();
     if (!_internal.onInitDone) {
-      await _internal.RootBlocks.areas.root.blocks[0].triggerEvent({
+      await _internal.RootAreas.areas.root.blocks[0].triggerEvent({
         name: 'onInit',
         progress,
       });
@@ -114,7 +127,7 @@ function getContext({
   };
   _internal.runOnInitAsync = async (progress) => {
     if (_internal.onInitDone && !_internal.onInitAsyncDone) {
-      await _internal.RootBlocks.areas.root.blocks[0].triggerEvent({
+      await _internal.RootAreas.areas.root.blocks[0].triggerEvent({
         name: 'onInitAsync',
         progress,
       });

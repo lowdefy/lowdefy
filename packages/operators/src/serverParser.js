@@ -17,20 +17,22 @@
 import { serializer, type } from '@lowdefy/helpers';
 
 class ServerParser {
-  constructor({ env, payload, secrets, user, operators, verbose, jsMap }) {
+  constructor({ env, jsMap, operators, payload, secrets, state, steps, user, verbose }) {
     this.env = env;
     this.jsMap = jsMap;
     this.operators = operators;
+    this.parse = this.parse.bind(this);
     this.payload = payload;
     this.secrets = secrets;
+    this.state = state;
+    this.steps = steps;
     this.user = user;
-    this.parse = this.parse.bind(this);
     this.verbose = verbose;
   }
 
   // TODO: Look at logging here
   // TODO: Remove console.error = () => {}; from tests
-  parse({ args, input, location, operatorPrefix = '_' }) {
+  parse({ args, input, items, location, operatorPrefix = '_' }) {
     if (type.isUndefined(input)) {
       return { output: input, errors: [] };
     }
@@ -43,8 +45,7 @@ class ServerParser {
     const errors = [];
     const reviver = (_, value) => {
       if (!type.isObject(value)) return value;
-      // TODO: pass ~k in errors.
-      // const _k = value['~k'];
+      const configKey = value['~k'];
       delete value['~k'];
       if (Object.keys(value).length !== 1) return value;
 
@@ -53,28 +54,38 @@ class ServerParser {
 
       const [op, methodName] = `_${key.substring(operatorPrefix.length)}`.split('.');
       if (type.isUndefined(this.operators[op])) return value;
+      const params = value[key];
       try {
         const res = this.operators[op]({
           args,
           arrayIndices: [],
           env: this.env,
+          items,
           jsMap: this.jsMap,
           location,
           methodName,
           operatorPrefix,
           operators: this.operators,
-          params: value[key],
+          params,
           parser: this,
           payload: this.payload,
           runtime: 'node',
           secrets: this.secrets,
+          state: this.state,
+          steps: this.steps,
           user: this.user,
         });
         return res;
       } catch (e) {
-        errors.push(e);
+        const message = e.message || `Operator ${op} threw an error`;
+        const formattedError = new Error(message);
+        formattedError.stack = e.stack;
+        formattedError.configKey = e.configKey ?? configKey;
+        formattedError.received = { [key]: params };
+        formattedError.operatorLocation = location;
+        errors.push(formattedError);
         if (this.verbose) {
-          console.error(e);
+          console.error(formattedError);
         }
         return null;
       }

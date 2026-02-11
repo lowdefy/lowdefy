@@ -1,0 +1,41 @@
+# 53: Deep Nesting Application
+lowdefy: local
+
+pages:
+  - id: nested
+    type: Box
+    properties:
+      title: Deep Nesting Test
+    blocks:
+      - id: level1
+        type: Card
+        properties:
+          title: Level 1
+        blocks:
+          - id: level2
+            type: Box
+            blocks:
+              - id: level3
+                type: Card
+                properties:
+                  title: Level 3
+                blocks:
+                  - id: level4
+                    type: Box
+                    blocks:
+                      - id: level5
+                        type: Card
+                        properties:
+                          title: Level 5
+                        blocks:
+                          - id: level6
+                            type: Box
+                            blocks:
+                              - id: level7
+                                type: Paragraph
+                                properties:
+                                  content: Deeply nested content
+                              - id: level7b
+                                type: Button
+                                properties:
+                                  title: Deep Button

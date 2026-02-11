@@ -1,0 +1,15 @@
+{
+  "tests": [
+    {
+      "mode": "dev",
+      "errors": [
+        "Invalid check slug(s)"
+      ],
+      "errorContains": [
+        "Invalid check slug(s): \"invalid-slug\". Valid slugs: state-refs, payload-refs, step-refs, link-refs, request-refs, connection-refs, types, schema",
+        "lowdefy.yaml:10"
+      ],
+      "expectThrow": true
+    }
+  ]
+}

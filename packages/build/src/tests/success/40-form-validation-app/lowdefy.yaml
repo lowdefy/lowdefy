@@ -1,0 +1,130 @@
+# 40: Form Validation Application
+lowdefy: local
+name: Form Validation Demo
+
+pages:
+  - id: registration
+    type: Box
+    properties:
+      title: Registration
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: User Registration
+      - id: form
+        type: Card
+        blocks:
+          - id: username
+            type: TextInput
+            required: Username is required
+            validate:
+              - status: error
+                message: Username must be at least 3 characters
+                pass:
+                  _gte:
+                    - _state: username
+                    - 3
+              - status: error
+                message: Username can only contain letters and numbers
+                pass:
+                  _regex:
+                    pattern: '^[a-zA-Z0-9]+$'
+                    on:
+                      _state: username
+            properties:
+              title: Username
+              placeholder: Choose a username
+          - id: email
+            type: TextInput
+            required: Email is required
+            validate:
+              - status: error
+                message: Please enter a valid email address
+                pass:
+                  _regex:
+                    pattern: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+                    on:
+                      _state: email
+            properties:
+              title: Email
+              placeholder: your@email.com
+          - id: password
+            type: PasswordInput
+            required: Password is required
+            validate:
+              - status: error
+                message: Password must be at least 8 characters
+                pass:
+                  _gte:
+                    - _string.length:
+                        _state: password
+                    - 8
+              - status: warning
+                message: Consider using a stronger password
+                pass:
+                  _regex:
+                    pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)'
+                    on:
+                      _state: password
+            properties:
+              title: Password
+          - id: confirmPassword
+            type: PasswordInput
+            required: Please confirm your password
+            validate:
+              - status: error
+                message: Passwords do not match
+                pass:
+                  _eq:
+                    - _state: password
+                    - _state: confirmPassword
+            properties:
+              title: Confirm Password
+          - id: age
+            type: NumberInput
+            required: Age is required
+            validate:
+              - status: error
+                message: You must be at least 18 years old
+                pass:
+                  _gte:
+                    - _state: age
+                    - 18
+              - status: error
+                message: Please enter a valid age
+                pass:
+                  _lte:
+                    - _state: age
+                    - 120
+            properties:
+              title: Age
+              min: 0
+              max: 150
+          - id: terms
+            type: Switch
+            required: You must accept the terms
+            validate:
+              - status: error
+                message: You must accept the terms and conditions
+                pass:
+                  _eq:
+                    - _state: terms
+                    - true
+            properties:
+              title: I accept the terms and conditions
+          - id: submitBtn
+            type: Button
+            properties:
+              title: Register
+              type: primary
+              block: true
+            events:
+              onClick:
+                - id: validate
+                  type: Validate
+                - id: success
+                  type: DisplayMessage
+                  params:
+                    content: Registration successful!
+                    status: success

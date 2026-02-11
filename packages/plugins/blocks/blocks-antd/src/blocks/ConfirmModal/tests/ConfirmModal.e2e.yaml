@@ -1,0 +1,410 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: confirmmodal
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: cm_basic
+    type: ConfirmModal
+    properties:
+      title: Confirm Action
+      content: Are you sure you want to proceed?
+
+  - id: open_basic
+    type: Button
+    properties:
+      title: Open Basic Confirm
+    events:
+      onClick:
+        - id: open_modal
+          type: CallMethod
+          params:
+            blockId: cm_basic
+            method: open
+
+  # ============================================
+  # STATUS TYPES
+  # ============================================
+
+  # Success status
+  - id: cm_success
+    type: ConfirmModal
+    properties:
+      title: Success
+      content: Operation completed successfully.
+      status: success
+
+  - id: open_success
+    type: Button
+    properties:
+      title: Open Success
+    events:
+      onClick:
+        - id: open_modal
+          type: CallMethod
+          params:
+            blockId: cm_success
+            method: open
+
+  # Error status
+  - id: cm_error
+    type: ConfirmModal
+    properties:
+      title: Error
+      content: An error occurred.
+      status: error
+
+  - id: open_error
+    type: Button
+    properties:
+      title: Open Error
+    events:
+      onClick:
+        - id: open_modal
+          type: CallMethod
+          params:
+            blockId: cm_error
+            method: open
+
+  # Info status
+  - id: cm_info
+    type: ConfirmModal
+    properties:
+      title: Information
+      content: Here is some information.
+      status: info
+
+  - id: open_info
+    type: Button
+    properties:
+      title: Open Info
+    events:
+      onClick:
+        - id: open_modal
+          type: CallMethod
+          params:
+            blockId: cm_info
+            method: open
+
+  # Warning status
+  - id: cm_warning
+    type: ConfirmModal
+    properties:
+      title: Warning
+      content: This action may have consequences.
+      status: warning
+
+  - id: open_warning
+    type: Button
+    properties:
+      title: Open Warning
+    events:
+      onClick:
+        - id: open_modal
+          type: CallMethod
+          params:
+            blockId: cm_warning
+            method: open
+
+  # ============================================
+  # PROPERTY TESTS
+  # ============================================
+
+  # Custom button text
+  - id: cm_custom_buttons
+    type: ConfirmModal
+    properties:
+      title: Custom Buttons
+      content: Modal with custom button text.
+      okText: Yes, proceed
+      cancelText: No, go back
+
+  - id: open_custom_buttons
+    type: Button
+    properties:
+      title: Open Custom Buttons
+    events:
+      onClick:
+        - id: open_modal
+          type: CallMethod
+          params:
+            blockId: cm_custom_buttons
+            method: open
+
+  # Centered modal
+  - id: cm_centered
+    type: ConfirmModal
+    properties:
+      title: Centered Modal
+      content: This modal is centered.
+      centered: true
+
+  - id: open_centered
+    type: Button
+    properties:
+      title: Open Centered
+    events:
+      onClick:
+        - id: open_modal
+          type: CallMethod
+          params:
+            blockId: cm_centered
+            method: open
+
+  # With closable button
+  - id: cm_closable
+    type: ConfirmModal
+    properties:
+      title: Closable Modal
+      content: This modal has a close button.
+      closable: true
+
+  - id: open_closable
+    type: Button
+    properties:
+      title: Open Closable
+    events:
+      onClick:
+        - id: open_modal
+          type: CallMethod
+          params:
+            blockId: cm_closable
+            method: open
+
+  # Custom width
+  - id: cm_custom_width
+    type: ConfirmModal
+    properties:
+      title: Wide Modal
+      content: This modal is 600px wide.
+      width: 600
+
+  - id: open_custom_width
+    type: Button
+    properties:
+      title: Open Wide Modal
+    events:
+      onClick:
+        - id: open_modal
+          type: CallMethod
+          params:
+            blockId: cm_custom_width
+            method: open
+
+  # With icon
+  - id: cm_with_icon
+    type: ConfirmModal
+    properties:
+      title: Modal with Icon
+      content: This modal has a custom icon.
+      icon: AiOutlineQuestionCircle
+
+  - id: open_with_icon
+    type: Button
+    properties:
+      title: Open With Icon
+    events:
+      onClick:
+        - id: open_modal
+          type: CallMethod
+          params:
+            blockId: cm_with_icon
+            method: open
+
+  # ============================================
+  # RUNTIME STATUS OVERRIDE
+  # ============================================
+
+  - id: cm_runtime_status
+    type: ConfirmModal
+    properties:
+      title: Runtime Status
+      content: Status can be changed at runtime.
+      status: confirm
+
+  - id: open_runtime_success
+    type: Button
+    properties:
+      title: Open as Success
+    events:
+      onClick:
+        - id: open_modal
+          type: CallMethod
+          params:
+            blockId: cm_runtime_status
+            method: open
+            args:
+              - status: success
+
+  - id: open_runtime_error
+    type: Button
+    properties:
+      title: Open as Error
+    events:
+      onClick:
+        - id: open_modal
+          type: CallMethod
+          params:
+            blockId: cm_runtime_status
+            method: open
+            args:
+              - status: error
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  # onOk event
+  - id: cm_onok
+    type: ConfirmModal
+    properties:
+      title: OnOk Test
+      content: Click Ok to test event.
+    events:
+      onOk:
+        - id: set_ok_fired
+          type: SetState
+          params:
+            cm_ok_fired: true
+
+  - id: open_onok
+    type: Button
+    properties:
+      title: Open OnOk Test
+    events:
+      onClick:
+        - id: open_modal
+          type: CallMethod
+          params:
+            blockId: cm_onok
+            method: open
+
+  - id: onok_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: cm_ok_fired
+              - true
+          then: Ok fired
+          else: ''
+
+  # onCancel event
+  - id: cm_oncancel
+    type: ConfirmModal
+    properties:
+      title: OnCancel Test
+      content: Click Cancel to test event.
+    events:
+      onCancel:
+        - id: set_cancel_fired
+          type: SetState
+          params:
+            cm_cancel_fired: true
+
+  - id: open_oncancel
+    type: Button
+    properties:
+      title: Open OnCancel Test
+    events:
+      onClick:
+        - id: open_modal
+          type: CallMethod
+          params:
+            blockId: cm_oncancel
+            method: open
+
+  - id: oncancel_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: cm_cancel_fired
+              - true
+          then: Cancel fired
+          else: ''
+
+  # onOpen event
+  - id: cm_onopen
+    type: ConfirmModal
+    properties:
+      title: OnOpen Test
+      content: Modal has onOpen event.
+    events:
+      onOpen:
+        - id: set_open_fired
+          type: SetState
+          params:
+            cm_open_fired: true
+
+  - id: open_onopen
+    type: Button
+    properties:
+      title: Open OnOpen Test
+    events:
+      onClick:
+        - id: open_modal
+          type: CallMethod
+          params:
+            blockId: cm_onopen
+            method: open
+
+  - id: onopen_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: cm_open_fired
+              - true
+          then: Open fired
+          else: ''
+
+  # ============================================
+  # CONTENT AREA TEST
+  # ============================================
+
+  - id: cm_with_content_area
+    type: ConfirmModal
+    properties:
+      title: Modal with Content Area
+    areas:
+      content:
+        blocks:
+          - id: cm_content_area_text
+            type: Paragraph
+            properties:
+              content: This is custom content from the content area.
+
+  - id: open_content_area
+    type: Button
+    properties:
+      title: Open Content Area Modal
+    events:
+      onClick:
+        - id: open_modal
+          type: CallMethod
+          params:
+            blockId: cm_with_content_area
+            method: open

@@ -1,0 +1,11 @@
+appName: Enterprise CRM
+version: 2.0.0
+features:
+  darkMode: true
+  notifications: true
+  analytics: true
+settings:
+  itemsPerPage: 25
+  currency: USD
+  timezone: America/New_York
+  dateFormat: MM/DD/YYYY

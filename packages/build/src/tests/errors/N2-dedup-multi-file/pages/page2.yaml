@@ -1,0 +1,10 @@
+# Page 2 - also references "sharedKey" which is undefined
+# This tests that same error message from different file is NOT deduplicated
+id: page2
+type: Box
+blocks:
+  - id: display2
+    type: Paragraph
+    properties:
+      content:
+        _state: sharedKey

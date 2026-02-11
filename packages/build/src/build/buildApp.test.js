@@ -17,7 +17,7 @@
 import { execSync } from 'child_process';
 
 import buildApp from './buildApp.js';
-import testContext from '../test/testContext.js';
+import testContext from '../test-utils/testContext.js';
 
 const context = testContext();
 

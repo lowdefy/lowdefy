@@ -1,0 +1,166 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: button
+type: Box
+
+blocks:
+  - id: button_basic
+    type: Button
+    properties:
+      title: Basic Button
+
+  - id: button_primary
+    type: Button
+    properties:
+      title: Primary
+      type: primary
+
+  - id: button_default
+    type: Button
+    properties:
+      title: Default
+      type: default
+
+  - id: button_dashed
+    type: Button
+    properties:
+      title: Dashed
+      type: dashed
+
+  - id: button_link
+    type: Button
+    properties:
+      title: Link
+      type: link
+
+  - id: button_disabled
+    type: Button
+    properties:
+      title: Disabled
+      disabled: true
+
+  - id: button_small
+    type: Button
+    properties:
+      title: Small
+      size: small
+
+  - id: button_large
+    type: Button
+    properties:
+      title: Large
+      size: large
+
+  - id: button_danger
+    type: Button
+    properties:
+      title: Danger
+      danger: true
+
+  - id: button_block
+    type: Button
+    properties:
+      title: Block Button
+      block: true
+
+  - id: button_with_icon
+    type: Button
+    properties:
+      title: With Icon
+      icon: AiOutlineSave
+
+  - id: button_clickable
+    type: Button
+    properties:
+      title:
+        _if:
+          test:
+            _eq:
+              - _state: button_clicked
+              - true
+          then: Clicked!
+          else: Click me
+    events:
+      onClick:
+        - id: set_clicked
+          type: SetState
+          params:
+            button_clicked: true
+
+  - id: button_loading
+    type: Button
+    properties:
+      title: Loading Button
+    events:
+      onClick:
+        - id: slow_action
+          type: SetState
+          params:
+            loading_done: true
+
+  - id: button_ghost
+    type: Button
+    properties:
+      title: Ghost
+      ghost: true
+
+  - id: button_shape_circle
+    type: Button
+    properties:
+      icon: AiOutlinePlus
+      shape: circle
+      hideTitle: true
+
+  - id: button_shape_round
+    type: Button
+    properties:
+      title: Round
+      shape: round
+
+  - id: button_text
+    type: Button
+    properties:
+      title: Text Button
+      type: text
+
+  - id: button_href
+    type: Button
+    properties:
+      title: Link with href
+      type: link
+      href: https://lowdefy.com
+
+  - id: button_hide_title
+    type: Button
+    properties:
+      icon: AiOutlineSearch
+      hideTitle: true
+
+  - id: button_color
+    type: Button
+    properties:
+      title: Custom Color
+      color: '#52c41a'
+
+  - id: button_loading_spinner
+    type: Button
+    properties:
+      title: Click for Loading
+    events:
+      onClick:
+        - id: wait_action
+          type: Wait
+          params:
+            ms: 2000

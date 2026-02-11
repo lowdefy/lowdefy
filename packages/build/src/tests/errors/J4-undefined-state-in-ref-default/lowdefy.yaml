@@ -1,0 +1,30 @@
+# J4: Undefined State Reference in _var.default via _ref
+# ======================================================
+# Tests that _state references in _var.default within a referenced file
+# correctly report the line number from the TEMPLATE file, not the parent.
+#
+# Bug: When _var.default is used (because no var was passed), the error
+# location points to the parent file (lowdefy.yaml) instead of the template
+# file (request-template.yaml) where the _state is actually defined.
+#
+# Expected warning should point to request-template.yaml:9 (the _state line),
+# NOT to lowdefy.yaml.
+
+lowdefy: local
+
+connections:
+  - id: mongodb
+    type: MongoDBCollection
+    properties:
+      databaseUri: mongodb://localhost:27017
+      databaseName: test
+      collection: contacts
+
+pages:
+  - id: contacts-new
+    type: Box
+    requests:
+      - _ref: request-template.yaml
+    blocks:
+      - id: name
+        type: TextInput

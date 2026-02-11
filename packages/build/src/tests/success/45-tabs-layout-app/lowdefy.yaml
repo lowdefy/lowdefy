@@ -1,0 +1,124 @@
+# 45: Tabs Layout Application
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    properties:
+      title: Tabs Demo
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Tabs Layout Demo
+      - id: mainTabs
+        type: Tabs
+        properties:
+          defaultActiveKey: overview
+        areas:
+          overview:
+            blocks:
+              - id: overviewTitle
+                type: Title
+                properties:
+                  level: 3
+                  content: Overview Tab
+              - id: overviewContent
+                type: Paragraph
+                properties:
+                  content: This is the overview section with general information.
+              - id: overviewStats
+                type: Box
+                blocks:
+                  - id: stat1
+                    type: Statistic
+                    layout:
+                      span: 8
+                    properties:
+                      title: Total
+                      value: 1234
+                  - id: stat2
+                    type: Statistic
+                    layout:
+                      span: 8
+                    properties:
+                      title: Active
+                      value: 890
+                  - id: stat3
+                    type: Statistic
+                    layout:
+                      span: 8
+                    properties:
+                      title: Pending
+                      value: 344
+          details:
+            blocks:
+              - id: detailsTitle
+                type: Title
+                properties:
+                  level: 3
+                  content: Details Tab
+              - id: detailsForm
+                type: Card
+                properties:
+                  title: Edit Details
+                blocks:
+                  - id: detailName
+                    type: TextInput
+                    properties:
+                      title: Name
+                  - id: detailDesc
+                    type: TextArea
+                    properties:
+                      title: Description
+          settings:
+            blocks:
+              - id: settingsTitle
+                type: Title
+                properties:
+                  level: 3
+                  content: Settings Tab
+              - id: settingsList
+                type: Card
+                blocks:
+                  - id: enableFeature
+                    type: Switch
+                    properties:
+                      title: Enable Feature
+                  - id: maxItems
+                    type: NumberInput
+                    properties:
+                      title: Max Items
+                      min: 1
+                      max: 100
+                  - id: theme
+                    type: Selector
+                    properties:
+                      title: Theme
+                      options:
+                        - value: light
+                          label: Light
+                        - value: dark
+                          label: Dark
+      - id: nestedTabs
+        type: Card
+        properties:
+          title: Nested Tabs Example
+        blocks:
+          - id: innerTabs
+            type: Tabs
+            properties:
+              type: card
+            areas:
+              tab1:
+                blocks:
+                  - id: inner1
+                    type: Paragraph
+                    properties:
+                      content: Inner Tab 1 Content
+              tab2:
+                blocks:
+                  - id: inner2
+                    type: Paragraph
+                    properties:
+                      content: Inner Tab 2 Content

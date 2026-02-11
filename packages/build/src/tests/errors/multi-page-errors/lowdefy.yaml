@@ -1,0 +1,38 @@
+# Multi-Page Errors Test
+# Tests that errors from multiple pages are ALL collected and reported.
+# This verifies that buildPage doesn't stop processing after the first error.
+#
+# Expected errors:
+# 1. Page "page1" - _state references "undefinedState1"
+# 2. Page "page2" - _state references "undefinedState2"
+# 3. Page "page3" - _state references "undefinedState3"
+
+lowdefy: local
+
+pages:
+  - id: page1
+    type: Box
+    blocks:
+      - id: block1
+        type: Paragraph
+        properties:
+          content:
+            _state: undefinedState1
+
+  - id: page2
+    type: Box
+    blocks:
+      - id: block2
+        type: Paragraph
+        properties:
+          content:
+            _state: undefinedState2
+
+  - id: page3
+    type: Box
+    blocks:
+      - id: block3
+        type: Paragraph
+        properties:
+          content:
+            _state: undefinedState3

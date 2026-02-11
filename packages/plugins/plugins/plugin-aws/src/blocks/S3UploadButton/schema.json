@@ -78,6 +78,22 @@
         "type": "array",
         "description": "Triggered when the upload state is changing."
       },
+      "onProgress": {
+        "type": "array",
+        "description": "Triggered when the upload state is in progress."
+      },
+      "onSuccess": {
+        "type": "array",
+        "description": "Triggered when the upload state is done uploading."
+      },
+      "onRemove": {
+        "type": "array",
+        "description": "Triggered when the upload has been removed."
+      },
+      "onError": {
+        "type": "array",
+        "description": "Triggered when the upload has failed."
+      },
       "onClick": {
         "type": "array",
         "description": "Triggered when the upload button is clicked."

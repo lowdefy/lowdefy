@@ -64,30 +64,27 @@ describe('_object.hasOwnProperty', () => {
         methodName,
         location,
       })
-    ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _object.hasOwnProperty must be evaluated on an object instance. For named args provide an object instance to the \\"on\\" property, for listed args provide and object instance as the first element in the operator argument array.
-          Received: {\\"_object.hasOwnProperty\\":[1,{\\"a\\":1}]} at locationId."
-    `);
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"_object.hasOwnProperty must be evaluated on an object instance. For named args provide an object instance to the \\"on\\" property, for listed args provide an object instance as the first element in the operator argument array."`
+    );
     expect(() =>
       object({
         params: 'x',
         methodName,
         location,
       })
-    ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _object.hasOwnProperty accepts one of the following types: array, object.
-            Received: {\\"_object.hasOwnProperty\\":\\"x\\"} at locationId."
-    `);
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"_object.hasOwnProperty accepts one of the following types: array, object."`
+    );
     expect(() =>
       object({
         params: null,
         methodName,
         location,
       })
-    ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _object.hasOwnProperty accepts one of the following types: array, object.
-            Received: {\\"_object.hasOwnProperty\\":null} at locationId."
-    `);
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"_object.hasOwnProperty accepts one of the following types: array, object."`
+    );
   });
 });
 
@@ -121,20 +118,18 @@ describe('_object.entries', () => {
         methodName,
         location,
       })
-    ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _object.entries accepts one of the following types: object, null.
-            Received: {\\"_object.entries\\":[]} at locationId."
-    `);
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"_object.entries accepts one of the following types: object, null."`
+    );
     expect(() =>
       object({
         params: 'x',
         methodName,
         location,
       })
-    ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _object.entries accepts one of the following types: object, null.
-            Received: {\\"_object.entries\\":\\"x\\"} at locationId."
-    `);
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"_object.entries accepts one of the following types: object, null."`
+    );
   });
 });
 
@@ -168,20 +163,18 @@ describe('_object.fromEntries', () => {
         methodName,
         location,
       })
-    ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _object.fromEntries accepts one of the following types: array, null.
-            Received: {\\"_object.fromEntries\\":{}} at locationId."
-    `);
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"_object.fromEntries accepts one of the following types: array, null."`
+    );
     expect(() =>
       object({
         params: 'x',
         methodName,
         location,
       })
-    ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _object.fromEntries accepts one of the following types: array, null.
-            Received: {\\"_object.fromEntries\\":\\"x\\"} at locationId."
-    `);
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"_object.fromEntries accepts one of the following types: array, null."`
+    );
   });
 });
 
@@ -212,20 +205,18 @@ describe('_object.keys', () => {
         methodName,
         location,
       })
-    ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _object.keys accepts one of the following types: object, null.
-            Received: {\\"_object.keys\\":[]} at locationId."
-    `);
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"_object.keys accepts one of the following types: object, null."`
+    );
     expect(() =>
       object({
         params: 'x',
         methodName,
         location,
       })
-    ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _object.keys accepts one of the following types: object, null.
-            Received: {\\"_object.keys\\":\\"x\\"} at locationId."
-    `);
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"_object.keys accepts one of the following types: object, null."`
+    );
   });
 });
 
@@ -256,20 +247,18 @@ describe('_object.values', () => {
         methodName,
         location,
       })
-    ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _object.values accepts one of the following types: object, null.
-            Received: {\\"_object.values\\":[]} at locationId."
-    `);
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"_object.values accepts one of the following types: object, null."`
+    );
     expect(() =>
       object({
         params: 'x',
         methodName,
         location,
       })
-    ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _object.values accepts one of the following types: object, null.
-            Received: {\\"_object.values\\":\\"x\\"} at locationId."
-    `);
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"_object.values accepts one of the following types: object, null."`
+    );
   });
 });
 
@@ -308,20 +297,18 @@ describe('_object.assign', () => {
         methodName,
         location,
       })
-    ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _object.assign accepts one of the following types: array.
-            Received: {\\"_object.assign\\":\\"x\\"} at locationId."
-    `);
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"_object.assign accepts one of the following types: array."`
+    );
     expect(() =>
       object({
         params: null,
         methodName,
         location,
       })
-    ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _object.assign accepts one of the following types: array.
-            Received: {\\"_object.assign\\":null} at locationId."
-    `);
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"_object.assign accepts one of the following types: array."`
+    );
   });
 });
 
@@ -370,42 +357,39 @@ describe('_object.defineProperty', () => {
         methodName,
         location,
       })
-    ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _object.defineProperty accepts one of the following types: array, object.
-            Received: {\\"_object.defineProperty\\":\\"x\\"} at locationId."
-    `);
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"_object.defineProperty accepts one of the following types: array, object."`
+    );
     expect(() =>
       object({
         params: null,
         methodName,
         location,
       })
-    ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _object.defineProperty accepts one of the following types: array, object.
-            Received: {\\"_object.defineProperty\\":null} at locationId."
-    `);
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"_object.defineProperty accepts one of the following types: array, object."`
+    );
   });
 });
 
 test('_object called with no method or params', () => {
-  expect(() => object({ location: 'locationId' })).toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _object requires a valid method name, use one of the following: assign, defineProperty, entries, fromEntries, keys, values.
-            Received: {\\"_object.undefined\\":undefined} at locationId."
-  `);
+  expect(() => object({ location: 'locationId' })).toThrowErrorMatchingInlineSnapshot(
+    `"_object requires a valid method name, use one of the following: assign, defineProperty, entries, fromEntries, keys, values."`
+  );
 });
 
 test('_object invalid method', () => {
-  expect(() => object({ params: [{ a: 1 }], methodName: 'X', location: 'locationId' }))
-    .toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _object.X is not supported, use one of the following: assign, defineProperty, entries, fromEntries, keys, values.
-          Received: {\\"_object.X\\":[{\\"a\\":1}]} at locationId."
-  `);
+  expect(() =>
+    object({ params: [{ a: 1 }], methodName: 'X', location: 'locationId' })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"_object.X is not supported, use one of the following: assign, defineProperty, entries, fromEntries, keys, values."`
+  );
 });
 
 test('_object invalid method args', () => {
-  expect(() => object({ params: 'X', methodName: 'flat', location: 'locationId' }))
-    .toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _object.flat is not supported, use one of the following: assign, defineProperty, entries, fromEntries, keys, values.
-          Received: {\\"_object.flat\\":\\"X\\"} at locationId."
-  `);
+  expect(() =>
+    object({ params: 'X', methodName: 'flat', location: 'locationId' })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"_object.flat is not supported, use one of the following: assign, defineProperty, entries, fromEntries, keys, values."`
+  );
 });

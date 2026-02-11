@@ -1,0 +1,2415 @@
+{
+  "app.json": {
+    "html": {
+      "appendBody": "",
+      "appendHead": "",
+      "~k": "33"
+    },
+    "git_sha": "test-git-sha-for-snapshots",
+    "~k": "32"
+  },
+  "auth.json": {
+    "api": {
+      "roles": {
+        "~k": "5h"
+      },
+      "~k": "5g"
+    },
+    "authPages": {
+      "~k": "5i"
+    },
+    "pages": {
+      "roles": {
+        "~k": "5k"
+      },
+      "~k": "5j"
+    },
+    "callbacks": {
+      "~arr": [],
+      "~k": "5l"
+    },
+    "events": {
+      "~arr": [],
+      "~k": "5m"
+    },
+    "providers": {
+      "~arr": [],
+      "~k": "5n"
+    },
+    "session": {
+      "~k": "5o"
+    },
+    "theme": {
+      "~k": "5p"
+    },
+    "configured": false,
+    "~k": "5f"
+  },
+  "config.json": {
+    "~k": "35"
+  },
+  "global.json": {},
+  "keyMap.json": {
+    "3": {
+      "key": "root",
+      "~k_parent": "2",
+      "~l": 2
+    },
+    "4": {
+      "key": "root.menus",
+      "~k_parent": "3",
+      "~l": 5
+    },
+    "5": {
+      "key": "root.menus[0:default]",
+      "~k_parent": "4",
+      "~l": 6
+    },
+    "6": {
+      "key": "root.menus[0:default].links",
+      "~k_parent": "5",
+      "~l": 7
+    },
+    "7": {
+      "key": "root.menus[0:default].links[0:home:MenuLink]",
+      "~k_parent": "6",
+      "~l": 8
+    },
+    "8": {
+      "key": "root.menus[0:default].links[0:home:MenuLink].properties",
+      "~k_parent": "7",
+      "~l": 11
+    },
+    "9": {
+      "key": "root.menus[0:default].links[1:products:MenuGroup]",
+      "~k_parent": "6",
+      "~l": 14
+    },
+    "10": {
+      "key": "root.menus[1:footer].links[0:privacy:MenuLink]",
+      "~k_parent": "z",
+      "~l": 75
+    },
+    "11": {
+      "key": "root.menus[1:footer].links[0:privacy:MenuLink].properties",
+      "~k_parent": "10",
+      "~l": 78
+    },
+    "12": {
+      "key": "root.menus[1:footer].links[1:terms:MenuLink]",
+      "~k_parent": "z",
+      "~l": 80
+    },
+    "13": {
+      "key": "root.menus[1:footer].links[1:terms:MenuLink].properties",
+      "~k_parent": "12",
+      "~l": 83
+    },
+    "14": {
+      "key": "root.pages",
+      "~k_parent": "3",
+      "~l": 86
+    },
+    "15": {
+      "key": "root.pages[0:home:Box]",
+      "~k_parent": "14",
+      "~l": 87
+    },
+    "16": {
+      "key": "root.pages[0:home:Box].properties",
+      "~k_parent": "15",
+      "~l": 89
+    },
+    "17": {
+      "key": "root.pages[0:home:Box].blocks",
+      "~k_parent": "15",
+      "~l": 91
+    },
+    "18": {
+      "key": "root.pages[0:home:Box].blocks[0:title:Title]",
+      "~k_parent": "17",
+      "~l": 92
+    },
+    "19": {
+      "key": "root.pages[0:home:Box].blocks[0:title:Title].properties",
+      "~k_parent": "18",
+      "~l": 94
+    },
+    "20": {
+      "key": "root.pages[6:support:Box].properties",
+      "~k_parent": "1z",
+      "~l": 143
+    },
+    "21": {
+      "key": "root.pages[6:support:Box].blocks",
+      "~k_parent": "1z",
+      "~l": 145
+    },
+    "22": {
+      "key": "root.pages[6:support:Box].blocks[0:title:Title]",
+      "~k_parent": "21",
+      "~l": 146
+    },
+    "23": {
+      "key": "root.pages[6:support:Box].blocks[0:title:Title].properties",
+      "~k_parent": "22",
+      "~l": 148
+    },
+    "24": {
+      "key": "root.pages[7:about:Box]",
+      "~k_parent": "14",
+      "~l": 150
+    },
+    "25": {
+      "key": "root.pages[7:about:Box].properties",
+      "~k_parent": "24",
+      "~l": 152
+    },
+    "26": {
+      "key": "root.pages[7:about:Box].blocks",
+      "~k_parent": "24",
+      "~l": 154
+    },
+    "27": {
+      "key": "root.pages[7:about:Box].blocks[0:title:Title]",
+      "~k_parent": "26",
+      "~l": 155
+    },
+    "28": {
+      "key": "root.pages[7:about:Box].blocks[0:title:Title].properties",
+      "~k_parent": "27",
+      "~l": 157
+    },
+    "29": {
+      "key": "root.pages[8:contact:Box]",
+      "~k_parent": "14",
+      "~l": 159
+    },
+    "30": {
+      "key": "root.pages[11:404:Result].areas.extra.blocks[0:home:Button].events.onClick[0:home:Link]",
+      "~k_parent": "2z"
+    },
+    "31": {
+      "key": "root.pages[11:404:Result].areas.extra.blocks[0:home:Button].events.onClick[0:home:Link].params",
+      "~k_parent": "30"
+    },
+    "32": {
+      "key": "root.app",
+      "~k_parent": "3"
+    },
+    "33": {
+      "key": "root.app.html",
+      "~k_parent": "32"
+    },
+    "34": {
+      "key": "root.logger",
+      "~k_parent": "3"
+    },
+    "35": {
+      "key": "root.config",
+      "~k_parent": "3"
+    },
+    "37": {
+      "key": "root.menus[0:default].links",
+      "~k_parent": "5"
+    },
+    "38": {
+      "key": "root.menus[0:default].links[0:home:MenuLink].auth",
+      "~k_parent": "7"
+    },
+    "39": {
+      "key": "root.menus[0:default].links[1:products:MenuGroup].links",
+      "~k_parent": "9"
+    },
+    "40": {
+      "key": "root.pages[1:products:Box].requests",
+      "~k_parent": "3w"
+    },
+    "41": {
+      "key": "root.pages[2:electronics:Box]",
+      "~k_parent": "3q"
+    },
+    "42": {
+      "key": "root.pages[2:electronics:Box].auth",
+      "~k_parent": "41"
+    },
+    "43": {
+      "key": "root.pages[2:electronics:Box].areas",
+      "~k_parent": "41"
+    },
+    "44": {
+      "key": "root.pages[2:electronics:Box].areas.content",
+      "~k_parent": "43"
+    },
+    "45": {
+      "key": "root.pages[2:electronics:Box].requests",
+      "~k_parent": "41"
+    },
+    "46": {
+      "key": "root.pages[3:clothing:Box]",
+      "~k_parent": "3q"
+    },
+    "47": {
+      "key": "root.pages[3:clothing:Box].auth",
+      "~k_parent": "46"
+    },
+    "48": {
+      "key": "root.pages[3:clothing:Box].areas",
+      "~k_parent": "46"
+    },
+    "49": {
+      "key": "root.pages[3:clothing:Box].areas.content",
+      "~k_parent": "48"
+    },
+    "50": {
+      "key": "root.pages[9:privacy:Box]",
+      "~k_parent": "3q"
+    },
+    "51": {
+      "key": "root.pages[9:privacy:Box].auth",
+      "~k_parent": "50"
+    },
+    "52": {
+      "key": "root.pages[9:privacy:Box].areas",
+      "~k_parent": "50"
+    },
+    "53": {
+      "key": "root.pages[9:privacy:Box].areas.content",
+      "~k_parent": "52"
+    },
+    "54": {
+      "key": "root.pages[9:privacy:Box].requests",
+      "~k_parent": "50"
+    },
+    "55": {
+      "key": "root.pages[10:terms:Box]",
+      "~k_parent": "3q"
+    },
+    "56": {
+      "key": "root.pages[10:terms:Box].auth",
+      "~k_parent": "55"
+    },
+    "57": {
+      "key": "root.pages[10:terms:Box].areas",
+      "~k_parent": "55"
+    },
+    "58": {
+      "key": "root.pages[10:terms:Box].areas.content",
+      "~k_parent": "57"
+    },
+    "59": {
+      "key": "root.pages[10:terms:Box].requests",
+      "~k_parent": "55"
+    },
+    "60": {
+      "key": "root.types.blocks.Title",
+      "~k_parent": "5y"
+    },
+    "61": {
+      "key": "root.types.blocks.Result",
+      "~k_parent": "5y"
+    },
+    "62": {
+      "key": "root.types.blocks.Button",
+      "~k_parent": "5y"
+    },
+    "63": {
+      "key": "root.types.blocks.Anchor",
+      "~k_parent": "5y"
+    },
+    "64": {
+      "key": "root.types.blocks.DangerousHtml",
+      "~k_parent": "5y"
+    },
+    "65": {
+      "key": "root.types.blocks.Html",
+      "~k_parent": "5y"
+    },
+    "66": {
+      "key": "root.types.blocks.Icon",
+      "~k_parent": "5y"
+    },
+    "67": {
+      "key": "root.types.blocks.Img",
+      "~k_parent": "5y"
+    },
+    "68": {
+      "key": "root.types.blocks.List",
+      "~k_parent": "5y"
+    },
+    "69": {
+      "key": "root.types.blocks.Span",
+      "~k_parent": "5y"
+    },
+    "70": {
+      "key": "root.imports.blocks[0]",
+      "~k_parent": "6z"
+    },
+    "71": {
+      "key": "root.imports.blocks[1]",
+      "~k_parent": "6z"
+    },
+    "72": {
+      "key": "root.imports.blocks[2]",
+      "~k_parent": "6z"
+    },
+    "73": {
+      "key": "root.imports.blocks[3]",
+      "~k_parent": "6z"
+    },
+    "74": {
+      "key": "root.imports.blocks[4]",
+      "~k_parent": "6z"
+    },
+    "75": {
+      "key": "root.imports.blocks[5]",
+      "~k_parent": "6z"
+    },
+    "76": {
+      "key": "root.imports.blocks[6]",
+      "~k_parent": "6z"
+    },
+    "77": {
+      "key": "root.imports.blocks[7]",
+      "~k_parent": "6z"
+    },
+    "78": {
+      "key": "root.imports.blocks[8]",
+      "~k_parent": "6z"
+    },
+    "79": {
+      "key": "root.imports.blocks[9]",
+      "~k_parent": "6z"
+    },
+    "80": {
+      "key": "root.imports.icons[7]",
+      "~k_parent": "7l"
+    },
+    "81": {
+      "key": "root.imports.icons[7].icons",
+      "~k_parent": "80"
+    },
+    "82": {
+      "key": "root.imports.icons[8]",
+      "~k_parent": "7l"
+    },
+    "83": {
+      "key": "root.imports.icons[8].icons",
+      "~k_parent": "82"
+    },
+    "84": {
+      "key": "root.imports.icons[9]",
+      "~k_parent": "7l"
+    },
+    "85": {
+      "key": "root.imports.icons[9].icons",
+      "~k_parent": "84"
+    },
+    "86": {
+      "key": "root.imports.icons[10]",
+      "~k_parent": "7l"
+    },
+    "87": {
+      "key": "root.imports.icons[10].icons",
+      "~k_parent": "86"
+    },
+    "88": {
+      "key": "root.imports.icons[11]",
+      "~k_parent": "7l"
+    },
+    "89": {
+      "key": "root.imports.icons[11].icons",
+      "~k_parent": "88"
+    },
+    "90": {
+      "key": "root.imports.icons[25]",
+      "~k_parent": "7l"
+    },
+    "91": {
+      "key": "root.imports.icons[25].icons",
+      "~k_parent": "90"
+    },
+    "92": {
+      "key": "root.imports.icons[26]",
+      "~k_parent": "7l"
+    },
+    "93": {
+      "key": "root.imports.icons[26].icons",
+      "~k_parent": "92"
+    },
+    "94": {
+      "key": "root.imports.icons[27]",
+      "~k_parent": "7l"
+    },
+    "95": {
+      "key": "root.imports.icons[27].icons",
+      "~k_parent": "94"
+    },
+    "96": {
+      "key": "root.imports.requests",
+      "~k_parent": "6r"
+    },
+    "97": {
+      "key": "root.imports.operators",
+      "~k_parent": "6r"
+    },
+    "98": {
+      "key": "root.imports.operators.client",
+      "~k_parent": "97"
+    },
+    "99": {
+      "key": "root.imports.operators.client[0]",
+      "~k_parent": "98"
+    },
+    "a": {
+      "key": "root.menus[0:default].links[1:products:MenuGroup].properties",
+      "~k_parent": "9",
+      "~l": 16
+    },
+    "b": {
+      "key": "root.menus[0:default].links[1:products:MenuGroup].links",
+      "~k_parent": "9",
+      "~l": 19
+    },
+    "c": {
+      "key": "root.menus[0:default].links[1:products:MenuGroup].links[0:all-products:MenuLink]",
+      "~k_parent": "b",
+      "~l": 20
+    },
+    "d": {
+      "key": "root.menus[0:default].links[1:products:MenuGroup].links[0:all-products:MenuLink].properties",
+      "~k_parent": "c",
+      "~l": 23
+    },
+    "e": {
+      "key": "root.menus[0:default].links[1:products:MenuGroup].links[1:categories:MenuGroup]",
+      "~k_parent": "b",
+      "~l": 25
+    },
+    "f": {
+      "key": "root.menus[0:default].links[1:products:MenuGroup].links[1:categories:MenuGroup].properties",
+      "~k_parent": "e",
+      "~l": 27
+    },
+    "g": {
+      "key": "root.menus[0:default].links[1:products:MenuGroup].links[1:categories:MenuGroup].links",
+      "~k_parent": "e",
+      "~l": 29
+    },
+    "h": {
+      "key": "root.menus[0:default].links[1:products:MenuGroup].links[1:categories:MenuGroup].links[0:electronics:MenuLink]",
+      "~k_parent": "g",
+      "~l": 30
+    },
+    "i": {
+      "key": "root.menus[0:default].links[1:products:MenuGroup].links[1:categories:MenuGroup].links[0:electronics:MenuLink].properties",
+      "~k_parent": "h",
+      "~l": 33
+    },
+    "j": {
+      "key": "root.menus[0:default].links[1:products:MenuGroup].links[1:categories:MenuGroup].links[1:clothing:MenuLink]",
+      "~k_parent": "g",
+      "~l": 35
+    },
+    "k": {
+      "key": "root.menus[0:default].links[1:products:MenuGroup].links[1:categories:MenuGroup].links[1:clothing:MenuLink].properties",
+      "~k_parent": "j",
+      "~l": 38
+    },
+    "l": {
+      "key": "root.menus[0:default].links[1:products:MenuGroup].links[2:featured:MenuLink]",
+      "~k_parent": "b",
+      "~l": 40
+    },
+    "m": {
+      "key": "root.menus[0:default].links[1:products:MenuGroup].links[2:featured:MenuLink].properties",
+      "~k_parent": "l",
+      "~l": 43
+    },
+    "n": {
+      "key": "root.menus[0:default].links[2:services:MenuGroup]",
+      "~k_parent": "6",
+      "~l": 45
+    },
+    "o": {
+      "key": "root.menus[0:default].links[2:services:MenuGroup].properties",
+      "~k_parent": "n",
+      "~l": 47
+    },
+    "p": {
+      "key": "root.menus[0:default].links[2:services:MenuGroup].links",
+      "~k_parent": "n",
+      "~l": 50
+    },
+    "q": {
+      "key": "root.menus[0:default].links[2:services:MenuGroup].links[0:consulting:MenuLink]",
+      "~k_parent": "p",
+      "~l": 51
+    },
+    "r": {
+      "key": "root.menus[0:default].links[2:services:MenuGroup].links[0:consulting:MenuLink].properties",
+      "~k_parent": "q",
+      "~l": 54
+    },
+    "s": {
+      "key": "root.menus[0:default].links[2:services:MenuGroup].links[1:support:MenuLink]",
+      "~k_parent": "p",
+      "~l": 56
+    },
+    "t": {
+      "key": "root.menus[0:default].links[2:services:MenuGroup].links[1:support:MenuLink].properties",
+      "~k_parent": "s",
+      "~l": 59
+    },
+    "u": {
+      "key": "root.menus[0:default].links[3:about:MenuLink]",
+      "~k_parent": "6",
+      "~l": 61
+    },
+    "v": {
+      "key": "root.menus[0:default].links[3:about:MenuLink].properties",
+      "~k_parent": "u",
+      "~l": 64
+    },
+    "w": {
+      "key": "root.menus[0:default].links[4:contact:MenuLink]",
+      "~k_parent": "6",
+      "~l": 67
+    },
+    "x": {
+      "key": "root.menus[0:default].links[4:contact:MenuLink].properties",
+      "~k_parent": "w",
+      "~l": 70
+    },
+    "y": {
+      "key": "root.menus[1:footer]",
+      "~k_parent": "4",
+      "~l": 73
+    },
+    "z": {
+      "key": "root.menus[1:footer].links",
+      "~k_parent": "y",
+      "~l": 74
+    },
+    "1a": {
+      "key": "root.pages[1:products:Box]",
+      "~k_parent": "14",
+      "~l": 96
+    },
+    "1b": {
+      "key": "root.pages[1:products:Box].properties",
+      "~k_parent": "1a",
+      "~l": 98
+    },
+    "1c": {
+      "key": "root.pages[1:products:Box].blocks",
+      "~k_parent": "1a",
+      "~l": 100
+    },
+    "1d": {
+      "key": "root.pages[1:products:Box].blocks[0:title:Title]",
+      "~k_parent": "1c",
+      "~l": 101
+    },
+    "1e": {
+      "key": "root.pages[1:products:Box].blocks[0:title:Title].properties",
+      "~k_parent": "1d",
+      "~l": 103
+    },
+    "1f": {
+      "key": "root.pages[2:electronics:Box]",
+      "~k_parent": "14",
+      "~l": 105
+    },
+    "1g": {
+      "key": "root.pages[2:electronics:Box].properties",
+      "~k_parent": "1f",
+      "~l": 107
+    },
+    "1h": {
+      "key": "root.pages[2:electronics:Box].blocks",
+      "~k_parent": "1f",
+      "~l": 109
+    },
+    "1i": {
+      "key": "root.pages[2:electronics:Box].blocks[0:title:Title]",
+      "~k_parent": "1h",
+      "~l": 110
+    },
+    "1j": {
+      "key": "root.pages[2:electronics:Box].blocks[0:title:Title].properties",
+      "~k_parent": "1i",
+      "~l": 112
+    },
+    "1k": {
+      "key": "root.pages[3:clothing:Box]",
+      "~k_parent": "14",
+      "~l": 114
+    },
+    "1l": {
+      "key": "root.pages[3:clothing:Box].properties",
+      "~k_parent": "1k",
+      "~l": 116
+    },
+    "1m": {
+      "key": "root.pages[3:clothing:Box].blocks",
+      "~k_parent": "1k",
+      "~l": 118
+    },
+    "1n": {
+      "key": "root.pages[3:clothing:Box].blocks[0:title:Title]",
+      "~k_parent": "1m",
+      "~l": 119
+    },
+    "1o": {
+      "key": "root.pages[3:clothing:Box].blocks[0:title:Title].properties",
+      "~k_parent": "1n",
+      "~l": 121
+    },
+    "1p": {
+      "key": "root.pages[4:featured:Box]",
+      "~k_parent": "14",
+      "~l": 123
+    },
+    "1q": {
+      "key": "root.pages[4:featured:Box].properties",
+      "~k_parent": "1p",
+      "~l": 125
+    },
+    "1r": {
+      "key": "root.pages[4:featured:Box].blocks",
+      "~k_parent": "1p",
+      "~l": 127
+    },
+    "1s": {
+      "key": "root.pages[4:featured:Box].blocks[0:title:Title]",
+      "~k_parent": "1r",
+      "~l": 128
+    },
+    "1t": {
+      "key": "root.pages[4:featured:Box].blocks[0:title:Title].properties",
+      "~k_parent": "1s",
+      "~l": 130
+    },
+    "1u": {
+      "key": "root.pages[5:consulting:Box]",
+      "~k_parent": "14",
+      "~l": 132
+    },
+    "1v": {
+      "key": "root.pages[5:consulting:Box].properties",
+      "~k_parent": "1u",
+      "~l": 134
+    },
+    "1w": {
+      "key": "root.pages[5:consulting:Box].blocks",
+      "~k_parent": "1u",
+      "~l": 136
+    },
+    "1x": {
+      "key": "root.pages[5:consulting:Box].blocks[0:title:Title]",
+      "~k_parent": "1w",
+      "~l": 137
+    },
+    "1y": {
+      "key": "root.pages[5:consulting:Box].blocks[0:title:Title].properties",
+      "~k_parent": "1x",
+      "~l": 139
+    },
+    "1z": {
+      "key": "root.pages[6:support:Box]",
+      "~k_parent": "14",
+      "~l": 141
+    },
+    "2a": {
+      "key": "root.pages[8:contact:Box].properties",
+      "~k_parent": "29",
+      "~l": 161
+    },
+    "2b": {
+      "key": "root.pages[8:contact:Box].blocks",
+      "~k_parent": "29",
+      "~l": 163
+    },
+    "2c": {
+      "key": "root.pages[8:contact:Box].blocks[0:title:Title]",
+      "~k_parent": "2b",
+      "~l": 164
+    },
+    "2d": {
+      "key": "root.pages[8:contact:Box].blocks[0:title:Title].properties",
+      "~k_parent": "2c",
+      "~l": 166
+    },
+    "2e": {
+      "key": "root.pages[9:privacy:Box]",
+      "~k_parent": "14",
+      "~l": 168
+    },
+    "2f": {
+      "key": "root.pages[9:privacy:Box].properties",
+      "~k_parent": "2e",
+      "~l": 170
+    },
+    "2g": {
+      "key": "root.pages[9:privacy:Box].blocks",
+      "~k_parent": "2e",
+      "~l": 172
+    },
+    "2h": {
+      "key": "root.pages[9:privacy:Box].blocks[0:title:Title]",
+      "~k_parent": "2g",
+      "~l": 173
+    },
+    "2i": {
+      "key": "root.pages[9:privacy:Box].blocks[0:title:Title].properties",
+      "~k_parent": "2h",
+      "~l": 175
+    },
+    "2j": {
+      "key": "root.pages[10:terms:Box]",
+      "~k_parent": "14",
+      "~l": 177
+    },
+    "2k": {
+      "key": "root.pages[10:terms:Box].properties",
+      "~k_parent": "2j",
+      "~l": 179
+    },
+    "2l": {
+      "key": "root.pages[10:terms:Box].blocks",
+      "~k_parent": "2j",
+      "~l": 181
+    },
+    "2m": {
+      "key": "root.pages[10:terms:Box].blocks[0:title:Title]",
+      "~k_parent": "2l",
+      "~l": 182
+    },
+    "2n": {
+      "key": "root.pages[10:terms:Box].blocks[0:title:Title].properties",
+      "~k_parent": "2m",
+      "~l": 184
+    },
+    "2p": {
+      "key": "root.pages",
+      "~k_parent": "3"
+    },
+    "2q": {
+      "key": "root.pages[11:404:Result]",
+      "~k_parent": "2p"
+    },
+    "2r": {
+      "key": "root.pages[11:404:Result].style",
+      "~k_parent": "2q"
+    },
+    "2s": {
+      "key": "root.pages[11:404:Result].properties",
+      "~k_parent": "2q"
+    },
+    "2t": {
+      "key": "root.pages[11:404:Result].areas",
+      "~k_parent": "2q"
+    },
+    "2u": {
+      "key": "root.pages[11:404:Result].areas.extra",
+      "~k_parent": "2t"
+    },
+    "2v": {
+      "key": "root.pages[11:404:Result].areas.extra.blocks",
+      "~k_parent": "2u"
+    },
+    "2w": {
+      "key": "root.pages[11:404:Result].areas.extra.blocks[0:home:Button]",
+      "~k_parent": "2v"
+    },
+    "2x": {
+      "key": "root.pages[11:404:Result].areas.extra.blocks[0:home:Button].properties",
+      "~k_parent": "2w"
+    },
+    "2y": {
+      "key": "root.pages[11:404:Result].areas.extra.blocks[0:home:Button].events",
+      "~k_parent": "2w"
+    },
+    "2z": {
+      "key": "root.pages[11:404:Result].areas.extra.blocks[0:home:Button].events.onClick",
+      "~k_parent": "2y"
+    },
+    "3a": {
+      "key": "root.menus[0:default].links[1:products:MenuGroup].links[0:all-products:MenuLink].auth",
+      "~k_parent": "c"
+    },
+    "3b": {
+      "key": "root.menus[0:default].links[1:products:MenuGroup].links[1:categories:MenuGroup].links",
+      "~k_parent": "e"
+    },
+    "3c": {
+      "key": "root.menus[0:default].links[1:products:MenuGroup].links[1:categories:MenuGroup].links[0:electronics:MenuLink].auth",
+      "~k_parent": "h"
+    },
+    "3d": {
+      "key": "root.menus[0:default].links[1:products:MenuGroup].links[1:categories:MenuGroup].links[1:clothing:MenuLink].auth",
+      "~k_parent": "j"
+    },
+    "3e": {
+      "key": "root.menus[0:default].links[1:products:MenuGroup].links[1:categories:MenuGroup].auth",
+      "~k_parent": "e"
+    },
+    "3f": {
+      "key": "root.menus[0:default].links[1:products:MenuGroup].links[2:featured:MenuLink].auth",
+      "~k_parent": "l"
+    },
+    "3g": {
+      "key": "root.menus[0:default].links[1:products:MenuGroup].auth",
+      "~k_parent": "9"
+    },
+    "3h": {
+      "key": "root.menus[0:default].links[2:services:MenuGroup].links",
+      "~k_parent": "n"
+    },
+    "3i": {
+      "key": "root.menus[0:default].links[2:services:MenuGroup].links[0:consulting:MenuLink].auth",
+      "~k_parent": "q"
+    },
+    "3j": {
+      "key": "root.menus[0:default].links[2:services:MenuGroup].links[1:support:MenuLink].auth",
+      "~k_parent": "s"
+    },
+    "3k": {
+      "key": "root.menus[0:default].links[2:services:MenuGroup].auth",
+      "~k_parent": "n"
+    },
+    "3l": {
+      "key": "root.menus[0:default].links[3:about:MenuLink].auth",
+      "~k_parent": "u"
+    },
+    "3m": {
+      "key": "root.menus[0:default].links[4:contact:MenuLink].auth",
+      "~k_parent": "w"
+    },
+    "3n": {
+      "key": "root.menus[1:footer].links",
+      "~k_parent": "y"
+    },
+    "3o": {
+      "key": "root.menus[1:footer].links[0:privacy:MenuLink].auth",
+      "~k_parent": "10"
+    },
+    "3p": {
+      "key": "root.menus[1:footer].links[1:terms:MenuLink].auth",
+      "~k_parent": "12"
+    },
+    "3q": {
+      "key": "root.pages",
+      "~k_parent": "3"
+    },
+    "3r": {
+      "key": "root.pages[0:home:Box]",
+      "~k_parent": "3q"
+    },
+    "3s": {
+      "key": "root.pages[0:home:Box].auth",
+      "~k_parent": "3r"
+    },
+    "3t": {
+      "key": "root.pages[0:home:Box].areas",
+      "~k_parent": "3r"
+    },
+    "3u": {
+      "key": "root.pages[0:home:Box].areas.content",
+      "~k_parent": "3t"
+    },
+    "3v": {
+      "key": "root.pages[0:home:Box].requests",
+      "~k_parent": "3r"
+    },
+    "3w": {
+      "key": "root.pages[1:products:Box]",
+      "~k_parent": "3q"
+    },
+    "3x": {
+      "key": "root.pages[1:products:Box].auth",
+      "~k_parent": "3w"
+    },
+    "3y": {
+      "key": "root.pages[1:products:Box].areas",
+      "~k_parent": "3w"
+    },
+    "3z": {
+      "key": "root.pages[1:products:Box].areas.content",
+      "~k_parent": "3y"
+    },
+    "4a": {
+      "key": "root.pages[3:clothing:Box].requests",
+      "~k_parent": "46"
+    },
+    "4b": {
+      "key": "root.pages[4:featured:Box]",
+      "~k_parent": "3q"
+    },
+    "4c": {
+      "key": "root.pages[4:featured:Box].auth",
+      "~k_parent": "4b"
+    },
+    "4d": {
+      "key": "root.pages[4:featured:Box].areas",
+      "~k_parent": "4b"
+    },
+    "4e": {
+      "key": "root.pages[4:featured:Box].areas.content",
+      "~k_parent": "4d"
+    },
+    "4f": {
+      "key": "root.pages[4:featured:Box].requests",
+      "~k_parent": "4b"
+    },
+    "4g": {
+      "key": "root.pages[5:consulting:Box]",
+      "~k_parent": "3q"
+    },
+    "4h": {
+      "key": "root.pages[5:consulting:Box].auth",
+      "~k_parent": "4g"
+    },
+    "4i": {
+      "key": "root.pages[5:consulting:Box].areas",
+      "~k_parent": "4g"
+    },
+    "4j": {
+      "key": "root.pages[5:consulting:Box].areas.content",
+      "~k_parent": "4i"
+    },
+    "4k": {
+      "key": "root.pages[5:consulting:Box].requests",
+      "~k_parent": "4g"
+    },
+    "4l": {
+      "key": "root.pages[6:support:Box]",
+      "~k_parent": "3q"
+    },
+    "4m": {
+      "key": "root.pages[6:support:Box].auth",
+      "~k_parent": "4l"
+    },
+    "4n": {
+      "key": "root.pages[6:support:Box].areas",
+      "~k_parent": "4l"
+    },
+    "4o": {
+      "key": "root.pages[6:support:Box].areas.content",
+      "~k_parent": "4n"
+    },
+    "4p": {
+      "key": "root.pages[6:support:Box].requests",
+      "~k_parent": "4l"
+    },
+    "4q": {
+      "key": "root.pages[7:about:Box]",
+      "~k_parent": "3q"
+    },
+    "4r": {
+      "key": "root.pages[7:about:Box].auth",
+      "~k_parent": "4q"
+    },
+    "4s": {
+      "key": "root.pages[7:about:Box].areas",
+      "~k_parent": "4q"
+    },
+    "4t": {
+      "key": "root.pages[7:about:Box].areas.content",
+      "~k_parent": "4s"
+    },
+    "4u": {
+      "key": "root.pages[7:about:Box].requests",
+      "~k_parent": "4q"
+    },
+    "4v": {
+      "key": "root.pages[8:contact:Box]",
+      "~k_parent": "3q"
+    },
+    "4w": {
+      "key": "root.pages[8:contact:Box].auth",
+      "~k_parent": "4v"
+    },
+    "4x": {
+      "key": "root.pages[8:contact:Box].areas",
+      "~k_parent": "4v"
+    },
+    "4y": {
+      "key": "root.pages[8:contact:Box].areas.content",
+      "~k_parent": "4x"
+    },
+    "4z": {
+      "key": "root.pages[8:contact:Box].requests",
+      "~k_parent": "4v"
+    },
+    "5a": {
+      "key": "root.pages[11:404:Result]",
+      "~k_parent": "3q"
+    },
+    "5b": {
+      "key": "root.pages[11:404:Result].areas.extra.blocks[0:home:Button].events.onClick",
+      "~k_parent": "2y"
+    },
+    "5c": {
+      "key": "root.pages[11:404:Result].areas.extra.blocks[0:home:Button].events.onClick.catch",
+      "~k_parent": "5b"
+    },
+    "5d": {
+      "key": "root.pages[11:404:Result].auth",
+      "~k_parent": "5a"
+    },
+    "5e": {
+      "key": "root.pages[11:404:Result].requests",
+      "~k_parent": "5a"
+    },
+    "5f": {
+      "key": "root.auth",
+      "~k_parent": "3"
+    },
+    "5g": {
+      "key": "root.auth.api",
+      "~k_parent": "5f"
+    },
+    "5h": {
+      "key": "root.auth.api.roles",
+      "~k_parent": "5g"
+    },
+    "5i": {
+      "key": "root.auth.authPages",
+      "~k_parent": "5f"
+    },
+    "5j": {
+      "key": "root.auth.pages",
+      "~k_parent": "5f"
+    },
+    "5k": {
+      "key": "root.auth.pages.roles",
+      "~k_parent": "5j"
+    },
+    "5l": {
+      "key": "root.auth.callbacks",
+      "~k_parent": "5f"
+    },
+    "5m": {
+      "key": "root.auth.events",
+      "~k_parent": "5f"
+    },
+    "5n": {
+      "key": "root.auth.providers",
+      "~k_parent": "5f"
+    },
+    "5o": {
+      "key": "root.auth.session",
+      "~k_parent": "5f"
+    },
+    "5p": {
+      "key": "root.auth.theme",
+      "~k_parent": "5f"
+    },
+    "5q": {
+      "key": "root.types",
+      "~k_parent": "3"
+    },
+    "5r": {
+      "key": "root.types.actions",
+      "~k_parent": "5q"
+    },
+    "5s": {
+      "key": "root.types.actions.Link",
+      "~k_parent": "5r"
+    },
+    "5t": {
+      "key": "root.types.auth",
+      "~k_parent": "5q"
+    },
+    "5u": {
+      "key": "root.types.auth.adapters",
+      "~k_parent": "5t"
+    },
+    "5v": {
+      "key": "root.types.auth.callbacks",
+      "~k_parent": "5t"
+    },
+    "5w": {
+      "key": "root.types.auth.events",
+      "~k_parent": "5t"
+    },
+    "5x": {
+      "key": "root.types.auth.providers",
+      "~k_parent": "5t"
+    },
+    "5y": {
+      "key": "root.types.blocks",
+      "~k_parent": "5q"
+    },
+    "5z": {
+      "key": "root.types.blocks.Box",
+      "~k_parent": "5y"
+    },
+    "6a": {
+      "key": "root.types.blocks.Throw",
+      "~k_parent": "5y"
+    },
+    "6b": {
+      "key": "root.types.blocks.ProgressBar",
+      "~k_parent": "5y"
+    },
+    "6c": {
+      "key": "root.types.blocks.Skeleton",
+      "~k_parent": "5y"
+    },
+    "6d": {
+      "key": "root.types.blocks.SkeletonAvatar",
+      "~k_parent": "5y"
+    },
+    "6e": {
+      "key": "root.types.blocks.SkeletonButton",
+      "~k_parent": "5y"
+    },
+    "6f": {
+      "key": "root.types.blocks.SkeletonInput",
+      "~k_parent": "5y"
+    },
+    "6g": {
+      "key": "root.types.blocks.SkeletonParagraph",
+      "~k_parent": "5y"
+    },
+    "6h": {
+      "key": "root.types.blocks.Spinner",
+      "~k_parent": "5y"
+    },
+    "6i": {
+      "key": "root.types.blocks.Message",
+      "~k_parent": "5y"
+    },
+    "6j": {
+      "key": "root.types.connections",
+      "~k_parent": "5q"
+    },
+    "6k": {
+      "key": "root.types.requests",
+      "~k_parent": "5q"
+    },
+    "6l": {
+      "key": "root.types.api",
+      "~k_parent": "5q"
+    },
+    "6m": {
+      "key": "root.types.operators",
+      "~k_parent": "5q"
+    },
+    "6n": {
+      "key": "root.types.operators.client",
+      "~k_parent": "6m"
+    },
+    "6o": {
+      "key": "root.types.operators.client._not",
+      "~k_parent": "6n"
+    },
+    "6p": {
+      "key": "root.types.operators.client._type",
+      "~k_parent": "6n"
+    },
+    "6q": {
+      "key": "root.types.operators.server",
+      "~k_parent": "6m"
+    },
+    "6r": {
+      "key": "root.imports",
+      "~k_parent": "3"
+    },
+    "6s": {
+      "key": "root.imports.actions",
+      "~k_parent": "6r"
+    },
+    "6t": {
+      "key": "root.imports.actions[0]",
+      "~k_parent": "6s"
+    },
+    "6u": {
+      "key": "root.imports.auth",
+      "~k_parent": "6r"
+    },
+    "6v": {
+      "key": "root.imports.auth.adapters",
+      "~k_parent": "6u"
+    },
+    "6w": {
+      "key": "root.imports.auth.callbacks",
+      "~k_parent": "6u"
+    },
+    "6x": {
+      "key": "root.imports.auth.events",
+      "~k_parent": "6u"
+    },
+    "6y": {
+      "key": "root.imports.auth.providers",
+      "~k_parent": "6u"
+    },
+    "6z": {
+      "key": "root.imports.blocks",
+      "~k_parent": "6r"
+    },
+    "7a": {
+      "key": "root.imports.blocks[10]",
+      "~k_parent": "6z"
+    },
+    "7b": {
+      "key": "root.imports.blocks[11]",
+      "~k_parent": "6z"
+    },
+    "7c": {
+      "key": "root.imports.blocks[12]",
+      "~k_parent": "6z"
+    },
+    "7d": {
+      "key": "root.imports.blocks[13]",
+      "~k_parent": "6z"
+    },
+    "7e": {
+      "key": "root.imports.blocks[14]",
+      "~k_parent": "6z"
+    },
+    "7f": {
+      "key": "root.imports.blocks[15]",
+      "~k_parent": "6z"
+    },
+    "7g": {
+      "key": "root.imports.blocks[16]",
+      "~k_parent": "6z"
+    },
+    "7h": {
+      "key": "root.imports.blocks[17]",
+      "~k_parent": "6z"
+    },
+    "7i": {
+      "key": "root.imports.blocks[18]",
+      "~k_parent": "6z"
+    },
+    "7j": {
+      "key": "root.imports.blocks[19]",
+      "~k_parent": "6z"
+    },
+    "7k": {
+      "key": "root.imports.connections",
+      "~k_parent": "6r"
+    },
+    "7l": {
+      "key": "root.imports.icons",
+      "~k_parent": "6r"
+    },
+    "7m": {
+      "key": "root.imports.icons[0]",
+      "~k_parent": "7l"
+    },
+    "7n": {
+      "key": "root.imports.icons[0].icons",
+      "~k_parent": "7m"
+    },
+    "7o": {
+      "key": "root.imports.icons[1]",
+      "~k_parent": "7l"
+    },
+    "7p": {
+      "key": "root.imports.icons[1].icons",
+      "~k_parent": "7o"
+    },
+    "7q": {
+      "key": "root.imports.icons[2]",
+      "~k_parent": "7l"
+    },
+    "7r": {
+      "key": "root.imports.icons[2].icons",
+      "~k_parent": "7q"
+    },
+    "7s": {
+      "key": "root.imports.icons[3]",
+      "~k_parent": "7l"
+    },
+    "7t": {
+      "key": "root.imports.icons[3].icons",
+      "~k_parent": "7s"
+    },
+    "7u": {
+      "key": "root.imports.icons[4]",
+      "~k_parent": "7l"
+    },
+    "7v": {
+      "key": "root.imports.icons[4].icons",
+      "~k_parent": "7u"
+    },
+    "7w": {
+      "key": "root.imports.icons[5]",
+      "~k_parent": "7l"
+    },
+    "7x": {
+      "key": "root.imports.icons[5].icons",
+      "~k_parent": "7w"
+    },
+    "7y": {
+      "key": "root.imports.icons[6]",
+      "~k_parent": "7l"
+    },
+    "7z": {
+      "key": "root.imports.icons[6].icons",
+      "~k_parent": "7y"
+    },
+    "8a": {
+      "key": "root.imports.icons[12]",
+      "~k_parent": "7l"
+    },
+    "8b": {
+      "key": "root.imports.icons[12].icons",
+      "~k_parent": "8a"
+    },
+    "8c": {
+      "key": "root.imports.icons[13]",
+      "~k_parent": "7l"
+    },
+    "8d": {
+      "key": "root.imports.icons[13].icons",
+      "~k_parent": "8c"
+    },
+    "8e": {
+      "key": "root.imports.icons[14]",
+      "~k_parent": "7l"
+    },
+    "8f": {
+      "key": "root.imports.icons[14].icons",
+      "~k_parent": "8e"
+    },
+    "8g": {
+      "key": "root.imports.icons[15]",
+      "~k_parent": "7l"
+    },
+    "8h": {
+      "key": "root.imports.icons[15].icons",
+      "~k_parent": "8g"
+    },
+    "8i": {
+      "key": "root.imports.icons[16]",
+      "~k_parent": "7l"
+    },
+    "8j": {
+      "key": "root.imports.icons[16].icons",
+      "~k_parent": "8i"
+    },
+    "8k": {
+      "key": "root.imports.icons[17]",
+      "~k_parent": "7l"
+    },
+    "8l": {
+      "key": "root.imports.icons[17].icons",
+      "~k_parent": "8k"
+    },
+    "8m": {
+      "key": "root.imports.icons[18]",
+      "~k_parent": "7l"
+    },
+    "8n": {
+      "key": "root.imports.icons[18].icons",
+      "~k_parent": "8m"
+    },
+    "8o": {
+      "key": "root.imports.icons[19]",
+      "~k_parent": "7l"
+    },
+    "8p": {
+      "key": "root.imports.icons[19].icons",
+      "~k_parent": "8o"
+    },
+    "8q": {
+      "key": "root.imports.icons[20]",
+      "~k_parent": "7l"
+    },
+    "8r": {
+      "key": "root.imports.icons[20].icons",
+      "~k_parent": "8q"
+    },
+    "8s": {
+      "key": "root.imports.icons[21]",
+      "~k_parent": "7l"
+    },
+    "8t": {
+      "key": "root.imports.icons[21].icons",
+      "~k_parent": "8s"
+    },
+    "8u": {
+      "key": "root.imports.icons[22]",
+      "~k_parent": "7l"
+    },
+    "8v": {
+      "key": "root.imports.icons[22].icons",
+      "~k_parent": "8u"
+    },
+    "8w": {
+      "key": "root.imports.icons[23]",
+      "~k_parent": "7l"
+    },
+    "8x": {
+      "key": "root.imports.icons[23].icons",
+      "~k_parent": "8w"
+    },
+    "8y": {
+      "key": "root.imports.icons[24]",
+      "~k_parent": "7l"
+    },
+    "8z": {
+      "key": "root.imports.icons[24].icons",
+      "~k_parent": "8y"
+    },
+    "9a": {
+      "key": "root.imports.operators.client[1]",
+      "~k_parent": "98"
+    },
+    "9b": {
+      "key": "root.imports.operators.server",
+      "~k_parent": "97"
+    },
+    "9c": {
+      "key": "root.imports.styles",
+      "~k_parent": "6r"
+    }
+  },
+  "logger.json": {
+    "~k": "34"
+  },
+  "menus.json": {
+    "~arr": [
+      {
+        "id": "menu:default",
+        "links": {
+          "~arr": [
+            {
+              "id": "menuitem:default:home",
+              "type": "MenuLink",
+              "pageId": "home",
+              "properties": {
+                "title": "Home",
+                "icon": "AiOutlineHome",
+                "~k": "8"
+              },
+              "~k": "7",
+              "auth": {
+                "public": true,
+                "~k": "38"
+              },
+              "menuItemId": "home"
+            },
+            {
+              "id": "menuitem:default:products",
+              "type": "MenuGroup",
+              "properties": {
+                "title": "Products",
+                "icon": "AiOutlineShop",
+                "~k": "a"
+              },
+              "links": {
+                "~arr": [
+                  {
+                    "id": "menuitem:default:all-products",
+                    "type": "MenuLink",
+                    "pageId": "products",
+                    "properties": {
+                      "title": "All Products",
+                      "~k": "d"
+                    },
+                    "~k": "c",
+                    "auth": {
+                      "public": true,
+                      "~k": "3a"
+                    },
+                    "menuItemId": "all-products"
+                  },
+                  {
+                    "id": "menuitem:default:categories",
+                    "type": "MenuGroup",
+                    "properties": {
+                      "title": "Categories",
+                      "~k": "f"
+                    },
+                    "links": {
+                      "~arr": [
+                        {
+                          "id": "menuitem:default:electronics",
+                          "type": "MenuLink",
+                          "pageId": "electronics",
+                          "properties": {
+                            "title": "Electronics",
+                            "~k": "i"
+                          },
+                          "~k": "h",
+                          "auth": {
+                            "public": true,
+                            "~k": "3c"
+                          },
+                          "menuItemId": "electronics"
+                        },
+                        {
+                          "id": "menuitem:default:clothing",
+                          "type": "MenuLink",
+                          "pageId": "clothing",
+                          "properties": {
+                            "title": "Clothing",
+                            "~k": "k"
+                          },
+                          "~k": "j",
+                          "auth": {
+                            "public": true,
+                            "~k": "3d"
+                          },
+                          "menuItemId": "clothing"
+                        }
+                      ],
+                      "~k": "3b"
+                    },
+                    "~k": "e",
+                    "auth": {
+                      "public": true,
+                      "~k": "3e"
+                    },
+                    "menuItemId": "categories"
+                  },
+                  {
+                    "id": "menuitem:default:featured",
+                    "type": "MenuLink",
+                    "pageId": "featured",
+                    "properties": {
+                      "title": "Featured",
+                      "~k": "m"
+                    },
+                    "~k": "l",
+                    "auth": {
+                      "public": true,
+                      "~k": "3f"
+                    },
+                    "menuItemId": "featured"
+                  }
+                ],
+                "~k": "39"
+              },
+              "~k": "9",
+              "auth": {
+                "public": true,
+                "~k": "3g"
+              },
+              "menuItemId": "products"
+            },
+            {
+              "id": "menuitem:default:services",
+              "type": "MenuGroup",
+              "properties": {
+                "title": "Services",
+                "icon": "AiOutlineTool",
+                "~k": "o"
+              },
+              "links": {
+                "~arr": [
+                  {
+                    "id": "menuitem:default:consulting",
+                    "type": "MenuLink",
+                    "pageId": "consulting",
+                    "properties": {
+                      "title": "Consulting",
+                      "~k": "r"
+                    },
+                    "~k": "q",
+                    "auth": {
+                      "public": true,
+                      "~k": "3i"
+                    },
+                    "menuItemId": "consulting"
+                  },
+                  {
+                    "id": "menuitem:default:support",
+                    "type": "MenuLink",
+                    "pageId": "support",
+                    "properties": {
+                      "title": "Support",
+                      "~k": "t"
+                    },
+                    "~k": "s",
+                    "auth": {
+                      "public": true,
+                      "~k": "3j"
+                    },
+                    "menuItemId": "support"
+                  }
+                ],
+                "~k": "3h"
+              },
+              "~k": "n",
+              "auth": {
+                "public": true,
+                "~k": "3k"
+              },
+              "menuItemId": "services"
+            },
+            {
+              "id": "menuitem:default:about",
+              "type": "MenuLink",
+              "pageId": "about",
+              "properties": {
+                "title": "About",
+                "icon": "AiOutlineInfo",
+                "~k": "v"
+              },
+              "~k": "u",
+              "auth": {
+                "public": true,
+                "~k": "3l"
+              },
+              "menuItemId": "about"
+            },
+            {
+              "id": "menuitem:default:contact",
+              "type": "MenuLink",
+              "pageId": "contact",
+              "properties": {
+                "title": "Contact",
+                "icon": "AiOutlineMail",
+                "~k": "x"
+              },
+              "~k": "w",
+              "auth": {
+                "public": true,
+                "~k": "3m"
+              },
+              "menuItemId": "contact"
+            }
+          ],
+          "~k": "37"
+        },
+        "~k": "5",
+        "menuId": "default"
+      },
+      {
+        "id": "menu:footer",
+        "links": {
+          "~arr": [
+            {
+              "id": "menuitem:footer:privacy",
+              "type": "MenuLink",
+              "pageId": "privacy",
+              "properties": {
+                "title": "Privacy Policy",
+                "~k": "11"
+              },
+              "~k": "10",
+              "auth": {
+                "public": true,
+                "~k": "3o"
+              },
+              "menuItemId": "privacy"
+            },
+            {
+              "id": "menuitem:footer:terms",
+              "type": "MenuLink",
+              "pageId": "terms",
+              "properties": {
+                "title": "Terms of Service",
+                "~k": "13"
+              },
+              "~k": "12",
+              "auth": {
+                "public": true,
+                "~k": "3p"
+              },
+              "menuItemId": "terms"
+            }
+          ],
+          "~k": "3n"
+        },
+        "~k": "y",
+        "menuId": "footer"
+      }
+    ],
+    "~k": "4"
+  },
+  "pages/404/404.json": {
+    "id": "page:404",
+    "type": "Result",
+    "style": {
+      "minHeight": "100vh",
+      "~k": "2r"
+    },
+    "properties": {
+      "status": "info",
+      "title": "404",
+      "subTitle": "Sorry, the page you are visiting does not exist.",
+      "~k": "2s"
+    },
+    "areas": {
+      "extra": {
+        "blocks": {
+          "~arr": [
+            {
+              "id": "block:404:home:0",
+              "type": "Button",
+              "properties": {
+                "title": "Go to home page",
+                "~k": "2x"
+              },
+              "events": {
+                "onClick": {
+                  "try": {
+                    "~arr": [
+                      {
+                        "id": "home",
+                        "type": "Link",
+                        "params": {
+                          "home": true,
+                          "~k": "31"
+                        },
+                        "~k": "30"
+                      }
+                    ],
+                    "~k": "2z"
+                  },
+                  "catch": {
+                    "~arr": [],
+                    "~k": "5c"
+                  },
+                  "~k": "5b"
+                },
+                "~k": "2y"
+              },
+              "~k": "2w",
+              "blockId": "home"
+            }
+          ],
+          "~k": "2v"
+        },
+        "~k": "2u"
+      },
+      "~k": "2t"
+    },
+    "auth": {
+      "public": true,
+      "~k": "5d"
+    },
+    "pageId": "404",
+    "blockId": "404",
+    "requests": {
+      "~arr": [],
+      "~k": "5e"
+    },
+    "~k": "5a"
+  },
+  "pages/about/about.json": {
+    "id": "page:about",
+    "type": "Box",
+    "properties": {
+      "title": "About",
+      "~k": "25"
+    },
+    "auth": {
+      "public": true,
+      "~k": "4r"
+    },
+    "pageId": "about",
+    "blockId": "about",
+    "areas": {
+      "content": {
+        "blocks": {
+          "~arr": [
+            {
+              "id": "block:about:title:0",
+              "type": "Title",
+              "properties": {
+                "content": "About Us",
+                "~k": "28"
+              },
+              "~k": "27",
+              "blockId": "title"
+            }
+          ],
+          "~k": "26"
+        },
+        "~k": "4t"
+      },
+      "~k": "4s"
+    },
+    "requests": {
+      "~arr": [],
+      "~k": "4u"
+    },
+    "~k": "4q"
+  },
+  "pages/clothing/clothing.json": {
+    "id": "page:clothing",
+    "type": "Box",
+    "properties": {
+      "title": "Clothing",
+      "~k": "1l"
+    },
+    "auth": {
+      "public": true,
+      "~k": "47"
+    },
+    "pageId": "clothing",
+    "blockId": "clothing",
+    "areas": {
+      "content": {
+        "blocks": {
+          "~arr": [
+            {
+              "id": "block:clothing:title:0",
+              "type": "Title",
+              "properties": {
+                "content": "Clothing Category",
+                "~k": "1o"
+              },
+              "~k": "1n",
+              "blockId": "title"
+            }
+          ],
+          "~k": "1m"
+        },
+        "~k": "49"
+      },
+      "~k": "48"
+    },
+    "requests": {
+      "~arr": [],
+      "~k": "4a"
+    },
+    "~k": "46"
+  },
+  "pages/consulting/consulting.json": {
+    "id": "page:consulting",
+    "type": "Box",
+    "properties": {
+      "title": "Consulting",
+      "~k": "1v"
+    },
+    "auth": {
+      "public": true,
+      "~k": "4h"
+    },
+    "pageId": "consulting",
+    "blockId": "consulting",
+    "areas": {
+      "content": {
+        "blocks": {
+          "~arr": [
+            {
+              "id": "block:consulting:title:0",
+              "type": "Title",
+              "properties": {
+                "content": "Consulting Services",
+                "~k": "1y"
+              },
+              "~k": "1x",
+              "blockId": "title"
+            }
+          ],
+          "~k": "1w"
+        },
+        "~k": "4j"
+      },
+      "~k": "4i"
+    },
+    "requests": {
+      "~arr": [],
+      "~k": "4k"
+    },
+    "~k": "4g"
+  },
+  "pages/contact/contact.json": {
+    "id": "page:contact",
+    "type": "Box",
+    "properties": {
+      "title": "Contact",
+      "~k": "2a"
+    },
+    "auth": {
+      "public": true,
+      "~k": "4w"
+    },
+    "pageId": "contact",
+    "blockId": "contact",
+    "areas": {
+      "content": {
+        "blocks": {
+          "~arr": [
+            {
+              "id": "block:contact:title:0",
+              "type": "Title",
+              "properties": {
+                "content": "Contact Us",
+                "~k": "2d"
+              },
+              "~k": "2c",
+              "blockId": "title"
+            }
+          ],
+          "~k": "2b"
+        },
+        "~k": "4y"
+      },
+      "~k": "4x"
+    },
+    "requests": {
+      "~arr": [],
+      "~k": "4z"
+    },
+    "~k": "4v"
+  },
+  "pages/electronics/electronics.json": {
+    "id": "page:electronics",
+    "type": "Box",
+    "properties": {
+      "title": "Electronics",
+      "~k": "1g"
+    },
+    "auth": {
+      "public": true,
+      "~k": "42"
+    },
+    "pageId": "electronics",
+    "blockId": "electronics",
+    "areas": {
+      "content": {
+        "blocks": {
+          "~arr": [
+            {
+              "id": "block:electronics:title:0",
+              "type": "Title",
+              "properties": {
+                "content": "Electronics Category",
+                "~k": "1j"
+              },
+              "~k": "1i",
+              "blockId": "title"
+            }
+          ],
+          "~k": "1h"
+        },
+        "~k": "44"
+      },
+      "~k": "43"
+    },
+    "requests": {
+      "~arr": [],
+      "~k": "45"
+    },
+    "~k": "41"
+  },
+  "pages/featured/featured.json": {
+    "id": "page:featured",
+    "type": "Box",
+    "properties": {
+      "title": "Featured",
+      "~k": "1q"
+    },
+    "auth": {
+      "public": true,
+      "~k": "4c"
+    },
+    "pageId": "featured",
+    "blockId": "featured",
+    "areas": {
+      "content": {
+        "blocks": {
+          "~arr": [
+            {
+              "id": "block:featured:title:0",
+              "type": "Title",
+              "properties": {
+                "content": "Featured Products",
+                "~k": "1t"
+              },
+              "~k": "1s",
+              "blockId": "title"
+            }
+          ],
+          "~k": "1r"
+        },
+        "~k": "4e"
+      },
+      "~k": "4d"
+    },
+    "requests": {
+      "~arr": [],
+      "~k": "4f"
+    },
+    "~k": "4b"
+  },
+  "pages/home/home.json": {
+    "id": "page:home",
+    "type": "Box",
+    "properties": {
+      "title": "Home",
+      "~k": "16"
+    },
+    "auth": {
+      "public": true,
+      "~k": "3s"
+    },
+    "pageId": "home",
+    "blockId": "home",
+    "areas": {
+      "content": {
+        "blocks": {
+          "~arr": [
+            {
+              "id": "block:home:title:0",
+              "type": "Title",
+              "properties": {
+                "content": "Welcome",
+                "~k": "19"
+              },
+              "~k": "18",
+              "blockId": "title"
+            }
+          ],
+          "~k": "17"
+        },
+        "~k": "3u"
+      },
+      "~k": "3t"
+    },
+    "requests": {
+      "~arr": [],
+      "~k": "3v"
+    },
+    "~k": "3r"
+  },
+  "pages/privacy/privacy.json": {
+    "id": "page:privacy",
+    "type": "Box",
+    "properties": {
+      "title": "Privacy Policy",
+      "~k": "2f"
+    },
+    "auth": {
+      "public": true,
+      "~k": "51"
+    },
+    "pageId": "privacy",
+    "blockId": "privacy",
+    "areas": {
+      "content": {
+        "blocks": {
+          "~arr": [
+            {
+              "id": "block:privacy:title:0",
+              "type": "Title",
+              "properties": {
+                "content": "Privacy Policy",
+                "~k": "2i"
+              },
+              "~k": "2h",
+              "blockId": "title"
+            }
+          ],
+          "~k": "2g"
+        },
+        "~k": "53"
+      },
+      "~k": "52"
+    },
+    "requests": {
+      "~arr": [],
+      "~k": "54"
+    },
+    "~k": "50"
+  },
+  "pages/products/products.json": {
+    "id": "page:products",
+    "type": "Box",
+    "properties": {
+      "title": "Products",
+      "~k": "1b"
+    },
+    "auth": {
+      "public": true,
+      "~k": "3x"
+    },
+    "pageId": "products",
+    "blockId": "products",
+    "areas": {
+      "content": {
+        "blocks": {
+          "~arr": [
+            {
+              "id": "block:products:title:0",
+              "type": "Title",
+              "properties": {
+                "content": "All Products",
+                "~k": "1e"
+              },
+              "~k": "1d",
+              "blockId": "title"
+            }
+          ],
+          "~k": "1c"
+        },
+        "~k": "3z"
+      },
+      "~k": "3y"
+    },
+    "requests": {
+      "~arr": [],
+      "~k": "40"
+    },
+    "~k": "3w"
+  },
+  "pages/support/support.json": {
+    "id": "page:support",
+    "type": "Box",
+    "properties": {
+      "title": "Support",
+      "~k": "20"
+    },
+    "auth": {
+      "public": true,
+      "~k": "4m"
+    },
+    "pageId": "support",
+    "blockId": "support",
+    "areas": {
+      "content": {
+        "blocks": {
+          "~arr": [
+            {
+              "id": "block:support:title:0",
+              "type": "Title",
+              "properties": {
+                "content": "Support Services",
+                "~k": "23"
+              },
+              "~k": "22",
+              "blockId": "title"
+            }
+          ],
+          "~k": "21"
+        },
+        "~k": "4o"
+      },
+      "~k": "4n"
+    },
+    "requests": {
+      "~arr": [],
+      "~k": "4p"
+    },
+    "~k": "4l"
+  },
+  "pages/terms/terms.json": {
+    "id": "page:terms",
+    "type": "Box",
+    "properties": {
+      "title": "Terms",
+      "~k": "2k"
+    },
+    "auth": {
+      "public": true,
+      "~k": "56"
+    },
+    "pageId": "terms",
+    "blockId": "terms",
+    "areas": {
+      "content": {
+        "blocks": {
+          "~arr": [
+            {
+              "id": "block:terms:title:0",
+              "type": "Title",
+              "properties": {
+                "content": "Terms of Service",
+                "~k": "2n"
+              },
+              "~k": "2m",
+              "blockId": "title"
+            }
+          ],
+          "~k": "2l"
+        },
+        "~k": "58"
+      },
+      "~k": "57"
+    },
+    "requests": {
+      "~arr": [],
+      "~k": "59"
+    },
+    "~k": "55"
+  },
+  "plugins/actions.js": "import {  as Link } from '@lowdefy/actions-core/actions';\nexport default {\n  Link,\n  };",
+  "plugins/auth/adapters.js": "export default {\n  };",
+  "plugins/auth/callbacks.js": "export default {\n  };",
+  "plugins/auth/events.js": "export default {\n  };",
+  "plugins/auth/providers.js": "export default {\n  };",
+  "plugins/blocks.js": "import {  as Box } from '@lowdefy/blocks-basic/blocks';\nimport {  as Title } from '@lowdefy/blocks-basic/blocks';\nimport {  as Result } from '@lowdefy/blocks-antd/blocks';\nimport {  as Button } from '@lowdefy/blocks-basic/blocks';\nimport {  as Anchor } from '@lowdefy/blocks-basic/blocks';\nimport {  as DangerousHtml } from '@lowdefy/blocks-basic/blocks';\nimport {  as Html } from '@lowdefy/blocks-basic/blocks';\nimport {  as Icon } from '@lowdefy/blocks-basic/blocks';\nimport {  as Img } from '@lowdefy/blocks-basic/blocks';\nimport {  as List } from '@lowdefy/blocks-basic/blocks';\nimport {  as Span } from '@lowdefy/blocks-basic/blocks';\nimport {  as Throw } from '@lowdefy/blocks-basic/blocks';\nimport {  as ProgressBar } from '@lowdefy/blocks-loaders/blocks';\nimport {  as Skeleton } from '@lowdefy/blocks-loaders/blocks';\nimport {  as SkeletonAvatar } from '@lowdefy/blocks-loaders/blocks';\nimport {  as SkeletonButton } from '@lowdefy/blocks-loaders/blocks';\nimport {  as SkeletonInput } from '@lowdefy/blocks-loaders/blocks';\nimport {  as SkeletonParagraph } from '@lowdefy/blocks-loaders/blocks';\nimport {  as Spinner } from '@lowdefy/blocks-loaders/blocks';\nimport {  as Message } from '@lowdefy/blocks-antd/blocks';\nexport default {\n  Box,\n  Title,\n  Result,\n  Button,\n  Anchor,\n  DangerousHtml,\n  Html,\n  Icon,\n  Img,\n  List,\n  Span,\n  Throw,\n  ProgressBar,\n  Skeleton,\n  SkeletonAvatar,\n  SkeletonButton,\n  SkeletonInput,\n  SkeletonParagraph,\n  Spinner,\n  Message,\n  };",
+  "plugins/connections.js": "export default {\n  };",
+  "plugins/icons.js": "import { AiOutlineExclamationCircle, AiOutlineLoading3Quarters, AiOutlineHome, AiOutlineShop, AiOutlineTool, AiOutlineInfo, AiOutlineMail } from 'react-icons/ai';\nexport default {\n  AiOutlineExclamationCircle,\n  AiOutlineLoading3Quarters,\n  AiOutlineHome,\n  AiOutlineShop,\n  AiOutlineTool,\n  AiOutlineInfo,\n  AiOutlineMail,\n};",
+  "plugins/operators/client.js": "import {  as _not } from '@lowdefy/operators-js/operators/client';\nimport {  as _type } from '@lowdefy/operators-js/operators/client';\nexport default {\n  _not,\n  _type,\n  };",
+  "plugins/operators/clientJsMap.js": "\nexport default {\n  };",
+  "plugins/operators/server.js": "export default {\n  };",
+  "plugins/operators/serverJsMap.js": "\nexport default {\n  };",
+  "plugins/styles.less": "@import '@lowdefy/layout/style.less';\n@import '@lowdefy/client/style.less';\n\n",
+  "refMap.json": {
+    "1": {
+      "parent": null
+    }
+  },
+  "types.json": {
+    "actions": {
+      "Link": {
+        "package": "@lowdefy/actions-core",
+        "count": 1,
+        "~k": "5s"
+      },
+      "~k": "5r"
+    },
+    "auth": {
+      "adapters": {
+        "~k": "5u"
+      },
+      "callbacks": {
+        "~k": "5v"
+      },
+      "events": {
+        "~k": "5w"
+      },
+      "providers": {
+        "~k": "5x"
+      },
+      "~k": "5t"
+    },
+    "blocks": {
+      "Box": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 12,
+        "~k": "5z"
+      },
+      "Title": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 11,
+        "~k": "60"
+      },
+      "Result": {
+        "package": "@lowdefy/blocks-antd",
+        "count": 1,
+        "~k": "61"
+      },
+      "Button": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "62"
+      },
+      "Anchor": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "63"
+      },
+      "DangerousHtml": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "64"
+      },
+      "Html": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "65"
+      },
+      "Icon": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "66"
+      },
+      "Img": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "67"
+      },
+      "List": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "68"
+      },
+      "Span": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "69"
+      },
+      "Throw": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "6a"
+      },
+      "ProgressBar": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "6b"
+      },
+      "Skeleton": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "6c"
+      },
+      "SkeletonAvatar": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "6d"
+      },
+      "SkeletonButton": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "6e"
+      },
+      "SkeletonInput": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "6f"
+      },
+      "SkeletonParagraph": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "6g"
+      },
+      "Spinner": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "6h"
+      },
+      "Message": {
+        "package": "@lowdefy/blocks-antd",
+        "count": 1,
+        "~k": "6i"
+      },
+      "~k": "5y"
+    },
+    "connections": {
+      "~k": "6j"
+    },
+    "requests": {
+      "~k": "6k"
+    },
+    "api": {
+      "~k": "6l"
+    },
+    "operators": {
+      "client": {
+        "_not": {
+          "package": "@lowdefy/operators-js",
+          "count": 1,
+          "~k": "6o"
+        },
+        "_type": {
+          "package": "@lowdefy/operators-js",
+          "count": 1,
+          "~k": "6p"
+        },
+        "~k": "6n"
+      },
+      "server": {
+        "~k": "6q"
+      },
+      "~k": "6m"
+    },
+    "~k": "5q"
+  }
+}
