@@ -14,21 +14,35 @@
   limitations under the License.
 */
 
-import build from '@lowdefy/build';
+import { shallowBuild } from '@lowdefy/build/dev';
 import createCustomPluginTypesMap from '../utils/createCustomPluginTypesMap.mjs';
 
-function lowdefyBuild({ directories, logger, options }) {
+function lowdefyBuild({ directories, logger, options, pageCache }) {
   return async () => {
     logger.ui.spin('Building config...');
     const customTypesMap = await createCustomPluginTypesMap({ directories, logger });
-    await build({
-      customTypesMap,
-      directories,
-      logger,
-      refResolver: options.refResolver,
-      stage: 'dev',
-    });
-    logger.ui.log('Built config.');
+
+    if (pageCache) {
+      await pageCache.acquireSkeletonLock();
+    }
+    try {
+      const result = await shallowBuild({
+        customTypesMap,
+        directories,
+        logger,
+        refResolver: options.refResolver,
+        stage: 'dev',
+      });
+
+      // Return result so getContext can store registries
+      logger.ui.log('Built config.');
+      return result;
+    } finally {
+      if (pageCache) {
+        pageCache.invalidateAll();
+        pageCache.releaseSkeletonLock();
+      }
+    }
   };
 }
 

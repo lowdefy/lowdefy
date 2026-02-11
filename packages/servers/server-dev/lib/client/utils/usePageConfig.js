@@ -13,14 +13,59 @@
 
 import useSWR from 'swr';
 
-import request from './request.js';
+import { getReloadVersion } from './useMutateCache.js';
 
-function fetchPageConfig(url) {
-  return request({ url });
+function parseJsModule(text) {
+  const fn = new Function('exports', text.replace('export default', 'exports.default ='));
+  const mod = {};
+  fn(mod);
+  return mod.default ?? {};
+}
+
+async function fetchJsEntries(basePath) {
+  try {
+    const res = await fetch(`${basePath}/api/js/client`);
+    if (!res.ok) return {};
+    return parseJsModule(await res.text());
+  } catch {
+    return {};
+  }
+}
+
+async function fetchPageConfig(url) {
+  const res = await fetch(url, {
+    headers: { 'Content-Type': 'application/json' },
+  });
+  if (res.status === 404) {
+    return null;
+  }
+  const data = await res.json();
+  if (data?.buildError) {
+    return data;
+  }
+  if (!res.ok) {
+    throw new Error(data.message || 'Request error');
+  }
+
+  // Fetch jsMap after page build completes (JIT build may have added new entries).
+  // Extract basePath from the URL to construct the jsMap endpoint.
+  const basePath = url.replace(/\/api\/page\/.*$/, '');
+  const jsEntries = await fetchJsEntries(basePath);
+  data._jsEntries = jsEntries;
+
+  return data;
 }
 
 function usePageConfig(pageId, basePath) {
-  const { data } = useSWR(`${basePath}/api/page/${pageId}`, fetchPageConfig, { suspense: true });
+  const url = `${basePath}/api/page/${pageId}`;
+  // Include reloadVersion in the SWR key so that after a config reload,
+  // previously cached page data is not reused. The fetcher receives
+  // [url, version] but only uses url — the version just busts the cache.
+  const { data } = useSWR(
+    [url, getReloadVersion()],
+    ([fetchUrl]) => fetchPageConfig(fetchUrl),
+    { suspense: true }
+  );
   return { data };
 }
 

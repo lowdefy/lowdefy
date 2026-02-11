@@ -16,10 +16,23 @@
 
 import { useSWRConfig } from 'swr';
 
-function useMutateCache(basePath) {
-  const { mutate } = useSWRConfig();
-  return () =>
-    mutate((key) => key.startsWith(`${basePath}/api/page`) || key === `${basePath}/api/root`);
+let reloadVersion = 0;
+
+function getReloadVersion() {
+  return reloadVersion;
 }
 
+function useMutateCache(basePath) {
+  const { mutate } = useSWRConfig();
+  return () => {
+    // Increment the reload version so that usePageConfig SWR keys change.
+    // Old cached page entries become orphaned (different key), forcing fresh
+    // fetches when navigating to any page after a reload.
+    reloadVersion += 1;
+    // Revalidate root config in the background (stale-while-revalidate, no suspend).
+    return mutate((key) => key === `${basePath}/api/root`);
+  };
+}
+
+export { getReloadVersion };
 export default useMutateCache;

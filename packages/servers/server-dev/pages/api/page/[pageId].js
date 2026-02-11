@@ -17,11 +17,41 @@
 import { getPageConfig } from '@lowdefy/api';
 
 import apiWrapper from '../../../lib/server/apiWrapper.js';
+import buildPageIfNeeded from '../../../lib/server/jitPageBuilder.js';
+import logError from '../../../lib/server/log/logError.js';
 
 async function handler({ context, req, res }) {
   const { pageId } = req.query;
+
+  // Attempt JIT build if page not yet compiled
+  try {
+    await buildPageIfNeeded({
+      pageId,
+      buildDirectory: context.buildDirectory,
+      configDirectory: context.configDirectory,
+    });
+  } catch (error) {
+    const rawErrors = error.buildErrors ?? [error];
+    const errors = [];
+    for (const err of rawErrors) {
+      await logError({ context, error: err });
+      errors.push({
+        type: err.name ?? 'Error',
+        message: err.message,
+        source: err.source ?? null,
+      });
+    }
+    res.status(500).json({
+      buildError: true,
+      errors,
+      // Keep top-level message/source for backward compatibility
+      message: error.message,
+      source: error.source ?? null,
+    });
+    return;
+  }
+
   const pageConfig = await getPageConfig(context, { pageId });
-  // TODO: Do we log here?
   if (pageConfig === null) {
     res.status(404).send('Page not found.');
   } else {

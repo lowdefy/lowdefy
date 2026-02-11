@@ -53,7 +53,7 @@ jest.unstable_mockModule('./utils/writeBuildArtifact.js', () => ({
 }));
 
 // Mock updateServerPackageJson to skip server package.json update
-jest.unstable_mockModule('./build/updateServerPackageJson.js', () => ({
+jest.unstable_mockModule('./build/full/updateServerPackageJson.js', () => ({
   default: jest.fn(() => Promise.resolve()),
 }));
 

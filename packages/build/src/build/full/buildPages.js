@@ -18,12 +18,12 @@
 
 import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors/build';
-import buildPage from './buildPage.js';
+import buildPage from '../buildPages/buildPage.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
-import validateLinkReferences from './validateLinkReferences.js';
-import validatePayloadReferences from './validatePayloadReferences.js';
-import validateServerStateReferences from './validateServerStateReferences.js';
-import validateStateReferences from './validateStateReferences.js';
+import validateLinkReferences from '../buildPages/validateLinkReferences.js';
+import validatePayloadReferences from '../buildPages/validatePayloadReferences.js';
+import validateServerStateReferences from '../buildPages/validateServerStateReferences.js';
+import validateStateReferences from '../buildPages/validateStateReferences.js';
 
 function buildPages({ components, context }) {
   const pages = type.isArray(components.pages) ? components.pages : [];

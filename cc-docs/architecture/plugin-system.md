@@ -286,12 +286,16 @@ export default {
 ### Dev vs Prod Imports
 
 **Dev:** (`buildImportsDev.js`)
-- Only includes types actually used in configuration
-- Faster builds, smaller bundles during development
+- Includes all types from installed packages (not just types counted in config)
+- Dev server pre-installs a broad set of default packages so bundle size is not a concern
+- Page content is built JIT (just-in-time) during development, so page-level types (actions, blocks, operators) aren't counted during the skeleton build
+- The skeleton build reads the server's `package.json` to determine which packages are installed, then includes all types from those packages
+- If a new plugin type is detected that isn't installed, a full rebuild is triggered to install the new plugin package
 
 **Prod:** (`buildImportsProd.js`)
-- Includes all available types
-- Ensures all plugins are available at runtime
+- Builds all pages to count exact type usage across the entire app
+- Only includes types that are actually used — effective tree-shaking
+- Produces minimal bundles with only the required plugin code
 
 ## Runtime Plugin Loading
 
