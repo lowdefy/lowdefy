@@ -176,6 +176,38 @@
           properties:
             title: Vercel
 
+    - id: testing
+      type: MenuGroup
+      properties:
+        title: Testing
+        icon: AiOutlineExperiment
+      links:
+        - id: e2e-introduction
+          type: MenuLink
+          pageId: e2e-introduction
+          properties:
+            title: Introduction
+        - id: e2e-getting-started
+          type: MenuLink
+          pageId: e2e-getting-started
+          properties:
+            title: Getting Started
+        - id: e2e-writing-tests
+          type: MenuLink
+          pageId: e2e-writing-tests
+          properties:
+            title: Writing Tests
+        - id: e2e-mocking
+          type: MenuLink
+          pageId: e2e-mocking
+          properties:
+            title: Mocking Requests
+        - id: e2e-configuration
+          type: MenuLink
+          pageId: e2e-configuration
+          properties:
+            title: Configuration
+
     - id: plugins_group
       type: MenuGroup
       properties:
