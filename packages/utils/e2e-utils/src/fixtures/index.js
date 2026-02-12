@@ -33,8 +33,11 @@ export const test = base.extend({
   mocksFile: [process.env.LOWDEFY_E2E_MOCKS_FILE || '', { option: true }],
 
   // Worker-scoped fixtures (shared across tests in a worker)
+  // These read from process.env directly — worker fixtures cannot depend on test-scoped options.
   helperRegistry: [
-    async ({ buildDir }, use) => {
+    // eslint-disable-next-line no-empty-pattern
+    async ({}, use) => {
+      const buildDir = process.env.LOWDEFY_BUILD_DIR || '.lowdefy/server/build';
       // serverDir is the parent of buildDir (e.g., .lowdefy/server)
       const serverDir = path.dirname(buildDir);
       const registry = createHelperRegistry({ serverDir });
@@ -44,7 +47,9 @@ export const test = base.extend({
   ],
 
   staticMocks: [
-    async ({ mocksFile }, use) => {
+    // eslint-disable-next-line no-empty-pattern
+    async ({}, use) => {
+      const mocksFile = process.env.LOWDEFY_E2E_MOCKS_FILE;
       const mocks = loadStaticMocks(mocksFile || undefined);
       await use(mocks);
     },
@@ -52,7 +57,9 @@ export const test = base.extend({
   ],
 
   manifest: [
-    async ({ buildDir }, use) => {
+    // eslint-disable-next-line no-empty-pattern
+    async ({}, use) => {
+      const buildDir = process.env.LOWDEFY_BUILD_DIR || '.lowdefy/server/build';
       const manifestPath = path.join(buildDir, 'e2e-manifest.json');
       const lockPath = path.join(buildDir, 'e2e-manifest.lock');
       const lockTimeout = 30000;
