@@ -14,22 +14,25 @@
   limitations under the License.
 */
 
-import fs from 'fs';
-import yaml from 'js-yaml';
+const COOKIE_NAME = 'lowdefy_e2e_user';
 
-function loadStaticMocks(mocksFile) {
-  if (!mocksFile || !fs.existsSync(mocksFile)) {
-    return { requests: [], api: [] };
-  }
-
-  const content = fs.readFileSync(mocksFile, 'utf8');
-  const parsed = yaml.load(content);
-
-  return {
-    requests: parsed?.requests ?? [],
-    api: parsed?.api ?? [],
-    user: parsed?.user ?? null,
-  };
+function getBaseURL(page) {
+  return page.context()._options?.baseURL ?? 'http://localhost:3000';
 }
 
-export default loadStaticMocks;
+async function setUserCookie(page, userObj) {
+  const value = Buffer.from(JSON.stringify(userObj)).toString('base64');
+  await page.context().addCookies([
+    {
+      name: COOKIE_NAME,
+      value,
+      url: getBaseURL(page),
+    },
+  ]);
+}
+
+async function clearUserCookie(page) {
+  await page.context().clearCookies({ name: COOKIE_NAME });
+}
+
+export { setUserCookie, clearUserCookie };

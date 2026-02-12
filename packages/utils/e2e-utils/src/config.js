@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -61,9 +61,9 @@ function createConfig({
       },
     ],
     webServer: {
-      // Build and start production server
+      // Build with e2e server and start
       // NEXT_PUBLIC_LOWDEFY_E2E=true exposes window.lowdefy for state testing
-      command: `NEXT_PUBLIC_LOWDEFY_E2E=true ${cliCommand} build && ${cliCommand} start --port ${port}`,
+      command: `NEXT_PUBLIC_LOWDEFY_E2E=true ${cliCommand} build --server e2e && ${cliCommand} start --port ${port}`,
       url: `http://localhost:${port}`,
       reuseExistingServer: true,
       timeout,
@@ -84,7 +84,8 @@ function createMultiAppConfig({
 
   // Set up projects for each app
   const projects = apps.map((app) => {
-    const appBuildDir = path.resolve(app.appDir, '.lowdefy/server/build');
+    const appBuildDir = path.resolve(app.appDir, app.buildDir ?? '.lowdefy/server/build');
+    const appMocksFile = path.resolve(app.appDir, app.mocksFile ?? 'e2e/mocks.yaml');
 
     return {
       name: app.name,
@@ -92,18 +93,16 @@ function createMultiAppConfig({
       testMatch,
       use: {
         baseURL: `http://localhost:${app.port}`,
-        ...devices['Desktop Chrome'],
-      },
-      // Store build dir in metadata for fixtures
-      metadata: {
         buildDir: appBuildDir,
+        mocksFile: fs.existsSync(appMocksFile) ? appMocksFile : undefined,
+        ...devices['Desktop Chrome'],
       },
     };
   });
 
   // Set up webServers for each app
   const webServer = apps.map((app) => ({
-    command: `NEXT_PUBLIC_LOWDEFY_E2E=true ${cliCommand} build && ${cliCommand} start --port ${app.port}`,
+    command: `NEXT_PUBLIC_LOWDEFY_E2E=true ${cliCommand} build --server e2e && ${cliCommand} start --port ${app.port}`,
     url: `http://localhost:${app.port}`,
     reuseExistingServer: true,
     timeout,

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -55,8 +55,7 @@ async function expectRequest(page, { requestId, loading, response, payload, time
         }
 
         if (response !== undefined) {
-          const matches = JSON.stringify(state.response) === JSON.stringify(response);
-          if (!matches) return { response: state.response };
+          if (!objectContains(state.response, response)) return { response: state.response };
         }
 
         // Payload is stored in the request state by the Lowdefy engine.
