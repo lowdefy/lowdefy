@@ -32,36 +32,9 @@ function detectPackageManager(cwd) {
   return 'npm';
 }
 
-function buildInstallCommand({ packageManager, useExperimental, useMongoDB }) {
-  const tag = useExperimental ? 'experimental' : 'latest';
-  const packages = [`@lowdefy/e2e-utils@${tag}`, '@playwright/test@^1.50.0'];
-
-  if (useMongoDB) {
-    packages.push(`@lowdefy/community-plugin-e2e-mdb@${tag}`);
-  }
-
-  const devFlag = packageManager === 'yarn' ? '--dev' : '-D';
-  return `${packageManager} add ${devFlag} ${packages.join(' ')}`;
-}
-
-function installPlaywright(appDir) {
-  console.log('\nInstalling Playwright browsers...');
-  console.log('  $ npx playwright install chromium\n');
-
-  try {
-    execSync('npx playwright install chromium', { cwd: appDir, stdio: 'inherit' });
-    console.log('\n✓ Playwright browsers installed');
-    return true;
-  } catch {
-    console.error('\n✗ Failed to install Playwright browsers');
-    console.error('  Run manually: npx playwright install chromium');
-    return false;
-  }
-}
-
-function installDeps({ appDir, useExperimental, useMongoDB }) {
+function installDeps({ appDir }) {
   const packageManager = detectPackageManager(appDir);
-  const installCmd = buildInstallCommand({ packageManager, useExperimental, useMongoDB });
+  const installCmd = `${packageManager} install`;
 
   console.log(`\nInstalling dependencies in ${appDir}...`);
   console.log(`  $ ${installCmd}\n`);
@@ -71,15 +44,25 @@ function installDeps({ appDir, useExperimental, useMongoDB }) {
     console.log('\n✓ Dependencies installed successfully');
   } catch {
     console.error('\n✗ Failed to install dependencies automatically');
-    console.log(`\nInstall manually by running from ${appDir}:`);
+    console.log(`\nInstall manually from ${appDir}:`);
     console.log(`  ${installCmd}`);
     console.log('  npx playwright install chromium');
     return false;
   }
 
-  installPlaywright(appDir);
+  console.log('\nInstalling Playwright browsers...');
+  console.log('  $ npx playwright install chromium\n');
+
+  try {
+    execSync('npx playwright install chromium', { cwd: appDir, stdio: 'inherit' });
+    console.log('\n✓ Playwright browsers installed');
+  } catch {
+    console.error('\n✗ Failed to install Playwright browsers');
+    console.error('  Run manually: npx playwright install chromium');
+  }
+
   return true;
 }
 
-export { detectPackageManager, buildInstallCommand };
+export { detectPackageManager };
 export default installDeps;

@@ -31,7 +31,38 @@ function copyTemplate(templateName, destPath) {
   return false;
 }
 
-function updatePackageJson({ appPath, cwd, useMongoDB }) {
+function findWorkspaceRoot(startDir) {
+  let dir = startDir;
+  while (dir !== path.dirname(dir)) {
+    if (fs.existsSync(path.join(dir, 'pnpm-workspace.yaml'))) return dir;
+    dir = path.dirname(dir);
+  }
+  return null;
+}
+
+function addOnlyBuiltDependency({ cwd, appPath, dependency }) {
+  const appDir = path.join(cwd, appPath);
+  const workspaceRoot = findWorkspaceRoot(appDir);
+
+  // In a pnpm workspace, onlyBuiltDependencies must be in the workspace root package.json
+  const targetDir = workspaceRoot ?? path.join(cwd, appPath);
+  const pkgPath = path.join(targetDir, 'package.json');
+
+  if (!fs.existsSync(pkgPath)) return;
+
+  const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
+  const allowedBuilds = pkg.pnpm?.onlyBuiltDependencies ?? [];
+
+  if (!allowedBuilds.includes(dependency)) {
+    pkg.pnpm = pkg.pnpm || {};
+    pkg.pnpm.onlyBuiltDependencies = [...allowedBuilds, dependency];
+    fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n');
+    const label = workspaceRoot ? 'workspace root package.json' : `${appPath}/package.json`;
+    console.log(`  ✓ Added ${dependency} to pnpm.onlyBuiltDependencies in ${label}`);
+  }
+}
+
+function updatePackageJson({ appPath, cwd, useExperimental, useMongoDB }) {
   const pkgPath = path.join(cwd, appPath, 'package.json');
   if (!fs.existsSync(pkgPath)) {
     console.log(`  ⚠ No package.json found at ${appPath}/package.json`);
@@ -41,6 +72,7 @@ function updatePackageJson({ appPath, cwd, useMongoDB }) {
   const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
   let updated = false;
 
+  // Add scripts
   pkg.scripts = pkg.scripts || {};
 
   if (!pkg.scripts.e2e) {
@@ -53,26 +85,39 @@ function updatePackageJson({ appPath, cwd, useMongoDB }) {
     updated = true;
   }
 
-  // mongodb-memory-server uses a postinstall script to download the MongoDB binary.
-  // pnpm v10+ blocks postinstall scripts by default, so we need to explicitly allow it.
-  if (useMongoDB) {
-    const allowedBuilds = pkg.pnpm?.onlyBuiltDependencies ?? [];
-    if (!allowedBuilds.includes('mongodb-memory-server')) {
-      pkg.pnpm = pkg.pnpm || {};
-      pkg.pnpm.onlyBuiltDependencies = [...allowedBuilds, 'mongodb-memory-server'];
-      updated = true;
-    }
+  // Add devDependencies
+  const tag = useExperimental ? 'experimental' : 'latest';
+  pkg.devDependencies = pkg.devDependencies || {};
+
+  if (!pkg.devDependencies['@lowdefy/e2e-utils']) {
+    pkg.devDependencies['@lowdefy/e2e-utils'] = tag;
+    updated = true;
+  }
+
+  if (!pkg.devDependencies['@playwright/test']) {
+    pkg.devDependencies['@playwright/test'] = '^1.50.0';
+    updated = true;
+  }
+
+  if (useMongoDB && !pkg.devDependencies['@lowdefy/community-plugin-e2e-mdb']) {
+    pkg.devDependencies['@lowdefy/community-plugin-e2e-mdb'] = tag;
+    updated = true;
   }
 
   if (updated) {
     fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n');
-    console.log(`  ✓ Updated ${appPath}/package.json with e2e scripts`);
+    console.log(`  ✓ Updated ${appPath}/package.json with e2e scripts and dependencies`);
+  }
+
+  // mongodb-memory-server needs onlyBuiltDependencies (workspace-aware)
+  if (useMongoDB) {
+    addOnlyBuiltDependency({ cwd, appPath, dependency: 'mongodb-memory-server' });
   }
 
   return updated;
 }
 
-function generateFiles({ cwd, app, useMongoDB }) {
+function generateFiles({ cwd, app, useExperimental, useMongoDB }) {
   const appFullPath = path.join(cwd, app.path);
   const e2eDir = path.join(appFullPath, 'e2e');
 
@@ -137,7 +182,7 @@ function generateFiles({ cwd, app, useMongoDB }) {
   }
 
   // Update package.json with e2e scripts
-  updatePackageJson({ appPath: app.path, cwd, useMongoDB });
+  updatePackageJson({ appPath: app.path, cwd, useExperimental, useMongoDB });
 }
 
 export default generateFiles;
