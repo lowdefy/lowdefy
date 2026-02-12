@@ -21,12 +21,17 @@ import resetServerPackageJson from '../../utils/resetServerPackageJson.js';
 import runLowdefyBuild from '../../utils/runLowdefyBuild.js';
 import runNextBuild from '../../utils/runNextBuild.js';
 
+const serverPackages = {
+  e2e: '@lowdefy/server-e2e',
+};
+
 async function build({ context }) {
   context.logger.ui.info('Starting build.');
 
   const directory = context.directories.server;
+  const packageName = serverPackages[context.options.server] ?? '@lowdefy/server';
 
-  await getServer({ context, packageName: '@lowdefy/server', directory });
+  await getServer({ context, packageName, directory });
   await resetServerPackageJson({ context, directory });
   await addCustomPluginsAsDeps({ context, directory });
   await installServer({ context, directory });
