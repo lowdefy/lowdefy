@@ -45,8 +45,8 @@ export default function Hero() {
             </h1>
 
             <p className="text-lg text-slate-600 dark:text-slate-400 mb-8 max-w-xl">
-              AI generates config that&apos;s easy to generate, review, and maintain. A higher-order
-              language between code and natural language.
+              Build apps that AI can generate, humans can review, and teams can maintain. Config
+              that works between code and natural language.
             </p>
 
             {/* CTA Buttons */}

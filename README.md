@@ -8,6 +8,8 @@
 
 # Lowdefy - The Config-First Web Stack for AI and Humans
 
+Build apps that AI can generate, humans can review, and teams can maintain. Config that works between code and natural language.
+
 ### Why config-first matters in the age of AI
 
 AI writes code fast, but the maintenance doesn't scale. LLMs generate thousands of lines that are hard to review, inconsistent across sessions, and full of hidden vulnerabilities. Lowdefy solves this:
