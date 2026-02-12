@@ -64,7 +64,8 @@ function createConfig({
     webServer: {
       // Build with e2e server and start
       command: `${cliCommand} build --server e2e && ${cliCommand} start --port ${port}`,
-      url: `http://localhost:${port}`,
+      // Use session API for health check — page URLs may redirect when auth is configured
+      url: `http://localhost:${port}/api/auth/session`,
       reuseExistingServer: true,
       timeout,
       cwd: absoluteAppDir,
@@ -106,7 +107,8 @@ function createMultiAppConfig({
   // Set up webServers for each app
   const webServer = apps.map((app) => ({
     command: `${cliCommand} build --server e2e && ${cliCommand} start --port ${app.port}`,
-    url: `http://localhost:${app.port}`,
+    // Use session API for health check — page URLs may redirect when auth is configured
+    url: `http://localhost:${app.port}/api/auth/session`,
     reuseExistingServer: true,
     timeout,
     cwd: app.appDir,
