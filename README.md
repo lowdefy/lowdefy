@@ -3,129 +3,135 @@
 </p>
 
 [![Discord](https://img.shields.io/discord/729696747261263962?label=Join%20our%20Discord&logo=discord&logoColor=white)](https://discord.gg/WmcJgXt)
+[![Follow](https://img.shields.io/twitter/follow/lowdefy?logo=x&style=flat-square)](https://x.com/lowdefy)
 
-[![Tweet](https://img.shields.io/twitter/url?logo=twitter&style=flat-square&url=https%3A%2F%2Flowdefy.com)](https://twitter.com/intent/tweet?text=Build%20web%20apps%2C%20admin%20panels%2C%20BI%20dashboards%2C%20and%20CRUD%20apps%20with%20ease%21%20Try%20&url=https://lowdefy.com&via=lowdefy&hashtags=lowcode,lowdefy,internaltools,developers,opensource)
-[![Follow](https://img.shields.io/twitter/follow/lowdefy?logo=twitter&style=flat-square)](https://twitter.com/intent/follow?screen_name=lowdefy)
+# Lowdefy - The Config-First Web Stack for AI and Humans
 
-![Tests](https://github.com/lowdefy/lowdefy/workflows/Tests/badge.svg?branch=main)
-[![Maintainability](https://api.codeclimate.com/v1/badges/6efe9bfa0648772cae00/maintainability)](https://codeclimate.com/github/lowdefy/lowdefy/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/6efe9bfa0648772cae00/test_coverage)](https://codeclimate.com/github/lowdefy/lowdefy/test_coverage)
-[![Codecov](https://codecov.io/gh/lowdefy/lowdefy/branch/main/graph/badge.svg?token=U2AEEH9K1W)](https://codecov.io/gh/lowdefy/lowdefy)
+### Why config-first matters in the age of AI
 
-# Lowdefy 🫶 The Config Webstack for Business Apps
+AI writes code fast, but the maintenance doesn't scale. LLMs generate thousands of lines that are hard to review, inconsistent across sessions, and full of hidden vulnerabilities. Lowdefy solves this:
 
-Lowdefy is a source available web framework that enables you to:
+- **50 lines of config vs 500 lines of code** — AI generates concise, reviewable config instead of sprawling React components.
+- **Schema-validated, no arbitrary code paths** — Every property validated against a schema. No arbitrary code paths.
+- **One framework update upgrades all your apps** — Config is stable. Lowdefy updates benefits all apps. No fixing each AI-generated codebase individually.
+- **Config is interpreted, not executed** — No code injection possible. Auth, permissions, and data validation built into the runtime.
 
-- 🎨 Build web UIs and connect to databases and APIs.
-- 🔌 Extend app functionality with npm plugins.
-- ⚛️ Built on top of [Next.js](https://nextjs.org/) and [Auth.js](https://authjs.dev/).
-- 🌐 Host your apps anywhere you host Next.js.
-- ✂️ Only code your business logic.
+### Full-stack, production-ready
 
-Create internal tools, web apps, admin panels, BI dashboards, web sites and CRUD apps with simple YAML or JSON config.
+- **Built on [Next.js](https://nextjs.org/) and [Auth.js](https://authjs.dev/)** — Deploy anywhere you host Next.js.
+- **70+ UI components** — Forms, tables, charts, markdown, and more out of the box.
+- **50+ logic operators** — `_if`, `_get`, `_js`, `_state` for dynamic UIs without writing code.
+- **10+ data connectors** — MongoDB, PostgreSQL, MySQL, REST APIs, Google Sheets, S3, Elasticsearch, Stripe.
+- **Auth & RBAC** — 75+ auth providers, public and private pages, role-based access control.
 
-### 🛠 Build Web UIs with Easy Config
+### Extend with npm plugins
 
-Lowdefy config is easy to read, write, copy, paste, or template. Config when you can, but code when you need to.
+Blocks, Connections, Operators, Actions, Auth Providers, and Adapters can all be extended with plugins. Declare them in config — Lowdefy handles the rest.
 
-- Over 70 Blocks and 150 logic operators for a quick start.
-- Dynamic UIs with simple state management.
-- Responsive layouts out of the box.
-- Extend with custom React components.
+Tree-shaking bundles only what you use. Build custom plugins with npm packages and publish them for the community.
 
-### 📡 Connect to Your Data and APIs
+- https://docs.lowdefy.com/plugins-introduction
+- https://github.com/lowdefy/lowdefy-example-plugins (pnpm monorepo setup)
+- https://github.com/lowdefy/community-plugins
 
-Make API calls and read and write to your databases with minimal config. Build web apps that connect your data.
+## Quick Start
 
-- Build dynamic queries using variables and logic operators.
-- Execute requests from both authenticated and public pages.
-- Secure secrets for passwords and API keys.
-- Build custom connections with any npm modules.
+```bash
+npx lowdefy@latest dev
+```
 
-## 🔧 Extend Everything with NPM Plugins
+This creates a `lowdefy.yaml` in the current directory and launches a local development server at http://localhost:3000. Edit the config to see changes reflected in the app.
 
-> Lowdefy's [Blocks](https://docs.lowdefy.com/blocks), [Requests](https://docs.lowdefy.com/connections-and-requests), [Operators](https://docs.lowdefy.com/operators), [Actions](https://docs.lowdefy.com/events-and-actions), Auth Providers, and Adapters can all be extended with plugins, making it the most flexible config web stack.
-> Powered by NPM, Lowdefy's plugin system allows developers to bundle modules using their preferred packages. Even unpublished plugins can be added to your repository, enabling easy use of project-specific code. See the [plugin docs](https://docs.lowdefy.com/plugins) and [the plugin project example](https://github.com/lowdefy/lowdefy-example-plugins) for more details.
+## How It Works
 
-### 💼 Built for Developers and Enterprise-Ready
-
-#### 🌍 Deploy Anywhere
-
-Lowdefy runs as a Next.js app in production, so you can deploy it anywhere that supports Next.js deployment. Deploy with [Vercel](https://vercel.com), [Docker](https://docs.lowdefy.com/docker), or anything that runs Next.js apps.
-
-#### 🔒 Secured with Auth.js
-
-Authentication is built on top of Auth.js, providing the full flexibility and security from one of the most popular open-source auth layers. SSO, SAML, 2FA, no problem. Google, Okta, Auth0, and more - bring your own provider.
-
-#### 👩‍💻👨‍💻 Git Control for Humans
-
-Lowdefy's minimal config is designed to be easy to read, write, and understand, making it simple to copy, paste, review changes, or pick up where others left off. Defining apps using a structured schema speeds up development in teams of any size.
-
-#### 🔑 Public, Authenticated, and Role-Based Access
-
-Lowdefy supports building multi-page apps with both public and private pages, serving a wide range of use cases. Role-based access control (RBAC) allows for easy implementation of secure, granular access control where needed.
-
-### How Lowdefy Apps Work 👉 https://docs.lowdefy.com
+```yaml
+lowdefy: 4
+pages:
+  - id: welcome
+    type: PageHeaderMenu
+    blocks:
+      - id: card
+        type: Card
+        blocks:
+          - id: name
+            type: TextInput
+            properties:
+              label: What's your name?
+          - id: greeting
+            type: Alert
+            properties:
+              type: success
+              message:
+                _js: |
+                  const n = state('name');
+                  return n ? `Hello, ${n}!` : 'Type your name';
+          - id: submit
+            type: Button
+            properties:
+              title: Save
+            events:
+              onClick:
+                - id: validate
+                  type: Validate
+```
 
 Lowdefy apps are built using:
 
-- 📦 [Blocks](https://docs.lowdefy.com/blocks) are the visual part of the app, the React components. Lowdefy provides a set of default block types but app capabilities can be extended with custom blocks.
-- ⚙️ [Operators](https://docs.lowdefy.com/operators) are the functions that are used to express logic within an app. Lowdefy has many built in easy to use operator functions for creating dynamic applications with ease, however, custom javascript operators can also be loaded.
-- ⚡️ [Actions](https://docs.lowdefy.com/events-and-actions) are triggered by events, like clicking a button or loading a page. When events are triggered, a list of javascript functions can be called. Lowdefy has a set of useful actions, but applications functionality can be enriched by adding custom Lowdefy actions.
-- 📣 [Requests](https://docs.lowdefy.com/connections-and-requests) make calls to external services to hydrate applications with data or post data to external services. Lowdefy doesn't have any data storage built in. Instead, it provides connections to external services like databases and APIs.
+- **[Blocks](https://docs.lowdefy.com/blocks)** — 70+ React UI components, from forms and tables to charts and markdown. Extend with custom blocks via npm plugins.
+- **[Operators](https://docs.lowdefy.com/operators)** — 50+ logic functions (`_if`, `_get`, `_js`) for dynamic UIs with simple state management.
+- **[Actions](https://docs.lowdefy.com/events-and-actions)** — Event handlers triggered by clicks, page loads, and more. Validate, navigate, call APIs, and set state.
+- **[Connections & Requests](https://docs.lowdefy.com/connections-and-requests)** — Connect to MongoDB, PostgreSQL, MySQL, REST APIs, Google Sheets, S3, Elasticsearch, Stripe, and more.
 
-We are working on expanding the list of connections, and you can vote for the ones you need [here](https://github.com/lowdefy/lowdefy/discussions/309).
+## Links
 
-## Quick start
+- [Documentation](https://docs.lowdefy.com)
+- [Getting started tutorial](https://docs.lowdefy.com/tutorial-start)
+- [Website](https://lowdefy.com)
+- [Community forum](https://github.com/lowdefy/lowdefy/discussions)
+- [Discord](https://discord.gg/WmcJgXt)
+- [Bug reports & feature requests](https://github.com/lowdefy/lowdefy/issues)
 
-Run:
+---
 
-```bash
-pnpx lowdefy@latest init && pnpx lowdefy@latest dev
-```
+## Lowdefy is built and maintained by Resonancy
 
-This will create a file called `lowdefy.yaml` in the current working directory that contains the configuration for a Lowdefy app (as well as a `.gitignore`) and launch a local development server at http://localhost:3000. Make changes in the `lowdefy.yaml` file to see them reflect in the app.
+🚀 Too many apps? https://resonancy.io builds it for you.
 
-### 🔗 More Lowdefy Links
+Most teams run 10+ business apps that don't talk to each other. https://resonancy.io replaces them with one purpose-built solution on Lowdefy — delivered in days, not months.
 
-- Getting started with Lowdefy - https://docs.lowdefy.com/tutorial-start
-- Lowdefy website - https://lowdefy.com
-- Community forum - https://github.com/lowdefy/lowdefy/discussions
-- Join the Lowdefy Discord - https://discord.gg/WmcJgXt
-- Bug reports and feature requests - https://github.com/lowdefy/lowdefy/issues
+- Consolidate your stack — Replace disconnected apps with one unified solution.
+- Streamline workflows — Seamlessly integrated systems that free up your team.
+- Ship in days — Custom apps built fast with Lowdefy.
+- Connect everything — Real-time data across your business for reliable insights.
 
-### ⛹️‍♀️ Contributing
+✅ One unified app replacing your SaaS dependency · ✅ Custom solution tailored to your business · ✅ AI, data science & integrations included · ✅ Ongoing support & managed hosting
 
-#### Lowdefy Plugins
+10+ years building business apps. 50+ internal tools deployed. Built on open source.
 
-The simplest way to contribute to Lowdefy is by creating custom plugins like Blocks, Actions, Requests, Operators, or Auth Adapters and Providers, and publishing them to NPM for the community's benefit.
+https://resonancy.io
 
-Easily add and develop plugins in any Lowdefy project; refer to [the plugins project example](https://github.com/lowdefy/lowdefy-example-plugins) for a pnpm monorepo setup to jumpstart local plugin development.
+---
 
-When publishing your plugin to NPM, include `lowdefy` in the name for easy discovery, and share it on our [Github Discussions](https://github.com/lowdefy/lowdefy/discussions) to inform the community.
+## Contributing
 
-#### Lowdefy Platform Development
+### Platform Development
 
-Run Lowdefy servers locally by adding your Lowdefy config to the `app/..` folder. Use one of the following scripts to the server:
+Run Lowdefy servers locally by adding your config to the `app/` folder:
 
-- `pnpm app:cli:dev`: Starts the development server with the config provided in the `app` folder, useful for developing locally.
-- `pnpm app:cli:build`: Creates a production build of your lowdefy app for the config config provided in the `app` folder.
-- `pnpm app:cli:start`: Starts the production server of your lowdefy app built using the `build` command output.
+- `pnpm app:cli:dev` — Start the development server.
+- `pnpm app:cli:build` — Create a production build.
+- `pnpm app:cli:start` — Start the production server.
 
-> See the project `package.json` scripts for more predefined scripts.
+See [CONTRIBUTING.md](https://github.com/lowdefy/lowdefy/blob/main/CONTRIBUTING.md) for more.
 
-Please also see [CONTRIBUTING.md](https://github.com/lowdefy/lowdefy/blob/main/CONTRIBUTING.md).
+## Changelog
 
-### ☕️ Changelog
+All changes are documented in [CHANGELOG.md](https://github.com/lowdefy/lowdefy/blob/main/CHANGELOG.md). Converting from v3? See the [v4 migration guide](https://docs.lowdefy.com/v3-to-v4).
 
-Convert a v3 app to V4 - [See the v4 conversion notes.](https://docs.lowdefy.com/v3-to-v4)
+## Security
 
-All changes to this project are documented in [CHANGELOG.md](https://github.com/lowdefy/lowdefy/blob/main/CHANGELOG.md).
+If you discover a vulnerability, please follow the guide in [SECURITY.md](https://github.com/lowdefy/lowdefy/blob/main/SECURITY.md).
 
-### 🔐 Security
+## Code of Conduct
 
-If you discover a vulnerability, please follow the guide in [SECURITY.md](https://github.com/lowdefy/lowdefy/blob/main/SECURITY.md) to disclose this to us responsibly.
-
-### 🤝 Code of Conduct
-
-In the interest of fostering an open and welcoming environment, we as contributors and maintainers pledge to follow the [Contributor Covenant](https://www.contributor-covenant.org) code of conduct. See [CODE_OF_CONDUCT.md](https://github.com/lowdefy/lowdefy/blob/main/CODE_OF_CONDUCT.md) for more.
+See [CODE_OF_CONDUCT.md](https://github.com/lowdefy/lowdefy/blob/main/CODE_OF_CONDUCT.md).
