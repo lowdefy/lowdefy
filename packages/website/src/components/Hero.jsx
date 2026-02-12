@@ -125,62 +125,62 @@ export default function Hero() {
                 {'\n'}
                 <span className="text-sky-700 dark:text-primary-400">pages:</span>
                 {'\n'}
-                <span className="text-slate-600"> - </span>
+                <span className="text-slate-600">{'  - '}</span>
                 <span className="text-cyan-700 dark:text-cyan-400">id:</span>
                 <span className="text-green-700 dark:text-green-400"> welcome</span>
                 {'\n'}
-                <span className="text-slate-600"> </span>
+                <span className="text-slate-600">{'    '}</span>
                 <span className="text-cyan-700 dark:text-cyan-400">type:</span>
                 <span className="text-green-700 dark:text-green-400"> PageHeaderMenu</span>
                 {'\n'}
-                <span className="text-slate-600"> </span>
+                <span className="text-slate-600">{'    '}</span>
                 <span className="text-cyan-700 dark:text-cyan-400">blocks:</span>
                 {'\n'}
-                <span className="text-slate-600"> - </span>
+                <span className="text-slate-600">{'      - '}</span>
                 <span className="text-cyan-700 dark:text-cyan-400">id:</span>
                 <span className="text-green-700 dark:text-green-400"> card</span>
                 {'\n'}
-                <span className="text-slate-600"> </span>
+                <span className="text-slate-600">{'        '}</span>
                 <span className="text-cyan-700 dark:text-cyan-400">type:</span>
                 <span className="text-green-700 dark:text-green-400"> Card</span>
                 {'\n'}
-                <span className="text-slate-600"> </span>
+                <span className="text-slate-600">{'        '}</span>
                 <span className="text-cyan-700 dark:text-cyan-400">blocks:</span>
                 {'\n'}
-                <span className="text-slate-600"> - </span>
+                <span className="text-slate-600">{'          - '}</span>
                 <span className="text-cyan-700 dark:text-cyan-400">id:</span>
                 <span className="text-green-700 dark:text-green-400"> name</span>
                 {'\n'}
-                <span className="text-slate-600"> </span>
+                <span className="text-slate-600">{'            '}</span>
                 <span className="text-cyan-700 dark:text-cyan-400">type:</span>
                 <span className="text-green-700 dark:text-green-400"> TextInput</span>
                 {'\n'}
-                <span className="text-slate-600"> </span>
+                <span className="text-slate-600">{'            '}</span>
                 <span className="text-cyan-700 dark:text-cyan-400">properties:</span>
                 {'\n'}
-                <span className="text-slate-600"> </span>
+                <span className="text-slate-600">{'              '}</span>
                 <span className="text-cyan-700 dark:text-cyan-400">label:</span>
                 <span className="text-green-700 dark:text-green-400"> What&apos;s your name?</span>
                 {'\n'}
-                <span className="text-slate-600"> - </span>
+                <span className="text-slate-600">{'          - '}</span>
                 <span className="text-cyan-700 dark:text-cyan-400">id:</span>
                 <span className="text-green-700 dark:text-green-400"> greeting</span>
                 {'\n'}
-                <span className="text-slate-600"> </span>
+                <span className="text-slate-600">{'            '}</span>
                 <span className="text-cyan-700 dark:text-cyan-400">type:</span>
                 <span className="text-green-700 dark:text-green-400"> Alert</span>
                 {'\n'}
-                <span className="text-slate-600"> </span>
+                <span className="text-slate-600">{'            '}</span>
                 <span className="text-cyan-700 dark:text-cyan-400">properties:</span>
                 {'\n'}
-                <span className="text-slate-600"> </span>
+                <span className="text-slate-600">{'              '}</span>
                 <span className="text-cyan-700 dark:text-cyan-400">type:</span>
                 <span className="text-green-700 dark:text-green-400"> success</span>
                 {'\n'}
-                <span className="text-slate-600"> </span>
+                <span className="text-slate-600">{'              '}</span>
                 <span className="text-cyan-700 dark:text-cyan-400">message:</span>
                 {'\n'}
-                <span className="text-slate-600"> </span>
+                <span className="text-slate-600">{'                '}</span>
                 <span className="text-cyan-700 dark:text-cyan-400">_js:</span>
                 <span className="text-green-700 dark:text-green-400"> |</span>
                 {'\n'}
@@ -194,32 +194,32 @@ export default function Hero() {
                   {"return n ? `Hello, ${n}!` : 'Type your name';"}
                 </span>
                 {'\n'}
-                <span className="text-slate-600"> - </span>
+                <span className="text-slate-600">{'          - '}</span>
                 <span className="text-cyan-700 dark:text-cyan-400">id:</span>
                 <span className="text-green-700 dark:text-green-400"> submit</span>
                 {'\n'}
-                <span className="text-slate-600"> </span>
+                <span className="text-slate-600">{'            '}</span>
                 <span className="text-cyan-700 dark:text-cyan-400">type:</span>
                 <span className="text-green-700 dark:text-green-400"> Button</span>
                 {'\n'}
-                <span className="text-slate-600"> </span>
+                <span className="text-slate-600">{'            '}</span>
                 <span className="text-cyan-700 dark:text-cyan-400">properties:</span>
                 {'\n'}
-                <span className="text-slate-600"> </span>
+                <span className="text-slate-600">{'              '}</span>
                 <span className="text-cyan-700 dark:text-cyan-400">title:</span>
                 <span className="text-green-700 dark:text-green-400"> Save</span>
                 {'\n'}
-                <span className="text-slate-600"> </span>
+                <span className="text-slate-600">{'            '}</span>
                 <span className="text-cyan-700 dark:text-cyan-400">events:</span>
                 {'\n'}
-                <span className="text-slate-600"> </span>
+                <span className="text-slate-600">{'              '}</span>
                 <span className="text-cyan-700 dark:text-cyan-400">onClick:</span>
                 {'\n'}
-                <span className="text-slate-600"> - </span>
+                <span className="text-slate-600">{'                - '}</span>
                 <span className="text-cyan-700 dark:text-cyan-400">id:</span>
                 <span className="text-green-700 dark:text-green-400"> validate</span>
                 {'\n'}
-                <span className="text-slate-600"> </span>
+                <span className="text-slate-600">{'                  '}</span>
                 <span className="text-cyan-700 dark:text-cyan-400">type:</span>
                 <span className="text-green-700 dark:text-green-400"> Validate</span>
               </code>

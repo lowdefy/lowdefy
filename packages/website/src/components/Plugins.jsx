@@ -70,43 +70,43 @@ export default function Plugins() {
                 {'\n'}
                 <span className="text-primary-400">plugins:</span>
                 {'\n'}
-                <span className="text-slate-500"> # UI components</span>
+                <span className="text-slate-500">{'  '}# UI components</span>
                 {'\n'}
-                <span className="text-slate-400"> - </span>
+                <span className="text-slate-400">{'  - '}</span>
                 <span className="text-cyan-400">name:</span>
                 <span className="text-green-400"> &apos;@lowdefy/blocks-antd&apos;</span>
                 {'\n'}
-                <span className="text-slate-400"> </span>
+                <span className="text-slate-400">{'    '}</span>
                 <span className="text-cyan-400">version:</span>
                 <span className="text-yellow-300"> &apos;4.5.2&apos;</span>
                 {'\n\n'}
-                <span className="text-slate-500"> # Data grids</span>
+                <span className="text-slate-500">{'  '}# Data grids</span>
                 {'\n'}
-                <span className="text-slate-400"> - </span>
+                <span className="text-slate-400">{'  - '}</span>
                 <span className="text-cyan-400">name:</span>
                 <span className="text-green-400"> &apos;@lowdefy/blocks-aggrid&apos;</span>
                 {'\n'}
-                <span className="text-slate-400"> </span>
+                <span className="text-slate-400">{'    '}</span>
                 <span className="text-cyan-400">version:</span>
                 <span className="text-yellow-300"> &apos;4.5.2&apos;</span>
                 {'\n\n'}
-                <span className="text-slate-500"> # Database connection</span>
+                <span className="text-slate-500">{'  '}# Database connection</span>
                 {'\n'}
-                <span className="text-slate-400"> - </span>
+                <span className="text-slate-400">{'  - '}</span>
                 <span className="text-cyan-400">name:</span>
                 <span className="text-green-400"> &apos;@lowdefy/connection-mongodb&apos;</span>
                 {'\n'}
-                <span className="text-slate-400"> </span>
+                <span className="text-slate-400">{'    '}</span>
                 <span className="text-cyan-400">version:</span>
                 <span className="text-yellow-300"> &apos;4.5.2&apos;</span>
                 {'\n\n'}
-                <span className="text-slate-500"> # Custom plugin from npm</span>
+                <span className="text-slate-500">{'  '}# Custom plugin from npm</span>
                 {'\n'}
-                <span className="text-slate-400"> - </span>
+                <span className="text-slate-400">{'  - '}</span>
                 <span className="text-cyan-400">name:</span>
                 <span className="text-purple-400"> &apos;@acme/custom-blocks&apos;</span>
                 {'\n'}
-                <span className="text-slate-400"> </span>
+                <span className="text-slate-400">{'    '}</span>
                 <span className="text-cyan-400">version:</span>
                 <span className="text-yellow-300"> &apos;1.0.0&apos;</span>
               </code>
