@@ -63,12 +63,13 @@ function createConfig({
     ],
     webServer: {
       // Build with e2e server and start
-      // NEXT_PUBLIC_LOWDEFY_E2E=true exposes window.lowdefy for state testing
-      command: `NEXT_PUBLIC_LOWDEFY_E2E=true ${cliCommand} build --server e2e && ${cliCommand} start --port ${port}`,
+      command: `${cliCommand} build --server e2e && ${cliCommand} start --port ${port}`,
       url: `http://localhost:${port}`,
       reuseExistingServer: true,
       timeout,
       cwd: absoluteAppDir,
+      // Exposes window.lowdefy for state testing
+      env: { NEXT_PUBLIC_LOWDEFY_E2E: 'true' },
     },
   });
 }
@@ -104,11 +105,12 @@ function createMultiAppConfig({
 
   // Set up webServers for each app
   const webServer = apps.map((app) => ({
-    command: `NEXT_PUBLIC_LOWDEFY_E2E=true ${cliCommand} build --server e2e && ${cliCommand} start --port ${app.port}`,
+    command: `${cliCommand} build --server e2e && ${cliCommand} start --port ${app.port}`,
     url: `http://localhost:${app.port}`,
     reuseExistingServer: true,
     timeout,
     cwd: app.appDir,
+    env: { NEXT_PUBLIC_LOWDEFY_E2E: 'true' },
   }));
 
   return defineConfig({

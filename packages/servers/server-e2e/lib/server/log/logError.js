@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -21,8 +21,6 @@ import {
   ServiceError,
 } from '@lowdefy/errors/server';
 import { resolveErrorConfigLocation } from '@lowdefy/errors/build';
-
-import captureSentryError from '../sentry/captureSentryError.js';
 
 function getEventType(error) {
   if (error instanceof ServiceError || error?.isServiceError === true) {
@@ -125,12 +123,6 @@ async function logError({ context, error }) {
       error.print ? error.print() : `[${errorName}] ${error.message}`
     );
 
-    // Capture error to Sentry (no-op if Sentry not configured)
-    captureSentryError({
-      error,
-      context,
-      configLocation: location,
-    });
   } catch (e) {
     console.error(error);
     console.error('An error occurred while logging the error.');

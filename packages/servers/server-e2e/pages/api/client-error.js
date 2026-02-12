@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -17,23 +17,12 @@
 import { logClientError } from '@lowdefy/api';
 
 import apiWrapper from '../../lib/server/apiWrapper.js';
-import captureSentryError from '../../lib/server/sentry/captureSentryError.js';
 
 async function handler({ context, req, res }) {
   if (req.method !== 'POST') {
     throw new Error('Only POST requests are supported.');
   }
   const response = await logClientError(context, req.body);
-
-  // Capture client error to Sentry (no-op if Sentry not configured)
-  captureSentryError({
-    error: new Error(req.body.message),
-    context,
-    configLocation: response.source
-      ? { source: response.source, config: response.config, link: response.link }
-      : null,
-  });
-
   res.status(200).json(response);
 }
 
