@@ -21,6 +21,7 @@ import { defineConfig, devices } from '@playwright/test';
 function createConfig({
   appDir = './',
   buildDir = '.lowdefy/server/build',
+  commandPrefix = '',
   mocksFile = 'e2e/mocks.yaml',
   port = 3000,
   testDir = 'e2e',
@@ -29,7 +30,7 @@ function createConfig({
   screenshot = 'only-on-failure', // 'off', 'on', or 'only-on-failure'
   outputDir = 'test-results',
 } = {}) {
-  const cliCommand = 'npx lowdefy';
+  const cliCommand = `${commandPrefix ? `${commandPrefix} ` : ''}npx lowdefy`;
   // Resolve absolute paths for all directories
   const absoluteAppDir = path.resolve(appDir);
   const absoluteBuildDir = path.resolve(absoluteAppDir, buildDir);
@@ -74,13 +75,14 @@ function createConfig({
 
 function createMultiAppConfig({
   apps = [],
+  commandPrefix = '',
   testDir = 'e2e',
   testMatch = '**/*.spec.js',
   timeout = 180000,
   screenshot = 'only-on-failure',
   outputDir = 'test-results',
 } = {}) {
-  const cliCommand = 'npx lowdefy';
+  const cliCommand = `${commandPrefix ? `${commandPrefix} ` : ''}npx lowdefy`;
 
   // Set up projects for each app
   const projects = apps.map((app) => {
