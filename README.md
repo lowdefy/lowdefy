@@ -37,7 +37,7 @@ Tree-shaking bundles only what you use. Build custom plugins with npm packages a
 ## Quick Start
 
 ```bash
-npx lowdefy@latest dev
+npx lowdefy@latest init && npx lowdefy@latest dev
 ```
 
 This creates a `lowdefy.yaml` in the current directory and launches a local development server at http://localhost:3000. Edit the config to see changes reflected in the app.
