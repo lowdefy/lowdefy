@@ -18,6 +18,7 @@
 
 /* eslint-disable no-console */
 
+import path from 'path';
 import prompts from 'prompts';
 
 import detectApps from './detectApps.js';
@@ -136,22 +137,33 @@ async function init() {
 
     const useExperimental = versionResponse.version === 'experimental';
 
-    // Step 8: Install dependencies
-    installDeps({ cwd, useExperimental, useMongoDB });
+    // Step 8: Install dependencies for each selected app
+    for (const app of selectedApps) {
+      const appDir = path.join(cwd, app.path);
+      installDeps({ appDir, useExperimental, useMongoDB });
+    }
   } else {
-    // Print manual install instructions
-    const packageManager = detectPackageManager(cwd);
-    const stableCmd = buildInstallCommand({ packageManager, useExperimental: false, useMongoDB });
-    const experimentalCmd = buildInstallCommand({
-      packageManager,
-      useExperimental: true,
-      useMongoDB,
-    });
+    // Print manual install instructions per app
+    for (const app of selectedApps) {
+      const appDir = path.join(cwd, app.path);
+      const packageManager = detectPackageManager(appDir);
+      const stableCmd = buildInstallCommand({
+        packageManager,
+        useExperimental: false,
+        useMongoDB,
+      });
+      const experimentalCmd = buildInstallCommand({
+        packageManager,
+        useExperimental: true,
+        useMongoDB,
+      });
 
-    console.log('\nTo install dependencies manually:');
-    console.log(`\n  Stable:       ${stableCmd}`);
-    console.log(`  Experimental: ${experimentalCmd}`);
-    console.log('\n  Then run: npx playwright install chromium');
+      console.log(`\nTo install dependencies manually in ${app.path}:`);
+      console.log(`  cd ${app.path}`);
+      console.log(`\n  Stable:       ${stableCmd}`);
+      console.log(`  Experimental: ${experimentalCmd}`);
+      console.log('  npx playwright install chromium');
+    }
   }
 
   // Step 9: Print completion summary
