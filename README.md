@@ -4,6 +4,7 @@
 
 [![Discord](https://img.shields.io/discord/729696747261263962?label=Join%20our%20Discord&logo=discord&logoColor=white)](https://discord.gg/WmcJgXt)
 [![Follow](https://img.shields.io/twitter/follow/lowdefy?logo=x&style=flat-square)](https://x.com/lowdefy)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Lowdefy-blue?logo=linkedin&logoColor=white)](https://www.linkedin.com/company/lowdefy)
 
 # Lowdefy - The Config-First Web Stack for AI and Humans
 
