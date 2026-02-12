@@ -37,7 +37,7 @@ Well-structured hierarchy, but with dead code and constructor side effects that 
 
 - **`ConfigError`**
   - Constructor side effects: None in base. **Build subclass does location resolution, suppression checking, and YAML parse error handling in constructor** — couples error to build context, makes serialization complex.
-  - Duplicate paths: `.log()` is used by `_app.js` ErrorBoundary (React rendering errors). `createLogError` handles action/operator errors. Two entry points into the same `/api/client-error` round-trip — unified by `handleError` in Brief 4.
+  - Duplicate paths: `.log()` is used by `_app.js` ErrorBoundary (React rendering errors). `createLogError` handles action/operator errors. Two entry points into the same `/api/client-error` round-trip — unified by `handleError` in Brief 5.
 
 - **`PluginError`**
   - Constructor side effects: **Appends location to message** (`rawMessage` + ` at ${location}.`). Stores `rawMessage` separately to avoid double-format on deserialize.
@@ -139,7 +139,7 @@ Parses pino JSON from child processes, extracts level/color/spin/succeed/source/
 
 1. **Three formatting functions that overlap**: `formatErrorMessage` (adds prefix + received), `formatUiMessage` (calls `.print()` or falls back without received), `formatBrowserError` (duplicate of `formatUiMessage`). The fallback path in `formatUiMessage` produces different output than the `.print()` path - errors without `.print()` lose the received value.
 2. **Location and received added at different stages**: PluginError bakes location into `error.message` at construction. `formatErrorMessage` adds received at display time via `.print()`. No good reason for this split.
-3. **Two browser error entry points**: `error.log()` (used by `_app.js` ErrorBoundary for React rendering errors) and `createLogError` (used by Actions.js for action/operator errors) both do the same `/api/client-error` round-trip independently. Two paths into the same system, unified by `handleError` in Brief 4.
+3. **Two browser error entry points**: `error.log()` (used by `_app.js` ErrorBoundary for React rendering errors) and `createLogError` (used by Actions.js for action/operator errors) both do the same `/api/client-error` round-trip independently. Two paths into the same system, unified by `handleError` in Brief 5.
 4. **Constructor side effects**: PluginError and ServiceError format messages at construction time, requiring `rawMessage` and careful deserialization to avoid double-formatting. Build ConfigError does location resolution, suppression, and YAML handling in its constructor — couples errors to build context. This is why per-class serializers exist and why env-specific subclasses were created.
 5. **Selective pino serializer**: `defaultErrSerializer` loses error properties in JSON log output.
 6. **Two competing error serializers**: `~e` in helpers (generic, lossy) and per-class `~err` (class-specific, selective). Different markers, different shapes, different purposes. Should be one mechanism.
@@ -414,34 +414,37 @@ context.logger = createBrowserLogger();  // console.error/warn/info/debug
 
 ### `context.handleWarning` — Build-Only Warning Handler
 
-Separate from the logger, just like `handleError`. Handles suppression, prodError escalation (throws ConfigError in prod), location resolution, dedup, and logging. Callers are explicit about what they're doing — no hidden behavior behind `logger.warn()`.
+Separate from the logger, just like `handleError`. Creates a ConfigWarning from params, then handles suppression, prodError escalation (collects the ConfigWarning directly — it extends ConfigError), location resolution, dedup, and logging. Callers are explicit about what they're doing — no hidden behavior behind `logger.warn()`.
 
 ```javascript
 function createHandleWarning({ pinoLogger, context }) {
   return function handleWarning(params) {
+    const warning = new ConfigWarning(params);
+
     // Check suppression (~ignoreBuildChecks)
-    if (shouldSuppress({ configKey: params.configKey, keyMap: context.keyMap, checkSlug: params.checkSlug })) {
+    if (shouldSuppress({ configKey: warning.configKey, keyMap: context.keyMap, checkSlug: warning.checkSlug })) {
       return;
     }
 
-    // Escalate to ConfigError in prod if marked prodError
+    // Escalate in prod if marked prodError — ConfigWarning extends ConfigError, so collect directly
     if (params.prodError && context.stage === 'prod') {
-      throw new ConfigError({ message: params.message, configKey: params.configKey });
+      collectExceptions(context, warning);
+      return;
     }
 
     // Resolve location (configKey → source via keyMap/refMap)
-    const location = resolveConfigLocation({ ...params, context });
+    const location = resolveConfigLocation({ configKey: warning.configKey, context });
 
     const source = location?.source ?? null;
 
     // Dedup by source:line
-    const dedupKey = source ?? params.message;
+    const dedupKey = source ?? warning.message;
     if (context.seenSourceLines.has(dedupKey)) return;
     context.seenSourceLines.add(dedupKey);
 
     // Two-argument pino call: merge object + message string.
     // Source display (blue) is handled by the CLI, not here — build just writes JSON.
-    pinoLogger.warn({ name: 'ConfigWarning', configKey: params.configKey, source }, params.message);
+    pinoLogger.warn({ typeName: 'ConfigWarning', configKey: warning.configKey, source }, warning.message);
   };
 }
 ```
@@ -518,7 +521,7 @@ The async file reads can still use lazy caching (read once, cache for subsequent
 
 #### Build `handleError` — Sync
 
-Build already has keyMap/refMap in memory. `handleError` in the build is sync. Used by `logCollectedErrors` to iterate `context.errors` and log each one before throwing. Also handles ConfigError suppression — suppressed errors are silently skipped (same `shouldSuppress` logic as `handleWarning`).
+Build already has keyMap/refMap in memory. `handleError` in the build is sync. Used by `logCollectedErrors` to iterate `context.errors` and log each one before throwing. Suppression is NOT handled here — it happens at collection time in `collectExceptions`/`tryBuildStep`, so suppressed errors never enter `context.errors`.
 
 `resolveErrorLocation` handles all three resolution paths from the current `ConfigMessage.js`:
 1. `configKey` → keyMap → refMap (standard path)
@@ -528,11 +531,6 @@ Build already has keyMap/refMap in memory. `handleError` in the build is sync. U
 ```javascript
 function createBuildHandleError({ pinoLogger, keyMap, refMap, directories }) {
   return function handleError(error) {
-    // Suppressed errors (via ~ignoreBuildChecks) are silently skipped
-    if (shouldSuppress({ configKey: error.configKey, keyMap, checkSlug: error.checkSlug })) {
-      return;
-    }
-
     // handleError must never throw.
     try {
       resolveErrorLocation(error, { keyMap, refMap, configDirectory: directories.config });
@@ -643,7 +641,7 @@ function createCliLogger({ logLevel } = {}) {
       if (input.source) {
         display(level, input.source, { color: 'blue' });
       }
-      const text = input.name ? `[${input.name}] ${input.msg}` : input.msg;
+      const text = input.typeName ? `[${input.typeName}] ${input.msg}` : input.msg;
       display(level, text, { color: input.color, spin: input.spin, succeed: input.succeed });
       return;
     }
@@ -679,7 +677,8 @@ function reconstructError(flatObj) {
   return error;
 }
 
-function createStdOutLineHandler({ logger }) {
+function createStdOutLineHandler({ context }) {
+  const logger = context.logger;
   return function stdOutLineHandler(line) {
     let parsed;
     try {
@@ -699,7 +698,7 @@ function createStdOutLineHandler({ logger }) {
 
     // Pass structured message to logger (pino default messageKey is 'msg')
     logger[level]({
-      name: parsed.name,
+      typeName: parsed.typeName,
       msg: parsed.msg,
       source: parsed.source,
       color: parsed.color,
@@ -752,25 +751,31 @@ This doesn't need to change architecturally — `handleError` is the right place
 
 ## Work Units (Briefs)
 
-### Brief 1: Remove `.print()` and `formatErrorMessage`, Clean Up Constructors, Remove Env Subclasses
+### Brief 1: Remove `.print()` and `formatErrorMessage`, Add `errorToDisplayString`, Clean Up Constructors
 
-**Scope:** `packages/utils/errors/src/`
+**Scope:** `packages/utils/errors/src/`, `packages/utils/logger/`
 
 **What:**
 
 - Remove `.print()` method from ALL error classes (LowdefyError, ConfigError, PluginError, ServiceError, UserError).
 - Delete `formatErrorMessage.js` entirely.
+- Add `errorToDisplayString` function to `@lowdefy/errors` (exported from main entry). This is the ONE function that formats any error for display: `[Name] error.message` + received. Replaces `.print()` at all call sites.
+- Delete `formatUiMessage.js` from `@lowdefy/logger`.
+- Remove `formatBrowserError` from browser logger.
+- Update all imports across all loggers to use `errorToDisplayString` from `@lowdefy/errors`.
 - PluginError: Keep constructor formatting (location baked into message). Rename `rawMessage` → `_message` for consistency. Keep structured parts as properties (`location`, `received`, `pluginType`, etc.).
 - ServiceError: Keep constructor formatting (service prefix, ECONNREFUSED etc. baked into message). Add `_message` property for the raw input. Keep structured parts as properties (`service`, `code`, `statusCode`).
 - ConfigError, LowdefyError, UserError: No constructor changes needed (no formatting side effects). Just remove `.print()`.
-- **Delete `build/ConfigError.js`** — the build subclass with location resolution, suppression, and YAML handling in the constructor. Location resolution moves to `handleError` and `handleWarning` (Brief 7). Suppression moves to both `handleError` (for errors) and `handleWarning` (for warnings). prodError escalation moves to `handleWarning`. YAML parse error message formatting stays at the throw site (just string formatting, not a constructor concern). The `build/index.js` re-exports the base `ConfigError`.
-- **Simplify `build/ConfigWarning.js`** — remove location resolution, suppression, and prodError escalation from constructor. ConfigWarning becomes a dumb data carrier (`{ name, message, configKey, checkSlug }`). All behavior moves to `handleWarning` (Brief 7).
+- **Delete `build/ConfigError.js`** — the build subclass with location resolution, suppression, and YAML handling in the constructor. Location resolution moves to `handleError` and `handleWarning` (Brief 5). Suppression moves to both `handleError` (for errors) and `handleWarning` (for warnings). prodError escalation moves to `handleWarning`. YAML parse error message formatting stays at the throw site (just string formatting, not a constructor concern). The `build/index.js` re-exports the base `ConfigError`.
+- **Simplify `build/ConfigWarning.js`** — make ConfigWarning extend ConfigError. Remove location resolution, suppression, and prodError escalation from constructor. ConfigWarning carries `{ name, message, configKey, checkSlug }`. All behavior moves to `handleWarning` (Brief 5). Extending ConfigError means it works with `errorToDisplayString`, `extractErrorProps`, and the `~e` serializer. prodError escalation just collects the ConfigWarning directly (it IS a ConfigError).
 - Update all tests.
 
-**Why:** Errors are dumb data carriers — handlers resolve. Unblocks Brief 2 (generic serializer), Brief 3 (single `errorToDisplayString`), and eliminates env-specific subclasses. Consistent with how server and browser already work: errors carry `configKey`, handlers resolve location.
+**Why:** Errors are dumb data carriers — handlers resolve. Four formatting functions (`formatErrorMessage`, `.print()`, `formatUiMessage`, `formatBrowserError`) collapse into one `errorToDisplayString`. Unblocks Brief 2 (generic serializer). Consistent with how server and browser already work: errors carry `configKey`, handlers resolve location.
 
 **Files:**
 
+- `packages/utils/errors/src/errorToDisplayString.js` (new)
+- `packages/utils/errors/src/index.js`
 - `packages/utils/errors/src/PluginError.js`
 - `packages/utils/errors/src/ServiceError.js`
 - `packages/utils/errors/src/LowdefyError.js`
@@ -779,6 +784,11 @@ This doesn't need to change architecturally — `handleError` is the right place
 - `packages/utils/errors/src/build/ConfigError.js` (delete — `build/index.js` re-exports base ConfigError)
 - `packages/utils/errors/src/build/ConfigWarning.js` (simplify: remove `.print()`, remove location resolution, remove suppression from constructor)
 - `packages/utils/errors/src/formatErrorMessage.js` (delete)
+- `packages/utils/logger/src/formatUiMessage.js` (delete)
+- `packages/utils/logger/src/browser/createBrowserLogger.js`
+- `packages/utils/logger/src/cli/createCliLogger.js`
+- `packages/utils/logger/src/node/createNodeLogger.js`
+- All callers of `error.print()` across the codebase (replace with `errorToDisplayString(error)`)
 - Test files for above
 
 **Serialization note:** `extractErrorProps` captures both `message` (formatted, as passed to `super()`) and `_message` (raw input). Deserialization via `Object.create + assign` sets `message` as a plain string property on the instance, which shadows Error.prototype's message. No constructor is called, so no double-formatting.
@@ -821,61 +831,32 @@ This doesn't need to change architecturally — `handleError` is the right place
 
 ---
 
-### Brief 3: Add `errorToDisplayString`, Remove All Other Formatting Functions
+### Brief 3: Remove Env-Specific Entry Points
 
-**Scope:** `packages/utils/errors/`, `packages/utils/logger/`
-
-**What:**
-
-- Add `errorToDisplayString` function to `@lowdefy/errors` (exported from main entry). This is the ONE function that formats any error for display: `[Name] error.message` + received.
-- Delete `formatUiMessage.js` from `@lowdefy/logger`.
-- Remove `formatBrowserError` from browser logger.
-- Update all imports across all loggers to use `errorToDisplayString` from `@lowdefy/errors`.
-
-**Why:** Four formatting functions (`formatErrorMessage`, `.print()`, `formatUiMessage`, `formatBrowserError`) collapse into one. The inconsistency where errors without `.print()` got different formatting than errors with `.print()` is eliminated — `errorToDisplayString` treats all errors the same.
-
-**Files:**
-
-- `packages/utils/errors/src/errorToDisplayString.js` (new)
-- `packages/utils/errors/src/index.js`
-- `packages/utils/logger/src/formatUiMessage.js` (delete)
-- `packages/utils/logger/src/browser/createBrowserLogger.js`
-- `packages/utils/logger/src/cli/createCliLogger.js`
-- `packages/utils/logger/src/node/createNodeLogger.js`
-- All callers of `error.print()` across the codebase (replace with `errorToDisplayString(error)`)
-
----
-
-### Brief 4: Remove Env-Specific Entry Points, Unify Browser Error Path
-
-**Scope:** `packages/utils/errors/src/client/`, `packages/utils/errors/src/server/`, `packages/servers/*/pages/_app.js`
+**Scope:** `packages/utils/errors/src/client/`, `packages/utils/errors/src/server/`
 
 **What:**
 
 - **Delete `client/ConfigError.js`** and **`client/LowdefyError.js`** — empty subclasses after removing `.resolve()` and `.log()`.
-- **Simplify `client/index.js`** — re-export base classes directly (no subclasses). Or delete the `/client` entry point entirely and update callers to import from `@lowdefy/errors`.
-- **Simplify `server/index.js`** — after removing `deserializeError` (Brief 2), this just re-exports base classes. Same treatment as client: simplify to re-exports or delete and update callers.
-- Update `_app.js` ErrorBoundary in both server and server-dev to use `lowdefy.handleError` instead of `error.log()`. **Wiring note:** `lowdefyRef.current` doesn't have `basePath` at ErrorBoundary level (it's set later by `initLowdefyContext` from `router.basePath`). This is fine — the current `error.log()` already falls back to `''`, giving a relative `/api/client-error` URL. `createBrowserHandleError` uses `lowdefy?.basePath ?? ''` to match. The `handleError` function is created early and attached to `lowdefyRef.current`.
-- Rename `createLogError.js` → `createHandleError.js` (creates `lowdefy.handleError`).
-- Update all `import from '@lowdefy/errors/client'` and `import from '@lowdefy/errors/server'` to `import from '@lowdefy/errors'` if entry points are deleted.
+- **Delete `client/index.js`** — no subclasses remain, callers import from `@lowdefy/errors` directly.
+- **Delete `server/index.js`** — after removing `deserializeError` (Brief 2), nothing remains. Callers import from `@lowdefy/errors` directly.
+- Update all `import from '@lowdefy/errors/client'` and `import from '@lowdefy/errors/server'` to `import from '@lowdefy/errors'`.
 
-**Why:** No env-specific subclasses needed. Errors are dumb data carriers — handlers resolve. One browser error logging path. No duplicate round-trips to `/api/client-error`. The only entry point with real content is `/build` (for build utilities like `ConfigWarning`, `ConfigMessage`, `resolveConfigLocation`).
+**Why:** No env-specific subclasses needed. Errors are dumb data carriers — handlers resolve. The only entry point with real content is `/build` (for build utilities like `ConfigWarning`, `ConfigMessage`, `resolveConfigLocation`).
 
 **Files:**
 
+- `packages/utils/errors/package.json` (remove `./client` and `./server` from `exports`)
 - `packages/utils/errors/src/client/ConfigError.js` (delete)
 - `packages/utils/errors/src/client/LowdefyError.js` (delete)
-- `packages/utils/errors/src/client/index.js` (simplify to re-exports or delete)
-- `packages/utils/errors/src/server/index.js` (simplify to re-exports or delete)
-- `packages/servers/server/pages/_app.js`
-- `packages/servers/server-dev/pages/_app.js`
-- `packages/client/src/createLogError.js` (rename to `createHandleError.js`)
+- `packages/utils/errors/src/client/index.js` (delete)
+- `packages/utils/errors/src/server/index.js` (delete)
 - All callers of `@lowdefy/errors/client` and `@lowdefy/errors/server` (update imports)
 - Test files for above
 
 ---
 
-### Brief 5: Simplify Node Logger — Plain Pino
+### Brief 4: Simplify Node Logger — Plain Pino
 
 **Scope:** `packages/utils/logger/src/node/`
 
@@ -901,25 +882,7 @@ This doesn't need to change architecturally — `handleError` is the right place
 
 ---
 
-### Brief 6: Simplify `context.logger` — Plain Pino, Zero Monkey-Patching
-
-**Scope:** `packages/build/src/`
-
-**What:**
-
-- `context.logger` becomes a plain pino logger. 4 sync methods. Remove ALL wrappers from `createContext.js` — both the `_lowdefyWrapped` error wrapper and the warn wrapper.
-- No monkey-patching. `context.logger.warn` is just pino's `.warn()`.
-- Build warning handling (suppression, location resolution, dedup) moves to `context.handleWarning` (Brief 7).
-
-**Why:** `context.logger` should just be a logger — zero surprises. Error handling moves to `context.handleError`, warning handling moves to `context.handleWarning`. Both are explicit, not hidden behind logger methods. Callers that pass `{ configKey, checkSlug, prodError }` use `context.handleWarning` — they know they're doing something special. Callers that just log a string use `context.logger.warn`.
-
-**Files:**
-
-- `packages/build/src/createContext.js` (remove all logger wrappers)
-
----
-
-### Brief 7: Create `handleError` and `handleWarning`, Update Call Sites
+### Brief 5: Create `handleError` and `handleWarning`, Unify Browser Error Path, Update Call Sites
 
 **Scope:** `packages/build/src/`, `packages/servers/*/`, `packages/api/`, `packages/client/`
 
@@ -927,16 +890,17 @@ This doesn't need to change architecturally — `handleError` is the right place
 
 - **Create `context.handleError`** — a separate async function for the full error pipeline. NOT a logger method. Lives on `context` (server/build) or `lowdefy` (browser). Created during context setup — no extra parameter passing since `context` is already threaded everywhere:
   - Server: `context.handleError = createHandleError({ pinoLogger, buildDir, sentry, req, user })` — per-request, async.
-  - Build: `context.handleError = createBuildHandleError({ pinoLogger, keyMap, refMap, directories })` — per-build, sync. Handles ConfigError suppression (calls `shouldSuppress`), all three location resolution paths (configKey, operatorLocation, filePath+lineNumber).
+  - Build: `context.handleError = createBuildHandleError({ pinoLogger, keyMap, refMap, directories })` — per-build, sync. Handles all three location resolution paths (configKey, operatorLocation, filePath+lineNumber). Does NOT handle suppression — that stays at collection time in `collectExceptions`/`tryBuildStep`.
   - Browser: `lowdefy.handleError = createBrowserHandleError(lowdefy)` — per-app, async.
-- **Create `context.handleWarning`** — build-only. Handles suppression, prodError escalation (throws ConfigError in prod), location resolution, dedup, and logging for config warnings. Created per-build, lives on `context`. See `handleWarning` pseudocode in target architecture.
+- **Create `context.handleWarning`** — build-only. Creates ConfigWarning (extends ConfigError) from params, then handles suppression, prodError escalation (collects the ConfigWarning directly), location resolution, dedup, and logging. Created per-build, lives on `context`. See `handleWarning` pseudocode in target architecture.
   - Build: `context.handleWarning = createHandleWarning({ pinoLogger, context })` — per-build, sync.
 - **Create `resolveErrorLocation`** — unified function that handles all three resolution paths from current `ConfigMessage.js`: configKey → keyMap → refMap, operatorLocation → refMap, filePath + lineNumber → raw path join. Signature: `resolveErrorLocation(errorOrData, { keyMap, refMap, configDirectory })`. Mutates first arg, setting `.source`.
+- **Unify browser error path:** Update `_app.js` ErrorBoundary in both server and server-dev to use `lowdefy.handleError` instead of `error.log()`. **Wiring note:** `lowdefyRef.current` doesn't have `basePath` at ErrorBoundary level (it's set later by `initLowdefyContext` from `router.basePath`). This is fine — the current `error.log()` already falls back to `''`, giving a relative `/api/client-error` URL. `createBrowserHandleError` uses `lowdefy?.basePath ?? ''` to match. The `handleError` function is created early and attached to `lowdefyRef.current`. Rename `createLogError.js` → `createHandleError.js` (creates `lowdefy.handleError`).
 - Update all catch points to `await context.handleError(error)`: `apiWrapper`, `runRoutine`, `serverSidePropsWrapper`, `logCollectedErrors`, `buildRefs` catch, browser `lowdefy.handleError`, `_app.js` ErrorBoundary. Note: `serverSidePropsWrapper` currently calls `logError` fire-and-forget — change to `await`. This is safe because `getServerSideProps` runs before any response is sent; the catch block fully executes before the throw propagates to Next.js.
 - Update all `context.logger.warn({ configKey, ... })` calls in build to `context.handleWarning({ ... })`. Plain string warnings stay on `context.logger.warn`.
 - Server async file reads stay async — no sync `readFileSync`, no event loop blocking. The async approach was fine all along; the problem was putting it inside a logger method.
 
-**Why:** Clean separation of concerns. Logger is sync, just logs. Error handling is async, does resolution + structured data + Sentry + logging. Warning handling is sync, does suppression + resolution + dedup + logging. Both are explicit — not hidden behind logger methods. Zero function signature changes — `context` is already passed everywhere.
+**Why:** Clean separation of concerns. Logger is sync, just logs. Error handling is async, does resolution + structured data + Sentry + logging. Warning handling is sync, does suppression + resolution + dedup + logging. Both are explicit — not hidden behind logger methods. Zero function signature changes — `context` is already passed everywhere. One browser error logging path — no duplicate round-trips to `/api/client-error`.
 
 **Files:**
 
@@ -949,7 +913,7 @@ This doesn't need to change architecturally — `handleError` is the right place
 - `packages/servers/server/lib/server/serverSidePropsWrapper.js` (calls `logError`)
 - `packages/servers/server-dev/pages/api/page/[pageId].js` (calls `logError` in loop)
 - `packages/api/src/routes/endpoints/runRoutine.js`
-- `packages/client/src/createHandleError.js` (renamed from `createLogError.js` in Brief 4)
+- `packages/client/src/createLogError.js` (rename to `createHandleError.js`)
 - `packages/servers/server/pages/_app.js`
 - `packages/servers/server-dev/pages/_app.js`
 - `packages/cli/src/utils/errorHandler.js` (no rename — this is a top-level catch-all, not the same `handleError` pattern. Just update it to use `errorToDisplayString` and the new logger API.)
@@ -961,18 +925,36 @@ This doesn't need to change architecturally — `handleError` is the right place
 
 **Note on `resolveErrorLocation`:** This function absorbs the three resolution strategies from the current `ConfigMessage.js` methods (`resolveOperatorLocation`, `resolveRawLocation`, and the configKey path). Unified signature: `resolveErrorLocation(errorOrData, { keyMap, refMap, configDirectory })`. It mutates the first argument, setting `.source`. The `configDirectory` parameter is only needed by the build (for raw `filePath` + `lineNumber` resolution); server omits it. The function reads `configKey`, `operatorLocation`, `filePath`, and `lineNumber` from the error/data object to determine which resolution path to use (same cascade as current `ConfigMessage.js`).
 
-**Note on ConfigError suppression:** `shouldSuppress` is called in both `handleWarning` (for warnings) and `handleError` (for errors). Currently `tryBuildStep` and `collectExceptions` check `error.suppressed` — after the refactor, ConfigError is a dumb carrier and `.suppressed` is never set. Instead, `createBuildHandleError` calls `shouldSuppress()` and silently skips suppressed errors. `tryBuildStep` and `collectExceptions` no longer need the `.suppressed` check.
+**Note on ConfigError suppression:** Suppression stays at collection time. Currently `tryBuildStep`/`collectExceptions` check `error.suppressed` — after the refactor, ConfigError no longer sets `.suppressed`. Instead, `collectExceptions`/`tryBuildStep` call `shouldSuppress()` directly and skip suppressed errors before adding them to `context.errors`. This keeps error counts correct — `logCollectedErrors` throws with `context.errors.length`, so suppressed errors must never be collected. `handleWarning` also calls `shouldSuppress` for warnings. `handleError` does NOT check suppression — it just logs whatever it receives.
 
 **Note:** `loadMaps` in the server pseudocode is extracted from the existing `logError` implementations. Not new logic — just pulled out of the current server `logError.js` functions.
 
 **Migration notes:**
 - `logError({ context, error })` → `await context.handleError(error)` at the few catch points.
 - `context.logger.warn({ message, configKey, ... })` → `context.handleWarning({ message, configKey, ... })` in build validation code.
-- `if (error.suppressed) return;` in `tryBuildStep`/`collectExceptions` → remove (suppression now in `handleError`).
+- `if (error.suppressed) return;` in `tryBuildStep`/`collectExceptions` → replace with `if (shouldSuppress({ configKey: error.configKey, keyMap: context.keyMap, checkSlug: error.checkSlug })) return;` (suppression stays at collection time, but uses `shouldSuppress()` instead of the `.suppressed` property).
 
 ---
 
-### Brief 8: Simplify CLI Logger
+### Brief 6: Simplify `context.logger` — Plain Pino, Zero Monkey-Patching
+
+**Scope:** `packages/build/src/`
+
+**What:**
+
+- `context.logger` becomes a plain pino logger. 4 sync methods. Remove ALL wrappers from `createContext.js` — both the `_lowdefyWrapped` error wrapper and the warn wrapper.
+- No monkey-patching. `context.logger.warn` is just pino's `.warn()`.
+- Build warning handling (suppression, location resolution, dedup) is now in `context.handleWarning` (Brief 5).
+
+**Why:** `context.logger` should just be a logger — zero surprises. Error handling moves to `context.handleError`, warning handling moves to `context.handleWarning`. Both are explicit, not hidden behind logger methods. Callers that pass `{ configKey, checkSlug, prodError }` use `context.handleWarning` — they know they're doing something special. Callers that just log a string use `context.logger.warn`.
+
+**Files:**
+
+- `packages/build/src/createContext.js` (remove all logger wrappers)
+
+---
+
+### Brief 7: Simplify CLI Logger
 
 **Scope:** `packages/utils/logger/src/cli/`
 
@@ -981,7 +963,7 @@ This doesn't need to change architecturally — `handleError` is the right place
 - Merge `createPrint` into `createCliLogger`. Remove `createPrint.js` as separate module. Keep Ora for interactive, console for CI.
 - Remove color sub-methods. The API is: `logger.error(input)`, `logger.info(input)`.
 - Input handling:
-  1. Error/error-like (has `.message`): log source in blue if present, then `errorToDisplayString(error)` in default color for level (red for error, yellow for warn).
+  1. Error/error-like (has `.message`): log source in blue if present, then `errorToDisplayString(error)` in default color for level (red for error, yellow for warn). For LowdefyError and non-Lowdefy errors (i.e. not ConfigError, PluginError, ServiceError, UserError), also log `error.stack` — these represent internal bugs or unexpected failures where the stack trace is critical for debugging. Lowdefy error types use `source`/location instead of stack traces to point to root cause.
   2. String: log string.
   3. Object with `msg`: log `msg`, apply `color`/`spin`/`succeed` from object properties.
   4. Else: `JSON.stringify(input, null, 2)`.
@@ -999,7 +981,7 @@ This doesn't need to change architecturally — `handleError` is the right place
 
 ---
 
-### Brief 9: Simplify CLI Line Handler
+### Brief 8: Simplify CLI Line Handler
 
 **Scope:** `packages/utils/logger/src/cli/createStdOutLineHandler.js`
 
@@ -1007,7 +989,7 @@ This doesn't need to change architecturally — `handleError` is the right place
 
 - Pure protocol translation: parse pino JSON, reconstruct errors, pass to logger.
 - If `parsed.err`: reconstruct error from flat pino JSON object (see below), call `logger[level](error)`.
-- Else: call `logger[level]({ name: parsed.name, msg: parsed.msg, source, color, spin, succeed })`. Passes `name` through so the CLI logger can prepend `[name]` for typed messages (e.g. `[ConfigWarning]`).
+- Else: call `logger[level]({ typeName: parsed.typeName, msg: parsed.msg, source, color, spin, succeed })`. Passes `typeName` through so the CLI logger can prepend `[typeName]` for typed messages (e.g. `[ConfigWarning]`).
 - No display logic (no source handling, no color application — logger does all of that).
 - Error reconstruction from pino JSON: pino's `err` serializer writes flat objects via `extractErrorProps` (not `~e` wrapped). The line handler reconstructs these using the same `lowdefyErrorTypes` map the helpers serializer uses (direct import). `Object.create(ErrorClass.prototype)` + property assignment — same pattern as the `~e` reviver, just without the `~e` wrapper.
 
@@ -1018,7 +1000,7 @@ This doesn't need to change architecturally — `handleError` is the right place
 
 ---
 
-### Brief 10: Simplify Browser Logger
+### Brief 9: Simplify Browser Logger
 
 **Scope:** `packages/utils/logger/src/browser/`
 
