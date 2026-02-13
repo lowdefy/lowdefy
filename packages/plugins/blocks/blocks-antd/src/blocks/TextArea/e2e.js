@@ -27,5 +27,7 @@ export default createBlockHelper({
   },
   expect: {
     value: (page, blockId, val) => expect(locator(page, blockId)).toHaveValue(val),
+    placeholder: (page, blockId, text) =>
+      expect(locator(page, blockId)).toHaveAttribute('placeholder', text),
   },
 });

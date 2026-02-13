@@ -24,7 +24,7 @@ export default createBlockHelper({
   do: {
     select: async (page, blockId, val) => {
       await locator(page, blockId).click();
-      await page.locator(`.ant-select-item-option-content:has-text("${val}")`).click();
+      await page.locator('.ant-select-item-option-content').filter({ hasText: val }).click();
     },
     clear: async (page, blockId) => {
       const sel = locator(page, blockId);

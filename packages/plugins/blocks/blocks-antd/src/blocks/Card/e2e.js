@@ -27,9 +27,7 @@ export default createBlockHelper({
   expect: {
     title: (page, blockId, text) =>
       expect(locator(page, blockId).locator('.ant-card-head-title')).toHaveText(text),
-    hoverable: (page, blockId) =>
-      expect(locator(page, blockId)).toHaveClass(/ant-card-hoverable/),
-    bordered: (page, blockId) =>
-      expect(locator(page, blockId)).not.toHaveClass(/ant-card-bordered/),
+    hoverable: (page, blockId) => expect(locator(page, blockId)).toHaveClass(/ant-card-hoverable/),
+    bordered: (page, blockId) => expect(locator(page, blockId)).toHaveClass(/ant-card-bordered/),
   },
 });
