@@ -16,11 +16,11 @@
 
 import { createBrowserLogger } from '@lowdefy/logger/browser';
 
-function createLogError(lowdefy) {
+function createHandleError(lowdefy) {
   const loggedErrors = new Set();
   const logger = createBrowserLogger();
 
-  return async function logError(error) {
+  return async function handleError(error) {
     const errorKey = `${error.message}:${error.configKey || ''}`;
     if (loggedErrors.has(errorKey)) {
       return;
@@ -37,7 +37,7 @@ function createLogError(lowdefy) {
     ) {
       const { name, message, stack, configKey, source, pluginType, pluginName, location } = error;
       try {
-        const response = await fetch(`${lowdefy.basePath}/api/client-error`, {
+        const response = await fetch(`${lowdefy?.basePath ?? ''}/api/client-error`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -70,4 +70,4 @@ function createLogError(lowdefy) {
   };
 }
 
-export default createLogError;
+export default createHandleError;

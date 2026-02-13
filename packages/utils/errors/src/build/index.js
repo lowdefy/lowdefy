@@ -35,6 +35,7 @@ import ConfigWarning from './ConfigWarning.js';
 import ConfigMessage, { VALID_CHECK_SLUGS } from './ConfigMessage.js';
 import resolveConfigLocation from './resolveConfigLocation.js';
 import resolveErrorConfigLocation from './resolveErrorConfigLocation.js';
+import resolveErrorLocation from './resolveErrorLocation.js';
 import errorToDisplayString from '../errorToDisplayString.js';
 import LowdefyError from '../LowdefyError.js';
 import PluginError from '../PluginError.js';
@@ -49,6 +50,7 @@ export {
   PluginError,
   resolveConfigLocation,
   resolveErrorConfigLocation,
+  resolveErrorLocation,
   ServiceError,
   VALID_CHECK_SLUGS,
 };

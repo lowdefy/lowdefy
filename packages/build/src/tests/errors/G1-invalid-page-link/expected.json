@@ -9,7 +9,7 @@
     {
       "mode": "prod",
       "exactErrors": [
-        "{{fixturesDir}}/G1-invalid-page-link/lowdefy.yaml:23\n[ConfigError] Page \"nonExistentPage\" not found. Link on page \"home\" references non-existent page."
+        "{{fixturesDir}}/G1-invalid-page-link/lowdefy.yaml:23\n[Config Warning] Page \"nonExistentPage\" not found. Link on page \"home\" references non-existent page."
       ],
       "expectThrow": true
     }

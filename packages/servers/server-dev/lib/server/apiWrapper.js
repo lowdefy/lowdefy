@@ -24,7 +24,7 @@ import connections from '../../build/plugins/connections.js';
 import createLogger from './log/createLogger.js';
 import fileCache from './fileCache.js';
 import getServerSession from './auth/getServerSession.js';
-import logError from './log/logError.js';
+import createHandleError from './log/createHandleError.js';
 import logRequest from './log/logRequest.js';
 import operators from '../../build/plugins/operators/server.js';
 import staticJsMap from '../../build/plugins/operators/serverJsMap.js';
@@ -73,6 +73,9 @@ function apiWrapper(handler) {
       fileCache,
       headers: req?.headers,
       jsMap,
+      handleError: async (err) => {
+        console.error(err);
+      },
       logger: console,
       operators,
       req,
@@ -81,6 +84,7 @@ function apiWrapper(handler) {
     };
     try {
       context.logger = createLogger({ rid: context.rid });
+      context.handleError = createHandleError({ context });
       context.authOptions = getAuthOptions(context);
       if (!req.url.startsWith('/api/auth')) {
         context.session = await getServerSession(context);
@@ -97,7 +101,7 @@ function apiWrapper(handler) {
       // TODO: Log response time?
       return response;
     } catch (error) {
-      await logError({ error, context });
+      await context.handleError(error);
       res.status(500).json({ name: error.name, message: error.message });
     }
   };

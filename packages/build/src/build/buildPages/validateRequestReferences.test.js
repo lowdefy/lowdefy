@@ -31,6 +31,12 @@ describe('validateRequestReferences', () => {
           warnFn(params.message);
         },
       },
+      handleWarning: (params) => {
+        if (params.prodError && context.stage === 'prod') {
+          throw new Error(params.message);
+        }
+        warnFn(params.message);
+      },
       directories: {
         config: '/test',
       },

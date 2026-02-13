@@ -39,7 +39,7 @@ function buildTypeClass(
         if (typeName === '_id') {
           return;
         }
-        context.logger.warn({ message, configKey, checkSlug: 'types' });
+        context.handleWarning({ message, configKey, checkSlug: 'types' });
         return;
       }
       throw new ConfigError({

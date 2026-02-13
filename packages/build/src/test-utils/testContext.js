@@ -78,6 +78,17 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
     },
   };
 
+  // handleWarning works like the logger.warn wrapper above
+  context.handleWarning = (params) => {
+    if (params.prodError && context.stage === 'prod') {
+      throw new Error(params.message);
+    }
+    originalWarn(params.message);
+  };
+
+  // handleError delegates to logger.error
+  context.handleError = mergedLogger.error;
+
   return context;
 }
 

@@ -31,7 +31,7 @@ class Actions {
   }
 
   logActionError({ error, action }) {
-    const logError = this.context._internal.lowdefy._internal.logError;
+    const handleError = this.context._internal.lowdefy._internal.handleError;
     const actionId = action?.id || '';
 
     // Deduplicate by error message + action id
@@ -47,9 +47,9 @@ class Actions {
       return;
     }
 
-    // ConfigError, PluginError, ServiceError - use logError (-> terminal)
-    if (logError) {
-      logError(error);
+    // ConfigError, PluginError, ServiceError - use handleError (-> terminal)
+    if (handleError) {
+      handleError(error);
     }
   }
 

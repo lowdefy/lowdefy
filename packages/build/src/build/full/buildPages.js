@@ -17,7 +17,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError, ConfigMessage } from '@lowdefy/errors/build';
 import buildPage from '../buildPages/buildPage.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 import validateLinkReferences from '../buildPages/validateLinkReferences.js';
@@ -47,8 +47,15 @@ function buildPages({ components, context }) {
         failedPageIndices.add(index);
       }
     } catch (error) {
-      // Skip suppressed ConfigErrors (via ~ignoreBuildChecks: true)
-      if (error instanceof ConfigError && error.suppressed) {
+      // Skip suppressed ConfigErrors (via ~ignoreBuildChecks)
+      if (
+        error instanceof ConfigError &&
+        ConfigMessage.shouldSuppress({
+          configKey: error.configKey,
+          keyMap: context.keyMap,
+          checkSlug: error.checkSlug,
+        })
+      ) {
         return;
       }
       // Collect error object if context.errors exists, otherwise throw (for backward compat with tests)

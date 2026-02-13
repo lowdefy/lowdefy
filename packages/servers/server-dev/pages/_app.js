@@ -39,8 +39,8 @@ function App({ Component }) {
   const lowdefyRef = useRef({});
 
   const handleError = useCallback((error) => {
-    if (error.log) {
-      error.log(lowdefyRef.current);
+    if (lowdefyRef.current?._internal?.handleError) {
+      lowdefyRef.current._internal.handleError(error);
     } else {
       console.error(errorToDisplayString(error));
     }

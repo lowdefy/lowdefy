@@ -118,7 +118,15 @@ function createRunBuild(build, fixturesDir) {
 
     // Create warn/error handlers that handle both pino-style and error-object calls
     function handleWarn(objOrMsg, maybeMsg) {
-      // Error-like object (ConfigWarning, ConfigError) — called directly by createContext
+      // Pino-style: (mergeObj, msg) — extract source from err in merging object
+      if (typeof objOrMsg === 'object' && objOrMsg !== null && maybeMsg !== undefined) {
+        const err = objOrMsg.err;
+        const source = err?.source ?? objOrMsg.source ?? null;
+        const formatted = source ? `${source}\n${maybeMsg}` : maybeMsg;
+        warnings.push(formatted);
+        return;
+      }
+      // Error-like object (ConfigWarning, ConfigError) — called directly
       if (
         typeof objOrMsg !== 'string' &&
         objOrMsg &&
@@ -130,12 +138,20 @@ function createRunBuild(build, fixturesDir) {
         warnings.push(formatted);
         return;
       }
-      // Pino-style: (mergeObj, msg) or (string)
-      const message = typeof objOrMsg === 'string' ? objOrMsg : maybeMsg ?? '';
+      // Plain string
+      const message = typeof objOrMsg === 'string' ? objOrMsg : '';
       if (message) warnings.push(message);
     }
 
     function handleError(objOrMsg, maybeMsg) {
+      // Pino-style: (mergeObj, msg) — extract source from err in merging object
+      if (typeof objOrMsg === 'object' && objOrMsg !== null && maybeMsg !== undefined) {
+        const err = objOrMsg.err;
+        const source = err?.source ?? objOrMsg.source ?? null;
+        const formatted = source ? `${source}\n${maybeMsg}` : maybeMsg;
+        errors.push(formatted);
+        return;
+      }
       // Error-like object
       if (
         typeof objOrMsg !== 'string' &&
@@ -148,12 +164,10 @@ function createRunBuild(build, fixturesDir) {
         errors.push(formatted);
         return;
       }
-      // Pino-style: (mergeObj, msg) or (string)
+      // Pino-style: plain string or Error
       let message;
       if (objOrMsg instanceof Error) {
         message = objOrMsg.message;
-      } else if (typeof objOrMsg === 'object' && objOrMsg !== null) {
-        message = maybeMsg ?? '';
       } else {
         message = objOrMsg;
       }

@@ -19,7 +19,7 @@ import createAuthMethods from './auth/createAuthMethods.js';
 import createCallRequest from './createCallRequest.js';
 import createIcon from './createIcon.js';
 import createLinkComponent from './createLinkComponent.js';
-import createLogError from './createLogError.js';
+import createHandleError from './createHandleError.js';
 import setupLink from './setupLink.js';
 
 function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, types, window }) {
@@ -64,7 +64,7 @@ function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, 
     lowdefy._internal.link = setupLink(lowdefy);
     lowdefy._internal.updateBlock = (blockId) =>
       lowdefy._internal.updaters[blockId] && lowdefy._internal.updaters[blockId]();
-    lowdefy._internal.logError = createLogError(lowdefy);
+    lowdefy._internal.handleError = createHandleError(lowdefy);
 
     if (stage === 'dev') {
       window.lowdefy = lowdefy;

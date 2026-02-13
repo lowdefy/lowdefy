@@ -20,7 +20,9 @@ import { mergeObjects } from '@lowdefy/helpers';
 import { ConfigError, ConfigWarning } from '@lowdefy/errors/build';
 
 import collectExceptions from './utils/collectExceptions.js';
+import createBuildHandleError from './utils/createBuildHandleError.js';
 import createCounter from './utils/createCounter.js';
+import createHandleWarning from './utils/createHandleWarning.js';
 import createReadConfigFile from './utils/readConfigFile.js';
 import createWriteBuildArtifact from './utils/writeBuildArtifact.js';
 import defaultTypesMap from './defaultTypesMap.js';
@@ -148,6 +150,8 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
   }
 
   context.logger = logger;
+  context.handleError = createBuildHandleError({ pinoLogger: logger, context });
+  context.handleWarning = createHandleWarning({ pinoLogger: logger, context });
 
   return context;
 }

@@ -43,7 +43,7 @@ function validateServerStateReferences({ page, context }) {
       `To use a state value in a request, add it to the request "payload" using _state, ` +
       `then reference it in request properties using _payload.`;
 
-    context.logger.warn({ message, configKey, prodError: true });
+    context.handleWarning({ message, configKey, prodError: true });
   });
 }
 

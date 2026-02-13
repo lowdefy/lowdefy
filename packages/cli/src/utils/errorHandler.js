@@ -43,7 +43,7 @@ async function logError({ error, context = {} }) {
 async function errorHandler({ context, error }) {
   const logger = context?.logger ?? createCliLogger({ logLevel: 'info' });
   logger.error(error);
-  if (!context.disableTelemetry) {
+  if (!context?.disableTelemetry) {
     await logError({ context, error });
   }
 }

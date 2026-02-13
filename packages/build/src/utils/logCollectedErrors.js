@@ -21,12 +21,12 @@ function logCollectedErrors(context) {
   if (context.errors.length === 0) return;
 
   context.errors.forEach((err) => {
-    if (err instanceof ConfigError || err.print) {
-      context.logger.error(err);
+    if (err instanceof ConfigError) {
+      context.handleError(err);
     } else {
       const lowdefyErr = new LowdefyError(err.message, { cause: err });
       lowdefyErr.stack = err.stack;
-      context.logger.error(lowdefyErr);
+      context.handleError(lowdefyErr);
     }
   });
   const error = new Error(

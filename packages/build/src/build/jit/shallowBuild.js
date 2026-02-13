@@ -91,7 +91,7 @@ async function shallowBuild(options) {
       });
     } catch (err) {
       if (err instanceof ConfigError) {
-        context.logger.error(err);
+        context.handleError(err);
         const error = new Error('Build failed with 1 error(s). See above for details.');
         error.isFormatted = true;
         error.hideStack = true;

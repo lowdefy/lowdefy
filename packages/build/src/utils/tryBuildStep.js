@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError, ConfigMessage } from '@lowdefy/errors/build';
 
 /**
  * Wraps a build step to collect errors instead of stopping immediately.
@@ -22,7 +22,7 @@ import { ConfigError } from '@lowdefy/errors/build';
  * and report all errors at once. Errors are logged together at checkpoints
  * in index.js to ensure proper ordering before the summary message.
  *
- * ConfigErrors with suppressed=true (via ~ignoreBuildCheck) are ignored.
+ * ConfigErrors suppressed via ~ignoreBuildChecks are ignored.
  *
  * @param {Function} stepFn - Build step function to execute
  * @param {string} stepName - Name of the build step (for debugging)
@@ -35,8 +35,15 @@ function tryBuildStep(stepFn, stepName, { components, context }) {
   try {
     return stepFn({ components, context });
   } catch (error) {
-    // Skip suppressed ConfigErrors (via ~ignoreBuildCheck: true)
-    if (error instanceof ConfigError && error.suppressed) {
+    // Skip suppressed ConfigErrors (via ~ignoreBuildChecks)
+    if (
+      error instanceof ConfigError &&
+      ConfigMessage.shouldSuppress({
+        configKey: error.configKey,
+        keyMap: context.keyMap,
+        checkSlug: error.checkSlug,
+      })
+    ) {
       return;
     }
     // Collect error object - logging happens at checkpoints in index.js

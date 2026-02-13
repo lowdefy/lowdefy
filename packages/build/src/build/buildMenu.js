@@ -143,7 +143,7 @@ function buildMenu({ components, context }) {
     });
   });
   missingPageWarnings.forEach((warning) => {
-    context.logger.warn({
+    context.handleWarning({
       message: `Page "${warning.pageId}" referenced in menu link "${warning.menuItemId}" not found.`,
       configKey: warning.configKey,
       prodError: true,
