@@ -48,10 +48,11 @@ class ConfigError extends BaseConfigError {
     const timeoutId = setTimeout(() => controller.abort(), timeout);
 
     try {
+      const { name, message, stack, configKey, received, operatorLocation } = this;
       const response = await fetch(`${lowdefy.basePath}/api/client-error`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(this.serialize()),
+        body: JSON.stringify({ name, message, stack, configKey, received, operatorLocation }),
         signal: controller.signal,
         credentials: 'same-origin',
       });

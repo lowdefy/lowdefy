@@ -16,8 +16,13 @@
   limitations under the License.
 */
 
+import { ConfigError, LowdefyError, PluginError, ServiceError, UserError } from '@lowdefy/errors';
+
+import extractErrorProps from './extractErrorProps.js';
 import type from './type.js';
 import stableStringify from './stableStringify.js';
+
+const lowdefyErrorTypes = { ConfigError, LowdefyError, PluginError, ServiceError, UserError };
 
 const makeReplacer = (customReplacer, isoStringDates) => (key, value) => {
   let dateReplacer = (date) => ({ '~d': date.valueOf() });
@@ -29,13 +34,7 @@ const makeReplacer = (customReplacer, isoStringDates) => (key, value) => {
     newValue = customReplacer(key, value);
   }
   if (type.isError(newValue)) {
-    return {
-      '~e': {
-        name: newValue.name,
-        message: newValue.message,
-        value: newValue.toString(),
-      },
-    };
+    return { '~e': extractErrorProps(newValue) };
   }
   if (type.isObject(newValue)) {
     Object.keys(newValue).forEach((k) => {
@@ -158,8 +157,12 @@ const makeReviver = (customReviver) => (key, value) => {
   }
   if (type.isObject(newValue)) {
     if (!type.isUndefined(newValue['~e'])) {
-      const error = new Error(newValue['~e'].message);
-      error.name = newValue['~e'].name;
+      const data = newValue['~e'];
+      const ErrorClass = lowdefyErrorTypes[data.name] || Error;
+      const error = Object.create(ErrorClass.prototype);
+      for (const [k, v] of Object.entries(data)) {
+        error[k] = v;
+      }
       return error;
     }
     if (!type.isUndefined(newValue['~d'])) {

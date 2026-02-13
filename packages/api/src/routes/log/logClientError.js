@@ -15,16 +15,12 @@
 */
 
 import { resolveConfigLocation } from '@lowdefy/errors/build';
-import { deserializeError } from '@lowdefy/errors/server';
 
 async function logClientError(context, data) {
   const { logger } = context;
 
-  // Deserialize the error from the client
-  const error = deserializeError(data);
-
   // Resolve config location if error has configKey
-  if (error.configKey) {
+  if (data.configKey) {
     try {
       const [keyMap, refMap] = await Promise.all([
         context.readConfigFile('keyMap.json'),
@@ -32,30 +28,30 @@ async function logClientError(context, data) {
       ]);
 
       const location = resolveConfigLocation({
-        configKey: error.configKey,
+        configKey: data.configKey,
         keyMap,
         refMap,
         configDirectory: context.configDirectory,
       });
 
       if (location) {
-        error.source = location.source;
-        error.config = location.config;
-        error.link = location.link;
+        data.source = location.source;
+        data.config = location.config;
+        data.link = location.link;
       }
     } catch (err) {
       logger.warn({ event: 'warn_maps_load_failed', error: err.message });
     }
   }
 
-  // Log error - logger handles formatting
-  logger.error(error);
+  // Log — data is a plain object with name/message/configKey/etc.
+  logger.error(data);
 
   return {
     success: true,
-    source: error.source ?? null,
-    config: error.config ?? null,
-    link: error.link ?? null,
+    source: data.source ?? null,
+    config: data.config ?? null,
+    link: data.link ?? null,
   };
 }
 

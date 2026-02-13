@@ -14,6 +14,9 @@
   limitations under the License.
 */
 
+import { ConfigError, LowdefyError, PluginError, ServiceError, UserError } from '@lowdefy/errors';
+
+import extractErrorProps from './extractErrorProps.js';
 import serializer from './serializer.js';
 
 test('serialize convert object js date to ~d', () => {
@@ -440,38 +443,42 @@ test('serializeToString isoStringDates', () => {
 });
 
 test('serialize convert Error to ~e', () => {
-  let object = {
+  const object = {
     a: new Error('Test error'),
   };
-  expect(serializer.serialize(object)).toEqual({
-    a: { '~e': { message: 'Test error', name: 'Error', value: 'Error: Test error' } },
-  });
+  const result = serializer.serialize(object);
+  expect(result.a['~e'].message).toBe('Test error');
+  expect(result.a['~e'].name).toBe('Error');
+  expect(result.a['~e'].stack).toContain('Error: Test error');
+  expect(result.a['~e'].value).toBeUndefined();
 });
 
 test('serializeToString convert Error to ~e', () => {
-  let object = {
+  const object = {
     a: new Error('Test error'),
   };
-  expect(serializer.serializeToString(object)).toEqual(
-    '{"a":{"~e":{"name":"Error","message":"Test error","value":"Error: Test error"}}}'
-  );
+  const result = JSON.parse(serializer.serializeToString(object));
+  expect(result.a['~e'].message).toBe('Test error');
+  expect(result.a['~e'].name).toBe('Error');
+  expect(result.a['~e'].stack).toContain('Error: Test error');
 });
 
 test('deserialize revive ~e to Error', () => {
-  let object = {
-    a: { '~e': { message: 'Test error', name: 'Error', value: 'Error: Test error' } },
+  const object = {
+    a: { '~e': { message: 'Test error', name: 'Error' } },
   };
-  expect(serializer.deserialize(object)).toEqual({
-    a: new Error('Test error'),
-  });
+  const result = serializer.deserialize(object);
+  expect(result.a).toBeInstanceOf(Error);
+  expect(result.a.message).toBe('Test error');
+  expect(result.a.name).toBe('Error');
 });
 
 test('deserializeFromString revive ~e to Error', () => {
-  let object =
-    '{"a": {"~e": {"message": "Test error", "name": "Error", "value": "Error: Test error"}}}';
-  expect(serializer.deserializeFromString(object)).toEqual({
-    a: new Error('Test error'),
-  });
+  const object = '{"a": {"~e": {"message": "Test error", "name": "Error"}}}';
+  const result = serializer.deserializeFromString(object);
+  expect(result.a).toBeInstanceOf(Error);
+  expect(result.a.message).toBe('Test error');
+  expect(result.a.name).toBe('Error');
 });
 test('deserialize with ~k and ~r values', () => {
   let object = {
@@ -757,14 +764,15 @@ test('serialize converts Error with custom name', () => {
   const err = new TypeError('bad type');
   const object = { err };
   const res = serializer.serialize(object);
-  expect(res).toEqual({
-    err: { '~e': { name: 'TypeError', message: 'bad type', value: 'TypeError: bad type' } },
-  });
+  expect(res.err['~e'].name).toBe('TypeError');
+  expect(res.err['~e'].message).toBe('bad type');
+  expect(res.err['~e'].stack).toContain('TypeError: bad type');
+  expect(res.err['~e'].value).toBeUndefined();
 });
 
 test('deserialize revives ~e with custom error name', () => {
   const object = {
-    err: { '~e': { name: 'TypeError', message: 'bad type', value: 'TypeError: bad type' } },
+    err: { '~e': { name: 'TypeError', message: 'bad type' } },
   };
   const res = serializer.deserialize(object);
   expect(res.err).toBeInstanceOf(Error);
@@ -966,4 +974,98 @@ test('copy preserves ~l and ~k and ~r together', () => {
   expect(res['~k']).toEqual('mykey');
   expect(res['~r']).toEqual('myref');
   expect(Object.keys(res)).toEqual(['x']);
+});
+
+// Lowdefy error class round-trip tests
+
+test('copy round-trip for ConfigError preserves class and properties', () => {
+  const err = new ConfigError({ message: 'Invalid block', configKey: 'key-123' });
+  const res = serializer.copy({ err });
+  expect(res.err).toBeInstanceOf(ConfigError);
+  expect(res.err.name).toBe('ConfigError');
+  expect(res.err.message).toBe('Invalid block');
+  expect(res.err.configKey).toBe('key-123');
+});
+
+test('copy round-trip for PluginError preserves class and properties', () => {
+  const original = new Error('_if requires boolean');
+  const err = new PluginError({
+    error: original,
+    pluginType: 'operator',
+    pluginName: '_if',
+    location: 'blocks.0.visible',
+    configKey: 'key-456',
+  });
+  const res = serializer.copy({ err });
+  expect(res.err).toBeInstanceOf(PluginError);
+  expect(res.err.name).toBe('PluginError');
+  expect(res.err._message).toBe('_if requires boolean');
+  expect(res.err.location).toBe('blocks.0.visible');
+  expect(res.err.pluginType).toBe('operator');
+  expect(res.err.pluginName).toBe('_if');
+  expect(res.err.configKey).toBe('key-456');
+});
+
+test('copy round-trip for ServiceError preserves class and properties', () => {
+  const err = new ServiceError({
+    message: 'Connection refused',
+    service: 'MongoDB',
+    code: 'ECONNREFUSED',
+    statusCode: 503,
+  });
+  const res = serializer.copy({ err });
+  expect(res.err).toBeInstanceOf(ServiceError);
+  expect(res.err.name).toBe('ServiceError');
+  expect(res.err.service).toBe('MongoDB');
+  expect(res.err.code).toBe('ECONNREFUSED');
+  expect(res.err.statusCode).toBe(503);
+});
+
+test('copy round-trip for UserError preserves class and properties', () => {
+  const err = new UserError('Validation failed', { blockId: 'input1', pageId: 'home' });
+  const res = serializer.copy({ err });
+  expect(res.err).toBeInstanceOf(UserError);
+  expect(res.err.name).toBe('UserError');
+  expect(res.err.message).toBe('Validation failed');
+  expect(res.err.blockId).toBe('input1');
+  expect(res.err.pageId).toBe('home');
+});
+
+test('copy round-trip for LowdefyError preserves class', () => {
+  const err = new LowdefyError('Unexpected condition');
+  const res = serializer.copy({ err });
+  expect(res.err).toBeInstanceOf(LowdefyError);
+  expect(res.err.name).toBe('LowdefyError');
+  expect(res.err.message).toBe('Unexpected condition');
+});
+
+// extractErrorProps tests
+
+test('extractErrorProps captures message, name, stack', () => {
+  const err = new Error('test');
+  const props = extractErrorProps(err);
+  expect(props.message).toBe('test');
+  expect(props.name).toBe('Error');
+  expect(props.stack).toContain('Error: test');
+});
+
+test('extractErrorProps captures enumerable properties', () => {
+  const err = new Error('test');
+  err.configKey = 'key-1';
+  err.pluginType = 'operator';
+  const props = extractErrorProps(err);
+  expect(props.configKey).toBe('key-1');
+  expect(props.pluginType).toBe('operator');
+});
+
+test('extractErrorProps captures cause when present', () => {
+  const cause = new Error('root cause');
+  const err = new Error('wrapper', { cause });
+  const props = extractErrorProps(err);
+  expect(props.cause).toBe(cause);
+});
+
+test('extractErrorProps returns falsy input as-is', () => {
+  expect(extractErrorProps(null)).toBeNull();
+  expect(extractErrorProps(undefined)).toBeUndefined();
 });

@@ -14,7 +14,6 @@
   limitations under the License.
 */
 
-import { ConfigError } from '@lowdefy/errors/client';
 import { createBrowserLogger } from '@lowdefy/logger/browser';
 
 function createLogError(lowdefy) {
@@ -28,32 +27,41 @@ function createLogError(lowdefy) {
     }
     loggedErrors.add(errorKey);
 
-    // Serialize and send to server for logging with location resolution
-    if (error.serialize) {
+    // Send known error types to server for logging with location resolution
+    if (
+      error.configKey ||
+      error.name === 'ConfigError' ||
+      error.name === 'PluginError' ||
+      error.name === 'ServiceError' ||
+      error.name === 'LowdefyError'
+    ) {
+      const { name, message, stack, configKey, source, pluginType, pluginName, location } = error;
       try {
         const response = await fetch(`${lowdefy.basePath}/api/client-error`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(error.serialize()),
+          body: JSON.stringify({
+            name,
+            message,
+            stack,
+            configKey,
+            source,
+            pluginType,
+            pluginName,
+            location,
+          }),
           credentials: 'same-origin',
         });
         if (response.ok) {
-          const { source } = await response.json();
-          if (source) {
-            logger.info(source);
+          const { source: resolvedSource } = await response.json();
+          if (resolvedSource) {
+            logger.info(resolvedSource);
           }
         }
       } catch {
         // Server logging failed - continue with local console
       }
       logger.error(error);
-      return;
-    }
-
-    // Plain errors with configKey - wrap in ConfigError for serialization
-    if (error.configKey) {
-      const configError = new ConfigError({ error });
-      await logError(configError);
       return;
     }
 

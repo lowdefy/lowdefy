@@ -1,6 +1,8 @@
 ---
 '@lowdefy/errors': minor
+'@lowdefy/helpers': minor
 '@lowdefy/api': patch
+'@lowdefy/client': patch
 '@lowdefy/operators': patch
 '@lowdefy/build': patch
 ---

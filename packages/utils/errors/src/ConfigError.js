@@ -80,30 +80,6 @@ class ConfigError extends Error {
       this.stack = error.stack;
     }
   }
-
-  /**
-   * Serializes the error for transport (e.g., client to server).
-   * @returns {Object} Serialized error data with type marker
-   */
-  serialize() {
-    return {
-      '~err': 'ConfigError',
-      message: this.message,
-      configKey: this.configKey,
-    };
-  }
-
-  /**
-   * Deserializes error data back into a ConfigError.
-   * @param {Object} data - Serialized error data
-   * @returns {ConfigError}
-   */
-  static deserialize(data) {
-    return new ConfigError({
-      message: data.message,
-      configKey: data.configKey,
-    });
-  }
 }
 
 export default ConfigError;

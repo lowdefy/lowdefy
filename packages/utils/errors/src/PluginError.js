@@ -76,51 +76,6 @@ class PluginError extends Error {
       this.stack = error.stack;
     }
   }
-
-  /**
-   * Serializes the error for transport (e.g., client to server).
-   * @returns {Object} Serialized error data with type marker
-   */
-  serialize() {
-    return {
-      '~err': 'PluginError',
-      message: this.message,
-      _message: this._message,
-      pluginType: this.pluginType,
-      pluginName: this.pluginName,
-      location: this.location,
-      configKey: this.configKey,
-      stack: this.stack,
-    };
-  }
-
-  /**
-   * Deserializes error data back into a PluginError.
-   * Note: message already contains location, so we don't pass it
-   * to avoid double-formatting.
-   * @param {Object} data - Serialized error data
-   * @returns {PluginError}
-   */
-  static deserialize(data) {
-    // Use _message if available, fallback to message
-    const messageToUse = data._message || data.message;
-    const error = new PluginError({
-      message: messageToUse,
-      pluginType: data.pluginType,
-      pluginName: data.pluginName,
-      configKey: data.configKey,
-    });
-    // Set location separately to preserve it without re-formatting message
-    error.location = data.location;
-    // Preserve the formatted message if different from _message
-    if (data.message && data.message !== messageToUse) {
-      error.message = data.message;
-    }
-    if (data.stack) {
-      error.stack = data.stack;
-    }
-    return error;
-  }
 }
 
 export default PluginError;

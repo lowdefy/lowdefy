@@ -42,10 +42,11 @@ class LowdefyError extends BaseLowdefyError {
     const timeoutId = setTimeout(() => controller.abort(), timeout);
 
     try {
+      const { name, message, stack, configKey } = this;
       await fetch(`${basePath}/api/client-error`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(this.serialize()),
+        body: JSON.stringify({ name, message, stack, configKey }),
         signal: controller.signal,
         credentials: 'same-origin',
       });
