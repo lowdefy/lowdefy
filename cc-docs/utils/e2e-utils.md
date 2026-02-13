@@ -9,6 +9,7 @@ Playwright testing utilities for Lowdefy applications with a locator-first API.
 ## Purpose
 
 Provides e2e testing infrastructure for Lowdefy apps:
+
 - Locator-first API for blocks, requests, state, and URL
 - Request mocking (static and inline)
 - Scaffold command for project setup
@@ -32,6 +33,7 @@ Provides e2e testing infrastructure for Lowdefy apps:
 ### Phase 1: Build Time
 
 Playwright's `webServer` runs before tests:
+
 ```bash
 NEXT_PUBLIC_LOWDEFY_E2E=true npx lowdefy build && npx lowdefy start
 ```
@@ -39,6 +41,7 @@ NEXT_PUBLIC_LOWDEFY_E2E=true npx lowdefy build && npx lowdefy start
 The `NEXT_PUBLIC_LOWDEFY_E2E=true` flag exposes `window.lowdefy` in browser for state/validation access.
 
 **Manifest Generation** (lazy, first worker):
+
 - Reads `types.json` for block type → package mapping
 - Walks page configs to build block lookup table
 - Produces `e2e-manifest.json` with helper import paths
@@ -78,52 +81,52 @@ Test scope (fresh per test):
 The `ldf` object provides the locator-first API:
 
 ```javascript
-ldf.block('id').do.fill('value')     // Block actions
-ldf.block('id').expect.visible()     // Block assertions
-ldf.request('id').expect.toFinish()  // Request assertions
-ldf.state('key').expect.toBe(value)  // State assertions
-ldf.mock.request('id', { response }) // Inline mocking
+ldf.block('id').do.fill('value'); // Block actions
+ldf.block('id').expect.visible(); // Block assertions
+ldf.request('id').expect.toFinish(); // Request assertions
+ldf.state('key').expect.toBe(value); // State assertions
+ldf.mock.request('id', { response }); // Inline mocking
 ```
 
 ## Key Modules
 
 ### Core (`src/core/`)
 
-| File | Purpose |
-|------|---------|
-| `navigation.js` | `goto()`, `waitForPage()` - navigation with Lowdefy ready detection |
-| `requests.js` | Request state access, `toFinish()`, `toHavePayload()` assertions |
-| `state.js` | State access via `page.evaluate()` into `window.lowdefy` |
-| `url.js` | URL and query parameter assertions |
-| `validation.js` | Block validation state access |
-| `locators.js` | Common locator patterns |
+| File            | Purpose                                                               |
+| --------------- | --------------------------------------------------------------------- |
+| `navigation.js` | `goto()`, `waitForPage()` - navigation with Lowdefy ready detection   |
+| `requests.js`   | Request state access, `toFinish()`, `toHavePayload()` assertions      |
+| `state.js`      | State access via `page.evaluate()` into `window.lowdefy`              |
+| `url.js`        | URL and query parameter assertions                                    |
+| `validation.js` | Block validation state access                                         |
+| `locators.js`   | Common locator patterns                                               |
 | `userCookie.js` | Set/clear `lowdefy_e2e_user` cookie via `browserContext.addCookies()` |
 
 ### Proxy (`src/proxy/`)
 
-| File | Purpose |
-|------|---------|
-| `createPageManager.js` | Creates the `ldf` object with all APIs |
-| `createBlockMethodProxy.js` | Proxy that routes `do.*`/`expect.*` to block helpers |
-| `createBlockHelper.js` | Factory for block e2e helpers with auto-provided methods |
-| `createHelperRegistry.js` | Lazy-loading cache for block helper imports |
+| File                        | Purpose                                                  |
+| --------------------------- | -------------------------------------------------------- |
+| `createPageManager.js`      | Creates the `ldf` object with all APIs                   |
+| `createBlockMethodProxy.js` | Proxy that routes `do.*`/`expect.*` to block helpers     |
+| `createBlockHelper.js`      | Factory for block e2e helpers with auto-provided methods |
+| `createHelperRegistry.js`   | Lazy-loading cache for block helper imports              |
 
 ### Mocking (`src/mocking/`)
 
-| File | Purpose |
-|------|---------|
+| File                   | Purpose                                 |
+| ---------------------- | --------------------------------------- |
 | `createMockManager.js` | Per-test mock state, route interception |
-| `loadStaticMocks.js` | Parses mocks.yaml, applies wildcards |
+| `loadStaticMocks.js`   | Parses mocks.yaml, applies wildcards    |
 
 ### Init (`src/init/`)
 
-| File | Purpose |
-|------|---------|
-| `index.js` | CLI entry point (`npx @lowdefy/e2e-utils`) |
-| `detectApps.js` | Finds Lowdefy apps in `app/` or `apps/` |
-| `generateFiles.js` | Creates e2e folder structure from templates |
-| `installDeps.js` | Package manager detection and install |
-| `updateGitignore.js` | Adds test artifacts to .gitignore |
+| File                 | Purpose                                     |
+| -------------------- | ------------------------------------------- |
+| `index.js`           | CLI entry point (`npx @lowdefy/e2e-utils`)  |
+| `detectApps.js`      | Finds Lowdefy apps in `app/` or `apps/`     |
+| `generateFiles.js`   | Creates e2e folder structure from templates |
+| `installDeps.js`     | Package manager detection and install       |
+| `updateGitignore.js` | Adds test artifacts to .gitignore           |
 
 ### Config (`src/config.js`)
 
@@ -134,30 +137,30 @@ createMultiAppConfig({ apps: [...] })             // Monorepo
 
 #### createConfig Parameters
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `appDir` | string | `'./'` | Path to Lowdefy app root |
-| `buildDir` | string | `'.lowdefy/server/build'` | Build output directory (relative to appDir) |
-| `mocksFile` | string | `'e2e/mocks.yaml'` | Static mocks file path (relative to appDir) |
-| `port` | number | `3000` | Port for the test server |
-| `testDir` | string | `'e2e'` | Directory containing test files |
-| `testMatch` | string | `'**/*.spec.js'` | Glob pattern for matching test files |
-| `timeout` | number | `180000` | Build + server start timeout (ms) |
-| `screenshot` | string | `'only-on-failure'` | `'off'`, `'on'`, or `'only-on-failure'` |
-| `outputDir` | string | `'test-results'` | Directory for test artifacts |
+| Parameter    | Type   | Default                   | Description                                 |
+| ------------ | ------ | ------------------------- | ------------------------------------------- |
+| `appDir`     | string | `'./'`                    | Path to Lowdefy app root                    |
+| `buildDir`   | string | `'.lowdefy/server/build'` | Build output directory (relative to appDir) |
+| `mocksFile`  | string | `'e2e/mocks.yaml'`        | Static mocks file path (relative to appDir) |
+| `port`       | number | `3000`                    | Port for the test server                    |
+| `testDir`    | string | `'e2e'`                   | Directory containing test files             |
+| `testMatch`  | string | `'**/*.spec.js'`          | Glob pattern for matching test files        |
+| `timeout`    | number | `180000`                  | Build + server start timeout (ms)           |
+| `screenshot` | string | `'only-on-failure'`       | `'off'`, `'on'`, or `'only-on-failure'`     |
+| `outputDir`  | string | `'test-results'`          | Directory for test artifacts                |
 
 Sets environment variables for fixtures: `LOWDEFY_BUILD_DIR` (absolute path to build artifacts) and `LOWDEFY_E2E_MOCKS_FILE` (absolute path to mocks file, if it exists).
 
 #### createMultiAppConfig Parameters
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `apps` | array | `[]` | Array of app definitions (see below) |
-| `testDir` | string | `'e2e'` | Root test directory |
-| `testMatch` | string | `'**/*.spec.js'` | Glob for test files |
-| `timeout` | number | `180000` | Build + server start timeout (ms) |
-| `screenshot` | string | `'only-on-failure'` | Screenshot mode |
-| `outputDir` | string | `'test-results'` | Artifacts directory |
+| Parameter    | Type   | Default             | Description                          |
+| ------------ | ------ | ------------------- | ------------------------------------ |
+| `apps`       | array  | `[]`                | Array of app definitions (see below) |
+| `testDir`    | string | `'e2e'`             | Root test directory                  |
+| `testMatch`  | string | `'**/*.spec.js'`    | Glob for test files                  |
+| `timeout`    | number | `180000`            | Build + server start timeout (ms)    |
+| `screenshot` | string | `'only-on-failure'` | Screenshot mode                      |
+| `outputDir`  | string | `'test-results'`    | Artifacts directory                  |
 
 Each app entry: `{ name: string, appDir: string, port: number }`. Creates separate Playwright projects and webServer entries per app. Build dir is stored in `project.metadata.buildDir` for fixture access.
 
@@ -183,7 +186,7 @@ ldf.block('id')                            // Returns block locator object
 // Request
 ldf.request('id')                          // Returns request locator object
   .expect.toFinish(opts?)                  // Wait for loading: false
-  .expect.toHaveResponse(data, opts?)      // Assert exact response match
+  .expect.toHaveResponse(data, opts?)      // Assert partial response match
   .expect.toHavePayload(data, opts?)       // Assert partial payload match
   .response()                              // Raw response data
   .state()                                 // Full request state object
@@ -251,12 +254,14 @@ export default createBlockHelper({
 > **Note:** `get` methods are defined in the helper object but `createPageManager.block()` only creates `do` and `expect` proxies. The `get` methods are not yet surfaced through `ldf.block('id').get.*`.
 
 **Auto-provided expect methods:**
+
 - `visible`, `hidden` — derived from locator via `toBeVisible()`/`toBeHidden()`
 - `disabled`, `enabled` — default uses `toBeDisabled()`/`toBeEnabled()`
 - `validationError(params?)`, `validationWarning(params?)` — optional `{ message }` to assert specific message
 - `validationSuccess` — from `core/validation.js`
 
 **Method resolution order** (later overrides earlier):
+
 1. `commonExpect` — visible, hidden, disabled, enabled
 2. `validationExpect` — validationError, validationWarning, validationSuccess
 3. User-provided `expect` — block-specific assertions and overrides
@@ -285,7 +290,7 @@ This allows test projects to work without block packages as direct dependencies.
 requests:
   - requestId: atlas_search
     response: [{ _id: 'doc-1' }]
-  - requestId: fetch_*          # Wildcards supported
+  - requestId: fetch_* # Wildcards supported
     pageId: admin-*
     response: []
 api:
@@ -343,13 +348,13 @@ Payload is extracted from the POST body's `payload` field (matching Lowdefy's re
 
 ### Request Assertion Comparison
 
-| Method | Asserts | Comparison | Source |
-|--------|---------|------------|--------|
-| `toFinish(opts?)` | `loading === false` | Exact | Engine request state |
-| `toHaveResponse(data, opts?)` | `response` matches | `JSON.stringify` equality | Server response in engine |
-| `toHavePayload(data, opts?)` | `payload` contains | Partial deep match via `objectContains` | Client-side evaluated payload |
+| Method                        | Asserts             | Comparison                              | Source                        |
+| ----------------------------- | ------------------- | --------------------------------------- | ----------------------------- |
+| `toFinish(opts?)`             | `loading === false` | Exact                                   | Engine request state          |
+| `toHaveResponse(data, opts?)` | `response` contains | Partial deep match via `objectContains` | Server response in engine     |
+| `toHavePayload(data, opts?)`  | `payload` contains  | Partial deep match via `objectContains` | Client-side evaluated payload |
 
-- `toHaveResponse` — exact match: `JSON.stringify(actual) === JSON.stringify(expected)`
+- `toHaveResponse` — partial match: actual response only needs to contain all keys from expected (can have extra keys)
 - `toHavePayload` — partial match: actual payload only needs to contain all keys from expected (can have extra keys)
 
 ## User Authentication
@@ -359,8 +364,8 @@ The `ldf` fixture provides a `user()` method for setting the test user per brows
 ### API
 
 ```javascript
-await ldf.user({ id: 'test', name: 'Test', roles: ['admin'] });  // Set user
-await ldf.user(null);                                              // Clear user
+await ldf.user({ id: 'test', name: 'Test', roles: ['admin'] }); // Set user
+await ldf.user(null); // Clear user
 ```
 
 ### Default User from mocks.yaml
@@ -417,6 +422,7 @@ The manifest generator reads `types.json` to map block types to packages, then c
 **Decision:** Locator-first pattern (`ldf.block('id').do.fill()`)
 
 **Why:**
+
 - More intuitive - mirrors how you think ("get the button, click it")
 - Consistent with Playwright's locator pattern
 - Better for LLM code generation - pattern is predictable
@@ -429,6 +435,7 @@ The manifest generator reads `types.json` to map block types to packages, then c
 **Decision:** Use `createRequire` from server's node_modules
 
 **Why:**
+
 - Test projects shouldn't need block packages as dependencies
 - Blocks are already installed in `.lowdefy/server/node_modules`
 - Simplifies test project setup
@@ -440,20 +447,21 @@ The manifest generator reads `types.json` to map block types to packages, then c
 **Decision:** Worker scope for manifest/registry/staticMocks, test scope for ldf/mockManager
 
 **Why:**
+
 - Manifest and helpers don't change between tests - cache them
 - Static mocks apply to all tests - load once
 - Each test needs fresh page and mock state - isolate them
 
 ## Timeout Configuration
 
-| Context | Default | Configurable | Source |
-|---------|---------|--------------|--------|
-| Build + server start | 180000ms (3 min) | `createConfig({ timeout })` | config.js |
-| `waitForReady` (page load) | 30000ms | No (hardcoded) | navigation.js |
-| State assertions | 5000ms | `{ timeout }` in opts | state.js |
-| Request assertions | 30000ms | `{ timeout }` in opts | requests.js |
-| URL assertions | 5000ms | `{ timeout }` in opts | url.js |
-| Validation assertions | 5000ms | `{ timeout }` in opts | validation.js |
+| Context                    | Default          | Configurable                | Source        |
+| -------------------------- | ---------------- | --------------------------- | ------------- |
+| Build + server start       | 180000ms (3 min) | `createConfig({ timeout })` | config.js     |
+| `waitForReady` (page load) | 30000ms          | No (hardcoded)              | navigation.js |
+| State assertions           | 5000ms           | `{ timeout }` in opts       | state.js      |
+| Request assertions         | 30000ms          | `{ timeout }` in opts       | requests.js   |
+| URL assertions             | 5000ms           | `{ timeout }` in opts       | url.js        |
+| Validation assertions      | 5000ms           | `{ timeout }` in opts       | validation.js |
 
 ```javascript
 await ldf.request('id').expect.toFinish({ timeout: 60000 });
@@ -462,12 +470,12 @@ await ldf.state('key').expect.toBe(value, { timeout: 10000 });
 
 ## Environment Variables
 
-| Variable | Set By | Used By | Purpose |
-|----------|--------|---------|---------|
-| `NEXT_PUBLIC_LOWDEFY_E2E` | webServer command | Client runtime | Exposes `window.lowdefy` for state/validation access |
-| `LOWDEFY_BUILD_DIR` | `createConfig()` | Fixtures | Absolute path to build artifacts for manifest/helper resolution |
-| `LOWDEFY_E2E_MOCKS_FILE` | `createConfig()` | Fixtures | Absolute path to static mocks YAML file |
-| `MDB_E2E_URI` | User (.env.e2e.local) | mdb fixture | MongoDB test database connection string |
+| Variable                  | Set By                | Used By        | Purpose                                                         |
+| ------------------------- | --------------------- | -------------- | --------------------------------------------------------------- |
+| `NEXT_PUBLIC_LOWDEFY_E2E` | webServer command     | Client runtime | Exposes `window.lowdefy` for state/validation access            |
+| `LOWDEFY_BUILD_DIR`       | `createConfig()`      | Fixtures       | Absolute path to build artifacts for manifest/helper resolution |
+| `LOWDEFY_E2E_MOCKS_FILE`  | `createConfig()`      | Fixtures       | Absolute path to static mocks YAML file                         |
+| `MDB_E2E_URI`             | User (.env.e2e.local) | mdb fixture    | MongoDB test database connection string                         |
 
 `NEXT_PUBLIC_LOWDEFY_E2E=true` is critical: without it, `window.lowdefy` is not exposed and all state/request/validation assertions fail.
 
