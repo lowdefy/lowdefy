@@ -15,7 +15,7 @@
 */
 
 import { validate } from '@lowdefy/ajv';
-import { ConfigError, ConfigMessage } from '@lowdefy/errors/build';
+import { ConfigError, shouldSuppressBuildCheck } from '@lowdefy/errors/build';
 
 import findConfigKey from '../utils/findConfigKey.js';
 import lowdefySchema from '../lowdefySchema.js';
@@ -65,7 +65,7 @@ function testSchema({ components, context }) {
 
       const configError = new ConfigError({ message, configKey, checkSlug: 'schema' });
       if (
-        !ConfigMessage.shouldSuppress({
+        !shouldSuppressBuildCheck({
           configKey,
           keyMap: context.keyMap,
           checkSlug: 'schema',

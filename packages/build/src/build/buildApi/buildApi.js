@@ -15,7 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError, ConfigMessage } from '@lowdefy/errors/build';
+import { ConfigError, shouldSuppressBuildCheck } from '@lowdefy/errors/build';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 import buildEndpoint from './buildEndpoint.js';
 
@@ -41,7 +41,7 @@ function buildApi({ components, context }) {
       // Skip suppressed ConfigErrors (via ~ignoreBuildChecks)
       if (
         error instanceof ConfigError &&
-        ConfigMessage.shouldSuppress({
+        shouldSuppressBuildCheck({
           configKey: error.configKey,
           keyMap: context.keyMap,
           checkSlug: error.checkSlug,

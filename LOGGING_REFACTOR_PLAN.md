@@ -1041,28 +1041,28 @@ This doesn't need to change architecturally — `handleError` is the right place
 
 **Checklist:**
 
-- [ ] Create `createBuildHandleError` function (sync, resolution + logging, safety wrapper)
-- [ ] Create `createHandleWarning` function (suppression, prodError escalation, location resolution, dedup, logging)
-- [ ] Create `resolveErrorLocation` function (unified 3-path resolution)
-- [ ] Wire `context.handleError` and `context.handleWarning` in `createContext.js`
-- [ ] Rename `createLogError.js` → `createHandleError.js` (browser)
-- [ ] Create `createBrowserHandleError` with `lowdefy?.basePath ?? ''` fallback
-- [ ] Update `_app.js` ErrorBoundary in server: `error.log()` → `lowdefy.handleError(error)`
-- [ ] Update `_app.js` ErrorBoundary in server-dev: same
-- [ ] Rename server `logError.js` → `handleError.js`
-- [ ] Rename server-dev `logError.js` → `handleError.js`
-- [ ] Update `apiWrapper.js` (server): `logError` → `context.handleError`
-- [ ] Update `apiWrapper.js` (server-dev): same
-- [ ] Update `serverSidePropsWrapper.js`: fire-and-forget → `await context.handleError(error)`
-- [ ] Update `[pageId].js` (server-dev): `logError` → `context.handleError`
-- [ ] Update `runRoutine.js`: `logError` → `context.handleError`
-- [ ] Update `logCollectedErrors.js`: iterate `context.errors`, call `context.handleError` for each
-- [ ] Update `errorHandler.js` (CLI): use `errorToDisplayString` and new logger API
-- [ ] Replace `error.suppressed` checks in `tryBuildStep`/`collectExceptions` with `shouldSuppress()` calls
-- [ ] Update all `context.logger.warn({ configKey, ... })` calls → `context.handleWarning({ ... })`
-- [ ] Update all affected tests
-- [ ] Run `pnpm --filter=@lowdefy/build test`
-- [ ] Run `pnpm --filter=@lowdefy/api test`
+- [x] Create `createBuildHandleError` function (sync, resolution + logging, safety wrapper)
+- [x] Create `createHandleWarning` function (suppression, prodError escalation, location resolution, dedup, logging)
+- [x] Create `resolveErrorLocation` function (unified 3-path resolution)
+- [x] Wire `context.handleError` and `context.handleWarning` in `createContext.js`
+- [x] Rename `createLogError.js` → `createHandleError.js` (browser)
+- [x] Create `createBrowserHandleError` with `lowdefy?.basePath ?? ''` fallback
+- [x] Update `_app.js` ErrorBoundary in server: `error.log()` → `lowdefy.handleError(error)`
+- [x] Update `_app.js` ErrorBoundary in server-dev: same
+- [x] Rename server `logError.js` → `handleError.js`
+- [x] Rename server-dev `logError.js` → `handleError.js`
+- [x] Update `apiWrapper.js` (server): `logError` → `context.handleError`
+- [x] Update `apiWrapper.js` (server-dev): same
+- [x] Update `serverSidePropsWrapper.js`: fire-and-forget → `await context.handleError(error)`
+- [x] Update `[pageId].js` (server-dev): `logError` → `context.handleError`
+- [x] Update `runRoutine.js`: `logError` → `context.handleError`
+- [x] Update `logCollectedErrors.js`: iterate `context.errors`, call `context.handleError` for each
+- [x] Update `errorHandler.js` (CLI): use `errorToDisplayString` and new logger API
+- [x] Replace `error.suppressed` checks in `tryBuildStep`/`collectExceptions` with `shouldSuppress()` calls
+- [x] Update all `context.logger.warn({ configKey, ... })` calls → `context.handleWarning({ ... })`
+- [x] Update all affected tests
+- [x] Run `pnpm --filter=@lowdefy/build test`
+- [x] Run `pnpm --filter=@lowdefy/api test`
 
 ---
 

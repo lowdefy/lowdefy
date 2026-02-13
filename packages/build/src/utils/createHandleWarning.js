@@ -15,10 +15,10 @@
 */
 
 import {
-  ConfigMessage,
   ConfigWarning,
   errorToDisplayString,
   resolveErrorLocation,
+  shouldSuppressBuildCheck,
 } from '@lowdefy/errors/build';
 
 import collectExceptions from './collectExceptions.js';
@@ -37,7 +37,7 @@ function createHandleWarning({ pinoLogger, context }) {
 
     // Suppression
     if (
-      ConfigMessage.shouldSuppress({
+      shouldSuppressBuildCheck({
         configKey: warning.configKey,
         keyMap: context.keyMap,
         checkSlug: warning.checkSlug,

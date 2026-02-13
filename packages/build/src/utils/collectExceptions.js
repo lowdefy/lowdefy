@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigMessage } from '@lowdefy/errors/build';
+import { shouldSuppressBuildCheck } from '@lowdefy/errors/build';
 
 /**
  * Collects an exception (ConfigError or ConfigWarning) instead of throwing immediately.
@@ -26,7 +26,7 @@ import { ConfigMessage } from '@lowdefy/errors/build';
 function collectExceptions(context, exception) {
   // Skip suppressed exceptions (from ~ignoreBuildChecks)
   if (
-    ConfigMessage.shouldSuppress({
+    shouldSuppressBuildCheck({
       configKey: exception.configKey,
       keyMap: context.keyMap,
       checkSlug: exception.checkSlug,

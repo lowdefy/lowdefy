@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigError, ConfigMessage } from '@lowdefy/errors/build';
+import { ConfigError, shouldSuppressBuildCheck } from '@lowdefy/errors/build';
 
 /**
  * Wraps a build step to collect errors instead of stopping immediately.
@@ -38,7 +38,7 @@ function tryBuildStep(stepFn, stepName, { components, context }) {
     // Skip suppressed ConfigErrors (via ~ignoreBuildChecks)
     if (
       error instanceof ConfigError &&
-      ConfigMessage.shouldSuppress({
+      shouldSuppressBuildCheck({
         configKey: error.configKey,
         keyMap: context.keyMap,
         checkSlug: error.checkSlug,

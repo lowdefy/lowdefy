@@ -21,21 +21,20 @@
  * using keyMap and refMap from the build context.
  *
  * @example
- * import { ConfigError, ConfigWarning, ConfigMessage } from '@lowdefy/errors/build';
+ * import { ConfigError, ConfigWarning, shouldSuppressBuildCheck } from '@lowdefy/errors/build';
  *
  * throw new ConfigError({
  *   message: 'Connection id missing.',
  *   configKey: block['~k'],
- *   context,
  * });
  */
 
 import ConfigError from '../ConfigError.js';
 import ConfigWarning from './ConfigWarning.js';
-import ConfigMessage, { VALID_CHECK_SLUGS } from './ConfigMessage.js';
 import resolveConfigLocation from './resolveConfigLocation.js';
 import resolveErrorConfigLocation from './resolveErrorConfigLocation.js';
 import resolveErrorLocation from './resolveErrorLocation.js';
+import shouldSuppressBuildCheck, { VALID_CHECK_SLUGS } from './shouldSuppressBuildCheck.js';
 import errorToDisplayString from '../errorToDisplayString.js';
 import LowdefyError from '../LowdefyError.js';
 import PluginError from '../PluginError.js';
@@ -43,7 +42,6 @@ import ServiceError from '../ServiceError.js';
 
 export {
   ConfigError,
-  ConfigMessage,
   ConfigWarning,
   errorToDisplayString,
   LowdefyError,
@@ -52,5 +50,6 @@ export {
   resolveErrorConfigLocation,
   resolveErrorLocation,
   ServiceError,
+  shouldSuppressBuildCheck,
   VALID_CHECK_SLUGS,
 };
