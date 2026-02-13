@@ -5,7 +5,7 @@
 '@lowdefy/block-dev-e2e': patch
 ---
 
-feat(e2e-utils): Add polymorphic API for app developer e2e testing
+Add polymorphic API for app developer e2e testing
 
 **@lowdefy/e2e-utils**
 
