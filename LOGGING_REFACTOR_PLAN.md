@@ -974,15 +974,15 @@ This doesn't need to change architecturally — `handleError` is the right place
 
 **Checklist:**
 
-- [ ] Remove `attachLevelMethods` function (80 lines)
-- [ ] Remove `buildMergeObj` function
-- [ ] Replace `defaultErrSerializer` with `extractErrorProps` from helpers
-- [ ] `createNodeLogger` returns plain pino logger
-- [ ] Verify `createDevLogger` still works as thin wrapper
-- [ ] Update `[pageId]/[requestId].js`: `context.logger.info.gray()` → `context.logger.info({ color: 'gray' }, ...)`
-- [ ] Find and update all other color sub-method call sites
-- [ ] Update all affected tests
-- [ ] Run `pnpm --filter=@lowdefy/logger test`
+- [x] Remove `attachLevelMethods` function (80 lines)
+- [x] Remove `buildMergeObj` function
+- [x] Replace `defaultErrSerializer` with `extractErrorProps` from helpers
+- [x] `createNodeLogger` returns plain pino logger
+- [x] Verify `createDevLogger` still works as thin wrapper
+- [x] Update `[pageId]/[requestId].js`: `context.logger.info.gray()` → `context.logger.info({ color: 'gray' }, ...)`
+- [x] Find and update all other color sub-method call sites
+- [x] Update all affected tests
+- [x] Run `pnpm --filter=@lowdefy/logger test`
 
 ---
 

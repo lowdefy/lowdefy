@@ -86,7 +86,7 @@ async function nextBuildWatcher(context) {
       })
     );
     if (!build) {
-      context.logger.info('Reloaded app.', { succeed: true });
+      context.logger.info({ succeed: true }, 'Reloaded app.');
       return;
     }
 

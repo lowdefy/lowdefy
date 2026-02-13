@@ -19,7 +19,7 @@ import createCustomPluginTypesMap from '../utils/createCustomPluginTypesMap.mjs'
 
 function lowdefyBuild({ directories, logger, options, pageCache }) {
   return async () => {
-    logger.info('Building config...', { spin: true });
+    logger.info({ spin: true }, 'Building config...');
     const customTypesMap = await createCustomPluginTypesMap({ directories, logger });
 
     if (pageCache) {

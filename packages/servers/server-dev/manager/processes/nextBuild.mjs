@@ -18,7 +18,7 @@ import { spawnProcess } from '@lowdefy/node-utils';
 
 function nextBuild({ bin, logger }) {
   return async () => {
-    logger.info('Building app...', { spin: true });
+    logger.info({ spin: true }, 'Building app...');
     const errorLines = [];
     try {
       await spawnProcess({

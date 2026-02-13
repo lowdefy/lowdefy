@@ -19,9 +19,9 @@ import startServer from './startServer.mjs';
 function restartServer(context) {
   return () => {
     context.shutdownServer();
-    context.logger.info('Restarting server...', { spin: true });
+    context.logger.info({ spin: true }, 'Restarting server...');
     startServer(context);
-    context.logger.info('Restarted server.', { succeed: true });
+    context.logger.info({ succeed: true }, 'Restarted server.');
   };
 }
 

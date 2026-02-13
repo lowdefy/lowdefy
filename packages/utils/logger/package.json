@@ -45,6 +45,7 @@
   },
   "dependencies": {
     "@lowdefy/errors": "4.5.2",
+    "@lowdefy/helpers": "4.5.2",
     "ora": "7.0.1",
     "pino": "8.16.2"
   },
