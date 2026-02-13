@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -50,9 +50,7 @@ const ErrorItem = ({ type, message, source }) => {
         {type}
       </span>
       <p style={{ fontSize: 14, margin: '4px 0' }}>{message}</p>
-      {source && (
-        <p style={{ fontSize: 13, color: '#8c8c8c', margin: 0 }}>{source}</p>
-      )}
+      {source && <p style={{ fontSize: 13, color: '#8c8c8c', margin: 0 }}>{source}</p>}
     </div>
   );
 };
@@ -75,17 +73,10 @@ const BuildErrorPage = ({ errors, message, source }) => {
     >
       <div style={{ maxWidth: 720, width: '100%' }}>
         <h2 style={{ color: '#cf1322', marginBottom: 16 }}>
-          {errorList.length > 1
-            ? `Build Errors (${errorList.length})`
-            : 'Build Error'}
+          {errorList.length > 1 ? `Build Errors (${errorList.length})` : 'Build Error'}
         </h2>
         {errorList.map((err, i) => (
-          <ErrorItem
-            key={i}
-            type={err.type}
-            message={err.message}
-            source={err.source}
-          />
+          <ErrorItem key={i} type={err.type} message={err.message} source={err.source} />
         ))}
         <p style={{ fontSize: 13, color: '#8c8c8c', marginTop: 24 }}>
           Fix the error{errorList.length > 1 ? 's' : ''} in your config and the page will rebuild

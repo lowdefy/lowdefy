@@ -46,9 +46,7 @@ function lowdefyBuildWatcher(context) {
         lowdefyYamlModified ||
         changedFiles.some(
           (f) =>
-            !context.fileDependencyMap?.has(f) &&
-            !f.startsWith('pages/') &&
-            !f.startsWith('./')
+            !context.fileDependencyMap?.has(f) && !f.startsWith('pages/') && !f.startsWith('./')
         );
 
       if (isSkeletonChange || !context.pageCache) {

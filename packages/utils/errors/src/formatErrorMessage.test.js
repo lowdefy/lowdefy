@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -85,9 +85,7 @@ test('formatErrorMessage returns Unknown error for undefined input', () => {
 
 test('formatErrorMessage skips prefix when includePrefix is false', () => {
   const error = { name: 'ConfigError', message: 'bad config', received: { x: 1 } };
-  expect(formatErrorMessage(error, { includePrefix: false })).toBe(
-    'bad config Received: {"x":1}'
-  );
+  expect(formatErrorMessage(error, { includePrefix: false })).toBe('bad config Received: {"x":1}');
 });
 
 test('formatErrorMessage skips prefix for error without received', () => {
