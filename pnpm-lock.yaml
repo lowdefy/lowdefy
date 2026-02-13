@@ -1388,7 +1388,7 @@ importers:
         version: link:../../../utils/helpers
       '@next-auth/mongodb-adapter':
         specifier: 1.1.3
-        version: 1.1.3(mongodb@6.3.0(@aws-sdk/credential-providers@3.425.0)(socks@2.7.1))(next-auth@4.24.5(next@13.5.4(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(nodemailer@6.9.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
+        version: 1.1.3(mongodb@6.3.0(@aws-sdk/credential-providers@3.425.0)(socks@2.7.1))(next-auth@4.24.5(next@14.2.30(@opentelemetry/api@1.9.0)(@playwright/test@1.50.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(nodemailer@6.9.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
       mongodb:
         specifier: 6.3.0
         version: 6.3.0(@aws-sdk/credential-providers@3.425.0)(socks@2.7.1)
@@ -1418,11 +1418,11 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       next:
-        specifier: 13.5.4
-        version: 13.5.4(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: 14.2.30
+        version: 14.2.30(@opentelemetry/api@1.9.0)(@playwright/test@1.50.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       next-auth:
         specifier: 4.24.5
-        version: 4.24.5(next@13.5.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(nodemailer@6.9.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 4.24.5(next@14.2.30(@opentelemetry/api@1.9.0)(@playwright/test@1.50.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(nodemailer@6.9.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -1884,11 +1884,11 @@ importers:
   packages/plugins/plugins/plugin-next-auth:
     dependencies:
       next:
-        specifier: 13.5.4
-        version: 13.5.4(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: 14.2.30
+        version: 14.2.30(@opentelemetry/api@1.9.0)(@playwright/test@1.50.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       next-auth:
         specifier: 4.24.5
-        version: 4.24.5(next@13.5.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(nodemailer@6.9.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 4.24.5(next@14.2.30(@opentelemetry/api@1.9.0)(@playwright/test@1.50.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(nodemailer@6.9.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
     devDependencies:
       '@swc/cli':
         specifier: 0.1.63
@@ -1970,13 +1970,13 @@ importers:
         version: link:../../plugins/plugins/plugin-next-auth
       '@sentry/nextjs':
         specifier: 8.53.0
-        version: 8.53.0(@opentelemetry/core@2.5.0(@opentelemetry/api@1.9.0))(@opentelemetry/instrumentation@0.56.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.2.0(@opentelemetry/api@1.9.0))(encoding@0.1.13)(next@13.5.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.94.0)
+        version: 8.53.0(@opentelemetry/core@2.5.0(@opentelemetry/api@1.9.0))(@opentelemetry/instrumentation@0.56.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.2.0(@opentelemetry/api@1.9.0))(encoding@0.1.13)(next@14.2.30(@opentelemetry/api@1.9.0)(@playwright/test@1.50.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.94.0)
       next:
-        specifier: 13.5.4
-        version: 13.5.4(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: 14.2.30
+        version: 14.2.30(@opentelemetry/api@1.9.0)(@playwright/test@1.50.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       next-auth:
         specifier: 4.24.5
-        version: 4.24.5(next@13.5.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(nodemailer@6.9.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 4.24.5(next@14.2.30(@opentelemetry/api@1.9.0)(@playwright/test@1.50.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(nodemailer@6.9.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       pino:
         specifier: 8.16.2
         version: 8.16.2
@@ -2010,7 +2010,7 @@ importers:
         version: 11.1.3(less@4.2.0)(webpack@5.94.0)
       next-with-less:
         specifier: 3.0.1
-        version: 3.0.1(less-loader@11.1.3(less@4.2.0)(webpack@5.94.0))(less@4.2.0)(next@13.5.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
+        version: 3.0.1(less-loader@11.1.3(less@4.2.0)(webpack@5.94.0))(less@4.2.0)(next@14.2.30(@opentelemetry/api@1.9.0)(@playwright/test@1.50.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
       webpack:
         specifier: 5.94.0
         version: 5.94.0
@@ -2112,7 +2112,7 @@ importers:
         version: link:../../plugins/plugins/plugin-next-auth
       '@sentry/nextjs':
         specifier: 8.53.0
-        version: 8.53.0(@opentelemetry/core@2.5.0(@opentelemetry/api@1.9.0))(@opentelemetry/instrumentation@0.56.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.2.0(@opentelemetry/api@1.9.0))(encoding@0.1.13)(next@13.5.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.94.0)
+        version: 8.53.0(@opentelemetry/core@2.5.0(@opentelemetry/api@1.9.0))(@opentelemetry/instrumentation@0.56.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.2.0(@opentelemetry/api@1.9.0))(encoding@0.1.13)(next@14.2.30(@opentelemetry/api@1.9.0)(@playwright/test@1.50.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.94.0)
       chokidar:
         specifier: 3.5.3
         version: 3.5.3
@@ -2120,11 +2120,11 @@ importers:
         specifier: 16.3.1
         version: 16.3.1
       next:
-        specifier: 13.5.4
-        version: 13.5.4(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: 14.2.30
+        version: 14.2.30(@opentelemetry/api@1.9.0)(@playwright/test@1.50.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       next-auth:
         specifier: 4.24.5
-        version: 4.24.5(next@13.5.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(nodemailer@6.9.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 4.24.5(next@14.2.30(@opentelemetry/api@1.9.0)(@playwright/test@1.50.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(nodemailer@6.9.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       opener:
         specifier: 1.5.2
         version: 1.5.2
@@ -2167,7 +2167,7 @@ importers:
         version: 11.1.3(less@4.1.3)(webpack@5.94.0)
       next-with-less:
         specifier: 3.0.1
-        version: 3.0.1(less-loader@11.1.3(less@4.1.3)(webpack@5.94.0))(less@4.1.3)(next@13.5.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
+        version: 3.0.1(less-loader@11.1.3(less@4.1.3)(webpack@5.94.0))(less@4.1.3)(next@14.2.30(@opentelemetry/api@1.9.0)(@playwright/test@1.50.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
       webpack:
         specifier: 5.94.0
         version: 5.94.0
@@ -3602,8 +3602,8 @@ packages:
       mongodb: ^5 || ^4
       next-auth: ^4
 
-  '@next/env@13.5.4':
-    resolution: {integrity: sha512-LGegJkMvRNw90WWphGJ3RMHMVplYcOfRWf2Be3td3sUa+1AaxmsYyANsA+znrGCBjXJNi4XAQlSoEfUxs/4kIQ==}
+  '@next/env@14.2.30':
+    resolution: {integrity: sha512-KBiBKrDY6kxTQWGzKjQB7QirL3PiiOkV7KW98leHFjtVRKtft76Ra5qSA/SL75xT44dp6hOcqiiJ6iievLOYug==}
 
   '@next/env@14.2.35':
     resolution: {integrity: sha512-DuhvCtj4t9Gwrx80dmz2F4t/zKQ4ktN8WrMwOuVzkJfBilwAwGr6v16M5eI8yCuZ63H9TTuEU09Iu2HqkzFPVQ==}
@@ -3614,8 +3614,8 @@ packages:
   '@next/eslint-plugin-next@16.1.6':
     resolution: {integrity: sha512-/Qq3PTagA6+nYVfryAtQ7/9FEr/6YVyvOtl6rZnGsbReGLf0jZU6gkpr1FuChAQpvV46a78p4cmHOVP8mbfSMQ==}
 
-  '@next/swc-darwin-arm64@13.5.4':
-    resolution: {integrity: sha512-Df8SHuXgF1p+aonBMcDPEsaahNo2TCwuie7VXED4FVyECvdXfRT9unapm54NssV9tF3OQFKBFOdlje4T43VO0w==}
+  '@next/swc-darwin-arm64@14.2.30':
+    resolution: {integrity: sha512-EAqfOTb3bTGh9+ewpO/jC59uACadRHM6TSA9DdxJB/6gxOpyV+zrbqeXiFTDy9uV6bmipFDkfpAskeaDcO+7/g==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [darwin]
@@ -3626,8 +3626,8 @@ packages:
     cpu: [arm64]
     os: [darwin]
 
-  '@next/swc-darwin-x64@13.5.4':
-    resolution: {integrity: sha512-siPuUwO45PnNRMeZnSa8n/Lye5ZX93IJom9wQRB5DEOdFrw0JjOMu1GINB8jAEdwa7Vdyn1oJ2xGNaQpdQQ9Pw==}
+  '@next/swc-darwin-x64@14.2.30':
+    resolution: {integrity: sha512-TyO7Wz1IKE2kGv8dwQ0bmPL3s44EKVencOqwIY69myoS3rdpO1NPg5xPM5ymKu7nfX4oYJrpMxv8G9iqLsnL4A==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [darwin]
@@ -3638,8 +3638,8 @@ packages:
     cpu: [x64]
     os: [darwin]
 
-  '@next/swc-linux-arm64-gnu@13.5.4':
-    resolution: {integrity: sha512-l/k/fvRP/zmB2jkFMfefmFkyZbDkYW0mRM/LB+tH5u9pB98WsHXC0WvDHlGCYp3CH/jlkJPL7gN8nkTQVrQ/2w==}
+  '@next/swc-linux-arm64-gnu@14.2.30':
+    resolution: {integrity: sha512-I5lg1fgPJ7I5dk6mr3qCH1hJYKJu1FsfKSiTKoYwcuUf53HWTrEkwmMI0t5ojFKeA6Vu+SfT2zVy5NS0QLXV4Q==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
@@ -3652,8 +3652,8 @@ packages:
     os: [linux]
     libc: [glibc]
 
-  '@next/swc-linux-arm64-musl@13.5.4':
-    resolution: {integrity: sha512-YYGb7SlLkI+XqfQa8VPErljb7k9nUnhhRrVaOdfJNCaQnHBcvbT7cx/UjDQLdleJcfyg1Hkn5YSSIeVfjgmkTg==}
+  '@next/swc-linux-arm64-musl@14.2.30':
+    resolution: {integrity: sha512-8GkNA+sLclQyxgzCDs2/2GSwBc92QLMrmYAmoP2xehe5MUKBLB2cgo34Yu242L1siSkwQkiV4YLdCnjwc/Micw==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
@@ -3666,8 +3666,8 @@ packages:
     os: [linux]
     libc: [musl]
 
-  '@next/swc-linux-x64-gnu@13.5.4':
-    resolution: {integrity: sha512-uE61vyUSClnCH18YHjA8tE1prr/PBFlBFhxBZis4XBRJoR+txAky5d7gGNUIbQ8sZZ7LVkSVgm/5Fc7mwXmRAg==}
+  '@next/swc-linux-x64-gnu@14.2.30':
+    resolution: {integrity: sha512-8Ly7okjssLuBoe8qaRCcjGtcMsv79hwzn/63wNeIkzJVFVX06h5S737XNr7DZwlsbTBDOyI6qbL2BJB5n6TV/w==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
@@ -3680,8 +3680,8 @@ packages:
     os: [linux]
     libc: [glibc]
 
-  '@next/swc-linux-x64-musl@13.5.4':
-    resolution: {integrity: sha512-qVEKFYML/GvJSy9CfYqAdUexA6M5AklYcQCW+8JECmkQHGoPxCf04iMh7CPR7wkHyWWK+XLt4Ja7hhsPJtSnhg==}
+  '@next/swc-linux-x64-musl@14.2.30':
+    resolution: {integrity: sha512-dBmV1lLNeX4mR7uI7KNVHsGQU+OgTG5RGFPi3tBJpsKPvOPtg9poyav/BYWrB3GPQL4dW5YGGgalwZ79WukbKQ==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
@@ -3694,8 +3694,8 @@ packages:
     os: [linux]
     libc: [musl]
 
-  '@next/swc-win32-arm64-msvc@13.5.4':
-    resolution: {integrity: sha512-mDSQfqxAlfpeZOLPxLymZkX0hYF3juN57W6vFHTvwKlnHfmh12Pt7hPIRLYIShk8uYRsKPtMTth/EzpwRI+u8w==}
+  '@next/swc-win32-arm64-msvc@14.2.30':
+    resolution: {integrity: sha512-6MMHi2Qc1Gkq+4YLXAgbYslE1f9zMGBikKMdmQRHXjkGPot1JY3n5/Qrbg40Uvbi8//wYnydPnyvNhI1DMUW1g==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [win32]
@@ -3706,8 +3706,8 @@ packages:
     cpu: [arm64]
     os: [win32]
 
-  '@next/swc-win32-ia32-msvc@13.5.4':
-    resolution: {integrity: sha512-aoqAT2XIekIWoriwzOmGFAvTtVY5O7JjV21giozBTP5c6uZhpvTWRbmHXbmsjZqY4HnEZQRXWkSAppsIBweKqw==}
+  '@next/swc-win32-ia32-msvc@14.2.30':
+    resolution: {integrity: sha512-pVZMnFok5qEX4RT59mK2hEVtJX+XFfak+/rjHpyFh7juiT52r177bfFKhnlafm0UOSldhXjj32b+LZIOdswGTg==}
     engines: {node: '>= 10'}
     cpu: [ia32]
     os: [win32]
@@ -3718,8 +3718,8 @@ packages:
     cpu: [ia32]
     os: [win32]
 
-  '@next/swc-win32-x64-msvc@13.5.4':
-    resolution: {integrity: sha512-cyRvlAxwlddlqeB9xtPSfNSCRy8BOa4wtMo0IuI9P7Y0XT2qpDrpFKRyZ7kUngZis59mPVla5k8X1oOJ8RxDYg==}
+  '@next/swc-win32-x64-msvc@14.2.30':
+    resolution: {integrity: sha512-4KCo8hMZXMjpTzs3HOqOGYYwAXymXIy7PEPAXNEcEOyKqkjiDlECumrWziy+JEF0Oi4ILHGxzgQ3YiMGG2t/Lg==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [win32]
@@ -4538,9 +4538,6 @@ packages:
 
   '@swc/counter@0.1.3':
     resolution: {integrity: sha512-e2BR4lsJkkRlKZ/qCHPw9ZaSxc0MVUd7gtbtaB7aMvHeJVYe8sOB8DBZkP2DtISHGSku9sCK6T6cnY0CtXrOCQ==}
-
-  '@swc/helpers@0.5.2':
-    resolution: {integrity: sha512-E4KcWTpoLHqwPHLxidpOqQbcrZVgi0rsmmZXUle1jXmJfuIf/UWpczUJ7MZZ5tlxytgJXyp0w4PGkkeLiuIdZw==}
 
   '@swc/helpers@0.5.5':
     resolution: {integrity: sha512-KGYxvIOXcceOAbEk4bi/dVLEK9z8sZ0uBB3Il5b1rhfClSpcX0yfRO0KmTkqR2cnQDymwLB+25ZyMzICg/cm/A==}
@@ -5400,6 +5397,7 @@ packages:
   aws-sdk@2.1459.0:
     resolution: {integrity: sha512-My45PgQYhRTh6fOeZ94ELUoXzza/6gTy0J22aK4iy0DEA+uE5gjr1VthnIwbLYNMeEqn8xwJZuNJqvi/WaUUcQ==}
     engines: {node: '>= 10.0.0'}
+    deprecated: The AWS SDK for JavaScript (v2) has reached end-of-support, and no longer receives updates. Please migrate your code to use AWS SDK for JavaScript (v3). More info https://a.co/cUPnyil
 
   axe-core@4.11.1:
     resolution: {integrity: sha512-BASOg+YwO2C+346x3LZOeoovTIoTrRqEsqMa6fmfAV0P+U9mFr9NsyOEpiYvFjbc64NMrSswhV50WdXzdb/Z5A==}
@@ -5694,9 +5692,6 @@ packages:
   camelcase@6.3.0:
     resolution: {integrity: sha512-Gmy6FhYlCY7uOElZUSbxo2UCDH8owEk996gkbrpsgGtrJLM3J7jGxl9Ic7Qwwj4ivOE5AWZWRMecDdF7hqGjFA==}
     engines: {node: '>=10'}
-
-  caniuse-lite@1.0.30001546:
-    resolution: {integrity: sha512-zvtSJwuQFpewSyRrI3AsftF6rM0X80mZkChIt1spBGEvRglCrjTniXvinc8JKRoqTwXAgvqTImaN9igfSMtUBw==}
 
   caniuse-lite@1.0.30001769:
     resolution: {integrity: sha512-BCfFL1sHijQlBGWBMuJyhZUhzo7wer5sVj9hqekB/7xn0Ypy+pER/edCYQm4exbXj4WiySGp40P8UuTh6w1srg==}
@@ -6108,6 +6103,7 @@ packages:
 
   deep-diff@1.0.2:
     resolution: {integrity: sha512-aWS3UIVH+NPGCD1kki+DCU9Dua032iSsO43LqQpcs4R3+dVv7tX0qBGjiVHJHjplsoUM2XRO/KB92glqc68awg==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   deep-equal@1.1.1:
     resolution: {integrity: sha512-yd9c5AdiqVcR+JjcwUQb9DkhJc8ngNr0MahEBGvDiJw8puWab2yZlh+nkasOnZP+EGTAP6rRp2JzJhJZzvNF8g==}
@@ -7114,19 +7110,20 @@ packages:
   glob@10.3.12:
     resolution: {integrity: sha512-TCNv8vJ+xz4QiqTpfOJA7HvYv+tNIRHKfUWw/q+v2jdgN4ebz+KY9tGx5J4rHP0o84mNP+ApH66HRX8us3Khqg==}
     engines: {node: '>=16 || 14 >=14.17'}
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
     hasBin: true
 
   glob@7.1.7:
     resolution: {integrity: sha512-OvD9ENzPLbegENnYP5UUfJIirTg4+XwMWGaQfQTY0JenxNvvIKP3U3/tAQSPIu/lHxXYSZmpXlUHeqAIdKzBLQ==}
-    deprecated: Glob versions prior to v9 are no longer supported
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   glob@7.2.0:
     resolution: {integrity: sha512-lmLf6gtyrPq8tTjSmrO94wBeQbFR3HbLHbuyD69wuyQkImp2hWqMGB47OX65FBkPffO641IP9jWa1z4ivqG26Q==}
-    deprecated: Glob versions prior to v9 are no longer supported
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
-    deprecated: Glob versions prior to v9 are no longer supported
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   glob@9.3.5:
     resolution: {integrity: sha512-e1LleDykUz2Iu+MTYdkSsuWX8lvAjAcs0Xef0lNIu0S2wOAzuTxCJtcd9S3cijlwYF18EsU3rzb8jPVobxDh9Q==}
@@ -8696,11 +8693,6 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
-  nanoid@3.3.6:
-    resolution: {integrity: sha512-BGcqMMJuToF7i1rt+2PWSNVnWIkGCU78jBG3RxO/bZlnZPK2Cmi2QaffxGO/2RvWi9sL+FAiRiXMgsyxQ1DIDA==}
-    engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
-    hasBin: true
-
   napi-build-utils@1.0.2:
     resolution: {integrity: sha512-ONmRUqK7zj7DWX0D9ADe03wbwOBZxNAfF20PlGfCWQcD3+/MakShIHrMqx9YwPTfxDdF1zLeL+RGZiR9kGMLdg==}
 
@@ -8755,17 +8747,21 @@ packages:
       less-loader: '>= 7.0.0'
       next: '>= 11.0.1'
 
-  next@13.5.4:
-    resolution: {integrity: sha512-+93un5S779gho8y9ASQhb/bTkQF17FNQOtXLKAj3lsNgltEcF0C5PMLLncDmH+8X1EnJH1kbqAERa29nRXqhjA==}
-    engines: {node: '>=16.14.0'}
+  next@14.2.30:
+    resolution: {integrity: sha512-+COdu6HQrHHFQ1S/8BBsCag61jZacmvbuL2avHvQFbWa2Ox7bE+d8FyNgxRLjXQ5wtPyQwEmk85js/AuaG2Sbg==}
+    engines: {node: '>=18.17.0'}
+    deprecated: This version has a security vulnerability. Please upgrade to a patched version. See https://nextjs.org/blog/security-update-2025-12-11 for more details.
     hasBin: true
     peerDependencies:
       '@opentelemetry/api': ^1.1.0
+      '@playwright/test': ^1.41.2
       react: ^18.2.0
       react-dom: ^18.2.0
       sass: ^1.3.0
     peerDependenciesMeta:
       '@opentelemetry/api':
+        optional: true
+      '@playwright/test':
         optional: true
       sass:
         optional: true
@@ -9180,9 +9176,6 @@ packages:
 
   pgpass@1.0.5:
     resolution: {integrity: sha512-FdW9r/jQZhSeohs1Z3sI1yxFQNFvMcnmfuj4WBMUTxOrAyLMaTcE1aAMBiTlbMNaXvBCQuVi0R7hd8udDSP7ug==}
-
-  picocolors@1.0.0:
-    resolution: {integrity: sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ==}
 
   picocolors@1.1.1:
     resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
@@ -10223,10 +10216,6 @@ packages:
     resolution: {integrity: sha512-vzn8aSqKgytVik0iwdBEi+zevbTYZogewTUM6dtpmGwEcdzbub/TX4bCzRhebDCRC3QzXgJsLRKB2V/Oof7HXg==}
     engines: {node: '>=0.10.0'}
 
-  source-map-js@1.0.2:
-    resolution: {integrity: sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==}
-    engines: {node: '>=0.10.0'}
-
   source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
     engines: {node: '>=0.10.0'}
@@ -10565,6 +10554,7 @@ packages:
   tar@6.2.0:
     resolution: {integrity: sha512-/Wo7DcT0u5HUV486xg675HtjNd3BXZ6xDbzsCUZPt5iw8bTQ63bP0Raut3mvro9u+CUyq7YQd8Cx55fsZXxqLQ==}
     engines: {node: '>=10'}
+    deprecated: Old versions of tar are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   tarn@3.0.2:
     resolution: {integrity: sha512-51LAVKUSZSVfI05vjPESNc5vwqqZpbXCsU+/+wxlOrUjk2SnFTt97v9ZgQrD4YmxYW1Px6w2KjaDitCfkvgxMQ==}
@@ -11054,10 +11044,6 @@ packages:
   walker@1.0.8:
     resolution: {integrity: sha512-ts/8E8l5b7kY0vlWLewOkDXMmPdLcVV4GmOQLyxuSswIJsweeFZtAsMF7k1Nszz+TYBQrlYRmzOnr398y1JemQ==}
 
-  watchpack@2.4.0:
-    resolution: {integrity: sha512-Lcvm7MGST/4fup+ifyKi2hjyIAwcdI4HRgtvTpIUxBRhB+RFtUh8XtDOxUfctVCnhVi+QQj49i91OyvzkJl6cg==}
-    engines: {node: '>=10.13.0'}
-
   watchpack@2.4.4:
     resolution: {integrity: sha512-c5EGNOiyxxV5qmTtAB7rbiXxi1ooX1pQKMLX/MIabJjRA0SJBQOjKF+KSVfHkr9U1cADPon0mRiVe/riyaiDUA==}
     engines: {node: '>=10.13.0'}
@@ -11119,6 +11105,7 @@ packages:
   whatwg-encoding@2.0.0:
     resolution: {integrity: sha512-p41ogyeMUrw3jWclHWTQg1k05DSVXPLcVxRTYsXUk+ZooOCZLcoYgPZ/HL/D/N+uQPOtcp1me1WhBEaX02mhWg==}
     engines: {node: '>=12'}
+    deprecated: Use @exodus/bytes instead for a more spec-conformant and faster implementation
 
   whatwg-mimetype@3.0.0:
     resolution: {integrity: sha512-nt+N2dzIutVRxARx1nghPKGv1xHikU7HKdfafKkLNLindmPU/ch3U31NOCGGA/dmPcmb1VlofO0vnKAcsm0o/Q==}
@@ -12870,7 +12857,7 @@ snapshots:
       chalk: 4.1.2
       ci-info: 3.7.1
       exit: 0.1.2
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
       jest-changed-files: 28.1.3
       jest-config: 28.1.3(@types/node@20.6.2)
       jest-haste-map: 28.1.3
@@ -13112,12 +13099,12 @@ snapshots:
       '@tybys/wasm-util': 0.10.1
     optional: true
 
-  '@next-auth/mongodb-adapter@1.1.3(mongodb@6.3.0(@aws-sdk/credential-providers@3.425.0)(socks@2.7.1))(next-auth@4.24.5(next@13.5.4(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(nodemailer@6.9.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))':
+  '@next-auth/mongodb-adapter@1.1.3(mongodb@6.3.0(@aws-sdk/credential-providers@3.425.0)(socks@2.7.1))(next-auth@4.24.5(next@14.2.30(@opentelemetry/api@1.9.0)(@playwright/test@1.50.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(nodemailer@6.9.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))':
     dependencies:
       mongodb: 6.3.0(@aws-sdk/credential-providers@3.425.0)(socks@2.7.1)
-      next-auth: 4.24.5(next@13.5.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(nodemailer@6.9.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      next-auth: 4.24.5(next@14.2.30(@opentelemetry/api@1.9.0)(@playwright/test@1.50.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(nodemailer@6.9.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
 
-  '@next/env@13.5.4': {}
+  '@next/env@14.2.30': {}
 
   '@next/env@14.2.35': {}
 
@@ -13129,55 +13116,55 @@ snapshots:
     dependencies:
       fast-glob: 3.3.1
 
-  '@next/swc-darwin-arm64@13.5.4':
+  '@next/swc-darwin-arm64@14.2.30':
     optional: true
 
   '@next/swc-darwin-arm64@14.2.33':
     optional: true
 
-  '@next/swc-darwin-x64@13.5.4':
+  '@next/swc-darwin-x64@14.2.30':
     optional: true
 
   '@next/swc-darwin-x64@14.2.33':
     optional: true
 
-  '@next/swc-linux-arm64-gnu@13.5.4':
+  '@next/swc-linux-arm64-gnu@14.2.30':
     optional: true
 
   '@next/swc-linux-arm64-gnu@14.2.33':
     optional: true
 
-  '@next/swc-linux-arm64-musl@13.5.4':
+  '@next/swc-linux-arm64-musl@14.2.30':
     optional: true
 
   '@next/swc-linux-arm64-musl@14.2.33':
     optional: true
 
-  '@next/swc-linux-x64-gnu@13.5.4':
+  '@next/swc-linux-x64-gnu@14.2.30':
     optional: true
 
   '@next/swc-linux-x64-gnu@14.2.33':
     optional: true
 
-  '@next/swc-linux-x64-musl@13.5.4':
+  '@next/swc-linux-x64-musl@14.2.30':
     optional: true
 
   '@next/swc-linux-x64-musl@14.2.33':
     optional: true
 
-  '@next/swc-win32-arm64-msvc@13.5.4':
+  '@next/swc-win32-arm64-msvc@14.2.30':
     optional: true
 
   '@next/swc-win32-arm64-msvc@14.2.33':
     optional: true
 
-  '@next/swc-win32-ia32-msvc@13.5.4':
+  '@next/swc-win32-ia32-msvc@14.2.30':
     optional: true
 
   '@next/swc-win32-ia32-msvc@14.2.33':
     optional: true
 
-  '@next/swc-win32-x64-msvc@13.5.4':
+  '@next/swc-win32-x64-msvc@14.2.30':
     optional: true
 
   '@next/swc-win32-x64-msvc@14.2.33':
@@ -13791,7 +13778,7 @@ snapshots:
 
   '@sentry/core@8.53.0': {}
 
-  '@sentry/nextjs@8.53.0(@opentelemetry/core@2.5.0(@opentelemetry/api@1.9.0))(@opentelemetry/instrumentation@0.56.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.2.0(@opentelemetry/api@1.9.0))(encoding@0.1.13)(next@13.5.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.94.0)':
+  '@sentry/nextjs@8.53.0(@opentelemetry/core@2.5.0(@opentelemetry/api@1.9.0))(@opentelemetry/instrumentation@0.56.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.2.0(@opentelemetry/api@1.9.0))(encoding@0.1.13)(next@14.2.30(@opentelemetry/api@1.9.0)(@playwright/test@1.50.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.94.0)':
     dependencies:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/semantic-conventions': 1.39.0
@@ -13804,7 +13791,7 @@ snapshots:
       '@sentry/vercel-edge': 8.53.0
       '@sentry/webpack-plugin': 2.22.7(encoding@0.1.13)(webpack@5.94.0)
       chalk: 3.0.0
-      next: 13.5.4(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      next: 14.2.30(@opentelemetry/api@1.9.0)(@playwright/test@1.50.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       resolve: 1.22.8
       rollup: 3.29.5
       stacktrace-parser: 0.1.11
@@ -14254,10 +14241,6 @@ snapshots:
   '@swc/counter@0.1.2': {}
 
   '@swc/counter@0.1.3': {}
-
-  '@swc/helpers@0.5.2':
-    dependencies:
-      tslib: 2.6.2
 
   '@swc/helpers@0.5.5':
     dependencies:
@@ -15492,7 +15475,7 @@ snapshots:
 
   browserslist@4.22.1:
     dependencies:
-      caniuse-lite: 1.0.30001546
+      caniuse-lite: 1.0.30001769
       electron-to-chromium: 1.4.542
       node-releases: 2.0.13
       update-browserslist-db: 1.0.13(browserslist@4.22.1)
@@ -15631,8 +15614,6 @@ snapshots:
   camelcase@5.3.1: {}
 
   camelcase@6.3.0: {}
-
-  caniuse-lite@1.0.30001546: {}
 
   caniuse-lite@1.0.30001769: {}
 
@@ -19464,8 +19445,6 @@ snapshots:
 
   nanoid@3.3.3: {}
 
-  nanoid@3.3.6: {}
-
   napi-build-utils@1.0.2: {}
 
   napi-postinstall@0.3.4: {}
@@ -19496,13 +19475,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  next-auth@4.24.5(next@13.5.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(nodemailer@6.9.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+  next-auth@4.24.5(next@14.2.30(@opentelemetry/api@1.9.0)(@playwright/test@1.50.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(nodemailer@6.9.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
       '@babel/runtime': 7.23.5
       '@panva/hkdf': 1.1.1
       cookie: 0.5.0
       jose: 4.15.2
-      next: 13.5.4(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      next: 14.2.30(@opentelemetry/api@1.9.0)(@playwright/test@1.50.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       oauth: 0.9.15
       openid-client: 5.6.0
       preact: 10.18.1
@@ -19515,42 +19494,43 @@ snapshots:
 
   next-tick@1.1.0: {}
 
-  next-with-less@3.0.1(less-loader@11.1.3(less@4.1.3)(webpack@5.94.0))(less@4.1.3)(next@13.5.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)):
+  next-with-less@3.0.1(less-loader@11.1.3(less@4.1.3)(webpack@5.94.0))(less@4.1.3)(next@14.2.30(@opentelemetry/api@1.9.0)(@playwright/test@1.50.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)):
     dependencies:
       clone-deep: 4.0.1
       less: 4.1.3
       less-loader: 11.1.3(less@4.1.3)(webpack@5.94.0)
-      next: 13.5.4(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      next: 14.2.30(@opentelemetry/api@1.9.0)(@playwright/test@1.50.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
 
-  next-with-less@3.0.1(less-loader@11.1.3(less@4.2.0)(webpack@5.94.0))(less@4.2.0)(next@13.5.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)):
+  next-with-less@3.0.1(less-loader@11.1.3(less@4.2.0)(webpack@5.94.0))(less@4.2.0)(next@14.2.30(@opentelemetry/api@1.9.0)(@playwright/test@1.50.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)):
     dependencies:
       clone-deep: 4.0.1
       less: 4.2.0
       less-loader: 11.1.3(less@4.2.0)(webpack@5.94.0)
-      next: 13.5.4(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      next: 14.2.30(@opentelemetry/api@1.9.0)(@playwright/test@1.50.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
 
-  next@13.5.4(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+  next@14.2.30(@opentelemetry/api@1.9.0)(@playwright/test@1.50.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
-      '@next/env': 13.5.4
-      '@swc/helpers': 0.5.2
+      '@next/env': 14.2.30
+      '@swc/helpers': 0.5.5
       busboy: 1.6.0
-      caniuse-lite: 1.0.30001546
+      caniuse-lite: 1.0.30001769
+      graceful-fs: 4.2.11
       postcss: 8.4.31
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       styled-jsx: 5.1.1(@babel/core@7.29.0)(react@18.2.0)
-      watchpack: 2.4.0
     optionalDependencies:
-      '@next/swc-darwin-arm64': 13.5.4
-      '@next/swc-darwin-x64': 13.5.4
-      '@next/swc-linux-arm64-gnu': 13.5.4
-      '@next/swc-linux-arm64-musl': 13.5.4
-      '@next/swc-linux-x64-gnu': 13.5.4
-      '@next/swc-linux-x64-musl': 13.5.4
-      '@next/swc-win32-arm64-msvc': 13.5.4
-      '@next/swc-win32-ia32-msvc': 13.5.4
-      '@next/swc-win32-x64-msvc': 13.5.4
+      '@next/swc-darwin-arm64': 14.2.30
+      '@next/swc-darwin-x64': 14.2.30
+      '@next/swc-linux-arm64-gnu': 14.2.30
+      '@next/swc-linux-arm64-musl': 14.2.30
+      '@next/swc-linux-x64-gnu': 14.2.30
+      '@next/swc-linux-x64-musl': 14.2.30
+      '@next/swc-win32-arm64-msvc': 14.2.30
+      '@next/swc-win32-ia32-msvc': 14.2.30
+      '@next/swc-win32-x64-msvc': 14.2.30
       '@opentelemetry/api': 1.9.0
+      '@playwright/test': 1.50.1
     transitivePeerDependencies:
       - '@babel/core'
       - babel-plugin-macros
@@ -20019,8 +19999,6 @@ snapshots:
     dependencies:
       split2: 4.2.0
 
-  picocolors@1.0.0: {}
-
   picocolors@1.1.1: {}
 
   picomatch@2.3.1: {}
@@ -20111,9 +20089,9 @@ snapshots:
 
   postcss@8.4.31:
     dependencies:
-      nanoid: 3.3.6
-      picocolors: 1.0.0
-      source-map-js: 1.0.2
+      nanoid: 3.3.11
+      picocolors: 1.1.1
+      source-map-js: 1.2.1
 
   postcss@8.5.6:
     dependencies:
@@ -21266,8 +21244,6 @@ snapshots:
     dependencies:
       is-plain-obj: 1.1.0
 
-  source-map-js@1.0.2: {}
-
   source-map-js@1.2.1: {}
 
   source-map-support@0.5.13:
@@ -22291,11 +22267,6 @@ snapshots:
   walker@1.0.8:
     dependencies:
       makeerror: 1.0.12
-
-  watchpack@2.4.0:
-    dependencies:
-      glob-to-regexp: 0.4.1
-      graceful-fs: 4.2.11
 
   watchpack@2.4.4:
     dependencies:
