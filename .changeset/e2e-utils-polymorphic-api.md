@@ -1,23 +1,31 @@
 ---
 '@lowdefy/e2e-utils': minor
+'@lowdefy/cli': minor
 '@lowdefy/client': minor
 '@lowdefy/blocks-antd': minor
 '@lowdefy/block-dev-e2e': patch
 ---
 
-feat(e2e-utils): Add polymorphic API for app developer e2e testing
+feat(e2e-utils): Add e2e testing package for Lowdefy apps
 
-**@lowdefy/e2e-utils**
+**@lowdefy/e2e-utils** (new package)
 
-- Add `createConfig()` for Playwright config with automatic build and server management
-- Add `ldf` fixture with polymorphic block API (`ldf.blocks['id'].method()`)
-- Add `globalSetup` that runs `lowdefy build` and generates e2e manifest
-- Add manifest generation from build artifacts for block type resolution
-- Export fixtures from `@lowdefy/e2e-utils/fixtures`
+- Locator-first API via `ldf` Playwright fixture: `ldf.block('id').do.*`, `ldf.block('id').expect.*`
+- Request mocking with static YAML files (`mocks.yaml`) and inline per-test overrides
+- Request assertion API: `ldf.request('id').expect.toFinish()`, `.toHaveResponse()`, `.toHavePayload()`
+- State and URL assertions: `ldf.state('key').expect.toBe()`, `ldf.url().expect.toBe()`
+- Manifest generation from build artifacts for block type resolution and helper loading
+- `createConfig()` and `createMultiAppConfig()` for Playwright config with automatic build/server management
+- Scaffold command (`npx @lowdefy/e2e-utils`) for project setup with templates and dependency management
+- Block helper factory with auto-provided expect methods (visible, hidden, disabled, validation)
+
+**@lowdefy/cli**
+
+- Add `--server` option to `lowdefy build` for server variant selection (e.g., `--server e2e`)
 
 **@lowdefy/client**
 
-- Expose `window.lowdefy` when `NEXT_PUBLIC_LOWDEFY_E2E=true` for production e2e testing
+- Expose `window.lowdefy` when `NEXT_PUBLIC_LOWDEFY_E2E=true` for e2e state/validation access
 
 **@lowdefy/blocks-antd**
 
