@@ -38,11 +38,13 @@ import writePageJit from './writePageJit.js';
 
 async function buildPageJit({ pageId, pageRegistry, context, directories, logger }) {
   // Use provided context or create a minimal one for JIT builds
-  const buildContext = context ?? createContext({
-    directories,
-    logger: logger ?? console,
-    stage: 'dev',
-  });
+  const buildContext =
+    context ??
+    createContext({
+      directories,
+      logger: logger ?? console,
+      stage: 'dev',
+    });
 
   const pageEntry = type.isFunction(pageRegistry.get)
     ? pageRegistry.get(pageId)

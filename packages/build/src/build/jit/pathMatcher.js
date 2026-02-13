@@ -15,9 +15,7 @@
 */
 
 function pathMatches(path, pattern) {
-  const regex = new RegExp(
-    '^' + pattern.replace(/\./g, '\\.').replace(/\*/g, '[^.]+') + '(\\.|$)'
-  );
+  const regex = new RegExp('^' + pattern.replace(/\./g, '\\.').replace(/\*/g, '[^.]+') + '(\\.|$)');
   return regex.test(path);
 }
 

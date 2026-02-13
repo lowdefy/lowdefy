@@ -19,7 +19,8 @@ import path from 'path';
 
 class MockConfigError extends Error {
   constructor({ message, error, filePath, received }) {
-    const finalMessage = error instanceof Error ? `Could not parse YAML. ${error.message}` : message;
+    const finalMessage =
+      error instanceof Error ? `Could not parse YAML. ${error.message}` : message;
     super(finalMessage);
     this.name = 'ConfigError';
     this.received = received;

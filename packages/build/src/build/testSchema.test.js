@@ -79,9 +79,7 @@ test('invalid schema', () => {
     lowdefy: '1.0.0',
     global: 'global',
   };
-  expect(() => testSchema({ components, context })).toThrow(
-    'App "global" should be an object.'
-  );
+  expect(() => testSchema({ components, context })).toThrow('App "global" should be an object.');
 });
 
 test('multiple schema errors throws on first error', () => {
@@ -172,9 +170,7 @@ test('nested schema error 2', () => {
       },
     ],
   };
-  expect(() => testSchema({ components, context })).toThrow(
-    'Block "blocks" should be an array.'
-  );
+  expect(() => testSchema({ components, context })).toThrow('Block "blocks" should be an array.');
 });
 
 test('connections schema error', () => {

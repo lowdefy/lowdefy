@@ -92,9 +92,7 @@ function refReviver(key, value) {
         const defaultValue = type.isNone(value._var.default) ? null : value._var.default;
         return copyVarValue(defaultValue, null);
       }
-      throw new Error(
-        '_var operator takes a string or object with "key" field as arguments.'
-      );
+      throw new Error('_var operator takes a string or object with "key" field as arguments.');
     }
   }
   return value;

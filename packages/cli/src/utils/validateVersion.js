@@ -18,8 +18,7 @@ import axios from 'axios';
 import semver from 'semver';
 
 async function validateVersion({ cliVersion, lowdefyVersion, logger, requiresLowdefyYaml }) {
-  const ui =
-    logger?.ui ??
+  const ui = logger?.ui ??
     logger ?? {
       warn: (message) => console.warn(message),
     };

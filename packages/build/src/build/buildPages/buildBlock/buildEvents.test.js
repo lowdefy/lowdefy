@@ -185,9 +185,7 @@ test('block events actions try not an array', () => {
       components,
       context,
     })
-  ).toThrow(
-    'Try actions must be an array at "block_1" in event "onClick.try" on page "page_1".'
-  );
+  ).toThrow('Try actions must be an array at "block_1" in event "onClick.try" on page "page_1".');
 });
 
 test('block events actions not an array', () => {
