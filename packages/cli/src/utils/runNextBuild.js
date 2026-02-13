@@ -29,7 +29,7 @@ function createStdOutLineHandler({ context }) {
 }
 
 async function runNextBuild({ context, directory }) {
-  context.logger.info('Running Next build.', { spin: true });
+  context.logger.info({ spin: true }, 'Running Next build.');
   try {
     await spawnProcess({
       command: context.pnpmCmd,

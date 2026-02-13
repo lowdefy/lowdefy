@@ -18,7 +18,7 @@ import { spawnProcess } from '@lowdefy/node-utils';
 import { createStdOutLineHandler } from '@lowdefy/logger/cli';
 
 async function runLowdefyBuild({ context, directory }) {
-  context.logger.info('Running Lowdefy build.', { spin: true });
+  context.logger.info({ spin: true }, 'Running Lowdefy build.');
   try {
     await spawnProcess({
       args: ['run', 'build:lowdefy'],

@@ -642,13 +642,22 @@ function createBrowserHandleError(lowdefy) {
 
 One `createCliLogger` function. No separate `createPrint`. No color sub-methods.
 
+**API matches pino's two-argument form** `logger.level(mergeObj, messageString)` for consistency — all build/server code uses this shape, and the line handler can forward in the same form:
+
+```javascript
+logger.info({ spin: true }, 'Building pages...');
+logger.info({ color: 'blue' }, 'some info');
+logger.error(error);
+logger.info('plain string');
+```
+
 **Input handling logic:**
 
-1. Error/error-like (has `.message`)?
+1. First arg is error/error-like (has `.message`)?
    - Log `error.source` in blue (if present), at the same log level
    - Log `errorToDisplayString(error)` in red (error level) or yellow (warn level)
-2. String? → log the string
-3. Object with `msg`? → log `msg` (with color/spin/succeed from object)
+2. Second arg is a string? → first arg is options (`color`/`spin`/`succeed`), second is the message
+3. First arg is a string? → log the string (no options)
 4. Else → `JSON.stringify(obj, null, 2)`
 
 **Two modes:**
@@ -663,41 +672,37 @@ function createCliLogger({ logLevel } = {}) {
   // Display layer (Ora or console)
   // ... spinner setup for interactive mode ...
 
-  function log(level, input) {
+  function log(level, first, second) {
     // Error-like: source in blue, then formatted message
-    if (input && typeof input !== 'string' && input.message !== undefined) {
-      if (input.source) {
-        display(level, input.source, { color: 'blue' });
+    if (first && typeof first !== 'string' && first.message !== undefined) {
+      if (first.source) {
+        display(level, first.source, { color: 'blue' });
       }
-      display(level, errorToDisplayString(input));
+      display(level, errorToDisplayString(first));
+      return;
+    }
+
+    // Two-arg form: (mergeObj, messageString) — matches pino API
+    if (typeof second === 'string') {
+      display(level, second, { color: first.color, spin: first.spin, succeed: first.succeed });
       return;
     }
 
     // String
-    if (typeof input === 'string') {
-      display(level, input);
-      return;
-    }
-
-    // Object with msg (from line handler / pino JSON)
-    if (input?.msg) {
-      if (input.source) {
-        display(level, input.source, { color: 'blue' });
-      }
-      const text = input.msg;
-      display(level, text, { color: input.color, spin: input.spin, succeed: input.succeed });
+    if (typeof first === 'string') {
+      display(level, first);
       return;
     }
 
     // Fallback: stringify
-    display(level, JSON.stringify(input, null, 2));
+    display(level, JSON.stringify(first, null, 2));
   }
 
   return {
-    error: (input) => log('error', input),
-    warn: (input) => log('warn', input),
-    info: (input) => log('info', input),
-    debug: (input) => log('debug', input),
+    error: (first, second) => log('error', first, second),
+    warn: (first, second) => log('warn', first, second),
+    info: (first, second) => log('info', first, second),
+    debug: (first, second) => log('debug', first, second),
   };
 }
 ```
@@ -739,14 +744,11 @@ function createStdOutLineHandler({ context }) {
       return;
     }
 
-    // Pass structured message to logger (pino default messageKey is 'msg')
-    logger[level]({
-      msg: parsed.msg,
-      source: parsed.source,
-      color: parsed.color,
-      spin: parsed.spin,
-      succeed: parsed.succeed,
-    });
+    // Two-arg form matching pino API: (mergeObj, messageString)
+    logger[level](
+      { source: parsed.source, color: parsed.color, spin: parsed.spin, succeed: parsed.succeed },
+      parsed.msg
+    );
   };
 }
 ```
@@ -1121,17 +1123,18 @@ This doesn't need to change architecturally — `handleError` is the right place
 
 **Checklist:**
 
-- [ ] Merge `createPrint` into `createCliLogger`
-- [ ] Delete `createPrint.js` (or keep as internal)
-- [ ] Remove color sub-methods from CLI logger API
-- [ ] Implement input handling: error → string → object with msg → fallback
-- [ ] Error path: log `error.source` in blue, then `errorToDisplayString(error)`
-- [ ] Error path: log `error.stack` for LowdefyError and non-Lowdefy errors
-- [ ] Object path: handle `msg`, `color`, `spin`, `succeed`
-- [ ] Keep Ora memoisation (one spinner per process)
-- [ ] Update `@lowdefy/logger/cli` exports
-- [ ] Update all affected tests
-- [ ] Run `pnpm --filter=@lowdefy/logger test`
+- [x] Merge `createPrint` into `createCliLogger`
+- [x] Delete `createPrint.js` (or keep as internal)
+- [x] Remove color sub-methods from CLI logger API
+- [x] Implement two-arg API matching pino: `logger.level(mergeObj, messageString)`
+- [x] Input handling: error → two-arg (mergeObj, string) → string → fallback
+- [x] Error path: log `error.source` in blue, then `errorToDisplayString(error)`
+- [x] Error path: log `error.stack` for LowdefyError and non-Lowdefy errors
+- [x] Two-arg path: handle `color`, `spin`, `succeed` from merge object
+- [x] Keep Ora memoisation (one spinner per process)
+- [x] Update `@lowdefy/logger/cli` exports
+- [x] Update all affected tests
+- [x] Run `pnpm --filter=@lowdefy/logger test`
 
 ---
 

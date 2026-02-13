@@ -36,7 +36,7 @@ async function init({ context }) {
   );
   context.logger.info("Created '.gitignore'.");
   await context.sendTelemetry();
-  context.logger.info('Project initialized.', { succeed: true });
+  context.logger.info({ succeed: true }, 'Project initialized.');
 }
 
 export default init;

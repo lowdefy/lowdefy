@@ -40,7 +40,7 @@ async function getServer({ context, packageName, directory }) {
   }
 
   if (fetchServer) {
-    context.logger.info(`Fetching ${packageName} from npm.`, { spin: true });
+    context.logger.info({ spin: true }, `Fetching ${packageName} from npm.`);
     await fetchNpmTarball({
       packageName,
       version: context.lowdefyVersion,

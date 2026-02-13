@@ -14,85 +14,182 @@
   limitations under the License.
 */
 
-import createPrint from './createPrint.js';
-import { errorToDisplayString } from '@lowdefy/errors';
+import ora from 'ora';
+import {
+  ConfigError,
+  PluginError,
+  ServiceError,
+  UserError,
+  errorToDisplayString,
+} from '@lowdefy/errors';
 
-const colorNames = ['red', 'green', 'yellow', 'blue', 'gray', 'white'];
+const reset = '\x1b[0m';
+const colors = {
+  red: (text) => `\x1b[31m${text}${reset}`,
+  green: (text) => `\x1b[32m${text}${reset}`,
+  yellow: (text) => `\x1b[33m${text}${reset}`,
+  blue: (text) => `\x1b[34m${text}${reset}`,
+  gray: (text) => `\x1b[2m${text}${reset}`,
+  white: (text) => text,
+};
+
+const defaultColors = {
+  error: 'red',
+  warn: 'yellow',
+  info: 'white',
+  debug: 'gray',
+};
+
+function getTime() {
+  const time = new Date(Date.now());
+  const h = time.getHours();
+  const m = time.getMinutes();
+  const s = time.getSeconds();
+  return `${h > 9 ? '' : '0'}${h}:${m > 9 ? '' : '0'}${m}:${s > 9 ? '' : '0'}${s}`;
+}
+
+// Standard pino levels + spin/succeed at info level
+const logLevelValues = {
+  error: 50,
+  warn: 40,
+  succeed: 30,
+  spin: 30,
+  info: 30,
+  debug: 20,
+};
+
+function filterLevels(obj, level) {
+  const levelValue = logLevelValues[level];
+  Object.keys(obj).forEach((key) => {
+    if (logLevelValues[key] < levelValue) {
+      obj[key] = () => {};
+    }
+  });
+  return obj;
+}
+
+function createOraPrint({ logLevel }) {
+  const spinner = ora({
+    spinner: 'random',
+    prefixText: () => colors.gray(getTime()),
+    color: 'blue',
+  });
+  return filterLevels(
+    {
+      error: (text, { color } = {}) => spinner.fail(colors[color ?? defaultColors.error](text)),
+      warn: (text, { color } = {}) => spinner.warn(colors[color ?? defaultColors.warn](text)),
+      info: (text, { color } = {}) =>
+        spinner.stopAndPersist({
+          symbol: '∙',
+          text: colors[color ?? defaultColors.info](text),
+        }),
+      debug: (text, { color } = {}) => {
+        if (spinner.isSpinning) {
+          spinner.stopAndPersist({ symbol: '∙' });
+        }
+        spinner.stopAndPersist({
+          symbol: colors.gray('+'),
+          text: colors[color ?? defaultColors.debug](text),
+        });
+      },
+      spin: (text) => spinner.start(text),
+      succeed: (text) => spinner.succeed(colors.green(text)),
+    },
+    logLevel
+  );
+}
+
+function createBasicPrint({ logLevel = 'info' }) {
+  return filterLevels(
+    {
+      error: (text) => console.error(text),
+      warn: (text) => console.warn(text),
+      info: (text) => console.log(text),
+      debug: (text) => console.debug(text),
+      spin: (text) => console.log(text),
+      succeed: (text) => console.log(text),
+    },
+    logLevel
+  );
+}
+
+// Memoise print so that error handler can get the same spinner object
+let print;
+
+function getPrint({ logLevel }) {
+  if (print) return print;
+  if (process.env.CI === 'true' || process.env.CI === '1') {
+    print = createBasicPrint({ logLevel });
+    return print;
+  }
+  print = createOraPrint({ logLevel });
+  return print;
+}
+
+function shouldLogStack(error) {
+  if (
+    error instanceof ConfigError ||
+    error instanceof PluginError ||
+    error instanceof ServiceError ||
+    error instanceof UserError
+  ) {
+    return false;
+  }
+  return true;
+}
+
+function isErrorLike(input) {
+  return input != null && typeof input !== 'string' && input.message !== undefined;
+}
 
 function createCliLogger({ logLevel } = {}) {
-  const print = createPrint({ logLevel });
+  const p = getPrint({ logLevel });
 
-  function createLevelMethod(level) {
-    const isErrorLevel = level === 'error' || level === 'warn';
-
-    const method = (first, options) => {
-      // Handle spin/succeed options
-      if (options?.spin) {
-        print.spin(typeof first === 'string' ? first : errorToDisplayString(first));
-        return;
+  function log(level, first, second) {
+    // 1. Error-like first arg
+    if (isErrorLike(first)) {
+      if (first.source) {
+        p.info(first.source, { color: 'blue' });
       }
-      if (options?.succeed) {
-        print.succeed(typeof first === 'string' ? first : errorToDisplayString(first));
-        return;
+      p[level](errorToDisplayString(first));
+      if (shouldLogStack(first) && first.stack) {
+        p[level](first.stack, { color: 'gray' });
       }
-
-      // Error object handling (warn/error only)
-      if (
-        isErrorLevel &&
-        typeof first !== 'string' &&
-        first &&
-        (first.name || first.message !== undefined)
-      ) {
-        if (first.source) {
-          logger.info.blue(first.source);
-        }
-        print[level](errorToDisplayString(first), { color: options?.color });
-        return;
-      }
-
-      // String message
-      const text = typeof first === 'string' ? first : errorToDisplayString(first);
-      print[level](text, { color: options?.color });
-    };
-
-    // Attach color sub-methods
-    for (const color of colorNames) {
-      method[color] = (first, options) => {
-        if (options?.spin) {
-          print.spin(typeof first === 'string' ? first : errorToDisplayString(first));
-          return;
-        }
-        if (options?.succeed) {
-          print.succeed(typeof first === 'string' ? first : errorToDisplayString(first));
-          return;
-        }
-
-        if (
-          isErrorLevel &&
-          typeof first !== 'string' &&
-          first &&
-          (first.name || first.message !== undefined)
-        ) {
-          if (first.source) {
-            logger.info.blue(first.source);
-          }
-          print[level](errorToDisplayString(first), { color });
-          return;
-        }
-
-        const text = typeof first === 'string' ? first : errorToDisplayString(first);
-        print[level](text, { color });
-      };
+      return;
     }
 
-    return method;
+    // 2. Pino two-arg form: (mergeObj, messageString)
+    if (typeof second === 'string') {
+      if (first?.spin) {
+        p.spin(second);
+        return;
+      }
+      if (first?.succeed) {
+        p.succeed(second);
+        return;
+      }
+      if (first?.source) {
+        p.info(first.source, { color: 'blue' });
+      }
+      p[level](second, { color: first?.color });
+      return;
+    }
+
+    // 3. Plain string
+    if (typeof first === 'string') {
+      p[level](first);
+      return;
+    }
+
+    // 4. Fallback
+    p[level](JSON.stringify(first, null, 2));
   }
 
   const logger = {
-    error: createLevelMethod('error'),
-    warn: createLevelMethod('warn'),
-    info: createLevelMethod('info'),
-    debug: createLevelMethod('debug'),
+    error: (first, second) => log('error', first, second),
+    warn: (first, second) => log('warn', first, second),
+    info: (first, second) => log('info', first, second),
+    debug: (first, second) => log('debug', first, second),
     child: () => logger,
     isLevelEnabled: () => true,
   };

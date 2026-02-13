@@ -16,7 +16,7 @@
 
 import { jest } from '@jest/globals';
 
-import createStdOutLineHandler from './cli/createStdOutLineHandler.js';
+import createStdOutLineHandler from './createStdOutLineHandler.js';
 
 function createMockLogger() {
   const info = jest.fn();

@@ -22,7 +22,7 @@ async function build({ context }) {
   await checkPortAvailable({ port: context.options.port });
   context.sendTelemetry({ sendTypes: true });
   const serverProcess = runStart({ context, directory: context.directories.server });
-  context.logger.info('Started server.', { succeed: true });
+  context.logger.info({ succeed: true }, 'Started server.');
   await serverProcess;
 }
 

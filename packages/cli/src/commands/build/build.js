@@ -36,7 +36,7 @@ async function build({ context }) {
     await runNextBuild({ context, directory });
   }
   await context.sendTelemetry({ sendTypes: true });
-  context.logger.info('Build successful.', { succeed: true });
+  context.logger.info({ succeed: true }, 'Build successful.');
 }
 
 export default build;
