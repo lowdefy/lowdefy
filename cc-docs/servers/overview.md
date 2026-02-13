@@ -8,25 +8,27 @@ Next.js-based servers for running Lowdefy applications.
 |---------|---------|----------|
 | `@lowdefy/server` | Production server | Deployment |
 | `@lowdefy/server-dev` | Development server | Local development |
+| `@lowdefy/server-e2e` | E2E testing server | Playwright testing with auth |
 
 ## Architecture
 
-Both servers are built on Next.js 13.5.4 and share:
+All three servers are built on Next.js 13.5.4 and share:
 - Core API handlers for requests and endpoints
-- NextAuth integration for authentication
 - Plugin loading from build artifacts
 - Page rendering with server-side props
 
+The production and dev servers use NextAuth for authentication. The e2e server replaces NextAuth with cookie-based session injection for Playwright testing.
+
 ## Key Differences
 
-| Aspect | Production | Development |
-|--------|------------|-------------|
-| Startup | `next start` | Process manager |
-| Build | Pre-built artifacts | Dynamic rebuilding |
-| Watching | None | 3 concurrent watchers |
-| Reload | N/A | SSE-based hot reload |
-| Plugins | Core only | Extended set |
-| Optimization | Full | Disabled |
+| Aspect | Production | Development | E2E |
+|--------|------------|-------------|-----|
+| Startup | `next start` | Process manager | `next start` |
+| Build | Pre-built artifacts | Dynamic rebuilding | Pre-built artifacts |
+| Watching | None | 3 concurrent watchers | None |
+| Reload | N/A | SSE-based hot reload | N/A |
+| Auth | NextAuth | NextAuth + mock user | Cookie-based |
+| Optimization | Full | Disabled | Full |
 
 ## Build Artifacts
 
@@ -65,7 +67,8 @@ build/
 |-------|---------|
 | `/api/request/[pageId]/[requestId]` | Execute requests |
 | `/api/endpoints/[endpointId]` | Execute API endpoints |
-| `/api/auth/[...nextauth]` | NextAuth handlers |
+| `/api/auth/[...nextauth]` | NextAuth handlers (production/dev only) |
+| `/api/auth/session` | Session retrieval (e2e: returns cookie user) |
 | `/api/usage` | Usage logging |
 
 ### Dev-Only Routes
@@ -111,3 +114,4 @@ API handlers receive a context with:
 
 - [server.md](./server.md) - Production server details
 - [server-dev.md](./server-dev.md) - Development server details
+- [server-e2e.md](./server-e2e.md) - E2E testing server details

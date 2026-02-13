@@ -23,10 +23,17 @@ import createHelperRegistry from '../proxy/createHelperRegistry.js';
 import createPageManager from '../proxy/createPageManager.js';
 import { generateManifest, loadManifest } from '../testPrep/generateManifest.js';
 import { createMockManager, loadStaticMocks } from '../mocking/index.js';
+import { setUserCookie } from '../core/userCookie.js';
 
 // Create test with ldf fixture
 export const test = base.extend({
+  // Option fixtures — overridable per-project via `use` in config.
+  // Multi-app configs set these per project; single-app configs use env vars.
+  buildDir: [process.env.LOWDEFY_BUILD_DIR || '.lowdefy/server/build', { option: true }],
+  mocksFile: [process.env.LOWDEFY_E2E_MOCKS_FILE || '', { option: true }],
+
   // Worker-scoped fixtures (shared across tests in a worker)
+  // These read from process.env directly — worker fixtures cannot depend on test-scoped options.
   helperRegistry: [
     // eslint-disable-next-line no-empty-pattern
     async ({}, use) => {
@@ -43,7 +50,7 @@ export const test = base.extend({
     // eslint-disable-next-line no-empty-pattern
     async ({}, use) => {
       const mocksFile = process.env.LOWDEFY_E2E_MOCKS_FILE;
-      const mocks = loadStaticMocks(mocksFile);
+      const mocks = loadStaticMocks(mocksFile || undefined);
       await use(mocks);
     },
     { scope: 'worker' },
@@ -130,6 +137,12 @@ export const test = base.extend({
   ldf: async ({ page, manifest, helperRegistry, staticMocks }, use) => {
     const mockManager = createMockManager({ page });
     await mockManager.applyStaticMocks(staticMocks);
+
+    // Apply default user from mocks.yaml
+    if (staticMocks.user) {
+      await setUserCookie(page, staticMocks.user);
+    }
+
     const pageManager = createPageManager({ page, manifest, helperRegistry, mockManager });
     await use(pageManager);
     await mockManager.cleanup();

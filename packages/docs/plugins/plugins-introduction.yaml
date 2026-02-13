@@ -55,7 +55,7 @@ _ref:
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: Overview
-            previous_page_id: overview
+            previous_page_title: Vercel
+            previous_page_id: vercel
             next_page_title: Developing Plugins
             next_page_id: plugins-dev
