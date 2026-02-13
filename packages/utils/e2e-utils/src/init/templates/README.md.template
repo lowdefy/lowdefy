@@ -1,0 +1,263 @@
+# E2E Testing
+
+End-to-end tests for your Lowdefy app using Playwright.
+
+## Running Tests
+
+```bash
+pnpm e2e        # Run all tests
+pnpm e2e:ui     # Run in UI mode (interactive)
+```
+
+## File Structure
+
+```
+e2e/
+  fixtures.js           # Test fixtures (ldf helper, mdb if enabled)
+  playwright.config.js  # Playwright configuration
+  mocks.yaml            # Static request mocks
+  example.spec.js       # Example test file - start here!
+  mongodb.spec.js       # MongoDB test examples (if enabled)
+  .env.e2e              # Environment variables template
+  .env.e2e.local        # Your local env vars (gitignored)
+```
+
+## Writing Tests
+
+See `example.spec.js` for working examples you can copy and modify.
+
+### Basic Test Structure
+
+```javascript
+import { test, expect } from './fixtures.js';
+
+test('page loads correctly', async ({ ldf }) => {
+  await ldf.goto('/my-page');
+
+  // Interact with blocks
+  await ldf.block('my_input').do.fill('Hello');
+  await ldf.block('submit_btn').do.click();
+
+  // Assert block state
+  await ldf.block('success_message').expect.visible();
+  await ldf.block('result').expect.text('Hello');
+});
+```
+
+### Block Interactions
+
+```javascript
+// Text inputs
+await ldf.block('name_input').do.fill('John Doe');
+await ldf.block('name_input').do.clear();
+
+// Buttons
+await ldf.block('submit_btn').do.click();
+
+// Selectors
+await ldf.block('priority').do.select('high');
+
+// Get the underlying Playwright locator for custom actions
+const locator = ldf.block('my_block').locator();
+await locator.scrollIntoViewIfNeeded();
+```
+
+### Block Assertions
+
+```javascript
+await ldf.block('alert').expect.visible();
+await ldf.block('alert').expect.hidden();
+await ldf.block('title').expect.text('Welcome');
+await ldf.block('btn').expect.disabled();
+await ldf.block('btn').expect.enabled();
+await ldf.block('items_list').expect.itemCount(5);
+```
+
+### Waiting for Requests
+
+```javascript
+// Wait for a request to complete
+await ldf.request('fetch_data').expect.toFinish();
+
+// Assert request payload
+await ldf.request('submit_form').expect.toHavePayload({
+  name: 'Test User',
+});
+```
+
+### State Assertions
+
+```javascript
+// Assert state values
+await ldf.state('form_submitted').expect.toBe(true);
+await ldf.state('items').expect.toBe([{ id: 1, name: 'Item' }]);
+
+// Get state value for custom assertions
+const items = await ldf.state('items').value();
+expect(items.length).toBeGreaterThan(0);
+```
+
+### Mocking Requests
+
+```javascript
+// Mock a request response
+await ldf.mock.request('search_products', {
+  response: { products: [{ id: 1, title: 'Mock Product' }] },
+});
+
+// Mock an error
+await ldf.mock.request('fetch_user', {
+  error: 'User not found',
+});
+```
+
+## Playwright Configuration
+
+Edit `playwright.config.js` to customize test behavior.
+
+### Configuration Options
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `appDir` | `'../'` | Path to your Lowdefy app root (relative to config file) |
+| `buildDir` | `'.lowdefy/server/build'` | Build output directory (relative to appDir) |
+| `mocksFile` | `'e2e/mocks.yaml'` | Static mocks file path (relative to appDir) |
+| `port` | `3000` | Port for the test server |
+| `testDir` | `'.'` | Directory containing test files (relative to config) |
+| `testMatch` | `'**/*.spec.js'` | Glob pattern for test files |
+| `timeout` | `180000` | Build and server start timeout in ms (3 min default) |
+| `screenshot` | `'only-on-failure'` | When to capture screenshots: `'off'`, `'on'`, or `'only-on-failure'` |
+| `outputDir` | `'test-results'` | Directory for test artifacts |
+
+### Example Customization
+
+```javascript
+import { createConfig } from '@lowdefy/e2e-utils/config';
+
+export default createConfig({
+  appDir: '../',
+  port: 3001,                    // Use different port
+  timeout: 300000,               // 5 min timeout for slow builds
+  screenshot: 'on',              // Always capture screenshots
+  testMatch: '**/*.e2e.js',      // Different file pattern
+});
+```
+
+### Multi-App Configuration
+
+For monorepos with multiple Lowdefy apps:
+
+```javascript
+import { createMultiAppConfig } from '@lowdefy/e2e-utils/config';
+
+export default createMultiAppConfig({
+  apps: [
+    { name: 'admin', appDir: '../apps/admin', port: 3001 },
+    { name: 'customer', appDir: '../apps/customer', port: 3002 },
+  ],
+  testDir: '.',
+  timeout: 180000,
+});
+```
+
+### Advanced: Extending the Config
+
+The config helpers return a standard Playwright config object. You can spread and extend it:
+
+```javascript
+import { createConfig } from '@lowdefy/e2e-utils/config';
+
+const baseConfig = createConfig({ port: 3000 });
+
+export default {
+  ...baseConfig,
+  retries: 2,
+  reporter: [['html', { open: 'never' }]],
+  projects: [
+    ...baseConfig.projects,
+    {
+      name: 'firefox',
+      use: { browserName: 'firefox' },
+    },
+  ],
+};
+```
+
+## Static Mocks (mocks.yaml)
+
+Define default mocks that apply to all tests. Tests can override these with `ldf.mock.request()`.
+
+```yaml
+requests:
+  - requestId: fetch_user
+    response:
+      id: 1
+      name: Test User
+      email: test@example.com
+
+  - requestId: search_products
+    response:
+      products: []
+      total: 0
+
+  - requestId: submit_form
+    error: Simulated error for testing
+
+api: []
+```
+
+## MongoDB Testing
+
+If MongoDB support is enabled, use the `mdb` fixture. See `mongodb.spec.js` for examples.
+
+```javascript
+test('database operations', async ({ ldf, mdb }) => {
+  // Seed test data
+  await mdb.seed('items', [
+    { _id: 'item-1', name: 'Test Item', price: 10 },
+  ]);
+
+  await ldf.goto('/items');
+  await ldf.request('get_items').expect.toFinish();
+
+  // Verify using native MongoDB driver
+  const doc = await mdb.collection('items').findOne({ _id: 'item-1' });
+  expect(doc.name).toBe('Test Item');
+});
+```
+
+### Snap Files
+
+Save and load database snapshots for repeatable test data:
+
+```javascript
+// Load from e2e/snaps/my-snap/collection.yaml
+await mdb.load('my-snap');
+
+// Save current database state to snap files
+await mdb.snap('my-snap', ['items', 'users']);
+```
+
+Snap files are YAML and can be version controlled:
+
+```
+e2e/snaps/
+  my-snap/
+    items.yaml
+    users.yaml
+```
+
+## Environment Variables
+
+Copy `.env.e2e` to `.env.e2e.local` and set your values:
+
+```bash
+cp e2e/.env.e2e e2e/.env.e2e.local
+```
+
+For MongoDB testing, set `MDB_E2E_URI` to a dedicated test database (data will be cleared during tests).
+
+## More Information
+
+- [Playwright Documentation](https://playwright.dev/docs/intro)
+- [Lowdefy Documentation](https://docs.lowdefy.com)

@@ -227,3 +227,78 @@ Input blocks automatically:
 - Read from `state[blockId]`
 - Write to `state[blockId]` on change
 - Support `value` property override
+
+## E2E Testing Helpers
+
+blocks-antd exports e2e helpers for Playwright testing via `@lowdefy/e2e-utils`.
+
+### Blocks with E2E Helpers
+
+| Block | Actions (`do.*`) | Assertions (`expect.*`) |
+|-------|------------------|------------------------|
+| `Alert` | - | visible, hidden, type, message |
+| `Button` | click | visible, disabled, enabled, loading, text, type |
+| `Card` | - | visible, hidden, title |
+| `Descriptions` | - | visible, hidden, item |
+| `NumberInput` | fill, clear | visible, value, disabled |
+| `PageHeaderMenu` | - | visible, title |
+| `Paragraph` | - | visible, text |
+| `Result` | - | visible, hidden, status, title |
+| `Selector` | select, clear, search | visible, value, disabled, enabled |
+| `Statistic` | - | visible, value, title |
+| `TextArea` | fill, clear | visible, value, disabled |
+| `TextInput` | fill, clear | visible, value, disabled |
+
+### Helper Export Pattern
+
+Each block's `e2e.js` file uses `createBlockHelper`:
+
+```javascript
+// src/blocks/TextInput/e2e.js
+import { createBlockHelper } from '@lowdefy/e2e-utils';
+import { expect } from '@playwright/test';
+
+const locator = (page, blockId) => page.locator(`#${blockId}_input`);
+
+export default createBlockHelper({
+  locator,
+  do: {
+    fill: (page, blockId, val) => locator(page, blockId).fill(val),
+    clear: (page, blockId) => locator(page, blockId).clear(),
+  },
+  expect: {
+    value: (page, blockId, val) => expect(locator(page, blockId)).toHaveValue(val),
+  },
+});
+```
+
+Common assertions (`visible`, `hidden`, `disabled`, `enabled`, `validationError`) are auto-provided by the factory.
+
+### Package Exports
+
+```json
+{
+  "exports": {
+    "./e2e/TextInput": "./dist/blocks/TextInput/e2e.js",
+    "./e2e/Button": "./dist/blocks/Button/e2e.js"
+  }
+}
+```
+
+### Locator Patterns
+
+Different blocks use different DOM locators:
+
+| Block | Locator Pattern |
+|-------|-----------------|
+| `TextInput`, `NumberInput` | `#${blockId}_input` |
+| `Button` | `#bl-${blockId} .ant-btn` |
+| `Alert` | `#bl-${blockId} .ant-alert` |
+| `Selector` | `#bl-${blockId} .ant-select` |
+
+Note: Ant Design components don't always forward the `id` prop, hence the `#bl-${blockId}` wrapper pattern.
+
+## See Also
+
+- [e2e-utils.md](../../utils/e2e-utils.md) - E2E testing utilities
+- [basic.md](./basic.md) - Basic blocks (List has e2e helper)

@@ -66,7 +66,7 @@ function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, 
       lowdefy._internal.updaters[blockId] && lowdefy._internal.updaters[blockId]();
     lowdefy._internal.logError = createLogError(lowdefy);
 
-    if (stage === 'dev') {
+    if (stage === 'dev' || process.env.NEXT_PUBLIC_LOWDEFY_E2E === 'true') {
       window.lowdefy = lowdefy;
     }
   }

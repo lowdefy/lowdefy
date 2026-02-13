@@ -1,0 +1,187 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: e2e-mocking
+    pageTitle: Mocking Requests
+    section: Testing
+    filePath: testing/e2e-mocking.yaml
+    content:
+      - id: md1
+        type: MarkdownWithCode
+        properties:
+          content: |
+            Some requests in your app may depend on external services that are unavailable in a test environment — for example, Atlas Search, third-party APIs, or services that require production credentials. Request mocking lets you control what these requests return, so your tests are fast, reliable, and independent of external systems.
+
+            There are two ways to mock requests:
+
+            - **Static mocks** — defined in `mocks.yaml`, applied to every test automatically
+            - **Inline mocks** — defined per-test in your test code, for test-specific scenarios
+
+            ## Static mocks (mocks.yaml)
+
+            The `mocks.yaml` file in your `e2e/` directory defines mocks that apply to all tests. This is useful for requests that should always be mocked in the test environment.
+
+            ```yaml
+            requests:
+              - requestId: atlas_search
+                response:
+                  - _id: doc-1
+                    title: Search Result
+                    score: 0.95
+
+              - requestId: fetch_config
+                response:
+                  theme: dark
+                  features:
+                    - analytics
+                    - notifications
+            ```
+
+            ### Page-specific mocks
+
+            You can scope a mock to a specific page using `pageId`:
+
+            ```yaml
+            requests:
+              - requestId: fetch_data
+                pageId: admin-dashboard
+                response: []
+            ```
+
+            ### Wildcard patterns
+
+            Use `*` wildcards to match multiple request or page IDs:
+
+            ```yaml
+            requests:
+              # Match any request starting with "fetch_"
+              - requestId: fetch_*
+                response: []
+
+              # Match fetch_* only on pages starting with "admin-"
+              - requestId: fetch_*
+                pageId: admin-*
+                response: []
+            ```
+
+            ### Error mocks
+
+            You can simulate request errors:
+
+            ```yaml
+            requests:
+              - requestId: atlas_search
+                error: Atlas Search is not available in the test environment
+            ```
+
+            ### API endpoint mocks
+
+            You can also mock Lowdefy API endpoints:
+
+            ```yaml
+            api:
+              - endpointId: external_webhook
+                method: POST
+                response:
+                  status: ok
+                  message: Webhook received
+            ```
+
+            ## Inline mocks (per-test)
+
+            Use `ldf.mock.request()` and `ldf.mock.api()` to set up mocks for individual tests. Inline mocks override static mocks for the same request ID.
+
+            ### Mock a request response
+
+            ```javascript
+            test('handles empty search results', async ({ ldf }) => {
+              await ldf.mock.request('search_products', {
+                response: [],
+              });
+
+              await ldf.goto('/search');
+              await ldf.block('search_input').do.fill('nonexistent');
+              await ldf.block('search_btn').do.click();
+
+              await ldf.request('search_products').expect.toFinish();
+              await ldf.block('no_results_alert').expect.visible();
+            });
+            ```
+
+            ### Simulate an error
+
+            ```javascript
+            test('shows error message when request fails', async ({ ldf }) => {
+              await ldf.mock.request('save_user', {
+                error: 'Database connection failed',
+              });
+
+              await ldf.goto('/profile');
+              await ldf.block('save_btn').do.click();
+
+              // Your app should handle the error gracefully
+            });
+            ```
+
+            ### Mock an API endpoint
+
+            ```javascript
+            await ldf.mock.api('external_webhook', {
+              method: 'POST',
+              response: { status: 'ok' },
+            });
+            ```
+
+            When you specify `method`, only that HTTP method is intercepted. Other methods pass through to the real server.
+
+            ## Capturing request payloads
+
+            Mocked requests automatically capture the payload sent by your app. This is useful for asserting that the correct data was sent:
+
+            ```javascript
+            test('search sends correct payload', async ({ ldf }) => {
+              await ldf.mock.request('search_products', { response: [] });
+
+              await ldf.goto('/search');
+              await ldf.block('search_input').do.fill('widget');
+              await ldf.block('search_btn').do.click();
+
+              const captured = ldf.mock.getCapturedRequest('search_products');
+              expect(captured.payload).toEqual(
+                expect.objectContaining({ query: 'widget' })
+              );
+            });
+            ```
+
+            Use `ldf.mock.clearCapturedRequests()` to clear captured payloads between assertions if needed.
+
+            ## Mock priority
+
+            When both static and inline mocks exist for the same request:
+
+            1. Static mocks from `mocks.yaml` are applied first (during test setup)
+            2. Inline mocks override static mocks for the same request ID
+
+            This means you can set sensible defaults in `mocks.yaml` and override them in specific tests.
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Writing Tests
+            previous_page_id: e2e-writing-tests
+            next_page_title: Configuration
+            next_page_id: e2e-configuration

@@ -1,0 +1,93 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: e2e-introduction
+    pageTitle: E2E Testing
+    section: Testing
+    filePath: testing/e2e-introduction.yaml
+    content:
+      - id: md1
+        type: MarkdownWithCode
+        properties:
+          content: |
+            End-to-end (e2e) testing verifies that your Lowdefy app works correctly from the user's perspective. Instead of testing individual functions, e2e tests open a real browser, navigate through your pages, fill in forms, click buttons, and check that everything behaves as expected.
+
+            The `@lowdefy/e2e-utils` package provides a Playwright-based testing toolkit built specifically for Lowdefy apps. It understands Lowdefy's block system, state management, and request lifecycle, so you can write expressive tests without worrying about implementation details.
+
+            ## What it provides
+
+            - **Locator-first API** — an intuitive pattern: get the thing, then do something with it
+            - **Request mocking** — control request responses with static YAML files or inline overrides
+            - **Block helpers** — type-aware interactions that know how to fill a TextInput, click a Button, or select from a Selector
+            - **Scaffold command** — `npx @lowdefy/e2e-utils` sets up everything you need in seconds
+
+            ## How it works
+
+            When you run your tests, Playwright:
+
+            1. Builds your Lowdefy app as a production build
+            2. Starts a local server
+            3. Opens a browser and runs your test code against the live app
+
+            The build runs with a special flag (`NEXT_PUBLIC_LOWDEFY_E2E=true`) that exposes internal state, so your tests can assert on page state, request responses, and validation status.
+
+            ## Prerequisites
+
+            - **Node.js 18+**
+            - A working Lowdefy app (your app must build successfully)
+            - **Playwright** (installed automatically during setup)
+
+      - id: build_alert
+        type: Alert
+        properties:
+          type: info
+          showIcon: false
+          message: E2e tests run against a production build of your app. If your app has build errors, the tests will not be able to start. Make sure <code>npx lowdefy build</code> succeeds before running tests.
+
+      - id: md2
+        type: MarkdownWithCode
+        properties:
+          content: |
+            ## Quick example
+
+            Here is what a simple test looks like:
+
+            ```javascript
+            import { test } from './fixtures.js';
+
+            test('contact form submits successfully', async ({ ldf }) => {
+              await ldf.goto('/contact');
+
+              await ldf.block('name_input').do.fill('Jane Doe');
+              await ldf.block('email_input').do.fill('jane@example.com');
+              await ldf.block('submit_btn').do.click();
+
+              await ldf.request('submit_form').expect.toFinish();
+              await ldf.state('form_submitted').expect.toBe(true);
+              await ldf.url().expect.toBe('/thank-you');
+            });
+            ```
+
+            The `ldf` object is your main testing helper. It is provided automatically by the test fixtures and gives you access to blocks, requests, state, and URL assertions.
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Vercel
+            previous_page_id: vercel
+            next_page_title: Getting Started
+            next_page_id: e2e-getting-started

@@ -1,0 +1,31 @@
+# E2E Request Mocks
+# Define mocked responses for requests that can't run in test environments
+# (Atlas Search, vector search, external APIs, etc.)
+
+# Request mocks - mock Lowdefy requests
+requests:
+  # Example: Mock a MongoDB Atlas Search request
+  # - requestId: atlas_search
+  #   response:
+  #     - _id: doc-1
+  #       title: Search Result
+  #       score: 0.95
+
+  # Example: Mock with pageId (only applies to specific page)
+  # - requestId: fetch_data
+  #   pageId: admin-dashboard
+  #   response: []
+
+  # Example: Mock with wildcard patterns
+  # - requestId: fetch_*
+  #   pageId: admin-*
+  #   response: []
+
+# API mocks - mock custom API endpoints
+api:
+  # Example: Mock an external API endpoint
+  # - endpointId: external_api
+  #   method: POST
+  #   response:
+  #     results: []
+  #     total: 0
