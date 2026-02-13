@@ -24,8 +24,7 @@ export default createBlockHelper({
   expect: {
     itemCount: (page, blockId, count) =>
       expect(locator(page, blockId).locator('> div')).toHaveCount(count),
-    empty: (page, blockId) =>
-      expect(locator(page, blockId).locator('> div')).toHaveCount(0),
+    empty: (page, blockId) => expect(locator(page, blockId).locator('> div')).toHaveCount(0),
     notEmpty: (page, blockId) =>
       expect(locator(page, blockId).locator('> div').first()).toBeVisible(),
   },

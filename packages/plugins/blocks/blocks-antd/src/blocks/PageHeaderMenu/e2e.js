@@ -23,19 +23,14 @@ export default createBlockHelper({
   locator,
   do: {
     clickMenuItem: (page, blockId, menuItemText) =>
-      locator(page, blockId)
-        .locator('.ant-menu-item')
-        .filter({ hasText: menuItemText })
-        .click(),
+      locator(page, blockId).locator('.ant-menu-item').filter({ hasText: menuItemText }).click(),
     clickLogo: (page, blockId) =>
       locator(page, blockId).locator(`#${blockId}_header`).locator('a').first().click(),
   },
   expect: {
     menuItemActive: (page, blockId, menuItemText) =>
       expect(
-        locator(page, blockId)
-          .locator('.ant-menu-item-selected')
-          .filter({ hasText: menuItemText })
+        locator(page, blockId).locator('.ant-menu-item-selected').filter({ hasText: menuItemText })
       ).toBeVisible(),
     menuItemVisible: (page, blockId, menuItemText) =>
       expect(

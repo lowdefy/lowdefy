@@ -25,9 +25,9 @@ export default createBlockHelper({
     title: (page, blockId, text) =>
       expect(locator(page, blockId).locator('.ant-descriptions-title')).toHaveText(text),
     itemLabel: (page, blockId, index, text) =>
-      expect(
-        locator(page, blockId).locator('.ant-descriptions-item-label').nth(index)
-      ).toHaveText(text),
+      expect(locator(page, blockId).locator('.ant-descriptions-item-label').nth(index)).toHaveText(
+        text
+      ),
     itemValue: (page, blockId, index, text) =>
       expect(
         locator(page, blockId).locator('.ant-descriptions-item-content').nth(index)
