@@ -108,11 +108,11 @@ When publishing your plugin to NPM, include `lowdefy` in the name for easy disco
 
 Run Lowdefy servers locally by adding your Lowdefy config to the `app/..` folder. Use one of the following scripts to the server:
 
-- `pnpm app:cli:dev`: Starts the development server with the config provided in the `app` folder, useful for developing locally.
-- `pnpm app:cli:build`: Creates a production build of your lowdefy app for the config config provided in the `app` folder.
-- `pnpm app:cli:start`: Starts the production server of your lowdefy app built using the `build` command output.
+- `pnpm app:dev` — Start the development server.
+- `pnpm app:build` — Create a production build.
+- `pnpm app:start` — Start the production server.
 
-> See the project `package.json` scripts for more predefined scripts.
+> Use `pnpm app:dev -- --path <path>` to run a specific app directory (e.g. a test app). See [CONTRIBUTING.md](https://github.com/lowdefy/lowdefy/blob/main/CONTRIBUTING.md) for more. See the project `package.json` scripts for more predefined scripts.
 
 Please also see [CONTRIBUTING.md](https://github.com/lowdefy/lowdefy/blob/main/CONTRIBUTING.md).
 
