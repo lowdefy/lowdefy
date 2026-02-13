@@ -206,7 +206,7 @@ After each extraction, ask before proceeding to the next.
 
 ```javascript
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
   ... license header ...
 */
 
@@ -228,7 +228,7 @@ export default validateRequiredString;
 
 ```javascript
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
   ... license header ...
 */
 
@@ -246,7 +246,7 @@ export default transformBlocks;
 
 ```javascript
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
   ... license header ...
 */
 

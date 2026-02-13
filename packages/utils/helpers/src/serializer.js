@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -79,7 +79,11 @@ const makeReplacer = (customReplacer, isoStringDates) => (key, value) => {
       return item;
     });
     // Preserve ~l, ~k, ~r on arrays by wrapping in a marker object
-    if (newValue['~l'] !== undefined || newValue['~k'] !== undefined || newValue['~r'] !== undefined) {
+    if (
+      newValue['~l'] !== undefined ||
+      newValue['~k'] !== undefined ||
+      newValue['~r'] !== undefined
+    ) {
       const wrapper = { '~arr': mappedArray };
       if (newValue['~r'] !== undefined) wrapper['~r'] = newValue['~r'];
       if (newValue['~k'] !== undefined) wrapper['~k'] = newValue['~k'];

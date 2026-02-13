@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -68,9 +68,7 @@ test('invalidateByFiles handles shared files affecting multiple pages', () => {
   cache.markCompiled('home');
   cache.markCompiled('dashboard');
 
-  const fileDependencyMap = new Map([
-    ['shared/layout.yaml', new Set(['home', 'dashboard'])],
-  ]);
+  const fileDependencyMap = new Map([['shared/layout.yaml', new Set(['home', 'dashboard'])]]);
 
   const affected = cache.invalidateByFiles(['shared/layout.yaml'], fileDependencyMap);
   expect(affected).toEqual(new Set(['home', 'dashboard']));

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -20,9 +20,7 @@ import Throw from './Throw.js';
 const methods = { getBlockId: () => 'blockId', getPageId: () => 'pageId' };
 
 test('Throw no params', () => {
-  expect(() => Throw({ methods })).toThrow(
-    'Throw action params should be an object.'
-  );
+  expect(() => Throw({ methods })).toThrow('Throw action params should be an object.');
 });
 
 test('Throw params.throw should be a boolean.', () => {

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -61,11 +61,9 @@ function usePageConfig(pageId, basePath) {
   // Include reloadVersion in the SWR key so that after a config reload,
   // previously cached page data is not reused. The fetcher receives
   // [url, version] but only uses url — the version just busts the cache.
-  const { data } = useSWR(
-    [url, getReloadVersion()],
-    ([fetchUrl]) => fetchPageConfig(fetchUrl),
-    { suspense: true }
-  );
+  const { data } = useSWR([url, getReloadVersion()], ([fetchUrl]) => fetchPageConfig(fetchUrl), {
+    suspense: true,
+  });
   return { data };
 }
 
