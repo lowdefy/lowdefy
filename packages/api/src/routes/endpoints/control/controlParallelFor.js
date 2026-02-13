@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { PluginError } from '@lowdefy/errors/server';
+import { PluginError } from '@lowdefy/errors';
 import runRoutine from '../runRoutine.js';
 
 async function controlParallelFor(context, routineContext, { control }) {

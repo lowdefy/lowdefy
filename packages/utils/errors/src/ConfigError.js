@@ -17,10 +17,8 @@
 /**
  * Base error class for configuration errors (invalid YAML, schema violations, validation errors).
  *
- * This is the environment-agnostic base class. For environment-specific behavior:
- * - Build-time: Use @lowdefy/errors/build (sync resolution via keyMap/refMap)
- * - Server-side: Use @lowdefy/errors/server (re-exports base)
- * - Client-side: Use @lowdefy/errors/client (async resolution via API)
+ * Import from @lowdefy/errors for general use, or @lowdefy/errors/build for
+ * build-time behavior (sync resolution via keyMap/refMap).
  *
  * @example
  * // Simple string (for plugins - configKey added by interface layer)

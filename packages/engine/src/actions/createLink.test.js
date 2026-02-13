@@ -15,7 +15,7 @@
 */
 
 import { jest } from '@jest/globals';
-import { PluginError } from '@lowdefy/errors/client';
+import { PluginError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import testContext from '../../test/testContext.js';

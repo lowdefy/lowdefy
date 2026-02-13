@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigError } from '@lowdefy/errors/server';
+import { ConfigError } from '@lowdefy/errors';
 
 async function getConnectionConfig({ logger, readConfigFile }, { requestConfig }) {
   const { connectionId, requestId } = requestConfig;

@@ -895,19 +895,19 @@ This doesn't need to change architecturally — `handleError` is the right place
 
 **Checklist:**
 
-- [ ] Add `extractErrorProps` function to helpers (captures all enumerable props + `message`, `name`, `stack`, `cause`)
-- [ ] Export `extractErrorProps` from `@lowdefy/helpers`
-- [ ] Enhance `~e` replacer to use `extractErrorProps`
-- [ ] Enhance `~e` reviver: `Object.create(ErrorClass.prototype)` + assign, with `lowdefyErrorTypes` map (direct imports including UserError)
-- [ ] Remove `.serialize()` from ConfigError, LowdefyError, PluginError, ServiceError
-- [ ] Remove `.deserialize()` from ConfigError, LowdefyError, PluginError, ServiceError
-- [ ] Delete `deserializeError.js`
-- [ ] Remove `deserializeError` re-export from `server/index.js`
-- [ ] Simplify `logClientError.js`: flat object handling, no class reconstruction
-- [ ] Update all callers of `error.serialize()`, `error.deserialize()`, `deserializeError()`
-- [ ] Update all affected tests
-- [ ] Run `pnpm --filter=@lowdefy/helpers test`
-- [ ] Run `pnpm --filter=@lowdefy/errors test`
+- [x] Add `extractErrorProps` function to helpers (captures all enumerable props + `message`, `name`, `stack`, `cause`)
+- [x] Export `extractErrorProps` from `@lowdefy/helpers`
+- [x] Enhance `~e` replacer to use `extractErrorProps`
+- [x] Enhance `~e` reviver: `Object.create(ErrorClass.prototype)` + assign, with `lowdefyErrorTypes` map (direct imports including UserError)
+- [x] Remove `.serialize()` from ConfigError, LowdefyError, PluginError, ServiceError
+- [x] Remove `.deserialize()` from ConfigError, LowdefyError, PluginError, ServiceError
+- [x] Delete `deserializeError.js`
+- [x] Remove `deserializeError` re-export from `server/index.js`
+- [x] Simplify `logClientError.js`: flat object handling, no class reconstruction
+- [x] Update all callers of `error.serialize()`, `error.deserialize()`, `deserializeError()`
+- [x] Update all affected tests
+- [x] Run `pnpm --filter=@lowdefy/helpers test`
+- [x] Run `pnpm --filter=@lowdefy/errors test`
 
 ---
 

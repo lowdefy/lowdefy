@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigError, errorToDisplayString, PluginError, UserError } from '@lowdefy/errors/client';
+import { ConfigError, errorToDisplayString, PluginError, UserError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 import getActionMethods from './actions/getActionMethods.js';
 

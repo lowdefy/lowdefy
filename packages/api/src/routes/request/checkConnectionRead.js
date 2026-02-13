@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { ConfigError } from '@lowdefy/errors/server';
+import { ConfigError } from '@lowdefy/errors';
 
 function checkConnectionRead(
   { logger },

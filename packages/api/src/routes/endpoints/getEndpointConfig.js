@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigError } from '@lowdefy/errors/server';
+import { ConfigError } from '@lowdefy/errors';
 
 async function getEndpointConfig({ logger, readConfigFile }, { endpointId }) {
   const endpoint = await readConfigFile(`api/${endpointId}.json`);

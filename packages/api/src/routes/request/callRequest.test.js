@@ -19,7 +19,7 @@ import { operatorsServer } from '@lowdefy/operators-js';
 import callRequest from './callRequest.js';
 import testContext from '../../test/testContext.js';
 
-import { ConfigError, PluginError } from '@lowdefy/errors/server';
+import { ConfigError, PluginError } from '@lowdefy/errors';
 
 const { _date, _payload, _secret, _user } = operatorsServer;
 

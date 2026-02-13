@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { PluginError } from '@lowdefy/errors/server';
+import { PluginError } from '@lowdefy/errors';
 
 import runTest from '../test/runTest.js';
 

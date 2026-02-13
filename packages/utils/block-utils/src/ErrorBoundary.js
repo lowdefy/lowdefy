@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 
-import { ConfigError, LowdefyError, PluginError, ServiceError } from '@lowdefy/errors/client';
+import { ConfigError, LowdefyError, PluginError, ServiceError } from '@lowdefy/errors';
 
 import ErrorPage from './ErrorPage.js';
 

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 import { jest } from '@jest/globals';
-import { PluginError, UserError } from '@lowdefy/errors/client';
+import { PluginError, UserError } from '@lowdefy/errors';
 
 import testContext from '../../test/testContext.js';
 

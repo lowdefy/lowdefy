@@ -17,10 +17,8 @@
 /**
  * Base configuration warning class.
  *
- * This is the environment-agnostic base class. For environment-specific behavior:
- * - Build-time: Use @lowdefy/errors/build (prodError flag, suppression logic)
- * - Server-side: Use @lowdefy/errors/server (re-exports base)
- * - Client-side: Use @lowdefy/errors/client (re-exports base)
+ * Import from @lowdefy/errors for general use, or @lowdefy/errors/build for
+ * build-time behavior (prodError flag, suppression logic).
  *
  * @example
  * const warning = new ConfigWarning({ message: 'Deprecated feature used', source: 'config.yaml:10' });

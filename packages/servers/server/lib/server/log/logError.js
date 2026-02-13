@@ -20,7 +20,7 @@ import {
   LowdefyError,
   PluginError,
   ServiceError,
-} from '@lowdefy/errors/server';
+} from '@lowdefy/errors';
 import { resolveErrorConfigLocation } from '@lowdefy/errors/build';
 
 import captureSentryError from '../sentry/captureSentryError.js';

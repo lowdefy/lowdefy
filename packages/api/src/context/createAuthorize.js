@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigError } from '@lowdefy/errors/server';
+import { ConfigError } from '@lowdefy/errors';
 
 function createAuthorize({ session }) {
   // Next-auth getSession provides a session object if the user is authenticated
