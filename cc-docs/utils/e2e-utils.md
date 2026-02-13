@@ -97,6 +97,7 @@ ldf.mock.request('id', { response }) // Inline mocking
 | `url.js` | URL and query parameter assertions |
 | `validation.js` | Block validation state access |
 | `locators.js` | Common locator patterns |
+| `userCookie.js` | Set/clear `lowdefy_e2e_user` cookie via `browserContext.addCookies()` |
 
 ### Proxy (`src/proxy/`)
 
@@ -350,6 +351,48 @@ Payload is extracted from the POST body's `payload` field (matching Lowdefy's re
 
 - `toHaveResponse` — exact match: `JSON.stringify(actual) === JSON.stringify(expected)`
 - `toHavePayload` — partial match: actual payload only needs to contain all keys from expected (can have extra keys)
+
+## User Authentication
+
+The `ldf` fixture provides a `user()` method for setting the test user per browser context.
+
+### API
+
+```javascript
+await ldf.user({ id: 'test', name: 'Test', roles: ['admin'] });  // Set user
+await ldf.user(null);                                              // Clear user
+```
+
+### Default User from mocks.yaml
+
+The `mocks.yaml` file supports a `user` key for a default test user applied to all tests automatically:
+
+```yaml
+user:
+  name: Test User
+  email: test@example.com
+  roles:
+    - admin
+```
+
+**File:** `src/mocking/loadStaticMocks.js` reads the `user` key.
+**File:** `src/fixtures/index.js` applies it via `setUserCookie(page, staticMocks.user)` during test setup.
+
+### How It Works
+
+1. `ldf.user(obj)` calls `setUserCookie(page, obj)` in `src/core/userCookie.js`
+2. `setUserCookie` encodes the user as `base64(JSON.stringify(obj))` and sets the `lowdefy_e2e_user` cookie via `page.context().addCookies()`
+3. The cookie is sent with every request to `server-e2e`
+4. `server-e2e/getServerSession` reads the cookie and returns `{ user }` as the session
+5. Authorization runs normally via `createAuthorize(session)` in `@lowdefy/api`
+
+The user object maps directly — no `userFields`, no session callbacks. Whatever the test sets is exactly what `lowdefy.user` receives.
+
+### Clearing the User
+
+`ldf.user(null)` or `ldf.user(undefined)` calls `clearUserCookie(page)` which removes the cookie via `page.context().clearCookies({ name: 'lowdefy_e2e_user' })`.
+
+See [server-e2e.md](../servers/server-e2e.md) for the server-side implementation.
 
 ## Integration with Blocks
 

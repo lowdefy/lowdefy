@@ -33,6 +33,7 @@ _ref:
             - **Locator-first API** — an intuitive pattern: get the thing, then do something with it
             - **Request mocking** — control request responses with static YAML files or inline overrides
             - **Block helpers** — type-aware interactions that know how to fill a TextInput, click a Button, or select from a Selector
+            - **User authentication** — set test users per browser context with cookie-based session injection
             - **Scaffold command** — `npx @lowdefy/e2e-utils` sets up everything you need in seconds
 
             ## How it works
@@ -87,7 +88,7 @@ _ref:
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: Vercel
-            previous_page_id: vercel
+            previous_page_title: Auth0LogoutCallback
+            previous_page_id: Auth0LogoutCallback
             next_page_title: Getting Started
             next_page_id: e2e-getting-started
