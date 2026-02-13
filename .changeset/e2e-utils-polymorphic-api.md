@@ -6,7 +6,7 @@
 '@lowdefy/block-dev-e2e': patch
 ---
 
-feat(e2e-utils): Add e2e testing package for Lowdefy apps
+Add e2e testing package for Lowdefy apps
 
 **@lowdefy/e2e-utils** (new package)
 
