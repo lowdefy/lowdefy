@@ -29,11 +29,12 @@ beforeEach(() => {
 
 test('handleError logs error with display string', () => {
   const context = {
+    logger: mockPinoLogger,
     keyMap: {},
     refMap: {},
     directories: { config: '/app' },
   };
-  const handleError = createBuildHandleError({ pinoLogger: mockPinoLogger, context });
+  const handleError = createBuildHandleError({ context });
 
   const error = new ConfigError({ message: 'Bad config' });
   handleError(error);
@@ -47,6 +48,7 @@ test('handleError logs error with display string', () => {
 
 test('handleError resolves location from configKey before logging', () => {
   const context = {
+    logger: mockPinoLogger,
     keyMap: {
       abc123: { key: 'pages.0.blocks.0.type', '~r': 'ref1', '~l': 10 },
     },
@@ -55,7 +57,7 @@ test('handleError resolves location from configKey before logging', () => {
     },
     directories: { config: '/app' },
   };
-  const handleError = createBuildHandleError({ pinoLogger: mockPinoLogger, context });
+  const handleError = createBuildHandleError({ context });
 
   const error = new ConfigError({ message: 'Invalid type', configKey: 'abc123' });
   handleError(error);
@@ -66,6 +68,7 @@ test('handleError resolves location from configKey before logging', () => {
 
 test('handleError falls back to error.message when resolveErrorLocation throws', () => {
   const context = {
+    logger: mockPinoLogger,
     keyMap: null, // will cause resolveErrorLocation to throw
     refMap: null,
     directories: { config: '/app' },
@@ -76,7 +79,7 @@ test('handleError falls back to error.message when resolveErrorLocation throws',
       throw new Error('keyMap exploded');
     },
   });
-  const handleError = createBuildHandleError({ pinoLogger: mockPinoLogger, context });
+  const handleError = createBuildHandleError({ context });
 
   const error = new ConfigError({ message: 'Something broke' });
   handleError(error);
@@ -88,7 +91,7 @@ test('handleError falls back to error.message when resolveErrorLocation throws',
   );
 });
 
-test('handleError falls back to console.error when pinoLogger also throws', () => {
+test('handleError falls back to console.error when logger also throws', () => {
   const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
   const throwingLogger = {
     error: jest.fn(() => {
@@ -96,6 +99,7 @@ test('handleError falls back to console.error when pinoLogger also throws', () =
     }),
   };
   const context = {
+    logger: throwingLogger,
     keyMap: {},
     refMap: {},
     directories: { config: '/app' },
@@ -106,7 +110,7 @@ test('handleError falls back to console.error when pinoLogger also throws', () =
       throw new Error('keyMap exploded');
     },
   });
-  const handleError = createBuildHandleError({ pinoLogger: throwingLogger, context });
+  const handleError = createBuildHandleError({ context });
 
   const error = new Error('total failure');
   handleError(error);
@@ -117,11 +121,12 @@ test('handleError falls back to console.error when pinoLogger also throws', () =
 
 test('handleError includes received in display string', () => {
   const context = {
+    logger: mockPinoLogger,
     keyMap: {},
     refMap: {},
     directories: { config: '/app' },
   };
-  const handleError = createBuildHandleError({ pinoLogger: mockPinoLogger, context });
+  const handleError = createBuildHandleError({ context });
 
   const error = new ConfigError({ message: 'Invalid type', received: { type: 'Buton' } });
   handleError(error);
@@ -134,11 +139,12 @@ test('handleError includes received in display string', () => {
 
 test('handleError works with plain Error (not ConfigError)', () => {
   const context = {
+    logger: mockPinoLogger,
     keyMap: {},
     refMap: {},
     directories: { config: '/app' },
   };
-  const handleError = createBuildHandleError({ pinoLogger: mockPinoLogger, context });
+  const handleError = createBuildHandleError({ context });
 
   const error = new Error('plain error');
   handleError(error);
@@ -152,10 +158,11 @@ test('handleError works with plain Error (not ConfigError)', () => {
 
 test('handleError works when directories is undefined', () => {
   const context = {
+    logger: mockPinoLogger,
     keyMap: {},
     refMap: {},
   };
-  const handleError = createBuildHandleError({ pinoLogger: mockPinoLogger, context });
+  const handleError = createBuildHandleError({ context });
 
   const error = new ConfigError({ message: 'No dirs' });
   handleError(error);

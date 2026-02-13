@@ -25,6 +25,7 @@ const mockPinoLogger = {
 
 function createContext(overrides = {}) {
   return {
+    logger: mockPinoLogger,
     keyMap: {},
     refMap: {},
     directories: { config: '/app' },
@@ -41,7 +42,7 @@ beforeEach(() => {
 
 test('handleWarning logs warning with display string', () => {
   const context = createContext();
-  const handleWarning = createHandleWarning({ pinoLogger: mockPinoLogger, context });
+  const handleWarning = createHandleWarning({ context });
 
   handleWarning({ message: 'Something looks wrong' });
 
@@ -60,7 +61,7 @@ test('handleWarning resolves location from configKey', () => {
       ref1: { path: 'pages/home.yaml' },
     },
   });
-  const handleWarning = createHandleWarning({ pinoLogger: mockPinoLogger, context });
+  const handleWarning = createHandleWarning({ context });
 
   handleWarning({ message: 'Bad block', configKey: 'abc123' });
 
@@ -71,7 +72,7 @@ test('handleWarning resolves location from configKey', () => {
 
 test('handleWarning sets received on warning', () => {
   const context = createContext();
-  const handleWarning = createHandleWarning({ pinoLogger: mockPinoLogger, context });
+  const handleWarning = createHandleWarning({ context });
 
   handleWarning({ message: 'Wrong type', received: { type: 'Buton' } });
 
@@ -87,7 +88,7 @@ test('handleWarning suppresses when ~ignoreBuildChecks is true', () => {
       abc123: { key: 'pages.0', '~ignoreBuildChecks': true },
     },
   });
-  const handleWarning = createHandleWarning({ pinoLogger: mockPinoLogger, context });
+  const handleWarning = createHandleWarning({ context });
 
   handleWarning({ message: 'Suppressed', configKey: 'abc123' });
 
@@ -100,7 +101,7 @@ test('handleWarning suppresses specific checkSlug', () => {
       abc123: { key: 'pages.0', '~ignoreBuildChecks': ['state-reference'] },
     },
   });
-  const handleWarning = createHandleWarning({ pinoLogger: mockPinoLogger, context });
+  const handleWarning = createHandleWarning({ context });
 
   handleWarning({ message: 'State ref', configKey: 'abc123', checkSlug: 'state-reference' });
 
@@ -113,7 +114,7 @@ test('handleWarning does not suppress non-matching checkSlug', () => {
       abc123: { key: 'pages.0', '~ignoreBuildChecks': ['state-reference'] },
     },
   });
-  const handleWarning = createHandleWarning({ pinoLogger: mockPinoLogger, context });
+  const handleWarning = createHandleWarning({ context });
 
   handleWarning({ message: 'Link ref', configKey: 'abc123', checkSlug: 'link-reference' });
 
@@ -124,7 +125,7 @@ test('handleWarning does not suppress non-matching checkSlug', () => {
 
 test('handleWarning collects warning as error in prod mode', () => {
   const context = createContext({ stage: 'prod' });
-  const handleWarning = createHandleWarning({ pinoLogger: mockPinoLogger, context });
+  const handleWarning = createHandleWarning({ context });
 
   handleWarning({ message: 'Prod failure', prodError: true });
 
@@ -136,7 +137,7 @@ test('handleWarning collects warning as error in prod mode', () => {
 
 test('handleWarning does not escalate prodError in dev mode', () => {
   const context = createContext({ stage: 'dev' });
-  const handleWarning = createHandleWarning({ pinoLogger: mockPinoLogger, context });
+  const handleWarning = createHandleWarning({ context });
 
   handleWarning({ message: 'Dev warning', prodError: true });
 
@@ -146,7 +147,7 @@ test('handleWarning does not escalate prodError in dev mode', () => {
 
 test('handleWarning does not escalate when prodError is false', () => {
   const context = createContext({ stage: 'prod' });
-  const handleWarning = createHandleWarning({ pinoLogger: mockPinoLogger, context });
+  const handleWarning = createHandleWarning({ context });
 
   handleWarning({ message: 'Not escalated', prodError: false });
 
@@ -166,7 +167,7 @@ test('handleWarning deduplicates by source when resolved', () => {
       r1: { path: 'pages/home.yaml' },
     },
   });
-  const handleWarning = createHandleWarning({ pinoLogger: mockPinoLogger, context });
+  const handleWarning = createHandleWarning({ context });
 
   handleWarning({ message: 'Same source', configKey: 'k1' });
   handleWarning({ message: 'Same source', configKey: 'k2' });
@@ -176,7 +177,7 @@ test('handleWarning deduplicates by source when resolved', () => {
 
 test('handleWarning deduplicates by message when source not resolved', () => {
   const context = createContext();
-  const handleWarning = createHandleWarning({ pinoLogger: mockPinoLogger, context });
+  const handleWarning = createHandleWarning({ context });
 
   handleWarning({ message: 'Same message' });
   handleWarning({ message: 'Same message' });
@@ -194,7 +195,7 @@ test('handleWarning does not deduplicate different sources', () => {
       r1: { path: 'pages/home.yaml' },
     },
   });
-  const handleWarning = createHandleWarning({ pinoLogger: mockPinoLogger, context });
+  const handleWarning = createHandleWarning({ context });
 
   handleWarning({ message: 'Same msg', configKey: 'k1' });
   handleWarning({ message: 'Same msg', configKey: 'k2' });
@@ -207,7 +208,7 @@ test('handleWarning does not deduplicate different sources', () => {
 test('handleWarning works without context.seenSourceLines (no dedup)', () => {
   const context = createContext();
   delete context.seenSourceLines;
-  const handleWarning = createHandleWarning({ pinoLogger: mockPinoLogger, context });
+  const handleWarning = createHandleWarning({ context });
 
   handleWarning({ message: 'No dedup' });
   handleWarning({ message: 'No dedup' });
@@ -220,7 +221,7 @@ test('handleWarning works without context.seenSourceLines (no dedup)', () => {
 
 test('handleWarning passes source as null when location not resolved', () => {
   const context = createContext();
-  const handleWarning = createHandleWarning({ pinoLogger: mockPinoLogger, context });
+  const handleWarning = createHandleWarning({ context });
 
   handleWarning({ message: 'No location' });
 

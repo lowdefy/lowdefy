@@ -150,8 +150,8 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
   }
 
   context.logger = logger;
-  context.handleError = createBuildHandleError({ pinoLogger: logger, context });
-  context.handleWarning = createHandleWarning({ pinoLogger: logger, context });
+  context.handleError = createBuildHandleError({ context });
+  context.handleWarning = createHandleWarning({ context });
 
   return context;
 }

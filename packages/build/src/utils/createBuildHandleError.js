@@ -16,7 +16,7 @@
 
 import { errorToDisplayString, resolveErrorLocation } from '@lowdefy/errors/build';
 
-function createBuildHandleError({ pinoLogger, context }) {
+function createBuildHandleError({ context }) {
   return function handleError(error) {
     try {
       resolveErrorLocation(error, {
@@ -24,10 +24,10 @@ function createBuildHandleError({ pinoLogger, context }) {
         refMap: context.refMap,
         configDirectory: context.directories?.config,
       });
-      pinoLogger.error({ err: error }, errorToDisplayString(error));
+      context.logger.error({ err: error }, errorToDisplayString(error));
     } catch {
       try {
-        pinoLogger.error({ err: error }, error.message);
+        context.logger.error({ err: error }, error.message);
       } catch {
         console.error(error);
       }

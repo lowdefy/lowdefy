@@ -23,7 +23,7 @@ import {
 
 import collectExceptions from './collectExceptions.js';
 
-function createHandleWarning({ pinoLogger, context }) {
+function createHandleWarning({ context }) {
   return function handleWarning(params) {
     // Create warning
     const warning = new ConfigWarning({
@@ -67,7 +67,7 @@ function createHandleWarning({ pinoLogger, context }) {
     if (context.seenSourceLines?.has(dedupKey)) return;
     context.seenSourceLines?.add(dedupKey);
 
-    pinoLogger.warn({ err: warning, source }, errorToDisplayString(warning));
+    context.logger.warn({ err: warning, source }, errorToDisplayString(warning));
   };
 }
 
