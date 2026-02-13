@@ -185,16 +185,12 @@ function createCliLogger({ logLevel } = {}) {
     p[level](JSON.stringify(first, null, 2));
   }
 
-  const logger = {
+  return {
     error: (first, second) => log('error', first, second),
     warn: (first, second) => log('warn', first, second),
     info: (first, second) => log('info', first, second),
     debug: (first, second) => log('debug', first, second),
-    child: () => logger,
-    isLevelEnabled: () => true,
   };
-
-  return logger;
 }
 
 export default createCliLogger;

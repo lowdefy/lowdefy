@@ -400,23 +400,3 @@ describe('level filtering', () => {
     ]);
   });
 });
-
-describe('child and isLevelEnabled', () => {
-  beforeEach(() => {
-    jest.resetModules();
-  });
-
-  test('child returns the same logger', async () => {
-    const { default: createCliLogger } = await import('./createCliLogger.js');
-    const logger = createCliLogger({ logLevel: 'info' });
-    expect(logger.child()).toBe(logger);
-    expect(logger.child('name')).toBe(logger);
-  });
-
-  test('isLevelEnabled returns true', async () => {
-    const { default: createCliLogger } = await import('./createCliLogger.js');
-    const logger = createCliLogger({ logLevel: 'info' });
-    expect(logger.isLevelEnabled()).toBe(true);
-    expect(logger.isLevelEnabled('error')).toBe(true);
-  });
-});

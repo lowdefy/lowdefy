@@ -1146,7 +1146,7 @@ This doesn't need to change architecturally — `handleError` is the right place
 
 - Pure protocol translation: parse pino JSON, reconstruct errors, pass to logger.
 - If `parsed.err`: reconstruct error from flat pino JSON object (see below), call `logger[level](error)`.
-- Else: call `logger[level]({ msg: parsed.msg, source, color, spin, succeed })`. Plain message forwarding — no error reconstruction needed.
+- Else: call `logger[level]({ source, color, spin, succeed }, parsed.msg)` — two-arg form matching pino and CLI logger API. Plain message forwarding — no error reconstruction needed.
 - No display logic (no source handling, no color application — logger does all of that).
 - Error reconstruction from pino JSON: pino's `err` serializer writes flat objects via `extractErrorProps` (not `~e` wrapped). The line handler reconstructs these using the same `lowdefyErrorTypes` map the helpers serializer uses (direct import). `Object.create(ErrorClass.prototype)` + property assignment — same pattern as the `~e` reviver, just without the `~e` wrapper.
 
@@ -1159,7 +1159,7 @@ This doesn't need to change architecturally — `handleError` is the right place
 
 - [ ] Parse pino JSON, extract `level`, `msg`, `err`, `source`, `color`, `spin`, `succeed`
 - [ ] If `parsed.err`: reconstruct error via `Object.create + assign` with `lowdefyErrorTypes` map, call `logger[level](error)`
-- [ ] Else: forward `{ msg, source, color, spin, succeed }` to `logger[level]`
+- [ ] Else: forward as two-arg `logger[level]({ source, color, spin, succeed }, parsed.msg)`
 - [ ] Keep `{ context }` signature (extract `context.logger` internally)
 - [ ] Remove all display logic (source handling, color application)
 - [ ] Update all affected tests
