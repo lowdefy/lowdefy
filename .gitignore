@@ -9,6 +9,8 @@
 **/out/*
 **/.env
 
+.claude/settings.local.json
+
 .turbo
 
 packages/servers/*/build/**
