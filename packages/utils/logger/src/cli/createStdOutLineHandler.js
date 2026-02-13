@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { ConfigError, LowdefyError, PluginError, ServiceError, UserError } from '@lowdefy/errors';
+
 // Map pino numeric levels to level names
 const pinoLevelToName = {
   10: 'debug', // trace
@@ -24,6 +26,23 @@ const pinoLevelToName = {
   60: 'error', // fatal
 };
 
+const lowdefyErrorTypes = {
+  ConfigError,
+  LowdefyError,
+  PluginError,
+  ServiceError,
+  UserError,
+};
+
+function reconstructError(flatObj) {
+  const ErrorClass = lowdefyErrorTypes[flatObj.name] || Error;
+  const error = Object.create(ErrorClass.prototype);
+  for (const [k, v] of Object.entries(flatObj)) {
+    error[k] = v;
+  }
+  return error;
+}
+
 function createStdOutLineHandler({ context }) {
   const logger = context?.logger ?? {
     error: (text) => console.error(text),
@@ -32,45 +51,32 @@ function createStdOutLineHandler({ context }) {
     debug: (text) => console.debug(text),
   };
 
-  // Ensure color sub-methods exist for fallback logger
-  if (!logger.info.blue) {
-    logger.info.blue = logger.info;
-  }
-
   function stdOutLineHandler(line) {
+    let parsed;
     try {
-      const parsed = JSON.parse(line);
-      const { level, color, spin, succeed, source, err } = parsed;
-      const msg = typeof parsed.msg === 'string' ? parsed.msg : JSON.stringify(parsed.msg);
-      const levelName = pinoLevelToName[level] ?? 'info';
-
-      if (msg == null || msg === '' || msg === 'undefined') {
-        logger.info(line);
-        return;
-      }
-
-      const resolvedSource = err?.source ?? source;
-      if (resolvedSource && (levelName === 'error' || levelName === 'warn')) {
-        logger.info.blue(resolvedSource);
-      }
-
-      if (spin) {
-        logger.info(msg, { spin: true });
-        return;
-      }
-      if (succeed) {
-        logger.info(msg, { succeed: true });
-        return;
-      }
-
-      if (color) {
-        logger[levelName](msg, { color });
-      } else {
-        logger[levelName](msg);
-      }
-    } catch (error) {
+      parsed = JSON.parse(line);
+    } catch {
       logger.info(line);
+      return;
     }
+
+    const levelName = pinoLevelToName[parsed.level] ?? 'info';
+
+    if (parsed.err) {
+      logger[levelName](reconstructError(parsed.err));
+      return;
+    }
+
+    const msg = typeof parsed.msg === 'string' ? parsed.msg : null;
+    if (msg == null || msg === '') {
+      logger.info(line);
+      return;
+    }
+
+    logger[levelName](
+      { source: parsed.source, color: parsed.color, spin: parsed.spin, succeed: parsed.succeed },
+      msg
+    );
   }
   return stdOutLineHandler;
 }
