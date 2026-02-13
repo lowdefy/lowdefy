@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import actions from '../../build/plugins/actions.js';
 import blocks from '../../build/plugins/blocks.js';
 import icons from '../../build/plugins/icons.js';
 import operators from '../../build/plugins/operators/client.js';
-import jsMap from '../../build/plugins/operators/clientJsMap.js';
+import staticJsMap from '../../build/plugins/operators/clientJsMap.js';
 
 const App = ({ auth, lowdefy }) => {
   const router = useRouter();
@@ -50,7 +50,7 @@ const App = ({ auth, lowdefy }) => {
           config={{
             rootConfig,
           }}
-          jsMap={jsMap}
+          jsMap={staticJsMap}
           lowdefy={lowdefy}
           pageId={pageId}
           resetContext={resetContext}

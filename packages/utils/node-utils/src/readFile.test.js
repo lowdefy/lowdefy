@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -31,7 +31,5 @@ test('readFile file not found throws', async () => {
 });
 
 test('readFile error id filepath is not a string', async () => {
-  await expect(readFile({})).rejects.toThrow(
-    'Could not read file, file path should be a string.'
-  );
+  await expect(readFile({})).rejects.toThrow('Could not read file, file path should be a string.');
 });

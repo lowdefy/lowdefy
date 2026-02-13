@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,12 +15,15 @@
 */
 import { serializer, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors/build';
+import createRefReviver from './createRefReviver.js';
 import evaluateBuildOperators from './evaluateBuildOperators.js';
 import getKey from './getKey.js';
 import getRefContent from './getRefContent.js';
+import getRefPositions from '../jit/getRefPositions.js';
 import getRefsFromFile from './getRefsFromFile.js';
 import populateRefs from './populateRefs.js';
 import runTransformer from './runTransformer.js';
+import { shouldSkipResolution } from '../jit/pathMatcher.js';
 
 async function recursiveBuild({
   context,
@@ -29,6 +32,8 @@ async function recursiveBuild({
   referencedFrom,
   refChainSet = new Set(),
   refChainList = [],
+  shallowOptions,
+  jsonPath = '',
 }) {
   // Detect circular references by tracking the chain of files being resolved
   // Skip circular reference checking for refs without paths (e.g., resolver refs)
@@ -63,12 +68,28 @@ async function recursiveBuild({
 
   const parsedFiles = {};
 
+  // Compute the JSON path position of each ref within the current file's content.
+  // This lets us check if a ref should be skipped during shallow builds.
+  const refPositions = shallowOptions ? getRefPositions(fileContentBuiltRefs, jsonPath) : null;
+
   // Since we can have references in the variables of a reference, we need to first parse
   // the deeper nodes, so we can use those parsed files in references higher in the tree.
   // To do this, since foundRefs is an array of ref definitions that are in order of the
   // deepest nodes first we for loop over over foundRefs one by one, awaiting each result.
 
   for (const newRefDef of foundRefs.values()) {
+    // Check if this ref should be skipped (shallow build)
+    const refJsonPath = refPositions?.get(newRefDef.id) ?? '';
+    if (shallowOptions && shouldSkipResolution(refJsonPath, shallowOptions.stopAt)) {
+      // Store shallow marker instead of resolving
+      parsedFiles[newRefDef.id] = {
+        '~shallow': true,
+        _ref: newRefDef.original,
+        _refId: newRefDef.id,
+      };
+      continue;
+    }
+
     // Parse vars and path before passing down to parse new file
     const parsedRefDef = populateRefs({
       toPopulate: newRefDef,
@@ -83,6 +104,8 @@ async function recursiveBuild({
       referencedFrom: refDef.path,
       refChainSet,
       refChainList,
+      shallowOptions,
+      jsonPath: refJsonPath,
     });
 
     const transformedFile = await runTransformer({
@@ -103,21 +126,10 @@ async function recursiveBuild({
       refDef: parsedRefDef,
     });
 
-    const reviver = (_, value) => {
-      if (!type.isObject(value) && !type.isArray(value)) return value;
-      // Only set ~r if not already present to preserve original file references from nested imports.
-      // Use child file's ref ID (parsedRefDef.id) not parent's (refDef.id) for correct error tracing.
-      if (value['~r'] === undefined) {
-        Object.defineProperty(value, '~r', {
-          value: parsedRefDef.id,
-          enumerable: false,
-          writable: true,
-          configurable: true,
-        });
-      }
-      return value;
-    };
-    // Use serializer.copy to preserve non-enumerable properties like ~l
+    // Use serializer.copy to preserve non-enumerable properties like ~l.
+    // Only set ~r if not already present to preserve original file references from nested imports.
+    // Use child file's ref ID (parsedRefDef.id) not parent's (refDef.id) for correct error tracing.
+    const reviver = createRefReviver(parsedRefDef.id);
     parsedFiles[newRefDef.id] = serializer.copy(withRefKey, { reviver });
   }
   // Backtrack: remove current file from chain so sibling refs can use it

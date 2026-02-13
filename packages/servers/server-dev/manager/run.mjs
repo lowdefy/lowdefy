@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import { wait } from '@lowdefy/helpers';
 import opener from 'opener';
 import getContext from './getContext.mjs';
 import startServer from './processes/startServer.mjs';
+import checkPortAvailable from './utils/checkPortAvailable.mjs';
 
 /*
 The run script does the following:
@@ -85,6 +86,7 @@ try {
   // because chokidar sometimes doesn't fire this event, and it seems like there isn't an issue with not waiting.
   context.startWatchers();
 
+  await checkPortAvailable(context.options.port);
   startServer(context);
   await wait(800);
   if (process.env.LOWDEFY_SERVER_DEV_OPEN_BROWSER === 'true') {
@@ -93,13 +95,7 @@ try {
   }
   await new Promise(() => {});
 } catch (error) {
-  // If error is already formatted (from error collection), just show the message
-  if (error.isFormatted || error.hideStack) {
-    context.logger.error(error.message);
-  } else {
-    // Otherwise, show full error with stack trace
-    context.logger.error(error);
-  }
+  context.logger.error(error);
   context.shutdownServer();
   process.exit();
 }

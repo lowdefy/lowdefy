@@ -61,23 +61,28 @@ Additional operators:
 ```
 server-dev/
 ├── lib/
-│   ├── build/            # Build artifact loaders (deserialize JSON)
-│   ├── server/           # Server utilities
-│   └── client/           # Client utilities (extended)
-│       ├── App.js        # Dev app wrapper
-│       ├── Reload.js     # Hot reload component
+│   ├── build/                # Build artifact loaders (deserialize JSON)
+│   ├── server/               # Server utilities
+│   │   ├── jitPageBuilder.js # JIT page build on request
+│   │   ├── pageCache.mjs     # PageCache class (shared by manager and server)
+│   │   └── log/
+│   │       └── createLogger.js
+│   └── client/               # Client utilities (extended)
+│       ├── App.js            # Dev app wrapper
+│       ├── Page.js           # Page renderer (merges jsMap)
+│       ├── Reload.js         # Hot reload component
 │       ├── RestartingPage.js
 │       └── Utils/
-│           ├── usePageConfig.js
+│           ├── usePageConfig.js       # SWR hook with versioned keys
 │           ├── useRootConfig.js
-│           ├── useMutateCache.js
+│           ├── useMutateCache.js      # reloadVersion counter
 │           └── waitForRestartedServer.js
 ├── manager/
-│   ├── run.mjs           # Entry point
-│   ├── getContext.mjs    # Context factory
-│   ├── processes/        # Build processes
+│   ├── run.mjs               # Entry point
+│   ├── getContext.mjs         # Context factory (stores JIT build state)
+│   ├── processes/
 │   │   ├── initialBuild.mjs
-│   │   ├── lowdefyBuild.mjs
+│   │   ├── lowdefyBuild.mjs  # Calls shallowBuild, captures result
 │   │   ├── installPlugins.mjs
 │   │   ├── nextBuild.mjs
 │   │   ├── startServer.mjs
@@ -85,16 +90,17 @@ server-dev/
 │   │   ├── shutdownServer.mjs
 │   │   ├── readDotEnv.mjs
 │   │   └── reloadClients.mjs
-│   └── watchers/         # File watchers
+│   └── watchers/
 │       ├── startWatchers.mjs
-│       ├── lowdefyBuildWatcher.mjs
+│       ├── lowdefyBuildWatcher.mjs   # Targeted invalidation logic
 │       ├── envWatcher.mjs
 │       └── nextBuildWatcher.mjs
 ├── pages/
 │   └── api/
-│       ├── reload.js     # SSE endpoint
-│       ├── ping.js       # Health check
-│       ├── page/[pageId].js
+│       ├── reload.js         # SSE endpoint
+│       ├── ping.js           # Health check
+│       ├── page/[pageId].js  # Page API (triggers JIT build)
+│       ├── js/[env].js       # Serves clientJsMap.js or serverJsMap.js
 │       ├── root.js
 │       └── dev-tools.js
 ├── next.config.js
@@ -136,19 +142,20 @@ const context = {
   bin: { next: nextBin },
   directories: { build, config, server },
   logger,
-  options: {
-    port,
-    refResolver,
-    watch: [],
-    watchIgnore: []
-  },
+  options: { port, refResolver, watch: [], watchIgnore: [] },
   version,
   packageManagerCmd,
+
+  // JIT build state
+  pageCache: new PageCache(),    // Manager's PageCache instance
+  pageRegistry: null,            // Set after each skeleton build
+  fileDependencyMap: null,       // Set after each skeleton build
+  buildContext: null,            // Build context from shallowBuild
 
   // Bound functions
   initialBuild,
   installPlugins,
-  lowdefyBuild,
+  lowdefyBuild,                  // Wrapped to capture build result
   nextBuild,
   readDotEnv,
   reloadClients,
@@ -157,6 +164,161 @@ const context = {
   startWatchers
 };
 ```
+
+## JIT (Just-In-Time) Build System
+
+The dev server uses a two-phase build strategy to minimize rebuild times:
+
+1. **Skeleton build** (`shallowBuild`): Resolves all `_ref` operators except page content (blocks, areas, events, requests, layout). Page content is left as `_shallow` markers.
+2. **JIT page build** (`buildPageJit`): When a page is requested, resolves that page's `_shallow` markers, runs build steps, and writes page artifacts.
+
+### Two-Process Architecture
+
+The manager process and the Next.js server run as **separate processes** with no shared memory:
+
+```
+Manager Process                    Next.js Server Process
+┌────────────────────┐            ┌────────────────────┐
+│ PageCache instance │            │ PageCache instance  │
+│ fileDependencyMap  │            │ (jitPageBuilder.js) │
+│ pageRegistry       │            │                     │
+│ buildContext       │            │ cachedRegistry      │
+│                    │            │ cachedBuildContext   │
+│ Watcher → build    │            │ API → buildPageJit  │
+└────────────────────┘            └────────────────────┘
+         │                                  ↑
+         │  invalidatePages.json            │
+         └──── (file on disk) ─────────────→┘
+```
+
+Cross-process communication uses files in the build directory:
+- `pageRegistry.json`: Page metadata + raw content for JIT resolution
+- `refMap.json`, `keyMap.json`, `jsMap.json`: Shared build state
+- `invalidatePages.json`: List of page IDs invalidated by the watcher
+
+### Skeleton Build Flow
+
+**File:** `manager/processes/lowdefyBuild.mjs`
+
+```javascript
+function lowdefyBuild({ directories, logger, options, pageCache }) {
+  return async () => {
+    logger.ui.spin('Building config...');
+    const customTypesMap = await createCustomPluginTypesMap({ directories, logger });
+    await pageCache.acquireSkeletonLock();
+    try {
+      const result = await shallowBuild({ customTypesMap, directories, logger, ... });
+      logger.ui.log('Built config.');
+      return result; // { components, pageRegistry, fileDependencyMap, context }
+    } finally {
+      pageCache.invalidateAll();
+      pageCache.releaseSkeletonLock();
+    }
+  };
+}
+```
+
+The manager wraps `lowdefyBuild` to capture and store the result on the manager context:
+
+```javascript
+// In getContext.mjs
+context.lowdefyBuild = async () => {
+  const result = await buildFn();
+  if (result) {
+    context.pageRegistry = result.pageRegistry;
+    context.fileDependencyMap = result.fileDependencyMap;
+    context.buildContext = result.context;
+  }
+};
+```
+
+### JIT Page Build Flow
+
+**File:** `lib/server/jitPageBuilder.js`
+
+When a page API request arrives (`/api/page/[pageId]`):
+
+1. `checkPageInvalidations()` reads `invalidatePages.json` (with mtime caching)
+2. `loadPageRegistry()` reads `pageRegistry.json` (with mtime caching)
+3. `pageCache.isCompiled(pageId)` checks if page was already built
+4. If not compiled, acquires build lock and calls `buildPageJit()`
+5. `getBuildContext()` creates/caches a build context with restored refMap/keyMap/jsMap
+
+```javascript
+async function buildPageIfNeeded({ pageId, buildDirectory, configDirectory }) {
+  checkPageInvalidations(buildDirectory);
+  const registry = loadPageRegistry(buildDirectory);
+  if (!registry?.[pageId]) return false;
+
+  if (pageCache.isCompiled(pageId)) return true;
+
+  const shouldBuild = await pageCache.acquireBuildLock(pageId);
+  if (!shouldBuild) return true; // Another request completed it
+
+  try {
+    const context = getBuildContext(buildDirectory, configDirectory);
+    await buildPageJit({ pageId, pageRegistry: registry, context });
+    pageCache.markCompiled(pageId);
+    return true;
+  } finally {
+    pageCache.releaseBuildLock(pageId);
+  }
+}
+```
+
+### PageCache
+
+**File:** `lib/server/pageCache.mjs`
+
+Tracks which pages have been JIT-compiled and provides concurrency control:
+
+| Method | Purpose |
+|--------|---------|
+| `isCompiled(pageId)` | Check if page has been built |
+| `markCompiled(pageId)` | Mark page as built |
+| `acquireBuildLock(pageId)` | Prevent concurrent builds of same page |
+| `releaseBuildLock(pageId)` | Release build lock |
+| `acquireSkeletonLock()` | Block page builds during skeleton rebuild |
+| `releaseSkeletonLock()` | Allow page builds after skeleton rebuild |
+| `invalidateAll()` | Clear all compiled pages (skeleton rebuild) |
+| `invalidatePages(pageIds)` | Clear specific pages (targeted invalidation) |
+| `invalidateByFiles(files, depMap)` | Clear pages affected by changed files |
+
+Two separate instances exist: one in the manager process (for watcher invalidation) and one in the Next.js server (for JIT build tracking).
+
+### File Dependency Map
+
+**File:** `packages/build/src/build/createFileDependencyMap.js`
+
+Maps config file paths → Set of page IDs that depend on them. Used for targeted invalidation.
+
+Sources of dependencies:
+1. **Page source file**: via `pageEntry.refId` → `refMap[refId].path`
+2. **Child `_ref` paths**: Collected from `_shallow` markers in raw page content
+
+### Targeted vs Full Rebuild
+
+**File:** `manager/watchers/lowdefyBuildWatcher.mjs`
+
+When a file changes, the watcher decides:
+
+| Condition | Action |
+|-----------|--------|
+| `lowdefy.yaml` changed | Full skeleton rebuild |
+| File not in dependency map and not in `pages/` | Full skeleton rebuild |
+| File in dependency map | Targeted: invalidate affected pages, write `invalidatePages.json` |
+| No affected pages found | Full skeleton rebuild (safety fallback) |
+
+### Cross-Process Cache Invalidation
+
+The manager and server run in separate processes with separate `PageCache` instances. When a file change only affects specific pages:
+
+1. Manager's watcher calls `pageCache.invalidateByFiles()` on its own cache
+2. Manager writes `invalidatePages.json` with affected page IDs
+3. Manager calls `reloadClients()` (SSE event)
+4. On next page request, server's `checkPageInvalidations()` reads the file
+5. Server's `pageCache.invalidatePages()` clears affected pages
+6. Server's `cachedBuildContext` is set to `null` to refresh maps
 
 ## Server Process and Logging
 
@@ -209,21 +371,6 @@ async function initialBuild(context) {
   await context.nextBuild();
 }
 ```
-
-### Lowdefy Build
-
-**File:** `manager/processes/lowdefyBuild.mjs`
-
-```javascript
-async function lowdefyBuild(context) {
-  await build({
-    customTypesMap,
-    directories: context.directories,
-    logger: context.logger,
-    refResolver: context.options.refResolver,
-    stage: 'dev'
-  });
-}
 ```
 
 ### Install Plugins
@@ -264,24 +411,30 @@ function startWatchers(context) {
 
 **File:** `manager/watchers/lowdefyBuildWatcher.mjs`
 
-Watches config directory for changes:
+Watches config directory for changes. Decides between targeted invalidation (fast) and full skeleton rebuild based on file dependency map:
 
 ```javascript
-const watcher = chokidar.watch(watchPaths, {
-  ignored: ['**/node_modules/**', ...watchIgnore],
-  ignoreInitial: true
-});
+const callback = async (filePaths) => {
+  const changedFiles = filePaths.map(f => path.relative(configDir, f));
 
-watcher.on('all', async (event, filePath) => {
-  // Check for version change
-  if (isVersionChange(filePath)) {
-    logger.warn('Version changed, please restart');
-    process.exit(1);
+  // Check for version change in lowdefy.yaml
+  if (lowdefyYamlModified) { /* exit if version changed */ }
+
+  const isSkeletonChange = lowdefyYamlModified ||
+    changedFiles.some(f => !fileDependencyMap?.has(f) && !f.startsWith('pages/'));
+
+  if (isSkeletonChange) {
+    await context.lowdefyBuild();          // Full rebuild
+  } else {
+    const affectedPages = pageCache.invalidateByFiles(changedFiles, fileDependencyMap);
+    if (affectedPages.size > 0) {
+      fs.writeFileSync(invalidationPath, JSON.stringify([...affectedPages]));
+    } else {
+      await context.lowdefyBuild();        // Fallback to full rebuild
+    }
   }
-
-  await context.lowdefyBuild();
-  await context.reloadClients();
-});
+  context.reloadClients();
+};
 ```
 
 ### Environment Watcher
@@ -398,22 +551,38 @@ async function reloadClients(context) {
 
 ## Dev-Specific API Routes
 
-### Page Config
+### Page Config (JIT Build Trigger)
 
 **File:** `pages/api/page/[pageId].js`
+
+The page API endpoint triggers JIT page building before returning page config:
 
 ```javascript
 export default apiWrapper(async ({ context, req, res }) => {
   const { pageId } = req.query;
-  const pageConfig = await getPageConfig(context, { pageId });
 
-  if (!pageConfig) {
+  // Trigger JIT build if page not yet compiled
+  const built = await buildPageIfNeeded({
+    pageId,
+    buildDirectory: context.directories.build,
+    configDirectory: context.directories.config,
+  });
+
+  if (!built) {
     return res.status(404).json({ message: 'Page not found' });
   }
 
+  // Read and return built page config
+  const pageConfig = await getPageConfig(context, { pageId });
   return res.json(pageConfig);
 });
 ```
+
+### JS Map
+
+**File:** `pages/api/js/[env].js`
+
+Serves the client or server JS map as a JavaScript module. The client fetches this after a JIT build to get newly extracted `_js` function entries.
 
 ### Health Check
 
@@ -449,16 +618,60 @@ function App({ children }) {
 
 **File:** `lib/client/Utils/usePageConfig.js`
 
-```javascript
-function usePageConfig(pageId) {
-  const { data, error, mutate } = useSWR(
-    `/api/page/${pageId}`,
-    fetcher
-  );
+Uses SWR with a versioned key to support cache busting on hot reload:
 
-  return { pageConfig: data, error, mutate };
+```javascript
+import { getReloadVersion } from './useMutateCache.js';
+
+async function fetchPageConfig(url) {
+  const res = await fetch(url, { headers: { 'Content-Type': 'application/json' } });
+  const data = await res.json();
+  // After page config fetch (which triggers JIT build), fetch JS entries
+  const basePath = url.replace(/\/api\/page\/.*$/, '');
+  const jsEntries = await fetchJsEntries(basePath);
+  data._jsEntries = jsEntries;
+  return data;
+}
+
+function usePageConfig(pageId, basePath) {
+  const url = `${basePath}/api/page/${pageId}`;
+  // reloadVersion changes on hot reload, orphaning old SWR cache entries
+  const { data } = useSWR(
+    [url, getReloadVersion()],
+    ([fetchUrl]) => fetchPageConfig(fetchUrl),
+    { suspense: true }
+  );
+  return { data };
 }
 ```
+
+**File:** `lib/client/Utils/useMutateCache.js`
+
+Manages cache busting via a `reloadVersion` counter:
+
+```javascript
+let reloadVersion = 0;
+
+function getReloadVersion() { return reloadVersion; }
+
+function useMutateCache(basePath) {
+  const { mutate } = useSWRConfig();
+  return () => {
+    reloadVersion += 1;    // Orphans old SWR keys
+    return mutate((key) => key === `${basePath}/api/root`);  // Only revalidate root
+  };
+}
+```
+
+**Why versioned keys instead of cache clearing:**
+- Clearing SWR entries to `undefined` causes React Suspense on currently mounted components
+- This creates a three-request waterfall (/api/root → /api/page → /api/js) with visible delay
+- Versioned keys orphan old entries without triggering Suspense, and new keys force fresh fetches
+
+**Why jsMap is fetched sequentially after page config:**
+- Page config fetch triggers JIT build which may extract new `_js` functions
+- If jsMap is fetched in parallel, it returns stale data missing the new JS entries
+- The `_jsEntries` are merged with the static `jsMap` in `Page.js`
 
 ## Next.js Configuration
 
@@ -485,19 +698,26 @@ const nextConfig = {
 | File | Purpose |
 |------|---------|
 | `manager/run.mjs` | Entry point |
-| `manager/getContext.mjs` | Context factory |
-| `manager/processes/lowdefyBuild.mjs` | Config build |
-| `manager/watchers/startWatchers.mjs` | Watcher orchestration |
+| `manager/getContext.mjs` | Context factory with JIT build state |
+| `manager/processes/lowdefyBuild.mjs` | Calls `shallowBuild`, captures result |
+| `manager/watchers/lowdefyBuildWatcher.mjs` | Targeted invalidation or full rebuild |
+| `lib/server/jitPageBuilder.js` | JIT page build on API request |
+| `lib/server/pageCache.mjs` | PageCache class (compiled tracking, locks) |
+| `pages/api/page/[pageId].js` | Page API (triggers JIT build) |
+| `pages/api/js/[env].js` | Serves JS map as module |
 | `pages/api/reload.js` | SSE endpoint |
 | `lib/client/Reload.js` | Hot reload component |
 | `lib/client/App.js` | Dev app wrapper |
-| `lib/client/Utils/usePageConfig.js` | SWR hook |
+| `lib/client/Page.js` | Page renderer (merges jsMap) |
+| `lib/client/Utils/usePageConfig.js` | SWR hook with versioned cache keys |
+| `lib/client/Utils/useMutateCache.js` | `reloadVersion` counter for cache busting |
 
 ## Reload Types
 
 | Trigger | Watcher | Action | Result |
 |---------|---------|--------|--------|
-| Config change | lowdefyBuildWatcher | Build + SSE | Soft reload |
+| Page-level config change | lowdefyBuildWatcher | Targeted invalidation + SSE | Soft reload (page rebuilt JIT) |
+| Skeleton-level config change | lowdefyBuildWatcher | Full skeleton rebuild + SSE | Soft reload (all pages invalidated) |
 | .env change | envWatcher | Read env | Hard restart |
 | Plugin change | nextBuildWatcher | Next build | Hard restart |
 | package.json | nextBuildWatcher | Install + build | Hard restart |
@@ -532,6 +752,49 @@ auth:
 | `pages/api/auth/[...nextauth].js` | Client-side integration |
 
 See [Auth System Architecture](../architecture/auth-system.md#mock-user-for-testing-dev-server-only) for full details.
+
+## Plugin Strategy
+
+The dev server uses a different plugin strategy than production to optimize for fast iteration.
+
+### Pre-installed Packages
+
+The dev server's `package.json` includes a broad set of default plugin packages (blocks, operators, actions, connections) as dependencies. This means:
+- No code build (Next.js rebuild) is needed when a user first uses a new block or action type
+- Bundle size is not a concern in development — all installed types are available immediately
+- The skeleton build reads the server's `package.json` to determine installed packages and includes all types from those packages in the generated import files
+
+### JIT Build and Type Counting
+
+During development, the skeleton build (`shallowBuild`) stops at page content boundaries (`pages.*.blocks`, `pages.*.events`, etc.) and leaves `_shallow` markers. Page content is resolved just-in-time when requested. This means page-level types (actions, blocks, operators used inside pages) are NOT counted during the skeleton build.
+
+To compensate, `shallowBuild` adds all types from installed packages to `components.types` after `buildTypes` runs. This ensures the generated plugin import files include all available types, not just those counted from non-page components (like connections and API config).
+
+### New Plugin Detection
+
+If a user configures a plugin package that isn't installed in the dev server:
+1. The build detects the new package via `customTypesMap`
+2. `installPlugins` runs `pnpm install` to add the package
+3. A Next.js rebuild is triggered to bundle the new imports
+4. The server restarts with the new plugin available
+
+### Production Comparison
+
+| Aspect | Development | Production |
+|--------|-------------|------------|
+| Type counting | Only non-page types counted; all installed types included | All pages built; exact type usage counted |
+| Bundle size | All installed types bundled (larger) | Only used types bundled (tree-shaken) |
+| Plugin availability | Immediate for pre-installed packages | Only what's declared and used |
+| New plugin | Install + rebuild triggered automatically | Must be declared in `lowdefy.yaml` |
+
+### Key Files
+
+| File | Purpose |
+|------|---------|
+| `packages/build/src/build/shallowBuild.js` | `getInstalledPackages()` reads server `package.json`; `addInstalledTypes()` pre-seeds types |
+| `packages/build/src/build/buildImports/buildImportsDev.js` | Generates imports from `components.types` |
+| `packages/servers/server-dev/manager/processes/installPlugins.mjs` | Installs new plugin packages |
+| `packages/servers/server-dev/manager/watchers/nextBuildWatcher.mjs` | Triggers rebuild on plugin changes |
 
 ## Environment Variables
 

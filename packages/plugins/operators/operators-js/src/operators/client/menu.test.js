@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -173,9 +173,7 @@ test('_menu params object value not string', () => {
   expect(res.output).toBe(null);
   expect(res.errors.length).toBe(1);
   expect(res.errors[0].rawMessage).toBe('_menu.value must be of type string.');
-  expect(res.errors[0].message).toBe(
-    '_menu.value must be of type string. at locationId.'
-  );
+  expect(res.errors[0].message).toBe('_menu.value must be of type string. at locationId.');
 });
 
 test('_menu params object index not number', () => {
@@ -189,9 +187,7 @@ test('_menu params object index not number', () => {
   expect(res.output).toBe(null);
   expect(res.errors.length).toBe(1);
   expect(res.errors[0].rawMessage).toBe('_menu.index must be of type number.');
-  expect(res.errors[0].message).toBe(
-    '_menu.index must be of type number. at locationId.'
-  );
+  expect(res.errors[0].message).toBe('_menu.index must be of type number. at locationId.');
 });
 
 test('_menu param object all', () => {

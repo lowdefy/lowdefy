@@ -88,6 +88,10 @@ async function build(options) {
 | `buildJs/` | Compile custom JavaScript functions |
 | `buildTypes.js` | Resolve and validate block/operator types |
 | `buildImports/` | Track which plugins need to be imported |
+| `shallowBuild.js` | Dev-only: skeleton build with `_shallow` markers |
+| `buildPageJit.js` | Dev-only: resolve page content on demand |
+| `createPageRegistry.js` | Dev-only: extract page metadata for JIT |
+| `createFileDependencyMap.js` | Dev-only: map files → pages for invalidation |
 
 ### Reference Resolution (`buildRefs/`)
 
@@ -268,11 +272,13 @@ Errors and warnings can be suppressed using `~ignoreBuildChecks` in config. See 
 
 ## Entry Points
 
+### Production Build
+
 ```javascript
 import build from '@lowdefy/build';
 import { createPluginTypesMap } from '@lowdefy/build';
 
-// Run full build
+// Run full build (resolves all refs, all pages)
 await build({
   configDirectory: './app',
   outputDirectory: './.lowdefy/build',
@@ -281,4 +287,90 @@ await build({
 
 // Create types map for validation
 const typesMap = createPluginTypesMap(plugins);
+```
+
+### Dev Build (JIT)
+
+```javascript
+import { shallowBuild, buildPageJit, createContext } from '@lowdefy/build/dev';
+
+// Phase 1: Skeleton build (resolves everything except page content)
+const { components, pageRegistry, fileDependencyMap, context } = await shallowBuild({
+  customTypesMap,
+  directories,
+  logger,
+  refResolver,
+  stage: 'dev',
+});
+
+// Phase 2: Build a single page on demand
+const buildContext = createContext({ directories, logger, stage: 'dev' });
+Object.assign(buildContext.refMap, refMap);    // Restore from skeleton
+Object.assign(buildContext.keyMap, keyMap);
+buildContext.jsMap = jsMap;
+
+await buildPageJit({
+  pageId: 'tasks',
+  pageRegistry,          // From shallowBuild or deserialized from pageRegistry.json
+  context: buildContext,
+});
+```
+
+## Dev Build Modules
+
+| Module | File | Purpose |
+|--------|------|---------|
+| `shallowBuild` | `build/shallowBuild.js` | Skeleton build with `_shallow` markers at page content |
+| `buildPageJit` | `build/buildPageJit.js` | Resolve `_shallow` markers, run page build steps, write artifacts |
+| `createPageRegistry` | `build/createPageRegistry.js` | Extract page metadata + raw content from shallow-built components |
+| `createFileDependencyMap` | `build/createFileDependencyMap.js` | Map config files → page IDs for targeted invalidation |
+| `writePageRegistry` | `build/writePageRegistry.js` | Serialize page registry to JSON |
+| `writePageJit` | `build/writePageJit.js` | Write page/request JSONs + updated maps + JS files |
+| `pathMatcher` | `utils/pathMatcher.js` | Match dot-notation paths against `SHALLOW_STOP_PATHS` |
+| `getRefPositions` | `buildRefs/getRefPositions.js` | Find ref positions in content tree |
+
+### Shallow Build Stop Paths
+
+The `_ref` resolution stops at these paths, leaving `_shallow` markers:
+
+```javascript
+const SHALLOW_STOP_PATHS = [
+  'pages.*.blocks',
+  'pages.*.areas',
+  'pages.*.events',
+  'pages.*.requests',
+  'pages.*.layout',
+];
+```
+
+### Page Registry Structure
+
+```javascript
+// createPageRegistry extracts from shallow-built components:
+registry.set(pageId, {
+  pageId: page.id,
+  auth: page.auth,
+  type: page.type,
+  refId: page['~r'] ?? null,    // For file dependency tracking
+  rawContent: serializer.copy({  // Deep copy of unresolved content
+    blocks: page.blocks,         // Contains _shallow markers
+    areas: page.areas,
+    events: page.events,
+    requests: page.requests,
+    layout: page.layout,
+  }),
+});
+```
+
+### File Dependency Map
+
+Maps config file paths to the page IDs that depend on them:
+
+```javascript
+// createFileDependencyMap builds:
+// Map<filePath, Set<pageId>>
+//
+// Sources of dependencies:
+// 1. Page's own source file: pageEntry.refId → refMap[refId].path
+// 2. Child _ref paths: collected from _shallow markers in rawContent
 ```

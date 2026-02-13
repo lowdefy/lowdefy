@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ jest.unstable_mockModule('./utils/writeBuildArtifact.js', () => ({
 }));
 
 // Mock updateServerPackageJson to skip server package.json update
-jest.unstable_mockModule('./build/updateServerPackageJson.js', () => ({
+jest.unstable_mockModule('./build/full/updateServerPackageJson.js', () => ({
   default: jest.fn(() => Promise.resolve()),
 }));
 

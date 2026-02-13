@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 import React from 'react';
 import Client from '@lowdefy/client';
 
+import BuildErrorPage from './BuildErrorPage.js';
 import RestartingPage from './RestartingPage.js';
 import usePageConfig from './utils/usePageConfig.js';
 
@@ -37,9 +38,22 @@ const Page = ({
     router.replace(`/404`);
     return '';
   }
+  if (pageConfig.buildError) {
+    return (
+      <BuildErrorPage
+        errors={pageConfig.errors}
+        message={pageConfig.message}
+        source={pageConfig.source}
+      />
+    );
+  }
   if (resetContext.restarting) {
     return <RestartingPage />;
   }
+
+  // Merge dynamic JS entries fetched after JIT build with the static jsMap
+  const mergedJsMap = pageConfig._jsEntries ? { ...jsMap, ...pageConfig._jsEntries } : jsMap;
+
   return (
     <Client
       auth={auth}
@@ -48,7 +62,7 @@ const Page = ({
         ...config,
         pageConfig,
       }}
-      jsMap={jsMap}
+      jsMap={mergedJsMap}
       lowdefy={lowdefy}
       resetContext={resetContext}
       router={router}

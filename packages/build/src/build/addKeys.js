@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import { ConfigError, VALID_CHECK_SLUGS } from '@lowdefy/errors/build';
 
 import collectExceptions from '../utils/collectExceptions.js';
 import makeId from '../utils/makeId.js';
+import setNonEnumerableProperty from '../utils/setNonEnumerableProperty.js';
 
 function recArray({ array, arrayKey, keyMap, parentKeyMapId, context }) {
   let arrayKeyMapId;
@@ -135,12 +136,7 @@ function recAddKeys({ object, key, keyMap, parentKeyMapId, context }) {
 
       entry['~ignoreBuildChecks'] = checks;
     }
-    Object.defineProperty(object, '~k', {
-      value: keyMapId,
-      enumerable: false,
-      writable: true,
-      configurable: true,
-    });
+    setNonEnumerableProperty(object, '~k', keyMapId);
     delete object['~r'];
     delete object['~l'];
     delete object['~ignoreBuildChecks'];
