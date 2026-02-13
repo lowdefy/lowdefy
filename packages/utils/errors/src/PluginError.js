@@ -38,8 +38,6 @@
  * }
  * // error.message = "[Plugin Error] _if requires boolean test. Received: {...} at blocks.0.properties.visible."
  */
-import formatErrorMessage from './formatErrorMessage.js';
-
 class PluginError extends Error {
   /**
    * Creates a PluginError instance with formatted message.
@@ -64,7 +62,7 @@ class PluginError extends Error {
     this.name = 'PluginError';
     this.pluginType = pluginType;
     this.pluginName = pluginName;
-    this.rawMessage = rawMessage; // Original message without location
+    this._message = rawMessage;
     this.received = received !== undefined ? received : error?.received;
     this.location = location;
     this.configKey = error?.configKey ?? configKey ?? null;
@@ -79,10 +77,6 @@ class PluginError extends Error {
     }
   }
 
-  print() {
-    return formatErrorMessage(this);
-  }
-
   /**
    * Serializes the error for transport (e.g., client to server).
    * @returns {Object} Serialized error data with type marker
@@ -91,7 +85,7 @@ class PluginError extends Error {
     return {
       '~err': 'PluginError',
       message: this.message,
-      rawMessage: this.rawMessage,
+      _message: this._message,
       pluginType: this.pluginType,
       pluginName: this.pluginName,
       location: this.location,
@@ -102,14 +96,14 @@ class PluginError extends Error {
 
   /**
    * Deserializes error data back into a PluginError.
-   * Note: message already contains location/received, so we don't pass them
+   * Note: message already contains location, so we don't pass it
    * to avoid double-formatting.
    * @param {Object} data - Serialized error data
    * @returns {PluginError}
    */
   static deserialize(data) {
-    // Use rawMessage if available, fallback to message
-    const messageToUse = data.rawMessage || data.message;
+    // Use _message if available, fallback to message
+    const messageToUse = data._message || data.message;
     const error = new PluginError({
       message: messageToUse,
       pluginType: data.pluginType,
@@ -118,7 +112,7 @@ class PluginError extends Error {
     });
     // Set location separately to preserve it without re-formatting message
     error.location = data.location;
-    // Preserve the formatted message if different from rawMessage
+    // Preserve the formatted message if different from _message
     if (data.message && data.message !== messageToUse) {
       error.message = data.message;
     }

@@ -53,8 +53,6 @@ const SERVICE_ERROR_CODES = new Set([
  * }
  * // error.message = "[Service Error] MongoDB: Connection refused. The service may be down..."
  */
-import formatErrorMessage from './formatErrorMessage.js';
-
 class ServiceError extends Error {
   /**
    * Creates a ServiceError instance with formatted message.
@@ -81,6 +79,7 @@ class ServiceError extends Error {
 
     super(formattedMessage, { cause: error });
     this.name = 'ServiceError';
+    this._message = baseMessage;
     this.service = service;
     this.code = errorCode;
     this.statusCode = errorStatusCode;
@@ -153,10 +152,6 @@ class ServiceError extends Error {
     }
 
     return error.message;
-  }
-
-  print() {
-    return formatErrorMessage(this);
   }
 
   /**

@@ -14,7 +14,13 @@
   limitations under the License.
 */
 
-import { ConfigError, LowdefyError, PluginError, ServiceError } from '@lowdefy/errors/server';
+import {
+  ConfigError,
+  errorToDisplayString,
+  LowdefyError,
+  PluginError,
+  ServiceError,
+} from '@lowdefy/errors/server';
 import { resolveErrorConfigLocation } from '@lowdefy/errors/build';
 
 import captureSentryError from '../sentry/captureSentryError.js';
@@ -116,7 +122,7 @@ async function logError({ context, error }) {
           'cf-visitor': headers['cf-visitor'],
         },
       },
-      error.print ? error.print() : `[${errorName}] ${error.message}`
+      errorToDisplayString(error)
     );
 
     // Capture error to Sentry (no-op if Sentry not configured)

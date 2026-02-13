@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import errorToDisplayString from '../errorToDisplayString.js';
 import BaseLowdefyError from '../LowdefyError.js';
 
 /**
@@ -53,7 +54,7 @@ class LowdefyError extends BaseLowdefyError {
       clearTimeout(timeoutId);
       // Server logging failed - continue with local console
     }
-    console.error(this.print());
+    console.error(errorToDisplayString(this));
   }
 }
 

@@ -16,7 +16,7 @@
 
 import pino from 'pino';
 
-import formatUiMessage from '../formatUiMessage.js';
+import { errorToDisplayString } from '@lowdefy/errors';
 
 const defaultErrSerializer = (err) => {
   if (!err) return err;
@@ -65,7 +65,7 @@ function attachLevelMethods(logger) {
         if (first.source) {
           logger.info({ color: 'blue' }, first.source);
         }
-        const msg = formatUiMessage(first);
+        const msg = errorToDisplayString(first);
         const merge = buildMergeObj(second);
         return original(merge, msg);
       }
@@ -95,7 +95,7 @@ function attachLevelMethods(logger) {
           if (first.source) {
             logger.info({ color: 'blue' }, first.source);
           }
-          const msg = formatUiMessage(first);
+          const msg = errorToDisplayString(first);
           return original({ color }, msg);
         }
         // Plain object (not an error): pino merge-object pass-through

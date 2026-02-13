@@ -166,6 +166,22 @@ describe('ServiceError constructor with error parameter', () => {
   });
 });
 
+test('ServiceError stores raw base message in _message', () => {
+  const original = new Error('connect ECONNREFUSED 127.0.0.1:27017');
+  original.code = 'ECONNREFUSED';
+  const error = new ServiceError({ error: original, service: 'MongoDB' });
+
+  // _message stores the enhanced message before service prefix
+  expect(error._message).toContain('Connection refused');
+  // message includes service prefix
+  expect(error.message).toContain('MongoDB:');
+});
+
+test('ServiceError stores base message in _message without service', () => {
+  const error = new ServiceError({ message: 'Connection failed' });
+  expect(error._message).toBe('Connection failed');
+});
+
 describe('ServiceError.enhanceMessage', () => {
   test('enhances ECONNREFUSED message', () => {
     const error = new Error('connect ECONNREFUSED');

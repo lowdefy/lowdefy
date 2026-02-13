@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { errorToDisplayString } from '@lowdefy/errors';
+
 function wrapErrorLogger(logger, { includeSource = true } = {}) {
   if (logger.error._lowdefyWrapped) return logger;
 
@@ -37,10 +39,7 @@ function wrapErrorLogger(logger, { includeSource = true } = {}) {
         originalInfo({ print: 'link' }, errorOrMessage.source);
       }
 
-      const msg = errorOrMessage.print
-        ? errorOrMessage.print()
-        : `[${errorOrMessage.name || 'Error'}] ${errorOrMessage.message}`;
-      originalError(msg);
+      originalError(errorToDisplayString(errorOrMessage));
       return;
     }
 

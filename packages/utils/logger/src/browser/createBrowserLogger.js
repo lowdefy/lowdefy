@@ -14,18 +14,7 @@
   limitations under the License.
 */
 
-import formatUiMessage from '../formatUiMessage.js';
-
-function formatBrowserError(errorOrMessage) {
-  if (typeof errorOrMessage === 'string') return errorOrMessage;
-  if (errorOrMessage?.print) return errorOrMessage.print();
-  if (errorOrMessage && (errorOrMessage.name || errorOrMessage.message !== undefined)) {
-    const name = errorOrMessage.name || 'Error';
-    const message = errorOrMessage.message ?? '';
-    return `[${name}] ${message}`;
-  }
-  return errorOrMessage;
-}
+import { errorToDisplayString } from '@lowdefy/errors';
 
 function createBrowserLogger() {
   const logger = {
@@ -42,10 +31,10 @@ function createBrowserLogger() {
         if (errorOrMessage.source) {
           console.info(errorOrMessage.source);
         }
-        console.error(formatBrowserError(errorOrMessage));
+        console.error(errorToDisplayString(errorOrMessage));
         return;
       }
-      console.error(formatBrowserError(errorOrMessage));
+      console.error(errorToDisplayString(errorOrMessage));
     },
     warn: (messageOrObj, ...args) => {
       if (args.length > 0) {
@@ -60,10 +49,10 @@ function createBrowserLogger() {
         if (messageOrObj.source) {
           console.info(messageOrObj.source);
         }
-        console.warn(formatUiMessage(messageOrObj));
+        console.warn(errorToDisplayString(messageOrObj));
         return;
       }
-      console.warn(formatUiMessage(messageOrObj));
+      console.warn(errorToDisplayString(messageOrObj));
     },
     info: (...args) => console.info(...args),
     debug: (...args) => console.debug(...args),

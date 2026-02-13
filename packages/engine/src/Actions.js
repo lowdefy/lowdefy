@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigError, PluginError, UserError } from '@lowdefy/errors/client';
+import { ConfigError, errorToDisplayString, PluginError, UserError } from '@lowdefy/errors/client';
 import { type } from '@lowdefy/helpers';
 import getActionMethods from './actions/getActionMethods.js';
 
@@ -43,7 +43,7 @@ class Actions {
 
     // User-facing errors log to browser console only, never to terminal
     if (error instanceof UserError) {
-      console.error(error.print());
+      console.error(errorToDisplayString(error));
       return;
     }
 

@@ -123,7 +123,7 @@ test('PluginError preserves original stack trace', () => {
   expect(pluginError.stack).toBe(original.stack);
 });
 
-test('PluginError serialize includes stack trace', () => {
+test('PluginError serialize includes stack trace and _message', () => {
   const original = new Error('Test error');
   const error = new PluginError({
     error: original,
@@ -135,6 +135,7 @@ test('PluginError serialize includes stack trace', () => {
 
   expect(serialized['~err']).toBe('PluginError');
   expect(serialized.message).toBe('Test error');
+  expect(serialized._message).toBe('Test error');
   expect(serialized.pluginType).toBe('operator');
   expect(serialized.pluginName).toBe('_if');
   expect(serialized.configKey).toBe('key123');

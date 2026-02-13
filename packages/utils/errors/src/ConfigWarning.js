@@ -26,8 +26,6 @@
  * const warning = new ConfigWarning({ message: 'Deprecated feature used', source: 'config.yaml:10' });
  * console.warn(warning.message);
  */
-import formatErrorMessage from './formatErrorMessage.js';
-
 class ConfigWarning {
   /**
    * @param {Object} params
@@ -39,10 +37,6 @@ class ConfigWarning {
     // Message without prefix - logger uses class name for display
     this.message = message;
     this.source = source ?? null;
-  }
-
-  print() {
-    return formatErrorMessage(this);
   }
 }
 

@@ -31,8 +31,6 @@
  *   console.error(err.stack);
  * }
  */
-import formatErrorMessage from './formatErrorMessage.js';
-
 class LowdefyError extends Error {
   /**
    * Creates a LowdefyError instance.
@@ -45,14 +43,6 @@ class LowdefyError extends Error {
     super(message, options);
     this.name = 'LowdefyError';
     this.configKey = null;
-  }
-
-  print() {
-    const message = formatErrorMessage(this);
-    if (this.stack) {
-      return `${message}\n${this.stack}`;
-    }
-    return message;
   }
 
   /**

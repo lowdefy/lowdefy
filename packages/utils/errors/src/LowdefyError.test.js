@@ -41,13 +41,6 @@ test('LowdefyError has proper stack trace', () => {
   expect(error.stack).toContain('LowdefyError.test.js');
 });
 
-test('LowdefyError print includes prefix and stack trace', () => {
-  const error = new LowdefyError('Something broke');
-  const output = error.print();
-  expect(output).toContain('[LowdefyError] Something broke');
-  expect(output).toContain('LowdefyError.test.js');
-});
-
 test('LowdefyError serialize includes stack trace', () => {
   const error = new LowdefyError('Test error');
   const serialized = error.serialize();

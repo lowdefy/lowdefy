@@ -28,8 +28,17 @@
 import ConfigError from '../ConfigError.js';
 import ConfigWarning from '../ConfigWarning.js';
 import deserializeError from '../deserializeError.js';
+import errorToDisplayString from '../errorToDisplayString.js';
 import LowdefyError from '../LowdefyError.js';
 import PluginError from '../PluginError.js';
 import ServiceError from '../ServiceError.js';
 
-export { ConfigError, ConfigWarning, deserializeError, LowdefyError, PluginError, ServiceError };
+export {
+  ConfigError,
+  ConfigWarning,
+  deserializeError,
+  errorToDisplayString,
+  LowdefyError,
+  PluginError,
+  ServiceError,
+};

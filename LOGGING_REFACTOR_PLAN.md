@@ -32,18 +32,22 @@ These three functions evolved separately and overlap in confusing ways:
 Well-structured hierarchy, but with dead code and constructor side effects that complicate serialization:
 
 - **`LowdefyError`**
+
   - Constructor side effects: None
   - Dead code: Client override has `.log()` method (fire-and-forget in `_app.js`, duplicates `createLogError`)
 
 - **`ConfigError`**
+
   - Constructor side effects: None in base. **Build subclass does location resolution, suppression checking, and YAML parse error handling in constructor** — couples error to build context, makes serialization complex.
   - Duplicate paths: `.log()` is used by `_app.js` ErrorBoundary (React rendering errors). `createLogError` handles action/operator errors. Two entry points into the same `/api/client-error` round-trip — unified by `handleError` in Brief 5.
 
 - **`PluginError`**
+
   - Constructor side effects: **Appends location to message** (`rawMessage` + ` at ${location}.`). Stores `rawMessage` separately to avoid double-format on deserialize.
   - Dead code: None
 
 - **`ServiceError`**
+
   - Constructor side effects: **Enhances message** (prepends service name, adds context for ECONNREFUSED etc.). Deserializer sets `service` separately to avoid double-prefix.
   - Dead code: None
 
@@ -97,22 +101,27 @@ if (!type.isUndefined(newValue['~e'])) {
 ### Error Logging Paths (Inconsistent)
 
 - **Server (prod)**
+
   - How: `logError({ context, error })` in `servers/server/lib/server/log/logError.js`
   - Location resolution: Async via `resolveErrorConfigLocation()` reading keyMap.json/refMap.json from disk each time
 
 - **Server (dev)**
+
   - How: `logError({ context, error })` in `servers/server-dev/lib/server/log/logError.js`
   - Location resolution: Same async resolution
 
 - **Build**
+
   - How: `context.logger.error(error)` directly. Logger monkey-patched in `createContext.js`.
   - Location resolution: Already resolved at throw time (ConfigError constructor uses keyMap/refMap synchronously)
 
 - **Browser (actions/blocks)**
+
   - How: `createLogError(lowdefy)` → sends to `/api/client-error` → server resolves → returns source
   - Location resolution: Async via API round-trip
 
 - **Browser (ErrorBoundary)**
+
   - How: `error.log(lowdefyRef.current)` in `_app.js` → duplicate path to `/api/client-error`
   - Location resolution: Same, but through error's own `.log()` method
 
@@ -247,10 +256,14 @@ Same pattern for ServiceError:
 class ServiceError extends Error {
   constructor({ message, error, service, code, statusCode, configKey }) {
     const rawMessage = message ?? error?.message ?? 'Service error';
-    let formatted = ServiceError.enhanceMessage(rawMessage, code ?? error?.code, statusCode ?? error?.statusCode);
+    let formatted = ServiceError.enhanceMessage(
+      rawMessage,
+      code ?? error?.code,
+      statusCode ?? error?.statusCode
+    );
     if (service) formatted = `${service}: ${formatted}`;
-    super(formatted);  // stack trace matches error.message ✓
-    this._message = rawMessage;  // raw input for serialization
+    super(formatted); // stack trace matches error.message ✓
+    this._message = rawMessage; // raw input for serialization
     this.name = 'ServiceError';
     this.service = service;
     this.code = code ?? error?.code;
@@ -294,8 +307,11 @@ function errorToDisplayString(error) {
   let msg = `[${name}] ${error.message}`;
 
   if (error.received !== undefined) {
-    try { msg = `${msg} Received: ${JSON.stringify(error.received)}`; }
-    catch { msg = `${msg} Received: [unserializable]`; }
+    try {
+      msg = `${msg} Received: ${JSON.stringify(error.received)}`;
+    } catch {
+      msg = `${msg} Received: [unserializable]`;
+    }
   }
   return msg;
 }
@@ -362,7 +378,16 @@ These are all already exported from the main `@lowdefy/errors` entry point. This
 // Browser handleError — explicit field picking for transport
 const { name, message, stack, configKey, source, pluginType, pluginName, location } = error;
 await fetch('/api/client-error', {
-  body: JSON.stringify({ name, message, stack, configKey, source, pluginType, pluginName, location }),
+  body: JSON.stringify({
+    name,
+    message,
+    stack,
+    configKey,
+    source,
+    pluginType,
+    pluginName,
+    location,
+  }),
 });
 ```
 
@@ -403,13 +428,13 @@ logger.info({ succeed: true }, 'Build complete');
 
 ```javascript
 // Build context
-context.logger = pinoLogger;  // plain pino — no wrappers
+context.logger = pinoLogger; // plain pino — no wrappers
 
 // Server context
-context.logger = pinoLogger;  // plain pino
+context.logger = pinoLogger; // plain pino
 
 // Browser
-context.logger = createBrowserLogger();  // console.error/warn/info/debug
+context.logger = createBrowserLogger(); // console.error/warn/info/debug
 ```
 
 ### `context.handleWarning` — Build-Only Warning Handler
@@ -422,7 +447,13 @@ function createHandleWarning({ pinoLogger, context }) {
     const warning = new ConfigWarning(params);
 
     // Check suppression (~ignoreBuildChecks)
-    if (shouldSuppress({ configKey: warning.configKey, keyMap: context.keyMap, checkSlug: warning.checkSlug })) {
+    if (
+      shouldSuppress({
+        configKey: warning.configKey,
+        keyMap: context.keyMap,
+        checkSlug: warning.checkSlug,
+      })
+    ) {
       return;
     }
 
@@ -499,7 +530,9 @@ function createHandleError({ pinoLogger, buildDir, sentry, req, user }) {
         isServiceError: error.isServiceError,
         source: error.source,
         configKey: error.configKey,
-        ...(user && { user: { id: user.id, roles: user.roles, sub: user.sub, session_id: user.session_id } }),
+        ...(user && {
+          user: { id: user.id, roles: user.roles, sub: user.sub, session_id: user.session_id },
+        }),
         ...(req && { url: req.url, method: req.method, headers: pickRequestHeaders(req) }),
       };
 
@@ -524,6 +557,7 @@ The async file reads can still use lazy caching (read once, cache for subsequent
 Build already has keyMap/refMap in memory. `handleError` in the build is sync. Used by `logCollectedErrors` to iterate `context.errors` and log each one before throwing. Suppression is NOT handled here — it happens at collection time in `collectExceptions`/`tryBuildStep`, so suppressed errors never enter `context.errors`.
 
 `resolveErrorLocation` handles all three resolution paths from the current `ConfigMessage.js`:
+
 1. `configKey` → keyMap → refMap (standard path)
 2. `operatorLocation` → refMap (operator errors)
 3. `filePath` + `lineNumber` → raw path join (needs `directories.config`)
@@ -565,7 +599,16 @@ function createBrowserHandleError(lowdefy) {
       const response = await fetch(`${lowdefy?.basePath ?? ''}/api/client-error`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, message, stack, configKey, source, pluginType, pluginName, location }),
+        body: JSON.stringify({
+          name,
+          message,
+          stack,
+          configKey,
+          source,
+          pluginType,
+          pluginName,
+          location,
+        }),
       });
       if (response.ok) {
         const { source: resolvedSource } = await response.json();
@@ -585,13 +628,13 @@ function createBrowserHandleError(lowdefy) {
 
 #### Where `handleError` and `handleWarning` Live
 
-| Function | Environment | Accessed via | Signature | Where called |
-|---|---|---|---|---|
-| `handleError` | **Server** | `context.handleError` | `await context.handleError(error)` | `apiWrapper`, `runRoutine`, `serverSidePropsWrapper` |
-| `handleError` | **Build** | `context.handleError` | `context.handleError(error)` (sync) | `logCollectedErrors`, `buildRefs` catch |
-| `handleError` | **Browser** | `lowdefy.handleError` | `await lowdefy.handleError(error)` | `createHandleError`, `_app.js` ErrorBoundary |
-| `errorHandler` | **CLI** | `errorHandler` (imported) | `await errorHandler({ context, error })` | `runCommand` catch |
-| `handleWarning` | **Build only** | `context.handleWarning` | `context.handleWarning(params)` (sync) | Build validation call sites |
+| Function        | Environment    | Accessed via              | Signature                                | Where called                                         |
+| --------------- | -------------- | ------------------------- | ---------------------------------------- | ---------------------------------------------------- |
+| `handleError`   | **Server**     | `context.handleError`     | `await context.handleError(error)`       | `apiWrapper`, `runRoutine`, `serverSidePropsWrapper` |
+| `handleError`   | **Build**      | `context.handleError`     | `context.handleError(error)` (sync)      | `logCollectedErrors`, `buildRefs` catch              |
+| `handleError`   | **Browser**    | `lowdefy.handleError`     | `await lowdefy.handleError(error)`       | `createHandleError`, `_app.js` ErrorBoundary         |
+| `errorHandler`  | **CLI**        | `errorHandler` (imported) | `await errorHandler({ context, error })` | `runCommand` catch                                   |
+| `handleWarning` | **Build only** | `context.handleWarning`   | `context.handleWarning(params)` (sync)   | Build validation call sites                          |
 
 **UserError bypasses `handleError`.** In `Actions.js`, `UserError` is logged to the browser console only (`console.error(errorToDisplayString(error))`), never sent to the server terminal. This is intentional — UserErrors are expected user-facing issues (validation failures, intentional throws), not system errors. The `instanceof UserError` check in `Actions.js` stays; it just uses `errorToDisplayString` instead of `error.print()`.
 
@@ -792,6 +835,28 @@ This doesn't need to change architecturally — `handleError` is the right place
 
 **Serialization note:** `extractErrorProps` captures both `message` (formatted, as passed to `super()`) and `_message` (raw input). Deserialization via `Object.create + assign` sets `message` as a plain string property on the instance, which shadows Error.prototype's message. No constructor is called, so no double-formatting.
 
+**Checklist:**
+
+- [x] Create `errorToDisplayString.js` — formats `[Name] message` + received for any error
+- [x] Export `errorToDisplayString` from `@lowdefy/errors` main entry
+- [x] Remove `.print()` from LowdefyError
+- [x] Remove `.print()` from ConfigError
+- [x] Remove `.print()` from PluginError
+- [x] Remove `.print()` from ServiceError
+- [x] Remove `.print()` from UserError
+- [x] Delete `formatErrorMessage.js`
+- [x] Delete `formatUiMessage.js` from logger
+- [x] Remove `formatBrowserError` from browser logger
+- [x] PluginError: rename `rawMessage` → `_message`
+- [x] ServiceError: add `_message` property
+- [x] Delete `build/ConfigError.js`, update `build/index.js` to re-export base ConfigError
+- [x] Simplify `build/ConfigWarning.js`: extend ConfigError, remove location resolution/suppression/prodError from constructor
+- [x] Replace all `error.print()` call sites with `errorToDisplayString(error)`
+- [x] Replace all `formatUiMessage` imports with `errorToDisplayString`
+- [x] Update all affected tests
+- [x] Run `pnpm --filter=@lowdefy/errors test`
+- [x] Run `pnpm --filter=@lowdefy/logger test`
+
 ---
 
 ### Brief 2: Enhance Helpers Serializer `~e`, Remove Per-Class Serializers
@@ -828,6 +893,22 @@ This doesn't need to change architecturally — `handleError` is the right place
 
 **Consequence to evaluate:** The helpers `serializer.copy()` is used throughout the codebase for deep cloning. Errors appearing in cloned data will now be fully preserved (correct class, all props) instead of becoming generic `Error` instances. This is generally better but needs testing.
 
+**Checklist:**
+
+- [ ] Add `extractErrorProps` function to helpers (captures all enumerable props + `message`, `name`, `stack`, `cause`)
+- [ ] Export `extractErrorProps` from `@lowdefy/helpers`
+- [ ] Enhance `~e` replacer to use `extractErrorProps`
+- [ ] Enhance `~e` reviver: `Object.create(ErrorClass.prototype)` + assign, with `lowdefyErrorTypes` map (direct imports including UserError)
+- [ ] Remove `.serialize()` from ConfigError, LowdefyError, PluginError, ServiceError
+- [ ] Remove `.deserialize()` from ConfigError, LowdefyError, PluginError, ServiceError
+- [ ] Delete `deserializeError.js`
+- [ ] Remove `deserializeError` re-export from `server/index.js`
+- [ ] Simplify `logClientError.js`: flat object handling, no class reconstruction
+- [ ] Update all callers of `error.serialize()`, `error.deserialize()`, `deserializeError()`
+- [ ] Update all affected tests
+- [ ] Run `pnpm --filter=@lowdefy/helpers test`
+- [ ] Run `pnpm --filter=@lowdefy/errors test`
+
 ---
 
 ### Brief 3: Remove Env-Specific Entry Points
@@ -852,6 +933,18 @@ This doesn't need to change architecturally — `handleError` is the right place
 - `packages/utils/errors/src/server/index.js` (delete)
 - All callers of `@lowdefy/errors/client` and `@lowdefy/errors/server` (update imports)
 - Test files for above
+
+**Checklist:**
+
+- [ ] Remove `./client` and `./server` from `package.json` exports
+- [ ] Delete `client/ConfigError.js`
+- [ ] Delete `client/LowdefyError.js`
+- [ ] Delete `client/index.js`
+- [ ] Delete `server/index.js`
+- [ ] Update all `import from '@lowdefy/errors/client'` → `import from '@lowdefy/errors'`
+- [ ] Update all `import from '@lowdefy/errors/server'` → `import from '@lowdefy/errors'`
+- [ ] Update all affected tests
+- [ ] Run `pnpm --filter=@lowdefy/errors test`
 
 ---
 
@@ -878,6 +971,18 @@ This doesn't need to change architecturally — `handleError` is the right place
 - `packages/servers/server-dev/pages/api/request/[pageId]/[requestId].js` (uses `context.logger.info.gray()`)
 - All other callers using color sub-methods across the codebase
 - Test files for above
+
+**Checklist:**
+
+- [ ] Remove `attachLevelMethods` function (80 lines)
+- [ ] Remove `buildMergeObj` function
+- [ ] Replace `defaultErrSerializer` with `extractErrorProps` from helpers
+- [ ] `createNodeLogger` returns plain pino logger
+- [ ] Verify `createDevLogger` still works as thin wrapper
+- [ ] Update `[pageId]/[requestId].js`: `context.logger.info.gray()` → `context.logger.info({ color: 'gray' }, ...)`
+- [ ] Find and update all other color sub-method call sites
+- [ ] Update all affected tests
+- [ ] Run `pnpm --filter=@lowdefy/logger test`
 
 ---
 
@@ -929,9 +1034,35 @@ This doesn't need to change architecturally — `handleError` is the right place
 **Note:** `loadMaps` in the server pseudocode is extracted from the existing `logError` implementations. Not new logic — just pulled out of the current server `logError.js` functions.
 
 **Migration notes:**
+
 - `logError({ context, error })` → `await context.handleError(error)` at the few catch points.
 - `context.logger.warn({ message, configKey, ... })` → `context.handleWarning({ message, configKey, ... })` in build validation code.
 - `if (error.suppressed) return;` in `tryBuildStep`/`collectExceptions` → replace with `if (shouldSuppress({ configKey: error.configKey, keyMap: context.keyMap, checkSlug: error.checkSlug })) return;` (suppression stays at collection time, but uses `shouldSuppress()` instead of the `.suppressed` property).
+
+**Checklist:**
+
+- [ ] Create `createBuildHandleError` function (sync, resolution + logging, safety wrapper)
+- [ ] Create `createHandleWarning` function (suppression, prodError escalation, location resolution, dedup, logging)
+- [ ] Create `resolveErrorLocation` function (unified 3-path resolution)
+- [ ] Wire `context.handleError` and `context.handleWarning` in `createContext.js`
+- [ ] Rename `createLogError.js` → `createHandleError.js` (browser)
+- [ ] Create `createBrowserHandleError` with `lowdefy?.basePath ?? ''` fallback
+- [ ] Update `_app.js` ErrorBoundary in server: `error.log()` → `lowdefy.handleError(error)`
+- [ ] Update `_app.js` ErrorBoundary in server-dev: same
+- [ ] Rename server `logError.js` → `handleError.js`
+- [ ] Rename server-dev `logError.js` → `handleError.js`
+- [ ] Update `apiWrapper.js` (server): `logError` → `context.handleError`
+- [ ] Update `apiWrapper.js` (server-dev): same
+- [ ] Update `serverSidePropsWrapper.js`: fire-and-forget → `await context.handleError(error)`
+- [ ] Update `[pageId].js` (server-dev): `logError` → `context.handleError`
+- [ ] Update `runRoutine.js`: `logError` → `context.handleError`
+- [ ] Update `logCollectedErrors.js`: iterate `context.errors`, call `context.handleError` for each
+- [ ] Update `errorHandler.js` (CLI): use `errorToDisplayString` and new logger API
+- [ ] Replace `error.suppressed` checks in `tryBuildStep`/`collectExceptions` with `shouldSuppress()` calls
+- [ ] Update all `context.logger.warn({ configKey, ... })` calls → `context.handleWarning({ ... })`
+- [ ] Update all affected tests
+- [ ] Run `pnpm --filter=@lowdefy/build test`
+- [ ] Run `pnpm --filter=@lowdefy/api test`
 
 ---
 
@@ -950,6 +1081,16 @@ This doesn't need to change architecturally — `handleError` is the right place
 **Files:**
 
 - `packages/build/src/createContext.js` (remove all logger wrappers)
+
+**Checklist:**
+
+- [ ] Remove `_lowdefyWrapped` warn wrapper from `createContext.js`
+- [ ] Remove `_lowdefyWrapped` error wrapper from `createContext.js`
+- [ ] Remove `_lowdefyContext` reference on logger
+- [ ] Remove `seenSourceLines` from context (now in `handleWarning`)
+- [ ] Verify `context.logger` is just the plain pino logger passed in
+- [ ] Update tests for `createContext.js`
+- [ ] Run `pnpm --filter=@lowdefy/build test`
 
 ---
 
@@ -978,6 +1119,20 @@ This doesn't need to change architecturally — `handleError` is the right place
 - `packages/utils/logger/src/cli/index.js`
 - Test files
 
+**Checklist:**
+
+- [ ] Merge `createPrint` into `createCliLogger`
+- [ ] Delete `createPrint.js` (or keep as internal)
+- [ ] Remove color sub-methods from CLI logger API
+- [ ] Implement input handling: error → string → object with msg → fallback
+- [ ] Error path: log `error.source` in blue, then `errorToDisplayString(error)`
+- [ ] Error path: log `error.stack` for LowdefyError and non-Lowdefy errors
+- [ ] Object path: handle `msg`, `color`, `spin`, `succeed`
+- [ ] Keep Ora memoisation (one spinner per process)
+- [ ] Update `@lowdefy/logger/cli` exports
+- [ ] Update all affected tests
+- [ ] Run `pnpm --filter=@lowdefy/logger test`
+
 ---
 
 ### Brief 8: Simplify CLI Line Handler
@@ -997,6 +1152,16 @@ This doesn't need to change architecturally — `handleError` is the right place
 - `packages/utils/logger/src/cli/createStdOutLineHandler.js`
 - Test files
 
+**Checklist:**
+
+- [ ] Parse pino JSON, extract `level`, `msg`, `err`, `source`, `color`, `spin`, `succeed`
+- [ ] If `parsed.err`: reconstruct error via `Object.create + assign` with `lowdefyErrorTypes` map, call `logger[level](error)`
+- [ ] Else: forward `{ msg, source, color, spin, succeed }` to `logger[level]`
+- [ ] Keep `{ context }` signature (extract `context.logger` internally)
+- [ ] Remove all display logic (source handling, color application)
+- [ ] Update all affected tests
+- [ ] Run `pnpm --filter=@lowdefy/logger test`
+
 ---
 
 ### Brief 9: Simplify Browser Logger
@@ -1014,6 +1179,14 @@ This doesn't need to change architecturally — `handleError` is the right place
 
 - `packages/utils/logger/src/browser/createBrowserLogger.js`
 - Test files
+
+**Checklist:**
+
+- [ ] Remove `formatBrowserError` function
+- [ ] Remove all error formatting logic
+- [ ] Browser logger becomes plain console wrapper: 4 methods pass-through
+- [ ] Update all affected tests
+- [ ] Run `pnpm --filter=@lowdefy/logger test`
 
 ---
 

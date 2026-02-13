@@ -15,7 +15,7 @@
 */
 
 import createPrint from './createPrint.js';
-import formatUiMessage from '../formatUiMessage.js';
+import { errorToDisplayString } from '@lowdefy/errors';
 
 const colorNames = ['red', 'green', 'yellow', 'blue', 'gray', 'white'];
 
@@ -28,11 +28,11 @@ function createCliLogger({ logLevel } = {}) {
     const method = (first, options) => {
       // Handle spin/succeed options
       if (options?.spin) {
-        print.spin(typeof first === 'string' ? first : formatUiMessage(first));
+        print.spin(typeof first === 'string' ? first : errorToDisplayString(first));
         return;
       }
       if (options?.succeed) {
-        print.succeed(typeof first === 'string' ? first : formatUiMessage(first));
+        print.succeed(typeof first === 'string' ? first : errorToDisplayString(first));
         return;
       }
 
@@ -46,12 +46,12 @@ function createCliLogger({ logLevel } = {}) {
         if (first.source) {
           logger.info.blue(first.source);
         }
-        print[level](formatUiMessage(first), { color: options?.color });
+        print[level](errorToDisplayString(first), { color: options?.color });
         return;
       }
 
       // String message
-      const text = typeof first === 'string' ? first : formatUiMessage(first);
+      const text = typeof first === 'string' ? first : errorToDisplayString(first);
       print[level](text, { color: options?.color });
     };
 
@@ -59,11 +59,11 @@ function createCliLogger({ logLevel } = {}) {
     for (const color of colorNames) {
       method[color] = (first, options) => {
         if (options?.spin) {
-          print.spin(typeof first === 'string' ? first : formatUiMessage(first));
+          print.spin(typeof first === 'string' ? first : errorToDisplayString(first));
           return;
         }
         if (options?.succeed) {
-          print.succeed(typeof first === 'string' ? first : formatUiMessage(first));
+          print.succeed(typeof first === 'string' ? first : errorToDisplayString(first));
           return;
         }
 
@@ -76,11 +76,11 @@ function createCliLogger({ logLevel } = {}) {
           if (first.source) {
             logger.info.blue(first.source);
           }
-          print[level](formatUiMessage(first), { color });
+          print[level](errorToDisplayString(first), { color });
           return;
         }
 
-        const text = typeof first === 'string' ? first : formatUiMessage(first);
+        const text = typeof first === 'string' ? first : errorToDisplayString(first);
         print[level](text, { color });
       };
     }

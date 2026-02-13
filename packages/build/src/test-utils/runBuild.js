@@ -17,6 +17,8 @@
 import { jest } from '@jest/globals';
 import path from 'path';
 
+import { errorToDisplayString } from '@lowdefy/errors';
+
 /**
  * Custom types map for testing - includes common types used in fixtures.
  * Contains all basic blocks, loaders, common actions, operators, and connections.
@@ -94,16 +96,7 @@ const testTypesMap = {
 };
 
 function formatMessage(messageOrObj) {
-  if (typeof messageOrObj === 'string') return messageOrObj;
-  if (messageOrObj?.print && typeof messageOrObj.print === 'function') {
-    return messageOrObj.print();
-  }
-  if (messageOrObj && (messageOrObj.name || messageOrObj.message !== undefined)) {
-    const name = messageOrObj.name || 'Error';
-    const message = messageOrObj.message ?? '';
-    return `[${name}] ${message}`;
-  }
-  return String(messageOrObj);
+  return errorToDisplayString(messageOrObj);
 }
 
 /**

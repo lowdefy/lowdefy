@@ -28,9 +28,18 @@
 
 import ConfigError from './ConfigError.js';
 import ConfigWarning from '../ConfigWarning.js';
+import errorToDisplayString from '../errorToDisplayString.js';
 import LowdefyError from './LowdefyError.js';
 import PluginError from '../PluginError.js';
 import ServiceError from '../ServiceError.js';
 import UserError from '../UserError.js';
 
-export { ConfigError, ConfigWarning, LowdefyError, PluginError, ServiceError, UserError };
+export {
+  ConfigError,
+  ConfigWarning,
+  errorToDisplayString,
+  LowdefyError,
+  PluginError,
+  ServiceError,
+  UserError,
+};
