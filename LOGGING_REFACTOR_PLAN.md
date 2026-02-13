@@ -444,7 +444,7 @@ function createHandleWarning({ pinoLogger, context }) {
 
     // Two-argument pino call: merge object + message string.
     // Source display (blue) is handled by the CLI, not here — build just writes JSON.
-    pinoLogger.warn({ typeName: 'ConfigWarning', configKey: warning.configKey, source }, warning.message);
+    pinoLogger.warn({ err: warning, source }, warning.message);
   };
 }
 ```
@@ -641,7 +641,7 @@ function createCliLogger({ logLevel } = {}) {
       if (input.source) {
         display(level, input.source, { color: 'blue' });
       }
-      const text = input.typeName ? `[${input.typeName}] ${input.msg}` : input.msg;
+      const text = input.msg;
       display(level, text, { color: input.color, spin: input.spin, succeed: input.succeed });
       return;
     }
@@ -698,7 +698,6 @@ function createStdOutLineHandler({ context }) {
 
     // Pass structured message to logger (pino default messageKey is 'msg')
     logger[level]({
-      typeName: parsed.typeName,
       msg: parsed.msg,
       source: parsed.source,
       color: parsed.color,
@@ -989,7 +988,7 @@ This doesn't need to change architecturally — `handleError` is the right place
 
 - Pure protocol translation: parse pino JSON, reconstruct errors, pass to logger.
 - If `parsed.err`: reconstruct error from flat pino JSON object (see below), call `logger[level](error)`.
-- Else: call `logger[level]({ typeName: parsed.typeName, msg: parsed.msg, source, color, spin, succeed })`. Passes `typeName` through so the CLI logger can prepend `[typeName]` for typed messages (e.g. `[ConfigWarning]`).
+- Else: call `logger[level]({ msg: parsed.msg, source, color, spin, succeed })`. Plain message forwarding — no error reconstruction needed.
 - No display logic (no source handling, no color application — logger does all of that).
 - Error reconstruction from pino JSON: pino's `err` serializer writes flat objects via `extractErrorProps` (not `~e` wrapped). The line handler reconstructs these using the same `lowdefyErrorTypes` map the helpers serializer uses (direct import). `Object.create(ErrorClass.prototype)` + property assignment — same pattern as the `~e` reviver, just without the `~e` wrapper.
 
