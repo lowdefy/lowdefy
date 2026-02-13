@@ -936,15 +936,15 @@ This doesn't need to change architecturally — `handleError` is the right place
 
 **Checklist:**
 
-- [ ] Remove `./client` and `./server` from `package.json` exports
-- [ ] Delete `client/ConfigError.js`
-- [ ] Delete `client/LowdefyError.js`
-- [ ] Delete `client/index.js`
-- [ ] Delete `server/index.js`
-- [ ] Update all `import from '@lowdefy/errors/client'` → `import from '@lowdefy/errors'`
-- [ ] Update all `import from '@lowdefy/errors/server'` → `import from '@lowdefy/errors'`
-- [ ] Update all affected tests
-- [ ] Run `pnpm --filter=@lowdefy/errors test`
+- [x] Remove `./client` and `./server` from `package.json` exports
+- [x] Delete `client/ConfigError.js`
+- [x] Delete `client/LowdefyError.js`
+- [x] Delete `client/index.js`
+- [x] Delete `server/index.js`
+- [x] Update all `import from '@lowdefy/errors/client'` → `import from '@lowdefy/errors'`
+- [x] Update all `import from '@lowdefy/errors/server'` → `import from '@lowdefy/errors'`
+- [x] Update all affected tests
+- [x] Run `pnpm --filter=@lowdefy/errors test`
 
 ---
 
