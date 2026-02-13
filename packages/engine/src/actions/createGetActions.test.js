@@ -209,7 +209,7 @@ test('getActions params is none', async () => {
     startTimestamp: { date: 0 },
     success: false,
   });
-  expect(res.error.error.rawMessage).toContain(
+  expect(res.error.error._message).toContain(
     'params must be of type string, integer, boolean or object'
   );
 });
@@ -394,7 +394,7 @@ test('getActions params.key is not string or int', async () => {
     startTimestamp: { date: 0 },
     success: false,
   });
-  expect(res.error.error.rawMessage).toContain('params.key must be of type string or integer');
+  expect(res.error.error._message).toContain('params.key must be of type string or integer');
 });
 
 test('getActions params.key is a', async () => {

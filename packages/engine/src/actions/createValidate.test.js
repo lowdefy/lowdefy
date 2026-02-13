@@ -715,7 +715,7 @@ test('Invalid Validate params', async () => {
     startTimestamp: { date: 0 },
     endTimestamp: { date: 0 },
   });
-  expect(button.Events.events.onClick.history[0].error.error.rawMessage).toContain(
+  expect(button.Events.events.onClick.history[0].error.error._message).toContain(
     'Invalid validate params.'
   );
   expect(displayMessage.mock.calls).toMatchInlineSnapshot(`

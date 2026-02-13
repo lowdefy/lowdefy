@@ -423,14 +423,14 @@ test('action error in error parser', async () => {
     eventName,
   });
   expect(res.responses.two.error).toBeInstanceOf(PluginError);
-  expect(res.responses.two.error.rawMessage).toBe('_divide takes an array of 2 numbers.');
+  expect(res.responses.two.error._message).toBe('_divide takes an array of 2 numbers.');
   // Message includes location but not [Plugin Error] prefix or Received - logger formats those
   expect(res.responses.two.error.message).toBe('_divide takes an array of 2 numbers. at blockId.');
   // Received value contains the _divide operator with params - second param is the error from nested parsing
   expect(res.responses.two.error.received._divide[0]).toBe(3);
   expect(res.responses.two.error.received._divide[1].name).toBe('PluginError');
   expect(res.error.error).toBeInstanceOf(PluginError);
-  expect(res.error.error.rawMessage).toBe('_divide takes an array of 2 numbers.');
+  expect(res.error.error._message).toBe('_divide takes an array of 2 numbers.');
   expect(res.error.error.message).toBe('_divide takes an array of 2 numbers. at blockId.');
 });
 
@@ -558,7 +558,7 @@ test('action throws a error', async () => {
     startTimestamp: { date: 0 },
     endTimestamp: { date: 0 },
   });
-  expect(res.error.error.rawMessage).toContain('Test error');
+  expect(res.error.error._message).toContain('Test error');
   expect(actions.ActionError.mock.calls.length).toBe(1);
 });
 
@@ -614,7 +614,7 @@ test('actions after a error are not called throws a error', async () => {
     startTimestamp: { date: 0 },
     endTimestamp: { date: 0 },
   });
-  expect(res.error.error.rawMessage).toContain('Test error');
+  expect(res.error.error._message).toContain('Test error');
   expect(actions.ActionError.mock.calls.length).toBe(1);
   expect(actions.ActionSync.mock.calls.length).toBe(0);
 });
@@ -706,7 +706,7 @@ test('Parser error in action', async () => {
   });
   expect(res.error.index).toBe(0);
   expect(res.error.error).toBeInstanceOf(PluginError);
-  expect(res.error.error.rawMessage).toBe(
+  expect(res.error.error._message).toBe(
     '_state params must be of type string, integer, boolean or object.'
   );
   // Message includes location but not [Plugin Error] prefix or Received - logger formats those
@@ -723,7 +723,7 @@ test('Parser error in action', async () => {
   });
   expect(res.responses.test.index).toBe(0);
   expect(res.responses.test.error).toBeInstanceOf(PluginError);
-  expect(res.responses.test.error.rawMessage).toBe(
+  expect(res.responses.test.error._message).toBe(
     '_state params must be of type string, integer, boolean or object.'
   );
   expect(res.responses.test.error.message).toBe(
@@ -1033,7 +1033,7 @@ test('Call catchActions when actions throws error', async () => {
     },
     success: false,
   });
-  expect(res.error.error.rawMessage).toContain('Test error');
+  expect(res.error.error._message).toContain('Test error');
   expect(actions.ActionAsync.mock.calls.length).toBe(1);
 });
 
@@ -1143,8 +1143,8 @@ test('Call catchActions when actions throws error and catchActions throws error'
     },
     success: false,
   });
-  expect(res.error.error.rawMessage).toContain('Test error');
-  expect(res.errorCatch.error.rawMessage).toContain('Test catch error');
+  expect(res.error.error._message).toContain('Test error');
+  expect(res.errorCatch.error._message).toContain('Test catch error');
   expect(actions.ActionAsync.mock.calls.length).toBe(1);
 });
 
@@ -1272,7 +1272,7 @@ test('call async: true with error', async () => {
     startTimestamp: { date: 0 },
     endTimestamp: { date: 0 },
   });
-  expect(res.responses.test1.error.rawMessage).toContain('Test error');
+  expect(res.responses.test1.error._message).toContain('Test error');
 });
 
 test('call 2 actions, first with async: false', async () => {

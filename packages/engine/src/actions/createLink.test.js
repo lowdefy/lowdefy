@@ -172,5 +172,5 @@ test('Link error', async () => {
     startTimestamp: { date: 0 },
     endTimestamp: { date: 0 },
   });
-  expect(res.error.error.rawMessage).toContain('Invalid Link, check action params');
+  expect(res.error.error._message).toContain('Invalid Link, check action params');
 });
