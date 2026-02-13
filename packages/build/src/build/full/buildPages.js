@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -18,12 +18,12 @@
 
 import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors/build';
-import buildPage from './buildPage.js';
+import buildPage from '../buildPages/buildPage.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
-import validateLinkReferences from './validateLinkReferences.js';
-import validatePayloadReferences from './validatePayloadReferences.js';
-import validateServerStateReferences from './validateServerStateReferences.js';
-import validateStateReferences from './validateStateReferences.js';
+import validateLinkReferences from '../buildPages/validateLinkReferences.js';
+import validatePayloadReferences from '../buildPages/validatePayloadReferences.js';
+import validateServerStateReferences from '../buildPages/validateServerStateReferences.js';
+import validateStateReferences from '../buildPages/validateStateReferences.js';
 
 function buildPages({ components, context }) {
   const pages = type.isArray(components.pages) ? components.pages : [];

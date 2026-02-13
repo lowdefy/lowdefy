@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -19,11 +19,26 @@ import { spawnProcess } from '@lowdefy/node-utils';
 function nextBuild({ bin, logger }) {
   return async () => {
     logger.ui.spin('Building app...');
-    await spawnProcess({
-      command: 'node',
-      args: [bin.next, 'build'],
-      stdOutLineHandler: (line) => logger.debug(line),
-    });
+    const errorLines = [];
+    try {
+      await spawnProcess({
+        command: 'node',
+        args: [bin.next, 'build'],
+        stdOutLineHandler: (line) => logger.debug(line),
+        stdErrLineHandler: (line) => {
+          logger.debug(line);
+          errorLines.push(line);
+        },
+      });
+    } catch (err) {
+      if (errorLines.length > 0) {
+        errorLines.forEach((line) => logger.error(line));
+      }
+      const error = new Error('Next.js build failed. See above for details.');
+      error.isFormatted = true;
+      error.hideStack = true;
+      throw error;
+    }
     logger.ui.log('Built app.');
   };
 }

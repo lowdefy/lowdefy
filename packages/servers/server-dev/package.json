@@ -57,7 +57,6 @@
     "@lowdefy/build": "4.5.2",
     "@lowdefy/client": "4.5.2",
     "@lowdefy/connection-axios-http": "4.5.2",
-    "@lowdefy/connection-test": "4.5.2",
     "@lowdefy/engine": "4.5.2",
     "@lowdefy/helpers": "4.5.2",
     "@lowdefy/layout": "4.5.2",

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import JSON5 from 'json5';
 import YAML, { isMap, isSeq, isPair, isScalar } from 'yaml';
 
 import parseNunjucks from './parseNunjucks.js';
+import setNonEnumerableProperty from '../../utils/setNonEnumerableProperty.js';
 
 function getLineNumber(content, offset) {
   if (offset == null || offset < 0) return null;
@@ -32,12 +33,7 @@ function addLineNumbers(node, content, result) {
   if (isMap(node)) {
     const obj = result || {};
     if (node.range) {
-      Object.defineProperty(obj, '~l', {
-        value: getLineNumber(content, node.range[0]),
-        enumerable: false,
-        writable: true,
-        configurable: true,
-      });
+      setNonEnumerableProperty(obj, '~l', getLineNumber(content, node.range[0]));
     }
     for (const pair of node.items) {
       if (isPair(pair) && isScalar(pair.key)) {
@@ -49,24 +45,14 @@ function addLineNumbers(node, content, result) {
           const mapResult = addLineNumbers(value, content, {});
           // Override ~l with key's line number if available
           if (keyLineNumber) {
-            Object.defineProperty(mapResult, '~l', {
-              value: keyLineNumber,
-              enumerable: false,
-              writable: true,
-              configurable: true,
-            });
+            setNonEnumerableProperty(mapResult, '~l', keyLineNumber);
           }
           obj[key] = mapResult;
         } else if (isSeq(value)) {
           const arrResult = addLineNumbers(value, content, []);
           // Override ~l with key's line number if available
           if (keyLineNumber) {
-            Object.defineProperty(arrResult, '~l', {
-              value: keyLineNumber,
-              enumerable: false,
-              writable: true,
-              configurable: true,
-            });
+            setNonEnumerableProperty(arrResult, '~l', keyLineNumber);
           }
           obj[key] = arrResult;
         } else if (isScalar(value)) {
@@ -82,12 +68,7 @@ function addLineNumbers(node, content, result) {
   if (isSeq(node)) {
     const arr = result || [];
     if (node.range) {
-      Object.defineProperty(arr, '~l', {
-        value: getLineNumber(content, node.range[0]),
-        enumerable: false,
-        writable: true,
-        configurable: true,
-      });
+      setNonEnumerableProperty(arr, '~l', getLineNumber(content, node.range[0]));
     }
     for (const item of node.items) {
       if (isMap(item)) {

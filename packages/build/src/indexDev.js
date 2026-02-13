@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -13,13 +13,9 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { serializer } from '@lowdefy/helpers';
 
-async function writeTypes({ components, context }) {
-  await context.writeBuildArtifact(
-    'types.json',
-    serializer.serializeToString(components.types ?? {})
-  );
-}
-
-export default writeTypes;
+export { default as shallowBuild } from './build/jit/shallowBuild.js';
+export { default as buildPageJit } from './build/jit/buildPageJit.js';
+export { default as createPageRegistry } from './build/jit/createPageRegistry.js';
+export { default as createFileDependencyMap } from './build/jit/createFileDependencyMap.js';
+export { default as createContext } from './createContext.js';

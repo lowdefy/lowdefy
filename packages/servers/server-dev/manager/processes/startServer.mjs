@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,6 +16,19 @@
 
 import { spawn } from 'child_process';
 
+function createStdErrLineHandler({ context }) {
+  const port = context.options.port;
+  return function stdErrLineHandler(line) {
+    if (line.includes('EADDRINUSE')) {
+      context.logger.error(
+        `Port ${port} is already in use. Stop the other process or use a different port with --port.`
+      );
+      return;
+    }
+    context.logger.error(line);
+  };
+}
+
 function startServer(context) {
   context.shutdownServer();
 
@@ -28,12 +41,13 @@ function startServer(context) {
     },
   });
 
+  const stdErrLineHandler = createStdErrLineHandler({ context });
   nextServer.stderr.on('data', (data) => {
     data
       .toString('utf8')
       .split('\n')
       .forEach((line) => {
-        if (line) context.logger.error(line);
+        if (line) stdErrLineHandler(line);
       });
   });
 
