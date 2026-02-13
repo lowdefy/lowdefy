@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -32,11 +32,4 @@ import LowdefyError from '../LowdefyError.js';
 import PluginError from '../PluginError.js';
 import ServiceError from '../ServiceError.js';
 
-export {
-  ConfigError,
-  ConfigWarning,
-  deserializeError,
-  LowdefyError,
-  PluginError,
-  ServiceError,
-};
+export { ConfigError, ConfigWarning, deserializeError, LowdefyError, PluginError, ServiceError };

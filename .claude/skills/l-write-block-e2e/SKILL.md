@@ -91,7 +91,7 @@ const getOption = (page, blockId, index) => page.locator(`#${blockId}_${index}`)
 Create `src/blocks/{BlockName}/tests/{BlockName}.e2e.yaml`:
 
 ```yaml
-# Copyright 2020-2024 Lowdefy, Inc
+# Copyright 2020-2026 Lowdefy, Inc
 # ... license header ...
 
 id: blockname  # Page ID - lowercase, used in URL
@@ -209,7 +209,7 @@ Create `src/blocks/{BlockName}/tests/{BlockName}.e2e.spec.js`:
 **For Display Blocks (Button, Alert, Badge, etc.):**
 ```javascript
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   ...
@@ -565,7 +565,7 @@ test('can clear value', async ({ page }) => {
 
 ```javascript
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
   ... license header ...
 */
 
@@ -584,7 +584,7 @@ export default createPlaywrightConfig({
 ### 2. Create e2e/app/lowdefy.yaml
 
 ```yaml
-# Copyright 2020-2024 Lowdefy, Inc
+# Copyright 2020-2026 Lowdefy, Inc
 # ... license header ...
 
 lowdefy: local
