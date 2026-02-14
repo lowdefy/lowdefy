@@ -27,8 +27,8 @@
 |---------|-------------|-------------|
 | Antd version | 4.24.14 | 6.3.0+ (latest) |
 | @ant-design/icons | 4.8.0 | 6.1.0+ |
-| Styling engine | Less + @emotion/css (`makeCssClass`) | CSS-in-JS tokens + CSS Variables (native antd v6) |
-| Style imports | Per-component `.less` files built at build-time | No style imports needed — antd v6 is CSS-in-JS with tree-shaking |
+| Styling engine | Less + @emotion/css (`makeCssClass`) | Static CSS + CSS Variables (`zeroRuntime` mode) |
+| Style imports | Per-component `.less` files built at build-time | Single `antd/dist/antd.css` import (static, no runtime JS) |
 | Theme vars | Less variables (`@primary-color`) overridden in `public/styles.less` | ConfigProvider `theme.token` system |
 | Date library | Moment.js (2.29.4) | Day.js (antd v6 default) |
 | Block nesting key | `areas` | `slots` (with backwards-compat swap at build time) |
@@ -61,15 +61,33 @@ We're jumping v4 → v6, so we absorb both v4→v5 and v5→v6 breaking changes.
 
 ### 2.1 Styling System (Biggest Change)
 
+**How antd v6 styles actually work:**
+
+Antd v6 still ships `@ant-design/cssinjs` v2.x. By default, components inject `<style>` tags at runtime
+via JS — but dynamic parts (colors, spacing) use `var(--ant-*)` CSS custom properties instead of
+hard-coded values. Theme switching changes CSS variable values, not re-serialized CSS.
+
+**However, v6 reintroduces `antd/dist/antd.css`** — a pre-compiled static CSS file with CSS variable
+references. Combined with `zeroRuntime: true` on ConfigProvider, this completely disables the
+CSS-in-JS runtime. This is the approach we will use.
+
+**Why `zeroRuntime` is the right choice for Lowdefy:**
+- No CSS-in-JS runtime overhead (lighter client bundle, faster hydration)
+- Static CSS plays cleanly with Tailwind (no specificity wars with runtime-injected styles)
+- Simpler mental model — one CSS file import, theme via CSS variables
+- `@ant-design/static-style-extract` can generate a custom static CSS if we need prefix changes
+
 | What | Impact |
 |------|--------|
 | Less completely removed from antd | All `@import 'antd/lib/*/style/index.less'` files become dead |
-| No `antd/dist/antd.css` | Use `antd/dist/reset.css` for base reset only |
-| `babel-plugin-import` not needed | Antd v6 tree-shakes CSS-in-JS automatically |
-| `next-with-less` not needed for antd | Can keep for user custom Less if desired, or drop entirely |
-| CSS Variables mode is DEFAULT in v6 | Tokens map to CSS custom properties automatically |
+| `antd/dist/antd.css` reintroduced in v6 | Pre-compiled static CSS with CSS variable refs — import this |
+| `antd/dist/reset.css` also available | Optional browser normalization |
+| `babel-plugin-import` not needed | Static CSS + tree-shaken JS handles everything |
+| `next-with-less` not needed for antd | Drop entirely (no more Less in the pipeline) |
+| CSS Variables mode is DEFAULT in v6 | Tokens map to `--ant-*` custom properties |
+| `zeroRuntime: true` available | Disables all runtime style injection — we use this |
 
-**Action:** Remove all `.less` files in blocks, remove `less`/`less-loader`/`next-with-less` from servers, remove `buildStyleImports`/`writeStyleImports` from build pipeline.
+**Action:** Remove all `.less` files in blocks, remove `less`/`less-loader`/`next-with-less` from servers, remove `buildStyleImports`/`writeStyleImports` from build, import `antd/dist/antd.css` in the app entry point, wrap app in `ConfigProvider` with `theme={{ zeroRuntime: true }}`.
 
 ### 2.2 Prop Renames (v4 → v5 → v6)
 
@@ -584,13 +602,18 @@ Users customize styling via `public/styles.less`:
 
 This gets compiled at build time via Less and affects all antd components.
 
-### 8.2 New System — ConfigProvider Theme Tokens
+### 8.2 New System — CSS Variables + ConfigProvider
 
-Antd v6 uses a three-tier token system: **Seed → Map → Alias tokens**, configured via `ConfigProvider`.
+Since we're using `zeroRuntime` mode, antd's static CSS already contains `var(--ant-*)` references.
+Theming works by setting these CSS custom properties — no JS-based token resolution needed.
 
-#### Option A: YAML Theme Config (Recommended)
+**Three approaches, all compatible:**
 
-Add a `theme` key to the Lowdefy config that maps to antd's ConfigProvider theme:
+#### Approach A: YAML Theme Config → CSS Variables (Recommended Primary)
+
+Add a `theme` key to the Lowdefy config. At build time, generate a CSS file that sets the
+corresponding `--ant-*` custom properties. At runtime, pass the theme to ConfigProvider for
+any component-level overrides that need JS access.
 
 ```yaml
 # lowdefy.yaml
@@ -603,7 +626,6 @@ theme:
     fontFamily: 'Inter, sans-serif'
     colorBgContainer: '#ffffff'
     colorBgLayout: '#f5f5f5'
-  algorithm: dark          # 'default' | 'dark' | 'compact' | ['dark', 'compact']
   components:
     Button:
       colorPrimary: '#1677ff'
@@ -614,17 +636,35 @@ theme:
       colorBorder: '#d9d9d9'
 ```
 
-At runtime, this config is passed to `ConfigProvider`:
+Build step generates `theme.css`:
+```css
+:root {
+  --ant-color-primary: #00b96b;
+  --ant-border-radius: 8px;
+  --ant-font-size: 14px;
+  --ant-font-family: 'Inter, sans-serif';
+  --ant-color-bg-container: #ffffff;
+  --ant-color-bg-layout: #f5f5f5;
+}
+```
 
+Runtime wraps app:
 ```jsx
-<ConfigProvider theme={lowdefy.theme}>
+<ConfigProvider theme={{ zeroRuntime: true, ...lowdefy.theme }}>
   <App />
 </ConfigProvider>
 ```
 
-#### Option B: CSS Variables File (Simpler Migration)
+**Note on algorithms:** The `algorithm` option (dark, compact) requires the CSS-in-JS runtime to
+derive Map tokens from Seed tokens. With `zeroRuntime`, dark/compact themes would instead be
+implemented as CSS variable override files (e.g., `antd/dist/antd.dark.css` or a generated
+dark-theme CSS). Alternatively, we can use `@ant-design/static-style-extract` at build time to
+generate themed static CSS files. **Decision needed:** whether to support algorithm-based themes
+in v1, or start with token-only customization and add algorithm support later.
 
-Allow users to provide a `public/theme.css` (replacing `styles.less`) with CSS custom properties:
+#### Approach B: CSS Variables File (Escape Hatch)
+
+Allow users to provide `public/theme.css` with raw CSS custom properties:
 
 ```css
 :root {
@@ -634,11 +674,40 @@ Allow users to provide a `public/theme.css` (replacing `styles.less`) with CSS c
 }
 ```
 
-This works because antd v6 defaults to CSS Variables mode.
+This is the simplest migration path from `public/styles.less` — same concept, just CSS variables
+instead of Less variables.
 
-#### Recommendation: Option A as primary, Option B as escape hatch
+#### Approach C: Tailwind Theme Integration (When Tailwind Enabled)
 
-Option A gives full antd token system access including algorithms and component-level overrides. Option B remains available for users who want to write raw CSS.
+When Tailwind is enabled, the Tailwind config can reference antd CSS variables so both systems
+share the same design tokens:
+
+```javascript
+// tailwind.config.js
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        primary: 'var(--ant-color-primary)',
+        success: 'var(--ant-color-success)',
+        warning: 'var(--ant-color-warning)',
+        error: 'var(--ant-color-error)',
+      },
+      borderRadius: {
+        DEFAULT: 'var(--ant-border-radius)',
+      },
+    },
+  },
+};
+```
+
+This means `class: 'bg-primary text-white'` in YAML uses the same primary color as antd components.
+
+#### Recommendation
+
+- **Approach A** as the primary theming mechanism (YAML → CSS variables + ConfigProvider)
+- **Approach B** available as escape hatch for custom CSS
+- **Approach C** layered on when Tailwind is enabled, bridging antd tokens into Tailwind utilities
 
 ### 8.3 Exposing Tokens to Config (Operators)
 
@@ -840,10 +909,11 @@ plugins:
 4. Remove all `.less` files from block packages
 5. Remove `less`, `less-loader`, `next-with-less` from server packages
 6. Remove `buildStyleImports` / `writeStyleImports` from build
-7. Add `antd/dist/reset.css` import in place of old Less imports
-8. Remove `.meta.styles` from all block metas
-9. Update `next.config.js` to remove `withLess()` wrapper
-10. Fix all compilation errors
+7. Import `antd/dist/antd.css` (static CSS) + optionally `antd/dist/reset.css`
+8. Wrap app root in `ConfigProvider` with `theme={{ zeroRuntime: true }}`
+9. Remove `.meta.styles` from all block metas
+10. Update `next.config.js` to remove `withLess()` wrapper
+11. Fix all compilation errors
 
 ### Phase 2: Block Property Migration
 
@@ -957,10 +1027,13 @@ plugins:
 | Package | Reason |
 |---------|--------|
 | `dayjs` | Antd v6 date library |
-| `@ant-design/cssinjs` | May be needed for advanced token access |
+| `@ant-design/static-style-extract` | Optional — generate custom static CSS with prefix/theme changes |
 | `tailwindcss` | When Tailwind enabled |
 | `autoprefixer` | When Tailwind enabled |
 | `postcss` | When Tailwind enabled |
+
+**Note:** `@ant-design/cssinjs` v2.x comes as a transitive dependency of antd v6. We don't need to
+install it directly. With `zeroRuntime: true`, it does essentially nothing at runtime.
 
 ## Appendix B: Files to Delete
 
