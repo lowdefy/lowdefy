@@ -21,11 +21,36 @@ Lowdefy API endpoints (defined under `api:` in lowdefy.yaml) currently only supp
 **Build time** (`packages/build/src/build/buildAuth/`):
 
 1. `validateAuthConfig` validates the `auth:` config and initializes defaults
-2. `buildApiAuth` iterates over all endpoints and sets `endpoint.auth`:
+2. `buildApiAuth` iterates over all endpoints and computes `endpoint.auth` from **global** config:
    - Reads `auth.api.protected`, `auth.api.public`, `auth.api.roles`
    - Sets `endpoint.auth = { public: true }` or `{ public: false, roles?: [...] }`
    - Auth metadata is baked into the build artifacts (`build/api/{endpointId}.json`)
-3. `buildPageAuth` does the same for pages
+3. `buildPageAuth` does the exact same thing for pages using `auth.pages`
+
+**Crucially: endpoints NEVER have inline `auth` config in YAML.** The `auth` field on
+endpoints is always computed at build time from the global `auth.api` config. This is the
+same pattern as pages — all auth config lives centrally under `auth:`.
+
+**The `auth.api` and `auth.pages` schemas are identical:**
+
+```yaml
+auth:
+  pages:                        # Pages auth config
+    protected: true             #   or: [page-a, page-b] or omit
+    public:                     #   or: [page-x, page-y] or true
+      - login-page
+    roles:                      #   role → [pageId, pageId]
+      admin:
+        - admin-dashboard
+
+  api:                          # API auth config — SAME shape
+    protected: true             #   or: [ep-a, ep-b] or omit
+    public:                     #   or: [ep-x, ep-y] or true
+      - health-check
+    roles:                      #   role → [endpointId, endpointId]
+      admin:
+        - admin-api
+```
 
 **Runtime** (`packages/api/`, `packages/servers/server/`):
 
@@ -33,7 +58,7 @@ Lowdefy API endpoints (defined under `api:` in lowdefy.yaml) currently only supp
    - Creates request context with `rid`, `config`, `connections`, `operators`, `secrets`
    - Calls `getServerSession()` → NextAuth's `getServerSession(req, res, authOptions)`
    - If auth is configured and session exists → `context.session = { user: {...} }`
-   - Calls `createApiContext()` → sets `context.user`, `context.authorize`
+   - Calls `createApiContext()` → sets `context.user = session?.user`, `context.authorize`
 2. `createAuthorize({ session })` creates a closure:
    - `authenticated = !!session`
    - `roles = session?.user?.roles ?? []`
@@ -45,48 +70,78 @@ Lowdefy API endpoints (defined under `api:` in lowdefy.yaml) currently only supp
 
 | File | Role |
 |------|------|
-| `packages/build/src/build/buildAuth/buildApiAuth.js` | Sets `endpoint.auth` at build time |
+| `packages/build/src/build/buildAuth/buildApiAuth.js` | Computes `endpoint.auth` from global config |
+| `packages/build/src/build/buildAuth/getProtectedApi.js` | Resolves which endpoints are protected |
+| `packages/build/src/build/buildAuth/getApiRoles.js` | Inverts role→endpoints map to endpoint→roles |
 | `packages/build/src/build/buildAuth/validateAuthConfig.js` | Validates auth config structure |
-| `packages/build/src/lowdefySchema.js` | AJV schema for auth config |
-| `packages/api/src/context/createAuthorize.js` | Core authorization logic |
-| `packages/api/src/context/createApiContext.js` | Attaches auth to context |
+| `packages/build/src/build/buildAuth/validateMutualExclusivity.js` | Validates protected/public aren't both set |
+| `packages/build/src/lowdefySchema.js` | AJV schema — `auth.api` and `auth.pages` are identical shapes |
+| `packages/api/src/context/createAuthorize.js` | Core authorization: checks `public` + `roles` |
+| `packages/api/src/context/createApiContext.js` | Sets `context.user` from session |
 | `packages/api/src/routes/endpoints/callEndpoint.js` | Endpoint handler entry point |
-| `packages/api/src/routes/endpoints/authorizeApiEndpoint.js` | Endpoint authorization gate |
-| `packages/servers/server/lib/server/apiWrapper.js` | Server middleware (session resolution) |
+| `packages/api/src/routes/endpoints/authorizeApiEndpoint.js` | Calls authorize, throws "not found" on failure |
+| `packages/servers/server/lib/server/apiWrapper.js` | Server middleware — session resolution |
 | `packages/servers/server/lib/server/auth/getServerSession.js` | NextAuth session lookup |
-| `packages/servers/server/pages/api/endpoints/[endpointId].js` | Next.js API route for endpoints |
+| `packages/servers/server/pages/api/endpoints/[endpointId].js` | Next.js API route |
 | `packages/api/src/routes/auth/getNextAuthConfig.js` | NextAuth config + `_secret` resolution |
 
 ### 2.3 Current Limitations
 
 1. **Single auth mechanism**: Only NextAuth session cookies
-2. **No per-endpoint auth config**: Auth is set globally via `auth.api.protected/public/roles`
-3. **POST only**: Endpoint handler rejects non-POST requests
-4. **Internal body format**: Expects `{ blockId, payload, pageId }` — external callers don't know/care about blocks
-5. **No API key support**: No way to authenticate via headers
-6. **No JWT verification**: Can't validate tokens from external identity providers
+2. **No API key support**: No way to authenticate via headers
+3. **No JWT verification**: Can't validate tokens from external identity providers
+4. **POST only**: Endpoint handler rejects non-POST requests
+5. **Internal body format**: Expects `{ blockId, payload, pageId }` — external callers don't know about blocks
 
 ---
 
-## 3. Design Goals
+## 3. Design Goals & Principles
+
+### 3.1 Core Design Principle: Auth Config Lives in One Place
+
+**All auth configuration stays under `auth:` — nothing on endpoints themselves.**
+
+This is the existing pattern for both pages and API endpoints. The `auth.pages` and
+`auth.api` objects control access via `protected`, `public`, and `roles`. Endpoints
+never define their own auth. We preserve this.
+
+Strategies are a new way to **get roles** — alongside NextAuth sessions. Roles are
+the universal access control mechanism. How you get those roles (session, API key, JWT)
+is separate from whether you have them.
+
+### 3.2 Design Goals
 
 1. **Secure by default**: If auth is configured, endpoints are protected unless explicitly made public
-2. **Config-driven**: Auth strategies defined in YAML, consistent with Lowdefy patterns
-3. **Backwards compatible**: Existing apps work without changes
+2. **Config-driven**: Auth strategies defined in YAML under `auth:`, consistent with Lowdefy patterns
+3. **Backwards compatible**: Existing apps work without any changes
 4. **Multiple strategies**: Support session, API keys, JWT, and public access
-5. **Per-endpoint control**: Each endpoint can specify which strategies it accepts
-6. **Role-based authorization**: Role checks work across all auth strategies
-7. **Simple to use**: Common cases (public endpoint, API key) should be ~3 lines of config
+5. **Role-based scoping**: Strategies grant roles, roles control endpoint access — same pattern as pages
+6. **No per-endpoint auth config**: All auth lives under `auth:` — endpoints are scoped via roles
+7. **Simple to use**: Common cases require minimal config
 8. **Extensible**: Architecture supports adding new strategies later
 
 ---
 
 ## 4. Proposed Config Design
 
-### 4.1 Named Auth Strategies (Global Definition)
+### 4.1 Overview: Strategies Grant Roles, Roles Scope Endpoints
 
-Auth strategies are defined globally under `auth.strategies` and referenced by ID on endpoints.
-This follows the Lowdefy pattern of defining reusable resources once (like `connections`).
+```
+┌──────────────────────────┐     ┌──────────────────────────┐
+│  HOW do you authenticate │     │  WHAT can you access      │
+│  (auth.strategies)       │     │  (auth.api.roles)         │
+│                          │     │                           │
+│  session → user.roles    │ ──→ │  admin: [admin-api]       │
+│  apiKey  → strategy roles│ ──→ │  partner: [webhook, data] │
+│  jwt     → claim roles   │ ──→ │  service: [sync, batch]   │
+└──────────────────────────┘     └──────────────────────────┘
+```
+
+Strategies define **how** to authenticate and **what roles** they grant.
+`auth.api.roles` defines **which endpoints** each role can access.
+This is the same pattern as pages — the only new piece is `auth.strategies`.
+
+### 4.2 Full Config Example
 
 ```yaml
 auth:
@@ -100,279 +155,294 @@ auth:
         clientSecret:
           _secret: GOOGLE_CLIENT_SECRET
 
-  # NEW: Named authentication strategies for API endpoints
+  # NEW: Authentication strategies for API access
+  # Strategies define how to authenticate and what roles they grant.
   strategies:
-    - id: internal-api-key
-      type: apiKey
-      properties:
-        keys:
-          - _secret: INTERNAL_API_KEY
-        # Identity assigned to requests authenticated with this strategy
-        user:
-          sub: internal-service
-          roles:
-            - api-internal
-
-    - id: partner-api-key
+    - id: partner-key
       type: apiKey
       properties:
         keys:
           - _secret: PARTNER_KEY_ACME
           - _secret: PARTNER_KEY_GLOBEX
-        user:
-          sub: partner
-          roles:
-            - api-partner
+      roles:
+        - partner
 
-    - id: service-jwt
+    - id: internal-key
+      type: apiKey
+      properties:
+        keys:
+          - _secret: INTERNAL_SERVICE_KEY
+      roles:
+        - internal-service
+
+    - id: admin-key
+      type: apiKey
+      properties:
+        keys:
+          - _secret: ADMIN_API_KEY
+      roles:
+        - admin
+        - internal-service
+
+    - id: external-jwt
       type: jwt
       properties:
-        # Option A: Shared secret (HMAC)
         secret:
           _secret: JWT_SIGNING_SECRET
-        # Option B: JWKS endpoint (RSA/EC) — one or the other
-        # jwksUri: https://auth.example.com/.well-known/jwks.json
         issuer: https://auth.example.com
         audience: my-lowdefy-api
         algorithms:
-          - RS256
+          - HS256
         # Map JWT claims to user fields
         userFields:
           sub: sub
           email: email
-          roles: roles
+          roles: roles       # Roles from JWT claims
+      roles:
+        - api-user           # Additional static roles granted to ALL JWT users
 
-  # Existing page/api config (unchanged)
+  # Existing page auth (unchanged)
   pages:
     protected: true
+    roles:
+      admin:
+        - admin-dashboard
+        - admin-settings
+
+  # Existing API auth — SAME schema, strategies just feed into roles
   api:
-    protected: true
+    protected: true           # All endpoints require auth by default
+    public:
+      - health-check          # Explicitly public
+    roles:
+      partner:                # partner-key strategy grants this role
+        - partner-webhook
+        - partner-data-export
+      internal-service:       # internal-key and admin-key grant this role
+        - sync-endpoint
+        - batch-process
+      admin:                  # admin-key grants this role (session users can too)
+        - admin-api
+        - sync-endpoint
+      api-user:               # external-jwt grants this role
+        - user-data-export
 ```
 
-### 4.2 Per-Endpoint Auth Configuration
+### 4.3 How Config Maps to Access
 
-Endpoints reference strategies by ID. The special built-in strategy `session` refers to
-the existing NextAuth session auth (always available when auth is configured).
+| Endpoint | Who can access | Why |
+|----------|---------------|-----|
+| `health-check` | Anyone | Listed in `auth.api.public` |
+| `partner-webhook` | `partner-key` holders | Strategy grants `partner` role → endpoint scoped to `partner` |
+| `partner-data-export` | `partner-key` holders | Same |
+| `sync-endpoint` | `internal-key` OR `admin-key` holders, OR session users with `admin`/`internal-service` role | Both `internal-service` and `admin` roles map to this endpoint |
+| `batch-process` | `internal-key` OR `admin-key` holders | `internal-service` role |
+| `admin-api` | `admin-key` holders OR session users with `admin` role | `admin` role |
+| `user-data-export` | Any valid JWT bearer | `external-jwt` grants `api-user` role |
+| (any unlisted endpoint) | Any authenticated user (session OR any strategy) | `auth.api.protected: true` — auth required, but no specific role |
+
+### 4.4 Config Schema: `auth.api` is Unchanged
+
+The `auth.api` schema (`protected`, `public`, `roles`) does not change at all.
+Strategies are a sibling of `api` and `pages` under `auth:`, not nested inside them.
+
+```
+auth:
+  providers: [...]        # Existing — NextAuth providers
+  strategies: [...]       # NEW — API auth strategies
+  pages:                  # Existing — page access control
+    protected/public/roles
+  api:                    # Existing — endpoint access control (UNCHANGED)
+    protected/public/roles
+```
+
+### 4.5 Multiple Keys/Secrets Per Role
+
+The user can list multiple API keys and/or JWT secrets under different strategies
+that grant the same role:
 
 ```yaml
-api:
-  # Public endpoint — no auth required
-  - id: health-check
-    auth:
-      public: true
-    routine:
-      - id: return-ok
-        type: Return
-        params:
-          status: ok
-
-  # Protected by session only (current behavior, default)
-  - id: user-dashboard-data
-    # No auth block → inherits from auth.api config → session auth
-    routine:
-      - id: fetch-data
-        type: MongoDBFind
-        connectionId: app-db
-        properties:
-          collection: dashboards
-
-  # Protected by API key
-  - id: webhook-receiver
-    auth:
-      strategies:
-        - internal-api-key
-    routine:
-      - id: process-webhook
-        type: MongoDBInsertOne
-        connectionId: app-db
-        properties:
-          doc:
-            _payload: true
-
-  # Protected by multiple strategies (first match wins)
-  - id: data-export
-    auth:
-      strategies:
-        - session         # Browser users with session
-        - partner-api-key # Partner services with API key
-        - service-jwt     # Services with JWT
+auth:
+  strategies:
+    # Multiple keys, one role
+    - id: partner-keys
+      type: apiKey
+      properties:
+        keys:
+          - _secret: PARTNER_KEY_ACME       # Acme Corp's key
+          - _secret: PARTNER_KEY_GLOBEX     # Globex Corp's key
+          - _secret: PARTNER_KEY_INITECH    # Initech's key
       roles:
-        - admin
-        - api-partner
-    routine:
-      - id: export-data
-        type: MongoDBFind
-        connectionId: app-db
-        properties:
-          collection: exports
+        - partner
 
-  # JWT-only endpoint
-  - id: microservice-sync
-    auth:
-      strategies:
-        - service-jwt
-    routine:
-      - id: sync-data
-        type: AxiosHttp
-        connectionId: upstream-api
-        properties:
-          url: /api/sync
+    # Different strategy type, same role
+    - id: partner-jwt
+      type: jwt
+      properties:
+        secret:
+          _secret: PARTNER_JWT_SECRET
+      roles:
+        - partner
+
+  api:
+    roles:
+      partner:
+        - partner-webhook
+        - partner-data-export
 ```
 
-### 4.3 Config Resolution Rules (Secure by Default)
+Now partners can authenticate with EITHER an API key OR a JWT — both grant the
+`partner` role which gives access to the same endpoints.
 
-Priority order for how `endpoint.auth` is determined at build time:
+To give different keys different access levels, use separate strategies with
+different roles:
 
-1. **Endpoint has explicit `auth` block** → use it directly
-2. **Endpoint has no `auth` block** → apply global `auth.api` config (existing behavior)
-3. **No `auth.api` config and no endpoint `auth`** → `public: true` (existing behavior: if no auth configured at all, everything is public)
+```yaml
+auth:
+  strategies:
+    - id: partner-read-key
+      type: apiKey
+      properties:
+        keys:
+          - _secret: PARTNER_READ_KEY
+      roles:
+        - partner-read
 
-When `auth.providers` are configured (auth is active):
-- **Default behavior**: endpoints without explicit `auth` are protected by session (existing behavior via `auth.api.protected: true`)
-- `auth.public: true` → explicitly makes an endpoint public
-- `auth.strategies: [...]` → explicitly sets which strategies are accepted
-- Strategies and roles can be combined
+    - id: partner-write-key
+      type: apiKey
+      properties:
+        keys:
+          - _secret: PARTNER_WRITE_KEY
+      roles:
+        - partner-read
+        - partner-write
 
-When `auth.providers` are NOT configured (no auth):
-- All endpoints are public (existing behavior, no change)
+  api:
+    roles:
+      partner-read:
+        - partner-data-export
+      partner-write:
+        - partner-data-import
+        - partner-data-export
+```
 
-### 4.4 Why Named Strategies (vs Inline)
+### 4.6 Why Roles Are the Only Scoping Mechanism
 
-**Option A: Named strategies (recommended)**
+**Option A: Roles only (this design)**
 ```yaml
 auth:
   strategies:
     - id: my-key
       type: apiKey
       properties:
-        keys: [{ _secret: KEY }]
-api:
-  - id: ep1
-    auth:
-      strategies: [my-key]
-  - id: ep2
-    auth:
-      strategies: [my-key]
+        keys: [{_secret: KEY}]
+      roles: [partner]
+  api:
+    roles:
+      partner: [webhook, export]
 ```
 
-**Option B: Inline strategies**
+**Option B: Per-endpoint strategy lists (v1 design, rejected)**
 ```yaml
 api:
-  - id: ep1
+  - id: webhook
     auth:
-      strategies:
-        - type: apiKey
-          properties:
-            keys: [{ _secret: KEY }]
-  - id: ep2
-    auth:
-      strategies:
-        - type: apiKey
-          properties:
-            keys: [{ _secret: KEY }]
+      strategies: [my-key]      # Auth config on endpoint — breaks pattern
 ```
 
-| Criteria | Named (A) | Inline (B) |
-|----------|-----------|------------|
-| DRY principle | Strategies defined once | Repeated per endpoint |
-| Consistency with Lowdefy | Matches `connections` pattern | Novel pattern |
-| Readability | Endpoint config stays clean | Endpoint config bloated |
-| Secret management | Secrets in one place | Secrets scattered |
-| Maintenance | Change strategy in one place | Change in every endpoint |
-| Simplicity for single use | Slightly more config | Slightly less config |
+| Criteria | Roles only (A) | Per-endpoint strategies (B) |
+|----------|---------------|---------------------------|
+| Auth config in one place | All under `auth:` | Split between `auth:` and `api:` |
+| Consistent with pages | Identical pattern | Pages don't have this |
+| Schema changes to `api:` | None | New `auth` field on endpoints |
+| `buildApiAuth` changes | Minimal | Significant — must handle inline auth |
+| Mental model | Same as today, just new auth methods | New concept to learn |
+| Flexibility | Full — different roles = different access | Full — but more complex config |
+| DRY | Roles reused across session + strategies | Strategy lists repeated per endpoint |
 
-**Decision**: Named strategies (Option A). Consistent with how `connections` are defined
-globally and referenced by ID. Avoids secret duplication. Better for maintainability.
+**Decision**: Roles only (Option A). All auth config under `auth:`. Same mental model
+as pages. No schema changes to endpoints. Strategies are just a new way to obtain roles.
 
 ---
 
 ## 5. Authentication Strategies (Detailed)
 
-### 5.1 Strategy: `session` (Built-in)
+### 5.1 Strategy: `session` (Built-in, Always Available)
 
-Uses the existing NextAuth session. No configuration needed — it is always available when
-`auth.providers` are configured. Referenced by the special ID `session`.
+The existing NextAuth session. Not defined in `strategies` — it's implicit. When
+`auth.providers` are configured and a user logs in via the browser, their session
+provides `user.roles` which are checked against `auth.api.roles` and `auth.pages.roles`.
 
-**How it works**:
-1. `apiWrapper` already calls `getServerSession()` on every request
-2. If session exists → user is authenticated
-3. `context.user = session.user` (existing behavior)
+**No changes needed.** Session auth continues to work exactly as before.
 
-**Config**: No definition needed. Just reference `session` in `strategies` array.
-
-```yaml
-api:
-  - id: browser-only-endpoint
-    auth:
-      strategies:
-        - session
-```
-
-**Pros**: Zero config, backwards compatible, already works.
-**Cons**: Only works for browser clients with cookies.
+The only change is conceptual: when strategies are defined, "authenticated" means
+"has a session OR matched a strategy". For `auth.api.protected: true` (no specific roles),
+any valid authentication method grants access. This is backwards compatible because without
+strategies, session is still the only auth method.
 
 ### 5.2 Strategy: `apiKey`
 
-Validates a pre-shared key from request headers.
+Validates a pre-shared key from request headers and grants configured roles.
 
-**Config**:
+**Config:**
 ```yaml
 auth:
   strategies:
     - id: my-api-key
       type: apiKey
       properties:
-        # Where to read the key from (optional, defaults shown)
-        headerName: X-API-Key  # Also checks Authorization: Bearer <key>
-        # List of valid keys
+        # Where to read the key from (optional)
+        headerName: X-API-Key     # Default: checks both X-API-Key and Authorization: Bearer
+        # List of valid keys — multiple keys for rotation or multi-tenant
         keys:
           - _secret: API_KEY_1
           - _secret: API_KEY_2
-        # Identity assigned to authenticated requests (optional)
-        user:
-          sub: api-client
-          roles:
-            - api-user
+      # Roles granted when authenticated with this strategy
+      roles:
+        - api-user
+        - partner
 ```
 
-**How it works**:
+**How it works:**
 1. Read key from `X-API-Key` header or `Authorization: Bearer <key>` header
-2. Compare against configured keys using constant-time comparison
-3. If match → authenticated with the configured `user` identity
+2. Compare against each key in `keys[]` using constant-time comparison
+3. If match → authenticated, user gets roles from strategy's `roles` array
 4. If no match → strategy fails, try next strategy
 
-**Key resolution flow**:
-```
-Request headers
-  → Extract key from headerName or Authorization: Bearer
-  → Compare with each key in keys[] (constant-time)
-  → Match found → return { authenticated: true, user: strategy.properties.user }
-  → No match → return { authenticated: false }
+**User identity for API key auth:**
+```javascript
+context.user = {
+  sub: `apiKey:${strategyId}`,    // e.g., "apiKey:my-api-key"
+  type: 'apiKey',
+  strategyId: 'my-api-key',
+  roles: ['api-user', 'partner'], // from strategy config
+};
 ```
 
-**Pros**:
+**Pros:**
 - Simple to set up and use
 - Works for server-to-server, webhooks, CLI tools
 - Keys stored as env vars via `_secret` (secure)
 - Low overhead (no crypto verification)
+- Multiple keys per strategy for key rotation
 
-**Cons**:
+**Cons:**
 - Keys are shared secrets — must be transmitted securely (HTTPS only)
 - No expiration (must rotate manually)
-- No per-request claims (static identity)
-- Must be kept secret — leaked key = full access until rotated
+- No per-request identity (all keys share the same roles)
+- Leaked key = access until rotated
 
-**Security considerations**:
-- Keys MUST be compared using constant-time comparison to prevent timing attacks
-- Keys should be at least 32 bytes of entropy
-- HTTPS is required (keys sent in headers)
+**Security considerations:**
+- Constant-time comparison via `crypto.timingSafeEqual` to prevent timing attacks
+- Keys should be at least 32 characters (validated at build time)
+- HTTPS required (keys sent in plaintext headers)
 - Rate limiting recommended (future enhancement)
 
 ### 5.3 Strategy: `jwt`
 
-Validates a JSON Web Token from the Authorization header.
+Validates a JSON Web Token from the Authorization header and extracts roles from claims.
 
-**Config**:
+**Config:**
 ```yaml
 auth:
   strategies:
@@ -384,22 +454,22 @@ auth:
           _secret: JWT_SECRET
         algorithms:
           - HS256
-        issuer: https://my-service.com    # Optional: validate iss claim
-        audience: my-lowdefy-api          # Optional: validate aud claim
-        userFields:                        # Map JWT claims to user object
+        issuer: https://my-service.com       # Optional: validate iss claim
+        audience: my-lowdefy-api             # Optional: validate aud claim
+        # Map JWT claims to user fields
+        userFields:
           sub: sub
           email: email
-          roles: roles
+          roles: roles                        # Extract roles from JWT claims
           name: name
+      roles:
+        - api-user                            # Additional static roles (merged with claim roles)
 
-    # Option B: RSA/EC (public key or JWKS)
+    # Option B: RSA/EC (JWKS endpoint)
     - id: rsa-jwt
       type: jwt
       properties:
         jwksUri: https://auth.example.com/.well-known/jwks.json
-        # OR
-        # publicKey:
-        #   _secret: JWT_PUBLIC_KEY
         algorithms:
           - RS256
         issuer: https://auth.example.com
@@ -407,70 +477,82 @@ auth:
         userFields:
           sub: sub
           email: email
-          roles: custom:roles
+          roles: realm_access.roles           # Nested paths supported (e.g., Keycloak)
+      roles: []                               # No static roles — all from JWT claims
 ```
 
-**How it works**:
+**How it works:**
 1. Read token from `Authorization: Bearer <token>` header
 2. Decode header to determine algorithm
 3. Verify signature:
    - HMAC: using `secret`
-   - RSA/EC: using `publicKey` or fetching from `jwksUri`
+   - RSA/EC: using key from `jwksUri` (cached)
 4. Validate standard claims: `exp`, `iat`, `nbf`, `iss`, `aud`
 5. Extract user fields from payload using `userFields` mapping
-6. If valid → authenticated with mapped user identity
+6. Merge static `roles` from strategy config with `roles` from JWT claims
+7. If valid → authenticated with merged identity
 
-**User field mapping**:
-```yaml
-userFields:
-  sub: sub                    # JWT payload.sub → user.sub
-  email: email                # JWT payload.email → user.email
-  roles: realm_access.roles   # JWT payload.realm_access.roles → user.roles (supports nested paths)
-  name: preferred_username    # JWT payload.preferred_username → user.name
+**Role resolution for JWT:**
+```javascript
+// Static roles from strategy config
+const staticRoles = strategy.roles ?? [];
+// Dynamic roles from JWT claims (via userFields mapping)
+const claimRoles = get(jwtPayload, strategy.properties.userFields.roles) ?? [];
+// Merge — user gets both
+context.user = {
+  sub: jwtPayload.sub,
+  email: jwtPayload.email,
+  type: 'jwt',
+  strategyId: 'hmac-jwt',
+  roles: [...new Set([...staticRoles, ...claimRoles])],
+};
 ```
 
-This uses `get()` from `@lowdefy/helpers` to support nested paths, consistent with
-the existing `auth.userFields` pattern for NextAuth.
+**User field mapping uses `get()` from `@lowdefy/helpers`** to support nested paths:
+```yaml
+userFields:
+  sub: sub                       # payload.sub → user.sub
+  email: email                   # payload.email → user.email
+  roles: realm_access.roles      # payload.realm_access.roles → user.roles (Keycloak)
+  name: preferred_username       # payload.preferred_username → user.name
+```
 
-**Pros**:
+**Pros:**
 - Industry standard (RFC 7519)
 - Self-contained — no database lookup needed
-- Supports expiration and claims validation
+- Per-request claims (different users get different roles)
 - Works with external identity providers (Auth0, Keycloak, Cognito, etc.)
-- Per-request claims (roles, scopes, etc.)
 - Asymmetric keys (JWKS) don't require sharing secrets
+- Supports expiration and claims validation
 
-**Cons**:
+**Cons:**
 - More complex setup than API keys
 - Token revocation requires additional infrastructure
 - JWKS URI introduces external dependency (mitigated by caching)
 - Clock skew can cause validation failures
-- Larger request overhead (tokens can be 1-2KB)
 
-**Security considerations**:
-- Algorithm MUST be validated (prevent `alg: none` attacks)
-- JWKS responses should be cached with TTL
-- Token expiration (`exp`) must be enforced
+**Security considerations:**
+- Algorithm MUST be validated against `algorithms` config (prevent `alg: none` attacks)
+- JWKS responses cached with TTL (default: 1 hour)
+- Token expiration (`exp`) enforced
 - `iss` and `aud` validation prevents token reuse across services
+- Clock tolerance configurable (default: 30 seconds)
 
-### 5.4 Strategy: `public`
+### 5.4 Public Access
 
-No authentication required. This is equivalent to `auth.public: true` on the endpoint,
-but expressed as a strategy for consistency.
-
-**Config**: No definition needed. Use `auth.public: true` on the endpoint.
+No new concept needed. Public endpoints are already supported via `auth.api.public`:
 
 ```yaml
-api:
-  - id: open-endpoint
-    auth:
-      public: true
-    routine: [...]
+auth:
+  api:
+    protected: true
+    public:
+      - health-check
+      - webhook-no-auth
 ```
 
-Note: `public` is NOT a named strategy — it's a flag on the endpoint's `auth` block.
-This keeps the existing API surface unchanged. An endpoint is either public or it
-requires one or more authentication strategies.
+Public endpoints skip all authentication — no session, no API key, no JWT needed.
+`context.user` is `null`. This is unchanged from today.
 
 ---
 
@@ -479,63 +561,71 @@ requires one or more authentication strategies.
 ### 6.1 Separation of Authentication and Authorization
 
 The current `createAuthorize` conflates authentication (is there a session?) with
-authorization (does the user have the right roles?). The new design separates these:
+authorization (does the user have the right roles?). The new design separates them:
 
 ```
-┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
-│  AUTHENTICATION │     │  IDENTITY         │     │  AUTHORIZATION  │
-│                 │     │  RESOLUTION       │     │                 │
-│  Which strategy │ ──→ │  Who is the user? │ ──→ │  Can they do    │
-│  matched?       │     │  Set context.user │     │  this action?   │
-└─────────────────┘     └──────────────────┘     └─────────────────┘
+┌─────────────────────────┐     ┌─────────────────────────┐
+│     AUTHENTICATION      │     │     AUTHORIZATION       │
+│                         │     │                         │
+│  Resolve identity from  │     │  Check access based on  │
+│  request. Set user +    │ ──→ │  identity. Same as      │
+│  roles on context.      │     │  today: public? roles?  │
+│                         │     │                         │
+│  Session (existing)     │     │  createAuthorize()      │
+│  API Key (new)          │     │  → authorize(config)    │
+│  JWT (new)              │     │  (unchanged logic)      │
+└─────────────────────────┘     └─────────────────────────┘
 ```
 
-**Authentication** (new): Resolves identity from the request.
-- Input: HTTP request (headers, cookies)
-- Output: `{ authenticated: boolean, user: object | null, strategyId: string }`
-- Tries each configured strategy in order, returns first match.
+**Authentication** (new step): Resolves identity from the request.
+- Try session first (existing behavior)
+- If no session and strategies are configured, try each strategy
+- First strategy that matches sets `context.user` with roles
+- If nothing matches → `context.user = null` (unauthenticated)
 
-**Authorization** (existing, extended): Checks access based on identity.
-- Input: `{ authenticated, user, config }`
-- Output: `boolean`
-- Checks `public`, `roles`, etc.
+**Authorization** (existing, unchanged): Checks access based on identity.
+- `authorize(config)` checks `config.auth.public` and `config.auth.roles`
+- Reads `context.user.roles` — doesn't care where roles came from
+- Returns boolean
 
-### 6.2 Runtime Flow (New)
+### 6.2 Runtime Flow
 
 ```
 HTTP Request → /api/endpoints/[endpointId]
   │
   ▼
-apiWrapper (unchanged except: passes strategy configs to context)
-  ├─ Creates context
+apiWrapper
+  ├─ Creates context (existing)
   ├─ Resolves NextAuth session (existing)
-  ├─ Adds strategyConfigs to context (from auth.json)
-  ├─ Calls createApiContext()
+  ├─ NEW: resolveAuthentication(context)
+  │  ├─ If session exists → context.user = session.user (existing behavior)
+  │  ├─ If no session AND strategies configured:
+  │  │  ├─ For each strategy in context.authStrategies:
+  │  │  │  ├─ apiKey → check headers against keys
+  │  │  │  ├─ jwt → verify token, extract claims
+  │  │  │  └─ If match → set context.user with strategy roles, break
+  │  │  └─ No match → context.user = null (unauthenticated)
+  │  └─ If no session AND no strategies → context.user = null
+  ├─ createApiContext() (existing — but context.user already set)
+  ├─ logRequest() (existing)
   │
   ▼
 callEndpoint()
-  ├─ Gets endpoint config (existing)
-  │
-  ├─ NEW: resolveAuthentication(context, endpointConfig)
-  │  ├─ If endpoint.auth.public === true → skip auth, user = null
-  │  ├─ If endpoint.auth.strategies exists:
-  │  │  ├─ For each strategyId in strategies[]:
-  │  │  │  ├─ "session" → check context.session
-  │  │  │  ├─ apiKey strategy → check headers against keys
-  │  │  │  ├─ jwt strategy → verify token, extract claims
-  │  │  │  └─ If match → set context.user, break
-  │  │  └─ No match → throw 401/404
-  │  ├─ If no strategies (legacy) → use session (existing behavior)
-  │  └─ Sets context.user from resolved identity
-  │
-  ├─ authorizeApiEndpoint() (existing, works with updated context.user)
-  │  └─ Checks roles against context.user.roles
-  │
-  ▼
-runRoutine() (unchanged)
+  ├─ getEndpointConfig() (existing)
+  ├─ authorizeApiEndpoint() (existing — checks endpoint.auth vs context.user)
+  │  └─ authorize(endpointConfig)
+  │     ├─ auth.public === true → allowed
+  │     ├─ auth.public === false, no roles → authenticated required
+  │     └─ auth.public === false, roles → role match required
+  ├─ runRoutine() (existing)
+  └─ Return response
 ```
 
-### 6.3 Build-Time Flow (Modified)
+**Key insight**: `authorizeApiEndpoint`, `authorize`, `buildApiAuth` — none of these
+change. The only new runtime step is `resolveAuthentication` which runs in `apiWrapper`
+BEFORE `createApiContext`. It sets `context.user` which the existing authorize flow reads.
+
+### 6.3 Build-Time Flow
 
 ```
 lowdefy.yaml
@@ -543,31 +633,45 @@ lowdefy.yaml
   ▼
 buildAuth()
   ├─ validateAuthConfig() (extended: validate strategies)
-  ├─ NEW: buildAuthStrategies() → validate and process strategy configs
-  ├─ buildApiAuth() (modified: respect per-endpoint auth blocks)
-  ├─ buildPageAuth() (unchanged)
-  └─ buildAuthPlugins() (unchanged)
+  ├─ NEW: buildAuthStrategies()
+  │  └─ Validate strategy configs, check duplicate IDs
+  ├─ buildApiAuth() (UNCHANGED — reads auth.api.protected/public/roles)
+  ├─ buildPageAuth() (UNCHANGED)
+  └─ buildAuthPlugins() (UNCHANGED)
   │
   ▼
 Build artifacts:
   ├─ auth.json (extended: includes strategies[])
-  └─ api/{endpointId}.json (extended: auth may include strategies)
+  └─ api/{endpointId}.json (UNCHANGED — still has auth.public/roles from buildApiAuth)
 ```
 
-### 6.4 Strategy Resolution at Startup
+`buildApiAuth` does NOT change — it still reads from `auth.api.protected/public/roles`
+and writes `endpoint.auth = { public, roles }`. Strategies don't affect the endpoint
+build output at all. They're stored in `auth.json` and resolved at server startup.
 
-Strategy configs contain `_secret` references that need to be resolved at server startup
-(not per-request). This follows the existing pattern in `getNextAuthConfig`:
+### 6.4 Strategy Resolution at Server Startup
+
+Strategy configs contain `_secret` references resolved at server startup (not per-request).
+This follows the existing `getNextAuthConfig` pattern:
 
 ```javascript
-// New: getAuthStrategies() — similar to getNextAuthConfig()
-// Called once at startup, cached thereafter
+// New: getAuthStrategies() — resolves _secret operators in strategy configs
+// Called once at startup, cached thereafter (same pattern as getNextAuthConfig)
+
+import { ServerParser } from '@lowdefy/operators';
+import { _secret } from '@lowdefy/operators-js/operators/server';
+
+const resolvedStrategies = [];
+let initialized = false;
 
 function getAuthStrategies({ authJson, secrets }) {
-  // Parse _secret operators in strategy configs
+  if (initialized) return resolvedStrategies;
+
   const operatorsParser = new ServerParser({
     operators: { _secret },
+    payload: {},
     secrets,
+    user: {},
   });
 
   const { output: strategies } = operatorsParser.parse({
@@ -575,80 +679,43 @@ function getAuthStrategies({ authJson, secrets }) {
     location: 'auth.strategies',
   });
 
-  return strategies; // Keys/secrets are now resolved plain values
+  resolvedStrategies.push(...strategies);
+  initialized = true;
+  return resolvedStrategies;
 }
 ```
 
 This ensures:
-- Secrets are resolved once, not per-request
+- Secrets resolved once, not per-request
 - Same `_secret` pattern used everywhere
 - Consistent with `getNextAuthConfig` approach
 
----
+### 6.5 How `createAuthorize` Changes
 
-## 7. Implementation Plan
-
-### Phase 1: Core Infrastructure (Auth Strategy Resolution)
-
-**7.1.1 Add strategy resolution to `@lowdefy/api`**
-
-New files:
-- `packages/api/src/context/resolveAuthentication.js` — Main resolver
-- `packages/api/src/context/strategies/resolveSessionStrategy.js` — Session strategy
-- `packages/api/src/context/strategies/resolveApiKeyStrategy.js` — API key strategy
-- `packages/api/src/context/strategies/resolveJwtStrategy.js` — JWT strategy
-- `packages/api/src/context/strategies/index.js` — Strategy registry
-
-```javascript
-// resolveAuthentication.js
-function resolveAuthentication(context, { endpointConfig }) {
-  const { auth } = endpointConfig;
-
-  // Public endpoint — no auth needed
-  if (auth.public === true) {
-    context.user = null;
-    return;
-  }
-
-  // If strategies are defined, try each in order
-  if (auth.strategies) {
-    for (const strategyId of auth.strategies) {
-      const result = resolveStrategy(context, { strategyId });
-      if (result.authenticated) {
-        context.user = result.user;
-        context.authStrategy = strategyId;
-        return;
-      }
-    }
-    // No strategy matched
-    throw new AuthenticationError('Authentication required.');
-  }
-
-  // Legacy behavior: check session (backwards compatible)
-  if (!context.session) {
-    throw new AuthenticationError('Authentication required.');
-  }
-  context.user = context.session.user;
-}
-```
-
-**7.1.2 Modify `createAuthorize` for strategy-resolved users**
-
-The existing `createAuthorize` creates the authorize function once from the session.
-With strategies, the user may change per-endpoint (resolved by `resolveAuthentication`
-before `authorize` is called). The authorize function should read from `context.user`
-rather than closing over `session` at creation time.
+The existing `createAuthorize` closes over `session` at creation time. It needs a
+minimal change to read from `context.user` instead (which is now set by
+`resolveAuthentication` before `createApiContext` runs):
 
 ```javascript
 // CURRENT (closes over session at creation time):
 function createAuthorize({ session }) {
   const authenticated = !!session;
   const roles = session?.user?.roles ?? [];
-  function authorize(config) { ... }
+  function authorize(config) {
+    const { auth } = config;
+    if (auth.public === true) return true;
+    if (auth.public === false) {
+      if (auth.roles) {
+        return authenticated && auth.roles.some((role) => roles.includes(role));
+      }
+      return authenticated;
+    }
+    throw new ConfigError({ ... });
+  }
   return authorize;
 }
 
-// NEW (reads from context at call time):
+// NEW (reads from context — user set by resolveAuthentication):
 function createAuthorize(context) {
   function authorize(config) {
     const { auth } = config;
@@ -667,107 +734,288 @@ function createAuthorize(context) {
 }
 ```
 
-This is a minimal, backwards-compatible change. The authorize function now reads
-`context.user` which is set by `resolveAuthentication` (or by the existing
-`createApiContext` for legacy endpoints).
+**Why this works**: `context.user` is set BEFORE `createApiContext` (which calls
+`createAuthorize`) runs. For session auth, `context.user = session.user` (same as
+before). For strategy auth, `context.user = { roles, sub, ... }` from the matched
+strategy. The authorize function doesn't care where the user came from.
 
-**7.1.3 Modify `callEndpoint` to resolve auth before authorization**
+---
 
-```javascript
-// CURRENT:
-async function callEndpoint(context, { blockId, endpointId, pageId, payload }) {
-  const endpointConfig = await getEndpointConfig(context, { endpointId });
-  authorizeApiEndpoint(context, { endpointConfig });
-  // ... run routine
-}
+## 7. Implementation Plan
 
-// NEW:
-async function callEndpoint(context, { blockId, endpointId, pageId, payload }) {
-  const endpointConfig = await getEndpointConfig(context, { endpointId });
-  resolveAuthentication(context, { endpointConfig });  // NEW: resolve identity first
-  authorizeApiEndpoint(context, { endpointConfig });   // Then authorize
-  // ... run routine
-}
-```
+### Phase 1: Core Infrastructure
 
-**7.1.4 Modify `apiWrapper` to pass strategy configs**
+**7.1.1 Add `auth.strategies` schema to `lowdefySchema.js`**
+
+Add a new `strategies` property to `authConfig`:
 
 ```javascript
-// In apiWrapper, after creating context:
-context.authStrategies = getAuthStrategies({ authJson, secrets });
-```
-
-### Phase 2: Build-Time Config Processing
-
-**7.2.1 Extend `lowdefySchema.js` with strategy definitions**
-
-Add to `definitions`:
-```javascript
-authStrategy: {
-  type: 'object',
-  required: ['id', 'type'],
-  properties: {
-    id: { type: 'string' },
-    type: { type: 'string', enum: ['apiKey', 'jwt'] },
-    properties: { type: 'object' },
+strategies: {
+  type: 'array',
+  items: {
+    type: 'object',
+    required: ['id', 'type'],
+    additionalProperties: false,
+    properties: {
+      id: {
+        type: 'string',
+        errorMessage: { type: 'Auth strategy "id" should be a string.' },
+      },
+      type: {
+        type: 'string',
+        enum: ['apiKey', 'jwt'],
+        errorMessage: { type: 'Auth strategy "type" should be "apiKey" or "jwt".' },
+      },
+      properties: {
+        type: 'object',
+      },
+      roles: {
+        type: 'array',
+        items: { type: 'string' },
+        errorMessage: { type: 'Auth strategy "roles" should be an array of strings.' },
+      },
+    },
   },
 },
 ```
 
-Add `strategies` to `authConfig.properties`:
-```javascript
-strategies: {
-  type: 'array',
-  items: { $ref: '#/definitions/authStrategy' },
-},
-```
+**No changes to `auth.api` or `auth.pages` schemas.**
 
-Add `strategies` to endpoint auth config (alongside existing `public` and `roles`).
+**7.1.2 Add `buildAuthStrategies.js`**
 
-**7.2.2 Add `buildAuthStrategies.js`**
+New file: `packages/build/src/build/buildAuth/buildAuthStrategies.js`
 
-Validates strategy configs:
+Validates strategy configs at build time:
 - Each strategy has unique `id`
+- `id` is not the reserved word `session`
 - `type` is one of `apiKey`, `jwt`
-- `apiKey` strategies have `keys` array
-- `jwt` strategies have `secret` or `jwksUri`
-- Strategy IDs don't collide with built-in `session`
+- `apiKey` strategies have a `properties.keys` array
+- `jwt` strategies have `properties.secret` or `properties.jwksUri` (not both)
+- `roles` is present and is an array of strings
 
-**7.2.3 Modify `buildApiAuth.js`**
+**7.1.3 Modify `buildAuth.js` to include strategy building**
 
-Respect per-endpoint `auth` blocks:
 ```javascript
-// CURRENT: Always overwrites endpoint.auth from global config
-endpoint.auth = { public: true/false, roles: [...] };
-
-// NEW: Only set from global config if endpoint doesn't have explicit auth
-if (type.isNone(endpoint.auth)) {
-  // Existing logic: apply global auth.api config
-  endpoint.auth = { public: ..., roles: ... };
-} else {
-  // Endpoint has explicit auth — validate it
-  validateEndpointAuth(endpoint.auth, { strategies: components.auth.strategies });
+function buildAuth({ components, context }) {
+  const configured = !type.isNone(components.auth);
+  validateAuthConfig({ components, context });
+  components.auth.configured = configured;
+  buildAuthStrategies({ components, context }); // NEW
+  buildApiAuth({ components, context });        // UNCHANGED
+  buildPageAuth({ components, context });       // UNCHANGED
+  buildAuthPlugins({ components, context });    // UNCHANGED
+  return components;
 }
 ```
 
-Validate per-endpoint auth:
-- `strategies` references valid strategy IDs (or `session`)
-- `roles` is valid array of strings
-- `public` and `strategies` are mutually exclusive
+**7.1.4 Include strategies in `auth.json` build output**
 
-**7.2.4 Include strategies in `auth.json` build output**
+The strategy configs (with `_secret` references intact — secrets are NOT resolved at
+build time) are serialized into `auth.json` alongside existing auth config.
 
-The strategy configs (with `_secret` references intact) are serialized into `auth.json`
-alongside existing auth config. Secrets are resolved at server startup, not build time.
+### Phase 2: Authentication Resolution
 
-### Phase 3: Endpoint HTTP Access Improvements
+**7.2.1 Create `resolveAuthentication.js`**
+
+New file: `packages/api/src/context/resolveAuthentication.js`
+
+```javascript
+function resolveAuthentication(context) {
+  // Session takes priority — if user has a browser session, use it
+  if (context.session) {
+    context.user = context.session.user;
+    return;
+  }
+
+  // Try each configured strategy
+  const strategies = context.authStrategies ?? [];
+  for (const strategy of strategies) {
+    const result = resolveStrategy(context, strategy);
+    if (result.authenticated) {
+      context.user = result.user;
+      context.authStrategy = strategy.id;
+      return;
+    }
+  }
+
+  // No auth — user is null (authorize will reject if endpoint is protected)
+  context.user = null;
+}
+```
+
+**7.2.2 Create strategy resolvers**
+
+New files:
+- `packages/api/src/context/strategies/resolveApiKeyStrategy.js`
+- `packages/api/src/context/strategies/resolveJwtStrategy.js`
+
+```javascript
+// resolveApiKeyStrategy.js
+import crypto from 'crypto';
+
+function resolveApiKeyStrategy(context, strategy) {
+  const { headers } = context;
+  const { properties, roles } = strategy;
+
+  // Extract key from headers
+  const headerName = properties.headerName ?? 'X-API-Key';
+  let key = headers?.[headerName.toLowerCase()];
+  if (!key) {
+    const authHeader = headers?.authorization;
+    if (authHeader?.startsWith('Bearer ')) {
+      key = authHeader.slice(7);
+    }
+  }
+  if (!key) return { authenticated: false };
+
+  // Constant-time comparison against each configured key
+  const keyBuffer = Buffer.from(key);
+  for (const configuredKey of properties.keys) {
+    const configuredBuffer = Buffer.from(configuredKey);
+    if (keyBuffer.length === configuredBuffer.length
+        && crypto.timingSafeEqual(keyBuffer, configuredBuffer)) {
+      return {
+        authenticated: true,
+        user: {
+          sub: `apiKey:${strategy.id}`,
+          type: 'apiKey',
+          strategyId: strategy.id,
+          roles: roles ?? [],
+        },
+      };
+    }
+  }
+
+  return { authenticated: false };
+}
+```
+
+```javascript
+// resolveJwtStrategy.js
+import jwt from 'jsonwebtoken';
+import { get } from '@lowdefy/helpers';
+
+function resolveJwtStrategy(context, strategy) {
+  const { headers } = context;
+  const { properties, roles: staticRoles } = strategy;
+
+  // Extract token from Authorization: Bearer header
+  const authHeader = headers?.authorization;
+  if (!authHeader?.startsWith('Bearer ')) return { authenticated: false };
+  const token = authHeader.slice(7);
+
+  try {
+    const payload = jwt.verify(token, properties.secret, {
+      algorithms: properties.algorithms,
+      issuer: properties.issuer,
+      audience: properties.audience,
+      clockTolerance: properties.clockTolerance ?? 30,
+    });
+
+    // Map claims to user fields
+    const user = { type: 'jwt', strategyId: strategy.id };
+    const userFields = properties.userFields ?? {};
+    for (const [userField, claimPath] of Object.entries(userFields)) {
+      if (userField !== 'roles') {
+        user[userField] = get(payload, claimPath);
+      }
+    }
+
+    // Merge static roles from strategy config with dynamic roles from JWT claims
+    const claimRoles = userFields.roles ? (get(payload, userFields.roles) ?? []) : [];
+    user.roles = [...new Set([...(staticRoles ?? []), ...claimRoles])];
+
+    return { authenticated: true, user };
+  } catch (error) {
+    context.logger.debug({ event: 'debug_jwt_verification_failed', error: error.message });
+    return { authenticated: false };
+  }
+}
+```
+
+**7.2.3 Modify `createApiContext.js`**
+
+Move user resolution out (it's now done by `resolveAuthentication` before this runs):
+
+```javascript
+// CURRENT:
+function createApiContext(context) {
+  context.state = {};
+  context.steps = {};
+  context.user = context?.session?.user;         // User from session
+  context.authorize = createAuthorize(context);
+  context.readConfigFile = createReadConfigFile(context);
+}
+
+// NEW:
+function createApiContext(context) {
+  context.state = {};
+  context.steps = {};
+  // context.user is already set by resolveAuthentication()
+  context.authorize = createAuthorize(context);
+  context.readConfigFile = createReadConfigFile(context);
+}
+```
+
+**7.2.4 Modify `createAuthorize.js`**
+
+Change from closing over `session` to reading `context.user` at call time (see section 6.5).
+
+**7.2.5 Modify `apiWrapper.js` in both server and server-dev**
+
+Add strategy resolution and pass resolved strategies to context:
+
+```javascript
+function apiWrapper(handler) {
+  return async function wrappedHandler(req, res) {
+    const context = {
+      rid: uuid(),
+      buildDirectory: path.join(process.cwd(), 'build'),
+      config,
+      connections,
+      fileCache,
+      headers: req?.headers,
+      jsMap,
+      logger: console,
+      operators,
+      req,
+      res,
+      secrets,
+    };
+    try {
+      context.logger = createLogger({ rid: context.rid });
+      context.authOptions = getAuthOptions(context);
+
+      // Resolve strategies (cached after first call)
+      context.authStrategies = getAuthStrategies({ authJson, secrets });
+
+      if (!req.url.startsWith('/api/auth')) {
+        context.session = await getServerSession(context);
+        setSentryUser({ user: context.session?.user, sentryConfig });
+
+        // NEW: Resolve authentication (session or strategy)
+        resolveAuthentication(context);
+      }
+
+      createApiContext(context);
+      logRequest({ context });
+      const response = await handler({ context, req, res });
+      return response;
+    } catch (error) {
+      await logError({ error, context });
+      res.status(500).json({ name: error.name, message: error.message });
+    }
+  };
+}
+```
+
+### Phase 3: Endpoint Handler Improvements
 
 **7.3.1 Support external request format**
 
-Currently the endpoint handler expects `{ blockId, payload, pageId }` in the POST body.
-External callers should be able to send a plain JSON body as the payload.
+Currently the endpoint handler expects `{ blockId, payload, pageId }`. External callers
+should be able to send a plain JSON body as the payload.
 
-Modified endpoint handler:
 ```javascript
 async function handler({ context, req, res }) {
   const { endpointId } = req.query;
@@ -777,23 +1025,22 @@ async function handler({ context, req, res }) {
 
   let blockId, payload, pageId;
   if (isInternalRequest) {
-    // Existing internal format
     ({ blockId, payload, pageId } = req.body);
   } else {
-    // External format: entire body is the payload
     blockId = undefined;
     payload = req.body;
     pageId = undefined;
   }
 
+  context.logger.info({ event: 'call_api_endpoint', blockId, endpointId, pageId });
   const response = await callEndpoint(context, { blockId, endpointId, pageId, payload });
   res.status(200).json(response);
 }
 ```
 
-**7.3.2 Support GET requests for endpoints**
+**7.3.2 Support configurable HTTP methods**
 
-Add optional `methods` config to endpoints:
+Add optional `methods` to endpoint config (at the endpoint level, not under auth):
 
 ```yaml
 api:
@@ -801,64 +1048,39 @@ api:
     methods:
       - GET
       - POST
-    auth:
-      public: true
     routine: [...]
 ```
 
-Modified handler:
+Default: `['POST']` (backwards compatible). The handler checks the method before processing.
+
+**7.3.3 Proper HTTP status codes for auth failures**
+
+Currently auth failures return "does not exist" (existing info-leak prevention).
+When strategies are configured (indicating external API use), proper HTTP codes improve
+the developer experience. The `apiWrapper` error handler should check error type:
+
 ```javascript
-async function handler({ context, req, res }) {
-  const { endpointId } = req.query;
-  const endpointConfig = await getEndpointConfig(context, { endpointId });
-
-  // Validate HTTP method
-  const allowedMethods = endpointConfig.methods ?? ['POST'];
-  if (!allowedMethods.includes(req.method)) {
-    res.setHeader('Allow', allowedMethods.join(', '));
-    res.status(405).json({ message: `Method ${req.method} not allowed.` });
-    return;
+catch (error) {
+  await logError({ error, context });
+  if (error.name === 'AuthenticationError') {
+    res.status(401).json({ name: error.name, message: error.message });
+  } else if (error.name === 'AuthorizationError') {
+    res.status(403).json({ name: error.name, message: error.message });
+  } else {
+    res.status(500).json({ name: error.name, message: error.message });
   }
-
-  // For GET: payload from query params; for POST: payload from body
-  const payload = req.method === 'GET' ? req.query : req.body;
-  // ...
 }
 ```
 
-**Default**: POST only (backwards compatible).
-
-**7.3.3 CORS support (optional, per-endpoint)**
-
-```yaml
-api:
-  - id: partner-api
-    cors:
-      origins:
-        - https://partner.example.com
-      methods:
-        - GET
-        - POST
-      headers:
-        - X-API-Key
-        - Content-Type
-    auth:
-      strategies: [partner-key]
-    routine: [...]
-```
-
-This could be implemented as headers set in the endpoint handler before the response.
-Could also be a global `auth.cors` config for all endpoints.
-
 ### Phase 4: Testing
 
-- Unit tests for each strategy resolver
-- Unit tests for `resolveAuthentication` with various configs
-- Unit tests for modified `createAuthorize`
-- Unit tests for modified `buildApiAuth` (per-endpoint auth)
-- Unit tests for strategy validation at build time
-- Integration tests for endpoint handler with different auth methods
-- Tests for backwards compatibility (existing configs still work)
+- Unit tests for `resolveApiKeyStrategy` (valid key, invalid key, missing header, timing safety)
+- Unit tests for `resolveJwtStrategy` (valid token, expired, wrong algorithm, JWKS, claim mapping)
+- Unit tests for `resolveAuthentication` (session priority, strategy fallthrough, no auth)
+- Unit tests for modified `createAuthorize` (works with strategy-resolved users)
+- Unit tests for `buildAuthStrategies` (validation, duplicate IDs, reserved `session`)
+- Integration tests for full endpoint flow with different auth methods
+- Backwards compatibility tests (existing configs, no strategies defined)
 
 ---
 
@@ -866,42 +1088,28 @@ Could also be a global `auth.cors` config for all endpoints.
 
 ### 8.1 Authentication Errors
 
-When authentication fails, the response should follow existing patterns:
+New error class: `AuthenticationError` in `@lowdefy/errors`
 
-**For endpoints with strategies** (external callers expect clear errors):
-```json
-{
-  "name": "AuthenticationError",
-  "message": "Authentication required.",
-  "status": 401
-}
-```
+When no authentication method succeeds for a protected endpoint:
+- Returns HTTP 401
+- Generic message: `"Authentication required."`
+- No details about which strategies were tried
 
-**For endpoints without strategies** (legacy, internal):
-```json
-{
-  "name": "ConfigError",
-  "message": "API Endpoint \"xyz\" does not exist."
-}
-```
-(Existing info-leak prevention behavior)
+### 8.2 Authorization Errors
 
-### 8.2 New Error Class
+When authenticated but wrong roles:
+- Protected endpoints without strategies: "does not exist" (existing behavior, info-leak prevention)
+- When strategies are defined globally: could return 403 for clearer external API UX
 
-Add `AuthenticationError` to `@lowdefy/errors`:
-- HTTP status: 401
-- Used when no strategy matches
-- Includes `WWW-Authenticate` header hint
+Note: The current info-leak prevention (returning "not found" instead of "forbidden") is
+a deliberate security choice. We keep this as default and consider adding an opt-in
+`auth.api.verboseErrors: true` flag for external API use cases.
 
-### 8.3 Authorization Errors (Existing)
+### 8.3 Strategy Resolution Errors
 
-When authorization fails (user authenticated but wrong roles):
-- Internal endpoints: "does not exist" (existing behavior)
-- External endpoints with strategies: 403 Forbidden
-
-The distinction between internal/external is based on whether the endpoint has
-explicit `strategies` configured. Endpoints with strategies are considered
-"external-facing" and get proper HTTP status codes.
+Strategy-specific errors (invalid JWT, expired token) are logged at debug level and
+the strategy simply returns `{ authenticated: false }`. The next strategy is tried.
+Only when ALL strategies fail does the authentication error surface.
 
 ---
 
@@ -909,121 +1117,94 @@ explicit `strategies` configured. Endpoints with strategies are considered
 
 ### 9.1 Secure by Default
 
-- Endpoints are protected by default when auth is configured
-- `public: true` must be explicitly set for public access
+- Endpoints are protected by default when auth is configured (`auth.api.protected: true`)
+- `auth.api.public: [...]` must explicitly list public endpoints
 - API keys must be stored as environment variables (via `_secret`)
 - JWT secrets must be stored as environment variables (via `_secret`)
-- No default API keys or JWT secrets are provided
+- No default keys or secrets are provided
 
-### 9.2 API Key Security
+### 9.2 Session Priority
 
-- **Constant-time comparison**: Use `crypto.timingSafeEqual` to compare keys
-- **Minimum key length**: Validate keys are at least 16 characters at build time
+Session auth (NextAuth) always takes priority over strategy auth. If a browser user
+has a session AND sends an API key header, the session is used. This prevents
+privilege escalation where a lower-privilege session user sends a higher-privilege
+API key.
+
+### 9.3 API Key Security
+
+- **Constant-time comparison**: `crypto.timingSafeEqual` prevents timing attacks
+- **Minimum key length**: Validated at build time (minimum 16 characters recommended)
 - **Header extraction**: Support `Authorization: Bearer <key>` and `X-API-Key: <key>`
-- **No key logging**: Keys must never appear in logs
+- **No key logging**: Keys must never appear in logs (only strategy ID)
 - **HTTPS required**: Document that API keys should only be sent over HTTPS
 
-### 9.3 JWT Security
+### 9.4 JWT Security
 
-- **Algorithm validation**: Only allow configured algorithms (prevent `alg: none` attack)
-- **Clock tolerance**: Allow configurable clock skew (default: 30 seconds)
+- **Algorithm validation**: Only configured algorithms allowed (prevent `alg: none`)
+- **Clock tolerance**: Configurable clock skew (default: 30 seconds)
 - **Expiration enforcement**: Reject expired tokens
-- **Issuer/audience validation**: Optional but recommended
-- **JWKS caching**: Cache JWKS responses with TTL (default: 1 hour)
-- **Key rotation**: JWKS supports automatic key rotation
+- **Issuer/audience validation**: Optional but strongly recommended
+- **JWKS caching**: Cache responses with TTL (default: 1 hour)
 
-### 9.4 Information Leak Prevention
+### 9.5 Information Leak Prevention
 
-- Endpoints with `strategies` (external-facing): return 401/403 with generic messages
-- Endpoints without `strategies` (internal): continue returning "does not exist" (existing behavior)
-- Never include strategy details in error responses
-- Log detailed auth failures at debug level only
+- Auth failures return generic messages (no strategy details)
+- Invalid endpoints return "does not exist" (existing behavior)
+- Detailed auth failure reasons logged at debug level only
 
-### 9.5 Rate Limiting (Future)
+### 9.6 Rate Limiting (Future)
 
-Not in scope for initial implementation, but the architecture supports adding rate
-limiting per-strategy later:
-
-```yaml
-auth:
-  strategies:
-    - id: my-key
-      type: apiKey
-      properties:
-        rateLimit:
-          windowMs: 60000
-          maxRequests: 100
-```
+Not in scope for initial implementation. The strategy architecture supports adding
+per-strategy rate limiting later without config changes.
 
 ---
 
 ## 10. Alternatives Considered
 
-### 10.1 Middleware-Based Auth (Next.js Middleware)
+### 10.1 Per-Endpoint Auth Config (v1 Design)
 
-**Approach**: Use Next.js middleware (`middleware.js`) to handle auth before API routes.
-
-**Pros**: Standard Next.js pattern, runs before handler.
-**Cons**: Can't access build config (middleware runs in Edge runtime), can't use
-`_secret` operator, harder to make config-driven, coupling to Next.js.
-
-**Decision**: Rejected. Lowdefy's config-driven approach works better at the API handler level.
-
-### 10.2 Plugin-Based Strategies
-
-**Approach**: Auth strategies as Lowdefy plugins (like connections).
-
-```yaml
-plugins:
-  - name: '@lowdefy/auth-strategy-apikey'
-    version: 1.0.0
-```
-
-**Pros**: Infinitely extensible, users can write custom strategies.
-**Cons**: Over-engineered for 3 strategies, complex plugin interface, longer to implement.
-
-**Decision**: Deferred. Start with built-in strategies. The architecture allows adding
-plugin support later if there's demand. The strategy resolver can be extended to look up
-plugins alongside built-in strategies.
-
-### 10.3 Inline Strategy Definitions Per-Endpoint
-
-**Approach**: Define strategy config directly on each endpoint rather than referencing global definitions.
-
-**Pros**: Self-contained endpoints, no cross-referencing.
-**Cons**: Violates DRY, scatters secrets, inconsistent with Lowdefy patterns.
-
-**Decision**: Rejected. Named global strategies are cleaner.
-
-### 10.4 Express-style Middleware Chain
-
-**Approach**: Allow defining middleware chains per-endpoint.
+**Approach**: Add `auth.strategies: [strategy-id]` on each endpoint definition.
 
 ```yaml
 api:
-  - id: my-endpoint
-    middleware:
-      - type: apiKeyAuth
-        properties: ...
-      - type: rateLimit
-        properties: ...
+  - id: webhook
+    auth:
+      strategies: [my-key]    # Auth config on the endpoint
 ```
 
-**Pros**: Very flexible, supports rate limiting and other concerns.
-**Cons**: Complex, not config-driven friendly, hard to validate at build time.
+**Pros**: Explicit about which strategies apply to which endpoints.
+**Cons**: Breaks the pattern of all auth config under `auth:`. Inconsistent with pages.
+Requires schema changes to endpoints. Splits auth concerns across two locations.
 
-**Decision**: Rejected for now. Auth strategies are a specific concern and don't need
-a general middleware system. Can be revisited if more per-endpoint middleware is needed.
+**Decision**: Rejected. Roles-only scoping via `auth.api.roles` is simpler, consistent
+with pages, and keeps all auth config centralized.
 
-### 10.5 Separate External API System
+### 10.2 Middleware-Based Auth (Next.js Middleware)
 
-**Approach**: Create a completely separate system for external APIs, independent of the
-existing endpoint system.
+**Approach**: Use Next.js middleware (`middleware.js`) for auth.
 
-**Pros**: Clean separation, no backwards compatibility concerns.
-**Cons**: Code duplication, two systems to maintain, confusing for users.
+**Pros**: Standard Next.js pattern.
+**Cons**: Can't access build config (Edge runtime), can't use `_secret`, coupling to Next.js.
 
-**Decision**: Rejected. Extending the existing endpoint system is simpler and more consistent.
+**Decision**: Rejected. Config-driven approach works better at the API handler level.
+
+### 10.3 Plugin-Based Strategies
+
+**Approach**: Auth strategies as Lowdefy plugins.
+
+**Pros**: Infinitely extensible.
+**Cons**: Over-engineered for 2 strategy types. Complex plugin interface.
+
+**Decision**: Deferred. Start with built-in. Architecture supports plugins later.
+
+### 10.4 Inline Strategy Definitions
+
+**Approach**: Define strategy config per-endpoint rather than globally.
+
+**Pros**: Self-contained.
+**Cons**: Violates DRY, scatters secrets, inconsistent with Lowdefy patterns.
+
+**Decision**: Rejected. Global named strategies are cleaner.
 
 ---
 
@@ -1031,23 +1212,24 @@ existing endpoint system.
 
 ### 11.1 New Package Dependencies
 
-| Package | Purpose | Strategy |
-|---------|---------|----------|
-| `jsonwebtoken` | JWT verification (HMAC, RSA) | jwt |
-| `jwks-rsa` | JWKS URI fetching and caching | jwt (optional) |
-
-Both are well-maintained, widely used packages. `jsonwebtoken` is already a transitive
-dependency via `next-auth`.
+| Package | Purpose | Strategy | Notes |
+|---------|---------|----------|-------|
+| `jsonwebtoken` | JWT verification | jwt | Already transitive dependency via `next-auth` |
+| `jwks-rsa` | JWKS URI fetching/caching | jwt (optional) | Only needed for RSA/EC with JWKS endpoint |
 
 ### 11.2 Affected Packages
 
 | Package | Changes |
 |---------|---------|
-| `@lowdefy/api` | Strategy resolution, modified authorize, auth errors |
-| `@lowdefy/build` | Schema changes, strategy validation, per-endpoint auth |
-| `@lowdefy/server` | Pass strategies to context, endpoint handler changes |
+| `@lowdefy/api` | `resolveAuthentication`, modified `createAuthorize`, `createApiContext`, strategy resolvers, `getAuthStrategies` |
+| `@lowdefy/build` | `lowdefySchema.js` (add strategies), `buildAuthStrategies.js` (new), `buildAuth.js` (call new step) |
+| `@lowdefy/server` | `apiWrapper.js` (add strategy resolution + pass strategies to context) |
 | `@lowdefy/server-dev` | Same as server |
-| `@lowdefy/errors` | New AuthenticationError class |
+| `@lowdefy/errors` | `AuthenticationError` class |
+
+**NOT changed**: `buildApiAuth.js`, `buildPageAuth.js`, `getApiRoles.js`,
+`getProtectedApi.js`, `authorizeApiEndpoint.js`, `authorizeRequest.js`,
+`callEndpoint.js`, `callRequest.js`, endpoint/page schemas.
 
 ---
 
@@ -1055,22 +1237,21 @@ dependency via `next-auth`.
 
 ### 12.1 Zero Breaking Changes
 
-The design is fully backwards compatible:
-
 1. **No `auth.strategies` defined**: Everything works exactly as before
-2. **No per-endpoint `auth` blocks**: Global `auth.api` config applies (existing behavior)
-3. **Existing `auth.api.protected/public/roles`**: Continue to work unchanged
-4. **Session auth**: Always available as built-in strategy, default for legacy endpoints
-5. **`callRequest` (page requests)**: Unchanged — page requests are always session-based
+2. **`auth.api.protected/public/roles`**: Completely unchanged
+3. **Session auth**: Still the default, still takes priority
+4. **Endpoint schema**: No changes — endpoints never had inline auth
+5. **Page auth**: Completely unchanged
+6. **`callRequest` (page requests)**: Unchanged — page requests are session-based
 
 ### 12.2 Incremental Adoption
 
-Users can adopt strategies incrementally:
-
-1. Start with existing auth setup (NextAuth)
-2. Add one strategy: `auth.strategies: [{ id: my-key, type: apiKey, ... }]`
-3. Apply to one endpoint: `auth.strategies: [my-key]`
-4. Expand to more endpoints as needed
+```
+Step 1: Existing app works as-is
+Step 2: Add auth.strategies with one API key strategy
+Step 3: Add a role for the strategy to auth.api.roles
+Step 4: Done — endpoints scoped by role now accept API keys
+```
 
 No migration tool needed. No config changes required for existing apps.
 
@@ -1078,67 +1259,56 @@ No migration tool needed. No config changes required for existing apps.
 
 ## 13. Implementation Order
 
-### Step 1: Foundation
-1. Add `AuthenticationError` to `@lowdefy/errors`
-2. Add strategy schema to `lowdefySchema.js`
-3. Add `buildAuthStrategies.js` (validation)
-4. Modify `buildApiAuth.js` to respect per-endpoint auth blocks
-5. Include strategies in `auth.json` output
+### Step 1: Build-Time Foundation
+1. Add `strategies` to `authConfig` in `lowdefySchema.js`
+2. Create `buildAuthStrategies.js` (validation + duplicate checking)
+3. Modify `buildAuth.js` to call `buildAuthStrategies`
+4. Ensure strategies are included in `auth.json` build output
+5. Tests for build-time validation
 
-### Step 2: Runtime Resolution
-6. Create `resolveAuthentication.js` and strategy resolvers
-7. Modify `createAuthorize.js` to read from `context.user` (not closed session)
-8. Add strategy config loading in server (alongside `getNextAuthConfig`)
-9. Modify `callEndpoint` to call `resolveAuthentication` before `authorizeApiEndpoint`
-10. Modify `apiWrapper` to pass strategy configs into context
+### Step 2: Runtime Authentication Resolution
+6. Create `resolveAuthentication.js`
+7. Create `resolveApiKeyStrategy.js` (with constant-time comparison)
+8. Create `resolveJwtStrategy.js` (with `jsonwebtoken`)
+9. Create `getAuthStrategies.js` (startup-time `_secret` resolution)
+10. Modify `createAuthorize.js` (read `context.user` instead of closing over session)
+11. Modify `createApiContext.js` (remove user-from-session assignment)
+12. Modify `apiWrapper.js` in server and server-dev (add resolveAuthentication call)
+13. Tests for each strategy resolver and resolveAuthentication
 
-### Step 3: API Key Strategy
-11. Implement `resolveApiKeyStrategy.js`
-12. Add constant-time key comparison
-13. Tests for API key auth
+### Step 3: Endpoint Handler Improvements
+14. Support external request body format (plain JSON payload)
+15. Support configurable HTTP methods on endpoints
+16. Add `AuthenticationError` to `@lowdefy/errors`
+17. Proper HTTP status codes (401, 403) in error handler
+18. Tests for endpoint handler changes
 
-### Step 4: JWT Strategy
-14. Implement `resolveJwtStrategy.js`
-15. Add JWT verification with `jsonwebtoken`
-16. Add JWKS support with `jwks-rsa`
-17. Implement claim-to-user field mapping
-18. Tests for JWT auth
-
-### Step 5: Endpoint Handler Improvements
-19. Support external request body format (plain JSON payload)
-20. Support configurable HTTP methods
-21. Proper HTTP status codes for auth errors (401, 403, 405)
-22. CORS support (optional)
-
-### Step 6: Testing & Documentation
-23. Integration tests
-24. Backwards compatibility tests
-25. Update user-facing docs
-26. Update cc-docs
+### Step 4: Testing & Documentation
+19. Integration tests (full request flow with different auth methods)
+20. Backwards compatibility tests
+21. Update cc-docs
+22. Update user-facing docs
 
 ---
 
 ## 14. Open Questions
 
-1. **Per-key identity vs shared identity for API keys**: Should each key have its own
-   identity, or should all keys for a strategy share one? The plan proposes shared identity
-   with per-key identity as a future enhancement.
+1. **CORS**: Should CORS configuration be part of this feature or a separate initiative?
+   External browser-based API clients need CORS, but server-to-server doesn't.
 
-2. **CORS**: Should CORS be part of this feature or a separate initiative? It's needed
-   for browser-based external API access but not for server-to-server.
+2. **Rate limiting**: Should basic rate limiting be included? Important for public and
+   API key endpoints but adds complexity.
 
-3. **Rate limiting**: Should basic rate limiting be included? It's important for public
-   and API key endpoints but adds complexity.
-
-4. **Request body format for external callers**: The plan proposes auto-detecting internal
-   vs external format. An alternative is a separate route prefix (e.g., `/api/v1/...`).
-
-5. **Endpoint response format**: External callers might want different response shapes
+3. **Endpoint response format**: External callers might want different response shapes
    than the internal format (`{ error, response, status, success }`). Should the response
-   be customizable?
+   format be configurable?
 
-6. **API key rotation**: Should the system support overlapping keys for zero-downtime
-   rotation? The current design supports this via multiple keys per strategy.
+4. **JWKS support**: Should JWKS (asymmetric key endpoint) be in the initial release or
+   deferred? HMAC (shared secret) covers most use cases.
 
-7. **Audit logging**: Should auth events (successful auth, failed auth, key used) be
-   logged differently from regular request logging?
+5. **Verbose auth errors**: Should there be an opt-in `auth.api.verboseErrors` flag that
+   returns 401/403 instead of "not found"? Useful for external API developers but
+   reduces security through obscurity.
+
+6. **Audit logging**: Should auth events (strategy used, key matched, JWT issuer) be
+   logged at info level for audit trails?
