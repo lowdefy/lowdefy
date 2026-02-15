@@ -6,6 +6,7 @@ This test config validates that error messages correctly show the **source file 
 
 **Before the fix:**
 When using `_ref` to import pages from separate files, errors showed incorrect file paths:
+
 ```
 ⚠ [Config Error] Request "fetchData" not defined on page "home".
   lowdefy.yaml:184 at root.pages[0:home:PageHeaderMenu].blocks[0]...
@@ -16,6 +17,7 @@ The error occurred in `pages/home.yaml` but the message pointed to `lowdefy.yaml
 
 **After the fix:**
 Errors now correctly show the source file:
+
 ```
 ⚠ [Config Error] Request "fetchData" not defined on page "home".
   pages/home.yaml:21 at root.pages[0:home:PageHeaderMenu].blocks[0]...
@@ -29,6 +31,7 @@ In `packages/build/src/build/buildRefs/recursiveBuild.js`, when processing `_ref
 ## The Fix
 
 Modified the reviver function to:
+
 1. Only set `~r` if not already present (preserves nested import references)
 2. Use the **child file's** ref ID (`parsedRefDef.id`) instead of parent's (`refDef.id`)
 
@@ -37,7 +40,7 @@ Modified the reviver function to:
 const reviver = (_, value) => {
   if (!type.isObject(value)) return value;
   Object.defineProperty(value, '~r', {
-    value: refDef.id,  // BUG: parent file
+    value: refDef.id, // BUG: parent file
     // ...
   });
   return value;
@@ -48,7 +51,7 @@ const reviver = (_, value) => {
   if (!type.isObject(value)) return value;
   if (value['~r'] === undefined) {
     Object.defineProperty(value, '~r', {
-      value: parsedRefDef.id,  // FIX: child file
+      value: parsedRefDef.id, // FIX: child file
       // ...
     });
   }
@@ -76,7 +79,7 @@ multi-file-refs/
 ```bash
 # From the root of lowdefy-alpha repo
 mkdir -p app
-cp -r cc-docs/test-configs/errors/multi-file-refs/* app/
+cp -r code-docs/test-configs/errors/multi-file-refs/* app/
 ```
 
 ### 2. Run the dev server
@@ -90,35 +93,43 @@ pnpm dev
 You should see **four warning messages** with correct file paths:
 
 #### Error 1: Undefined Request (home.yaml)
+
 ```
 ⚠ [Config Error] Request "fetchData" not defined on page "home".
   pages/home.yaml:21 at root.pages[0:home:PageHeaderMenu]...
   /Users/dev/myapp/app/pages/home.yaml:21
 ```
+
 ✅ **Correct:** Shows `pages/home.yaml` (not `lowdefy.yaml`)
 
 #### Error 2: Non-Existent Connection (products.yaml)
+
 ```
 ✖ [Config Error] Request "loadProducts" at page "products" references non-existent connection "wrongDb".
   pages/products.yaml:9 at root.pages[1:products:PageHeaderMenu].requests[0:loadProducts:MongoDBFindOne]
   /Users/dev/myapp/app/pages/products.yaml:9
 ```
+
 ✅ **Correct:** Shows `pages/products.yaml` (not `lowdefy.yaml`)
 
 #### Error 3: Invalid Block Type (about.yaml)
+
 ```
 ✖ [Config Error] Block type "InvalidBlockType" was used but is not defined.
   pages/about.yaml:21 at root.pages[2:about:PageHeaderMenu].blocks[0:content:Card].blocks[1:invalidBlock:InvalidBlockType]
   /Users/dev/myapp/app/pages/about.yaml:21
 ```
+
 ✅ **Correct:** Shows `pages/about.yaml` (not `lowdefy.yaml`)
 
 #### Error 4: Invalid Action Type (contact.yaml)
+
 ```
 ✖ [Config Error] Action type "InvalidAction" was used but is not defined.
   pages/contact.yaml:25 at root.pages[3:contact:PageHeaderMenu].blocks[0:content:Card].blocks[1:submitButton:Button].events.onClick[0:invalidAction:InvalidAction]
   /Users/dev/myapp/app/pages/contact.yaml:25
 ```
+
 ✅ **Correct:** Shows `pages/contact.yaml` (not `lowdefy.yaml`)
 
 ### 4. Verify Clickable Links
@@ -127,11 +138,11 @@ In VSCode terminal, the absolute paths should be clickable and open the correct 
 
 ## Before/After Comparison
 
-| Scenario | Before Fix | After Fix |
-|----------|-----------|-----------|
-| **Error in `pages/home.yaml:21`** | `lowdefy.yaml:21` ❌ | `pages/home.yaml:21` ✅ |
-| **Error in `pages/products.yaml:9`** | `lowdefy.yaml:9` ❌ | `pages/products.yaml:9` ✅ |
-| **Error in `pages/about.yaml:21`** | `lowdefy.yaml:21` ❌ | `pages/about.yaml:21` ✅ |
+| Scenario                             | Before Fix           | After Fix                  |
+| ------------------------------------ | -------------------- | -------------------------- |
+| **Error in `pages/home.yaml:21`**    | `lowdefy.yaml:21` ❌ | `pages/home.yaml:21` ✅    |
+| **Error in `pages/products.yaml:9`** | `lowdefy.yaml:9` ❌  | `pages/products.yaml:9` ✅ |
+| **Error in `pages/about.yaml:21`**   | `lowdefy.yaml:21` ❌ | `pages/about.yaml:21` ✅   |
 | **Error in `pages/contact.yaml:25`** | `lowdefy.yaml:25` ❌ | `pages/contact.yaml:25` ✅ |
 
 ## Related Files
@@ -161,7 +172,7 @@ blocks:
 
 # components/nested-child.yaml
 id: childBlock
-type: InvalidType  # Error should show components/nested-child.yaml, not pages/nested-parent.yaml
+type: InvalidType # Error should show components/nested-child.yaml, not pages/nested-parent.yaml
 ```
 
 The fix ensures that even deeply nested imports preserve the original source file location.

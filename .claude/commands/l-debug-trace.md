@@ -1,6 +1,6 @@
 ---
 description: Analytically debug issues by tracing data flow through code - no logs, no test-and-see
-argument-hint: "<description of the bug or symptom>"
+argument-hint: '<description of the bug or symptom>'
 ---
 
 # Analytical Debug Trace
@@ -73,22 +73,23 @@ This is the critical phase. Most bugs live at boundaries — where data crosses 
 2. **Trace backward one step.** That variable was set by some function call, assignment, or parameter. Read that code. What are its inputs?
 
 3. **Repeat until you reach the entry point.** Build a chain of:
+
    ```
    [Entry] → fn_a() → fn_b() → serialize → process boundary → deserialize → fn_c() → [Output]
    ```
 
 4. **Identify every boundary type** in the pipeline:
 
-   | Boundary Type | What Can Go Wrong | What to Check |
-   |---------------|-------------------|---------------|
-   | Function call | Wrong args, missing params | Parameter names, destructuring |
-   | Object spread/merge | Property shadowing, missing keys | Spread order, key names |
-   | Serialization (JSON, pino, etc.) | Lost properties, type coercion | What fields are included/excluded |
-   | Process boundary (spawn, IPC) | Stdout parsing, buffering | Line handling, JSON parse |
-   | Async boundary (Promise, callback) | Timing, unhandled rejection | await, error propagation |
-   | Error boundary (try/catch) | Swallowed errors, wrong re-throw | Catch scope, error transformation |
-   | Framework boundary (Next.js, React) | SSR/CSR mismatch, lifecycle | Rendering context, hydration |
-   | Library boundary (pino, express) | Config behavior, version quirks | Library docs, default options |
+   | Boundary Type                       | What Can Go Wrong                | What to Check                     |
+   | ----------------------------------- | -------------------------------- | --------------------------------- |
+   | Function call                       | Wrong args, missing params       | Parameter names, destructuring    |
+   | Object spread/merge                 | Property shadowing, missing keys | Spread order, key names           |
+   | Serialization (JSON, pino, etc.)    | Lost properties, type coercion   | What fields are included/excluded |
+   | Process boundary (spawn, IPC)       | Stdout parsing, buffering        | Line handling, JSON parse         |
+   | Async boundary (Promise, callback)  | Timing, unhandled rejection      | await, error propagation          |
+   | Error boundary (try/catch)          | Swallowed errors, wrong re-throw | Catch scope, error transformation |
+   | Framework boundary (Next.js, React) | SSR/CSR mismatch, lifecycle      | Rendering context, hydration      |
+   | Library boundary (pino, express)    | Config behavior, version quirks  | Library docs, default options     |
 
 5. **Document the complete pipeline** with file paths and line numbers.
 
@@ -191,6 +192,7 @@ If the issue persists, please share the exact output and I'll trace further.
 ```
 
 If the user reports it didn't work:
+
 - Go back to Phase 3 with the new information
 - The user's test result tells you which part of your trace was wrong
 - Refine your mental model and find the actual divergence point
@@ -200,6 +202,7 @@ If the user reports it didn't work:
 ### Common Pipelines to Trace
 
 **Error display pipeline (server-dev):**
+
 ```
 Plugin throws → Interface layer catches → PluginError/ConfigError created →
 logger.error(error) → pino serializes → JSON to stdout →
@@ -208,6 +211,7 @@ CLI's stdOutLineHandler parses → ora spinner displays
 ```
 
 **Error display pipeline (client):**
+
 ```
 Plugin throws → Interface layer catches → PluginError created →
 error.serialize() → POST /api/client-error →
@@ -216,6 +220,7 @@ pino serializes → JSON to stdout → Manager → CLI
 ```
 
 **Build error pipeline:**
+
 ```
 Validation code → ConfigError(message, configKey, context) →
 resolveConfigLocation (keyMap + refMap) → formatBuildError →
@@ -223,6 +228,7 @@ logger.error() → pino → CLI display
 ```
 
 **Config key tracing (`~k`):**
+
 ```
 YAML parsed → build assigns ~k keys → stored in build artifacts →
 runtime reads artifacts → error includes configKey →
@@ -230,6 +236,7 @@ keyMap.json + refMap.json → source file:line resolution
 ```
 
 **Operator evaluation pipeline:**
+
 ```
 Config YAML → build outputs JSON → client/server loads →
 parser.parse() finds _operator keys → evaluates with params →
@@ -254,12 +261,14 @@ When tracing through Lowdefy, always check these boundaries:
 ### Key Files Reference
 
 Error classes:
+
 - `packages/utils/errors/src/PluginError.js` — Plugin error with received, location, serialization
 - `packages/utils/errors/src/ConfigError.js` — Config error with configKey, location resolution
 - `packages/utils/errors/src/ServiceError.js` — External service error with isServiceError flag
 - `packages/utils/errors/src/LowdefyError.js` — Internal framework error
 
 Server-dev logging pipeline:
+
 - `packages/servers/server-dev/lib/server/log/createLogger.js` — Server's pino with error wrapper
 - `packages/servers/server-dev/lib/server/log/logError.js` — Server-side error logging
 - `packages/servers/server-dev/manager/utils/createLogger.mjs` — Manager's pino logger
@@ -267,15 +276,18 @@ Server-dev logging pipeline:
 - `packages/cli/src/utils/createStdOutLineHandler.js` — CLI parses manager stdout and displays
 
 Client error pipeline:
+
 - `packages/client/src/createLogError.js` — Client-side error logging
 - `packages/api/src/routes/log/logClientError.js` — Server-side client error handler
 
 Build error pipeline:
+
 - `packages/build/src/createContext.js` — Build context with logger
 - `packages/utils/errors/src/build/` — Build-time error classes with sync location resolution
 
 Architecture documentation:
-- `cc-docs/architecture/error-tracing.md` — Complete error system architecture
+
+- `code-docs/architecture/error-tracing.md` — Complete error system architecture
 
 ## Anti-Patterns to Avoid
 
@@ -303,25 +315,33 @@ Structure your investigation as a narrative that the user can follow:
 
 ```markdown
 ## Symptom Analysis
+
 [What is observed vs expected]
 
 ## Pipeline Map
+
 [Entry] → [step] → [step] → ... → [Output]
 
 ## Trace
+
 ### Step 1: [file:line] — [description]
+
 Value at this point: ...
 
 ### Step 2: [file:line] — [description]
+
 Value at this point: ...
 ...
 
 ## Root Cause
+
 [file:line]: [precise description]
 
 ## Fix
+
 [Minimal change at the root cause]
 
 ## Verification
+
 [What to test and what to expect]
 ```
