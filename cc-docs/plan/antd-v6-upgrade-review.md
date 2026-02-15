@@ -172,7 +172,7 @@ Same as Rev 1:
 
 | # | Risk | Severity | Status |
 |---|------|----------|--------|
-| 1 | ~~Responsive `style` has no clear solution post-emotion removal~~ | ~~High~~ | **Resolved** — build-time CSS generation. Sub-element responsive was already broken. |
+| 1 | ~~Responsive `style` has no clear solution post-emotion removal~~ | ~~High~~ | **Resolved** — breaking change: remove responsive `style`, use Tailwind classes. |
 | 2 | 62 blocks need manual testing — no automated visual regression | **High** | **OPEN** — need Playwright setup |
 | 3 | ~~Scope creep: multi-library support~~ | ~~High~~ | **Resolved** — separated from this plan |
 | 4 | `class` + `style` + `styles` is three styling concepts — user confusion | **Medium** | **OPEN** — clear docs needed |
@@ -215,11 +215,11 @@ Don't defer — it's the direct replacement.
 ~~11. Comment block?~~ **Resolved** — Remove entirely. Don't add `@ant-design/compatible` as a
 dependency for one rarely-used block. Users who need it can use a custom plugin.
 
-~~12. Responsive styles?~~ **Resolved** — Build-time CSS generation for v6 upgrade. Key insight:
-sub-element responsive (`makeCssClass(styles, true)`) was already broken — React inline styles
-don't support `@media` queries. Only wrapper `style` and area `style` actually need handling. Build
-step generates scoped CSS rules in `globals.css`. Long-term: deprecate responsive `style` in favor
-of Tailwind responsive classes after Tailwind is stable.
+~~12. Responsive styles?~~ **Resolved** — Breaking change: remove responsive breakpoint keys from
+`style` entirely. Users migrate to Tailwind responsive classes (`class: 'p-16 sm:p-8'`). Key
+insight: sub-element responsive (`makeCssClass(styles, true)`) was already broken — React inline
+styles don't support `@media` queries. Only wrapper/area `style` responsive actually worked.
+Real-world impact is limited. Build validates and emits `ConfigError` with migration guidance.
 
 ~~13. `style` vs `styles.root`?~~ **Resolved** — Keep separate. `style` = wrapper/layout positioning
 (applied to the Col/wrapper div). `styles.root` = component root styling (passed to antd's

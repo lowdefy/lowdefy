@@ -117,30 +117,33 @@ breakpoint keys were silently ignored. **Responsive sub-element styles never act
 | `properties.bodyStyle.sm` (sub-element) | **No — already broken** | No |
 | `areas.content.style.sm` (area) | Yes (emotion) | **Yes** |
 
-### Decision: Build-Time CSS Generation (Option A)
+### Decision: Breaking Change — Use Tailwind Classes
 
-**For the v6 upgrade:** Build-time CSS generation. During build, scan `style` objects for responsive
-breakpoint keys, generate scoped CSS rules in `globals.css`:
+Since Lowdefy v5 can have breaking changes, **remove responsive `style` entirely.** Users migrate
+to Tailwind responsive classes:
 
-```css
-/* Build generates: */
-#bl-my_card { padding: 64px; }
-@media screen and (min-width: 576px) { #bl-my_card { padding: 32px; } }
+```yaml
+# Before:                          # After:
+style:                             class: 'p-16 sm:p-8'
+  padding: 64
+  sm:
+    padding: 32
 ```
 
-**Why this option:**
-- Aligns with "build does the work, runtime stays simple" philosophy
-- Removes emotion entirely (clean break)
-- Works perfectly with `@layer` strategy
-- Doesn't depend on Tailwind being ready
-- Dynamic operator edge case (responsive values from `_if`) is low severity
+**Why this is cleaner than build-time CSS generation:**
+- No build complexity — no CSS generation step needed
+- No edge cases with operator-dependent responsive values
+- One way to do responsive (Tailwind) — no confusion
+- Removes emotion entirely with zero replacement code
+- Layout responsive (`layout.sm.span`) is unaffected — antd Col handles it natively
 
-**Edge case:** Operator-dependent responsive values (`_if` inside `style.sm`) can't be resolved at
-build time. These are rare and will be flagged as unsupported (operators in non-responsive `style`
-properties still work fine as inline styles).
+**Build-time validation:** `ConfigError` when `style` objects contain breakpoint keys, with clear
+migration message pointing to `class` with Tailwind utilities.
 
-**Long-term path:** After Tailwind is stable, deprecate responsive `style` in favor of Tailwind
-responsive classes (`class: 'p-16 sm:p-8'`). Build-time CSS becomes the migration bridge.
+**Mitigating the breaking change:** Sub-element responsive (`properties.bodyStyle.sm`) was already
+broken (React inline styles don't support `@media`). Only wrapper `style` and area `style`
+responsive actually worked. The real-world impact is limited to users who used `style.sm` on
+wrapper/area positioning — likely a small minority.
 
 ---
 
@@ -210,7 +213,7 @@ slots rename, Tailwind, new blocks, theme YAML config) can come later in separat
 | `_theme` operator | Build-time resolution from YAML config |
 | BackTop → FloatButton | Phase 1 (direct replacement) |
 | Comment block | Remove entirely (no `@ant-design/compatible`) |
-| Responsive styles | Build-time CSS generation. Deprecate → Tailwind after Tailwind stable |
+| Responsive styles | Breaking change — remove from `style`, use Tailwind classes (`class: 'p-16 sm:p-8'`) |
 | `style` vs `styles.root` | Keep separate — `style` = wrapper positioning, `styles.root` = component root |
 
 ## Decisions Still Open

@@ -489,68 +489,55 @@ When string, the engine normalizes it to `{ root: value }`. When object, passed 
 1. `style` (object) → applied as `style` prop on BlockLayout wrapper div
 2. `class` (string/object) → applied as `className` on wrapper and `classNames` on antd component
 3. `styles` (object with sub-slot keys) → applied via antd component's `styles` semantic prop
-4. `mediaToCssObject` → **remove** from runtime. Responsive style support moves to build-time CSS
-   generation (see Section 5.5)
+4. `mediaToCssObject` → **remove entirely**. Responsive styles move to Tailwind classes (see 5.5)
 
-### 5.5 Responsive Styles — Build-Time CSS Generation
+### 5.5 Responsive Styles — Breaking Change: Use Tailwind Classes
 
-**Key discovery:** Lowdefy has two independent responsive systems:
+**Background:** Lowdefy has two independent responsive systems:
 
 1. **Layout responsive** (`layout.sm.span`) — uses antd Col native responsive props via
-   `deriveLayout()`. Unaffected by the upgrade.
-2. **Style responsive** (`style.sm.padding`) — uses `mediaToCssObject` + `@emotion/css`. This is
-   what breaks when emotion is removed.
+   `deriveLayout()`. **Unaffected.** Works exactly the same in v6.
+2. **Style responsive** (`style.sm.padding`) — uses `mediaToCssObject` + `@emotion/css`. **Removed
+   in Lowdefy v5.** Use Tailwind responsive classes instead.
 
 **Also discovered:** The 9 blocks using `makeCssClass(styles, true)` for sub-element props
 (`bodyStyle`, `tabBarStyle`, etc.) produce plain JS objects. React inline `style` does NOT support
-`@media` queries — responsive breakpoints in sub-element styles were silently ignored. They never
-actually worked.
+`@media` queries — responsive breakpoints in sub-element styles were silently ignored. **They never
+actually worked.** This means the breaking change is smaller than it appears.
 
-**Solution — Build-time CSS generation:**
+**What changes (breaking):**
 
-During the Lowdefy build step, scan all `style` objects for responsive breakpoint keys. For each
-block that has them, generate a scoped CSS rule in `globals.css`:
+Responsive breakpoint keys (`xs`, `sm`, `md`, `lg`, `xl`, `xxl`) in the `style` property are no
+longer supported. Use the `class` property with Tailwind responsive utilities instead:
 
 ```yaml
-# User writes:
+# BEFORE (v4) — responsive style with breakpoint keys
 - id: my_card
   type: Card
   style:
     padding: 64
     sm:
       padding: 32
+
+# AFTER (v5) — Tailwind responsive classes
+- id: my_card
+  type: Card
+  class: 'p-16 sm:p-8'
 ```
 
-```css
-/* Build generates in globals.css: */
-#bl-my_card { padding: 64px; }
-@media screen and (min-width: 576px) { #bl-my_card { padding: 32px; } }
-```
+**What to remove:**
+- `mediaToCssObject.js` — delete entirely
+- `makeCssClass.js` — delete entirely
+- `@emotion/css` dependency — remove from `block-utils`
 
-**Build step logic:**
-1. Walk all blocks, find `style` objects with breakpoint keys (`xs`/`sm`/`md`/`lg`/`xl`/`xxl`)
-2. Extract responsive portions, generate scoped CSS rules using block ID selector (`#bl-{blockId}`)
-3. Append to generated `globals.css` (after `@layer` declarations, inside `@layer components`)
-4. Strip responsive keys from style object — remaining non-responsive props become inline `style`
-5. Same treatment for area `style` objects (selector: `#ar-{blockId}-{areaKey}`)
+**Build-time validation:** The build step will detect `style` objects with breakpoint keys and emit
+a `ConfigError` with a clear migration message: "Responsive breakpoint keys in `style` are no
+longer supported. Use `class` with Tailwind responsive utilities instead."
 
-**Edge case:** Operator-dependent responsive values (e.g., `_if` inside `style.sm`) can't be
-resolved at build time. These are rare and will be flagged as a build warning. Operators in
-non-responsive style properties still work fine as inline styles.
-
-**Long-term path:**
-```yaml
-# After Tailwind is stable — preferred responsive approach:
-class: 'p-16 sm:p-8'
-
-# Build-time CSS generation still works as backwards-compatible fallback
-style:
-  sm:
-    padding: 32
-```
-
-Deprecate responsive `style` in favor of Tailwind responsive classes after Tailwind is stable.
-Build-time CSS generation becomes the migration bridge, then gets removed.
+**What's NOT affected:**
+- `layout` responsive (`layout.sm.span`) — still works via antd Col native props
+- Non-responsive `style` properties — still work as inline React `style` props
+- `styles` sub-slot objects — still work as antd semantic `styles` prop (never had responsive)
 
 ### 5.6 Migration Path
 
