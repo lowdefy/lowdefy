@@ -1,11 +1,11 @@
-# cc-docs/plan/
+# cc-docs/plans/
 
 Planning documents for Lowdefy feature branches. Each subfolder corresponds to a development branch and contains the plan, review, research, and examples for that work.
 
 ## Convention
 
 ```
-cc-docs/plan/
+cc-docs/plans/
 ├── README.md                              ← this file
 ├── {branch-suffix}/                       ← one folder per plan branch
 │   ├── README.md                          ← index of files + branch context
@@ -24,6 +24,6 @@ The root-level `PLAN.md` at the repo root is the initial plan draft. The branch 
 
 ## Current Plans
 
-| Folder | Branch | Summary |
-|---|---|---|
+| Folder                                                              | Branch                                   | Summary                                                                  |
+| ------------------------------------------------------------------- | ---------------------------------------- | ------------------------------------------------------------------------ |
 | [mcp-bridge-implementation-Tymtc](mcp-bridge-implementation-Tymtc/) | `claude/mcp-bridge-implementation-Tymtc` | MCP Bridge — expose Lowdefy apps to AI agents via Model Context Protocol |
