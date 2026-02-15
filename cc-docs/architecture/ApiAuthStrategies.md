@@ -434,7 +434,8 @@ context.user = {
 
 **Security considerations:**
 - Constant-time comparison via `crypto.timingSafeEqual` to prevent timing attacks
-- Keys should be at least 32 characters (validated at build time)
+- Keys should be at least 32 characters (validated at server startup after `_secret`
+  resolution — cannot validate at build time since keys are `_secret` references)
 - HTTPS required (keys sent in plaintext headers)
 - Rate limiting recommended (future enhancement)
 
@@ -652,20 +653,16 @@ build output at all. They're stored in `auth.json` and resolved at server startu
 ### 6.4 Strategy Resolution at Server Startup
 
 Strategy configs contain `_secret` references resolved at server startup (not per-request).
-This follows the existing `getNextAuthConfig` pattern:
+
+**Important**: `getNextAuthConfig` already parses the ENTIRE `authJson` through
+`ServerParser` (including strategies). Creating a second `ServerParser` to parse
+strategies separately would duplicate the work. Instead, extract resolved strategies
+from the already-parsed `authConfig` inside `getNextAuthConfig`:
 
 ```javascript
-// New: getAuthStrategies() — resolves _secret operators in strategy configs
-// Called once at startup, cached thereafter (same pattern as getNextAuthConfig)
-
-import { ServerParser } from '@lowdefy/operators';
-import { _secret } from '@lowdefy/operators-js/operators/server';
-
-const resolvedStrategies = [];
-let initialized = false;
-
-function getAuthStrategies({ authJson, secrets }) {
-  if (initialized) return resolvedStrategies;
+// In getNextAuthConfig.js — extract strategies from already-parsed config
+function getNextAuthConfig({ authJson, logger, plugins, secrets }) {
+  if (initialized) return nextAuthConfig;
 
   const operatorsParser = new ServerParser({
     operators: { _secret },
@@ -674,21 +671,68 @@ function getAuthStrategies({ authJson, secrets }) {
     user: {},
   });
 
-  const { output: strategies } = operatorsParser.parse({
-    input: authJson.strategies ?? [],
-    location: 'auth.strategies',
+  // This already resolves ALL _secret operators in the entire authJson,
+  // including strategies[].properties.keys and strategies[].properties.secret
+  const { output: authConfig, errors: operatorErrors } = operatorsParser.parse({
+    input: authJson,
+    location: 'auth',
   });
 
-  resolvedStrategies.push(...strategies);
+  if (operatorErrors.length > 0) {
+    throw operatorErrors[0];
+  }
+
+  // Existing NextAuth config creation (unchanged)
+  nextAuthConfig.adapter = createAdapter({ authConfig, logger, plugins });
+  nextAuthConfig.callbacks = createCallbacks({ authConfig, logger, plugins });
+  nextAuthConfig.events = createEvents({ authConfig, logger, plugins });
+  nextAuthConfig.logger = createLogger({ logger });
+  nextAuthConfig.providers = createProviders({ authConfig, logger, plugins });
+  nextAuthConfig.debug = authConfig.debug ?? logger?.isLevelEnabled('debug') === true;
+  nextAuthConfig.pages = authConfig.authPages;
+  nextAuthConfig.session = authConfig.session;
+  nextAuthConfig.theme = authConfig.theme;
+  nextAuthConfig.cookies = authConfig?.advanced?.cookies;
+  nextAuthConfig.originalRedirectCallback = nextAuthConfig.callbacks.redirect;
+
+  // NEW: Extract resolved strategies (secrets already resolved above)
+  nextAuthConfig.strategies = authConfig.strategies ?? [];
+
+  // Validate resolved key lengths (can only do this after _secret resolution)
+  for (const strategy of nextAuthConfig.strategies) {
+    if (strategy.type === 'apiKey') {
+      for (const key of strategy.properties?.keys ?? []) {
+        if (typeof key === 'string' && key.length < 32) {
+          logger.warn({
+            event: 'warn_api_key_short',
+            strategyId: strategy.id,
+            message: `API key for strategy "${strategy.id}" is shorter than 32 characters.`,
+          });
+        }
+      }
+    }
+  }
+
   initialized = true;
-  return resolvedStrategies;
+  return nextAuthConfig;
 }
 ```
 
+**No separate `getAuthStrategies` function needed.** The `apiWrapper` reads strategies
+from `getNextAuthConfig` (which is already called via `getAuthOptions`):
+
+```javascript
+// In apiWrapper.js
+context.authOptions = getAuthOptions(context);
+// Strategies are available from the already-initialized auth config:
+context.authStrategies = context.authOptions.strategies ?? [];
+```
+
 This ensures:
-- Secrets resolved once, not per-request
-- Same `_secret` pattern used everywhere
-- Consistent with `getNextAuthConfig` approach
+- Secrets resolved once by a single `ServerParser` (no duplicate parsing)
+- Consistent with existing `getNextAuthConfig` pattern
+- Key length validation happens after `_secret` resolution (at startup, not build time)
+- Cached after first call (existing `initialized` flag)
 
 ### 6.5 How `createAuthorize` Changes
 
@@ -935,27 +979,40 @@ function resolveJwtStrategy(context, strategy) {
 
 **7.2.3 Modify `createApiContext.js`**
 
-Move user resolution out (it's now done by `resolveAuthentication` before this runs):
+Change user assignment to a conditional — `resolveAuthentication` sets `context.user`
+before this runs in `apiWrapper`, but `serverSidePropsWrapper` does NOT call
+`resolveAuthentication` (pages are session-only). The conditional preserves both paths:
 
 ```javascript
 // CURRENT:
 function createApiContext(context) {
   context.state = {};
   context.steps = {};
-  context.user = context?.session?.user;         // User from session
+  context.user = context?.session?.user;         // Always overwrites — breaks strategies
   context.authorize = createAuthorize(context);
   context.readConfigFile = createReadConfigFile(context);
 }
 
 // NEW:
+import { type } from '@lowdefy/helpers';
+
 function createApiContext(context) {
   context.state = {};
   context.steps = {};
-  // context.user is already set by resolveAuthentication()
+  // Only fall back to session user if resolveAuthentication hasn't already set user.
+  // apiWrapper: resolveAuthentication sets context.user → this is a no-op.
+  // serverSidePropsWrapper: no resolveAuthentication → falls back to session.user.
+  if (type.isNone(context.user)) {
+    context.user = context?.session?.user;
+  }
   context.authorize = createAuthorize(context);
   context.readConfigFile = createReadConfigFile(context);
 }
 ```
+
+**Why conditional instead of removing the line**: `serverSidePropsWrapper` (page SSR)
+also calls `createApiContext` but does NOT call `resolveAuthentication`. Removing the
+line entirely would break page auth. The conditional handles both callers correctly.
 
 **7.2.4 Modify `createAuthorize.js`**
 
@@ -963,7 +1020,9 @@ Change from closing over `session` to reading `context.user` at call time (see s
 
 **7.2.5 Modify `apiWrapper.js` in both server and server-dev**
 
-Add strategy resolution and pass resolved strategies to context:
+Add strategy resolution and pass resolved strategies to context. Note: `setSentryUser`
+is moved AFTER `resolveAuthentication` so that strategy-authenticated users (API key,
+JWT) are tracked in Sentry:
 
 ```javascript
 function apiWrapper(handler) {
@@ -986,15 +1045,15 @@ function apiWrapper(handler) {
       context.logger = createLogger({ rid: context.rid });
       context.authOptions = getAuthOptions(context);
 
-      // Resolve strategies (cached after first call)
-      context.authStrategies = getAuthStrategies({ authJson, secrets });
-
       if (!req.url.startsWith('/api/auth')) {
         context.session = await getServerSession(context);
-        setSentryUser({ user: context.session?.user, sentryConfig });
 
         // NEW: Resolve authentication (session or strategy)
         resolveAuthentication(context);
+
+        // Set Sentry user AFTER resolveAuthentication so strategy users are tracked.
+        // Uses context.user (set by resolveAuthentication) instead of session.user.
+        setSentryUser({ user: context.user, sentryConfig: loggerConfig.sentry });
       }
 
       createApiContext(context);
@@ -1003,11 +1062,23 @@ function apiWrapper(handler) {
       return response;
     } catch (error) {
       await logError({ error, context });
-      res.status(500).json({ name: error.name, message: error.message });
+      if (error instanceof AuthenticationError) {
+        res.status(401).json({ name: error.name, message: error.message });
+      } else {
+        res.status(500).json({ name: error.name, message: error.message });
+      }
     }
   };
 }
 ```
+
+**`serverSidePropsWrapper` is intentionally unchanged.** It serves page SSR only, which
+is always session-based. It does NOT call `resolveAuthentication`. The conditional in
+`createApiContext` (section 7.2.3) ensures `context.user` falls back to `session.user`
+for this path.
+
+**Both `server` and `server-dev` `apiWrapper.js` need the same changes.** The dev server
+version has additional `loadDynamicJsMap` logic but the auth flow is identical.
 
 ### Phase 3: Endpoint Handler Improvements
 
@@ -1086,30 +1157,152 @@ catch (error) {
 
 ## 8. Error Handling
 
-### 8.1 Authentication Errors
+### 8.1 `AuthenticationError` Class
 
-New error class: `AuthenticationError` in `@lowdefy/errors`
+New error class in `@lowdefy/errors`. Follows the existing error hierarchy pattern
+(sibling to `ConfigError`, `PluginError`, `ServiceError`):
 
-When no authentication method succeeds for a protected endpoint:
-- Returns HTTP 401
-- Generic message: `"Authentication required."`
-- No details about which strategies were tried
+```javascript
+// packages/utils/errors/src/AuthenticationError.js
+class AuthenticationError extends Error {
+  constructor(message) {
+    super(message ?? 'Authentication required.');
+    this.name = 'AuthenticationError';
+  }
+}
+```
 
-### 8.2 Authorization Errors
+**Why a new class instead of reusing ConfigError**: `ConfigError` signals a YAML config
+problem. `AuthenticationError` signals a request-level auth failure — the config is
+correct, the caller just isn't authenticated. Different semantics require different
+error types. The `apiWrapper` catch block checks `instanceof AuthenticationError`
+to return 401 instead of 500.
 
-When authenticated but wrong roles:
-- Protected endpoints without strategies: "does not exist" (existing behavior, info-leak prevention)
-- When strategies are defined globally: could return 403 for clearer external API UX
+**Exports**: Add to the server subpath only (`@lowdefy/errors/server`). This error is
+never thrown at build time or on the client:
 
-Note: The current info-leak prevention (returning "not found" instead of "forbidden") is
-a deliberate security choice. We keep this as default and consider adding an opt-in
-`auth.api.verboseErrors: true` flag for external API use cases.
+```javascript
+// packages/utils/errors/src/server/index.js
+export { AuthenticationError } from '../AuthenticationError.js';
+```
 
-### 8.3 Strategy Resolution Errors
+Also export from the main entry point (`@lowdefy/errors`) for convenience.
+
+### 8.2 Where `AuthenticationError` Is Thrown
+
+The error is thrown in `resolveAuthentication` — NOT in `authorizeApiEndpoint`:
+
+```javascript
+// resolveAuthentication.js
+function resolveAuthentication(context) {
+  // Session takes priority
+  if (context.session) {
+    context.user = context.session.user;
+    return;
+  }
+
+  // Try each strategy
+  const strategies = context.authStrategies ?? [];
+  for (const strategy of strategies) {
+    const result = resolveStrategy(context, strategy);
+    if (result.authenticated) {
+      context.user = result.user;
+      context.authStrategy = strategy.id;
+      return;
+    }
+  }
+
+  // No auth succeeded — set user to null.
+  // Do NOT throw here. The authorize step will check if the endpoint
+  // requires auth and throw appropriately.
+  context.user = null;
+}
+```
+
+Wait — if we don't throw in `resolveAuthentication`, where does the 401 come from?
+
+**The 401 is thrown by a modified `authorizeApiEndpoint`:**
+
+```javascript
+// authorizeApiEndpoint.js
+import { AuthenticationError } from '@lowdefy/errors/server';
+import { ConfigError } from '@lowdefy/errors/server';
+
+function authorizeApiEndpoint({ authorize, user, logger }, { endpointConfig }) {
+  if (!authorize(endpointConfig)) {
+    logger.debug({
+      event: 'debug_api_authorize',
+      authorized: false,
+      auth_config: endpointConfig.auth,
+    });
+
+    // Distinguish unauthenticated (no user at all) from unauthorized (wrong roles).
+    // unauthenticated → 401 (caught by apiWrapper)
+    // unauthorized → existing "does not exist" behavior (500 → hides info)
+    if (type.isNone(user)) {
+      throw new AuthenticationError('Authentication required.');
+    }
+
+    // User is authenticated but lacks roles → existing "does not exist" pattern.
+    // This preserves the current info-leak prevention behavior.
+    throw new ConfigError({
+      message: `API Endpoint "${endpointConfig.endpointId}" does not exist.`,
+    });
+  }
+  logger.debug({
+    event: 'debug_api_authorize',
+    authorized: true,
+    auth_config: endpointConfig.auth,
+  });
+}
+```
+
+**Why this approach works:**
+
+| Caller | Auth state | Endpoint | Error | HTTP status |
+|--------|-----------|----------|-------|-------------|
+| No session, no API key, no JWT | `user = null` | Protected | `AuthenticationError` | 401 |
+| Valid API key | `user = { roles: ['partner'] }` | Requires `admin` role | `ConfigError` "does not exist" | 500 |
+| Valid session | `user = { roles: ['viewer'] }` | Requires `admin` role | `ConfigError` "does not exist" | 500 |
+| Any authenticated user | `user = { ... }` | Public | Passes | 200 |
+| No auth | `user = null` | Public | Passes (public skips auth check) | 200 |
+
+**Key insight**: The 401 only fires when `user` is completely null (no auth at all) AND
+the endpoint is not public. Authenticated users with wrong roles get the existing "does
+not exist" (500) behavior — no info leak about what roles are required.
+
+### 8.3 Error Handling in `apiWrapper`
+
+The catch block checks for `AuthenticationError` to return proper HTTP status:
+
+```javascript
+catch (error) {
+  await logError({ error, context });
+  if (error instanceof AuthenticationError) {
+    res.status(401).json({ name: error.name, message: error.message });
+  } else {
+    res.status(500).json({ name: error.name, message: error.message });
+  }
+}
+```
+
+**No 403 status code.** The existing "does not exist" pattern deliberately hides
+authorization failures. Returning 403 would leak information about endpoint existence
+and role requirements. The only new HTTP status is 401 for completely unauthenticated
+requests — this reveals nothing about the endpoint's auth configuration.
+
+### 8.4 Strategy Resolution Errors
 
 Strategy-specific errors (invalid JWT, expired token) are logged at debug level and
 the strategy simply returns `{ authenticated: false }`. The next strategy is tried.
-Only when ALL strategies fail does the authentication error surface.
+Only when ALL strategies fail AND the endpoint is protected does the 401 surface.
+
+### 8.5 `authorizeRequest` (Page Requests)
+
+`authorizeRequest` gets the same change as `authorizeApiEndpoint` — check `user` is
+null before throwing `AuthenticationError`. In practice, page requests always come from
+browsers with sessions, so the 401 path is unlikely. But it's correct to handle it
+consistently.
 
 ---
 
@@ -1133,8 +1326,14 @@ API key.
 ### 9.3 API Key Security
 
 - **Constant-time comparison**: `crypto.timingSafeEqual` prevents timing attacks
-- **Minimum key length**: Validated at build time (minimum 16 characters recommended)
-- **Header extraction**: Support `Authorization: Bearer <key>` and `X-API-Key: <key>`
+- **Minimum key length**: Validated at **server startup** (not build time) after `_secret`
+  resolution. At build time, keys are `_secret` references — the actual values are only
+  available as environment variables at runtime. `getAuthStrategies` logs a warning if
+  any resolved key is shorter than 32 characters. This is a warning, not a fatal error,
+  to avoid blocking startup in development environments.
+- **Header extraction**: Support `X-API-Key: <key>` header. `Authorization: Bearer <key>`
+  is also supported but `X-API-Key` is preferred when JWT strategies are also configured
+  (avoids ambiguity — see section 15.5).
 - **No key logging**: Keys must never appear in logs (only strategy ID)
 - **HTTPS required**: Document that API keys should only be sent over HTTPS
 
@@ -1221,15 +1420,19 @@ with pages, and keeps all auth config centralized.
 
 | Package | Changes |
 |---------|---------|
-| `@lowdefy/api` | `resolveAuthentication`, modified `createAuthorize`, `createApiContext`, strategy resolvers, `getAuthStrategies` |
+| `@lowdefy/api` | `resolveAuthentication` (new), `resolveApiKeyStrategy` (new), `resolveJwtStrategy` (new), modified `createAuthorize`, `createApiContext`, `authorizeApiEndpoint`, `authorizeRequest` |
+| `@lowdefy/api` (auth) | Modified `getNextAuthConfig` (extract strategies from parsed config) |
 | `@lowdefy/build` | `lowdefySchema.js` (add strategies), `buildAuthStrategies.js` (new), `buildAuth.js` (call new step) |
-| `@lowdefy/server` | `apiWrapper.js` (add strategy resolution + pass strategies to context) |
+| `@lowdefy/server` | `apiWrapper.js` (add resolveAuthentication + AuthenticationError handling) |
 | `@lowdefy/server-dev` | Same as server |
-| `@lowdefy/errors` | `AuthenticationError` class |
+| `@lowdefy/errors` | `AuthenticationError` class (new) |
 
 **NOT changed**: `buildApiAuth.js`, `buildPageAuth.js`, `getApiRoles.js`,
-`getProtectedApi.js`, `authorizeApiEndpoint.js`, `authorizeRequest.js`,
-`callEndpoint.js`, `callRequest.js`, endpoint/page schemas.
+`getProtectedApi.js`, `callEndpoint.js`, `callRequest.js`, `serverSidePropsWrapper.js`,
+endpoint/page schemas.
+
+**Changed minimally**: `authorizeApiEndpoint.js`, `authorizeRequest.js` (add
+`AuthenticationError` throw for unauthenticated users — see section 8.2).
 
 ---
 
@@ -1267,21 +1470,25 @@ No migration tool needed. No config changes required for existing apps.
 5. Tests for build-time validation
 
 ### Step 2: Runtime Authentication Resolution
-6. Create `resolveAuthentication.js`
-7. Create `resolveApiKeyStrategy.js` (with constant-time comparison)
-8. Create `resolveJwtStrategy.js` (with `jsonwebtoken`)
-9. Create `getAuthStrategies.js` (startup-time `_secret` resolution)
-10. Modify `createAuthorize.js` (read `context.user` instead of closing over session)
-11. Modify `createApiContext.js` (remove user-from-session assignment)
-12. Modify `apiWrapper.js` in server and server-dev (add resolveAuthentication call)
-13. Tests for each strategy resolver and resolveAuthentication
+6. Add `AuthenticationError` to `@lowdefy/errors` (needed by steps below)
+7. Modify `getNextAuthConfig.js` (extract strategies from parsed config — no separate parser)
+8. Create `resolveAuthentication.js`
+9. Create `resolveApiKeyStrategy.js` (with constant-time comparison)
+10. Create `resolveJwtStrategy.js` (with `jsonwebtoken`)
+11. Modify `createAuthorize.js` (read `context.user` instead of closing over session)
+12. Modify `createApiContext.js` (conditional user assignment — preserve `serverSidePropsWrapper`)
+13. Modify `authorizeApiEndpoint.js` (throw `AuthenticationError` when `user` is null)
+14. Modify `authorizeRequest.js` (same `AuthenticationError` change)
+15. Modify `apiWrapper.js` in server and server-dev:
+    - Add `resolveAuthentication` call after session resolution
+    - Move `setSentryUser` after `resolveAuthentication` (uses `context.user`)
+    - Add `AuthenticationError` → 401 in catch block
+16. Tests for each strategy resolver, resolveAuthentication, and modified authorize
 
 ### Step 3: Endpoint Handler Improvements
-14. Support external request body format (plain JSON payload)
-15. Support configurable HTTP methods on endpoints
-16. Add `AuthenticationError` to `@lowdefy/errors`
-17. Proper HTTP status codes (401, 403) in error handler
-18. Tests for endpoint handler changes
+17. Support external request body format (plain JSON payload)
+18. Support configurable HTTP methods on endpoints
+19. Tests for endpoint handler changes
 
 ### Step 4: Testing & Documentation
 19. Integration tests (full request flow with different auth methods)
@@ -1306,9 +1513,164 @@ No migration tool needed. No config changes required for existing apps.
 4. **JWKS support**: Should JWKS (asymmetric key endpoint) be in the initial release or
    deferred? HMAC (shared secret) covers most use cases.
 
-5. **Verbose auth errors**: Should there be an opt-in `auth.api.verboseErrors` flag that
-   returns 401/403 instead of "not found"? Useful for external API developers but
-   reduces security through obscurity.
-
-6. **Audit logging**: Should auth events (strategy used, key matched, JWT issuer) be
+5. **Audit logging**: Should auth events (strategy used, key matched, JWT issuer) be
    logged at info level for audit trails?
+
+---
+
+## 15. Review Findings — Addressed
+
+These findings from the critical review (`cc-docs/plan/review.md`) are now addressed
+in the plan sections above. This section documents the rationale for each resolution.
+
+### 15.1 BUG-1: `createApiContext` overwrites strategy-resolved user (FIXED)
+
+**Problem**: `createApiContext` line 23 does `context.user = context?.session?.user`,
+overwriting whatever `resolveAuthentication` set. For strategy users, `session` is
+null, so `context.user` becomes `undefined`.
+
+**Resolution**: Changed to conditional assignment (section 7.2.3):
+```javascript
+if (type.isNone(context.user)) {
+  context.user = context?.session?.user;
+}
+```
+This preserves the `apiWrapper` path (resolveAuthentication sets user first) AND the
+`serverSidePropsWrapper` path (no resolveAuthentication → falls back to session).
+
+### 15.2 BUG-2: Sentry user tracking skipped for strategy users (FIXED)
+
+**Problem**: `setSentryUser` called before `resolveAuthentication` in `apiWrapper`.
+API key/JWT users never tracked in Sentry.
+
+**Resolution**: Moved `setSentryUser` after `resolveAuthentication` (section 7.2.5).
+Uses `context.user` (set by resolveAuthentication) instead of `context.session?.user`.
+
+### 15.3 BUG-3: Build-time key length validation is impossible (FIXED)
+
+**Problem**: Section 9.3 claimed keys validated at build time. But keys are `_secret`
+references at build time — actual values only available at runtime.
+
+**Resolution**: Key length validation moved to server startup inside `getNextAuthConfig`
+after `_secret` resolution (sections 6.4, 9.3). Logs a warning for keys shorter than
+32 characters. Does not block startup.
+
+### 15.4 GAP-1: `serverSidePropsWrapper` not addressed (ADDRESSED)
+
+**Problem**: `serverSidePropsWrapper` also calls `createApiContext` but plan only
+modified `apiWrapper`.
+
+**Resolution**: `serverSidePropsWrapper` is intentionally unchanged. It serves page SSR
+only (always session-based, never strategy auth). The conditional assignment in
+`createApiContext` (section 7.2.3) ensures it falls back to `session.user` when
+`resolveAuthentication` hasn't run. Explicitly documented in section 7.2.5.
+
+### 15.5 GAP-2: `callRequest` also uses `context.authorize` (ADDRESSED)
+
+**Problem**: Page-level requests go through `callRequest` → `authorizeRequest` →
+`context.authorize`. The `createAuthorize` change affects these too.
+
+**Resolution**: This works correctly. Page requests come from browsers with sessions, so
+`context.user = session.user` — same as today. Strategy auth also works for page requests
+if an API key user calls `/api/request/...` with the right roles. This is intentional
+and correct — `authorizeRequest` gets the same `AuthenticationError` change as
+`authorizeApiEndpoint` (section 8.5). No regression.
+
+### 15.6 GAP-3: Strategies without providers (API-key-only auth) (CONFIRMED VALID)
+
+**Problem**: What if someone configures only strategies (no NextAuth providers)?
+
+```yaml
+auth:
+  strategies:
+    - id: my-key
+      type: apiKey
+      properties:
+        keys: [{ _secret: KEY }]
+      roles: [api-user]
+  api:
+    protected: true
+    roles:
+      api-user: [my-endpoint]
+```
+
+**Resolution**: This is a valid and supported configuration. The flow:
+
+1. **Build time**: `auth.configured = true` (auth config is not `isNone`). `buildApiAuth`
+   runs normally — computes `endpoint.auth` from `auth.api.roles`.
+2. **Server startup**: `getNextAuthConfig` runs. Creates empty `providers: []`,
+   `callbacks: {}`, etc. Extracts strategies from parsed config. No errors.
+3. **Request time**: `getServerSession` calls NextAuth's `getServerSession` with no
+   providers → returns null session. `resolveAuthentication` then tries strategies →
+   API key matches → `context.user` set with roles → `authorize` passes.
+4. **NEXTAUTH_SECRET**: `validateAuthConfig` only requires `NEXTAUTH_SECRET` when
+   `providers.length > 0`. Strategies-only configs don't need it.
+
+This path needs explicit integration testing but is architecturally sound.
+
+### 15.7 GAP-4: `_user` operator shape differs for strategy users (DOCUMENTED)
+
+**Problem**: Session users have OIDC claims (`name`, `email`, `picture`). Strategy users
+have `{ sub, type, strategyId, roles }`. Routines using `_user.email` get `undefined`
+for API key callers.
+
+**Resolution**: This is by design — different auth methods provide different identity
+information. Document the user object shape per strategy type:
+
+| Auth method | `_user` shape |
+|------------|--------------|
+| Session (NextAuth) | `{ sub, name, email, picture, roles, ... }` (OIDC claims) |
+| API Key | `{ sub: 'apiKey:{id}', type: 'apiKey', strategyId, roles }` |
+| JWT | `{ sub, type: 'jwt', strategyId, roles, ...userFields }` (claim-mapped) |
+
+Recommend checking `_user.type` in routines that need to handle multiple auth methods:
+```yaml
+# In a routine
+- id: check-user-type
+  type: Condition
+  properties:
+    if:
+      _eq:
+        - _user: type
+        - apiKey
+```
+
+### 15.8 GAP-5: Strategy ordering and `Authorization: Bearer` ambiguity (ADDRESSED)
+
+**Problem**: Both `apiKey` and `jwt` strategies can read from `Authorization: Bearer`.
+First match wins, but a JWT strategy would try to parse an API key as a JWT (and fail).
+
+**Resolution**:
+1. **Default behavior**: `apiKey` checks `X-API-Key` header first, then falls back to
+   `Authorization: Bearer`. When a custom `headerName` is set, ONLY that header is checked.
+2. **Recommendation**: When both `apiKey` and `jwt` strategies are configured, use
+   `X-API-Key` for API keys (or set a custom `headerName`). API key strategies should
+   be listed BEFORE JWT strategies in the YAML array — they fail fast (simple string
+   comparison) while JWT verification is more expensive.
+3. **Strategy ordering**: YAML array order = resolution priority. Document this clearly.
+
+### 15.9 GAP-6: Double-parsing of `authJson` secrets (FIXED)
+
+**Problem**: `getNextAuthConfig` already parses entire `authJson` through `ServerParser`.
+A separate `getAuthStrategies` function would create a second `ServerParser` — duplicate work.
+
+**Resolution**: Eliminated the separate `getAuthStrategies` function. Instead, extract
+strategies from the already-parsed `authConfig` inside `getNextAuthConfig` (section 6.4):
+```javascript
+nextAuthConfig.strategies = authConfig.strategies ?? [];
+```
+Strategies are accessed via `context.authOptions.strategies` in `apiWrapper`. Single
+`ServerParser` instance, no duplication.
+
+### 15.10 CONCERN-3: AuthenticationError vs "does not exist" (RESOLVED)
+
+**Problem**: The plan introduced `AuthenticationError` (401) but existing code returns
+"does not exist" (hides auth failures). These patterns conflicted.
+
+**Resolution**: Both patterns coexist cleanly (section 8.2):
+- **Unauthenticated** (`user === null` on protected endpoint) → `AuthenticationError` → 401
+- **Unauthorized** (user exists but wrong roles) → existing `ConfigError` "does not exist" → 500
+
+The 401 reveals nothing about endpoint auth configuration — it just says "you need to
+authenticate." The "does not exist" pattern is preserved for wrong-roles cases, maintaining
+existing info-leak prevention. No `verboseErrors` flag needed.
