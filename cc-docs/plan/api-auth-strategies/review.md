@@ -1,7 +1,7 @@
 # Critical Review: API Auth Strategies Plan
 
 > **Status**: All bugs fixed, all gaps addressed, design concerns resolved.
-> See `ApiAuthStrategies.md` section 15 for the full resolution of each finding.
+> See `plan.md` section 15 for the full resolution of each finding.
 
 ## Verdict
 
@@ -12,7 +12,7 @@ roles scope endpoints, same pattern as pages — is the right call. It keeps
 
 The bugs, gaps, and design concerns identified below have all been addressed
 in the updated plan (v3). Resolution details are in section 15 of
-`ApiAuthStrategies.md`.
+`plan.md`.
 
 ---
 
@@ -21,7 +21,7 @@ in the updated plan (v3). Resolution details are in section 15 of
 ### BUG-1: `createApiContext` will overwrite strategy-resolved user — FIXED
 
 > **Resolution**: Plan section 7.2.3 updated with conditional assignment.
-> See section 15.1 of `ApiAuthStrategies.md`.
+> See section 15.1 of `plan.md`.
 
 **Severity**: Critical — strategies would silently not work.
 
@@ -54,7 +54,7 @@ This way:
 ### BUG-2: Sentry user tracking skipped for strategy users — FIXED
 
 > **Resolution**: Plan section 7.2.5 updated — `setSentryUser` moved after
-> `resolveAuthentication`. See section 15.2 of `ApiAuthStrategies.md`.
+> `resolveAuthentication`. See section 15.2 of `plan.md`.
 
 **Severity**: Low — observability gap, not functional.
 
@@ -74,7 +74,7 @@ gets the user identity.
 ### BUG-3: Build-time key length validation is impossible — FIXED
 
 > **Resolution**: Plan sections 5.2, 6.4, 9.3 updated — validation moved to
-> server startup. See section 15.3 of `ApiAuthStrategies.md`.
+> server startup. See section 15.3 of `plan.md`.
 
 **Severity**: Low — misleading claim in plan.
 
@@ -99,7 +99,7 @@ Log a warning, don't fail the build.
 ### GAP-1: `serverSidePropsWrapper` is not addressed — ADDRESSED
 
 > **Resolution**: Plan section 7.2.5 explicitly documents that `serverSidePropsWrapper`
-> is intentionally unchanged. See section 15.4 of `ApiAuthStrategies.md`.
+> is intentionally unchanged. See section 15.4 of `plan.md`.
 
 The plan only modifies `apiWrapper`. But `serverSidePropsWrapper` also calls
 `createApiContext` → `createAuthorize`. Since pages are session-only, this
@@ -190,7 +190,7 @@ keys. Consider defaulting apiKey to ONLY check `X-API-Key` (not
 
 > **Resolution**: Plan section 6.4 eliminates the separate `getAuthStrategies` function.
 > Strategies extracted from the already-parsed `authConfig` inside `getNextAuthConfig`.
-> See section 15.9 of `ApiAuthStrategies.md`.
+> See section 15.9 of `plan.md`.
 
 `getNextAuthConfig` already parses the ENTIRE `authJson` (including
 strategies) through `ServerParser` with `_secret` resolution (line 39-42
@@ -242,7 +242,7 @@ harder. Consider logging which auth method was used, so developers can debug.
 
 > **Resolution**: Plan section 8 redesigned with concrete `AuthenticationError` class.
 > Unauthenticated (null user) → 401. Wrong roles → existing "does not exist" (500).
-> No 403. No `verboseErrors` flag needed. See section 15.10 of `ApiAuthStrategies.md`.
+> No 403. No `verboseErrors` flag needed. See section 15.10 of `plan.md`.
 
 The plan introduces `AuthenticationError` (401) but existing code returns
 "does not exist" (hides auth failures). These two patterns conflict. The

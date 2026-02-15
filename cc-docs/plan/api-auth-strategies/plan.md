@@ -1520,7 +1520,7 @@ No migration tool needed. No config changes required for existing apps.
 
 ## 15. Review Findings — Addressed
 
-These findings from the critical review (`cc-docs/plan/review.md`) are now addressed
+These findings from the critical review (`review.md`) are now addressed
 in the plan sections above. This section documents the rationale for each resolution.
 
 ### 15.1 BUG-1: `createApiContext` overwrites strategy-resolved user (FIXED)
