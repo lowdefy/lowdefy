@@ -176,7 +176,7 @@ Same as Rev 1:
 | 2 | 62 blocks need manual testing — no automated visual regression | **High** | **OPEN** — need Playwright setup |
 | 3 | ~~Scope creep: multi-library support~~ | ~~High~~ | **Resolved** — separated from this plan |
 | 4 | `class` + `style` + `styles` is three styling concepts — user confusion | **Medium** | **OPEN** — clear docs needed |
-| 5 | ~~`properties.style` → `styles.root` distinction~~ | ~~Medium~~ | **Resolved** — keep separate. `style` = wrapper, `styles.root` = component root. |
+| 5 | ~~`properties.style` → `styles.root` distinction~~ | ~~Medium~~ | **Resolved** — `style` is shorthand for `styles.root` (build normalizes). |
 | 6 | ~~PageHeaderMenu/PageSiderMenu incorrectly flagged~~ | ~~Low~~ | **Resolved** — custom composites |
 | 7 | ~~`@ant-design/nextjs-registry` Pages Router~~ | ~~Medium~~ | **Resolved** — not needed, client-only rendering |
 | 8 | ~~`class` YAML example duplicate key~~ | ~~Low~~ | **Resolved** — fixed to show union type |
@@ -221,8 +221,10 @@ insight: sub-element responsive (`makeCssClass(styles, true)`) was already broke
 styles don't support `@media` queries. Only wrapper/area `style` responsive actually worked.
 Real-world impact is limited. Build validates and emits `ConfigError` with migration guidance.
 
-~~13. `style` vs `styles.root`?~~ **Resolved** — Keep separate. `style` = wrapper/layout positioning
-(applied to the Col/wrapper div). `styles.root` = component root styling (passed to antd's
-`styles.root` semantic prop). Different targets, different concerns.
+~~13. `style` vs `styles.root`?~~ **Resolved** — `style` is shorthand for `styles.root`. Build
+normalizes it at build time, just like `blocks` → `slots.content.blocks`. Runtime only ever sees
+`styles` with sub-slot keys. If both `style` and `styles.root` are specified, they merge (`style`
+first, `styles.root` overrides). `styles.root` is applied as the `style` prop on the block's
+wrapper/root element.
 
 **Remaining decisions:** None. All decisions resolved. Only open risks: 2, 4, 9, 12.

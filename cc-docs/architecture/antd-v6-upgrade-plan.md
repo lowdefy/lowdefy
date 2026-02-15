@@ -344,20 +344,36 @@ Currently blocks use `methods.makeCssClass([...styleObjects])` to generate emoti
 
 ### 5.2 New Architecture
 
-#### Keep `style` for inline CSS-in-JS objects (but simplify)
+#### `style` is shorthand for `styles.root` (build-time normalization)
 
-The `style` key continues to work as today — an object of CSS properties that gets applied to the block's root element. But instead of running through emotion to generate a class, it's applied as a React `style` prop or through antd's `styles` semantic API.
+The `style` key is syntactic sugar — at build time it gets normalized into `styles.root`, just like
+`blocks` is shorthand for `slots.content.blocks`. This means there is only ONE styling system at
+runtime: the `styles` object with sub-slot keys.
 
 ```yaml
-# Unchanged for users — style still works
+# User writes (shorthand):
 - id: my_card
   type: Card
   style:
     marginTop: 20
     border: '1px solid red'
+
+# Build normalizes to:
+- id: my_card
+  type: Card
+  styles:
+    root:
+      marginTop: 20
+      border: '1px solid red'
 ```
 
-**Implementation:** `style` continues to flow through the engine parser (so operators work), but at the layout level it's applied directly as a `style` prop on the wrapper div, not via `makeCssClass`.
+If the user specifies both `style` and `styles.root`, the build merges them (`style` values first,
+`styles.root` overrides — like how explicit always wins over shorthand).
+
+**Implementation:** During the build step, for each block:
+1. If `style` exists, merge into `styles.root` (creating `styles` if needed)
+2. Delete `style` from the block config
+3. Runtime only ever sees `styles`
 
 #### New `class` property — maps class names to block root and sub-slots
 
@@ -392,12 +408,15 @@ CardBlock.meta = {
 };
 ```
 
-The block receives `classNames` (processed from user's `class` config):
+The block receives `classNames` and `styles` (both already normalized by build):
 
 ```javascript
+// Runtime receives styles = { root: {...}, header: {...}, body: {...} }
+// styles.root was merged from user's `style` shorthand + explicit `styles.root`
 const CardBlock = ({ blockId, content, properties, classNames, styles }) => (
   <Card
     id={blockId}
+    style={styles.root}
     className={classNames.root}
     classNames={{
       header: classNames.header,
@@ -419,23 +438,36 @@ const CardBlock = ({ blockId, content, properties, classNames, styles }) => (
 
 This aligns perfectly with antd v6's native `classNames` and `styles` semantic API that every component now supports.
 
-#### New `styles` property — maps style objects to sub-slots
+#### `styles` property — maps style objects to sub-slots
 
-Similar to `class`, but for inline style objects targeting sub-elements:
+The `styles` property maps inline style objects to semantic sub-elements of the block, matching
+antd v6's `styles` prop:
 
 ```yaml
+# style is shorthand for styles.root — these are equivalent:
 - id: my_card
   type: Card
-  style:
-    marginTop: 20        # Applied to block wrapper (layout level)
+  style:                         # Shorthand → build normalizes to styles.root
+    marginTop: 20
   styles:
+    header:
+      backgroundColor: '#f0f0f0'
+    body:
+      padding: 24
+
+- id: my_card
+  type: Card
+  styles:                        # Explicit — what runtime actually sees
+    root:
+      marginTop: 20
     header:
       backgroundColor: '#f0f0f0'
     body:
       padding: 24
 ```
 
-This replaces the current pattern where blocks had custom `properties.headerStyle`, `properties.bodyStyle`, etc. — now it's standardized.
+This replaces the current pattern where blocks had custom `properties.headerStyle`,
+`properties.bodyStyle`, etc. — now it's standardized.
 
 ### 5.3 Comparison: Current vs New
 
@@ -453,43 +485,51 @@ This replaces the current pattern where blocks had custom `properties.headerStyl
     style:                         # ALSO a thing — merged into className via emotion
       border: '1px solid red'
 
-# NEW (v6) — class as string (applies to component root)
+# NEW (v5) — style shorthand with class as string
 - id: my_card
   type: Card
-  style:                           # Layout wrapper style (React style prop)
+  style:                           # Shorthand for styles.root (build normalizes)
     marginTop: 20
-  class: 'shadow-lg'              # Component root className
+  class: 'shadow-lg'              # Shorthand for class.root (build normalizes)
   styles:                          # Semantic sub-slot styles
     header:
       backgroundColor: '#f0f0f0'
     body:
       padding: 24
 
-# NEW (v6) — class as object (sub-slot mapping)
+# NEW (v5) — explicit styles and class objects
 - id: my_card
   type: Card
-  style:                           # Layout wrapper style (React style prop)
-    marginTop: 20
   class:                           # Semantic sub-slot classes
     root: 'shadow-lg'
     header: 'bg-blue-50'
     body: 'p-6'
-  styles:                          # Semantic sub-slot styles
+  styles:                          # Semantic sub-slot styles (what runtime sees)
+    root:
+      marginTop: 20
     header:
       backgroundColor: '#f0f0f0'
 ```
 
+**Build-time normalization parallels:**
+- `style` → `styles.root` (like `blocks` → `slots.content.blocks`)
+- `class` (string) → `class.root` (like how shorthand → explicit sub-slot)
+
 **Note:** `class` is a union type — either a string OR an object, never both on the same block.
-When string, the engine normalizes it to `{ root: value }`. When object, passed through directly.
+When string, the build normalizes it to `{ root: value }`. When object, passed through directly.
 
 ### 5.4 What Happens to `makeCssClass`?
 
 **Remove it.** The new flow is:
 
-1. `style` (object) → applied as `style` prop on BlockLayout wrapper div
-2. `class` (string/object) → applied as `className` on wrapper and `classNames` on antd component
-3. `styles` (object with sub-slot keys) → applied via antd component's `styles` semantic prop
-4. `mediaToCssObject` → **remove entirely**. Responsive styles move to Tailwind classes (see 5.5)
+1. **Build time:** `style` → merged into `styles.root`, `class` (string) → `{ root: value }`
+2. **Runtime:** blocks receive `styles` (object with sub-slot keys) and `classNames` (object with
+   sub-slot keys). No `style` at runtime — it's already in `styles.root`.
+3. `styles.root` → applied as `style` prop on block wrapper div
+4. `styles.{header,body,...}` → applied via antd component's `styles` semantic prop
+5. `classNames.root` → applied as `className` on wrapper
+6. `classNames.{header,body,...}` → applied via antd component's `classNames` prop
+7. `mediaToCssObject` → **remove entirely**. Responsive styles move to Tailwind classes (see 5.5)
 
 ### 5.5 Responsive Styles — Breaking Change: Use Tailwind Classes
 

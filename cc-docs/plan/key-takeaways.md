@@ -27,8 +27,8 @@
   `static-style-extract` misunderstanding
 - **Responsive styles remain the hardest open question** — build-time CSS generation or deprecate
   in favor of Tailwind responsive classes
-- **`style` and `styles.root` serve different purposes** — don't merge them. `style` = layout
-  wrapper positioning. `styles.root` = component root styling.
+- **`style` is shorthand for `styles.root`** — build normalizes it, just like `blocks` →
+  `slots.content.blocks`. Runtime only sees `styles` object. `styles.root` = wrapper/root style.
 - **Multi-library support is scope creep** — separate initiative after antd v6 is stable
 - **Phase 1+2 should be combined** — can't validate antd v6 without fixing prop renames
 - **`@ant-design/nextjs-registry` needs Pages Router verification** — Lowdefy uses Pages Router
@@ -214,7 +214,7 @@ slots rename, Tailwind, new blocks, theme YAML config) can come later in separat
 | BackTop → FloatButton | Phase 1 (direct replacement) |
 | Comment block | Remove entirely (no `@ant-design/compatible`) |
 | Responsive styles | Breaking change — remove from `style`, use Tailwind classes (`class: 'p-16 sm:p-8'`) |
-| `style` vs `styles.root` | Keep separate — `style` = wrapper positioning, `styles.root` = component root |
+| `style` vs `styles.root` | `style` is shorthand for `styles.root` — build normalizes (like `blocks` → `slots.content.blocks`) |
 
 ## Decisions Still Open
 
