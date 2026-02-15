@@ -1,6 +1,6 @@
 # Next.js + React 19 Upgrade Plan
 
-> Companion plan to `antd-v6-upgrade-plan.md`. These two upgrades share dependencies and should be
+> Companion plan to `antd-v6-upgrade.md`. These two upgrades share dependencies and should be
 > coordinated — certain steps must happen together, others have a strict order.
 
 ---
@@ -235,7 +235,7 @@ Bump Next.js from 13.5.4 to 13.5.11 in:
 This is a patch version — zero code changes, zero risk. Do this on `main`/`develop` immediately,
 don't wait for the v5 upgrade.
 
-### Phase 1: Antd v6 Upgrade (See `antd-v6-upgrade-plan.md`)
+### Phase 1: Antd v6 Upgrade (See `antd-v6-upgrade.md`)
 
 Complete the antd v6 upgrade first. This:
 - Removes `next-with-less` and all Less files

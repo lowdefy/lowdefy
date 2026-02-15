@@ -1,6 +1,6 @@
 # Critical Review: Antd v6 Upgrade Plan (Rev 2)
 
-> Reviewed against: `cc-docs/architecture/antd-v6-upgrade-plan.md` (updated)
+> Reviewed against: `antd-v6-upgrade.md` (updated)
 > Review date: 2026-02-15
 
 ---

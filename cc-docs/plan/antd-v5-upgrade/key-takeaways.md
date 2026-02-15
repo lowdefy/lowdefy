@@ -1,12 +1,12 @@
 # Key Takeaways: Antd v6 Upgrade
 
-> Distilled from plan (rev 2) + review (rev 2). One file to read before starting implementation.
+> Distilled from `antd-v6-upgrade.md` + `review.md`. One file to read before starting implementation.
 
 ---
 
 ## Per-File Takeaways
 
-### `cc-docs/architecture/antd-v6-upgrade-plan.md`
+### `antd-v6-upgrade.md`
 
 - **62 blocks** in blocks-antd, all need `.meta.styles` removed and testing
 - **5 date blocks** use moment.js — must migrate to dayjs
@@ -20,7 +20,7 @@
 - The plan's `class` YAML example has a **duplicate key bug** — can't have `class` twice in YAML
 - **Use default CSS-in-JS mode** with `StyleProvider layer`, NOT `zeroRuntime`
 
-### `cc-docs/plan/antd-v6-upgrade-review.md`
+### `review.md`
 
 - **Switching from `zeroRuntime` to default mode resolved 7 critical issues** — `@layer`
   automation, tree-shaking, algorithm support, token derivation, bundle size, SSR, and the
