@@ -94,22 +94,78 @@ trades real functionality (algorithms, tree-shaking, automatic `@layer`) for mar
 
 **Action:** Remove all `.less` files in blocks, remove `less`/`less-loader`/`next-with-less` from
 servers, remove `buildStyleImports`/`writeStyleImports` from build. Wrap app root in
-`StyleProvider layer` + `ConfigProvider` with theme config. Add `@ant-design/nextjs-registry` for
-SSR style extraction.
+`StyleProvider layer` + `ConfigProvider` with theme config.
+
+**Note on SSR:** Lowdefy renders client-side only (`_app.js` uses `dynamic(..., { ssr: false })`).
+No SSR style extraction is needed — no `@ant-design/nextjs-registry`, no `extractStyle()`. Antd's
+CSS-in-JS injects styles client-side after hydration, which is exactly what Lowdefy already does.
 
 ```jsx
-// App root setup
+// _app.js — wrap inside the existing App component
 import { StyleProvider } from '@ant-design/cssinjs';
-import { AntdRegistry } from '@ant-design/nextjs-registry';
+import { ConfigProvider } from 'antd';
 
-<AntdRegistry>
-  <StyleProvider layer>
-    <ConfigProvider theme={lowdefy.theme}>
-      {children}
-    </ConfigProvider>
-  </StyleProvider>
-</AntdRegistry>
+<StyleProvider layer>
+  <ConfigProvider theme={lowdefy.theme}>
+    {children}
+  </ConfigProvider>
+</StyleProvider>
 ```
+
+### 2.1.1 CSS `@layer` Strategy — Antd + Tailwind Coexistence
+
+`StyleProvider layer` wraps antd's runtime-injected styles in `@layer antd`. But **this alone is
+not enough for Tailwind.** CSS `@layer` priority depends on declaration order — last declared wins.
+If `@layer antd` is first encountered at runtime (after Tailwind's layers already exist), it gets
+appended **after** Tailwind's layers, giving it **higher** priority than utilities. This is
+backwards — Tailwind utilities must beat antd.
+
+**The fix:** Pre-declare the layer order in the global CSS entry point.
+
+```css
+/* globals.css — loaded before any component renders */
+@layer theme, base, antd, components, utilities;
+```
+
+This locks the cascade priority regardless of when antd injects its styles:
+
+| Layer | Source | Priority |
+|-------|--------|----------|
+| `theme` | Tailwind v4 design tokens | Lowest |
+| `base` | Tailwind v4 preflight/reset | Low |
+| `antd` | Antd runtime-injected styles (via StyleProvider) | Medium |
+| `components` | User/Tailwind component classes | High |
+| `utilities` | Tailwind utility classes | Highest |
+
+**When Tailwind is enabled**, the global CSS file looks like:
+
+```css
+/* globals.css */
+@layer theme, base, antd, components, utilities;
+
+/* Tailwind v4 granular imports — must use granular, not @import "tailwindcss" */
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "tailwindcss/utilities.css" layer(utilities);
+```
+
+**When Tailwind is NOT enabled**, we still declare the layer for antd:
+
+```css
+/* globals.css */
+@layer antd;
+```
+
+This is minimal — just ensures antd styles go into a named layer. No practical effect without
+Tailwind, but establishes the pattern for when Tailwind is added later.
+
+**The build step generates `globals.css`** based on whether Tailwind is enabled in config. This
+replaces the current `writeStyleImports` that generates `styles.less`.
+
+**Why granular Tailwind imports:** Using `@import "tailwindcss"` (the simple form) internally
+declares its own `@layer` order, which conflicts with our explicit declaration. The granular
+imports (`tailwindcss/theme.css`, `tailwindcss/preflight.css`, `tailwindcss/utilities.css`) let
+us control exactly which Tailwind layer each file lands in.
 
 ### 2.2 Prop Renames (v4 → v5 → v6)
 
@@ -397,22 +453,34 @@ This replaces the current pattern where blocks had custom `properties.headerStyl
     style:                         # ALSO a thing — merged into className via emotion
       border: '1px solid red'
 
-# NEW (v6)
+# NEW (v6) — class as string (applies to component root)
 - id: my_card
   type: Card
   style:                           # Layout wrapper style (React style prop)
     marginTop: 20
-  class: 'shadow-lg'              # Layout wrapper class
+  class: 'shadow-lg'              # Component root className
   styles:                          # Semantic sub-slot styles
     header:
       backgroundColor: '#f0f0f0'
     body:
       padding: 24
+
+# NEW (v6) — class as object (sub-slot mapping)
+- id: my_card
+  type: Card
+  style:                           # Layout wrapper style (React style prop)
+    marginTop: 20
   class:                           # Semantic sub-slot classes
     root: 'shadow-lg'
     header: 'bg-blue-50'
     body: 'p-6'
+  styles:                          # Semantic sub-slot styles
+    header:
+      backgroundColor: '#f0f0f0'
 ```
+
+**Note:** `class` is a union type — either a string OR an object, never both on the same block.
+When string, the engine normalizes it to `{ root: value }`. When object, passed through directly.
 
 ### 5.4 What Happens to `makeCssClass`?
 
@@ -884,20 +952,15 @@ module.exports = {
 
 #### Tailwind + Antd Coexistence
 
-`StyleProvider layer` wraps all antd runtime styles in `@layer antd`. Tailwind's utility classes
-are unlayered by default, so they automatically have higher cascade priority than antd — no
-specificity hacks needed. This is the cleanest possible coexistence: antd provides component
-structure, Tailwind overrides specific visual properties.
+See **Section 2.1.1** for the complete `@layer` strategy. In summary:
 
-For the global CSS entry point (when Tailwind is enabled):
-```css
-/* Tailwind base (preflight) loaded first — antd overrides it, utilities override antd */
-@import "tailwindcss/preflight.css";
-@import "tailwindcss/utilities.css";
-/* antd styles injected at runtime in @layer antd — lower priority than unlayered utilities */
-```
+1. `StyleProvider layer` wraps antd styles in `@layer antd`
+2. A global CSS file pre-declares layer order: `@layer theme, base, antd, components, utilities`
+3. Tailwind v4 uses granular imports placed into the correct layers
+4. Result: preflight → antd → utilities (Tailwind utilities always win)
 
-No manual `@layer` import ordering required — `StyleProvider layer` handles the antd side.
+This is the cleanest possible coexistence: antd provides component structure, Tailwind utilities
+override specific visual properties, and the CSS cascade handles priority deterministically.
 
 ### 9.4 Shadcn/Radix Future Path
 
@@ -947,9 +1010,9 @@ plugins:
 3. Replace `moment` with `dayjs` in date blocks
 4. Remove all `.less` files from block packages
 5. Remove `less`, `less-loader`, `next-with-less` from server packages
-6. Remove `buildStyleImports` / `writeStyleImports` from build
-7. Add `@ant-design/nextjs-registry` for SSR style extraction
-8. Wrap app root in `AntdRegistry` + `StyleProvider layer` + `ConfigProvider`
+6. Replace `buildStyleImports` / `writeStyleImports` with `globals.css` generation (see Section 2.1.1)
+7. Replace `import '../build/plugins/styles.less'` in `_app.js` with `import './globals.css'`
+8. Wrap app root in `StyleProvider layer` + `ConfigProvider`
 9. Remove `.meta.styles` from all block metas
 10. Update `next.config.js` to remove `withLess()` wrapper
 11. Fix all compilation errors
@@ -1066,13 +1129,14 @@ plugins:
 | Package | Reason |
 |---------|--------|
 | `dayjs` | Antd v6 date library |
-| `@ant-design/nextjs-registry` | SSR style extraction for Next.js |
-| `tailwindcss` | When Tailwind enabled |
-| `autoprefixer` | When Tailwind enabled |
-| `postcss` | When Tailwind enabled |
+| `tailwindcss` | When Tailwind enabled (v4) |
+| `@tailwindcss/postcss` | Tailwind v4 PostCSS plugin (replaces `tailwindcss` + `autoprefixer` combo) |
 
 **Note:** `@ant-design/cssinjs` v2.x comes as a transitive dependency of antd v6. We import
 `StyleProvider` from it for `@layer` support but don't need to install it directly.
+
+**Not needed:** `@ant-design/nextjs-registry` — Lowdefy renders client-side only (`ssr: false`),
+so no SSR style extraction is required.
 
 ## Appendix B: Files to Delete
 

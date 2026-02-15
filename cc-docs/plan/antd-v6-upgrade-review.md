@@ -41,12 +41,21 @@ No issues.
 
 ### Section 2.1: Styling System — NOW CORRECT
 
-**Key takeaway:** Default mode with `StyleProvider layer` + `AntdRegistry` for SSR is the right
-architecture. Code example is clear.
+**Key takeaway:** Default mode with `StyleProvider layer` + `ConfigProvider` is the right
+architecture. No SSR style extraction needed — Lowdefy renders client-side only.
 
-**Minor:** Verify `@ant-design/nextjs-registry` compatibility with Next.js 13.5.4. The registry
-package targets Next.js App Router — confirm it also works with Pages Router (which Lowdefy uses).
-If not, the alternative is manual SSR extraction via `@ant-design/cssinjs` `extractStyle()`.
+**Resolved:** `@ant-design/nextjs-registry` is App Router only and NOT needed. Lowdefy's `_app.js`
+uses `dynamic(..., { ssr: false })`, so there's no server-side rendering of antd components. The
+CSS-in-JS engine injects styles client-side, which is exactly how Lowdefy already works.
+
+**New Section 2.1.1** (`@layer` strategy) correctly addresses the Tailwind coexistence issue that
+was the #1 risk in Rev 1. Pre-declaring `@layer theme, base, antd, components, utilities` in a
+generated `globals.css` locks the cascade priority. Critical detail: must use Tailwind v4 granular
+imports (not `@import "tailwindcss"`) to control layer placement.
+
+**New concern:** Tailwind v4 compatibility with Next.js 13.x is untested. Tailwind v4 is
+officially documented with Next.js 14/15. If it doesn't work with 13.x, fallback is Tailwind v3
+(which does NOT use native CSS `@layer` and needs a different coexistence strategy).
 
 ---
 
@@ -159,23 +168,24 @@ Same as Rev 1:
 
 ---
 
-## Updated Top 10 Risks
+## Updated Top 10 Risks (Rev 3)
 
-| # | Risk | Severity | Mitigation |
-|---|------|----------|------------|
-| 1 | Responsive `style` has no clear solution post-emotion removal | **High** | Decide: build-time CSS generation or deprecate in favor of Tailwind |
-| 2 | 62 blocks need manual testing — no automated visual regression | **High** | Set up Playwright visual comparison tests before starting |
-| 3 | Scope creep: multi-library support mixed into antd upgrade | **High** | Separate concerns. This plan is antd v6 + styling + slots |
-| 4 | `class` + `style` + `styles` is three styling concepts — user confusion | **Medium** | Clear documentation. Deprecate `properties.style` → `styles.root` |
-| 5 | `properties.style` → top-level `style` loses wrapper vs component distinction | **Medium** | Keep separate. Deprecate `properties.style` → `styles.root` |
-| 6 | PageHeaderMenu/PageSiderMenu incorrectly flagged — wastes effort | **Low** | Corrected in this review. They're custom composites |
-| 7 | `@ant-design/nextjs-registry` may not support Pages Router (Next 13) | **Medium** | Test early. Fallback: manual `extractStyle()` SSR setup |
-| 8 | `class` YAML example has duplicate key bug | **Low** | Fix example to show union type (string OR object, not both) |
-| 9 | ~15 blocks missing from audit — risk of surprises during migration | **Medium** | Complete block audit before starting Phase 1 |
-| 10 | Segmented miscategorized as display (it's input) | **Low** | Fix in new blocks list |
+| # | Risk | Severity | Status |
+|---|------|----------|--------|
+| 1 | Responsive `style` has no clear solution post-emotion removal | **High** | **OPEN** — last remaining decision |
+| 2 | 62 blocks need manual testing — no automated visual regression | **High** | **OPEN** — need Playwright setup |
+| 3 | ~~Scope creep: multi-library support~~ | ~~High~~ | **Resolved** — separated from this plan |
+| 4 | `class` + `style` + `styles` is three styling concepts — user confusion | **Medium** | **OPEN** — clear docs needed |
+| 5 | `properties.style` → `styles.root` distinction | **Medium** | **OPEN** — recommend keep separate |
+| 6 | ~~PageHeaderMenu/PageSiderMenu incorrectly flagged~~ | ~~Low~~ | **Resolved** — custom composites |
+| 7 | ~~`@ant-design/nextjs-registry` Pages Router~~ | ~~Medium~~ | **Resolved** — not needed, client-only rendering |
+| 8 | ~~`class` YAML example duplicate key~~ | ~~Low~~ | **Resolved** — fixed to show union type |
+| 9 | ~15 blocks missing from audit | **Medium** | **OPEN** — complete audit before Phase 1 |
+| 10 | ~~Segmented miscategorized~~ | ~~Low~~ | Note for new blocks list |
+| 11 | `@layer` pre-declaration required for Tailwind coexistence | **High** | **Resolved** — plan updated with globals.css strategy |
+| 12 | Tailwind v4 compatibility with Next.js 13.x | **Medium** | **OPEN** — needs early testing, may need v3 fallback |
 
-**Notable:** 3 risks from Rev 1 are completely eliminated by switching to default mode (bundle
-size, `@layer` ordering, token derivation).
+**Active risks:** 1, 2, 4, 5, 9, 12. Everything else resolved.
 
 ---
 
@@ -184,15 +194,28 @@ size, `@layer` ordering, token derivation).
 ~~1. Dark mode / algorithms: Support in v1 or defer?~~ **Resolved** — works out of the box now.
 ~~2. `antd.css` bundle size: Acceptable?~~ **Resolved** — tree-shaken, not a concern.
 ~~3. Build-time token→CSS-var mapping?~~ **Resolved** — ConfigProvider handles it at runtime.
+~~4. SSR approach: `@ant-design/nextjs-registry` or manual `extractStyle()`?~~ **Resolved** —
+Neither. Lowdefy renders client-side only (`_app.js` uses `dynamic(..., { ssr: false })`). No SSR
+style extraction needed. Just `StyleProvider layer` + `ConfigProvider` in the App component.
+~~5. `@layer` strategy for Tailwind?~~ **Resolved** — Pre-declare layer order in generated
+`globals.css`: `@layer theme, base, antd, components, utilities;`. Use Tailwind v4 granular
+imports. `StyleProvider layer` handles antd side. See plan Section 2.1.1.
+~~6. `class` property: String-or-object union type?~~ **Resolved** — Union type (string OR object).
+String normalizes to `{ root: value }` in the engine. Plan example fixed to show two separate
+blocks instead of duplicate keys.
+~~7. Phase ordering: Combined Phase 1+2, slots before styling?~~ **Resolved** — Yes. Phase 1+2
+combined (can't validate antd v6 without prop fixes). Slots before styling (avoids touching
+blocks twice).
+~~8. Multi-library scope: Include in this plan or separate initiative?~~ **Resolved** — Separate
+initiative. This plan is antd v6 + styling + slots + Tailwind. Multi-library comes after.
+~~9. `_theme` operator: Build-time resolution?~~ **Resolved** — Yes, resolves from YAML config at
+parse time. Simple lookup: `_theme: colorPrimary` → value from `lowdefy.yaml` theme.token.
+~~10. BackTop → FloatButton?~~ **Resolved** — Add FloatButton during Phase 1 when removing BackTop.
+Don't defer — it's the direct replacement.
+~~11. Comment block?~~ **Resolved** — Remove entirely. Don't add `@ant-design/compatible` as a
+dependency for one rarely-used block. Users who need it can use a custom plugin.
 
 **Remaining decisions:**
 
 1. **Responsive styles:** Build-time CSS generation, keep emotion for this one case, or deprecate?
 2. **`style` vs `styles.root`:** Merge or keep separate? (Review recommends: keep separate)
-3. **Phase ordering:** Combined Phase 1+2, slots before styling?
-4. **Multi-library scope:** Include in this plan or separate initiative?
-5. **`_theme` operator:** Build-time resolution from YAML config? (Review recommends: yes)
-6. **BackTop → FloatButton:** Add FloatButton in Phase 1+2 or defer?
-7. **Comment block:** Remove entirely or wrap with `@ant-design/compatible`?
-8. **SSR approach:** `@ant-design/nextjs-registry` or manual `extractStyle()`?
-9. **`class` property:** String-or-object union type — how to document clearly?
