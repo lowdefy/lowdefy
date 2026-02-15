@@ -11,6 +11,7 @@
 | **[REVISED_ARCHITECTURE.md](REVISED_ARCHITECTURE.md)** | Engine-first architecture — reuse Engine headlessly, blocks render markdown |
 | **[EXAMPLE_1_SUPPORT_TICKETS.md](EXAMPLE_1_SUPPORT_TICKETS.md)** | Full end-to-end example: support ticket CRUD with session management |
 | **[EXAMPLE_2_INVENTORY_MANAGEMENT.md](EXAMPLE_2_INVENTORY_MANAGEMENT.md)** | Full end-to-end example: inventory + PO approvals with concurrent sessions |
+| **[BUSINESS_CASE.md](BUSINESS_CASE.md)** | Business case: market research, pros/cons, competitive positioning, website strategy |
 | **takeaways/** | Per-file analysis of key Lowdefy source files relevant to MCP implementation |
 
 ## Takeaway Files
