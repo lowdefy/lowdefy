@@ -489,34 +489,68 @@ When string, the engine normalizes it to `{ root: value }`. When object, passed 
 1. `style` (object) → applied as `style` prop on BlockLayout wrapper div
 2. `class` (string/object) → applied as `className` on wrapper and `classNames` on antd component
 3. `styles` (object with sub-slot keys) → applied via antd component's `styles` semantic prop
-4. `mediaToCssObject` → **keep** for responsive style support but convert output to CSS-in-JS tokens or CSS variables instead of emotion classes
+4. `mediaToCssObject` → **remove** from runtime. Responsive style support moves to build-time CSS
+   generation (see Section 5.5)
 
-### 5.5 Responsive Styles Consideration
+### 5.5 Responsive Styles — Build-Time CSS Generation
 
-Current `mediaToCssObject` handles responsive breakpoints like:
+**Key discovery:** Lowdefy has two independent responsive systems:
+
+1. **Layout responsive** (`layout.sm.span`) — uses antd Col native responsive props via
+   `deriveLayout()`. Unaffected by the upgrade.
+2. **Style responsive** (`style.sm.padding`) — uses `mediaToCssObject` + `@emotion/css`. This is
+   what breaks when emotion is removed.
+
+**Also discovered:** The 9 blocks using `makeCssClass(styles, true)` for sub-element props
+(`bodyStyle`, `tabBarStyle`, etc.) produce plain JS objects. React inline `style` does NOT support
+`@media` queries — responsive breakpoints in sub-element styles were silently ignored. They never
+actually worked.
+
+**Solution — Build-time CSS generation:**
+
+During the Lowdefy build step, scan all `style` objects for responsive breakpoint keys. For each
+block that has them, generate a scoped CSS rule in `globals.css`:
+
 ```yaml
-style:
-  sm:
-    fontSize: 12
-  lg:
-    fontSize: 16
+# User writes:
+- id: my_card
+  type: Card
+  style:
+    padding: 64
+    sm:
+      padding: 32
 ```
 
-In the new system, responsive `style` objects can still work — they'd be converted to `@media` queries via a thin runtime wrapper or, better, via Tailwind responsive prefixes:
-
-```yaml
-# New preferred approach with Tailwind
-class: 'text-sm lg:text-base'
-
-# Still supported via style for non-Tailwind users
-style:
-  sm:
-    fontSize: 12
-  lg:
-    fontSize: 16
+```css
+/* Build generates in globals.css: */
+#bl-my_card { padding: 64px; }
+@media screen and (min-width: 576px) { #bl-my_card { padding: 32px; } }
 ```
 
-For non-Tailwind users, we keep a minimal responsive style helper (not emotion — just generates a `<style>` tag or uses CSS custom properties).
+**Build step logic:**
+1. Walk all blocks, find `style` objects with breakpoint keys (`xs`/`sm`/`md`/`lg`/`xl`/`xxl`)
+2. Extract responsive portions, generate scoped CSS rules using block ID selector (`#bl-{blockId}`)
+3. Append to generated `globals.css` (after `@layer` declarations, inside `@layer components`)
+4. Strip responsive keys from style object — remaining non-responsive props become inline `style`
+5. Same treatment for area `style` objects (selector: `#ar-{blockId}-{areaKey}`)
+
+**Edge case:** Operator-dependent responsive values (e.g., `_if` inside `style.sm`) can't be
+resolved at build time. These are rare and will be flagged as a build warning. Operators in
+non-responsive style properties still work fine as inline styles.
+
+**Long-term path:**
+```yaml
+# After Tailwind is stable — preferred responsive approach:
+class: 'p-16 sm:p-8'
+
+# Build-time CSS generation still works as backwards-compatible fallback
+style:
+  sm:
+    padding: 32
+```
+
+Deprecate responsive `style` in favor of Tailwind responsive classes after Tailwind is stable.
+Build-time CSS generation becomes the migration bridge, then gets removed.
 
 ### 5.6 Migration Path
 

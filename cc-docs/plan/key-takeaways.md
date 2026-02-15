@@ -91,26 +91,56 @@ styles client-side after hydration — same as what Lowdefy already does with em
 
 ---
 
-## The Hardest Remaining Problem
+## Responsive Styles (Resolved)
 
-### Responsive Styles Without Emotion
+### The Two Independent Responsive Systems
 
-Currently `mediaToCssObject` + `@emotion/css` handles:
-```yaml
-style:
-  sm: { fontSize: 12 }
-  lg: { fontSize: 16 }
+Lowdefy has **two separate responsive systems** — only one is affected:
+
+1. **Layout responsive** (`layout.sm.span`) — uses antd Col native responsive props via
+   `deriveLayout()`. **Not affected.** Survives the upgrade unchanged.
+2. **Style responsive** (`style.sm.padding`) — uses `mediaToCssObject` + `@emotion/css` to generate
+   CSS classes with `@media` queries. **This is what breaks when emotion is removed.**
+
+### Critical Discovery: Sub-Element Responsive Was Already Broken
+
+The 9 blocks using `makeCssClass(styles, true)` for sub-element props (`bodyStyle`, `tabBarStyle`,
+etc.) return plain JS objects. React inline `style` does NOT support `@media` queries — those
+breakpoint keys were silently ignored. **Responsive sub-element styles never actually worked.**
+
+### Actual Scope: Only Wrapper `style` and Area `style`
+
+| Use Case | Responsive Works? | Affected? |
+|----------|-------------------|-----------|
+| `layout.sm.span` | Yes (antd native) | No |
+| `style.sm.padding` (wrapper) | Yes (emotion) | **Yes** |
+| `properties.bodyStyle.sm` (sub-element) | **No — already broken** | No |
+| `areas.content.style.sm` (area) | Yes (emotion) | **Yes** |
+
+### Decision: Build-Time CSS Generation (Option A)
+
+**For the v6 upgrade:** Build-time CSS generation. During build, scan `style` objects for responsive
+breakpoint keys, generate scoped CSS rules in `globals.css`:
+
+```css
+/* Build generates: */
+#bl-my_card { padding: 64px; }
+@media screen and (min-width: 576px) { #bl-my_card { padding: 32px; } }
 ```
 
-Emotion generates a class with `@media` queries. Without emotion, options are:
-- **Build-time CSS generation:** Convert responsive style objects to a CSS file during Lowdefy
-  build. Each block gets a scoped selector. Works, but adds build complexity.
-- **Keep emotion for this one thing:** Only use emotion for responsive `style` objects. Minimal
-  footprint, but keeps the dependency.
-- **Deprecate:** Tell users to use Tailwind responsive classes (`class: 'text-sm lg:text-base'`).
-  Cleanest, but breaking change for existing users.
+**Why this option:**
+- Aligns with "build does the work, runtime stays simple" philosophy
+- Removes emotion entirely (clean break)
+- Works perfectly with `@layer` strategy
+- Doesn't depend on Tailwind being ready
+- Dynamic operator edge case (responsive values from `_if`) is low severity
 
-**Recommendation:** Build-time generation for v1. Deprecate in v2 after Tailwind is stable.
+**Edge case:** Operator-dependent responsive values (`_if` inside `style.sm`) can't be resolved at
+build time. These are rare and will be flagged as unsupported (operators in non-responsive `style`
+properties still work fine as inline styles).
+
+**Long-term path:** After Tailwind is stable, deprecate responsive `style` in favor of Tailwind
+responsive classes (`class: 'p-16 sm:p-8'`). Build-time CSS becomes the migration bridge.
 
 ---
 
@@ -180,9 +210,9 @@ slots rename, Tailwind, new blocks, theme YAML config) can come later in separat
 | `_theme` operator | Build-time resolution from YAML config |
 | BackTop → FloatButton | Phase 1 (direct replacement) |
 | Comment block | Remove entirely (no `@ant-design/compatible`) |
+| Responsive styles | Build-time CSS generation. Deprecate → Tailwind after Tailwind stable |
+| `style` vs `styles.root` | Keep separate — `style` = wrapper positioning, `styles.root` = component root |
 
 ## Decisions Still Open
 
-1. **Responsive styles:** Build-time CSS, keep emotion, or deprecate? (Recommend: build-time)
-2. **`style` vs `styles.root`:** Keep separate? (Recommend: yes)
-3. **Tailwind v4 + Next.js 13.x:** Needs early testing. Fallback: Tailwind v3.
+1. **Tailwind v4 + Next.js 13.x:** Needs early testing. Fallback: Tailwind v3.

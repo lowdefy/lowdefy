@@ -172,20 +172,20 @@ Same as Rev 1:
 
 | # | Risk | Severity | Status |
 |---|------|----------|--------|
-| 1 | Responsive `style` has no clear solution post-emotion removal | **High** | **OPEN** — last remaining decision |
+| 1 | ~~Responsive `style` has no clear solution post-emotion removal~~ | ~~High~~ | **Resolved** — build-time CSS generation. Sub-element responsive was already broken. |
 | 2 | 62 blocks need manual testing — no automated visual regression | **High** | **OPEN** — need Playwright setup |
 | 3 | ~~Scope creep: multi-library support~~ | ~~High~~ | **Resolved** — separated from this plan |
 | 4 | `class` + `style` + `styles` is three styling concepts — user confusion | **Medium** | **OPEN** — clear docs needed |
-| 5 | `properties.style` → `styles.root` distinction | **Medium** | **OPEN** — recommend keep separate |
+| 5 | ~~`properties.style` → `styles.root` distinction~~ | ~~Medium~~ | **Resolved** — keep separate. `style` = wrapper, `styles.root` = component root. |
 | 6 | ~~PageHeaderMenu/PageSiderMenu incorrectly flagged~~ | ~~Low~~ | **Resolved** — custom composites |
 | 7 | ~~`@ant-design/nextjs-registry` Pages Router~~ | ~~Medium~~ | **Resolved** — not needed, client-only rendering |
 | 8 | ~~`class` YAML example duplicate key~~ | ~~Low~~ | **Resolved** — fixed to show union type |
 | 9 | ~15 blocks missing from audit | **Medium** | **OPEN** — complete audit before Phase 1 |
 | 10 | ~~Segmented miscategorized~~ | ~~Low~~ | Note for new blocks list |
-| 11 | `@layer` pre-declaration required for Tailwind coexistence | **High** | **Resolved** — plan updated with globals.css strategy |
+| 11 | ~~`@layer` pre-declaration required for Tailwind coexistence~~ | ~~High~~ | **Resolved** — plan updated with globals.css strategy |
 | 12 | Tailwind v4 compatibility with Next.js 13.x | **Medium** | **OPEN** — needs early testing, may need v3 fallback |
 
-**Active risks:** 1, 2, 4, 5, 9, 12. Everything else resolved.
+**Active risks:** 2, 4, 9, 12. Everything else resolved.
 
 ---
 
@@ -215,7 +215,14 @@ Don't defer — it's the direct replacement.
 ~~11. Comment block?~~ **Resolved** — Remove entirely. Don't add `@ant-design/compatible` as a
 dependency for one rarely-used block. Users who need it can use a custom plugin.
 
-**Remaining decisions:**
+~~12. Responsive styles?~~ **Resolved** — Build-time CSS generation for v6 upgrade. Key insight:
+sub-element responsive (`makeCssClass(styles, true)`) was already broken — React inline styles
+don't support `@media` queries. Only wrapper `style` and area `style` actually need handling. Build
+step generates scoped CSS rules in `globals.css`. Long-term: deprecate responsive `style` in favor
+of Tailwind responsive classes after Tailwind is stable.
 
-1. **Responsive styles:** Build-time CSS generation, keep emotion for this one case, or deprecate?
-2. **`style` vs `styles.root`:** Merge or keep separate? (Review recommends: keep separate)
+~~13. `style` vs `styles.root`?~~ **Resolved** — Keep separate. `style` = wrapper/layout positioning
+(applied to the Col/wrapper div). `styles.root` = component root styling (passed to antd's
+`styles.root` semantic prop). Different targets, different concerns.
+
+**Remaining decisions:** None. All decisions resolved. Only open risks: 2, 4, 9, 12.
