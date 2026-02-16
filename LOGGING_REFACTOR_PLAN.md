@@ -1185,11 +1185,11 @@ This doesn't need to change architecturally — `handleError` is the right place
 
 **Checklist:**
 
-- [ ] Remove `formatBrowserError` function
-- [ ] Remove all error formatting logic
-- [ ] Browser logger becomes plain console wrapper: 4 methods pass-through
-- [ ] Update all affected tests
-- [ ] Run `pnpm --filter=@lowdefy/logger test`
+- [x] Remove `formatBrowserError` function
+- [x] Remove all error formatting logic
+- [x] Browser logger becomes plain console wrapper: 4 methods pass-through
+- [x] Update all affected tests
+- [x] Run `pnpm --filter=@lowdefy/logger test`
 
 ---
 
