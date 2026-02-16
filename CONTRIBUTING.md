@@ -10,13 +10,26 @@
 
 ## Starting the Lowdefy server
 
-Run Lowdefy servers locally by adding your Lowdefy config to the `app/..` folder. Use one of the following scripts to the server:
+Run Lowdefy servers locally by adding your Lowdefy config to the `app/` folder. Use one of the following scripts:
 
-- `yarn start`: Starts the production server.
-- `yarn start:dev`: Starts the production server in next development mode, useful for debugging Lowdefy code changes.
-- `yarn start:server-dev`: Starts the development server in next production mode, useful for developing your Lowdefy config locally.
+- `pnpm app:dev`: Starts the development server.
+- `pnpm app:build`: Creates a production build.
+- `pnpm app:start`: Starts the production server.
 
-> `yarn install` and `yarn build` should be executed manually during development, this allows you to build only the package you are working on. Server needs to be restarted after package rebuild.
+### Running a specific app directory
+
+`app:dev` accepts an optional `--path` parameter to run a different app directory (path relative to the repo root):
+
+```bash
+# Default — runs the app/ directory
+pnpm app:dev
+
+# Run a specific test app
+pnpm app:dev -- --path packages/build/src/tests/errors/C2-menu-missing-page
+pnpm app:dev -- --path packages/build/src/tests/success/01-minimal-config
+```
+
+This is useful for running the test example apps in `packages/build/src/tests/`.
 
 ## Asking a question
 
