@@ -44,7 +44,7 @@ describe('logClientError', () => {
     };
 
     const result = await logClientError(context, {
-      '~err': 'ConfigError',
+      name: 'ConfigError',
       message: 'Test error',
     });
 
@@ -75,7 +75,7 @@ describe('logClientError', () => {
     };
 
     const result = await logClientError(context, {
-      '~err': 'ConfigError',
+      name: 'ConfigError',
       message: 'Test error',
       configKey: 'key-123',
     });
@@ -106,7 +106,7 @@ describe('logClientError', () => {
     };
 
     const result = await logClientError(context, {
-      '~err': 'PluginError',
+      name: 'PluginError',
       message: 'Operator failed',
       configKey: 'key-123',
       pluginType: 'operator',
@@ -136,7 +136,7 @@ describe('logClientError', () => {
     };
 
     const result = await logClientError(context, {
-      '~err': 'ServiceError',
+      name: 'ServiceError',
       message: 'MongoDB: Connection refused',
       service: 'MongoDB',
     });
@@ -167,7 +167,7 @@ describe('logClientError', () => {
     };
 
     const result = await logClientError(context, {
-      '~err': 'ConfigError',
+      name: 'ConfigError',
       message: 'Test error',
       configKey: 'non-existent-key',
     });
@@ -181,7 +181,7 @@ describe('logClientError', () => {
     const loggedError = mockLogger.error.mock.calls[0][0];
     expect(loggedError.name).toBe('ConfigError');
     expect(loggedError.message).toBe('Test error');
-    expect(loggedError.source).toBeNull();
+    expect(loggedError.source).toBeUndefined();
   });
 
   test('handles error when loading maps', async () => {
@@ -195,7 +195,7 @@ describe('logClientError', () => {
     };
 
     const result = await logClientError(context, {
-      '~err': 'ConfigError',
+      name: 'ConfigError',
       message: 'Test error',
       configKey: 'key-123',
     });

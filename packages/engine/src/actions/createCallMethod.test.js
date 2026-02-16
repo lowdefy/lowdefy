@@ -14,7 +14,7 @@
   limitations under the License.
 */
 import { jest } from '@jest/globals';
-import { PluginError } from '@lowdefy/errors/client';
+import { PluginError } from '@lowdefy/errors';
 
 import testContext from '../../test/testContext.js';
 
@@ -253,7 +253,7 @@ test('CallMethod with args not an array', async () => {
     startTimestamp: { date: 0 },
     endTimestamp: { date: 0 },
   });
-  expect(res.error.error.rawMessage).toContain('"args" should be an array');
+  expect(res.error.error._message).toContain('"args" should be an array');
   expect(blockMethod.mock.calls).toEqual([]);
 });
 
@@ -521,6 +521,6 @@ test('CallMethod with method does not exist', async () => {
     startTimestamp: { date: 0 },
     endTimestamp: { date: 0 },
   });
-  expect(res.error.error.rawMessage).toContain('is a valid block method');
+  expect(res.error.error._message).toContain('is a valid block method');
   expect(blockMethod.mock.calls).toEqual([]);
 });

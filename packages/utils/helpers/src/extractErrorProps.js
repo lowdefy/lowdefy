@@ -14,17 +14,14 @@
   limitations under the License.
 */
 
-function formatUiMessage(messageOrObj) {
-  if (typeof messageOrObj === 'string') return messageOrObj;
-  if (messageOrObj?.print && typeof messageOrObj.print === 'function') {
-    return messageOrObj.print();
+function extractErrorProps(err) {
+  if (!err) return err;
+  const props = { message: err.message, name: err.name, stack: err.stack };
+  if (err.cause !== undefined) props.cause = err.cause;
+  for (const key of Object.keys(err)) {
+    props[key] = err[key];
   }
-  if (messageOrObj && (messageOrObj.name || messageOrObj.message !== undefined)) {
-    const name = messageOrObj.name || 'Error';
-    const message = messageOrObj.message ?? '';
-    return `[${name}] ${message}`;
-  }
-  return String(messageOrObj);
+  return props;
 }
 
-export default formatUiMessage;
+export default extractErrorProps;

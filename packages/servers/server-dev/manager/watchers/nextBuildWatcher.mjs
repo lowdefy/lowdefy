@@ -86,13 +86,13 @@ async function nextBuildWatcher(context) {
       })
     );
     if (!build) {
-      context.logger.ui.succeed('Reloaded app.');
+      context.logger.info({ succeed: true }, 'Reloaded app.');
       return;
     }
 
     context.shutdownServer();
     if (install) {
-      context.logger.ui.warn('Plugin dependencies have changed and will be reinstalled.');
+      context.logger.warn('Plugin dependencies have changed and will be reinstalled.');
       await context.installPlugins();
     }
     await context.nextBuild();

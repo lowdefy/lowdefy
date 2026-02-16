@@ -17,6 +17,8 @@
 import { jest } from '@jest/globals';
 import path from 'path';
 
+import { errorToDisplayString } from '@lowdefy/errors';
+
 /**
  * Custom types map for testing - includes common types used in fixtures.
  * Contains all basic blocks, loaders, common actions, operators, and connections.
@@ -93,100 +95,104 @@ const testTypesMap = {
   },
 };
 
+function formatMessage(messageOrObj) {
+  return errorToDisplayString(messageOrObj);
+}
+
 /**
  * Creates a runBuild helper function for testing build errors.
  *
  * @param {Function} build - The build function (imported after mocking writeBuildArtifact)
  * @param {string} fixturesDir - Absolute path to the fixtures directory
  * @returns {Function} runBuild helper function
- *
- * @example
- * // In test file:
- * jest.unstable_mockModule('./utils/writeBuildArtifact.js', () => ({
- *   default: () => jest.fn(),
- * }));
- * const { default: build } = await import('./index.js');
- * const runBuild = createRunBuild(build, path.join(__dirname, 'build-errors'));
- *
- * // Then in tests:
- * const result = await runBuild('A1-invalid-connection-type', 'prod');
- * expect(result.errors).toContain('...');
  */
 function createRunBuild(build, fixturesDir) {
   /**
    * Runs build with a specific fixture directory and stage.
    * Returns captured errors, warnings, and the thrown error (if any).
-   *
-   * @param {string} fixtureDir - Name of the fixture directory (e.g., 'A1-invalid-connection-type')
-   * @param {string} [stage='prod'] - Build stage ('dev' or 'prod')
-   * @returns {Promise<{errors: string[], warnings: string[], thrownError: Error|null, logger: Object}>}
    */
   return async function runBuild(fixtureDir, stage = 'prod') {
     const configDir = path.join(fixturesDir, fixtureDir);
     const errors = [];
     const warnings = [];
-    let pendingLogLine = null; // Captures log line to combine with next warn/error
 
-    function formatMessage(messageOrObj) {
-      if (typeof messageOrObj === 'string') return messageOrObj;
-      if (messageOrObj?.print && typeof messageOrObj.print === 'function') {
-        return messageOrObj.print();
+    // Create warn/error handlers that handle both pino-style and error-object calls
+    function handleWarn(objOrMsg, maybeMsg) {
+      // Pino-style: (mergeObj, msg) — extract source from err in merging object
+      if (typeof objOrMsg === 'object' && objOrMsg !== null && maybeMsg !== undefined) {
+        const err = objOrMsg.err;
+        const source = err?.source ?? objOrMsg.source ?? null;
+        const formatted = source ? `${source}\n${maybeMsg}` : maybeMsg;
+        warnings.push(formatted);
+        return;
       }
-      if (messageOrObj && (messageOrObj.name || messageOrObj.message !== undefined)) {
-        const name = messageOrObj.name || 'Error';
-        const message = messageOrObj.message ?? '';
-        return `[${name}] ${message}`;
+      // Error-like object (ConfigWarning, ConfigError) — called directly
+      if (
+        typeof objOrMsg !== 'string' &&
+        objOrMsg &&
+        (objOrMsg.name || objOrMsg.message !== undefined)
+      ) {
+        const source = objOrMsg.source ?? null;
+        const message = formatMessage(objOrMsg);
+        const formatted = source ? `${source}\n${message}` : message;
+        warnings.push(formatted);
+        return;
       }
-      return String(messageOrObj);
+      // Plain string
+      const message = typeof objOrMsg === 'string' ? objOrMsg : '';
+      if (message) warnings.push(message);
+    }
+
+    function handleError(objOrMsg, maybeMsg) {
+      // Pino-style: (mergeObj, msg) — extract source from err in merging object
+      if (typeof objOrMsg === 'object' && objOrMsg !== null && maybeMsg !== undefined) {
+        const err = objOrMsg.err;
+        const source = err?.source ?? objOrMsg.source ?? null;
+        const formatted = source ? `${source}\n${maybeMsg}` : maybeMsg;
+        errors.push(formatted);
+        return;
+      }
+      // Error-like object
+      if (
+        typeof objOrMsg !== 'string' &&
+        objOrMsg &&
+        (objOrMsg.name || objOrMsg.message !== undefined)
+      ) {
+        const source = objOrMsg.source ?? null;
+        const message = formatMessage(objOrMsg);
+        const formatted = source ? `${source}\n${message}` : message;
+        errors.push(formatted);
+        return;
+      }
+      // Pino-style: plain string or Error
+      let message;
+      if (objOrMsg instanceof Error) {
+        message = objOrMsg.message;
+      } else {
+        message = objOrMsg;
+      }
+      if (message) errors.push(message);
+    }
+
+    const warnFn = jest.fn(handleWarn);
+    const errorFn = jest.fn(handleError);
+    const infoFn = jest.fn();
+    infoFn.blue = jest.fn();
+
+    // Attach color sub-methods to warn and error
+    for (const color of ['red', 'green', 'yellow', 'blue', 'gray', 'white']) {
+      warnFn[color] = jest.fn(handleWarn);
+      errorFn[color] = jest.fn(handleError);
     }
 
     const logger = {
-      info: jest.fn(),
-      log: jest.fn(),
-      warn: jest.fn((objOrMsg, maybeMsg) => {
-        // Handle pino-style calls: logger.warn({ print }, message) or logger.warn(message)
-        let message = objOrMsg;
-        if (typeof objOrMsg === 'object' && objOrMsg !== null) {
-          message = maybeMsg ?? '';
-        }
-        if (message) warnings.push(message);
-      }),
-      error: jest.fn((objOrMsg, maybeMsg) => {
-        // Handle pino-style calls
-        let message;
-        if (objOrMsg instanceof Error) {
-          message = objOrMsg.message;
-        } else if (typeof objOrMsg === 'object' && objOrMsg !== null) {
-          message = maybeMsg ?? '';
-        } else {
-          message = objOrMsg;
-        }
-        if (message) errors.push(message);
-      }),
-      succeed: jest.fn(),
-    };
-
-    // Add ui methods that handle ConfigWarning/ConfigError objects
-    logger.ui = {
-      warn: (messageOrObj) => {
-        const source = messageOrObj?.source ?? null;
-        const message = formatMessage(messageOrObj);
-        const formatted = source ? `${source}\n${message}` : message;
-        warnings.push(formatted);
-      },
-      error: (messageOrObj) => {
-        const source = messageOrObj?.source ?? null;
-        const message = formatMessage(messageOrObj);
-        const formatted = source ? `${source}\n${message}` : message;
-        errors.push(formatted);
-      },
-      link: jest.fn(),
-      log: jest.fn(),
-      info: jest.fn(),
-      dim: jest.fn(),
+      info: infoFn,
+      warn: warnFn,
+      error: errorFn,
       debug: jest.fn(),
-      spin: jest.fn(),
-      succeed: jest.fn(),
+      child: function () {
+        return this;
+      },
     };
 
     let thrownError = null;
@@ -204,28 +210,22 @@ function createRunBuild(build, fixturesDir) {
     } catch (err) {
       thrownError = err;
       // Extract errors embedded in the thrown message (format: "✖ [Config Error] ...")
-      // This handles the case where errors are bundled in the thrown message to avoid interleaving
-      // Each error is multi-line: message line + indented location lines
       if (err.message) {
         const lines = err.message.split('\n');
         let currentError = null;
         for (const line of lines) {
           if (line.startsWith('✖ [Config Error]')) {
-            // Start of a new error - save previous if exists
             if (currentError !== null) {
               errors.push(currentError);
             }
             currentError = line.slice(2); // Remove "✖ " prefix
           } else if (currentError !== null && line.startsWith('  ')) {
-            // Continuation line (indented) - append to current error
             currentError += '\n' + line;
           } else if (currentError !== null) {
-            // Non-continuation line - save current error and reset
             errors.push(currentError);
             currentError = null;
           }
         }
-        // Don't forget the last error
         if (currentError !== null) {
           errors.push(currentError);
         }

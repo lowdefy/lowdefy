@@ -17,10 +17,8 @@
 /**
  * Base error class for configuration errors (invalid YAML, schema violations, validation errors).
  *
- * This is the environment-agnostic base class. For environment-specific behavior:
- * - Build-time: Use @lowdefy/errors/build (sync resolution via keyMap/refMap)
- * - Server-side: Use @lowdefy/errors/server (re-exports base)
- * - Client-side: Use @lowdefy/errors/client (async resolution via API)
+ * Import from @lowdefy/errors for general use, or @lowdefy/errors/build for
+ * build-time behavior (sync resolution via keyMap/refMap).
  *
  * @example
  * // Simple string (for plugins - configKey added by interface layer)
@@ -34,8 +32,6 @@
  *   location: { source: 'pages/home.yaml:42', link: '/path/to/pages/home.yaml:42' }
  * });
  */
-import formatErrorMessage from './formatErrorMessage.js';
-
 class ConfigError extends Error {
   /**
    * Creates a ConfigError instance with formatted message.
@@ -81,34 +77,6 @@ class ConfigError extends Error {
     if (error?.stack) {
       this.stack = error.stack;
     }
-  }
-
-  print() {
-    return formatErrorMessage(this);
-  }
-
-  /**
-   * Serializes the error for transport (e.g., client to server).
-   * @returns {Object} Serialized error data with type marker
-   */
-  serialize() {
-    return {
-      '~err': 'ConfigError',
-      message: this.message,
-      configKey: this.configKey,
-    };
-  }
-
-  /**
-   * Deserializes error data back into a ConfigError.
-   * @param {Object} data - Serialized error data
-   * @returns {ConfigError}
-   */
-  static deserialize(data) {
-    return new ConfigError({
-      message: data.message,
-      configKey: data.configKey,
-    });
   }
 }
 

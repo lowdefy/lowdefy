@@ -14,8 +14,10 @@
   limitations under the License.
 */
 
-// Map pino numeric levels to print method names
-const pinoLevelToPrint = {
+import { ConfigError, LowdefyError, PluginError, ServiceError, UserError } from '@lowdefy/errors';
+
+// Map pino numeric levels to level names
+const pinoLevelToName = {
   10: 'debug', // trace
   20: 'debug',
   30: 'info',
@@ -24,39 +26,57 @@ const pinoLevelToPrint = {
   60: 'error', // fatal
 };
 
+const lowdefyErrorTypes = {
+  ConfigError,
+  LowdefyError,
+  PluginError,
+  ServiceError,
+  UserError,
+};
+
+function reconstructError(flatObj) {
+  const ErrorClass = lowdefyErrorTypes[flatObj.name] || Error;
+  const error = Object.create(ErrorClass.prototype);
+  for (const [k, v] of Object.entries(flatObj)) {
+    error[k] = v;
+  }
+  return error;
+}
+
 function createStdOutLineHandler({ context }) {
-  const ui = context?.logger?.ui ??
-    context?.print ?? {
-      log: (text) => console.log(text),
-      dim: (text) => console.log(text),
-      info: (text) => console.info(text),
-      warn: (text) => console.warn(text),
-      error: (text) => console.error(text),
-      debug: (text) => console.debug(text),
-      link: (text) => console.info(text),
-      spin: (text) => console.log(text),
-      succeed: (text) => console.log(text),
-    };
+  const logger = context?.logger ?? {
+    error: (text) => console.error(text),
+    warn: (text) => console.warn(text),
+    info: (text) => console.info(text),
+    debug: (text) => console.debug(text),
+  };
 
   function stdOutLineHandler(line) {
+    let parsed;
     try {
-      const { print, level, msg, source, err } = JSON.parse(line);
-      const printLevel = print ?? pinoLevelToPrint[level] ?? 'info';
-
-      if (msg == null || msg === '' || msg === 'undefined') {
-        ui.log(line);
-        return;
-      }
-
-      const resolvedSource = err?.source ?? source;
-      if (resolvedSource && (printLevel === 'error' || printLevel === 'warn')) {
-        ui.link(resolvedSource);
-      }
-
-      ui[printLevel]?.(msg);
-    } catch (error) {
-      ui.log(line);
+      parsed = JSON.parse(line);
+    } catch {
+      logger.info(line);
+      return;
     }
+
+    const levelName = pinoLevelToName[parsed.level] ?? 'info';
+
+    if (parsed.err) {
+      logger[levelName](reconstructError(parsed.err));
+      return;
+    }
+
+    const msg = typeof parsed.msg === 'string' ? parsed.msg : null;
+    if (msg == null || msg === '') {
+      logger.info(line);
+      return;
+    }
+
+    logger[levelName](
+      { source: parsed.source, color: parsed.color, spin: parsed.spin, succeed: parsed.succeed },
+      msg
+    );
   }
   return stdOutLineHandler;
 }

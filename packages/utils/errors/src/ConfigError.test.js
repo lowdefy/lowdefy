@@ -114,19 +114,3 @@ test('ConfigError constructor with error and location', () => {
   expect(configError.source).toBe('config.yaml:10');
   expect(configError.resolved).toBe(true);
 });
-
-test('ConfigError serialize returns message and configKey', () => {
-  const error = new ConfigError({ message: 'Test error', configKey: 'abc123' });
-  expect(error.serialize()).toEqual({
-    '~err': 'ConfigError',
-    message: 'Test error',
-    configKey: 'abc123',
-  });
-});
-
-test('ConfigError deserialize creates error from data', () => {
-  const data = { message: 'Test error', configKey: 'abc123' };
-  const error = ConfigError.deserialize(data);
-  expect(error.message).toBe('Test error');
-  expect(error.configKey).toBe('abc123');
-});

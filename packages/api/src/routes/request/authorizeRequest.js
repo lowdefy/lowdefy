@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigError } from '@lowdefy/errors/server';
+import { ConfigError } from '@lowdefy/errors';
 
 function authorizeRequest({ authorize, logger }, { requestConfig }) {
   if (!authorize(requestConfig)) {

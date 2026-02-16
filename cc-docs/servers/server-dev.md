@@ -203,12 +203,12 @@ Cross-process communication uses files in the build directory:
 ```javascript
 function lowdefyBuild({ directories, logger, options, pageCache }) {
   return async () => {
-    logger.ui.spin('Building config...');
+    logger.info('Building config...', { spin: true });
     const customTypesMap = await createCustomPluginTypesMap({ directories, logger });
     await pageCache.acquireSkeletonLock();
     try {
       const result = await shallowBuild({ customTypesMap, directories, logger, ... });
-      logger.ui.log('Built config.');
+      logger.info('Built config.');
       return result; // { components, pageRegistry, fileDependencyMap, context }
     } finally {
       pageCache.invalidateAll();
@@ -330,7 +330,7 @@ The manager spawns the Next.js server with `stdio: ['ignore', 'inherit', 'pipe']
 - **stderr** is piped — the manager formats stderr lines through its own logger
 - **stdin** is ignored
 
-This eliminates the need for a dev stdout line handler to parse and re-emit server logs. The server's pino logger includes a `print` mixin that adds a `print` field to every JSON line, so the CLI can render each line correctly (error → red, link → blue, spin → spinner, etc.).
+This eliminates the need for a dev stdout line handler to parse and re-emit server logs. The server's pino logger emits JSON with optional `color`/`spin`/`succeed` fields, so the CLI can render each line correctly (error → red, blue → source link, spin → spinner, etc.).
 
 ```javascript
 // startServer.mjs
@@ -351,9 +351,9 @@ The server-dev uses two loggers:
 | Logger | Package | Purpose |
 |--------|---------|---------|
 | Manager logger | `createDevLogger` from `@lowdefy/logger/dev` | Build orchestration, watcher output |
-| Server logger | `createNodeLogger` + `wrapErrorLogger` from `@lowdefy/logger/node` | HTTP request logs, runtime errors |
+| Server logger | `createNodeLogger` from `@lowdefy/logger/node` | HTTP request logs, runtime errors |
 
-Both emit pino JSON with `print` mixin to stdout. The CLI reads this JSON and renders it via `createStdOutLineHandler` → `createPrint` (ora spinners, colored output).
+Both emit pino JSON with optional `color`/`spin`/`succeed` fields to stdout. The CLI reads this JSON and renders it via `createStdOutLineHandler` → `createPrint` (ora spinners, colored output).
 
 See [@lowdefy/logger](../utils/logger.md) for details.
 

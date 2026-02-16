@@ -18,7 +18,6 @@ import { getPageConfig } from '@lowdefy/api';
 
 import apiWrapper from '../../../lib/server/apiWrapper.js';
 import buildPageIfNeeded from '../../../lib/server/jitPageBuilder.js';
-import logError from '../../../lib/server/log/logError.js';
 
 async function handler({ context, req, res }) {
   const { pageId } = req.query;
@@ -34,7 +33,7 @@ async function handler({ context, req, res }) {
     const rawErrors = error.buildErrors ?? [error];
     const errors = [];
     for (const err of rawErrors) {
-      await logError({ context, error: err });
+      await context.handleError(err);
       errors.push({
         type: err.name ?? 'Error',
         message: err.message,

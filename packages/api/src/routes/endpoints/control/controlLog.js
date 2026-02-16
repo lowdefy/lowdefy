@@ -15,7 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { PluginError } from '@lowdefy/errors/server';
+import { PluginError } from '@lowdefy/errors';
 
 async function controlLog(context, routineContext, { control }) {
   const { endpointId, logger, evaluateOperators } = context;

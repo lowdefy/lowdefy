@@ -18,7 +18,7 @@ import { spawnProcess } from '@lowdefy/node-utils';
 
 function nextBuild({ bin, logger }) {
   return async () => {
-    logger.ui.spin('Building app...');
+    logger.info({ spin: true }, 'Building app...');
     const errorLines = [];
     try {
       await spawnProcess({
@@ -39,7 +39,7 @@ function nextBuild({ bin, logger }) {
       error.hideStack = true;
       throw error;
     }
-    logger.ui.log('Built app.');
+    logger.info('Built app.');
   };
 }
 

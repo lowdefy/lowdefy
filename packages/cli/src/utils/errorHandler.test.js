@@ -17,12 +17,12 @@
 import { jest } from '@jest/globals';
 
 jest.unstable_mockModule('@lowdefy/logger/cli', () => {
-  const ui = {
+  const logger = {
     error: jest.fn(),
+    warn: jest.fn(),
     info: jest.fn(),
-    link: jest.fn(),
+    debug: jest.fn(),
   };
-  const logger = { ui };
   const createCliLogger = jest.fn(() => logger);
   return {
     default: createCliLogger,
@@ -53,7 +53,7 @@ test('Print and log error with full context', async () => {
   };
   await errorHandler({ context, error });
   const logger = createCliLogger.mock.results[0].value;
-  expect(logger.ui.error.mock.calls).toEqual([['Test error']]);
+  expect(logger.error.mock.calls).toEqual([[error]]);
   const axiosArguments = axios.request.mock.calls[0][0];
   expect(axiosArguments.headers).toEqual({
     'User-Agent': 'Lowdefy CLI vcliVersion',
@@ -80,7 +80,7 @@ test('Print and log error with starting context', async () => {
   await errorHandler({ context, error });
 
   const logger = createCliLogger.mock.results[0].value;
-  expect(logger.ui.error.mock.calls).toEqual([['Test error']]);
+  expect(logger.error.mock.calls).toEqual([[error]]);
   const axiosArguments = axios.request.mock.calls[0][0];
   expect(axiosArguments.headers).toEqual({
     'User-Agent': 'Lowdefy CLI vcliVersion',
@@ -110,7 +110,7 @@ test('Do not log error if telemetry is disabled', async () => {
   await errorHandler({ context, error });
 
   const logger = createCliLogger.mock.results[0].value;
-  expect(logger.ui.error.mock.calls).toEqual([['Test error']]);
+  expect(logger.error.mock.calls).toEqual([[error]]);
   expect(axios.request.mock.calls).toEqual([]);
 });
 
@@ -131,63 +131,7 @@ test('Pass if logError fails', async () => {
   };
   await errorHandler({ context, error });
   const logger = createCliLogger.mock.results[0].value;
-  expect(logger.ui.error.mock.calls).toEqual([['Test error']]);
+  expect(logger.error.mock.calls).toEqual([[error]]);
   expect(axios.request.mock.calls.length).toBe(1);
   expect(didThrow).toBe(true);
 });
-
-// test('Catch error synchronous function', async () => {
-//   const fn = jest.fn(() => {
-//     throw new Error('Error');
-//   });
-//   const wrapped = errorHandler(fn);
-//   await wrapped();
-//   expect(fn).toHaveBeenCalled();
-
-//   const error =
-// });
-
-// test('Catch error asynchronous function', async () => {
-//   const fn = jest.fn(async () => {
-//     await wait(3);
-//     throw new Error('Async Error');
-//   });
-//   const wrapped = errorHandler(fn);
-//   await wrapped();
-//   expect(fn).toHaveBeenCalled();
-//   expect(print.error.mock.calls).toEqual([['Async Error']]);
-//   const axiosArguments = axios.request.mock.calls[0][0];
-//   expect(axiosArguments.headers).toEqual({
-//     'User-Agent': 'Lowdefy CLI vcliVersion',
-//   });
-//   expect(axiosArguments.url).toEqual('https://api.lowdefy.net/errors');
-//   expect(axiosArguments.method).toEqual('post');
-//   expect(axiosArguments.data.cliVersion).toEqual('cliVersion');
-//   expect(axiosArguments.data.message).toEqual('Async Error');
-//   expect(axiosArguments.data.name).toEqual('Error');
-//   expect(axiosArguments.data.source).toEqual('cli');
-//   expect(axiosArguments.data.stack).toMatch('Error: Async Error');
-// });
-
-// test('Catch error synchronous function, stay alive', async () => {
-//   const fn = jest.fn(() => {
-//     throw new Error('Error');
-//   });
-//   const wrapped = errorHandler(fn, { stayAlive: true });
-//   const res = await wrapped();
-//   expect(res).toBe(undefined);
-//   expect(fn).toHaveBeenCalled();
-//   expect(print.error.mock.calls).toEqual([['Error']]);
-// });
-
-// test('Catch error asynchronous function, stay alive', async () => {
-//   const fn = jest.fn(async () => {
-//     await wait(3);
-//     throw new Error('Async Error');
-//   });
-//   const wrapped = errorHandler(fn, { stayAlive: true });
-//   const res = await wrapped();
-//   expect(res).toBe(undefined);
-//   expect(fn).toHaveBeenCalled();
-//   expect(print.error.mock.calls).toEqual([['Async Error']]);
-// });

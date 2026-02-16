@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { UserError } from '@lowdefy/errors/client';
+import { UserError } from '@lowdefy/errors';
 
 import getBlockMatcher from '../getBlockMatcher.js';
 

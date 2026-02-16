@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigError } from '@lowdefy/errors/server';
+import { ConfigError } from '@lowdefy/errors';
 
 async function getRequestConfig({ logger, readConfigFile }, { pageId, requestId }) {
   const request = await readConfigFile(`pages/${pageId}/requests/${requestId}.json`);

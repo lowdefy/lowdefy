@@ -25,7 +25,7 @@ function validateLinkReferences({ linkActionRefs, pageIds, context }) {
     }
 
     if (!pageIdSet.has(pageId)) {
-      context.logger.warn({
+      context.handleWarning({
         message: `Page "${pageId}" not found. Link on page "${sourcePageId}" references non-existent page.`,
         configKey: action['~k'],
         prodError: true,

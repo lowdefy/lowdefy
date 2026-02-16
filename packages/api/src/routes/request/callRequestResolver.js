@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigError, PluginError, ServiceError } from '@lowdefy/errors/server';
+import { ConfigError, PluginError, ServiceError } from '@lowdefy/errors';
 
 async function callRequestResolver(
   { blockId, endpointId, logger, pageId, payload },

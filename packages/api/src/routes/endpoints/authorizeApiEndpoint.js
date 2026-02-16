@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigError } from '@lowdefy/errors/server';
+import { ConfigError } from '@lowdefy/errors';
 
 function authorizeApiEndpoint({ authorize, logger }, { endpointConfig }) {
   if (!authorize(endpointConfig)) {

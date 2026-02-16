@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigError, PluginError } from '@lowdefy/errors/client';
+import { ConfigError, PluginError } from '@lowdefy/errors';
 import { applyArrayIndices, serializer, type } from '@lowdefy/helpers';
 
 class WebParser {

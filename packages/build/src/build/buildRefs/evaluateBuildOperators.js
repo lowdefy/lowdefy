@@ -38,7 +38,7 @@ function evaluateBuildOperators({ context, input, refDef }) {
   });
   if (errors.length > 0) {
     errors.forEach((error) => {
-      context.logger.warn({
+      context.handleWarning({
         message: error.message,
         received: error.received,
         operatorLocation: error.operatorLocation,

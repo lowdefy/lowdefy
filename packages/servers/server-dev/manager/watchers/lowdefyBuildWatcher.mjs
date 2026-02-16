@@ -63,7 +63,7 @@ function lowdefyBuildWatcher(context) {
           // (which has its own PageCache) knows which pages to rebuild.
           const invalidationPath = path.join(context.directories.build, 'invalidatePages.json');
           fs.writeFileSync(invalidationPath, JSON.stringify([...affectedPages]));
-          context.logger.ui.log(
+          context.logger.info(
             `Invalidated ${affectedPages.size} page(s): ${[...affectedPages].join(', ')}`
           );
         } else {

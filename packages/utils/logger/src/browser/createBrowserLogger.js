@@ -14,53 +14,13 @@
   limitations under the License.
 */
 
-import formatUiMessage from '../formatUiMessage.js';
-
-function formatBrowserError(errorOrMessage) {
-  if (typeof errorOrMessage === 'string') return errorOrMessage;
-  if (errorOrMessage?.print) return errorOrMessage.print();
-  if (errorOrMessage && (errorOrMessage.name || errorOrMessage.message !== undefined)) {
-    const name = errorOrMessage.name || 'Error';
-    const message = errorOrMessage.message ?? '';
-    return `[${name}] ${message}`;
-  }
-  return errorOrMessage;
-}
-
 function createBrowserLogger() {
-  const logger = {
-    error: (errorOrMessage, ...args) => {
-      if (args.length > 0) {
-        console.error(errorOrMessage, ...args);
-        return;
-      }
-      console.error(formatBrowserError(errorOrMessage));
-    },
+  return {
+    error: (...args) => console.error(...args),
     warn: (...args) => console.warn(...args),
     info: (...args) => console.info(...args),
     debug: (...args) => console.debug(...args),
-    log: (...args) => console.log(...args),
   };
-
-  logger.ui = {
-    log: (text) => logger.log(text),
-    dim: (text) => logger.log(text),
-    info: (text) => logger.info(text),
-    warn: (messageOrObj) => {
-      if (messageOrObj?.source) logger.info(messageOrObj.source);
-      logger.warn(formatUiMessage(messageOrObj));
-    },
-    error: (messageOrObj) => {
-      if (messageOrObj?.source) logger.info(messageOrObj.source);
-      logger.error(formatUiMessage(messageOrObj));
-    },
-    debug: (text) => logger.debug(text),
-    link: (text) => logger.info(text),
-    spin: (text) => logger.info(text),
-    succeed: (text) => logger.info(text),
-  };
-
-  return logger;
 }
 
 export default createBrowserLogger;

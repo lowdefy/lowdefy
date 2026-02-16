@@ -1,6 +1,8 @@
 ---
 '@lowdefy/errors': minor
+'@lowdefy/helpers': minor
 '@lowdefy/api': patch
+'@lowdefy/client': patch
 '@lowdefy/operators': patch
 '@lowdefy/build': patch
 ---
@@ -9,10 +11,8 @@ refactor: Consolidate error classes into @lowdefy/errors package with environmen
 
 **Error Package Restructure**
 
-- New `@lowdefy/errors` package with environment-specific subpaths:
+- New `@lowdefy/errors` package with all error classes (`ConfigError`, `PluginError`, `ServiceError`, `UserError`, `LowdefyError`, `ConfigWarning`)
   - `@lowdefy/errors/build` - Build-time errors with sync resolution via keyMap/refMap
-  - `@lowdefy/errors/server` - Server-side errors (re-exports base classes)
-  - `@lowdefy/errors/client` - Client-side errors with async resolution via API
 - Moved ConfigMessage, resolveConfigLocation from node-utils to errors/build
 
 **ConfigError String Overload**
@@ -36,12 +36,11 @@ refactor: Consolidate error classes into @lowdefy/errors package with environmen
 
 - ConfigError and PluginError now extract `received` and `configKey` from the wrapped error:
   ```javascript
-  new ConfigError({ error: plainError }) // extracts plainError.received and plainError.configKey
-  new PluginError({ error: plainError }) // same extraction
+  new ConfigError({ error: plainError }); // extracts plainError.received and plainError.configKey
+  new PluginError({ error: plainError }); // same extraction
   ```
 
-**Error Message Pattern**
+**Error Display**
 
-- All error classes have `.print()` method using shared `formatErrorMessage()`
-- `formatErrorMessage()` appends `Received: <JSON>` when `error.received` is defined
+- `errorToDisplayString()` formats errors for display, appending `Received: <JSON>` when `error.received` is defined
 - `rawMessage` stores the original unformatted message on PluginError

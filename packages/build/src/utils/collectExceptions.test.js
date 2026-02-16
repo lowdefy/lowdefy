@@ -91,7 +91,7 @@ test('collectExceptions collects multiple errors', () => {
   expect(context.errors[1].message).toBe('Second error');
 });
 
-test('collectExceptions includes location information', () => {
+test('collectExceptions collects error with configKey for later resolution', () => {
   const context = {
     errors: [],
     logger: mockLogger,
@@ -107,14 +107,13 @@ test('collectExceptions includes location information', () => {
   const error = new ConfigError({
     message: 'Invalid block type',
     configKey: 'abc123',
-    context,
   });
 
   collectExceptions(context, error);
 
   expect(context.errors).toHaveLength(1);
   expect(context.errors[0]).toBeInstanceOf(ConfigError);
-  expect(context.errors[0].source).toBe('/app/pages/home.yaml:10');
+  expect(context.errors[0].configKey).toBe('abc123');
   expect(context.errors[0].message).toBe('Invalid block type');
 });
 
@@ -158,33 +157,6 @@ test('collectExceptions with no configKey', () => {
   expect(context.errors[0]).toBeInstanceOf(ConfigError);
   expect(context.errors[0].source).toBeNull();
   expect(context.errors[0].message).toBe('Error without configKey');
-});
-
-test('collectExceptions deduplicates by source', () => {
-  const context = {
-    errors: [],
-    seenSourceLines: new Set(),
-    keyMap: {
-      abc123: { key: 'pages.0.blocks.0.type', '~r': 'ref1', '~l': 10 },
-    },
-    refMap: {
-      ref1: { path: 'pages/home.yaml' },
-    },
-    directories: { config: '/app' },
-  };
-
-  // Same source location - second should be deduplicated
-  collectExceptions(
-    context,
-    new ConfigError({ message: 'First error', configKey: 'abc123', context })
-  );
-  collectExceptions(
-    context,
-    new ConfigError({ message: 'Second error', configKey: 'abc123', context })
-  );
-
-  expect(context.errors).toHaveLength(1);
-  expect(context.errors[0].message).toBe('First error');
 });
 
 test('collectExceptions skips suppressed errors', () => {

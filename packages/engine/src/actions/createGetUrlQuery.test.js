@@ -14,7 +14,7 @@
   limitations under the License.
 */
 import { jest } from '@jest/globals';
-import { PluginError } from '@lowdefy/errors/client';
+import { PluginError } from '@lowdefy/errors';
 
 import testContext from '../../test/testContext.js';
 
@@ -181,7 +181,7 @@ test('getUrlQuery params is none', async () => {
     startTimestamp: { date: 0 },
     success: false,
   });
-  expect(res.error.error.rawMessage).toContain(
+  expect(res.error.error._message).toContain(
     'params must be of type string, integer, boolean or object'
   );
 });
@@ -340,7 +340,7 @@ test('getUrlQuery params.key is not string or int', async () => {
     startTimestamp: { date: 0 },
     success: false,
   });
-  expect(res.error.error.rawMessage).toContain('params.key must be of type string or integer');
+  expect(res.error.error._message).toContain('params.key must be of type string or integer');
 });
 
 test('getUrlQuery params.key is some', async () => {

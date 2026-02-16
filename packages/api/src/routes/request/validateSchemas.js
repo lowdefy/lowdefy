@@ -16,7 +16,7 @@
 
 import { validate } from '@lowdefy/ajv';
 
-import { ConfigError } from '@lowdefy/errors/server';
+import { ConfigError } from '@lowdefy/errors';
 
 function validateSchemas(
   { logger },

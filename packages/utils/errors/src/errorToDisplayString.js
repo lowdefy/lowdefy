@@ -14,25 +14,21 @@
   limitations under the License.
 */
 
-function formatErrorMessage(error, { includePrefix = true } = {}) {
+function errorToDisplayString(error) {
   if (typeof error === 'string') return error;
+  if (error?.message === undefined) return String(error);
 
-  let message = error?.message || error?.rawMessage || error?.cause?.message || 'Unknown error';
+  const name = error.name || 'Error';
+  let msg = `[${name}] ${error.message}`;
 
-  if (error?.received !== undefined) {
+  if (error.received !== undefined) {
     try {
-      message = `${message} Received: ${JSON.stringify(error.received)}`;
+      msg = `${msg} Received: ${JSON.stringify(error.received)}`;
     } catch {
-      message = `${message} Received: [unserializable]`;
+      msg = `${msg} Received: [unserializable]`;
     }
   }
-
-  if (includePrefix) {
-    const name = error?.name || 'Error';
-    return `[${name}] ${message}`;
-  }
-
-  return message;
+  return msg;
 }
 
-export default formatErrorMessage;
+export default errorToDisplayString;

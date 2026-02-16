@@ -72,7 +72,7 @@ async function build(options) {
     } catch (err) {
       // Handle ConfigError from buildRefs (e.g., missing _ref files)
       if (err instanceof ConfigError) {
-        context.logger.error(err);
+        context.handleError(err);
         const error = new Error('Build failed with 1 error(s). See above for details.');
         error.isFormatted = true;
         error.hideStack = true;

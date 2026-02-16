@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigError, PluginError, UserError } from '@lowdefy/errors/client';
+import { ConfigError, errorToDisplayString, PluginError, UserError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 import getActionMethods from './actions/getActionMethods.js';
 
@@ -31,7 +31,7 @@ class Actions {
   }
 
   logActionError({ error, action }) {
-    const logError = this.context._internal.lowdefy._internal.logError;
+    const handleError = this.context._internal.lowdefy._internal.handleError;
     const actionId = action?.id || '';
 
     // Deduplicate by error message + action id
@@ -43,13 +43,13 @@ class Actions {
 
     // User-facing errors log to browser console only, never to terminal
     if (error instanceof UserError) {
-      console.error(error.print());
+      console.error(errorToDisplayString(error));
       return;
     }
 
-    // ConfigError, PluginError, ServiceError - use logError (-> terminal)
-    if (logError) {
-      logError(error);
+    // ConfigError, PluginError, ServiceError - use handleError (-> terminal)
+    if (handleError) {
+      handleError(error);
     }
   }
 

@@ -53,8 +53,6 @@ const SERVICE_ERROR_CODES = new Set([
  * }
  * // error.message = "[Service Error] MongoDB: Connection refused. The service may be down..."
  */
-import formatErrorMessage from './formatErrorMessage.js';
-
 class ServiceError extends Error {
   /**
    * Creates a ServiceError instance with formatted message.
@@ -81,6 +79,7 @@ class ServiceError extends Error {
 
     super(formattedMessage, { cause: error });
     this.name = 'ServiceError';
+    this._message = baseMessage;
     this.service = service;
     this.code = errorCode;
     this.statusCode = errorStatusCode;
@@ -153,42 +152,6 @@ class ServiceError extends Error {
     }
 
     return error.message;
-  }
-
-  print() {
-    return formatErrorMessage(this);
-  }
-
-  /**
-   * Serializes the error for transport (e.g., client to server).
-   * @returns {Object} Serialized error data with type marker
-   */
-  serialize() {
-    return {
-      '~err': 'ServiceError',
-      message: this.message,
-      service: this.service,
-      code: this.code,
-      statusCode: this.statusCode,
-    };
-  }
-
-  /**
-   * Deserializes error data back into a ServiceError.
-   * Note: message already contains service prefix, so we don't pass service
-   * to avoid double-prefixing.
-   * @param {Object} data - Serialized error data
-   * @returns {ServiceError}
-   */
-  static deserialize(data) {
-    const error = new ServiceError({
-      message: data.message,
-      code: data.code,
-      statusCode: data.statusCode,
-    });
-    // Set service separately to preserve it without re-prefixing the message
-    error.service = data.service;
-    return error;
   }
 }
 
