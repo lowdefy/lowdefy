@@ -10,3 +10,4 @@
 |------|---------|
 | [README.md](./README.md) | This index |
 | [plan.md](./plan.md) | Full investigation plan with findings, feasibility analysis, and proposed approaches |
+| [review.md](./review.md) | Critical technical review of the plan — blast radius, risk analysis, phasing critique |
