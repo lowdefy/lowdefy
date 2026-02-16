@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { errorToDisplayString, resolveErrorLocation } from '@lowdefy/errors/build';
+import { resolveErrorLocation } from '@lowdefy/errors/build';
 
 function createBuildHandleError({ context }) {
   return function handleError(error) {
@@ -24,10 +24,10 @@ function createBuildHandleError({ context }) {
         refMap: context.refMap,
         configDirectory: context.directories?.config,
       });
-      context.logger.error({ err: error }, errorToDisplayString(error));
+      context.logger.error(error);
     } catch {
       try {
-        context.logger.error({ err: error }, error.message);
+        context.logger.error(error);
       } catch {
         console.error(error);
       }

@@ -5,6 +5,8 @@
 '@lowdefy/client': patch
 '@lowdefy/operators': patch
 '@lowdefy/build': patch
+'@lowdefy/logger': patch
+'@lowdefy/engine': patch
 ---
 
 refactor: Consolidate error classes into @lowdefy/errors package with environment-specific subpaths

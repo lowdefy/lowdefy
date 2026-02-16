@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { errorToDisplayString, resolveErrorConfigLocation } from '@lowdefy/errors/build';
+import { resolveErrorConfigLocation } from '@lowdefy/errors/build';
 
 import captureSentryError from '../sentry/captureSentryError.js';
 
@@ -38,9 +38,7 @@ function createHandleError({ context }) {
         error.config = location.config;
       }
 
-      // Single structured log call — pino serializes error via extractErrorProps,
-      // message string gives human-readable display
-      context.logger.error({ err: error }, errorToDisplayString(error));
+      context.logger.error(error);
 
       // Capture error to Sentry (no-op if Sentry not configured)
       captureSentryError({

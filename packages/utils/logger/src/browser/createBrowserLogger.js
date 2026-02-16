@@ -14,10 +14,39 @@
   limitations under the License.
 */
 
+import { errorToDisplayString } from '@lowdefy/errors';
+
+const lowdefyErrorNames = new Set([
+  'ConfigError',
+  'Config Warning',
+  'LowdefyError',
+  'PluginError',
+  'ServiceError',
+  'UserError',
+]);
+
 function createBrowserLogger() {
   return {
-    error: (...args) => console.error(...args),
-    warn: (...args) => console.warn(...args),
+    error: (...args) => {
+      if (lowdefyErrorNames.has(args[0]?.name)) {
+        if (args[0].source) {
+          console.info('%c%s', 'color: #4a9eff', args[0].source);
+        }
+        console.error(errorToDisplayString(args[0]));
+        return;
+      }
+      console.error(...args);
+    },
+    warn: (...args) => {
+      if (lowdefyErrorNames.has(args[0]?.name)) {
+        if (args[0].source) {
+          console.info('%c%s', 'color: #4a9eff', args[0].source);
+        }
+        console.warn(errorToDisplayString(args[0]));
+        return;
+      }
+      console.warn(...args);
+    },
     info: (...args) => console.info(...args),
     debug: (...args) => console.debug(...args),
   };

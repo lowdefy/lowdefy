@@ -40,16 +40,16 @@ beforeEach(() => {
   mockPinoLogger.warn.mockClear();
 });
 
-test('handleWarning logs warning with display string', () => {
+test('handleWarning logs warning directly', () => {
   const context = createContext();
   const handleWarning = createHandleWarning({ context });
 
   handleWarning({ message: 'Something looks wrong' });
 
   expect(mockPinoLogger.warn).toHaveBeenCalledTimes(1);
-  const [mergeObj, msg] = mockPinoLogger.warn.mock.calls[0];
-  expect(mergeObj.err).toBeInstanceOf(ConfigWarning);
-  expect(msg).toBe('[Config Warning] Something looks wrong');
+  const [warning] = mockPinoLogger.warn.mock.calls[0];
+  expect(warning).toBeInstanceOf(ConfigWarning);
+  expect(warning.message).toBe('Something looks wrong');
 });
 
 test('handleWarning resolves location from configKey', () => {
@@ -65,9 +65,8 @@ test('handleWarning resolves location from configKey', () => {
 
   handleWarning({ message: 'Bad block', configKey: 'abc123' });
 
-  const [mergeObj] = mockPinoLogger.warn.mock.calls[0];
-  expect(mergeObj.source).toBe('/app/pages/home.yaml:42');
-  expect(mergeObj.err.source).toBe('/app/pages/home.yaml:42');
+  const [warning] = mockPinoLogger.warn.mock.calls[0];
+  expect(warning.source).toBe('/app/pages/home.yaml:42');
 });
 
 test('handleWarning sets received on warning', () => {
@@ -76,8 +75,8 @@ test('handleWarning sets received on warning', () => {
 
   handleWarning({ message: 'Wrong type', received: { type: 'Buton' } });
 
-  const [, msg] = mockPinoLogger.warn.mock.calls[0];
-  expect(msg).toBe('[Config Warning] Wrong type Received: {"type":"Buton"}');
+  const [warning] = mockPinoLogger.warn.mock.calls[0];
+  expect(warning.received).toEqual({ type: 'Buton' });
 });
 
 // --- Suppression ---
@@ -219,12 +218,12 @@ test('handleWarning works without context.seenSourceLines (no dedup)', () => {
 
 // --- Source null when unresolved ---
 
-test('handleWarning passes source as null when location not resolved', () => {
+test('handleWarning has null source when location not resolved', () => {
   const context = createContext();
   const handleWarning = createHandleWarning({ context });
 
   handleWarning({ message: 'No location' });
 
-  const [mergeObj] = mockPinoLogger.warn.mock.calls[0];
-  expect(mergeObj.source).toBeNull();
+  const [warning] = mockPinoLogger.warn.mock.calls[0];
+  expect(warning.source).toBeNull();
 });

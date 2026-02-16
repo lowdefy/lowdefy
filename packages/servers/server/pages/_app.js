@@ -19,8 +19,6 @@ import dynamic from 'next/dynamic';
 
 import { ErrorBoundary } from '@lowdefy/block-utils';
 
-import { errorToDisplayString } from '@lowdefy/errors';
-
 import Auth from '../lib/client/auth/Auth.js';
 import createLogUsage from '../lib/client/createLogUsage.js';
 import initSentryClient from '../lib/client/sentry/initSentryClient.js';
@@ -44,7 +42,7 @@ function App({ Component, pageProps: { session, rootConfig, pageConfig } }) {
     if (lowdefyRef.current?._internal?.handleError) {
       lowdefyRef.current._internal.handleError(error);
     } else {
-      console.error(errorToDisplayString(error));
+      console.error(error);
     }
   }, []);
 

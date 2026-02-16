@@ -27,7 +27,7 @@ beforeEach(() => {
   mockPinoLogger.error.mockClear();
 });
 
-test('handleError logs error with display string', () => {
+test('handleError logs error directly', () => {
   const context = {
     logger: mockPinoLogger,
     keyMap: {},
@@ -40,10 +40,7 @@ test('handleError logs error with display string', () => {
   handleError(error);
 
   expect(mockPinoLogger.error).toHaveBeenCalledTimes(1);
-  expect(mockPinoLogger.error).toHaveBeenCalledWith(
-    { err: error },
-    '[ConfigError] Bad config'
-  );
+  expect(mockPinoLogger.error).toHaveBeenCalledWith(error);
 });
 
 test('handleError resolves location from configKey before logging', () => {
@@ -66,14 +63,13 @@ test('handleError resolves location from configKey before logging', () => {
   expect(mockPinoLogger.error).toHaveBeenCalledTimes(1);
 });
 
-test('handleError falls back to error.message when resolveErrorLocation throws', () => {
+test('handleError still logs when resolveErrorLocation throws', () => {
   const context = {
     logger: mockPinoLogger,
-    keyMap: null, // will cause resolveErrorLocation to throw
+    keyMap: null,
     refMap: null,
     directories: { config: '/app' },
   };
-  // Force resolveErrorLocation to throw by passing a non-object keyMap
   Object.defineProperty(context, 'keyMap', {
     get() {
       throw new Error('keyMap exploded');
@@ -85,10 +81,7 @@ test('handleError falls back to error.message when resolveErrorLocation throws',
   handleError(error);
 
   expect(mockPinoLogger.error).toHaveBeenCalledTimes(1);
-  expect(mockPinoLogger.error).toHaveBeenCalledWith(
-    { err: error },
-    'Something broke'
-  );
+  expect(mockPinoLogger.error).toHaveBeenCalledWith(error);
 });
 
 test('handleError falls back to console.error when logger also throws', () => {
@@ -119,7 +112,7 @@ test('handleError falls back to console.error when logger also throws', () => {
   consoleSpy.mockRestore();
 });
 
-test('handleError includes received in display string', () => {
+test('handleError works with ConfigError that has received', () => {
   const context = {
     logger: mockPinoLogger,
     keyMap: {},
@@ -131,10 +124,8 @@ test('handleError includes received in display string', () => {
   const error = new ConfigError({ message: 'Invalid type', received: { type: 'Buton' } });
   handleError(error);
 
-  expect(mockPinoLogger.error).toHaveBeenCalledWith(
-    { err: error },
-    '[ConfigError] Invalid type Received: {"type":"Buton"}'
-  );
+  expect(mockPinoLogger.error).toHaveBeenCalledWith(error);
+  expect(error.received).toEqual({ type: 'Buton' });
 });
 
 test('handleError works with plain Error (not ConfigError)', () => {
@@ -150,10 +141,7 @@ test('handleError works with plain Error (not ConfigError)', () => {
   handleError(error);
 
   expect(mockPinoLogger.error).toHaveBeenCalledTimes(1);
-  expect(mockPinoLogger.error).toHaveBeenCalledWith(
-    { err: error },
-    '[Error] plain error'
-  );
+  expect(mockPinoLogger.error).toHaveBeenCalledWith(error);
 });
 
 test('handleError works when directories is undefined', () => {

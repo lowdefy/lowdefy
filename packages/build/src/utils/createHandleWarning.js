@@ -16,7 +16,6 @@
 
 import {
   ConfigWarning,
-  errorToDisplayString,
   resolveErrorLocation,
   shouldSuppressBuildCheck,
 } from '@lowdefy/errors/build';
@@ -67,7 +66,7 @@ function createHandleWarning({ context }) {
     if (context.seenSourceLines?.has(dedupKey)) return;
     context.seenSourceLines?.add(dedupKey);
 
-    context.logger.warn({ err: warning, source }, errorToDisplayString(warning));
+    context.logger.warn(warning);
   };
 }
 
