@@ -24,12 +24,7 @@ describe('validateLinkReferences', () => {
     const context = {
       stage,
       logger: {
-        warn: (params) => {
-          if (params.prodError && context.stage === 'prod') {
-            throw new Error(params.message);
-          }
-          warnFn(params.message);
-        },
+        warn: jest.fn(),
       },
       handleWarning: (params) => {
         if (params.prodError && context.stage === 'prod') {

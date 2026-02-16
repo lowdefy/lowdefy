@@ -44,7 +44,7 @@ const Block = ({ block, Blocks, context, lowdefy, parentLoading }) => {
         }
       });
     }
-  }, [block.eval?.parseErrors, block.id, lowdefy]);
+  }, [block.eval?.parseErrors, block.id, lowdefy._internal]);
 
   return (
     <ErrorBoundary blockId={block.blockId} configKey={block.eval?.configKey} onError={handleError}>

@@ -176,23 +176,12 @@ function createRunBuild(build, fixturesDir) {
 
     const warnFn = jest.fn(handleWarn);
     const errorFn = jest.fn(handleError);
-    const infoFn = jest.fn();
-    infoFn.blue = jest.fn();
-
-    // Attach color sub-methods to warn and error
-    for (const color of ['red', 'green', 'yellow', 'blue', 'gray', 'white']) {
-      warnFn[color] = jest.fn(handleWarn);
-      errorFn[color] = jest.fn(handleError);
-    }
 
     const logger = {
-      info: infoFn,
+      info: jest.fn(),
       warn: warnFn,
       error: errorFn,
       debug: jest.fn(),
-      child: function () {
-        return this;
-      },
     };
 
     let thrownError = null;
@@ -209,27 +198,6 @@ function createRunBuild(build, fixturesDir) {
       });
     } catch (err) {
       thrownError = err;
-      // Extract errors embedded in the thrown message (format: "✖ [Config Error] ...")
-      if (err.message) {
-        const lines = err.message.split('\n');
-        let currentError = null;
-        for (const line of lines) {
-          if (line.startsWith('✖ [Config Error]')) {
-            if (currentError !== null) {
-              errors.push(currentError);
-            }
-            currentError = line.slice(2); // Remove "✖ " prefix
-          } else if (currentError !== null && line.startsWith('  ')) {
-            currentError += '\n' + line;
-          } else if (currentError !== null) {
-            errors.push(currentError);
-            currentError = null;
-          }
-        }
-        if (currentError !== null) {
-          errors.push(currentError);
-        }
-      }
     }
 
     return { errors, warnings, thrownError, logger };

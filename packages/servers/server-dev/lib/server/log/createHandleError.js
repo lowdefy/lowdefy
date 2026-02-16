@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { LowdefyError } from '@lowdefy/errors';
 import { resolveErrorConfigLocation } from '@lowdefy/errors/build';
 
 import captureSentryError from '../sentry/captureSentryError.js';
@@ -22,15 +23,17 @@ function createHandleError({ context }) {
   return async function handleError(error) {
     try {
       const isServiceError = error?.isServiceError === true;
+      const isLowdefyError = error instanceof LowdefyError;
 
-      // For service errors, don't resolve config location (not a config issue)
-      const location = isServiceError
-        ? null
-        : await resolveErrorConfigLocation({
-            error,
-            readConfigFile: context.readConfigFile,
-            configDirectory: context.configDirectory,
-          });
+      // For service errors and internal lowdefy errors, don't resolve config location
+      const location =
+        isServiceError || isLowdefyError
+          ? null
+          : await resolveErrorConfigLocation({
+              error,
+              readConfigFile: context.readConfigFile,
+              configDirectory: context.configDirectory,
+            });
 
       // Attach resolved location to error for display layer
       if (location) {

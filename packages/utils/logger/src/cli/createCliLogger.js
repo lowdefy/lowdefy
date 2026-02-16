@@ -143,17 +143,17 @@ function isErrorLike(input) {
 }
 
 function createCliLogger({ logLevel } = {}) {
-  const p = getPrint({ logLevel });
+  const print = getPrint({ logLevel });
 
   function log(level, first, second) {
     // 1. Error-like first arg
     if (isErrorLike(first)) {
       if (first.source) {
-        p.info(first.source, { color: 'blue' });
+        print.info(first.source, { color: 'blue' });
       }
-      p[level](errorToDisplayString(first));
+      print[level](errorToDisplayString(first));
       if (shouldLogStack(first) && first.stack) {
-        p[level](first.stack, { color: 'gray' });
+        print[level](first.stack, { color: 'gray' });
       }
       return;
     }
@@ -161,28 +161,28 @@ function createCliLogger({ logLevel } = {}) {
     // 2. Pino two-arg form: (mergeObj, messageString)
     if (typeof second === 'string') {
       if (first?.spin) {
-        p.spin(second);
+        print.spin(second);
         return;
       }
       if (first?.succeed) {
-        p.succeed(second);
+        print.succeed(second);
         return;
       }
       if (first?.source) {
-        p.info(first.source, { color: 'blue' });
+        print.info(first.source, { color: 'blue' });
       }
-      p[level](second, { color: first?.color });
+      print[level](second, { color: first?.color });
       return;
     }
 
     // 3. Plain string
     if (typeof first === 'string') {
-      p[level](first);
+      print[level](first);
       return;
     }
 
     // 4. Fallback
-    p[level](JSON.stringify(first, null, 2));
+    print[level](JSON.stringify(first, null, 2));
   }
 
   return {

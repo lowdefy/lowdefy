@@ -17,8 +17,7 @@
 /**
  * Base error class for configuration errors (invalid YAML, schema violations, validation errors).
  *
- * Import from @lowdefy/errors for general use, or @lowdefy/errors/build for
- * build-time behavior (sync resolution via keyMap/refMap).
+ * Import from @lowdefy/errors for general use.
  *
  * @example
  * // Simple string (for plugins - configKey added by interface layer)
