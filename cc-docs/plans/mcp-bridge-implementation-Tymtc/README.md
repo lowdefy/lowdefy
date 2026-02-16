@@ -8,7 +8,8 @@
 | File | Purpose |
 |---|---|
 | **[REVIEW.md](REVIEW.md)** | Critical review of PLAN.md — errors found, gaps identified, what works |
-| **[REVISED_ARCHITECTURE.md](REVISED_ARCHITECTURE.md)** | Engine-first architecture — reuse Engine headlessly, blocks render markdown |
+| **[REVISED_ARCHITECTURE.md](REVISED_ARCHITECTURE.md)** | Engine-first architecture v2 — reuse Engine headlessly, blocks render markdown |
+| **[ARCHITECTURE_V3.md](ARCHITECTURE_V3.md)** | **Current** — v3 architecture addressing all review findings with concrete solutions |
 | **[EXAMPLE_1_SUPPORT_TICKETS.md](EXAMPLE_1_SUPPORT_TICKETS.md)** | Full end-to-end example: support ticket CRUD with session management |
 | **[EXAMPLE_2_INVENTORY_MANAGEMENT.md](EXAMPLE_2_INVENTORY_MANAGEMENT.md)** | Full end-to-end example: inventory + PO approvals with concurrent sessions |
 | **[BUSINESS_CASE.md](BUSINESS_CASE.md)** | Business case: market research, pros/cons, competitive positioning, website strategy |
