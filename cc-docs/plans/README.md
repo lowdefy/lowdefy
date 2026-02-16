@@ -27,3 +27,4 @@ The root-level `PLAN.md` at the repo root is the initial plan draft. The branch 
 | Folder                                                              | Branch                                   | Summary                                                                  |
 | ------------------------------------------------------------------- | ---------------------------------------- | ------------------------------------------------------------------------ |
 | [mcp-bridge-implementation-Tymtc](mcp-bridge-implementation-Tymtc/) | `claude/mcp-bridge-implementation-Tymtc` | MCP Bridge — expose Lowdefy apps to AI agents via Model Context Protocol |
+| [bun-executable-cli-cnenE](bun-executable-cli-cnenE/) | `claude/bun-executable-cli-cnenE` | Bun single-file executable CLI — zero-dependency distribution |
