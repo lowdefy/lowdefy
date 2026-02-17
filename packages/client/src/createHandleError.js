@@ -14,11 +14,9 @@
   limitations under the License.
 */
 
-import { createBrowserLogger } from '@lowdefy/logger/browser';
-
 function createHandleError(lowdefy) {
   const loggedErrors = new Set();
-  const logger = createBrowserLogger();
+  const logger = lowdefy._internal.logger;
 
   return async function handleError(error) {
     const errorKey = `${error.message}:${error.configKey || ''}`;
@@ -55,7 +53,7 @@ function createHandleError(lowdefy) {
         if (response.ok) {
           const { source: resolvedSource } = await response.json();
           if (resolvedSource) {
-            logger.info(resolvedSource);
+            error.source = resolvedSource;
           }
         }
       } catch {

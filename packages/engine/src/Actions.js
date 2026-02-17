@@ -43,7 +43,7 @@ class Actions {
 
     // User-facing errors log to browser console only, never to terminal
     if (error instanceof UserError) {
-      console.error(error);
+      this.context._internal.lowdefy._internal.logger.error(error);
       return;
     }
 
