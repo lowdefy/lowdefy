@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { serializer } from '@lowdefy/helpers';
+
 function createHandleError(lowdefy) {
   const loggedErrors = new Set();
   const logger = lowdefy._internal.logger;
@@ -33,21 +35,15 @@ function createHandleError(lowdefy) {
       error.name === 'ServiceError' ||
       error.name === 'LowdefyError'
     ) {
-      const { name, message, stack, configKey, source, pluginType, pluginName, location } = error;
       try {
+        const serialized = serializer.serialize(error);
+        if (serialized?.['~e']) {
+          delete serialized['~e'].received;
+        }
         const response = await fetch(`${lowdefy?.basePath ?? ''}/api/client-error`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name,
-            message,
-            stack,
-            configKey,
-            source,
-            pluginType,
-            pluginName,
-            location,
-          }),
+          body: JSON.stringify(serialized),
           credentials: 'same-origin',
         });
         if (response.ok) {

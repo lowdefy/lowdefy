@@ -23,11 +23,11 @@ async function handler({ context, req, res }) {
   if (req.method !== 'POST') {
     throw new Error('Only POST requests are supported.');
   }
-  const response = await logClientError(context, req.body);
+  const { error, ...response } = await logClientError(context, req.body);
 
   // Capture client error to Sentry (no-op if Sentry not configured)
   captureSentryError({
-    error: new Error(req.body.message),
+    error,
     context,
     configLocation: response.source
       ? { source: response.source, config: response.config, link: response.link }
