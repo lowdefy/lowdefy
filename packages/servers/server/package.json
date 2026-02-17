@@ -66,7 +66,7 @@
     "@lowdefy/operators-uuid": "4.5.2",
     "@lowdefy/plugin-next-auth": "4.5.2",
     "@sentry/nextjs": "8.53.0",
-    "next": "13.5.4",
+    "next": "14.2.30",
     "next-auth": "4.24.5",
     "pino": "8.16.2",
     "process": "0.11.10",
