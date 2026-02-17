@@ -34,6 +34,8 @@ const testContext = async ({ lowdefy, pageConfig }) => {
       callRequest: () => {},
       displayMessage: () => () => {},
       updateBlock: () => {},
+      logger: { error: () => {}, warn: () => {}, log: () => {}, debug: () => {} },
+      handleError: () => {},
       ...lowdefy?._internal,
       operators: testOperators,
       actions: { ...testActions, ...lowdefy?._internal?.actions },
