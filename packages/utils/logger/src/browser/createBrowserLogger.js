@@ -18,7 +18,7 @@ import { errorToDisplayString } from '@lowdefy/errors';
 
 const lowdefyErrorNames = new Set([
   'ConfigError',
-  'Config Warning',
+  'ConfigWarning',
   'LowdefyError',
   'PluginError',
   'ServiceError',

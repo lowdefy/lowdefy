@@ -19,7 +19,7 @@ import ConfigError from './ConfigError.js';
 class ConfigWarning extends ConfigError {
   constructor({ message, configKey, checkSlug }) {
     super({ message, configKey, checkSlug });
-    this.name = 'Config Warning';
+    this.name = 'ConfigWarning';
   }
 }
 

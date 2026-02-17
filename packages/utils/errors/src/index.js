@@ -41,7 +41,7 @@
  *
  * 5. ConfigWarning - Config inconsistencies (warning in dev, error in prod)
  *    - Extends ConfigError with name override
- *    - Format: source:line\n[Config Warning] message
+ *    - Format: source:line\n[ConfigWarning] message
  *
  * 6. UserError - Expected user interaction (validation, throws), client-only
  *    - Thrown: Action plugins for expected user errors

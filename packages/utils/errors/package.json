@@ -28,8 +28,7 @@
   },
   "type": "module",
   "exports": {
-    ".": "./dist/index.js",
-    "./build": "./dist/build/index.js"
+    ".": "./dist/index.js"
   },
   "files": [
     "dist/*"
