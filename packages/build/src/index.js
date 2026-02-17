@@ -16,7 +16,7 @@
   limitations under the License.
 */
 
-import { BuildError, ConfigError, LowdefyError } from '@lowdefy/errors';
+import { BuildError, LowdefyError } from '@lowdefy/errors';
 
 import createContext from './createContext.js';
 import createPluginTypesMap from './utils/createPluginTypesMap.js';
@@ -70,7 +70,7 @@ async function build(options) {
       components = await buildRefs({ context });
     } catch (err) {
       // Handle ConfigError from buildRefs (e.g., missing _ref files)
-      if (err instanceof ConfigError) {
+      if (err.isLowdefyError) {
         context.handleError(err);
         throw new BuildError('Build failed with 1 error(s). See above for details.');
       }

@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import { BuildError, ConfigError, LowdefyError } from '@lowdefy/errors';
+import { BuildError, LowdefyError } from '@lowdefy/errors';
 
 function logCollectedErrors(context) {
   if (context.errors.length === 0) return;
 
   context.errors.forEach((err) => {
-    if (err instanceof ConfigError) {
+    if (err.isLowdefyError) {
       context.handleError(err);
     } else {
       const lowdefyErr = new LowdefyError(err.message, { cause: err });

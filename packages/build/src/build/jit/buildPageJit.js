@@ -134,7 +134,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     if (buildContext.errors.length > 0 && !err.buildErrors) {
       err.buildErrors = [err, ...buildContext.errors];
     }
-    if (err instanceof ConfigError) {
+    if (err.isLowdefyError) {
       throw err;
     }
     const lowdefyErr = new LowdefyError(err.message, { cause: err });

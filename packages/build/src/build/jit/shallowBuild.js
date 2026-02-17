@@ -18,7 +18,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import { BuildError, ConfigError, LowdefyError } from '@lowdefy/errors';
+import { BuildError, LowdefyError } from '@lowdefy/errors';
 
 import createContext from '../../createContext.js';
 import logCollectedErrors from '../../utils/logCollectedErrors.js';
@@ -89,7 +89,7 @@ async function shallowBuild(options) {
         shallowOptions: { stopAt: SHALLOW_STOP_PATHS },
       });
     } catch (err) {
-      if (err instanceof ConfigError) {
+      if (err.isLowdefyError) {
         context.handleError(err);
         throw new BuildError('Build failed with 1 error(s). See above for details.');
       }
