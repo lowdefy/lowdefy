@@ -1,6 +1,6 @@
 ---
 description: Document cross-cutting Lowdefy architecture topics (build pipeline, request lifecycle, etc.)
-argument-hint: "<topic>"
+argument-hint: '<topic>'
 ---
 
 # Document Architecture Topic
@@ -19,7 +19,9 @@ Generate documentation for cross-cutting architectural concerns in the Lowdefy m
 ## Available Topics
 
 ### build-pipeline
+
 How Lowdefy transforms YAML config into a running Next.js app
+
 - Config parsing and validation
 - Reference resolution (`_ref`)
 - Plugin loading
@@ -27,7 +29,9 @@ How Lowdefy transforms YAML config into a running Next.js app
 - Next.js integration
 
 ### request-lifecycle
+
 How data flows from user action to database and back
+
 - Client-side request initiation
 - API route handling
 - Connection execution
@@ -35,28 +39,36 @@ How data flows from user action to database and back
 - Error handling
 
 ### state-management
+
 How Lowdefy manages page and application state
+
 - Page state structure
 - State operators (`_state`, `_global`, `_input`)
 - State updates and reactivity
 - Cross-page state sharing
 
 ### plugin-system
+
 How Lowdefy's plugin architecture works
+
 - Plugin discovery and loading
 - Type registration
 - Build-time vs runtime plugins
 - Creating custom plugins
 
 ### auth-system
+
 How authentication integrates with Lowdefy
+
 - Auth.js (NextAuth) integration
 - Provider configuration
 - Session management
 - Protected pages
 
 ### operator-system
+
 How operators are evaluated
+
 - Operator syntax and resolution
 - Evaluation context
 - Async operators
@@ -69,6 +81,7 @@ How operators are evaluated
 Trace the topic through relevant packages:
 
 **For build-pipeline:**
+
 ```bash
 # Start with CLI
 cat packages/cli/src/commands/build.js
@@ -79,6 +92,7 @@ ls packages/servers/server/
 ```
 
 **For request-lifecycle:**
+
 ```bash
 # Client-side
 grep -r "callRequest" packages/client/src/
@@ -92,10 +106,10 @@ cat packages/plugins/connections/*/src/
 
 For each topic, document the complete flow:
 
-```markdown
+````markdown
 ---
-topic: {topic}
-updated: {date}
+topic: { topic }
+updated: { date }
 packages: [list of involved packages]
 ---
 
@@ -117,22 +131,26 @@ packages: [list of involved packages]
 {What happens at this stage}
 
 **Key code:**
+
 ```javascript
 // Simplified example showing the pattern
 ```
+````
 
 **Inputs:** {what comes in}
 **Outputs:** {what goes out}
 
 ### Step 2: {Next Stage}
+
 ...
 
 ## Package Responsibilities
 
-| Package | Role in {topic} |
-|---------|-----------------|
-| @lowdefy/cli | {role} |
-| @lowdefy/build | {role} |
+| Package        | Role in {topic} |
+| -------------- | --------------- |
+| @lowdefy/cli   | {role}          |
+| @lowdefy/build | {role}          |
+
 ...
 
 ## Data Structures
@@ -158,10 +176,12 @@ packages: [list of involved packages]
 **Rationale:** {Why - this is the most important part}
 
 **Trade-offs:**
+
 - Pro: {benefit}
 - Con: {downside}
 
 ### {Decision 2}
+
 ...
 
 ## Common Patterns
@@ -171,6 +191,7 @@ packages: [list of involved packages]
 {Description of a pattern used throughout this flow}
 
 **Example:**
+
 ```javascript
 // Code showing the pattern
 ```
@@ -193,7 +214,8 @@ packages: [list of involved packages]
 ## Related Topics
 
 - [{Related Topic}](./related-topic.md)
-```
+
+````
 
 ### 3. Cross-Reference
 
@@ -204,11 +226,11 @@ Ensure the doc links to:
 
 ### 4. Update Plan
 
-Mark completed in `cc-docs/DOCUMENTATION_PLAN.md`.
+Mark completed in `code-docs/DOCUMENTATION_PLAN.md`.
 
 ## Output
 
-Single file: `cc-docs/architecture/{topic}.md`
+Single file: `code-docs/architecture/{topic}.md`
 
 ## Example: Build Pipeline
 
@@ -247,7 +269,7 @@ const context = await createBuildContext({
   outputDirectory,
 });
 await build(context);
-```
+````
 
 ### Step 2: Config Loading
 
@@ -257,6 +279,7 @@ await build(context);
 Loads `lowdefy.yaml` and recursively resolves all `_ref` references.
 
 **Why `_ref` resolution at build time?**
+
 - Allows splitting config across files for maintainability
 - Validates all references exist before runtime
 - Enables config preprocessing (env vars, etc.)
@@ -274,11 +297,13 @@ Identifies all plugins used in config and generates import statements.
 ### Step 5: Build Artifacts
 
 Generates:
+
 - `pages/` - Next.js page routes
 - `public/` - Static assets
 - `lowdefy.config.json` - Runtime config
 
 ...
+
 ```
 
 ## Focus
@@ -289,3 +314,4 @@ Architecture docs should answer:
 - **Where** does each package fit?
 - **How** do the pieces connect?
 - **What** are the key design decisions?
+```
