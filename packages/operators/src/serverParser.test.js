@@ -17,6 +17,8 @@
 /* eslint-disable max-classes-per-file */
 import { jest } from '@jest/globals';
 
+import { ConfigError, PluginError } from '@lowdefy/errors';
+
 import ServerParser from './serverParser.js';
 
 const args = [{ args: true }];
@@ -145,7 +147,6 @@ test('operator returns value and removes ~k', () => {
             "user": Object {
               "user": true,
             },
-            "verbose": undefined,
           },
           "payload": Object {
             "payload": true,
@@ -195,13 +196,16 @@ test('undefined operator', () => {
   expect(res.errors).toEqual([]);
 });
 
-test('operator errors with verbose', () => {
+test('operator errors', () => {
   const input = { a: { _error: { params: true } } };
   const parser = new ServerParser({ operators, payload, secrets, user });
   const res = parser.parse({ args, input, location });
   expect(res.output).toEqual({ a: null });
   expect(res.errors.length).toBe(1);
-  expect(res.errors[0].message).toBe('Test error.');
+  expect(res.errors[0]).toBeInstanceOf(PluginError);
+  expect(res.errors[0].name).toBe('PluginError');
+  expect(res.errors[0]._message).toBe('Test error.');
+  expect(res.errors[0].message).toBe('Test error. at location.');
   expect(res.errors[0].received).toEqual({ _error: { params: true } });
 });
 
@@ -217,7 +221,9 @@ test('operator errors include configKey from ~k', () => {
   const res = parser.parse({ args, input, location });
   expect(res.output).toEqual({ a: null });
   expect(res.errors.length).toBe(1);
-  expect(res.errors[0].message).toBe('Test error.');
+  expect(res.errors[0]).toBeInstanceOf(PluginError);
+  expect(res.errors[0].name).toBe('PluginError');
+  expect(res.errors[0]._message).toBe('Test error.');
   expect(res.errors[0].received).toEqual({ _error: { params: true } });
   expect(res.errors[0].configKey).toBe('config-key-456');
 });
@@ -246,5 +252,35 @@ test('operator errors preserve existing configKey', () => {
   });
   const res = parser.parse({ args, input, location });
   expect(res.errors.length).toBe(1);
-  expect(res.errors[0].configKey).toBe('existing-key'); // Should preserve existing key
+  expect(res.errors[0]).toBeInstanceOf(PluginError);
+  expect(res.errors[0].configKey).toBe('existing-key');
+});
+
+test('ConfigError from operator is preserved', () => {
+  const operatorsWithConfigError = {
+    ...operators,
+    _configError: jest.fn(() => {
+      throw new ConfigError('Invalid config value.');
+    }),
+  };
+  const input = { a: { _configError: { params: true } } };
+  Object.defineProperty(input.a, '~k', {
+    value: 'config-key-789',
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  const parser = new ServerParser({
+    operators: operatorsWithConfigError,
+    payload,
+    secrets,
+    user,
+  });
+  const res = parser.parse({ args, input, location });
+  expect(res.output).toEqual({ a: null });
+  expect(res.errors.length).toBe(1);
+  expect(res.errors[0]).toBeInstanceOf(ConfigError);
+  expect(res.errors[0].name).toBe('ConfigError');
+  expect(res.errors[0].message).toBe('Invalid config value.');
+  expect(res.errors[0].configKey).toBe('config-key-789');
 });

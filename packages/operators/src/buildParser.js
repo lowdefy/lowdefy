@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { ConfigError, PluginError } from '@lowdefy/errors';
 import { serializer, type } from '@lowdefy/helpers';
 
 class BuildParser {
@@ -47,20 +48,17 @@ class BuildParser {
     return value;
   }
 
-  constructor({ env, payload, secrets, user, operators, verbose, dynamicIdentifiers, typeNames }) {
+  constructor({ env, payload, secrets, user, operators, dynamicIdentifiers, typeNames }) {
     this.env = env;
     this.operators = operators;
     this.parse = this.parse.bind(this);
     this.payload = payload;
     this.secrets = secrets;
     this.user = user;
-    this.verbose = verbose;
     this.dynamicIdentifiers = dynamicIdentifiers ?? new Set();
     this.typeNames = typeNames ?? new Set();
   }
 
-  // TODO: Look at logging here
-  // TODO: Remove console.error = () => {}; from tests
   parse({ args, input, location, operatorPrefix = '_' }) {
     if (type.isUndefined(input)) {
       return { output: input, errors: [] };
@@ -136,6 +134,7 @@ class BuildParser {
       }
 
       // Build location with line number if available
+      const configKey = value['~k'];
       const lineNumber = value['~l'];
       const operatorLocation = lineNumber ? `${location}:${lineNumber}` : location;
       const params = value[key];
@@ -158,15 +157,29 @@ class BuildParser {
         });
         return res;
       } catch (e) {
-        const message = e.message || `Operator ${op} threw an error`;
-        const formattedError = new Error(message);
-        formattedError.stack = e.stack;
-        formattedError.received = { [key]: params };
-        formattedError.lineNumber = value['~l'];
-        errors.push(formattedError);
-        if (this.verbose) {
-          console.error(formattedError);
+        if (e instanceof ConfigError) {
+          if (!e.configKey) {
+            e.configKey = configKey;
+          }
+          if (!e.lineNumber) {
+            e.lineNumber = lineNumber;
+          }
+          errors.push(e);
+          return null;
         }
+        const pluginError = new PluginError({
+          error: e,
+          pluginType: 'operator',
+          pluginName: op,
+          received: { [key]: params },
+          location: operatorLocation,
+          configKey: e.configKey ?? configKey,
+        });
+        // lineNumber needed by buildRefs consumers (evaluateBuildOperators,
+        // evaluateStaticOperators) which run before addKeys — no configKey
+        // exists yet, so they use filePath + lineNumber for resolution.
+        pluginError.lineNumber = lineNumber;
+        errors.push(pluginError);
         return null;
       }
     };

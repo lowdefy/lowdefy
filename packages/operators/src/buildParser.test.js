@@ -17,6 +17,8 @@
 /* eslint-disable max-classes-per-file */
 import { jest } from '@jest/globals';
 
+import { ConfigError, PluginError } from '@lowdefy/errors';
+
 import BuildParser from './buildParser.js';
 
 const args = [{ args: true }];
@@ -130,7 +132,6 @@ test('operator returns value', () => {
             "user": Object {
               "user": true,
             },
-            "verbose": undefined,
           },
           "payload": Object {
             "payload": true,
@@ -180,9 +181,108 @@ test('operator errors', () => {
   const res = parser.parse({ args, input, location });
   expect(res.output).toEqual({ a: null });
   expect(res.errors.length).toBe(1);
-  expect(res.errors[0].message).toBe('Test error.');
+  expect(res.errors[0]).toBeInstanceOf(PluginError);
+  expect(res.errors[0].name).toBe('PluginError');
+  expect(res.errors[0]._message).toBe('Test error.');
+  expect(res.errors[0].message).toBe('Test error. at location.');
   expect(res.errors[0].received).toEqual({ _error: { params: true } });
   expect(res.errors[0].lineNumber).toBeUndefined();
+});
+
+test('operator errors include configKey from ~k', () => {
+  const input = { a: { _error: { params: true } } };
+  Object.defineProperty(input.a, '~k', {
+    value: 'config-key-456',
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  const parser = new BuildParser({ operators, payload, secrets, user });
+  const res = parser.parse({ args, input, location });
+  expect(res.errors.length).toBe(1);
+  expect(res.errors[0]).toBeInstanceOf(PluginError);
+  expect(res.errors[0].configKey).toBe('config-key-456');
+});
+
+test('operator errors preserve existing configKey', () => {
+  const errorWithConfigKey = new Error('Pre-configured error');
+  errorWithConfigKey.configKey = 'existing-key';
+  const operatorsWithPreConfiguredError = {
+    ...operators,
+    _errorWithKey: jest.fn(() => {
+      throw errorWithConfigKey;
+    }),
+  };
+  const input = { a: { _errorWithKey: { params: true } } };
+  Object.defineProperty(input.a, '~k', {
+    value: 'new-key',
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  const parser = new BuildParser({
+    operators: operatorsWithPreConfiguredError,
+    payload,
+    secrets,
+    user,
+  });
+  const res = parser.parse({ args, input, location });
+  expect(res.errors.length).toBe(1);
+  expect(res.errors[0]).toBeInstanceOf(PluginError);
+  expect(res.errors[0].configKey).toBe('existing-key');
+});
+
+test('operator errors include lineNumber in location and on error', () => {
+  const input = { a: { _error: { params: true } } };
+  Object.defineProperty(input.a, '~l', {
+    value: 42,
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  const parser = new BuildParser({ operators, payload, secrets, user });
+  const res = parser.parse({ args, input, location });
+  expect(res.errors.length).toBe(1);
+  expect(res.errors[0]).toBeInstanceOf(PluginError);
+  expect(res.errors[0].message).toBe('Test error. at location:42.');
+  expect(res.errors[0].location).toBe('location:42');
+  expect(res.errors[0].lineNumber).toBe(42);
+});
+
+test('ConfigError from operator is preserved with configKey and lineNumber', () => {
+  const operatorsWithConfigError = {
+    ...operators,
+    _configError: jest.fn(() => {
+      throw new ConfigError('Invalid config value.');
+    }),
+  };
+  const input = { a: { _configError: { params: true } } };
+  Object.defineProperty(input.a, '~k', {
+    value: 'config-key-789',
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  Object.defineProperty(input.a, '~l', {
+    value: 10,
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  const parser = new BuildParser({
+    operators: operatorsWithConfigError,
+    payload,
+    secrets,
+    user,
+  });
+  const res = parser.parse({ args, input, location });
+  expect(res.output).toEqual({ a: null });
+  expect(res.errors.length).toBe(1);
+  expect(res.errors[0]).toBeInstanceOf(ConfigError);
+  expect(res.errors[0].name).toBe('ConfigError');
+  expect(res.errors[0].message).toBe('Invalid config value.');
+  expect(res.errors[0].configKey).toBe('config-key-789');
+  expect(res.errors[0].lineNumber).toBe(10);
 });
 
 // ==================== hasDynamicMarker tests ====================
