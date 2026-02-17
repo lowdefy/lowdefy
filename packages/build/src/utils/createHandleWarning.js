@@ -14,48 +14,28 @@
   limitations under the License.
 */
 
-import {
-  ConfigWarning,
-  resolveErrorLocation,
-  shouldSuppressBuildCheck,
-} from '@lowdefy/errors';
+import { resolveErrorLocation, shouldSuppressBuildCheck } from '@lowdefy/errors';
 
 import collectExceptions from './collectExceptions.js';
 
 function createHandleWarning({ context }) {
-  return function handleWarning(params) {
-    // Create warning
-    const warning = new ConfigWarning({
-      message: params.message,
-      configKey: params.configKey,
-      checkSlug: params.checkSlug,
-    });
-    if (params.received !== undefined) {
-      warning.received = params.received;
-    }
-
-    // Suppression
+  return function handleWarning(warning) {
     if (shouldSuppressBuildCheck(warning, context.keyMap)) {
       return;
     }
 
-    // prodError escalation: collect ConfigWarning directly (it extends ConfigError)
-    if (params.prodError && context.stage === 'prod') {
+    if (warning.prodError && context.stage === 'prod') {
       collectExceptions(context, warning);
       return;
     }
 
-    // Resolve location — pass params (has configKey, filePath, lineNumber)
-    resolveErrorLocation(params, {
+    resolveErrorLocation(warning, {
       keyMap: context.keyMap,
       refMap: context.refMap,
       configDirectory: context.directories?.config,
     });
-    if (params.source) warning.source = params.source;
-    if (params.config) warning.config = params.config;
 
-    const source = warning.source ?? null;
-    const dedupKey = source ?? warning.message;
+    const dedupKey = warning.source ?? warning.message;
     if (context.seenSourceLines?.has(dedupKey)) return;
     context.seenSourceLines?.add(dedupKey);
 

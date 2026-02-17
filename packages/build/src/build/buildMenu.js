@@ -17,7 +17,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors';
+import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 import collectExceptions from '../utils/collectExceptions.js';
 import createCheckDuplicateId from '../utils/createCheckDuplicateId.js';
 
@@ -143,12 +143,14 @@ function buildMenu({ components, context }) {
     });
   });
   missingPageWarnings.forEach((warning) => {
-    context.handleWarning({
-      message: `Page "${warning.pageId}" referenced in menu link "${warning.menuItemId}" not found.`,
-      configKey: warning.configKey,
-      prodError: true,
-      checkSlug: 'link-refs',
-    });
+    context.handleWarning(
+      new ConfigWarning({
+        message: `Page "${warning.pageId}" referenced in menu link "${warning.menuItemId}" not found.`,
+        configKey: warning.configKey,
+        prodError: true,
+        checkSlug: 'link-refs',
+      })
+    );
   });
   return components;
 }

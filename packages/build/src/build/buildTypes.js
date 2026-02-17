@@ -16,7 +16,7 @@
 
 import basicTypes from '@lowdefy/blocks-basic/types';
 import loaderTypes from '@lowdefy/blocks-loaders/types';
-import { ConfigError } from '@lowdefy/errors';
+import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 
 import findSimilarString from '../utils/findSimilarString.js';
 
@@ -39,7 +39,7 @@ function buildTypeClass(
         if (typeName === '_id') {
           return;
         }
-        context.handleWarning({ message, configKey, checkSlug: 'types' });
+        context.handleWarning(new ConfigWarning({ message, configKey, checkSlug: 'types' }));
         return;
       }
       throw new ConfigError({

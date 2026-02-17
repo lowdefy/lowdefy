@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { ConfigWarning } from '@lowdefy/errors';
 import { BuildParser } from '@lowdefy/operators';
 import operators from '@lowdefy/operators-js/operators/build';
 
@@ -38,12 +39,14 @@ function evaluateBuildOperators({ context, input, refDef }) {
   });
   if (errors.length > 0) {
     errors.forEach((error) => {
-      context.handleWarning({
-        message: error.message,
-        received: error.received,
-        filePath: refDef.path,
-        lineNumber: error.operatorLocation?.line,
-      });
+      context.handleWarning(
+        new ConfigWarning({
+          message: error.message,
+          received: error.received,
+          filePath: refDef.path,
+          lineNumber: error.operatorLocation?.line,
+        })
+      );
     });
   }
   return output;

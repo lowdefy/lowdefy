@@ -17,9 +17,10 @@
 import ConfigError from './ConfigError.js';
 
 class ConfigWarning extends ConfigError {
-  constructor({ message, configKey, checkSlug }) {
-    super({ message, configKey, checkSlug });
+  constructor({ message, configKey, checkSlug, filePath, lineNumber, received, prodError }) {
+    super({ message, configKey, checkSlug, filePath, lineNumber, received });
     this.name = 'ConfigWarning';
+    this.prodError = prodError ?? false;
   }
 }
 

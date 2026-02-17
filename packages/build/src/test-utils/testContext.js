@@ -61,11 +61,11 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
   };
 
   // handleWarning works like a simplified version of the production handleWarning
-  context.handleWarning = (params) => {
-    if (params.prodError && context.stage === 'prod') {
-      throw new Error(params.message);
+  context.handleWarning = (warning) => {
+    if (warning.prodError && context.stage === 'prod') {
+      throw new Error(warning.message);
     }
-    context.logger.warn(params.message);
+    context.logger.warn(warning.message);
   };
 
   // handleError delegates to logger.error

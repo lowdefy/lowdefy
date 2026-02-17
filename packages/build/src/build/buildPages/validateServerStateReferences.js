@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { ConfigWarning } from '@lowdefy/errors';
 import traverseConfig from '../../utils/traverseConfig.js';
 
 function validateServerStateReferences({ page, context }) {
@@ -43,7 +44,9 @@ function validateServerStateReferences({ page, context }) {
       `To use a state value in a request, add it to the request "payload" using _state, ` +
       `then reference it in request properties using _payload.`;
 
-    context.handleWarning({ message, configKey, prodError: true });
+    context.handleWarning(
+      new ConfigWarning({ message, configKey, prodError: true, checkSlug: 'state-refs' })
+    );
   });
 }
 

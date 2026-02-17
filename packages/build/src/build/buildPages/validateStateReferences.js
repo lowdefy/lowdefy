@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { ConfigWarning } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import extractOperatorKey from '../../utils/extractOperatorKey.js';
@@ -81,7 +82,9 @@ function validateStateReferences({ page, context }) {
       `State keys are created from input block ids. ` +
       `Check for typos, add an input block with this id, or initialize the state with SetState.`;
 
-    context.handleWarning({ message, configKey, prodError: true, checkSlug: 'state-refs' });
+    context.handleWarning(
+      new ConfigWarning({ message, configKey, prodError: true, checkSlug: 'state-refs' })
+    );
   });
 }
 

@@ -44,7 +44,7 @@ test('handleWarning logs warning directly', () => {
   const context = createContext();
   const handleWarning = createHandleWarning({ context });
 
-  handleWarning({ message: 'Something looks wrong' });
+  handleWarning(new ConfigWarning({ message: 'Something looks wrong' }));
 
   expect(mockPinoLogger.warn).toHaveBeenCalledTimes(1);
   const [warning] = mockPinoLogger.warn.mock.calls[0];
@@ -63,7 +63,7 @@ test('handleWarning resolves location from configKey', () => {
   });
   const handleWarning = createHandleWarning({ context });
 
-  handleWarning({ message: 'Bad block', configKey: 'abc123' });
+  handleWarning(new ConfigWarning({ message: 'Bad block', configKey: 'abc123' }));
 
   const [warning] = mockPinoLogger.warn.mock.calls[0];
   expect(warning.source).toBe('/app/pages/home.yaml:42');
@@ -73,7 +73,7 @@ test('handleWarning sets received on warning', () => {
   const context = createContext();
   const handleWarning = createHandleWarning({ context });
 
-  handleWarning({ message: 'Wrong type', received: { type: 'Buton' } });
+  handleWarning(new ConfigWarning({ message: 'Wrong type', received: { type: 'Buton' } }));
 
   const [warning] = mockPinoLogger.warn.mock.calls[0];
   expect(warning.received).toEqual({ type: 'Buton' });
@@ -89,7 +89,7 @@ test('handleWarning suppresses when ~ignoreBuildChecks is true', () => {
   });
   const handleWarning = createHandleWarning({ context });
 
-  handleWarning({ message: 'Suppressed', configKey: 'abc123' });
+  handleWarning(new ConfigWarning({ message: 'Suppressed', configKey: 'abc123' }));
 
   expect(mockPinoLogger.warn).not.toHaveBeenCalled();
 });
@@ -102,7 +102,9 @@ test('handleWarning suppresses specific checkSlug', () => {
   });
   const handleWarning = createHandleWarning({ context });
 
-  handleWarning({ message: 'State ref', configKey: 'abc123', checkSlug: 'state-reference' });
+  handleWarning(
+    new ConfigWarning({ message: 'State ref', configKey: 'abc123', checkSlug: 'state-reference' })
+  );
 
   expect(mockPinoLogger.warn).not.toHaveBeenCalled();
 });
@@ -115,7 +117,9 @@ test('handleWarning does not suppress non-matching checkSlug', () => {
   });
   const handleWarning = createHandleWarning({ context });
 
-  handleWarning({ message: 'Link ref', configKey: 'abc123', checkSlug: 'link-reference' });
+  handleWarning(
+    new ConfigWarning({ message: 'Link ref', configKey: 'abc123', checkSlug: 'link-reference' })
+  );
 
   expect(mockPinoLogger.warn).toHaveBeenCalledTimes(1);
 });
@@ -126,7 +130,7 @@ test('handleWarning collects warning as error in prod mode', () => {
   const context = createContext({ stage: 'prod' });
   const handleWarning = createHandleWarning({ context });
 
-  handleWarning({ message: 'Prod failure', prodError: true });
+  handleWarning(new ConfigWarning({ message: 'Prod failure', prodError: true }));
 
   expect(mockPinoLogger.warn).not.toHaveBeenCalled();
   expect(context.errors).toHaveLength(1);
@@ -138,7 +142,7 @@ test('handleWarning does not escalate prodError in dev mode', () => {
   const context = createContext({ stage: 'dev' });
   const handleWarning = createHandleWarning({ context });
 
-  handleWarning({ message: 'Dev warning', prodError: true });
+  handleWarning(new ConfigWarning({ message: 'Dev warning', prodError: true }));
 
   expect(mockPinoLogger.warn).toHaveBeenCalledTimes(1);
   expect(context.errors).toHaveLength(0);
@@ -148,7 +152,7 @@ test('handleWarning does not escalate when prodError is false', () => {
   const context = createContext({ stage: 'prod' });
   const handleWarning = createHandleWarning({ context });
 
-  handleWarning({ message: 'Not escalated', prodError: false });
+  handleWarning(new ConfigWarning({ message: 'Not escalated', prodError: false }));
 
   expect(mockPinoLogger.warn).toHaveBeenCalledTimes(1);
   expect(context.errors).toHaveLength(0);
@@ -168,8 +172,8 @@ test('handleWarning deduplicates by source when resolved', () => {
   });
   const handleWarning = createHandleWarning({ context });
 
-  handleWarning({ message: 'Same source', configKey: 'k1' });
-  handleWarning({ message: 'Same source', configKey: 'k2' });
+  handleWarning(new ConfigWarning({ message: 'Same source', configKey: 'k1' }));
+  handleWarning(new ConfigWarning({ message: 'Same source', configKey: 'k2' }));
 
   expect(mockPinoLogger.warn).toHaveBeenCalledTimes(1);
 });
@@ -178,8 +182,8 @@ test('handleWarning deduplicates by message when source not resolved', () => {
   const context = createContext();
   const handleWarning = createHandleWarning({ context });
 
-  handleWarning({ message: 'Same message' });
-  handleWarning({ message: 'Same message' });
+  handleWarning(new ConfigWarning({ message: 'Same message' }));
+  handleWarning(new ConfigWarning({ message: 'Same message' }));
 
   expect(mockPinoLogger.warn).toHaveBeenCalledTimes(1);
 });
@@ -196,8 +200,8 @@ test('handleWarning does not deduplicate different sources', () => {
   });
   const handleWarning = createHandleWarning({ context });
 
-  handleWarning({ message: 'Same msg', configKey: 'k1' });
-  handleWarning({ message: 'Same msg', configKey: 'k2' });
+  handleWarning(new ConfigWarning({ message: 'Same msg', configKey: 'k1' }));
+  handleWarning(new ConfigWarning({ message: 'Same msg', configKey: 'k2' }));
 
   expect(mockPinoLogger.warn).toHaveBeenCalledTimes(2);
 });
@@ -209,8 +213,8 @@ test('handleWarning works without context.seenSourceLines (no dedup)', () => {
   delete context.seenSourceLines;
   const handleWarning = createHandleWarning({ context });
 
-  handleWarning({ message: 'No dedup' });
-  handleWarning({ message: 'No dedup' });
+  handleWarning(new ConfigWarning({ message: 'No dedup' }));
+  handleWarning(new ConfigWarning({ message: 'No dedup' }));
 
   // Both logged — no dedup without seenSourceLines
   expect(mockPinoLogger.warn).toHaveBeenCalledTimes(2);
@@ -222,7 +226,7 @@ test('handleWarning has null source when location not resolved', () => {
   const context = createContext();
   const handleWarning = createHandleWarning({ context });
 
-  handleWarning({ message: 'No location' });
+  handleWarning(new ConfigWarning({ message: 'No location' }));
 
   const [warning] = mockPinoLogger.warn.mock.calls[0];
   expect(warning.source).toBeNull();

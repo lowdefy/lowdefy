@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { ConfigWarning } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 function validateRequestReferences({ requestActionRefs, requests, pageId, context }) {
@@ -26,12 +27,14 @@ function validateRequestReferences({ requestActionRefs, requests, pageId, contex
     }
 
     if (!requestIds.has(requestId)) {
-      context.handleWarning({
-        message: `Request "${requestId}" not defined on page "${pageId}".`,
-        configKey: action['~k'],
-        prodError: true,
-        checkSlug: 'request-refs',
-      });
+      context.handleWarning(
+        new ConfigWarning({
+          message: `Request "${requestId}" not defined on page "${pageId}".`,
+          configKey: action['~k'],
+          prodError: true,
+          checkSlug: 'request-refs',
+        })
+      );
     }
   });
 }

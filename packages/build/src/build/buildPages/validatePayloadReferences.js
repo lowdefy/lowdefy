@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { ConfigWarning } from '@lowdefy/errors';
 import extractOperatorKey from '../../utils/extractOperatorKey.js';
 import traverseConfig from '../../utils/traverseConfig.js';
 
@@ -52,7 +53,9 @@ function validatePayloadReferences({ page, context }) {
         `Payload keys are defined in the request's "payload" property. ` +
         `Check for typos or add the key to the payload definition.`;
 
-      context.handleWarning({ message, configKey, prodError: true, checkSlug: 'payload-refs' });
+      context.handleWarning(
+        new ConfigWarning({ message, configKey, prodError: true, checkSlug: 'payload-refs' })
+      );
     });
   });
 }
