@@ -29,11 +29,15 @@ function createHandleWarning({ context }) {
       return;
     }
 
-    resolveErrorLocation(warning, {
+    const location = resolveErrorLocation(warning, {
       keyMap: context.keyMap,
       refMap: context.refMap,
       configDirectory: context.directories?.config,
     });
+    if (location) {
+      warning.source = location.source;
+      warning.config = location.config;
+    }
 
     const dedupKey = warning.source ?? warning.message;
     if (context.seenSourceLines?.has(dedupKey)) return;

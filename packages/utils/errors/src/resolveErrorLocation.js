@@ -24,17 +24,17 @@ import resolveConfigLocation from './resolveConfigLocation.js';
  *   1. configKey → resolveConfigLocation (standard keyMap/refMap lookup, post-addKeys)
  *   2. filePath + lineNumber → raw path join (pre-addKeys: YAML parse errors, operator eval)
  *
- * Mutates data, setting .source and .config. Returns data.
+ * Returns { source, config } or null. Does not mutate data.
  *
- * @param {Object} data - Error or params object to resolve location on
+ * @param {Object} data - Error or params object to resolve location from
  * @param {Object} options
  * @param {Object} [options.keyMap] - The keyMap from build context
  * @param {Object} [options.refMap] - The refMap from build context
  * @param {string} [options.configDirectory] - Absolute path to config directory
- * @returns {Object} The mutated data object
+ * @returns {Object|null} Location object with source and config, or null
  */
 function resolveErrorLocation(data, { keyMap, refMap, configDirectory }) {
-  if (!data) return data;
+  if (!data) return null;
 
   // Path 1: configKey → standard keyMap/refMap lookup
   if (data.configKey) {
@@ -45,9 +45,7 @@ function resolveErrorLocation(data, { keyMap, refMap, configDirectory }) {
       configDirectory,
     });
     if (location) {
-      data.source = location.source;
-      data.config = location.config;
-      return data;
+      return location;
     }
   }
 
@@ -58,11 +56,10 @@ function resolveErrorLocation(data, { keyMap, refMap, configDirectory }) {
       resolvedPath = path.join(configDirectory, data.filePath);
     }
     const source = data.lineNumber ? `${resolvedPath}:${data.lineNumber}` : resolvedPath;
-    data.source = source;
-    return data;
+    return { source };
   }
 
-  return data;
+  return null;
 }
 
 export default resolveErrorLocation;

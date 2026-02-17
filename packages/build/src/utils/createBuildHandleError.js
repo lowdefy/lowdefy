@@ -19,11 +19,15 @@ import { resolveErrorLocation } from '@lowdefy/errors';
 function createBuildHandleError({ context }) {
   return function handleError(error) {
     try {
-      resolveErrorLocation(error, {
+      const location = resolveErrorLocation(error, {
         keyMap: context.keyMap,
         refMap: context.refMap,
         configDirectory: context.directories?.config,
       });
+      if (location) {
+        error.source = location.source;
+        error.config = location.config;
+      }
       context.logger.error(error);
     } catch {
       try {
