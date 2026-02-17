@@ -139,7 +139,12 @@ function shouldLogStack(error) {
 }
 
 function isErrorLike(input) {
-  return input != null && typeof input !== 'string' && input.message !== undefined;
+  return (
+    input != null &&
+    typeof input !== 'string' &&
+    input.message !== undefined &&
+    (input instanceof Error || input.name !== undefined)
+  );
 }
 
 function createCliLogger({ logLevel } = {}) {
