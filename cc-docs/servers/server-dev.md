@@ -5,6 +5,7 @@ Development server with hot reload and file watching.
 ## Overview
 
 The development server provides:
+
 - Automatic rebuilding on config changes
 - Hot reload without full page refresh
 - Extended plugin set for development
@@ -13,18 +14,19 @@ The development server provides:
 
 ## Key Differences from Production
 
-| Feature | Development | Production |
-|---------|-------------|------------|
-| Minification | Disabled | Enabled |
-| Compression | Disabled | Enabled |
-| Source maps | Available | Disabled |
-| File watching | 3 watchers | None |
-| Hot reload | SSE-based | None |
-| Plugins | Extended | Core only |
+| Feature       | Development | Production |
+| ------------- | ----------- | ---------- |
+| Minification  | Disabled    | Enabled    |
+| Compression   | Disabled    | Enabled    |
+| Source maps   | Available   | Disabled   |
+| File watching | 3 watchers  | None       |
+| Hot reload    | SSE-based   | None       |
+| Plugins       | Extended    | Core only  |
 
 ## Additional Dependencies
 
 Beyond production server:
+
 - `@lowdefy/build` - Build system
 - `chokidar` (3.5.3) - File watcher
 - `dotenv` (16.3.1) - Env loading
@@ -32,6 +34,7 @@ Beyond production server:
 - `swr` (2.2.4) - Data fetching
 
 Additional block packages:
+
 - `@lowdefy/blocks-aggrid`
 - `@lowdefy/blocks-color-selectors`
 - `@lowdefy/blocks-echarts`
@@ -39,6 +42,7 @@ Additional block packages:
 - `@lowdefy/blocks-qr`
 
 Additional operators:
+
 - `@lowdefy/operators-change-case`
 - `@lowdefy/operators-diff`
 - `@lowdefy/operators-moment`
@@ -147,21 +151,21 @@ const context = {
   packageManagerCmd,
 
   // JIT build state
-  pageCache: new PageCache(),    // Manager's PageCache instance
-  pageRegistry: null,            // Set after each skeleton build
-  fileDependencyMap: null,       // Set after each skeleton build
-  buildContext: null,            // Build context from shallowBuild
+  pageCache: new PageCache(), // Manager's PageCache instance
+  pageRegistry: null, // Set after each skeleton build
+  fileDependencyMap: null, // Set after each skeleton build
+  buildContext: null, // Build context from shallowBuild
 
   // Bound functions
   initialBuild,
   installPlugins,
-  lowdefyBuild,                  // Wrapped to capture build result
+  lowdefyBuild, // Wrapped to capture build result
   nextBuild,
   readDotEnv,
   reloadClients,
   restartServer,
   shutdownServer,
-  startWatchers
+  startWatchers,
 };
 ```
 
@@ -192,6 +196,7 @@ Manager Process                    Next.js Server Process
 ```
 
 Cross-process communication uses files in the build directory:
+
 - `pageRegistry.json`: Page metadata + raw content for JIT resolution
 - `refMap.json`, `keyMap.json`, `jsMap.json`: Shared build state
 - `invalidatePages.json`: List of page IDs invalidated by the watcher
@@ -272,17 +277,17 @@ async function buildPageIfNeeded({ pageId, buildDirectory, configDirectory }) {
 
 Tracks which pages have been JIT-compiled and provides concurrency control:
 
-| Method | Purpose |
-|--------|---------|
-| `isCompiled(pageId)` | Check if page has been built |
-| `markCompiled(pageId)` | Mark page as built |
-| `acquireBuildLock(pageId)` | Prevent concurrent builds of same page |
-| `releaseBuildLock(pageId)` | Release build lock |
-| `acquireSkeletonLock()` | Block page builds during skeleton rebuild |
-| `releaseSkeletonLock()` | Allow page builds after skeleton rebuild |
-| `invalidateAll()` | Clear all compiled pages (skeleton rebuild) |
-| `invalidatePages(pageIds)` | Clear specific pages (targeted invalidation) |
-| `invalidateByFiles(files, depMap)` | Clear pages affected by changed files |
+| Method                             | Purpose                                      |
+| ---------------------------------- | -------------------------------------------- |
+| `isCompiled(pageId)`               | Check if page has been built                 |
+| `markCompiled(pageId)`             | Mark page as built                           |
+| `acquireBuildLock(pageId)`         | Prevent concurrent builds of same page       |
+| `releaseBuildLock(pageId)`         | Release build lock                           |
+| `acquireSkeletonLock()`            | Block page builds during skeleton rebuild    |
+| `releaseSkeletonLock()`            | Allow page builds after skeleton rebuild     |
+| `invalidateAll()`                  | Clear all compiled pages (skeleton rebuild)  |
+| `invalidatePages(pageIds)`         | Clear specific pages (targeted invalidation) |
+| `invalidateByFiles(files, depMap)` | Clear pages affected by changed files        |
 
 Two separate instances exist: one in the manager process (for watcher invalidation) and one in the Next.js server (for JIT build tracking).
 
@@ -293,6 +298,7 @@ Two separate instances exist: one in the manager process (for watcher invalidati
 Maps config file paths → Set of page IDs that depend on them. Used for targeted invalidation.
 
 Sources of dependencies:
+
 1. **Page source file**: via `pageEntry.refId` → `refMap[refId].path`
 2. **Child `_ref` paths**: Collected from `_shallow` markers in raw page content
 
@@ -302,12 +308,12 @@ Sources of dependencies:
 
 When a file changes, the watcher decides:
 
-| Condition | Action |
-|-----------|--------|
-| `lowdefy.yaml` changed | Full skeleton rebuild |
-| File not in dependency map and not in `pages/` | Full skeleton rebuild |
-| File in dependency map | Targeted: invalidate affected pages, write `invalidatePages.json` |
-| No affected pages found | Full skeleton rebuild (safety fallback) |
+| Condition                                      | Action                                                            |
+| ---------------------------------------------- | ----------------------------------------------------------------- |
+| `lowdefy.yaml` changed                         | Full skeleton rebuild                                             |
+| File not in dependency map and not in `pages/` | Full skeleton rebuild                                             |
+| File in dependency map                         | Targeted: invalidate affected pages, write `invalidatePages.json` |
+| No affected pages found                        | Full skeleton rebuild (safety fallback)                           |
 
 ### Cross-Process Cache Invalidation
 
@@ -348,12 +354,12 @@ const nextServer = spawn('node', [context.bin.next, 'start'], {
 
 The server-dev uses two loggers:
 
-| Logger | Package | Purpose |
-|--------|---------|---------|
-| Manager logger | `createDevLogger` from `@lowdefy/logger/dev` | Build orchestration, watcher output |
-| Server logger | `createNodeLogger` from `@lowdefy/logger/node` | HTTP request logs, runtime errors |
+| Logger         | Package                                        | Purpose                             |
+| -------------- | ---------------------------------------------- | ----------------------------------- |
+| Manager logger | `createDevLogger` from `@lowdefy/logger/dev`   | Build orchestration, watcher output |
+| Server logger  | `createNodeLogger` from `@lowdefy/logger/node` | HTTP request logs, runtime errors   |
 
-Both emit pino JSON with optional `color`/`spin`/`succeed` fields to stdout. The CLI reads this JSON and renders it via `createStdOutLineHandler` → `createPrint` (ora spinners, colored output).
+Both emit pino JSON with optional `color`/`spin`/`succeed` fields to stdout. The CLI reads this JSON and renders it via `createStdOutLineHandler` → `createCliLogger` (ora spinners, colored output).
 
 See [@lowdefy/logger](../utils/logger.md) for details.
 
@@ -371,7 +377,8 @@ async function initialBuild(context) {
   await context.nextBuild();
 }
 ```
-```
+
+````
 
 ### Install Plugins
 
@@ -386,7 +393,7 @@ async function installPlugins(context) {
     logger: context.logger
   });
 }
-```
+````
 
 ## File Watchers
 
@@ -415,22 +422,25 @@ Watches config directory for changes. Decides between targeted invalidation (fas
 
 ```javascript
 const callback = async (filePaths) => {
-  const changedFiles = filePaths.map(f => path.relative(configDir, f));
+  const changedFiles = filePaths.map((f) => path.relative(configDir, f));
 
   // Check for version change in lowdefy.yaml
-  if (lowdefyYamlModified) { /* exit if version changed */ }
+  if (lowdefyYamlModified) {
+    /* exit if version changed */
+  }
 
-  const isSkeletonChange = lowdefyYamlModified ||
-    changedFiles.some(f => !fileDependencyMap?.has(f) && !f.startsWith('pages/'));
+  const isSkeletonChange =
+    lowdefyYamlModified ||
+    changedFiles.some((f) => !fileDependencyMap?.has(f) && !f.startsWith('pages/'));
 
   if (isSkeletonChange) {
-    await context.lowdefyBuild();          // Full rebuild
+    await context.lowdefyBuild(); // Full rebuild
   } else {
     const affectedPages = pageCache.invalidateByFiles(changedFiles, fileDependencyMap);
     if (affectedPages.size > 0) {
       fs.writeFileSync(invalidationPath, JSON.stringify([...affectedPages]));
     } else {
-      await context.lowdefyBuild();        // Fallback to full rebuild
+      await context.lowdefyBuild(); // Fallback to full rebuild
     }
   }
   context.reloadClients();
@@ -459,11 +469,9 @@ watcher.on('all', async () => {
 Watches build artifacts:
 
 ```javascript
-const watcher = chokidar.watch([
-  'build/plugins/**',
-  'build/config.json',
-  'server/package.json'
-], { ignoreInitial: true });
+const watcher = chokidar.watch(['build/plugins/**', 'build/config.json', 'server/package.json'], {
+  ignoreInitial: true,
+});
 
 watcher.on('all', async (event, filePath) => {
   if (filePath.includes('package.json')) {
@@ -485,7 +493,7 @@ export default function handler(req, res) {
   res.writeHead(200, {
     'Content-Type': 'text/event-stream',
     'Cache-Control': 'no-cache',
-    'Connection': 'keep-alive'
+    Connection: 'keep-alive',
   });
 
   const watcher = chokidar.watch('./build/reload');
@@ -606,9 +614,7 @@ function App({ children }) {
 
   return (
     <Reload lowdefy={lowdefy} resetContext={resetContext}>
-      <Auth auth={auth}>
-        {children}
-      </Auth>
+      <Auth auth={auth}>{children}</Auth>
     </Reload>
   );
 }
@@ -636,11 +642,9 @@ async function fetchPageConfig(url) {
 function usePageConfig(pageId, basePath) {
   const url = `${basePath}/api/page/${pageId}`;
   // reloadVersion changes on hot reload, orphaning old SWR cache entries
-  const { data } = useSWR(
-    [url, getReloadVersion()],
-    ([fetchUrl]) => fetchPageConfig(fetchUrl),
-    { suspense: true }
-  );
+  const { data } = useSWR([url, getReloadVersion()], ([fetchUrl]) => fetchPageConfig(fetchUrl), {
+    suspense: true,
+  });
   return { data };
 }
 ```
@@ -652,23 +656,27 @@ Manages cache busting via a `reloadVersion` counter:
 ```javascript
 let reloadVersion = 0;
 
-function getReloadVersion() { return reloadVersion; }
+function getReloadVersion() {
+  return reloadVersion;
+}
 
 function useMutateCache(basePath) {
   const { mutate } = useSWRConfig();
   return () => {
-    reloadVersion += 1;    // Orphans old SWR keys
-    return mutate((key) => key === `${basePath}/api/root`);  // Only revalidate root
+    reloadVersion += 1; // Orphans old SWR keys
+    return mutate((key) => key === `${basePath}/api/root`); // Only revalidate root
   };
 }
 ```
 
 **Why versioned keys instead of cache clearing:**
+
 - Clearing SWR entries to `undefined` causes React Suspense on currently mounted components
 - This creates a three-request waterfall (/api/root → /api/page → /api/js) with visible delay
 - Versioned keys orphan old entries without triggering Suspense, and new keys force fresh fetches
 
 **Why jsMap is fetched sequentially after page config:**
+
 - Page config fetch triggers JIT build which may extract new `_js` functions
 - If jsMap is fetched in parallel, it returns stale data missing the new JS entries
 - The `_jsEntries` are merged with the static `jsMap` in `Page.js`
@@ -689,38 +697,38 @@ const nextConfig = {
   webpack: (config) => {
     // Same browser fallbacks as production
     return config;
-  }
+  },
 };
 ```
 
 ## Key Files
 
-| File | Purpose |
-|------|---------|
-| `manager/run.mjs` | Entry point |
-| `manager/getContext.mjs` | Context factory with JIT build state |
-| `manager/processes/lowdefyBuild.mjs` | Calls `shallowBuild`, captures result |
-| `manager/watchers/lowdefyBuildWatcher.mjs` | Targeted invalidation or full rebuild |
-| `lib/server/jitPageBuilder.js` | JIT page build on API request |
-| `lib/server/pageCache.mjs` | PageCache class (compiled tracking, locks) |
-| `pages/api/page/[pageId].js` | Page API (triggers JIT build) |
-| `pages/api/js/[env].js` | Serves JS map as module |
-| `pages/api/reload.js` | SSE endpoint |
-| `lib/client/Reload.js` | Hot reload component |
-| `lib/client/App.js` | Dev app wrapper |
-| `lib/client/Page.js` | Page renderer (merges jsMap) |
-| `lib/client/Utils/usePageConfig.js` | SWR hook with versioned cache keys |
-| `lib/client/Utils/useMutateCache.js` | `reloadVersion` counter for cache busting |
+| File                                       | Purpose                                    |
+| ------------------------------------------ | ------------------------------------------ |
+| `manager/run.mjs`                          | Entry point                                |
+| `manager/getContext.mjs`                   | Context factory with JIT build state       |
+| `manager/processes/lowdefyBuild.mjs`       | Calls `shallowBuild`, captures result      |
+| `manager/watchers/lowdefyBuildWatcher.mjs` | Targeted invalidation or full rebuild      |
+| `lib/server/jitPageBuilder.js`             | JIT page build on API request              |
+| `lib/server/pageCache.mjs`                 | PageCache class (compiled tracking, locks) |
+| `pages/api/page/[pageId].js`               | Page API (triggers JIT build)              |
+| `pages/api/js/[env].js`                    | Serves JS map as module                    |
+| `pages/api/reload.js`                      | SSE endpoint                               |
+| `lib/client/Reload.js`                     | Hot reload component                       |
+| `lib/client/App.js`                        | Dev app wrapper                            |
+| `lib/client/Page.js`                       | Page renderer (merges jsMap)               |
+| `lib/client/Utils/usePageConfig.js`        | SWR hook with versioned cache keys         |
+| `lib/client/Utils/useMutateCache.js`       | `reloadVersion` counter for cache busting  |
 
 ## Reload Types
 
-| Trigger | Watcher | Action | Result |
-|---------|---------|--------|--------|
-| Page-level config change | lowdefyBuildWatcher | Targeted invalidation + SSE | Soft reload (page rebuilt JIT) |
+| Trigger                      | Watcher             | Action                      | Result                              |
+| ---------------------------- | ------------------- | --------------------------- | ----------------------------------- |
+| Page-level config change     | lowdefyBuildWatcher | Targeted invalidation + SSE | Soft reload (page rebuilt JIT)      |
 | Skeleton-level config change | lowdefyBuildWatcher | Full skeleton rebuild + SSE | Soft reload (all pages invalidated) |
-| .env change | envWatcher | Read env | Hard restart |
-| Plugin change | nextBuildWatcher | Next build | Hard restart |
-| package.json | nextBuildWatcher | Install + build | Hard restart |
+| .env change                  | envWatcher          | Read env                    | Hard restart                        |
+| Plugin change                | nextBuildWatcher    | Next build                  | Hard restart                        |
+| package.json                 | nextBuildWatcher    | Install + build             | Hard restart                        |
 
 ## Mock User for Testing
 
@@ -729,11 +737,13 @@ The dev server supports mock users for testing, bypassing the login flow.
 ### Configuration
 
 **Environment Variable (takes precedence):**
+
 ```bash
 LOWDEFY_DEV_USER='{"sub":"test-user","email":"test@example.com","roles":["admin"]}'
 ```
 
 **Config File:**
+
 ```yaml
 auth:
   dev:
@@ -744,12 +754,12 @@ auth:
 
 ### Key Files
 
-| File | Purpose |
-|------|---------|
-| `lib/server/auth/getMockSession.js` | Core mock session logic |
-| `lib/server/auth/checkMockUserWarning.js` | Startup warning |
-| `lib/server/auth/getServerSession.js` | Server-side integration |
-| `pages/api/auth/[...nextauth].js` | Client-side integration |
+| File                                      | Purpose                 |
+| ----------------------------------------- | ----------------------- |
+| `lib/server/auth/getMockSession.js`       | Core mock session logic |
+| `lib/server/auth/checkMockUserWarning.js` | Startup warning         |
+| `lib/server/auth/getServerSession.js`     | Server-side integration |
+| `pages/api/auth/[...nextauth].js`         | Client-side integration |
 
 See [Auth System Architecture](../architecture/auth-system.md#mock-user-for-testing-dev-server-only) for full details.
 
@@ -760,6 +770,7 @@ The dev server uses a different plugin strategy than production to optimize for 
 ### Pre-installed Packages
 
 The dev server's `package.json` includes a broad set of default plugin packages (blocks, operators, actions, connections) as dependencies. This means:
+
 - No code build (Next.js rebuild) is needed when a user first uses a new block or action type
 - Bundle size is not a concern in development — all installed types are available immediately
 - The skeleton build reads the server's `package.json` to determine installed packages and includes all types from those packages in the generated import files
@@ -773,6 +784,7 @@ To compensate, `shallowBuild` adds all types from installed packages to `compone
 ### New Plugin Detection
 
 If a user configures a plugin package that isn't installed in the dev server:
+
 1. The build detects the new package via `customTypesMap`
 2. `installPlugins` runs `pnpm install` to add the package
 3. A Next.js rebuild is triggered to bundle the new imports
@@ -780,28 +792,28 @@ If a user configures a plugin package that isn't installed in the dev server:
 
 ### Production Comparison
 
-| Aspect | Development | Production |
-|--------|-------------|------------|
-| Type counting | Only non-page types counted; all installed types included | All pages built; exact type usage counted |
-| Bundle size | All installed types bundled (larger) | Only used types bundled (tree-shaken) |
-| Plugin availability | Immediate for pre-installed packages | Only what's declared and used |
-| New plugin | Install + rebuild triggered automatically | Must be declared in `lowdefy.yaml` |
+| Aspect              | Development                                               | Production                                |
+| ------------------- | --------------------------------------------------------- | ----------------------------------------- |
+| Type counting       | Only non-page types counted; all installed types included | All pages built; exact type usage counted |
+| Bundle size         | All installed types bundled (larger)                      | Only used types bundled (tree-shaken)     |
+| Plugin availability | Immediate for pre-installed packages                      | Only what's declared and used             |
+| New plugin          | Install + rebuild triggered automatically                 | Must be declared in `lowdefy.yaml`        |
 
 ### Key Files
 
-| File | Purpose |
-|------|---------|
-| `packages/build/src/build/shallowBuild.js` | `getInstalledPackages()` reads server `package.json`; `addInstalledTypes()` pre-seeds types |
-| `packages/build/src/build/buildImports/buildImportsDev.js` | Generates imports from `components.types` |
-| `packages/servers/server-dev/manager/processes/installPlugins.mjs` | Installs new plugin packages |
-| `packages/servers/server-dev/manager/watchers/nextBuildWatcher.mjs` | Triggers rebuild on plugin changes |
+| File                                                                | Purpose                                                                                     |
+| ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `packages/build/src/build/shallowBuild.js`                          | `getInstalledPackages()` reads server `package.json`; `addInstalledTypes()` pre-seeds types |
+| `packages/build/src/build/buildImports/buildImportsDev.js`          | Generates imports from `components.types`                                                   |
+| `packages/servers/server-dev/manager/processes/installPlugins.mjs`  | Installs new plugin packages                                                                |
+| `packages/servers/server-dev/manager/watchers/nextBuildWatcher.mjs` | Triggers rebuild on plugin changes                                                          |
 
 ## Environment Variables
 
-| Variable | Purpose |
-|----------|---------|
-| `LOWDEFY_OPEN_BROWSER` | Auto-open browser (default: true) |
-| `LOWDEFY_DIRECTORY_CONFIG` | Config directory path |
-| `PORT` | Server port (default: 3000) |
-| `LOWDEFY_BUILD_REF_RESOLVER` | Custom ref resolver |
-| `LOWDEFY_DEV_USER` | Mock user JSON for testing |
+| Variable                     | Purpose                           |
+| ---------------------------- | --------------------------------- |
+| `LOWDEFY_OPEN_BROWSER`       | Auto-open browser (default: true) |
+| `LOWDEFY_DIRECTORY_CONFIG`   | Config directory path             |
+| `PORT`                       | Server port (default: 3000)       |
+| `LOWDEFY_BUILD_REF_RESOLVER` | Custom ref resolver               |
+| `LOWDEFY_DEV_USER`           | Mock user JSON for testing        |

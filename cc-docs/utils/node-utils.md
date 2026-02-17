@@ -5,6 +5,7 @@ Node.js-specific file system and process utilities.
 ## Overview
 
 Provides Node.js utilities for:
+
 - File system operations
 - Process spawning
 - Environment variable handling
@@ -73,9 +74,9 @@ await copyFileOrDirectory('src/templates', 'dest/templates');
 Extract file extension:
 
 ```javascript
-getFileExtension('config.yaml');        // 'yaml'
-getFileExtension('app.config.js');      // 'js'
-getFileExtension('README');             // ''
+getFileExtension('config.yaml'); // 'yaml'
+getFileExtension('app.config.js'); // 'js'
+getFileExtension('README'); // ''
 ```
 
 ### getFileSubExtension(filePath)
@@ -83,9 +84,9 @@ getFileExtension('README');             // ''
 Extract sub-extension:
 
 ```javascript
-getFileSubExtension('app.config.js');   // 'config'
-getFileSubExtension('test.spec.ts');    // 'spec'
-getFileSubExtension('file.js');         // ''
+getFileSubExtension('app.config.js'); // 'config'
+getFileSubExtension('test.spec.ts'); // 'spec'
+getFileSubExtension('file.js'); // ''
 ```
 
 ### spawnProcess(options)
@@ -98,7 +99,7 @@ await spawnProcess({
   args: ['install'],
   cwd: './project',
   logger: console,
-  processOptions: { env: process.env }
+  processOptions: { env: process.env },
 });
 ```
 
@@ -120,7 +121,7 @@ await spawnProcess({
 const childProcess = await spawnProcess({
   command: 'node',
   args: ['server.js'],
-  returnProcess: true
+  returnProcess: true,
 });
 
 // Kill later
@@ -134,7 +135,7 @@ await spawnProcess({
   command: 'npm',
   args: ['test'],
   onStdout: (line) => console.log('OUT:', line),
-  onStderr: (line) => console.error('ERR:', line)
+  onStderr: (line) => console.error('ERR:', line),
 });
 ```
 
@@ -149,137 +150,20 @@ const secrets = getSecretsFromEnv(process.env);
 
 Typically filtered by prefix or naming convention in calling code.
 
-## Error Classes
+## Error Classes (Moved to @lowdefy/errors)
 
-Build-time error and warning classes for config validation with location resolution.
-
-### ConfigMessage (Base Class)
-
-Shared formatting logic for config messages with suppression support. Not used directly - use ConfigError or ConfigWarning.
-
-```javascript
-import { ConfigMessage, VALID_CHECK_SLUGS } from '@lowdefy/node-utils';
-
-// Check if a message should be suppressed based on ~ignoreBuildChecks
-const shouldSkip = ConfigMessage.shouldSuppress({
-  configKey: obj['~k'],
-  keyMap: context.keyMap,
-  checkSlug: 'state-refs',  // Optional - omit to only match ~ignoreBuildChecks: true
-  verbose: false,           // Set true to log suppressions
-});
-
-// Format a message with location
-const message = ConfigMessage.format({
-  prefix: '[Custom]',
-  message: 'Something happened',
-  configKey: obj['~k'],
-  context,
-  checkSlug: 'state-refs',  // For suppression check
-});
-```
-
-### VALID_CHECK_SLUGS
-
-Available check slugs for `~ignoreBuildChecks`:
-
-```javascript
-import { VALID_CHECK_SLUGS } from '@lowdefy/node-utils';
-
-// VALID_CHECK_SLUGS = {
-//   'state-refs': 'Undefined _state reference warnings',
-//   'payload-refs': 'Undefined _payload reference warnings',
-//   'step-refs': 'Undefined _step reference warnings',
-//   'link-refs': 'Invalid Link action page reference warnings',
-//   'request-refs': 'Invalid Request action reference warnings',
-//   'connection-refs': 'Nonexistent connection ID references',
-//   'types': 'All type validation (blocks, operators, actions, requests, connections)',
-//   'schema': 'JSON schema validation errors',
-// }
-```
-
-### ConfigError
-
-Build-time error class that extends Error with config location resolution.
-
-```javascript
-import { ConfigError } from '@lowdefy/node-utils';
-
-// Standard error
-throw new ConfigError({
-  message: 'Block type "Buton" not found.',
-  configKey: block['~k'],
-  context,
-});
-
-// YAML parse error (constructor overload)
-throw new ConfigError({
-  error: yamlParseError,  // Extracts line number from error.message
-  filePath: 'pages/home.yaml',
-  configDirectory: '/app',
-});
-```
-
-**Output format:**
-```
-[Config Error] Block type "Buton" not found.
-  pages/home.yaml:15 at pages.0.blocks.0.type
-  /Users/dev/myapp/pages/home.yaml:15
-```
-
-### ConfigWarning
-
-Build-time warning class with optional `prodError` flag. **Prefer using `context.logger.configWarning()` instead of calling directly.**
-
-**prodError behavior:**
-- `stage === 'dev'` or `stage === 'test'`: Returns formatted warning string
-- `stage === 'prod'`: Throws `ConfigError` instead
-
-### Logger Integration (Preferred)
-
-The build context logger has convenience methods that wrap ConfigError and ConfigWarning:
-
-```javascript
-// Warning - logs but continues build
-context.logger.configWarning({
-  message: '_state references "userName" but no block exists.',
-  configKey: obj['~k'],
-  checkSlug: 'state-refs',  // For ~ignoreBuildChecks suppression
-});
-
-// Warning that becomes error in prod builds
-context.logger.configWarning({
-  message: 'Deprecated feature used.',
-  configKey: obj['~k'],
-  prodError: true,
-  checkSlug: 'types',
-});
-
-// Throws ConfigError with location
-context.logger.configError({
-  message: 'Invalid block type.',
-  configKey: block['~k'],
-  checkSlug: 'types',
-});
-```
-
-**Implementation** (in `createContext.js`):
-```javascript
-logger.configWarning = ({ message, configKey, operatorLocation, prodError, checkSlug }) => {
-  const formatted = ConfigWarning.format({
-    message, configKey, operatorLocation, context, prodError, checkSlug
-  });
-  if (formatted) {
-    logger.warn(formatted);
-  }
-};
-
-logger.configError = ({ message, configKey, operatorLocation, checkSlug }) => {
-  const formatted = ConfigError.format({ message, configKey, operatorLocation, context, checkSlug });
-  if (formatted) {
-    logger.error(formatted);
-  }
-};
-```
+> **Note:** Error classes (`ConfigError`, `ConfigWarning`, `ConfigMessage`) and location resolution (`resolveConfigLocation`, `shouldSuppressBuildCheck`, `VALID_CHECK_SLUGS`) have moved to `@lowdefy/errors`. Import from there:
+>
+> ```javascript
+> import {
+>   ConfigError,
+>   ConfigWarning,
+>   shouldSuppressBuildCheck,
+>   VALID_CHECK_SLUGS,
+> } from '@lowdefy/errors';
+> ```
+>
+> See [errors.md](./errors.md) for the complete error system and [error-tracing.md](../architecture/error-tracing.md) for the error flow.
 
 ## Dependencies
 
@@ -288,19 +172,19 @@ logger.configError = ({ message, configKey, operatorLocation, checkSlug }) => {
 
 ## Key Files
 
-| File | Purpose |
-|------|---------|
-| `src/readFile.js` | File reading |
-| `src/writeFile.js` | File writing |
-| `src/cleanDirectory.js` | Directory cleaning |
-| `src/copyFileOrDirectory.js` | Copy operations |
-| `src/getFileExtension.js` | Extension parsing |
-| `src/spawnProcess.js` | Process spawning |
-| `src/getSecretsFromEnv.js` | Environment secrets |
-| `src/ConfigMessage.js` | Base class for config messages |
-| `src/ConfigError.js` | Build-time error with location |
-| `src/ConfigWarning.js` | Build-time warning with prodError flag |
-| `src/resolveConfigLocation.js` | Config location resolver |
+| File                           | Purpose                                |
+| ------------------------------ | -------------------------------------- |
+| `src/readFile.js`              | File reading                           |
+| `src/writeFile.js`             | File writing                           |
+| `src/cleanDirectory.js`        | Directory cleaning                     |
+| `src/copyFileOrDirectory.js`   | Copy operations                        |
+| `src/getFileExtension.js`      | Extension parsing                      |
+| `src/spawnProcess.js`          | Process spawning                       |
+| `src/getSecretsFromEnv.js`     | Environment secrets                    |
+| `src/ConfigMessage.js`         | Base class for config messages         |
+| `src/ConfigError.js`           | Build-time error with location         |
+| `src/ConfigWarning.js`         | Build-time warning with prodError flag |
+| `src/resolveConfigLocation.js` | Config location resolver               |
 
 ## Usage Examples
 
@@ -320,7 +204,7 @@ async function build() {
   await spawnProcess({
     command: 'npm',
     args: ['run', 'build'],
-    logger: console
+    logger: console,
   });
 }
 ```

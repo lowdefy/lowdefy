@@ -5,6 +5,7 @@ The command-line interface for Lowdefy. Provides commands for initializing, deve
 ## Purpose
 
 The CLI is the primary entry point for developers working with Lowdefy:
+
 - Initialize new projects
 - Run development server with hot reload
 - Build production applications
@@ -21,6 +22,7 @@ lowdefy init
 ```
 
 Creates:
+
 - `lowdefy.yaml` - Main configuration file
 - `.gitignore` - Ignores build artifacts
 
@@ -45,6 +47,7 @@ lowdefy dev [options]
 | `--log-level` | Log level (error/warn/info/debug) | info |
 
 **What happens:**
+
 1. Downloads dev server package
 2. Runs `@lowdefy/build` on config
 3. Starts Next.js dev server
@@ -69,6 +72,7 @@ lowdefy build [options]
 | `--log-level` | Log level | info |
 
 **What happens:**
+
 1. Downloads production server package
 2. Runs `@lowdefy/build` on config
 3. Runs `next build` on the server
@@ -110,14 +114,14 @@ lowdefy init-vercel [options]
 
 All options can be set via environment variables:
 
-| Variable | Corresponding Option |
-|----------|---------------------|
-| `LOWDEFY_DIRECTORY_CONFIG` | `--config-directory` |
-| `LOWDEFY_DIRECTORY_DEV` | `--dev-directory` |
-| `LOWDEFY_DIRECTORY_SERVER` | `--server-directory` |
-| `LOWDEFY_LOG_LEVEL` | `--log-level` |
+| Variable                    | Corresponding Option  |
+| --------------------------- | --------------------- |
+| `LOWDEFY_DIRECTORY_CONFIG`  | `--config-directory`  |
+| `LOWDEFY_DIRECTORY_DEV`     | `--dev-directory`     |
+| `LOWDEFY_DIRECTORY_SERVER`  | `--server-directory`  |
+| `LOWDEFY_LOG_LEVEL`         | `--log-level`         |
 | `LOWDEFY_DISABLE_TELEMETRY` | `--disable-telemetry` |
-| `PORT` | `--port` |
+| `PORT`                      | `--port`              |
 
 ## Architecture
 
@@ -157,27 +161,27 @@ All options can be set via environment variables:
 
 ### `/commands/`
 
-| Directory | Purpose |
-|-----------|---------|
-| `init/` | Project initialization logic |
-| `dev/` | Development server orchestration |
-| `build/` | Production build orchestration |
-| `start/` | Production server startup |
-| `init-docker/` | Dockerfile generation |
-| `init-vercel/` | Vercel scripts generation |
+| Directory      | Purpose                          |
+| -------------- | -------------------------------- |
+| `init/`        | Project initialization logic     |
+| `dev/`         | Development server orchestration |
+| `build/`       | Production build orchestration   |
+| `start/`       | Production server startup        |
+| `init-docker/` | Dockerfile generation            |
+| `init-vercel/` | Vercel scripts generation        |
 
 ### `/utils/`
 
-| Module | Purpose |
-|--------|---------|
-| `runCommand.js` | Command wrapper with error handling |
-| `createPluginTypesMap.js` | Generate plugin type maps |
+| Module                    | Purpose                             |
+| ------------------------- | ----------------------------------- |
+| `runCommand.js`           | Command wrapper with error handling |
+| `createPluginTypesMap.js` | Generate plugin type maps           |
 
 ### Logging
 
-The CLI uses `createCliLogger` from `@lowdefy/logger/cli` which wraps `createPrint` (ora spinners, colored terminal output). The logger is available as `context.logger` with four level methods (`error`, `warn`, `info`, `debug`), six color sub-methods each (`.red()`, `.blue()`, etc.), and options for spin/succeed (`logger.info(msg, { spin: true })`).
+The CLI uses `createCliLogger` from `@lowdefy/logger/cli` (ora spinners, colored terminal output). The logger is available as `context.logger` with four level methods (`error`, `warn`, `info`, `debug`). Color is passed via merge objects: `logger.info({ color: 'blue' }, 'text')`. Spin/succeed: `logger.info({ spin: true }, 'Building...')`.
 
-When running the dev server, the CLI pipes the manager process stdout through `createStdOutLineHandler` which parses pino JSON lines and routes them to `logger[level](msg, { color/spin/succeed })` for rendering.
+When running the dev server, the CLI pipes the manager process stdout through `createStdOutLineHandler` which parses pino JSON lines, reconstructs errors, and routes them to `logger[level](error)` or `logger[level]({ color/spin/succeed }, msg)` for rendering.
 
 See [@lowdefy/logger](../utils/logger.md) for the full logging architecture.
 
@@ -186,6 +190,7 @@ See [@lowdefy/logger](../utils/logger.md) for the full logging architecture.
 ### Why Download Server Packages?
 
 The CLI downloads `@lowdefy/server` and `@lowdefy/server-dev` on demand:
+
 - Keeps CLI package small
 - Server can be versioned independently
 - Different server variants possible
@@ -193,6 +198,7 @@ The CLI downloads `@lowdefy/server` and `@lowdefy/server-dev` on demand:
 ### Why Not Bundle Build?
 
 The build package (`@lowdefy/build`) is also downloaded:
+
 - Reduces CLI size
 - Ensures build matches server version
 - Allows build improvements without CLI updates
@@ -200,6 +206,7 @@ The build package (`@lowdefy/build`) is also downloaded:
 ### Node.js Version Check
 
 The CLI enforces Node.js >= 18:
+
 ```javascript
 if (Number(nodeMajorVersion) < 18) {
   throw new Error('...');
@@ -207,6 +214,7 @@ if (Number(nodeMajorVersion) < 18) {
 ```
 
 This ensures compatibility with:
+
 - ES modules
 - Modern JavaScript features
 - Next.js requirements
@@ -240,11 +248,13 @@ npx lowdefy init-vercel  # or init-docker
 ## File Watching (Dev Mode)
 
 The dev server watches:
+
 - All `.yaml`, `.yml`, `.json`, `.json5` in config directory
 - Custom paths via `--watch`
 - Excludes `node_modules`, `.git`, `.lowdefy`
 
 On change:
+
 1. Rebuild config via `@lowdefy/build`
 2. Hot reload the Next.js dev server
 3. Browser refreshes automatically
