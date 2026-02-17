@@ -72,7 +72,6 @@
     "@lowdefy/operators-uuid": "4.5.2",
     "@lowdefy/operators-yaml": "4.5.2",
     "@lowdefy/plugin-next-auth": "4.5.2",
-    "@sentry/nextjs": "8.53.0",
     "chokidar": "3.5.3",
     "dotenv": "16.3.1",
     "next": "13.5.4",

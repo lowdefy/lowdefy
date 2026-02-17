@@ -16,8 +16,6 @@
 
 import { LowdefyError, loadAndResolveErrorLocation } from '@lowdefy/errors';
 
-import captureSentryError from '../sentry/captureSentryError.js';
-
 function createHandleError({ context }) {
   return async function handleError(error) {
     try {
@@ -41,13 +39,6 @@ function createHandleError({ context }) {
       }
 
       context.logger.error(error);
-
-      // Capture error to Sentry (no-op if Sentry not configured)
-      captureSentryError({
-        error,
-        context,
-        configLocation: location,
-      });
     } catch (e) {
       console.error(error);
       console.error('An error occurred while logging the error.');
