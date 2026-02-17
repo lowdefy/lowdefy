@@ -30,7 +30,6 @@
   "exports": {
     ".": "./dist/index.js",
     "./node": "./dist/node/index.js",
-    "./dev": "./dist/dev/index.js",
     "./cli": "./dist/cli/index.js",
     "./browser": "./dist/browser/index.js"
   },

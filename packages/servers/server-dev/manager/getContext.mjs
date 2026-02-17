@@ -19,7 +19,8 @@ import path from 'path';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
-import { createDevLogger as createLogger } from '@lowdefy/logger/dev';
+import pino from 'pino';
+import { createNodeLogger } from '@lowdefy/logger/node';
 import checkMockUserWarning from './processes/checkMockUserWarning.mjs';
 import initialBuild from './processes/initialBuild.mjs';
 import installPlugins from './processes/installPlugins.mjs';
@@ -48,7 +49,12 @@ async function getContext() {
       config: path.resolve(argv.configDirectory ?? env.LOWDEFY_DIRECTORY_CONFIG ?? process.cwd()),
       server: process.cwd(),
     },
-    logger: createLogger({ level: env.LOWDEFY_LOG_LEVEL }),
+    logger: createNodeLogger({
+      name: 'lowdefy build',
+      level: env.LOWDEFY_LOG_LEVEL ?? 'info',
+      base: { pid: undefined, hostname: undefined },
+      destination: pino.destination({ dest: 1, sync: true }),
+    }),
     options: {
       port: argv.port ?? env.PORT ?? 3000,
       refResolver: argv.refResolver ?? env.LOWDEFY_BUILD_REF_RESOLVER,
