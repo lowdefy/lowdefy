@@ -59,15 +59,12 @@ class BuildParser {
     this.typeNames = typeNames ?? new Set();
   }
 
-  parse({ args, input, location, operatorPrefix = '_' }) {
+  parse({ args, input, operatorPrefix = '_' }) {
     if (type.isUndefined(input)) {
       return { output: input, errors: [] };
     }
     if (args && !type.isArray(args)) {
       throw new Error('Operator parser args must be an array.');
-    }
-    if (!type.isString(location)) {
-      throw new Error('Operator parser location must be a string.');
     }
     const errors = [];
     const reviver = (_, value) => {
@@ -133,10 +130,9 @@ class BuildParser {
         return BuildParser.setDynamicMarker(value);
       }
 
-      // Build location with line number if available
       const configKey = value['~k'];
       const lineNumber = value['~l'];
-      const operatorLocation = lineNumber ? `${location}:${lineNumber}` : location;
+      const refId = value['~r'];
       const params = value[key];
 
       try {
@@ -144,7 +140,6 @@ class BuildParser {
           args,
           arrayIndices: [],
           env: this.env,
-          location: operatorLocation,
           methodName,
           operators: this.operators,
           params,
@@ -164,6 +159,9 @@ class BuildParser {
           if (!e.lineNumber) {
             e.lineNumber = lineNumber;
           }
+          if (!e.refId) {
+            e.refId = refId;
+          }
           errors.push(e);
           return null;
         }
@@ -172,13 +170,14 @@ class BuildParser {
           pluginType: 'operator',
           pluginName: op,
           received: { [key]: params },
-          location: operatorLocation,
           configKey: e.configKey ?? configKey,
         });
-        // lineNumber needed by buildRefs consumers (evaluateBuildOperators,
+        // lineNumber and refId needed by buildRefs consumers (evaluateBuildOperators,
         // evaluateStaticOperators) which run before addKeys — no configKey
         // exists yet, so they use filePath + lineNumber for resolution.
+        // refId (from ~r) identifies the source file in the refMap.
         pluginError.lineNumber = lineNumber;
+        pluginError.refId = refId;
         errors.push(pluginError);
         return null;
       }

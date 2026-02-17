@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { ConfigWarning } from '@lowdefy/errors';
 import { BuildParser } from '@lowdefy/operators';
 import operators from '@lowdefy/operators-js/operators/build';
 import collectDynamicIdentifiers from '../collectDynamicIdentifiers.js';
 import collectTypeNames from '../collectTypeNames.js';
 import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
+import collectExceptions from '../../utils/collectExceptions.js';
 
 // Validate and collect dynamic identifiers once at module load
 validateOperatorsDynamic({ operators });
@@ -36,23 +36,20 @@ function evaluateStaticOperators({ context, input, refDef }) {
     typeNames,
   });
 
-  const location = refDef.path ?? refDef.resolver;
   const { output, errors } = operatorsParser.parse({
     input,
-    location,
     operatorPrefix: '_',
   });
 
   if (errors.length > 0) {
     errors.forEach((error) => {
-      context.handleWarning(
-        new ConfigWarning({
-          message: error.message,
-          received: error.received,
-          filePath: refDef.path,
-          lineNumber: error.lineNumber,
-        })
-      );
+      // Resolve source file path for error location.
+      // Only called from buildRefs top-level where refDef is root lowdefy.yaml,
+      // but ~r on each operator object identifies the real source file via refMap.
+      // Falls back to refDef.path if ~r is missing (shouldn't happen at this stage
+      // since all objects have ~r after recursiveBuild completes).
+      error.filePath = error.refId ? context.refMap[error.refId]?.path : refDef.path;
+      collectExceptions(context, error);
     });
   }
 

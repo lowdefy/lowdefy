@@ -43,6 +43,16 @@ const context = testContext({
   readConfigFile: mockReadConfigFile,
 });
 
+// collectExceptions needs errors[] and keyMap to collect instead of throwing
+context.errors = [];
+context.keyMap = context.keyMap ?? {};
+
+beforeEach(() => {
+  context.errors = [];
+  mockLogWarn.mockClear();
+  mockReadConfigFile.mockClear();
+});
+
 test('buildRefs no refs', async () => {
   const files = [
     {
@@ -1396,7 +1406,8 @@ answer:
     expect(res).toEqual({
       answer: null,
     });
-    expect(mockLogWarn.mock.calls).toEqual([['_sum takes an array type as input.']]);
+    expect(context.errors).toHaveLength(1);
+    expect(context.errors[0].message).toContain('_sum takes an array type as input.');
   });
 
   test('Build time operator error in referenced file', async () => {
@@ -1418,6 +1429,7 @@ _build.sum: A`,
     expect(res).toEqual({
       answer: null,
     });
-    expect(mockLogWarn.mock.calls).toEqual([['_sum takes an array type as input.']]);
+    expect(context.errors).toHaveLength(1);
+    expect(context.errors[0].message).toContain('_sum takes an array type as input.');
   });
 });
