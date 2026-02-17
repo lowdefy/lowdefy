@@ -73,14 +73,14 @@ Lowdefy uses a unified error system in `@lowdefy/errors` package:
 └── UserError.js        # Expected user-facing errors (client-side only)
 ```
 
-| Error Class      | Purpose                                          | Thrown By                      | Caught At                        | Prefix             |
-| ---------------- | ------------------------------------------------ | ------------------------------ | -------------------------------- | ------------------ |
-| `LowdefyError`   | Internal Lowdefy bugs, unexpected conditions     | Anywhere inside Lowdefy        | Top-level (build/server/client)  | `[Lowdefy Error]`  |
-| `PluginError`    | Plugin code failures (operators, actions, etc.)  | Plugin interface layer         | Request handlers, parsers        | `[Plugin Error]`   |
-| `ServiceError`   | External service failures (network, timeout)     | Plugin interface layer         | Request handlers                 | `[Service Error]`  |
-| `ConfigError`    | Config validation errors (invalid YAML, schema)  | Build validation               | Build orchestrator               | `[Config Error]`   |
-| `ConfigWarning`  | Config inconsistencies (warning in dev only)     | Build validation               | Build orchestrator               | `[Config Warning]` |
-| `UserError`      | Expected user interaction (validation, throws)   | Actions (Validate, Throw)      | Browser console only             | `[UserError]`      |
+| Error Class     | Purpose                                         | Thrown By                 | Caught At                       | Prefix             |
+| --------------- | ----------------------------------------------- | ------------------------- | ------------------------------- | ------------------ |
+| `LowdefyError`  | Internal Lowdefy bugs, unexpected conditions    | Anywhere inside Lowdefy   | Top-level (build/server/client) | `[Lowdefy Error]`  |
+| `PluginError`   | Plugin code failures (operators, actions, etc.) | Plugin interface layer    | Request handlers, parsers       | `[Plugin Error]`   |
+| `ServiceError`  | External service failures (network, timeout)    | Plugin interface layer    | Request handlers                | `[Service Error]`  |
+| `ConfigError`   | Config validation errors (invalid YAML, schema) | Build validation          | Build orchestrator              | `[Config Error]`   |
+| `ConfigWarning` | Config inconsistencies (warning in dev only)    | Build validation          | Build orchestrator              | `[Config Warning]` |
+| `UserError`     | Expected user interaction (validation, throws)  | Actions (Validate, Throw) | Browser console only            | `[UserError]`      |
 
 **Key principle:** Plugins throw errors without knowing about config keys. The interface layer catches all errors and adds `configKey` for location resolution - this helps developers trace any error back to its config source. ConfigError supports a simple string form (`new ConfigError('message')`) for plugin convenience.
 
@@ -88,11 +88,11 @@ Lowdefy uses a unified error system in `@lowdefy/errors` package:
 
 When wrapping an error via `new ConfigError({ error })` or `new PluginError({ error })`, both classes extract properties from the wrapped error as fallbacks:
 
-| Property | ConfigError | PluginError | ServiceError |
-|----------|-------------|-------------|--------------|
+| Property    | ConfigError                            | PluginError                            | ServiceError       |
+| ----------- | -------------------------------------- | -------------------------------------- | ------------------ |
 | `configKey` | `params.configKey ?? error?.configKey` | `error?.configKey ?? params.configKey` | `params.configKey` |
-| `received` | `params.received ?? error?.received` | `params.received ?? error?.received` | N/A |
-| `message` | `params.message ?? error?.message` | `params.message ?? error?.message` | `params.message` |
+| `received`  | `params.received ?? error?.received`   | `params.received ?? error?.received`   | N/A                |
+| `message`   | `params.message ?? error?.message`     | `params.message ?? error?.message`     | `params.message`   |
 
 This means wrapping a plain error that already carries `received` or `configKey` preserves those properties automatically:
 
@@ -140,25 +140,25 @@ configError.configKey; // 'abc123'
 
 ### Build-Time Error Formatting
 
-Build-time errors use classes from `@lowdefy/errors/build` which extend the base classes:
+Build-time errors use classes from `@lowdefy/errors`:
 
-| Class            | Purpose                              | Location                                   |
-| ---------------- | ------------------------------------ | ------------------------------------------ |
-| `ConfigMessage`  | Base formatter (shared logic)        | `packages/utils/errors/src/build/`         |
-| `ConfigError`    | Build errors (extends base class)    | `packages/utils/errors/src/build/`         |
-| `ConfigWarning`  | Build warnings (non-fatal)           | `packages/utils/errors/src/build/`         |
+| Class           | Purpose                              | Location                     |
+| --------------- | ------------------------------------ | ---------------------------- |
+| `ConfigError`   | Build errors (extends Error)         | `packages/utils/errors/src/` |
+| `ConfigWarning` | Build warnings (extends ConfigError) | `packages/utils/errors/src/` |
 
-**Architecture:** Build-time `ConfigError` and `ConfigWarning` use `ConfigMessage.format()` for synchronous location resolution via `keyMap` and `refMap`.
+**Architecture:** Build-time `ConfigError` and `ConfigWarning` use synchronous location resolution via `keyMap` and `refMap`.
 
 **Import pattern:**
+
 ```javascript
-import { ConfigError, ConfigWarning } from '@lowdefy/errors/build';
+import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 ```
 
 **Usage (build-time - via logger methods):**
 
 ```javascript
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError } from '@lowdefy/errors';
 
 // For fatal errors that stop the build
 throw new ConfigError({
@@ -326,14 +326,14 @@ Validates block, operator, request, and action types with suggestions:
 
 ### Reference Validations
 
-| Validator                          | Validates                              | Example Warning                                                          |
-| ---------------------------------- | -------------------------------------- | ------------------------------------------------------------------------ |
-| `validateStateReferences`          | `_state` references blockIds           | `_state references "userName" but no block with id "userName" exists`    |
-| `validateServerStateReferences`    | `_state` not used in request properties | `_state is not available in request properties`                         |
-| `validatePayloadReferences`        | `_payload` references payload keys     | `_payload references "query" but key not in request payload definition`  |
-| `validateStepReferences`           | `_step` references step IDs            | `_step references "step1" but no step with id "step1" exists in routine` |
-| `validateLinkReferences`           | `Link` action references pageIds       | `Link action references page "homePage" but page does not exist`         |
-| `validateRequestReferences`        | `Request` action references requestIds | `Request "getData" not defined on page "home"`                           |
+| Validator                       | Validates                               | Example Warning                                                          |
+| ------------------------------- | --------------------------------------- | ------------------------------------------------------------------------ |
+| `validateStateReferences`       | `_state` references blockIds            | `_state references "userName" but no block with id "userName" exists`    |
+| `validateServerStateReferences` | `_state` not used in request properties | `_state is not available in request properties`                          |
+| `validatePayloadReferences`     | `_payload` references payload keys      | `_payload references "query" but key not in request payload definition`  |
+| `validateStepReferences`        | `_step` references step IDs             | `_step references "step1" but no step with id "step1" exists in routine` |
+| `validateLinkReferences`        | `Link` action references pageIds        | `Link action references page "homePage" but page does not exist`         |
+| `validateRequestReferences`     | `Request` action references requestIds  | `Request "getData" not defined on page "home"`                           |
 
 #### Deduplication Between State Validators
 
@@ -348,14 +348,15 @@ Validates block, operator, request, and action types with suggestions:
 
 Request and Link actions have **different validation behaviors** for skip conditions because of their scope differences:
 
-| Action Type | Skip Behavior | Rationale |
-|-------------|---------------|-----------|
-| **Request** | Skips validation for `skip: true` OR `skip: { operator }` | Requests are page-scoped and may not be defined in all contexts |
-| **Link** | Skips validation ONLY for `skip: true` | Pages are app-scoped and must exist regardless of conditional navigation |
+| Action Type | Skip Behavior                                             | Rationale                                                                |
+| ----------- | --------------------------------------------------------- | ------------------------------------------------------------------------ |
+| **Request** | Skips validation for `skip: true` OR `skip: { operator }` | Requests are page-scoped and may not be defined in all contexts          |
+| **Link**    | Skips validation ONLY for `skip: true`                    | Pages are app-scoped and must exist regardless of conditional navigation |
 
 **`validateRequestReferences` - Lenient**
 
 Validation is skipped when `skip` is:
+
 - `skip: true` (explicitly disabled)
 - `skip: { operator }` (any operator object, e.g., `{ _eq: [...] }`)
 
@@ -372,7 +373,7 @@ events:
         _eq:
           - _ref: { path: app_config.yaml, key: app_name }
           - prp-support
-      params: contact_companies_search  # Only exists in non-support apps
+      params: contact_companies_search # Only exists in non-support apps
 ```
 
 In this case, `contact_companies_search` may not be defined on the current page (because it's only used in non-support apps), but validation is skipped because the action has a conditional `skip` operator.
@@ -389,9 +390,11 @@ if (action.skip === true || type.isObject(action.skip)) {
 **`validateLinkReferences` - Strict**
 
 Validation is skipped ONLY when:
+
 - `skip: true` (explicitly disabled)
 
 Validation runs normally for:
+
 - `skip: { operator }` (operator objects - page must exist)
 - `skip: false` (explicitly enabled)
 - `skip: undefined` (property not set)
@@ -409,7 +412,7 @@ events:
       skip:
         _not:
           _state: user.isAdmin
-      params: admin_dashboard  # Page MUST exist even if user isn't admin
+      params: admin_dashboard # Page MUST exist even if user isn't admin
 ```
 
 The `admin_dashboard` page must be defined in the app. The skip condition only controls whether the navigation happens at runtime, not whether the page exists.
@@ -442,24 +445,26 @@ The `~ignoreBuildChecks` property allows developers to suppress specific or all 
 
 **Available Check Slugs:**
 
-| Slug             | Description                                                     |
-|------------------|------------------------------------------------------------------|
-| `state-refs`     | Undefined `_state` reference warnings                            |
-| `payload-refs`   | Undefined `_payload` reference warnings                          |
-| `step-refs`      | Undefined `_step` reference warnings                             |
-| `link-refs`      | Invalid Link action page reference warnings                      |
-| `request-refs`   | Invalid Request action reference warnings                        |
-| `connection-refs`| Nonexistent connection ID references                             |
-| `types`          | All type validation (blocks, operators, actions, requests, connections) |
-| `schema`         | JSON schema validation errors                                    |
+| Slug              | Description                                                             |
+| ----------------- | ----------------------------------------------------------------------- |
+| `state-refs`      | Undefined `_state` reference warnings                                   |
+| `payload-refs`    | Undefined `_payload` reference warnings                                 |
+| `step-refs`       | Undefined `_step` reference warnings                                    |
+| `link-refs`       | Invalid Link action page reference warnings                             |
+| `request-refs`    | Invalid Request action reference warnings                               |
+| `connection-refs` | Nonexistent connection ID references                                    |
+| `types`           | All type validation (blocks, operators, actions, requests, connections) |
+| `schema`          | JSON schema validation errors                                           |
 
 **Use Cases:**
+
 - Dynamic config patterns where references only exist at runtime
 - Work-in-progress config during development
 - Conditional features that may not be valid in all contexts
 - Plugin development with custom types not yet registered
 
 **Behavior:**
+
 - Suppression is **silent** by default - no log output when errors are suppressed
 - With `--log-level debug`, suppressions are logged for debugging
 - **Cascades to descendants** - setting on a page suppresses all child blocks
@@ -474,8 +479,8 @@ blocks:
     type: CustomBlock
     properties:
       onClick:
-        _state: dynamicState  # Created by methods.registerEvent at runtime
-        ~ignoreBuildChecks: true  # Suppress all build-time checks
+        _state: dynamicState # Created by methods.registerEvent at runtime
+        ~ignoreBuildChecks: true # Suppress all build-time checks
 ```
 
 **Example 2:** Suppress only state references for an entire page
@@ -485,13 +490,13 @@ pages:
   - id: dynamic-page
     type: Box
     ~ignoreBuildChecks:
-      - state-refs  # Only suppress state reference warnings
+      - state-refs # Only suppress state reference warnings
     blocks:
       - id: block1
         type: TextInput
         properties:
           value:
-            _state: dynamicField  # No warning (inherited from page)
+            _state: dynamicField # No warning (inherited from page)
 ```
 
 **Example 3:** Suppress type validation for custom plugin blocks
@@ -499,7 +504,7 @@ pages:
 ```yaml
 blocks:
   - id: custom_block
-    type: MyCustomBlock  # Custom type not in types registry
+    type: MyCustomBlock # Custom type not in types registry
     ~ignoreBuildChecks:
       - types
     properties:
@@ -589,8 +594,8 @@ function createLogError(lowdefy) {
         body: JSON.stringify(error.serialize()),
       });
       const { source } = await response.json();
-      if (source) console.info(source);  // "pages/home.yaml:15"
-      console.error(error.print());       // "[ConfigError] message. Received: ..."
+      if (source) console.info(source); // "pages/home.yaml:15"
+      console.error(error.print()); // "[ConfigError] message. Received: ..."
       return;
     }
 
@@ -609,6 +614,7 @@ function createLogError(lowdefy) {
 ```
 
 **Key behaviors:**
+
 - **Deduplication**: Same error logged only once per session
 - **Location resolution**: Errors with `serialize()` are sent to server for `configKey → source:line` resolution
 - **Property forwarding**: Wrapping in `new ConfigError({ error })` preserves `received` and `configKey` from the original error
@@ -626,6 +632,7 @@ ServiceError  → logError() → POST /api/client-error → server terminal
 ```
 
 In `Actions.js`, `logActionError()` uses `instanceof UserError` to route errors:
+
 - `UserError` → `console.error(error.print())` (browser only)
 - Everything else → `logError(error)` (→ terminal)
 
@@ -658,6 +665,7 @@ try {
 ```
 
 This maintains separation of concerns:
+
 - **Plugins**: Throw descriptive errors about what went wrong
 - **Core**: Attaches `configKey`, `received`, and location context
 
@@ -834,6 +842,7 @@ Build failed with 3 error(s):
 **Problem:** `formatConfigError()` and `formatConfigWarning()` were nearly identical functions. Also, throwing `new Error(formatConfigError(...))` was awkward.
 
 **Decision:** Use classes in `@lowdefy/node-utils`:
+
 - `ConfigMessage` - Base class with shared `format()` logic
 - `ConfigError` - Extends Error, can be thrown directly
 - `ConfigWarning` - Static `format()` method with `prodError` flag
@@ -875,10 +884,12 @@ Build failed with 3 error(s):
 **Problem:** Both client and build need ConfigError, but with different capabilities.
 
 **Decision:** Two separate implementations:
+
 - `@lowdefy/helpers` - Client-side, async location resolution via HTTP
 - `@lowdefy/node-utils` - Build-time, sync resolution with direct keyMap/refMap access
 
 **Rationale:**
+
 - Client cannot access keyMap/refMap directly (server-side only)
 - Client needs non-blocking resolution (can't freeze UI)
 - Build has synchronous access to all artifacts
@@ -891,6 +902,7 @@ Build failed with 3 error(s):
 **Decision:** Plugins throw errors without `configKey`. The interface layer adds `configKey` to ALL error types before re-throwing.
 
 **Rationale:**
+
 - Plugins are user-facing, should have simple error interface
 - `configKey` is an internal implementation detail
 - Core already tracks `~k` during operator evaluation
@@ -901,17 +913,20 @@ Build failed with 3 error(s):
 **Problem:** Initially, ServiceError passed through unchanged because it represents infrastructure issues, not config problems. However, even service errors originate from a specific config location (e.g., a request that made a database call).
 
 **Decision:** Add `configKey` to ALL error types at the interface layer:
+
 - `ConfigError`: Add `configKey` if not present, then re-throw
 - `ServiceError`: Create `new ServiceError({ error, service, configKey })`
 - Plain `Error`: Wrap in `new PluginError({ error, ..., configKey })`
 
 **Rationale:**
+
 - Even infrastructure errors are triggered by specific config - developers want to know which request/connection caused the issue
 - Consistent error handling - all errors can be traced back to config
 - The service may be fine; the config might have wrong connection string
 - Adding location to ServiceError helps distinguish "MongoDB is down" from "this specific request to MongoDB failed"
 
 **Implementation:** ServiceError constructor accepts `configKey`:
+
 ```javascript
 new ServiceError({
   error,
@@ -925,6 +940,7 @@ new ServiceError({
 **Problem:** Plugins throwing ConfigError had to use object form: `throw new ConfigError({ message: 'msg' })`. This was verbose for simple error messages.
 
 **Decision:** Support both string and object forms:
+
 ```javascript
 // Simple string form (for plugins)
 throw new ConfigError('Property must be a string.');
@@ -934,12 +950,14 @@ throw new ConfigError({ message: 'Property must be a string.', configKey });
 ```
 
 **Rationale:**
+
 - Plugins should have a simple API - they shouldn't need to know about configKey
 - String form is concise and readable
 - Interface layer adds configKey anyway, so plugins don't need to provide it
 - Object form still available for cases where additional metadata is needed
 
 **Implementation:** Constructor checks parameter type:
+
 ```javascript
 constructor(messageOrParams) {
   const isString = typeof messageOrParams === 'string';

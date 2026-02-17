@@ -14,27 +14,12 @@
   limitations under the License.
 */
 
-/**
- * Base configuration warning class.
- *
- * Import from @lowdefy/errors for general use, or @lowdefy/errors/build for
- * build-time behavior (prodError flag, suppression logic).
- *
- * @example
- * const warning = new ConfigWarning({ message: 'Deprecated feature used', source: 'config.yaml:10' });
- * console.warn(warning.message);
- */
-class ConfigWarning {
-  /**
-   * @param {Object} params
-   * @param {string} params.message - The warning message
-   * @param {string} [params.source] - Source file:line
-   */
-  constructor({ message, source }) {
+import ConfigError from './ConfigError.js';
+
+class ConfigWarning extends ConfigError {
+  constructor({ message, configKey, checkSlug }) {
+    super({ message, configKey, checkSlug });
     this.name = 'Config Warning';
-    // Message without prefix - logger uses class name for display
-    this.message = message;
-    this.source = source ?? null;
   }
 }
 

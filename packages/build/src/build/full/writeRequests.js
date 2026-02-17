@@ -14,7 +14,7 @@
   limitations under the License.
 */
 import { serializer, type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError } from '@lowdefy/errors';
 
 async function writeRequestsOnPage({ page, context }) {
   const requests = page.requests ?? [];

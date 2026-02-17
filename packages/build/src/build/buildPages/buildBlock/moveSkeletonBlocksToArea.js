@@ -15,7 +15,7 @@
 */
 
 import { set, type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError } from '@lowdefy/errors';
 
 function recMoveSkeletonBlocksToArea(block, blockId, pageId, context) {
   if (!type.isNone(block.blocks)) {

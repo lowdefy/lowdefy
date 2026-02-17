@@ -16,7 +16,7 @@
 
 import path from 'path';
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError } from '@lowdefy/errors';
 
 function resolveRawLocation({ filePath, lineNumber, configDirectory }) {
   let resolvedPath = filePath;

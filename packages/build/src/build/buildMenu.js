@@ -17,7 +17,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError } from '@lowdefy/errors';
 import collectExceptions from '../utils/collectExceptions.js';
 import createCheckDuplicateId from '../utils/createCheckDuplicateId.js';
 

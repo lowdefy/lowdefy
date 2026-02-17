@@ -17,7 +17,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError } from '@lowdefy/errors';
 import getApiRoles from './getApiRoles.js';
 import getProtectedApi from './getProtectedApi.js';
 

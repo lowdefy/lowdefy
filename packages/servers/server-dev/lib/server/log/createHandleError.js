@@ -14,8 +14,7 @@
   limitations under the License.
 */
 
-import { LowdefyError } from '@lowdefy/errors';
-import { resolveErrorConfigLocation } from '@lowdefy/errors/build';
+import { LowdefyError, resolveErrorConfigLocation } from '@lowdefy/errors';
 
 import captureSentryError from '../sentry/captureSentryError.js';
 

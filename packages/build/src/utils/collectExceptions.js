@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { shouldSuppressBuildCheck } from '@lowdefy/errors/build';
+import { shouldSuppressBuildCheck } from '@lowdefy/errors';
 
 /**
  * Collects an exception (ConfigError or ConfigWarning) instead of throwing immediately.

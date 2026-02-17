@@ -17,7 +17,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError } from '@lowdefy/errors';
 
 function validateMutualExclusivity({ components, context, entity }) {
   const configKey = components.auth[entity]?.['~k'] || components.auth?.['~k'];

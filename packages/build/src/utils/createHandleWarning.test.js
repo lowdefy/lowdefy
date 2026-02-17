@@ -15,7 +15,7 @@
 */
 
 import { jest } from '@jest/globals';
-import { ConfigWarning } from '@lowdefy/errors/build';
+import { ConfigWarning } from '@lowdefy/errors';
 
 import createHandleWarning from './createHandleWarning.js';
 

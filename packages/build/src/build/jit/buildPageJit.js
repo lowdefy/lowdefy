@@ -15,8 +15,7 @@
 */
 
 import { serializer, type } from '@lowdefy/helpers';
-import { LowdefyError } from '@lowdefy/errors';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError, LowdefyError } from '@lowdefy/errors';
 
 import addKeys from '../addKeys.js';
 import buildPage from '../buildPages/buildPage.js';

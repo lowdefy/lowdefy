@@ -14,7 +14,7 @@
   limitations under the License.
 */
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError } from '@lowdefy/errors';
 
 import collectExceptions from '../../utils/collectExceptions.js';
 

@@ -15,7 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError } from '@lowdefy/errors';
 import buildRoutine from './buildRoutine.js';
 import countControl from './countControl.js';
 import countOperators from '../../../utils/countOperators.js';

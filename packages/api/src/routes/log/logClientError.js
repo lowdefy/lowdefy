@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { resolveConfigLocation } from '@lowdefy/errors/build';
+import { resolveConfigLocation } from '@lowdefy/errors';
 
 async function logClientError(context, data) {
   const { logger } = context;

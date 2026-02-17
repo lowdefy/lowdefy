@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigError, shouldSuppressBuildCheck } from '@lowdefy/errors/build';
+import { ConfigError, shouldSuppressBuildCheck } from '@lowdefy/errors';
 
 /**
  * Wraps a build step to collect errors instead of stopping immediately.

@@ -16,7 +16,7 @@
 
 import { jest } from '@jest/globals';
 import logCollectedErrors from './logCollectedErrors.js';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError } from '@lowdefy/errors';
 
 test('logCollectedErrors does nothing when no errors', () => {
   const context = { errors: [], handleError: jest.fn() };

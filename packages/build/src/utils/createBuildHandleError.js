@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { resolveErrorLocation } from '@lowdefy/errors/build';
+import { resolveErrorLocation } from '@lowdefy/errors';
 
 function createBuildHandleError({ context }) {
   return function handleError(error) {

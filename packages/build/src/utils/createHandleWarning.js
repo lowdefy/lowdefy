@@ -18,7 +18,7 @@ import {
   ConfigWarning,
   resolveErrorLocation,
   shouldSuppressBuildCheck,
-} from '@lowdefy/errors/build';
+} from '@lowdefy/errors';
 
 import collectExceptions from './collectExceptions.js';
 

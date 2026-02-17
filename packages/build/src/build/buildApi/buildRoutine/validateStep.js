@@ -15,7 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError } from '@lowdefy/errors';
 
 function validateStep(step, { endpointId, context }) {
   const configKey = step['~k'];

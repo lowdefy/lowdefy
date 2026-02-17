@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError } from '@lowdefy/errors';
 
 import getConfigFile from './getConfigFile.js';
 import parseRefContent from './parseRefContent.js';

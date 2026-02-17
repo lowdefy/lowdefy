@@ -18,8 +18,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import { LowdefyError } from '@lowdefy/errors';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError, LowdefyError } from '@lowdefy/errors';
 
 import createContext from '../../createContext.js';
 import logCollectedErrors from '../../utils/logCollectedErrors.js';

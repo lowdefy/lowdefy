@@ -14,8 +14,7 @@
   limitations under the License.
 */
 
-import { LowdefyError } from '@lowdefy/errors';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError, LowdefyError } from '@lowdefy/errors';
 
 function logCollectedErrors(context) {
   if (context.errors.length === 0) return;

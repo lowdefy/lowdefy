@@ -16,8 +16,7 @@
   limitations under the License.
 */
 
-import { LowdefyError } from '@lowdefy/errors';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError, LowdefyError } from '@lowdefy/errors';
 
 import createContext from './createContext.js';
 import createPluginTypesMap from './utils/createPluginTypesMap.js';

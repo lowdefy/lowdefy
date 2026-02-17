@@ -40,8 +40,19 @@
  *    - Format: source:line\n[Config Error] message
  *
  * 5. ConfigWarning - Config inconsistencies (warning in dev, error in prod)
- *    - Not an error class, utility for conditional warning/error
+ *    - Extends ConfigError with name override
  *    - Format: source:line\n[Config Warning] message
+ *
+ * 6. UserError - Expected user interaction (validation, throws), client-only
+ *    - Thrown: Action plugins for expected user errors
+ *    - Caught: Browser console only, never sent to server
+ *    - Format: [User Error] message
+ *
+ * Location Resolution Utilities:
+ *   resolveConfigLocation     - Sync: configKey → {source, config, link} via keyMap/refMap
+ *   resolveErrorLocation      - Sync: unified resolver (configKey, operatorLocation, filePath)
+ *   resolveErrorConfigLocation - Async: reads keyMap/refMap files at runtime
+ *   shouldSuppressBuildCheck   - Check ~ignoreBuildChecks in parent chain
  */
 
 import ConfigError from './ConfigError.js';
@@ -49,7 +60,11 @@ import ConfigWarning from './ConfigWarning.js';
 import errorToDisplayString from './errorToDisplayString.js';
 import LowdefyError from './LowdefyError.js';
 import PluginError from './PluginError.js';
+import resolveConfigLocation from './resolveConfigLocation.js';
+import resolveErrorConfigLocation from './resolveErrorConfigLocation.js';
+import resolveErrorLocation from './resolveErrorLocation.js';
 import ServiceError from './ServiceError.js';
+import shouldSuppressBuildCheck, { VALID_CHECK_SLUGS } from './shouldSuppressBuildCheck.js';
 import UserError from './UserError.js';
 
 export {
@@ -58,6 +73,11 @@ export {
   errorToDisplayString,
   LowdefyError,
   PluginError,
+  resolveConfigLocation,
+  resolveErrorConfigLocation,
+  resolveErrorLocation,
   ServiceError,
+  shouldSuppressBuildCheck,
   UserError,
+  VALID_CHECK_SLUGS,
 };

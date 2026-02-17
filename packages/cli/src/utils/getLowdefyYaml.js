@@ -16,7 +16,7 @@
 
 import path from 'path';
 import { get, type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError } from '@lowdefy/errors';
 import { readFile } from '@lowdefy/node-utils';
 import YAML from 'yaml';
 

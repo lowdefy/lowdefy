@@ -17,7 +17,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError } from '@lowdefy/errors';
 
 import buildBlock from './buildBlock/buildBlock.js';
 import collectExceptions from '../../utils/collectExceptions.js';

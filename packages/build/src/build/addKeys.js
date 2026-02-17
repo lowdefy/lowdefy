@@ -15,7 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError, VALID_CHECK_SLUGS } from '@lowdefy/errors/build';
+import { ConfigError, VALID_CHECK_SLUGS } from '@lowdefy/errors';
 
 import collectExceptions from '../utils/collectExceptions.js';
 import makeId from '../utils/makeId.js';

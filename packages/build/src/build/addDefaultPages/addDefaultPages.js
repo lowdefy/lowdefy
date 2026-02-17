@@ -15,7 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError } from '@lowdefy/errors';
 import page404 from './404.js';
 
 function addDefaultPages({ components, context }) {

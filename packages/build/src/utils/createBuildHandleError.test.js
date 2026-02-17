@@ -15,7 +15,7 @@
 */
 
 import { jest } from '@jest/globals';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError } from '@lowdefy/errors';
 
 import createBuildHandleError from './createBuildHandleError.js';
 

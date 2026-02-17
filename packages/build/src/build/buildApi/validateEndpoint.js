@@ -15,7 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError } from '@lowdefy/errors';
 
 function validateEndpoint({ endpoint, index, checkDuplicateEndpointId, context }) {
   const configKey = endpoint['~k'];

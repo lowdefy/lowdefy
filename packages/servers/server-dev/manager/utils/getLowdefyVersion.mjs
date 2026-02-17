@@ -17,7 +17,7 @@
 import path from 'path';
 import { type } from '@lowdefy/helpers';
 import { readFile } from '@lowdefy/node-utils';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError } from '@lowdefy/errors';
 import YAML from 'yaml';
 
 async function getLowdefyVersion(context) {

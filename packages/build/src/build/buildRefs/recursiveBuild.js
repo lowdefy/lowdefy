@@ -15,7 +15,7 @@
 */
 import path from 'path';
 import { serializer, type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError } from '@lowdefy/errors';
 import createRefReviver from './createRefReviver.js';
 import evaluateBuildOperators from './evaluateBuildOperators.js';
 import getKey from './getKey.js';

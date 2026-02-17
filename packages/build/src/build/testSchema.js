@@ -15,7 +15,7 @@
 */
 
 import { validate } from '@lowdefy/ajv';
-import { ConfigError, shouldSuppressBuildCheck } from '@lowdefy/errors/build';
+import { ConfigError, shouldSuppressBuildCheck } from '@lowdefy/errors';
 
 import findConfigKey from '../utils/findConfigKey.js';
 import lowdefySchema from '../lowdefySchema.js';

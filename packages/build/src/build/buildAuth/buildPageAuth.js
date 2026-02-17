@@ -17,7 +17,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError } from '@lowdefy/errors';
 import getPageRoles from './getPageRoles.js';
 import getProtectedPages from './getProtectedPages.js';
 

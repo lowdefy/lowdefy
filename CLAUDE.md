@@ -272,11 +272,7 @@ async function MongoDBFindOne({ request, connection }) {
 Lowdefy uses a unified error system in `@lowdefy/errors`:
 
 ```javascript
-// General use - all error classes
-import { ConfigError, PluginError, ServiceError, UserError } from '@lowdefy/errors';
-
-// Build-time - classes with sync location resolution via keyMap/refMap
-import { ConfigError, ConfigWarning } from '@lowdefy/errors/build';
+import { ConfigError, ConfigWarning, PluginError, ServiceError, UserError } from '@lowdefy/errors';
 ```
 
 | Class           | Purpose                                                     | Catch Layer                      |
@@ -292,10 +288,10 @@ import { ConfigError, ConfigWarning } from '@lowdefy/errors/build';
 
 ### Build-Time Errors (in `packages/build/`)
 
-Use `ConfigError` from `@lowdefy/errors/build` for errors with config location:
+Use `ConfigError` from `@lowdefy/errors` for errors with config location:
 
 ```javascript
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError } from '@lowdefy/errors';
 
 // Fatal error - stops build
 throw new ConfigError({

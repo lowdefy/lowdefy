@@ -15,7 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError, shouldSuppressBuildCheck } from '@lowdefy/errors/build';
+import { ConfigError, shouldSuppressBuildCheck } from '@lowdefy/errors';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 import buildEndpoint from './buildEndpoint.js';
 
