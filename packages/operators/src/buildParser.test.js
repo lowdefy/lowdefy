@@ -182,11 +182,7 @@ test('operator errors', () => {
   expect(res.errors.length).toBe(1);
   expect(res.errors[0].message).toBe('Test error.');
   expect(res.errors[0].received).toEqual({ _error: { params: true } });
-  expect(res.errors[0].operatorLocation).toEqual({
-    location: 'location',
-    line: undefined,
-    ref: undefined,
-  });
+  expect(res.errors[0].lineNumber).toBeUndefined();
 });
 
 // ==================== hasDynamicMarker tests ====================

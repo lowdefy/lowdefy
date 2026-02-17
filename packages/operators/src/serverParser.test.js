@@ -203,7 +203,6 @@ test('operator errors with verbose', () => {
   expect(res.errors.length).toBe(1);
   expect(res.errors[0].message).toBe('Test error.');
   expect(res.errors[0].received).toEqual({ _error: { params: true } });
-  expect(res.errors[0].operatorLocation).toBe('location');
 });
 
 test('operator errors include configKey from ~k', () => {

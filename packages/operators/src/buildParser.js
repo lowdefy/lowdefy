@@ -162,12 +162,7 @@ class BuildParser {
         const formattedError = new Error(message);
         formattedError.stack = e.stack;
         formattedError.received = { [key]: params };
-        // Attach location info for error formatting
-        formattedError.operatorLocation = {
-          location: operatorLocation,
-          line: value['~l'],
-          ref: value['~r'],
-        };
+        formattedError.lineNumber = value['~l'];
         errors.push(formattedError);
         if (this.verbose) {
           console.error(formattedError);

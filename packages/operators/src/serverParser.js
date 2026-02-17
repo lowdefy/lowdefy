@@ -82,7 +82,6 @@ class ServerParser {
         formattedError.stack = e.stack;
         formattedError.configKey = e.configKey ?? configKey;
         formattedError.received = { [key]: params };
-        formattedError.operatorLocation = location;
         errors.push(formattedError);
         if (this.verbose) {
           console.error(formattedError);

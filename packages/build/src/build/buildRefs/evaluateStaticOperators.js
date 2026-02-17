@@ -50,7 +50,7 @@ function evaluateStaticOperators({ context, input, refDef }) {
           message: error.message,
           received: error.received,
           filePath: refDef.path,
-          lineNumber: error.operatorLocation?.line,
+          lineNumber: error.lineNumber,
         })
       );
     });
