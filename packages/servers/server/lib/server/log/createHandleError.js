@@ -70,7 +70,7 @@ function createHandleError({ context }) {
       context.logger.error(
         {
           err: error,
-          // Core error schema (consistent with client)
+          // Top-level fields for log drain consumers (duplicated from err for queryability)
           event: eventType,
           errorName,
           errorMessage: error.message,

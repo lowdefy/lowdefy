@@ -21,6 +21,7 @@ test('PluginError wraps error with message', () => {
   const error = new PluginError({ error: original });
   expect(error.message).toBe('Test error message');
   expect(error.name).toBe('PluginError');
+  expect(error.isLowdefyError).toBe(true);
   expect(error.configKey).toBeNull();
   expect(error.cause).toBe(original);
 });

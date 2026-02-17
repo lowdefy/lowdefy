@@ -79,6 +79,7 @@ class ServiceError extends Error {
 
     super(formattedMessage, { cause: error });
     this.name = 'ServiceError';
+    this.isLowdefyError = true;
     this._message = baseMessage;
     this.service = service;
     this.code = errorCode;

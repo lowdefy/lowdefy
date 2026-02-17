@@ -20,6 +20,7 @@ test('ConfigError creates error with message only (object)', () => {
   const error = new ConfigError({ message: 'Test error message' });
   expect(error.message).toBe('Test error message');
   expect(error.name).toBe('ConfigError');
+  expect(error.isLowdefyError).toBe(true);
   expect(error.configKey).toBeNull();
   expect(error.source).toBeNull();
   expect(error.link).toBeNull();

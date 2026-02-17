@@ -15,13 +15,7 @@
 */
 
 import ora from 'ora';
-import {
-  ConfigError,
-  PluginError,
-  ServiceError,
-  UserError,
-  errorToDisplayString,
-} from '@lowdefy/errors';
+import { errorToDisplayString } from '@lowdefy/errors';
 
 const reset = '\x1b[0m';
 const colors = {
@@ -127,12 +121,7 @@ function getPrint({ logLevel }) {
 }
 
 function shouldLogStack(error) {
-  if (
-    error instanceof ConfigError ||
-    error instanceof PluginError ||
-    error instanceof ServiceError ||
-    error instanceof UserError
-  ) {
+  if (error.isLowdefyError === true && error.name !== 'LowdefyError') {
     return false;
   }
   return true;

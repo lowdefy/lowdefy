@@ -16,19 +16,10 @@
 
 import { errorToDisplayString } from '@lowdefy/errors';
 
-const lowdefyErrorNames = new Set([
-  'ConfigError',
-  'ConfigWarning',
-  'LowdefyError',
-  'PluginError',
-  'ServiceError',
-  'UserError',
-]);
-
 function createBrowserLogger() {
   return {
     error: (...args) => {
-      if (lowdefyErrorNames.has(args[0]?.name)) {
+      if (args[0]?.isLowdefyError === true) {
         if (args[0].source) {
           console.info('%c%s', 'color: #4a9eff', args[0].source);
         }
@@ -38,7 +29,7 @@ function createBrowserLogger() {
       console.error(...args);
     },
     warn: (...args) => {
-      if (lowdefyErrorNames.has(args[0]?.name)) {
+      if (args[0]?.isLowdefyError === true) {
         if (args[0].source) {
           console.info('%c%s', 'color: #4a9eff', args[0].source);
         }

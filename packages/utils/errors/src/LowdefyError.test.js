@@ -20,6 +20,7 @@ test('LowdefyError creates error with message', () => {
   const error = new LowdefyError('Unexpected condition');
   expect(error.message).toBe('Unexpected condition');
   expect(error.name).toBe('LowdefyError');
+  expect(error.isLowdefyError).toBe(true);
   expect(error.configKey).toBeNull();
 });
 

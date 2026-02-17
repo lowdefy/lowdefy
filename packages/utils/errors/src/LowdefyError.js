@@ -42,6 +42,7 @@ class LowdefyError extends Error {
     // Message without prefix - logger uses error.name for display
     super(message, options);
     this.name = 'LowdefyError';
+    this.isLowdefyError = true;
     this.configKey = null;
   }
 }

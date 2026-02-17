@@ -60,6 +60,7 @@ class PluginError extends Error {
 
     super(formattedMessage, { cause: error });
     this.name = 'PluginError';
+    this.isLowdefyError = true;
     this.pluginType = pluginType;
     this.pluginName = pluginName;
     this._message = rawMessage;

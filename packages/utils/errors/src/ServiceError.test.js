@@ -20,6 +20,7 @@ test('ServiceError creates error with message only', () => {
   const error = new ServiceError({ message: 'Connection failed' });
   expect(error.message).toBe('Connection failed');
   expect(error.name).toBe('ServiceError');
+  expect(error.isLowdefyError).toBe(true);
   expect(error.configKey).toBeNull();
 });
 
