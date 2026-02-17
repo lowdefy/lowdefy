@@ -18,34 +18,29 @@ import { jest } from '@jest/globals';
 import { ConfigError } from '@lowdefy/errors';
 
 import createBuildHandleError from './createBuildHandleError.js';
-
-const mockPinoLogger = {
-  error: jest.fn(),
-};
-
-beforeEach(() => {
-  mockPinoLogger.error.mockClear();
-});
+import createTestLogger from '../test-utils/createTestLogger.js';
 
 test('handleError logs error directly', () => {
+  const { logger, lines } = createTestLogger();
   const context = {
-    logger: mockPinoLogger,
+    logger,
     keyMap: {},
     refMap: {},
     directories: { config: '/app' },
   };
   const handleError = createBuildHandleError({ context });
 
-  const error = new ConfigError({ message: 'Bad config' });
-  handleError(error);
+  handleError(new ConfigError({ message: 'Bad config' }));
 
-  expect(mockPinoLogger.error).toHaveBeenCalledTimes(1);
-  expect(mockPinoLogger.error).toHaveBeenCalledWith(error);
+  expect(lines).toHaveLength(1);
+  expect(lines[0].msg).toBe('Bad config');
+  expect(lines[0].err.name).toBe('ConfigError');
 });
 
 test('handleError resolves location from configKey before logging', () => {
+  const { logger, lines } = createTestLogger();
   const context = {
-    logger: mockPinoLogger,
+    logger,
     keyMap: {
       abc123: { key: 'pages.0.blocks.0.type', '~r': 'ref1', '~l': 10 },
     },
@@ -56,36 +51,36 @@ test('handleError resolves location from configKey before logging', () => {
   };
   const handleError = createBuildHandleError({ context });
 
-  const error = new ConfigError({ message: 'Invalid type', configKey: 'abc123' });
-  handleError(error);
+  handleError(new ConfigError({ message: 'Invalid type', configKey: 'abc123' }));
 
-  expect(error.source).toBe('/app/pages/home.yaml:10');
-  expect(mockPinoLogger.error).toHaveBeenCalledTimes(1);
+  expect(lines[0].err.source).toBe('/app/pages/home.yaml:10');
 });
 
 test('handleError resolves location from filePath and lineNumber', () => {
+  const { logger, lines } = createTestLogger();
   const context = {
-    logger: mockPinoLogger,
+    logger,
     keyMap: {},
     refMap: {},
     directories: { config: '/app' },
   };
   const handleError = createBuildHandleError({ context });
 
-  const error = new ConfigError({
-    message: 'Error parsing YAML',
-    filePath: 'pages/home.yaml',
-    lineNumber: 6,
-  });
-  handleError(error);
+  handleError(
+    new ConfigError({
+      message: 'Error parsing YAML',
+      filePath: 'pages/home.yaml',
+      lineNumber: 6,
+    })
+  );
 
-  expect(error.source).toBe('/app/pages/home.yaml:6');
-  expect(mockPinoLogger.error).toHaveBeenCalledTimes(1);
+  expect(lines[0].err.source).toBe('/app/pages/home.yaml:6');
 });
 
 test('handleError still logs when resolveErrorLocation throws', () => {
+  const { logger, lines } = createTestLogger();
   const context = {
-    logger: mockPinoLogger,
+    logger,
     keyMap: null,
     refMap: null,
     directories: { config: '/app' },
@@ -97,11 +92,10 @@ test('handleError still logs when resolveErrorLocation throws', () => {
   });
   const handleError = createBuildHandleError({ context });
 
-  const error = new ConfigError({ message: 'Something broke' });
-  handleError(error);
+  handleError(new ConfigError({ message: 'Something broke' }));
 
-  expect(mockPinoLogger.error).toHaveBeenCalledTimes(1);
-  expect(mockPinoLogger.error).toHaveBeenCalledWith(error);
+  expect(lines).toHaveLength(1);
+  expect(lines[0].msg).toBe('Something broke');
 });
 
 test('handleError falls back to console.error when logger also throws', () => {
@@ -117,7 +111,6 @@ test('handleError falls back to console.error when logger also throws', () => {
     refMap: {},
     directories: { config: '/app' },
   };
-  // Force first try to throw so we hit second try with throwingLogger
   Object.defineProperty(context, 'keyMap', {
     get() {
       throw new Error('keyMap exploded');
@@ -133,47 +126,46 @@ test('handleError falls back to console.error when logger also throws', () => {
 });
 
 test('handleError works with ConfigError that has received', () => {
+  const { logger, lines } = createTestLogger();
   const context = {
-    logger: mockPinoLogger,
+    logger,
     keyMap: {},
     refMap: {},
     directories: { config: '/app' },
   };
   const handleError = createBuildHandleError({ context });
 
-  const error = new ConfigError({ message: 'Invalid type', received: { type: 'Buton' } });
-  handleError(error);
+  handleError(new ConfigError({ message: 'Invalid type', received: { type: 'Buton' } }));
 
-  expect(mockPinoLogger.error).toHaveBeenCalledWith(error);
-  expect(error.received).toEqual({ type: 'Buton' });
+  expect(lines[0].err.received).toEqual({ type: 'Buton' });
 });
 
 test('handleError works with plain Error (not ConfigError)', () => {
+  const { logger, lines } = createTestLogger();
   const context = {
-    logger: mockPinoLogger,
+    logger,
     keyMap: {},
     refMap: {},
     directories: { config: '/app' },
   };
   const handleError = createBuildHandleError({ context });
 
-  const error = new Error('plain error');
-  handleError(error);
+  handleError(new Error('plain error'));
 
-  expect(mockPinoLogger.error).toHaveBeenCalledTimes(1);
-  expect(mockPinoLogger.error).toHaveBeenCalledWith(error);
+  expect(lines).toHaveLength(1);
+  expect(lines[0].msg).toBe('plain error');
 });
 
 test('handleError works when directories is undefined', () => {
+  const { logger, lines } = createTestLogger();
   const context = {
-    logger: mockPinoLogger,
+    logger,
     keyMap: {},
     refMap: {},
   };
   const handleError = createBuildHandleError({ context });
 
-  const error = new ConfigError({ message: 'No dirs' });
-  handleError(error);
+  handleError(new ConfigError({ message: 'No dirs' }));
 
-  expect(mockPinoLogger.error).toHaveBeenCalledTimes(1);
+  expect(lines).toHaveLength(1);
 });
