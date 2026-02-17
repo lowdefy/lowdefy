@@ -64,13 +64,7 @@ function testSchema({ components, context }) {
       }
 
       const configError = new ConfigError({ message, configKey, checkSlug: 'schema' });
-      if (
-        !shouldSuppressBuildCheck({
-          configKey,
-          keyMap: context.keyMap,
-          checkSlug: 'schema',
-        })
-      ) {
+      if (!shouldSuppressBuildCheck(configError, context.keyMap)) {
         if (!context.errors) {
           // If no error collection array, throw immediately (fallback for tests)
           throw configError;

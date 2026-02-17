@@ -35,13 +35,7 @@ function createHandleWarning({ context }) {
     }
 
     // Suppression
-    if (
-      shouldSuppressBuildCheck({
-        configKey: warning.configKey,
-        keyMap: context.keyMap,
-        checkSlug: warning.checkSlug,
-      })
-    ) {
+    if (shouldSuppressBuildCheck(warning, context.keyMap)) {
       return;
     }
 

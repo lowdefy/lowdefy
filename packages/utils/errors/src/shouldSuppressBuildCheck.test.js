@@ -58,54 +58,42 @@ test('VALID_CHECK_SLUGS exports valid check slugs', () => {
 });
 
 test('returns false for missing configKey', () => {
-  expect(shouldSuppressBuildCheck({ configKey: null, keyMap })).toBe(false);
-  expect(shouldSuppressBuildCheck({ configKey: undefined, keyMap })).toBe(false);
+  expect(shouldSuppressBuildCheck({ configKey: null }, keyMap)).toBe(false);
+  expect(shouldSuppressBuildCheck({ configKey: undefined }, keyMap)).toBe(false);
 });
 
 test('returns false for missing keyMap', () => {
-  expect(shouldSuppressBuildCheck({ configKey: 'abc123', keyMap: null })).toBe(false);
+  expect(shouldSuppressBuildCheck({ configKey: 'abc123' }, null)).toBe(false);
 });
 
 test('returns false for configKey not in keyMap', () => {
-  expect(shouldSuppressBuildCheck({ configKey: 'notfound', keyMap })).toBe(false);
+  expect(shouldSuppressBuildCheck({ configKey: 'notfound' }, keyMap)).toBe(false);
 });
 
 test('returns false for entry without ignoreBuildChecks', () => {
-  expect(shouldSuppressBuildCheck({ configKey: 'abc123', keyMap })).toBe(false);
+  expect(shouldSuppressBuildCheck({ configKey: 'abc123' }, keyMap)).toBe(false);
 });
 
 test('returns true when parent has ignoreBuildChecks: true', () => {
-  expect(shouldSuppressBuildCheck({ configKey: 'withParent', keyMap })).toBe(true);
+  expect(shouldSuppressBuildCheck({ configKey: 'withParent' }, keyMap)).toBe(true);
 });
 
 test('returns true when entry itself has ignoreBuildChecks: true', () => {
-  expect(shouldSuppressBuildCheck({ configKey: 'parentWithIgnore', keyMap })).toBe(true);
+  expect(shouldSuppressBuildCheck({ configKey: 'parentWithIgnore' }, keyMap)).toBe(true);
 });
 
 test('returns true when parent has matching checkSlug in array', () => {
   expect(
-    shouldSuppressBuildCheck({
-      configKey: 'childOfPartial',
-      keyMap,
-      checkSlug: 'state-refs',
-    })
+    shouldSuppressBuildCheck({ configKey: 'childOfPartial', checkSlug: 'state-refs' }, keyMap)
   ).toBe(true);
 
   expect(
-    shouldSuppressBuildCheck({
-      configKey: 'childOfPartial',
-      keyMap,
-      checkSlug: 'link-refs',
-    })
+    shouldSuppressBuildCheck({ configKey: 'childOfPartial', checkSlug: 'link-refs' }, keyMap)
   ).toBe(true);
 });
 
 test('returns false when parent has non-matching checkSlug', () => {
   expect(
-    shouldSuppressBuildCheck({
-      configKey: 'childOfPartial',
-      keyMap,
-      checkSlug: 'types',
-    })
+    shouldSuppressBuildCheck({ configKey: 'childOfPartial', checkSlug: 'types' }, keyMap)
   ).toBe(false);
 });

@@ -35,13 +35,12 @@ export const VALID_CHECK_SLUGS = {
  * Walks up the parent chain looking for suppressions that cover this check.
  * This walk happens ONLY when an error/warning is about to be logged.
  *
- * @param {Object} params
- * @param {string} params.configKey - Config key (~k) of the error location
- * @param {Object} params.keyMap - The keyMap from build context
- * @param {string} [params.checkSlug] - The specific check being performed (e.g., 'state-refs')
+ * @param {Object} error - Error/warning object with configKey and optional checkSlug
+ * @param {Object} keyMap - The keyMap from build context
  * @returns {boolean} True if the check should be suppressed
  */
-function shouldSuppressBuildCheck({ configKey, keyMap, checkSlug }) {
+function shouldSuppressBuildCheck(error, keyMap) {
+  const { configKey, checkSlug } = error;
   if (!configKey || !keyMap) return false;
 
   let currentKey = configKey;

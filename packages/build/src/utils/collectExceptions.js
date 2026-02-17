@@ -25,13 +25,7 @@ import { shouldSuppressBuildCheck } from '@lowdefy/errors';
  */
 function collectExceptions(context, exception) {
   // Skip suppressed exceptions (from ~ignoreBuildChecks)
-  if (
-    shouldSuppressBuildCheck({
-      configKey: exception.configKey,
-      keyMap: context.keyMap,
-      checkSlug: exception.checkSlug,
-    })
-  ) {
+  if (shouldSuppressBuildCheck(exception, context.keyMap)) {
     return;
   }
 

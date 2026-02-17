@@ -50,11 +50,7 @@ function buildPages({ components, context }) {
       // Skip suppressed ConfigErrors (via ~ignoreBuildChecks)
       if (
         error instanceof ConfigError &&
-        shouldSuppressBuildCheck({
-          configKey: error.configKey,
-          keyMap: context.keyMap,
-          checkSlug: error.checkSlug,
-        })
+        shouldSuppressBuildCheck(error, context.keyMap)
       ) {
         return;
       }
