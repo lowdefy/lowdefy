@@ -55,6 +55,7 @@
  *   shouldSuppressBuildCheck   - Check ~ignoreBuildChecks in parent chain
  */
 
+import BuildError from './BuildError.js';
 import ConfigError from './ConfigError.js';
 import ConfigWarning from './ConfigWarning.js';
 import errorToDisplayString from './errorToDisplayString.js';
@@ -68,6 +69,7 @@ import shouldSuppressBuildCheck, { VALID_CHECK_SLUGS } from './shouldSuppressBui
 import UserError from './UserError.js';
 
 export {
+  BuildError,
   ConfigError,
   ConfigWarning,
   errorToDisplayString,

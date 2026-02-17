@@ -16,7 +16,7 @@
   limitations under the License.
 */
 
-import { ConfigError, LowdefyError } from '@lowdefy/errors';
+import { BuildError, ConfigError, LowdefyError } from '@lowdefy/errors';
 
 import createContext from './createContext.js';
 import createPluginTypesMap from './utils/createPluginTypesMap.js';
@@ -72,10 +72,7 @@ async function build(options) {
       // Handle ConfigError from buildRefs (e.g., missing _ref files)
       if (err instanceof ConfigError) {
         context.handleError(err);
-        const error = new Error('Build failed with 1 error(s). See above for details.');
-        error.isFormatted = true;
-        error.hideStack = true;
-        throw error;
+        throw new BuildError('Build failed with 1 error(s). See above for details.');
       }
       throw err;
     }
@@ -127,7 +124,7 @@ async function build(options) {
     await copyPublicFolder({ components, context });
   } catch (err) {
     // Re-throw already formatted errors (ConfigError or build errors)
-    if (err.isFormatted) {
+    if (err instanceof BuildError) {
       throw err;
     }
     // Unexpected internal error - wrap as LowdefyError for proper formatting
@@ -135,10 +132,7 @@ async function build(options) {
     const lowdefyErr = new LowdefyError(err.message, { cause: err });
     lowdefyErr.stack = err.stack;
     logger.error(lowdefyErr);
-    const error = new Error('Build failed due to internal error. See above for details.');
-    error.isFormatted = true;
-    error.hideStack = true;
-    throw error;
+    throw new BuildError('Build failed due to internal error. See above for details.');
   }
 }
 

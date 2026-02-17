@@ -16,7 +16,7 @@
 
 import { jest } from '@jest/globals';
 import logCollectedErrors from './logCollectedErrors.js';
-import { ConfigError } from '@lowdefy/errors';
+import { BuildError, ConfigError } from '@lowdefy/errors';
 
 test('logCollectedErrors does nothing when no errors', () => {
   const context = { errors: [], handleError: jest.fn() };
@@ -53,13 +53,12 @@ test('logCollectedErrors wraps errors without print method as LowdefyError', () 
   expect(loggedErr.message).toBe('Printable');
 });
 
-test('logCollectedErrors sets isFormatted and hideStack on thrown error', () => {
+test('logCollectedErrors throws BuildError', () => {
   const context = { errors: [new Error('a'), new Error('b')], handleError: jest.fn() };
   try {
     logCollectedErrors(context);
   } catch (err) {
-    expect(err.isFormatted).toBe(true);
-    expect(err.hideStack).toBe(true);
+    expect(err).toBeInstanceOf(BuildError);
     expect(err.message).toBe('Build failed with 2 error(s). See above for details.');
   }
 });

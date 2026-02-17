@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { BuildError } from '@lowdefy/errors';
 import { spawnProcess } from '@lowdefy/node-utils';
 
 function nextBuild({ bin, logger }) {
@@ -34,10 +35,7 @@ function nextBuild({ bin, logger }) {
       if (errorLines.length > 0) {
         errorLines.forEach((line) => logger.error(line));
       }
-      const error = new Error('Next.js build failed. See above for details.');
-      error.isFormatted = true;
-      error.hideStack = true;
-      throw error;
+      throw new BuildError('Next.js build failed. See above for details.');
     }
     logger.info('Built app.');
   };

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigError, LowdefyError } from '@lowdefy/errors';
+import { BuildError, ConfigError, LowdefyError } from '@lowdefy/errors';
 
 function logCollectedErrors(context) {
   if (context.errors.length === 0) return;
@@ -28,12 +28,9 @@ function logCollectedErrors(context) {
       context.handleError(lowdefyErr);
     }
   });
-  const error = new Error(
+  throw new BuildError(
     `Build failed with ${context.errors.length} error(s). See above for details.`
   );
-  error.isFormatted = true;
-  error.hideStack = true;
-  throw error;
 }
 
 export default logCollectedErrors;

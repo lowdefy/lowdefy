@@ -18,7 +18,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import { ConfigError, LowdefyError } from '@lowdefy/errors';
+import { BuildError, ConfigError, LowdefyError } from '@lowdefy/errors';
 
 import createContext from '../../createContext.js';
 import logCollectedErrors from '../../utils/logCollectedErrors.js';
@@ -91,10 +91,7 @@ async function shallowBuild(options) {
     } catch (err) {
       if (err instanceof ConfigError) {
         context.handleError(err);
-        const error = new Error('Build failed with 1 error(s). See above for details.');
-        error.isFormatted = true;
-        error.hideStack = true;
-        throw error;
+        throw new BuildError('Build failed with 1 error(s). See above for details.');
       }
       throw err;
     }
@@ -229,17 +226,14 @@ async function shallowBuild(options) {
 
     return { components, pageRegistry, fileDependencyMap, context };
   } catch (err) {
-    if (err.isFormatted) {
+    if (err instanceof BuildError) {
       throw err;
     }
     const logger = context?.logger ?? options.logger ?? console;
     const lowdefyErr = new LowdefyError(err.message, { cause: err });
     lowdefyErr.stack = err.stack;
     logger.error(lowdefyErr);
-    const error = new Error('Build failed due to internal error. See above for details.');
-    error.isFormatted = true;
-    error.hideStack = true;
-    throw error;
+    throw new BuildError('Build failed due to internal error. See above for details.');
   }
 }
 
