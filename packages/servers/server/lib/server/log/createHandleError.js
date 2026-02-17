@@ -18,7 +18,7 @@ import {
   ConfigError,
   LowdefyError,
   PluginError,
-  resolveErrorConfigLocation,
+  loadAndResolveErrorLocation,
   ServiceError,
 } from '@lowdefy/errors';
 
@@ -52,7 +52,7 @@ function createHandleError({ context }) {
       const location =
         isServiceError || isLowdefyError
           ? null
-          : await resolveErrorConfigLocation({
+          : await loadAndResolveErrorLocation({
               error,
               readConfigFile: context.readConfigFile,
               configDirectory: context.configDirectory,

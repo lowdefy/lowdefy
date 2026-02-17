@@ -14,35 +14,23 @@
   limitations under the License.
 */
 
-import { resolveConfigLocation } from '@lowdefy/errors';
+import { loadAndResolveErrorLocation } from '@lowdefy/errors';
 import { serializer } from '@lowdefy/helpers';
 
 async function logClientError(context, serializedError) {
   const { logger } = context;
   const error = serializer.deserialize(serializedError);
 
-  if (error.configKey) {
-    try {
-      const [keyMap, refMap] = await Promise.all([
-        context.readConfigFile('keyMap.json'),
-        context.readConfigFile('refMap.json'),
-      ]);
+  const location = await loadAndResolveErrorLocation({
+    error,
+    readConfigFile: context.readConfigFile,
+    configDirectory: context.configDirectory,
+  });
 
-      const location = resolveConfigLocation({
-        configKey: error.configKey,
-        keyMap,
-        refMap,
-        configDirectory: context.configDirectory,
-      });
-
-      if (location) {
-        error.source = location.source;
-        error.config = location.config;
-        error.link = location.link;
-      }
-    } catch (err) {
-      logger.warn({ event: 'warn_maps_load_failed', error: err.message });
-    }
+  if (location) {
+    error.source = location.source;
+    error.config = location.config;
+    error.link = location.link;
   }
 
   logger.error(error);

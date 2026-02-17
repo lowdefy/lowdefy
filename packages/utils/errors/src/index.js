@@ -51,7 +51,7 @@
  * Location Resolution Utilities:
  *   resolveConfigLocation     - Sync: configKey → {source, config, link} via keyMap/refMap
  *   resolveErrorLocation      - Sync: unified resolver (configKey, operatorLocation, filePath)
- *   resolveErrorConfigLocation - Async: reads keyMap/refMap files at runtime
+ *   loadAndResolveErrorLocation - Async: reads keyMap/refMap files at runtime
  *   shouldSuppressBuildCheck   - Check ~ignoreBuildChecks in parent chain
  */
 
@@ -61,7 +61,7 @@ import errorToDisplayString from './errorToDisplayString.js';
 import LowdefyError from './LowdefyError.js';
 import PluginError from './PluginError.js';
 import resolveConfigLocation from './resolveConfigLocation.js';
-import resolveErrorConfigLocation from './resolveErrorConfigLocation.js';
+import loadAndResolveErrorLocation from './loadAndResolveErrorLocation.js';
 import resolveErrorLocation from './resolveErrorLocation.js';
 import ServiceError from './ServiceError.js';
 import shouldSuppressBuildCheck, { VALID_CHECK_SLUGS } from './shouldSuppressBuildCheck.js';
@@ -74,7 +74,7 @@ export {
   LowdefyError,
   PluginError,
   resolveConfigLocation,
-  resolveErrorConfigLocation,
+  loadAndResolveErrorLocation,
   resolveErrorLocation,
   ServiceError,
   shouldSuppressBuildCheck,

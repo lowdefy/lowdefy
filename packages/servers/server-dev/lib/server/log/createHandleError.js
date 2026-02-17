@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { LowdefyError, resolveErrorConfigLocation } from '@lowdefy/errors';
+import { LowdefyError, loadAndResolveErrorLocation } from '@lowdefy/errors';
 
 import captureSentryError from '../sentry/captureSentryError.js';
 
@@ -28,7 +28,7 @@ function createHandleError({ context }) {
       const location =
         isServiceError || isLowdefyError
           ? null
-          : await resolveErrorConfigLocation({
+          : await loadAndResolveErrorLocation({
               error,
               readConfigFile: context.readConfigFile,
               configDirectory: context.configDirectory,

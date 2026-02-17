@@ -184,36 +184,6 @@ describe('logClientError', () => {
     expect(error.source).toBeNull();
   });
 
-  test('handles error when loading maps', async () => {
-    const mockLogger = {
-      error: jest.fn(),
-      warn: jest.fn(),
-    };
-    const context = {
-      logger: mockLogger,
-      readConfigFile: jest.fn(() => Promise.reject(new Error('File not found'))),
-    };
-
-    const data = serializer.serialize(
-      new ConfigError({ message: 'Test error', configKey: 'key-123' })
-    );
-    const { error, ...response } = await logClientError(context, data);
-
-    expect(response).toEqual({
-      success: true,
-      source: null,
-      config: null,
-      link: null,
-    });
-    expect(mockLogger.warn).toHaveBeenCalledWith({
-      event: 'warn_maps_load_failed',
-      error: 'File not found',
-    });
-    expect(error).toBeInstanceOf(ConfigError);
-    expect(error.name).toBe('ConfigError');
-    expect(error.message).toBe('Test error');
-  });
-
   test('strips received property from serialized data', async () => {
     const mockLogger = {
       error: jest.fn(),
