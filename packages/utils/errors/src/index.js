@@ -49,8 +49,8 @@
  *    - Format: [User Error] message
  *
  * Location Resolution Utilities:
- *   resolveConfigLocation     - Sync: configKey → {source, config, link} via keyMap/refMap
- *   resolveErrorLocation      - Sync: unified resolver (configKey, operatorLocation, filePath)
+ *   resolveConfigLocation     - Sync: configKey → {source, config} via keyMap/refMap
+ *   resolveErrorLocation      - Sync: unified resolver (configKey or filePath/lineNumber)
  *   loadAndResolveErrorLocation - Async: reads keyMap/refMap files at runtime
  *   shouldSuppressBuildCheck   - Check ~ignoreBuildChecks in parent chain
  */

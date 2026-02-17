@@ -79,7 +79,6 @@ function createHandleError({ context }) {
           timestamp: new Date().toISOString(),
           source: error.source || null,
           config: error.config || null,
-          link: location?.link || null,
           // Production fields
           user: {
             id: user.id,

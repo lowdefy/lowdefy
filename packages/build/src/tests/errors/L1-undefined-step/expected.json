@@ -3,13 +3,13 @@
     {
       "mode": "dev",
       "exactWarnings": [
-        "{{fixturesDir}}/L1-undefined-step/lowdefy.yaml:32\n[Config Warning] _step references \"nonExistentStep\" in endpoint \"testEndpoint\", but no step with id \"nonExistentStep\" exists in the routine. Step IDs are defined by the \"id\" property of each step. Check for typos or add a step with this id."
+        "{{fixturesDir}}/L1-undefined-step/lowdefy.yaml:32\n[ConfigWarning] _step references \"nonExistentStep\" in endpoint \"testEndpoint\", but no step with id \"nonExistentStep\" exists in the routine. Step IDs are defined by the \"id\" property of each step. Check for typos or add a step with this id."
       ]
     },
     {
       "mode": "prod",
       "exactErrors": [
-        "{{fixturesDir}}/L1-undefined-step/lowdefy.yaml:32\n[Config Warning] _step references \"nonExistentStep\" in endpoint \"testEndpoint\", but no step with id \"nonExistentStep\" exists in the routine. Step IDs are defined by the \"id\" property of each step. Check for typos or add a step with this id."
+        "{{fixturesDir}}/L1-undefined-step/lowdefy.yaml:32\n[ConfigWarning] _step references \"nonExistentStep\" in endpoint \"testEndpoint\", but no step with id \"nonExistentStep\" exists in the routine. Step IDs are defined by the \"id\" property of each step. Check for typos or add a step with this id."
       ],
       "expectThrow": true
     }

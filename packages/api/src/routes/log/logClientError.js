@@ -30,7 +30,6 @@ async function logClientError(context, serializedError) {
   if (location) {
     error.source = location.source;
     error.config = location.config;
-    error.link = location.link;
   }
 
   logger.error(error);
@@ -39,7 +38,6 @@ async function logClientError(context, serializedError) {
     success: true,
     source: error.source ?? null,
     config: error.config ?? null,
-    link: error.link ?? null,
     error,
   };
 }

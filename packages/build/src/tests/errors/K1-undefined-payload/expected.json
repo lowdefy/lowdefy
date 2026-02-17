@@ -3,13 +3,13 @@
     {
       "mode": "dev",
       "exactWarnings": [
-        "{{fixturesDir}}/K1-undefined-payload/lowdefy.yaml:33\n[Config Warning] _payload references \"undefinedKey\" in request \"testRequest\" on page \"home\", but no key \"undefinedKey\" exists in the request payload definition. Payload keys are defined in the request's \"payload\" property. Check for typos or add the key to the payload definition."
+        "{{fixturesDir}}/K1-undefined-payload/lowdefy.yaml:33\n[ConfigWarning] _payload references \"undefinedKey\" in request \"testRequest\" on page \"home\", but no key \"undefinedKey\" exists in the request payload definition. Payload keys are defined in the request's \"payload\" property. Check for typos or add the key to the payload definition."
       ]
     },
     {
       "mode": "prod",
       "exactErrors": [
-        "{{fixturesDir}}/K1-undefined-payload/lowdefy.yaml:33\n[Config Warning] _payload references \"undefinedKey\" in request \"testRequest\" on page \"home\", but no key \"undefinedKey\" exists in the request payload definition. Payload keys are defined in the request's \"payload\" property. Check for typos or add the key to the payload definition."
+        "{{fixturesDir}}/K1-undefined-payload/lowdefy.yaml:33\n[ConfigWarning] _payload references \"undefinedKey\" in request \"testRequest\" on page \"home\", but no key \"undefinedKey\" exists in the request payload definition. Payload keys are defined in the request's \"payload\" property. Check for typos or add the key to the payload definition."
       ],
       "expectThrow": true
     }

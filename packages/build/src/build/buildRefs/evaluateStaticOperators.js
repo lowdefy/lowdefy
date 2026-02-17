@@ -47,7 +47,6 @@ function evaluateStaticOperators({ context, input, refDef }) {
       context.handleWarning({
         message: error.message,
         received: error.received,
-        operatorLocation: error.operatorLocation,
         filePath: refDef.path,
         lineNumber: error.operatorLocation?.line,
       });

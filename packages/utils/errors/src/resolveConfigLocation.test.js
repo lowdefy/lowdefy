@@ -68,7 +68,6 @@ test('resolveConfigLocation resolves full location with absolute path', () => {
   expect(result).toEqual({
     source: '/Users/dev/myapp/pages/home.yaml:5',
     config: 'root.pages[0:home].blocks[0:header]',
-    link: '/Users/dev/myapp/pages/home.yaml:5',
   });
 });
 
@@ -83,7 +82,6 @@ test('resolveConfigLocation handles different file paths', () => {
   expect(result).toEqual({
     source: '/app/connections/mongodb.yaml:42',
     config: 'root.connections[0:mongodb]',
-    link: '/app/connections/mongodb.yaml:42',
   });
 });
 
@@ -97,7 +95,6 @@ test('resolveConfigLocation without configDirectory uses relative path', () => {
   expect(result).toEqual({
     source: 'pages/home.yaml:5',
     config: 'root.pages[0:home].blocks[0:header]',
-    link: 'pages/home.yaml:5',
   });
 });
 
@@ -112,7 +109,6 @@ test('resolveConfigLocation without line number', () => {
   expect(result).toEqual({
     source: '/app/pages/home.yaml',
     config: 'root.global',
-    link: '/app/pages/home.yaml',
   });
 });
 
@@ -127,7 +123,6 @@ test('resolveConfigLocation defaults to lowdefy.yaml when ref not found', () => 
   expect(result).toEqual({
     source: '/app/lowdefy.yaml:10',
     config: 'root.something',
-    link: '/app/lowdefy.yaml:10',
   });
 });
 
@@ -141,6 +136,5 @@ test('resolveConfigLocation with null refMap uses lowdefy.yaml', () => {
   expect(result).toEqual({
     source: 'lowdefy.yaml:5',
     config: 'root.pages[0:home].blocks[0:header]',
-    link: 'lowdefy.yaml:5',
   });
 });

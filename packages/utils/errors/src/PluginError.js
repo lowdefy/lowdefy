@@ -68,10 +68,9 @@ class PluginError extends Error {
     this.location = location;
     this.configKey = error?.configKey ?? configKey ?? null;
 
-    // Location info (set by server-side resolution)
+    // Location outputs (set by server-side resolution)
     this.source = null;
     this.config = null;
-    this.link = null;
 
     if (error?.stack) {
       this.stack = error.stack;

@@ -53,7 +53,6 @@ describe('logClientError', () => {
       success: true,
       source: null,
       config: null,
-      link: null,
     });
     expect(mockLogger.error).toHaveBeenCalledTimes(1);
     expect(error).toBeInstanceOf(ConfigError);
@@ -84,7 +83,6 @@ describe('logClientError', () => {
       success: true,
       source: 'pages/home.yaml:8',
       config: 'root.pages[0:home].blocks[0:header]',
-      link: 'pages/home.yaml:8',
     });
     expect(error).toBeInstanceOf(ConfigError);
     expect(error.name).toBe('ConfigError');
@@ -119,7 +117,6 @@ describe('logClientError', () => {
       success: true,
       source: 'pages/home.yaml:8',
       config: 'root.pages[0:home].blocks[0:header]',
-      link: 'pages/home.yaml:8',
     });
     expect(error).toBeInstanceOf(PluginError);
     expect(error.name).toBe('PluginError');
@@ -146,7 +143,6 @@ describe('logClientError', () => {
       success: true,
       source: null,
       config: null,
-      link: null,
     });
     expect(error).toBeInstanceOf(ServiceError);
     expect(error.name).toBe('ServiceError');
@@ -176,7 +172,6 @@ describe('logClientError', () => {
       success: true,
       source: null,
       config: null,
-      link: null,
     });
     expect(error).toBeInstanceOf(ConfigError);
     expect(error.name).toBe('ConfigError');

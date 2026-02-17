@@ -18,28 +18,13 @@ import path from 'path';
 import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
-function resolveRawLocation({ filePath, lineNumber, configDirectory }) {
-  let resolvedPath = filePath;
-  if (configDirectory) {
-    resolvedPath = path.join(configDirectory, filePath);
-  }
-  const source = lineNumber ? `${resolvedPath}:${lineNumber}` : resolvedPath;
-  return { source, link: source };
-}
-
 async function getConfigFile({ context, refDef, referencedFrom }) {
   if (!type.isString(refDef.path)) {
-    const location = referencedFrom
-      ? resolveRawLocation({
-          filePath: referencedFrom,
-          lineNumber: refDef.lineNumber,
-          configDirectory: context.directories.config,
-        })
-      : undefined;
     throw new ConfigError({
       message: 'Invalid _ref definition.',
       received: { _ref: refDef.original },
-      location,
+      filePath: referencedFrom ?? null,
+      lineNumber: referencedFrom ? refDef.lineNumber : null,
     });
   }
 
@@ -59,16 +44,10 @@ async function getConfigFile({ context, refDef, referencedFrom }) {
       message += ` Tip: Remove "./" prefix - paths are resolved from config root. Did you mean "${suggestedPath}"?`;
     }
 
-    const location = referencedFrom
-      ? resolveRawLocation({
-          filePath: referencedFrom,
-          lineNumber: refDef.lineNumber,
-          configDirectory: context.directories.config,
-        })
-      : undefined;
     throw new ConfigError({
       message,
-      location,
+      filePath: referencedFrom ?? null,
+      lineNumber: referencedFrom ? refDef.lineNumber : null,
     });
   }
 

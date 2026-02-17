@@ -29,9 +29,7 @@ async function handler({ context, req, res }) {
   captureSentryError({
     error,
     context,
-    configLocation: response.source
-      ? { source: response.source, config: response.config, link: response.link }
-      : null,
+    configLocation: response.source ? { source: response.source, config: response.config } : null,
   });
 
   res.status(200).json(response);

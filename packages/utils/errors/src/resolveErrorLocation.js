@@ -20,12 +20,11 @@ import resolveConfigLocation from './resolveConfigLocation.js';
 
 /**
  * Unified sync location resolver for build-time errors and warnings.
- * Absorbs 3 resolution paths:
- *   1. configKey → resolveConfigLocation (standard keyMap/refMap lookup)
- *   2. operatorLocation → resolve via refMap (operator warnings in buildRefs)
- *   3. filePath + lineNumber → raw path join (YAML parse errors)
+ * Two resolution paths:
+ *   1. configKey → resolveConfigLocation (standard keyMap/refMap lookup, post-addKeys)
+ *   2. filePath + lineNumber → raw path join (pre-addKeys: YAML parse errors, operator eval)
  *
- * Mutates data, setting .source, .config, .link. Returns data.
+ * Mutates data, setting .source and .config. Returns data.
  *
  * @param {Object} data - Error or params object to resolve location on
  * @param {Object} options
@@ -48,30 +47,11 @@ function resolveErrorLocation(data, { keyMap, refMap, configDirectory }) {
     if (location) {
       data.source = location.source;
       data.config = location.config;
-      data.link = location.link;
       return data;
     }
   }
 
-  // Path 2: operatorLocation → resolve via refMap (operator warnings in buildRefs)
-  if (data.operatorLocation) {
-    const refEntry = refMap?.[data.operatorLocation.ref];
-    if (refEntry?.path) {
-      const filePath = refEntry.path;
-      const lineNumber = data.operatorLocation.line;
-
-      let resolvedPath = filePath;
-      if (configDirectory) {
-        resolvedPath = path.join(configDirectory, filePath);
-      }
-      const source = lineNumber ? `${resolvedPath}:${lineNumber}` : resolvedPath;
-      data.source = source;
-      data.link = source;
-      return data;
-    }
-  }
-
-  // Path 3: filePath + lineNumber → raw path join (YAML parse errors)
+  // Path 2: filePath + lineNumber → raw path join (YAML parse errors, operator eval)
   if (data.filePath) {
     let resolvedPath = data.filePath;
     if (configDirectory) {
@@ -79,7 +59,6 @@ function resolveErrorLocation(data, { keyMap, refMap, configDirectory }) {
     }
     const source = data.lineNumber ? `${resolvedPath}:${data.lineNumber}` : resolvedPath;
     data.source = source;
-    data.link = source;
     return data;
   }
 

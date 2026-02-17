@@ -13,7 +13,6 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import path from 'path';
 import { serializer, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 import createRefReviver from './createRefReviver.js';
@@ -42,18 +41,10 @@ async function recursiveBuild({
   if (currentPath) {
     if (refChainSet.has(currentPath)) {
       const chainDisplay = [...refChainList, currentPath].join('\n  -> ');
-      let location;
-      if (referencedFrom) {
-        let resolvedPath = referencedFrom;
-        if (context.directories.config) {
-          resolvedPath = path.join(context.directories.config, referencedFrom);
-        }
-        const source = refDef.lineNumber ? `${resolvedPath}:${refDef.lineNumber}` : resolvedPath;
-        location = { source, link: source };
-      }
       throw new ConfigError({
         message: `Circular reference detected. File "${currentPath}" references itself through:\n  -> ${chainDisplay}`,
-        location,
+        filePath: referencedFrom ?? null,
+        lineNumber: referencedFrom ? refDef.lineNumber : null,
       });
     }
     refChainSet.add(currentPath);

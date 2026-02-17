@@ -45,7 +45,7 @@ function createHandleWarning({ context }) {
       return;
     }
 
-    // Resolve location — pass params (has configKey, operatorLocation, filePath, lineNumber)
+    // Resolve location — pass params (has configKey, filePath, lineNumber)
     resolveErrorLocation(params, {
       keyMap: context.keyMap,
       refMap: context.refMap,
@@ -53,7 +53,6 @@ function createHandleWarning({ context }) {
     });
     if (params.source) warning.source = params.source;
     if (params.config) warning.config = params.config;
-    if (params.link) warning.link = params.link;
 
     const source = warning.source ?? null;
     const dedupKey = source ?? warning.message;

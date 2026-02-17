@@ -40,7 +40,6 @@ async function getRefContent({ context, refDef, referencedFrom }) {
       message: `Error parsing "${refDef.path}": ${error.message}`,
       filePath: refDef.path,
       lineNumber: lineMatch ? lineMatch[1] : null,
-      configDirectory: context.directories.config,
     });
   }
 }

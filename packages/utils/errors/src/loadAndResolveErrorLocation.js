@@ -24,7 +24,7 @@ import resolveConfigLocation from './resolveConfigLocation.js';
  * @param {Object} params.error - Error object with optional configKey property
  * @param {Function} params.readConfigFile - Async function to read config files
  * @param {string} params.configDirectory - Absolute path to config directory
- * @returns {Promise<Object|null>} Location object with source, config, and link, or null
+ * @returns {Promise<Object|null>} Location object with source and config, or null
  */
 async function loadAndResolveErrorLocation({ error, readConfigFile, configDirectory }) {
   if (!error?.configKey) {

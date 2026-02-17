@@ -24,7 +24,7 @@ import path from 'path';
  * @param {Object} params.keyMap - The keyMap from build output
  * @param {Object} params.refMap - The refMap from build output
  * @param {string} [params.configDirectory] - Absolute path to config directory for clickable links
- * @returns {Object|null} Location object with source, config, and link, or null if not resolvable
+ * @returns {Object|null} Location object with source and config, or null if not resolvable
  *
  * @example
  * const location = resolveConfigLocation({
@@ -36,7 +36,6 @@ import path from 'path';
  * // Returns: {
  * //   source: '/Users/dev/myapp/pages/home.yaml:5',
  * //   config: 'root.pages[0:home].blocks[0:header]',
- * //   link: '/Users/dev/myapp/pages/home.yaml:5'
  * // }
  */
 function resolveConfigLocation({ configKey, keyMap, refMap, configDirectory }) {
@@ -63,7 +62,6 @@ function resolveConfigLocation({ configKey, keyMap, refMap, configDirectory }) {
   return {
     source,
     config,
-    link: source,
   };
 }
 

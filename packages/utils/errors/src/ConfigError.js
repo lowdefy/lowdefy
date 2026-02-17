@@ -28,7 +28,14 @@
  * throw new ConfigError({
  *   message: 'Invalid block type',
  *   configKey: block['~k'],
- *   location: { source: 'pages/home.yaml:42', link: '/path/to/pages/home.yaml:42' }
+ * });
+ *
+ * @example
+ * // With raw file location (YAML parse errors, pre-addKeys)
+ * throw new ConfigError({
+ *   message: 'Error parsing file',
+ *   filePath: 'pages/home.yaml',
+ *   lineNumber: 6,
  * });
  */
 class ConfigError extends Error {
@@ -38,7 +45,8 @@ class ConfigError extends Error {
    * @param {string} [messageOrParams.message] - The error message (if object)
    * @param {Error} [messageOrParams.error] - Original error to wrap (extracts message/configKey/stack)
    * @param {string} [messageOrParams.configKey] - Config key (~k) for location resolution
-   * @param {Object} [messageOrParams.location] - Pre-resolved location { source, link, config }
+   * @param {string} [messageOrParams.filePath] - Raw file path for pre-addKeys errors (YAML parse, operator eval)
+   * @param {string|number} [messageOrParams.lineNumber] - Line number for pre-addKeys errors
    * @param {string} [messageOrParams.checkSlug] - The build check that triggered this error
    */
   constructor(messageOrParams) {
@@ -47,14 +55,12 @@ class ConfigError extends Error {
     const error = isString ? null : messageOrParams.error;
     const message = isString ? messageOrParams : messageOrParams.message ?? error?.message;
     const configKey = isString ? null : messageOrParams.configKey ?? error?.configKey;
-    const location = isString ? null : messageOrParams.location;
     const checkSlug = isString ? undefined : messageOrParams.checkSlug;
     const received = isString
       ? undefined
       : messageOrParams.received !== undefined
         ? messageOrParams.received
         : error?.received;
-    const operatorLocation = isString ? null : messageOrParams.operatorLocation;
 
     // Message without prefix - logger uses error.name for display
     super(message);
@@ -65,13 +71,14 @@ class ConfigError extends Error {
 
     // For logger formatting
     this.received = received;
-    this.operatorLocation = operatorLocation;
 
-    // Location info (can be set via constructor or subclass)
-    this.source = location?.source ?? null;
-    this.link = location?.link ?? null;
-    this.config = location?.config ?? null;
-    this.resolved = !!location;
+    // Raw file location for pre-addKeys errors (resolved by handleError/handleWarning)
+    this.filePath = isString ? null : messageOrParams.filePath ?? null;
+    this.lineNumber = isString ? null : messageOrParams.lineNumber ?? null;
+
+    // Location outputs (set by handlers via resolveErrorLocation, not at construction)
+    this.source = null;
+    this.config = null;
 
     // Preserve original error's stack if wrapping
     if (error?.stack) {

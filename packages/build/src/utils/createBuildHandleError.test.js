@@ -63,6 +63,26 @@ test('handleError resolves location from configKey before logging', () => {
   expect(mockPinoLogger.error).toHaveBeenCalledTimes(1);
 });
 
+test('handleError resolves location from filePath and lineNumber', () => {
+  const context = {
+    logger: mockPinoLogger,
+    keyMap: {},
+    refMap: {},
+    directories: { config: '/app' },
+  };
+  const handleError = createBuildHandleError({ context });
+
+  const error = new ConfigError({
+    message: 'Error parsing YAML',
+    filePath: 'pages/home.yaml',
+    lineNumber: 6,
+  });
+  handleError(error);
+
+  expect(error.source).toBe('/app/pages/home.yaml:6');
+  expect(mockPinoLogger.error).toHaveBeenCalledTimes(1);
+});
+
 test('handleError still logs when resolveErrorLocation throws', () => {
   const context = {
     logger: mockPinoLogger,

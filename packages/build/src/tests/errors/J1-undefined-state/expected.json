@@ -3,13 +3,13 @@
     {
       "mode": "dev",
       "exactWarnings": [
-        "{{fixturesDir}}/J1-undefined-state/lowdefy.yaml:21\n[Config Warning] _state references \"undefinedKey\" on page \"home\", but no input block with id \"undefinedKey\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState."
+        "{{fixturesDir}}/J1-undefined-state/lowdefy.yaml:21\n[ConfigWarning] _state references \"undefinedKey\" on page \"home\", but no input block with id \"undefinedKey\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState."
       ]
     },
     {
       "mode": "prod",
       "exactErrors": [
-        "{{fixturesDir}}/J1-undefined-state/lowdefy.yaml:21\n[Config Warning] _state references \"undefinedKey\" on page \"home\", but no input block with id \"undefinedKey\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState."
+        "{{fixturesDir}}/J1-undefined-state/lowdefy.yaml:21\n[ConfigWarning] _state references \"undefinedKey\" on page \"home\", but no input block with id \"undefinedKey\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState."
       ],
       "expectThrow": true
     }
