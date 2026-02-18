@@ -17,7 +17,9 @@
 function extractErrorProps(err) {
   if (!err) return err;
   const props = { message: err.message, name: err.name, stack: err.stack };
-  if (err.cause !== undefined) props.cause = err.cause;
+  if (err.cause !== undefined) {
+    props.cause = err.cause instanceof Error ? extractErrorProps(err.cause) : err.cause;
+  }
   for (const key of Object.keys(err)) {
     props[key] = err[key];
   }

@@ -201,7 +201,7 @@ describe('error input', () => {
     const { OperatorError } = await import('@lowdefy/errors');
     const { default: createCliLogger } = await import('./createCliLogger.js');
     const logger = createCliLogger({ logLevel: 'info' });
-    const err = new OperatorError('operator broke');
+    const err = new OperatorError({ message: 'operator broke' });
     logger.error(err);
     expect(mockOraFail.mock.calls.length).toBe(1);
     expect(mockOraFail.mock.calls[0][0]).toBe('\x1b[31m[OperatorError] operator broke\x1b[0m');
@@ -211,7 +211,7 @@ describe('error input', () => {
     const { ServiceError } = await import('@lowdefy/errors');
     const { default: createCliLogger } = await import('./createCliLogger.js');
     const logger = createCliLogger({ logLevel: 'info' });
-    const err = new ServiceError('service down');
+    const err = new ServiceError({ message: 'service down' });
     logger.error(err);
     expect(mockOraFail.mock.calls.length).toBe(1);
     expect(mockOraFail.mock.calls[0][0]).toBe('\x1b[31m[ServiceError] service down\x1b[0m');
@@ -297,7 +297,7 @@ describe('cause chain', () => {
     const { default: createCliLogger } = await import('./createCliLogger.js');
     const logger = createCliLogger({ logLevel: 'info' });
     const cause = new Error('root');
-    const err = new ConfigError('config', { cause });
+    const err = new ConfigError({ message: 'config', error: cause });
     logger.error(err);
     // ConfigError message (no stack for ConfigError)
     expect(mockOraFail.mock.calls[0][0]).toBe('\x1b[31m[ConfigError] config\x1b[0m');

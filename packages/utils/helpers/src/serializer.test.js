@@ -1061,11 +1061,13 @@ test('extractErrorProps captures enumerable properties', () => {
   expect(props.typeName).toBe('_if');
 });
 
-test('extractErrorProps captures cause when present', () => {
+test('extractErrorProps recursively serializes Error cause', () => {
   const cause = new Error('root cause');
   const err = new Error('wrapper', { cause });
   const props = extractErrorProps(err);
-  expect(props.cause).toBe(cause);
+  expect(props.cause.message).toBe('root cause');
+  expect(props.cause.name).toBe('Error');
+  expect(props.cause.stack).toBeDefined();
 });
 
 test('extractErrorProps returns falsy input as-is', () => {
