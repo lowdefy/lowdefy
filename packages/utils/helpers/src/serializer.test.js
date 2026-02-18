@@ -1011,8 +1011,7 @@ test('copy round-trip for OperatorError preserves class and properties', () => {
 });
 
 test('copy round-trip for ServiceError preserves class and properties', () => {
-  const err = new ServiceError({
-    message: 'Connection refused',
+  const err = new ServiceError('Connection refused', {
     service: 'MongoDB',
     code: 'ECONNREFUSED',
     statusCode: 503,

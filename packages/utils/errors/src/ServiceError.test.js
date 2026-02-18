@@ -17,7 +17,7 @@
 import ServiceError from './ServiceError.js';
 
 test('ServiceError creates error with message only', () => {
-  const error = new ServiceError({ message: 'Connection failed' });
+  const error = new ServiceError('Connection failed');
   expect(error.message).toBe('Connection failed');
   expect(error.name).toBe('ServiceError');
   expect(error.isLowdefyError).toBe(true);
@@ -25,25 +25,31 @@ test('ServiceError creates error with message only', () => {
 });
 
 test('ServiceError includes service name in message', () => {
-  const error = new ServiceError({ message: 'Connection refused', service: 'MongoDB' });
+  const error = new ServiceError('Connection refused', { service: 'MongoDB' });
   expect(error.message).toBe('MongoDB: Connection refused');
   expect(error.service).toBe('MongoDB');
 });
 
 test('ServiceError stores error code', () => {
-  const error = new ServiceError({ message: 'Failed', code: 'ECONNREFUSED' });
+  const error = new ServiceError('Failed', { code: 'ECONNREFUSED' });
   expect(error.code).toBe('ECONNREFUSED');
 });
 
 test('ServiceError stores status code', () => {
-  const error = new ServiceError({ message: 'Server error', statusCode: 503 });
+  const error = new ServiceError('Server error', { statusCode: 503 });
   expect(error.statusCode).toBe(503);
 });
 
 test('ServiceError is an instance of Error', () => {
-  const error = new ServiceError({ message: 'Test' });
+  const error = new ServiceError('Test');
   expect(error instanceof Error).toBe(true);
   expect(error instanceof ServiceError).toBe(true);
+});
+
+test('ServiceError works with no args', () => {
+  const error = new ServiceError();
+  expect(error.message).toBe('Service error');
+  expect(error.cause).toBeUndefined();
 });
 
 describe('ServiceError.isServiceError', () => {
@@ -116,12 +122,12 @@ describe('ServiceError.isServiceError', () => {
   });
 });
 
-describe('ServiceError constructor with error parameter', () => {
+describe('ServiceError constructor with cause parameter', () => {
   test('creates ServiceError from existing error', () => {
     const original = new Error('connect ECONNREFUSED 127.0.0.1:27017');
     original.code = 'ECONNREFUSED';
 
-    const serviceError = new ServiceError({ error: original, service: 'MongoDB' });
+    const serviceError = new ServiceError(undefined, { cause: original, service: 'MongoDB' });
 
     expect(serviceError.name).toBe('ServiceError');
     expect(serviceError.service).toBe('MongoDB');
@@ -133,17 +139,17 @@ describe('ServiceError constructor with error parameter', () => {
 
   test('creates ServiceError without service name', () => {
     const original = new Error('timeout');
-    const serviceError = new ServiceError({ error: original });
+    const serviceError = new ServiceError(undefined, { cause: original });
 
     expect(serviceError.message).toBe('timeout');
     expect(serviceError.service).toBeUndefined();
   });
 
-  test('preserves status code from original', () => {
+  test('preserves status code from cause', () => {
     const original = new Error('Internal Server Error');
     original.statusCode = 500;
 
-    const serviceError = new ServiceError({ error: original, service: 'API' });
+    const serviceError = new ServiceError(undefined, { cause: original, service: 'API' });
     expect(serviceError.statusCode).toBe(500);
     expect(serviceError.message).toContain('Server returned error 500');
   });
@@ -152,8 +158,8 @@ describe('ServiceError constructor with error parameter', () => {
     const original = new Error('connect ECONNREFUSED');
     original.code = 'ECONNREFUSED';
 
-    const serviceError = new ServiceError({
-      error: original,
+    const serviceError = new ServiceError(undefined, {
+      cause: original,
       service: 'MongoDB',
       configKey: 'requests.0.connection',
     });
@@ -162,15 +168,22 @@ describe('ServiceError constructor with error parameter', () => {
 
   test('configKey is null when not provided', () => {
     const original = new Error('timeout');
-    const serviceError = new ServiceError({ error: original, service: 'API' });
+    const serviceError = new ServiceError(undefined, { cause: original, service: 'API' });
     expect(serviceError.configKey).toBeNull();
+  });
+
+  test('explicit message overrides cause message', () => {
+    const original = new Error('raw error');
+    const serviceError = new ServiceError('Custom message', { cause: original, service: 'API' });
+    expect(serviceError.message).toBe('API: Custom message');
+    expect(serviceError.cause).toBe(original);
   });
 });
 
 test('ServiceError stores raw base message in _message', () => {
   const original = new Error('connect ECONNREFUSED 127.0.0.1:27017');
   original.code = 'ECONNREFUSED';
-  const error = new ServiceError({ error: original, service: 'MongoDB' });
+  const error = new ServiceError(undefined, { cause: original, service: 'MongoDB' });
 
   // _message stores the enhanced message before service prefix
   expect(error._message).toContain('Connection refused');
@@ -179,7 +192,7 @@ test('ServiceError stores raw base message in _message', () => {
 });
 
 test('ServiceError stores base message in _message without service', () => {
-  const error = new ServiceError({ message: 'Connection failed' });
+  const error = new ServiceError('Connection failed');
   expect(error._message).toBe('Connection failed');
 });
 

@@ -48,8 +48,8 @@ async function callRequestResolver(
 
     // Check if this is a service error (network, timeout, 5xx)
     if (ServiceError.isServiceError(error)) {
-      const serviceError = new ServiceError({
-        error,
+      const serviceError = new ServiceError(undefined, {
+        cause: error,
         service: requestConfig.connectionId,
         configKey: requestConfig['~k'],
       });

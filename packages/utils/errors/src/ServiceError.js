@@ -47,37 +47,37 @@ const SERVICE_ERROR_CODES = new Set([
  *   return await fetch(url);
  * } catch (error) {
  *   if (ServiceError.isServiceError(error)) {
- *     throw ServiceError.from(error, 'MongoDB');
+ *     throw new ServiceError(undefined, { cause: error, service: 'MongoDB' });
  *   }
- *   throw new PluginError({ error, ... });
+ *   throw new PluginError(error.message, { cause: error, ... });
  * }
- * // error.message = "[Service Error] MongoDB: Connection refused. The service may be down..."
+ * // error.message = "MongoDB: Connection refused. The service may be down..."
  */
 class ServiceError extends Error {
   /**
    * Creates a ServiceError instance with formatted message.
-   * @param {Object} params
-   * @param {string} [params.message] - The error message (required if no error)
-   * @param {Error} [params.error] - Original error to wrap (auto-enhances message)
-   * @param {string} [params.service] - Name of the service that failed
-   * @param {string} [params.code] - Error code (e.g., 'ECONNREFUSED')
-   * @param {number} [params.statusCode] - HTTP status code if applicable
-   * @param {string} [params.configKey] - Config key for location resolution
+   * @param {string} [message] - Error message (falls back to enhanced cause message)
+   * @param {Object} [options]
+   * @param {Error} [options.cause] - Original error to wrap (auto-enhances message)
+   * @param {string} [options.service] - Name of the service that failed
+   * @param {string} [options.code] - Error code (e.g., 'ECONNREFUSED')
+   * @param {number} [options.statusCode] - HTTP status code if applicable
+   * @param {string} [options.configKey] - Config key for location resolution
    */
-  constructor({ message, error, service, code, statusCode, configKey }) {
+  constructor(message, { cause, service, code, statusCode, configKey } = {}) {
     // Extract info from wrapped error if provided
-    const errorCode = code ?? error?.code;
+    const errorCode = code ?? cause?.code;
     const errorStatusCode =
-      statusCode ?? error?.statusCode ?? error?.status ?? error?.response?.status;
+      statusCode ?? cause?.statusCode ?? cause?.status ?? cause?.response?.status;
 
     // Use provided message, or enhance wrapped error's message
-    const baseMessage = message ?? (error ? ServiceError.enhanceMessage(error) : 'Service error');
+    const baseMessage = message ?? (cause ? ServiceError.enhanceMessage(cause) : 'Service error');
 
     // Message without prefix - logger uses error.name for display
     // Include service in message if provided
     const formattedMessage = service ? `${service}: ${baseMessage}` : baseMessage;
 
-    super(formattedMessage, { cause: error });
+    super(formattedMessage, { cause });
     this.name = 'ServiceError';
     this.isLowdefyError = true;
     this._message = baseMessage;

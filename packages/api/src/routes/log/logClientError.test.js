@@ -133,7 +133,7 @@ describe('logClientError', () => {
     };
 
     const data = serializer.serialize(
-      new ServiceError({ message: 'Connection refused', service: 'MongoDB' })
+      new ServiceError('Connection refused', { service: 'MongoDB' })
     );
     const { error, ...response } = await logClientError(context, data);
 

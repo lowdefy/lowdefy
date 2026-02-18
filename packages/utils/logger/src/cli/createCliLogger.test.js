@@ -211,7 +211,7 @@ describe('error input', () => {
     const { ServiceError } = await import('@lowdefy/errors');
     const { default: createCliLogger } = await import('./createCliLogger.js');
     const logger = createCliLogger({ logLevel: 'info' });
-    const err = new ServiceError({ message: 'service down' });
+    const err = new ServiceError('service down');
     logger.error(err);
     expect(mockOraFail.mock.calls.length).toBe(1);
     expect(mockOraFail.mock.calls[0][0]).toBe('\x1b[31m[ServiceError] service down\x1b[0m');

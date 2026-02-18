@@ -26,7 +26,7 @@ async function TestError({ request }) {
     case 'ConfigError':
       throw new ConfigError(message);
     case 'ServiceError':
-      throw new ServiceError({ message, service: 'TestService' });
+      throw new ServiceError(message, { service: 'TestService' });
     case 'UserError':
       throw new UserError(message);
     case 'TypeError':
