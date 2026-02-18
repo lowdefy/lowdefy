@@ -35,11 +35,9 @@ const defaultColors = {
 };
 
 function getTime() {
-  const time = new Date(Date.now());
-  const h = time.getHours();
-  const m = time.getMinutes();
-  const s = time.getSeconds();
-  return `${h > 9 ? '' : '0'}${h}:${m > 9 ? '' : '0'}${m}:${s > 9 ? '' : '0'}${s}`;
+  const t = new Date();
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${pad(t.getHours())}:${pad(t.getMinutes())}:${pad(t.getSeconds())}`;
 }
 
 // Standard pino levels + spin/succeed at info level
@@ -62,6 +60,10 @@ function filterLevels(obj, level) {
   return obj;
 }
 
+function colorize(text, color, level) {
+  return colors[color ?? defaultColors[level]](text);
+}
+
 function createOraPrint({ logLevel }) {
   const spinner = ora({
     spinner: 'random',
@@ -70,20 +72,17 @@ function createOraPrint({ logLevel }) {
   });
   return filterLevels(
     {
-      error: (text, { color } = {}) => spinner.fail(colors[color ?? defaultColors.error](text)),
-      warn: (text, { color } = {}) => spinner.warn(colors[color ?? defaultColors.warn](text)),
+      error: (text, { color } = {}) => spinner.fail(colorize(text, color, 'error')),
+      warn: (text, { color } = {}) => spinner.warn(colorize(text, color, 'warn')),
       info: (text, { color } = {}) =>
-        spinner.stopAndPersist({
-          symbol: '∙',
-          text: colors[color ?? defaultColors.info](text),
-        }),
+        spinner.stopAndPersist({ symbol: '∙', text: colorize(text, color, 'info') }),
       debug: (text, { color } = {}) => {
         if (spinner.isSpinning) {
           spinner.stopAndPersist({ symbol: '∙' });
         }
         spinner.stopAndPersist({
           symbol: colors.gray('+'),
-          text: colors[color ?? defaultColors.debug](text),
+          text: colorize(text, color, 'debug'),
         });
       },
       spin: (text) => spinner.start(text),
@@ -111,20 +110,15 @@ function createBasicPrint({ logLevel = 'info' }) {
 let print;
 
 function getPrint({ logLevel }) {
-  if (print) return print;
-  if (process.env.CI === 'true' || process.env.CI === '1') {
-    print = createBasicPrint({ logLevel });
-    return print;
+  if (!print) {
+    const isCI = process.env.CI === 'true' || process.env.CI === '1';
+    print = isCI ? createBasicPrint({ logLevel }) : createOraPrint({ logLevel });
   }
-  print = createOraPrint({ logLevel });
   return print;
 }
 
 function shouldLogStack(error) {
-  if (error.isLowdefyError === true && error.name !== 'LowdefyError') {
-    return false;
-  }
-  return true;
+  return !error.isLowdefyError || error.name === 'LowdefyError';
 }
 
 function isErrorLike(input) {
