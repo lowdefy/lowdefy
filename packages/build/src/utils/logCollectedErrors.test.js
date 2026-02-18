@@ -33,23 +33,23 @@ test('logCollectedErrors logs ConfigError instances and throws summary', () => {
   expect(context.handleError).toHaveBeenCalledWith(configErr);
 });
 
-test('logCollectedErrors wraps plain errors as LowdefyError', () => {
+test('logCollectedErrors wraps plain errors as LowdefyInternalError', () => {
   const plainErr = new Error('Something broke');
   const context = { errors: [plainErr], handleError: jest.fn() };
   expect(() => logCollectedErrors(context)).toThrow(
     'Build failed with 1 error(s). See above for details.'
   );
   const loggedErr = context.handleError.mock.calls[0][0];
-  expect(loggedErr.name).toBe('LowdefyError');
+  expect(loggedErr.name).toBe('LowdefyInternalError');
   expect(loggedErr.message).toBe('Something broke');
 });
 
-test('logCollectedErrors wraps errors without print method as LowdefyError', () => {
+test('logCollectedErrors wraps errors without print method as LowdefyInternalError', () => {
   const plainErr = new Error('Printable');
   const context = { errors: [plainErr], handleError: jest.fn() };
   expect(() => logCollectedErrors(context)).toThrow();
   const loggedErr = context.handleError.mock.calls[0][0];
-  expect(loggedErr.name).toBe('LowdefyError');
+  expect(loggedErr.name).toBe('LowdefyInternalError');
   expect(loggedErr.message).toBe('Printable');
 });
 

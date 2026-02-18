@@ -18,7 +18,7 @@ import {
   ActionError,
   BlockError,
   ConfigError,
-  LowdefyError,
+  LowdefyInternalError,
   OperatorError,
   PluginError,
   RequestError,
@@ -50,7 +50,7 @@ function getEventType(error) {
   if (error instanceof ConfigError) {
     return 'config_error';
   }
-  if (error instanceof LowdefyError) {
+  if (error instanceof LowdefyInternalError) {
     return 'lowdefy_error';
   }
   return 'error';
@@ -62,7 +62,7 @@ function createHandleError({ context }) {
       const { headers = {}, user = {} } = context;
       const eventType = getEventType(error);
       const isServiceError = error instanceof ServiceError;
-      const isLowdefyError = error instanceof LowdefyError;
+      const isLowdefyError = error instanceof LowdefyInternalError;
 
       // For service errors and internal lowdefy errors, don't resolve config location
       const location =

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { BuildError, LowdefyError } from '@lowdefy/errors';
+import { BuildError, LowdefyInternalError } from '@lowdefy/errors';
 
 function logCollectedErrors(context) {
   if (context.errors.length === 0) return;
@@ -23,7 +23,7 @@ function logCollectedErrors(context) {
     if (err.isLowdefyError) {
       context.handleError(err);
     } else {
-      const lowdefyErr = new LowdefyError(err.message, { cause: err });
+      const lowdefyErr = new LowdefyInternalError(err.message, { cause: err });
       lowdefyErr.stack = err.stack;
       context.handleError(lowdefyErr);
     }

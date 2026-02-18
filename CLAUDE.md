@@ -283,18 +283,18 @@ import {
 } from '@lowdefy/errors';
 ```
 
-| Class           | Purpose                                                     | Catch Layer                      |
-| --------------- | ----------------------------------------------------------- | -------------------------------- |
-| `LowdefyError`  | Internal Lowdefy bugs                                       | Top-level in build/server/client |
-| `PluginError`   | Base class for plugin failures (not used directly)          | Plugin interface layer           |
-| `OperatorError` | Operator failures (`_if`, `_get`, etc.)                     | Operator parsers                 |
-| `ActionError`   | Action failures (`SetState`, `Request`, etc.)               | Action runner (engine)           |
-| `RequestError`  | Request/connection failures (`MongoDBFind`, etc.)           | Request handler (API)            |
-| `BlockError`    | Block rendering failures                                    | ErrorBoundary (client)           |
-| `ServiceError`  | External service failures (network, timeout, 5xx)           | Request/connection layer         |
-| `ConfigError`   | YAML config validation errors                               | Build validation, runtime        |
-| `ConfigWarning` | Config inconsistencies (warning in dev, error in prod)      | Build validation                 |
-| `UserError`     | Expected user interaction (validation, throws), client-only | Browser console only             |
+| Class                  | Purpose                                                     | Catch Layer                      |
+| ---------------------- | ----------------------------------------------------------- | -------------------------------- |
+| `LowdefyInternalError` | Internal Lowdefy bugs                                       | Top-level in build/server/client |
+| `PluginError`          | Base class for plugin failures (not used directly)          | Plugin interface layer           |
+| `OperatorError`        | Operator failures (`_if`, `_get`, etc.)                     | Operator parsers                 |
+| `ActionError`          | Action failures (`SetState`, `Request`, etc.)               | Action runner (engine)           |
+| `RequestError`         | Request/connection failures (`MongoDBFind`, etc.)           | Request handler (API)            |
+| `BlockError`           | Block rendering failures                                    | ErrorBoundary (client)           |
+| `ServiceError`         | External service failures (network, timeout, 5xx)           | Request/connection layer         |
+| `ConfigError`          | YAML config validation errors                               | Build validation, runtime        |
+| `ConfigWarning`        | Config inconsistencies (warning in dev, error in prod)      | Build validation                 |
+| `UserError`            | Expected user interaction (validation, throws), client-only | Browser console only             |
 
 **Key principle:** Plugins throw errors without knowing about config keys. The interface layer catches errors and adds `configKey` for location resolution to ALL error types - this helps developers trace any error back to its config source.
 

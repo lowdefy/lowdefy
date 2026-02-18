@@ -175,14 +175,14 @@ describe('error input', () => {
     expect(mockOraFail.mock.calls[1][0]).toMatch(/^\x1b\[2m[\s\S]*\x1b\[0m$/);
   });
 
-  test('LowdefyError logs stack trace in gray', async () => {
-    const { LowdefyError } = await import('@lowdefy/errors');
+  test('LowdefyInternalError logs stack trace in gray', async () => {
+    const { LowdefyInternalError } = await import('@lowdefy/errors');
     const { default: createCliLogger } = await import('./createCliLogger.js');
     const logger = createCliLogger({ logLevel: 'info' });
-    const err = new LowdefyError('internal bug');
+    const err = new LowdefyInternalError('internal bug');
     logger.error(err);
     expect(mockOraFail.mock.calls.length).toBe(2);
-    expect(mockOraFail.mock.calls[0][0]).toBe('\x1b[31m[LowdefyError] internal bug\x1b[0m');
+    expect(mockOraFail.mock.calls[0][0]).toBe('\x1b[31m[LowdefyInternalError] internal bug\x1b[0m');
     // Second call is the stack wrapped in gray ANSI
     expect(mockOraFail.mock.calls[1][0]).toMatch(/^\x1b\[2m[\s\S]*\x1b\[0m$/);
   });

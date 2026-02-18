@@ -16,7 +16,7 @@ This package provides:
 ```
 @lowdefy/errors/src/
 ├── index.js                        # Single flat entry point
-├── LowdefyError.js                 # Internal Lowdefy bugs
+├── LowdefyInternalError.js                 # Internal Lowdefy bugs
 ├── ConfigError.js                  # Config validation errors
 ├── ConfigWarning.js                # Warnings (extends ConfigError)
 ├── BuildError.js                   # Summary error after build fails
@@ -38,7 +38,7 @@ No `/client`, `/server`, or `/build` subpaths. All exports are flat.
 
 ```
 Error
-├── LowdefyError          # Internal Lowdefy bugs
+├── LowdefyInternalError          # Internal Lowdefy bugs
 │   └── isLowdefyError: true
 ├── ConfigError            # Config validation errors
 │   └── isLowdefyError: true
@@ -66,15 +66,15 @@ The marker survives `extractErrorProps` → pino JSON → `reconstructError` bec
 
 ### Error Classes
 
-#### LowdefyError
+#### LowdefyInternalError
 
 Internal Lowdefy bugs or unexpected conditions.
 
 ```javascript
-class LowdefyError extends Error {
+class LowdefyInternalError extends Error {
   constructor(message, options = {}) {
     super(message, options);
-    this.name = 'LowdefyError';
+    this.name = 'LowdefyInternalError';
     this.isLowdefyError = true;
     this.configKey = null;
   }

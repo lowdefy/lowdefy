@@ -22,7 +22,7 @@
  *
  * @example
  * // Create a new error
- * throw new LowdefyError('Unexpected condition');
+ * throw new LowdefyInternalError('Unexpected condition');
  *
  * @example
  * // At top-level catch, log the error with stack
@@ -31,9 +31,9 @@
  *   console.error(err.stack);
  * }
  */
-class LowdefyError extends Error {
+class LowdefyInternalError extends Error {
   /**
-   * Creates a LowdefyError instance.
+   * Creates a LowdefyInternalError instance.
    * @param {string} message - The error message
    * @param {Object} [options]
    * @param {Error} [options.cause] - The original error that caused this
@@ -41,10 +41,10 @@ class LowdefyError extends Error {
   constructor(message, options = {}) {
     // Message without prefix - logger uses error.name for display
     super(message, options);
-    this.name = 'LowdefyError';
+    this.name = 'LowdefyInternalError';
     this.isLowdefyError = true;
     this.configKey = null;
   }
 }
 
-export default LowdefyError;
+export default LowdefyInternalError;

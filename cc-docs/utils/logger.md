@@ -118,7 +118,7 @@ logger.info({ color: 'blue' }, 'link'); // Blue text
 
    - Log `error.source` in blue if present
    - Log `errorToDisplayString(error)` at the appropriate level
-   - Log `error.stack` for `LowdefyError` and non-Lowdefy errors (actual bugs)
+   - Log `error.stack` for `LowdefyInternalError` and non-Lowdefy errors (actual bugs)
    - Suppress stack for ConfigError, PluginError, ServiceError, UserError, BuildError, ConfigWarning
 
 2. **Pino two-arg form** (second arg is string):
@@ -133,7 +133,7 @@ logger.info({ color: 'blue' }, 'link'); // Blue text
 4. **Fallback** (anything else):
    - `JSON.stringify(input, null, 2)`
 
-**Stack trace logic (`shouldLogStack`):** Logs stacks for `LowdefyError` (internal bugs where stack is critical) and non-Lowdefy errors (plain `Error`, `TypeError`, etc. — JS bugs). Suppresses stacks for all other Lowdefy error types that use `source`/location instead of stack traces.
+**Stack trace logic (`shouldLogStack`):** Logs stacks for `LowdefyInternalError` (internal bugs where stack is critical) and non-Lowdefy errors (plain `Error`, `TypeError`, etc. — JS bugs). Suppresses stacks for all other Lowdefy error types that use `source`/location instead of stack traces.
 
 **Two modes:**
 

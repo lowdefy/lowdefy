@@ -21,7 +21,7 @@ const typeColors = {
   ConfigWarning: '#d48806',
   PluginError: '#531dab',
   ServiceError: '#096dd9',
-  LowdefyError: '#cf1322',
+  LowdefyInternalError: '#cf1322',
 };
 
 function getTypeColor(type) {

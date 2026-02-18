@@ -68,19 +68,19 @@ const location = resolveConfigLocation({
 
 All error classes in `@lowdefy/errors` with single flat entry point:
 
-| Error Class     | Purpose                        | Thrown By                 | Stack in CLI      |
-| --------------- | ------------------------------ | ------------------------- | ----------------- |
-| `LowdefyError`  | Internal Lowdefy bugs          | Anywhere inside Lowdefy   | Yes (bugs)        |
-| `ConfigError`   | Config validation errors       | Build validation          | No (use source)   |
-| `ConfigWarning` | Config inconsistencies         | Build validation          | No (use source)   |
-| `BuildError`    | Summary after errors logged    | `logCollectedErrors`      | No (summary)      |
-| `PluginError`   | Base class (not used directly) | —                         | —                 |
-| `OperatorError` | Operator failures              | Operator parsers          | No (use received) |
-| `ActionError`   | Action failures                | Action runner (engine)    | No (use received) |
-| `RequestError`  | Request/connection failures    | Request handler (API)     | No (use received) |
-| `BlockError`    | Block rendering failures       | ErrorBoundary (client)    | No (use received) |
-| `ServiceError`  | External service failures      | Plugin interface layer    | No (use service)  |
-| `UserError`     | Expected user interaction      | Actions (Validate, Throw) | No (client-only)  |
+| Error Class            | Purpose                        | Thrown By                 | Stack in CLI      |
+| ---------------------- | ------------------------------ | ------------------------- | ----------------- |
+| `LowdefyInternalError` | Internal Lowdefy bugs          | Anywhere inside Lowdefy   | Yes (bugs)        |
+| `ConfigError`          | Config validation errors       | Build validation          | No (use source)   |
+| `ConfigWarning`        | Config inconsistencies         | Build validation          | No (use source)   |
+| `BuildError`           | Summary after errors logged    | `logCollectedErrors`      | No (summary)      |
+| `PluginError`          | Base class (not used directly) | —                         | —                 |
+| `OperatorError`        | Operator failures              | Operator parsers          | No (use received) |
+| `ActionError`          | Action failures                | Action runner (engine)    | No (use received) |
+| `RequestError`         | Request/connection failures    | Request handler (API)     | No (use received) |
+| `BlockError`           | Block rendering failures       | ErrorBoundary (client)    | No (use received) |
+| `ServiceError`         | External service failures      | Plugin interface layer    | No (use service)  |
+| `UserError`            | Expected user interaction      | Actions (Validate, Throw) | No (client-only)  |
 
 **Key markers:** All classes set `isLowdefyError = true` — survives serialization, replaces `instanceof` checks.
 

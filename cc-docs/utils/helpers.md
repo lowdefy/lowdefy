@@ -385,7 +385,7 @@ if (!type.isUndefined(newValue['~e'])) {
 }
 ```
 
-The `lowdefyErrorTypes` map imports Lowdefy error classes directly from `@lowdefy/errors` — no registration, no config passing. Includes: `ConfigError`, `LowdefyError`, `PluginError`, `ServiceError`, `UserError`.
+The `lowdefyErrorTypes` map imports Lowdefy error classes directly from `@lowdefy/errors` — no registration, no config passing. Includes: `ConfigError`, `LowdefyInternalError`, `PluginError`, `ServiceError`, `UserError`.
 
 **Why `Object.create` instead of `new`:** Avoids calling constructors, which would re-format messages (PluginError adds location suffix, ServiceError adds service prefix). Setting `message` as a plain property on the instance shadows `Error.prototype.message`.
 

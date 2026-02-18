@@ -19,7 +19,7 @@
  *
  * Error Hierarchy:
  *
- * 1. LowdefyError - Internal Lowdefy bugs, unexpected conditions
+ * 1. LowdefyInternalError - Internal Lowdefy bugs, unexpected conditions
  *    - Thrown: Anywhere inside Lowdefy internals
  *    - Caught: Top-level catch in build/server/client
  *    - Format: [Lowdefy Error] message + stack trace
@@ -62,7 +62,7 @@ import BuildError from './BuildError.js';
 import ConfigError from './ConfigError.js';
 import ConfigWarning from './ConfigWarning.js';
 import errorToDisplayString from './errorToDisplayString.js';
-import LowdefyError from './LowdefyError.js';
+import LowdefyInternalError from './LowdefyInternalError.js';
 import OperatorError from './OperatorError.js';
 import PluginError from './PluginError.js';
 import RequestError from './RequestError.js';
@@ -80,7 +80,7 @@ export {
   ConfigError,
   ConfigWarning,
   errorToDisplayString,
-  LowdefyError,
+  LowdefyInternalError,
   OperatorError,
   PluginError,
   RequestError,

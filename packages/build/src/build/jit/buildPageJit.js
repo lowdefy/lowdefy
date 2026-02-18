@@ -15,7 +15,7 @@
 */
 
 import { serializer, type } from '@lowdefy/helpers';
-import { ConfigError, LowdefyError } from '@lowdefy/errors';
+import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 
 import addKeys from '../addKeys.js';
 import buildPage from '../buildPages/buildPage.js';
@@ -137,7 +137,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     if (err.isLowdefyError) {
       throw err;
     }
-    const lowdefyErr = new LowdefyError(err.message, { cause: err });
+    const lowdefyErr = new LowdefyInternalError(err.message, { cause: err });
     lowdefyErr.stack = err.stack;
     lowdefyErr.buildErrors = err.buildErrors;
     throw lowdefyErr;

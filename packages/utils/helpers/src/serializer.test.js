@@ -14,7 +14,13 @@
   limitations under the License.
 */
 
-import { ConfigError, LowdefyError, OperatorError, ServiceError, UserError } from '@lowdefy/errors';
+import {
+  ConfigError,
+  LowdefyInternalError,
+  OperatorError,
+  ServiceError,
+  UserError,
+} from '@lowdefy/errors';
 
 import extractErrorProps from './extractErrorProps.js';
 import serializer from './serializer.js';
@@ -1029,11 +1035,11 @@ test('copy round-trip for UserError preserves class and properties', () => {
   expect(res.err.pageId).toBe('home');
 });
 
-test('copy round-trip for LowdefyError preserves class', () => {
-  const err = new LowdefyError('Unexpected condition');
+test('copy round-trip for LowdefyInternalError preserves class', () => {
+  const err = new LowdefyInternalError('Unexpected condition');
   const res = serializer.copy({ err });
-  expect(res.err).toBeInstanceOf(LowdefyError);
-  expect(res.err.name).toBe('LowdefyError');
+  expect(res.err).toBeInstanceOf(LowdefyInternalError);
+  expect(res.err.name).toBe('LowdefyInternalError');
   expect(res.err.message).toBe('Unexpected condition');
 });
 

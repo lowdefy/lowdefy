@@ -14,30 +14,30 @@
   limitations under the License.
 */
 
-import LowdefyError from './LowdefyError.js';
+import LowdefyInternalError from './LowdefyInternalError.js';
 
-test('LowdefyError creates error with message', () => {
-  const error = new LowdefyError('Unexpected condition');
+test('LowdefyInternalError creates error with message', () => {
+  const error = new LowdefyInternalError('Unexpected condition');
   expect(error.message).toBe('Unexpected condition');
-  expect(error.name).toBe('LowdefyError');
+  expect(error.name).toBe('LowdefyInternalError');
   expect(error.isLowdefyError).toBe(true);
   expect(error.configKey).toBeNull();
 });
 
-test('LowdefyError is an instance of Error', () => {
-  const error = new LowdefyError('Test');
+test('LowdefyInternalError is an instance of Error', () => {
+  const error = new LowdefyInternalError('Test');
   expect(error instanceof Error).toBe(true);
-  expect(error instanceof LowdefyError).toBe(true);
+  expect(error instanceof LowdefyInternalError).toBe(true);
 });
 
-test('LowdefyError with cause option', () => {
+test('LowdefyInternalError with cause option', () => {
   const original = new Error('Original cause');
-  const error = new LowdefyError('Wrapped error', { cause: original });
+  const error = new LowdefyInternalError('Wrapped error', { cause: original });
   expect(error.cause).toBe(original);
 });
 
-test('LowdefyError has proper stack trace', () => {
-  const error = new LowdefyError('Test error');
-  expect(error.stack).toContain('LowdefyError');
-  expect(error.stack).toContain('LowdefyError.test.js');
+test('LowdefyInternalError has proper stack trace', () => {
+  const error = new LowdefyInternalError('Test error');
+  expect(error.stack).toContain('LowdefyInternalError');
+  expect(error.stack).toContain('LowdefyInternalError.test.js');
 });

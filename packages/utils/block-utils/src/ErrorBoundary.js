@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 
-import { BlockError, LowdefyError } from '@lowdefy/errors';
+import { BlockError, LowdefyInternalError } from '@lowdefy/errors';
 
 import ErrorPage from './ErrorPage.js';
 
@@ -54,7 +54,7 @@ class ErrorBoundary extends Component {
         configKey,
       });
     } else {
-      wrappedError = new LowdefyError(error.message, { cause: error });
+      wrappedError = new LowdefyInternalError(error.message, { cause: error });
       wrappedError.stack = error.stack;
     }
 

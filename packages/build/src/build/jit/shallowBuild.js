@@ -18,7 +18,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import { BuildError, LowdefyError } from '@lowdefy/errors';
+import { BuildError, LowdefyInternalError } from '@lowdefy/errors';
 
 import createContext from '../../createContext.js';
 import logCollectedErrors from '../../utils/logCollectedErrors.js';
@@ -230,7 +230,7 @@ async function shallowBuild(options) {
       throw err;
     }
     const logger = context?.logger ?? options.logger ?? console;
-    const lowdefyErr = new LowdefyError(err.message, { cause: err });
+    const lowdefyErr = new LowdefyInternalError(err.message, { cause: err });
     lowdefyErr.stack = err.stack;
     logger.error(lowdefyErr);
     throw new BuildError('Build failed due to internal error. See above for details.');

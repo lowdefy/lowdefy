@@ -118,7 +118,7 @@ function getPrint({ logLevel }) {
 }
 
 function shouldLogStack(error) {
-  return !error.isLowdefyError || error.name === 'LowdefyError';
+  return !error.isLowdefyError || error.name === 'LowdefyInternalError';
 }
 
 function isErrorLike(input) {

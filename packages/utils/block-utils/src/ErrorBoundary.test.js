@@ -109,7 +109,7 @@ test('wraps unknown error as BlockError when blockId is provided', () => {
   expect(capturedError.configKey).toBe('test-config-key');
 });
 
-test('wraps unknown error as LowdefyError when no blockId', () => {
+test('wraps unknown error as LowdefyInternalError when no blockId', () => {
   let capturedError = null;
   const ProblemChild = () => {
     throw new Error('ErrorBoundary test error');
@@ -124,7 +124,7 @@ test('wraps unknown error as LowdefyError when no blockId', () => {
     </ErrorBoundary>
   );
   expect(capturedError).not.toBeNull();
-  expect(capturedError.name).toBe('LowdefyError');
+  expect(capturedError.name).toBe('LowdefyInternalError');
   expect(capturedError.message).toBe('ErrorBoundary test error');
 });
 
