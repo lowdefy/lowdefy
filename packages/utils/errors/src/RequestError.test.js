@@ -19,7 +19,7 @@ import PluginError from './PluginError.js';
 
 test('RequestError sets name and is instanceof PluginError', () => {
   const original = new Error('Collection not found');
-  const error = new RequestError({ error: original, typeName: 'MongoDBFind' });
+  const error = new RequestError(original.message, { cause: original, typeName: 'MongoDBFind' });
   expect(error.name).toBe('RequestError');
   expect(error.isLowdefyError).toBe(true);
   expect(error.typeName).toBe('MongoDBFind');
@@ -30,8 +30,8 @@ test('RequestError sets name and is instanceof PluginError', () => {
 
 test('RequestError with all fields', () => {
   const original = new Error('Invalid query');
-  const error = new RequestError({
-    error: original,
+  const error = new RequestError(original.message, {
+    cause: original,
     typeName: 'MongoDBFind',
     received: { query: {} },
     location: 'mongodb/findUsers',

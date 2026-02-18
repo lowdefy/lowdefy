@@ -47,8 +47,8 @@ class ErrorBoundary extends Component {
     // Wrap unknown errors based on context
     let wrappedError;
     if (blockId) {
-      wrappedError = new BlockError({
-        error,
+      wrappedError = new BlockError(error.message, {
+        cause: error,
         typeName: blockType,
         location: blockId,
         configKey,

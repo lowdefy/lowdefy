@@ -117,8 +117,8 @@ test('try catch with unsuccessful try', async () => {
     ],
     [
       {
-        err: new RequestError({
-          error: new Error('Try and fail'),
+        err: new RequestError('Try and fail', {
+          cause: new Error('Try and fail'),
           location: 'test/try_fail',
         }),
         params: {
@@ -239,8 +239,8 @@ test('try only, fail', async () => {
     ],
     [
       {
-        err: new RequestError({
-          error: new Error('Try and fail'),
+        err: new RequestError('Try and fail', {
+          cause: new Error('Try and fail'),
           location: 'test/try_fail',
         }),
         params: {
@@ -378,8 +378,8 @@ test('try with finally, try fail', async () => {
     ],
     [
       {
-        err: new RequestError({
-          error: new Error('Try and fail'),
+        err: new RequestError('Try and fail', {
+          cause: new Error('Try and fail'),
           location: 'test/try_fail',
         }),
         params: {
@@ -562,8 +562,8 @@ test('try catch finally, try fail', async () => {
     ],
     [
       {
-        err: new RequestError({
-          error: new Error('Try and fail'),
+        err: new RequestError('Try and fail', {
+          cause: new Error('Try and fail'),
           location: 'test/try_fail',
         }),
         params: {
@@ -683,8 +683,8 @@ test('try catch finally, try and catch fail', async () => {
     ],
     [
       {
-        err: new RequestError({
-          error: new Error('Try and fail'),
+        err: new RequestError('Try and fail', {
+          cause: new Error('Try and fail'),
           location: 'test/try_fail',
         }),
         params: {
@@ -715,8 +715,8 @@ test('try catch finally, try and catch fail', async () => {
     ],
     [
       {
-        err: new RequestError({
-          error: new Error('Fallback thing fail'),
+        err: new RequestError('Fallback thing fail', {
+          cause: new Error('Fallback thing fail'),
           location: 'test/catch_error',
         }),
         params: {

@@ -94,8 +94,8 @@ class WebParser {
         }
         // Plain error from plugin - wrap in OperatorError
         errors.push(
-          new OperatorError({
-            error: e,
+          new OperatorError(e.message, {
+            cause: e,
             typeName: op,
             received: { [key]: params },
             location: operatorLocation,

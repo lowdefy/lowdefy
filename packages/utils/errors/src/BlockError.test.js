@@ -19,7 +19,7 @@ import PluginError from './PluginError.js';
 
 test('BlockError sets name and is instanceof PluginError', () => {
   const original = new Error('Render failed');
-  const error = new BlockError({ error: original, typeName: 'Button' });
+  const error = new BlockError(original.message, { cause: original, typeName: 'Button' });
   expect(error.name).toBe('BlockError');
   expect(error.isLowdefyError).toBe(true);
   expect(error.typeName).toBe('Button');
@@ -30,8 +30,8 @@ test('BlockError sets name and is instanceof PluginError', () => {
 
 test('BlockError with all fields', () => {
   const original = new Error('Cannot read property');
-  const error = new BlockError({
-    error: original,
+  const error = new BlockError(original.message, {
+    cause: original,
     typeName: 'myButton',
     location: 'myButton',
     configKey: 'key-789',

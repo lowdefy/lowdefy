@@ -54,8 +54,8 @@ test('logCollectedErrors wraps errors without print method as LowdefyInternalErr
 });
 
 test('logCollectedErrors passes OperatorError directly without wrapping', () => {
-  const operatorErr = new OperatorError({
-    error: new Error('op failed'),
+  const operatorErr = new OperatorError('op failed', {
+    cause: new Error('op failed'),
     typeName: '_get',
   });
   const context = { errors: [operatorErr], handleError: jest.fn() };

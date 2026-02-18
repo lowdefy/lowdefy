@@ -104,8 +104,7 @@ describe('logClientError', () => {
     };
 
     const data = serializer.serialize(
-      new OperatorError({
-        message: 'Operator failed',
+      new OperatorError('Operator failed', {
         configKey: 'key-123',
         typeName: '_if',
       })
@@ -188,8 +187,7 @@ describe('logClientError', () => {
       readConfigFile: jest.fn(),
     };
 
-    const operatorError = new OperatorError({
-      message: 'Operator failed',
+    const operatorError = new OperatorError('Operator failed', {
       typeName: '_if',
       received: { sensitiveData: 'should not appear' },
     });

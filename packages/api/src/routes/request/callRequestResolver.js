@@ -61,8 +61,8 @@ async function callRequestResolver(
     }
 
     // Wrap other errors in RequestError (request/connection logic error)
-    const requestError = new RequestError({
-      error,
+    const requestError = new RequestError(error.message, {
+      cause: error,
       typeName: requestConfig.type,
       received: requestProperties,
       location: `${requestConfig.connectionId}/${requestConfig.requestId}`,

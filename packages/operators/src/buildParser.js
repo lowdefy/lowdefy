@@ -165,8 +165,8 @@ class BuildParser {
           errors.push(e);
           return null;
         }
-        const operatorError = new OperatorError({
-          error: e,
+        const operatorError = new OperatorError(e.message, {
+          cause: e,
           typeName: op,
           received: { [key]: params },
           configKey: e.configKey ?? configKey,

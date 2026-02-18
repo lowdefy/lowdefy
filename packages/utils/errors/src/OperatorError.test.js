@@ -19,7 +19,7 @@ import PluginError from './PluginError.js';
 
 test('OperatorError sets name and is instanceof PluginError', () => {
   const original = new Error('_if requires boolean test');
-  const error = new OperatorError({ error: original, typeName: '_if' });
+  const error = new OperatorError(original.message, { cause: original, typeName: '_if' });
   expect(error.name).toBe('OperatorError');
   expect(error.isLowdefyError).toBe(true);
   expect(error.typeName).toBe('_if');
@@ -30,8 +30,8 @@ test('OperatorError sets name and is instanceof PluginError', () => {
 
 test('OperatorError with all fields', () => {
   const original = new Error('_get path must be a string');
-  const error = new OperatorError({
-    error: original,
+  const error = new OperatorError(original.message, {
+    cause: original,
     typeName: '_get',
     received: { _get: 42 },
     location: 'blocks.0.visible',

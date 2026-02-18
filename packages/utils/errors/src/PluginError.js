@@ -27,8 +27,8 @@
  *   return operator({ params });
  * } catch (error) {
  *   if (error instanceof ConfigError) throw error;
- *   throw new OperatorError({
- *     error,
+ *   throw new OperatorError(error.message, {
+ *     cause: error,
  *     typeName: '_if',
  *     received: params,
  *     location: 'blocks.0.properties.visible',
@@ -39,30 +39,29 @@
 class PluginError extends Error {
   /**
    * Creates a PluginError instance with formatted message.
-   * @param {Object} params
-   * @param {Error} params.error - The original error thrown by the plugin
-   * @param {string} [params.typeName] - The config type name (e.g., '_if', 'SetState', 'MongoDBFind')
-   * @param {*} [params.received] - The input that caused the error
-   * @param {string} [params.location] - Where in the config the error occurred
-   * @param {string} [params.configKey] - Config key (~k) for location resolution
+   * @param {string} [message] - Error message (falls back to cause.message)
+   * @param {Object} [options]
+   * @param {Error} [options.cause] - The original error thrown by the plugin
+   * @param {string} [options.typeName] - The config type name (e.g., '_if', 'SetState', 'MongoDBFind')
+   * @param {*} [options.received] - The input that caused the error
+   * @param {string} [options.location] - Where in the config the error occurred
+   * @param {string} [options.configKey] - Config key (~k) for location resolution
    */
-  constructor({ error, message, typeName, received, location, configKey }) {
-    // Store raw message - logger formats received value
-    // Accept either error object or direct message string
-    const rawMessage = message ?? error?.message;
+  constructor(message, { cause, typeName, received, location, configKey } = {}) {
+    const rawMessage = message ?? cause?.message;
     let formattedMessage = rawMessage;
     if (location) {
       formattedMessage = rawMessage != null ? `${rawMessage} at ${location}.` : `at ${location}.`;
     }
 
-    super(formattedMessage, { cause: error });
+    super(formattedMessage, { cause });
     this.name = 'PluginError';
     this.isLowdefyError = true;
     this.typeName = typeName;
     this._message = rawMessage;
-    this.received = received !== undefined ? received : error?.received;
+    this.received = received !== undefined ? received : cause?.received;
     this.location = location;
-    this.configKey = error?.configKey ?? configKey ?? null;
+    this.configKey = cause?.configKey ?? configKey ?? null;
 
     // Location outputs (set by server-side resolution)
     this.source = null;

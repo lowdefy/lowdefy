@@ -995,8 +995,8 @@ test('copy round-trip for ConfigError preserves class and properties', () => {
 
 test('copy round-trip for OperatorError preserves class and properties', () => {
   const original = new Error('_if requires boolean');
-  const err = new OperatorError({
-    error: original,
+  const err = new OperatorError(original.message, {
+    cause: original,
     typeName: '_if',
     location: 'blocks.0.visible',
     configKey: 'key-456',

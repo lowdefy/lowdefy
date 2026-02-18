@@ -19,7 +19,7 @@ import PluginError from './PluginError.js';
 
 test('ActionError sets name and is instanceof PluginError', () => {
   const original = new Error('SetState requires params');
-  const error = new ActionError({ error: original, typeName: 'SetState' });
+  const error = new ActionError(original.message, { cause: original, typeName: 'SetState' });
   expect(error.name).toBe('ActionError');
   expect(error.isLowdefyError).toBe(true);
   expect(error.typeName).toBe('SetState');
@@ -30,8 +30,8 @@ test('ActionError sets name and is instanceof PluginError', () => {
 
 test('ActionError with all fields', () => {
   const original = new Error('Request failed');
-  const error = new ActionError({
-    error: original,
+  const error = new ActionError(original.message, {
+    cause: original,
     typeName: 'Request',
     received: { requestId: 'get_data' },
     location: 'myBlock',

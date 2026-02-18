@@ -17,8 +17,8 @@
 import PluginError from './PluginError.js';
 
 class RequestError extends PluginError {
-  constructor({ error, message, typeName, received, location, configKey }) {
-    super({ error, message, typeName, received, location, configKey });
+  constructor(message, options = {}) {
+    super(message, options);
     this.name = 'RequestError';
   }
 }

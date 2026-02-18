@@ -208,8 +208,8 @@ class Actions {
     } catch (err) {
       const error = err.isLowdefyError
         ? err
-        : new ActionError({
-            error: err,
+        : new ActionError(err.message, {
+            cause: err,
             typeName: action.type,
             received: parsedAction.params,
             location: block.blockId,
