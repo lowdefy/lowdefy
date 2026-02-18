@@ -130,7 +130,6 @@ async function build(options) {
     // Unexpected internal error - wrap as LowdefyInternalError for proper formatting
     const logger = context?.logger ?? options.logger ?? console;
     const lowdefyErr = new LowdefyInternalError(err.message, { cause: err });
-    lowdefyErr.stack = err.stack;
     logger.error(lowdefyErr);
     throw new BuildError('Build failed due to internal error. See above for details.');
   }

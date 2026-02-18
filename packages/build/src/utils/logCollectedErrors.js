@@ -24,7 +24,6 @@ function logCollectedErrors(context) {
       context.handleError(err);
     } else {
       const lowdefyErr = new LowdefyInternalError(err.message, { cause: err });
-      lowdefyErr.stack = err.stack;
       context.handleError(lowdefyErr);
     }
   });

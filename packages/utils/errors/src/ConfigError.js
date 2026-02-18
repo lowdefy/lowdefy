@@ -63,7 +63,7 @@ class ConfigError extends Error {
         : error?.received;
 
     // Message without prefix - logger uses error.name for display
-    super(message);
+    super(message, { cause: error ?? undefined });
     this.name = 'ConfigError';
     this.isLowdefyError = true;
     this.configKey = configKey ?? null;
@@ -79,11 +79,6 @@ class ConfigError extends Error {
     // Location outputs (set by handlers via resolveErrorLocation, not at construction)
     this.source = null;
     this.config = null;
-
-    // Preserve original error's stack if wrapping
-    if (error?.stack) {
-      this.stack = error.stack;
-    }
   }
 }
 

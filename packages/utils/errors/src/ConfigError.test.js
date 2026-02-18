@@ -82,7 +82,27 @@ test('ConfigError constructor wraps existing error', () => {
 
   expect(configError.message).toBe('Original error');
   expect(configError.configKey).toBe('key123');
-  expect(configError.stack).toBe(original.stack);
+  expect(configError.cause).toBe(original);
+  expect(configError.stack).not.toBe(original.stack);
+});
+
+test('ConfigError sets cause when wrapping an error', () => {
+  const original = new Error('Wrapped');
+  const configError = new ConfigError({ error: original });
+
+  expect(configError.cause).toBe(original);
+});
+
+test('ConfigError cause is undefined when no error is wrapped', () => {
+  const configError = new ConfigError({ message: 'No cause' });
+
+  expect(configError.cause).toBeUndefined();
+});
+
+test('ConfigError string form has no cause', () => {
+  const configError = new ConfigError('Simple string');
+
+  expect(configError.cause).toBeUndefined();
 });
 
 test('ConfigError constructor preserves configKey from original error', () => {

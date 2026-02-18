@@ -138,7 +138,6 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       throw err;
     }
     const lowdefyErr = new LowdefyInternalError(err.message, { cause: err });
-    lowdefyErr.stack = err.stack;
     lowdefyErr.buildErrors = err.buildErrors;
     throw lowdefyErr;
   }

@@ -113,9 +113,10 @@ test('PluginError uses provided configKey when original has none', () => {
   expect(pluginError.configKey).toBe('provided_key');
 });
 
-test('PluginError preserves original stack trace', () => {
+test('PluginError preserves original error via cause chain', () => {
   const original = new Error('Original');
   const pluginError = new PluginError({ error: original, typeName: 'Button' });
 
-  expect(pluginError.stack).toBe(original.stack);
+  expect(pluginError.cause).toBe(original);
+  expect(pluginError.stack).not.toBe(original.stack);
 });

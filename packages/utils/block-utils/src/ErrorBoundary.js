@@ -55,7 +55,6 @@ class ErrorBoundary extends Component {
       });
     } else {
       wrappedError = new LowdefyInternalError(error.message, { cause: error });
-      wrappedError.stack = error.stack;
     }
 
     if (onError) {

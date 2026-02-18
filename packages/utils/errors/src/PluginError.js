@@ -67,10 +67,6 @@ class PluginError extends Error {
     // Location outputs (set by server-side resolution)
     this.source = null;
     this.config = null;
-
-    if (error?.stack) {
-      this.stack = error.stack;
-    }
   }
 }
 

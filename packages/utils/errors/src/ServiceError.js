@@ -85,10 +85,6 @@ class ServiceError extends Error {
     this.code = errorCode;
     this.statusCode = errorStatusCode;
     this.configKey = configKey ?? null;
-
-    if (error?.stack) {
-      this.stack = error.stack;
-    }
   }
 
   /**
