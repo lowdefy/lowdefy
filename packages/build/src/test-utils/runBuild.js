@@ -14,10 +14,9 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
 import path from 'path';
 
-import { errorToDisplayString } from '@lowdefy/errors';
+import createTestLogger from './createTestLogger.js';
 
 /**
  * Custom types map for testing - includes common types used in fixtures.
@@ -95,8 +94,11 @@ const testTypesMap = {
   },
 };
 
-function formatMessage(messageOrObj) {
-  return errorToDisplayString(messageOrObj);
+function formatLine(line) {
+  const source = line.err?.source ?? null;
+  const name = line.err?.name ?? null;
+  const message = name ? `[${name}] ${line.msg}` : line.msg;
+  return source ? `${source}\n${message}` : message;
 }
 
 /**
@@ -113,76 +115,7 @@ function createRunBuild(build, fixturesDir) {
    */
   return async function runBuild(fixtureDir, stage = 'prod') {
     const configDir = path.join(fixturesDir, fixtureDir);
-    const errors = [];
-    const warnings = [];
-
-    // Create warn/error handlers that handle both pino-style and error-object calls
-    function handleWarn(objOrMsg, maybeMsg) {
-      // Pino-style: (mergeObj, msg) — extract source from err in merging object
-      if (typeof objOrMsg === 'object' && objOrMsg !== null && maybeMsg !== undefined) {
-        const err = objOrMsg.err;
-        const source = err?.source ?? objOrMsg.source ?? null;
-        const formatted = source ? `${source}\n${maybeMsg}` : maybeMsg;
-        warnings.push(formatted);
-        return;
-      }
-      // Error-like object (ConfigWarning, ConfigError) — called directly
-      if (
-        typeof objOrMsg !== 'string' &&
-        objOrMsg &&
-        (objOrMsg.name || objOrMsg.message !== undefined)
-      ) {
-        const source = objOrMsg.source ?? null;
-        const message = formatMessage(objOrMsg);
-        const formatted = source ? `${source}\n${message}` : message;
-        warnings.push(formatted);
-        return;
-      }
-      // Plain string
-      const message = typeof objOrMsg === 'string' ? objOrMsg : '';
-      if (message) warnings.push(message);
-    }
-
-    function handleError(objOrMsg, maybeMsg) {
-      // Pino-style: (mergeObj, msg) — extract source from err in merging object
-      if (typeof objOrMsg === 'object' && objOrMsg !== null && maybeMsg !== undefined) {
-        const err = objOrMsg.err;
-        const source = err?.source ?? objOrMsg.source ?? null;
-        const formatted = source ? `${source}\n${maybeMsg}` : maybeMsg;
-        errors.push(formatted);
-        return;
-      }
-      // Error-like object
-      if (
-        typeof objOrMsg !== 'string' &&
-        objOrMsg &&
-        (objOrMsg.name || objOrMsg.message !== undefined)
-      ) {
-        const source = objOrMsg.source ?? null;
-        const message = formatMessage(objOrMsg);
-        const formatted = source ? `${source}\n${message}` : message;
-        errors.push(formatted);
-        return;
-      }
-      // Pino-style: plain string or Error
-      let message;
-      if (objOrMsg instanceof Error) {
-        message = objOrMsg.message;
-      } else {
-        message = objOrMsg;
-      }
-      if (message) errors.push(message);
-    }
-
-    const warnFn = jest.fn(handleWarn);
-    const errorFn = jest.fn(handleError);
-
-    const logger = {
-      info: jest.fn(),
-      warn: warnFn,
-      error: errorFn,
-      debug: jest.fn(),
-    };
+    const { logger, lines } = createTestLogger();
 
     let thrownError = null;
     try {
@@ -199,6 +132,10 @@ function createRunBuild(build, fixturesDir) {
     } catch (err) {
       thrownError = err;
     }
+
+    // Pino levels: error=50, warn=40
+    const errors = lines.filter((l) => l.level >= 50).map(formatLine);
+    const warnings = lines.filter((l) => l.level >= 40 && l.level < 50).map(formatLine);
 
     return { errors, warnings, thrownError, logger };
   };
