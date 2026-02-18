@@ -174,8 +174,7 @@ Wraps errors from plugin code (operators, actions, blocks, requests). Follows TC
 ```javascript
 throw new PluginError('_if requires a boolean condition.', {
   cause: originalError,
-  pluginType: 'operator',
-  pluginName: '_if',
+  typeName: '_if',
   received: params,
   location: 'blockId.events.onClick',
   configKey: obj['~k'],
@@ -184,21 +183,20 @@ throw new PluginError('_if requires a boolean condition.', {
 
 **Properties:**
 
-| Property         | Type    | Description                                      |
-| ---------------- | ------- | ------------------------------------------------ |
-| `name`           | string  | `'PluginError'`                                  |
-| `isLowdefyError` | boolean | `true`                                           |
-| `pluginType`     | string  | `'operator'`, `'action'`, `'request'`, `'block'` |
-| `pluginName`     | string  | e.g. `'_if'`, `'SetState'`, `'MongoDBFind'`      |
-| `rawMessage`     | string  | Raw unformatted message (for serialization)      |
-| `received`       | any     | The input that caused the error                  |
-| `location`       | string  | Config path like `blockId.events.onClick`        |
-| `configKey`      | string  | `~k` value for location resolution               |
+| Property         | Type    | Description                                 |
+| ---------------- | ------- | ------------------------------------------- |
+| `name`           | string  | `'PluginError'`                             |
+| `isLowdefyError` | boolean | `true`                                      |
+| `typeName`       | string  | e.g. `'_if'`, `'SetState'`, `'MongoDBFind'` |
+| `_message`       | string  | Raw unformatted message (for serialization) |
+| `received`       | any     | The input that caused the error             |
+| `location`       | string  | Config path like `blockId.events.onClick`   |
+| `configKey`      | string  | `~k` value for location resolution          |
 
 **Message formatting:** Constructor formats the message with location suffix:
-`"message at location."`. The `rawMessage` property preserves the raw input for serialization (avoids double-formatting on deserialize via `Object.create`). Original error preserved via `cause`.
+`"message at location."`. The `_message` property preserves the raw input for serialization (avoids double-formatting on deserialize via `Object.create`). Original error preserved via `cause`.
 
-**Subclasses:** `OperatorError`, `ActionError`, `RequestError`, and `BlockError` extend `PluginError` and follow the same `(message, options)` signature, setting appropriate `pluginType` and `name`.
+**Subclasses:** `OperatorError`, `ActionError`, `RequestError`, and `BlockError` extend `PluginError` and follow the same `(message, options)` signature, setting the appropriate `name`.
 
 **Stack trace:** Suppressed in CLI display — `received` and `location` are more useful.
 
@@ -221,7 +219,7 @@ throw new ServiceError('Connection to MongoDB failed.', {
 | `name`           | string  | `'ServiceError'`                   |
 | `isLowdefyError` | boolean | `true`                             |
 | `service`        | string  | Service name (connection ID)       |
-| `rawMessage`     | string  | Raw unformatted message            |
+| `_message`       | string  | Raw unformatted message            |
 | `code`           | string  | Error code (ECONNREFUSED, etc.)    |
 | `statusCode`     | number  | HTTP status code                   |
 | `configKey`      | string  | `~k` value for location resolution |
@@ -376,7 +374,7 @@ Errors are serialized by the `~e` marker in `@lowdefy/helpers/serializer`:
 
 The reviver uses a `lowdefyErrorTypes` map with direct imports to reconstruct the correct class without calling constructors (avoids re-formatting messages).
 
-**Recursive cause serialization:** `extractErrorProps` recursively serializes Error objects found in the `cause` property, so the full cause chain is preserved across serialization boundaries. The CLI logger walks the `error.cause` chain, displaying `Caused by:` lines with indentation for each level.
+**Recursive cause serialization:** `extractErrorProps` recursively serializes Error objects found in the `cause` property, so the full cause chain is preserved across serialization boundaries. The CLI logger walks the `error.cause` chain, displaying `Caused by:` lines with indentation (limited to 3 levels to guard against circular references).
 
 See [helpers.md](./helpers.md) for serializer details.
 

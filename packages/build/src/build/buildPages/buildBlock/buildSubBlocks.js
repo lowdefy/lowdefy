@@ -20,7 +20,6 @@ import { ConfigError } from '@lowdefy/errors';
 import buildBlock from './buildBlock.js';
 
 function buildSubBlocks(block, pageContext) {
-  const { context } = pageContext;
   if (type.isObject(block.areas)) {
     Object.keys(block.areas).forEach((key) => {
       if (type.isNone(block.areas[key].blocks)) {

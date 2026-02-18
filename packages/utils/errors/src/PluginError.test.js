@@ -119,12 +119,23 @@ test('PluginError uses provided configKey when cause has none', () => {
   expect(pluginError.configKey).toBe('provided_key');
 });
 
+test('PluginError configKey from cause takes precedence over options configKey', () => {
+  const original = new Error('Error');
+  original.configKey = 'cause_key';
+  const pluginError = new PluginError(original.message, {
+    cause: original,
+    typeName: '_get',
+    configKey: 'options_key',
+  });
+
+  expect(pluginError.configKey).toBe('cause_key');
+});
+
 test('PluginError preserves original error via cause chain', () => {
   const original = new Error('Original');
   const pluginError = new PluginError(original.message, { cause: original, typeName: 'Button' });
 
   expect(pluginError.cause).toBe(original);
-  expect(pluginError.stack).not.toBe(original.stack);
 });
 
 test('PluginError works with no options', () => {

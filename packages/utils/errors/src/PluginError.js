@@ -51,7 +51,7 @@ class PluginError extends Error {
     const rawMessage = message ?? cause?.message;
     let formattedMessage = rawMessage;
     if (location) {
-      formattedMessage = rawMessage != null ? `${rawMessage} at ${location}.` : `at ${location}.`;
+      formattedMessage = rawMessage ? `${rawMessage} at ${location}.` : `at ${location}.`;
     }
 
     super(formattedMessage, { cause });

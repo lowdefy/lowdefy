@@ -17,7 +17,7 @@
 import { set, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
-function recMoveSkeletonBlocksToArea(block, blockId, pageId, context) {
+function recMoveSkeletonBlocksToArea(block, blockId, pageId) {
   if (!type.isNone(block.blocks)) {
     if (!type.isArray(block.blocks)) {
       throw new ConfigError(
@@ -30,19 +30,14 @@ function recMoveSkeletonBlocksToArea(block, blockId, pageId, context) {
   }
   Object.keys(block.areas || {}).forEach((area) => {
     block.areas[area].blocks.forEach((block, i) => {
-      recMoveSkeletonBlocksToArea(block, `${blockId}.areas.${area}.${i}.blocks`, pageId, context);
+      recMoveSkeletonBlocksToArea(block, `${blockId}.areas.${area}.${i}.blocks`, pageId);
     });
   });
 }
 
 function moveSkeletonBlocksToArea(block, pageContext) {
   if (type.isObject(block.skeleton)) {
-    recMoveSkeletonBlocksToArea(
-      block.skeleton,
-      `${block.blockId}.skeleton`,
-      pageContext.pageId,
-      pageContext.context
-    );
+    recMoveSkeletonBlocksToArea(block.skeleton, `${block.blockId}.skeleton`, pageContext.pageId);
   }
 }
 

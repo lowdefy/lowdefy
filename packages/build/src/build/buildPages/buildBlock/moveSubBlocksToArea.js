@@ -18,7 +18,6 @@ import { set, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
 function moveSubBlocksToArea(block, pageContext) {
-  const { context } = pageContext;
   if (!type.isNone(block.blocks)) {
     if (!type.isArray(block.blocks)) {
       throw new ConfigError(

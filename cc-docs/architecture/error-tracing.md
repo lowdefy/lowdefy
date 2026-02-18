@@ -302,7 +302,7 @@ try {
     throw error;
   }
   // Plain errors get wrapped in OperatorError
-  throw new OperatorError(undefined, {
+  throw new OperatorError(error.message, {
     cause: error,
     typeName: '_if',
     received: params,
@@ -329,7 +329,7 @@ try {
     });
   }
 
-  throw new RequestError(undefined, {
+  throw new RequestError(error.message, {
     cause: error,
     typeName: requestType,
     received: requestProperties,

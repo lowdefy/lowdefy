@@ -23,7 +23,6 @@ function checkAction(
   {
     blockId,
     checkDuplicateActionId,
-    context,
     eventId,
     linkActionRefs,
     pageId,
@@ -92,7 +91,6 @@ function checkAction(
 }
 
 function buildEvents(block, pageContext) {
-  const { context } = pageContext;
   if (block.events) {
     Object.keys(block.events).map((key) => {
       const eventConfigKey = block.events[key]?.['~k'] || block['~k'];
@@ -134,7 +132,6 @@ function buildEvents(block, pageContext) {
         checkAction(action, {
           eventId: key,
           blockId: block.blockId,
-          context,
           typeCounters: pageContext.typeCounters,
           pageId: pageContext.pageId,
           linkActionRefs: pageContext.linkActionRefs,
@@ -146,7 +143,6 @@ function buildEvents(block, pageContext) {
         checkAction(action, {
           eventId: key,
           blockId: block.blockId,
-          context,
           typeCounters: pageContext.typeCounters,
           pageId: pageContext.pageId,
           linkActionRefs: pageContext.linkActionRefs,

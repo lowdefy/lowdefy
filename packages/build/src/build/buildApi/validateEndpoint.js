@@ -17,7 +17,7 @@
 import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
-function validateEndpoint({ endpoint, index, checkDuplicateEndpointId, context }) {
+function validateEndpoint({ endpoint, index, checkDuplicateEndpointId }) {
   const configKey = endpoint['~k'];
   if (type.isUndefined(endpoint.id)) {
     throw new ConfigError(`Endpoint id missing at endpoint ${index}.`, { configKey });

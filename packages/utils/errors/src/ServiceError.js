@@ -133,19 +133,21 @@ class ServiceError extends Error {
     const statusCode = error.statusCode ?? error.status ?? error.response?.status;
 
     if (code === 'ECONNREFUSED') {
-      return `Connection refused. The service may be down or the address may be incorrect. ${error.message}`;
+      return `Connection refused. The service may be down or the address may be incorrect. ${
+        error.message ?? ''
+      }`;
     }
     if (code === 'ENOTFOUND') {
-      return `DNS lookup failed. The hostname could not be resolved. ${error.message}`;
+      return `DNS lookup failed. The hostname could not be resolved. ${error.message ?? ''}`;
     }
     if (code === 'ETIMEDOUT') {
-      return `Connection timed out. The service may be slow or unreachable. ${error.message}`;
+      return `Connection timed out. The service may be slow or unreachable. ${error.message ?? ''}`;
     }
     if (code === 'ECONNRESET') {
-      return `Connection reset by the server. ${error.message}`;
+      return `Connection reset by the server. ${error.message ?? ''}`;
     }
     if (statusCode && statusCode >= 500) {
-      return `Server returned error ${statusCode}. ${error.message}`;
+      return `Server returned error ${statusCode}. ${error.message ?? ''}`;
     }
 
     return error.message;

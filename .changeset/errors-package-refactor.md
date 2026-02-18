@@ -13,7 +13,7 @@ refactor: Consolidate error classes into @lowdefy/errors package with environmen
 
 **Error Package Restructure**
 
-- New `@lowdefy/errors` package with all error classes (`ConfigError`, `PluginError`, `ServiceError`, `UserError`, `LowdefyError`, `ConfigWarning`)
+- New `@lowdefy/errors` package with all error classes (`ConfigError`, `PluginError`, `ServiceError`, `UserError`, `LowdefyInternalError`, `ConfigWarning`)
   - `@lowdefy/errors/build` - Build-time errors with sync resolution via keyMap/refMap
 - Moved ConfigMessage, resolveConfigLocation from node-utils to errors/build
 
@@ -22,7 +22,7 @@ refactor: Consolidate error classes into @lowdefy/errors package with environmen
 - All error constructors standardized to `new MyError(message, { cause, ...options })`:
   ```javascript
   new ConfigError('Property must be a string.', { configKey });
-  new OperatorError(undefined, { cause: error, typeName: '_if', received: params });
+  new OperatorError(e.message, { cause: e, typeName: '_if', received: params });
   new ServiceError(undefined, { cause: error, service: 'MongoDB', configKey });
   ```
 - Plugins throw simple errors without knowing about configKey

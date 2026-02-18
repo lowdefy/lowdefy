@@ -275,6 +275,7 @@ Lowdefy uses a unified error system in `@lowdefy/errors`:
 import {
   ActionError,
   BlockError,
+  BuildError,
   ConfigError,
   OperatorError,
   RequestError,
@@ -286,6 +287,7 @@ import {
 | Class                  | Purpose                                                     | Catch Layer                      |
 | ---------------------- | ----------------------------------------------------------- | -------------------------------- |
 | `LowdefyInternalError` | Internal Lowdefy bugs                                       | Top-level in build/server/client |
+| `BuildError`           | Summary error after build fails (`Build failed with N...`)  | `logCollectedErrors`             |
 | `PluginError`          | Base class for plugin failures (not used directly)          | Plugin interface layer           |
 | `OperatorError`        | Operator failures (`_if`, `_get`, etc.)                     | Operator parsers                 |
 | `ActionError`          | Action failures (`SetState`, `Request`, etc.)               | Action runner (engine)           |
@@ -410,7 +412,7 @@ try {
   }
 
   // Plain errors get wrapped in typed error with context
-  throw new OperatorError(undefined, {
+  throw new OperatorError(e.message, {
     cause: e,
     typeName: '_if',
     received: params,

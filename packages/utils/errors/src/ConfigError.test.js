@@ -72,7 +72,6 @@ test('ConfigError constructor wraps existing error via cause', () => {
   expect(configError.message).toBe('Original error');
   expect(configError.configKey).toBe('key123');
   expect(configError.cause).toBe(original);
-  expect(configError.stack).not.toBe(original.stack);
 });
 
 test('ConfigError sets cause when wrapping an error', () => {

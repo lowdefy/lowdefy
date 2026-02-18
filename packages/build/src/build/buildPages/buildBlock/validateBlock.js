@@ -17,7 +17,7 @@
 import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
-function validateBlock(block, { pageId, context }) {
+function validateBlock(block, { pageId }) {
   const configKey = block?.['~k'];
   if (!type.isObject(block)) {
     throw new ConfigError(`Expected block to be an object on page "${pageId}".`, {
