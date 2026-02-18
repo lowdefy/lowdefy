@@ -34,11 +34,7 @@ test('collectExceptions throws when context.errors does not exist', () => {
     directories: { config: '/app' },
   };
 
-  const error = new ConfigError({
-    message: 'Test error',
-    configKey: 'abc123',
-    context,
-  });
+  const error = new ConfigError('Test error', { configKey: 'abc123' });
 
   expect(() => collectExceptions(context, error)).toThrow(ConfigError);
   expect(() => collectExceptions(context, error)).toThrow('Test error');
@@ -53,11 +49,7 @@ test('collectExceptions collects error when context.errors exists', () => {
     directories: { config: '/app' },
   };
 
-  const error = new ConfigError({
-    message: 'Test error',
-    configKey: 'abc123',
-    context,
-  });
+  const error = new ConfigError('Test error', { configKey: 'abc123' });
 
   collectExceptions(context, error);
 
@@ -78,12 +70,12 @@ test('collectExceptions collects multiple errors', () => {
 
   collectExceptions(
     context,
-    new ConfigError({ message: 'First error', configKey: 'abc123', context })
+    new ConfigError('First error', { configKey: 'abc123' })
   );
 
   collectExceptions(
     context,
-    new ConfigError({ message: 'Second error', configKey: 'def456', context })
+    new ConfigError('Second error', { configKey: 'def456' })
   );
 
   expect(context.errors).toHaveLength(2);
@@ -104,10 +96,7 @@ test('collectExceptions collects error with configKey for later resolution', () 
     directories: { config: '/app' },
   };
 
-  const error = new ConfigError({
-    message: 'Invalid block type',
-    configKey: 'abc123',
-  });
+  const error = new ConfigError('Invalid block type', { configKey: 'abc123' });
 
   collectExceptions(context, error);
 
@@ -125,11 +114,7 @@ test('collectExceptions works without logger', () => {
     directories: { config: '/app' },
   };
 
-  const error = new ConfigError({
-    message: 'Test error',
-    configKey: 'abc123',
-    context,
-  });
+  const error = new ConfigError('Test error', { configKey: 'abc123' });
 
   collectExceptions(context, error);
 
@@ -146,10 +131,7 @@ test('collectExceptions with no configKey', () => {
     directories: { config: '/app' },
   };
 
-  const error = new ConfigError({
-    message: 'Error without configKey',
-    context,
-  });
+  const error = new ConfigError('Error without configKey');
 
   collectExceptions(context, error);
 
@@ -170,11 +152,7 @@ test('collectExceptions skips suppressed errors', () => {
     directories: { config: '/app' },
   };
 
-  const error = new ConfigError({
-    message: 'Suppressed error',
-    configKey: 'abc123',
-    context,
-  });
+  const error = new ConfigError('Suppressed error', { configKey: 'abc123' });
 
   collectExceptions(context, error);
 

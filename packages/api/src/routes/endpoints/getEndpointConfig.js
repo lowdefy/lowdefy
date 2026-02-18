@@ -19,7 +19,7 @@ import { ConfigError } from '@lowdefy/errors';
 async function getEndpointConfig({ logger, readConfigFile }, { endpointId }) {
   const endpoint = await readConfigFile(`api/${endpointId}.json`);
   if (!endpoint) {
-    const err = new ConfigError({ message: `API Endpoint "${endpointId}" does not exist.` });
+    const err = new ConfigError(`API Endpoint "${endpointId}" does not exist.`);
     logger.debug({ params: { endpointId }, err }, err.message);
     throw err;
   }

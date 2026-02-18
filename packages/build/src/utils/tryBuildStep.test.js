@@ -197,10 +197,8 @@ test('tryBuildStep ignores suppressed ConfigError', () => {
   };
 
   const stepFn = jest.fn(() => {
-    throw new ConfigError({
-      message: 'This error should be suppressed.',
+    throw new ConfigError('This error should be suppressed.', {
       configKey: 'suppressedKey',
-      context: mockContext,
     });
   });
 
@@ -230,10 +228,8 @@ test('tryBuildStep collects non-suppressed ConfigError', () => {
   };
 
   const stepFn = jest.fn(() => {
-    throw new ConfigError({
-      message: 'This error should be collected.',
+    throw new ConfigError('This error should be collected.', {
       configKey: 'normalKey',
-      context: mockContext,
     });
   });
 

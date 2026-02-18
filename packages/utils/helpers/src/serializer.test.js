@@ -985,7 +985,7 @@ test('copy preserves ~l and ~k and ~r together', () => {
 // Lowdefy error class round-trip tests
 
 test('copy round-trip for ConfigError preserves class and properties', () => {
-  const err = new ConfigError({ message: 'Invalid block', configKey: 'key-123' });
+  const err = new ConfigError('Invalid block', { configKey: 'key-123' });
   const res = serializer.copy({ err });
   expect(res.err).toBeInstanceOf(ConfigError);
   expect(res.err.name).toBe('ConfigError');

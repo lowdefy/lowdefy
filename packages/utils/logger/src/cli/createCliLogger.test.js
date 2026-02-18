@@ -297,7 +297,7 @@ describe('cause chain', () => {
     const { default: createCliLogger } = await import('./createCliLogger.js');
     const logger = createCliLogger({ logLevel: 'info' });
     const cause = new Error('root');
-    const err = new ConfigError({ message: 'config', error: cause });
+    const err = new ConfigError('config', { cause });
     logger.error(err);
     // ConfigError message (no stack for ConfigError)
     expect(mockOraFail.mock.calls[0][0]).toBe('\x1b[31m[ConfigError] config\x1b[0m');

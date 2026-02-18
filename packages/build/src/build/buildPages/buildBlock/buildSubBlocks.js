@@ -27,12 +27,10 @@ function buildSubBlocks(block, pageContext) {
         block.areas[key].blocks = [];
       }
       if (!type.isArray(block.areas[key].blocks)) {
-        throw new ConfigError({
-          message: `Expected blocks to be an array at ${block.blockId} in area ${key} on page ${pageContext.pageId}.`,
-          received: block.areas[key].blocks,
-          configKey: block.areas[key]['~k'] ?? block['~k'],
-          context,
-        });
+        throw new ConfigError(
+          `Expected blocks to be an array at ${block.blockId} in area ${key} on page ${pageContext.pageId}.`,
+          { received: block.areas[key].blocks, configKey: block.areas[key]['~k'] ?? block['~k'] }
+        );
       }
       block.areas[key].blocks.map((blk) => buildBlock(blk, pageContext));
     });

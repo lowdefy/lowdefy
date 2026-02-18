@@ -39,15 +39,10 @@ function buildTypeClass(
         if (typeName === '_id') {
           return;
         }
-        context.handleWarning(new ConfigWarning({ message, configKey, checkSlug: 'types' }));
+        context.handleWarning(new ConfigWarning(message, { configKey, checkSlug: 'types' }));
         return;
       }
-      throw new ConfigError({
-        message,
-        configKey,
-        context,
-        checkSlug: 'types',
-      });
+      throw new ConfigError(message, { configKey, checkSlug: 'types' });
     }
     store[typeName] = {
       originalTypeName: definitions[typeName].originalTypeName,

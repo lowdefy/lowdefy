@@ -465,6 +465,10 @@ See `cc-docs/architecture/error-tracing.md` for the complete error system.
 - Run: `pnpm test` or `pnpm -r --filter=@lowdefy/helpers test`
 - **Do not create tests for blocks** (currently disabled)
 
+### Cross-Package Changes
+
+When modifying code in multiple packages, run `pnpm build` from the repo root before running tests. Packages import from each other's `dist/` directories — without rebuilding, tests will run against stale exports.
+
 **Test naming:** Use descriptive names that explain the scenario and expected outcome:
 
 ```javascript

@@ -39,11 +39,10 @@ async function controlFor(context, routineContext, { control }) {
   });
 
   if (!Array.isArray(array)) {
-    throw new ConfigError({
-      message: `Invalid :for in endpoint "${endpointId}" - :in must evaluate to an array.`,
-      received: array,
-      configKey: control['~k'],
-    });
+    throw new ConfigError(
+      `Invalid :for in endpoint "${endpointId}" - :in must evaluate to an array.`,
+      { received: array, configKey: control['~k'] }
+    );
   }
 
   if (!control[':do']) {

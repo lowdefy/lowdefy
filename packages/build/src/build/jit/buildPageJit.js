@@ -87,7 +87,6 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     // Build the page (validation, block processing)
     const checkDuplicatePageId = createCheckDuplicateId({
       message: 'Duplicate pageId "{{ id }}".',
-      context: buildContext,
     });
     buildPage({ page: processed, index: 0, context: buildContext, checkDuplicatePageId });
 
@@ -118,9 +117,9 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
 
     // Check for collected errors from validation steps
     if (buildContext.errors.length > 0) {
-      const error = new ConfigError({
-        message: `Page "${pageId}" build failed with ${buildContext.errors.length} error(s).`,
-      });
+      const error = new ConfigError(
+        `Page "${pageId}" build failed with ${buildContext.errors.length} error(s).`
+      );
       error.buildErrors = buildContext.errors;
       throw error;
     }

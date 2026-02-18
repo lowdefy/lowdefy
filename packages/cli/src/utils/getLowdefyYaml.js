@@ -38,11 +38,7 @@ async function getLowdefyYaml({ configDirectory, requiresLowdefyYaml }) {
   try {
     lowdefy = YAML.parse(lowdefyYaml);
   } catch (error) {
-    throw new ConfigError({
-      error,
-      filePath,
-      configDirectory,
-    });
+    throw new ConfigError(error.message, { cause: error, filePath });
   }
   if (!lowdefy.lowdefy) {
     throw new Error(
@@ -50,12 +46,10 @@ async function getLowdefyYaml({ configDirectory, requiresLowdefyYaml }) {
     );
   }
   if (!type.isString(lowdefy.lowdefy)) {
-    throw new ConfigError({
-      message: 'Version number specified in "lowdefy.yaml" file should be a string.',
-      received: lowdefy.lowdefy,
-      filePath,
-      configDirectory,
-    });
+    throw new ConfigError(
+      'Version number specified in "lowdefy.yaml" file should be a string.',
+      { received: lowdefy.lowdefy, filePath }
+    );
   }
   // TODO: Validate plugins
   return {

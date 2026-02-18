@@ -28,8 +28,7 @@ function validateRequestReferences({ requestActionRefs, requests, pageId, contex
 
     if (!requestIds.has(requestId)) {
       context.handleWarning(
-        new ConfigWarning({
-          message: `Request "${requestId}" not defined on page "${pageId}".`,
+        new ConfigWarning(`Request "${requestId}" not defined on page "${pageId}".`, {
           configKey: action['~k'],
           prodError: true,
           checkSlug: 'request-refs',

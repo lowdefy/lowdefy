@@ -161,10 +161,10 @@ class Actions {
 
   async callAction({ action, arrayIndices, block, event, index, progress, responses }) {
     if (!this.actions[action.type]) {
-      const error = new ConfigError({
-        message: `Invalid action type "${action.type}" at "${block.blockId}".`,
-        configKey: action['~k'],
-      });
+      const error = new ConfigError(
+        `Invalid action type "${action.type}" at "${block.blockId}".`,
+        { configKey: action['~k'] }
+      );
       throw { error, action, index };
     }
     const { output: parsedAction, errors: parserErrors } = this.context._internal.parser.parse({

@@ -30,19 +30,14 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
   if (type.isUndefined(page.id)) {
     collectExceptions(
       context,
-      new ConfigError({ message: `Page id missing at page ${index}.`, configKey, context })
+      new ConfigError(`Page id missing at page ${index}.`, { configKey })
     );
     return { failed: true };
   }
   if (!type.isString(page.id)) {
     collectExceptions(
       context,
-      new ConfigError({
-        message: `Page id is not a string at page ${index}.`,
-        received: page.id,
-        configKey,
-        context,
-      })
+      new ConfigError(`Page id is not a string at page ${index}.`, { received: page.id, configKey })
     );
     return { failed: true };
   }
@@ -55,7 +50,6 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
     blockIdCounter: createCounter(),
     checkDuplicateRequestId: createCheckDuplicateId({
       message: 'Duplicate requestId "{{ id }}" on page "{{ pageId }}".',
-      context,
     }),
     context,
     pageId: page.pageId,

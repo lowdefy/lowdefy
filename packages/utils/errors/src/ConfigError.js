@@ -25,56 +25,46 @@
  *
  * @example
  * // With options
- * throw new ConfigError({
- *   message: 'Invalid block type',
- *   configKey: block['~k'],
- * });
+ * throw new ConfigError('Invalid block type', { configKey: block['~k'] });
  *
  * @example
  * // With raw file location (YAML parse errors, pre-addKeys)
- * throw new ConfigError({
- *   message: 'Error parsing file',
+ * throw new ConfigError('Error parsing file', {
  *   filePath: 'pages/home.yaml',
  *   lineNumber: 6,
  * });
+ *
+ * @example
+ * // Wrapping an error
+ * throw new ConfigError(error.message, { cause: error, filePath });
  */
 class ConfigError extends Error {
   /**
    * Creates a ConfigError instance with formatted message.
-   * @param {string|Object} messageOrParams - Error message string, or params object
-   * @param {string} [messageOrParams.message] - The error message (if object)
-   * @param {Error} [messageOrParams.error] - Original error to wrap (extracts message/configKey/stack)
-   * @param {string} [messageOrParams.configKey] - Config key (~k) for location resolution
-   * @param {string} [messageOrParams.filePath] - Raw file path for pre-addKeys errors (YAML parse, operator eval)
-   * @param {string|number} [messageOrParams.lineNumber] - Line number for pre-addKeys errors
-   * @param {string} [messageOrParams.checkSlug] - The build check that triggered this error
+   * @param {string} [message] - Error message (falls back to cause.message)
+   * @param {Object} [options]
+   * @param {Error} [options.cause] - Original error to wrap
+   * @param {string} [options.configKey] - Config key (~k) for location resolution
+   * @param {string} [options.filePath] - Raw file path for pre-addKeys errors
+   * @param {string|number} [options.lineNumber] - Line number for pre-addKeys errors
+   * @param {string} [options.checkSlug] - The build check that triggered this error
+   * @param {*} [options.received] - The input that caused the error
    */
-  constructor(messageOrParams) {
-    // Support both string and object parameter
-    const isString = typeof messageOrParams === 'string';
-    const error = isString ? null : messageOrParams.error;
-    const message = isString ? messageOrParams : messageOrParams.message ?? error?.message;
-    const configKey = isString ? null : messageOrParams.configKey ?? error?.configKey;
-    const checkSlug = isString ? undefined : messageOrParams.checkSlug;
-    const received = isString
-      ? undefined
-      : messageOrParams.received !== undefined
-        ? messageOrParams.received
-        : error?.received;
+  constructor(message, { cause, configKey, filePath, lineNumber, checkSlug, received } = {}) {
+    const resolvedMessage = message ?? cause?.message;
 
-    // Message without prefix - logger uses error.name for display
-    super(message, { cause: error ?? undefined });
+    super(resolvedMessage, { cause });
     this.name = 'ConfigError';
     this.isLowdefyError = true;
-    this.configKey = configKey ?? null;
+    this.configKey = configKey ?? cause?.configKey ?? null;
     this.checkSlug = checkSlug;
 
     // For logger formatting
-    this.received = received;
+    this.received = received !== undefined ? received : cause?.received;
 
     // Raw file location for pre-addKeys errors (resolved by handleError/handleWarning)
-    this.filePath = isString ? null : messageOrParams.filePath ?? null;
-    this.lineNumber = isString ? null : messageOrParams.lineNumber ?? null;
+    this.filePath = filePath ?? null;
+    this.lineNumber = lineNumber ?? null;
 
     // Location outputs (set by handlers via resolveErrorLocation, not at construction)
     this.source = null;

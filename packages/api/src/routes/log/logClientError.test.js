@@ -75,7 +75,7 @@ describe('logClientError', () => {
     };
 
     const data = serializer.serialize(
-      new ConfigError({ message: 'Test error', configKey: 'key-123' })
+      new ConfigError('Test error', { configKey: 'key-123' })
     );
     const { error, ...response } = await logClientError(context, data);
 
@@ -162,7 +162,7 @@ describe('logClientError', () => {
     };
 
     const data = serializer.serialize(
-      new ConfigError({ message: 'Test error', configKey: 'non-existent-key' })
+      new ConfigError('Test error', { configKey: 'non-existent-key' })
     );
     const { error, ...response } = await logClientError(context, data);
 

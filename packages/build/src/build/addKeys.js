@@ -113,23 +113,18 @@ function recAddKeys({ object, key, keyMap, parentKeyMapId, context }) {
         if (invalid.length > 0) {
           collectExceptions(
             context,
-            new ConfigError({
-              message: `Invalid check slug(s): "${invalid.join(
-                '", "'
-              )}". Valid slugs: ${validSlugs.join(', ')}`,
-              configKey: keyMapId,
-              context,
-            })
+            new ConfigError(
+              `Invalid check slug(s): "${invalid.join('", "')}". Valid slugs: ${validSlugs.join(', ')}`,
+              { configKey: keyMapId }
+            )
           );
         }
       } else if (checks !== true) {
         collectExceptions(
           context,
-          new ConfigError({
-            message: `~ignoreBuildChecks must be true or an array of check slugs.`,
+          new ConfigError('~ignoreBuildChecks must be true or an array of check slugs.', {
             received: checks,
             configKey: keyMapId,
-            context,
           })
         );
       }

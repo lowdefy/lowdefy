@@ -16,24 +16,14 @@
 
 import ConfigError from './ConfigError.js';
 
-test('ConfigError creates error with message only (object)', () => {
-  const error = new ConfigError({ message: 'Test error message' });
+test('ConfigError creates error with message only', () => {
+  const error = new ConfigError('Test error message');
   expect(error.message).toBe('Test error message');
   expect(error.name).toBe('ConfigError');
   expect(error.isLowdefyError).toBe(true);
   expect(error.configKey).toBeNull();
   expect(error.source).toBeNull();
   expect(error.config).toBeNull();
-  expect(error.filePath).toBeNull();
-  expect(error.lineNumber).toBeNull();
-});
-
-test('ConfigError creates error with string message (simple form for plugins)', () => {
-  const error = new ConfigError('Simple error message');
-  expect(error.message).toBe('Simple error message');
-  expect(error.name).toBe('ConfigError');
-  expect(error.configKey).toBeNull();
-  expect(error.source).toBeNull();
   expect(error.filePath).toBeNull();
   expect(error.lineNumber).toBeNull();
 });
@@ -48,18 +38,17 @@ test('ConfigError string form allows configKey to be added later', () => {
 });
 
 test('ConfigError stores configKey', () => {
-  const error = new ConfigError({ message: 'Test error', configKey: 'abc123' });
+  const error = new ConfigError('Test error', { configKey: 'abc123' });
   expect(error.configKey).toBe('abc123');
 });
 
 test('ConfigError stores checkSlug', () => {
-  const error = new ConfigError({ message: 'Test error', checkSlug: 'block-types' });
+  const error = new ConfigError('Test error', { checkSlug: 'block-types' });
   expect(error.checkSlug).toBe('block-types');
 });
 
 test('ConfigError stores filePath and lineNumber', () => {
-  const error = new ConfigError({
-    message: 'Error parsing file',
+  const error = new ConfigError('Error parsing file', {
     filePath: 'pages/home.yaml',
     lineNumber: 6,
   });
@@ -71,14 +60,14 @@ test('ConfigError stores filePath and lineNumber', () => {
 });
 
 test('ConfigError is an instance of Error', () => {
-  const error = new ConfigError({ message: 'Test' });
+  const error = new ConfigError('Test');
   expect(error instanceof Error).toBe(true);
   expect(error instanceof ConfigError).toBe(true);
 });
 
-test('ConfigError constructor wraps existing error', () => {
+test('ConfigError constructor wraps existing error via cause', () => {
   const original = new Error('Original error');
-  const configError = new ConfigError({ error: original, configKey: 'key123' });
+  const configError = new ConfigError(original.message, { cause: original, configKey: 'key123' });
 
   expect(configError.message).toBe('Original error');
   expect(configError.configKey).toBe('key123');
@@ -88,41 +77,50 @@ test('ConfigError constructor wraps existing error', () => {
 
 test('ConfigError sets cause when wrapping an error', () => {
   const original = new Error('Wrapped');
-  const configError = new ConfigError({ error: original });
+  const configError = new ConfigError(original.message, { cause: original });
 
   expect(configError.cause).toBe(original);
 });
 
 test('ConfigError cause is undefined when no error is wrapped', () => {
-  const configError = new ConfigError({ message: 'No cause' });
+  const configError = new ConfigError('No cause');
 
   expect(configError.cause).toBeUndefined();
 });
 
-test('ConfigError string form has no cause', () => {
-  const configError = new ConfigError('Simple string');
+test('ConfigError falls back to cause message when message is undefined', () => {
+  const original = new Error('Fallback');
+  const configError = new ConfigError(undefined, { cause: original });
 
-  expect(configError.cause).toBeUndefined();
+  expect(configError.message).toBe('Fallback');
 });
 
-test('ConfigError constructor preserves configKey from original error', () => {
+test('ConfigError constructor preserves configKey from cause error', () => {
   const original = new Error('Original error');
   original.configKey = 'original_key';
-  const configError = new ConfigError({ error: original });
+  const configError = new ConfigError(original.message, { cause: original });
 
   expect(configError.configKey).toBe('original_key');
 });
 
-test('ConfigError constructor uses provided configKey over original', () => {
+test('ConfigError constructor uses provided configKey over cause', () => {
   const original = new Error('Original error');
   original.configKey = 'original_key';
-  const configError = new ConfigError({ error: original, configKey: 'new_key' });
+  const configError = new ConfigError(original.message, {
+    cause: original,
+    configKey: 'new_key',
+  });
 
   // Provided configKey takes precedence
   expect(configError.configKey).toBe('new_key');
 });
 
 test('ConfigError has isLowdefyError marker', () => {
-  const error = new ConfigError({ message: 'Test' });
+  const error = new ConfigError('Test');
   expect(error.isLowdefyError).toBe(true);
+});
+
+test('ConfigError stores received value', () => {
+  const error = new ConfigError('Bad value', { received: 42, configKey: 'key' });
+  expect(error.received).toBe(42);
 });

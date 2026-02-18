@@ -25,18 +25,16 @@ function buildAuthPlugin({ counter, pluginConfig, typeClass, context }) {
       if (type.isUndefined(plugin.id)) {
         collectExceptions(
           context,
-          new ConfigError({ message: `Auth ${typeClass} id missing.`, configKey, context })
+          new ConfigError(`Auth ${typeClass} id missing.`, { configKey })
         );
         return;
       }
       if (!type.isString(plugin.id)) {
         collectExceptions(
           context,
-          new ConfigError({
-            message: `Auth ${typeClass} id is not a string.`,
+          new ConfigError(`Auth ${typeClass} id is not a string.`, {
             received: plugin.id,
             configKey,
-            context,
           })
         );
         return;
@@ -44,11 +42,9 @@ function buildAuthPlugin({ counter, pluginConfig, typeClass, context }) {
       if (!type.isString(plugin.type)) {
         collectExceptions(
           context,
-          new ConfigError({
-            message: `Auth ${typeClass} type is not a string at ${typeClass} "${plugin.id}".`,
+          new ConfigError(`Auth ${typeClass} type is not a string at ${typeClass} "${plugin.id}".`, {
             received: plugin.type,
             configKey,
-            context,
           })
         );
         return;
@@ -67,30 +63,23 @@ function buildAdapter({ components, context }) {
   if (type.isUndefined(adapter.id)) {
     collectExceptions(
       context,
-      new ConfigError({ message: 'Auth adapter id missing.', configKey, context })
+      new ConfigError('Auth adapter id missing.', { configKey })
     );
     return;
   }
   if (!type.isString(adapter.id)) {
     collectExceptions(
       context,
-      new ConfigError({
-        message: `Auth adapter id is not a string.`,
-        received: adapter.id,
-        configKey,
-        context,
-      })
+      new ConfigError('Auth adapter id is not a string.', { received: adapter.id, configKey })
     );
     return;
   }
   if (!type.isString(adapter.type)) {
     collectExceptions(
       context,
-      new ConfigError({
-        message: `Auth adapter type is not a string at adapter "${adapter.id}".`,
+      new ConfigError(`Auth adapter type is not a string at adapter "${adapter.id}".`, {
         received: adapter.type,
         configKey,
-        context,
       })
     );
     return;

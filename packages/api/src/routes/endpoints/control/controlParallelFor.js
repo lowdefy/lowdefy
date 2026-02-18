@@ -41,11 +41,10 @@ async function controlParallelFor(context, routineContext, { control }) {
   });
 
   if (!Array.isArray(array)) {
-    throw new ConfigError({
-      message: `Invalid :parallel_for in endpoint "${endpointId}" - :in must evaluate to an array.`,
-      received: array,
-      configKey: control['~k'],
-    });
+    throw new ConfigError(
+      `Invalid :parallel_for in endpoint "${endpointId}" - :in must evaluate to an array.`,
+      { received: array, configKey: control['~k'] }
+    );
   }
 
   if (!control[':do']) {

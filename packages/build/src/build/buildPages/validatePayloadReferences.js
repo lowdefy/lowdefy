@@ -54,7 +54,7 @@ function validatePayloadReferences({ page, context }) {
         `Check for typos or add the key to the payload definition.`;
 
       context.handleWarning(
-        new ConfigWarning({ message, configKey, prodError: true, checkSlug: 'payload-refs' })
+        new ConfigWarning(message, { configKey, prodError: true, checkSlug: 'payload-refs' })
       );
     });
   });

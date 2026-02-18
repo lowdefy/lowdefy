@@ -83,7 +83,7 @@ function validateStateReferences({ page, context }) {
       `Check for typos, add an input block with this id, or initialize the state with SetState.`;
 
     context.handleWarning(
-      new ConfigWarning({ message, configKey, prodError: true, checkSlug: 'state-refs' })
+      new ConfigWarning(message, { configKey, prodError: true, checkSlug: 'state-refs' })
     );
   });
 }

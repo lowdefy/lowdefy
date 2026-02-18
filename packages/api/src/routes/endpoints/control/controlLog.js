@@ -27,11 +27,10 @@ async function controlLog(context, routineContext, { control }) {
   const logLevel = evaluateOperators({ input: control[':level'], items, location }) ?? 'info';
 
   if (!type.isString(logLevel)) {
-    throw new ConfigError({
-      message: `Invalid :log in endpoint "${endpointId}" - :level must be a string.`,
-      received: logLevel,
-      configKey: control['~k'],
-    });
+    throw new ConfigError(
+      `Invalid :log in endpoint "${endpointId}" - :level must be a string.`,
+      { received: logLevel, configKey: control['~k'] }
+    );
   }
   if (!logger[logLevel]) {
     throw new Error(

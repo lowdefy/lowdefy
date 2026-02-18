@@ -21,10 +21,10 @@ function checkConnectionRead(
 ) {
   if (requestResolver.meta.checkRead && connectionProperties.read === false) {
     const configKey = requestConfig['~k'];
-    const err = new ConfigError({
-      message: `Connection "${connectionConfig.connectionId}" does not allow reads.`,
-      configKey,
-    });
+    const err = new ConfigError(
+      `Connection "${connectionConfig.connectionId}" does not allow reads.`,
+      { configKey }
+    );
     logger.debug(
       {
         params: {

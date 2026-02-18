@@ -20,8 +20,7 @@ import { ConfigError } from '@lowdefy/errors';
 
 async function getConfigFile({ context, refDef, referencedFrom }) {
   if (!type.isString(refDef.path)) {
-    throw new ConfigError({
-      message: 'Invalid _ref definition.',
+    throw new ConfigError('Invalid _ref definition.', {
       received: { _ref: refDef.original },
       filePath: referencedFrom ?? null,
       lineNumber: referencedFrom ? refDef.lineNumber : null,
@@ -44,8 +43,7 @@ async function getConfigFile({ context, refDef, referencedFrom }) {
       message += ` Tip: Remove "./" prefix - paths are resolved from config root. Did you mean "${suggestedPath}"?`;
     }
 
-    throw new ConfigError({
-      message,
+    throw new ConfigError(message, {
       filePath: referencedFrom ?? null,
       lineNumber: referencedFrom ? refDef.lineNumber : null,
     });

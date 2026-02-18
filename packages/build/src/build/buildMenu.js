@@ -98,7 +98,6 @@ function buildMenu({ components, context }) {
   const missingPageWarnings = [];
   const checkDuplicateMenuId = createCheckDuplicateId({
     message: 'Duplicate menuId "{{ id }}".',
-    context,
   });
   // Track which menus failed validation so we skip processing them
   const failedMenuIndices = new Set();
@@ -108,7 +107,7 @@ function buildMenu({ components, context }) {
     if (type.isUndefined(menu.id)) {
       collectExceptions(
         context,
-        new ConfigError({ message: 'Menu id missing.', configKey, context })
+        new ConfigError('Menu id missing.', { configKey })
       );
       failedMenuIndices.add(menuIndex);
       return;
@@ -116,12 +115,7 @@ function buildMenu({ components, context }) {
     if (!type.isString(menu.id)) {
       collectExceptions(
         context,
-        new ConfigError({
-          message: `Menu id is not a string.`,
-          received: menu.id,
-          configKey,
-          context,
-        })
+        new ConfigError('Menu id is not a string.', { received: menu.id, configKey })
       );
       failedMenuIndices.add(menuIndex);
       return;
@@ -131,7 +125,6 @@ function buildMenu({ components, context }) {
     menu.id = `menu:${menu.id}`;
     const checkDuplicateMenuItemId = createCheckDuplicateId({
       message: 'Duplicate menuItemId "{{ id }}" on menu "{{ menuId }}".',
-      context,
     });
     loopItems({
       parent: menu,
@@ -144,12 +137,10 @@ function buildMenu({ components, context }) {
   });
   missingPageWarnings.forEach((warning) => {
     context.handleWarning(
-      new ConfigWarning({
-        message: `Page "${warning.pageId}" referenced in menu link "${warning.menuItemId}" not found.`,
-        configKey: warning.configKey,
-        prodError: true,
-        checkSlug: 'link-refs',
-      })
+      new ConfigWarning(
+        `Page "${warning.pageId}" referenced in menu link "${warning.menuItemId}" not found.`,
+        { configKey: warning.configKey, prodError: true, checkSlug: 'link-refs' }
+      )
     );
   });
   return components;

@@ -27,7 +27,7 @@ function validateSchemas(
     validate({ schema: requestResolver.schema, data: requestProperties });
   } catch (error) {
     const configKey = requestConfig['~k'];
-    const err = new ConfigError({ message: error.message, configKey });
+    const err = new ConfigError(error.message, { configKey });
     logger.debug(
       { params: { id: requestConfig.requestId, type: requestConfig.type, configKey }, err },
       err.message

@@ -26,25 +26,16 @@ function validateMutualExclusivity({ components, context, entity }) {
     (type.isArray(components.auth[entity].protected) &&
       type.isArray(components.auth[entity].public))
   ) {
-    throw new ConfigError({
-      message: `Protected and public ${entity} are mutually exclusive. When protected ${entity} are listed, all unlisted ${entity} are public by default and vice versa.`,
-      configKey,
-      context,
-    });
+    throw new ConfigError(
+      `Protected and public ${entity} are mutually exclusive. When protected ${entity} are listed, all unlisted ${entity} are public by default and vice versa.`,
+      { configKey }
+    );
   }
   if (components.auth[entity].protected === false) {
-    throw new ConfigError({
-      message: `Protected ${entity} can not be set to false.`,
-      configKey,
-      context,
-    });
+    throw new ConfigError(`Protected ${entity} can not be set to false.`, { configKey });
   }
   if (components.auth[entity].public === false) {
-    throw new ConfigError({
-      message: `Public ${entity} can not be set to false.`,
-      configKey,
-      context,
-    });
+    throw new ConfigError(`Public ${entity} can not be set to false.`, { configKey });
   }
 }
 

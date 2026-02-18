@@ -40,7 +40,7 @@ test('handleWarning logs warning directly', () => {
   const { context, lines } = createContext();
   const handleWarning = createHandleWarning({ context });
 
-  handleWarning(new ConfigWarning({ message: 'Something looks wrong' }));
+  handleWarning(new ConfigWarning('Something looks wrong'));
 
   expect(lines).toHaveLength(1);
   expect(lines[0].msg).toBe('Something looks wrong');
@@ -58,7 +58,7 @@ test('handleWarning resolves location from configKey', () => {
   });
   const handleWarning = createHandleWarning({ context });
 
-  handleWarning(new ConfigWarning({ message: 'Bad block', configKey: 'abc123' }));
+  handleWarning(new ConfigWarning('Bad block', { configKey: 'abc123' }));
 
   expect(lines[0].err.source).toBe('/app/pages/home.yaml:42');
 });
@@ -67,7 +67,7 @@ test('handleWarning sets received on warning', () => {
   const { context, lines } = createContext();
   const handleWarning = createHandleWarning({ context });
 
-  handleWarning(new ConfigWarning({ message: 'Wrong type', received: { type: 'Buton' } }));
+  handleWarning(new ConfigWarning('Wrong type', { received: { type: 'Buton' } }));
 
   expect(lines[0].err.received).toEqual({ type: 'Buton' });
 });
@@ -82,7 +82,7 @@ test('handleWarning suppresses when ~ignoreBuildChecks is true', () => {
   });
   const handleWarning = createHandleWarning({ context });
 
-  handleWarning(new ConfigWarning({ message: 'Suppressed', configKey: 'abc123' }));
+  handleWarning(new ConfigWarning('Suppressed', { configKey: 'abc123' }));
 
   expect(lines).toHaveLength(0);
 });
@@ -96,7 +96,7 @@ test('handleWarning suppresses specific checkSlug', () => {
   const handleWarning = createHandleWarning({ context });
 
   handleWarning(
-    new ConfigWarning({ message: 'State ref', configKey: 'abc123', checkSlug: 'state-reference' })
+    new ConfigWarning('State ref', { configKey: 'abc123', checkSlug: 'state-reference' })
   );
 
   expect(lines).toHaveLength(0);
@@ -111,7 +111,7 @@ test('handleWarning does not suppress non-matching checkSlug', () => {
   const handleWarning = createHandleWarning({ context });
 
   handleWarning(
-    new ConfigWarning({ message: 'Link ref', configKey: 'abc123', checkSlug: 'link-reference' })
+    new ConfigWarning('Link ref', { configKey: 'abc123', checkSlug: 'link-reference' })
   );
 
   expect(lines).toHaveLength(1);
@@ -123,7 +123,7 @@ test('handleWarning collects warning as error in prod mode', () => {
   const { context, lines } = createContext({ stage: 'prod' });
   const handleWarning = createHandleWarning({ context });
 
-  handleWarning(new ConfigWarning({ message: 'Prod failure', prodError: true }));
+  handleWarning(new ConfigWarning('Prod failure', { prodError: true }));
 
   expect(lines).toHaveLength(0);
   expect(context.errors).toHaveLength(1);
@@ -135,7 +135,7 @@ test('handleWarning does not escalate prodError in dev mode', () => {
   const { context, lines } = createContext({ stage: 'dev' });
   const handleWarning = createHandleWarning({ context });
 
-  handleWarning(new ConfigWarning({ message: 'Dev warning', prodError: true }));
+  handleWarning(new ConfigWarning('Dev warning', { prodError: true }));
 
   expect(lines).toHaveLength(1);
   expect(context.errors).toHaveLength(0);
@@ -145,7 +145,7 @@ test('handleWarning does not escalate when prodError is false', () => {
   const { context, lines } = createContext({ stage: 'prod' });
   const handleWarning = createHandleWarning({ context });
 
-  handleWarning(new ConfigWarning({ message: 'Not escalated', prodError: false }));
+  handleWarning(new ConfigWarning('Not escalated', { prodError: false }));
 
   expect(lines).toHaveLength(1);
   expect(context.errors).toHaveLength(0);
@@ -165,8 +165,8 @@ test('handleWarning deduplicates by source when resolved', () => {
   });
   const handleWarning = createHandleWarning({ context });
 
-  handleWarning(new ConfigWarning({ message: 'Same source', configKey: 'k1' }));
-  handleWarning(new ConfigWarning({ message: 'Same source', configKey: 'k2' }));
+  handleWarning(new ConfigWarning('Same source', { configKey: 'k1' }));
+  handleWarning(new ConfigWarning('Same source', { configKey: 'k2' }));
 
   expect(lines).toHaveLength(1);
 });
@@ -175,8 +175,8 @@ test('handleWarning deduplicates by message when source not resolved', () => {
   const { context, lines } = createContext();
   const handleWarning = createHandleWarning({ context });
 
-  handleWarning(new ConfigWarning({ message: 'Same message' }));
-  handleWarning(new ConfigWarning({ message: 'Same message' }));
+  handleWarning(new ConfigWarning('Same message'));
+  handleWarning(new ConfigWarning('Same message'));
 
   expect(lines).toHaveLength(1);
 });
@@ -193,8 +193,8 @@ test('handleWarning does not deduplicate different sources', () => {
   });
   const handleWarning = createHandleWarning({ context });
 
-  handleWarning(new ConfigWarning({ message: 'Same msg', configKey: 'k1' }));
-  handleWarning(new ConfigWarning({ message: 'Same msg', configKey: 'k2' }));
+  handleWarning(new ConfigWarning('Same msg', { configKey: 'k1' }));
+  handleWarning(new ConfigWarning('Same msg', { configKey: 'k2' }));
 
   expect(lines).toHaveLength(2);
 });
@@ -206,8 +206,8 @@ test('handleWarning works without context.seenSourceLines (no dedup)', () => {
   delete context.seenSourceLines;
   const handleWarning = createHandleWarning({ context });
 
-  handleWarning(new ConfigWarning({ message: 'No dedup' }));
-  handleWarning(new ConfigWarning({ message: 'No dedup' }));
+  handleWarning(new ConfigWarning('No dedup'));
+  handleWarning(new ConfigWarning('No dedup'));
 
   // Both logged — no dedup without seenSourceLines
   expect(lines).toHaveLength(2);
@@ -219,7 +219,7 @@ test('handleWarning has null source when location not resolved', () => {
   const { context, lines } = createContext();
   const handleWarning = createHandleWarning({ context });
 
-  handleWarning(new ConfigWarning({ message: 'No location' }));
+  handleWarning(new ConfigWarning('No location'));
 
   expect(lines[0].err.source).toBeNull();
 });

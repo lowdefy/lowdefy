@@ -21,10 +21,10 @@ function checkConnectionWrite(
 ) {
   if (requestResolver.meta.checkWrite && connectionProperties.write !== true) {
     const configKey = requestConfig['~k'];
-    const err = new ConfigError({
-      message: `Connection "${connectionConfig.connectionId}" does not allow writes.`,
-      configKey,
-    });
+    const err = new ConfigError(
+      `Connection "${connectionConfig.connectionId}" does not allow writes.`,
+      { configKey }
+    );
     logger.debug(
       {
         params: {

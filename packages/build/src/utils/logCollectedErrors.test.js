@@ -25,7 +25,7 @@ test('logCollectedErrors does nothing when no errors', () => {
 });
 
 test('logCollectedErrors logs ConfigError instances and throws summary', () => {
-  const configErr = new ConfigError({ message: 'Bad config' });
+  const configErr = new ConfigError('Bad config');
   const context = { errors: [configErr], handleError: jest.fn() };
   expect(() => logCollectedErrors(context)).toThrow(
     'Build failed with 1 error(s). See above for details.'

@@ -45,7 +45,7 @@ function validateServerStateReferences({ page, context }) {
       `then reference it in request properties using _payload.`;
 
     context.handleWarning(
-      new ConfigWarning({ message, configKey, prodError: true, checkSlug: 'state-refs' })
+      new ConfigWarning(message, { configKey, prodError: true, checkSlug: 'state-refs' })
     );
   });
 }

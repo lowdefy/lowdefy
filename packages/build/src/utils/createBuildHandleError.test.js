@@ -30,7 +30,7 @@ test('handleError logs error directly', () => {
   };
   const handleError = createBuildHandleError({ context });
 
-  handleError(new ConfigError({ message: 'Bad config' }));
+  handleError(new ConfigError('Bad config'));
 
   expect(lines).toHaveLength(1);
   expect(lines[0].msg).toBe('Bad config');
@@ -51,7 +51,7 @@ test('handleError resolves location from configKey before logging', () => {
   };
   const handleError = createBuildHandleError({ context });
 
-  handleError(new ConfigError({ message: 'Invalid type', configKey: 'abc123' }));
+  handleError(new ConfigError('Invalid type', { configKey: 'abc123' }));
 
   expect(lines[0].err.source).toBe('/app/pages/home.yaml:10');
 });
@@ -67,8 +67,7 @@ test('handleError resolves location from filePath and lineNumber', () => {
   const handleError = createBuildHandleError({ context });
 
   handleError(
-    new ConfigError({
-      message: 'Error parsing YAML',
+    new ConfigError('Error parsing YAML', {
       filePath: 'pages/home.yaml',
       lineNumber: 6,
     })
@@ -92,7 +91,7 @@ test('handleError still logs when resolveErrorLocation throws', () => {
   });
   const handleError = createBuildHandleError({ context });
 
-  handleError(new ConfigError({ message: 'Something broke' }));
+  handleError(new ConfigError('Something broke'));
 
   expect(lines).toHaveLength(1);
   expect(lines[0].msg).toBe('Something broke');
@@ -135,7 +134,7 @@ test('handleError works with ConfigError that has received', () => {
   };
   const handleError = createBuildHandleError({ context });
 
-  handleError(new ConfigError({ message: 'Invalid type', received: { type: 'Buton' } }));
+  handleError(new ConfigError('Invalid type', { received: { type: 'Buton' } }));
 
   expect(lines[0].err.received).toEqual({ type: 'Buton' });
 });
@@ -165,7 +164,7 @@ test('handleError works when directories is undefined', () => {
   };
   const handleError = createBuildHandleError({ context });
 
-  handleError(new ConfigError({ message: 'No dirs' }));
+  handleError(new ConfigError('No dirs'));
 
   expect(lines).toHaveLength(1);
 });

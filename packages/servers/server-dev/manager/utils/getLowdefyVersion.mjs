@@ -33,11 +33,7 @@ async function getLowdefyVersion(context) {
   try {
     lowdefy = YAML.parse(lowdefyYaml);
   } catch (error) {
-    throw new ConfigError({
-      error,
-      filePath,
-      configDirectory: context.directories.config,
-    });
+    throw new ConfigError(error.message, { cause: error, filePath });
   }
   if (!lowdefy.lowdefy) {
     throw new Error(
@@ -45,12 +41,10 @@ async function getLowdefyVersion(context) {
     );
   }
   if (!type.isString(lowdefy.lowdefy)) {
-    throw new ConfigError({
-      message: 'Version number specified in "lowdefy.yaml" file should be a string.',
-      received: lowdefy.lowdefy,
-      filePath,
-      configDirectory: context.directories.config,
-    });
+    throw new ConfigError(
+      'Version number specified in "lowdefy.yaml" file should be a string.',
+      { received: lowdefy.lowdefy, filePath }
+    );
   }
   return lowdefy.lowdefy;
 }

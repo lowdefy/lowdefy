@@ -36,8 +36,7 @@ async function getRefContent({ context, refDef, referencedFrom }) {
     // Extract line number from YAML parse error message (e.g., "at line 6")
     const lineMatch = error.message.match(/at line (\d+)/);
     // Re-throw parse errors as ConfigError with location info
-    throw new ConfigError({
-      message: `Error parsing "${refDef.path}": ${error.message}`,
+    throw new ConfigError(`Error parsing "${refDef.path}": ${error.message}`, {
       filePath: refDef.path,
       lineNumber: lineMatch ? lineMatch[1] : null,
     });

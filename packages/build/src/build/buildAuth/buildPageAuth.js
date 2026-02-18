@@ -32,11 +32,9 @@ function buildPageAuth({ components, context }) {
   (components.pages || []).forEach((page) => {
     if (pageRoles[page.id]) {
       if (configPublicPages.includes(page.id)) {
-        throw new ConfigError({
-          message: `Page "${page.id}" is both protected by roles and public.`,
+        throw new ConfigError(`Page "${page.id}" is both protected by roles and public.`, {
           received: pageRoles[page.id],
           configKey: page['~k'],
-          context,
         });
       }
       page.auth = {

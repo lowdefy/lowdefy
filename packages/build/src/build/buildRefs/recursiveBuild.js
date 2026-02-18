@@ -41,11 +41,10 @@ async function recursiveBuild({
   if (currentPath) {
     if (refChainSet.has(currentPath)) {
       const chainDisplay = [...refChainList, currentPath].join('\n  -> ');
-      throw new ConfigError({
-        message: `Circular reference detected. File "${currentPath}" references itself through:\n  -> ${chainDisplay}`,
-        filePath: referencedFrom ?? null,
-        lineNumber: referencedFrom ? refDef.lineNumber : null,
-      });
+      throw new ConfigError(
+        `Circular reference detected. File "${currentPath}" references itself through:\n  -> ${chainDisplay}`,
+        { filePath: referencedFrom ?? null, lineNumber: referencedFrom ? refDef.lineNumber : null }
+      );
     }
     refChainSet.add(currentPath);
     refChainList.push(currentPath);
@@ -53,10 +52,9 @@ async function recursiveBuild({
 
   // Keep count as a fallback safety limit
   if (count > 10000) {
-    throw new ConfigError({
-      message: `Maximum recursion depth of references exceeded (10000 levels). This likely indicates a circular reference.`,
-      context,
-    });
+    throw new ConfigError(
+      'Maximum recursion depth of references exceeded (10000 levels). This likely indicates a circular reference.'
+    );
   }
   let fileContent = await getRefContent({ context, refDef, referencedFrom });
   const { foundRefs, fileContentBuiltRefs } = getRefsFromFile(

@@ -29,7 +29,7 @@ function validateTypeClass({ context, counter, definitions, typeClass }) {
       if (suggestion) {
         message += ` Did you mean "${suggestion}"?`;
       }
-      throw new ConfigError({ message, configKey, context });
+      throw new ConfigError(message, { configKey });
     }
   }
 }

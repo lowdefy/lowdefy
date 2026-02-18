@@ -23,9 +23,7 @@ function authorizeApiEndpoint({ authorize, logger }, { endpointConfig }) {
       authorized: false,
       auth_config: endpointConfig.auth,
     });
-    throw new ConfigError({
-      message: `API Endpoint "${endpointConfig.endpointId}" does not exist.`,
-    });
+    throw new ConfigError(`API Endpoint "${endpointConfig.endpointId}" does not exist.`);
   }
   logger.debug({
     event: 'debug_api_authorize',

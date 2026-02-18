@@ -67,7 +67,7 @@ function validateStepReferences({ endpoint, context }) {
       `Check for typos or add a step with this id.`;
 
     context.handleWarning(
-      new ConfigWarning({ message, configKey, prodError: true, checkSlug: 'step-refs' })
+      new ConfigWarning(message, { configKey, prodError: true, checkSlug: 'step-refs' })
     );
   });
 }

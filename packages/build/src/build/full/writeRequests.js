@@ -20,11 +20,9 @@ async function writeRequestsOnPage({ page, context }) {
   const requests = page.requests ?? [];
 
   if (!type.isArray(requests)) {
-    throw new ConfigError({
-      message: `Page requests must be an array.`,
+    throw new ConfigError('Page requests must be an array.', {
       received: requests,
       configKey: page['~k'],
-      context,
     });
   }
 
