@@ -36,6 +36,12 @@ function createHandleError(lowdefy) {
 
     // Send known error types to server for logging with location resolution
     if (error.isLowdefyError) {
+      // Server-originated errors already have source resolved — just display locally
+      if (error.source) {
+        logger.error(error);
+        return;
+      }
+      // Client-originated errors — send to server for logging + location resolution
       try {
         const serialized = serializer.serialize(error);
         if (serialized?.['~e']) {

@@ -176,11 +176,14 @@ Three-layer safety net: resolve + log → log without resolve → console.error.
 
 **Server handleError** (`packages/servers/*/lib/server/createHandleError.js`):
 
-Per-request, async. Reads keyMap/refMap from build artifacts, resolves location, logs with request metadata (user, URL, headers), captures to Sentry.
+Per-request, async. Reads keyMap/refMap from build artifacts, resolves location, logs with request metadata (user, URL, headers), captures to Sentry. After `handleError` completes, the `apiWrapper` serializes the error (with `source` resolved) using `serializer.serialize()`, strips sensitive fields (`received`, `stack`, `configKey`), and sends it in the 500 response. This allows the client to reconstruct the typed error with location already resolved.
 
 **Browser handleError** (`packages/client/src/createHandleError.js`):
 
-Deduplicates by `message:configKey`. Serializes error via `serializer.serialize()` (uses `~e` marker), sends to `/api/client-error`, receives resolved `source` back, displays via shared browser logger.
+Deduplicates by `message:configKey`. Two paths:
+
+1. **Server-originated errors** (have `source` already set from serialized 500 response): Logs to browser console only — server already logged, no round-trip needed.
+2. **Client-originated errors** (no `source`): Serializes error via `serializer.serialize()` (uses `~e` marker), sends to `/api/client-error`, receives resolved `source` back, displays via shared browser logger.
 
 ### handleWarning
 
@@ -443,10 +446,15 @@ function createHandleError(lowdefy) {
     if (loggedErrors.has(errorKey)) return;
     loggedErrors.add(errorKey);
 
-    // Known Lowdefy errors → send to server for location resolution
     if (error.isLowdefyError) {
+      // Server-originated errors already have source resolved — just display locally
+      if (error.source) {
+        logger.error(error);
+        return;
+      }
+      // Client-originated errors — send to server for logging + location resolution
       const serialized = serializer.serialize(error);  // ~e marker
-      if (serialized?.['~e']) delete serialized['~e'].received;  // Don't send received to server
+      if (serialized?.['~e']) delete serialized['~e'].received;
       const response = await fetch(`${lowdefy?.basePath ?? ''}/api/client-error`, { ... });
       if (response.ok) {
         const { source } = await response.json();
@@ -464,30 +472,37 @@ function createHandleError(lowdefy) {
 **Key behaviors:**
 
 - **Deduplication:** Same error logged only once per session
-- **Serialization:** Uses `serializer.serialize()` with `~e` marker (not manual field picking)
+- **Server-originated errors skip round-trip:** If `error.source` is already set (from the serialized 500 response), logs to browser only — no `/api/client-error` call
+- **Client-originated errors use client-error API:** Serializes with `serializer.serialize()`, sends to server for logging + location resolution
 - **Received excluded:** Removed from payload before sending (can be large)
-- **Source resolution:** Server resolves `configKey` → `source`, returns it to client
 - **Display:** Browser logger formats Lowdefy errors with `errorToDisplayString`
 
 #### UserError — Client-Only, Console-Only
 
 `UserError` represents expected user-facing errors (validation failures, intentional throws). It is **never sent to the server terminal** — it only logs to the browser console.
 
+**Error routing by origin:**
+
 ```
-UserError      → logger.error() in browser only, NEVER sent to server terminal
-OperatorError  → handleError() → POST /api/client-error → server terminal
-ActionError    → handleError() → POST /api/client-error → server terminal
-RequestError   → handleError() → POST /api/client-error → server terminal
-BlockError     → handleError() → POST /api/client-error → server terminal
-ConfigError    → handleError() → POST /api/client-error → server terminal
-ServiceError   → handleError() → POST /api/client-error → server terminal
+Server-originated errors (have source from serialized 500 response):
+  RequestError   → browser console only (server already logged)
+  ServiceError   → browser console only (server already logged)
+  ConfigError    → browser console only (server already logged)
+
+Client-originated errors (no source yet):
+  OperatorError  → handleError() → POST /api/client-error → server terminal
+  ActionError    → handleError() → POST /api/client-error → server terminal
+  BlockError     → handleError() → POST /api/client-error → server terminal
+
+Client-only:
+  UserError      → logger.error() in browser only, NEVER sent to server terminal
 ```
 
-In `Actions.js`, `UserError` is detected by name and routed to the browser logger only.
+In `Actions.js`, `UserError` is detected by `instanceof` and routed to the browser logger only.
 
 #### Server-Side Client Error Logging
 
-`logClientError` (`packages/api/src/routes/log/logClientError.js`) processes client-reported errors:
+`logClientError` (`packages/api/src/routes/log/logClientError.js`) processes **client-originated** errors only (e.g., operator parse failures, block errors). Server-originated errors are logged once by the server's `handleError` and never sent back via this endpoint.
 
 1. Deserializes error via `serializer.deserialize()` — restores correct error class
 2. Calls `loadAndResolveErrorLocation()` — reads keyMap/refMap from build artifacts
@@ -567,9 +582,23 @@ const restored = serializer.deserialize(serialized);
 
 Pino uses `extractErrorProps` directly (no `~e` wrapper) as the `err` serializer. The line handler reconstructs errors using the same `lowdefyErrorTypes` map and `Object.create + assign` pattern.
 
-### Transport (Browser → Server)
+### Transport
 
-Browser `handleError` uses `serializer.serialize()` for the POST body. The server uses `serializer.deserialize()` to restore the error class. This is different from pino serialization — it uses the `~e` wrapper.
+Errors cross the HTTP boundary in both directions using the `~e` serialization format:
+
+**Server → Browser (500 responses):**
+
+The `apiWrapper` serializes errors using `serializer.serialize()` before sending the 500 response. Sensitive fields are stripped:
+
+- `received` — may contain query params, connection strings, user data
+- `stack` — server internals
+- `configKey` — internal build artifact (source is already resolved)
+
+The client `request.js` checks for `body['~e']` and deserializes with `serializer.deserialize()`, reconstructing the correct Lowdefy error class (e.g., `RequestError`) with `source` already set. This means server-originated errors retain their identity across the HTTP boundary — the engine sees `isLowdefyError = true` and passes through without wrapping in `ActionError`.
+
+**Browser → Server (client-error API):**
+
+Browser `handleError` uses `serializer.serialize()` for the POST body to `/api/client-error`. The server uses `serializer.deserialize()` to restore the error class. Only used for **client-originated** errors (no `source` set yet).
 
 ## Config Traversal
 
@@ -606,14 +635,17 @@ traverseConfig({
 
 ### Client Integration
 
+- `packages/client/src/request.js` — Deserializes typed errors from 500 responses
 - `packages/client/src/createHandleError.js` — Browser error handler
 - `packages/client/src/initLowdefyContext.js` — Wires `lowdefy._internal.handleError`
 
 ### Server Integration
 
-- `packages/servers/server/lib/server/createHandleError.js` — Server error handler
-- `packages/servers/server-dev/lib/server/createHandleError.js` — Dev server error handler
-- `packages/api/src/routes/log/logClientError.js` — Client error endpoint
+- `packages/servers/server/lib/server/apiWrapper.js` — Serializes errors for 500 responses
+- `packages/servers/server-dev/lib/server/apiWrapper.js` — Dev server equivalent
+- `packages/servers/server/lib/server/log/createHandleError.js` — Server error handler
+- `packages/servers/server-dev/lib/server/log/createHandleError.js` — Dev server error handler
+- `packages/api/src/routes/log/logClientError.js` — Client error endpoint (client-originated only)
 
 ### Sentry Integration
 

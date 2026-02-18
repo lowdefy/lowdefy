@@ -17,6 +17,7 @@
 import path from 'path';
 import { createApiContext } from '@lowdefy/api';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
+import { serializer } from '@lowdefy/helpers';
 import { v4 as uuid } from 'uuid';
 
 import config from '../build/config.js';
@@ -73,7 +74,13 @@ function apiWrapper(handler) {
       return response;
     } catch (error) {
       await context.handleError(error);
-      res.status(500).json({ name: error.name, message: error.message });
+      const serialized = serializer.serialize(error);
+      if (serialized?.['~e']) {
+        delete serialized['~e'].received;
+        delete serialized['~e'].stack;
+        delete serialized['~e'].configKey;
+      }
+      res.status(500).json(serialized);
     }
   };
 }
