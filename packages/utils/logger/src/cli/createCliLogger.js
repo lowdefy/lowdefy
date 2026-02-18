@@ -143,6 +143,14 @@ function createCliLogger({ logLevel } = {}) {
       if (shouldLogStack(first) && first.stack) {
         print[level](first.stack, { color: 'gray' });
       }
+      let currentCause = first.cause;
+      while (currentCause instanceof Error) {
+        print[level](`  Caused by: ${errorToDisplayString(currentCause)}`);
+        if (shouldLogStack(currentCause) && currentCause.stack) {
+          print[level](currentCause.stack, { color: 'gray' });
+        }
+        currentCause = currentCause.cause;
+      }
       return;
     }
 

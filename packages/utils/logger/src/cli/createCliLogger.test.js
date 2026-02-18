@@ -249,6 +249,92 @@ describe('error input', () => {
   });
 });
 
+describe('cause chain', () => {
+  beforeEach(() => {
+    jest.resetModules();
+    mockOraFail.mockClear();
+    mockOraStart.mockClear();
+    mockOraStopAndPersist.mockClear();
+    mockOraSucceed.mockClear();
+    mockOraWarn.mockClear();
+  });
+
+  test('error with cause shows Caused by line', async () => {
+    const { default: createCliLogger } = await import('./createCliLogger.js');
+    const logger = createCliLogger({ logLevel: 'info' });
+    const cause = new Error('root cause');
+    const err = new Error('wrapper', { cause });
+    logger.error(err);
+    // wrapper message + wrapper stack + caused by + cause stack
+    expect(mockOraFail.mock.calls[0][0]).toBe('\x1b[31m[Error] wrapper\x1b[0m');
+    // Stack for wrapper (plain Error shows stack)
+    expect(mockOraFail.mock.calls[1][0]).toMatch(/^\x1b\[2m[\s\S]*\x1b\[0m$/);
+    // Caused by line
+    expect(mockOraFail.mock.calls[2][0]).toBe('\x1b[31m  Caused by: [Error] root cause\x1b[0m');
+    // Cause stack (plain Error shows stack)
+    expect(mockOraFail.mock.calls[3][0]).toMatch(/^\x1b\[2m[\s\S]*\x1b\[0m$/);
+  });
+
+  test('ConfigError cause does not show stack', async () => {
+    const { ConfigError } = await import('@lowdefy/errors');
+    const { default: createCliLogger } = await import('./createCliLogger.js');
+    const logger = createCliLogger({ logLevel: 'info' });
+    const cause = new ConfigError('bad config');
+    const err = new Error('wrapper', { cause });
+    logger.error(err);
+    // wrapper message + wrapper stack + caused by (no cause stack for ConfigError)
+    expect(mockOraFail.mock.calls[0][0]).toBe('\x1b[31m[Error] wrapper\x1b[0m');
+    expect(mockOraFail.mock.calls[1][0]).toMatch(/^\x1b\[2m[\s\S]*\x1b\[0m$/);
+    expect(mockOraFail.mock.calls[2][0]).toBe(
+      '\x1b[31m  Caused by: [ConfigError] bad config\x1b[0m'
+    );
+    // No stack for ConfigError — only 3 calls total
+    expect(mockOraFail.mock.calls.length).toBe(3);
+  });
+
+  test('plain Error cause shows stack', async () => {
+    const { ConfigError } = await import('@lowdefy/errors');
+    const { default: createCliLogger } = await import('./createCliLogger.js');
+    const logger = createCliLogger({ logLevel: 'info' });
+    const cause = new Error('root');
+    const err = new ConfigError({ message: 'config', error: cause });
+    logger.error(err);
+    // ConfigError message (no stack for ConfigError)
+    expect(mockOraFail.mock.calls[0][0]).toBe('\x1b[31m[ConfigError] config\x1b[0m');
+    // Caused by line
+    expect(mockOraFail.mock.calls[1][0]).toBe('\x1b[31m  Caused by: [Error] root\x1b[0m');
+    // Cause stack (plain Error shows stack)
+    expect(mockOraFail.mock.calls[2][0]).toMatch(/^\x1b\[2m[\s\S]*\x1b\[0m$/);
+    expect(mockOraFail.mock.calls.length).toBe(3);
+  });
+
+  test('multi-level cause chain walks all levels', async () => {
+    const { default: createCliLogger } = await import('./createCliLogger.js');
+    const logger = createCliLogger({ logLevel: 'info' });
+    const root = new Error('root');
+    const mid = new Error('middle', { cause: root });
+    const top = new Error('top', { cause: mid });
+    logger.error(top);
+    // top message + top stack + caused by mid + mid stack + caused by root + root stack
+    expect(mockOraFail.mock.calls[0][0]).toBe('\x1b[31m[Error] top\x1b[0m');
+    expect(mockOraFail.mock.calls[1][0]).toMatch(/^\x1b\[2m[\s\S]*\x1b\[0m$/);
+    expect(mockOraFail.mock.calls[2][0]).toBe('\x1b[31m  Caused by: [Error] middle\x1b[0m');
+    expect(mockOraFail.mock.calls[3][0]).toMatch(/^\x1b\[2m[\s\S]*\x1b\[0m$/);
+    expect(mockOraFail.mock.calls[4][0]).toBe('\x1b[31m  Caused by: [Error] root\x1b[0m');
+    expect(mockOraFail.mock.calls[5][0]).toMatch(/^\x1b\[2m[\s\S]*\x1b\[0m$/);
+    expect(mockOraFail.mock.calls.length).toBe(6);
+  });
+
+  test('error without cause does not show Caused by line', async () => {
+    const { default: createCliLogger } = await import('./createCliLogger.js');
+    const logger = createCliLogger({ logLevel: 'info' });
+    const err = new Error('no cause');
+    logger.error(err);
+    // message + stack only, no Caused by
+    expect(mockOraFail.mock.calls.length).toBe(2);
+  });
+});
+
 describe('pino two-arg form', () => {
   beforeEach(() => {
     jest.resetModules();
