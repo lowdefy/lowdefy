@@ -29,7 +29,7 @@ import {
 import captureSentryError from '../sentry/captureSentryError.js';
 
 function getEventType(error) {
-  if (error instanceof ServiceError || error?.isServiceError === true) {
+  if (error instanceof ServiceError) {
     return 'service_error';
   }
   if (error instanceof OperatorError) {
@@ -61,7 +61,7 @@ function createHandleError({ context }) {
     try {
       const { headers = {}, user = {} } = context;
       const eventType = getEventType(error);
-      const isServiceError = error instanceof ServiceError || error?.isServiceError === true;
+      const isServiceError = error instanceof ServiceError;
       const isLowdefyError = error instanceof LowdefyError;
 
       // For service errors and internal lowdefy errors, don't resolve config location
