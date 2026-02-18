@@ -8,11 +8,11 @@ Config-aware error tracing that maps runtime and build-time errors back to their
 >
 > ```javascript
 > // WRONG - stops build at first error
-> throw new ConfigError({ message: '...', configKey });
+> throw new ConfigError('...', { configKey });
 >
 > // CORRECT - collects error, build continues
 > import collectExceptions from '../utils/collectExceptions.js';
-> collectExceptions(context, new ConfigError({ message: '...', configKey }));
+> collectExceptions(context, new ConfigError('...', { configKey }));
 > ```
 >
 > When collecting errors, return early from the current function to avoid continuing with invalid data. The error will be reported with all other errors at the build checkpoint.
@@ -86,15 +86,17 @@ All error classes in `@lowdefy/errors` with single flat entry point:
 
 **Key principle:** Plugins throw errors without knowing about config keys. The interface layer catches all errors and adds `configKey` for location resolution.
 
-### Property Extraction from Wrapped Errors
+### Property Extraction from Cause Chain
 
-When wrapping an error via `new ConfigError({ error })` or a plugin error subclass (e.g., `new OperatorError({ error })`), both extract properties from the wrapped error as fallbacks:
+All error constructors follow the TC39 standard: `new MyError(message, { cause, ...options })`. When wrapping an error via `cause`, properties are extracted from the cause as fallbacks:
 
-| Property    | ConfigError                            | PluginError (base)                     | ServiceError       |
-| ----------- | -------------------------------------- | -------------------------------------- | ------------------ |
-| `configKey` | `params.configKey ?? error?.configKey` | `error?.configKey ?? params.configKey` | `params.configKey` |
-| `received`  | `params.received ?? error?.received`   | `params.received ?? error?.received`   | N/A                |
-| `message`   | `params.message ?? error?.message`     | `params.message ?? error?.message`     | `params.message`   |
+| Property    | ConfigError                             | PluginError (base)                      | ServiceError        |
+| ----------- | --------------------------------------- | --------------------------------------- | ------------------- |
+| `configKey` | `options.configKey ?? cause?.configKey` | `cause?.configKey ?? options.configKey` | `options.configKey` |
+| `received`  | `options.received ?? cause?.received`   | `options.received ?? cause?.received`   | N/A                 |
+| `message`   | `message ?? cause?.message`             | `message ?? cause?.message`             | `message`           |
+
+The `cause` property is set via TC39 standard `error.cause`, and the CLI logger walks the cause chain displaying `Caused by:` lines. `extractErrorProps` recursively serializes Error causes.
 
 ```javascript
 // Plain error with received (e.g., from operator parser)
@@ -102,10 +104,11 @@ const err = new Error('bad input');
 err.received = { _if: [true, 'a', 'b'] };
 err.configKey = 'abc123';
 
-// Wrapping preserves both properties
-const configError = new ConfigError({ error: err });
+// Wrapping preserves both properties via cause chain
+const configError = new ConfigError(undefined, { cause: err });
 configError.received; // { _if: [true, 'a', 'b'] }
 configError.configKey; // 'abc123'
+configError.cause; // err
 ```
 
 ### Error Catch Layers
@@ -124,12 +127,12 @@ configError.configKey; // 'abc123'
 │  ├─ Catches: All errors from plugin code                                    │
 │  ├─ Adds configKey to ALL errors for location tracing                       │
 │  ├─ ConfigError: adds configKey if not present, re-throws                   │
-│  ├─ ServiceError: creates new ServiceError({ error, service, configKey })   │
+│  ├─ ServiceError: creates new ServiceError(undefined, { cause: error, service, configKey }) │
 │  └─ Plain Error: wraps in typed error (OperatorError, ActionError, etc.)    │
 │                                                                             │
 │  Layer 3: BUILD VALIDATION (schema, refs, type checking)                    │
-│  ├─ Errors: collectExceptions(context, new ConfigError({ ... }))            │
-│  └─ Warnings: context.handleWarning(new ConfigWarning({ ... }))             │
+│  ├─ Errors: collectExceptions(context, new ConfigError('...', { configKey }))  │
+│  └─ Warnings: context.handleWarning(new ConfigWarning('...', { configKey }))   │
 │                                                                             │
 │  Layer 4: PLUGIN CODE (operators, actions, blocks, connections)             │
 │  ├─ Throws: Plain Error('simple message')                                   │
@@ -217,8 +220,7 @@ function handleWarning(warning) {
 
 ```javascript
 context.handleWarning(
-  new ConfigWarning({
-    message: '_state references "userName" but no block with id "userName" exists.',
+  new ConfigWarning('_state references "userName" but no block with id "userName" exists.', {
     configKey: obj['~k'],
     checkSlug: 'state-refs',
     prodError: true,
@@ -238,8 +240,7 @@ import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 // Fatal error — collected, build continues until checkpoint
 collectExceptions(
   context,
-  new ConfigError({
-    message: `Block type "Buton" not found.`,
+  new ConfigError(`Block type "Buton" not found.`, {
     configKey: block['~k'],
     checkSlug: 'types',
   })
@@ -247,8 +248,7 @@ collectExceptions(
 
 // Warning — suppression, dedup, location resolution
 context.handleWarning(
-  new ConfigWarning({
-    message: `_state references "userName" but no block with id "userName" exists.`,
+  new ConfigWarning(`_state references "userName" but no block with id "userName" exists.`, {
     configKey: obj['~k'],
     checkSlug: 'state-refs',
     prodError: true,
@@ -302,8 +302,8 @@ try {
     throw error;
   }
   // Plain errors get wrapped in OperatorError
-  throw new OperatorError({
-    error,
+  throw new OperatorError(undefined, {
+    cause: error,
     typeName: '_if',
     received: params,
     configKey,
@@ -322,15 +322,15 @@ try {
   if (error instanceof ConfigError) throw error;
 
   if (ServiceError.isServiceError(error)) {
-    throw new ServiceError({
-      error,
+    throw new ServiceError(undefined, {
+      cause: error,
       service: connectionId,
       configKey: requestConfig['~k'],
     });
   }
 
-  throw new RequestError({
-    error,
+  throw new RequestError(undefined, {
+    cause: error,
     typeName: requestType,
     received: requestProperties,
     configKey: requestConfig['~k'],
@@ -565,7 +565,7 @@ All Sentry functions are no-ops when `SENTRY_DSN` is not set.
 
 The `@lowdefy/helpers` serializer handles error serialization via the `~e` marker:
 
-- **Replacer:** `extractErrorProps(error)` captures `message`, `name`, `stack`, `cause` (non-enumerable) + all enumerable properties → wraps as `{ '~e': props }`
+- **Replacer:** `extractErrorProps(error)` captures `message`, `name`, `stack`, `cause` (non-enumerable) + all enumerable properties → wraps as `{ '~e': props }`. Error `cause` values are recursively serialized via `extractErrorProps`.
 - **Reviver:** `Object.create(ErrorClass.prototype)` + property assignment — reconstructs correct Lowdefy class without calling constructors
 
 ```javascript

@@ -85,17 +85,22 @@ class LowdefyInternalError extends Error {
 
 #### ConfigError
 
-Config validation errors. Supports both string and object constructor forms.
+Config validation errors. Follows TC39 `(message, options)` constructor pattern.
 
 ```javascript
-// String form (for plugins — interface layer adds configKey)
+// String-only form (for plugins — interface layer adds configKey)
 throw new ConfigError('Property must be a string.');
 
-// Object form (when you have config context)
-throw new ConfigError({
-  message: 'Block type "Buton" not found.',
+// Full form (when you have config context)
+throw new ConfigError('Block type "Buton" not found.', {
   configKey: block['~k'],
   checkSlug: 'types',
+});
+
+// Wrapping a cause error
+throw new ConfigError('Operator evaluation failed.', {
+  cause: originalError,
+  configKey: obj['~k'],
 });
 ```
 
@@ -107,27 +112,29 @@ throw new ConfigError({
 | `isLowdefyError` | boolean | `true`                                             |
 | `configKey`      | string  | `~k` value for location resolution                 |
 | `checkSlug`      | string  | For `~ignoreBuildChecks` matching                  |
-| `received`       | any     | Debug value (extracted from wrapped error)         |
+| `received`       | any     | Debug value (extracted from cause)                 |
 | `filePath`       | string  | For pre-addKeys errors (YAML parse, operator eval) |
 | `lineNumber`     | number  | For pre-addKeys errors                             |
 | `source`         | string  | Set by handleError/handleWarning: `file:line`      |
 | `config`         | string  | Set by handleError/handleWarning: config path      |
 
-**Property extraction from wrapped errors:** `new ConfigError({ error })` extracts `configKey` and `received` from the wrapped error as fallbacks.
+**Property extraction from cause:** `new ConfigError(undefined, { cause: err })` extracts `configKey` and `received` from the cause error as fallbacks. The original error is preserved via the standard `cause` property.
 
 **Stack trace:** Suppressed in CLI display — source location (from `configKey`) is more useful.
 
 #### ConfigWarning
 
-Extends ConfigError. Warnings in dev mode, errors in prod mode.
+Extends ConfigError. Warnings in dev mode, errors in prod mode. Follows TC39 `(message, options)` constructor pattern.
 
 ```javascript
-const warning = new ConfigWarning({
-  message: '_state references "userName" but no block with id "userName" exists.',
-  configKey: obj['~k'],
-  checkSlug: 'state-refs',
-  prodError: true,
-});
+const warning = new ConfigWarning(
+  '_state references "userName" but no block with id "userName" exists.',
+  {
+    configKey: obj['~k'],
+    checkSlug: 'state-refs',
+    prodError: true,
+  }
+);
 ```
 
 **Properties:** Same as ConfigError, plus:
@@ -162,11 +169,11 @@ Used by `logCollectedErrors`: after iterating `context.errors` and calling `hand
 
 #### PluginError
 
-Wraps errors from plugin code (operators, actions, blocks, requests).
+Wraps errors from plugin code (operators, actions, blocks, requests). Follows TC39 `(message, options)` constructor pattern. Subclassed by `OperatorError`, `ActionError`, `RequestError`, and `BlockError`.
 
 ```javascript
-throw new PluginError({
-  error: originalError,
+throw new PluginError('_if requires a boolean condition.', {
+  cause: originalError,
   pluginType: 'operator',
   pluginName: '_if',
   received: params,
@@ -183,23 +190,25 @@ throw new PluginError({
 | `isLowdefyError` | boolean | `true`                                           |
 | `pluginType`     | string  | `'operator'`, `'action'`, `'request'`, `'block'` |
 | `pluginName`     | string  | e.g. `'_if'`, `'SetState'`, `'MongoDBFind'`      |
-| `_message`       | string  | Raw unformatted message (for serialization)      |
+| `rawMessage`     | string  | Raw unformatted message (for serialization)      |
 | `received`       | any     | The input that caused the error                  |
 | `location`       | string  | Config path like `blockId.events.onClick`        |
 | `configKey`      | string  | `~k` value for location resolution               |
 
-**Message formatting:** Constructor formats `error.message` with location suffix:
-`"message at location."`. The `_message` property preserves the raw input for serialization (avoids double-formatting on deserialize via `Object.create`).
+**Message formatting:** Constructor formats the message with location suffix:
+`"message at location."`. The `rawMessage` property preserves the raw input for serialization (avoids double-formatting on deserialize via `Object.create`). Original error preserved via `cause`.
+
+**Subclasses:** `OperatorError`, `ActionError`, `RequestError`, and `BlockError` extend `PluginError` and follow the same `(message, options)` signature, setting appropriate `pluginType` and `name`.
 
 **Stack trace:** Suppressed in CLI display — `received` and `location` are more useful.
 
 #### ServiceError
 
-External service failures (network issues, timeouts, 5xx responses).
+External service failures (network issues, timeouts, 5xx responses). Follows TC39 `(message, options)` constructor pattern.
 
 ```javascript
-throw new ServiceError({
-  error: networkError,
+throw new ServiceError('Connection to MongoDB failed.', {
+  cause: networkError,
   service: 'MongoDB',
   configKey: requestConfig['~k'],
 });
@@ -212,7 +221,7 @@ throw new ServiceError({
 | `name`           | string  | `'ServiceError'`                   |
 | `isLowdefyError` | boolean | `true`                             |
 | `service`        | string  | Service name (connection ID)       |
-| `_message`       | string  | Raw unformatted message            |
+| `rawMessage`     | string  | Raw unformatted message            |
 | `code`           | string  | Error code (ECONNREFUSED, etc.)    |
 | `statusCode`     | number  | HTTP status code                   |
 | `configKey`      | string  | `~k` value for location resolution |
@@ -366,6 +375,8 @@ Errors are serialized by the `~e` marker in `@lowdefy/helpers/serializer`:
 ```
 
 The reviver uses a `lowdefyErrorTypes` map with direct imports to reconstruct the correct class without calling constructors (avoids re-formatting messages).
+
+**Recursive cause serialization:** `extractErrorProps` recursively serializes Error objects found in the `cause` property, so the full cause chain is preserved across serialization boundaries. The CLI logger walks the `error.cause` chain, displaying `Caused by:` lines with indentation for each level.
 
 See [helpers.md](./helpers.md) for serializer details.
 

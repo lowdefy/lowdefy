@@ -303,27 +303,27 @@ import {
 Use `ConfigError` from `@lowdefy/errors` for errors with config location:
 
 ```javascript
-import { ConfigError } from '@lowdefy/errors';
+import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 
 // Fatal error - stops build
-throw new ConfigError({
-  message: 'Block type "Buton" not found.',
+throw new ConfigError('Block type "Buton" not found.', {
   configKey: block['~k'],
-  context,
 });
 
 // Warning - logs but continues build
-context.logger.configWarning({
-  message: '_state references undefined blockId.',
-  configKey: obj['~k'],
-});
+context.handleWarning(
+  new ConfigWarning('_state references undefined blockId.', {
+    configKey: obj['~k'],
+  })
+);
 
 // Warning that becomes error in prod builds
-context.logger.configWarning({
-  message: 'Deprecated feature used.',
-  configKey: obj['~k'],
-  prodError: true,
-});
+context.handleWarning(
+  new ConfigWarning('Deprecated feature used.', {
+    configKey: obj['~k'],
+    prodError: true,
+  })
+);
 ```
 
 ### Plugin Interface Layer and Error Propagation
@@ -339,7 +339,7 @@ Add configKey to ANY error (for location tracing)
         ↓
 Then handle by type:
   - ConfigError  → re-throw (for location resolution)
-  - ServiceError → wrap with new ServiceError({ error, service, configKey })
+  - ServiceError → wrap with new ServiceError(undefined, { cause: error, service, configKey })
   - Plain Error  → wrap in typed error (OperatorError, ActionError, etc.)
         ↓
 Error bubbles to top-level handler
@@ -402,16 +402,16 @@ try {
   }
 
   if (ServiceError.isServiceError(e)) {
-    throw new ServiceError({
-      error: e,
+    throw new ServiceError(undefined, {
+      cause: e,
       service: connectionId,
       configKey: obj['~k'],
     });
   }
 
   // Plain errors get wrapped in typed error with context
-  throw new OperatorError({
-    error: e,
+  throw new OperatorError(undefined, {
+    cause: e,
     typeName: '_if',
     received: params,
     location: 'blockId.events.onClick',
@@ -436,8 +436,8 @@ import { ServiceError } from '@lowdefy/errors';
 
 // Check if error is service-related (network issues, timeouts, 5xx)
 if (ServiceError.isServiceError(error)) {
-  throw new ServiceError({
-    error,
+  throw new ServiceError(undefined, {
+    cause: error,
     service: 'MongoDB',
     configKey: requestConfig['~k'],
   });
@@ -446,15 +446,16 @@ if (ServiceError.isServiceError(error)) {
 
 ### Client-Side Errors
 
-Client code uses `ConfigError` from `@lowdefy/errors`. When wrapping a plain error, `received` and `configKey` are extracted from the wrapped error automatically:
+Client code uses `ConfigError` from `@lowdefy/errors`. When wrapping via `cause`, `received` and `configKey` are extracted from the cause automatically:
 
 ```javascript
 import { ConfigError } from '@lowdefy/errors';
 
-// Wrap error - received and configKey extracted from wrapped error
-const configError = new ConfigError({ error: e });
+// Wrap error - received and configKey extracted from cause
+const configError = new ConfigError(e.message, { cause: e });
 // configError.received = e.received (if present)
 // configError.configKey = e.configKey (if present)
+// configError.cause = e (original error preserved)
 ```
 
 See `cc-docs/architecture/error-tracing.md` for the complete error system.
