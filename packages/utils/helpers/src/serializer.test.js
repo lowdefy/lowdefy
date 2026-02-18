@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigError, LowdefyError, PluginError, ServiceError, UserError } from '@lowdefy/errors';
+import { ConfigError, LowdefyError, OperatorError, ServiceError, UserError } from '@lowdefy/errors';
 
 import extractErrorProps from './extractErrorProps.js';
 import serializer from './serializer.js';
@@ -987,22 +987,20 @@ test('copy round-trip for ConfigError preserves class and properties', () => {
   expect(res.err.configKey).toBe('key-123');
 });
 
-test('copy round-trip for PluginError preserves class and properties', () => {
+test('copy round-trip for OperatorError preserves class and properties', () => {
   const original = new Error('_if requires boolean');
-  const err = new PluginError({
+  const err = new OperatorError({
     error: original,
-    pluginType: 'operator',
-    pluginName: '_if',
+    typeName: '_if',
     location: 'blocks.0.visible',
     configKey: 'key-456',
   });
   const res = serializer.copy({ err });
-  expect(res.err).toBeInstanceOf(PluginError);
-  expect(res.err.name).toBe('PluginError');
+  expect(res.err).toBeInstanceOf(OperatorError);
+  expect(res.err.name).toBe('OperatorError');
   expect(res.err._message).toBe('_if requires boolean');
   expect(res.err.location).toBe('blocks.0.visible');
-  expect(res.err.pluginType).toBe('operator');
-  expect(res.err.pluginName).toBe('_if');
+  expect(res.err.typeName).toBe('_if');
   expect(res.err.configKey).toBe('key-456');
 });
 
@@ -1052,10 +1050,10 @@ test('extractErrorProps captures message, name, stack', () => {
 test('extractErrorProps captures enumerable properties', () => {
   const err = new Error('test');
   err.configKey = 'key-1';
-  err.pluginType = 'operator';
+  err.typeName = '_if';
   const props = extractErrorProps(err);
   expect(props.configKey).toBe('key-1');
-  expect(props.pluginType).toBe('operator');
+  expect(props.typeName).toBe('_if');
 });
 
 test('extractErrorProps captures cause when present', () => {

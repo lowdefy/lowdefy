@@ -14,7 +14,7 @@
   limitations under the License.
 */
 import { jest } from '@jest/globals';
-import { PluginError } from '@lowdefy/errors';
+import { ActionError } from '@lowdefy/errors';
 
 import testContext from '../../test/testContext.js';
 
@@ -231,7 +231,7 @@ test('CallMethod with args not an array', async () => {
         },
         type: 'CallMethod',
       },
-      error: expect.any(PluginError),
+      error: expect.any(ActionError),
       index: 0,
     },
     responses: {
@@ -245,7 +245,7 @@ test('CallMethod with args not an array', async () => {
           },
           type: 'CallMethod',
         },
-        error: expect.any(PluginError),
+        error: expect.any(ActionError),
         index: 0,
       },
     },
@@ -500,7 +500,7 @@ test('CallMethod with method does not exist', async () => {
         },
         type: 'CallMethod',
       },
-      error: expect.any(PluginError),
+      error: expect.any(ActionError),
       index: 0,
     },
     responses: {
@@ -513,7 +513,7 @@ test('CallMethod with method does not exist', async () => {
           },
           type: 'CallMethod',
         },
-        error: expect.any(PluginError),
+        error: expect.any(ActionError),
         index: 0,
       },
     },

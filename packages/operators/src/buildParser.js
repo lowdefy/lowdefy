@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigError, PluginError } from '@lowdefy/errors';
+import { ConfigError, OperatorError } from '@lowdefy/errors';
 import { serializer, type } from '@lowdefy/helpers';
 
 class BuildParser {
@@ -165,10 +165,9 @@ class BuildParser {
           errors.push(e);
           return null;
         }
-        const pluginError = new PluginError({
+        const operatorError = new OperatorError({
           error: e,
-          pluginType: 'operator',
-          pluginName: op,
+          typeName: op,
           received: { [key]: params },
           configKey: e.configKey ?? configKey,
         });
@@ -176,9 +175,9 @@ class BuildParser {
         // evaluateStaticOperators) which run before addKeys — no configKey
         // exists yet, so they use filePath + lineNumber for resolution.
         // refId (from ~r) identifies the source file in the refMap.
-        pluginError.lineNumber = lineNumber;
-        pluginError.refId = refId;
-        errors.push(pluginError);
+        operatorError.lineNumber = lineNumber;
+        operatorError.refId = refId;
+        errors.push(operatorError);
         return null;
       }
     };

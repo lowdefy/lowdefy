@@ -16,13 +16,33 @@
   limitations under the License.
 */
 
-import { ConfigError, LowdefyError, PluginError, ServiceError, UserError } from '@lowdefy/errors';
+import {
+  ActionError,
+  BlockError,
+  ConfigError,
+  LowdefyError,
+  OperatorError,
+  PluginError,
+  RequestError,
+  ServiceError,
+  UserError,
+} from '@lowdefy/errors';
 
 import extractErrorProps from './extractErrorProps.js';
 import type from './type.js';
 import stableStringify from './stableStringify.js';
 
-const lowdefyErrorTypes = { ConfigError, LowdefyError, PluginError, ServiceError, UserError };
+const lowdefyErrorTypes = {
+  ActionError,
+  BlockError,
+  ConfigError,
+  LowdefyError,
+  OperatorError,
+  PluginError,
+  RequestError,
+  ServiceError,
+  UserError,
+};
 
 const makeReplacer = (customReplacer, isoStringDates) => (key, value) => {
   let dateReplacer = (date) => ({ '~d': date.valueOf() });

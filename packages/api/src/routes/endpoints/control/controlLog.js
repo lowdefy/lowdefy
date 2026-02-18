@@ -15,7 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { PluginError } from '@lowdefy/errors';
+import { ConfigError } from '@lowdefy/errors';
 
 async function controlLog(context, routineContext, { control }) {
   const { endpointId, logger, evaluateOperators } = context;
@@ -27,7 +27,7 @@ async function controlLog(context, routineContext, { control }) {
   const logLevel = evaluateOperators({ input: control[':level'], items, location }) ?? 'info';
 
   if (!type.isString(logLevel)) {
-    throw new PluginError({
+    throw new ConfigError({
       message: `Invalid :log in endpoint "${endpointId}" - :level must be a string.`,
       received: logLevel,
       configKey: control['~k'],

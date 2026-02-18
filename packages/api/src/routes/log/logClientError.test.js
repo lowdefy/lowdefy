@@ -16,7 +16,7 @@
 
 import { jest } from '@jest/globals';
 
-import { ConfigError, PluginError, ServiceError } from '@lowdefy/errors';
+import { ConfigError, OperatorError, ServiceError } from '@lowdefy/errors';
 import { serializer } from '@lowdefy/helpers';
 
 import logClientError from './logClientError.js';
@@ -90,7 +90,7 @@ describe('logClientError', () => {
     expect(error.source).toBe('pages/home.yaml:8');
   });
 
-  test('logs PluginError with configKey and resolves location', async () => {
+  test('logs OperatorError with configKey and resolves location', async () => {
     const mockLogger = {
       error: jest.fn(),
       warn: jest.fn(),
@@ -104,11 +104,10 @@ describe('logClientError', () => {
     };
 
     const data = serializer.serialize(
-      new PluginError({
+      new OperatorError({
         message: 'Operator failed',
         configKey: 'key-123',
-        pluginType: 'operator',
-        pluginName: '_if',
+        typeName: '_if',
       })
     );
     const { error, ...response } = await logClientError(context, data);
@@ -118,8 +117,8 @@ describe('logClientError', () => {
       source: 'pages/home.yaml:8',
       config: 'root.pages[0:home].blocks[0:header]',
     });
-    expect(error).toBeInstanceOf(PluginError);
-    expect(error.name).toBe('PluginError');
+    expect(error).toBeInstanceOf(OperatorError);
+    expect(error.name).toBe('OperatorError');
     expect(error.message).toBe('Operator failed');
     expect(error.source).toBe('pages/home.yaml:8');
   });
@@ -189,19 +188,18 @@ describe('logClientError', () => {
       readConfigFile: jest.fn(),
     };
 
-    const pluginError = new PluginError({
+    const operatorError = new OperatorError({
       message: 'Operator failed',
-      pluginType: 'operator',
-      pluginName: '_if',
+      typeName: '_if',
       received: { sensitiveData: 'should not appear' },
     });
-    const data = serializer.serialize(pluginError);
+    const data = serializer.serialize(operatorError);
     // Simulate client-side stripping of received
     delete data['~e'].received;
 
     const { error } = await logClientError(context, data);
 
-    expect(error).toBeInstanceOf(PluginError);
+    expect(error).toBeInstanceOf(OperatorError);
     expect(error.received).toBeUndefined();
   });
 });

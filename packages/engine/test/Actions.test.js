@@ -17,7 +17,7 @@
 */
 
 import { jest } from '@jest/globals';
-import { PluginError } from '@lowdefy/errors';
+import { ActionError, OperatorError } from '@lowdefy/errors';
 
 import testContext from './testContext.js';
 
@@ -373,7 +373,7 @@ test('action error in error messages from same action id', async () => {
   expect(displayMessage.mock.calls).toEqual([
     [
       {
-        content: 'Result one: one response - Result two: PluginError: Test error at blockId.',
+        content: 'Result one: one response - Result two: ActionError: Test error at blockId.',
         duration: 6,
         status: 'error',
       },
@@ -422,14 +422,14 @@ test('action error in error parser', async () => {
     event: {},
     eventName,
   });
-  expect(res.responses.two.error).toBeInstanceOf(PluginError);
+  expect(res.responses.two.error).toBeInstanceOf(OperatorError);
   expect(res.responses.two.error._message).toBe('_divide takes an array of 2 numbers.');
   // Message includes location but not [Plugin Error] prefix or Received - logger formats those
   expect(res.responses.two.error.message).toBe('_divide takes an array of 2 numbers. at blockId.');
   // Received value contains the _divide operator with params - second param is the error from nested parsing
   expect(res.responses.two.error.received._divide[0]).toBe(3);
-  expect(res.responses.two.error.received._divide[1].name).toBe('PluginError');
-  expect(res.error.error).toBeInstanceOf(PluginError);
+  expect(res.responses.two.error.received._divide[1].name).toBe('ActionError');
+  expect(res.error.error).toBeInstanceOf(OperatorError);
   expect(res.error.error._message).toBe('_divide takes an array of 2 numbers.');
   expect(res.error.error.message).toBe('_divide takes an array of 2 numbers. at blockId.');
 });
@@ -540,7 +540,7 @@ test('action throws a error', async () => {
         params: 'params',
         type: 'ActionError',
       },
-      error: expect.any(PluginError),
+      error: expect.any(ActionError),
       index: 0,
     },
     responses: {
@@ -550,7 +550,7 @@ test('action throws a error', async () => {
           params: 'params',
           type: 'ActionError',
         },
-        error: expect.any(PluginError),
+        error: expect.any(ActionError),
         index: 0,
       },
     },
@@ -596,7 +596,7 @@ test('actions after a error are not called throws a error', async () => {
         params: 'params',
         type: 'ActionError',
       },
-      error: expect.any(PluginError),
+      error: expect.any(ActionError),
       index: 0,
     },
     responses: {
@@ -606,7 +606,7 @@ test('actions after a error are not called throws a error', async () => {
           params: 'params',
           type: 'ActionError',
         },
-        error: expect.any(PluginError),
+        error: expect.any(ActionError),
         index: 0,
       },
     },
@@ -705,7 +705,7 @@ test('Parser error in action', async () => {
     type: 'ActionSync',
   });
   expect(res.error.index).toBe(0);
-  expect(res.error.error).toBeInstanceOf(PluginError);
+  expect(res.error.error).toBeInstanceOf(OperatorError);
   expect(res.error.error._message).toBe(
     '_state params must be of type string, integer, boolean or object.'
   );
@@ -722,7 +722,7 @@ test('Parser error in action', async () => {
     type: 'ActionSync',
   });
   expect(res.responses.test.index).toBe(0);
-  expect(res.responses.test.error).toBeInstanceOf(PluginError);
+  expect(res.responses.test.error).toBeInstanceOf(OperatorError);
   expect(res.responses.test.error._message).toBe(
     '_state params must be of type string, integer, boolean or object.'
   );
@@ -1005,7 +1005,7 @@ test('Call catchActions when actions throws error', async () => {
         },
         type: 'ActionError',
       },
-      error: expect.any(PluginError),
+      error: expect.any(ActionError),
       index: 0,
     },
     event: {},
@@ -1024,7 +1024,7 @@ test('Call catchActions when actions throws error', async () => {
           },
           type: 'ActionError',
         },
-        error: expect.any(PluginError),
+        error: expect.any(ActionError),
         index: 0,
       },
     },
@@ -1093,7 +1093,7 @@ test('Call catchActions when actions throws error and catchActions throws error'
         },
         type: 'ActionError',
       },
-      error: expect.any(PluginError),
+      error: expect.any(ActionError),
       index: 0,
     },
     errorCatch: {
@@ -1104,7 +1104,7 @@ test('Call catchActions when actions throws error and catchActions throws error'
         },
         type: 'CatchActionError',
       },
-      error: expect.any(PluginError),
+      error: expect.any(ActionError),
       index: 1,
     },
     event: {},
@@ -1123,7 +1123,7 @@ test('Call catchActions when actions throws error and catchActions throws error'
           },
           type: 'ActionError',
         },
-        error: expect.any(PluginError),
+        error: expect.any(ActionError),
         index: 0,
       },
       catch_error: {
@@ -1134,7 +1134,7 @@ test('Call catchActions when actions throws error and catchActions throws error'
           },
           type: 'CatchActionError',
         },
-        error: expect.any(PluginError),
+        error: expect.any(ActionError),
         index: 1,
       },
     },
@@ -1264,7 +1264,7 @@ test('call async: true with error', async () => {
       },
       test1: {
         action: { id: 'test1', type: 'ActionAsyncError', async: true, params: { ms: 100 } },
-        error: expect.any(PluginError),
+        error: expect.any(ActionError),
         index: 0,
       },
     },

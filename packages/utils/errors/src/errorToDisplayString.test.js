@@ -35,13 +35,13 @@ test('errorToDisplayString defaults name to Error when missing', () => {
 });
 
 test('errorToDisplayString appends received value', () => {
-  const error = { name: 'PluginError', message: 'expected string', received: 42 };
-  expect(errorToDisplayString(error)).toBe('[PluginError] expected string Received: 42');
+  const error = { name: 'OperatorError', message: 'expected string', received: 42 };
+  expect(errorToDisplayString(error)).toBe('[OperatorError] expected string Received: 42');
 });
 
 test('errorToDisplayString appends received object', () => {
-  const error = { name: 'PluginError', message: 'bad params', received: { key: 'val' } };
-  expect(errorToDisplayString(error)).toBe('[PluginError] bad params Received: {"key":"val"}');
+  const error = { name: 'OperatorError', message: 'bad params', received: { key: 'val' } };
+  expect(errorToDisplayString(error)).toBe('[OperatorError] bad params Received: {"key":"val"}');
 });
 
 test('errorToDisplayString handles unserializable received value', () => {

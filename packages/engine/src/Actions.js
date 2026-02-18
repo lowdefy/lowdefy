@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigError, PluginError, UserError } from '@lowdefy/errors';
+import { ActionError, ConfigError, UserError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 import getActionMethods from './actions/getActionMethods.js';
 
@@ -47,7 +47,7 @@ class Actions {
       return;
     }
 
-    // ConfigError, PluginError, ServiceError - use handleError (-> terminal)
+    // Lowdefy errors - use handleError (-> terminal)
     if (handleError) {
       handleError(error);
     }
@@ -206,17 +206,15 @@ class Actions {
         progress();
       }
     } catch (err) {
-      const error =
-        err instanceof ConfigError || err instanceof PluginError || err instanceof UserError
-          ? err
-          : new PluginError({
-              error: err,
-              pluginType: 'action',
-              pluginName: action.type,
-              received: parsedAction.params,
-              location: block.blockId,
-              configKey: action['~k'],
-            });
+      const error = err.isLowdefyError
+        ? err
+        : new ActionError({
+            error: err,
+            typeName: action.type,
+            received: parsedAction.params,
+            location: block.blockId,
+            configKey: action['~k'],
+          });
 
       responses[action.id] = { error, index, type: action.type };
       const { output: parsedMessages, errors: parserErrors } = this.context._internal.parser.parse({

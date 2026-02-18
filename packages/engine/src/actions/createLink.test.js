@@ -15,7 +15,7 @@
 */
 
 import { jest } from '@jest/globals';
-import { PluginError } from '@lowdefy/errors';
+import { ActionError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import testContext from '../../test/testContext.js';
@@ -152,7 +152,7 @@ test('Link error', async () => {
         },
         type: 'Link',
       },
-      error: expect.any(PluginError),
+      error: expect.any(ActionError),
       index: 0,
     },
     responses: {
@@ -164,7 +164,7 @@ test('Link error', async () => {
           },
           type: 'Link',
         },
-        error: expect.any(PluginError),
+        error: expect.any(ActionError),
         index: 0,
       },
     },

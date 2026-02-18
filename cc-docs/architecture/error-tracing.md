@@ -68,15 +68,19 @@ const location = resolveConfigLocation({
 
 All error classes in `@lowdefy/errors` with single flat entry point:
 
-| Error Class     | Purpose                     | Thrown By                 | Stack in CLI      |
-| --------------- | --------------------------- | ------------------------- | ----------------- |
-| `LowdefyError`  | Internal Lowdefy bugs       | Anywhere inside Lowdefy   | Yes (bugs)        |
-| `ConfigError`   | Config validation errors    | Build validation          | No (use source)   |
-| `ConfigWarning` | Config inconsistencies      | Build validation          | No (use source)   |
-| `BuildError`    | Summary after errors logged | `logCollectedErrors`      | No (summary)      |
-| `PluginError`   | Plugin code failures        | Plugin interface layer    | No (use received) |
-| `ServiceError`  | External service failures   | Plugin interface layer    | No (use service)  |
-| `UserError`     | Expected user interaction   | Actions (Validate, Throw) | No (client-only)  |
+| Error Class     | Purpose                        | Thrown By                 | Stack in CLI      |
+| --------------- | ------------------------------ | ------------------------- | ----------------- |
+| `LowdefyError`  | Internal Lowdefy bugs          | Anywhere inside Lowdefy   | Yes (bugs)        |
+| `ConfigError`   | Config validation errors       | Build validation          | No (use source)   |
+| `ConfigWarning` | Config inconsistencies         | Build validation          | No (use source)   |
+| `BuildError`    | Summary after errors logged    | `logCollectedErrors`      | No (summary)      |
+| `PluginError`   | Base class (not used directly) | —                         | —                 |
+| `OperatorError` | Operator failures              | Operator parsers          | No (use received) |
+| `ActionError`   | Action failures                | Action runner (engine)    | No (use received) |
+| `RequestError`  | Request/connection failures    | Request handler (API)     | No (use received) |
+| `BlockError`    | Block rendering failures       | ErrorBoundary (client)    | No (use received) |
+| `ServiceError`  | External service failures      | Plugin interface layer    | No (use service)  |
+| `UserError`     | Expected user interaction      | Actions (Validate, Throw) | No (client-only)  |
 
 **Key markers:** All classes set `isLowdefyError = true` — survives serialization, replaces `instanceof` checks.
 
@@ -84,9 +88,9 @@ All error classes in `@lowdefy/errors` with single flat entry point:
 
 ### Property Extraction from Wrapped Errors
 
-When wrapping an error via `new ConfigError({ error })` or `new PluginError({ error })`, both classes extract properties from the wrapped error as fallbacks:
+When wrapping an error via `new ConfigError({ error })` or a plugin error subclass (e.g., `new OperatorError({ error })`), both extract properties from the wrapped error as fallbacks:
 
-| Property    | ConfigError                            | PluginError                            | ServiceError       |
+| Property    | ConfigError                            | PluginError (base)                     | ServiceError       |
 | ----------- | -------------------------------------- | -------------------------------------- | ------------------ |
 | `configKey` | `params.configKey ?? error?.configKey` | `error?.configKey ?? params.configKey` | `params.configKey` |
 | `received`  | `params.received ?? error?.received`   | `params.received ?? error?.received`   | N/A                |
@@ -114,14 +118,14 @@ configError.configKey; // 'abc123'
 │  Layer 1: TOP LEVEL (build/server/client entry points)                      │
 │  ├─ Catches: Everything that bubbles up                                     │
 │  ├─ Calls: context.handleError(error) — resolves location, logs, Sentry     │
-│  └─ Re-throws: ConfigError, PluginError, ServiceError (already formatted)   │
+│  └─ Re-throws: ConfigError, OperatorError, ActionError, etc. (formatted)    │
 │                                                                             │
 │  Layer 2: PLUGIN INTERFACE (parsers, action runner, request handler)        │
 │  ├─ Catches: All errors from plugin code                                    │
 │  ├─ Adds configKey to ALL errors for location tracing                       │
 │  ├─ ConfigError: adds configKey if not present, re-throws                   │
 │  ├─ ServiceError: creates new ServiceError({ error, service, configKey })   │
-│  └─ Plain Error: wraps in PluginError (adds received, location, configKey)  │
+│  └─ Plain Error: wraps in typed error (OperatorError, ActionError, etc.)    │
 │                                                                             │
 │  Layer 3: BUILD VALIDATION (schema, refs, type checking)                    │
 │  ├─ Errors: collectExceptions(context, new ConfigError({ ... }))            │
@@ -294,11 +298,10 @@ try {
     }
     throw error;
   }
-  // Plain errors get wrapped in PluginError
-  throw new PluginError({
+  // Plain errors get wrapped in OperatorError
+  throw new OperatorError({
     error,
-    pluginType: 'operator',
-    pluginName: '_if',
+    typeName: '_if',
     received: params,
     configKey,
   });
@@ -323,10 +326,9 @@ try {
     });
   }
 
-  throw new PluginError({
+  throw new RequestError({
     error,
-    pluginType: 'request',
-    pluginName: requestType,
+    typeName: requestType,
     received: requestProperties,
     configKey: requestConfig['~k'],
   });
@@ -442,7 +444,7 @@ function createHandleError(lowdefy) {
     loggedErrors.add(errorKey);
 
     // Known Lowdefy errors → send to server for location resolution
-    if (error.configKey || ['ConfigError', 'PluginError', 'ServiceError', 'LowdefyError'].includes(error.name)) {
+    if (error.isLowdefyError) {
       const serialized = serializer.serialize(error);  // ~e marker
       if (serialized?.['~e']) delete serialized['~e'].received;  // Don't send received to server
       const response = await fetch(`${lowdefy?.basePath ?? ''}/api/client-error`, { ... });
@@ -472,10 +474,13 @@ function createHandleError(lowdefy) {
 `UserError` represents expected user-facing errors (validation failures, intentional throws). It is **never sent to the server terminal** — it only logs to the browser console.
 
 ```
-UserError     → logger.error() in browser only, NEVER sent to server terminal
-PluginError   → handleError() → POST /api/client-error → server terminal
-ConfigError   → handleError() → POST /api/client-error → server terminal
-ServiceError  → handleError() → POST /api/client-error → server terminal
+UserError      → logger.error() in browser only, NEVER sent to server terminal
+OperatorError  → handleError() → POST /api/client-error → server terminal
+ActionError    → handleError() → POST /api/client-error → server terminal
+RequestError   → handleError() → POST /api/client-error → server terminal
+BlockError     → handleError() → POST /api/client-error → server terminal
+ConfigError    → handleError() → POST /api/client-error → server terminal
+ServiceError   → handleError() → POST /api/client-error → server terminal
 ```
 
 In `Actions.js`, `UserError` is detected by name and routed to the browser logger only.
@@ -550,12 +555,12 @@ The `@lowdefy/helpers` serializer handles error serialization via the `~e` marke
 
 ```javascript
 // Round-trip preserves class and all properties
-const serialized = serializer.serialize(pluginError);
-// { '~e': { name: 'PluginError', message: '...', pluginType: 'operator', ... } }
+const serialized = serializer.serialize(operatorError);
+// { '~e': { name: 'OperatorError', message: '...', typeName: '_if', ... } }
 const restored = serializer.deserialize(serialized);
-// restored instanceof PluginError → false (Object.create, not constructor)
+// restored instanceof OperatorError → false (Object.create, not constructor)
 // restored.isLowdefyError → true
-// restored.name → 'PluginError'
+// restored.name → 'OperatorError'
 ```
 
 ### Pino Error Serialization

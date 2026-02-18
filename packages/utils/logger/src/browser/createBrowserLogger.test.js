@@ -120,10 +120,10 @@ describe('isLowdefyError marker detection', () => {
   test('error with isLowdefyError: true is detected as Lowdefy error', () => {
     const logger = createBrowserLogger();
     const error = new Error('marked');
-    error.name = 'PluginError';
+    error.name = 'OperatorError';
     error.isLowdefyError = true;
     logger.error(error);
-    expect(mockConsoleError).toHaveBeenCalledWith('[PluginError] marked');
+    expect(mockConsoleError).toHaveBeenCalledWith('[OperatorError] marked');
   });
 
   test('error without isLowdefyError is not detected as Lowdefy error', () => {

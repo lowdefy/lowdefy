@@ -15,9 +15,13 @@
 */
 
 import {
+  ActionError,
+  BlockError,
   ConfigError,
   LowdefyError,
+  OperatorError,
   PluginError,
+  RequestError,
   loadAndResolveErrorLocation,
   ServiceError,
 } from '@lowdefy/errors';
@@ -27,6 +31,18 @@ import captureSentryError from '../sentry/captureSentryError.js';
 function getEventType(error) {
   if (error instanceof ServiceError || error?.isServiceError === true) {
     return 'service_error';
+  }
+  if (error instanceof OperatorError) {
+    return 'operator_error';
+  }
+  if (error instanceof ActionError) {
+    return 'action_error';
+  }
+  if (error instanceof RequestError) {
+    return 'request_error';
+  }
+  if (error instanceof BlockError) {
+    return 'block_error';
   }
   if (error instanceof PluginError) {
     return 'plugin_error';

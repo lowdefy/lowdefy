@@ -14,7 +14,17 @@
   limitations under the License.
 */
 
-import { ConfigError, LowdefyError, PluginError, ServiceError, UserError } from '@lowdefy/errors';
+import {
+  ActionError,
+  BlockError,
+  ConfigError,
+  LowdefyError,
+  OperatorError,
+  PluginError,
+  RequestError,
+  ServiceError,
+  UserError,
+} from '@lowdefy/errors';
 
 // Map pino numeric levels to level names
 const pinoLevelToName = {
@@ -27,9 +37,13 @@ const pinoLevelToName = {
 };
 
 const lowdefyErrorTypes = {
+  ActionError,
+  BlockError,
   ConfigError,
   LowdefyError,
+  OperatorError,
   PluginError,
+  RequestError,
   ServiceError,
   UserError,
 };

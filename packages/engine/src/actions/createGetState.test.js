@@ -14,7 +14,7 @@
   limitations under the License.
 */
 import { jest } from '@jest/globals';
-import { PluginError } from '@lowdefy/errors';
+import { ActionError } from '@lowdefy/errors';
 
 import testContext from '../../test/testContext.js';
 
@@ -190,7 +190,7 @@ test('getState params is none', async () => {
     endTimestamp: { date: 0 },
     error: {
       action: { id: 'a', type: 'Action' },
-      error: expect.any(PluginError),
+      error: expect.any(ActionError),
       index: 0,
     },
     event: undefined,
@@ -198,7 +198,7 @@ test('getState params is none', async () => {
     responses: {
       a: {
         action: { id: 'a', type: 'Action' },
-        error: expect.any(PluginError),
+        error: expect.any(ActionError),
         index: 0,
       },
     },
@@ -372,7 +372,7 @@ test('getState params.key is not string or int', async () => {
         },
         type: 'Action',
       },
-      error: expect.any(PluginError),
+      error: expect.any(ActionError),
       index: 0,
     },
     responses: {
@@ -384,7 +384,7 @@ test('getState params.key is not string or int', async () => {
           },
           type: 'Action',
         },
-        error: expect.any(PluginError),
+        error: expect.any(ActionError),
         index: 0,
       },
     },

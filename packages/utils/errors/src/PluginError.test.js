@@ -26,15 +26,13 @@ test('PluginError wraps error with message', () => {
   expect(error.cause).toBe(original);
 });
 
-test('PluginError stores plugin metadata', () => {
+test('PluginError stores typeName', () => {
   const original = new Error('Invalid params');
   const error = new PluginError({
     error: original,
-    pluginType: 'operator',
-    pluginName: '_if',
+    typeName: '_if',
   });
-  expect(error.pluginType).toBe('operator');
-  expect(error.pluginName).toBe('_if');
+  expect(error.typeName).toBe('_if');
 });
 
 test('PluginError stores received value for logger formatting', () => {
@@ -76,16 +74,14 @@ test('PluginError with all fields', () => {
   const original = new Error('_if requires boolean test');
   const error = new PluginError({
     error: original,
-    pluginType: 'operator',
-    pluginName: '_if',
+    typeName: '_if',
     received: 'string',
     location: 'blocks.0.visible',
     configKey: 'key123',
   });
   // Message includes location but NOT received - logger formats received
   expect(error.message).toBe('_if requires boolean test at blocks.0.visible.');
-  expect(error.pluginType).toBe('operator');
-  expect(error.pluginName).toBe('_if');
+  expect(error.typeName).toBe('_if');
   expect(error.received).toBe('string');
   expect(error.location).toBe('blocks.0.visible');
   expect(error.configKey).toBe('key123');
@@ -101,7 +97,7 @@ test('PluginError is an instance of Error', () => {
 test('PluginError preserves configKey from original error', () => {
   const original = new Error('Error');
   original.configKey = 'original_key';
-  const pluginError = new PluginError({ error: original, pluginType: 'operator' });
+  const pluginError = new PluginError({ error: original, typeName: '_get' });
 
   expect(pluginError.configKey).toBe('original_key');
 });
@@ -110,7 +106,7 @@ test('PluginError uses provided configKey when original has none', () => {
   const original = new Error('Error');
   const pluginError = new PluginError({
     error: original,
-    pluginType: 'operator',
+    typeName: '_get',
     configKey: 'provided_key',
   });
 
@@ -119,7 +115,7 @@ test('PluginError uses provided configKey when original has none', () => {
 
 test('PluginError preserves original stack trace', () => {
   const original = new Error('Original');
-  const pluginError = new PluginError({ error: original, pluginType: 'block' });
+  const pluginError = new PluginError({ error: original, typeName: 'Button' });
 
   expect(pluginError.stack).toBe(original.stack);
 });

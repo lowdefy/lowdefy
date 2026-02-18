@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { UserError } from '@lowdefy/errors';
 import { serializer } from '@lowdefy/helpers';
 
 function createHandleError(lowdefy) {
@@ -27,14 +28,14 @@ function createHandleError(lowdefy) {
     }
     loggedErrors.add(errorKey);
 
+    // UserError is client-only — log to browser console, never send to server
+    if (error instanceof UserError) {
+      logger.error(error);
+      return;
+    }
+
     // Send known error types to server for logging with location resolution
-    if (
-      error.configKey ||
-      error.name === 'ConfigError' ||
-      error.name === 'PluginError' ||
-      error.name === 'ServiceError' ||
-      error.name === 'LowdefyError'
-    ) {
+    if (error.isLowdefyError) {
       try {
         const serialized = serializer.serialize(error);
         if (serialized?.['~e']) {

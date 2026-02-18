@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { PluginError } from '@lowdefy/errors';
+import { ConfigError } from '@lowdefy/errors';
 import runRoutine from '../runRoutine.js';
 
 async function controlParallelFor(context, routineContext, { control }) {
@@ -41,7 +41,7 @@ async function controlParallelFor(context, routineContext, { control }) {
   });
 
   if (!Array.isArray(array)) {
-    throw new PluginError({
+    throw new ConfigError({
       message: `Invalid :parallel_for in endpoint "${endpointId}" - :in must evaluate to an array.`,
       received: array,
       configKey: control['~k'],

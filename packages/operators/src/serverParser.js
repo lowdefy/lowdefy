@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigError, PluginError } from '@lowdefy/errors';
+import { ConfigError, OperatorError } from '@lowdefy/errors';
 import { serializer, type } from '@lowdefy/helpers';
 
 class ServerParser {
@@ -82,15 +82,14 @@ class ServerParser {
           errors.push(e);
           return null;
         }
-        const pluginError = new PluginError({
+        const operatorError = new OperatorError({
           error: e,
-          pluginType: 'operator',
-          pluginName: op,
+          typeName: op,
           received: { [key]: params },
           location,
           configKey: e.configKey ?? configKey,
         });
-        errors.push(pluginError);
+        errors.push(operatorError);
         return null;
       }
     };

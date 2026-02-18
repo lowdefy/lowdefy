@@ -15,11 +15,11 @@
 */
 
 /**
- * Error class for plugin failures (operators, actions, blocks, connections, requests).
+ * Base error class for plugin failures (operators, actions, blocks, requests).
  *
  * Plugins throw plain Error objects with simple messages.
- * The plugin interface layer catches these and wraps them in PluginError
- * with additional context (received values, location, plugin type).
+ * The plugin interface layer catches these and wraps them in a typed subclass
+ * (OperatorError, ActionError, BlockError, RequestError) with additional context.
  *
  * @example
  * // In operator parser (plugin interface layer):
@@ -27,29 +27,26 @@
  *   return operator({ params });
  * } catch (error) {
  *   if (error instanceof ConfigError) throw error;
- *   throw new PluginError({
+ *   throw new OperatorError({
  *     error,
- *     pluginType: 'operator',
- *     pluginName: '_if',
+ *     typeName: '_if',
  *     received: params,
  *     location: 'blocks.0.properties.visible',
  *     configKey: block['~k'],
  *   });
  * }
- * // error.message = "[Plugin Error] _if requires boolean test. Received: {...} at blocks.0.properties.visible."
  */
 class PluginError extends Error {
   /**
    * Creates a PluginError instance with formatted message.
    * @param {Object} params
    * @param {Error} params.error - The original error thrown by the plugin
-   * @param {string} [params.pluginType] - Type of plugin (operator, action, block, request, connection)
-   * @param {string} [params.pluginName] - Name of the plugin (e.g., '_if', 'SetState')
+   * @param {string} [params.typeName] - The config type name (e.g., '_if', 'SetState', 'MongoDBFind')
    * @param {*} [params.received] - The input that caused the error
    * @param {string} [params.location] - Where in the config the error occurred
    * @param {string} [params.configKey] - Config key (~k) for location resolution
    */
-  constructor({ error, message, pluginType, pluginName, received, location, configKey }) {
+  constructor({ error, message, typeName, received, location, configKey }) {
     // Store raw message - logger formats received value
     // Accept either error object or direct message string
     const rawMessage = message ?? error?.message;
@@ -61,8 +58,7 @@ class PluginError extends Error {
     super(formattedMessage, { cause: error });
     this.name = 'PluginError';
     this.isLowdefyError = true;
-    this.pluginType = pluginType;
-    this.pluginName = pluginName;
+    this.typeName = typeName;
     this._message = rawMessage;
     this.received = received !== undefined ? received : error?.received;
     this.location = location;

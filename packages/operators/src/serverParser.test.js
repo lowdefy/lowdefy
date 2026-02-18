@@ -17,7 +17,7 @@
 /* eslint-disable max-classes-per-file */
 import { jest } from '@jest/globals';
 
-import { ConfigError, PluginError } from '@lowdefy/errors';
+import { ConfigError, OperatorError } from '@lowdefy/errors';
 
 import ServerParser from './serverParser.js';
 
@@ -202,8 +202,8 @@ test('operator errors', () => {
   const res = parser.parse({ args, input, location });
   expect(res.output).toEqual({ a: null });
   expect(res.errors.length).toBe(1);
-  expect(res.errors[0]).toBeInstanceOf(PluginError);
-  expect(res.errors[0].name).toBe('PluginError');
+  expect(res.errors[0]).toBeInstanceOf(OperatorError);
+  expect(res.errors[0].name).toBe('OperatorError');
   expect(res.errors[0]._message).toBe('Test error.');
   expect(res.errors[0].message).toBe('Test error. at location.');
   expect(res.errors[0].received).toEqual({ _error: { params: true } });
@@ -221,8 +221,8 @@ test('operator errors include configKey from ~k', () => {
   const res = parser.parse({ args, input, location });
   expect(res.output).toEqual({ a: null });
   expect(res.errors.length).toBe(1);
-  expect(res.errors[0]).toBeInstanceOf(PluginError);
-  expect(res.errors[0].name).toBe('PluginError');
+  expect(res.errors[0]).toBeInstanceOf(OperatorError);
+  expect(res.errors[0].name).toBe('OperatorError');
   expect(res.errors[0]._message).toBe('Test error.');
   expect(res.errors[0].received).toEqual({ _error: { params: true } });
   expect(res.errors[0].configKey).toBe('config-key-456');
@@ -252,7 +252,7 @@ test('operator errors preserve existing configKey', () => {
   });
   const res = parser.parse({ args, input, location });
   expect(res.errors.length).toBe(1);
-  expect(res.errors[0]).toBeInstanceOf(PluginError);
+  expect(res.errors[0]).toBeInstanceOf(OperatorError);
   expect(res.errors[0].configKey).toBe('existing-key');
 });
 

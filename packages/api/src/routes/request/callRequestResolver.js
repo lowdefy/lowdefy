@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigError, PluginError, ServiceError } from '@lowdefy/errors';
+import { ConfigError, RequestError, ServiceError } from '@lowdefy/errors';
 
 async function callRequestResolver(
   { blockId, endpointId, logger, pageId, payload },
@@ -60,21 +60,20 @@ async function callRequestResolver(
       throw serviceError;
     }
 
-    // Wrap other errors in PluginError (request/connection logic error)
-    const pluginError = new PluginError({
+    // Wrap other errors in RequestError (request/connection logic error)
+    const requestError = new RequestError({
       error,
-      pluginType: 'request',
-      pluginName: requestConfig.type,
+      typeName: requestConfig.type,
       received: requestProperties,
       location: `${requestConfig.connectionId}/${requestConfig.requestId}`,
       configKey: requestConfig['~k'],
     });
 
     logger.debug(
-      { params: { id: requestConfig.requestId, type: requestConfig.type }, err: pluginError },
-      pluginError.message
+      { params: { id: requestConfig.requestId, type: requestConfig.type }, err: requestError },
+      requestError.message
     );
-    throw pluginError;
+    throw requestError;
   }
 }
 

@@ -15,7 +15,7 @@
 */
 
 import { jest } from '@jest/globals';
-import { ConfigError, PluginError } from '@lowdefy/errors';
+import { ConfigError, OperatorError } from '@lowdefy/errors';
 
 import createStdOutLineHandler from './createStdOutLineHandler.js';
 
@@ -54,28 +54,26 @@ describe('createStdOutLineHandler', () => {
     expect(error.stack).toBe('ConfigError: Block type not found.\n    at buildBlocks');
   });
 
-  test('reconstructs PluginError with correct prototype', () => {
+  test('reconstructs OperatorError with correct prototype', () => {
     const logger = createMockLogger();
     const handler = createStdOutLineHandler({ context: { logger } });
 
     handler(
       JSON.stringify({
         level: 50,
-        msg: 'Plugin failed',
+        msg: 'Operator failed',
         err: {
-          name: 'PluginError',
+          name: 'OperatorError',
           message: '_if requires boolean.',
           _message: '_if requires boolean.',
-          pluginType: 'operator',
-          pluginName: '_if',
+          typeName: '_if',
         },
       })
     );
 
     const error = logger.error.mock.calls[0][0];
-    expect(error).toBeInstanceOf(PluginError);
-    expect(error.pluginName).toBe('_if');
-    expect(error.pluginType).toBe('operator');
+    expect(error).toBeInstanceOf(OperatorError);
+    expect(error.typeName).toBe('_if');
   });
 
   test('falls back to Error for unknown error name', () => {

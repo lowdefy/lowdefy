@@ -24,10 +24,11 @@
  *    - Caught: Top-level catch in build/server/client
  *    - Format: [Lowdefy Error] message + stack trace
  *
- * 2. PluginError - Plugin code failures (operators, actions, blocks, requests)
+ * 2. PluginError - Base class for plugin failures. Use typed subclasses:
+ *    - OperatorError, ActionError, BlockError, RequestError
  *    - Thrown: At plugin interface layer (NOT by plugins themselves)
  *    - Caught: Depends on context (collected or thrown)
- *    - Format: [Plugin Error] message. Received: {...} at location.
+ *    - Format: [OperatorError] message. Received: {...} at location.
  *
  * 3. ServiceError - External service failures (network, timeout, 5xx)
  *    - Thrown: At plugin interface layer when external service fails
@@ -55,12 +56,16 @@
  *   shouldSuppressBuildCheck   - Check ~ignoreBuildChecks in parent chain
  */
 
+import ActionError from './ActionError.js';
+import BlockError from './BlockError.js';
 import BuildError from './BuildError.js';
 import ConfigError from './ConfigError.js';
 import ConfigWarning from './ConfigWarning.js';
 import errorToDisplayString from './errorToDisplayString.js';
 import LowdefyError from './LowdefyError.js';
+import OperatorError from './OperatorError.js';
 import PluginError from './PluginError.js';
+import RequestError from './RequestError.js';
 import resolveConfigLocation from './resolveConfigLocation.js';
 import loadAndResolveErrorLocation from './loadAndResolveErrorLocation.js';
 import resolveErrorLocation from './resolveErrorLocation.js';
@@ -69,12 +74,16 @@ import shouldSuppressBuildCheck, { VALID_CHECK_SLUGS } from './shouldSuppressBui
 import UserError from './UserError.js';
 
 export {
+  ActionError,
+  BlockError,
   BuildError,
   ConfigError,
   ConfigWarning,
   errorToDisplayString,
   LowdefyError,
+  OperatorError,
   PluginError,
+  RequestError,
   resolveConfigLocation,
   loadAndResolveErrorLocation,
   resolveErrorLocation,

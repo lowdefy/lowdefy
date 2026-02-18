@@ -14,7 +14,7 @@
   limitations under the License.
 */
 import { jest } from '@jest/globals';
-import { PluginError, UserError } from '@lowdefy/errors';
+import { ActionError, UserError } from '@lowdefy/errors';
 
 import testContext from '../../test/testContext.js';
 
@@ -697,7 +697,7 @@ test('Invalid Validate params', async () => {
         params: 1,
         type: 'Validate',
       },
-      error: expect.any(PluginError),
+      error: expect.any(ActionError),
       index: 0,
     },
     responses: {
@@ -707,7 +707,7 @@ test('Invalid Validate params', async () => {
           params: 1,
           type: 'Validate',
         },
-        error: expect.any(PluginError),
+        error: expect.any(ActionError),
         index: 0,
       },
     },

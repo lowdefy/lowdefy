@@ -253,7 +253,7 @@ export default MyThrowAction;
 
 ### Connections/Requests
 
-Connections throw simple errors. The request interface layer catches and wraps them in `PluginError`:
+Connections throw simple errors. The request interface layer catches and wraps them in `RequestError`:
 
 ```javascript
 async function MongoDBFindOne({ request, connection }) {
@@ -272,13 +272,25 @@ async function MongoDBFindOne({ request, connection }) {
 Lowdefy uses a unified error system in `@lowdefy/errors`:
 
 ```javascript
-import { ConfigError, ConfigWarning, PluginError, ServiceError, UserError } from '@lowdefy/errors';
+import {
+  ActionError,
+  BlockError,
+  ConfigError,
+  OperatorError,
+  RequestError,
+  ServiceError,
+  UserError,
+} from '@lowdefy/errors';
 ```
 
 | Class           | Purpose                                                     | Catch Layer                      |
 | --------------- | ----------------------------------------------------------- | -------------------------------- |
 | `LowdefyError`  | Internal Lowdefy bugs                                       | Top-level in build/server/client |
-| `PluginError`   | Plugin failures (operators, actions, blocks, requests)      | Plugin interface layer           |
+| `PluginError`   | Base class for plugin failures (not used directly)          | Plugin interface layer           |
+| `OperatorError` | Operator failures (`_if`, `_get`, etc.)                     | Operator parsers                 |
+| `ActionError`   | Action failures (`SetState`, `Request`, etc.)               | Action runner (engine)           |
+| `RequestError`  | Request/connection failures (`MongoDBFind`, etc.)           | Request handler (API)            |
+| `BlockError`    | Block rendering failures                                    | ErrorBoundary (client)           |
 | `ServiceError`  | External service failures (network, timeout, 5xx)           | Request/connection layer         |
 | `ConfigError`   | YAML config validation errors                               | Build validation, runtime        |
 | `ConfigWarning` | Config inconsistencies (warning in dev, error in prod)      | Build validation                 |
@@ -328,7 +340,7 @@ Add configKey to ANY error (for location tracing)
 Then handle by type:
   - ConfigError  → re-throw (for location resolution)
   - ServiceError → wrap with new ServiceError({ error, service, configKey })
-  - Plain Error  → wrap in PluginError (add received value, location)
+  - Plain Error  → wrap in typed error (OperatorError, ActionError, etc.)
         ↓
 Error bubbles to top-level handler
         ↓
@@ -374,9 +386,9 @@ async function MongoDBFind({ request }) {
 **Interface layer adds configKey to ALL errors:**
 
 ```javascript
-import { ConfigError, PluginError, ServiceError } from '@lowdefy/errors';
+import { ConfigError, OperatorError, ServiceError } from '@lowdefy/errors';
 
-// In parser/interface - add configKey to ANY error, then handle by type
+// In operator parser - add configKey to ANY error, then handle by type
 try {
   return operator({ params, ...context });
 } catch (e) {
@@ -397,11 +409,10 @@ try {
     });
   }
 
-  // Plain errors get wrapped in PluginError with context
-  throw new PluginError({
+  // Plain errors get wrapped in typed error with context
+  throw new OperatorError({
     error: e,
-    pluginType: 'operator',
-    pluginName: '_if',
+    typeName: '_if',
     received: params,
     location: 'blockId.events.onClick',
     configKey: obj['~k'],
@@ -414,7 +425,7 @@ try {
 - **Plugins stay simple** - they don't need to know about `~k` keys or config tracking
 - **ALL errors get configKey first** - one place for the assignment, cleaner code
 - **ConfigError string form** - plugins can throw `new ConfigError('message')` for simplicity
-- **Plain Error becomes PluginError** - adds received value and location for debugging
+- **Plain Error becomes typed error** (OperatorError, ActionError, etc.) - adds received value and location for debugging
 
 ### Service Errors
 

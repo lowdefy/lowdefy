@@ -17,7 +17,7 @@
 /* eslint-disable max-classes-per-file */
 import { jest } from '@jest/globals';
 
-import { ConfigError, PluginError } from '@lowdefy/errors';
+import { ConfigError, OperatorError } from '@lowdefy/errors';
 
 import BuildParser from './buildParser.js';
 
@@ -169,8 +169,8 @@ test('operator errors', () => {
   const res = parser.parse({ args, input });
   expect(res.output).toEqual({ a: null });
   expect(res.errors.length).toBe(1);
-  expect(res.errors[0]).toBeInstanceOf(PluginError);
-  expect(res.errors[0].name).toBe('PluginError');
+  expect(res.errors[0]).toBeInstanceOf(OperatorError);
+  expect(res.errors[0].name).toBe('OperatorError');
   expect(res.errors[0].message).toBe('Test error.');
   expect(res.errors[0].received).toEqual({ _error: { params: true } });
   expect(res.errors[0].lineNumber).toBeUndefined();
@@ -188,7 +188,7 @@ test('operator errors include configKey from ~k', () => {
   const parser = new BuildParser({ operators, payload, secrets, user });
   const res = parser.parse({ args, input });
   expect(res.errors.length).toBe(1);
-  expect(res.errors[0]).toBeInstanceOf(PluginError);
+  expect(res.errors[0]).toBeInstanceOf(OperatorError);
   expect(res.errors[0].configKey).toBe('config-key-456');
 });
 
@@ -216,7 +216,7 @@ test('operator errors preserve existing configKey', () => {
   });
   const res = parser.parse({ args, input });
   expect(res.errors.length).toBe(1);
-  expect(res.errors[0]).toBeInstanceOf(PluginError);
+  expect(res.errors[0]).toBeInstanceOf(OperatorError);
   expect(res.errors[0].configKey).toBe('existing-key');
 });
 
@@ -237,7 +237,7 @@ test('operator errors include lineNumber and refId from ~l and ~r', () => {
   const parser = new BuildParser({ operators, payload, secrets, user });
   const res = parser.parse({ args, input });
   expect(res.errors.length).toBe(1);
-  expect(res.errors[0]).toBeInstanceOf(PluginError);
+  expect(res.errors[0]).toBeInstanceOf(OperatorError);
   expect(res.errors[0].message).toBe('Test error.');
   expect(res.errors[0].lineNumber).toBe(42);
   expect(res.errors[0].refId).toBe('ref-123');

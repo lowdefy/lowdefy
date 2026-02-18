@@ -16,7 +16,7 @@
 
 import { jest } from '@jest/globals';
 import logCollectedErrors from './logCollectedErrors.js';
-import { BuildError, ConfigError, PluginError } from '@lowdefy/errors';
+import { BuildError, ConfigError, OperatorError } from '@lowdefy/errors';
 
 test('logCollectedErrors does nothing when no errors', () => {
   const context = { errors: [], handleError: jest.fn() };
@@ -53,15 +53,14 @@ test('logCollectedErrors wraps errors without print method as LowdefyError', () 
   expect(loggedErr.message).toBe('Printable');
 });
 
-test('logCollectedErrors passes PluginError directly without wrapping', () => {
-  const pluginErr = new PluginError({
+test('logCollectedErrors passes OperatorError directly without wrapping', () => {
+  const operatorErr = new OperatorError({
     error: new Error('op failed'),
-    pluginName: '_get',
-    pluginType: 'operator',
+    typeName: '_get',
   });
-  const context = { errors: [pluginErr], handleError: jest.fn() };
+  const context = { errors: [operatorErr], handleError: jest.fn() };
   expect(() => logCollectedErrors(context)).toThrow(BuildError);
-  expect(context.handleError).toHaveBeenCalledWith(pluginErr);
+  expect(context.handleError).toHaveBeenCalledWith(operatorErr);
 });
 
 test('logCollectedErrors throws BuildError', () => {
