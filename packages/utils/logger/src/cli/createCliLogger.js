@@ -148,7 +148,7 @@ function createCliLogger({ logLevel } = {}) {
       while (currentCause instanceof Error && depth < 3) {
         print[level](`  Caused by: ${errorToDisplayString(currentCause)}`);
         if (shouldLogStack(currentCause) && currentCause.stack) {
-          print[level](currentCause.stack, { color: 'gray' });
+          print.debug(currentCause.stack);
         }
         currentCause = currentCause.cause;
         depth++;

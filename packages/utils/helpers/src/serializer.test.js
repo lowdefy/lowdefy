@@ -1074,3 +1074,65 @@ test('extractErrorProps returns falsy input as-is', () => {
   expect(extractErrorProps(null)).toBeNull();
   expect(extractErrorProps(undefined)).toBeUndefined();
 });
+
+// Cause chain reconstruction tests
+
+test('copy round-trip reconstructs cause as instanceof Error', () => {
+  const cause = new Error('root cause');
+  cause.code = 'ROOT';
+  const err = new Error('wrapper', { cause });
+  const res = serializer.copy({ err });
+  expect(res.err).toBeInstanceOf(Error);
+  expect(res.err.message).toBe('wrapper');
+  expect(res.err.cause).toBeInstanceOf(Error);
+  expect(res.err.cause.message).toBe('root cause');
+  expect(res.err.cause.code).toBe('ROOT');
+});
+
+test('copy round-trip reconstructs multi-level cause chain', () => {
+  const root = new Error('root');
+  const middle = new ConfigError('middle', { cause: root });
+  const top = new OperatorError('top', { cause: middle, typeName: '_if' });
+  const res = serializer.copy({ err: top });
+  expect(res.err).toBeInstanceOf(OperatorError);
+  expect(res.err.cause).toBeInstanceOf(ConfigError);
+  expect(res.err.cause.cause).toBeInstanceOf(Error);
+  expect(res.err.cause.cause.message).toBe('root');
+});
+
+test('serialize(error)?.[~e] produces unwrapped props for pino pattern', () => {
+  const err = new ConfigError('Block not found', { configKey: 'key-1' });
+  const result = serializer.serialize(err)?.['~e'];
+  expect(result).toBeDefined();
+  expect(result.message).toBe('Block not found');
+  expect(result.name).toBe('ConfigError');
+  expect(result.configKey).toBe('key-1');
+  expect(result['~e']).toBeUndefined();
+});
+
+test('deserialize({ ~e: flatProps }) reconstructs typed Error with cause chain', () => {
+  const flatProps = {
+    name: 'OperatorError',
+    message: '_if failed',
+    typeName: '_if',
+    cause: {
+      name: 'ConfigError',
+      message: 'Invalid config',
+      configKey: 'key-2',
+    },
+  };
+  const result = serializer.deserialize({ '~e': flatProps });
+  expect(result).toBeInstanceOf(OperatorError);
+  expect(result.message).toBe('_if failed');
+  expect(result.typeName).toBe('_if');
+  expect(result.cause).toBeInstanceOf(ConfigError);
+  expect(result.cause.message).toBe('Invalid config');
+  expect(result.cause.configKey).toBe('key-2');
+});
+
+test('copy preserves non-Error cause values as-is', () => {
+  const err = new Error('test');
+  err.cause = 'string cause';
+  const res = serializer.copy({ err });
+  expect(res.err.cause).toBe('string cause');
+});

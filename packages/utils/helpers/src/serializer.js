@@ -44,6 +44,19 @@ const lowdefyErrorTypes = {
   UserError,
 };
 
+function propsToError(data) {
+  const ErrorClass = lowdefyErrorTypes[data.name] || Error;
+  const error = Object.create(ErrorClass.prototype);
+  for (const [k, v] of Object.entries(data)) {
+    if (k === 'cause' && v !== null && typeof v === 'object' && v.message !== undefined) {
+      error[k] = propsToError(v);
+    } else {
+      error[k] = v;
+    }
+  }
+  return error;
+}
+
 const makeReplacer = (customReplacer, isoStringDates) => (key, value) => {
   let dateReplacer = (date) => ({ '~d': date.valueOf() });
   if (isoStringDates) {
@@ -177,13 +190,7 @@ const makeReviver = (customReviver) => (key, value) => {
   }
   if (type.isObject(newValue)) {
     if (!type.isUndefined(newValue['~e'])) {
-      const data = newValue['~e'];
-      const ErrorClass = lowdefyErrorTypes[data.name] || Error;
-      const error = Object.create(ErrorClass.prototype);
-      for (const [k, v] of Object.entries(data)) {
-        error[k] = v;
-      }
-      return error;
+      return propsToError(newValue['~e']);
     }
     if (!type.isUndefined(newValue['~d'])) {
       const result = new Date(newValue['~d']);

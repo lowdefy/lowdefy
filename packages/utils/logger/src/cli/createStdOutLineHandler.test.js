@@ -224,4 +224,63 @@ describe('createStdOutLineHandler', () => {
     expect(logger.warn).toHaveBeenCalledTimes(1);
     expect(logger.warn.mock.calls[0][0]).toBeInstanceOf(Error);
   });
+
+  test('reconstructs error with cause as instanceof Error', () => {
+    const logger = createMockLogger();
+    const handler = createStdOutLineHandler({ context: { logger } });
+
+    handler(
+      JSON.stringify({
+        level: 50,
+        msg: 'Wrapped error',
+        err: {
+          name: 'OperatorError',
+          message: '_if failed',
+          typeName: '_if',
+          cause: {
+            name: 'Error',
+            message: 'root cause',
+            code: 'ROOT',
+          },
+        },
+      })
+    );
+
+    expect(logger.error).toHaveBeenCalledTimes(1);
+    const error = logger.error.mock.calls[0][0];
+    expect(error).toBeInstanceOf(OperatorError);
+    expect(error.cause).toBeInstanceOf(Error);
+    expect(error.cause.message).toBe('root cause');
+    expect(error.cause.code).toBe('ROOT');
+  });
+
+  test('reconstructs multi-level cause chain from pino JSON', () => {
+    const logger = createMockLogger();
+    const handler = createStdOutLineHandler({ context: { logger } });
+
+    handler(
+      JSON.stringify({
+        level: 50,
+        msg: 'Deep chain',
+        err: {
+          name: 'OperatorError',
+          message: 'top',
+          cause: {
+            name: 'ConfigError',
+            message: 'middle',
+            cause: {
+              name: 'Error',
+              message: 'root',
+            },
+          },
+        },
+      })
+    );
+
+    const error = logger.error.mock.calls[0][0];
+    expect(error).toBeInstanceOf(OperatorError);
+    expect(error.cause).toBeInstanceOf(ConfigError);
+    expect(error.cause.cause).toBeInstanceOf(Error);
+    expect(error.cause.cause.message).toBe('root');
+  });
 });

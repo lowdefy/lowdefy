@@ -14,17 +14,7 @@
   limitations under the License.
 */
 
-import {
-  ActionError,
-  BlockError,
-  ConfigError,
-  LowdefyInternalError,
-  OperatorError,
-  PluginError,
-  RequestError,
-  ServiceError,
-  UserError,
-} from '@lowdefy/errors';
+import { serializer } from '@lowdefy/helpers';
 
 // Map pino numeric levels to level names
 const pinoLevelToName = {
@@ -35,27 +25,6 @@ const pinoLevelToName = {
   50: 'error',
   60: 'error', // fatal
 };
-
-const lowdefyErrorTypes = {
-  ActionError,
-  BlockError,
-  ConfigError,
-  LowdefyInternalError,
-  OperatorError,
-  PluginError,
-  RequestError,
-  ServiceError,
-  UserError,
-};
-
-function reconstructError(flatObj) {
-  const ErrorClass = lowdefyErrorTypes[flatObj.name] || Error;
-  const error = Object.create(ErrorClass.prototype);
-  for (const [k, v] of Object.entries(flatObj)) {
-    error[k] = v;
-  }
-  return error;
-}
 
 function createStdOutLineHandler({ context }) {
   const logger = context?.logger ?? {
@@ -77,7 +46,7 @@ function createStdOutLineHandler({ context }) {
     const levelName = pinoLevelToName[parsed.level] ?? 'info';
 
     if (parsed.err) {
-      logger[levelName](reconstructError(parsed.err));
+      logger[levelName](serializer.deserialize({ '~e': parsed.err }));
       return;
     }
 

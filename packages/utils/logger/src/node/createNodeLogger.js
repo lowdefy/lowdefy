@@ -16,7 +16,7 @@
 
 import pino from 'pino';
 
-import { extractErrorProps } from '@lowdefy/helpers';
+import { serializer } from '@lowdefy/helpers';
 
 function createNodeLogger({
   name = 'lowdefy',
@@ -33,7 +33,7 @@ function createNodeLogger({
       base,
       mixin,
       serializers: {
-        err: extractErrorProps,
+        err: (error) => serializer.serialize(error)?.['~e'] ?? error,
         ...serializers,
       },
     },

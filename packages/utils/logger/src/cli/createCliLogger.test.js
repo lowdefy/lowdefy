@@ -259,20 +259,17 @@ describe('cause chain', () => {
     mockOraWarn.mockClear();
   });
 
-  test('error with cause shows Caused by line', async () => {
+  test('error with cause shows Caused by line without cause stack at info level', async () => {
     const { default: createCliLogger } = await import('./createCliLogger.js');
     const logger = createCliLogger({ logLevel: 'info' });
     const cause = new Error('root cause');
     const err = new Error('wrapper', { cause });
     logger.error(err);
-    // wrapper message + wrapper stack + caused by + cause stack
+    // wrapper message + wrapper stack + caused by (cause stack at debug only)
     expect(mockOraFail.mock.calls[0][0]).toBe('\x1b[31m[Error] wrapper\x1b[0m');
-    // Stack for wrapper (plain Error shows stack)
     expect(mockOraFail.mock.calls[1][0]).toMatch(/^\x1b\[2m[\s\S]*\x1b\[0m$/);
-    // Caused by line
     expect(mockOraFail.mock.calls[2][0]).toBe('\x1b[31m  Caused by: [Error] root cause\x1b[0m');
-    // Cause stack (plain Error shows stack)
-    expect(mockOraFail.mock.calls[3][0]).toMatch(/^\x1b\[2m[\s\S]*\x1b\[0m$/);
+    expect(mockOraFail.mock.calls.length).toBe(3);
   });
 
   test('ConfigError cause does not show stack', async () => {
@@ -292,37 +289,49 @@ describe('cause chain', () => {
     expect(mockOraFail.mock.calls.length).toBe(3);
   });
 
-  test('plain Error cause shows stack', async () => {
+  test('plain Error cause does not show stack at info level', async () => {
     const { ConfigError } = await import('@lowdefy/errors');
     const { default: createCliLogger } = await import('./createCliLogger.js');
     const logger = createCliLogger({ logLevel: 'info' });
     const cause = new Error('root');
     const err = new ConfigError('config', { cause });
     logger.error(err);
-    // ConfigError message (no stack for ConfigError)
+    // ConfigError message (no stack for ConfigError) + caused by (no cause stack at info)
     expect(mockOraFail.mock.calls[0][0]).toBe('\x1b[31m[ConfigError] config\x1b[0m');
-    // Caused by line
     expect(mockOraFail.mock.calls[1][0]).toBe('\x1b[31m  Caused by: [Error] root\x1b[0m');
-    // Cause stack (plain Error shows stack)
-    expect(mockOraFail.mock.calls[2][0]).toMatch(/^\x1b\[2m[\s\S]*\x1b\[0m$/);
-    expect(mockOraFail.mock.calls.length).toBe(3);
+    expect(mockOraFail.mock.calls.length).toBe(2);
   });
 
-  test('multi-level cause chain walks all levels', async () => {
+  test('multi-level cause chain walks all levels without cause stacks at info', async () => {
     const { default: createCliLogger } = await import('./createCliLogger.js');
     const logger = createCliLogger({ logLevel: 'info' });
     const root = new Error('root');
     const mid = new Error('middle', { cause: root });
     const top = new Error('top', { cause: mid });
     logger.error(top);
-    // top message + top stack + caused by mid + mid stack + caused by root + root stack
+    // top message + top stack + caused by mid + caused by root (no cause stacks at info)
     expect(mockOraFail.mock.calls[0][0]).toBe('\x1b[31m[Error] top\x1b[0m');
     expect(mockOraFail.mock.calls[1][0]).toMatch(/^\x1b\[2m[\s\S]*\x1b\[0m$/);
     expect(mockOraFail.mock.calls[2][0]).toBe('\x1b[31m  Caused by: [Error] middle\x1b[0m');
-    expect(mockOraFail.mock.calls[3][0]).toMatch(/^\x1b\[2m[\s\S]*\x1b\[0m$/);
-    expect(mockOraFail.mock.calls[4][0]).toBe('\x1b[31m  Caused by: [Error] root\x1b[0m');
-    expect(mockOraFail.mock.calls[5][0]).toMatch(/^\x1b\[2m[\s\S]*\x1b\[0m$/);
-    expect(mockOraFail.mock.calls.length).toBe(6);
+    expect(mockOraFail.mock.calls[3][0]).toBe('\x1b[31m  Caused by: [Error] root\x1b[0m');
+    expect(mockOraFail.mock.calls.length).toBe(4);
+  });
+
+  test('cause stacks are logged at debug level', async () => {
+    const { default: createCliLogger } = await import('./createCliLogger.js');
+    const logger = createCliLogger({ logLevel: 'debug' });
+    const cause = new Error('root cause');
+    const err = new Error('wrapper', { cause });
+    logger.error(err);
+    // wrapper message + wrapper stack + caused by + cause stack (at debug)
+    expect(mockOraFail.mock.calls[0][0]).toBe('\x1b[31m[Error] wrapper\x1b[0m');
+    expect(mockOraFail.mock.calls[1][0]).toMatch(/^\x1b\[2m[\s\S]*\x1b\[0m$/);
+    expect(mockOraFail.mock.calls[2][0]).toBe('\x1b[31m  Caused by: [Error] root cause\x1b[0m');
+    // Cause stack logged via print.debug (stopAndPersist)
+    expect(mockOraStopAndPersist).toHaveBeenCalled();
+    const debugCalls = mockOraStopAndPersist.mock.calls;
+    const causeStackCall = debugCalls.find((call) => call[0]?.symbol === '\x1b[2m+\x1b[0m');
+    expect(causeStackCall).toBeDefined();
   });
 
   test('error without cause does not show Caused by line', async () => {
