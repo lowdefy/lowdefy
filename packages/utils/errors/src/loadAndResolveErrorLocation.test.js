@@ -34,7 +34,7 @@ function createReadConfigFile(files) {
   };
 }
 
-// --- null/missing configKey ---
+// --- null/missing error ---
 
 test('loadAndResolveErrorLocation returns null when error is null', async () => {
   const readConfigFile = createReadConfigFile({});
@@ -56,7 +56,7 @@ test('loadAndResolveErrorLocation returns null when error is undefined', async (
   expect(result).toBeNull();
 });
 
-test('loadAndResolveErrorLocation returns null when error has no configKey', async () => {
+test('loadAndResolveErrorLocation returns null when error has no configKey or filePath', async () => {
   const readConfigFile = createReadConfigFile({});
   const result = await loadAndResolveErrorLocation({
     error: new Error('no key'),
@@ -120,4 +120,76 @@ test('loadAndResolveErrorLocation returns null when readConfigFile throws', asyn
     configDirectory: '/app',
   });
   expect(result).toBeNull();
+});
+
+// --- filePath fallback ---
+
+test('loadAndResolveErrorLocation resolves filePath with lineNumber when no configKey', async () => {
+  const readConfigFile = createReadConfigFile({});
+  const error = new Error('YAML parse error');
+  error.filePath = 'components/page.yaml.njk';
+  error.lineNumber = 27;
+
+  const result = await loadAndResolveErrorLocation({
+    error,
+    readConfigFile,
+    configDirectory: '/app',
+  });
+  expect(result).toEqual({
+    source: '/app/components/page.yaml.njk:27',
+  });
+});
+
+test('loadAndResolveErrorLocation resolves filePath without lineNumber', async () => {
+  const readConfigFile = createReadConfigFile({});
+  const error = new Error('YAML parse error');
+  error.filePath = 'components/page.yaml';
+
+  const result = await loadAndResolveErrorLocation({
+    error,
+    readConfigFile,
+    configDirectory: '/app',
+  });
+  expect(result).toEqual({
+    source: '/app/components/page.yaml',
+  });
+});
+
+test('loadAndResolveErrorLocation falls back to filePath when configKey lookup fails', async () => {
+  const readConfigFile = async () => {
+    throw new Error('file not found');
+  };
+  const error = new Error('test');
+  error.configKey = 'abc123';
+  error.filePath = 'components/page.yaml.njk';
+  error.lineNumber = 10;
+
+  const result = await loadAndResolveErrorLocation({
+    error,
+    readConfigFile,
+    configDirectory: '/app',
+  });
+  expect(result).toEqual({
+    source: '/app/components/page.yaml.njk:10',
+  });
+});
+
+test('loadAndResolveErrorLocation falls back to filePath when configKey not in keyMap', async () => {
+  const readConfigFile = createReadConfigFile({
+    'keyMap.json': keyMap,
+    'refMap.json': refMap,
+  });
+  const error = new Error('test');
+  error.configKey = 'missing';
+  error.filePath = 'components/page.yaml';
+  error.lineNumber = 5;
+
+  const result = await loadAndResolveErrorLocation({
+    error,
+    readConfigFile,
+    configDirectory: '/app',
+  });
+  expect(result).toEqual({
+    source: '/app/components/page.yaml:5',
+  });
 });
