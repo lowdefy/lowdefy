@@ -33,7 +33,7 @@ async function getLowdefyVersion(context) {
   try {
     lowdefy = YAML.parse(lowdefyYaml);
   } catch (error) {
-    throw new ConfigError(error.message, { cause: error, filePath });
+    throw new ConfigError('Could not parse YAML.', { cause: error, filePath });
   }
   if (!lowdefy.lowdefy) {
     throw new Error(
