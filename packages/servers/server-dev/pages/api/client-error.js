@@ -22,6 +22,22 @@ async function handler({ context, req, res }) {
   if (req.method !== 'POST') {
     throw new Error('Only POST requests are supported.');
   }
+
+  const origin = req.headers.origin;
+  if (!origin) {
+    res.status(403).json({ error: 'Forbidden' });
+    return;
+  }
+  try {
+    if (new URL(origin).host !== req.headers.host) {
+      res.status(403).json({ error: 'Forbidden' });
+      return;
+    }
+  } catch {
+    res.status(403).json({ error: 'Forbidden' });
+    return;
+  }
+
   const { error, ...response } = await logClientError(context, req.body);
   res.status(200).json(response);
 }
