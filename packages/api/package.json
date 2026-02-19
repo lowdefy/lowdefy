@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/api",
-  "version": "4.5.2",
+  "version": "4.5.3",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -40,12 +40,12 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@lowdefy/ajv": "4.5.2",
-    "@lowdefy/helpers": "4.5.2",
-    "@lowdefy/node-utils": "4.5.2",
-    "@lowdefy/nunjucks": "4.5.2",
-    "@lowdefy/operators": "4.5.2",
-    "@lowdefy/operators-js": "4.5.2"
+    "@lowdefy/ajv": "4.5.3",
+    "@lowdefy/helpers": "4.5.3",
+    "@lowdefy/node-utils": "4.5.3",
+    "@lowdefy/nunjucks": "4.5.3",
+    "@lowdefy/operators": "4.5.3",
+    "@lowdefy/operators-js": "4.5.3"
   },
   "devDependencies": {
     "@jest/globals": "28.1.3",

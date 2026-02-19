@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/operators-change-case",
-  "version": "4.5.2",
+  "version": "4.5.3",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -42,8 +42,8 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.5.2",
-    "@lowdefy/operators": "4.5.2",
+    "@lowdefy/helpers": "4.5.3",
+    "@lowdefy/operators": "4.5.3",
     "change-case": "5.4.0"
   },
   "devDependencies": {
