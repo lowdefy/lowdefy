@@ -36,9 +36,6 @@ function buildTypeClass(
         message += ` Did you mean "${suggestion}"?`;
       }
       if (warnIfMissing) {
-        if (typeName === '_id') {
-          return;
-        }
         context.handleWarning(new ConfigWarning(message, { configKey, checkSlug: 'types' }));
         return;
       }

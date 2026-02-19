@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { ConfigError } from '@lowdefy/errors';
+import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 
 import findSimilarString from '../../utils/findSimilarString.js';
 
-function validateTypeClass({ context, counter, definitions, typeClass }) {
+function validateTypeClass({ context, counter, definitions, typeClass, warnIfMissing = false }) {
   const counts = counter.getCounts();
   const definedTypes = Object.keys(definitions);
   for (const typeName of Object.keys(counts)) {
@@ -28,6 +28,10 @@ function validateTypeClass({ context, counter, definitions, typeClass }) {
       const suggestion = findSimilarString({ input: typeName, candidates: definedTypes });
       if (suggestion) {
         message += ` Did you mean "${suggestion}"?`;
+      }
+      if (warnIfMissing) {
+        context.handleWarning(new ConfigWarning(message, { configKey, checkSlug: 'types' }));
+        continue;
       }
       throw new ConfigError(message, { configKey });
     }
@@ -56,6 +60,7 @@ function validatePageTypes({ context }) {
     counter: typeCounters.operators.client,
     definitions: typesMap.operators.client,
     typeClass: 'Operator',
+    warnIfMissing: true,
   });
 
   validateTypeClass({
@@ -63,6 +68,7 @@ function validatePageTypes({ context }) {
     counter: typeCounters.operators.server,
     definitions: typesMap.operators.server,
     typeClass: 'Operator',
+    warnIfMissing: true,
   });
 }
 
