@@ -27,7 +27,8 @@ async function runRefResolver({ context, refDef, referencedFrom }) {
   try {
     content = await resolverFn(refDef.path, refDef.vars, context);
   } catch (error) {
-    throw new ConfigError(`Error calling resolver "${refDef.resolver}": ${error.message}`, {
+    throw new ConfigError(`Error calling resolver "${refDef.resolver}".`, {
+      cause: error,
       filePath: referencedFrom,
       lineNumber: refDef.lineNumber,
     });

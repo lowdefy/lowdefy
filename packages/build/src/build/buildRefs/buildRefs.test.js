@@ -1289,7 +1289,7 @@ _ref:
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     await expect(buildRefs({ context })).rejects.toThrow(
-      'Error calling resolver "src/test-utils/buildRefs/testBuildRefsErrorResolver.js": Test error'
+      'Error calling resolver "src/test-utils/buildRefs/testBuildRefsErrorResolver.js".'
     );
   });
 
