@@ -28,6 +28,7 @@ function loadStaticMocks(mocksFile) {
   return {
     requests: parsed?.requests ?? [],
     api: parsed?.api ?? [],
+    user: parsed?.user ?? null,
   };
 }
 

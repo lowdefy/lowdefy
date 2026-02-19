@@ -4,4 +4,6 @@ export default createConfig({
   appDir: '../', // Go up from e2e/ to app root
   testDir: '.', // Tests are in same dir as config
   port: 3000,
+  // If your app needs environment variables (e.g., via infisical, dotenv-vault, aws-vault):
+  // commandPrefix: 'infisical run --env=dev --path=/my-app --',
 });
