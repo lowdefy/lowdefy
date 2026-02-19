@@ -167,7 +167,7 @@ async function shallowBuild(options) {
     // production builds tree-shake by counting exact type usage.
     const installedPackages = getInstalledPackages(context.directories);
     if (installedPackages) {
-      function addInstalledTypes(store, definitions) {
+      const addInstalledTypes = (store, definitions) => {
         for (const [typeName, def] of Object.entries(definitions)) {
           if (!store[typeName] && installedPackages.has(def.package)) {
             store[typeName] = {

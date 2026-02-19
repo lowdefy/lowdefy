@@ -27,12 +27,7 @@ const pinoLevelToName = {
 };
 
 function createStdOutLineHandler({ context }) {
-  const logger = context?.logger ?? {
-    error: (text) => console.error(text),
-    warn: (text) => console.warn(text),
-    info: (text) => console.info(text),
-    debug: (text) => console.debug(text),
-  };
+  const { logger } = context;
 
   function stdOutLineHandler(line) {
     let parsed;
