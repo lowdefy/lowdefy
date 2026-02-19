@@ -2,7 +2,7 @@
   "name": "@lowdefy/logger",
   "version": "4.5.2",
   "license": "Apache-2.0",
-  "description": "Lowdefy logging utilities for node, dev, cli, and browser",
+  "description": "Lowdefy logging utilities for node, cli, and browser",
   "homepage": "https://lowdefy.com",
   "keywords": [
     "lowdefy",

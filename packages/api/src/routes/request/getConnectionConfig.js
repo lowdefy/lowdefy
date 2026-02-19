@@ -21,7 +21,9 @@ async function getConnectionConfig({ logger, readConfigFile }, { requestConfig }
   let err;
 
   if (!connectionId) {
-    err = new ConfigError(`Request "${requestId}" does not specify a connection.`);
+    err = new ConfigError(`Request "${requestId}" does not specify a connection.`, {
+      configKey: requestConfig['~k'],
+    });
     logger.debug({ params: { requestId }, err }, err.message);
     throw err;
   }
@@ -29,7 +31,9 @@ async function getConnectionConfig({ logger, readConfigFile }, { requestConfig }
   const connection = await readConfigFile(`connections/${connectionId}.json`);
 
   if (!connection) {
-    err = new ConfigError(`Connection "${connectionId}" does not exist.`);
+    err = new ConfigError(`Connection "${connectionId}" does not exist.`, {
+      configKey: requestConfig['~k'],
+    });
     logger.debug({ params: { requestId }, err }, err.message);
     throw err;
   }

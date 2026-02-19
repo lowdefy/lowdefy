@@ -19,7 +19,9 @@
 import {
   ActionError,
   BlockError,
+  BuildError,
   ConfigError,
+  ConfigWarning,
   LowdefyInternalError,
   OperatorError,
   PluginError,
@@ -35,7 +37,9 @@ import stableStringify from './stableStringify.js';
 const lowdefyErrorTypes = {
   ActionError,
   BlockError,
+  BuildError,
   ConfigError,
+  ConfigWarning,
   LowdefyInternalError,
   OperatorError,
   PluginError,

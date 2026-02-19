@@ -1,6 +1,6 @@
 # @lowdefy/logger
 
-Centralized logging utilities for all Lowdefy environments: Node.js servers, development manager, CLI, and browser.
+Centralized logging utilities for all Lowdefy environments: Node.js servers, CLI, and browser.
 
 ## Overview
 
@@ -11,7 +11,6 @@ The logger package provides environment-specific logger factories. Each logger e
 ```
 @lowdefy/logger
 ├── node/      # createNodeLogger (plain pino)
-├── dev/       # createDevLogger (thin wrapper around createNodeLogger)
 ├── cli/       # createCliLogger, createStdOutLineHandler
 └── browser/   # createBrowserLogger (console-based)
 ```
@@ -22,7 +21,6 @@ The logger package provides environment-specific logger factories. Each logger e
 | ------------------------- | -------------------------------------------- | ------- |
 | `@lowdefy/logger`         | Re-exports node                              | Node.js |
 | `@lowdefy/logger/node`    | `createNodeLogger`                           | Node.js |
-| `@lowdefy/logger/dev`     | `createDevLogger`                            | Node.js |
 | `@lowdefy/logger/cli`     | `createCliLogger`, `createStdOutLineHandler` | Node.js |
 | `@lowdefy/logger/browser` | `createBrowserLogger`                        | Browser |
 
@@ -83,19 +81,6 @@ logger.error(someError); // pino auto-detects Error, uses extractErrorProps
 | `serializers` | —                                         | Additional serializers (merged with err) |
 | `destination` | —                                         | Pino destination                         |
 
-### createDevLogger (`/dev`)
-
-Thin wrapper around `createNodeLogger` with sync stdout destination. Used by the build process and dev server manager.
-
-**Source:** `src/dev/createDevLogger.js`
-
-```javascript
-import { createDevLogger } from '@lowdefy/logger/dev';
-
-const logger = createDevLogger({ level: 'info', name: 'lowdefy build' });
-logger.info({ spin: true }, 'Building config...');
-```
-
 ### createCliLogger (`/cli`)
 
 Display-layer logger with ora spinners. Parses input to determine formatting. This is where `errorToDisplayString` is called — not in error handlers.
@@ -120,6 +105,7 @@ logger.info({ color: 'blue' }, 'link'); // Blue text
    - Log `errorToDisplayString(error)` at the appropriate level
    - Log `error.stack` for `LowdefyInternalError` and non-Lowdefy errors (actual bugs)
    - Suppress stack for ConfigError, PluginError, ServiceError, UserError, BuildError, ConfigWarning
+   - **Walk the cause chain** (max 3 levels): for each `error.cause` that is an Error, print `"  Caused by: [ErrorName] message"`. Cause stacks are logged at debug level only.
 
 2. **Pino two-arg form** (second arg is string):
 
@@ -192,8 +178,10 @@ logger.info('loaded'); // Plain pass-through to console.info
 
 **Error handling (error/warn levels):**
 
-- `isLowdefyError === true` → display `error.source` in blue (if present), then `errorToDisplayString(error)`
+- `isLowdefyError === true` → display `error.source` in blue (if present), then `errorToDisplayString(error)`, then **walk the cause chain** (max 3 levels, same as CLI logger)
 - Everything else → plain `console.error(...args)` / `console.warn(...args)` (browser devtools render natively)
+
+**Cause chain walking:** Both the CLI logger and browser logger use the same pattern — iterate `error.cause` up to 3 levels, printing `"  Caused by: [ErrorName] message"` for each. The browser logger uses a shared `logCauseChain` helper.
 
 **Info/debug levels:** Pure pass-through to `console.info` / `console.debug`.
 
@@ -205,7 +193,7 @@ Server process (plain pino via createNodeLogger)
   → stdio: 'inherit' → inherits manager stdout
   → piped to CLI process
 
-Manager process (createDevLogger = createNodeLogger + sync destination)
+Manager process (createNodeLogger with sync destination)
   → stdout JSON lines with optional color/spin/succeed fields
   → piped to CLI process
 
@@ -232,7 +220,6 @@ Fields `color`, `spin`, and `succeed` are optional UI hints. The `err` field con
 | File                                 | Purpose                                                 |
 | ------------------------------------ | ------------------------------------------------------- |
 | `src/node/createNodeLogger.js`       | Plain pino factory with extractErrorProps serializer    |
-| `src/dev/createDevLogger.js`         | Thin wrapper with sync destination                      |
 | `src/cli/createCliLogger.js`         | CLI display with ora, errorToDisplayString, stack logic |
 | `src/cli/createStdOutLineHandler.js` | Pino JSON → CLI logger protocol translator              |
 | `src/browser/createBrowserLogger.js` | Browser console with Lowdefy error formatting           |

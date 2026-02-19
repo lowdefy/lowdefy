@@ -24,7 +24,9 @@ function authorizeRequest({ authorize, logger }, { requestConfig }) {
       auth_config: requestConfig.auth,
     });
     // Throw does not exist error to avoid leaking information that request exists to unauthorized users
-    throw new ConfigError(`Request "${requestConfig.requestId}" does not exist.`);
+    throw new ConfigError(`Request "${requestConfig.requestId}" does not exist.`, {
+      configKey: requestConfig['~k'],
+    });
   }
   logger.debug({
     event: 'debug_request_authorize',

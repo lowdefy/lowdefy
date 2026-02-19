@@ -62,10 +62,10 @@ function createHandleError({ context }) {
       const { headers = {}, user = {} } = context;
       const eventType = getEventType(error);
       const isServiceError = error instanceof ServiceError;
-      const isLowdefyError = error instanceof LowdefyInternalError;
+      const isLowdefyInternalError = error instanceof LowdefyInternalError;
 
       // For internal lowdefy errors, don't resolve config location
-      const location = isLowdefyError
+      const location = isLowdefyInternalError
         ? null
         : await loadAndResolveErrorLocation({
             error,

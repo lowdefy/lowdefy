@@ -61,7 +61,7 @@ class PluginError extends Error {
     this._message = rawMessage;
     this.received = received !== undefined ? received : cause?.received;
     this.location = location;
-    this.configKey = cause?.configKey ?? configKey ?? null;
+    this.configKey = configKey ?? cause?.configKey ?? null;
 
     // Location outputs (set by server-side resolution)
     this.source = null;

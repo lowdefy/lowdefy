@@ -352,6 +352,14 @@ const props = extractErrorProps(someError);
 // { message: '...', name: 'ConfigError', stack: '...', configKey: 'abc123', ... }
 ```
 
+**Cause chain handling:** Recursively serializes `error.cause` when the cause is an `Error` instance. Guarded by:
+
+- **MAX_CAUSE_DEPTH = 3** — stops recursion after 3 levels
+- **Circular reference detection** — uses a `seen` Set; skips already-visited errors
+- **Non-Error causes** — preserved as-is (strings, plain objects, etc.)
+
+Error objects found in other enumerable properties (not just `cause`) are also recursively extracted with the same circular reference protection.
+
 Used by:
 
 - **Pino error serializer** in `createNodeLogger` — determines what appears in JSON logs
@@ -370,16 +378,19 @@ if (type.isError(newValue)) {
 }
 ```
 
-**Reviver:**
+**Reviver (via `propsToError`):**
 
 ```javascript
 // { '~e': data } → Object.create(ErrorClass.prototype) + assign props
-if (!type.isUndefined(newValue['~e'])) {
-  const data = newValue['~e'];
+function propsToError(data) {
   const ErrorClass = lowdefyErrorTypes[data.name] || Error;
   const error = Object.create(ErrorClass.prototype);
   for (const [k, v] of Object.entries(data)) {
-    error[k] = v;
+    if (k === 'cause' && v !== null && typeof v === 'object' && v.message !== undefined) {
+      error[k] = propsToError(v); // Recursively reconstruct cause chain
+    } else {
+      error[k] = v;
+    }
   }
   return error;
 }

@@ -20,7 +20,9 @@ function getRequestResolver({ logger }, { connection, requestConfig }) {
   const requestResolver = connection.requests[requestConfig.type];
 
   if (!requestResolver) {
-    const err = new ConfigError(`Request type "${requestConfig.type}" can not be found.`);
+    const err = new ConfigError(`Request type "${requestConfig.type}" can not be found.`, {
+      configKey: requestConfig['~k'],
+    });
     logger.debug(
       { params: { id: requestConfig.requestId, type: requestConfig.type }, err },
       err.message

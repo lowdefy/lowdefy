@@ -53,7 +53,7 @@ function resolveErrorLocation(data, { keyMap, refMap, configDirectory }) {
   if (data.filePath) {
     let resolvedPath = data.filePath;
     if (configDirectory) {
-      resolvedPath = path.join(configDirectory, data.filePath);
+      resolvedPath = path.resolve(configDirectory, data.filePath);
     }
     const source = data.lineNumber ? `${resolvedPath}:${data.lineNumber}` : resolvedPath;
     return { source };
