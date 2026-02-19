@@ -7,10 +7,10 @@ Lowdefy is a config-driven web framework built on Next.js. Apps are defined in Y
 | Location                  | Purpose                                                     | Audience                              |
 | ------------------------- | ----------------------------------------------------------- | ------------------------------------- |
 | **CLAUDE.md** (this file) | Coding standards, patterns, helpers                         | Claude Code when editing code         |
-| **cc-docs/**              | Internal architecture, design decisions, package deep-dives | Claude Code for understanding how/why |
+| **code-docs/**            | Internal architecture, design decisions, package deep-dives | Claude Code for understanding how/why |
 | **packages/docs/**        | User-facing docs (Lowdefy app)                              | End users learning Lowdefy            |
 
-**cc-docs/** structure: `Overview.md`, `Philosophy.md`, `packages/`, `plugins/`, `architecture/`
+**code-docs/** structure: `Overview.md`, `Philosophy.md`, `packages/`, `plugins/`, `architecture/`
 
 **Claude Code Commands:** `/l-docs-init`, `/l-docs-package`, `/l-docs-plugin`, `/l-docs-architecture`, `/l-docs-update`, `/l-review-extract`, `/l-generate-tests`
 
@@ -42,7 +42,7 @@ packages/
 | `@lowdefy/server`     | Production  | `next start`      | Minimal, no watching                    |
 | `@lowdefy/server-dev` | Development | `manager/run.mjs` | File watching, hot reload, auto-rebuild |
 
-**server-dev manager** orchestrates: initial build → file watchers → server process → SSE-based hot reload. See `cc-docs/architecture/` for details.
+**server-dev manager** orchestrates: initial build → file watchers → server process → SSE-based hot reload. See `code-docs/architecture/` for details.
 
 ## Code Principles
 
@@ -282,14 +282,14 @@ import { ConfigError, ConfigWarning } from '@lowdefy/errors/build';
 import { ConfigError } from '@lowdefy/errors/client';
 ```
 
-| Class | Purpose | Catch Layer |
-|-------|---------|-------------|
-| `LowdefyError` | Internal Lowdefy bugs | Top-level in build/server/client |
-| `PluginError` | Plugin failures (operators, actions, blocks, requests) | Plugin interface layer |
-| `ServiceError` | External service failures (network, timeout, 5xx) | Request/connection layer |
-| `ConfigError` | YAML config validation errors | Build validation, runtime |
-| `ConfigWarning` | Config inconsistencies (warning in dev, error in prod) | Build validation |
-| `UserError` | Expected user interaction (validation, throws), client-only | Browser console only |
+| Class           | Purpose                                                     | Catch Layer                      |
+| --------------- | ----------------------------------------------------------- | -------------------------------- |
+| `LowdefyError`  | Internal Lowdefy bugs                                       | Top-level in build/server/client |
+| `PluginError`   | Plugin failures (operators, actions, blocks, requests)      | Plugin interface layer           |
+| `ServiceError`  | External service failures (network, timeout, 5xx)           | Request/connection layer         |
+| `ConfigError`   | YAML config validation errors                               | Build validation, runtime        |
+| `ConfigWarning` | Config inconsistencies (warning in dev, error in prod)      | Build validation                 |
+| `UserError`     | Expected user interaction (validation, throws), client-only | Browser console only             |
 
 **Key principle:** Plugins throw errors without knowing about config keys. The interface layer catches errors and adds `configKey` for location resolution to ALL error types - this helps developers trace any error back to its config source.
 
@@ -417,6 +417,7 @@ try {
 ```
 
 **Why this pattern:**
+
 - **Plugins stay simple** - they don't need to know about `~k` keys or config tracking
 - **ALL errors get configKey first** - one place for the assignment, cleaner code
 - **ConfigError string form** - plugins can throw `new ConfigError('message')` for simplicity
@@ -459,7 +460,7 @@ const response = await fetch('/api/client-error', {
 console.error(configError.print()); // "[ConfigError] message. Received: ..."
 ```
 
-See `cc-docs/architecture/error-tracing.md` for the complete error system.
+See `code-docs/architecture/error-tracing.md` for the complete error system.
 
 ## Testing
 

@@ -1,6 +1,6 @@
 ---
 description: Initialize documentation for the Lowdefy monorepo - discover structure, create plan
-argument-hint: ""
+argument-hint: ''
 ---
 
 # Initialize Lowdefy Monorepo Documentation
@@ -10,6 +10,7 @@ Bootstrap documentation for the Lowdefy framework monorepo. Creates a mind map f
 ## Purpose
 
 These docs are **for Claude Code** to:
+
 - Understand how the framework works internally
 - Know why certain architectural decisions were made
 - Navigate the monorepo efficiently
@@ -17,9 +18,10 @@ These docs are **for Claude Code** to:
 
 ## Output Location
 
-All documentation goes to `cc-docs/`:
+All documentation goes to `code-docs/`:
+
 ```
-cc-docs/
+code-docs/
 ├── Overview.md              # High-level architecture
 ├── Philosophy.md            # Design principles & decisions
 ├── DOCUMENTATION_PLAN.md    # Progress tracking
@@ -53,33 +55,39 @@ cc-docs/
 Run comprehensive analysis of the monorepo:
 
 **Core Packages:**
+
 ```bash
 ls packages/*.json 2>/dev/null || ls -d packages/*/
 ```
 
 **Plugin Packages:**
+
 ```bash
 ls -d packages/plugins/*/
 ls -d packages/plugins/*/*/
 ```
 
 **Servers:**
+
 ```bash
 ls -d packages/servers/*/
 ```
 
 **Utils:**
+
 ```bash
 ls -d packages/utils/*/
 ```
 
 **Build Configuration:**
+
 ```bash
 cat turbo.json
 cat pnpm-workspace.yaml
 ```
 
 **For each package, gather:**
+
 - `package.json` - name, description, dependencies
 - `src/` structure - main modules and exports
 - `README.md` if exists
@@ -93,12 +101,14 @@ Summarize findings:
 ## Monorepo Discovery Results
 
 ### Core Packages ({count})
-| Package | Description | Key Dependencies |
-|---------|-------------|------------------|
-| @lowdefy/api | ... | ... |
-| @lowdefy/build | ... | ... |
+
+| Package        | Description | Key Dependencies |
+| -------------- | ----------- | ---------------- |
+| @lowdefy/api   | ...         | ...              |
+| @lowdefy/build | ...         | ...              |
 
 ### Plugin Categories ({count} total)
+
 - **Blocks:** {count} packages (antd, basic, aggrid, etc.)
 - **Connections:** {count} packages (mongodb, axios-http, etc.)
 - **Operators:** {count} packages (js, mql, moment, etc.)
@@ -106,20 +116,23 @@ Summarize findings:
 - **Plugins:** {count} packages (next-auth, aws, etc.)
 
 ### Servers ({count})
+
 - server, server-dev, server-community, server-enterprise
 
 ### Utils ({count})
+
 - helpers, node-utils, ajv, etc.
 ```
 
 ### Phase 3: Generate DOCUMENTATION_PLAN.md
 
-Create tracking plan at `cc-docs/DOCUMENTATION_PLAN.md`:
+Create tracking plan at `code-docs/DOCUMENTATION_PLAN.md`:
 
 ```markdown
 # Lowdefy Monorepo Documentation Plan
 
 ## Progress Overview
+
 - [ ] Phase 1: Foundation
 - [ ] Phase 2: Core Packages
 - [ ] Phase 3: Plugin System
@@ -127,67 +140,82 @@ Create tracking plan at `cc-docs/DOCUMENTATION_PLAN.md`:
 - [ ] Phase 5: Validation
 
 ## Phase 1: Foundation
-- [ ] cc-docs/Overview.md
-- [ ] cc-docs/Philosophy.md
-- [ ] cc-docs/.metadata/monorepo-structure.json
+
+- [ ] code-docs/Overview.md
+- [ ] code-docs/Philosophy.md
+- [ ] code-docs/.metadata/monorepo-structure.json
 
 ## Phase 2: Core Packages
+
 ### packages/api
-- [ ] cc-docs/packages/api.md
+
+- [ ] code-docs/packages/api.md
 
 ### packages/build
-- [ ] cc-docs/packages/build.md
+
+- [ ] code-docs/packages/build.md
 
 ### packages/cli
-- [ ] cc-docs/packages/cli.md
+
+- [ ] code-docs/packages/cli.md
 
 ### packages/client
-- [ ] cc-docs/packages/client.md
+
+- [ ] code-docs/packages/client.md
 
 ### packages/engine
-- [ ] cc-docs/packages/engine.md
+
+- [ ] code-docs/packages/engine.md
 
 ### packages/layout
-- [ ] cc-docs/packages/layout.md
+
+- [ ] code-docs/packages/layout.md
 
 ### packages/operators
-- [ ] cc-docs/packages/operators.md
+
+- [ ] code-docs/packages/operators.md
 
 ## Phase 3: Plugin System
 
 ### Blocks
-- [ ] cc-docs/plugins/blocks/overview.md
-- [ ] cc-docs/plugins/blocks/antd.md
-- [ ] cc-docs/plugins/blocks/basic.md
-...
+
+- [ ] code-docs/plugins/blocks/overview.md
+- [ ] code-docs/plugins/blocks/antd.md
+- [ ] code-docs/plugins/blocks/basic.md
+      ...
 
 ### Connections
-- [ ] cc-docs/plugins/connections/overview.md
-- [ ] cc-docs/plugins/connections/mongodb.md
-...
+
+- [ ] code-docs/plugins/connections/overview.md
+- [ ] code-docs/plugins/connections/mongodb.md
+      ...
 
 ### Operators
-- [ ] cc-docs/plugins/operators/overview.md
-...
+
+- [ ] code-docs/plugins/operators/overview.md
+      ...
 
 ### Actions
-- [ ] cc-docs/plugins/actions/overview.md
-...
+
+- [ ] code-docs/plugins/actions/overview.md
+      ...
 
 ## Phase 4: Architecture
-- [ ] cc-docs/architecture/build-pipeline.md
-- [ ] cc-docs/architecture/request-lifecycle.md
-- [ ] cc-docs/architecture/state-management.md
-- [ ] cc-docs/architecture/plugin-system.md
+
+- [ ] code-docs/architecture/build-pipeline.md
+- [ ] code-docs/architecture/request-lifecycle.md
+- [ ] code-docs/architecture/state-management.md
+- [ ] code-docs/architecture/plugin-system.md
 
 ## Phase 5: Validation
+
 - [ ] Verify all internal links work
 - [ ] Check cross-references between docs
 ```
 
 ### Phase 4: Generate Metadata
 
-Create `cc-docs/.metadata/monorepo-structure.json`:
+Create `code-docs/.metadata/monorepo-structure.json`:
 
 ```json
 {
@@ -213,7 +241,7 @@ Create `cc-docs/.metadata/monorepo-structure.json`:
 Present the plan:
 
 ```
-Generated cc-docs/DOCUMENTATION_PLAN.md with:
+Generated code-docs/DOCUMENTATION_PLAN.md with:
 - {X} core packages to document
 - {Y} plugin packages across {Z} categories
 - {N} architecture topics
@@ -228,13 +256,14 @@ Ready to proceed with Phase 1 (Foundation)?
 
 If user confirms, create:
 
-1. **cc-docs/Overview.md** - High-level architecture:
+1. **code-docs/Overview.md** - High-level architecture:
+
    - What is Lowdefy (from user perspective)
    - Monorepo structure overview
    - How packages relate to each other
    - Key concepts (blocks, operators, connections, etc.)
 
-2. **cc-docs/Philosophy.md** - Design principles:
+2. **code-docs/Philosophy.md** - Design principles:
    - Configuration over code
    - Plugin extensibility
    - Why YAML configuration
