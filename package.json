@@ -30,7 +30,7 @@
     "e2e": "pnpm -r --workspace-concurrency=1 e2e",
     "update-packages": "pnpm up -i -r --latest",
     "app:build": "pnpm build:turbo && pnpm -r --filter=lowdefy start build --config-directory ../../app --server-directory ../servers/server",
-    "app:dev": "pnpm build:turbo && pnpm -r --filter=lowdefy start dev --config-directory ../../app --dev-directory ../servers/server-dev",
+    "app:dev": "bash scripts/app-dev.sh",
     "app:start": "pnpm build:turbo && pnpm -r --filter=lowdefy start start --config-directory ../../app --server-directory ../servers/server",
     "docs:build": "pnpm build:turbo && pnpm -r --filter=lowdefy start build --config-directory ../docs --server-directory ../servers/server",
     "docs:dev": "pnpm build:turbo && pnpm -r --filter=lowdefy start dev --config-directory ../docs --dev-directory ../servers/server-dev --log-level=debug",
@@ -58,5 +58,5 @@
     "prettier": "3.1.0",
     "turbo": "1.10.16"
   },
-  "packageManager": "pnpm@9.4.0"
+  "packageManager": "pnpm@10.29.2"
 }

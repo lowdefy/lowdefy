@@ -1,6 +1,6 @@
 ---
 description: Document a Lowdefy plugin package (blocks, connections, operators, actions)
-argument-hint: "<category>/<plugin-name> or <category>"
+argument-hint: '<category>/<plugin-name> or <category>'
 ---
 
 # Document Plugin Package
@@ -25,7 +25,9 @@ Generate documentation for plugin packages in the Lowdefy monorepo.
 Located in `packages/plugins/`:
 
 ### blocks/
+
 UI components that render in the browser
+
 - `blocks-antd` - Ant Design components (primary UI library)
 - `blocks-basic` - HTML elements, containers
 - `blocks-aggrid` - AG Grid data tables
@@ -38,7 +40,9 @@ UI components that render in the browser
 - `blocks-qr` - QR code generation
 
 ### connections/
+
 Data source integrations (server-side)
+
 - `connection-mongodb` - MongoDB database
 - `connection-axios-http` - HTTP/REST APIs
 - `connection-knex` - SQL databases
@@ -49,7 +53,9 @@ Data source integrations (server-side)
 - `connection-stripe` - Stripe payments
 
 ### operators/
+
 Data transformation functions
+
 - `operators-js` - JavaScript evaluation
 - `operators-mql` - MongoDB Query Language
 - `operators-moment` - Date manipulation
@@ -61,12 +67,16 @@ Data transformation functions
 - `operators-jsonata` - JSONata queries
 
 ### actions/
+
 Event handlers (onClick, onEnter, etc.)
+
 - `actions-core` - Built-in actions (SetState, Request, Link, etc.)
 - `actions-pdf-make` - PDF generation
 
 ### plugins/
+
 Composite plugins (multiple types)
+
 - `plugin-next-auth` - Authentication providers
 - `plugin-aws` - AWS services (S3, SES, etc.)
 - `plugin-csv` - CSV parsing/generation
@@ -77,18 +87,19 @@ Composite plugins (multiple types)
 ### For Category Overview
 
 1. List all plugins in category:
+
    ```bash
    ls -d packages/plugins/{category}/*/
    ```
 
 2. For each plugin, read `package.json` description
 
-3. Create `cc-docs/plugins/{category}/overview.md`:
+3. Create `code-docs/plugins/{category}/overview.md`:
 
 ```markdown
 ---
-category: {category}
-updated: {date}
+category: { category }
+updated: { date }
 ---
 
 # {Category} Plugins
@@ -102,19 +113,21 @@ updated: {date}
 ## Available Plugins
 
 | Plugin | Description | Key Types |
-|--------|-------------|-----------|
-| {name} | {desc} | {types} |
+| ------ | ----------- | --------- |
+| {name} | {desc}      | {types}   |
 
 ## Plugin Structure
 
 All {category} plugins follow this structure:
 ```
+
 {category}-{name}/
 ├── package.json
 ├── src/
-│   ├── {type}/        # Individual implementations
-│   └── types.js       # Type definitions
+│ ├── {type}/ # Individual implementations
+│ └── types.js # Type definitions
 └── README.md
+
 ```
 
 ## Common Patterns
@@ -129,25 +142,28 @@ All {category} plugins follow this structure:
 ### For Specific Plugin
 
 1. Read package metadata:
+
    ```bash
    cat packages/plugins/{category}/{plugin}/package.json
    ```
 
 2. List source structure:
+
    ```bash
    ls -la packages/plugins/{category}/{plugin}/src/
    ```
 
 3. Read type definitions (blocks/connections have these):
+
    ```bash
    cat packages/plugins/{category}/{plugin}/src/types.js 2>/dev/null
    ```
 
 4. Sample a few implementations to understand patterns
 
-5. Create `cc-docs/plugins/{category}/{plugin-name}.md`:
+5. Create `code-docs/plugins/{category}/{plugin-name}.md`:
 
-```markdown
+````markdown
 ---
 plugin: @lowdefy/{plugin}
 category: {category}
@@ -164,8 +180,8 @@ updated: {date}
 
 ## Provided Types
 
-| Type | Description |
-|------|-------------|
+| Type       | Description    |
+| ---------- | -------------- |
 | {TypeName} | {what it does} |
 
 ## Architecture
@@ -173,16 +189,19 @@ updated: {date}
 {How this plugin integrates with Lowdefy}
 
 ### For Blocks:
+
 - Rendering approach (controlled vs uncontrolled)
 - State binding patterns
 - Event handling
 
 ### For Connections:
+
 - Authentication method
 - Request/response patterns
 - Error handling
 
 ### For Operators:
+
 - Input/output types
 - When to use vs alternatives
 
@@ -195,13 +214,16 @@ updated: {date}
 **Purpose:** {what it does}
 
 **Props/Options:**
+
 - `{prop}` - {description}
 
 **Example usage context:**
+
 ```yaml
 # How this appears in Lowdefy config
-{example}
+{ example }
 ```
+````
 
 ## Patterns & Conventions
 
@@ -210,6 +232,7 @@ updated: {date}
 ## Dependencies
 
 **Key external:**
+
 - `{package}` - {why} - [Documentation Link]({url})
 
 ## External Library Documentation
@@ -223,6 +246,7 @@ If this plugin wraps an external library, add a documentation link in the header
 ```
 
 Examples:
+
 - `@lowdefy/blocks-antd` → [Ant Design](https://ant.design/components/overview)
 - `@lowdefy/blocks-aggrid` → [AG Grid](https://www.ag-grid.com/documentation/)
 - `@lowdefy/connection-knex` → [Knex.js](https://knexjs.org/guide/)
@@ -231,16 +255,17 @@ Examples:
 ## Design Decisions
 
 {Why certain implementation choices were made}
+
 ```
 
 ### 4. Update Plan
 
-Mark completed in `cc-docs/DOCUMENTATION_PLAN.md`.
+Mark completed in `code-docs/DOCUMENTATION_PLAN.md`.
 
 ## Output Locations
 
-- Category overview: `cc-docs/plugins/{category}/overview.md`
-- Specific plugin: `cc-docs/plugins/{category}/{plugin-name}.md`
+- Category overview: `code-docs/plugins/{category}/overview.md`
+- Specific plugin: `code-docs/plugins/{category}/{plugin-name}.md`
 
 ## Documentation Focus
 
@@ -264,3 +289,4 @@ Before finalizing documentation:
 - [ ] Verify action names (e.g., `DisplayMessage` not `Message`)
 - [ ] Add link to external library documentation if plugin wraps external library
 - [ ] Cross-reference with official Lowdefy docs for accuracy
+```
