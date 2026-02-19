@@ -116,6 +116,66 @@ describe('info and debug pass through', () => {
   });
 });
 
+describe('cause chain logging', () => {
+  test('Lowdefy error with cause chain logs causes at error level', () => {
+    const logger = createBrowserLogger();
+    const rootCause = new Error('connection refused');
+    const midCause = new Error('query failed');
+    midCause.cause = rootCause;
+    const error = createLowdefyError({ name: 'RequestError', message: 'request failed' });
+    error.cause = midCause;
+    logger.error(error);
+    expect(mockConsoleError).toHaveBeenCalledTimes(3);
+    expect(mockConsoleError).toHaveBeenNthCalledWith(1, '[RequestError] request failed');
+    expect(mockConsoleError).toHaveBeenNthCalledWith(2, '  Caused by: [Error] query failed');
+    expect(mockConsoleError).toHaveBeenNthCalledWith(3, '  Caused by: [Error] connection refused');
+  });
+
+  test('Lowdefy error with cause chain logs causes at warn level', () => {
+    const logger = createBrowserLogger();
+    const rootCause = new Error('missing field');
+    const error = createLowdefyError({ name: 'ConfigWarning', message: 'invalid config' });
+    error.cause = rootCause;
+    logger.warn(error);
+    expect(mockConsoleWarn).toHaveBeenCalledTimes(2);
+    expect(mockConsoleWarn).toHaveBeenNthCalledWith(1, '[ConfigWarning] invalid config');
+    expect(mockConsoleWarn).toHaveBeenNthCalledWith(2, '  Caused by: [Error] missing field');
+  });
+
+  test('cause chain is limited to 3 levels', () => {
+    const logger = createBrowserLogger();
+    let current = new Error('level 4');
+    for (let i = 3; i >= 1; i--) {
+      const next = new Error(`level ${i}`);
+      next.cause = current;
+      current = next;
+    }
+    const error = createLowdefyError({ message: 'top' });
+    error.cause = current;
+    logger.error(error);
+    // 1 top-level + 3 causes (level 1, 2, 3) — level 4 is excluded
+    expect(mockConsoleError).toHaveBeenCalledTimes(4);
+    expect(mockConsoleError).toHaveBeenNthCalledWith(2, '  Caused by: [Error] level 1');
+    expect(mockConsoleError).toHaveBeenNthCalledWith(3, '  Caused by: [Error] level 2');
+    expect(mockConsoleError).toHaveBeenNthCalledWith(4, '  Caused by: [Error] level 3');
+  });
+
+  test('Lowdefy error without cause does not log extra lines', () => {
+    const logger = createBrowserLogger();
+    logger.error(createLowdefyError({ message: 'no cause' }));
+    expect(mockConsoleError).toHaveBeenCalledTimes(1);
+    expect(mockConsoleError).toHaveBeenCalledWith('[ConfigError] no cause');
+  });
+
+  test('non-Error cause is not logged', () => {
+    const logger = createBrowserLogger();
+    const error = createLowdefyError({ message: 'string cause' });
+    error.cause = 'not an error';
+    logger.error(error);
+    expect(mockConsoleError).toHaveBeenCalledTimes(1);
+  });
+});
+
 describe('isLowdefyError marker detection', () => {
   test('error with isLowdefyError: true is detected as Lowdefy error', () => {
     const logger = createBrowserLogger();

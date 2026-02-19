@@ -16,6 +16,16 @@
 
 import { errorToDisplayString } from '@lowdefy/errors';
 
+function logCauseChain(logFn, error) {
+  let currentCause = error.cause;
+  let depth = 0;
+  while (currentCause instanceof Error && depth < 3) {
+    logFn(`  Caused by: ${errorToDisplayString(currentCause)}`);
+    currentCause = currentCause.cause;
+    depth++;
+  }
+}
+
 function createBrowserLogger() {
   return {
     error: (...args) => {
@@ -24,6 +34,7 @@ function createBrowserLogger() {
           console.info('%c%s', 'color: #4a9eff', args[0].source);
         }
         console.error(errorToDisplayString(args[0]));
+        logCauseChain(console.error, args[0]);
         return;
       }
       console.error(...args);
@@ -34,6 +45,7 @@ function createBrowserLogger() {
           console.info('%c%s', 'color: #4a9eff', args[0].source);
         }
         console.warn(errorToDisplayString(args[0]));
+        logCauseChain(console.warn, args[0]);
         return;
       }
       console.warn(...args);
