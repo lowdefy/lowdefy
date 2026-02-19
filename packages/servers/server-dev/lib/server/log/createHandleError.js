@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import { LowdefyInternalError, ServiceError, loadAndResolveErrorLocation } from '@lowdefy/errors';
+import { LowdefyInternalError, loadAndResolveErrorLocation } from '@lowdefy/errors';
 
 function createHandleError({ context }) {
   return async function handleError(error) {
     try {
-      // For service errors and internal lowdefy errors, don't resolve config location
+      // For internal lowdefy errors, don't resolve config location
       const location =
-        error instanceof ServiceError || error instanceof LowdefyInternalError
+        error instanceof LowdefyInternalError
           ? null
           : await loadAndResolveErrorLocation({
               error,

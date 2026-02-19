@@ -36,8 +36,8 @@ const SERVICE_ERROR_CODES = new Set([
  * Error class for external service failures (network, timeout, database, 5xx).
  *
  * ServiceError represents infrastructure/service issues that are NOT caused by
- * invalid configuration. These errors should not include config location info
- * since the config is correct - the external service is the problem.
+ * invalid configuration. The config location is still resolved to help developers
+ * identify which request/connection triggered the service failure.
  *
  * The message is formatted in the constructor - no format() method needed.
  *

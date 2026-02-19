@@ -64,15 +64,14 @@ function createHandleError({ context }) {
       const isServiceError = error instanceof ServiceError;
       const isLowdefyError = error instanceof LowdefyInternalError;
 
-      // For service errors and internal lowdefy errors, don't resolve config location
-      const location =
-        isServiceError || isLowdefyError
-          ? null
-          : await loadAndResolveErrorLocation({
-              error,
-              readConfigFile: context.readConfigFile,
-              configDirectory: context.configDirectory,
-            });
+      // For internal lowdefy errors, don't resolve config location
+      const location = isLowdefyError
+        ? null
+        : await loadAndResolveErrorLocation({
+            error,
+            readConfigFile: context.readConfigFile,
+            configDirectory: context.configDirectory,
+          });
 
       // Attach resolved location to error for consistency
       if (location) {
