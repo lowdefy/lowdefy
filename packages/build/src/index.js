@@ -123,14 +123,19 @@ async function build(options) {
     await updateServerPackageJson({ components, context });
     await copyPublicFolder({ components, context });
   } catch (err) {
-    // Re-throw already formatted errors (ConfigError or build errors)
     if (err instanceof BuildError) {
       throw err;
     }
-    // Unexpected internal error - wrap as LowdefyInternalError for proper formatting
-    const logger = context?.logger ?? options.logger ?? console;
-    const lowdefyErr = new LowdefyInternalError(err.message, { cause: err });
-    logger.error(lowdefyErr);
+    // Unexpected internal error - preserve Lowdefy errors as-is, wrap plain errors
+    const lowdefyErr = err.isLowdefyError
+      ? err
+      : new LowdefyInternalError(err.message, { cause: err });
+    if (context) {
+      context.handleError(lowdefyErr);
+    } else {
+      const logger = options.logger ?? console;
+      logger.error(lowdefyErr);
+    }
     throw new BuildError('Build failed due to internal error. See above for details.');
   }
 }
