@@ -220,6 +220,10 @@ async function shallowBuild(options) {
     await writeMenus({ components, context });
     await writeJs({ context });
     await context.writeBuildArtifact('jsMap.json', JSON.stringify(context.jsMap));
+    await context.writeBuildArtifact(
+      'customTypesMap.json',
+      JSON.stringify(options.customTypesMap ?? {})
+    );
     await writePluginImports({ components, context });
     await writePageRegistry({ pageRegistry, context });
     await copyPublicFolder({ components, context });
