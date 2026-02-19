@@ -151,22 +151,94 @@ describe('createStdOutLineHandler', () => {
     expect(logger.info).toHaveBeenCalledWith('raw output line');
   });
 
-  test('falls back to logger.info(line) when msg is missing', () => {
+  test('formats data as key:value lines when msg is missing', () => {
     const logger = createMockLogger();
     const handler = createStdOutLineHandler({ context: { logger } });
 
-    const line = JSON.stringify({ level: 30, some: 'data' });
-    handler(line);
-    expect(logger.info).toHaveBeenCalledWith(line);
+    handler(JSON.stringify({ level: 30, some: 'data', count: 42 }));
+    expect(logger.info).toHaveBeenCalledWith(
+      { source: undefined, color: undefined, spin: undefined, succeed: undefined },
+      '  some: data'
+    );
+    expect(logger.info).toHaveBeenCalledWith('  count: 42');
   });
 
-  test('falls back to logger.info(line) when msg is empty string', () => {
+  test('formats data at correct level when msg is missing', () => {
+    const logger = createMockLogger();
+    const handler = createStdOutLineHandler({ context: { logger } });
+
+    handler(JSON.stringify({ level: 20, url: '/api/root', method: 'GET' }));
+    expect(logger.debug).toHaveBeenCalledWith(
+      { source: undefined, color: undefined, spin: undefined, succeed: undefined },
+      '  url: /api/root'
+    );
+    expect(logger.debug).toHaveBeenCalledWith('  method: GET');
+  });
+
+  test('formats nested objects as JSON in data lines', () => {
+    const logger = createMockLogger();
+    const handler = createStdOutLineHandler({ context: { logger } });
+
+    handler(JSON.stringify({ level: 20, user: { id: 'abc' }, url: '/api/root' }));
+    expect(logger.debug).toHaveBeenCalledWith(
+      { source: undefined, color: undefined, spin: undefined, succeed: undefined },
+      '  user: {"id":"abc"}'
+    );
+    expect(logger.debug).toHaveBeenCalledWith('  url: /api/root');
+  });
+
+  test('logs msg then data fields as separate lines', () => {
+    const logger = createMockLogger();
+    const handler = createStdOutLineHandler({ context: { logger } });
+
+    handler(JSON.stringify({ level: 20, msg: 'adapter_getSessionAndUser', rid: '123', args: ['a'] }));
+    expect(logger.debug).toHaveBeenCalledWith(
+      { source: undefined, color: undefined, spin: undefined, succeed: undefined },
+      'adapter_getSessionAndUser'
+    );
+    expect(logger.debug).toHaveBeenCalledWith('  rid: 123');
+    expect(logger.debug).toHaveBeenCalledWith('  args: ["a"]');
+  });
+
+  test('strips pino metadata from data output', () => {
+    const logger = createMockLogger();
+    const handler = createStdOutLineHandler({ context: { logger } });
+
+    handler(
+      JSON.stringify({
+        level: 20,
+        time: 1234567890,
+        name: 'lowdefy_server',
+        pid: 12345,
+        hostname: 'localhost',
+        msg: 'request',
+        url: '/api/root',
+      })
+    );
+    expect(logger.debug).toHaveBeenCalledWith(
+      { source: undefined, color: undefined, spin: undefined, succeed: undefined },
+      'request'
+    );
+    expect(logger.debug).toHaveBeenCalledWith('  url: /api/root');
+    expect(logger.debug).toHaveBeenCalledTimes(2);
+  });
+
+  test('falls back to raw line at correct level when no msg and no data', () => {
     const logger = createMockLogger();
     const handler = createStdOutLineHandler({ context: { logger } });
 
     const line = JSON.stringify({ level: 30, msg: '' });
     handler(line);
     expect(logger.info).toHaveBeenCalledWith(line);
+  });
+
+  test('falls back to raw line at debug level when no msg and no data', () => {
+    const logger = createMockLogger();
+    const handler = createStdOutLineHandler({ context: { logger } });
+
+    const line = JSON.stringify({ level: 20 });
+    handler(line);
+    expect(logger.debug).toHaveBeenCalledWith(line);
   });
 
   test('forwards error with source at warn level', () => {
