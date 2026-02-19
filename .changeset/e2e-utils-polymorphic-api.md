@@ -1,6 +1,5 @@
 ---
 '@lowdefy/e2e-utils': minor
-'@lowdefy/cli': minor
 '@lowdefy/client': minor
 '@lowdefy/blocks-antd': minor
 '@lowdefy/block-dev-e2e': patch
