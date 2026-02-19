@@ -4,3 +4,6 @@ packages:
   - packages/servers/*
   - packages/utils/*
   - packages/ides/*
+
+ignoredBuiltDependencies:
+  - '@sentry/cli'
