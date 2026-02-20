@@ -52,6 +52,7 @@ import writeGlobal from '../writeGlobal.js';
 import writeJs from '../buildJs/writeJs.js';
 import writeLogger from '../writeLogger.js';
 import writeMaps from '../writeMaps.js';
+import updateServerPackageJson from '../full/updateServerPackageJson.js';
 import writeMenus from '../writeMenus.js';
 import writePageRegistry from './writePageRegistry.js';
 import writePluginImports from '../writePluginImports/writePluginImports.js';
@@ -190,6 +191,12 @@ async function shallowBuild(options) {
 
     logCollectedErrors(context);
 
+    // Update server package.json with plugin packages discovered during skeleton build.
+    // Connections, requests, and auth types are skeleton-level — they must be installed
+    // before Next.js builds. Page-level types (blocks, actions, operators) are handled
+    // by detectMissingPluginPackages during JIT page builds.
+    await updateServerPackageJson({ components, context });
+
     // Build file dependency map for targeted invalidation
     const fileDependencyMap = createFileDependencyMap({ pageRegistry, refMap: context.refMap });
 
@@ -223,6 +230,13 @@ async function shallowBuild(options) {
     await context.writeBuildArtifact(
       'customTypesMap.json',
       JSON.stringify(options.customTypesMap ?? {})
+    );
+    // Persist snapshot of installed packages for JIT missing-package detection.
+    // Written as a build artifact so JIT builds compare against the skeleton
+    // build state, not a potentially-updated package.json (race condition).
+    await context.writeBuildArtifact(
+      'installedPluginPackages.json',
+      JSON.stringify([...(installedPackages ?? [])])
     );
     await writePluginImports({ components, context });
     await writePageRegistry({ pageRegistry, context });
