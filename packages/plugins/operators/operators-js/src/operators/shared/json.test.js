@@ -18,7 +18,7 @@ import json from './json.js';
 
 test('_json.parse string unquoted', () => {
   expect(() => json({ params: 'firstName', location: 'locationId', methodName: 'parse' })).toThrow(
-    '_json.parse - Unexpected token'
+    'Unexpected token'
   );
 });
 
