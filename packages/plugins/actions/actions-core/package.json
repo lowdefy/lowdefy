@@ -37,6 +37,7 @@
   "type": "module",
   "exports": {
     "./actions": "./dist/actions.js",
+    "./schemas": "./dist/schemas.js",
     "./types": "./dist/types.js"
   },
   "files": [
