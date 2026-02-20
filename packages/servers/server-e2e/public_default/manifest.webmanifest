@@ -1,0 +1,16 @@
+{
+  "short_name": "Lowdefy App",
+  "name": "Lowdefy App",
+  "description": "Lowdefy App",
+  "icons": [
+    {
+      "src": "/public/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#FFFFFF",
+  "display": "browser",
+  "scope": "/"
+}

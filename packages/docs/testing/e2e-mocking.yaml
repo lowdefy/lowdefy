@@ -183,5 +183,5 @@ _ref:
           vars:
             previous_page_title: Writing Tests
             previous_page_id: e2e-writing-tests
-            next_page_title: Configuration
-            next_page_id: e2e-configuration
+            next_page_title: Testing Authentication
+            next_page_id: e2e-auth

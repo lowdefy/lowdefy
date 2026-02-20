@@ -591,6 +591,61 @@ async function getMockSession() {
 
 Mock user is **only available in server-dev**. The production server (`@lowdefy/server`) has no mock user code paths.
 
+## E2E Testing with Cookie-Based Auth (server-e2e)
+
+The e2e server (`@lowdefy/server-e2e`) provides a separate auth mechanism for Playwright testing, distinct from the dev server's mock user.
+
+### Comparison with Dev Server Mock User
+
+| Aspect | Dev Server Mock User | E2E Server Cookie Auth |
+|--------|---------------------|----------------------|
+| Set by | Env var or `auth.dev.mockUser` | `ldf.user()` in test code |
+| Scope | Global (all requests) | Per browser context |
+| Transforms | Runs through session callback | No transforms (direct mapping) |
+| Change mid-test | No | Yes (`ldf.user(newUser)`) |
+| Clear mid-test | No | Yes (`ldf.user(null)`) |
+| Server | `@lowdefy/server-dev` | `@lowdefy/server-e2e` |
+
+### How It Works
+
+1. **Test sets cookie:** `ldf.user({ id, roles })` → `base64(JSON)` → `lowdefy_e2e_user` cookie via `browserContext.addCookies()`
+2. **Server reads cookie:** `getServerSession({ req })` parses the cookie → returns `{ user }`
+3. **Authorization runs normally:** `createAuthorize(session)` → `authorize(pageConfig)` — same as production
+4. **Client receives session:** `AuthE2E` passes session from SSR props to `lowdefy.user`
+
+### Client Auth: AuthE2E
+
+Replaces NextAuth's `SessionProvider`. The `signIn` and `signOut` methods throw:
+
+```javascript
+function e2eNotSupported() {
+  throw new Error('Sign-in and sign-out are not supported in e2e testing.');
+}
+```
+
+### Auth Redirect
+
+Since NextAuth middleware doesn't exist in server-e2e, page handlers check auth explicitly:
+
+```javascript
+if (authJson.configured && !session) {
+  const loginPage = authJson.pages?.public?.[0] ?? '404';
+  return { redirect: { destination: `/${loginPage}`, permanent: false } };
+}
+```
+
+### Key Files
+
+| File | Purpose |
+|------|---------|
+| `server-e2e/lib/server/auth/getServerSession.js` | Reads cookie, returns `{ user }` |
+| `server-e2e/lib/client/auth/AuthE2E.js` | Client auth (no NextAuth) |
+| `server-e2e/pages/api/auth/session.js` | Returns `context.session ?? {}` |
+| `e2e-utils/src/core/userCookie.js` | Sets/clears cookie via Playwright |
+| `e2e-utils/src/proxy/createPageManager.js` | Exposes `ldf.user()` API |
+
+See [server-e2e.md](../servers/server-e2e.md) for full server architecture.
+
 ## Security Considerations
 
 1. **404 for Unauthorized**: Returns 404 instead of 403 to hide existence

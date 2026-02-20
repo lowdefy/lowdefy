@@ -21,6 +21,7 @@ import { defineConfig, devices } from '@playwright/test';
 function createConfig({
   appDir = './',
   buildDir = '.lowdefy/server/build',
+  commandPrefix = '',
   mocksFile = 'e2e/mocks.yaml',
   port = 3000,
   testDir = 'e2e',
@@ -29,7 +30,7 @@ function createConfig({
   screenshot = 'only-on-failure', // 'off', 'on', or 'only-on-failure'
   outputDir = 'test-results',
 } = {}) {
-  const cliCommand = 'npx lowdefy';
+  const cliCommand = `${commandPrefix ? `${commandPrefix} ` : ''}npx lowdefy`;
   // Resolve absolute paths for all directories
   const absoluteAppDir = path.resolve(appDir);
   const absoluteBuildDir = path.resolve(absoluteAppDir, buildDir);
@@ -61,30 +62,34 @@ function createConfig({
       },
     ],
     webServer: {
-      // Build and start production server
-      // NEXT_PUBLIC_LOWDEFY_E2E=true exposes window.lowdefy for state testing
-      command: `NEXT_PUBLIC_LOWDEFY_E2E=true ${cliCommand} build && ${cliCommand} start --port ${port}`,
-      url: `http://localhost:${port}`,
+      // Build with e2e server and start
+      command: `${cliCommand} build --server e2e && ${cliCommand} start --port ${port} --log-level warn`,
+      // Use session API for health check — page URLs may redirect when auth is configured
+      url: `http://localhost:${port}/api/auth/session`,
       reuseExistingServer: true,
       timeout,
       cwd: absoluteAppDir,
+      // Exposes window.lowdefy for state testing
+      env: { NEXT_PUBLIC_LOWDEFY_E2E: 'true' },
     },
   });
 }
 
 function createMultiAppConfig({
   apps = [],
+  commandPrefix = '',
   testDir = 'e2e',
   testMatch = '**/*.spec.js',
   timeout = 180000,
   screenshot = 'only-on-failure',
   outputDir = 'test-results',
 } = {}) {
-  const cliCommand = 'npx lowdefy';
+  const cliCommand = `${commandPrefix ? `${commandPrefix} ` : ''}npx lowdefy`;
 
   // Set up projects for each app
   const projects = apps.map((app) => {
-    const appBuildDir = path.resolve(app.appDir, '.lowdefy/server/build');
+    const appBuildDir = path.resolve(app.appDir, app.buildDir ?? '.lowdefy/server/build');
+    const appMocksFile = path.resolve(app.appDir, app.mocksFile ?? 'e2e/mocks.yaml');
 
     return {
       name: app.name,
@@ -92,22 +97,22 @@ function createMultiAppConfig({
       testMatch,
       use: {
         baseURL: `http://localhost:${app.port}`,
-        ...devices['Desktop Chrome'],
-      },
-      // Store build dir in metadata for fixtures
-      metadata: {
         buildDir: appBuildDir,
+        mocksFile: fs.existsSync(appMocksFile) ? appMocksFile : undefined,
+        ...devices['Desktop Chrome'],
       },
     };
   });
 
   // Set up webServers for each app
   const webServer = apps.map((app) => ({
-    command: `NEXT_PUBLIC_LOWDEFY_E2E=true ${cliCommand} build && ${cliCommand} start --port ${app.port}`,
-    url: `http://localhost:${app.port}`,
+    command: `${cliCommand} build --server e2e && ${cliCommand} start --port ${app.port} --log-level warn`,
+    // Use session API for health check — page URLs may redirect when auth is configured
+    url: `http://localhost:${app.port}/api/auth/session`,
     reuseExistingServer: true,
     timeout,
     cwd: app.appDir,
+    env: { NEXT_PUBLIC_LOWDEFY_E2E: 'true' },
   }));
 
   return defineConfig({

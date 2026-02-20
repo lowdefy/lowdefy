@@ -55,8 +55,7 @@ async function expectRequest(page, { requestId, loading, response, payload, time
         }
 
         if (response !== undefined) {
-          const matches = JSON.stringify(state.response) === JSON.stringify(response);
-          if (!matches) return { response: state.response };
+          if (!objectContains(state.response, response)) return { response: state.response };
         }
 
         // Payload is stored in the request state by the Lowdefy engine.

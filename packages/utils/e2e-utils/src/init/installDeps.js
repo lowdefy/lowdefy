@@ -21,71 +21,48 @@ import path from 'path';
 import { execSync } from 'child_process';
 
 function detectPackageManager(cwd) {
-  if (fs.existsSync(path.join(cwd, 'pnpm-lock.yaml'))) {
-    return 'pnpm';
-  }
-  if (fs.existsSync(path.join(cwd, 'yarn.lock'))) {
-    return 'yarn';
+  // Walk up from cwd to find the lock file
+  let dir = cwd;
+  while (dir !== path.dirname(dir)) {
+    if (fs.existsSync(path.join(dir, 'pnpm-lock.yaml'))) return 'pnpm';
+    if (fs.existsSync(path.join(dir, 'yarn.lock'))) return 'yarn';
+    if (fs.existsSync(path.join(dir, 'package-lock.json'))) return 'npm';
+    dir = path.dirname(dir);
   }
   return 'npm';
 }
 
-function buildInstallCommand({ packageManager, useExperimental, useMongoDB }) {
-  const tag = useExperimental ? 'experimental' : 'latest';
-  const packages = [`@lowdefy/e2e-utils@${tag}`, '@playwright/test@^1.50.0'];
+function installDeps({ appDir }) {
+  const packageManager = detectPackageManager(appDir);
+  const installCmd = `${packageManager} install`;
 
-  if (useMongoDB) {
-    packages.push(`@lowdefy/community-plugin-e2e-mdb@${tag}`);
-  }
-
-  const addCmd = packageManager === 'yarn' ? 'add' : 'add';
-  const devFlag = packageManager === 'yarn' ? '--dev' : '-D';
-
-  return `${packageManager} ${addCmd} ${devFlag} ${packages.join(' ')}`;
-}
-
-function runInstall({ cwd, packageManager, useExperimental, useMongoDB }) {
-  const installCmd = buildInstallCommand({ packageManager, useExperimental, useMongoDB });
-
-  console.log(`\nInstalling dependencies with ${packageManager}...`);
+  console.log(`\nInstalling dependencies in ${appDir}...`);
   console.log(`  $ ${installCmd}\n`);
 
   try {
-    execSync(installCmd, { cwd, stdio: 'inherit' });
+    execSync(installCmd, { cwd: appDir, stdio: 'inherit' });
     console.log('\n✓ Dependencies installed successfully');
-    return true;
-  } catch (error) {
-    console.error('\n✗ Failed to install dependencies');
-    console.error(`  Run manually: ${installCmd}`);
+  } catch {
+    console.error('\n✗ Failed to install dependencies automatically');
+    console.log(`\nInstall manually from ${appDir}:`);
+    console.log(`  ${installCmd}`);
+    console.log('  npx playwright install chromium');
     return false;
   }
-}
 
-function installPlaywright(cwd) {
   console.log('\nInstalling Playwright browsers...');
   console.log('  $ npx playwright install chromium\n');
 
   try {
-    execSync('npx playwright install chromium', { cwd, stdio: 'inherit' });
+    execSync('npx playwright install chromium', { cwd: appDir, stdio: 'inherit' });
     console.log('\n✓ Playwright browsers installed');
-    return true;
-  } catch (error) {
+  } catch {
     console.error('\n✗ Failed to install Playwright browsers');
     console.error('  Run manually: npx playwright install chromium');
-    return false;
-  }
-}
-
-function installDeps({ cwd, useExperimental, useMongoDB }) {
-  const packageManager = detectPackageManager(cwd);
-  const depsInstalled = runInstall({ cwd, packageManager, useExperimental, useMongoDB });
-
-  if (depsInstalled) {
-    installPlaywright(cwd);
   }
 
-  return depsInstalled;
+  return true;
 }
 
-export { detectPackageManager, buildInstallCommand };
+export { detectPackageManager };
 export default installDeps;

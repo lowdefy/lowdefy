@@ -97,6 +97,31 @@ const items = await ldf.state('items').value();
 expect(items.length).toBeGreaterThan(0);
 ```
 
+### User Session
+
+Set a user session for tests that require authentication. The e2e server reads the user from a browser cookie — no real auth provider needed.
+
+```javascript
+// Set user before navigating to a protected page
+await ldf.user({ name: 'Test User', email: 'test@example.com', roles: ['admin'] });
+await ldf.goto('/admin-dashboard');
+
+// Clear user session
+await ldf.user(null);
+```
+
+You can also set a default user for all tests in `mocks.yaml`:
+
+```yaml
+user:
+  name: Test User
+  email: test@example.com
+  roles:
+    - admin
+```
+
+Override per-test with `ldf.user({ ... })` or clear with `ldf.user(null)`.
+
 ### Mocking Requests
 
 ```javascript
