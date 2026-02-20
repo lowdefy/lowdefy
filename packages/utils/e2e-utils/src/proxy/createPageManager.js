@@ -20,6 +20,7 @@ import { getState, getBlockState, setState, expectState } from '../core/state.js
 import { getRequestState, getRequestResponse, expectRequest } from '../core/requests.js';
 import { getValidation } from '../core/validation.js';
 import { expectUrl, expectUrlQuery, setUrlQuery } from '../core/url.js';
+import { setUserCookie, clearUserCookie } from '../core/userCookie.js';
 
 import createBlockMethodProxy from './createBlockMethodProxy.js';
 
@@ -36,6 +37,15 @@ function createPageManager({ page, manifest, helperRegistry, mockManager }) {
   return {
     // Raw Playwright page
     page,
+
+    // User session (cookie-based, for server-e2e)
+    async user(userObj) {
+      if (userObj === null || userObj === undefined) {
+        await clearUserCookie(page);
+        return;
+      }
+      await setUserCookie(page, userObj);
+    },
 
     // Navigation (control flow)
     async goto(path) {

@@ -32,10 +32,10 @@
   },
   "type": "module",
   "exports": {
+    "./e2e/*": "./dist/blocks/*/e2e.js",
     "./*": "./dist/*",
     "./blocks": "./dist/blocks.js",
-    "./types": "./dist/types.js",
-    "./e2e/List": "./dist/blocks/List/e2e.js"
+    "./types": "./dist/types.js"
   },
   "files": [
     "dist/*"

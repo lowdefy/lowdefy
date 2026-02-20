@@ -145,7 +145,7 @@ _ref:
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: Mocking Requests
-            previous_page_id: e2e-mocking
-            next_page_title: Plugins
-            next_page_id: plugins-introduction
+            previous_page_title: Testing Authentication
+            previous_page_id: e2e-auth
+            next_page_title: AutoComplete
+            next_page_id: AutoComplete

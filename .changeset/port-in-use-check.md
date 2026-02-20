@@ -1,5 +1,4 @@
 ---
-'@lowdefy/cli': patch
 '@lowdefy/server-dev': patch
 ---
 

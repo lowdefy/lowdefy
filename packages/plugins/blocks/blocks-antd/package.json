@@ -34,21 +34,10 @@
   },
   "type": "module",
   "exports": {
+    "./e2e/*": "./dist/blocks/*/e2e.js",
     "./*": "./dist/*",
     "./blocks": "./dist/blocks.js",
-    "./types": "./dist/types.js",
-    "./e2e/Alert": "./dist/blocks/Alert/e2e.js",
-    "./e2e/Button": "./dist/blocks/Button/e2e.js",
-    "./e2e/Card": "./dist/blocks/Card/e2e.js",
-    "./e2e/Descriptions": "./dist/blocks/Descriptions/e2e.js",
-    "./e2e/PageHeaderMenu": "./dist/blocks/PageHeaderMenu/e2e.js",
-    "./e2e/Paragraph": "./dist/blocks/Paragraph/e2e.js",
-    "./e2e/Result": "./dist/blocks/Result/e2e.js",
-    "./e2e/Selector": "./dist/blocks/Selector/e2e.js",
-    "./e2e/Statistic": "./dist/blocks/Statistic/e2e.js",
-    "./e2e/TextArea": "./dist/blocks/TextArea/e2e.js",
-    "./e2e/NumberInput": "./dist/blocks/NumberInput/e2e.js",
-    "./e2e/TextInput": "./dist/blocks/TextInput/e2e.js"
+    "./types": "./dist/types.js"
   },
   "files": [
     "dist/*"

@@ -215,6 +215,43 @@ api:
       status: ok
 ```
 
+## Testing Authentication
+
+If your app uses auth, define a default test user in `mocks.yaml`:
+
+```yaml
+# e2e/mocks.yaml
+user:
+  name: Test User
+  email: test@example.com
+  roles:
+    - admin
+```
+
+Override the user per test with `ldf.user()`, or clear it with `ldf.user(null)`:
+
+```javascript
+test('admin can access dashboard', async ({ ldf }) => {
+  // Default user from mocks.yaml is used
+  await ldf.goto('/dashboard');
+  await ldf.url().expect.toBe('/dashboard');
+});
+
+test('unauthenticated user is redirected', async ({ ldf }) => {
+  await ldf.user(null);
+  await ldf.goto('/dashboard');
+  await ldf.url().expect.toBe('/login');
+});
+
+test('viewer cannot access admin page', async ({ ldf }) => {
+  await ldf.user({ name: 'Viewer', roles: ['viewer'] });
+  await ldf.goto('/admin-settings');
+  await ldf.url().expect.toBe('/login');
+});
+```
+
+The user object maps directly to `lowdefy.user` — no session callbacks or transforms are applied.
+
 ## Playwright Config
 
 ```javascript
