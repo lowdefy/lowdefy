@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -27,5 +27,7 @@ export default createBlockHelper({
   },
   expect: {
     value: (page, blockId, val) => expect(locator(page, blockId)).toHaveValue(val),
+    placeholder: (page, blockId, text) =>
+      expect(locator(page, blockId)).toHaveAttribute('placeholder', text),
   },
 });

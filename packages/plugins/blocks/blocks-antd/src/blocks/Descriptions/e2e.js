@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -25,9 +25,9 @@ export default createBlockHelper({
     title: (page, blockId, text) =>
       expect(locator(page, blockId).locator('.ant-descriptions-title')).toHaveText(text),
     itemLabel: (page, blockId, index, text) =>
-      expect(
-        locator(page, blockId).locator('.ant-descriptions-item-label').nth(index)
-      ).toHaveText(text),
+      expect(locator(page, blockId).locator('.ant-descriptions-item-label').nth(index)).toHaveText(
+        text
+      ),
     itemValue: (page, blockId, index, text) =>
       expect(
         locator(page, blockId).locator('.ant-descriptions-item-content').nth(index)

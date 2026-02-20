@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -24,8 +24,7 @@ export default createBlockHelper({
   expect: {
     itemCount: (page, blockId, count) =>
       expect(locator(page, blockId).locator('> div')).toHaveCount(count),
-    empty: (page, blockId) =>
-      expect(locator(page, blockId).locator('> div')).toHaveCount(0),
+    empty: (page, blockId) => expect(locator(page, blockId).locator('> div')).toHaveCount(0),
     notEmpty: (page, blockId) =>
       expect(locator(page, blockId).locator('> div').first()).toBeVisible(),
   },

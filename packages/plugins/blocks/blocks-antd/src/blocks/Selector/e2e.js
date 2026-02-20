@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ export default createBlockHelper({
   do: {
     select: async (page, blockId, val) => {
       await locator(page, blockId).click();
-      await page.locator(`.ant-select-item-option-content:has-text("${val}")`).click();
+      await page.locator('.ant-select-item-option-content').filter({ hasText: val }).click();
     },
     clear: async (page, blockId) => {
       const sel = locator(page, blockId);

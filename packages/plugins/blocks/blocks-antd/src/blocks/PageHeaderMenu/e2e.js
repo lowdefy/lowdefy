@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -23,19 +23,14 @@ export default createBlockHelper({
   locator,
   do: {
     clickMenuItem: (page, blockId, menuItemText) =>
-      locator(page, blockId)
-        .locator('.ant-menu-item')
-        .filter({ hasText: menuItemText })
-        .click(),
+      locator(page, blockId).locator('.ant-menu-item').filter({ hasText: menuItemText }).click(),
     clickLogo: (page, blockId) =>
       locator(page, blockId).locator(`#${blockId}_header`).locator('a').first().click(),
   },
   expect: {
     menuItemActive: (page, blockId, menuItemText) =>
       expect(
-        locator(page, blockId)
-          .locator('.ant-menu-item-selected')
-          .filter({ hasText: menuItemText })
+        locator(page, blockId).locator('.ant-menu-item-selected').filter({ hasText: menuItemText })
       ).toBeVisible(),
     menuItemVisible: (page, blockId, menuItemText) =>
       expect(

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -27,9 +27,7 @@ export default createBlockHelper({
   expect: {
     title: (page, blockId, text) =>
       expect(locator(page, blockId).locator('.ant-card-head-title')).toHaveText(text),
-    hoverable: (page, blockId) =>
-      expect(locator(page, blockId)).toHaveClass(/ant-card-hoverable/),
-    bordered: (page, blockId) =>
-      expect(locator(page, blockId)).not.toHaveClass(/ant-card-bordered/),
+    hoverable: (page, blockId) => expect(locator(page, blockId)).toHaveClass(/ant-card-hoverable/),
+    bordered: (page, blockId) => expect(locator(page, blockId)).toHaveClass(/ant-card-bordered/),
   },
 });
