@@ -27,7 +27,6 @@ new BuildParser({
   secrets, // Application secrets
   user, // Build-time user
   operators, // Operator registry
-  verbose, // Logging flag
 });
 ```
 
@@ -80,7 +79,6 @@ new ServerParser({
   state, // Workflow state
   steps, // Previous step results
   user, // Authenticated user
-  verbose, // Logging flag
 });
 ```
 
@@ -498,7 +496,6 @@ parse({ input, location }) {
 ```
 
 - Failed operators return `null`
-- Errors logged if `verbose: true`
 - Non-fatal: parsing continues
 
 ## Metadata Handling
