@@ -14,12 +14,83 @@
   limitations under the License.
 */
 
-import { loadAndResolveErrorLocation } from '@lowdefy/errors';
+import { ConfigError, loadAndResolveErrorLocation } from '@lowdefy/errors';
 import { serializer } from '@lowdefy/helpers';
+
+import formatValidationError from './formatValidationError.js';
+import validatePluginSchema from './validatePluginSchema.js';
+
+const validationConfigs = {
+  BlockError: {
+    schemaFile: 'plugins/blockSchemas.json',
+    schemaKey: 'properties',
+    pluginLabel: 'Block',
+    fieldLabel: 'property',
+  },
+  ActionError: {
+    schemaFile: 'plugins/actionSchemas.json',
+    schemaKey: 'params',
+    pluginLabel: 'Action',
+    fieldLabel: 'param',
+  },
+  OperatorError: {
+    schemaFile: 'plugins/operatorSchemas.json',
+    schemaKey: 'params',
+    pluginLabel: 'Operator',
+    fieldLabel: 'param',
+  },
+};
 
 async function logClientError(context, serializedError) {
   const { logger } = context;
   const error = serializer.deserialize(serializedError);
+
+  // Schema validation for plugin errors with received data
+  const validationConfig = validationConfigs[error.name];
+  let validationErrors = null;
+
+  if (validationConfig && error.received) {
+    try {
+      const schemas = await context.readConfigFile(validationConfig.schemaFile);
+      if (schemas) {
+        const schema = schemas[error.typeName];
+        if (schema) {
+          const data =
+            error.name === 'OperatorError'
+              ? Object.values(error.received)[0]
+              : error.received;
+
+          const ajvErrors = validatePluginSchema({
+            data,
+            schema,
+            schemaKey: validationConfig.schemaKey,
+          });
+
+          if (ajvErrors) {
+            const displayName =
+              error.name === 'OperatorError' && error.methodName
+                ? `${error.typeName}.${error.methodName}`
+                : error.typeName;
+
+            validationErrors = ajvErrors.map(
+              (ajvError) =>
+                new ConfigError(
+                  formatValidationError({
+                    ajvError,
+                    pluginLabel: validationConfig.pluginLabel,
+                    typeName: displayName,
+                    fieldLabel: validationConfig.fieldLabel,
+                  }),
+                  { configKey: error.configKey }
+                )
+            );
+          }
+        }
+      }
+    } catch {
+      // Schema file not found or unreadable — skip validation
+    }
+  }
 
   const location = await loadAndResolveErrorLocation({
     error,
@@ -30,6 +101,25 @@ async function logClientError(context, serializedError) {
   if (location) {
     error.source = location.source;
     error.config = location.config;
+  }
+
+  // If validation produced ConfigErrors, resolve their locations and log them
+  if (validationErrors) {
+    for (const configError of validationErrors) {
+      if (location) {
+        configError.source = location.source;
+        configError.config = location.config;
+      }
+      logger.error(configError);
+    }
+
+    return {
+      success: true,
+      source: error.source ?? null,
+      config: error.config ?? null,
+      error,
+      errors: validationErrors.map((e) => serializer.serialize(e)),
+    };
   }
 
   logger.error(error);

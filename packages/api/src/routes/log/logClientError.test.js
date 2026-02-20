@@ -16,7 +16,13 @@
 
 import { jest } from '@jest/globals';
 
-import { ConfigError, OperatorError, ServiceError } from '@lowdefy/errors';
+import {
+  ActionError,
+  BlockError,
+  ConfigError,
+  OperatorError,
+  ServiceError,
+} from '@lowdefy/errors';
 import { serializer } from '@lowdefy/helpers';
 
 import logClientError from './logClientError.js';
@@ -199,5 +205,215 @@ describe('logClientError', () => {
 
     expect(error).toBeInstanceOf(OperatorError);
     expect(error.received).toBeUndefined();
+  });
+});
+
+describe('logClientError schema validation', () => {
+  test('ActionError with received that fails schema returns ConfigErrors', async () => {
+    const mockLogger = {
+      error: jest.fn(),
+      warn: jest.fn(),
+    };
+    const actionSchemas = {
+      SetState: {
+        params: {
+          type: 'object',
+          properties: {
+            value: { type: 'string' },
+          },
+          required: ['value'],
+        },
+      },
+    };
+    const context = {
+      logger: mockLogger,
+      readConfigFile: jest.fn((file) => {
+        if (file === 'plugins/actionSchemas.json') return Promise.resolve(actionSchemas);
+        if (file === 'keyMap.json') return Promise.resolve(keyMap);
+        if (file === 'refMap.json') return Promise.resolve(refMap);
+      }),
+    };
+
+    const data = serializer.serialize(
+      new ActionError('Something broke', {
+        typeName: 'SetState',
+        received: { notValue: 123 },
+        configKey: 'key-123',
+      })
+    );
+
+    const result = await logClientError(context, data);
+
+    expect(result.errors).toBeDefined();
+    expect(result.errors.length).toBeGreaterThan(0);
+    // Each error should be a serialized ConfigError
+    const deserializedError = serializer.deserialize(result.errors[0]);
+    expect(deserializedError).toBeInstanceOf(ConfigError);
+    expect(deserializedError.message).toContain('SetState');
+    // Original error is still returned
+    expect(result.error).toBeInstanceOf(ActionError);
+    // Logger should have been called with ConfigErrors, not original
+    expect(mockLogger.error).toHaveBeenCalled();
+    const loggedError = mockLogger.error.mock.calls[0][0];
+    expect(loggedError).toBeInstanceOf(ConfigError);
+  });
+
+  test('OperatorError with method-style received extracts params correctly', async () => {
+    const mockLogger = {
+      error: jest.fn(),
+      warn: jest.fn(),
+    };
+    const operatorSchemas = {
+      _yaml: {
+        params: {
+          type: 'object',
+          properties: {
+            on: { type: 'string' },
+          },
+          required: ['on'],
+        },
+      },
+    };
+    const context = {
+      logger: mockLogger,
+      readConfigFile: jest.fn((file) => {
+        if (file === 'plugins/operatorSchemas.json') return Promise.resolve(operatorSchemas);
+        if (file === 'keyMap.json') return Promise.resolve({});
+        if (file === 'refMap.json') return Promise.resolve({});
+      }),
+    };
+
+    const data = serializer.serialize(
+      new OperatorError('yaml parse failed', {
+        typeName: '_yaml',
+        methodName: 'parse',
+        received: { '_yaml.parse': { notOn: 123 } },
+      })
+    );
+
+    const result = await logClientError(context, data);
+
+    expect(result.errors).toBeDefined();
+    const deserializedError = serializer.deserialize(result.errors[0]);
+    expect(deserializedError).toBeInstanceOf(ConfigError);
+    // Display name should include methodName
+    expect(deserializedError.message).toContain('_yaml.parse');
+  });
+
+  test('BlockError with received that passes schema keeps original error', async () => {
+    const mockLogger = {
+      error: jest.fn(),
+      warn: jest.fn(),
+    };
+    const blockSchemas = {
+      Button: {
+        properties: {
+          type: 'object',
+          properties: {
+            title: { type: 'string' },
+          },
+        },
+      },
+    };
+    const context = {
+      logger: mockLogger,
+      readConfigFile: jest.fn((file) => {
+        if (file === 'plugins/blockSchemas.json') return Promise.resolve(blockSchemas);
+        if (file === 'keyMap.json') return Promise.resolve({});
+        if (file === 'refMap.json') return Promise.resolve({});
+      }),
+    };
+
+    const data = serializer.serialize(
+      new BlockError('Render failed', {
+        typeName: 'Button',
+        received: { title: 'Click me' },
+      })
+    );
+
+    const result = await logClientError(context, data);
+
+    expect(result.errors).toBeUndefined();
+    expect(result.error).toBeInstanceOf(BlockError);
+    // Original error should be logged, not ConfigError
+    expect(mockLogger.error).toHaveBeenCalledTimes(1);
+    expect(mockLogger.error.mock.calls[0][0]).toBeInstanceOf(BlockError);
+  });
+
+  test('missing schema file keeps original error', async () => {
+    const mockLogger = {
+      error: jest.fn(),
+      warn: jest.fn(),
+    };
+    const context = {
+      logger: mockLogger,
+      readConfigFile: jest.fn((file) => {
+        if (file === 'plugins/actionSchemas.json') throw new Error('File not found');
+        if (file === 'keyMap.json') return Promise.resolve({});
+        if (file === 'refMap.json') return Promise.resolve({});
+      }),
+    };
+
+    const data = serializer.serialize(
+      new ActionError('Something broke', {
+        typeName: 'SetState',
+        received: { badParam: true },
+      })
+    );
+
+    const result = await logClientError(context, data);
+
+    expect(result.errors).toBeUndefined();
+    expect(result.error).toBeInstanceOf(ActionError);
+    expect(mockLogger.error).toHaveBeenCalledTimes(1);
+    expect(mockLogger.error.mock.calls[0][0]).toBeInstanceOf(ActionError);
+  });
+
+  test('no received on error skips validation', async () => {
+    const mockLogger = {
+      error: jest.fn(),
+      warn: jest.fn(),
+    };
+    const context = {
+      logger: mockLogger,
+      readConfigFile: jest.fn(),
+    };
+
+    const data = serializer.serialize(
+      new ActionError('Something broke', {
+        typeName: 'SetState',
+      })
+    );
+
+    const result = await logClientError(context, data);
+
+    expect(result.errors).toBeUndefined();
+    expect(result.error).toBeInstanceOf(ActionError);
+    // readConfigFile should not be called for schema files
+    expect(context.readConfigFile).not.toHaveBeenCalledWith('plugins/actionSchemas.json');
+  });
+
+  test('ConfigError skips validation', async () => {
+    const mockLogger = {
+      error: jest.fn(),
+      warn: jest.fn(),
+    };
+    const context = {
+      logger: mockLogger,
+      readConfigFile: jest.fn(),
+    };
+
+    const data = serializer.serialize(
+      new ConfigError('Already a config error')
+    );
+
+    const result = await logClientError(context, data);
+
+    expect(result.errors).toBeUndefined();
+    expect(result.error).toBeInstanceOf(ConfigError);
+    // Should not try to load any schema files
+    expect(context.readConfigFile).not.toHaveBeenCalledWith('plugins/actionSchemas.json');
+    expect(context.readConfigFile).not.toHaveBeenCalledWith('plugins/blockSchemas.json');
+    expect(context.readConfigFile).not.toHaveBeenCalledWith('plugins/operatorSchemas.json');
   });
 });

@@ -52,6 +52,7 @@ const Block = ({ block, Blocks, context, lowdefy, parentLoading }) => {
       blockType={block.type}
       configKey={block.eval?.configKey}
       onError={handleError}
+      properties={block.eval?.properties}
     >
       <MountEvents
         context={context}

@@ -15,24 +15,64 @@
 */
 
 import { validate } from '@lowdefy/ajv';
-
 import { ConfigError } from '@lowdefy/errors';
+
+import formatValidationError from '../log/formatValidationError.js';
 
 function validateSchemas(
   { logger },
   { connection, connectionProperties, requestConfig, requestResolver, requestProperties }
 ) {
-  try {
-    validate({ schema: connection.schema, data: connectionProperties });
-    validate({ schema: requestResolver.schema, data: requestProperties });
-  } catch (error) {
-    const configKey = requestConfig['~k'];
-    const err = new ConfigError(error.message, { configKey });
-    logger.debug(
-      { params: { id: requestConfig.requestId, type: requestConfig.type, configKey }, err },
-      err.message
-    );
-    throw err;
+  const configKey = requestConfig['~k'];
+  const allErrors = [];
+
+  const connectionResult = validate({
+    schema: connection.schema,
+    data: connectionProperties,
+    returnErrors: true,
+  });
+  if (!connectionResult.valid) {
+    for (const ajvError of connectionResult.errors) {
+      allErrors.push(
+        new ConfigError(
+          formatValidationError({
+            ajvError,
+            pluginLabel: 'Connection',
+            typeName: requestConfig.connectionId,
+            fieldLabel: 'property',
+          }),
+          { configKey }
+        )
+      );
+    }
+  }
+
+  const requestResult = validate({
+    schema: requestResolver.schema,
+    data: requestProperties,
+    returnErrors: true,
+  });
+  if (!requestResult.valid) {
+    for (const ajvError of requestResult.errors) {
+      allErrors.push(
+        new ConfigError(
+          formatValidationError({
+            ajvError,
+            pluginLabel: 'Request',
+            typeName: requestConfig.type,
+            fieldLabel: 'property',
+          }),
+          { configKey }
+        )
+      );
+    }
+  }
+
+  if (allErrors.length > 0) {
+    for (const err of allErrors) {
+      logger.error(err);
+    }
+    throw allErrors[0];
   }
 }
 

@@ -97,6 +97,7 @@ class WebParser {
           new OperatorError(e.message, {
             cause: e,
             typeName: op,
+            methodName,
             received: { [key]: params },
             location: operatorLocation,
             configKey: e.configKey ?? configKey,

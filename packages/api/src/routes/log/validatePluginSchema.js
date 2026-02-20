@@ -14,14 +14,16 @@
   limitations under the License.
 */
 
-import PluginError from './PluginError.js';
+import { validate } from '@lowdefy/ajv';
 
-class OperatorError extends PluginError {
-  constructor(message, options = {}) {
-    super(message, options);
-    this.name = 'OperatorError';
-    this.methodName = options.methodName ?? null;
-  }
+function validatePluginSchema({ data, schema, schemaKey }) {
+  if (!schema?.[schemaKey]) return null;
+  const { valid, errors } = validate({
+    schema: schema[schemaKey],
+    data: data ?? {},
+    returnErrors: true,
+  });
+  return valid ? null : errors;
 }
 
-export default OperatorError;
+export default validatePluginSchema;

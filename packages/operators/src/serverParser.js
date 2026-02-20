@@ -85,6 +85,7 @@ class ServerParser {
         const operatorError = new OperatorError(e.message, {
           cause: e,
           typeName: op,
+          methodName,
           received: { [key]: params },
           location,
           configKey: e.configKey ?? configKey,
