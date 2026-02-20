@@ -78,15 +78,11 @@ const runInstance = ({ location, meta, methodName, operator, params, instanceTyp
   if (meta[methodName].property) {
     return instance[methodName];
   }
-  try {
-    const result = instance[methodName](...args);
-    if (meta[methodName].returnInstance) {
-      return instance;
-    }
-    return result;
-  } catch (e) {
-    throw new Error(`${operator}.${methodName} - ${e.message}`);
+  const result = instance[methodName](...args);
+  if (meta[methodName].returnInstance) {
+    return instance;
   }
+  return result;
 };
 
 export default runInstance;

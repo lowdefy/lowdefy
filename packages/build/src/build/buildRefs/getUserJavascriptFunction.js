@@ -15,13 +15,13 @@
 */
 import path from 'path';
 import { pathToFileURL } from 'url';
+import { ConfigError } from '@lowdefy/errors';
 
 async function getUserJavascriptFunction({ context, filePath }) {
   try {
     return (await import(pathToFileURL(path.join(context.directories.config, filePath)))).default;
   } catch (error) {
-    context.logger.error(`Error importing ${filePath}.`);
-    throw Error(error);
+    throw new ConfigError(`Error importing ${filePath}.`, { cause: error, filePath });
   }
 }
 

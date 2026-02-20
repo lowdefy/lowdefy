@@ -8,9 +8,8 @@ feat(logger): Add centralized @lowdefy/logger package and standardize logging
 
 **New @lowdefy/logger Package**
 
-- Centralized logging with environment-specific subpaths: `/node`, `/dev`, `/cli`, `/browser`
+- Centralized logging with environment-specific subpaths: `/node`, `/cli`, `/browser`
 - `createNodeLogger` — pino factory with custom error serializer preserving Lowdefy error metadata (source, configKey, isServiceError)
-- `createDevLogger` — pino logger with `print` mixin for terminal rendering
 - `createCliLogger` — wraps `createPrint` (ora spinners, colored output) with standard logger interface
 - `createBrowserLogger` — maps to `console.*` with error formatting
 - `wrapErrorLogger` — formats Lowdefy errors, emits source as separate `{ print: 'link' }` line for blue clickable links

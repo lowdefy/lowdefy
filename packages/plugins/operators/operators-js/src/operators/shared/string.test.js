@@ -515,7 +515,7 @@ describe('_string.normalize', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.normalize - The normalization form should be one of NFC, NFD, NFKC, NFKD."`
+      `"The normalization form should be one of NFC, NFD, NFKC, NFKD."`
     );
     expect(() =>
       string({

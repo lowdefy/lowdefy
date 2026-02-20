@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { createNodeLogger, wrapErrorLogger } from '@lowdefy/logger/node';
+import { createNodeLogger } from '@lowdefy/logger/node';
 
 const logger = createNodeLogger({
   name: 'lowdefy_server',
@@ -23,7 +23,7 @@ const logger = createNodeLogger({
 });
 
 function createLogger(metadata = {}) {
-  return wrapErrorLogger(logger.child(metadata));
+  return logger.child(metadata);
 }
 
 export default createLogger;

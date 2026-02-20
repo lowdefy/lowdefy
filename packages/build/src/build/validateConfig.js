@@ -27,7 +27,7 @@ function validateConfig({ components }) {
   }
   if (type.isString(components.config.basePath)) {
     if (components.config.basePath[0] !== '/') {
-      throw Error('Base path must start with "/".');
+      throw new Error('Base path must start with "/".');
     }
   }
   return components;

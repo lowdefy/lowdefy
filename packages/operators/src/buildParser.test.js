@@ -17,6 +17,8 @@
 /* eslint-disable max-classes-per-file */
 import { jest } from '@jest/globals';
 
+import { ConfigError, OperatorError } from '@lowdefy/errors';
+
 import BuildParser from './buildParser.js';
 
 const args = [{ args: true }];
@@ -30,8 +32,6 @@ const operators = {
 };
 
 operators._init.init = jest.fn();
-
-const location = 'location';
 
 const payload = {
   payload: true,
@@ -59,19 +59,10 @@ test('parse args not array', () => {
   expect(() => parser.parse({ args, input })).toThrow('Operator parser args must be an array.');
 });
 
-test('parse location not string', () => {
-  const input = {};
-  const location = [];
-  const parser = new BuildParser({ operators, payload, secrets, user });
-  expect(() => parser.parse({ args, input, location })).toThrow(
-    'Operator parser location must be a string.'
-  );
-});
-
 test('operator returns value', () => {
   const input = { a: { _test: { params: true } } };
   const parser = new BuildParser({ operators, payload, secrets, user });
-  const res = parser.parse({ args, input, location });
+  const res = parser.parse({ args, input });
   expect(res.output).toEqual({ a: 'test' });
   expect(operators._test.mock.calls).toMatchInlineSnapshot(`
     Array [
@@ -84,7 +75,6 @@ test('operator returns value', () => {
           ],
           "arrayIndices": Array [],
           "env": undefined,
-          "location": "location",
           "methodName": undefined,
           "operatorPrefix": "_",
           "operators": Object {
@@ -130,7 +120,6 @@ test('operator returns value', () => {
             "user": Object {
               "user": true,
             },
-            "verbose": undefined,
           },
           "payload": Object {
             "payload": true,
@@ -152,7 +141,7 @@ test('operator returns value', () => {
 test('operator should be object with 1 key', () => {
   const input = { a: { _test: { params: true }, x: 1 } };
   const parser = new BuildParser({ operators, payload, secrets, user });
-  const res = parser.parse({ args, input, location });
+  const res = parser.parse({ args, input });
   expect(res.output).toEqual(input);
   expect(res.errors).toEqual([]);
 });
@@ -161,7 +150,7 @@ test('operatorPrefix invalid', () => {
   const input = { a: { _test: { params: true }, x: 1 } };
   const operatorPrefix = 'invalid';
   const parser = new BuildParser({ operators, payload, secrets, user });
-  const res = parser.parse({ args, input, location, operatorPrefix });
+  const res = parser.parse({ args, input, operatorPrefix });
   expect(res.output).toEqual(input);
   expect(res.errors).toEqual([]);
 });
@@ -169,7 +158,7 @@ test('operatorPrefix invalid', () => {
 test('undefined operator', () => {
   const input = { a: { _id: { params: true } } };
   const parser = new BuildParser({ operators, payload, secrets, user });
-  const res = parser.parse({ args, input, location });
+  const res = parser.parse({ args, input });
   expect(res.output).toEqual(input);
   expect(res.errors).toEqual([]);
 });
@@ -177,16 +166,124 @@ test('undefined operator', () => {
 test('operator errors', () => {
   const input = { a: { _error: { params: true } } };
   const parser = new BuildParser({ operators, payload, secrets, user });
-  const res = parser.parse({ args, input, location });
+  const res = parser.parse({ args, input });
   expect(res.output).toEqual({ a: null });
   expect(res.errors.length).toBe(1);
+  expect(res.errors[0]).toBeInstanceOf(OperatorError);
+  expect(res.errors[0].name).toBe('OperatorError');
   expect(res.errors[0].message).toBe('Test error.');
   expect(res.errors[0].received).toEqual({ _error: { params: true } });
-  expect(res.errors[0].operatorLocation).toEqual({
-    location: 'location',
-    line: undefined,
-    ref: undefined,
+  expect(res.errors[0].lineNumber).toBeUndefined();
+  expect(res.errors[0].refId).toBeUndefined();
+});
+
+test('operator errors include configKey from ~k', () => {
+  const input = { a: { _error: { params: true } } };
+  Object.defineProperty(input.a, '~k', {
+    value: 'config-key-456',
+    enumerable: false,
+    writable: true,
+    configurable: true,
   });
+  const parser = new BuildParser({ operators, payload, secrets, user });
+  const res = parser.parse({ args, input });
+  expect(res.errors.length).toBe(1);
+  expect(res.errors[0]).toBeInstanceOf(OperatorError);
+  expect(res.errors[0].configKey).toBe('config-key-456');
+});
+
+test('operator errors preserve existing configKey', () => {
+  const errorWithConfigKey = new Error('Pre-configured error');
+  errorWithConfigKey.configKey = 'existing-key';
+  const operatorsWithPreConfiguredError = {
+    ...operators,
+    _errorWithKey: jest.fn(() => {
+      throw errorWithConfigKey;
+    }),
+  };
+  const input = { a: { _errorWithKey: { params: true } } };
+  Object.defineProperty(input.a, '~k', {
+    value: 'new-key',
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  const parser = new BuildParser({
+    operators: operatorsWithPreConfiguredError,
+    payload,
+    secrets,
+    user,
+  });
+  const res = parser.parse({ args, input });
+  expect(res.errors.length).toBe(1);
+  expect(res.errors[0]).toBeInstanceOf(OperatorError);
+  expect(res.errors[0].configKey).toBe('existing-key');
+});
+
+test('operator errors include lineNumber and refId from ~l and ~r', () => {
+  const input = { a: { _error: { params: true } } };
+  Object.defineProperty(input.a, '~l', {
+    value: 42,
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  Object.defineProperty(input.a, '~r', {
+    value: 'ref-123',
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  const parser = new BuildParser({ operators, payload, secrets, user });
+  const res = parser.parse({ args, input });
+  expect(res.errors.length).toBe(1);
+  expect(res.errors[0]).toBeInstanceOf(OperatorError);
+  expect(res.errors[0].message).toBe('Test error.');
+  expect(res.errors[0].lineNumber).toBe(42);
+  expect(res.errors[0].refId).toBe('ref-123');
+});
+
+test('ConfigError from operator is preserved with configKey, lineNumber and refId', () => {
+  const operatorsWithConfigError = {
+    ...operators,
+    _configError: jest.fn(() => {
+      throw new ConfigError('Invalid config value.');
+    }),
+  };
+  const input = { a: { _configError: { params: true } } };
+  Object.defineProperty(input.a, '~k', {
+    value: 'config-key-789',
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  Object.defineProperty(input.a, '~l', {
+    value: 10,
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  Object.defineProperty(input.a, '~r', {
+    value: 'ref-456',
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  const parser = new BuildParser({
+    operators: operatorsWithConfigError,
+    payload,
+    secrets,
+    user,
+  });
+  const res = parser.parse({ args, input });
+  expect(res.output).toEqual({ a: null });
+  expect(res.errors.length).toBe(1);
+  expect(res.errors[0]).toBeInstanceOf(ConfigError);
+  expect(res.errors[0].name).toBe('ConfigError');
+  expect(res.errors[0].message).toBe('Invalid config value.');
+  expect(res.errors[0].configKey).toBe('config-key-789');
+  expect(res.errors[0].lineNumber).toBe(10);
+  expect(res.errors[0].refId).toBe('ref-456');
 });
 
 // ==================== hasDynamicMarker tests ====================
@@ -295,7 +392,7 @@ describe('dynamic operator detection', () => {
 
     const parser = new BuildParser({ operators: ops, dynamicIdentifiers });
     const input = { a: { _dynamic: 'params' } };
-    const res = parser.parse({ input, location });
+    const res = parser.parse({ input });
 
     expect(_dynamic).not.toHaveBeenCalled();
     expect(res.output.a).toEqual({ _dynamic: 'params' });
@@ -310,7 +407,7 @@ describe('dynamic operator detection', () => {
 
     const parser = new BuildParser({ operators: ops, dynamicIdentifiers });
     const input = { a: { _static: 'params' } };
-    const res = parser.parse({ input, location });
+    const res = parser.parse({ input });
 
     expect(_static).toHaveBeenCalled();
     expect(res.output).toEqual({ a: 'static result' });
@@ -323,7 +420,7 @@ describe('dynamic operator detection', () => {
 
     const parser = new BuildParser({ operators: ops, dynamicIdentifiers });
     const input = { a: { '_math.random': {} } };
-    const res = parser.parse({ input, location });
+    const res = parser.parse({ input });
 
     expect(_math).not.toHaveBeenCalled();
     expect(res.output.a).toEqual({ '_math.random': {} });
@@ -337,7 +434,7 @@ describe('dynamic operator detection', () => {
 
     const parser = new BuildParser({ operators: ops, dynamicIdentifiers });
     const input = { a: { '_math.abs': -5 } };
-    const res = parser.parse({ input, location });
+    const res = parser.parse({ input });
 
     expect(_math).toHaveBeenCalled();
     expect(res.output).toEqual({ a: 42 });
@@ -356,7 +453,7 @@ describe('dynamic operator detection', () => {
       b: { _request: 'y' },
       c: { _get: 'z' },
     };
-    const res = parser.parse({ input, location });
+    const res = parser.parse({ input });
 
     expect(_state).not.toHaveBeenCalled();
     expect(_request).not.toHaveBeenCalled();
@@ -380,7 +477,7 @@ describe('dynamic content bubble-up', () => {
     const input = {
       result: { _if: { test: { _state: 'loading' }, then: 'yes', else: 'no' } },
     };
-    const res = parser.parse({ input, location });
+    const res = parser.parse({ input });
 
     expect(_state).not.toHaveBeenCalled();
     expect(_if).not.toHaveBeenCalled();
@@ -401,7 +498,7 @@ describe('dynamic content bubble-up', () => {
         },
       },
     };
-    const res = parser.parse({ input, location });
+    const res = parser.parse({ input });
 
     expect(res.output.outer['~dyn']).toBe(true);
     expect(res.output.outer.middle['~dyn']).toBe(true);
@@ -419,7 +516,7 @@ describe('dynamic content bubble-up', () => {
       static: { _get: 'path' },
       dynamic: { _state: 'key' },
     };
-    const res = parser.parse({ input, location });
+    const res = parser.parse({ input });
 
     expect(_get).toHaveBeenCalled();
     expect(res.output.static).toBe('static value');
@@ -436,7 +533,7 @@ describe('dynamic content bubble-up', () => {
     const input = {
       text: { _concat: ['Hello ', { _state: 'name' }] },
     };
-    const res = parser.parse({ input, location });
+    const res = parser.parse({ input });
 
     expect(_concat).not.toHaveBeenCalled();
     expect(res.output.text['~dyn']).toBe(true);
@@ -461,7 +558,7 @@ describe('type boundary reset', () => {
         },
       ],
     };
-    const res = parser.parse({ input, location });
+    const res = parser.parse({ input });
 
     // The block itself should NOT have ~dyn (type boundary reset)
     expect(res.output.blocks[0]['~dyn']).toBeUndefined();
@@ -485,7 +582,7 @@ describe('type boundary reset', () => {
         { type: 'Button', label: { _get: 'static.path' } },
       ],
     };
-    const res = parser.parse({ input, location });
+    const res = parser.parse({ input });
 
     expect(res.output.blocks[0].label['~dyn']).toBe(true);
     expect(res.output.blocks[1].label).toBe('static');
@@ -505,7 +602,7 @@ describe('type boundary reset', () => {
         content: { _state: 'value' },
       },
     };
-    const res = parser.parse({ input, location });
+    const res = parser.parse({ input });
 
     // UnknownType is not in typeNames, so bubble-up continues
     expect(res.output.wrapper['~dyn']).toBe(true);
@@ -526,7 +623,7 @@ describe('type boundary reset', () => {
         },
       },
     };
-    const res = parser.parse({ input, location });
+    const res = parser.parse({ input });
 
     // Card type boundary resets at top level
     expect(res.output['~dyn']).toBeUndefined();
@@ -547,7 +644,7 @@ describe('type boundary reset', () => {
       type: 'Button',
       label: { _state: 'text' },
     };
-    const res = parser.parse({ input, location });
+    const res = parser.parse({ input });
 
     // With no typeNames, type boundary doesn't reset
     expect(res.output['~dyn']).toBe(true);
@@ -563,7 +660,7 @@ describe('edge cases', () => {
 
     const parser = new BuildParser({ operators: ops });
     const input = { a: { _test: 'params' } };
-    const res = parser.parse({ input, location });
+    const res = parser.parse({ input });
 
     expect(_test).toHaveBeenCalled();
     expect(res.output).toEqual({ a: 'result' });
@@ -582,7 +679,7 @@ describe('edge cases', () => {
       writable: true,
       configurable: true,
     });
-    const res = parser.parse({ input, location });
+    const res = parser.parse({ input });
 
     // Objects with ~r are returned early, no operator processing
     expect(res.output.a).toBe(1);
@@ -595,7 +692,7 @@ describe('edge cases', () => {
 
     const parser = new BuildParser({ operators: ops });
     const input = { result: { _build: {} } };
-    const res = parser.parse({ input, location });
+    const res = parser.parse({ input });
 
     expect(res.output.result).toEqual({ computed: true });
     expect(res.output.result['~dyn']).toBeUndefined();
@@ -610,7 +707,7 @@ describe('edge cases', () => {
     const input = {
       items: [{ nested: [{ deep: { _state: 'value' } }] }],
     };
-    const res = parser.parse({ input, location });
+    const res = parser.parse({ input });
 
     // Dynamic marker bubbles up through objects and arrays
     expect(res.output.items[0].nested[0].deep['~dyn']).toBe(true);
@@ -627,7 +724,7 @@ describe('edge cases', () => {
 
     const parser = new BuildParser({ operators: ops, dynamicIdentifiers });
     const input = { a: { $state: 'value' } };
-    const res = parser.parse({ input, location, operatorPrefix: '$' });
+    const res = parser.parse({ input, operatorPrefix: '$' });
 
     expect(_state).not.toHaveBeenCalled();
     expect(res.output.a['~dyn']).toBe(true);
@@ -646,10 +743,106 @@ describe('edge cases', () => {
         b: { _request: 'y' },
       },
     };
-    const res = parser.parse({ input, location });
+    const res = parser.parse({ input });
 
     expect(res.output.container['~dyn']).toBe(true);
     expect(res.output.container.a['~dyn']).toBe(true);
     expect(res.output.container.b['~dyn']).toBe(true);
+  });
+});
+
+// ==================== ~shallow placeholder handling tests ====================
+
+describe('~shallow placeholder handling', () => {
+  test('~shallow object is marked with ~dyn', () => {
+    const _test = jest.fn(() => 'result');
+    const ops = { _test };
+
+    const parser = new BuildParser({ operators: ops });
+    const input = {
+      blocks: { '~shallow': true, _ref: 'pages/home/blocks.yaml' },
+    };
+    const res = parser.parse({ input });
+
+    expect(res.output.blocks['~dyn']).toBe(true);
+    expect(res.output.blocks['~shallow']).toBe(true);
+    expect(res.output.blocks._ref).toBe('pages/home/blocks.yaml');
+  });
+
+  test('operator wrapping ~shallow content is preserved (not evaluated)', () => {
+    const _array = jest.fn(() => [1, 2, 3]);
+    const ops = { _array };
+
+    const parser = new BuildParser({ operators: ops });
+    const input = {
+      merged: {
+        '_build.array.concat': [
+          { '~shallow': true, _ref: 'pages/home/blocks.yaml' },
+          { '~shallow': true, _ref: 'pages/home/extra.yaml' },
+        ],
+      },
+    };
+    const res = parser.parse({ input, operatorPrefix: '_build.' });
+
+    // Operator should NOT be evaluated — args contain ~shallow (dynamic) content
+    expect(_array).not.toHaveBeenCalled();
+    expect(res.output.merged['~dyn']).toBe(true);
+    expect(res.output.merged['_build.array.concat']).toBeDefined();
+  });
+
+  test('operator with normal args (no ~shallow) is still evaluated', () => {
+    const _string = jest.fn(() => 'hello world');
+    const ops = { _string };
+
+    const parser = new BuildParser({ operators: ops });
+    const input = {
+      title: { '_build.string.concat': ['hello', ' ', 'world'] },
+    };
+    const res = parser.parse({ input, operatorPrefix: '_build.' });
+
+    expect(_string).toHaveBeenCalled();
+    expect(res.output.title).toBe('hello world');
+  });
+
+  test('nested: resolved inner args evaluate, outer with ~shallow is preserved', () => {
+    const _string = jest.fn(() => 'computed-id');
+    const _array = jest.fn(() => [1, 2, 3]);
+    const ops = { _string, _array };
+
+    const parser = new BuildParser({ operators: ops });
+    const input = {
+      id: { '_build.string.concat': ['page', '-', 'home'] },
+      events: {
+        '_build.array.concat': [
+          { '~shallow': true, _ref: 'pages/home/events.yaml' },
+        ],
+      },
+    };
+    const res = parser.parse({ input, operatorPrefix: '_build.' });
+
+    // id operator has no ~shallow args — should evaluate
+    expect(_string).toHaveBeenCalled();
+    expect(res.output.id).toBe('computed-id');
+    // events operator wraps ~shallow content — should be preserved
+    expect(_array).not.toHaveBeenCalled();
+    expect(res.output.events['~dyn']).toBe(true);
+  });
+
+  test('~shallow marker does not interfere with non-shallow objects', () => {
+    const _test = jest.fn(() => 'evaluated');
+    const ops = { _test };
+
+    const parser = new BuildParser({ operators: ops });
+    const input = {
+      normal: { _test: 'params' },
+      shallow: { '~shallow': true, _ref: 'file.yaml' },
+    };
+    const res = parser.parse({ input });
+
+    // Normal operator evaluates
+    expect(_test).toHaveBeenCalled();
+    expect(res.output.normal).toBe('evaluated');
+    // Shallow is marked as dynamic
+    expect(res.output.shallow['~dyn']).toBe(true);
   });
 });

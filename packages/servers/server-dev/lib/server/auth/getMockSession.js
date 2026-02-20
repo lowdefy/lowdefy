@@ -28,7 +28,7 @@ async function getMockSession() {
     try {
       mockUser = JSON.parse(mockUserJson);
     } catch (error) {
-      throw new Error(`Invalid JSON in LOWDEFY_DEV_USER environment variable: ${error.message}`);
+      throw new Error('Invalid JSON in LOWDEFY_DEV_USER environment variable.', { cause: error });
     }
   } else {
     mockUser = authJson.dev?.mockUser;

@@ -15,55 +15,41 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError } from '@lowdefy/errors';
 
-function validateBlock(block, { pageId, context }) {
+function validateBlock(block, { pageId }) {
   const configKey = block?.['~k'];
   if (!type.isObject(block)) {
-    throw new ConfigError({
-      message: `Expected block to be an object on page "${pageId}".`,
+    throw new ConfigError(`Expected block to be an object on page "${pageId}".`, {
       received: block,
       configKey,
-      context,
     });
   }
   if (type.isUndefined(block.id)) {
-    throw new ConfigError({
-      message: `Block id missing at page "${pageId}".`,
-      configKey,
-      context,
-    });
+    throw new ConfigError(`Block id missing at page "${pageId}".`, { configKey });
   }
   if (!type.isString(block.id)) {
-    throw new ConfigError({
-      message: `Block id is not a string at page "${pageId}".`,
+    throw new ConfigError(`Block id is not a string at page "${pageId}".`, {
       received: block.id,
       configKey,
-      context,
     });
   }
   if (type.isNone(block.type)) {
-    throw new ConfigError({
-      message: `Block type is not defined at "${block.id}" on page "${pageId}".`,
+    throw new ConfigError(`Block type is not defined at "${block.id}" on page "${pageId}".`, {
       configKey,
-      context,
     });
   }
   if (!type.isString(block.type)) {
-    throw new ConfigError({
-      message: `Block type is not a string at "${block.id}" on page "${pageId}".`,
+    throw new ConfigError(`Block type is not a string at "${block.id}" on page "${pageId}".`, {
       received: block.type,
       configKey,
-      context,
     });
   }
   if (!type.isNone(block.requests)) {
     if (!type.isArray(block.requests)) {
-      throw new ConfigError({
-        message: `Requests is not an array at "${block.id}" on page "${pageId}".`,
+      throw new ConfigError(`Requests is not an array at "${block.id}" on page "${pageId}".`, {
         received: block.requests,
         configKey,
-        context,
       });
     }
   }

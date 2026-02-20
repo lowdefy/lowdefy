@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { ConfigError, OperatorError } from '@lowdefy/errors';
 import { serializer, type } from '@lowdefy/helpers';
 
 class BuildParser {
@@ -47,29 +48,23 @@ class BuildParser {
     return value;
   }
 
-  constructor({ env, payload, secrets, user, operators, verbose, dynamicIdentifiers, typeNames }) {
+  constructor({ env, payload, secrets, user, operators, dynamicIdentifiers, typeNames }) {
     this.env = env;
     this.operators = operators;
     this.parse = this.parse.bind(this);
     this.payload = payload;
     this.secrets = secrets;
     this.user = user;
-    this.verbose = verbose;
     this.dynamicIdentifiers = dynamicIdentifiers ?? new Set();
     this.typeNames = typeNames ?? new Set();
   }
 
-  // TODO: Look at logging here
-  // TODO: Remove console.error = () => {}; from tests
-  parse({ args, input, location, operatorPrefix = '_' }) {
+  parse({ args, input, operatorPrefix = '_' }) {
     if (type.isUndefined(input)) {
       return { output: input, errors: [] };
     }
     if (args && !type.isArray(args)) {
       throw new Error('Operator parser args must be an array.');
-    }
-    if (!type.isString(location)) {
-      throw new Error('Operator parser location must be a string.');
     }
     const errors = [];
     const reviver = (_, value) => {
@@ -82,6 +77,12 @@ class BuildParser {
       }
 
       if (!type.isObject(value)) return value;
+
+      // ~shallow placeholders are unresolved refs — mark as dynamic so operators
+      // wrapping them are preserved for evaluation after resolution (JIT builds).
+      if (value['~shallow'] === true) {
+        return BuildParser.setDynamicMarker(value);
+      }
 
       // Check if this is an operator object BEFORE checking ~r
       // Operators in vars have ~r set by copyVarValue (as enumerable), but should still be evaluated
@@ -135,9 +136,9 @@ class BuildParser {
         return BuildParser.setDynamicMarker(value);
       }
 
-      // Build location with line number if available
+      const configKey = value['~k'];
       const lineNumber = value['~l'];
-      const operatorLocation = lineNumber ? `${location}:${lineNumber}` : location;
+      const refId = value['~r'];
       const params = value[key];
 
       try {
@@ -145,7 +146,6 @@ class BuildParser {
           args,
           arrayIndices: [],
           env: this.env,
-          location: operatorLocation,
           methodName,
           operators: this.operators,
           params,
@@ -158,20 +158,32 @@ class BuildParser {
         });
         return res;
       } catch (e) {
-        const message = e.message || `Operator ${op} threw an error`;
-        const formattedError = new Error(message);
-        formattedError.stack = e.stack;
-        formattedError.received = { [key]: params };
-        // Attach location info for error formatting
-        formattedError.operatorLocation = {
-          location: operatorLocation,
-          line: value['~l'],
-          ref: value['~r'],
-        };
-        errors.push(formattedError);
-        if (this.verbose) {
-          console.error(formattedError);
+        if (e instanceof ConfigError) {
+          if (!e.configKey) {
+            e.configKey = configKey;
+          }
+          if (!e.lineNumber) {
+            e.lineNumber = lineNumber;
+          }
+          if (!e.refId) {
+            e.refId = refId;
+          }
+          errors.push(e);
+          return null;
         }
+        const operatorError = new OperatorError(e.message, {
+          cause: e,
+          typeName: op,
+          received: { [key]: params },
+          configKey: e.configKey ?? configKey,
+        });
+        // lineNumber and refId needed by buildRefs consumers (evaluateBuildOperators,
+        // evaluateStaticOperators) which run before addKeys — no configKey
+        // exists yet, so they use filePath + lineNumber for resolution.
+        // refId (from ~r) identifies the source file in the refMap.
+        operatorError.lineNumber = lineNumber;
+        operatorError.refId = refId;
+        errors.push(operatorError);
         return null;
       }
     };

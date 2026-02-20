@@ -54,6 +54,24 @@ test('countOperators', () => {
   expect(counter.getCounts()).toEqual({ _op_1: 2, _op_2: 1, _op_3: 1, _op_4: 1 });
 });
 
+test('countOperators does not count _id as an operator', () => {
+  const counter = createCounter();
+  countOperators(
+    {
+      a: {
+        _id: '507f1f77bcf86cd799439011',
+      },
+      b: {
+        _op_1: {
+          _id: '507f1f77bcf86cd799439012',
+        },
+      },
+    },
+    { counter }
+  );
+  expect(counter.getCounts()).toEqual({ _op_1: 1 });
+});
+
 test('operator should be object with just one key', () => {
   let counter = createCounter();
   countOperators(

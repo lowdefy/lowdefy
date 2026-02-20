@@ -15,8 +15,7 @@
 */
 
 import createCliLogger from './createCliLogger.js';
-import createPrint, { createOraPrint, createBasicPrint } from './createPrint.js';
 import createStdOutLineHandler from './createStdOutLineHandler.js';
 
-export { createCliLogger, createPrint, createOraPrint, createBasicPrint, createStdOutLineHandler };
+export { createCliLogger, createStdOutLineHandler };
 export default createCliLogger;

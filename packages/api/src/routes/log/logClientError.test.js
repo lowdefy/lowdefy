@@ -16,6 +16,9 @@
 
 import { jest } from '@jest/globals';
 
+import { ConfigError, OperatorError, ServiceError } from '@lowdefy/errors';
+import { serializer } from '@lowdefy/helpers';
+
 import logClientError from './logClientError.js';
 
 const keyMap = {
@@ -43,21 +46,18 @@ describe('logClientError', () => {
       readConfigFile: jest.fn(),
     };
 
-    const result = await logClientError(context, {
-      '~err': 'ConfigError',
-      message: 'Test error',
-    });
+    const data = serializer.serialize(new ConfigError('Test error'));
+    const { error, ...response } = await logClientError(context, data);
 
-    expect(result).toEqual({
+    expect(response).toEqual({
       success: true,
       source: null,
       config: null,
-      link: null,
     });
     expect(mockLogger.error).toHaveBeenCalledTimes(1);
-    const loggedError = mockLogger.error.mock.calls[0][0];
-    expect(loggedError.name).toBe('ConfigError');
-    expect(loggedError.message).toBe('Test error');
+    expect(error).toBeInstanceOf(ConfigError);
+    expect(error.name).toBe('ConfigError');
+    expect(error.message).toBe('Test error');
     expect(context.readConfigFile).not.toHaveBeenCalled();
   });
 
@@ -74,25 +74,23 @@ describe('logClientError', () => {
       }),
     };
 
-    const result = await logClientError(context, {
-      '~err': 'ConfigError',
-      message: 'Test error',
-      configKey: 'key-123',
-    });
+    const data = serializer.serialize(
+      new ConfigError('Test error', { configKey: 'key-123' })
+    );
+    const { error, ...response } = await logClientError(context, data);
 
-    expect(result).toEqual({
+    expect(response).toEqual({
       success: true,
       source: 'pages/home.yaml:8',
       config: 'root.pages[0:home].blocks[0:header]',
-      link: 'pages/home.yaml:8',
     });
-    const loggedError = mockLogger.error.mock.calls[0][0];
-    expect(loggedError.name).toBe('ConfigError');
-    expect(loggedError.message).toBe('Test error');
-    expect(loggedError.source).toBe('pages/home.yaml:8');
+    expect(error).toBeInstanceOf(ConfigError);
+    expect(error.name).toBe('ConfigError');
+    expect(error.message).toBe('Test error');
+    expect(error.source).toBe('pages/home.yaml:8');
   });
 
-  test('logs PluginError with configKey and resolves location', async () => {
+  test('logs OperatorError with configKey and resolves location', async () => {
     const mockLogger = {
       error: jest.fn(),
       warn: jest.fn(),
@@ -105,24 +103,23 @@ describe('logClientError', () => {
       }),
     };
 
-    const result = await logClientError(context, {
-      '~err': 'PluginError',
-      message: 'Operator failed',
-      configKey: 'key-123',
-      pluginType: 'operator',
-      pluginName: '_if',
-    });
+    const data = serializer.serialize(
+      new OperatorError('Operator failed', {
+        configKey: 'key-123',
+        typeName: '_if',
+      })
+    );
+    const { error, ...response } = await logClientError(context, data);
 
-    expect(result).toEqual({
+    expect(response).toEqual({
       success: true,
       source: 'pages/home.yaml:8',
       config: 'root.pages[0:home].blocks[0:header]',
-      link: 'pages/home.yaml:8',
     });
-    const loggedError = mockLogger.error.mock.calls[0][0];
-    expect(loggedError.name).toBe('PluginError');
-    expect(loggedError.message).toBe('Operator failed');
-    expect(loggedError.source).toBe('pages/home.yaml:8');
+    expect(error).toBeInstanceOf(OperatorError);
+    expect(error.name).toBe('OperatorError');
+    expect(error.message).toBe('Operator failed');
+    expect(error.source).toBe('pages/home.yaml:8');
   });
 
   test('logs ServiceError', async () => {
@@ -135,21 +132,19 @@ describe('logClientError', () => {
       readConfigFile: jest.fn(),
     };
 
-    const result = await logClientError(context, {
-      '~err': 'ServiceError',
-      message: 'MongoDB: Connection refused',
-      service: 'MongoDB',
-    });
+    const data = serializer.serialize(
+      new ServiceError('Connection refused', { service: 'MongoDB' })
+    );
+    const { error, ...response } = await logClientError(context, data);
 
-    expect(result).toEqual({
+    expect(response).toEqual({
       success: true,
       source: null,
       config: null,
-      link: null,
     });
-    const loggedError = mockLogger.error.mock.calls[0][0];
-    expect(loggedError.name).toBe('ServiceError');
-    expect(loggedError.message).toBe('MongoDB: Connection refused');
+    expect(error).toBeInstanceOf(ServiceError);
+    expect(error.name).toBe('ServiceError');
+    expect(error.message).toBe('MongoDB: Connection refused');
     expect(context.readConfigFile).not.toHaveBeenCalled();
   });
 
@@ -166,52 +161,43 @@ describe('logClientError', () => {
       }),
     };
 
-    const result = await logClientError(context, {
-      '~err': 'ConfigError',
-      message: 'Test error',
-      configKey: 'non-existent-key',
-    });
+    const data = serializer.serialize(
+      new ConfigError('Test error', { configKey: 'non-existent-key' })
+    );
+    const { error, ...response } = await logClientError(context, data);
 
-    expect(result).toEqual({
+    expect(response).toEqual({
       success: true,
       source: null,
       config: null,
-      link: null,
     });
-    const loggedError = mockLogger.error.mock.calls[0][0];
-    expect(loggedError.name).toBe('ConfigError');
-    expect(loggedError.message).toBe('Test error');
-    expect(loggedError.source).toBeNull();
+    expect(error).toBeInstanceOf(ConfigError);
+    expect(error.name).toBe('ConfigError');
+    expect(error.message).toBe('Test error');
+    expect(error.source).toBeNull();
   });
 
-  test('handles error when loading maps', async () => {
+  test('strips received property from serialized data', async () => {
     const mockLogger = {
       error: jest.fn(),
       warn: jest.fn(),
     };
     const context = {
       logger: mockLogger,
-      readConfigFile: jest.fn(() => Promise.reject(new Error('File not found'))),
+      readConfigFile: jest.fn(),
     };
 
-    const result = await logClientError(context, {
-      '~err': 'ConfigError',
-      message: 'Test error',
-      configKey: 'key-123',
+    const operatorError = new OperatorError('Operator failed', {
+      typeName: '_if',
+      received: { sensitiveData: 'should not appear' },
     });
+    const data = serializer.serialize(operatorError);
+    // Simulate client-side stripping of received
+    delete data['~e'].received;
 
-    expect(result).toEqual({
-      success: true,
-      source: null,
-      config: null,
-      link: null,
-    });
-    expect(mockLogger.warn).toHaveBeenCalledWith({
-      event: 'warn_maps_load_failed',
-      error: 'File not found',
-    });
-    const loggedError = mockLogger.error.mock.calls[0][0];
-    expect(loggedError.name).toBe('ConfigError');
-    expect(loggedError.message).toBe('Test error');
+    const { error } = await logClientError(context, data);
+
+    expect(error).toBeInstanceOf(OperatorError);
+    expect(error.received).toBeUndefined();
   });
 });

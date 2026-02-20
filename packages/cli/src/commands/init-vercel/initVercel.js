@@ -19,7 +19,7 @@ import url from 'url';
 import { readFile, writeFile } from '@lowdefy/node-utils';
 
 async function initVercel({ context }) {
-  context.logger.ui.log('Initializing Vercel deployment.');
+  context.logger.info('Initializing Vercel deployment.');
 
   const installScript = await readFile(
     url.fileURLToPath(new URL('./vercel.install.sh', import.meta.url))
@@ -28,13 +28,13 @@ async function initVercel({ context }) {
     path.join(context.directories.config, 'deploy', 'vercel.install.sh'),
     installScript
   );
-  context.logger.ui.log("Created 'vercel.install.sh'.");
+  context.logger.info("Created 'vercel.install.sh'.");
   const readMe = await readFile(url.fileURLToPath(new URL('./README.md', import.meta.url)));
   await writeFile(path.join(context.directories.config, 'deploy', 'README.md'), readMe);
-  context.logger.ui.log("Created 'README.md'.");
+  context.logger.info("Created 'README.md'.");
 
   await context.sendTelemetry();
-  context.logger.ui.succeed('Vercel deployment initialized.');
+  context.logger.info({ succeed: true }, 'Vercel deployment initialized.');
 }
 
 export default initVercel;

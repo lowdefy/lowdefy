@@ -230,7 +230,7 @@ describe('_array.every', () => {
         methodName,
         location,
       })
-    ).toThrow(/_array\.every - (number )?1 is not a function/);
+    ).toThrow(/(number )?1 is not a function/);
     expect(() =>
       _array({
         params: null,
@@ -361,7 +361,7 @@ describe('_array.filter', () => {
         methodName,
         location,
       })
-    ).toThrow(/_array\.filter - (number )?1 is not a function/);
+    ).toThrow(/(number )?1 is not a function/);
     expect(() =>
       _array({
         params: null,
@@ -431,7 +431,7 @@ describe('_array.find', () => {
         methodName,
         location,
       })
-    ).toThrow(/_array\.find - (number )?1 is not a function/);
+    ).toThrow(/(number )?1 is not a function/);
     expect(() =>
       _array({
         params: null,
@@ -501,7 +501,7 @@ describe('_array.findIndex', () => {
         methodName,
         location,
       })
-    ).toThrow(/_array\.findIndex - (number )?1 is not a function/);
+    ).toThrow(/(number )?1 is not a function/);
     expect(() =>
       _array({
         params: null,
@@ -897,7 +897,7 @@ describe('_array.map', () => {
         methodName,
         location,
       })
-    ).toThrow(/_array\.map - (number )?1 is not a function/);
+    ).toThrow(/(number )?1 is not a function/);
     expect(() =>
       _array({
         params: null,
@@ -973,9 +973,7 @@ describe('_array.reduce', () => {
         methodName,
         location,
       })
-    ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.reduce - Reduce of empty array with no initial value"`
-    );
+    ).toThrowErrorMatchingInlineSnapshot(`"Reduce of empty array with no initial value"`);
     expect(() =>
       _array({
         params: { on: 0 },
@@ -991,7 +989,7 @@ describe('_array.reduce', () => {
         methodName,
         location,
       })
-    ).toThrow(/_array\.reduce - (number )?1 is not a function/);
+    ).toThrow(/(number )?1 is not a function/);
     expect(() =>
       _array({
         params: null,
@@ -1062,9 +1060,7 @@ describe('_array.reduceRight', () => {
           location,
         })
       )
-    ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.reduceRight - Reduce of empty array with no initial value"`
-    );
+    ).toThrowErrorMatchingInlineSnapshot(`"Reduce of empty array with no initial value"`);
     expect(() =>
       _array({
         params: { on: 0 },
@@ -1080,7 +1076,7 @@ describe('_array.reduceRight', () => {
         methodName,
         location,
       })
-    ).toThrow(/_array\.reduceRight - (number )?1 is not a function/);
+    ).toThrow(/(number )?1 is not a function/);
     expect(() =>
       _array({
         params: null,
@@ -1327,7 +1323,7 @@ describe('_array.some', () => {
         methodName,
         location,
       })
-    ).toThrow(/_array\.some - (number )?1 is not a function/);
+    ).toThrow(/(number )?1 is not a function/);
     expect(() =>
       _array({
         params: null,

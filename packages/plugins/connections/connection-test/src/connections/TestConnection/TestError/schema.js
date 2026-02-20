@@ -22,11 +22,11 @@ export default {
   properties: {
     errorType: {
       type: 'string',
-      enum: ['Error', 'ConfigError', 'TypeError', 'RangeError'],
+      enum: ['Error', 'ConfigError', 'ServiceError', 'UserError', 'TypeError', 'RangeError'],
       description: 'The type of error to throw.',
       errorMessage: {
         type: 'TestError property "errorType" should be a string.',
-        enum: 'TestError property "errorType" must be one of "Error", "ConfigError", "TypeError", "RangeError".',
+        enum: 'TestError property "errorType" must be one of "Error", "ConfigError", "ServiceError", "UserError", "TypeError", "RangeError".',
       },
     },
     message: {

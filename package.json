@@ -22,7 +22,7 @@
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
   "scripts": {
-    "build": "pnpm -r build",
+    "build": "pnpm -r --filter='!@lowdefy/website' build",
     "build:turbo": "turbo run build",
     "clean": "pnpm -r clean",
     "prettier": "prettier --config .prettierrc --write **/*.js",

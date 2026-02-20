@@ -15,6 +15,5 @@
 */
 
 import createNodeLogger from './createNodeLogger.js';
-import wrapErrorLogger from './wrapErrorLogger.js';
 
-export { createNodeLogger, wrapErrorLogger };
+export { createNodeLogger };

@@ -16,49 +16,59 @@
 
 import { jest } from '@jest/globals';
 import logCollectedErrors from './logCollectedErrors.js';
-import { ConfigError } from '@lowdefy/errors/build';
+import { BuildError, ConfigError, OperatorError } from '@lowdefy/errors';
 
 test('logCollectedErrors does nothing when no errors', () => {
-  const context = { errors: [], logger: { error: jest.fn() } };
+  const context = { errors: [], handleError: jest.fn() };
   logCollectedErrors(context);
-  expect(context.logger.error).not.toHaveBeenCalled();
+  expect(context.handleError).not.toHaveBeenCalled();
 });
 
 test('logCollectedErrors logs ConfigError instances and throws summary', () => {
-  const configErr = new ConfigError({ message: 'Bad config' });
-  const context = { errors: [configErr], logger: { error: jest.fn() } };
+  const configErr = new ConfigError('Bad config');
+  const context = { errors: [configErr], handleError: jest.fn() };
   expect(() => logCollectedErrors(context)).toThrow(
     'Build failed with 1 error(s). See above for details.'
   );
-  expect(context.logger.error).toHaveBeenCalledWith(configErr);
+  expect(context.handleError).toHaveBeenCalledWith(configErr);
 });
 
-test('logCollectedErrors wraps plain errors as LowdefyError', () => {
+test('logCollectedErrors wraps plain errors as LowdefyInternalError', () => {
   const plainErr = new Error('Something broke');
-  const context = { errors: [plainErr], logger: { error: jest.fn() } };
+  const context = { errors: [plainErr], handleError: jest.fn() };
   expect(() => logCollectedErrors(context)).toThrow(
     'Build failed with 1 error(s). See above for details.'
   );
-  const loggedErr = context.logger.error.mock.calls[0][0];
-  expect(loggedErr.name).toBe('LowdefyError');
+  const loggedErr = context.handleError.mock.calls[0][0];
+  expect(loggedErr.name).toBe('LowdefyInternalError');
   expect(loggedErr.message).toBe('Something broke');
 });
 
-test('logCollectedErrors logs errors with print method directly', () => {
-  const printableErr = new Error('Printable');
-  printableErr.print = () => 'formatted';
-  const context = { errors: [printableErr], logger: { error: jest.fn() } };
+test('logCollectedErrors wraps errors without print method as LowdefyInternalError', () => {
+  const plainErr = new Error('Printable');
+  const context = { errors: [plainErr], handleError: jest.fn() };
   expect(() => logCollectedErrors(context)).toThrow();
-  expect(context.logger.error).toHaveBeenCalledWith(printableErr);
+  const loggedErr = context.handleError.mock.calls[0][0];
+  expect(loggedErr.name).toBe('LowdefyInternalError');
+  expect(loggedErr.message).toBe('Printable');
 });
 
-test('logCollectedErrors sets isFormatted and hideStack on thrown error', () => {
-  const context = { errors: [new Error('a'), new Error('b')], logger: { error: jest.fn() } };
+test('logCollectedErrors passes OperatorError directly without wrapping', () => {
+  const operatorErr = new OperatorError('op failed', {
+    cause: new Error('op failed'),
+    typeName: '_get',
+  });
+  const context = { errors: [operatorErr], handleError: jest.fn() };
+  expect(() => logCollectedErrors(context)).toThrow(BuildError);
+  expect(context.handleError).toHaveBeenCalledWith(operatorErr);
+});
+
+test('logCollectedErrors throws BuildError', () => {
+  const context = { errors: [new Error('a'), new Error('b')], handleError: jest.fn() };
   try {
     logCollectedErrors(context);
   } catch (err) {
-    expect(err.isFormatted).toBe(true);
-    expect(err.hideStack).toBe(true);
+    expect(err).toBeInstanceOf(BuildError);
     expect(err.message).toBe('Build failed with 2 error(s). See above for details.');
   }
 });

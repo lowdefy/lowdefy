@@ -15,7 +15,7 @@
 */
 
 import { validate } from '@lowdefy/ajv';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError, shouldSuppressBuildCheck } from '@lowdefy/errors';
 
 import findConfigKey from '../utils/findConfigKey.js';
 import lowdefySchema from '../lowdefySchema.js';
@@ -63,8 +63,8 @@ function testSchema({ components, context }) {
         message = `${message} - "${error.params.additionalProperty}"`;
       }
 
-      const configError = new ConfigError({ message, configKey, context, checkSlug: 'schema' });
-      if (!configError.suppressed) {
+      const configError = new ConfigError(message, { configKey, checkSlug: 'schema' });
+      if (!shouldSuppressBuildCheck(configError, context.keyMap)) {
         if (!context.errors) {
           // If no error collection array, throw immediately (fallback for tests)
           throw configError;

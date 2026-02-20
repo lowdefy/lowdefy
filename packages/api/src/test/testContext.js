@@ -37,6 +37,9 @@ function testContext({
     authorize: createAuthorize({ session }),
     config,
     connections,
+    handleError: async (error) => {
+      logger.error(error);
+    },
     headers,
     logger,
     operators,

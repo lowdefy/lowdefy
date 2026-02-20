@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/errors';
+
 import getUserJavascriptFunction from './getUserJavascriptFunction.js';
 
 async function runTransformer({ context, input, refDef }) {
@@ -25,8 +27,9 @@ async function runTransformer({ context, input, refDef }) {
     try {
       return transformerFn(input, refDef.vars);
     } catch (error) {
-      throw Error(
-        `Error calling transformer "${refDef.transformer}" from "${refDef.path}": ${error.message}`
+      throw new ConfigError(
+        `Error calling transformer "${refDef.transformer}" from "${refDef.path}".`,
+        { cause: error, filePath: refDef.transformer }
       );
     }
   }
