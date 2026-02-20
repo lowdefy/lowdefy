@@ -1,0 +1,78 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+export default {
+  type: 'object',
+  properties: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      labelStyle: {
+        type: 'object',
+        description: 'Css style object to apply to the label skeleton.',
+        docs: {
+          displayType: 'yaml',
+        },
+      },
+      inputStyle: {
+        type: 'object',
+        description: 'Css style object to apply to the input skeleton.',
+        docs: {
+          displayType: 'yaml',
+        },
+      },
+      size: {
+        type: 'string',
+        default: 'medium',
+        description: 'Size of the skeleton.',
+        enum: ['small', 'medium', 'large'],
+      },
+      width: {
+        type: ['number', 'string'],
+        description: 'Width of the skeleton.',
+        docs: {
+          displayType: 'string',
+        },
+      },
+      labelHeight: {
+        type: ['number', 'string'],
+        description: 'Height of the skeleton.',
+        docs: {
+          displayType: 'string',
+        },
+      },
+      labelWidth: {
+        type: ['number', 'string'],
+        description: 'Width of the skeleton.',
+        docs: {
+          displayType: 'string',
+        },
+      },
+      inputHeight: {
+        type: ['number', 'string'],
+        description: 'Height of the skeleton.',
+        docs: {
+          displayType: 'string',
+        },
+      },
+    },
+  },
+  events: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {},
+  },
+};

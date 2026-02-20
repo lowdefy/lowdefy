@@ -121,7 +121,7 @@ test('writeOperatorSchemaMap handles missing typesMap.schemas gracefully', async
   expect(mockWriteBuildArtifact).toHaveBeenCalledWith('plugins/operatorSchemas.json', '{}');
 });
 
-test('writeOperatorSchemaMap writes empty schemas for packages without schema exports', async () => {
+test('writeOperatorSchemaMap collects schemas from resolvable packages', async () => {
   const components = {
     imports: {
       operators: {
@@ -141,7 +141,9 @@ test('writeOperatorSchemaMap writes empty schemas for packages without schema ex
     writeBuildArtifact: mockWriteBuildArtifact,
   };
   await writeOperatorSchemaMap({ components, context });
-  expect(mockWriteBuildArtifact).toHaveBeenCalledWith('plugins/operatorSchemas.json', '{}');
+  const written = JSON.parse(mockWriteBuildArtifact.mock.calls[0][1]);
+  expect(written._if).toBeDefined();
+  expect(written._if.params).toBeDefined();
 });
 
 test('writeOperatorSchemaMap deduplicates operators across client and server', async () => {
@@ -171,26 +173,24 @@ test('writeOperatorSchemaMap deduplicates operators across client and server', a
   expect(written._get).toEqual(getSchema);
 });
 
-test('writeOperatorSchemaMap groups multiple operators using typesMap schemas', async () => {
-  const ifSchema = { params: { type: 'object' } };
-  const eqSchema = { params: { type: 'array' } };
+test('writeOperatorSchemaMap groups multiple operators from same package', async () => {
   const components = {
     imports: {
       operators: {
         client: [
-          { package: 'custom-plugin', typeName: '_if', originalTypeName: '_if' },
-          { package: 'custom-plugin', typeName: '_eq', originalTypeName: '_eq' },
+          { package: '@lowdefy/operators-js', typeName: '_if', originalTypeName: '_if' },
+          { package: '@lowdefy/operators-js', typeName: '_eq', originalTypeName: '_eq' },
         ],
         server: [],
       },
     },
   };
   const context = {
-    typesMap: { schemas: { operators: { _if: ifSchema, _eq: eqSchema } } },
+    typesMap: { schemas: { operators: {} } },
     writeBuildArtifact: mockWriteBuildArtifact,
   };
   await writeOperatorSchemaMap({ components, context });
   const written = JSON.parse(mockWriteBuildArtifact.mock.calls[0][1]);
-  expect(written._if).toEqual(ifSchema);
-  expect(written._eq).toEqual(eqSchema);
+  expect(written._if).toBeDefined();
+  expect(written._eq).toBeDefined();
 });

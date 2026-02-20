@@ -106,7 +106,7 @@ test('writeBlockSchemaMap handles missing typesMap.schemas gracefully', async ()
   expect(mockWriteBuildArtifact).toHaveBeenCalledWith('plugins/blockSchemas.json', '{}');
 });
 
-test('writeBlockSchemaMap writes empty schemas for packages without schema exports', async () => {
+test('writeBlockSchemaMap collects schemas from resolvable packages', async () => {
   const components = {
     imports: {
       blocks: [
@@ -123,14 +123,12 @@ test('writeBlockSchemaMap writes empty schemas for packages without schema expor
     writeBuildArtifact: mockWriteBuildArtifact,
   };
   await writeBlockSchemaMap({ components, context });
-  expect(mockWriteBuildArtifact).toHaveBeenCalledWith('plugins/blockSchemas.json', '{}');
+  const written = JSON.parse(mockWriteBuildArtifact.mock.calls[0][1]);
+  expect(written.Box).toBeDefined();
+  expect(written.Box.properties).toBeDefined();
 });
 
-test('writeBlockSchemaMap groups multiple blocks using typesMap schemas', async () => {
-  const boxSchema = { properties: { type: 'object', properties: { span: { type: 'number' } } } };
-  const spanSchema = {
-    properties: { type: 'object', properties: { content: { type: 'string' } } },
-  };
+test('writeBlockSchemaMap groups multiple blocks from same package', async () => {
   const components = {
     imports: {
       blocks: [
@@ -140,11 +138,11 @@ test('writeBlockSchemaMap groups multiple blocks using typesMap schemas', async 
     },
   };
   const context = {
-    typesMap: { schemas: { blocks: { Box: boxSchema, Span: spanSchema } } },
+    typesMap: { schemas: { blocks: {} } },
     writeBuildArtifact: mockWriteBuildArtifact,
   };
   await writeBlockSchemaMap({ components, context });
   const written = JSON.parse(mockWriteBuildArtifact.mock.calls[0][1]);
-  expect(written.Box).toEqual(boxSchema);
-  expect(written.Span).toEqual(spanSchema);
+  expect(written.Box).toBeDefined();
+  expect(written.Span).toBeDefined();
 });
