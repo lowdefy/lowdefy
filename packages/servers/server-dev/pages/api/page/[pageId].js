@@ -23,8 +23,9 @@ async function handler({ context, req, res }) {
   const { pageId } = req.query;
 
   // Attempt JIT build if page not yet compiled
+  let buildResult;
   try {
-    await buildPageIfNeeded({
+    buildResult = await buildPageIfNeeded({
       pageId,
       buildDirectory: context.buildDirectory,
       configDirectory: context.configDirectory,
@@ -46,6 +47,14 @@ async function handler({ context, req, res }) {
       // Keep top-level message/source for backward compatibility
       message: error.message,
       source: error.source ?? null,
+    });
+    return;
+  }
+
+  if (buildResult && buildResult.installing) {
+    res.status(200).json({
+      installing: true,
+      packages: buildResult.packages,
     });
     return;
   }

@@ -32,6 +32,8 @@ import evaluateStaticOperators from '../buildRefs/evaluateStaticOperators.js';
 import jsMapParser from '../buildJs/jsMapParser.js';
 import makeRefDefinition from '../buildRefs/makeRefDefinition.js';
 import recursiveBuild from '../buildRefs/recursiveBuild.js';
+import detectMissingPluginPackages from './detectMissingPluginPackages.js';
+import updateServerPackageJsonJit from './updateServerPackageJsonJit.js';
 import validatePageTypes from './validatePageTypes.js';
 import writePageJit from './writePageJit.js';
 
@@ -92,6 +94,21 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
 
     // Validate that all page-level types (blocks, actions, operators) exist
     validatePageTypes({ context: buildContext });
+
+    // Detect plugin packages that are in typesMap but not installed in server
+    const missingPackages = detectMissingPluginPackages({
+      context: buildContext,
+      installedPluginPackages: buildContext.installedPluginPackages,
+    });
+    if (missingPackages.size > 0) {
+      if (buildContext.directories.server) {
+        await updateServerPackageJsonJit({
+          directories: buildContext.directories,
+          missingPackages,
+        });
+      }
+      return { installing: true, packages: [...missingPackages.keys()] };
+    }
 
     // Validate link, state, payload, and server-state references
     const pageIds = Object.keys(pageRegistry);
