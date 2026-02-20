@@ -30,9 +30,13 @@ function createConfig({
   screenshot = 'only-on-failure', // 'off', 'on', or 'only-on-failure'
   outputDir = 'test-results',
 } = {}) {
-  const cliCommand = `${commandPrefix ? `${commandPrefix} ` : ''}npx lowdefy`;
   // Resolve absolute paths for all directories
   const absoluteAppDir = path.resolve(appDir);
+  // Use the local binary when available — npx may resolve the latest stable from npm
+  // instead of the locally installed version in Playwright's subprocess context
+  const localBin = path.join(absoluteAppDir, 'node_modules', '.bin', 'lowdefy');
+  const lowdefyCmd = fs.existsSync(localBin) ? localBin : 'npx lowdefy';
+  const cliCommand = `${commandPrefix ? `${commandPrefix} ` : ''}${lowdefyCmd}`;
   const absoluteBuildDir = path.resolve(absoluteAppDir, buildDir);
 
   // Set environment for fixtures to find build artifacts
@@ -84,8 +88,6 @@ function createMultiAppConfig({
   screenshot = 'only-on-failure',
   outputDir = 'test-results',
 } = {}) {
-  const cliCommand = `${commandPrefix ? `${commandPrefix} ` : ''}npx lowdefy`;
-
   // Set up projects for each app
   const projects = apps.map((app) => {
     const appBuildDir = path.resolve(app.appDir, app.buildDir ?? '.lowdefy/server/build');
@@ -105,15 +107,20 @@ function createMultiAppConfig({
   });
 
   // Set up webServers for each app
-  const webServer = apps.map((app) => ({
-    command: `${cliCommand} build --server e2e && ${cliCommand} start --port ${app.port} --log-level warn`,
-    // Use session API for health check — page URLs may redirect when auth is configured
-    url: `http://localhost:${app.port}/api/auth/session`,
-    reuseExistingServer: true,
-    timeout,
-    cwd: app.appDir,
-    env: { NEXT_PUBLIC_LOWDEFY_E2E: 'true' },
-  }));
+  const webServer = apps.map((app) => {
+    const appLocalBin = path.join(app.appDir, 'node_modules', '.bin', 'lowdefy');
+    const appLowdefyCmd = fs.existsSync(appLocalBin) ? appLocalBin : 'npx lowdefy';
+    const appCliCommand = `${commandPrefix ? `${commandPrefix} ` : ''}${appLowdefyCmd}`;
+    return {
+      command: `${appCliCommand} build --server e2e && ${appCliCommand} start --port ${app.port} --log-level warn`,
+      // Use session API for health check — page URLs may redirect when auth is configured
+      url: `http://localhost:${app.port}/api/auth/session`,
+      reuseExistingServer: true,
+      timeout,
+      cwd: app.appDir,
+      env: { NEXT_PUBLIC_LOWDEFY_E2E: 'true' },
+    };
+  });
 
   return defineConfig({
     testDir,
