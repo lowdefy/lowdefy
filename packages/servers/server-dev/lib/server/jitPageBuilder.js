@@ -85,10 +85,14 @@ function getBuildContext(buildDirectory, configDirectory) {
   const jsMap = readJsonFile(path.join(buildDirectory, 'jsMap.json')) ?? { client: {}, server: {} };
   const connectionIds = readJsonFile(path.join(buildDirectory, 'connectionIds.json')) ?? [];
 
+  const customTypesMap = readJsonFile(path.join(buildDirectory, 'customTypesMap.json')) ?? {};
+
   cachedBuildContext = createContext({
+    customTypesMap,
     directories: {
       build: buildDirectory,
       config: configDirectory,
+      server: path.resolve(buildDirectory, '..'),
     },
     logger: jitLogger,
     stage: 'dev',
@@ -102,6 +106,11 @@ function getBuildContext(buildDirectory, configDirectory) {
   for (const id of connectionIds) {
     cachedBuildContext.connectionIds.add(id);
   }
+
+  // Load installed packages snapshot from skeleton build for missing-package detection
+  const installedPluginPackages =
+    readJsonFile(path.join(buildDirectory, 'installedPluginPackages.json')) ?? [];
+  cachedBuildContext.installedPluginPackages = new Set(installedPluginPackages);
 
   return cachedBuildContext;
 }
@@ -126,11 +135,18 @@ async function buildPageIfNeeded({ pageId, buildDirectory, configDirectory }) {
   try {
     const context = getBuildContext(buildDirectory, configDirectory);
     const startTime = Date.now();
-    await buildPageJit({
+    const result = await buildPageJit({
       pageId,
       pageRegistry: registry,
       context,
     });
+    if (result && result.installing) {
+      jitLogger.info(
+        `Installing plugin packages for page "${pageId}": ${result.packages.join(', ')}. ` +
+          'The page will be available after the server restarts.'
+      );
+      return result;
+    }
     pageCache.markCompiled(pageId);
     jitLogger.info(`Built page "${pageId}" in ${Date.now() - startTime}ms.`);
     return true;

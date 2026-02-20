@@ -6,8 +6,8 @@ Uses the [MongoDB Node.js Driver](https://www.mongodb.com/docs/drivers/node/curr
 
 ## Connection Type
 
-| Type | Purpose |
-|------|---------|
+| Type                | Purpose                         |
+| ------------------- | ------------------------------- |
 | `MongoDBCollection` | Connect to a MongoDB collection |
 
 ## Connection Configuration
@@ -19,7 +19,7 @@ connections:
     properties:
       databaseUri:
         _secret: MONGODB_URI
-      databaseName: myapp   # Optional if included in URI
+      databaseName: myapp # Optional if included in URI
       collection: users
       read: true
       write: true
@@ -27,13 +27,13 @@ connections:
 
 ## Properties
 
-| Property | Type | Required | Description |
-|----------|------|----------|-------------|
-| `databaseUri` | string | Yes | MongoDB connection URI |
-| `databaseName` | string | No | Database name (can be in URI) |
-| `collection` | string | Yes | Collection name |
-| `read` | boolean | No | Allow read operations (default: true) |
-| `write` | boolean | No | Allow write operations (default: false) |
+| Property       | Type    | Required | Description                             |
+| -------------- | ------- | -------- | --------------------------------------- |
+| `databaseUri`  | string  | Yes      | MongoDB connection URI                  |
+| `databaseName` | string  | No       | Database name (can be in URI)           |
+| `collection`   | string  | Yes      | Collection name                         |
+| `read`         | boolean | No       | Allow read operations (default: true)   |
+| `write`        | boolean | No       | Allow write operations (default: false) |
 
 ## Request Types
 
@@ -261,6 +261,7 @@ MongoDB connections are pooled automatically. The connection string is used as t
 ### ObjectId Handling
 
 String IDs are automatically converted to ObjectIds when:
+
 - Field is named `_id`
 - Value matches ObjectId pattern
 

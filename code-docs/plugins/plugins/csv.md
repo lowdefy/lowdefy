@@ -8,12 +8,12 @@ Provides operators for CSV parsing and generation.
 
 ## Operators
 
-| Operator | Purpose |
-|----------|---------|
-| `_csv_parse` | Parse CSV string to array |
+| Operator         | Purpose                     |
+| ---------------- | --------------------------- |
+| `_csv_parse`     | Parse CSV string to array   |
 | `_csv_stringify` | Convert array to CSV string |
 
-## _csv_parse
+## \_csv_parse
 
 Parse CSV string to array of objects:
 
@@ -23,40 +23,42 @@ data:
     csv:
       _state: csvInput
     options:
-      header: true         # First row is headers
+      header: true # First row is headers
       skipEmptyLines: true
       delimiter: ','
 ```
 
 ### Options
 
-| Option | Type | Description |
-|--------|------|-------------|
-| `header` | boolean | Use first row as headers |
-| `skipEmptyLines` | boolean | Skip empty lines |
-| `delimiter` | string | Field delimiter (default: ,) |
-| `columns` | array | Specify column names |
+| Option           | Type    | Description                  |
+| ---------------- | ------- | ---------------------------- |
+| `header`         | boolean | Use first row as headers     |
+| `skipEmptyLines` | boolean | Skip empty lines             |
+| `delimiter`      | string  | Field delimiter (default: ,) |
+| `columns`        | array   | Specify column names         |
 
 ### Output
 
 With `header: true`:
+
 ```javascript
 [
   { name: 'John', email: 'john@example.com' },
-  { name: 'Jane', email: 'jane@example.com' }
-]
+  { name: 'Jane', email: 'jane@example.com' },
+];
 ```
 
 Without `header`:
+
 ```javascript
 [
   ['name', 'email'],
   ['John', 'john@example.com'],
-  ['Jane', 'jane@example.com']
-]
+  ['Jane', 'jane@example.com'],
+];
 ```
 
-## _csv_stringify
+## \_csv_stringify
 
 Convert array to CSV:
 
@@ -76,11 +78,11 @@ csvOutput:
 
 ### Options
 
-| Option | Type | Description |
-|--------|------|-------------|
-| `header` | boolean | Include header row |
-| `columns` | array | Column definitions |
-| `delimiter` | string | Field delimiter |
+| Option      | Type    | Description        |
+| ----------- | ------- | ------------------ |
+| `header`    | boolean | Include header row |
+| `columns`   | array   | Column definitions |
+| `delimiter` | string  | Field delimiter    |
 
 ## Use Cases
 

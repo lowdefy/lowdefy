@@ -86,14 +86,24 @@ async function nextBuildWatcher(context) {
       })
     );
     if (!build) {
-      context.logger.ui.succeed('Reloaded app.');
+      context.logger.info({ succeed: true }, 'Reloaded app.');
       return;
     }
 
     context.shutdownServer();
     if (install) {
-      context.logger.ui.warn('Plugin dependencies have changed and will be reinstalled.');
+      context.logger.warn('Plugin dependencies have changed and will be reinstalled.');
       await context.installPlugins();
+      // Rebuild Lowdefy artifacts (blocks.js, icons.js, styles.less, etc.)
+      // so newly installed packages are included in the Next.js bundle.
+      await context.lowdefyBuild();
+      // Re-hash all tracked files to avoid detecting our own build output
+      // changes as new changes on the next watcher callback.
+      await Promise.all(
+        trackedFiles.map(async (filePath) => {
+          hashes[filePath] = await sha1(filePath);
+        })
+      );
     }
     await context.nextBuild();
     context.restartServer();

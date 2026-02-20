@@ -5,6 +5,7 @@ Connections enable Lowdefy apps to communicate with external data sources and AP
 ## What Are Connections?
 
 Connections are:
+
 - Server-side data adapters
 - Configured with credentials and endpoints
 - Used by requests to fetch/mutate data
@@ -39,16 +40,16 @@ Connections are:
 
 ## Available Connection Packages
 
-| Package | Data Source | Request Types |
-|---------|-------------|---------------|
-| [@lowdefy/connection-mongodb](./mongodb.md) | MongoDB | CRUD, Aggregation |
-| [@lowdefy/connection-axios-http](./axios-http.md) | REST APIs | GET, POST, PUT, DELETE |
-| [@lowdefy/connection-knex](./knex.md) | SQL (Postgres, MySQL, etc.) | Query, Insert, Update |
-| [@lowdefy/connection-elasticsearch](./elasticsearch.md) | Elasticsearch | Search, Index |
-| [@lowdefy/connection-google-sheets](./google-sheets.md) | Google Sheets | Read, Write |
-| [@lowdefy/connection-redis](./redis.md) | Redis | Get, Set, List ops |
-| [@lowdefy/connection-sendgrid](./sendgrid.md) | SendGrid | Send emails |
-| [@lowdefy/connection-stripe](./stripe.md) | Stripe | Payments, Customers |
+| Package                                                 | Data Source                 | Request Types          |
+| ------------------------------------------------------- | --------------------------- | ---------------------- |
+| [@lowdefy/connection-mongodb](./mongodb.md)             | MongoDB                     | CRUD, Aggregation      |
+| [@lowdefy/connection-axios-http](./axios-http.md)       | REST APIs                   | GET, POST, PUT, DELETE |
+| [@lowdefy/connection-knex](./knex.md)                   | SQL (Postgres, MySQL, etc.) | Query, Insert, Update  |
+| [@lowdefy/connection-elasticsearch](./elasticsearch.md) | Elasticsearch               | Search, Index          |
+| [@lowdefy/connection-google-sheets](./google-sheets.md) | Google Sheets               | Read, Write            |
+| [@lowdefy/connection-redis](./redis.md)                 | Redis                       | Get, Set, List ops     |
+| [@lowdefy/connection-sendgrid](./sendgrid.md)           | SendGrid                    | Send emails            |
+| [@lowdefy/connection-stripe](./stripe.md)               | Stripe                      | Payments, Customers    |
 
 ## Connection Configuration
 
@@ -91,10 +92,11 @@ Connection credentials use `_secret`:
 ```yaml
 properties:
   connectionString:
-    _secret: MONGODB_URI   # From environment
+    _secret: MONGODB_URI # From environment
 ```
 
 Secrets:
+
 - Set via environment variables
 - Never sent to client
 - Evaluated server-side only
@@ -105,8 +107,8 @@ Connections can restrict operations:
 
 ```yaml
 properties:
-  read: true    # Allow read operations
-  write: false  # Block write operations
+  read: true # Allow read operations
+  write: false # Block write operations
 ```
 
 ### Request Authorization
@@ -147,6 +149,7 @@ export default {
 ### Why Server-Side Only?
 
 Connections run server-side because:
+
 - Credentials must stay secure
 - Database drivers aren't browser-compatible
 - Network security (firewalls, VPNs)
@@ -162,6 +165,7 @@ Multiple requests can share one connection.
 ### Why Use Operators in Properties?
 
 Operators like `_secret` and `_user` enable:
+
 - Dynamic credentials
 - Per-user data access
 - Environment-specific config

@@ -16,7 +16,7 @@
 
 import createAuthorize from './createAuthorize.js';
 
-import { ConfigError } from '@lowdefy/errors/server';
+import { ConfigError } from '@lowdefy/errors';
 
 test('authorize public object', () => {
   const auth = { public: true };

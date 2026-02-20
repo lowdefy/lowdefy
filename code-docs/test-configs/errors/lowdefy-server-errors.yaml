@@ -145,7 +145,7 @@ pages:
                 _state: requestResult
               then:
                 _string.concat:
-                  - "Result: "
+                  - 'Result: '
                   - _json.stringify:
                       - _state: requestResult
               else: Click a button above to test server errors.

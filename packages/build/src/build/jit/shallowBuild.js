@@ -18,8 +18,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import { LowdefyError } from '@lowdefy/errors';
-import { ConfigError } from '@lowdefy/errors/build';
+import { BuildError, LowdefyInternalError } from '@lowdefy/errors';
 
 import createContext from '../../createContext.js';
 import logCollectedErrors from '../../utils/logCollectedErrors.js';
@@ -39,8 +38,8 @@ import buildRefs from '../buildRefs/buildRefs.js';
 import buildTypes from '../buildTypes.js';
 import cleanBuildDirectory from '../cleanBuildDirectory.js';
 import copyPublicFolder from '../copyPublicFolder.js';
-import createFileDependencyMap from './createFileDependencyMap.js';
 import createPageRegistry from './createPageRegistry.js';
+import PAGE_CONTENT_KEYS from './pageContentKeys.js';
 import jsMapParser from '../buildJs/jsMapParser.js';
 import testSchema from '../testSchema.js';
 import validateConfig from '../validateConfig.js';
@@ -53,6 +52,7 @@ import writeGlobal from '../writeGlobal.js';
 import writeJs from '../buildJs/writeJs.js';
 import writeLogger from '../writeLogger.js';
 import writeMaps from '../writeMaps.js';
+import updateServerPackageJson from '../full/updateServerPackageJson.js';
 import writeMenus from '../writeMenus.js';
 import writePageRegistry from './writePageRegistry.js';
 import writePluginImports from '../writePluginImports/writePluginImports.js';
@@ -68,13 +68,10 @@ function getInstalledPackages(directories) {
   }
 }
 
-const SHALLOW_STOP_PATHS = [
-  'pages.*.blocks',
-  'pages.*.areas',
-  'pages.*.events',
-  'pages.*.requests',
-  'pages.*.layout',
-];
+// Derive stop paths from PAGE_CONTENT_KEYS, excluding 'type' (not a ref path)
+const SHALLOW_STOP_PATHS = PAGE_CONTENT_KEYS
+  .filter((key) => key !== 'type')
+  .map((key) => `pages.*.${key}`);
 
 async function shallowBuild(options) {
   makeId.reset();
@@ -90,12 +87,9 @@ async function shallowBuild(options) {
         shallowOptions: { stopAt: SHALLOW_STOP_PATHS },
       });
     } catch (err) {
-      if (err instanceof ConfigError) {
-        context.logger.error(err);
-        const error = new Error('Build failed with 1 error(s). See above for details.');
-        error.isFormatted = true;
-        error.hideStack = true;
-        throw error;
+      if (err.isLowdefyError) {
+        context.handleError(err);
+        throw new BuildError('Build failed with 1 error(s). See above for details.');
       }
       throw err;
     }
@@ -105,10 +99,10 @@ async function shallowBuild(options) {
 
     // Strip shallow markers from pages before schema validation.
     // Schema doesn't know about ~shallow placeholders — they'd fail as additional properties.
-    // Save and restore so createPageRegistry can still capture raw content later.
+    // Save and restore so createPageRegistry can still see page metadata.
     const savedPageContent = (components.pages ?? []).map((page) => {
       const saved = {};
-      for (const key of ['blocks', 'areas', 'events', 'requests', 'layout']) {
+      for (const key of PAGE_CONTENT_KEYS) {
         if (page[key] !== undefined) {
           saved[key] = page[key];
           delete page[key];
@@ -144,6 +138,14 @@ async function shallowBuild(options) {
     // but before build steps that modify page content for skeleton output.
     const pageRegistry = createPageRegistry({ components });
 
+    // Page file refs are captured in pageRegistry — JIT resolves from scratch.
+    // Strip all content so downstream steps only see page metadata.
+    for (const page of components.pages ?? []) {
+      for (const key of PAGE_CONTENT_KEYS) {
+        delete page[key];
+      }
+    }
+
     tryBuildStep(buildMenu, 'buildMenu', { components, context });
 
     // Extract JS from non-page components only (pages JS built JIT)
@@ -171,7 +173,7 @@ async function shallowBuild(options) {
     // production builds tree-shake by counting exact type usage.
     const installedPackages = getInstalledPackages(context.directories);
     if (installedPackages) {
-      function addInstalledTypes(store, definitions) {
+      const addInstalledTypes = (store, definitions) => {
         for (const [typeName, def] of Object.entries(definitions)) {
           if (!store[typeName] && installedPackages.has(def.package)) {
             store[typeName] = {
@@ -194,8 +196,11 @@ async function shallowBuild(options) {
 
     logCollectedErrors(context);
 
-    // Build file dependency map for targeted invalidation
-    const fileDependencyMap = createFileDependencyMap({ pageRegistry, refMap: context.refMap });
+    // Update server package.json with plugin packages discovered during skeleton build.
+    // Connections, requests, and auth types are skeleton-level — they must be installed
+    // before Next.js builds. Page-level types (blocks, actions, operators) are handled
+    // by detectMissingPluginPackages during JIT page builds.
+    await updateServerPackageJson({ components, context });
 
     // Ensure both client and server jsMap keys exist.
     // In shallow build, only server JS is extracted (api/connections).
@@ -224,23 +229,37 @@ async function shallowBuild(options) {
     await writeMenus({ components, context });
     await writeJs({ context });
     await context.writeBuildArtifact('jsMap.json', JSON.stringify(context.jsMap));
+    await context.writeBuildArtifact(
+      'customTypesMap.json',
+      JSON.stringify(options.customTypesMap ?? {})
+    );
+    // Persist snapshot of installed packages for JIT missing-package detection.
+    // Written as a build artifact so JIT builds compare against the skeleton
+    // build state, not a potentially-updated package.json (race condition).
+    await context.writeBuildArtifact(
+      'installedPluginPackages.json',
+      JSON.stringify([...(installedPackages ?? [])])
+    );
     await writePluginImports({ components, context });
     await writePageRegistry({ pageRegistry, context });
     await copyPublicFolder({ components, context });
 
-    return { components, pageRegistry, fileDependencyMap, context };
+    return { components, pageRegistry, context };
   } catch (err) {
-    if (err.isFormatted) {
+    if (err instanceof BuildError) {
       throw err;
     }
-    const logger = context?.logger ?? options.logger ?? console;
-    const lowdefyErr = new LowdefyError(err.message, { cause: err });
-    lowdefyErr.stack = err.stack;
-    logger.error(lowdefyErr);
-    const error = new Error('Build failed due to internal error. See above for details.');
-    error.isFormatted = true;
-    error.hideStack = true;
-    throw error;
+    // Unexpected internal error - preserve Lowdefy errors as-is, wrap plain errors
+    const lowdefyErr = err.isLowdefyError
+      ? err
+      : new LowdefyInternalError(err.message, { cause: err });
+    if (context) {
+      context.handleError(lowdefyErr);
+    } else {
+      const logger = options.logger ?? console;
+      logger.error(lowdefyErr);
+    }
+    throw new BuildError('Build failed due to internal error. See above for details.');
   }
 }
 

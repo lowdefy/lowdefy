@@ -16,7 +16,7 @@
 
 import basicTypes from '@lowdefy/blocks-basic/types';
 import loaderTypes from '@lowdefy/blocks-loaders/types';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 
 import findSimilarString from '../utils/findSimilarString.js';
 
@@ -36,18 +36,10 @@ function buildTypeClass(
         message += ` Did you mean "${suggestion}"?`;
       }
       if (warnIfMissing) {
-        if (typeName === '_id') {
-          return;
-        }
-        context.logger.warn({ message, configKey, checkSlug: 'types' });
+        context.handleWarning(new ConfigWarning(message, { configKey, checkSlug: 'types' }));
         return;
       }
-      throw new ConfigError({
-        message,
-        configKey,
-        context,
-        checkSlug: 'types',
-      });
+      throw new ConfigError(message, { configKey, checkSlug: 'types' });
     }
     store[typeName] = {
       originalTypeName: definitions[typeName].originalTypeName,

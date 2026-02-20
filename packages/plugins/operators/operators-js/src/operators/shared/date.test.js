@@ -68,7 +68,7 @@ test('_date invalid operator type', () => {
 
 test('_date invalid string', () => {
   expect(() => _date({ params: 'abc', location })).toThrowErrorMatchingInlineSnapshot(
-    `"_date.__default - abc could not resolve as a valid javascript date."`
+    `"abc could not resolve as a valid javascript date."`
   );
 });
 

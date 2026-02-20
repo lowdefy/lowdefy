@@ -4,8 +4,8 @@
 
 ## Connection Type
 
-| Type | Purpose |
-|------|---------|
+| Type    | Purpose          |
+| ------- | ---------------- |
 | `Redis` | Connect to Redis |
 
 ## Connection Configuration
@@ -34,11 +34,11 @@ connections:
 
 ## Request Types
 
-| Type | Purpose |
-|------|---------|
-| `RedisGet` | Get value |
-| `RedisSet` | Set value |
-| `RedisDelete` | Delete key |
+| Type          | Purpose        |
+| ------------- | -------------- |
+| `RedisGet`    | Get value      |
+| `RedisSet`    | Set value      |
+| `RedisDelete` | Delete key     |
 | `RedisExpire` | Set expiration |
 
 ## RedisGet
@@ -69,7 +69,7 @@ requests:
           - _state: sessionId
       value:
         _state: sessionData
-      ex: 3600    # Expire in 1 hour
+      ex: 3600 # Expire in 1 hour
 ```
 
 ## Use Cases

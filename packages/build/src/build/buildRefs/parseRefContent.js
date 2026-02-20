@@ -16,6 +16,7 @@
 
 /* eslint-disable no-param-reassign */
 
+import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 import { getFileExtension, getFileSubExtension } from '@lowdefy/node-utils';
 import JSON5 from 'json5';
@@ -104,15 +105,38 @@ function parseRefContent({ content, refDef }) {
   if (type.isString(path)) {
     let ext = getFileExtension(path);
     if (ext === 'njk') {
-      content = parseNunjucks(content, vars);
+      try {
+        content = parseNunjucks(content, vars);
+      } catch (error) {
+        throw new ConfigError(`Nunjucks error in "${path}".`, {
+          cause: error,
+          filePath: path,
+        });
+      }
       ext = getFileSubExtension(path);
     }
 
     if (ext === 'yaml' || ext === 'yml') {
-      content = parseYamlWithLineNumbers(content);
+      try {
+        content = parseYamlWithLineNumbers(content);
+      } catch (error) {
+        const lineMatch = error.message.match(/at line (\d+)/);
+        throw new ConfigError(`YAML parse error in "${path}".`, {
+          cause: error,
+          filePath: path,
+          lineNumber: lineMatch ? lineMatch[1] : null,
+        });
+      }
     }
     if (ext === 'json') {
-      content = JSON5.parse(content);
+      try {
+        content = JSON5.parse(content);
+      } catch (error) {
+        throw new ConfigError(`JSON parse error in "${path}".`, {
+          cause: error,
+          filePath: path,
+        });
+      }
     }
   }
 

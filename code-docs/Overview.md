@@ -5,6 +5,7 @@
 ## What Lowdefy Is
 
 Lowdefy lets developers build web applications using YAML/JSON configuration instead of code. Users define:
+
 - **Pages** with layouts and UI components (blocks)
 - **Connections** to databases and APIs
 - **Requests** that query those connections
@@ -50,15 +51,15 @@ The framework compiles this config into a Next.js application at build time.
 
 ## Core Packages
 
-| Package | Role | Key Responsibility |
-|---------|------|-------------------|
-| [lowdefy (cli)](./packages/cli.md) | Entry point | Commands: init, dev, build, start |
-| [@lowdefy/build](./packages/build.md) | Compiler | YAML → build artifacts |
-| [@lowdefy/api](./packages/api.md) | Server | API routes, request execution |
-| [@lowdefy/client](./packages/client.md) | Client | React rendering, page context |
-| [@lowdefy/engine](./packages/engine.md) | Runtime | State management, actions |
-| [@lowdefy/layout](./packages/layout.md) | Layout | Grid system, block positioning |
-| [@lowdefy/operators](./packages/operators.md) | Logic | Operator parsing and evaluation |
+| Package                                       | Role        | Key Responsibility                |
+| --------------------------------------------- | ----------- | --------------------------------- |
+| [lowdefy (cli)](./packages/cli.md)            | Entry point | Commands: init, dev, build, start |
+| [@lowdefy/build](./packages/build.md)         | Compiler    | YAML → build artifacts            |
+| [@lowdefy/api](./packages/api.md)             | Server      | API routes, request execution     |
+| [@lowdefy/client](./packages/client.md)       | Client      | React rendering, page context     |
+| [@lowdefy/engine](./packages/engine.md)       | Runtime     | State management, actions         |
+| [@lowdefy/layout](./packages/layout.md)       | Layout      | Grid system, block positioning    |
+| [@lowdefy/operators](./packages/operators.md) | Logic       | Operator parsing and evaluation   |
 
 ## Plugin System
 
@@ -66,17 +67,18 @@ Lowdefy is extensible via npm packages. Everything the user sees or interacts wi
 
 ### Plugin Types
 
-| Type | What It Does | Examples |
-|------|--------------|----------|
-| **Blocks** | UI components | Button, TextInput, Table, Chart |
-| **Connections** | Data source configs | MongoDB, PostgreSQL, REST API |
-| **Operators** | Logic functions | `_if`, `_get`, `_sum`, `_date` |
-| **Actions** | Event handlers | SetState, Request, Navigate |
-| **Auth Providers** | Authentication | Google, Auth0, Credentials |
+| Type               | What It Does        | Examples                        |
+| ------------------ | ------------------- | ------------------------------- |
+| **Blocks**         | UI components       | Button, TextInput, Table, Chart |
+| **Connections**    | Data source configs | MongoDB, PostgreSQL, REST API   |
+| **Operators**      | Logic functions     | `_if`, `_get`, `_sum`, `_date`  |
+| **Actions**        | Event handlers      | SetState, Request, Navigate     |
+| **Auth Providers** | Authentication      | Google, Auth0, Credentials      |
 
 ### Default Plugins
 
 These ship with Lowdefy and don't need explicit installation:
+
 - `@lowdefy/blocks-antd` - Primary UI components (Ant Design based)
 - `@lowdefy/blocks-basic` - HTML primitives
 - `@lowdefy/operators-js` - Core JavaScript operators
@@ -88,9 +90,9 @@ See [Plugin System Architecture](./architecture/plugin-system.md) for internals.
 
 ### Build vs Runtime
 
-| Phase | When | What Happens |
-|-------|------|--------------|
-| **Build** | `lowdefy build` | Config parsed, validated, compiled to artifacts |
+| Phase       | When             | What Happens                                             |
+| ----------- | ---------------- | -------------------------------------------------------- |
+| **Build**   | `lowdefy build`  | Config parsed, validated, compiled to artifacts          |
 | **Runtime** | User visits page | Artifacts loaded, operators evaluated, requests executed |
 
 This separation is why Lowdefy apps are fast - heavy YAML parsing happens once at deploy time.
@@ -115,6 +117,7 @@ title:
 ```
 
 Operators can run at:
+
 - **Build time** (in `@lowdefy/build`) - for config composition
 - **Runtime client** (in `@lowdefy/engine`) - for UI reactivity
 - **Runtime server** (in `@lowdefy/api`) - for request logic
@@ -122,15 +125,17 @@ Operators can run at:
 ### State Management
 
 Each page has isolated state managed by `@lowdefy/engine`:
+
 - **state** - Form values and user input
 - **urlQuery** - URL query parameters
 - **input** - Data passed when navigating to page
-- **_request** - Cached request responses
-- **_global** - Shared across pages (sparingly used)
+- **\_request** - Cached request responses
+- **\_global** - Shared across pages (sparingly used)
 
 ### Requests
 
 Requests are server-side data operations:
+
 1. Client triggers request via action
 2. `@lowdefy/client` sends to API route
 3. `@lowdefy/api` executes against connection
@@ -138,10 +143,10 @@ Requests are server-side data operations:
 
 ## Server Variants
 
-| Server | Use Case |
-|--------|----------|
-| `server` | Production Next.js server for deployments |
-| `server-dev` | Local development server with hot reload |
+| Server       | Use Case                                  |
+| ------------ | ----------------------------------------- |
+| `server`     | Production Next.js server for deployments |
+| `server-dev` | Local development server with hot reload  |
 
 ## File Structure
 

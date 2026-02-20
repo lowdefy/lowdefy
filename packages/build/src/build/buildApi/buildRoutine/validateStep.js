@@ -15,67 +15,49 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError } from '@lowdefy/errors';
 
-function validateStep(step, { endpointId, context }) {
+function validateStep(step, { endpointId }) {
   const configKey = step['~k'];
   if (Object.keys(step).length === 0) {
-    throw new ConfigError({
-      message: `Step is not defined at endpoint "${endpointId}".`,
-      configKey,
-      context,
-    });
+    throw new ConfigError(`Step is not defined at endpoint "${endpointId}".`, { configKey });
   }
   if (type.isUndefined(step.id)) {
-    throw new ConfigError({
-      message: `Step id missing at endpoint "${endpointId}".`,
-      configKey,
-      context,
-    });
+    throw new ConfigError(`Step id missing at endpoint "${endpointId}".`, { configKey });
   }
   if (!type.isString(step.id)) {
-    throw new ConfigError({
-      message: `Step id is not a string at endpoint "${endpointId}".`,
+    throw new ConfigError(`Step id is not a string at endpoint "${endpointId}".`, {
       received: step.id,
       configKey,
-      context,
     });
   }
   if (step.id.includes('.')) {
-    throw new ConfigError({
-      message: `Step id "${step.id}" at endpoint "${endpointId}" should not include a period (".").`,
-      configKey,
-      context,
-    });
+    throw new ConfigError(
+      `Step id "${step.id}" at endpoint "${endpointId}" should not include a period (".").`,
+      { configKey }
+    );
   }
   if (type.isNone(step.type)) {
-    throw new ConfigError({
-      message: `Step type is not defined at "${step.id}" on endpoint "${endpointId}".`,
-      configKey,
-      context,
-    });
+    throw new ConfigError(
+      `Step type is not defined at "${step.id}" on endpoint "${endpointId}".`,
+      { configKey }
+    );
   }
   if (!type.isString(step.type)) {
-    throw new ConfigError({
-      message: `Step type is not a string at "${step.id}" on endpoint "${endpointId}".`,
-      received: step.type,
-      configKey,
-      context,
-    });
+    throw new ConfigError(
+      `Step type is not a string at "${step.id}" on endpoint "${endpointId}".`,
+      { received: step.type, configKey }
+    );
   }
   if (type.isUndefined(step.connectionId)) {
-    throw new ConfigError({
-      message: `Step connectionId missing at endpoint "${endpointId}".`,
+    throw new ConfigError(`Step connectionId missing at endpoint "${endpointId}".`, {
       configKey,
-      context,
     });
   }
   if (!type.isString(step.connectionId)) {
-    throw new ConfigError({
-      message: `Step connectionId is not a string at endpoint "${endpointId}".`,
+    throw new ConfigError(`Step connectionId is not a string at endpoint "${endpointId}".`, {
       received: step.connectionId,
       configKey,
-      context,
     });
   }
 }

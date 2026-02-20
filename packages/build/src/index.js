@@ -16,8 +16,7 @@
   limitations under the License.
 */
 
-import { LowdefyError } from '@lowdefy/errors';
-import { ConfigError } from '@lowdefy/errors/build';
+import { BuildError, LowdefyInternalError } from '@lowdefy/errors';
 
 import createContext from './createContext.js';
 import createPluginTypesMap from './utils/createPluginTypesMap.js';
@@ -71,12 +70,9 @@ async function build(options) {
       components = await buildRefs({ context });
     } catch (err) {
       // Handle ConfigError from buildRefs (e.g., missing _ref files)
-      if (err instanceof ConfigError) {
-        context.logger.error(err);
-        const error = new Error('Build failed with 1 error(s). See above for details.');
-        error.isFormatted = true;
-        error.hideStack = true;
-        throw error;
+      if (err.isLowdefyError) {
+        context.handleError(err);
+        throw new BuildError('Build failed with 1 error(s). See above for details.');
       }
       throw err;
     }
@@ -127,19 +123,20 @@ async function build(options) {
     await updateServerPackageJson({ components, context });
     await copyPublicFolder({ components, context });
   } catch (err) {
-    // Re-throw already formatted errors (ConfigError or build errors)
-    if (err.isFormatted) {
+    if (err instanceof BuildError) {
       throw err;
     }
-    // Unexpected internal error - wrap as LowdefyError for proper formatting
-    const logger = context?.logger ?? options.logger ?? console;
-    const lowdefyErr = new LowdefyError(err.message, { cause: err });
-    lowdefyErr.stack = err.stack;
-    logger.error(lowdefyErr);
-    const error = new Error('Build failed due to internal error. See above for details.');
-    error.isFormatted = true;
-    error.hideStack = true;
-    throw error;
+    // Unexpected internal error - preserve Lowdefy errors as-is, wrap plain errors
+    const lowdefyErr = err.isLowdefyError
+      ? err
+      : new LowdefyInternalError(err.message, { cause: err });
+    if (context) {
+      context.handleError(lowdefyErr);
+    } else {
+      const logger = options.logger ?? console;
+      logger.error(lowdefyErr);
+    }
+    throw new BuildError('Build failed due to internal error. See above for details.');
   }
 }
 

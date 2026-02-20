@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigError } from '@lowdefy/errors/server';
+import { ConfigError } from '@lowdefy/errors';
 
 function createAuthorize({ session }) {
   // Next-auth getSession provides a session object if the user is authenticated
@@ -31,8 +31,7 @@ function createAuthorize({ session }) {
       }
       return authenticated;
     }
-    throw new ConfigError({
-      message: 'auth.public must be true or false.',
+    throw new ConfigError('auth.public must be true or false.', {
       received: auth.public,
       configKey: config['~k'],
     });

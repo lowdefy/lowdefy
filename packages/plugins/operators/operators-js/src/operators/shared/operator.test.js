@@ -59,7 +59,7 @@ test('_operator.name invalid', () => {
   const res = parser.parse({ input, location });
   expect(res.output).toEqual({ a: null });
   expect(res.errors.length).toBe(1);
-  expect(res.errors[0].message).toBe('_operator - Invalid operator name.');
+  expect(res.errors[0].message).toBe('_operator - Invalid operator name. at location.');
 });
 
 test('_operator.name not allowed to include "experimental"', () => {
@@ -68,7 +68,9 @@ test('_operator.name not allowed to include "experimental"', () => {
   const res = parser.parse({ input, location });
   expect(res.output).toEqual({ a: null });
   expect(res.errors.length).toBe(1);
-  expect(res.errors[0].message).toBe('Experimental operators cannot be used with _operator.');
+  expect(res.errors[0].message).toBe(
+    'Experimental operators cannot be used with _operator. at location.'
+  );
 });
 
 test('_operator.name not a string', () => {
@@ -77,7 +79,9 @@ test('_operator.name not a string', () => {
   const res = parser.parse({ input, location });
   expect(res.output).toEqual({ a: null });
   expect(res.errors.length).toBe(1);
-  expect(res.errors[0].message).toBe('_operator.name must be a valid operator name as string.');
+  expect(res.errors[0].message).toBe(
+    '_operator.name must be a valid operator name as string. at location.'
+  );
 });
 
 test('_operator with value not a object', () => {
@@ -86,7 +90,9 @@ test('_operator with value not a object', () => {
   const res = parser.parse({ input, location });
   expect(res.output).toEqual({ a: null });
   expect(res.errors.length).toBe(1);
-  expect(res.errors[0].message).toBe('_operator.name must be a valid operator name as string.');
+  expect(res.errors[0].message).toBe(
+    '_operator.name must be a valid operator name as string. at location.'
+  );
 });
 
 test('_operator cannot be set to _operator', () => {
@@ -96,7 +102,7 @@ test('_operator cannot be set to _operator', () => {
   expect(res.output).toEqual({ a: null });
   expect(res.errors.length).toBe(1);
   expect(res.errors[0].message).toBe(
-    '_operator.name cannot be set to _operator to avoid infinite loop reference.'
+    '_operator.name cannot be set to _operator to avoid infinite loop reference. at location.'
   );
 });
 

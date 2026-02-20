@@ -15,45 +15,31 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError } from '@lowdefy/errors';
 
-function validateEndpoint({ endpoint, index, checkDuplicateEndpointId, context }) {
+function validateEndpoint({ endpoint, index, checkDuplicateEndpointId }) {
   const configKey = endpoint['~k'];
   if (type.isUndefined(endpoint.id)) {
-    throw new ConfigError({
-      message: `Endpoint id missing at endpoint ${index}.`,
-      configKey,
-      context,
-    });
+    throw new ConfigError(`Endpoint id missing at endpoint ${index}.`, { configKey });
   }
   if (!type.isString(endpoint.id)) {
-    throw new ConfigError({
-      message: `Endpoint id is not a string at endpoint ${index}.`,
+    throw new ConfigError(`Endpoint id is not a string at endpoint ${index}.`, {
       received: endpoint.id,
       configKey,
-      context,
     });
   }
   if (endpoint.id.includes('.')) {
-    throw new ConfigError({
-      message: `Endpoint id "${endpoint.id}" should not include a period (".").`,
+    throw new ConfigError(`Endpoint id "${endpoint.id}" should not include a period (".").`, {
       configKey,
-      context,
     });
   }
   if (type.isUndefined(endpoint.type)) {
-    throw new ConfigError({
-      message: `Endpoint type is not defined at "${endpoint.id}".`,
-      configKey,
-      context,
-    });
+    throw new ConfigError(`Endpoint type is not defined at "${endpoint.id}".`, { configKey });
   }
   if (!type.isString(endpoint.type)) {
-    throw new ConfigError({
-      message: `Endpoint type is not a string at "${endpoint.id}".`,
+    throw new ConfigError(`Endpoint type is not a string at "${endpoint.id}".`, {
       received: endpoint.type,
       configKey,
-      context,
     });
   }
   checkDuplicateEndpointId({ id: endpoint.id, configKey });

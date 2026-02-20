@@ -43,6 +43,9 @@ async function fetchPageConfig(url) {
   if (data?.buildError) {
     return data;
   }
+  if (data?.installing) {
+    return data;
+  }
   if (!res.ok) {
     throw new Error(data.message || 'Request error');
   }

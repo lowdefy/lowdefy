@@ -20,7 +20,7 @@ function getCallbackUrl({ lowdefy, callbackUrl = {} }) {
   const { home, pageId, urlQuery, url } = callbackUrl;
 
   if ([!home, !pageId, !url].filter((v) => !v).length > 1) {
-    throw Error(
+    throw new Error(
       `Invalid Link: To avoid ambiguity, only one of 'home', 'pageId' or 'url' can be defined.`
     );
   }

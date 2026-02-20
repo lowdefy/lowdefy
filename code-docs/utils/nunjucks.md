@@ -5,6 +5,7 @@ Nunjucks template engine wrapper with Lowdefy-specific filters.
 ## Overview
 
 Provides template rendering with:
+
 - Memoized template compilation
 - Custom date formatting filter
 - Array and URL utilities
@@ -34,8 +35,8 @@ Compile and memoize template function (faster for repeated use):
 ```javascript
 const template = nunjucksFunction('Hello {{ name }}!');
 
-template({ name: 'Alice' });  // 'Hello Alice!'
-template({ name: 'Bob' });    // 'Hello Bob!'
+template({ name: 'Alice' }); // 'Hello Alice!'
+template({ name: 'Bob' }); // 'Hello Bob!'
 ```
 
 **Performance Note:** Templates are cached by string content, so the same template string will reuse the compiled function.
@@ -46,8 +47,8 @@ Validate template syntax:
 
 ```javascript
 // Returns boolean
-validNunjucksString('{{ name }}');  // true
-validNunjucksString('{{ name');     // false
+validNunjucksString('{{ name }}'); // true
+validNunjucksString('{{ name'); // false
 
 // Return error object
 const result = validNunjucksString('{{ name', true);
@@ -73,23 +74,40 @@ Format dates using moment.js:
 
 ```javascript
 // Default ISO format
-{{ date | date }}
+{
+  {
+    date | date;
+  }
+}
 // '2024-01-15T10:30:00.000Z'
 
 // Custom format
-{{ date | date('YYYY-MM-DD') }}
+{
+  {
+    date | date('YYYY-MM-DD');
+  }
+}
 // '2024-01-15'
 
 // Relative time
-{{ date | date('fromNow') }}
+{
+  {
+    date | date('fromNow');
+  }
+}
 // '2 hours ago'
 
 // With method chaining
-{{ date | date('add', 1, 'days') | date('YYYY-MM-DD') }}
+{
+  {
+    date | date('add', 1, 'days') | date('YYYY-MM-DD');
+  }
+}
 // '2024-01-16'
 ```
 
 **Supported Moment Methods:**
+
 - `format(string)` - Format date
 - `fromNow()` - Relative time
 - `add(n, unit)` - Add time
@@ -102,10 +120,18 @@ Format dates using moment.js:
 Get unique values from array:
 
 ```javascript
-{{ [1, 2, 2, 3, 3, 3] | unique }}
+{
+  {
+    [1, 2, 2, 3, 3, 3] | unique;
+  }
+}
 // [1, 2, 3]
 
-{{ items | unique }}
+{
+  {
+    items | unique;
+  }
+}
 ```
 
 ### urlQuery(value)
@@ -162,10 +188,7 @@ Standard Nunjucks syntax:
 ```javascript
 import { nunjucksString } from '@lowdefy/nunjucks';
 
-const label = nunjucksString(
-  'Showing {{ count }} of {{ total }} items',
-  { count: 10, total: 100 }
-);
+const label = nunjucksString('Showing {{ count }} of {{ total }} items', { count: 10, total: 100 });
 // 'Showing 10 of 100 items'
 ```
 
@@ -174,10 +197,9 @@ const label = nunjucksString(
 ```javascript
 import { nunjucksString } from '@lowdefy/nunjucks';
 
-const formatted = nunjucksString(
-  'Created: {{ date | date("MMMM D, YYYY") }}',
-  { date: new Date('2024-01-15') }
-);
+const formatted = nunjucksString('Created: {{ date | date("MMMM D, YYYY") }}', {
+  date: new Date('2024-01-15'),
+});
 // 'Created: January 15, 2024'
 ```
 
@@ -186,13 +208,16 @@ const formatted = nunjucksString(
 ```javascript
 import { nunjucksString } from '@lowdefy/nunjucks';
 
-const message = nunjucksString(`
+const message = nunjucksString(
+  `
   {% if items.length > 0 %}
     {{ items.length }} items found
   {% else %}
     No items found
   {% endif %}
-`, { items: ['a', 'b', 'c'] });
+`,
+  { items: ['a', 'b', 'c'] }
+);
 // '3 items found'
 ```
 
@@ -242,12 +267,12 @@ Uses webpack with SWC loader for bundling. Output is CommonJS module.
 
 ## Key Files
 
-| File | Purpose |
-|------|---------|
-| `src/nunjucksString.js` | One-off rendering |
-| `src/nunjucksFunction.js` | Compiled template function |
-| `src/validNunjucksString.js` | Syntax validation |
-| `src/nunjucksEnv.js` | Environment configuration |
-| `src/filters/dateFilter.js` | Date formatting filter |
-| `src/filters/uniqueFilter.js` | Array unique filter |
-| `src/filters/urlQueryFilter.js` | URL query filter |
+| File                            | Purpose                    |
+| ------------------------------- | -------------------------- |
+| `src/nunjucksString.js`         | One-off rendering          |
+| `src/nunjucksFunction.js`       | Compiled template function |
+| `src/validNunjucksString.js`    | Syntax validation          |
+| `src/nunjucksEnv.js`            | Environment configuration  |
+| `src/filters/dateFilter.js`     | Date formatting filter     |
+| `src/filters/uniqueFilter.js`   | Array unique filter        |
+| `src/filters/urlQueryFilter.js` | URL query filter           |

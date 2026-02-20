@@ -5,6 +5,7 @@ Block testing and development utilities.
 ## Overview
 
 Provides testing utilities for:
+
 - Mock block environments
 - Schema validation tests
 - Render snapshot tests
@@ -28,9 +29,9 @@ import { mockBlock } from '@lowdefy/block-dev';
 const { block, methods, makeCssClass } = mockBlock({
   meta: {
     valueType: 'string',
-    category: 'input'
+    category: 'input',
   },
-  schema: buttonSchema
+  schema: buttonSchema,
 });
 
 // block contains mock block instance
@@ -40,13 +41,13 @@ const { block, methods, makeCssClass } = mockBlock({
 
 **Returns:**
 
-| Property | Description |
-|----------|-------------|
-| `block` | Mock block instance |
-| `methods` | Object with mock methods |
-| `makeCssClass` | CSS class generator |
-| `lowdefy` | Mock lowdefy context |
-| `schemaError` | Schema validation errors |
+| Property       | Description              |
+| -------------- | ------------------------ |
+| `block`        | Mock block instance      |
+| `methods`      | Object with mock methods |
+| `makeCssClass` | CSS class generator      |
+| `lowdefy`      | Mock lowdefy context     |
+| `schemaError`  | Schema validation errors |
 
 **Mocked Methods:**
 
@@ -73,15 +74,15 @@ describe('Button Schema', () => {
       {
         id: 'basic',
         type: 'Button',
-        properties: { label: 'Click' }
+        properties: { label: 'Click' },
       },
       {
         id: 'styled',
         type: 'Button',
-        properties: { label: 'Submit', color: 'primary' }
-      }
+        properties: { label: 'Submit', color: 'primary' },
+      },
     ],
-    schema: buttonSchema
+    schema: buttonSchema,
   });
 });
 ```
@@ -100,13 +101,13 @@ describe('Button Render', () => {
       {
         id: 'basic',
         type: 'Button',
-        properties: { label: 'Click' }
-      }
+        properties: { label: 'Click' },
+      },
     ],
     Block: Button,
     methods: {
-      triggerEvent: jest.fn()
-    }
+      triggerEvent: jest.fn(),
+    },
   });
 });
 ```
@@ -123,8 +124,8 @@ describe('Table Render', () => {
     examples: tableExamples,
     Block: Table,
     mockDataTest: (data) => {
-      return data.map(row => ({ ...row, id: 'mock-id' }));
-    }
+      return data.map((row) => ({ ...row, id: 'mock-id' }));
+    },
   });
 });
 ```
@@ -140,9 +141,9 @@ describe('Input Methods', () => {
   runMockMethodTests({
     meta: {
       valueType: 'string',
-      category: 'input'
+      category: 'input',
     },
-    schema: inputSchema
+    schema: inputSchema,
   });
 });
 ```
@@ -158,14 +159,14 @@ const props = stubBlockProps({
   block: {
     id: 'test-button',
     type: 'Button',
-    properties: { label: 'Test' }
+    properties: { label: 'Test' },
   },
   meta: { category: 'display' },
-  schema: buttonSchema
+  schema: buttonSchema,
 });
 
 // props can be spread into component
-<Button {...props} />
+<Button {...props} />;
 ```
 
 ## Classes
@@ -193,7 +194,7 @@ try {
 ### Math.random
 
 ```javascript
-Math.random = () => 0.5;  // Deterministic for snapshots
+Math.random = () => 0.5; // Deterministic for snapshots
 ```
 
 ### window.matchMedia
@@ -203,15 +204,15 @@ window.matchMedia = (query) => ({
   matches: false,
   media: query,
   addListener: () => {},
-  removeListener: () => {}
+  removeListener: () => {},
 });
 ```
 
 ### CSS Animations
 
 ```javascript
-window.AnimationEvent = function() {};
-window.TransitionEvent = function() {};
+window.AnimationEvent = function () {};
+window.TransitionEvent = function () {};
 ```
 
 ## Dependencies
@@ -239,7 +240,7 @@ describe('Button', () => {
   // Schema tests
   runBlockSchemaTests({
     examples: buttonExamples,
-    schema: buttonSchema
+    schema: buttonSchema,
   });
 
   // Render test
@@ -247,7 +248,7 @@ describe('Button', () => {
     const props = stubBlockProps({
       block: { id: 'btn', type: 'Button', properties: { label: 'Click' } },
       meta: { category: 'input' },
-      schema: buttonSchema
+      schema: buttonSchema,
     });
 
     const { getByText } = render(<Button {...props} />);
@@ -258,18 +259,16 @@ describe('Button', () => {
   test('triggers onClick event', () => {
     const { block, methods } = mockBlock({
       meta: { category: 'input' },
-      schema: buttonSchema
+      schema: buttonSchema,
     });
 
     const props = stubBlockProps({
       block: { id: 'btn', type: 'Button', properties: { label: 'Click' } },
       meta: { category: 'input' },
-      schema: buttonSchema
+      schema: buttonSchema,
     });
 
-    const { getByRole } = render(
-      <Button {...props} methods={methods} />
-    );
+    const { getByRole } = render(<Button {...props} methods={methods} />);
 
     fireEvent.click(getByRole('button'));
     expect(methods.triggerEvent).toHaveBeenCalledWith({ name: 'onClick' });
@@ -288,18 +287,16 @@ describe('TextInput', () => {
   test('calls setValue on change', () => {
     const { methods } = mockBlock({
       meta: { valueType: 'string', category: 'input' },
-      schema: inputSchema
+      schema: inputSchema,
     });
 
     const props = stubBlockProps({
       block: { id: 'input', type: 'TextInput', properties: {} },
       meta: { valueType: 'string', category: 'input' },
-      schema: inputSchema
+      schema: inputSchema,
     });
 
-    const { getByRole } = render(
-      <TextInput {...props} methods={methods} />
-    );
+    const { getByRole } = render(<TextInput {...props} methods={methods} />);
 
     fireEvent.change(getByRole('textbox'), { target: { value: 'test' } });
     expect(methods.setValue).toHaveBeenCalledWith('test');
@@ -309,10 +306,10 @@ describe('TextInput', () => {
 
 ## Key Files
 
-| File | Purpose |
-|------|---------|
-| `src/mockBlock.js` | Block environment mocking |
-| `src/runBlockSchemaTests.js` | Schema test runner |
-| `src/runRenderTests.js` | Render test runner |
-| `src/stubBlockProps.js` | Props generation |
-| `src/BlockSchemaErrors.js` | Error class |
+| File                         | Purpose                   |
+| ---------------------------- | ------------------------- |
+| `src/mockBlock.js`           | Block environment mocking |
+| `src/runBlockSchemaTests.js` | Schema test runner        |
+| `src/runRenderTests.js`      | Render test runner        |
+| `src/stubBlockProps.js`      | Props generation          |
+| `src/BlockSchemaErrors.js`   | Error class               |

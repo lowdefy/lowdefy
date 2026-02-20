@@ -5,6 +5,7 @@ Blocks are the visual building blocks of Lowdefy applications. Each block is a R
 ## What Are Blocks?
 
 Blocks are:
+
 - React components wrapped for Lowdefy
 - Configurable via YAML properties
 - Connected to page state
@@ -12,28 +13,28 @@ Blocks are:
 
 ## Block Categories
 
-| Category | Purpose | Examples |
-|----------|---------|----------|
-| **Container** | Layout and grouping | Box, Card, Collapse, Tabs |
-| **Input** | User data entry | TextInput, NumberInput, Selector |
-| **Display** | Show data | Title, Paragraph, Table, List |
-| **Feedback** | User feedback | Alert, Message, Progress |
-| **Navigation** | App navigation | Menu, Breadcrumb, Anchor |
+| Category       | Purpose             | Examples                         |
+| -------------- | ------------------- | -------------------------------- |
+| **Container**  | Layout and grouping | Box, Card, Collapse, Tabs        |
+| **Input**      | User data entry     | TextInput, NumberInput, Selector |
+| **Display**    | Show data           | Title, Paragraph, Table, List    |
+| **Feedback**   | User feedback       | Alert, Message, Progress         |
+| **Navigation** | App navigation      | Menu, Breadcrumb, Anchor         |
 
 ## Available Block Packages
 
-| Package | Description | Block Count |
-|---------|-------------|-------------|
-| [@lowdefy/blocks-antd](./antd.md) | Primary UI kit (Ant Design) | 62 |
-| [@lowdefy/blocks-basic](./basic.md) | HTML primitives | 8 |
-| [@lowdefy/blocks-aggrid](./aggrid.md) | AG Grid data tables | 1 |
-| [@lowdefy/blocks-echarts](./echarts.md) | ECharts visualizations | 1 |
-| [@lowdefy/blocks-markdown](./markdown.md) | Markdown rendering | 2 |
-| [@lowdefy/blocks-google-maps](./google-maps.md) | Google Maps | 1 |
-| [@lowdefy/blocks-algolia](./algolia.md) | Algolia search | 1 |
-| [@lowdefy/blocks-color-selectors](./color-selectors.md) | Color pickers | 3 |
-| [@lowdefy/blocks-loaders](./loaders.md) | Loading spinners | 1 |
-| [@lowdefy/blocks-qr](./qr.md) | QR code generation | 1 |
+| Package                                                 | Description                 | Block Count |
+| ------------------------------------------------------- | --------------------------- | ----------- |
+| [@lowdefy/blocks-antd](./antd.md)                       | Primary UI kit (Ant Design) | 62          |
+| [@lowdefy/blocks-basic](./basic.md)                     | HTML primitives             | 8           |
+| [@lowdefy/blocks-aggrid](./aggrid.md)                   | AG Grid data tables         | 1           |
+| [@lowdefy/blocks-echarts](./echarts.md)                 | ECharts visualizations      | 1           |
+| [@lowdefy/blocks-markdown](./markdown.md)               | Markdown rendering          | 2           |
+| [@lowdefy/blocks-google-maps](./google-maps.md)         | Google Maps                 | 1           |
+| [@lowdefy/blocks-algolia](./algolia.md)                 | Algolia search              | 1           |
+| [@lowdefy/blocks-color-selectors](./color-selectors.md) | Color pickers               | 3           |
+| [@lowdefy/blocks-loaders](./loaders.md)                 | Loading spinners            | 1           |
+| [@lowdefy/blocks-qr](./qr.md)                           | QR code generation          | 1           |
 
 ## Block Structure
 
@@ -73,6 +74,7 @@ blocks:
 ## Block Properties
 
 Each block has:
+
 - **id** - Unique identifier
 - **type** - Block type name
 - **properties** - Configuration (title, style, etc.)
@@ -124,6 +126,7 @@ Each block has:
 ### Block Meta Categories
 
 Blocks declare their category for:
+
 - Build validation (inputs need value handling)
 - Documentation organization
 - IDE tooling support

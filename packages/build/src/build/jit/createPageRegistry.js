@@ -14,26 +14,14 @@
   limitations under the License.
 */
 
-import { serializer } from '@lowdefy/helpers';
-
 function createPageRegistry({ components }) {
   const registry = new Map();
 
   for (const page of components.pages ?? []) {
-    // Deep copy raw content fields so the shallow components object can be modified
-    // independently (e.g., by skeleton build steps)
     registry.set(page.id, {
       pageId: page.id,
       auth: page.auth,
-      type: page.type,
       refId: page['~r'] ?? null,
-      rawContent: serializer.copy({
-        blocks: page.blocks,
-        areas: page.areas,
-        events: page.events,
-        requests: page.requests,
-        layout: page.layout,
-      }),
     });
   }
 

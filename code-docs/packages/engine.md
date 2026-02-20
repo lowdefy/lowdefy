@@ -5,6 +5,7 @@ Runtime state management and action execution engine. The brain of Lowdefy's cli
 ## Purpose
 
 This package provides:
+
 - Page state management (State class)
 - Action execution pipeline (Actions class)
 - Event handling (Events class)
@@ -80,6 +81,7 @@ class State {
 ```
 
 **Why freeze/reset?**
+
 - `freezeState()` captures state after onInit completes
 - `resetState()` allows "Reset Form" functionality
 - Enables undo/restore patterns
@@ -104,9 +106,9 @@ events:
   # With debounce (300ms default)
   onSearchChange:
     debounce:
-      ms: 500           # Debounce delay
-      leading: false    # Fire on leading edge
-      trailing: true    # Fire on trailing edge (default)
+      ms: 500 # Debounce delay
+      leading: false # Fire on leading edge
+      trailing: true # Fire on trailing edge (default)
     actions:
       - id: search
         type: Request
@@ -115,6 +117,7 @@ events:
 ```
 
 Events orchestrate action execution and handle:
+
 - Sequential action execution
 - Error handling per action
 - Debounce support (prevents rapid-fire execution)
@@ -152,6 +155,7 @@ events:
 ```
 
 Actions receive:
+
 - `context` - Page context with state
 - `params` - Action parameters (operators evaluated)
 - `event` - Original event object
@@ -172,6 +176,7 @@ requests:
 ```
 
 Requests class handles:
+
 - Request execution via API
 - Response caching in state (stores history array, not just latest)
 - Loading state management
@@ -197,6 +202,7 @@ areas:
 ```
 
 Areas class:
+
 - Builds block hierarchy
 - Evaluates block properties
 - Manages block visibility
@@ -206,13 +212,13 @@ Areas class:
 
 Each page has these state containers:
 
-| Container | Purpose | Access |
-|-----------|---------|--------|
-| `state` | Form values, user input | `_state: fieldName` |
-| `urlQuery` | URL query parameters | `_url_query: paramName` |
-| `input` | Data passed on navigation | `_input: fieldName` |
-| `requests` | Cached request responses | `_request: requestId` |
-| `global` | Cross-page shared state | `_global: fieldName` |
+| Container  | Purpose                   | Access                  |
+| ---------- | ------------------------- | ----------------------- |
+| `state`    | Form values, user input   | `_state: fieldName`     |
+| `urlQuery` | URL query parameters      | `_url_query: paramName` |
+| `input`    | Data passed on navigation | `_input: fieldName`     |
+| `requests` | Cached request responses  | `_request: requestId`   |
+| `global`   | Cross-page shared state   | `_global: fieldName`    |
 
 ## Operator Evaluation
 
@@ -234,6 +240,7 @@ properties:
 ```
 
 Operators are evaluated:
+
 - When state changes
 - Before rendering blocks
 - For action parameters
@@ -278,6 +285,7 @@ React re-renders
 ### Why Class-Based?
 
 Classes provide:
+
 - Encapsulated state per instance
 - Clear lifecycle methods
 - Bound methods for callbacks
@@ -286,6 +294,7 @@ Classes provide:
 ### Why Not Redux/MobX?
 
 Lowdefy's state model is simpler:
+
 - State is page-scoped, not global
 - No complex reducers needed
 - Actions are declarative (from config)
@@ -294,6 +303,7 @@ Lowdefy's state model is simpler:
 ### Why Evaluate Operators Client-Side?
 
 Client-side evaluation enables:
+
 - Reactive UI updates
 - No round-trip for UI changes
 - Fast form interactions
@@ -302,6 +312,7 @@ Client-side evaluation enables:
 ### State Mutation vs Immutability
 
 State is mutated directly for:
+
 - Simplicity (no spread operators)
 - Performance (no object recreation)
 - Compatibility with form libraries
@@ -338,6 +349,7 @@ block.eval.properties = {
 ```
 
 Properties re-evaluate when:
+
 - State changes
 - URL query changes
 - Request completes

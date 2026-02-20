@@ -4,8 +4,8 @@ Loading spinner blocks for Lowdefy.
 
 ## Block
 
-| Block | Purpose |
-|-------|---------|
+| Block     | Purpose                  |
+| --------- | ------------------------ |
 | `Spinner` | Animated loading spinner |
 
 ## Usage
@@ -22,10 +22,10 @@ Loading spinner blocks for Lowdefy.
 
 ## Properties
 
-| Property | Purpose |
-|----------|---------|
-| `size` | Spinner size in pixels |
-| `color` | Spinner color |
-| `type` | Spinner style variant |
+| Property | Purpose                |
+| -------- | ---------------------- |
+| `size`   | Spinner size in pixels |
+| `color`  | Spinner color          |
+| `type`   | Spinner style variant  |
 
 Typically used with `visible` to show/hide during loading states.

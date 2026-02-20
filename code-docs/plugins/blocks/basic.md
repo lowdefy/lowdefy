@@ -5,6 +5,7 @@ HTML primitive blocks for Lowdefy. Provides basic building blocks without framew
 ## Overview
 
 This package contains simple HTML-based blocks that:
+
 - Have minimal dependencies
 - Provide raw HTML elements
 - Enable custom styling
@@ -12,16 +13,16 @@ This package contains simple HTML-based blocks that:
 
 ## Blocks
 
-| Block | HTML Element | Purpose |
-|-------|--------------|---------|
-| `Box` | `<div>` | Generic container |
-| `Span` | `<span>` | Inline container |
-| `Html` | `<div>` | Renders HTML string (sanitized) |
-| `DangerousHtml` | `<div>` | Renders raw HTML (unsanitized) |
-| `Img` | `<img>` | Image element |
-| `Icon` | SVG | Icon from icon library |
-| `Anchor` | `<a>` | HTML anchor/link |
-| `List` | `<ul>/<ol>` | HTML list |
+| Block           | HTML Element | Purpose                         |
+| --------------- | ------------ | ------------------------------- |
+| `Box`           | `<div>`      | Generic container               |
+| `Span`          | `<span>`     | Inline container                |
+| `Html`          | `<div>`      | Renders HTML string (sanitized) |
+| `DangerousHtml` | `<div>`      | Renders raw HTML (unsanitized)  |
+| `Img`           | `<img>`      | Image element                   |
+| `Icon`          | SVG          | Icon from icon library          |
+| `Anchor`        | `<a>`        | HTML anchor/link                |
+| `List`          | `<ul>/<ol>`  | HTML list                       |
 
 ## Box Block
 
@@ -52,6 +53,7 @@ Renders sanitized HTML:
 ```
 
 Sanitization removes:
+
 - `<script>` tags
 - Event handlers (onclick, etc.)
 - Dangerous attributes
@@ -78,12 +80,13 @@ Renders icons from icon libraries:
 - id: icon
   type: Icon
   properties:
-    name: AiOutlineUser   # Ant Design icon
+    name: AiOutlineUser # Ant Design icon
     size: 24
     color: '#1890ff'
 ```
 
 Supported icon libraries:
+
 - Ant Design Icons (`AiOutline*`, `AiFilled*`)
 - Font Awesome (via configuration)
 
@@ -108,7 +111,7 @@ HTML list rendering:
 - id: features
   type: List
   properties:
-    ordered: false    # ul vs ol
+    ordered: false # ul vs ol
     items:
       - First item
       - Second item
@@ -133,6 +136,7 @@ HTML list rendering:
 ### When to Use
 
 Use basic blocks when:
+
 - Need raw HTML control
 - Want minimal styling
 - Embedding external content

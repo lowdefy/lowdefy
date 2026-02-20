@@ -4,8 +4,8 @@ JSONata query language operator.
 
 ## Operator
 
-| Operator | Purpose |
-|----------|---------|
+| Operator   | Purpose                    |
+| ---------- | -------------------------- |
 | `_jsonata` | Execute JSONata expression |
 
 ## Usage

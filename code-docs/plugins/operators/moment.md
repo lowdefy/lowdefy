@@ -4,12 +4,12 @@ Date and time operators using [Moment.js](https://momentjs.com/docs/).
 
 ## Operators
 
-| Operator | Purpose |
-|----------|---------|
-| `_moment` | Full Moment.js operations |
-| `_date` | Simplified date operations |
+| Operator  | Purpose                    |
+| --------- | -------------------------- |
+| `_moment` | Full Moment.js operations  |
+| `_date`   | Simplified date operations |
 
-## _date
+## \_date
 
 Simple date operations:
 
@@ -39,7 +39,7 @@ nextWeek:
         - days
 ```
 
-## _moment
+## \_moment
 
 Full Moment.js API:
 
@@ -69,16 +69,16 @@ result:
 
 ### Format Tokens
 
-| Token | Output |
-|-------|--------|
-| `YYYY` | 2024 |
-| `MM` | 01-12 |
-| `DD` | 01-31 |
-| `HH` | 00-23 |
-| `mm` | 00-59 |
-| `ss` | 00-59 |
+| Token  | Output  |
+| ------ | ------- |
+| `YYYY` | 2024    |
+| `MM`   | 01-12   |
+| `DD`   | 01-31   |
+| `HH`   | 00-23   |
+| `mm`   | 00-59   |
+| `ss`   | 00-59   |
 | `MMMM` | January |
-| `dddd` | Monday |
+| `dddd` | Monday  |
 
 ### Relative Time
 

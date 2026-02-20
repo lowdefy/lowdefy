@@ -4,10 +4,10 @@ Color picker blocks for Lowdefy.
 
 ## Blocks
 
-| Block | Purpose |
-|-------|---------|
-| `ChromeColorSelector` | Chrome-style color picker |
-| `CircleColorSelector` | Circular color palette |
+| Block                  | Purpose                     |
+| ---------------------- | --------------------------- |
+| `ChromeColorSelector`  | Chrome-style color picker   |
+| `CircleColorSelector`  | Circular color palette      |
 | `TwitterColorSelector` | Twitter-style color palette |
 
 ## ChromeColorSelector

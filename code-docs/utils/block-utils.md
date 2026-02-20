@@ -5,6 +5,7 @@ Runtime utilities for block components.
 ## Overview
 
 Provides browser-side utilities for:
+
 - CSS class generation with media queries
 - Safe HTML rendering
 - Error boundaries
@@ -26,18 +27,18 @@ Generate CSS classes using Emotion:
 // Simple styles
 const className = makeCssClass({
   color: 'red',
-  fontSize: '16px'
+  fontSize: '16px',
 });
 
 // With media queries (shorthand)
 const responsiveClass = makeCssClass({
   fontSize: '14px',
   '@media sm': {
-    fontSize: '16px'
+    fontSize: '16px',
   },
   '@media lg': {
-    fontSize: '18px'
-  }
+    fontSize: '18px',
+  },
 });
 
 // Style object only (no class generation)
@@ -46,13 +47,13 @@ const styleObject = makeCssClass({ color: 'blue' }, true);
 
 **Media Query Shortcuts:**
 
-| Shortcut | Breakpoint | CSS |
-|----------|------------|-----|
-| `xs` | 576px | `@media screen and (max-width: 576px)` |
-| `sm` | 768px | `@media screen and (max-width: 768px)` |
-| `md` | 992px | `@media screen and (max-width: 992px)` |
-| `lg` | 1200px | `@media screen and (max-width: 1200px)` |
-| `xl` | 1600px | `@media screen and (max-width: 1600px)` |
+| Shortcut | Breakpoint | CSS                                     |
+| -------- | ---------- | --------------------------------------- |
+| `xs`     | 576px      | `@media screen and (max-width: 576px)`  |
+| `sm`     | 768px      | `@media screen and (max-width: 768px)`  |
+| `md`     | 992px      | `@media screen and (max-width: 992px)`  |
+| `lg`     | 1200px     | `@media screen and (max-width: 1200px)` |
+| `xl`     | 1600px     | `@media screen and (max-width: 1600px)` |
 
 ### mediaToCssObject(styles, styleObjectOnly)
 
@@ -61,7 +62,7 @@ Transform shorthand media queries to CSS objects:
 ```javascript
 const input = {
   color: 'red',
-  '@media sm': { color: 'blue' }
+  '@media sm': { color: 'blue' },
 };
 
 const output = mediaToCssObject(input);
@@ -99,19 +100,19 @@ import { ErrorBoundary } from '@lowdefy/block-utils';
   fallback={(error) => <CustomError error={error} />}
 >
   <RiskyComponent />
-</ErrorBoundary>
+</ErrorBoundary>;
 ```
 
 **Props:**
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `children` | ReactNode | Components to wrap |
-| `fallback` | function | Custom error handler `(error) => ReactNode` |
-| `fullPage` | boolean | Show full-page error display |
-| `message` | string | Error message |
-| `name` | string | Component name for debugging |
-| `description` | string | Error description |
+| Prop          | Type      | Description                                 |
+| ------------- | --------- | ------------------------------------------- |
+| `children`    | ReactNode | Components to wrap                          |
+| `fallback`    | function  | Custom error handler `(error) => ReactNode` |
+| `fullPage`    | boolean   | Show full-page error display                |
+| `message`     | string    | Error message                               |
+| `name`        | string    | Component name for debugging                |
+| `description` | string    | Error description                           |
 
 ### HtmlComponent
 
@@ -120,10 +121,11 @@ Safe HTML rendering component:
 ```javascript
 import { HtmlComponent } from '@lowdefy/block-utils';
 
-<HtmlComponent html="<p>Safe <strong>HTML</strong></p>" />
+<HtmlComponent html="<p>Safe <strong>HTML</strong></p>" />;
 ```
 
 Uses DOMPurify for sanitization, removing:
+
 - `<script>` tags
 - Event handlers (`onclick`, etc.)
 - `javascript:` URLs
@@ -194,15 +196,12 @@ const Button = ({ properties, methods }) => {
     cursor: 'pointer',
     '@media sm': {
       padding: '6px 12px',
-      fontSize: '14px'
-    }
+      fontSize: '14px',
+    },
   });
 
   return (
-    <button
-      className={className}
-      onClick={() => methods.triggerEvent({ name: 'onClick' })}
-    >
+    <button className={className} onClick={() => methods.triggerEvent({ name: 'onClick' })}>
       {properties.label}
     </button>
   );
@@ -229,12 +228,12 @@ const RichText = ({ properties }) => {
 
 ## Key Files
 
-| File | Purpose |
-|------|---------|
-| `src/makeCssClass.js` | CSS class generation |
-| `src/mediaToCssObject.js` | Media query transformation |
-| `src/renderHtml.js` | HTML sanitization |
-| `src/ErrorBoundary.js` | Error boundary component |
-| `src/HtmlComponent.js` | Safe HTML component |
-| `src/blockSchema.js` | Default block schema |
-| `src/blockDefaultProps.js` | Default props |
+| File                       | Purpose                    |
+| -------------------------- | -------------------------- |
+| `src/makeCssClass.js`      | CSS class generation       |
+| `src/mediaToCssObject.js`  | Media query transformation |
+| `src/renderHtml.js`        | HTML sanitization          |
+| `src/ErrorBoundary.js`     | Error boundary component   |
+| `src/HtmlComponent.js`     | Safe HTML component        |
+| `src/blockSchema.js`       | Default block schema       |
+| `src/blockDefaultProps.js` | Default props              |

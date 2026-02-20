@@ -47,45 +47,6 @@ test('invalidatePages removes specific pages', () => {
   expect(cache.isCompiled('settings')).toBe(false);
 });
 
-test('invalidateByFiles returns affected pages and invalidates them', () => {
-  const cache = new PageCache();
-  cache.markCompiled('home');
-  cache.markCompiled('dashboard');
-
-  const fileDependencyMap = new Map([
-    ['pages/home/blocks.yaml', new Set(['home'])],
-    ['shared/layout.yaml', new Set(['home', 'dashboard'])],
-  ]);
-
-  const affected = cache.invalidateByFiles(['pages/home/blocks.yaml'], fileDependencyMap);
-  expect(affected).toEqual(new Set(['home']));
-  expect(cache.isCompiled('home')).toBe(false);
-  expect(cache.isCompiled('dashboard')).toBe(true);
-});
-
-test('invalidateByFiles handles shared files affecting multiple pages', () => {
-  const cache = new PageCache();
-  cache.markCompiled('home');
-  cache.markCompiled('dashboard');
-
-  const fileDependencyMap = new Map([['shared/layout.yaml', new Set(['home', 'dashboard'])]]);
-
-  const affected = cache.invalidateByFiles(['shared/layout.yaml'], fileDependencyMap);
-  expect(affected).toEqual(new Set(['home', 'dashboard']));
-  expect(cache.isCompiled('home')).toBe(false);
-  expect(cache.isCompiled('dashboard')).toBe(false);
-});
-
-test('invalidateByFiles returns empty set for unknown files', () => {
-  const cache = new PageCache();
-  cache.markCompiled('home');
-
-  const fileDependencyMap = new Map();
-  const affected = cache.invalidateByFiles(['unknown.yaml'], fileDependencyMap);
-  expect(affected).toEqual(new Set());
-  expect(cache.isCompiled('home')).toBe(true);
-});
-
 test('acquireBuildLock returns true for first request', async () => {
   const cache = new PageCache();
   const shouldBuild = await cache.acquireBuildLock('home');

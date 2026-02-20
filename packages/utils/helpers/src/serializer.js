@@ -16,8 +16,50 @@
   limitations under the License.
 */
 
+import {
+  ActionError,
+  BlockError,
+  BuildError,
+  ConfigError,
+  ConfigWarning,
+  LowdefyInternalError,
+  OperatorError,
+  PluginError,
+  RequestError,
+  ServiceError,
+  UserError,
+} from '@lowdefy/errors';
+
+import extractErrorProps from './extractErrorProps.js';
 import type from './type.js';
 import stableStringify from './stableStringify.js';
+
+const lowdefyErrorTypes = {
+  ActionError,
+  BlockError,
+  BuildError,
+  ConfigError,
+  ConfigWarning,
+  LowdefyInternalError,
+  OperatorError,
+  PluginError,
+  RequestError,
+  ServiceError,
+  UserError,
+};
+
+function propsToError(data) {
+  const ErrorClass = lowdefyErrorTypes[data.name] || Error;
+  const error = Object.create(ErrorClass.prototype);
+  for (const [k, v] of Object.entries(data)) {
+    if (k === 'cause' && v !== null && typeof v === 'object' && v.message !== undefined) {
+      error[k] = propsToError(v);
+    } else {
+      error[k] = v;
+    }
+  }
+  return error;
+}
 
 const makeReplacer = (customReplacer, isoStringDates) => (key, value) => {
   let dateReplacer = (date) => ({ '~d': date.valueOf() });
@@ -29,13 +71,7 @@ const makeReplacer = (customReplacer, isoStringDates) => (key, value) => {
     newValue = customReplacer(key, value);
   }
   if (type.isError(newValue)) {
-    return {
-      '~e': {
-        name: newValue.name,
-        message: newValue.message,
-        value: newValue.toString(),
-      },
-    };
+    return { '~e': extractErrorProps(newValue) };
   }
   if (type.isObject(newValue)) {
     Object.keys(newValue).forEach((k) => {
@@ -158,9 +194,7 @@ const makeReviver = (customReviver) => (key, value) => {
   }
   if (type.isObject(newValue)) {
     if (!type.isUndefined(newValue['~e'])) {
-      const error = new Error(newValue['~e'].message);
-      error.name = newValue['~e'].name;
-      return error;
+      return propsToError(newValue['~e']);
     }
     if (!type.isUndefined(newValue['~d'])) {
       const result = new Date(newValue['~d']);

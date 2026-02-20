@@ -14,8 +14,6 @@
   limitations under the License.
 */
 
-import { ConfigError } from '@lowdefy/errors/build';
-
 import getConfigFile from './getConfigFile.js';
 import parseRefContent from './parseRefContent.js';
 import runRefResolver from './runRefResolver.js';
@@ -30,19 +28,7 @@ async function getRefContent({ context, refDef, referencedFrom }) {
     content = await getConfigFile({ context, refDef, referencedFrom });
   }
 
-  try {
-    return parseRefContent({ content, refDef });
-  } catch (error) {
-    // Extract line number from YAML parse error message (e.g., "at line 6")
-    const lineMatch = error.message.match(/at line (\d+)/);
-    // Re-throw parse errors as ConfigError with location info
-    throw new ConfigError({
-      message: `Error parsing "${refDef.path}": ${error.message}`,
-      filePath: refDef.path,
-      lineNumber: lineMatch ? lineMatch[1] : null,
-      configDirectory: context.directories.config,
-    });
-  }
+  return parseRefContent({ content, refDef });
 }
 
 export default getRefContent;

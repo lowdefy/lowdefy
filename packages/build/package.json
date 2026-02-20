@@ -102,7 +102,9 @@
     "@swc/cli": "0.1.63",
     "@swc/core": "1.3.99",
     "@swc/jest": "0.2.29",
-    "jest": "28.1.3"
+    "@lowdefy/logger": "4.5.2",
+    "jest": "28.1.3",
+    "pino": "8.16.2"
   },
   "publishConfig": {
     "access": "public"

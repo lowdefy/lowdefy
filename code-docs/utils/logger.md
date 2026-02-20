@@ -1,59 +1,57 @@
 # @lowdefy/logger
 
-Centralized logging utilities for all Lowdefy environments: Node.js servers, development manager, CLI, and browser.
+Centralized logging utilities for all Lowdefy environments: Node.js servers, CLI, and browser.
 
 ## Overview
 
-The logger package provides environment-specific logger factories that share a common interface. Each logger exposes a `.ui` property with terminal-friendly methods (`log`, `error`, `warn`, `link`, `spin`, `succeed`) so that any component can emit structured output without knowing whether it's running in a CLI spinner, a pino JSON stream, or the browser console.
+The logger package provides environment-specific logger factories. Each logger exposes four standard level methods (`error`, `warn`, `info`, `debug`). The core principle: **`logger.error(error)` is the ONE way to log errors.** Display formatting happens only at the display layer (CLI logger, browser logger).
 
 ## Package Structure
 
 ```
 @lowdefy/logger
-├── node/      # createNodeLogger, wrapErrorLogger (pino-based)
-├── dev/       # createDevLogger (pino + print mixin for manager)
-├── cli/       # createCliLogger, createPrint, createStdOutLineHandler
+├── node/      # createNodeLogger (plain pino)
+├── cli/       # createCliLogger, createStdOutLineHandler
 └── browser/   # createBrowserLogger (console-based)
 ```
 
 **Exports (subpaths):**
 
-| Subpath | Exports | Runtime |
-|---------|---------|---------|
-| `@lowdefy/logger` | Re-exports node | Node.js |
-| `@lowdefy/logger/node` | `createNodeLogger`, `wrapErrorLogger` | Node.js |
-| `@lowdefy/logger/dev` | `createDevLogger` | Node.js |
-| `@lowdefy/logger/cli` | `createCliLogger`, `createPrint`, `createStdOutLineHandler` | Node.js |
-| `@lowdefy/logger/browser` | `createBrowserLogger` | Browser |
+| Subpath                   | Exports                                      | Runtime |
+| ------------------------- | -------------------------------------------- | ------- |
+| `@lowdefy/logger`         | Re-exports node                              | Node.js |
+| `@lowdefy/logger/node`    | `createNodeLogger`                           | Node.js |
+| `@lowdefy/logger/cli`     | `createCliLogger`, `createStdOutLineHandler` | Node.js |
+| `@lowdefy/logger/browser` | `createBrowserLogger`                        | Browser |
 
-**Dependencies:** `pino` (8.16.2), `ora` (7.0.1)
+**Dependencies:** `pino`, `ora`, `@lowdefy/errors`, `@lowdefy/helpers`
 
-## The `.ui` Interface
+## Logger API
 
-Every logger variant exposes `logger.ui` with the same methods:
+All logger variants expose the same four level methods. The standard call patterns:
 
 ```javascript
-logger.ui.log(text)      // General output (white ∙)
-logger.ui.dim(text)      // Low-priority trace (dim ∙) — e.g., request logs
-logger.ui.info(text)     // Informational (blue ℹ)
-logger.ui.warn(text)     // Warning (yellow ⚠)
-logger.ui.error(text)    // Error (red ✖)
-logger.ui.debug(text)    // Debug output (gray +)
-logger.ui.link(text)     // Source link (blue ℹ, clickable)
-logger.ui.spin(text)     // Spinner start/update
-logger.ui.succeed(text)  // Spinner success (green ✔)
+// Log an error object (THE primary pattern)
+logger.error(error);
+
+// Pino two-arg form: merge object + message string
+logger.info({ spin: true }, 'Building pages...');
+logger.info({ color: 'blue' }, 'some info');
+logger.info({ succeed: true }, 'Build complete');
+
+// Plain string
+logger.info('Server started');
 ```
 
-The `.ui` methods are environment-aware:
-- **CLI**: Routes through `createPrint` (ora spinners, colored output)
-- **Dev/Node**: Logs as pino JSON with `print` field for downstream rendering
-- **Browser**: Maps to `console.*` methods
+Color is passed via merge objects (not method chaining).
 
 ## Logger Variants
 
 ### createNodeLogger (`/node`)
 
-Pino-based logger for production servers. Attaches a `.ui` property that maps to standard pino methods. Child loggers inherit `.ui` automatically.
+Plain pino logger. No wrappers, no `attachLevelMethods`. Returns pino directly.
+
+**Source:** `src/node/createNodeLogger.js`
 
 ```javascript
 import { createNodeLogger } from '@lowdefy/logger/node';
@@ -62,152 +60,173 @@ const logger = createNodeLogger({
   name: 'lowdefy_server',
   level: 'info',
   base: { pid: undefined, hostname: undefined },
-  mixin: (context, level) => ({ ...context, print: context.print ?? logger.levels.labels[level] }),
   serializers: {},
   destination: undefined,
 });
+
+logger.info({ spin: true }, 'Building...');
+logger.error(someError); // pino auto-detects Error, uses extractErrorProps
 ```
 
-**Error serializer:** Extracts `message`, `name`, `stack`, `source`, `config`, `configKey`, `isServiceError` from error objects — preserving Lowdefy error metadata through pino serialization.
+**Error serializer:** Uses `extractErrorProps` from `@lowdefy/helpers`. Captures all enumerable properties plus non-enumerable `message`, `name`, `stack`, `cause`.
 
-### wrapErrorLogger (`/node`)
+**Parameters:**
 
-Wraps a pino logger's `.error()` method to format Lowdefy error objects. When an error has a `.source` property, it emits a separate `{ print: 'link' }` line before the error message — the CLI renders this as a blue clickable link.
-
-```javascript
-import { wrapErrorLogger } from '@lowdefy/logger/node';
-
-const wrapped = wrapErrorLogger(logger, { includeSource: true });
-wrapped.error(someError);
-// Output (two pino JSON lines):
-//   { print: 'link', msg: 'pages/home.yaml:15' }
-//   { print: 'error', msg: '[ConfigError] Block type not found.' }
-```
-
-**Guard:** `_lowdefyWrapped` flag prevents double-wrapping when `wrapErrorLogger` is called multiple times.
-
-### createDevLogger (`/dev`)
-
-Used by the server-dev manager process. Wraps `createNodeLogger` with:
-- Synchronous pino destination (`dest: 1`, stdout)
-- `print` mixin that adds a `print` field to every JSON line
-- Custom `.ui` that adds `print` context to each method
-
-```javascript
-import { createDevLogger } from '@lowdefy/logger/dev';
-
-const logger = createDevLogger({ level: 'info', name: 'lowdefy build' });
-logger.ui.spin('Building...');
-// Outputs JSON: { print: 'spin', msg: 'Building...' }
-```
+| Parameter     | Default                                   | Description                              |
+| ------------- | ----------------------------------------- | ---------------------------------------- |
+| `name`        | `'lowdefy'`                               | Logger name                              |
+| `level`       | `process.env.LOWDEFY_LOG_LEVEL ?? 'info'` | Log level                                |
+| `base`        | `{ pid: undefined, hostname: undefined }` | Base fields                              |
+| `mixin`       | —                                         | Pino mixin function                      |
+| `serializers` | —                                         | Additional serializers (merged with err) |
+| `destination` | —                                         | Pino destination                         |
 
 ### createCliLogger (`/cli`)
 
-Lightweight logger for the CLI process. Uses `createPrint` for terminal output with ora spinners. Formats errors using `.print()` method or `[Name] message` fallback.
+Display-layer logger with ora spinners. Parses input to determine formatting. This is where `errorToDisplayString` is called — not in error handlers.
+
+**Source:** `src/cli/createCliLogger.js`
 
 ```javascript
 import { createCliLogger } from '@lowdefy/logger/cli';
 
 const logger = createCliLogger({ logLevel: 'info' });
-logger.error(someError);   // Formats and prints via createPrint
-logger.ui.spin('Working'); // Starts ora spinner
+logger.error(someError); // Formats and prints error
+logger.info({ spin: true }, 'Working...'); // Starts ora spinner
+logger.info({ succeed: true }, 'Done'); // Green checkmark
+logger.info({ color: 'blue' }, 'link'); // Blue text
 ```
 
-### createPrint (`/cli`)
+**Input dispatch (4 paths):**
 
-Terminal output renderer with custom log levels and ora spinner integration:
+1. **Error-like** (has `.message`):
 
-| Level | Value | Rendering |
-|-------|-------|-----------|
-| `error` | 50 | Red text |
-| `warn` | 40 | Yellow text |
-| `succeed` | 33 | Green check + text |
-| `spin` | 32 | Ora spinner |
-| `log` | 31 | White dot + text |
-| `dim` | 31 | White dot + dim text |
-| `link` | 30 | Blue text (clickable path) |
-| `info` | 30 | Default text |
-| `debug` | 20 | Gray text |
+   - Log `error.source` in blue if present
+   - Log `errorToDisplayString(error)` at the appropriate level
+   - Log `error.stack` for `LowdefyInternalError` and non-Lowdefy errors (actual bugs)
+   - Suppress stack for ConfigError, PluginError, ServiceError, UserError, BuildError, ConfigWarning
+   - **Walk the cause chain** (max 3 levels): for each `error.cause` that is an Error, print `"  Caused by: [ErrorName] message"`. Cause stacks are logged at debug level only.
 
-Falls back to basic `console.*` in CI environments (no ora).
+2. **Pino two-arg form** (second arg is string):
+
+   - First arg is options: extract `color`, `spin`, `succeed`
+   - Display the string with those options
+
+3. **Plain string** (first arg is string):
+
+   - Display directly
+
+4. **Fallback** (anything else):
+   - `JSON.stringify(input, null, 2)`
+
+**Stack trace logic (`shouldLogStack`):** Logs stacks for `LowdefyInternalError` (internal bugs where stack is critical) and non-Lowdefy errors (plain `Error`, `TypeError`, etc. — JS bugs). Suppresses stacks for all other Lowdefy error types that use `source`/location instead of stack traces.
+
+**Two modes:**
+
+- **Interactive (default):** Ora spinner with timestamps and ANSI colors
+- **Basic (CI):** Plain `console.*` — detected via `process.env.CI`
+
+**Memoized:** Only one spinner per process. Multiple `createCliLogger` calls return the same instance.
+
+**Log levels:**
+
+| Level   | Pino Value | Rendering                                       |
+| ------- | ---------- | ----------------------------------------------- |
+| error   | 50         | `spinner.fail()` (red)                          |
+| warn    | 40         | `spinner.warn()` (yellow)                       |
+| succeed | 30         | `spinner.succeed()` (green)                     |
+| spin    | 30         | `spinner.start()`                               |
+| info    | 30         | `spinner.stopAndPersist({ symbol: '∙' })`       |
+| debug   | 20         | `spinner.stopAndPersist({ symbol: gray('+') })` |
 
 ### createStdOutLineHandler (`/cli`)
 
-Parses pino JSON lines from piped stdout and routes them to the CLI's `.ui` methods. Used by the CLI to render manager process output.
+Pure protocol translator. Parses pino JSON lines from piped stdout and routes to the CLI logger. Zero display logic.
+
+**Source:** `src/cli/createStdOutLineHandler.js`
 
 ```javascript
 import { createStdOutLineHandler } from '@lowdefy/logger/cli';
 
-const handler = createStdOutLineHandler({ context: { logger: { ui } } });
-handler('{"print":"spin","msg":"Building..."}');
-// → ui.spin('Building...')
+const handler = createStdOutLineHandler({ context: { logger } });
+handler('{"level":30,"spin":true,"msg":"Building..."}');
+// → logger.info({ spin: true }, 'Building...')
 ```
 
-Handles `source` and `err.source` fields for error/warn lines — renders the source as a separate `ui.link()` call before the message.
+**Dispatch logic:**
 
-**Print level resolution:** Uses `print` field if present, otherwise maps pino's numeric `level` (10=trace, 20=debug, 30=info, 40=warn, 50=error) to a UI method, defaulting to `'info'`. This ensures server logs without an explicit `print` field (e.g., default pino output) still appear in the terminal.
+1. Try `JSON.parse(line)`. If fails → `logger.info(line)` (raw string)
+2. Map `parsed.level` to level name (50→error, 40→warn, 30→info, 20→debug)
+3. If `parsed.err` exists → reconstruct error via `Object.create(ErrorClass.prototype)` + property assignment, call `logger[level](error)`
+4. Else → `logger[level]({ source, color, spin, succeed }, parsed.msg)` (two-arg form)
+
+**Error reconstruction:** Uses the same `lowdefyErrorTypes` map as the serializer `~e` reviver (direct imports of Lowdefy error classes). Same `Object.create + assign` pattern — no constructor called, no message re-formatting.
 
 ### createBrowserLogger (`/browser`)
 
-Maps to `console.*` methods. Formats errors using `.print()` or `[Name] message`. The `.ui` property maps `link`/`spin`/`succeed` to `console.info`/`console.log`.
+Display-layer logger for the browser. Formats Lowdefy errors with `errorToDisplayString`; passes everything else through to `console.*`.
+
+**Source:** `src/browser/createBrowserLogger.js`
+
+```javascript
+import { createBrowserLogger } from '@lowdefy/logger/browser';
+
+const logger = createBrowserLogger();
+logger.error(error); // Lowdefy errors: source in blue + errorToDisplayString
+logger.info('loaded'); // Plain pass-through to console.info
+```
+
+**Error handling (error/warn levels):**
+
+- `isLowdefyError === true` → display `error.source` in blue (if present), then `errorToDisplayString(error)`, then **walk the cause chain** (max 3 levels, same as CLI logger)
+- Everything else → plain `console.error(...args)` / `console.warn(...args)` (browser devtools render natively)
+
+**Cause chain walking:** Both the CLI logger and browser logger use the same pattern — iterate `error.cause` up to 3 levels, printing `"  Caused by: [ErrorName] message"` for each. The browser logger uses a shared `logCauseChain` helper.
+
+**Info/debug levels:** Pure pass-through to `console.info` / `console.debug`.
 
 ## Data Flow: Dev Server Logging
 
 ```
-Server process (pino + print mixin + wrapErrorLogger)
-  → stdout JSON lines with `print` field
+Server process (plain pino via createNodeLogger)
+  → stdout JSON lines with optional color/spin/succeed fields
   → stdio: 'inherit' → inherits manager stdout
   → piped to CLI process
 
-Manager process (createDevLogger = pino + print mixin)
-  → stdout JSON lines with `print` field
+Manager process (createNodeLogger with sync destination)
+  → stdout JSON lines with optional color/spin/succeed fields
   → piped to CLI process
 
 CLI process reads pipe
   → createStdOutLineHandler parses JSON
-  → routes to context.logger.ui[print](msg)
-  → terminal (ora spinners, colored output)
+  → reconstructs errors from pino err field
+  → routes to logger[level](error) or logger[level]({ opts }, msg)
+  → createCliLogger renders terminal (ora spinners, colored output)
 ```
 
-**Example flows:**
+## Pino JSON Wire Format
 
-| Event | Server/Manager Output | CLI Rendering |
-|-------|----------------------|---------------|
-| HTTP request | `{ print: 'dim', msg: 'Request: ...' }` | Dim `∙ Request: ...` |
-| Config error | `{ print: 'link', msg: 'file.yaml:10' }` then `{ print: 'error', msg: '[ConfigError] ...' }` | Blue link + Red error |
-| Build start | `{ print: 'spin', msg: 'Building...' }` | Ora spinner |
-| Build done | `{ print: 'succeed', msg: 'Build complete' }` | Green check |
+```json
+{"level":30,"spin":true,"msg":"Building..."}
+{"level":30,"color":"blue","msg":"src/config.yaml:5"}
+{"level":50,"err":{"message":"...","name":"ConfigError","configKey":"abc123","source":"/app/pages/home.yaml:15"},"msg":"..."}
+{"level":30,"succeed":true,"msg":"Build complete"}
+```
 
-## Key Design Decisions
-
-### Why `stdio: 'inherit'` for the Server Process?
-
-The server-dev manager spawns the Next.js server with `stdio: ['ignore', 'inherit', 'pipe']`. Server stdout is inherited directly by the manager process (which is piped to the CLI). This eliminates the need for a separate dev `createStdOutLineHandler` to parse and re-emit server logs — the server's pino JSON goes straight through to the CLI.
-
-Only stderr is piped separately for error formatting through the manager logger.
-
-### Why a `print` Mixin?
-
-Pino's structured JSON output needs a way to tell the CLI _how_ to render each line. The `print` field (`'error'`, `'warn'`, `'spin'`, `'log'`, `'link'`, etc.) maps directly to `ui.*` methods. Without this, the CLI would have to guess rendering from log levels alone.
-
-### Why `wrapErrorLogger` Emits Source as a Separate Line?
-
-Source links and error messages need different terminal formatting (blue vs red). By emitting source as a separate `{ print: 'link' }` line via `originalInfo()`, the CLI can render each independently. The alternative (embedding source in the error message) would force single-color rendering.
+Fields `color`, `spin`, and `succeed` are optional UI hints. The `err` field contains the full serialized error (via `extractErrorProps`).
 
 ## Key Files
 
-| File | Purpose |
-|------|---------|
-| `src/node/createNodeLogger.js` | Pino factory with `.ui` and error serializer |
-| `src/node/wrapErrorLogger.js` | Error formatting wrapper with source link emission |
-| `src/dev/createDevLogger.js` | Manager logger with print mixin |
-| `src/cli/createCliLogger.js` | CLI logger wrapping createPrint |
-| `src/cli/createPrint.js` | Terminal output with ora spinners |
-| `src/cli/createStdOutLineHandler.js` | Pino JSON line parser for CLI |
-| `src/browser/createBrowserLogger.js` | Browser console logger |
+| File                                 | Purpose                                                 |
+| ------------------------------------ | ------------------------------------------------------- |
+| `src/node/createNodeLogger.js`       | Plain pino factory with extractErrorProps serializer    |
+| `src/cli/createCliLogger.js`         | CLI display with ora, errorToDisplayString, stack logic |
+| `src/cli/createStdOutLineHandler.js` | Pino JSON → CLI logger protocol translator              |
+| `src/browser/createBrowserLogger.js` | Browser console with Lowdefy error formatting           |
 
 ## See Also
 
-- [Server Dev](../servers/server-dev.md) - How the dev server uses these loggers
-- [CLI](../packages/cli.md) - CLI command orchestration
-- [Error Tracing](../architecture/error-tracing.md) - Error system that produces the errors loggers format
+- [Errors](./errors.md) — Error classes and errorToDisplayString
+- [Server Dev](../servers/server-dev.md) — How the dev server uses these loggers
+- [CLI](../packages/cli.md) — CLI command orchestration
+- [Error Tracing](../architecture/error-tracing.md) — Error system that produces the errors loggers format

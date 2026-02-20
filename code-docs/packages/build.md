@@ -248,25 +248,27 @@ Located in `packages/build/src/utils/`:
 | `createCheckDuplicateId.js` | Factory for duplicate ID detection |
 | `createCounter.js` | Factory for counting type usage |
 
-**Error formatting pattern:**
+**Error handling pattern:**
 ```javascript
-import { ConfigError } from '@lowdefy/node-utils';
+import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 
-// Fatal error - stops build
-throw new ConfigError({
+// Fatal error — collected via collectExceptions, build continues
+collectExceptions(context, new ConfigError({
   message: `Block type "${type}" not found.`,
   configKey: block['~k'],
-  context,
-  checkSlug: 'types',  // For ~ignoreBuildChecks suppression
-});
+  checkSlug: 'types',
+}));
 
-// Warning - logs but continues build
-context.logger.configWarning({
+// Warning — suppression, dedup, location resolution via handleWarning
+context.handleWarning(new ConfigWarning({
   message: `Deprecated feature used.`,
   configKey: obj['~k'],
-  checkSlug: 'state-refs',  // For ~ignoreBuildChecks suppression
-});
+  checkSlug: 'state-refs',
+  prodError: true,
+}));
 ```
+
+**context.handleError** and **context.handleWarning** are explicit functions wired in `createContext.js` — not logger methods. `context.logger` is plain pino with zero monkey-patching.
 
 Errors and warnings can be suppressed using `~ignoreBuildChecks` in config. See [architecture/error-tracing.md](../architecture/error-tracing.md) for details.
 

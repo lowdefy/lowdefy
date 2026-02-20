@@ -14,10 +14,11 @@
   limitations under the License.
 */
 
+import { ConfigError, OperatorError } from '@lowdefy/errors';
 import { serializer, type } from '@lowdefy/helpers';
 
 class ServerParser {
-  constructor({ env, jsMap, operators, payload, secrets, state, steps, user, verbose }) {
+  constructor({ env, jsMap, operators, payload, secrets, state, steps, user }) {
     this.env = env;
     this.jsMap = jsMap;
     this.operators = operators;
@@ -27,11 +28,8 @@ class ServerParser {
     this.state = state;
     this.steps = steps;
     this.user = user;
-    this.verbose = verbose;
   }
 
-  // TODO: Look at logging here
-  // TODO: Remove console.error = () => {}; from tests
   parse({ args, input, items, location, operatorPrefix = '_' }) {
     if (type.isUndefined(input)) {
       return { output: input, errors: [] };
@@ -77,16 +75,21 @@ class ServerParser {
         });
         return res;
       } catch (e) {
-        const message = e.message || `Operator ${op} threw an error`;
-        const formattedError = new Error(message);
-        formattedError.stack = e.stack;
-        formattedError.configKey = e.configKey ?? configKey;
-        formattedError.received = { [key]: params };
-        formattedError.operatorLocation = location;
-        errors.push(formattedError);
-        if (this.verbose) {
-          console.error(formattedError);
+        if (e instanceof ConfigError) {
+          if (!e.configKey) {
+            e.configKey = configKey;
+          }
+          errors.push(e);
+          return null;
         }
+        const operatorError = new OperatorError(e.message, {
+          cause: e,
+          typeName: op,
+          received: { [key]: params },
+          location,
+          configKey: e.configKey ?? configKey,
+        });
+        errors.push(operatorError);
         return null;
       }
     };

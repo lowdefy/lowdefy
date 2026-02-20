@@ -120,6 +120,7 @@ https://resonancy.io
 ### Platform Development
 
 Run Lowdefy servers locally by adding your config to the `app/` folder:
+
 - `pnpm app:dev` — Start the development server.
 - `pnpm app:build` — Create a production build.
 - `pnpm app:start` — Start the production server.

@@ -16,53 +16,7 @@
 
 import pino from 'pino';
 
-import formatUiMessage from '../formatUiMessage.js';
-
-const defaultErrSerializer = (err) => {
-  if (!err) return err;
-  return {
-    message: err.message,
-    name: err.name,
-    stack: err.stack,
-    source: err.source,
-    config: err.config,
-    configKey: err.configKey,
-    isServiceError: err.isServiceError,
-  };
-};
-
-function attachUi(logger) {
-  if (logger.ui) return logger;
-  logger.ui = {
-    log: (text) => logger.info({ print: 'log' }, text),
-    dim: (text) => logger.info({ print: 'dim' }, text),
-    info: (text) => logger.info({ print: 'info' }, text),
-    warn: (messageOrObj) => {
-      if (messageOrObj?.source) {
-        logger.info({ print: 'link' }, messageOrObj.source);
-      }
-      logger.warn({ print: 'warn' }, formatUiMessage(messageOrObj));
-    },
-    error: (messageOrObj) => {
-      if (messageOrObj?.source) {
-        logger.info({ print: 'link' }, messageOrObj.source);
-      }
-      logger.error({ print: 'error' }, formatUiMessage(messageOrObj));
-    },
-    debug: (text) => logger.debug({ print: 'debug' }, text),
-    link: (text) => logger.info({ print: 'link' }, text),
-    spin: (text) => logger.info({ print: 'spin' }, text),
-    succeed: (text) => logger.info({ print: 'succeed' }, text),
-  };
-
-  if (logger.child && !logger.child._lowdefyWrapped) {
-    const originalChild = logger.child.bind(logger);
-    logger.child = (...args) => attachUi(originalChild(...args));
-    logger.child._lowdefyWrapped = true;
-  }
-
-  return logger;
-}
+import { serializer } from '@lowdefy/helpers';
 
 function createNodeLogger({
   name = 'lowdefy',
@@ -72,21 +26,19 @@ function createNodeLogger({
   serializers,
   destination,
 } = {}) {
-  const logger = pino(
+  return pino(
     {
       name,
       level,
       base,
       mixin,
       serializers: {
-        err: defaultErrSerializer,
+        err: (error) => serializer.serialize(error)?.['~e'] ?? error,
         ...serializers,
       },
     },
     destination
   );
-  return attachUi(logger);
 }
 
 export default createNodeLogger;
-export { defaultErrSerializer };

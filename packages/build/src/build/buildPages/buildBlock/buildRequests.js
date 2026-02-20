@@ -15,73 +15,59 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError } from '@lowdefy/errors';
 
 function buildRequest(request, pageContext) {
   const { auth, checkDuplicateRequestId, context, pageId, typeCounters } = pageContext;
   const configKey = request['~k'];
   if (type.isUndefined(request.id)) {
-    throw new ConfigError({
-      message: `Request id missing at page "${pageId}".`,
-      configKey,
-      context,
-    });
+    throw new ConfigError(`Request id missing at page "${pageId}".`, { configKey });
   }
   if (!type.isString(request.id)) {
-    throw new ConfigError({
-      message: `Request id is not a string at page "${pageId}".`,
+    throw new ConfigError(`Request id is not a string at page "${pageId}".`, {
       received: request.id,
       configKey,
-      context,
     });
   }
   checkDuplicateRequestId({ id: request.id, configKey, pageId });
   if (request.id.includes('.')) {
-    throw new ConfigError({
-      message: `Request id "${request.id}" at page "${pageId}" should not include a period (".").`,
-      configKey,
-      context,
-    });
+    throw new ConfigError(
+      `Request id "${request.id}" at page "${pageId}" should not include a period (".").`,
+      { configKey }
+    );
   }
 
   if (!type.isString(request.type)) {
-    throw new ConfigError({
-      message: `Request type is not a string at request "${request.id}" at page "${pageId}".`,
-      received: request.type,
-      configKey,
-      context,
-    });
+    throw new ConfigError(
+      `Request type is not a string at request "${request.id}" at page "${pageId}".`,
+      { received: request.type, configKey }
+    );
   }
   typeCounters.requests.increment(request.type, configKey);
 
   // Validate connectionId references an existing connection
   if (!type.isNone(request.connectionId)) {
     if (!type.isString(request.connectionId)) {
-      throw new ConfigError({
-        message: `Request "${request.id}" at page "${pageId}" connectionId is not a string.`,
-        received: request.connectionId,
-        configKey,
-        context,
-      });
+      throw new ConfigError(
+        `Request "${request.id}" at page "${pageId}" connectionId is not a string.`,
+        { received: request.connectionId, configKey }
+      );
     }
     if (!context.connectionIds.has(request.connectionId)) {
-      throw new ConfigError({
-        message: `Request "${request.id}" at page "${pageId}" references non-existent connection "${request.connectionId}".`,
-        configKey,
-        context,
-        checkSlug: 'connection-refs',
-      });
+      throw new ConfigError(
+        `Request "${request.id}" at page "${pageId}" references non-existent connection "${request.connectionId}".`,
+        { configKey, checkSlug: 'connection-refs' }
+      );
     }
   }
 
   if (type.isUndefined(request.payload)) request.payload = {};
 
   if (!type.isObject(request.payload)) {
-    throw new ConfigError({
-      message: `Request "${request.id}" at page "${pageId}" payload should be an object.`,
-      configKey,
-      context,
-    });
+    throw new ConfigError(
+      `Request "${request.id}" at page "${pageId}" payload should be an object.`,
+      { configKey }
+    );
   }
 
   request.auth = auth;

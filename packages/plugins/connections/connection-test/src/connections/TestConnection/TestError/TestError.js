@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigError } from '@lowdefy/errors';
+import { ConfigError, ServiceError, UserError } from '@lowdefy/errors';
 
 import schema from './schema.js';
 
@@ -25,6 +25,10 @@ async function TestError({ request }) {
   switch (errorType) {
     case 'ConfigError':
       throw new ConfigError(message);
+    case 'ServiceError':
+      throw new ServiceError(message, { service: 'TestService' });
+    case 'UserError':
+      throw new UserError(message);
     case 'TypeError':
       throw new TypeError(message);
     case 'RangeError':

@@ -5,6 +5,7 @@
 ## What Are Plugin Plugins?
 
 Unlike single-purpose plugins (blocks, connections, operators, actions), these packages provide:
+
 - Authentication providers and adapters
 - Cloud service integrations
 - Multi-component functionality
@@ -12,12 +13,12 @@ Unlike single-purpose plugins (blocks, connections, operators, actions), these p
 
 ## Available Plugin Packages
 
-| Package | Purpose | Provides |
-|---------|---------|----------|
-| [@lowdefy/plugin-next-auth](./next-auth.md) | Authentication | Auth providers, callbacks, adapters |
-| [@lowdefy/plugin-aws](./aws.md) | AWS integration | S3 connection, Lambda support |
-| [@lowdefy/plugin-auth0](./auth0.md) | Auth0 integration | Auth0-specific provider |
-| [@lowdefy/plugin-csv](./csv.md) | CSV utilities | CSV parsing operators |
+| Package                                     | Purpose           | Provides                            |
+| ------------------------------------------- | ----------------- | ----------------------------------- |
+| [@lowdefy/plugin-next-auth](./next-auth.md) | Authentication    | Auth providers, callbacks, adapters |
+| [@lowdefy/plugin-aws](./aws.md)             | AWS integration   | S3 connection, Lambda support       |
+| [@lowdefy/plugin-auth0](./auth0.md)         | Auth0 integration | Auth0-specific provider             |
+| [@lowdefy/plugin-csv](./csv.md)             | CSV utilities     | CSV parsing operators               |
 
 ## Authentication in Lowdefy
 
@@ -106,6 +107,7 @@ export default {
 ### Why Composite Plugins?
 
 Some functionality requires multiple components:
+
 - Auth needs providers, adapters, and callbacks
 - AWS needs connections and operators
 - Better package organization
@@ -113,6 +115,7 @@ Some functionality requires multiple components:
 ### Why Auth.js?
 
 Auth.js provides:
+
 - 50+ OAuth providers
 - JWT and database sessions
 - Secure implementation

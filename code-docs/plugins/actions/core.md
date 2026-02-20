@@ -4,28 +4,28 @@ Core actions for Lowdefy. The primary action package included by default.
 
 ## Actions
 
-| Action | Purpose |
-|--------|---------|
-| `SetState` | Modify page state |
-| `SetGlobal` | Modify global state |
-| `Request` | Execute data request |
-| `CallAPI` | Call custom endpoint |
-| `Link` | Navigate to page |
-| `Login` | Trigger login |
-| `Logout` | Trigger logout |
-| `DisplayMessage` | Show notification |
-| `Validate` | Validate form |
-| `Reset` | Reset state |
-| `ResetValidation` | Clear validation errors |
-| `CallMethod` | Call block method |
-| `CopyToClipboard` | Copy text to clipboard |
-| `ScrollTo` | Scroll to element |
-| `SetFocus` | Focus element |
-| `Wait` | Delay execution |
-| `Fetch` | Client-side fetch |
-| `Throw` | Throw error |
-| `UpdateSession` | Refresh auth session |
-| `GeolocationCurrentPosition` | Get GPS location |
+| Action                       | Purpose                 |
+| ---------------------------- | ----------------------- |
+| `SetState`                   | Modify page state       |
+| `SetGlobal`                  | Modify global state     |
+| `Request`                    | Execute data request    |
+| `CallAPI`                    | Call custom endpoint    |
+| `Link`                       | Navigate to page        |
+| `Login`                      | Trigger login           |
+| `Logout`                     | Trigger logout          |
+| `DisplayMessage`             | Show notification       |
+| `Validate`                   | Validate form           |
+| `Reset`                      | Reset state             |
+| `ResetValidation`            | Clear validation errors |
+| `CallMethod`                 | Call block method       |
+| `CopyToClipboard`            | Copy text to clipboard  |
+| `ScrollTo`                   | Scroll to element       |
+| `SetFocus`                   | Focus element           |
+| `Wait`                       | Delay execution         |
+| `Fetch`                      | Client-side fetch       |
+| `Throw`                      | Throw error             |
+| `UpdateSession`              | Refresh auth session    |
+| `GeolocationCurrentPosition` | Get GPS location        |
 
 ## SetState
 
@@ -35,12 +35,12 @@ Modify page state:
 - id: update
   type: SetState
   params:
-    name: John               # Simple value
-    count:                   # Dynamic value
+    name: John # Simple value
+    count: # Dynamic value
       _sum:
         - _state: count
         - 1
-    user.name:               # Nested path
+    user.name: # Nested path
       _event: value
 ```
 
@@ -145,15 +145,15 @@ Navigate to another page:
 
 ### Link Parameters
 
-| Param | Purpose |
-|-------|---------|
-| `pageId` | Target page ID |
-| `url` | External URL |
-| `input` | Data to pass |
+| Param      | Purpose          |
+| ---------- | ---------------- |
+| `pageId`   | Target page ID   |
+| `url`      | External URL     |
+| `input`    | Data to pass     |
 | `urlQuery` | Query parameters |
-| `newTab` | Open in new tab |
-| `home` | Go to home page |
-| `back` | Go back |
+| `newTab`   | Open in new tab  |
+| `home`     | Go to home page  |
+| `back`     | Go back          |
 
 ## Login / Logout
 
@@ -178,8 +178,8 @@ Show toast notification:
   type: DisplayMessage
   params:
     content: Operation successful!
-    type: success        # success, error, warning, info
-    duration: 3          # seconds
+    type: success # success, error, warning, info
+    duration: 3 # seconds
 ```
 
 ## Validate
@@ -190,7 +190,7 @@ Validate form inputs:
 - id: validateForm
   type: Validate
   params:
-    blockIds:            # Optional: specific blocks
+    blockIds: # Optional: specific blocks
       - email
       - password
 ```
@@ -277,7 +277,7 @@ Delay before next action:
 - id: delay
   type: Wait
   params:
-    ms: 1000    # milliseconds
+    ms: 1000 # milliseconds
 ```
 
 ## Fetch
@@ -322,5 +322,5 @@ Get user's GPS location:
 - id: getLocation
   type: GeolocationCurrentPosition
   params:
-    stateKey: userLocation   # Where to store result
+    stateKey: userLocation # Where to store result
 ```

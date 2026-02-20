@@ -4,14 +4,15 @@ Next.js-based servers for running Lowdefy applications.
 
 ## Package Summary
 
-| Package | Purpose | Use Case |
-|---------|---------|----------|
-| `@lowdefy/server` | Production server | Deployment |
+| Package               | Purpose            | Use Case          |
+| --------------------- | ------------------ | ----------------- |
+| `@lowdefy/server`     | Production server  | Deployment        |
 | `@lowdefy/server-dev` | Development server | Local development |
 
 ## Architecture
 
 Both servers are built on Next.js 13.5.4 and share:
+
 - Core API handlers for requests and endpoints
 - NextAuth integration for authentication
 - Plugin loading from build artifacts
@@ -19,14 +20,14 @@ Both servers are built on Next.js 13.5.4 and share:
 
 ## Key Differences
 
-| Aspect | Production | Development |
-|--------|------------|-------------|
-| Startup | `next start` | Process manager |
-| Build | Pre-built artifacts | Dynamic rebuilding |
-| Watching | None | 3 concurrent watchers |
-| Reload | N/A | SSE-based hot reload |
-| Plugins | Core only | Extended set |
-| Optimization | Full | Disabled |
+| Aspect       | Production          | Development           |
+| ------------ | ------------------- | --------------------- |
+| Startup      | `next start`        | Process manager       |
+| Build        | Pre-built artifacts | Dynamic rebuilding    |
+| Watching     | None                | 3 concurrent watchers |
+| Reload       | N/A                 | SSE-based hot reload  |
+| Plugins      | Core only           | Extended set          |
+| Optimization | Full                | Disabled              |
 
 ## Build Artifacts
 
@@ -61,29 +62,29 @@ build/
 
 ### Shared Routes
 
-| Route | Purpose |
-|-------|---------|
-| `/api/request/[pageId]/[requestId]` | Execute requests |
-| `/api/endpoints/[endpointId]` | Execute API endpoints |
-| `/api/auth/[...nextauth]` | NextAuth handlers |
-| `/api/usage` | Usage logging |
+| Route                               | Purpose               |
+| ----------------------------------- | --------------------- |
+| `/api/request/[pageId]/[requestId]` | Execute requests      |
+| `/api/endpoints/[endpointId]`       | Execute API endpoints |
+| `/api/auth/[...nextauth]`           | NextAuth handlers     |
+| `/api/usage`                        | Usage logging         |
 
 ### Dev-Only Routes
 
-| Route | Purpose |
-|-------|---------|
-| `/api/reload` | SSE for hot reload |
-| `/api/ping` | Health check |
-| `/api/page/[pageId]` | Page config fetch |
-| `/api/root` | Root config fetch |
+| Route                | Purpose            |
+| -------------------- | ------------------ |
+| `/api/reload`        | SSE for hot reload |
+| `/api/ping`          | Health check       |
+| `/api/page/[pageId]` | Page config fetch  |
+| `/api/root`          | Root config fetch  |
 
 ## Page Routes
 
-| Route | Purpose |
-|-------|---------|
-| `/` | Homepage (redirects to home page) |
-| `/[pageId]` | Dynamic page rendering |
-| `/404` | Not found page |
+| Route       | Purpose                           |
+| ----------- | --------------------------------- |
+| `/`         | Homepage (redirects to home page) |
+| `/[pageId]` | Dynamic page rendering            |
+| `/404`      | Not found page                    |
 
 ## Context Object
 

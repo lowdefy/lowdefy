@@ -4,8 +4,8 @@
 
 ## Operator
 
-| Operator | Purpose |
-|----------|---------|
+| Operator    | Purpose                  |
+| ----------- | ------------------------ |
 | `_nunjucks` | Render Nunjucks template |
 
 ## Usage

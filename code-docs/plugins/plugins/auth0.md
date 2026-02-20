@@ -8,8 +8,8 @@ Provides Auth0-specific provider with full Auth0 features.
 
 ## Provider
 
-| Type | Purpose |
-|------|---------|
+| Type            | Purpose              |
+| --------------- | -------------------- |
 | `Auth0Provider` | Auth0 authentication |
 
 ## Configuration
@@ -25,16 +25,16 @@ auth:
         clientSecret:
           _secret: AUTH0_CLIENT_SECRET
         issuer:
-          _secret: AUTH0_ISSUER     # https://your-tenant.auth0.com
+          _secret: AUTH0_ISSUER # https://your-tenant.auth0.com
 ```
 
 ## Properties
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `clientId` | string | Auth0 application client ID |
+| Property       | Type   | Description                     |
+| -------------- | ------ | ------------------------------- |
+| `clientId`     | string | Auth0 application client ID     |
 | `clientSecret` | string | Auth0 application client secret |
-| `issuer` | string | Auth0 domain URL |
+| `issuer`       | string | Auth0 domain URL                |
 
 ## Environment Variables
 
@@ -55,6 +55,7 @@ AUTH0_ISSUER=https://your-tenant.auth0.com
 ## Features
 
 Auth0 provides:
+
 - Universal Login
 - Social connections
 - Enterprise connections (SAML, LDAP)

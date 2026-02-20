@@ -129,7 +129,7 @@ test('_api true gives null', () => {
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual(null);
   expect(res.errors.length).toBe(1);
-  expect(res.errors[0].rawMessage).toBe('_api accepts a string value.');
+  expect(res.errors[0]._message).toBe('_api accepts a string value.');
   expect(res.errors[0].message).toBe('_api accepts a string value. at locationId.');
 });
 
@@ -146,7 +146,7 @@ test('_api null', () => {
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(null);
   expect(res.errors.length).toBe(1);
-  expect(res.errors[0].rawMessage).toBe('_api accepts a string value.');
+  expect(res.errors[0]._message).toBe('_api accepts a string value.');
   expect(res.errors[0].message).toBe('_api accepts a string value. at locationId.');
 });
 

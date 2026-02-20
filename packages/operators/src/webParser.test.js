@@ -314,8 +314,8 @@ test('operator errors', () => {
   const res = parser.parse({ actions, args, arrayIndices, event, input, location });
   expect(res.output).toEqual({ a: null });
   expect(res.errors.length).toBe(1);
-  expect(res.errors[0].name).toBe('PluginError');
-  expect(res.errors[0].rawMessage).toBe('Test error.');
+  expect(res.errors[0].name).toBe('OperatorError');
+  expect(res.errors[0]._message).toBe('Test error.');
   expect(res.errors[0].message).toBe('Test error. at location.');
   expect(res.errors[0].received).toEqual({ _error: { params: true } });
   expect(res.errors[0].location).toBe('location');
@@ -333,8 +333,8 @@ test('operator errors include configKey from ~k', () => {
   const res = parser.parse({ actions, args, arrayIndices, event, input, location });
   expect(res.output).toEqual({ a: null });
   expect(res.errors.length).toBe(1);
-  expect(res.errors[0].name).toBe('PluginError');
-  expect(res.errors[0].rawMessage).toBe('Test error.');
+  expect(res.errors[0].name).toBe('OperatorError');
+  expect(res.errors[0]._message).toBe('Test error.');
   expect(res.errors[0].received).toEqual({ _error: { params: true } });
   expect(res.errors[0].configKey).toBe('config-key-123');
 });

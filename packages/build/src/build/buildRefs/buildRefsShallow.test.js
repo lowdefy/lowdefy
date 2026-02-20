@@ -273,3 +273,104 @@ pages:
   // Empty stopAt means nothing is skipped
   expect(res.pages[0].blocks).toEqual([{ id: 'block1' }]);
 });
+
+test('buildRefs shallow: _build.array.concat wrapping two refs at stop paths is preserved', async () => {
+  const files = [
+    {
+      path: 'lowdefy.yaml',
+      content: `
+pages:
+  - id: home
+    type: PageHeaderMenu
+    blocks:
+      _build.array.concat:
+        - _ref: pages/home/blocks-a.yaml
+        - _ref: pages/home/blocks-b.yaml
+`,
+    },
+    {
+      path: 'pages/home/blocks-a.yaml',
+      content: `- id: blockA`,
+    },
+    {
+      path: 'pages/home/blocks-b.yaml',
+      content: `- id: blockB`,
+    },
+  ];
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+  const res = await buildRefs({
+    context,
+    shallowOptions: { stopAt: ['pages.*.blocks'] },
+  });
+  // The operator should be preserved as-is (not evaluated) because its
+  // arguments are ~shallow placeholders containing dynamic content.
+  expect(res.pages[0].blocks['_build.array.concat']).toBeDefined();
+  const args = res.pages[0].blocks['_build.array.concat'];
+  expect(args[0]['~shallow']).toBe(true);
+  expect(args[1]['~shallow']).toBe(true);
+});
+
+test('buildRefs shallow: page id from _build.string.concat evaluates while ~shallow events are preserved', async () => {
+  const files = [
+    {
+      path: 'lowdefy.yaml',
+      content: `
+pages:
+  - id:
+      _build.string.concat:
+        - page
+        - _
+        - home
+    type: PageHeaderMenu
+    events:
+      _ref: pages/home/events.yaml
+`,
+    },
+    {
+      path: 'pages/home/events.yaml',
+      content: `onClick: []`,
+    },
+  ];
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+  const res = await buildRefs({
+    context,
+    shallowOptions: { stopAt: ['pages.*.events'] },
+  });
+  // Page id should be evaluated (no ~shallow args)
+  expect(res.pages[0].id).toBe('page_home');
+  // Events should be shallow
+  expect(res.pages[0].events['~shallow']).toBe(true);
+});
+
+test('buildRefs shallow: static operator wrapping ~shallow content is preserved', async () => {
+  const files = [
+    {
+      path: 'lowdefy.yaml',
+      content: `
+pages:
+  - id: home
+    type: PageHeaderMenu
+    blocks:
+      _if:
+        test: true
+        then:
+          _ref: pages/home/blocks.yaml
+        else: []
+`,
+    },
+    {
+      path: 'pages/home/blocks.yaml',
+      content: `- id: block1`,
+    },
+  ];
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+  const res = await buildRefs({
+    context,
+    shallowOptions: { stopAt: ['pages.*.blocks'] },
+  });
+  // The _if operator wraps a ~shallow ref in its 'then' branch.
+  // After top-level static operator evaluation, the _if should be preserved
+  // because its params contain dynamic (~shallow) content.
+  expect(res.pages[0].blocks._if).toBeDefined();
+  expect(res.pages[0].blocks._if.then['~shallow']).toBe(true);
+});

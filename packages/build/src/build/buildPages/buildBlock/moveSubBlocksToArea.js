@@ -15,18 +15,15 @@
 */
 
 import { set, type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError } from '@lowdefy/errors';
 
 function moveSubBlocksToArea(block, pageContext) {
-  const { context } = pageContext;
   if (!type.isNone(block.blocks)) {
     if (!type.isArray(block.blocks)) {
-      throw new ConfigError({
-        message: `Blocks at ${block.blockId} on page ${pageContext.pageId} is not an array.`,
-        received: block.blocks,
-        configKey: block['~k'],
-        context,
-      });
+      throw new ConfigError(
+        `Blocks at ${block.blockId} on page ${pageContext.pageId} is not an array.`,
+        { received: block.blocks, configKey: block['~k'] }
+      );
     }
     set(block, 'areas.content.blocks', block.blocks);
     delete block.blocks;
