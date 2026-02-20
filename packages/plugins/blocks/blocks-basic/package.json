@@ -34,7 +34,8 @@
   "exports": {
     "./*": "./dist/*",
     "./blocks": "./dist/blocks.js",
-    "./types": "./dist/types.js"
+    "./types": "./dist/types.js",
+    "./e2e/List": "./dist/blocks/List/e2e.js"
   },
   "files": [
     "dist/*"
@@ -59,6 +60,7 @@
     "@emotion/jest": "11.10.5",
     "@lowdefy/block-dev": "4.5.2",
     "@lowdefy/block-dev-e2e": "4.5.2",
+    "@lowdefy/e2e-utils": "4.5.2",
     "@lowdefy/jest-yaml-transform": "4.5.2",
     "@playwright/test": "1.50.1",
     "@swc/cli": "0.1.63",

@@ -17,10 +17,9 @@
 import path from 'path';
 import { defineConfig, devices } from '@playwright/test';
 
-function createPlaywrightConfig({ packageDir, port = 3001, testMatch = '**/tests/*.e2e.spec.js' }) {
+function createPlaywrightConfig({ packageDir, port = 3001 }) {
   const e2eDir = path.join(packageDir, 'e2e');
   const appDir = path.join(e2eDir, 'app');
-  const srcDir = path.join(packageDir, 'src');
 
   // Calculate paths relative to monorepo root
   // packageDir is like: /path/to/lowdefy/packages/plugins/blocks/blocks-basic
@@ -29,8 +28,8 @@ function createPlaywrightConfig({ packageDir, port = 3001, testMatch = '**/tests
   const serverDir = path.join(monorepoRoot, 'packages/servers/server');
 
   return defineConfig({
-    testDir: srcDir,
-    testMatch,
+    testDir: packageDir,
+    testMatch: ['src/**/tests/*.e2e.spec.js', 'e2e/tests/*.e2e.spec.js'],
     fullyParallel: true,
     reporter: 'list',
     outputDir: path.join(e2eDir, 'test-results'),

@@ -15,7 +15,7 @@
   },
   "contributors": [
     {
-      "name": "Machiel",
+      "name": "Machiel van der Walt",
       "url": "https://github.com/machielvdw"
     }
   ],
@@ -34,6 +34,7 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
+    "@lowdefy/e2e-utils": "4.5.2",
     "@playwright/test": "1.50.1"
   },
   "devDependencies": {

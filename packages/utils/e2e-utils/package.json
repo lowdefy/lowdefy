@@ -1,0 +1,72 @@
+{
+  "name": "@lowdefy/e2e-utils",
+  "version": "4.5.2",
+  "license": "Apache-2.0",
+  "description": "Lowdefy E2E Testing Utilities for Playwright",
+  "homepage": "https://lowdefy.com",
+  "keywords": [
+    "lowdefy",
+    "e2e",
+    "playwright",
+    "testing"
+  ],
+  "bugs": {
+    "url": "https://github.com/lowdefy/lowdefy/issues"
+  },
+  "contributors": [
+    {
+      "name": "Machiel van der Walt",
+      "url": "https://github.com/machielvdw"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lowdefy/lowdefy.git"
+  },
+  "type": "module",
+  "bin": {
+    "lowdefy-e2e": "./dist/init/index.js"
+  },
+  "exports": {
+    ".": "./dist/index.js",
+    "./config": "./dist/config.js",
+    "./fixtures": "./dist/fixtures/index.js"
+  },
+  "files": [
+    "dist/*"
+  ],
+  "scripts": {
+    "build": "swc src --out-dir dist --config-file ../../../.swcrc --delete-dir-on-start && pnpm copyfiles",
+    "clean": "rm -rf dist",
+    "copyfiles": "copyfiles -u 1 \"./src/init/templates/*\" dist",
+    "prepublishOnly": "pnpm build"
+  },
+  "dependencies": {
+    "js-yaml": "4.1.0",
+    "prompts": "2.4.2"
+  },
+  "peerDependencies": {
+    "@lowdefy/blocks-antd": "4.5.2",
+    "@lowdefy/blocks-basic": "4.5.2",
+    "@playwright/test": "1.50.1"
+  },
+  "peerDependenciesMeta": {
+    "@lowdefy/blocks-antd": {
+      "optional": true
+    },
+    "@lowdefy/blocks-basic": {
+      "optional": true
+    },
+    "@playwright/test": {
+      "optional": false
+    }
+  },
+  "devDependencies": {
+    "@swc/cli": "0.1.63",
+    "@swc/core": "1.3.99",
+    "copyfiles": "2.4.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

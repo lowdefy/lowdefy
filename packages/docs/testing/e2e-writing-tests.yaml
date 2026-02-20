@@ -1,0 +1,255 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: e2e-writing-tests
+    pageTitle: Writing Tests
+    section: Testing
+    filePath: testing/e2e-writing-tests.yaml
+    content:
+      - id: md1
+        type: MarkdownWithCode
+        properties:
+          content: |
+            The `ldf` object is your main interface for testing Lowdefy apps. It is provided by the test fixtures and gives you a locator-first API — you get the thing you want to interact with, then perform actions or assertions on it.
+
+            ## Navigation
+
+            Navigate to a page and wait for Lowdefy to be ready:
+
+            ```javascript
+            await ldf.goto('/my-page');
+            ```
+
+            If your test triggers a page navigation (for example, a Link action), you can wait for the new page:
+
+            ```javascript
+            await ldf.block('next_btn').do.click();
+            await ldf.waitForPage('/next-page');
+            ```
+
+            You can also access the current page ID and the raw Playwright page object:
+
+            ```javascript
+            const pageId = ldf.pageId;          // e.g. 'contact-form'
+            const playwrightPage = ldf.page;    // for advanced Playwright usage
+            ```
+
+            ## Block interactions
+
+            Use `ldf.block('blockId')` to get a block, then call methods on it.
+
+            ### Actions (`do`)
+
+            The available `do` methods depend on the block type. Common examples:
+
+            ```javascript
+            // TextInput - fill, clear
+            await ldf.block('name_input').do.fill('John Doe');
+            await ldf.block('name_input').do.clear();
+
+            // Button - click
+            await ldf.block('submit_btn').do.click();
+
+            // Selector - select an option
+            await ldf.block('category').do.select('Support');
+
+            // NumberInput - fill with a number
+            await ldf.block('quantity').do.fill('5');
+
+            // TextArea - fill with text
+            await ldf.block('comments').do.fill('This is a comment');
+            ```
+
+            ### Assertions (`expect`)
+
+            Every block has these built-in assertion methods:
+
+            ```javascript
+            await ldf.block('submit_btn').expect.visible();
+            await ldf.block('submit_btn').expect.hidden();
+            await ldf.block('submit_btn').expect.disabled();
+            await ldf.block('submit_btn').expect.enabled();
+            ```
+
+            Block types can also provide their own assertions:
+
+            ```javascript
+            // TextInput - check value and placeholder
+            await ldf.block('name_input').expect.value('John Doe');
+            await ldf.block('name_input').expect.placeholder('Enter your name');
+
+            // Button - check text
+            await ldf.block('submit_btn').expect.text('Submit');
+            ```
+
+      - id: method_alert
+        type: Alert
+        properties:
+          type: info
+          showIcon: false
+          message: The available <code>do</code> and <code>expect</code> methods depend on the block type. If you call a method that does not exist, you will get a clear error listing the available methods.
+
+      - id: md2
+        type: MarkdownWithCode
+        properties:
+          content: |
+            ### Raw locator access
+
+            If you need to do something not covered by the block helpers, you can get the raw Playwright locator:
+
+            ```javascript
+            const locator = ldf.block('my_block').locator();
+            await locator.scrollIntoViewIfNeeded();
+            await locator.screenshot({ path: 'block.png' });
+            ```
+
+            ## State
+
+            Use `ldf.state('key')` to interact with page state.
+
+            ### Assert state values
+
+            ```javascript
+            await ldf.state('form_submitted').expect.toBe(true);
+            await ldf.state('selected_items').expect.toBe(['item1', 'item2']);
+            ```
+
+            ### Set state programmatically
+
+            ```javascript
+            await ldf.state('search_query').do.set('widget');
+            ```
+
+            ### Read state values
+
+            ```javascript
+            // Get a specific state value
+            const name = await ldf.state('name_input').value();
+
+            // Get the entire page state
+            const allState = await ldf.state().value();
+            ```
+
+            You can use dot notation for nested state:
+
+            ```javascript
+            await ldf.state('form.email').expect.toBe('jane@example.com');
+            ```
+
+            ## Requests
+
+            Use `ldf.request('requestId')` to assert on request state and responses.
+
+            ### Wait for a request to complete
+
+            ```javascript
+            await ldf.request('fetch_users').expect.toFinish();
+            ```
+
+            ### Assert the response
+
+            ```javascript
+            await ldf.request('fetch_users').expect.toHaveResponse([
+              { id: 1, name: 'Alice' },
+              { id: 2, name: 'Bob' },
+            ]);
+            ```
+
+            `toHaveResponse` uses an exact match — the actual response must be identical to the expected value.
+
+            ### Assert the payload
+
+            ```javascript
+            await ldf.request('search').expect.toHavePayload({ query: 'widget' });
+            ```
+
+            `toHavePayload` uses a partial match — the actual payload only needs to contain the keys you specify. It can have additional keys.
+
+            ### Read the raw response
+
+            ```javascript
+            const data = await ldf.request('fetch_users').response();
+            ```
+
+            ## URL
+
+            Use `ldf.url()` and `ldf.urlQuery('key')` for URL assertions.
+
+            ### Assert the current URL
+
+            ```javascript
+            await ldf.url().expect.toBe('/dashboard');
+            await ldf.url().expect.toMatch(/dashboard/);
+            ```
+
+            ### Work with query parameters
+
+            ```javascript
+            // Assert a query parameter
+            await ldf.urlQuery('tab').expect.toBe('settings');
+
+            // Set a query parameter
+            await ldf.urlQuery('page').do.set('2');
+
+            // Read a query parameter
+            const tab = ldf.urlQuery('tab').value();
+            ```
+
+            ## Validation
+
+            You can assert on block validation status using the built-in validation methods:
+
+            ```javascript
+            // Trigger validation by clicking submit
+            await ldf.block('submit_btn').do.click();
+
+            // Check that a block has a validation error
+            await ldf.block('email_input').expect.validationError();
+
+            // Check for a specific error message
+            await ldf.block('email_input').expect.validationError({
+              message: 'Please enter a valid email address',
+            });
+
+            // Check for warnings and success
+            await ldf.block('age_input').expect.validationWarning();
+            await ldf.block('name_input').expect.validationSuccess();
+            ```
+
+            ## Timeouts
+
+            Assertion methods accept an optional `{ timeout }` parameter (in milliseconds):
+
+            ```javascript
+            // Wait up to 60 seconds for a slow request
+            await ldf.request('generate_report').expect.toFinish({ timeout: 60000 });
+
+            // Wait up to 10 seconds for state to update
+            await ldf.state('processed').expect.toBe(true, { timeout: 10000 });
+            ```
+
+            Default timeouts:
+            - Request assertions: 30 seconds
+            - State, URL, and validation assertions: 5 seconds
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Getting Started
+            previous_page_id: e2e-getting-started
+            next_page_title: Mocking Requests
+            next_page_id: e2e-mocking

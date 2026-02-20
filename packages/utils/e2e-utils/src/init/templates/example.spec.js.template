@@ -1,0 +1,53 @@
+import { test, expect } from '@lowdefy/e2e-utils/fixtures';
+
+test('homepage loads', async ({ ldf }) => {
+  await ldf.goto('/');
+
+  // Replace with your own assertions
+  await expect(ldf.page).toHaveTitle(/./);
+});
+
+// Example: Testing a form
+//
+// test('submit contact form', async ({ ldf }) => {
+//   await ldf.goto('/contact');
+//
+//   await ldf.block('name_input').do.fill('John Doe');
+//   await ldf.block('email_input').do.fill('john@example.com');
+//   await ldf.block('category').do.select('Support');
+//   await ldf.block('submit_btn').do.click();
+//
+//   await ldf.state('form_submitted').expect.toBe(true);
+// });
+//
+// Example: Testing validation
+//
+// test('validates required fields', async ({ ldf }) => {
+//   await ldf.goto('/contact');
+//   await ldf.block('submit_btn').do.click();
+//
+//   await ldf.block('name_input').expect.validationError();
+//   await ldf.block('email_input').expect.validationError({ message: 'Required' });
+// });
+//
+// Example: Request mocking (define static mocks in e2e/mocks.yaml)
+//
+// test('displays search results', async ({ ldf }) => {
+//   // Static mocks from mocks.yaml are applied automatically
+//   await ldf.goto('/search');
+//   await ldf.block('search_input').do.fill('widget');
+//   await ldf.block('search_btn').do.click();
+//
+//   // Assert on the payload sent to the request
+//   await ldf.request('search_products').expect.toHavePayload({ query: 'widget' });
+// });
+//
+// test('handles search error', async ({ ldf }) => {
+//   // Override mock for this specific test
+//   await ldf.mock.request('search_products', { error: 'Service unavailable' });
+//
+//   await ldf.goto('/search');
+//   await ldf.block('search_btn').do.click();
+//
+//   await ldf.block('error_message').expect.visible();
+// });
