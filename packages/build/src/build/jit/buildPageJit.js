@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { serializer, type } from '@lowdefy/helpers';
+import { type } from '@lowdefy/helpers';
 import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 
 import addKeys from '../addKeys.js';
@@ -23,9 +23,7 @@ import validateLinkReferences from '../buildPages/validateLinkReferences.js';
 import validatePayloadReferences from '../buildPages/validatePayloadReferences.js';
 import validateServerStateReferences from '../buildPages/validateServerStateReferences.js';
 import validateStateReferences from '../buildPages/validateStateReferences.js';
-import createRefReviver from '../buildRefs/createRefReviver.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
-import preserveMetaProperties from '../../utils/preserveMetaProperties.js';
 import createContext from '../../createContext.js';
 import evaluateBuildOperators from '../buildRefs/evaluateBuildOperators.js';
 import evaluateStaticOperators from '../buildRefs/evaluateStaticOperators.js';
@@ -54,29 +52,35 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
   }
 
   try {
-    // Reconstruct raw page with shallow markers
-    const rawPage = {
-      id: pageEntry.pageId,
-      auth: pageEntry.auth,
-      type: pageEntry.type,
-      ...pageEntry.rawContent,
-    };
-
-    // Resolve all ~shallow markers in the page content
-    const resolvedPage = await resolveShallowRefs(rawPage, buildContext);
-
-    // Run build operators on the resolved page content
-    const dummyRefDef = { id: 'jit-page', path: `jit:${pageId}` };
-    let processed = await evaluateBuildOperators({
+    // Resolve the page file from scratch — same as a normal full build of the page file.
+    // The refId traces back to the refMap entry with the page's source file path.
+    const storedRef = buildContext.refMap[pageEntry.refId];
+    if (!storedRef?.path) {
+      throw new ConfigError(
+        `Page "${pageId}" has no source file reference. Cannot resolve page content.`
+      );
+    }
+    const refDef = makeRefDefinition(storedRef.path, null, buildContext.refMap);
+    let processed = await recursiveBuild({
       context: buildContext,
-      input: resolvedPage,
-      refDef: dummyRefDef,
+      refDef,
+      count: 0,
+    });
+
+    // Top-level operator evaluation (same as buildRefs does after recursiveBuild)
+    processed = await evaluateBuildOperators({
+      context: buildContext,
+      input: processed,
+      refDef,
     });
     processed = evaluateStaticOperators({
       context: buildContext,
       input: processed,
-      refDef: dummyRefDef,
+      refDef,
     });
+
+    // Apply skeleton-computed auth (buildAuth ran during skeleton build)
+    processed.auth = pageEntry.auth;
 
     // Add keys to the resolved page
     addKeys({ components: processed, context: buildContext });
@@ -157,44 +161,6 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     lowdefyErr.buildErrors = err.buildErrors;
     throw lowdefyErr;
   }
-}
-
-async function resolveShallowRefs(obj, context) {
-  if (type.isArray(obj)) {
-    const results = [];
-    for (const item of obj) {
-      results.push(await resolveShallowRefs(item, context));
-    }
-    return results;
-  }
-
-  if (!type.isObject(obj)) {
-    return obj;
-  }
-
-  // This is a shallow marker - resolve the ref
-  if (obj['~shallow'] === true && obj._ref !== undefined) {
-    const refDef = makeRefDefinition(obj._ref, null, context.refMap);
-    const resolved = await recursiveBuild({
-      context,
-      refDef,
-      count: 0,
-    });
-    // Set ~r on all objects so addKeys can trace them to the correct source file.
-    // In a normal build, the parent's reviver sets ~r on child ref content.
-    // Here there is no parent, so we set it explicitly.
-    const reviver = createRefReviver(refDef.id);
-    return serializer.copy(resolved, { reviver });
-  }
-
-  // Recurse into object properties
-  const result = {};
-  for (const key of Object.keys(obj)) {
-    result[key] = await resolveShallowRefs(obj[key], context);
-  }
-  // Preserve non-enumerable properties
-  preserveMetaProperties(result, obj);
-  return result;
 }
 
 export default buildPageJit;

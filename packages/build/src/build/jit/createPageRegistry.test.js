@@ -17,28 +17,22 @@
 import createPageRegistry from './createPageRegistry.js';
 
 test('createPageRegistry creates registry from pages', () => {
-  const components = {
-    pages: [
-      {
-        id: 'home',
-        auth: { public: true },
-        type: 'PageHeaderMenu',
-        blocks: [{ id: 'block1', type: 'TextInput' }],
-        events: { onClick: { actions: [] } },
-        requests: [{ id: 'req1' }],
-      },
-    ],
+  const page = {
+    id: 'home',
+    auth: { public: true },
+    type: 'PageHeaderMenu',
+    blocks: [{ id: 'block1', type: 'TextInput' }],
   };
+  Object.defineProperty(page, '~r', { value: 'ref-1', enumerable: false });
+  const components = { pages: [page] };
   const registry = createPageRegistry({ components });
   expect(registry.size).toBe(1);
 
   const entry = registry.get('home');
   expect(entry.pageId).toBe('home');
   expect(entry.auth).toEqual({ public: true });
-  expect(entry.type).toBe('PageHeaderMenu');
-  expect(entry.rawContent.blocks).toEqual([{ id: 'block1', type: 'TextInput' }]);
-  expect(entry.rawContent.events).toEqual({ onClick: { actions: [] } });
-  expect(entry.rawContent.requests).toEqual([{ id: 'req1' }]);
+  expect(entry.refId).toBe('ref-1');
+  expect(entry.rawContent).toBeUndefined();
 });
 
 test('createPageRegistry creates registry with multiple pages', () => {
@@ -66,47 +60,32 @@ test('createPageRegistry returns empty registry when pages is null', () => {
   expect(registry.size).toBe(0);
 });
 
-test('createPageRegistry deep copies raw content', () => {
-  const blocks = [{ id: 'block1', type: 'TextInput' }];
-  const components = {
-    pages: [{ id: 'home', type: 'PageHeaderMenu', blocks }],
-  };
+test('createPageRegistry stores refId from ~r marker', () => {
+  const page = { id: 'home', type: 'PageHeaderMenu' };
+  Object.defineProperty(page, '~r', { value: 'ref-42', enumerable: false });
+  const components = { pages: [page] };
   const registry = createPageRegistry({ components });
   const entry = registry.get('home');
-
-  // Modify original - should not affect registry
-  blocks[0].id = 'modified';
-  expect(entry.rawContent.blocks[0].id).toBe('block1');
+  expect(entry.refId).toBe('ref-42');
 });
 
-test('createPageRegistry handles pages with shallow markers', () => {
-  const components = {
-    pages: [
-      {
-        id: 'home',
-        auth: { public: true },
-        type: 'PageHeaderMenu',
-        blocks: { '~shallow': true, _ref: 'pages/home/blocks.yaml', _refId: 'r1' },
-        events: { '~shallow': true, _ref: 'pages/home/events.yaml', _refId: 'r2' },
-      },
-    ],
-  };
-  const registry = createPageRegistry({ components });
-  const entry = registry.get('home');
-  expect(entry.rawContent.blocks['~shallow']).toBe(true);
-  expect(entry.rawContent.blocks._ref).toBe('pages/home/blocks.yaml');
-  expect(entry.rawContent.events['~shallow']).toBe(true);
-});
-
-test('createPageRegistry handles undefined content fields', () => {
+test('createPageRegistry stores null refId when ~r is missing', () => {
   const components = {
     pages: [{ id: 'home', type: 'PageHeaderMenu' }],
   };
   const registry = createPageRegistry({ components });
   const entry = registry.get('home');
-  expect(entry.rawContent.blocks).toBeUndefined();
-  expect(entry.rawContent.areas).toBeUndefined();
-  expect(entry.rawContent.events).toBeUndefined();
-  expect(entry.rawContent.requests).toBeUndefined();
-  expect(entry.rawContent.layout).toBeUndefined();
+  expect(entry.refId).toBeNull();
+});
+
+test('createPageRegistry stores page auth', () => {
+  const components = {
+    pages: [
+      { id: 'home', auth: { public: true } },
+      { id: 'admin', auth: { roles: ['admin'] } },
+    ],
+  };
+  const registry = createPageRegistry({ components });
+  expect(registry.get('home').auth).toEqual({ public: true });
+  expect(registry.get('admin').auth).toEqual({ roles: ['admin'] });
 });

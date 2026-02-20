@@ -38,8 +38,8 @@ import buildRefs from '../buildRefs/buildRefs.js';
 import buildTypes from '../buildTypes.js';
 import cleanBuildDirectory from '../cleanBuildDirectory.js';
 import copyPublicFolder from '../copyPublicFolder.js';
-import createFileDependencyMap from './createFileDependencyMap.js';
 import createPageRegistry from './createPageRegistry.js';
+import PAGE_CONTENT_KEYS from './pageContentKeys.js';
 import jsMapParser from '../buildJs/jsMapParser.js';
 import testSchema from '../testSchema.js';
 import validateConfig from '../validateConfig.js';
@@ -68,13 +68,10 @@ function getInstalledPackages(directories) {
   }
 }
 
-const SHALLOW_STOP_PATHS = [
-  'pages.*.blocks',
-  'pages.*.areas',
-  'pages.*.events',
-  'pages.*.requests',
-  'pages.*.layout',
-];
+// Derive stop paths from PAGE_CONTENT_KEYS, excluding 'type' (not a ref path)
+const SHALLOW_STOP_PATHS = PAGE_CONTENT_KEYS
+  .filter((key) => key !== 'type')
+  .map((key) => `pages.*.${key}`);
 
 async function shallowBuild(options) {
   makeId.reset();
@@ -102,10 +99,10 @@ async function shallowBuild(options) {
 
     // Strip shallow markers from pages before schema validation.
     // Schema doesn't know about ~shallow placeholders — they'd fail as additional properties.
-    // Save and restore so createPageRegistry can still capture raw content later.
+    // Save and restore so createPageRegistry can still see page metadata.
     const savedPageContent = (components.pages ?? []).map((page) => {
       const saved = {};
-      for (const key of ['blocks', 'areas', 'events', 'requests', 'layout']) {
+      for (const key of PAGE_CONTENT_KEYS) {
         if (page[key] !== undefined) {
           saved[key] = page[key];
           delete page[key];
@@ -140,6 +137,14 @@ async function shallowBuild(options) {
     // Extract page registry after buildAuth (sets page.auth) and pageId assignment,
     // but before build steps that modify page content for skeleton output.
     const pageRegistry = createPageRegistry({ components });
+
+    // Page file refs are captured in pageRegistry — JIT resolves from scratch.
+    // Strip all content so downstream steps only see page metadata.
+    for (const page of components.pages ?? []) {
+      for (const key of PAGE_CONTENT_KEYS) {
+        delete page[key];
+      }
+    }
 
     tryBuildStep(buildMenu, 'buildMenu', { components, context });
 
@@ -197,9 +202,6 @@ async function shallowBuild(options) {
     // by detectMissingPluginPackages during JIT page builds.
     await updateServerPackageJson({ components, context });
 
-    // Build file dependency map for targeted invalidation
-    const fileDependencyMap = createFileDependencyMap({ pageRegistry, refMap: context.refMap });
-
     // Ensure both client and server jsMap keys exist.
     // In shallow build, only server JS is extracted (api/connections).
     // Client JS is extracted per-page during JIT build.
@@ -242,7 +244,7 @@ async function shallowBuild(options) {
     await writePageRegistry({ pageRegistry, context });
     await copyPublicFolder({ components, context });
 
-    return { components, pageRegistry, fileDependencyMap, context };
+    return { components, pageRegistry, context };
   } catch (err) {
     if (err instanceof BuildError) {
       throw err;

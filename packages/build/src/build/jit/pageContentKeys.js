@@ -14,18 +14,8 @@
   limitations under the License.
 */
 
-function createPageRegistry({ components }) {
-  const registry = new Map();
+// Keys stripped from pages after createPageRegistry captures the page file ref.
+// Only `id` (and skeleton-computed `pageId`, `auth`, `~k`, `~r`) survive.
+const PAGE_CONTENT_KEYS = ['type', 'blocks', 'areas', 'events', 'requests', 'layout'];
 
-  for (const page of components.pages ?? []) {
-    registry.set(page.id, {
-      pageId: page.id,
-      auth: page.auth,
-      refId: page['~r'] ?? null,
-    });
-  }
-
-  return registry;
-}
-
-export default createPageRegistry;
+export default PAGE_CONTENT_KEYS;

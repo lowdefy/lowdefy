@@ -750,3 +750,99 @@ describe('edge cases', () => {
     expect(res.output.container.b['~dyn']).toBe(true);
   });
 });
+
+// ==================== ~shallow placeholder handling tests ====================
+
+describe('~shallow placeholder handling', () => {
+  test('~shallow object is marked with ~dyn', () => {
+    const _test = jest.fn(() => 'result');
+    const ops = { _test };
+
+    const parser = new BuildParser({ operators: ops });
+    const input = {
+      blocks: { '~shallow': true, _ref: 'pages/home/blocks.yaml' },
+    };
+    const res = parser.parse({ input });
+
+    expect(res.output.blocks['~dyn']).toBe(true);
+    expect(res.output.blocks['~shallow']).toBe(true);
+    expect(res.output.blocks._ref).toBe('pages/home/blocks.yaml');
+  });
+
+  test('operator wrapping ~shallow content is preserved (not evaluated)', () => {
+    const _array = jest.fn(() => [1, 2, 3]);
+    const ops = { _array };
+
+    const parser = new BuildParser({ operators: ops });
+    const input = {
+      merged: {
+        '_build.array.concat': [
+          { '~shallow': true, _ref: 'pages/home/blocks.yaml' },
+          { '~shallow': true, _ref: 'pages/home/extra.yaml' },
+        ],
+      },
+    };
+    const res = parser.parse({ input, operatorPrefix: '_build.' });
+
+    // Operator should NOT be evaluated — args contain ~shallow (dynamic) content
+    expect(_array).not.toHaveBeenCalled();
+    expect(res.output.merged['~dyn']).toBe(true);
+    expect(res.output.merged['_build.array.concat']).toBeDefined();
+  });
+
+  test('operator with normal args (no ~shallow) is still evaluated', () => {
+    const _string = jest.fn(() => 'hello world');
+    const ops = { _string };
+
+    const parser = new BuildParser({ operators: ops });
+    const input = {
+      title: { '_build.string.concat': ['hello', ' ', 'world'] },
+    };
+    const res = parser.parse({ input, operatorPrefix: '_build.' });
+
+    expect(_string).toHaveBeenCalled();
+    expect(res.output.title).toBe('hello world');
+  });
+
+  test('nested: resolved inner args evaluate, outer with ~shallow is preserved', () => {
+    const _string = jest.fn(() => 'computed-id');
+    const _array = jest.fn(() => [1, 2, 3]);
+    const ops = { _string, _array };
+
+    const parser = new BuildParser({ operators: ops });
+    const input = {
+      id: { '_build.string.concat': ['page', '-', 'home'] },
+      events: {
+        '_build.array.concat': [
+          { '~shallow': true, _ref: 'pages/home/events.yaml' },
+        ],
+      },
+    };
+    const res = parser.parse({ input, operatorPrefix: '_build.' });
+
+    // id operator has no ~shallow args — should evaluate
+    expect(_string).toHaveBeenCalled();
+    expect(res.output.id).toBe('computed-id');
+    // events operator wraps ~shallow content — should be preserved
+    expect(_array).not.toHaveBeenCalled();
+    expect(res.output.events['~dyn']).toBe(true);
+  });
+
+  test('~shallow marker does not interfere with non-shallow objects', () => {
+    const _test = jest.fn(() => 'evaluated');
+    const ops = { _test };
+
+    const parser = new BuildParser({ operators: ops });
+    const input = {
+      normal: { _test: 'params' },
+      shallow: { '~shallow': true, _ref: 'file.yaml' },
+    };
+    const res = parser.parse({ input });
+
+    // Normal operator evaluates
+    expect(_test).toHaveBeenCalled();
+    expect(res.output.normal).toBe('evaluated');
+    // Shallow is marked as dynamic
+    expect(res.output.shallow['~dyn']).toBe(true);
+  });
+});
