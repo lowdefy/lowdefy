@@ -17,17 +17,19 @@
 import { createBlockHelper } from '@lowdefy/e2e-utils';
 import { expect } from '@playwright/test';
 
-const locator = (page, blockId) => page.locator(`#${blockId}_input`);
+const locator = (page, blockId) => page.locator(`#bl-${blockId} .ant-typography`);
 
 export default createBlockHelper({
   locator,
   do: {
-    fill: (page, blockId, val) => locator(page, blockId).fill(val),
-    clear: (page, blockId) => locator(page, blockId).clear(),
+    edit: async (page, blockId, val) => {
+      await locator(page, blockId).getByRole('button', { name: 'Edit' }).first().click();
+      const textarea = page.locator('.ant-typography-edit-content textarea');
+      await textarea.fill(val);
+      await textarea.press('Enter');
+    },
   },
   expect: {
-    value: (page, blockId, val) => expect(locator(page, blockId)).toHaveValue(val),
-    placeholder: (page, blockId, text) =>
-      expect(locator(page, blockId)).toHaveAttribute('placeholder', text),
+    text: (page, blockId, text) => expect(locator(page, blockId)).toHaveText(text),
   },
 });
