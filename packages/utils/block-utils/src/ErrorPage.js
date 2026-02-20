@@ -16,43 +16,59 @@
 
 import React from 'react';
 
+const fontFamily =
+  "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif";
+
 const ErrorPage = ({ code, description, message, name }) => (
   <div
     style={{
-      height: '100%',
-      fontFamily: 'system-ui',
+      height: '100vh',
+      fontFamily,
       margin: 0,
       display: 'flex',
-      justifyContent: 'center',
+      flexDirection: 'column',
       alignItems: 'center',
+      justifyContent: 'center',
+      textAlign: 'center',
+      padding: '0 24px',
     }}
   >
     <div
       style={{
-        flex: '0 1 auto',
         fontSize: '4.3em',
         fontWeight: '100',
-        paddingRight: 30,
+        marginBottom: 16,
       }}
     >
       {code ?? 500}
     </div>
     <div
       style={{
-        flex: '0 1 auto',
-        paddingLeft: 30,
-        maxWidth: 400,
-        borderLeft: '1px solid #aeaeae',
+        fontSize: '1.3em',
+        fontWeight: '300',
+        marginBottom: 8,
       }}
     >
-      <div style={{ fontSize: '1.3em', fontWeight: '300', paddingBottom: 10 }}>
-        {name ?? 'Error'}
+      {name ?? 'Error'}
+    </div>
+    <div style={{ fontSize: '0.9em', color: '#595959', maxWidth: 400 }}>
+      {message ?? 'An error has occurred.'}
+    </div>
+    {description && (
+      <div style={{ fontSize: '0.9em', color: '#595959', maxWidth: 400, marginTop: 4 }}>
+        {description}
       </div>
-      <div style={{ fontSize: '0.9em' }}>{message ?? 'An error has occurred.'}</div>
-      <div style={{ fontSize: '0.9em' }}>{description}</div>
-      <div style={{ paddingTop: 20 }}>
-        <a href="/">Return to home page</a>
-      </div>
+    )}
+    <div style={{ marginTop: 24 }}>
+      <a
+        href="/"
+        style={{
+          color: '#1890ff',
+          textDecoration: 'none',
+        }}
+      >
+        Return to home page
+      </a>
     </div>
   </div>
 );

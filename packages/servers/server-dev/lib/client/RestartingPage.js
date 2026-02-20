@@ -26,6 +26,8 @@ const RestartingPage = () => {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
+        fontFamily:
+          "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
       }}
     >
       <div

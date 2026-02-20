@@ -49,7 +49,7 @@ const ErrorItem = ({ type, message, source }) => {
       >
         {type}
       </span>
-      <p style={{ fontSize: 14, margin: '4px 0' }}>{message}</p>
+      <p style={{ fontSize: 14, margin: '4px 0', fontFamily: 'monospace' }}>{message}</p>
       {source && <p style={{ fontSize: 13, color: '#8c8c8c', margin: 0 }}>{source}</p>}
     </div>
   );
@@ -67,7 +67,8 @@ const BuildErrorPage = ({ errors, message, source }) => {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        fontFamily: 'monospace',
+        fontFamily:
+          "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
         padding: '0 24px',
       }}
     >
