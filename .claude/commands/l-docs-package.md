@@ -1,6 +1,6 @@
 ---
 description: Document a core Lowdefy package (api, build, cli, client, engine, layout, operators)
-argument-hint: "<package-name>"
+argument-hint: '<package-name>'
 ---
 
 # Document Core Package
@@ -18,6 +18,7 @@ Generate documentation for a specific core package in the Lowdefy monorepo.
 ## Valid Packages
 
 Core packages (in `packages/`):
+
 - `api` - Request handling, context creation, API routes
 - `build` - YAML parsing, validation, build artifacts
 - `cli` - Command line interface, dev server orchestration
@@ -39,22 +40,26 @@ If not found, suggest valid packages.
 ### 2. Gather Information
 
 **Package metadata:**
+
 ```bash
 cat packages/{package}/package.json
 ```
 
 **Source structure:**
+
 ```bash
 ls -la packages/{package}/src/
 find packages/{package}/src -name "*.js" -o -name "*.mjs" | head -20
 ```
 
 **Main exports:**
+
 ```bash
 cat packages/{package}/src/index.js 2>/dev/null || cat packages/{package}/src/index.mjs
 ```
 
 **README (if exists):**
+
 ```bash
 cat packages/{package}/README.md 2>/dev/null
 ```
@@ -65,6 +70,7 @@ Look for `@lowdefy/*` imports to understand package relationships.
 ### 3. Analyze Key Modules
 
 For each major module/folder in `src/`:
+
 - Read the main file
 - Understand its purpose
 - Note key exports and functions
@@ -72,7 +78,7 @@ For each major module/folder in `src/`:
 
 ### 4. Generate Documentation
 
-Create `cc-docs/packages/{package}.md`:
+Create `code-docs/packages/{package}.md`:
 
 ```markdown
 ---
@@ -94,11 +100,13 @@ updated: {date}
 
 ### Dependencies
 
-**Internal (@lowdefy/*):**
+**Internal (@lowdefy/\*):**
+
 - `@lowdefy/helpers` - {why}
 - `@lowdefy/operators` - {why}
 
 **Key External:**
+
 - `{package}` - {why this dependency}
 
 ## Key Modules
@@ -110,6 +118,7 @@ updated: {date}
 **Purpose:** {what it does}
 
 **Key exports:**
+
 - `{function}` - {description}
 - `{class}` - {description}
 
@@ -117,6 +126,7 @@ updated: {date}
 {Brief explanation of the logic/flow}
 
 ### {another-module}
+
 ...
 
 ## Patterns & Conventions
@@ -128,9 +138,11 @@ updated: {date}
 ## Integration Points
 
 **Used by:**
+
 - `@lowdefy/{package}` - {how}
 
 **Uses:**
+
 - `@lowdefy/{package}` - {how}
 
 ## Key Design Decisions
@@ -147,15 +159,15 @@ updated: {date}
 
 ## Files Quick Reference
 
-| File | Purpose |
-|------|---------|
+| File           | Purpose      |
+| -------------- | ------------ |
 | `src/index.js` | Main exports |
-| `src/{file}` | {purpose} |
+| `src/{file}`   | {purpose}    |
 ```
 
 ### 5. Update Plan
 
-Mark the package as completed in `cc-docs/DOCUMENTATION_PLAN.md`.
+Mark the package as completed in `code-docs/DOCUMENTATION_PLAN.md`.
 
 ### 6. Cross-Reference Check
 
@@ -164,12 +176,14 @@ Verify links to related packages exist or note them as pending.
 ## Documentation Depth
 
 Focus on:
+
 - **Why** the package exists
 - **How** it fits with other packages
 - **What** the key modules do
 - **Where** to find specific functionality
 
 Skip:
+
 - Line-by-line code explanation
 - Full API reference (that's in the code)
 - User-facing documentation (that's in packages/docs)
@@ -177,6 +191,7 @@ Skip:
 ## Accuracy Checklist
 
 Before finalizing documentation:
+
 - [ ] Verify exact counts (e.g., "31 build steps" not "25+ steps")
 - [ ] List all context parameters for parsers (BuildParser, ServerParser, WebParser)
 - [ ] Include all output files/directories in build output sections
@@ -186,26 +201,30 @@ Before finalizing documentation:
 ## Package-Specific Guidance
 
 ### @lowdefy/build
+
 - List all 31 build steps by name
 - Include complete output structure (keyMap.json, refMap.json, api/, etc.)
 
 ### @lowdefy/operators
+
 - Document full payload parameters for each parser:
   - BuildParser: env, variables, refDef, path, jsMap
   - ServerParser: secrets, user, payload, urlQuery, pageId, requestId, global, input, lowdefyGlobal, apiResponses
   - WebParser: state, urlQuery, input, global, requests, event, eventLog, user, actions, lowdefyGlobal, blockId, pageId
 
 ### @lowdefy/engine
+
 - Include debounce configuration (ms, leading, trailing)
 - Document try/catch pattern for actions (catchActions)
 - Note that requests store history arrays, not just latest response
 
 ### @lowdefy/actions-core
+
 - Correct action name is `DisplayMessage` (not `Message`)
 
 ## Output
 
-Single file: `cc-docs/packages/{package}.md`
+Single file: `code-docs/packages/{package}.md`
 
 ## Example
 
@@ -224,6 +243,7 @@ Core runtime engine for evaluating operators and managing page state.
 ## Purpose
 
 The engine is the brain of a running Lowdefy page. It:
+
 - Manages component state (input values, visibility, loading states)
 - Evaluates operators (`_state`, `_request`, `_if`, etc.)
 - Handles the operator dependency graph
@@ -238,6 +258,7 @@ reactive page.
 ### Dependencies
 
 **Internal:**
+
 - `@lowdefy/operators` - Operator implementations
 - `@lowdefy/helpers` - Utility functions
 
@@ -250,6 +271,7 @@ reactive page.
 **Purpose:** Tracks all mutable state for a page
 
 **Key concepts:**
+
 - `pageState` - Form inputs, component values
 - `requestState` - Loading, error, response data
 - `urlQuery` - URL parameters
@@ -261,10 +283,11 @@ reactive page.
 **Purpose:** Recursively evaluates operators in configuration
 
 **How it works:**
+
 1. Walks the config tree looking for `_` prefixed keys
 2. Resolves operator based on the key (e.g., `_state` → getState)
 3. Passes arguments to operator function
 4. Replaces operator node with result
 5. Continues until no operators remain
-...
+   ...
 ```
