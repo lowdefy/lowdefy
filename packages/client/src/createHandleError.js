@@ -51,15 +51,16 @@ function createHandleError(lowdefy) {
           credentials: 'same-origin',
         });
         if (response.ok) {
-          const { source: resolvedSource, errors: serverErrors } = await response.json();
+          const { source: resolvedSource, configError: serializedConfigError } =
+            await response.json();
           if (resolvedSource) {
             error.source = resolvedSource;
           }
-          // If server converted to ConfigErrors, log those alongside the original error
-          if (serverErrors) {
-            for (const serializedErr of serverErrors) {
-              logger.error(serializer.deserialize(serializedErr));
-            }
+          // If server produced a consolidated ConfigError, log it and return early
+          // (cause chain includes original error)
+          if (serializedConfigError) {
+            logger.error(serializer.deserialize(serializedConfigError));
+            return;
           }
         }
       } catch {

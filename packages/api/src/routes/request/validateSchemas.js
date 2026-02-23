@@ -24,7 +24,7 @@ function validateSchemas(
   { connection, connectionProperties, requestConfig, requestResolver, requestProperties }
 ) {
   const configKey = requestConfig['~k'];
-  const allErrors = [];
+  const messages = [];
 
   const connectionResult = validate({
     schema: connection.schema,
@@ -33,16 +33,13 @@ function validateSchemas(
   });
   if (!connectionResult.valid) {
     for (const ajvError of connectionResult.errors) {
-      allErrors.push(
-        new ConfigError(
-          formatValidationError({
-            ajvError,
-            pluginLabel: 'Connection',
-            typeName: requestConfig.connectionId,
-            fieldLabel: 'property',
-          }),
-          { configKey }
-        )
+      messages.push(
+        formatValidationError({
+          ajvError,
+          pluginLabel: 'Connection',
+          typeName: requestConfig.connectionId,
+          fieldLabel: 'property',
+        })
       );
     }
   }
@@ -54,26 +51,26 @@ function validateSchemas(
   });
   if (!requestResult.valid) {
     for (const ajvError of requestResult.errors) {
-      allErrors.push(
-        new ConfigError(
-          formatValidationError({
-            ajvError,
-            pluginLabel: 'Request',
-            typeName: requestConfig.type,
-            fieldLabel: 'property',
-          }),
-          { configKey }
-        )
+      messages.push(
+        formatValidationError({
+          ajvError,
+          pluginLabel: 'Request',
+          typeName: requestConfig.type,
+          fieldLabel: 'property',
+        })
       );
     }
   }
 
-  if (allErrors.length > 0) {
-    // Log additional errors here; the first will be logged by the upstream error handler
-    for (const err of allErrors.slice(1)) {
-      logger.error(err);
-    }
-    throw allErrors[0];
+  if (messages.length > 0) {
+    const message =
+      messages.length === 1
+        ? messages[0]
+        : `Request "${requestConfig.requestId}" has schema validation errors:\n${messages
+            .map((m) => `  - ${m}`)
+            .join('\n')}`;
+
+    throw new ConfigError(message, { configKey });
   }
 }
 

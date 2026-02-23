@@ -47,7 +47,7 @@ async function logClientError(context, serializedError) {
 
   // Schema validation for plugin errors with received data
   const validationConfig = validationConfigs[error.name];
-  let validationErrors = null;
+  let validationError = null;
 
   if (validationConfig && !type.isNone(error.received)) {
     const schemas = await context.readConfigFile(validationConfig.schemaFile);
@@ -70,18 +70,26 @@ async function logClientError(context, serializedError) {
                 ? `${error.typeName}.${error.methodName}`
                 : error.typeName;
 
-            validationErrors = ajvErrors.map(
-              (ajvError) =>
-                new ConfigError(
-                  formatValidationError({
-                    ajvError,
-                    pluginLabel: validationConfig.pluginLabel,
-                    typeName: displayName,
-                    fieldLabel: validationConfig.fieldLabel,
-                  }),
-                  { configKey: error.configKey }
-                )
+            const messages = ajvErrors.map((ajvError) =>
+              formatValidationError({
+                ajvError,
+                pluginLabel: validationConfig.pluginLabel,
+                typeName: displayName,
+                fieldLabel: validationConfig.fieldLabel,
+              })
             );
+
+            const message =
+              messages.length === 1
+                ? messages[0]
+                : `${validationConfig.pluginLabel} "${displayName}" has invalid ${
+                    validationConfig.schemaKey
+                  }:\n${messages.map((m) => `  - ${m}`).join('\n')}`;
+
+            validationError = new ConfigError(message, {
+              configKey: error.configKey,
+              cause: error,
+            });
           }
         } catch (e) {
           logger.warn(e);
@@ -101,26 +109,24 @@ async function logClientError(context, serializedError) {
     error.config = location.config;
   }
 
-  logger.error(error);
-
-  // If validation produced ConfigErrors, resolve their locations and log them
-  if (validationErrors) {
-    for (const configError of validationErrors) {
-      if (location) {
-        configError.source = location.source;
-        configError.config = location.config;
-      }
-      logger.error(configError);
+  // If validation produced a ConfigError, log only that (cause chain shows original)
+  if (validationError) {
+    if (location) {
+      validationError.source = location.source;
+      validationError.config = location.config;
     }
+    logger.error(validationError);
 
     return {
       success: true,
       source: error.source ?? null,
       config: error.config ?? null,
       error,
-      errors: validationErrors.map((e) => serializer.serialize(e)),
+      configError: serializer.serialize(validationError),
     };
   }
+
+  logger.error(error);
 
   return {
     success: true,

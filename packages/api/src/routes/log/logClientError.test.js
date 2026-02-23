@@ -16,13 +16,7 @@
 
 import { jest } from '@jest/globals';
 
-import {
-  ActionError,
-  BlockError,
-  ConfigError,
-  OperatorError,
-  ServiceError,
-} from '@lowdefy/errors';
+import { ActionError, BlockError, ConfigError, OperatorError, ServiceError } from '@lowdefy/errors';
 import { serializer } from '@lowdefy/helpers';
 
 import logClientError from './logClientError.js';
@@ -80,9 +74,7 @@ describe('logClientError', () => {
       }),
     };
 
-    const data = serializer.serialize(
-      new ConfigError('Test error', { configKey: 'key-123' })
-    );
+    const data = serializer.serialize(new ConfigError('Test error', { configKey: 'key-123' }));
     const { error, ...response } = await logClientError(context, data);
 
     expect(response).toEqual({
@@ -209,7 +201,7 @@ describe('logClientError', () => {
 });
 
 describe('logClientError schema validation', () => {
-  test('ActionError with received that fails schema returns ConfigErrors', async () => {
+  test('ActionError with received that fails schema returns single ConfigError', async () => {
     const mockLogger = {
       error: jest.fn(),
       warn: jest.fn(),
@@ -244,18 +236,17 @@ describe('logClientError schema validation', () => {
 
     const result = await logClientError(context, data);
 
-    expect(result.errors).toBeDefined();
-    expect(result.errors.length).toBeGreaterThan(0);
-    // Each error should be a serialized ConfigError
-    const deserializedError = serializer.deserialize(result.errors[0]);
+    expect(result.configError).toBeDefined();
+    const deserializedError = serializer.deserialize(result.configError);
     expect(deserializedError).toBeInstanceOf(ConfigError);
     expect(deserializedError.message).toContain('SetState');
+    // Cause chain includes original error
+    expect(deserializedError.cause).toBeInstanceOf(ActionError);
     // Original error is still returned
     expect(result.error).toBeInstanceOf(ActionError);
-    // Logger should have been called with ConfigErrors, not original
-    expect(mockLogger.error).toHaveBeenCalled();
-    const loggedError = mockLogger.error.mock.calls[0][0];
-    expect(loggedError).toBeInstanceOf(ConfigError);
+    // Logger called once with consolidated ConfigError
+    expect(mockLogger.error).toHaveBeenCalledTimes(1);
+    expect(mockLogger.error.mock.calls[0][0]).toBeInstanceOf(ConfigError);
   });
 
   test('OperatorError with method-style received extracts params correctly', async () => {
@@ -293,11 +284,13 @@ describe('logClientError schema validation', () => {
 
     const result = await logClientError(context, data);
 
-    expect(result.errors).toBeDefined();
-    const deserializedError = serializer.deserialize(result.errors[0]);
+    expect(result.configError).toBeDefined();
+    const deserializedError = serializer.deserialize(result.configError);
     expect(deserializedError).toBeInstanceOf(ConfigError);
     // Display name should include methodName
     expect(deserializedError.message).toContain('_yaml.parse');
+    // Cause chain includes original error
+    expect(deserializedError.cause).toBeInstanceOf(OperatorError);
   });
 
   test('BlockError with received that passes schema keeps original error', async () => {
@@ -333,7 +326,7 @@ describe('logClientError schema validation', () => {
 
     const result = await logClientError(context, data);
 
-    expect(result.errors).toBeUndefined();
+    expect(result.configError).toBeUndefined();
     expect(result.error).toBeInstanceOf(BlockError);
     // Original error should be logged, not ConfigError
     expect(mockLogger.error).toHaveBeenCalledTimes(1);
@@ -363,7 +356,7 @@ describe('logClientError schema validation', () => {
 
     const result = await logClientError(context, data);
 
-    expect(result.errors).toBeUndefined();
+    expect(result.configError).toBeUndefined();
     expect(result.error).toBeInstanceOf(ActionError);
     expect(mockLogger.error).toHaveBeenCalledTimes(1);
     expect(mockLogger.error.mock.calls[0][0]).toBeInstanceOf(ActionError);
@@ -387,7 +380,7 @@ describe('logClientError schema validation', () => {
 
     const result = await logClientError(context, data);
 
-    expect(result.errors).toBeUndefined();
+    expect(result.configError).toBeUndefined();
     expect(result.error).toBeInstanceOf(ActionError);
     // readConfigFile should not be called for schema files
     expect(context.readConfigFile).not.toHaveBeenCalledWith('plugins/actionSchemas.json');
@@ -403,13 +396,11 @@ describe('logClientError schema validation', () => {
       readConfigFile: jest.fn(),
     };
 
-    const data = serializer.serialize(
-      new ConfigError('Already a config error')
-    );
+    const data = serializer.serialize(new ConfigError('Already a config error'));
 
     const result = await logClientError(context, data);
 
-    expect(result.errors).toBeUndefined();
+    expect(result.configError).toBeUndefined();
     expect(result.error).toBeInstanceOf(ConfigError);
     // Should not try to load any schema files
     expect(context.readConfigFile).not.toHaveBeenCalledWith('plugins/actionSchemas.json');

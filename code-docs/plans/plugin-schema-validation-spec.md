@@ -64,9 +64,11 @@ The function is parameterized with `pluginLabel` ("Block", "Action", "Operator")
 
 Nested paths from `instancePath` are converted to dot notation: `/options/behavior` → `options.behavior`.
 
-## Flow 1: Client-Side Plugin Errors → Server Validation
+## Flow 1: Client-Side Plugin Errors → Server Validation (Dev Only)
 
-This is the primary flow. Plugin errors on the client (blocks, actions, operators evaluated client-side) are sent to the server for logging. The server validates the plugin data against schemas before logging.
+Schema validation of client-reported errors runs **only in the dev server**. In production, errors are logged and sent to Sentry without schema validation — the `received` data is stripped and the response is just `{ success: true }`.
+
+This is a natural fit for the existing architecture: the dev and prod servers already have separate `/api/client-error` route handlers with different behavior.
 
 ### How errors reach the server
 
@@ -75,7 +77,45 @@ This is the primary flow. Plugin errors on the client (blocks, actions, operator
 3. **Operator errors**: Parser catches operator failures → wraps in `OperatorError` → bubbles up → `handleError(error)`
 4. **Parse errors on eval**: `Block.js` detects `block.eval.parseErrors` → calls `handleError(error)` for each
 
-`handleError` (in `createHandleError.js`) serializes the error and sends it to `POST /api/client-error`.
+`handleError` (in `createHandleError.js`) serializes the error and sends it to `POST /api/client-error`. The client is shared between dev and prod — it always sends the full error including `received`. The per-server route handlers decide what to do with it.
+
+### Dev vs prod: the existing split
+
+The dev and prod servers already have separate `client-error.js` route handlers:
+
+| Aspect                 | Dev (`server-dev/pages/api/client-error.js`) | Prod (`server/pages/api/client-error.js`) |
+| ---------------------- | -------------------------------------------- | ----------------------------------------- |
+| Calls `logClientError` | Yes                                          | Yes                                       |
+| Schema validation      | Yes (new)                                    | No                                        |
+| Sentry capture         | No                                           | Yes (strips `received` before capture)    |
+
+Schema validation is added to `logClientError` in `@lowdefy/api` (shared), but is conditional on `received` being present in the deserialized error. The prod route strips `received` from `req.body` before calling `logClientError`, so validation is never triggered.
+
+### API response contracts
+
+**`logClientError` return value** (internal, shared `@lowdefy/api`):
+
+```javascript
+{
+  success: true,
+  source: 'pages/home.yaml:8' | null,   // resolved file:line
+  config: 'root.pages[0:home]' | null,   // config key path
+  error,                                  // original error (for Sentry in prod)
+  errors: [serialized, ...]              // serializer.serialize()-d errors for client
+}
+```
+
+`errors` contains converted ConfigErrors if schema validation fired, or the original error serialized if not. All entries are serialized via `serializer.serialize()` so they survive the JSON round-trip.
+
+**Dev route response** (to client): forwards `{ success, source, config, errors }`.
+
+**Prod route response** (to client): `{ success: true }` only. The `error` field is used internally for Sentry capture but not returned.
+
+### `createHandleError.js` changes
+
+Currently strips `received` before sending to the server (line 48). This stripping is removed — the client always sends the full serialized error. The servers handle the difference via their route handlers.
+
+On response, `createHandleError.js` checks for the `errors` array. If present, it deserializes each entry with `serializer.deserialize()` and logs those instead of the original error. In prod the response has no `errors` field, so behavior is unchanged.
 
 ### Server-side processing in `logClientError`
 
@@ -84,14 +124,12 @@ Receive serialized error
        ↓
 Deserialize error
        ↓
-Is it a PluginError subclass (ActionError, OperatorError, BlockError)?
+Is error.name one of 'ActionError', 'OperatorError', 'BlockError'
+AND does error.received exist?
   No → skip to location resolution
   Yes ↓
        ↓
-Determine plugin type from error class:
-  ActionError  → pluginType: "action",  lookup by error.typeName
-  OperatorError → pluginType: "operator", lookup by error.typeName
-  BlockError   → pluginType: "block",   lookup by error.typeName (blockType)
+Look up validation config by error.name (see table below)
        ↓
 Load schema file (e.g., plugins/actionSchemas.json)
   Failed → log warning, skip validation, keep original error
@@ -99,12 +137,7 @@ Load schema file (e.g., plugins/actionSchemas.json)
 Look up schema for this specific plugin (e.g., schemas["Wait"])
   Not found → skip validation, keep original error
        ↓
-Extract validation data:
-  Blocks:    error.received (= properties at time of error)
-  Actions:   error.received (= params passed to action)
-  Operators: error.received (= { _if: params }) → extract the inner value
-       ↓
-Validate data against schema
+Validate error.received against schema
        ↓
 Schema fails → create ConfigError for EACH validation error
                with formatted message and original configKey
@@ -114,7 +147,9 @@ Resolve configKey → source location (file:line)
        ↓
 Log errors to terminal
        ↓
-Return { success, source, config, errors } to client
+Serialize errors with serializer.serialize() for response
+       ↓
+Return { success, source, config, errors: [serialized] } to caller
 ```
 
 ### Validation configs
@@ -127,7 +162,9 @@ Each plugin type needs a config entry mapping error fields to schema lookup:
 | action      | `error.typeName` | `plugins/actionSchemas.json`   | `error.typeName` | `error.received`              | `params`     |
 | operator    | `error.typeName` | `plugins/operatorSchemas.json` | `error.typeName` | extract from `error.received` | `params`     |
 
-For operators, `received` is `{ _if: params }` — the inner value must be extracted for validation.
+For operators, `received` is `{ [operatorKey]: params }` where the key may be method-qualified (e.g., `_yaml.parse`). Extract params using `Object.values(error.received)[0]` — not by `typeName` lookup — to handle both simple (`{ _if: params }`) and method-style (`{ _yaml.parse: params }`) operators.
+
+For error formatting, compose the display name from `typeName` and `methodName`: use `error.methodName ? `${error.typeName}.${error.methodName}` : error.typeName` to produce `_yaml.parse` or `_if` as appropriate. See "Prerequisite: Add `methodName` to `OperatorError`" below.
 
 ## Flow 2: Server-Side Request/Connection Validation
 
@@ -145,8 +182,7 @@ Call validateSchemas() with:
 Validate both against their schemas (collect all errors)
        ↓
 All valid → return (no-op)
-Any invalid → throw ConfigError with configKey from requestConfig['~k']
-              attach additional errors as .additionalErrors
+Any invalid → log each ConfigError individually, then throw the first
 ```
 
 **Key difference from Flow 1**: This is **proactive** — it runs before the request executes, catching config errors before they cause opaque downstream failures. Flow 1 is reactive — it runs only when an error has already occurred.
@@ -156,9 +192,11 @@ Any invalid → throw ConfigError with configKey from requestConfig['~k']
 The current `validateSchemas.js` wraps `validate()` in try/catch and throws on first error. The enhanced version should:
 
 1. Use `returnErrors: true` to collect all validation errors from both schemas
-2. Create a `ConfigError` for each individual violation
-3. Attach additional errors to the primary error via `additionalErrors`
-4. Use `formatValidationError` for human-readable messages (connection errors use pluginLabel "Connection" / fieldLabel "property"; request errors use "Request" / "property")
+2. Create a `ConfigError` for each individual violation with `formatValidationError` (connection errors use pluginLabel "Connection" / fieldLabel "property"; request errors use "Request" / "property")
+3. Log every ConfigError to the logger — the terminal shows all violations
+4. Throw the first ConfigError to halt request execution
+
+This avoids needing an `additionalErrors` field on `ConfigError` (which doesn't exist). All errors are visible in the terminal via logging; the thrown error stops execution.
 
 ## Error Conversion Rules
 
@@ -188,7 +226,7 @@ The current `validateSchemas.js` wraps `validate()` in try/catch and throws on f
 | Serialization           | `error.serialize()` / `deserializeError()` | `serializer.serialize()` / `serializer.deserialize()`            |
 | Client error handler    | `createLogError.js`                        | `createHandleError.js`                                           |
 | Error module import     | `@lowdefy/errors/client`, `/server`        | `@lowdefy/errors`                                                |
-| `logClientError` return | Returns `{ errors: [serialized] }`         | Returns `{ error }` with `source`                                |
+| `logClientError` return | Returns `{ errors: [serialized] }`         | Returns `{ success, source, config, error }` (see API contract)  |
 
 ### Implementation notes
 
@@ -196,22 +234,79 @@ The current `validateSchemas.js` wraps `validate()` in try/catch and throws on f
 
 2. **Map `typeName` to schema lookup** — the current error classes use `typeName` (e.g., `typeName: 'Wait'` for actions, `typeName: '_if'` for operators). This is the key for schema map lookup.
 
-3. **Block errors need `received` populated** — `ErrorBoundary` needs to pass the block's evaluated properties as `received` so they're available for schema validation on the server. The current `ErrorBoundary` may need updating.
+3. **Block errors need `received` populated** — `ErrorBoundary` is a React class component using `componentDidCatch(error)`. React passes `(error, errorInfo)` — neither contains block properties. However, `block.eval.properties` already exists as a reference on the `block` object (computed every eval cycle). The mechanism:
 
-4. **`createHandleError.js` round-trip** — currently sends error to server and gets back `{ source }`. The enhanced version should also receive back the ConfigErrors (if schema validation converted the error) for local display.
+   - **`Block.js`**: Pass `properties={block.eval?.properties}` as a prop to `ErrorBoundary` (just forwarding an existing reference, no extra copying)
+   - **`ErrorBoundary.componentDidCatch`**: Read `this.props.properties` and attach as `received` on the `BlockError`:
+     ```javascript
+     wrappedError = new BlockError(error.message, {
+       cause: error,
+       typeName: blockType,
+       location: blockId,
+       configKey,
+       received: this.props.properties,
+     });
+     ```
+   - This is lightweight — no additional storage beyond the prop reference that React already manages. The properties reference updates on each render via normal React prop flow.
 
-5. **`logClientError` schema validation response** — the server should return both the resolved source location AND any schema validation results. The client should log the converted ConfigErrors if present, or the original error if not.
+4. **`createHandleError.js` changes** — remove `received` stripping, handle `errors` in response. See "API response contracts" and "`createHandleError.js` changes" sections above for details.
+
+5. **Prod `client-error.js` strips `received`** — strips `received` from `req.body` before calling `logClientError`, returns `{ success: true }` only. See "API response contracts" above.
+
+6. **Dev `client-error.js` returns errors** — forwards `{ success, source, config, errors }` from `logClientError` to the client. See "API response contracts" above.
+
+## Prerequisite: Add `methodName` to `OperatorError`
+
+Operators can be method-qualified (e.g., `_yaml.parse`). The parser already splits `op` (`_yaml`) and `methodName` (`parse`) but only stores `op` as `typeName` on the error. Add `methodName` to `OperatorError` so error messages and schema validation can reference the full operator name.
+
+**`OperatorError.js`** — store `methodName` from constructor options:
+
+```javascript
+class OperatorError extends PluginError {
+  constructor(message, options = {}) {
+    super(message, options);
+    this.name = 'OperatorError';
+    this.methodName = options.methodName ?? null;
+  }
+}
+```
+
+**`webParser.js` and `serverParser.js`** — pass `methodName` when creating the error:
+
+```javascript
+new OperatorError(e.message, {
+  cause: e,
+  typeName: op, // "_yaml"
+  methodName, // "parse" (or undefined for simple operators)
+  received: { [key]: params },
+  location: operatorLocation,
+  configKey: e.configKey ?? configKey,
+});
+```
+
+**Display name composition** — wherever the operator name is displayed (error messages, `formatValidationError`), compose the full name:
+
+```javascript
+const displayName = error.methodName ? `${error.typeName}.${error.methodName}` : error.typeName;
+// "_yaml.parse" or "_if"
+```
+
+This is a small standalone change that should be done before the schema validation work.
 
 ## Packages to Modify
 
-| Package                | File(s)                                     | Change                                                      |
-| ---------------------- | ------------------------------------------- | ----------------------------------------------------------- |
-| `@lowdefy/api`         | `routes/log/validatePluginSchema.js` (new)  | Pure validation function                                    |
-| `@lowdefy/api`         | `routes/log/formatValidationError.js` (new) | Human-readable Ajv error formatting                         |
-| `@lowdefy/api`         | `routes/log/logClientError.js`              | Add schema validation before logging PluginError subclasses |
-| `@lowdefy/api`         | `routes/request/validateSchemas.js`         | Collect all errors, use formatValidationError               |
-| `@lowdefy/client`      | `createHandleError.js`                      | Handle schema validation results from server response       |
-| `@lowdefy/block-utils` | `ErrorBoundary`                             | Pass evaluated properties as `received` on BlockError       |
+| Package                | File(s)                                     | Change                                                            |
+| ---------------------- | ------------------------------------------- | ----------------------------------------------------------------- |
+| `@lowdefy/errors`      | `OperatorError.js`                          | Add `methodName` field                                            |
+| `@lowdefy/operators`   | `webParser.js`, `serverParser.js`           | Pass `methodName` when creating `OperatorError`                   |
+| `@lowdefy/api`         | `routes/log/validatePluginSchema.js` (new)  | Pure validation function                                          |
+| `@lowdefy/api`         | `routes/log/formatValidationError.js` (new) | Human-readable Ajv error formatting                               |
+| `@lowdefy/api`         | `routes/log/logClientError.js`              | Add schema validation (conditional on `received` being present)   |
+| `@lowdefy/api`         | `routes/request/validateSchemas.js`         | Collect all errors, use formatValidationError                     |
+| `@lowdefy/client`      | `createHandleError.js`                      | Stop stripping `received`, handle `errors` in dev server response |
+| `@lowdefy/block-utils` | `ErrorBoundary`                             | Pass evaluated properties as `received` on BlockError             |
+| `@lowdefy/server`      | `pages/api/client-error.js`                 | Strip `received` from payload before `logClientError`             |
+| `@lowdefy/server-dev`  | `pages/api/client-error.js`                 | Return `errors` from `logClientError` response to client          |
 
 ## Graceful Degradation
 
