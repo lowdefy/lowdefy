@@ -25,8 +25,17 @@ export default createBlockHelper({
   do: {
     fill: (page, blockId, val) => input(page, blockId).fill(val),
     select: async (page, blockId, val) => {
-      await input(page, blockId).click();
-      await page.locator('.ant-select-item-option-content').filter({ hasText: val }).click();
+      const sel = locator(page, blockId);
+      const isOpen = await sel.evaluate((el) => el.classList.contains('ant-select-open'));
+      if (!isOpen) {
+        await input(page, blockId).click();
+      }
+      await page
+        .locator(
+          '.ant-select-dropdown:not(.ant-select-dropdown-hidden) .ant-select-item-option-content'
+        )
+        .filter({ hasText: val })
+        .click();
     },
     clear: async (page, blockId) => {
       await locator(page, blockId).hover();
