@@ -17,18 +17,20 @@
 import { createBlockHelper } from '@lowdefy/e2e-utils';
 import { expect } from '@playwright/test';
 
-// ConfirmModal renders as a portal with id="${blockId}_confirm_modal".
-const locator = (page, blockId) => page.locator(`#${blockId}_confirm_modal`);
+// ConfirmModal renders via Modal.confirm() as a portal. Ant Design 4 does not
+// forward the id prop to the portal DOM element, so we target the first visible
+// confirm modal.
+const locator = (page, _blockId) => page.locator('.ant-modal-confirm:visible').first();
 
 export default createBlockHelper({
   locator,
   do: {
-    ok: (page, blockId) => locator(page, blockId).locator('.ant-btn-primary').click(),
-    cancel: (page, blockId) =>
-      locator(page, blockId).locator('.ant-btn:not(.ant-btn-primary)').click(),
+    ok: (page, _blockId) => locator(page, _blockId).locator('.ant-btn-primary').click(),
+    cancel: (page, _blockId) =>
+      locator(page, _blockId).locator('.ant-btn:not(.ant-btn-primary)').click(),
   },
   expect: {
-    title: (page, blockId, text) =>
-      expect(locator(page, blockId).locator('.ant-modal-confirm-title')).toHaveText(text),
+    title: (page, _blockId, text) =>
+      expect(locator(page, _blockId).locator('.ant-modal-confirm-title')).toHaveText(text),
   },
 });

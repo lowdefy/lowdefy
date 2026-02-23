@@ -17,19 +17,20 @@
 import { createBlockHelper } from '@lowdefy/e2e-utils';
 import { expect } from '@playwright/test';
 
-// Modal renders as a portal — the modal element has id="${blockId}_modal".
-const locator = (page, blockId) => page.locator(`#${blockId}_modal`);
+// Modal renders as a portal. Ant Design 4 does not forward the id prop to the
+// portal DOM element, so we target the first visible non-confirm modal.
+const locator = (page, _blockId) => page.locator('.ant-modal:visible').first();
 
 export default createBlockHelper({
   locator,
   do: {
-    close: (page, blockId) => locator(page, blockId).locator('.ant-modal-close').click(),
-    ok: (page, blockId) => locator(page, blockId).locator('.ant-btn-primary').click(),
-    cancel: (page, blockId) =>
-      locator(page, blockId).locator('.ant-btn:not(.ant-btn-primary)').click(),
+    close: (page, _blockId) => locator(page, _blockId).locator('.ant-modal-close').click(),
+    ok: (page, _blockId) => locator(page, _blockId).locator('.ant-btn-primary').click(),
+    cancel: (page, _blockId) =>
+      locator(page, _blockId).locator('.ant-btn:not(.ant-btn-primary)').click(),
   },
   expect: {
-    title: (page, blockId, text) =>
-      expect(locator(page, blockId).locator('.ant-modal-title')).toHaveText(text),
+    title: (page, _blockId, text) =>
+      expect(locator(page, _blockId).locator('.ant-modal-title')).toHaveText(text),
   },
 });
