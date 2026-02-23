@@ -86,19 +86,6 @@ class PageCache {
     }
   }
 
-  invalidateByFiles(changedFiles, fileDependencyMap) {
-    const affectedPages = new Set();
-    for (const filePath of changedFiles) {
-      const pageIds = fileDependencyMap.get(filePath);
-      if (pageIds) {
-        for (const pageId of pageIds) {
-          affectedPages.add(pageId);
-        }
-      }
-    }
-    this.invalidatePages(affectedPages);
-    return affectedPages;
-  }
 }
 
 export default PageCache;

@@ -14,28 +14,19 @@
   limitations under the License.
 */
 
-import { serializer } from '@lowdefy/helpers';
-
-function createPageRegistry({ components }) {
+function createPageRegistry({ components, shallowPageIndices, context }) {
   const registry = new Map();
 
-  for (const page of components.pages ?? []) {
-    // Deep copy raw content fields so the shallow components object can be modified
-    // independently (e.g., by skeleton build steps)
+  (components.pages ?? []).forEach((page, i) => {
+    // Read ~r from keyMap — addKeys moves ~r there and deletes it from objects.
+    const refId = context.keyMap[page['~k']]?.['~r'] ?? null;
     registry.set(page.id, {
       pageId: page.id,
       auth: page.auth,
-      type: page.type,
-      refId: page['~r'] ?? null,
-      rawContent: serializer.copy({
-        blocks: page.blocks,
-        areas: page.areas,
-        events: page.events,
-        requests: page.requests,
-        layout: page.layout,
-      }),
+      refId,
+      shallow: shallowPageIndices.has(i),
     });
-  }
+  });
 
   return registry;
 }

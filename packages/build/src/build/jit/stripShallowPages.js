@@ -14,7 +14,19 @@
   limitations under the License.
 */
 
-export { default as shallowBuild } from './build/jit/shallowBuild.js';
-export { default as buildPageJit } from './build/jit/buildPageJit.js';
-export { default as createPageRegistry } from './build/jit/createPageRegistry.js';
-export { default as createContext } from './createContext.js';
+import PAGE_CONTENT_KEYS from './pageContentKeys.js';
+
+// Strip shallow pages to stubs before schema validation.
+// Stubs keep id + type (required by block schema) and ~shallow marker.
+// Non-shallow pages (no skipped refs) keep their full content.
+function stripShallowPages({ components, shallowPageIndices }) {
+  (components.pages ?? []).forEach((page, i) => {
+    if (!shallowPageIndices.has(i)) return;
+    for (const key of PAGE_CONTENT_KEYS) {
+      delete page[key];
+    }
+    page['~shallow'] = true;
+  });
+}
+
+export default stripShallowPages;

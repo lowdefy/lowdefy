@@ -253,3 +253,72 @@ test('validatePayloadReferences finds references in nested properties', () => {
   expect(mockLogWarn).toHaveBeenCalledTimes(1);
   expect(mockLogWarn.mock.calls[0][0]).toContain('_payload references "invalidKey"');
 });
+
+test('validatePayloadReferences allows dotted payload key matching exact reference', () => {
+  const context = testContext({ logger });
+  const page = {
+    pageId: 'page_1',
+    requests: [
+      {
+        requestId: 'updateRecord',
+        payload: {
+          'status.approved': { _state: 'record.status.approved' },
+        },
+        properties: {
+          update: {
+            $set: {
+              'status.approved': { _payload: 'status.approved' },
+            },
+          },
+        },
+      },
+    ],
+  };
+  validatePayloadReferences({ page, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('validatePayloadReferences allows dotted payload key with sub-path reference', () => {
+  const context = testContext({ logger });
+  const page = {
+    pageId: 'page_1',
+    requests: [
+      {
+        requestId: 'updateRecord',
+        payload: {
+          'status.approved': { _state: 'record.status.approved' },
+        },
+        properties: {
+          update: {
+            value: { _payload: 'status.approved.timestamp' },
+          },
+        },
+      },
+    ],
+  };
+  validatePayloadReferences({ page, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('validatePayloadReferences warns when dotted payload key does not match reference', () => {
+  const context = testContext({ logger });
+  const page = {
+    pageId: 'page_1',
+    requests: [
+      {
+        requestId: 'updateRecord',
+        payload: {
+          'status.approved': { _state: 'record.status.approved' },
+        },
+        properties: {
+          update: {
+            value: { _payload: 'status.other' },
+          },
+        },
+      },
+    ],
+  };
+  validatePayloadReferences({ page, context });
+  expect(mockLogWarn).toHaveBeenCalledTimes(1);
+  expect(mockLogWarn.mock.calls[0][0]).toContain('_payload references "status"');
+});

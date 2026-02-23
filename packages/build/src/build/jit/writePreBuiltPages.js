@@ -14,7 +14,19 @@
   limitations under the License.
 */
 
-export { default as shallowBuild } from './build/jit/shallowBuild.js';
-export { default as buildPageJit } from './build/jit/buildPageJit.js';
-export { default as createPageRegistry } from './build/jit/createPageRegistry.js';
-export { default as createContext } from './createContext.js';
+async function writePreBuiltPages({ preBuiltPageArtifacts, context }) {
+  for (const artifact of preBuiltPageArtifacts) {
+    await context.writeBuildArtifact(
+      `pages/${artifact.pageId}/${artifact.pageId}.json`,
+      artifact.pageJson
+    );
+    for (const request of artifact.requests) {
+      await context.writeBuildArtifact(
+        `pages/${artifact.pageId}/requests/${request.requestId}.json`,
+        request.requestJson
+      );
+    }
+  }
+}
+
+export default writePreBuiltPages;

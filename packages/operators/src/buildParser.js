@@ -78,6 +78,12 @@ class BuildParser {
 
       if (!type.isObject(value)) return value;
 
+      // ~shallow placeholders are unresolved refs — mark as dynamic so operators
+      // wrapping them are preserved for evaluation after resolution (JIT builds).
+      if (value['~shallow'] === true) {
+        return BuildParser.setDynamicMarker(value);
+      }
+
       // Check if this is an operator object BEFORE checking ~r
       // Operators in vars have ~r set by copyVarValue (as enumerable), but should still be evaluated
       // Filter out ~ prefixed keys (like ~r, ~k, ~l) when determining if single-key operator

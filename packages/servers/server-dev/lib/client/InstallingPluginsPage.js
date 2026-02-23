@@ -16,7 +16,7 @@
 
 import React from 'react';
 
-const RestartingPage = () => {
+const InstallingPluginsPage = ({ packages }) => {
   return (
     <div
       style={{
@@ -36,14 +36,15 @@ const RestartingPage = () => {
           display: 'inline-block',
         }}
       >
-        <h3>Rebuilding Lowdefy App</h3>
+        <h3>Installing Plugin Packages</h3>
         <p>
-          The server is restarting because your configuration changed. The page will reload when
-          ready.
+          This page requires packages that are not yet installed:{' '}
+          <strong>{(packages ?? []).join(', ')}</strong>.
         </p>
+        <p>The server will restart automatically. The page will reload when ready.</p>
       </div>
     </div>
   );
 };
 
-export default RestartingPage;
+export default InstallingPluginsPage;

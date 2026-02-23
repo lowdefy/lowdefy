@@ -70,7 +70,6 @@ async function getContext() {
     // JIT build state
     pageCache: new PageCache(),
     pageRegistry: null,
-    fileDependencyMap: null,
     buildContext: null,
   };
 
@@ -85,7 +84,6 @@ async function getContext() {
     const result = await buildFn();
     if (result) {
       context.pageRegistry = result.pageRegistry;
-      context.fileDependencyMap = result.fileDependencyMap;
       context.buildContext = result.context;
     }
   };
