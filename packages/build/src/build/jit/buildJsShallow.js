@@ -48,8 +48,8 @@ function buildJsShallow({ components, context }) {
   }
 
   // Ensure both client and server jsMap keys exist.
-  // In shallow build, only server JS is extracted (api/connections).
-  // Client JS is extracted per-page during JIT build.
+  // Shallow pages defer both client and server JS extraction to JIT build.
+  // Non-shallow pages have already been fully extracted above.
   if (!context.jsMap.client) {
     context.jsMap.client = {};
   }

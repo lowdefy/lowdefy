@@ -25,7 +25,7 @@ function addPageKey(page, keyMapId, refId, keyMap) {
 }
 
 const emptyContext = { keyMap: {} };
-const defaults = { shallowPageIndices: new Set(), context: emptyContext };
+const defaults = { context: emptyContext };
 
 test('createPageRegistry creates registry from pages', () => {
   const keyMap = {};
@@ -39,7 +39,6 @@ test('createPageRegistry creates registry from pages', () => {
   const components = { pages: [page] };
   const registry = createPageRegistry({
     components,
-    shallowPageIndices: new Set(),
     context: { keyMap },
   });
   expect(registry.size).toBe(1);
@@ -62,7 +61,6 @@ test('createPageRegistry creates registry with multiple pages', () => {
   const components = { pages };
   const registry = createPageRegistry({
     components,
-    shallowPageIndices: new Set(),
     context: { keyMap },
   });
   expect(registry.size).toBe(3);
@@ -88,7 +86,6 @@ test('createPageRegistry reads refId from keyMap via ~k', () => {
   const components = { pages: [page] };
   const registry = createPageRegistry({
     components,
-    shallowPageIndices: new Set(),
     context: { keyMap },
   });
   const entry = registry.get('home');
@@ -102,7 +99,6 @@ test('createPageRegistry stores null refId when ~r not in keyMap', () => {
   const components = { pages: [page] };
   const registry = createPageRegistry({
     components,
-    shallowPageIndices: new Set(),
     context: { keyMap },
   });
   const entry = registry.get('home');
@@ -119,25 +115,22 @@ test('createPageRegistry stores page auth', () => {
   const components = { pages };
   const registry = createPageRegistry({
     components,
-    shallowPageIndices: new Set(),
     context: { keyMap },
   });
   expect(registry.get('home').auth).toEqual({ public: true });
   expect(registry.get('admin').auth).toEqual({ roles: ['admin'] });
 });
 
-test('createPageRegistry marks shallow pages from shallowPageIndices', () => {
+test('createPageRegistry marks shallow pages from ~shallow marker', () => {
   const keyMap = {};
   const pages = [
-    { id: 'home', type: 'PageHeaderMenu' },
-    { id: 'dashboard', type: 'PageSiderMenu' },
+    { id: 'home', type: 'PageHeaderMenu', '~shallow': true },
+    { id: 'dashboard', type: 'PageSiderMenu', '~shallow': true },
     { id: '404', type: 'PageHeaderMenu' },
   ];
   pages.forEach((p, i) => addPageKey(p, `k${i}`, undefined, keyMap));
-  const shallowPageIndices = new Set([0, 1]);
   const registry = createPageRegistry({
     components: { pages },
-    shallowPageIndices,
     context: { keyMap },
   });
   expect(registry.get('home').shallow).toBe(true);

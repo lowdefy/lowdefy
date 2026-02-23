@@ -65,8 +65,8 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       try {
         const content = await fs.promises.readFile(pagePath, 'utf8');
         return serializer.deserialize(JSON.parse(content));
-      } catch {
-        // Fall through to JIT if pre-built artifact missing
+      } catch (err) {
+        if (err.code !== 'ENOENT') throw err;
       }
     }
 

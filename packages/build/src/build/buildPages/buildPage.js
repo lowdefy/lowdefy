@@ -41,7 +41,9 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
     );
     return { failed: true };
   }
-  checkDuplicatePageId({ id: page.id, configKey });
+  if (checkDuplicatePageId) {
+    checkDuplicatePageId({ id: page.id, configKey });
+  }
   page.pageId = page.id;
   const requests = [];
   const requestActionRefs = [];

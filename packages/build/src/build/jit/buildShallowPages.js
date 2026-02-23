@@ -23,7 +23,7 @@ import validatePayloadReferences from '../buildPages/validatePayloadReferences.j
 import validateServerStateReferences from '../buildPages/validateServerStateReferences.js';
 import validateStateReferences from '../buildPages/validateStateReferences.js';
 
-function buildShallowPages({ components, shallowPageIndices, context }) {
+function buildShallowPages({ components, context }) {
   // Set pageId on all pages (normally done by buildPage in buildPages).
   // Must run before createPageRegistry which uses page.id as map key.
   for (const page of components.pages ?? []) {
@@ -34,7 +34,7 @@ function buildShallowPages({ components, shallowPageIndices, context }) {
 
   // Extract page registry BEFORE buildPage (which transforms page.id to `page:${pageId}`).
   // Registry uses original page.id as the map key.
-  const pageRegistry = createPageRegistry({ components, shallowPageIndices, context });
+  const pageRegistry = createPageRegistry({ components, context });
 
   // Build non-shallow pages (fully resolved, including injected defaults like 404).
   // Shallow pages are deferred to JIT resolution.
@@ -43,12 +43,16 @@ function buildShallowPages({ components, shallowPageIndices, context }) {
   });
   context.linkActionRefs = [];
 
+  const failedPageIndices = new Set();
+
   (components.pages ?? []).forEach((page, index) => {
     checkDuplicatePageId({ id: page.id, configKey: page['~k'] });
     if (page['~shallow']) return;
     try {
-      // Pass no-op for checkDuplicatePageId since we already checked above
-      buildPage({ page, index, context, checkDuplicatePageId: () => {} });
+      const result = buildPage({ page, index, context });
+      if (result?.failed) {
+        failedPageIndices.add(index);
+      }
     } catch (error) {
       // Skip suppressed ConfigErrors (via ~ignoreBuildChecks)
       if (
@@ -58,6 +62,7 @@ function buildShallowPages({ components, shallowPageIndices, context }) {
         return;
       }
       context.errors.push(error);
+      failedPageIndices.add(index);
     }
   });
 
@@ -67,12 +72,12 @@ function buildShallowPages({ components, shallowPageIndices, context }) {
     pageIds: (components.pages ?? []).map((p) => p.pageId),
     context,
   });
-  for (const page of components.pages ?? []) {
-    if (page['~shallow']) continue;
+  (components.pages ?? []).forEach((page, index) => {
+    if (page['~shallow'] || failedPageIndices.has(index)) return;
     validateStateReferences({ page, context });
     validatePayloadReferences({ page, context });
     validateServerStateReferences({ page, context });
-  }
+  });
 
   return pageRegistry;
 }
