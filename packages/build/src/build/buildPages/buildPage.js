@@ -17,7 +17,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError } from '@lowdefy/errors';
 
 import buildBlock from './buildBlock/buildBlock.js';
 import collectExceptions from '../../utils/collectExceptions.js';
@@ -30,23 +30,20 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
   if (type.isUndefined(page.id)) {
     collectExceptions(
       context,
-      new ConfigError({ message: `Page id missing at page ${index}.`, configKey, context })
+      new ConfigError(`Page id missing at page ${index}.`, { configKey })
     );
     return { failed: true };
   }
   if (!type.isString(page.id)) {
     collectExceptions(
       context,
-      new ConfigError({
-        message: `Page id is not a string at page ${index}.`,
-        received: page.id,
-        configKey,
-        context,
-      })
+      new ConfigError(`Page id is not a string at page ${index}.`, { received: page.id, configKey })
     );
     return { failed: true };
   }
-  checkDuplicatePageId({ id: page.id, configKey });
+  if (checkDuplicatePageId) {
+    checkDuplicatePageId({ id: page.id, configKey });
+  }
   page.pageId = page.id;
   const requests = [];
   const requestActionRefs = [];
@@ -55,7 +52,6 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
     blockIdCounter: createCounter(),
     checkDuplicateRequestId: createCheckDuplicateId({
       message: 'Duplicate requestId "{{ id }}" on page "{{ pageId }}".',
-      context,
     }),
     context,
     pageId: page.pageId,

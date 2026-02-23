@@ -4,9 +4,9 @@ Object diffing operator for Lowdefy.
 
 ## Operator
 
-| Operator | Purpose |
-|----------|---------|
-| `_diff` | Compare objects/arrays |
+| Operator | Purpose                |
+| -------- | ---------------------- |
+| `_diff`  | Compare objects/arrays |
 
 ## Usage
 
@@ -25,21 +25,21 @@ Returns array of changes:
 
 ```javascript
 [
-  { kind: 'N', path: ['newField'], rhs: 'value' },  // New
-  { kind: 'D', path: ['removed'], lhs: 'old' },    // Deleted
-  { kind: 'E', path: ['changed'], lhs: 'old', rhs: 'new' },  // Edited
-  { kind: 'A', path: ['array'], index: 0, item: { kind: 'N', rhs: 'item' } }  // Array
-]
+  { kind: 'N', path: ['newField'], rhs: 'value' }, // New
+  { kind: 'D', path: ['removed'], lhs: 'old' }, // Deleted
+  { kind: 'E', path: ['changed'], lhs: 'old', rhs: 'new' }, // Edited
+  { kind: 'A', path: ['array'], index: 0, item: { kind: 'N', rhs: 'item' } }, // Array
+];
 ```
 
 ## Change Types
 
-| Kind | Meaning |
-|------|---------|
-| `N` | New - property added |
-| `D` | Deleted - property removed |
-| `E` | Edited - value changed |
-| `A` | Array - array element changed |
+| Kind | Meaning                       |
+| ---- | ----------------------------- |
+| `N`  | New - property added          |
+| `D`  | Deleted - property removed    |
+| `E`  | Edited - value changed        |
+| `A`  | Array - array element changed |
 
 ## Use Cases
 

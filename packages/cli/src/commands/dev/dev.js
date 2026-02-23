@@ -23,7 +23,7 @@ import getServer from '../../utils/getServer.js';
 
 async function dev({ context }) {
   const directory = context.directories.dev;
-  context.logger.ui.info('Starting development server.');
+  context.logger.info('Starting development server.');
   await checkPortAvailable({ port: context.options.port });
   await getServer({ context, packageName: '@lowdefy/server-dev', directory });
   await resetServerPackageJson({ context, directory });

@@ -5,6 +5,7 @@ JSON Schema validation wrapper with detailed error reporting.
 ## Overview
 
 Wraps AJV (Another JSON Validator) with:
+
 - Comprehensive error collection
 - Better error messages via ajv-errors
 - Integration with Lowdefy error handling
@@ -26,9 +27,9 @@ const schema = {
   type: 'object',
   properties: {
     name: { type: 'string' },
-    age: { type: 'number', minimum: 0 }
+    age: { type: 'number', minimum: 0 },
   },
-  required: ['name']
+  required: ['name'],
 };
 
 const data = { name: 'John', age: 30 };
@@ -75,9 +76,9 @@ AJV is configured with:
 
 ```javascript
 const ajv = new Ajv({
-  allErrors: true,       // Collect all errors, not just first
-  verbose: true,         // Include schema in errors
-  $data: true            // Enable $data reference
+  allErrors: true, // Collect all errors, not just first
+  verbose: true, // Include schema in errors
+  $data: true, // Enable $data reference
 });
 ```
 
@@ -85,13 +86,13 @@ const ajv = new Ajv({
 
 Errors include:
 
-| Field | Description |
-|-------|-------------|
-| `keyword` | Validation keyword that failed |
-| `dataPath` | JSON pointer to invalid data |
-| `schemaPath` | JSON pointer to schema rule |
-| `params` | Additional error parameters |
-| `message` | Human-readable message |
+| Field        | Description                    |
+| ------------ | ------------------------------ |
+| `keyword`    | Validation keyword that failed |
+| `dataPath`   | JSON pointer to invalid data   |
+| `schemaPath` | JSON pointer to schema rule    |
+| `params`     | Additional error parameters    |
+| `message`    | Human-readable message         |
 
 ## Usage Examples
 
@@ -105,9 +106,9 @@ const blockSchema = {
   properties: {
     id: { type: 'string' },
     type: { type: 'string' },
-    properties: { type: 'object' }
+    properties: { type: 'object' },
   },
-  required: ['id', 'type']
+  required: ['id', 'type'],
 };
 
 function validateBlock(block) {
@@ -124,21 +125,19 @@ const mongoSchema = {
     databaseUri: { type: 'string' },
     collection: { type: 'string' },
     read: { type: 'boolean', default: true },
-    write: { type: 'boolean', default: false }
+    write: { type: 'boolean', default: false },
   },
-  required: ['databaseUri', 'collection']
+  required: ['databaseUri', 'collection'],
 };
 
 const result = validate({
   schema: mongoSchema,
   data: connectionConfig,
-  returnErrors: true
+  returnErrors: true,
 });
 
 if (!result.valid) {
-  throw new ConfigurationError(
-    `Invalid MongoDB connection: ${formatErrors(result.errors)}`
-  );
+  throw new ConfigurationError(`Invalid MongoDB connection: ${formatErrors(result.errors)}`);
 }
 ```
 
@@ -154,17 +153,17 @@ const findSchema = {
       properties: {
         limit: { type: 'number', minimum: 1 },
         skip: { type: 'number', minimum: 0 },
-        sort: { type: 'object' }
-      }
-    }
-  }
+        sort: { type: 'object' },
+      },
+    },
+  },
 };
 
 function validateRequest(request) {
   const result = validate({
     schema: findSchema,
     data: request,
-    returnErrors: true
+    returnErrors: true,
   });
 
   if (!result.valid) {
@@ -183,7 +182,7 @@ function validateRequest(request) {
 
 ## Key Files
 
-| File | Purpose |
-|------|---------|
-| `src/validate.js` | Main validation function |
-| `src/ajv.js` | AJV instance configuration |
+| File              | Purpose                    |
+| ----------------- | -------------------------- |
+| `src/validate.js` | Main validation function   |
+| `src/ajv.js`      | AJV instance configuration |

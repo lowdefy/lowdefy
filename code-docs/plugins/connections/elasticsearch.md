@@ -4,8 +4,8 @@
 
 ## Connection Type
 
-| Type | Purpose |
-|------|---------|
+| Type            | Purpose                  |
+| --------------- | ------------------------ |
 | `Elasticsearch` | Connect to Elasticsearch |
 
 ## Connection Configuration
@@ -25,12 +25,12 @@ connections:
 
 ## Request Types
 
-| Type | Purpose |
-|------|---------|
+| Type                  | Purpose          |
+| --------------------- | ---------------- |
 | `ElasticsearchSearch` | Search documents |
-| `ElasticsearchIndex` | Index document |
-| `ElasticsearchDelete` | Delete document |
-| `ElasticsearchUpdate` | Update document |
+| `ElasticsearchIndex`  | Index document   |
+| `ElasticsearchDelete` | Delete document  |
+| `ElasticsearchUpdate` | Update document  |
 
 ## ElasticsearchSearch
 

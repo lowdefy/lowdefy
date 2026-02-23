@@ -5,6 +5,7 @@ Core JavaScript operators for Lowdefy. The primary operator package included by 
 ## Overview
 
 This package provides:
+
 - Data access operators (`_state`, `_request`, `_user`)
 - Logic operators (`_if`, `_and`, `_or`)
 - Math operators (`_sum`, `_multiply`, `_math`)
@@ -14,7 +15,7 @@ This package provides:
 
 ## Data Access Operators
 
-### _state
+### \_state
 
 Access page state:
 
@@ -30,19 +31,19 @@ name:
     default: Anonymous
 ```
 
-### _request
+### \_request
 
 Access request responses:
 
 ```yaml
 users:
-  _request: getUsers           # Entire response
+  _request: getUsers # Entire response
 
 userName:
-  _request: getUsers.data.name  # Nested path
+  _request: getUsers.data.name # Nested path
 ```
 
-### _url_query
+### \_url_query
 
 Access URL query parameters:
 
@@ -52,7 +53,7 @@ currentTab:
   _url_query: tab
 ```
 
-### _input
+### \_input
 
 Access navigation input:
 
@@ -62,7 +63,7 @@ itemId:
   _input: id
 ```
 
-### _global
+### \_global
 
 Access global state:
 
@@ -71,7 +72,7 @@ theme:
   _global: userTheme
 ```
 
-### _user
+### \_user
 
 Access user session (requires auth):
 
@@ -86,7 +87,7 @@ userRoles:
   _user: roles
 ```
 
-### _secret
+### \_secret
 
 Access secrets (server-side only):
 
@@ -96,17 +97,17 @@ apiKey:
   _secret: EXTERNAL_API_KEY
 ```
 
-### _args
+### \_args
 
 Access function arguments:
 
 ```yaml
 # In custom functions
 value:
-  _args: 0    # First argument
+  _args: 0 # First argument
 ```
 
-### _event
+### \_event
 
 Access event payload:
 
@@ -122,7 +123,7 @@ events:
 
 ## Logic Operators
 
-### _if
+### \_if
 
 Conditional logic:
 
@@ -135,7 +136,7 @@ message:
     else: User Dashboard
 ```
 
-### _and / _or / _not
+### \_and / \_or / \_not
 
 Boolean logic:
 
@@ -161,17 +162,17 @@ disabled:
 
 ```yaml
 # Equality
-_eq: [a, b]      # a == b
-_ne: [a, b]      # a != b
+_eq: [a, b] # a == b
+_ne: [a, b] # a != b
 
 # Numeric
-_gt: [a, b]      # a > b
-_gte: [a, b]     # a >= b
-_lt: [a, b]      # a < b
-_lte: [a, b]     # a <= b
+_gt: [a, b] # a > b
+_gte: [a, b] # a >= b
+_lt: [a, b] # a < b
+_lte: [a, b] # a <= b
 ```
 
-### _switch
+### \_switch
 
 Multiple conditions:
 
@@ -192,7 +193,7 @@ color:
     default: green
 ```
 
-### _if_none
+### \_if_none
 
 Default for null/undefined:
 
@@ -229,7 +230,7 @@ average:
     - _state: count
 ```
 
-### _math
+### \_math
 
 Advanced math operations:
 
@@ -249,13 +250,13 @@ absolute:
 
 Supported methods: `abs`, `ceil`, `floor`, `round`, `max`, `min`, `pow`, `sqrt`, etc.
 
-### _random
+### \_random
 
 Random number:
 
 ```yaml
 randomId:
-  _random: {}              # 0-1
+  _random: {} # 0-1
 
 diceRoll:
   _random:
@@ -266,7 +267,7 @@ diceRoll:
 
 ## String Operators
 
-### _string
+### \_string
 
 Concatenate strings:
 
@@ -278,7 +279,7 @@ fullName:
     - _state: lastName
 ```
 
-### _regex
+### \_regex
 
 Regular expression:
 
@@ -293,7 +294,7 @@ isEmail:
 
 ## Array/Object Operators
 
-### _array
+### \_array
 
 Create array:
 
@@ -305,7 +306,7 @@ items:
     - item3
 ```
 
-### _object
+### \_object
 
 Create object:
 
@@ -318,7 +319,7 @@ user:
       - _state: userEmail
 ```
 
-### _get
+### \_get
 
 Get nested value:
 
@@ -333,7 +334,7 @@ city:
 
 ## Type Operators
 
-### _type
+### \_type
 
 Check type:
 
@@ -345,7 +346,7 @@ isArray:
       _state: items
 ```
 
-### _number
+### \_number
 
 Parse number:
 
@@ -355,7 +356,7 @@ count:
     _state: countString
 ```
 
-### _json
+### \_json
 
 JSON parse/stringify:
 
@@ -375,7 +376,7 @@ jsonStr:
 
 ## Utility Operators
 
-### _log
+### \_log
 
 Debug logging (outputs to console):
 
@@ -385,7 +386,7 @@ debug:
     _state: debugValue
 ```
 
-### _intl
+### \_intl
 
 Internationalization:
 
@@ -401,7 +402,7 @@ price:
       _state: price
 ```
 
-### _uri
+### \_uri
 
 URI encoding:
 
@@ -412,7 +413,7 @@ encoded:
       _state: searchQuery
 ```
 
-### _date
+### \_date
 
 Current date/time:
 

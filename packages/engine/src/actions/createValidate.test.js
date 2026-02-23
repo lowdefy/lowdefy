@@ -14,7 +14,7 @@
   limitations under the License.
 */
 import { jest } from '@jest/globals';
-import { PluginError, UserError } from '@lowdefy/errors/client';
+import { ActionError, UserError } from '@lowdefy/errors';
 
 import testContext from '../../test/testContext.js';
 
@@ -697,7 +697,7 @@ test('Invalid Validate params', async () => {
         params: 1,
         type: 'Validate',
       },
-      error: expect.any(PluginError),
+      error: expect.any(ActionError),
       index: 0,
     },
     responses: {
@@ -707,7 +707,7 @@ test('Invalid Validate params', async () => {
           params: 1,
           type: 'Validate',
         },
-        error: expect.any(PluginError),
+        error: expect.any(ActionError),
         index: 0,
       },
     },
@@ -715,7 +715,7 @@ test('Invalid Validate params', async () => {
     startTimestamp: { date: 0 },
     endTimestamp: { date: 0 },
   });
-  expect(button.Events.events.onClick.history[0].error.error.rawMessage).toContain(
+  expect(button.Events.events.onClick.history[0].error.error._message).toContain(
     'Invalid validate params.'
   );
   expect(displayMessage.mock.calls).toMatchInlineSnapshot(`

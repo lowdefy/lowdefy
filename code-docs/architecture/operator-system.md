@@ -5,6 +5,7 @@ How operators are evaluated in Lowdefy.
 ## Overview
 
 Operators are the expression system in Lowdefy that:
+
 - Transform data at build-time and runtime
 - Access context (state, requests, user, etc.)
 - Perform computations and transformations
@@ -21,16 +22,16 @@ Operators are the expression system in Lowdefy that:
 
 ```javascript
 new BuildParser({
-  env,        // process.env
-  payload,    // Build payload
-  secrets,    // Application secrets
-  user,       // Build-time user
-  operators,  // Operator registry
-  verbose     // Logging flag
-})
+  env, // process.env
+  payload, // Build payload
+  secrets, // Application secrets
+  user, // Build-time user
+  operators, // Operator registry
+});
 ```
 
 **Available Data:**
+
 - `env` - Environment variables
 - `payload` - Build payload
 - `secrets` - Application secrets
@@ -44,12 +45,13 @@ new BuildParser({
 
 ```javascript
 new WebParser({
-  context,    // Complete browser context
-  operators   // Operator registry
-})
+  context, // Complete browser context
+  operators, // Operator registry
+});
 ```
 
 **Available Data:**
+
 - `state` - Page state
 - `requests` - API request responses
 - `apiResponses` - API endpoint responses
@@ -69,19 +71,19 @@ new WebParser({
 
 ```javascript
 new ServerParser({
-  env,        // Environment variables
-  jsMap,      // JavaScript mapping
-  operators,  // Operator registry
-  payload,    // Request payload
-  secrets,    // Application secrets
-  state,      // Workflow state
-  steps,      // Previous step results
-  user,       // Authenticated user
-  verbose     // Logging flag
-})
+  env, // Environment variables
+  jsMap, // JavaScript mapping
+  operators, // Operator registry
+  payload, // Request payload
+  secrets, // Application secrets
+  state, // Workflow state
+  steps, // Previous step results
+  user, // Authenticated user
+});
 ```
 
 **Available Data:**
+
 - `env` - Environment variables
 - `payload` - Request payload
 - `secrets` - Application secrets
@@ -121,7 +123,7 @@ parse({ args, input, location, operatorPrefix = '_' }) {
 
 ## Build-Time Operators
 
-### _ref Operator
+### \_ref Operator
 
 **Files:** `packages/build/src/build/buildRefs/`
 
@@ -144,6 +146,7 @@ blocks:
 ```
 
 **Processing:**
+
 1. `makeRefDefinition()` - Create ref definition
 2. `getRefContent()` - Load file content
 3. `parseRefContent()` - Parse YAML/JSON/Nunjucks
@@ -153,7 +156,7 @@ blocks:
 7. `runTransformer()` - Apply transformers
 8. `evaluateBuildOperators()` - Evaluate `_build.*`
 
-### _var Operator
+### \_var Operator
 
 **File:** `packages/build/src/build/buildRefs/populateRefs.js`
 
@@ -177,7 +180,7 @@ label:
     default: "Click"
 ```
 
-### _build.* Operators
+### \_build.\* Operators
 
 **File:** `packages/build/src/build/buildRefs/evaluateBuildOperators.js`
 
@@ -191,7 +194,7 @@ debug:
   _build.vars: debugEnabled
 ```
 
-### _secret Operator
+### \_secret Operator
 
 **File:** `packages/plugins/operators/operators-js/src/operators/server/secret.js`
 
@@ -217,7 +220,7 @@ connectionString:
 
 ## Runtime Operators - Browser
 
-### _state
+### \_state
 
 **File:** `packages/plugins/operators/operators-js/src/operators/shared/state.js`
 
@@ -246,7 +249,7 @@ value:
     default: "Anonymous"
 ```
 
-### _request
+### \_request
 
 Access request responses:
 
@@ -259,18 +262,18 @@ firstUser:
   _request: getUsers.response[0]
 ```
 
-### _user
+### \_user
 
 Access authenticated user:
 
 ```yaml
 greeting:
   _string:
-    - "Hello, "
+    - 'Hello, '
     - _user: session.user.name
 ```
 
-### _input
+### \_input
 
 Access block inputs:
 
@@ -279,7 +282,7 @@ searchValue:
   _input: searchBox.value
 ```
 
-### _global
+### \_global
 
 Access global configuration:
 
@@ -288,7 +291,7 @@ appName:
   _global: config.appName
 ```
 
-### _url_query
+### \_url_query
 
 Access URL query parameters:
 
@@ -300,10 +303,10 @@ currentPage:
 filterValue:
   _url_query:
     key: filter
-    default: "all"
+    default: 'all'
 ```
 
-### _event
+### \_event
 
 Access event data:
 
@@ -317,7 +320,7 @@ events:
           _event: value
 ```
 
-### _location
+### \_location
 
 Access browser location:
 
@@ -326,7 +329,7 @@ currentPath:
   _location: pathname
 ```
 
-### _media
+### \_media
 
 Access media query data:
 
@@ -337,7 +340,7 @@ isMobile:
 
 ## Runtime Operators - Server
 
-### _payload
+### \_payload
 
 Access request payload:
 
@@ -348,7 +351,7 @@ query:
     _payload: userId
 ```
 
-### _step
+### \_step
 
 Access previous workflow step results:
 
@@ -376,6 +379,7 @@ function _state({ arrayIndices, location, params, state }) {
 ```
 
 **getFromObject Parameters:**
+
 - `params: true` → Return all (deep copy)
 - `params: string/int` → Key path
 - `params: { key, default, all }` → Object form
@@ -452,26 +456,26 @@ status:
       _eq:
         - _state: count
         - 0
-    then: "Empty"
-    else: "Has items"
+    then: 'Empty'
+    else: 'Has items'
 ```
 
 ## Operator Context by Parser
 
-| Context | Build | Web | Server |
-|---------|-------|-----|--------|
-| `env` | ✓ | | ✓ |
-| `secrets` | ✓ | | ✓ |
-| `user` | ✓ | ✓ | ✓ |
-| `state` | | ✓ | ✓ |
-| `requests` | | ✓ | |
-| `event` | | ✓ | |
-| `payload` | ✓ | | ✓ |
-| `apiResponses` | | ✓ | |
-| `inputs` | | ✓ | |
-| `menus` | | ✓ | |
-| `steps` | | | ✓ |
-| `jsMap` | | ✓ | ✓ |
+| Context        | Build | Web | Server |
+| -------------- | ----- | --- | ------ |
+| `env`          | ✓     |     | ✓      |
+| `secrets`      | ✓     |     | ✓      |
+| `user`         | ✓     | ✓   | ✓      |
+| `state`        |       | ✓   | ✓      |
+| `requests`     |       | ✓   |        |
+| `event`        |       | ✓   |        |
+| `payload`      | ✓     |     | ✓      |
+| `apiResponses` |       | ✓   |        |
+| `inputs`       |       | ✓   |        |
+| `menus`        |       | ✓   |        |
+| `steps`        |       |     | ✓      |
+| `jsMap`        |       | ✓   | ✓      |
 
 ## Error Handling
 
@@ -492,7 +496,6 @@ parse({ input, location }) {
 ```
 
 - Failed operators return `null`
-- Errors logged if `verbose: true`
 - Non-fatal: parsing continues
 
 ## Metadata Handling
@@ -515,12 +518,12 @@ parse({ input, location }) {
 
 ```javascript
 getFromObject({
-  arrayIndices,  // For dynamic path resolution
-  location,      // Error reporting
-  object,        // Data source
-  operator,      // Operator name
-  params         // Access parameters
-})
+  arrayIndices, // For dynamic path resolution
+  location, // Error reporting
+  object, // Data source
+  operator, // Operator name
+  params, // Access parameters
+});
 
 // Param formats:
 // true → return all (deep copy)
@@ -537,12 +540,12 @@ For instance method operators (`_array.filter`):
 ```javascript
 runInstance({
   location,
-  meta,           // Method definitions
-  methodName,     // Method to call
-  operator,       // Operator name
-  params,         // Parameters
-  instanceType    // Expected instance type
-})
+  meta, // Method definitions
+  methodName, // Method to call
+  operator, // Operator name
+  params, // Parameters
+  instanceType, // Expected instance type
+});
 ```
 
 ### runClass
@@ -554,12 +557,12 @@ For class/static method operators:
 ```javascript
 runClass({
   location,
-  meta,           // Method definitions
-  methodName,     // Method to call
-  operator,       // Operator name
-  params,         // Parameters
-  functions       // Function implementations
-})
+  meta, // Method definitions
+  methodName, // Method to call
+  operator, // Operator name
+  params, // Parameters
+  functions, // Function implementations
+});
 ```
 
 ## Common Operators
@@ -567,12 +570,12 @@ runClass({
 ### Comparison
 
 ```yaml
-_eq: [a, b]         # a === b
-_ne: [a, b]         # a !== b
-_gt: [a, b]         # a > b
-_gte: [a, b]        # a >= b
-_lt: [a, b]         # a < b
-_lte: [a, b]        # a <= b
+_eq: [a, b] # a === b
+_ne: [a, b] # a !== b
+_gt: [a, b] # a > b
+_gte: [a, b] # a >= b
+_lt: [a, b] # a < b
+_lte: [a, b] # a <= b
 ```
 
 ### Logic
@@ -590,7 +593,7 @@ _if:
 ### Array
 
 ```yaml
-_array.concat: [[1,2], [3,4]]
+_array.concat: [[1, 2], [3, 4]]
 _array.filter:
   on: array
   callback: function
@@ -608,13 +611,13 @@ _array.includes:
 ### String
 
 ```yaml
-_string.concat: ["Hello", " ", "World"]
+_string.concat: ['Hello', ' ', 'World']
 _string.includes:
   on: text
   value: search
 _string.split:
   on: text
-  delimiter: ","
+  delimiter: ','
 ```
 
 ### Object
@@ -628,7 +631,7 @@ _object.assign: [obj1, obj2]
 ### Type
 
 ```yaml
-_type: value          # Returns type name
+_type: value # Returns type name
 _type.isString: value
 _type.isNumber: value
 _type.isArray: value
@@ -639,17 +642,17 @@ _type.isUndefined: value
 
 ## Key Files
 
-| Component | File |
-|-----------|------|
-| BuildParser | `packages/operators/src/buildParser.js` |
-| WebParser | `packages/operators/src/webParser.js` |
-| ServerParser | `packages/operators/src/serverParser.js` |
-| getFromObject | `packages/operators/src/getFromObject.js` |
-| runInstance | `packages/operators/src/runInstance.js` |
-| runClass | `packages/operators/src/runClass.js` |
-| Build Operators | `packages/build/src/build/buildRefs/` |
-| JS Operators | `packages/plugins/operators/operators-js/` |
-| MQL Operators | `packages/plugins/operators/operators-mql/` |
+| Component          | File                                             |
+| ------------------ | ------------------------------------------------ |
+| BuildParser        | `packages/operators/src/buildParser.js`          |
+| WebParser          | `packages/operators/src/webParser.js`            |
+| ServerParser       | `packages/operators/src/serverParser.js`         |
+| getFromObject      | `packages/operators/src/getFromObject.js`        |
+| runInstance        | `packages/operators/src/runInstance.js`          |
+| runClass           | `packages/operators/src/runClass.js`             |
+| Build Operators    | `packages/build/src/build/buildRefs/`            |
+| JS Operators       | `packages/plugins/operators/operators-js/`       |
+| MQL Operators      | `packages/plugins/operators/operators-mql/`      |
 | Nunjucks Operators | `packages/plugins/operators/operators-nunjucks/` |
 
 ## Architectural Patterns

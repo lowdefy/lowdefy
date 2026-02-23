@@ -56,7 +56,7 @@ const stubBlockProps = ({ block, meta, logger = () => null, initialValue, schema
     try {
       validate[block.type] = schemaTest(schema);
     } catch (error) {
-      throw new Error(`Schema error in ${block.type} - ${error.message}`);
+      throw new Error(`Schema error in ${block.type}.`, { cause: error });
     }
   }
   block.schemaErrors = !validate[block.type](block);

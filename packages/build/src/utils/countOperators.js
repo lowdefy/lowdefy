@@ -16,6 +16,9 @@
 
 import { type } from '@lowdefy/helpers';
 
+// Keys that look like operators (single key starting with _) but are not.
+const KNOWN_NON_OPERATORS = new Set(['_id']);
+
 function walkAndCount(value, counter, parentConfigKey) {
   if (type.isArray(value)) {
     value.forEach((item) => walkAndCount(item, counter, parentConfigKey));
@@ -36,7 +39,7 @@ function walkAndCount(value, counter, parentConfigKey) {
     const key = nonTildeKeys[0];
     const [op] = key.split('.');
     const operator = op.replace(/^(_+)/gm, '_');
-    if (operator.length > 1 && operator[0] === '_') {
+    if (operator.length > 1 && operator[0] === '_' && !KNOWN_NON_OPERATORS.has(operator)) {
       counter.increment(operator, configKey);
     }
   }

@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { ConfigWarning } from '@lowdefy/errors';
+
 function validateLinkReferences({ linkActionRefs, pageIds, context }) {
   const pageIdSet = new Set(pageIds);
 
@@ -25,12 +27,12 @@ function validateLinkReferences({ linkActionRefs, pageIds, context }) {
     }
 
     if (!pageIdSet.has(pageId)) {
-      context.logger.warn({
-        message: `Page "${pageId}" not found. Link on page "${sourcePageId}" references non-existent page.`,
-        configKey: action['~k'],
-        prodError: true,
-        checkSlug: 'link-refs',
-      });
+      context.handleWarning(
+        new ConfigWarning(
+          `Page "${pageId}" not found. Link on page "${sourcePageId}" references non-existent page.`,
+          { configKey: action['~k'], prodError: true, checkSlug: 'link-refs' }
+        )
+      );
     }
   });
 }

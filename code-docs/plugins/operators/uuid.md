@@ -4,9 +4,9 @@ UUID generation operator.
 
 ## Operator
 
-| Operator | Purpose |
-|----------|---------|
-| `_uuid` | Generate UUID |
+| Operator | Purpose       |
+| -------- | ------------- |
+| `_uuid`  | Generate UUID |
 
 ## Usage
 
@@ -19,10 +19,10 @@ newId:
 
 ## Versions
 
-| Version | Description |
-|---------|-------------|
-| `v1` | Timestamp-based |
-| `v4` | Random (recommended) |
+| Version | Description          |
+| ------- | -------------------- |
+| `v1`    | Timestamp-based      |
+| `v4`    | Random (recommended) |
 
 ## Examples
 

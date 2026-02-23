@@ -17,7 +17,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError, shouldSuppressBuildCheck } from '@lowdefy/errors';
 import buildPage from '../buildPages/buildPage.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 import validateLinkReferences from '../buildPages/validateLinkReferences.js';
@@ -29,7 +29,6 @@ function buildPages({ components, context }) {
   const pages = type.isArray(components.pages) ? components.pages : [];
   const checkDuplicatePageId = createCheckDuplicateId({
     message: 'Duplicate pageId "{{ id }}".',
-    context,
   });
 
   // Initialize linkActionRefs to collect Link action references across all pages
@@ -47,8 +46,11 @@ function buildPages({ components, context }) {
         failedPageIndices.add(index);
       }
     } catch (error) {
-      // Skip suppressed ConfigErrors (via ~ignoreBuildChecks: true)
-      if (error instanceof ConfigError && error.suppressed) {
+      // Skip suppressed ConfigErrors (via ~ignoreBuildChecks)
+      if (
+        error instanceof ConfigError &&
+        shouldSuppressBuildCheck(error, context.keyMap)
+      ) {
         return;
       }
       // Collect error object if context.errors exists, otherwise throw (for backward compat with tests)
@@ -62,10 +64,8 @@ function buildPages({ components, context }) {
   });
 
   // Validate that all Link actions reference existing pages
-  // Only include pages that built successfully
-  const pageIds = pages
-    .filter((_, index) => !failedPageIndices.has(index))
-    .map((page) => page.pageId);
+  // Include all pages — a link to a broken page is valid; the page error is already reported
+  const pageIds = pages.map((page) => page.pageId);
   validateLinkReferences({
     linkActionRefs: context.linkActionRefs,
     pageIds,

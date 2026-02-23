@@ -14,8 +14,10 @@
   limitations under the License.
 */
 
-// Map pino numeric levels to print method names
-const pinoLevelToPrint = {
+import { serializer } from '@lowdefy/helpers';
+
+// Map pino numeric levels to level names
+const pinoLevelToName = {
   10: 'debug', // trace
   20: 'debug',
   30: 'info',
@@ -25,37 +27,63 @@ const pinoLevelToPrint = {
 };
 
 function createStdOutLineHandler({ context }) {
-  const ui = context?.logger?.ui ??
-    context?.print ?? {
-      log: (text) => console.log(text),
-      dim: (text) => console.log(text),
-      info: (text) => console.info(text),
-      warn: (text) => console.warn(text),
-      error: (text) => console.error(text),
-      debug: (text) => console.debug(text),
-      link: (text) => console.info(text),
-      spin: (text) => console.log(text),
-      succeed: (text) => console.log(text),
-    };
+  const { logger } = context;
 
   function stdOutLineHandler(line) {
+    let parsed;
     try {
-      const { print, level, msg, source, err } = JSON.parse(line);
-      const printLevel = print ?? pinoLevelToPrint[level] ?? 'info';
+      parsed = JSON.parse(line);
+    } catch {
+      logger.info(line);
+      return;
+    }
 
-      if (msg == null || msg === '' || msg === 'undefined') {
-        ui.log(line);
-        return;
+    const levelName = pinoLevelToName[parsed.level] ?? 'info';
+
+    if (parsed.err) {
+      logger[levelName](serializer.deserialize({ '~e': parsed.err }));
+      return;
+    }
+
+    const msg = typeof parsed.msg === 'string' && parsed.msg !== '' ? parsed.msg : null;
+
+    // Strip pino metadata — level/time/name are already handled by the CLI logger
+    // Also strip CLI control fields — they are passed via the mergeObj, not displayed as data
+    const {
+      level,
+      time,
+      name,
+      pid,
+      hostname,
+      msg: _msg,
+      source,
+      color,
+      spin,
+      succeed,
+      ...data
+    } = parsed;
+    const dataEntries = Object.entries(data);
+
+    if (msg == null && dataEntries.length === 0) {
+      logger[levelName](line);
+      return;
+    }
+
+    const dataLines = dataEntries.map(([key, value]) => {
+      if (typeof value === 'object' && value !== null) {
+        return `  ${key}: ${JSON.stringify(value)}`;
       }
+      return `  ${key}: ${value}`;
+    });
 
-      const resolvedSource = err?.source ?? source;
-      if (resolvedSource && (printLevel === 'error' || printLevel === 'warn')) {
-        ui.link(resolvedSource);
-      }
-
-      ui[printLevel]?.(msg);
-    } catch (error) {
-      ui.log(line);
+    // First line gets source/color/spin/succeed, rest are plain indented lines
+    if (msg) {
+      logger[levelName]({ source, color, spin, succeed }, msg);
+    } else if (dataLines.length > 0) {
+      logger[levelName]({ source, color, spin, succeed }, dataLines.shift());
+    }
+    for (const dataLine of dataLines) {
+      logger[levelName](dataLine);
     }
   }
   return stdOutLineHandler;

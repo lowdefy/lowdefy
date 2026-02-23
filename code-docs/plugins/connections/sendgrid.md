@@ -4,8 +4,8 @@
 
 ## Connection Type
 
-| Type | Purpose |
-|------|---------|
+| Type       | Purpose             |
+| ---------- | ------------------- |
 | `SendGrid` | Connect to SendGrid |
 
 ## Connection Configuration
@@ -21,8 +21,8 @@ connections:
 
 ## Request Type
 
-| Type | Purpose |
-|------|---------|
+| Type           | Purpose    |
+| -------------- | ---------- |
 | `SendGridSend` | Send email |
 
 ## SendGridSend
@@ -50,15 +50,15 @@ requests:
 
 ## Properties
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `to` | string/array | Recipient(s) |
-| `from` | string | Sender address |
-| `subject` | string | Email subject |
-| `text` | string | Plain text body |
-| `html` | string | HTML body |
-| `templateId` | string | SendGrid template ID |
-| `templateData` | object | Template variables |
+| Property       | Type         | Description          |
+| -------------- | ------------ | -------------------- |
+| `to`           | string/array | Recipient(s)         |
+| `from`         | string       | Sender address       |
+| `subject`      | string       | Email subject        |
+| `text`         | string       | Plain text body      |
+| `html`         | string       | HTML body            |
+| `templateId`   | string       | SendGrid template ID |
+| `templateData` | object       | Template variables   |
 
 ## Using Templates
 

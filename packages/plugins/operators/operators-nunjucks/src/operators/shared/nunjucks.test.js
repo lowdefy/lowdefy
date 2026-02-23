@@ -99,5 +99,5 @@ test('_nunjucks invalid template', () => {
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(null);
   expect(res.errors.length).toBe(1);
-  expect(res.errors[0].message).toBe('_nunjucks failed to parse nunjucks template.');
+  expect(res.errors[0].message).toBe('_nunjucks failed to parse nunjucks template. at locationId.');
 });

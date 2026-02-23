@@ -4,8 +4,8 @@ Algolia search integration for Lowdefy.
 
 ## Block
 
-| Block | Purpose |
-|-------|---------|
+| Block                 | Purpose                             |
+| --------------------- | ----------------------------------- |
 | `AlgoliaAutocomplete` | Algolia-powered search autocomplete |
 
 ## Usage
@@ -24,17 +24,17 @@ Algolia search integration for Lowdefy.
 
 ## Properties
 
-| Property | Purpose |
-|----------|---------|
-| `appId` | Algolia application ID |
+| Property       | Purpose                     |
+| -------------- | --------------------------- |
+| `appId`        | Algolia application ID      |
 | `searchApiKey` | Algolia search-only API key |
-| `indexName` | Index to search |
-| `placeholder` | Input placeholder |
-| `hitsPerPage` | Results per page |
+| `indexName`    | Index to search             |
+| `placeholder`  | Input placeholder           |
+| `hitsPerPage`  | Results per page            |
 
 ## Events
 
-| Event | Payload |
-|-------|---------|
+| Event      | Payload            |
+| ---------- | ------------------ |
 | `onSelect` | Selected item data |
-| `onChange` | Search query |
+| `onChange` | Search query       |

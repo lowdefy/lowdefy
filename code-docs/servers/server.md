@@ -5,6 +5,7 @@ Production Next.js server for deploying Lowdefy applications.
 ## Overview
 
 The production server is a lightweight, optimized Next.js application that:
+
 - Loads pre-built configuration from `./build/`
 - Serves pages with server-side rendering
 - Handles API requests and authentication
@@ -119,8 +120,9 @@ function apiWrapper(handler) {
       jsMap,
       logger,
       operators,
-      req, res,
-      secrets: getSecretsFromEnv(process.env)
+      req,
+      res,
+      secrets: getSecretsFromEnv(process.env),
     };
 
     // Add auth
@@ -151,7 +153,7 @@ function serverSidePropsWrapper(handler) {
       logger,
       nextContext,
       req: nextContext?.req,
-      res: nextContext?.res
+      res: nextContext?.res,
     };
 
     context.authOptions = getAuthOptions(context);
@@ -168,28 +170,26 @@ function serverSidePropsWrapper(handler) {
 **File:** `pages/[pageId].js`
 
 ```javascript
-export const getServerSideProps = serverSidePropsWrapper(
-  async ({ context, nextContext }) => {
-    const [pageConfig, rootConfig] = await Promise.all([
-      getPageConfig(context, { pageId }),
-      getRootConfig(context)
-    ]);
+export const getServerSideProps = serverSidePropsWrapper(async ({ context, nextContext }) => {
+  const [pageConfig, rootConfig] = await Promise.all([
+    getPageConfig(context, { pageId }),
+    getRootConfig(context),
+  ]);
 
-    if (!pageConfig) {
-      return { redirect: { destination: '/404' } };
-    }
-
-    logPageView(context, { pageId });
-
-    return {
-      props: {
-        pageConfig,
-        rootConfig,
-        session: context.session
-      }
-    };
+  if (!pageConfig) {
+    return { redirect: { destination: '/404' } };
   }
-);
+
+  logPageView(context, { pageId });
+
+  return {
+    props: {
+      pageConfig,
+      rootConfig,
+      session: context.session,
+    },
+  };
+});
 ```
 
 ## Next.js Configuration
@@ -199,20 +199,22 @@ export const getServerSideProps = serverSidePropsWrapper(
 ```javascript
 const nextConfig = {
   basePath: config.basePath || '',
-  output: process.env.LOWDEFY_BUILD_OUTPUT_STANDALONE
-    ? 'standalone'
-    : undefined,
+  output: process.env.LOWDEFY_BUILD_OUTPUT_STANDALONE ? 'standalone' : undefined,
   poweredByHeader: false,
   webpack: (config, { isServer }) => {
     if (!isServer) {
       // Browser fallbacks for Node modules
       config.resolve.fallback = {
-        fs: false, net: false, tls: false,
-        crypto: false, path: false, os: false
+        fs: false,
+        net: false,
+        tls: false,
+        crypto: false,
+        path: false,
+        os: false,
       };
     }
     return config;
-  }
+  },
 };
 ```
 
@@ -226,14 +228,14 @@ import build from '@lowdefy/build';
 const directories = {
   build: path.join(serverDirectory, 'build'),
   config: configDirectory,
-  server: serverDirectory
+  server: serverDirectory,
 };
 
 await build({
   customTypesMap,
   directories,
   logger,
-  refResolver
+  refResolver,
 });
 ```
 
@@ -245,9 +247,7 @@ Loads auth configuration:
 
 ```javascript
 function getAuthOptions({ buildDirectory, logger }) {
-  const authJson = readJsonSync(
-    path.join(buildDirectory, 'auth.json')
-  );
+  const authJson = readJsonSync(path.join(buildDirectory, 'auth.json'));
 
   if (!authJson.configured) {
     return { configured: false };
@@ -257,7 +257,7 @@ function getAuthOptions({ buildDirectory, logger }) {
     authJson,
     logger,
     plugins: loadAuthPlugins(buildDirectory),
-    secrets: getSecretsFromEnv(process.env)
+    secrets: getSecretsFromEnv(process.env),
   });
 }
 ```
@@ -306,30 +306,30 @@ Uses Pino for structured logging:
 const logger = pino({
   level: process.env.LOWDEFY_LOG_LEVEL || 'info',
   formatters: {
-    level: (label) => ({ level: label })
-  }
+    level: (label) => ({ level: label }),
+  },
 });
 ```
 
 ## Key Files
 
-| File | Purpose |
-|------|---------|
-| `lib/server/apiWrapper.js` | API context setup |
-| `lib/server/serverSidePropsWrapper.js` | SSP context setup |
-| `lib/server/auth/getAuthOptions.js` | Auth configuration |
-| `lib/client/Page.js` | Page component |
-| `lib/client/auth/Auth.js` | Auth wrapper |
-| `pages/[pageId].js` | Dynamic page route |
-| `pages/api/request/[pageId]/[requestId].js` | Request handler |
-| `lowdefy/build.mjs` | Build orchestration |
-| `next.config.js` | Next.js config |
+| File                                        | Purpose             |
+| ------------------------------------------- | ------------------- |
+| `lib/server/apiWrapper.js`                  | API context setup   |
+| `lib/server/serverSidePropsWrapper.js`      | SSP context setup   |
+| `lib/server/auth/getAuthOptions.js`         | Auth configuration  |
+| `lib/client/Page.js`                        | Page component      |
+| `lib/client/auth/Auth.js`                   | Auth wrapper        |
+| `pages/[pageId].js`                         | Dynamic page route  |
+| `pages/api/request/[pageId]/[requestId].js` | Request handler     |
+| `lowdefy/build.mjs`                         | Build orchestration |
+| `next.config.js`                            | Next.js config      |
 
 ## Environment Variables
 
-| Variable | Purpose |
-|----------|---------|
-| `LOWDEFY_LOG_LEVEL` | Logging level (default: info) |
-| `LOWDEFY_BUILD_OUTPUT_STANDALONE` | Enable standalone output |
-| `NEXTAUTH_SECRET` | Session encryption key |
-| `NEXTAUTH_URL` | App URL for OAuth |
+| Variable                          | Purpose                       |
+| --------------------------------- | ----------------------------- |
+| `LOWDEFY_LOG_LEVEL`               | Logging level (default: info) |
+| `LOWDEFY_BUILD_OUTPUT_STANDALONE` | Enable standalone output      |
+| `NEXTAUTH_SECRET`                 | Session encryption key        |
+| `NEXTAUTH_URL`                    | App URL for OAuth             |

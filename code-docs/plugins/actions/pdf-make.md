@@ -4,8 +4,8 @@ PDF generation action using pdfmake library.
 
 ## Action
 
-| Action | Purpose |
-|--------|---------|
+| Action    | Purpose                   |
+| --------- | ------------------------- |
 | `PdfMake` | Generate and download PDF |
 
 ## Usage
@@ -48,9 +48,9 @@ PDF generation action using pdfmake library.
 
 ## Parameters
 
-| Param | Type | Description |
-|-------|------|-------------|
-| `filename` | string | Downloaded file name |
+| Param           | Type   | Description                 |
+| --------------- | ------ | --------------------------- |
+| `filename`      | string | Downloaded file name        |
 | `docDefinition` | object | pdfmake document definition |
 
 ## Document Definition
@@ -73,9 +73,9 @@ content:
   - table:
       headerRows: 1
       widths:
-        - '*'          # Flexible
-        - 100          # Fixed
-        - auto         # Content width
+        - '*' # Flexible
+        - 100 # Fixed
+        - auto # Content width
       body:
         - - Header 1
           - Header 2

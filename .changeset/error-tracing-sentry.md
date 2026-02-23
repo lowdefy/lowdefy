@@ -48,10 +48,8 @@ feat: Config-aware error tracing and Sentry integration
 
 **Error Class Hierarchy**
 
-- Unified error system in `@lowdefy/errors` with environment-specific subpaths:
-  - `@lowdefy/errors/server` - Base classes for server/API runtime
+- Unified error system in `@lowdefy/errors` with all error classes
   - `@lowdefy/errors/build` - Build-time classes with sync location resolution
-  - `@lowdefy/errors/client` - Client-side classes with async location resolution
 - Error classes: `LowdefyError`, `ConfigError`, `ConfigWarning`, `PluginError`, `ServiceError`
 - `ConfigWarning` supports `prodError` flag to throw in production builds
 - `ServiceError.isServiceError()` detects network/timeout/5xx errors

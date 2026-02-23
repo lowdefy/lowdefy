@@ -34,7 +34,7 @@ async function SendGridMailSend({ request, connection }) {
     await sendgrid.send(messages);
   } catch (error) {
     if (error.response) {
-      throw new Error('SendGrid request failed.');
+      throw new Error('SendGrid request failed.', { cause: error });
     }
     throw error;
   }

@@ -4,8 +4,8 @@ SQL database connection for Lowdefy using [Knex.js](https://knexjs.org/guide/). 
 
 ## Connection Type
 
-| Type | Purpose |
-|------|---------|
+| Type   | Purpose                  |
+| ------ | ------------------------ |
 | `Knex` | Connect to SQL databases |
 
 ## Supported Databases
@@ -68,9 +68,9 @@ connections:
 
 ## Request Types
 
-| Type | Purpose |
-|------|---------|
-| `KnexRaw` | Raw SQL query |
+| Type          | Purpose            |
+| ------------- | ------------------ |
+| `KnexRaw`     | Raw SQL query      |
 | `KnexBuilder` | Knex query builder |
 
 ### KnexRaw

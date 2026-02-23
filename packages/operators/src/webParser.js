@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigError, PluginError } from '@lowdefy/errors/client';
+import { ConfigError, OperatorError } from '@lowdefy/errors';
 import { applyArrayIndices, serializer, type } from '@lowdefy/helpers';
 
 class WebParser {
@@ -92,12 +92,11 @@ class WebParser {
           errors.push(e);
           return null;
         }
-        // Plain error from plugin - wrap in PluginError
+        // Plain error from plugin - wrap in OperatorError
         errors.push(
-          new PluginError({
-            error: e,
-            pluginType: 'operator',
-            pluginName: op,
+          new OperatorError(e.message, {
+            cause: e,
+            typeName: op,
             received: { [key]: params },
             location: operatorLocation,
             configKey: e.configKey ?? configKey,

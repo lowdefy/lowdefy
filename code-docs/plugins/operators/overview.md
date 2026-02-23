@@ -5,6 +5,7 @@ Operators are functions that make Lowdefy configuration dynamic. They transform 
 ## What Are Operators?
 
 Operators are:
+
 - Functions prefixed with `_`
 - Evaluated at build time or runtime
 - Used to access state, transform data, add logic
@@ -12,25 +13,25 @@ Operators are:
 
 ## Operator Evaluation Contexts
 
-| Context | When | Package | Example Operators |
-|---------|------|---------|-------------------|
-| **Build** | `lowdefy build` | @lowdefy/build | `_ref`, `_var`, `_env` |
-| **Server** | Request execution | @lowdefy/api | `_secret`, `_user` |
-| **Client** | Page rendering | @lowdefy/engine | `_state`, `_request` |
+| Context    | When              | Package         | Example Operators      |
+| ---------- | ----------------- | --------------- | ---------------------- |
+| **Build**  | `lowdefy build`   | @lowdefy/build  | `_ref`, `_var`, `_env` |
+| **Server** | Request execution | @lowdefy/api    | `_secret`, `_user`     |
+| **Client** | Page rendering    | @lowdefy/engine | `_state`, `_request`   |
 
 ## Available Operator Packages
 
-| Package | Purpose | Key Operators |
-|---------|---------|---------------|
-| [@lowdefy/operators-js](./js.md) | Core JS operators | `_if`, `_get`, `_state`, `_array` |
-| [@lowdefy/operators-mql](./mql.md) | MongoDB Query Language | `_mql_*` query operators |
-| [@lowdefy/operators-moment](./moment.md) | Date/time with Moment.js | `_moment`, `_date` |
-| [@lowdefy/operators-nunjucks](./nunjucks.md) | Template strings | `_nunjucks` |
-| [@lowdefy/operators-change-case](./change-case.md) | String case conversion | `_change_case` |
-| [@lowdefy/operators-diff](./diff.md) | Object diffing | `_diff` |
-| [@lowdefy/operators-uuid](./uuid.md) | UUID generation | `_uuid` |
-| [@lowdefy/operators-yaml](./yaml.md) | YAML parsing | `_yaml_parse`, `_yaml_stringify` |
-| [@lowdefy/operators-jsonata](./jsonata.md) | JSONata queries | `_jsonata` |
+| Package                                            | Purpose                  | Key Operators                     |
+| -------------------------------------------------- | ------------------------ | --------------------------------- |
+| [@lowdefy/operators-js](./js.md)                   | Core JS operators        | `_if`, `_get`, `_state`, `_array` |
+| [@lowdefy/operators-mql](./mql.md)                 | MongoDB Query Language   | `_mql_*` query operators          |
+| [@lowdefy/operators-moment](./moment.md)           | Date/time with Moment.js | `_moment`, `_date`                |
+| [@lowdefy/operators-nunjucks](./nunjucks.md)       | Template strings         | `_nunjucks`                       |
+| [@lowdefy/operators-change-case](./change-case.md) | String case conversion   | `_change_case`                    |
+| [@lowdefy/operators-diff](./diff.md)               | Object diffing           | `_diff`                           |
+| [@lowdefy/operators-uuid](./uuid.md)               | UUID generation          | `_uuid`                           |
+| [@lowdefy/operators-yaml](./yaml.md)               | YAML parsing             | `_yaml_parse`, `_yaml_stringify`  |
+| [@lowdefy/operators-jsonata](./jsonata.md)         | JSONata queries          | `_jsonata`                        |
 
 ## Operator Syntax
 
@@ -78,46 +79,46 @@ greeting:
 
 These are from `@lowdefy/operators-js`:
 
-| Operator | Purpose | Context |
-|----------|---------|---------|
-| `_state` | Page state values | Client |
-| `_request` | Request responses | Client |
-| `_url_query` | URL parameters | Client |
-| `_input` | Navigation input | Client |
-| `_global` | Global state | Client |
-| `_user` | User session | Server/Client |
-| `_secret` | Environment secrets | Server |
-| `_args` | Function arguments | All |
-| `_event` | Event payload | Client |
+| Operator     | Purpose             | Context       |
+| ------------ | ------------------- | ------------- |
+| `_state`     | Page state values   | Client        |
+| `_request`   | Request responses   | Client        |
+| `_url_query` | URL parameters      | Client        |
+| `_input`     | Navigation input    | Client        |
+| `_global`    | Global state        | Client        |
+| `_user`      | User session        | Server/Client |
+| `_secret`    | Environment secrets | Server        |
+| `_args`      | Function arguments  | All           |
+| `_event`     | Event payload       | Client        |
 
 ## Logic Operators
 
-| Operator | Purpose |
-|----------|---------|
-| `_if` | Conditional |
-| `_and` | Logical AND |
-| `_or` | Logical OR |
-| `_not` | Logical NOT |
-| `_eq` | Equality |
-| `_ne` | Not equal |
-| `_gt` | Greater than |
-| `_gte` | Greater or equal |
-| `_lt` | Less than |
-| `_lte` | Less or equal |
+| Operator | Purpose          |
+| -------- | ---------------- |
+| `_if`    | Conditional      |
+| `_and`   | Logical AND      |
+| `_or`    | Logical OR       |
+| `_not`   | Logical NOT      |
+| `_eq`    | Equality         |
+| `_ne`    | Not equal        |
+| `_gt`    | Greater than     |
+| `_gte`   | Greater or equal |
+| `_lt`    | Less than        |
+| `_lte`   | Less or equal    |
 
 ## Data Transform Operators
 
-| Operator | Purpose |
-|----------|---------|
-| `_get` | Get nested value |
-| `_array` | Create array |
-| `_object` | Create object |
-| `_string` | Concatenate strings |
-| `_sum` | Sum numbers |
-| `_subtract` | Subtract |
-| `_multiply` | Multiply |
-| `_divide` | Divide |
-| `_math` | Math operations |
+| Operator    | Purpose             |
+| ----------- | ------------------- |
+| `_get`      | Get nested value    |
+| `_array`    | Create array        |
+| `_object`   | Create object       |
+| `_string`   | Concatenate strings |
+| `_sum`      | Sum numbers         |
+| `_subtract` | Subtract            |
+| `_multiply` | Multiply            |
+| `_divide`   | Divide              |
+| `_math`     | Math operations     |
 
 ## Design Decisions
 
@@ -138,6 +139,7 @@ These are from `@lowdefy/operators-js`:
 ### Why Not Just JavaScript?
 
 Operators provide:
+
 - Declarative configuration
 - Safe evaluation (sandboxed)
 - Build-time analysis

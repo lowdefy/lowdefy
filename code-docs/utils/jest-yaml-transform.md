@@ -19,8 +19,8 @@ Add to Jest configuration:
 // jest.config.js
 module.exports = {
   transform: {
-    '\\.yaml$': '@lowdefy/jest-yaml-transform'
-  }
+    '\\.yaml$': '@lowdefy/jest-yaml-transform',
+  },
 };
 ```
 
@@ -55,8 +55,8 @@ Transform YAML source to JavaScript module:
 module.exports = {
   type: 'object',
   properties: {
-    name: { type: 'string' }
-  }
+    name: { type: 'string' },
+  },
 };
 ```
 
@@ -91,7 +91,7 @@ Generate cache key for Jest caching:
 import examples from './examples.yaml';
 
 describe('Button', () => {
-  examples.forEach(example => {
+  examples.forEach((example) => {
     test(`renders ${example.id}`, () => {
       // Test each example
     });
@@ -118,7 +118,7 @@ test('validates button config', () => {
   const result = validate({
     schema,
     data: { label: 'Click' },
-    returnErrors: true
+    returnErrors: true,
   });
 
   expect(result.valid).toBe(true);
@@ -139,9 +139,7 @@ import fixtures from './fixtures.yaml';
 
 describe('UserList', () => {
   test('renders users', () => {
-    const { getAllByRole } = render(
-      <UserList users={fixtures.users} />
-    );
+    const { getAllByRole } = render(<UserList users={fixtures.users} />);
 
     expect(getAllByRole('listitem')).toHaveLength(2);
   });
@@ -157,9 +155,9 @@ describe('UserList', () => {
 module.exports = {
   transform: {
     '\\.yaml$': '@lowdefy/jest-yaml-transform',
-    '\\.yml$': '@lowdefy/jest-yaml-transform'
+    '\\.yml$': '@lowdefy/jest-yaml-transform',
   },
-  moduleFileExtensions: ['js', 'json', 'yaml', 'yml']
+  moduleFileExtensions: ['js', 'json', 'yaml', 'yml'],
 };
 ```
 
@@ -182,11 +180,11 @@ declare module '*.yml' {
 
 ## Key Files
 
-| File | Purpose |
-|------|---------|
-| `src/index.js` | Transformer implementation |
-| `src/process.js` | YAML processing logic |
-| `src/getCacheKey.js` | Cache key generation |
+| File                 | Purpose                    |
+| -------------------- | -------------------------- |
+| `src/index.js`       | Transformer implementation |
+| `src/process.js`     | YAML processing logic      |
+| `src/getCacheKey.js` | Cache key generation       |
 
 ## Benefits
 

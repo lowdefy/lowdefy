@@ -27,27 +27,32 @@ const Block = ({ block, Blocks, context, lowdefy, parentLoading }) => {
   lowdefy._internal.updaters[block.id] = () => setUpdate(updates + 1);
 
   const handleError = (error) => {
-    if (lowdefy._internal.logError) {
-      lowdefy._internal.logError(error);
+    if (lowdefy._internal.handleError) {
+      lowdefy._internal.handleError(error);
     }
   };
 
   // Log parse errors to server
   useEffect(() => {
-    if (block.eval?.parseErrors && lowdefy._internal.logError) {
+    if (block.eval?.parseErrors && lowdefy._internal.handleError) {
       block.eval.parseErrors.forEach((error) => {
         // Use error message as key to avoid duplicate logs
         const errorKey = `${block.id}:${error.message}`;
         if (!loggedErrorsRef.current.has(errorKey)) {
           loggedErrorsRef.current.add(errorKey);
-          lowdefy._internal.logError(error);
+          lowdefy._internal.handleError(error);
         }
       });
     }
   }, [block.eval?.parseErrors, block.id, lowdefy._internal]);
 
   return (
-    <ErrorBoundary blockId={block.blockId} configKey={block.eval?.configKey} onError={handleError}>
+    <ErrorBoundary
+      blockId={block.blockId}
+      blockType={block.type}
+      configKey={block.eval?.configKey}
+      onError={handleError}
+    >
       <MountEvents
         context={context}
         triggerEvent={async () => {

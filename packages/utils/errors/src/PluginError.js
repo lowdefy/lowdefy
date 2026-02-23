@@ -15,11 +15,11 @@
 */
 
 /**
- * Error class for plugin failures (operators, actions, blocks, connections, requests).
+ * Base error class for plugin failures (operators, actions, blocks, requests).
  *
  * Plugins throw plain Error objects with simple messages.
- * The plugin interface layer catches these and wraps them in PluginError
- * with additional context (received values, location, plugin type).
+ * The plugin interface layer catches these and wraps them in a typed subclass
+ * (OperatorError, ActionError, BlockError, RequestError) with additional context.
  *
  * @example
  * // In operator parser (plugin interface layer):
@@ -27,105 +27,45 @@
  *   return operator({ params });
  * } catch (error) {
  *   if (error instanceof ConfigError) throw error;
- *   throw new PluginError({
- *     error,
- *     pluginType: 'operator',
- *     pluginName: '_if',
+ *   throw new OperatorError(error.message, {
+ *     cause: error,
+ *     typeName: '_if',
  *     received: params,
  *     location: 'blocks.0.properties.visible',
  *     configKey: block['~k'],
  *   });
  * }
- * // error.message = "[Plugin Error] _if requires boolean test. Received: {...} at blocks.0.properties.visible."
  */
-import formatErrorMessage from './formatErrorMessage.js';
-
 class PluginError extends Error {
   /**
    * Creates a PluginError instance with formatted message.
-   * @param {Object} params
-   * @param {Error} params.error - The original error thrown by the plugin
-   * @param {string} [params.pluginType] - Type of plugin (operator, action, block, request, connection)
-   * @param {string} [params.pluginName] - Name of the plugin (e.g., '_if', 'SetState')
-   * @param {*} [params.received] - The input that caused the error
-   * @param {string} [params.location] - Where in the config the error occurred
-   * @param {string} [params.configKey] - Config key (~k) for location resolution
+   * @param {string} [message] - Error message (falls back to cause.message)
+   * @param {Object} [options]
+   * @param {Error} [options.cause] - The original error thrown by the plugin
+   * @param {string} [options.typeName] - The config type name (e.g., '_if', 'SetState', 'MongoDBFind')
+   * @param {*} [options.received] - The input that caused the error
+   * @param {string} [options.location] - Where in the config the error occurred
+   * @param {string} [options.configKey] - Config key (~k) for location resolution
    */
-  constructor({ error, message, pluginType, pluginName, received, location, configKey }) {
-    // Store raw message - logger formats received value
-    // Accept either error object or direct message string
-    const rawMessage = message ?? error?.message;
+  constructor(message, { cause, typeName, received, location, configKey } = {}) {
+    const rawMessage = message ?? cause?.message;
     let formattedMessage = rawMessage;
     if (location) {
-      formattedMessage = rawMessage != null ? `${rawMessage} at ${location}.` : `at ${location}.`;
+      formattedMessage = rawMessage ? `${rawMessage} at ${location}.` : `at ${location}.`;
     }
 
-    super(formattedMessage, { cause: error });
+    super(formattedMessage, { cause });
     this.name = 'PluginError';
-    this.pluginType = pluginType;
-    this.pluginName = pluginName;
-    this.rawMessage = rawMessage; // Original message without location
-    this.received = received !== undefined ? received : error?.received;
+    this.isLowdefyError = true;
+    this.typeName = typeName;
+    this._message = rawMessage;
+    this.received = received !== undefined ? received : cause?.received;
     this.location = location;
-    this.configKey = error?.configKey ?? configKey ?? null;
+    this.configKey = configKey ?? cause?.configKey ?? null;
 
-    // Location info (set by server-side resolution)
+    // Location outputs (set by server-side resolution)
     this.source = null;
     this.config = null;
-    this.link = null;
-
-    if (error?.stack) {
-      this.stack = error.stack;
-    }
-  }
-
-  print() {
-    return formatErrorMessage(this);
-  }
-
-  /**
-   * Serializes the error for transport (e.g., client to server).
-   * @returns {Object} Serialized error data with type marker
-   */
-  serialize() {
-    return {
-      '~err': 'PluginError',
-      message: this.message,
-      rawMessage: this.rawMessage,
-      pluginType: this.pluginType,
-      pluginName: this.pluginName,
-      location: this.location,
-      configKey: this.configKey,
-      stack: this.stack,
-    };
-  }
-
-  /**
-   * Deserializes error data back into a PluginError.
-   * Note: message already contains location/received, so we don't pass them
-   * to avoid double-formatting.
-   * @param {Object} data - Serialized error data
-   * @returns {PluginError}
-   */
-  static deserialize(data) {
-    // Use rawMessage if available, fallback to message
-    const messageToUse = data.rawMessage || data.message;
-    const error = new PluginError({
-      message: messageToUse,
-      pluginType: data.pluginType,
-      pluginName: data.pluginName,
-      configKey: data.configKey,
-    });
-    // Set location separately to preserve it without re-formatting message
-    error.location = data.location;
-    // Preserve the formatted message if different from rawMessage
-    if (data.message && data.message !== messageToUse) {
-      error.message = data.message;
-    }
-    if (data.stack) {
-      error.stack = data.stack;
-    }
-    return error;
   }
 }
 

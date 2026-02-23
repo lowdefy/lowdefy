@@ -14,27 +14,22 @@
   limitations under the License.
 */
 
-import { LowdefyError } from '@lowdefy/errors';
-import { ConfigError } from '@lowdefy/errors/build';
+import { BuildError, LowdefyInternalError } from '@lowdefy/errors';
 
 function logCollectedErrors(context) {
   if (context.errors.length === 0) return;
 
   context.errors.forEach((err) => {
-    if (err instanceof ConfigError || err.print) {
-      context.logger.error(err);
+    if (err.isLowdefyError) {
+      context.handleError(err);
     } else {
-      const lowdefyErr = new LowdefyError(err.message, { cause: err });
-      lowdefyErr.stack = err.stack;
-      context.logger.error(lowdefyErr);
+      const lowdefyErr = new LowdefyInternalError(err.message, { cause: err });
+      context.handleError(lowdefyErr);
     }
   });
-  const error = new Error(
+  throw new BuildError(
     `Build failed with ${context.errors.length} error(s). See above for details.`
   );
-  error.isFormatted = true;
-  error.hideStack = true;
-  throw error;
 }
 
 export default logCollectedErrors;

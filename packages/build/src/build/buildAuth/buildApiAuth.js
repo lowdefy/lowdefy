@@ -17,7 +17,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError } from '@lowdefy/errors';
 import getApiRoles from './getApiRoles.js';
 import getProtectedApi from './getProtectedApi.js';
 
@@ -32,11 +32,9 @@ function buildApiAuth({ components, context }) {
   (components.api || []).forEach((endpoint) => {
     if (apiRoles[endpoint.id]) {
       if (configPublicApi.includes(endpoint.id)) {
-        throw new ConfigError({
-          message: `Endpoint "${endpoint.id}" is both protected by roles and public.`,
+        throw new ConfigError(`Endpoint "${endpoint.id}" is both protected by roles and public.`, {
           received: apiRoles[endpoint.id],
           configKey: endpoint['~k'],
-          context,
         });
       }
       endpoint.auth = {

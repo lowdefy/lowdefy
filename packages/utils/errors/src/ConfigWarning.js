@@ -14,35 +14,16 @@
   limitations under the License.
 */
 
-/**
- * Base configuration warning class.
- *
- * This is the environment-agnostic base class. For environment-specific behavior:
- * - Build-time: Use @lowdefy/errors/build (prodError flag, suppression logic)
- * - Server-side: Use @lowdefy/errors/server (re-exports base)
- * - Client-side: Use @lowdefy/errors/client (re-exports base)
- *
- * @example
- * const warning = new ConfigWarning({ message: 'Deprecated feature used', source: 'config.yaml:10' });
- * console.warn(warning.message);
- */
-import formatErrorMessage from './formatErrorMessage.js';
+import ConfigError from './ConfigError.js';
 
-class ConfigWarning {
-  /**
-   * @param {Object} params
-   * @param {string} params.message - The warning message
-   * @param {string} [params.source] - Source file:line
-   */
-  constructor({ message, source }) {
-    this.name = 'Config Warning';
-    // Message without prefix - logger uses class name for display
-    this.message = message;
-    this.source = source ?? null;
-  }
-
-  print() {
-    return formatErrorMessage(this);
+class ConfigWarning extends ConfigError {
+  constructor(
+    message,
+    { cause, configKey, checkSlug, filePath, lineNumber, received, prodError } = {}
+  ) {
+    super(message, { cause, configKey, checkSlug, filePath, lineNumber, received });
+    this.name = 'ConfigWarning';
+    this.prodError = prodError ?? false;
   }
 }
 

@@ -24,7 +24,10 @@ async function handler({ context, req, res }) {
   }
   const { pageId, requestId } = req.query;
   const { actionId, blockId, payload } = req.body;
-  context.logger.ui.dim(`Request: ${pageId} · ${blockId} · ${actionId} → ${requestId}`);
+  context.logger.info(
+    { color: 'gray' },
+    `Request: ${pageId} · ${blockId} · ${actionId} → ${requestId}`
+  );
   const response = await callRequest(context, { blockId, pageId, payload, requestId });
   res.status(200).json(response);
 }
