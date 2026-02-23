@@ -35,12 +35,20 @@ const schema = {
 };
 
 test('returns null when no schema provided', () => {
-  const result = validatePluginSchema({ data: { title: 'hi' }, schema: null, schemaKey: 'properties' });
+  const result = validatePluginSchema({
+    data: { title: 'hi' },
+    schema: null,
+    schemaKey: 'properties',
+  });
   expect(result).toBeNull();
 });
 
 test('returns null when schema has no matching key', () => {
-  const result = validatePluginSchema({ data: { title: 'hi' }, schema: {}, schemaKey: 'properties' });
+  const result = validatePluginSchema({
+    data: { title: 'hi' },
+    schema: {},
+    schemaKey: 'properties',
+  });
   expect(result).toBeNull();
 });
 
@@ -64,14 +72,14 @@ test('returns errors array when data fails validation', () => {
   expect(result[0].keyword).toBe('enum');
 });
 
-test('handles null data by treating as empty object', () => {
+test('returns errors when data is null', () => {
   const result = validatePluginSchema({
     data: null,
     schema,
     schemaKey: 'properties',
   });
   expect(result).not.toBeNull();
-  expect(result.some((e) => e.keyword === 'required')).toBe(true);
+  expect(result.some((e) => e.keyword === 'type')).toBe(true);
 });
 
 test('returns all errors not just first', () => {
