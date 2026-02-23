@@ -16,7 +16,7 @@
 
 import { createBlockHelper } from '@lowdefy/e2e-utils';
 
-const locator = (page, blockId) => page.locator(`#${blockId}`);
+const locator = (page, blockId) => page.locator(`#bl-${blockId} .ant-carousel`);
 
 export default createBlockHelper({
   locator,
