@@ -22,6 +22,7 @@ import {
   getNextAuthConfig, // Auth.js configuration
   getPageConfig, // Fetch page configuration
   getRootConfig, // Fetch app root configuration
+  logClientError, // Process client errors with schema validation
   ConfigurationError,
   RequestError,
   ServerError,
@@ -227,27 +228,73 @@ The error classes accept an options object:
 
 When errors reach the client or logs, the `configKey` can be resolved to show file:line location using `resolveConfigLocation` from `@lowdefy/helpers`.
 
-### Client Error Logging
+### Client Error Logging & Plugin Schema Validation
 
-Client-side errors are sent to the server for centralized logging via the `logClientError` route.
+Client-side errors are sent to the server for centralized logging via the `logClientError` route. When errors carry `received` data (the params/properties that caused the failure), the server validates them against plugin schemas to produce more helpful error messages.
 
-**Client-side:** `lowdefy._internal.handleError(error)` serializes the error with `serializer.serialize()` (using the `~e` marker), removes `received` from the payload, and POSTs to `/api/client-error`.
+**Client-side:** `lowdefy._internal.handleError(error)` serializes the error with `serializer.serialize()` (using the `~e` marker) and POSTs to `/api/client-error`. The `received` property is preserved in the payload for server-side schema validation.
 
 **Server route:** `packages/api/src/routes/log/logClientError.js`
 
 Processes client errors:
 
 1. Deserializes error via `serializer.deserialize()` — restores correct Lowdefy error class
-2. Calls `loadAndResolveErrorLocation()` — reads keyMap/refMap from build artifacts
-3. Sets `error.source` and `error.config` on the error object
-4. Logs via `logger.error(error)`
-5. Returns `{ source }` to client for browser display
+2. **Schema validation** — if the error is a `BlockError`, `ActionError`, or `OperatorError` with `received` data, validates against plugin schemas (see below)
+3. Calls `loadAndResolveErrorLocation()` — reads keyMap/refMap from build artifacts
+4. Sets `error.source` and `error.config` on the error object
+5. If validation produced a `ConfigError`, logs that (with cause chain preserving the original error)
+6. Returns `{ source, configError }` to client — `configError` is the serialized validation error if schema validation failed
 
-**Output format:**
+### `/routes/log/` — Plugin Schema Validation
+
+| Module                     | Purpose                                                            |
+| -------------------------- | ------------------------------------------------------------------ |
+| `validatePluginSchema.js`  | Validates data against a plugin's JSON schema using `@lowdefy/ajv` |
+| `formatValidationError.js` | Converts AJV errors into human-readable messages                   |
+| `logClientError.js`        | Orchestrates error logging with optional schema validation         |
+
+**Validation flow in `logClientError`:**
+
+```
+Client sends error (e.g., BlockError with received: { title: 123 })
+    │
+    ▼
+┌──────────────────────────┐
+│ Look up schema for type  │  ◀── Read from plugins/blockSchemas.json
+└──────────────────────────┘
+    │
+    ▼
+┌──────────────────────────┐
+│  validatePluginSchema()  │  ◀── Validate received data against schema
+└──────────────────────────┘
+    │ (if invalid)
+    ▼
+┌──────────────────────────┐
+│ formatValidationError()  │  ◀── Convert AJV errors to readable messages
+└──────────────────────────┘
+    │
+    ▼
+ConfigError with cause chain → logged to terminal
+```
+
+**Schema map files** (generated at build time):
+
+| Error Type      | Schema File                    | Schema Key   | Field Label |
+| --------------- | ------------------------------ | ------------ | ----------- |
+| `BlockError`    | `plugins/blockSchemas.json`    | `properties` | property    |
+| `ActionError`   | `plugins/actionSchemas.json`   | `params`     | param       |
+| `OperatorError` | `plugins/operatorSchemas.json` | `params`     | param       |
+
+**Example output:**
 
 ```
 /Users/dev/app/pages/home.yaml:15
-[ConfigError] Block type "Buton" not found.
+[ConfigError] Block "Button" property "title" must be type "string".
+  Caused by: [BlockError] Error rendering block "submitBtn".
 ```
+
+**Operator method names:** For operators with method-qualified names (e.g., `_yaml.parse`), the validation extracts params from the method-style `received` key (e.g., `{ '_yaml.parse': { on: ... } }`) and uses the display name `_yaml.parse` in error messages.
+
+**Graceful degradation:** If schema files are missing, the plugin has no schema, or validation itself fails, the original error is logged unchanged. Schema validation never prevents error logging.
 
 See [Error Tracing System](../architecture/error-tracing.md) for complete documentation.

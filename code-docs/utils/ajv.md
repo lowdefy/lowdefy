@@ -174,6 +174,30 @@ function validateRequest(request) {
 }
 ```
 
+## Runtime Plugin Schema Validation
+
+`@lowdefy/ajv` is used by the plugin schema validation system to validate block properties, action params, and operator params at runtime when errors occur.
+
+**File:** `packages/api/src/routes/log/validatePluginSchema.js`
+
+```javascript
+import { validate } from '@lowdefy/ajv';
+
+function validatePluginSchema({ data, schema, schemaKey }) {
+  if (!schema?.[schemaKey]) return null;
+  const { valid, errors } = validate({
+    schema: schema[schemaKey],
+    data,
+    returnErrors: true,
+  });
+  return valid ? null : errors;
+}
+```
+
+The `returnErrors: true` mode is essential here — it returns all AJV errors instead of throwing, allowing `formatValidationError` to convert them into human-readable messages for each violation.
+
+See [api.md](../packages/api.md#client-error-logging--plugin-schema-validation) for the full validation flow.
+
 ## Dependencies
 
 - `ajv` (8.12.0)

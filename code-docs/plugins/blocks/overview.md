@@ -106,6 +106,18 @@ Each block has:
    └── Re-render with new properties
 ```
 
+## Runtime Schema Validation
+
+Each block can export a `schema.js` file describing its expected `properties` shape. These schemas are collected at build time into `plugins/blockSchemas.json`.
+
+When a `BlockError` occurs at runtime, the server validates the `received` properties against the block's schema and produces a diagnostic `ConfigError` with a human-readable message:
+
+```
+[ConfigError] Block "Button" property "title" must be type "string".
+```
+
+This is **reactive** validation — it only runs when an error is caught, not on every render. See [plugin-system.md](../../architecture/plugin-system.md#blockactionoperator-schemas-runtime-reactive) for schema format details.
+
 ## Design Decisions
 
 ### Why Ant Design as Default?

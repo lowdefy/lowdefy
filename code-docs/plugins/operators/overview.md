@@ -120,6 +120,20 @@ These are from `@lowdefy/operators-js`:
 | `_divide`   | Divide              |
 | `_math`     | Math operations     |
 
+## Runtime Schema Validation
+
+Each operator can export a `.schema.js` file describing its expected `params` shape (e.g., `get.schema.js`). These schemas are collected at build time into `plugins/operatorSchemas.json`.
+
+When an `OperatorError` occurs at runtime, the server validates the `received` params against the operator's schema and produces a diagnostic `ConfigError`:
+
+```
+[ConfigError] Operator "_get" required param "from" is missing.
+```
+
+For method-qualified operators (e.g., `_yaml.parse`), the display name includes the method and params are extracted from the method-style `received` key.
+
+This is **reactive** validation — it only runs when an error is caught, not on every evaluation. See [plugin-system.md](../../architecture/plugin-system.md#blockactionoperator-schemas-runtime-reactive) for schema format details.
+
 ## Design Decisions
 
 ### Why Underscore Prefix?
