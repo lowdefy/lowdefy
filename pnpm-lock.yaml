@@ -271,9 +271,6 @@ importers:
       dotenv:
         specifier: 16.3.1
         version: 16.3.1
-      ora:
-        specifier: 7.0.1
-        version: 7.0.1
       semver:
         specifier: 7.5.4
         version: 7.5.4
@@ -2110,9 +2107,6 @@ importers:
       '@lowdefy/operators-yaml':
         specifier: 4.5.2
         version: link:../../plugins/operators/operators-yaml
-      '@lowdefy/plugin-aws':
-        specifier: 4.5.2
-        version: link:../../plugins/plugins/plugin-aws
       '@lowdefy/plugin-next-auth':
         specifier: 4.5.2
         version: link:../../plugins/plugins/plugin-next-auth
