@@ -14,16 +14,19 @@
   limitations under the License.
 */
 
-function createPageRegistry({ components }) {
+function createPageRegistry({ components, shallowPageIndices, context }) {
   const registry = new Map();
 
-  for (const page of components.pages ?? []) {
+  (components.pages ?? []).forEach((page, i) => {
+    // Read ~r from keyMap — addKeys moves ~r there and deletes it from objects.
+    const refId = context.keyMap[page['~k']]?.['~r'] ?? null;
     registry.set(page.id, {
       pageId: page.id,
       auth: page.auth,
-      refId: page['~r'] ?? null,
+      refId,
+      shallow: shallowPageIndices.has(i),
     });
-  }
+  });
 
   return registry;
 }

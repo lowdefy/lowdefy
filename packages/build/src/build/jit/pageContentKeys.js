@@ -15,7 +15,9 @@
 */
 
 // Keys stripped from pages after createPageRegistry captures the page file ref.
-// Only `id` (and skeleton-computed `pageId`, `auth`, `~k`, `~r`) survive.
-const PAGE_CONTENT_KEYS = ['type', 'blocks', 'areas', 'events', 'requests', 'layout'];
+// Only `id`, `type` (and skeleton-computed `pageId`, `auth`, `~k`, `~r`) survive.
+// `type` is always a resolved string (never a ref target) and must stay on stubs
+// for schema validation (block schema requires both `id` and `type`).
+const PAGE_CONTENT_KEYS = ['blocks', 'areas', 'events', 'requests', 'layout'];
 
 export default PAGE_CONTENT_KEYS;

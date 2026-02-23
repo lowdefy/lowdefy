@@ -14,7 +14,9 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import fs from 'fs';
+import path from 'path';
+import { serializer, type } from '@lowdefy/helpers';
 import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 
 import addKeys from '../addKeys.js';
@@ -52,6 +54,22 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
   }
 
   try {
+    // Non-shallow pages were pre-built during skeleton build — read from disk.
+    if (pageEntry.shallow === false) {
+      const pagePath = path.join(
+        buildContext.directories.build,
+        'pages',
+        pageId,
+        `${pageId}.json`
+      );
+      try {
+        const content = await fs.promises.readFile(pagePath, 'utf8');
+        return serializer.deserialize(JSON.parse(content));
+      } catch {
+        // Fall through to JIT if pre-built artifact missing
+      }
+    }
+
     // Resolve the page file from scratch — same as a normal full build of the page file.
     // The refId traces back to the refMap entry with the page's source file path.
     const storedRef = buildContext.refMap[pageEntry.refId];
