@@ -55,12 +55,11 @@ function createHandleError(lowdefy) {
           if (resolvedSource) {
             error.source = resolvedSource;
           }
-          // If server converted to ConfigErrors, log those instead
+          // If server converted to ConfigErrors, log those alongside the original error
           if (serverErrors) {
             for (const serializedErr of serverErrors) {
               logger.error(serializer.deserialize(serializedErr));
             }
-            return;
           }
         }
       } catch {

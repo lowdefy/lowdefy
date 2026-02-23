@@ -20,7 +20,7 @@ function validatePluginSchema({ data, schema, schemaKey }) {
   if (!schema?.[schemaKey]) return null;
   const { valid, errors } = validate({
     schema: schema[schemaKey],
-    data: data ?? {},
+    data,
     returnErrors: true,
   });
   return valid ? null : errors;

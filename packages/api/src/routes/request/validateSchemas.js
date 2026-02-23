@@ -69,7 +69,8 @@ function validateSchemas(
   }
 
   if (allErrors.length > 0) {
-    for (const err of allErrors) {
+    // Log additional errors here; the first will be logged by the upstream error handler
+    for (const err of allErrors.slice(1)) {
       logger.error(err);
     }
     throw allErrors[0];

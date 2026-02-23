@@ -15,7 +15,7 @@
 */
 
 import { ConfigError, loadAndResolveErrorLocation } from '@lowdefy/errors';
-import { serializer } from '@lowdefy/helpers';
+import { serializer, type } from '@lowdefy/helpers';
 
 import formatValidationError from './formatValidationError.js';
 import validatePluginSchema from './validatePluginSchema.js';
@@ -49,16 +49,14 @@ async function logClientError(context, serializedError) {
   const validationConfig = validationConfigs[error.name];
   let validationErrors = null;
 
-  if (validationConfig && error.received) {
-    try {
-      const schemas = await context.readConfigFile(validationConfig.schemaFile);
-      if (schemas) {
-        const schema = schemas[error.typeName];
-        if (schema) {
+  if (validationConfig && !type.isNone(error.received)) {
+    const schemas = await context.readConfigFile(validationConfig.schemaFile);
+    if (schemas) {
+      const schema = schemas[error.typeName];
+      if (schema) {
+        try {
           const data =
-            error.name === 'OperatorError'
-              ? Object.values(error.received)[0]
-              : error.received;
+            error.name === 'OperatorError' ? Object.values(error.received)[0] : error.received;
 
           const ajvErrors = validatePluginSchema({
             data,
@@ -85,10 +83,10 @@ async function logClientError(context, serializedError) {
                 )
             );
           }
+        } catch (e) {
+          logger.warn(e);
         }
       }
-    } catch {
-      // Schema file not found or unreadable — skip validation
     }
   }
 
@@ -102,6 +100,8 @@ async function logClientError(context, serializedError) {
     error.source = location.source;
     error.config = location.config;
   }
+
+  logger.error(error);
 
   // If validation produced ConfigErrors, resolve their locations and log them
   if (validationErrors) {
@@ -121,8 +121,6 @@ async function logClientError(context, serializedError) {
       errors: validationErrors.map((e) => serializer.serialize(e)),
     };
   }
-
-  logger.error(error);
 
   return {
     success: true,

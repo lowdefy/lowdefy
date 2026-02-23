@@ -15,14 +15,18 @@
 */
 
 function formatValidationError({ ajvError, pluginLabel, typeName, fieldLabel }) {
-  const path = ajvError.instancePath ? ajvError.instancePath.substring(1).replace(/\//g, '.') : null;
+  const path = ajvError.instancePath
+    ? ajvError.instancePath.substring(1).replace(/\//g, '.')
+    : null;
   const fieldName = path || ajvError.params?.missingProperty || 'unknown';
 
   switch (ajvError.keyword) {
     case 'type':
       return `${pluginLabel} "${typeName}" ${fieldLabel} "${fieldName}" must be type "${ajvError.params.type}".`;
     case 'enum':
-      return `${pluginLabel} "${typeName}" ${fieldLabel} "${fieldName}" must be one of ${JSON.stringify(ajvError.params.allowedValues)}.`;
+      return `${pluginLabel} "${typeName}" ${fieldLabel} "${fieldName}" must be one of ${JSON.stringify(
+        ajvError.params.allowedValues
+      )}.`;
     case 'additionalProperties':
       return `${pluginLabel} "${typeName}" ${fieldLabel} "${ajvError.params.additionalProperty}" is not allowed.`;
     case 'required':

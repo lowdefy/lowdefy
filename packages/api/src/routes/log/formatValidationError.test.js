@@ -43,9 +43,7 @@ test('formats enum error', () => {
     typeName: 'Button',
     fieldLabel: 'property',
   });
-  expect(result).toBe(
-    'Block "Button" property "size" must be one of ["small","default","large"].'
-  );
+  expect(result).toBe('Block "Button" property "size" must be one of ["small","default","large"].');
 });
 
 test('formats additionalProperties error', () => {
@@ -121,4 +119,19 @@ test('uses missingProperty as fallback fieldName when instancePath is empty', ()
     fieldLabel: 'property',
   });
   expect(result).toBe('Request "MongoDBFind" required property "collection" is missing.');
+});
+
+test('uses "unknown" as fieldName when instancePath is empty and no missingProperty', () => {
+  const result = formatValidationError({
+    ajvError: {
+      keyword: 'minItems',
+      instancePath: '',
+      message: 'must NOT have fewer than 1 items',
+      params: { limit: 1 },
+    },
+    pluginLabel: 'Block',
+    typeName: 'List',
+    fieldLabel: 'property',
+  });
+  expect(result).toBe('Block "List" property "unknown" must NOT have fewer than 1 items.');
 });
