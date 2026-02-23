@@ -2162,6 +2162,9 @@ importers:
       '@next/eslint-plugin-next':
         specifier: 13.5.4
         version: 13.5.4
+      jest:
+        specifier: 28.1.3
+        version: 28.1.3(@types/node@20.6.2)
       less:
         specifier: 4.1.3
         version: 4.1.3

@@ -40,6 +40,7 @@
     "start": "node manager/run.mjs",
     "lint": "next lint",
     "next": "next",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
@@ -89,6 +90,7 @@
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "13.5.4",
+    "jest": "28.1.3",
     "less": "4.1.3",
     "less-loader": "11.1.3",
     "next-with-less": "3.0.1",
