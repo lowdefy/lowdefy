@@ -19,16 +19,19 @@ import { expect } from '@playwright/test';
 
 const locator = (page, blockId) => page.locator(`#bl-${blockId}`);
 
+// Menu items render inside a Drawer portal, not inside #bl-${blockId}.
+const drawerMenu = (page) => page.locator('.ant-drawer .ant-menu');
+
 export default createBlockHelper({
   locator,
   do: {
-    clickMenuItem: (page, blockId, text) =>
-      locator(page, blockId).locator('.ant-menu-item').filter({ hasText: text }).click(),
+    clickMenuItem: (page, _blockId, text) =>
+      drawerMenu(page).locator('.ant-menu-item').filter({ hasText: text }).click(),
   },
   expect: {
-    menuItemActive: (page, blockId, text) =>
+    menuItemActive: (page, _blockId, text) =>
       expect(
-        locator(page, blockId).locator('.ant-menu-item-selected').filter({ hasText: text })
+        drawerMenu(page).locator('.ant-menu-item-selected').filter({ hasText: text })
       ).toBeVisible(),
   },
 });
