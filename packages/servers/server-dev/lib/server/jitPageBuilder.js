@@ -22,8 +22,7 @@ import { buildPageJit, createContext } from '@lowdefy/build/dev';
 import createLogger from './log/createLogger.js';
 import PageCache from './pageCache.mjs';
 
-const jitLogger = createLogger({ component: 'jit-build' });
-
+const jitLogger = createLogger({ name: 'jit-build' });
 const pageCache = new PageCache();
 let cachedRegistryMtime = null;
 let cachedRegistry = null;
