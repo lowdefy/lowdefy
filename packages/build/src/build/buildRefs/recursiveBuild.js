@@ -78,15 +78,6 @@ async function recursiveBuild({
     // Check if this ref should be skipped (shallow build)
     const refJsonPath = refPositions?.get(newRefDef.id) ?? '';
     if (shallowOptions && shouldSkipResolution(refJsonPath, shallowOptions.stopAt)) {
-      // Track which page indices had refs skipped
-      if (shallowOptions.shallowPageIndices && refJsonPath.startsWith('pages.')) {
-        const dotIndex = refJsonPath.indexOf('.', 6); // after "pages."
-        const pageIndexStr = dotIndex === -1 ? refJsonPath.slice(6) : refJsonPath.slice(6, dotIndex);
-        const pageIndex = parseInt(pageIndexStr, 10);
-        if (!isNaN(pageIndex)) {
-          shallowOptions.shallowPageIndices.add(pageIndex);
-        }
-      }
       // Store shallow marker instead of resolving
       parsedFiles[newRefDef.id] = {
         '~shallow': true,

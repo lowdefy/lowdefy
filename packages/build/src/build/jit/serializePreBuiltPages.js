@@ -15,38 +15,22 @@
 */
 
 import { serializer } from '@lowdefy/helpers';
-import PAGE_CONTENT_KEYS from './pageContentKeys.js';
 
 // Serialize non-shallow page data for writing after cleanBuildDirectory.
-// Must capture before stripping content keys below.
+// Must run before stripPreBuiltPages, which removes the content being serialized.
 function serializePreBuiltPages({ components }) {
   const preBuiltPageArtifacts = [];
   for (const page of components.pages ?? []) {
     if (page['~shallow']) continue;
     preBuiltPageArtifacts.push({
       pageId: page.pageId,
-      pageJson: serializer.serializeToString(page ?? {}),
+      pageJson: serializer.serializeToString(page),
       requests: (page.requests ?? []).map((request) => ({
         requestId: request.requestId,
-        requestJson: serializer.serializeToString(request ?? {}),
+        requestJson: serializer.serializeToString(request),
       })),
     });
   }
-
-  // Strip request metadata and content keys from non-shallow pages
-  for (const page of components.pages ?? []) {
-    if (page['~shallow']) continue;
-    for (const request of page.requests ?? []) {
-      delete request.properties;
-      delete request.type;
-      delete request.connectionId;
-      delete request.auth;
-    }
-    for (const key of PAGE_CONTENT_KEYS) {
-      delete page[key];
-    }
-  }
-
   return preBuiltPageArtifacts;
 }
 

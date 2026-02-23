@@ -64,10 +64,8 @@ function buildPages({ components, context }) {
   });
 
   // Validate that all Link actions reference existing pages
-  // Only include pages that built successfully
-  const pageIds = pages
-    .filter((_, index) => !failedPageIndices.has(index))
-    .map((page) => page.pageId);
+  // Include all pages — a link to a broken page is valid; the page error is already reported
+  const pageIds = pages.map((page) => page.pageId);
   validateLinkReferences({
     linkActionRefs: context.linkActionRefs,
     pageIds,

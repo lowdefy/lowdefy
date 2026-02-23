@@ -19,13 +19,10 @@ import path from 'path';
 
 function getInstalledPackages(directories) {
   if (!directories.server) return null;
-  try {
-    const pkgPath = path.join(directories.server, 'package.json');
-    const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
-    return new Set(Object.keys(pkg.dependencies ?? {}));
-  } catch {
-    return null;
-  }
+  const pkgPath = path.join(directories.server, 'package.json');
+  if (!fs.existsSync(pkgPath)) return null;
+  const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
+  return new Set(Object.keys(pkg.dependencies ?? {}));
 }
 
 // In dev mode, page content is built JIT so page-level types (actions, blocks,

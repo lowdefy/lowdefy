@@ -14,21 +14,25 @@
   limitations under the License.
 */
 
-function createPageRegistry({ components, context }) {
-  const registry = new Map();
+import PAGE_CONTENT_KEYS from './pageContentKeys.js';
 
-  (components.pages ?? []).forEach((page) => {
-    // Read ~r from keyMap — addKeys moves ~r there and deletes it from objects.
-    const refId = context.keyMap[page['~k']]?.['~r'] ?? null;
-    registry.set(page.id, {
-      pageId: page.id,
-      auth: page.auth,
-      refId,
-      shallow: !!page['~shallow'],
-    });
-  });
-
-  return registry;
+function containsShallowMarker(value) {
+  if (value == null || typeof value !== 'object') return false;
+  if (value['~shallow'] === true) return true;
+  return Object.values(value).some(containsShallowMarker);
 }
 
-export default createPageRegistry;
+function findShallowPageIndices(pages) {
+  const indices = new Set();
+  (pages ?? []).forEach((page, i) => {
+    for (const key of PAGE_CONTENT_KEYS) {
+      if (containsShallowMarker(page[key])) {
+        indices.add(i);
+        break;
+      }
+    }
+  });
+  return indices;
+}
+
+export default findShallowPageIndices;
