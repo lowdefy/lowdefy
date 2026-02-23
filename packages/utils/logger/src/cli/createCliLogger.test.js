@@ -60,12 +60,28 @@ Date = jest.fn(() => ({
 
 Date.now = () => {};
 
+// Save original CI value so tests are deterministic regardless of environment
+const originalCI = process.env.CI;
+afterEach(() => {
+  process.env.CI = originalCI;
+});
+
 describe('memoisation', () => {
   beforeEach(() => {
     jest.resetModules();
+    mockOraFail.mockClear();
+    mockOraStart.mockClear();
+    mockOraStopAndPersist.mockClear();
+    mockOraSucceed.mockClear();
+    mockOraWarn.mockClear();
+    mockConsoleError.mockClear();
+    mockConsoleLog.mockClear();
+    mockConsoleWarn.mockClear();
+    mockConsoleDebug.mockClear();
   });
 
   test('same print instance on repeated createCliLogger calls', async () => {
+    process.env.CI = 'false';
     const { default: createCliLogger } = await import('./createCliLogger.js');
     const logger1 = createCliLogger({ logLevel: 'info' });
     const logger2 = createCliLogger({ logLevel: 'info' });
@@ -79,28 +95,25 @@ describe('memoisation', () => {
   });
 
   test('creates ora print when CI is false', async () => {
-    const { default: createCliLogger } = await import('./createCliLogger.js');
-    const realCI = process.env.CI;
     process.env.CI = 'false';
+    const { default: createCliLogger } = await import('./createCliLogger.js');
     const logger = createCliLogger({ logLevel: 'info' });
     logger.info('Test');
     expect(mockOraStopAndPersist.mock.calls).toEqual([[{ symbol: '∙', text: 'Test' }]]);
-    process.env.CI = realCI;
   });
 
   test('creates basic print when CI is true', async () => {
-    const { default: createCliLogger } = await import('./createCliLogger.js');
-    const realCI = process.env.CI;
     process.env.CI = 'true';
+    const { default: createCliLogger } = await import('./createCliLogger.js');
     const logger = createCliLogger({ logLevel: 'info' });
     logger.info('Test log');
     expect(mockConsoleLog.mock.calls).toEqual([['Test log']]);
-    process.env.CI = realCI;
   });
 });
 
 describe('string input', () => {
   beforeEach(() => {
+    process.env.CI = 'false';
     jest.resetModules();
     mockOraFail.mockClear();
     mockOraStart.mockClear();
@@ -142,6 +155,7 @@ describe('string input', () => {
 
 describe('error input', () => {
   beforeEach(() => {
+    process.env.CI = 'false';
     jest.resetModules();
     mockOraFail.mockClear();
     mockOraStart.mockClear();
@@ -251,6 +265,7 @@ describe('error input', () => {
 
 describe('cause chain', () => {
   beforeEach(() => {
+    process.env.CI = 'false';
     jest.resetModules();
     mockOraFail.mockClear();
     mockOraStart.mockClear();
@@ -346,6 +361,7 @@ describe('cause chain', () => {
 
 describe('pino two-arg form', () => {
   beforeEach(() => {
+    process.env.CI = 'false';
     jest.resetModules();
     mockOraFail.mockClear();
     mockOraStart.mockClear();
@@ -399,6 +415,7 @@ describe('pino two-arg form', () => {
 
 describe('fallback', () => {
   beforeEach(() => {
+    process.env.CI = 'false';
     jest.resetModules();
     mockOraFail.mockClear();
     mockOraStart.mockClear();
@@ -419,6 +436,7 @@ describe('fallback', () => {
 
 describe('level filtering', () => {
   beforeEach(() => {
+    process.env.CI = 'false';
     jest.resetModules();
     mockOraFail.mockClear();
     mockOraStart.mockClear();

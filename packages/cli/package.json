@@ -36,7 +36,7 @@
     "clean": "rm -rf dist && rm -rf .lowdefy",
     "start": "node ./dist/index.js",
     "prepublishOnly": "pnpm build",
-    "test": "FORCE_COLOR=3 node --experimental-vm-modules node_modules/jest/bin/jest.js"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
     "@lowdefy/errors": "4.5.2",
@@ -48,7 +48,6 @@
     "decompress": "4.2.1",
     "decompress-targz": "4.1.1",
     "dotenv": "16.3.1",
-    "ora": "7.0.1",
     "semver": "7.5.4",
     "uuid": "9.0.1",
     "yaml": "2.3.4"
