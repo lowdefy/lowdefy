@@ -17,7 +17,8 @@
 import { createBlockHelper } from '@lowdefy/e2e-utils';
 import { expect } from '@playwright/test';
 
-const locator = (page, blockId) => page.locator(`#${blockId}_input`);
+const locator = (page, blockId) => page.locator(`#bl-${blockId} .ant-slider`);
+const handle = (page, blockId) => page.locator(`#bl-${blockId} .ant-slider-handle`);
 
 export default createBlockHelper({
   locator,
@@ -25,13 +26,13 @@ export default createBlockHelper({
     // Sets value via keyboard: Home resets to min, then ArrowRight steps up by 1.
     // Assumes default min=0 and step=1. For custom min/step configure tests accordingly.
     setValue: async (page, blockId, val) => {
-      await locator(page, blockId).focus();
-      await locator(page, blockId).press('Home');
-      for (let i = 0; i < val; i++) await locator(page, blockId).press('ArrowRight');
+      await handle(page, blockId).focus();
+      await handle(page, blockId).press('Home');
+      for (let i = 0; i < val; i++) await handle(page, blockId).press('ArrowRight');
     },
   },
   expect: {
     value: (page, blockId, val) =>
-      expect(locator(page, blockId)).toHaveAttribute('aria-valuenow', String(val)),
+      expect(handle(page, blockId)).toHaveAttribute('aria-valuenow', String(val)),
   },
 });
