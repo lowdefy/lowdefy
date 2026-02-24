@@ -14,19 +14,27 @@
   limitations under the License.
 */
 
-/* eslint-disable react/jsx-props-no-spreading */
-
-import React from 'react';
-import AuthE2E from './AuthE2E.js';
-
 import authConfig from '../../build/auth.js';
 
+function e2eNotSupported() {
+  throw new Error('Sign-in and sign-out are not supported in e2e testing.');
+}
+
 function Auth({ children, session }) {
-  return (
-    <AuthE2E session={session} authConfig={authConfig}>
-      {(auth) => children(auth)}
-    </AuthE2E>
-  );
+  const auth = {
+    authConfig,
+    session,
+    getSession: async () => {
+      const res = await fetch('/api/auth/session');
+      if (res.ok) {
+        return res.json();
+      }
+      return null;
+    },
+    signIn: e2eNotSupported,
+    signOut: e2eNotSupported,
+  };
+  return children(auth);
 }
 
 export default Auth;

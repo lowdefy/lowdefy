@@ -14,9 +14,8 @@
   limitations under the License.
 */
 
-import { createNodeLogger, wrapErrorLogger } from '@lowdefy/logger/node';
+import { createNodeLogger } from '@lowdefy/logger/node';
 
-// TODO: Pino does not serialize error.cause properties if the cause object is not an Error (or Error-like)
 const logger = createNodeLogger({
   name: 'lowdefy_server',
   level: process.env.LOWDEFY_LOG_LEVEL ?? 'info',
@@ -24,7 +23,7 @@ const logger = createNodeLogger({
 });
 
 function createLogger(metadata = {}) {
-  return wrapErrorLogger(logger.child(metadata));
+  return logger.child(metadata);
 }
 
 export default createLogger;
