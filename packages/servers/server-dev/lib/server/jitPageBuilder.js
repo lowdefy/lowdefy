@@ -39,21 +39,17 @@ function readJsonFile(filePath) {
 }
 
 function checkPageInvalidations(buildDirectory) {
-  const invalidationPath = path.join(buildDirectory, 'invalidatePages.json');
+  const invalidatePath = path.join(buildDirectory, 'invalidatePages');
   try {
-    const stat = fs.statSync(invalidationPath);
+    const stat = fs.statSync(invalidatePath);
     if (lastInvalidationMtime && stat.mtimeMs === lastInvalidationMtime) {
       return;
     }
     lastInvalidationMtime = stat.mtimeMs;
-    const content = fs.readFileSync(invalidationPath, 'utf8');
-    const pageIds = JSON.parse(content);
-    if (Array.isArray(pageIds) && pageIds.length > 0) {
-      pageCache.invalidatePages(pageIds);
-      cachedBuildContext = null;
-    }
+    pageCache.invalidateAll();
+    cachedBuildContext = null;
   } catch {
-    // File doesn't exist yet or read error — nothing to invalidate
+    // File doesn't exist yet — nothing to invalidate
   }
 }
 
@@ -155,4 +151,3 @@ async function buildPageIfNeeded({ pageId, buildDirectory, configDirectory }) {
 }
 
 export default buildPageIfNeeded;
-export { pageCache };
