@@ -25,12 +25,13 @@
 
   How it works:
     1. Builds the monorepo (pnpm build:turbo)
-    2. Copies server-dev to <config-dir>/.lowdefy/dev (isolated from monorepo)
-    3. Rewrites @lowdefy/* deps to link: paths pointing at monorepo packages
-    4. Adds pnpm.overrides so runtime-written version strings still resolve locally
-    5. Handles workspace:* plugins from external pnpm monorepos
-    6. Runs pnpm install in the isolated copy
-    7. Starts the dev server manager (node manager/run.mjs)
+    2. Imports CLI logger from built dist (for spinners and formatted output)
+    3. Copies server-dev to <config-dir>/.lowdefy/dev (isolated from monorepo)
+    4. Rewrites @lowdefy/* deps to link: paths pointing at monorepo packages
+    5. Adds pnpm.overrides so runtime-written version strings still resolve locally
+    6. Handles workspace:* plugins from external pnpm monorepos
+    7. Runs pnpm install in the isolated copy
+    8. Starts the dev server manager (node manager/run.mjs)
 */
 
 import { parseArgs } from 'node:util';
@@ -66,7 +67,7 @@ const skipBuild = args['skip-build'];
 
 const devDir = path.resolve(configDirectory, '.lowdefy/dev');
 
-console.log(`Lowdefy dev`);
+console.log('Lowdefy dev');
 console.log(`  Config directory: ${configDirectory}`);
 console.log(`  Dev directory:    ${devDir}`);
 console.log(`  Port:             ${port}`);
@@ -82,9 +83,22 @@ if (!skipBuild) {
   console.log('');
 }
 
-// -- Step 2: Copy server-dev to isolated location --
+// -- Step 2: Import CLI logger (needs dist from build) --
 
-console.log('Copying server-dev to dev directory...');
+// Dynamic import: @lowdefy/logger is a workspace package whose dist/ is built by
+// pnpm build:turbo above. The repo root can't resolve it by package name, so we
+// import directly from the dist path.
+const { createCliLogger, createStdOutLineHandler } = await import(
+  '../packages/utils/logger/dist/cli/index.js'
+);
+
+const logger = createCliLogger({ logLevel });
+const context = { logger };
+const stdOutLineHandler = createStdOutLineHandler({ context });
+
+// -- Step 3: Copy server-dev to isolated location --
+
+logger.info({ spin: true }, 'Copying server-dev to dev directory...');
 
 const SKIP_DIRS = new Set(['node_modules', '.next', '.turbo']);
 
@@ -136,9 +150,11 @@ fs.writeFileSync(
   )
 );
 
-// -- Step 3: Build @lowdefy/* package map --
+logger.info({ succeed: true }, 'Copied server-dev to dev directory.');
 
-console.log('Scanning monorepo packages...');
+// -- Step 4: Build @lowdefy/* package map --
+
+logger.info({ spin: true }, 'Scanning monorepo packages...');
 
 const packageMap = new Map();
 
@@ -170,9 +186,9 @@ function scanForPackages(dir, depth) {
 }
 
 scanForPackages(path.join(REPO_ROOT, 'packages'), 0);
-console.log(`  Found ${packageMap.size} @lowdefy/* packages`);
+logger.info({ succeed: true }, `Found ${packageMap.size} @lowdefy/* packages.`);
 
-// -- Step 4: Rewrite deps + add pnpm.overrides --
+// -- Step 5: Rewrite deps + add pnpm.overrides --
 
 function rewritePackageJson(filePath) {
   const pkg = JSON.parse(fs.readFileSync(filePath, 'utf8'));
@@ -201,11 +217,12 @@ function rewritePackageJson(filePath) {
   fs.writeFileSync(filePath, JSON.stringify(pkg, null, 2) + '\n');
 }
 
-console.log('Rewriting package.json files with link: paths...');
+logger.info({ spin: true }, 'Rewriting package.json files with link: paths...');
 rewritePackageJson(path.join(devDir, 'package.json'));
 rewritePackageJson(path.join(devDir, 'package.original.json'));
+logger.info({ succeed: true }, 'Rewrote package.json files.');
 
-// -- Step 5: Handle custom plugins from lowdefy.yaml --
+// -- Step 6: Handle custom plugins from lowdefy.yaml --
 
 function readLowdefyYaml() {
   for (const filename of ['lowdefy.yaml', 'lowdefy.yml']) {
@@ -305,7 +322,7 @@ function addCustomPlugins() {
 
   if (plugins.length === 0) return;
 
-  console.log(`Found ${plugins.length} custom plugin(s) in lowdefy.yaml`);
+  logger.info(`Found ${plugins.length} custom plugin(s) in lowdefy.yaml`);
 
   const pkgJsonPath = path.join(devDir, 'package.json');
   const origPkgJsonPath = path.join(devDir, 'package.original.json');
@@ -317,15 +334,15 @@ function addCustomPlugins() {
       // Find the package in the host workspace
       const workspaceRoot = findPnpmWorkspaceRoot(configDirectory);
       if (!workspaceRoot) {
-        console.warn(
-          `  Warning: Plugin "${plugin.name}" uses workspace: version but no pnpm workspace root found`
+        logger.warn(
+          `Plugin "${plugin.name}" uses workspace: version but no pnpm workspace root found`
         );
         continue;
       }
       const pluginDir = findWorkspacePackage(workspaceRoot, plugin.name);
       if (!pluginDir) {
-        console.warn(
-          `  Warning: Plugin "${plugin.name}" not found in workspace at ${workspaceRoot}`
+        logger.warn(
+          `Plugin "${plugin.name}" not found in workspace at ${workspaceRoot}`
         );
         continue;
       }
@@ -336,7 +353,7 @@ function addCustomPlugins() {
         pkg.pnpm.overrides[plugin.name] = `link:${relPath}`;
         fs.writeFileSync(jsonPath, JSON.stringify(pkg, null, 2) + '\n');
       }
-      console.log(`  ${plugin.name} → link:${relPath} (workspace)`);
+      logger.info(`  ${plugin.name} → link:${relPath} (workspace)`);
     } else {
       // npm package with version
       for (const jsonPath of [pkgJsonPath, origPkgJsonPath]) {
@@ -344,16 +361,16 @@ function addCustomPlugins() {
         pkg.dependencies[plugin.name] = version;
         fs.writeFileSync(jsonPath, JSON.stringify(pkg, null, 2) + '\n');
       }
-      console.log(`  ${plugin.name} → ${version} (npm)`);
+      logger.info(`  ${plugin.name} → ${version} (npm)`);
     }
   }
 }
 
 addCustomPlugins();
 
-// -- Step 6: Create isolated workspace --
+// -- Step 7: Create isolated workspace --
 
-console.log('Creating isolated pnpm workspace...');
+logger.info({ spin: true }, 'Creating isolated pnpm workspace...');
 fs.writeFileSync(path.join(devDir, 'pnpm-workspace.yaml'), 'packages: []\n');
 
 // Copy .npmrc to ensure strict-peer-dependencies=false is set
@@ -361,17 +378,17 @@ if (!fs.existsSync(path.join(devDir, '.npmrc'))) {
   fs.writeFileSync(path.join(devDir, '.npmrc'), 'strict-peer-dependencies=false\n');
 }
 
-// -- Step 7: Install dependencies --
+logger.info({ succeed: true }, 'Created isolated pnpm workspace.');
 
-console.log('Installing dependencies...');
-console.log('');
+// -- Step 8: Install dependencies --
+
+logger.info({ spin: true }, 'Installing dependencies...');
 execSync('pnpm install --no-lockfile', { cwd: devDir, stdio: 'inherit' });
-console.log('');
+logger.info({ succeed: true }, 'Dependencies installed.');
 
-// -- Step 8: Start the dev server --
+// -- Step 9: Start the dev server --
 
-console.log('Starting dev server...');
-console.log('');
+logger.info({ spin: true }, 'Starting dev server...');
 
 const env = {
   ...process.env,
@@ -390,9 +407,24 @@ if (watchIgnorePaths.length > 0) {
 
 const child = spawn('node', ['manager/run.mjs'], {
   cwd: devDir,
-  stdio: 'inherit',
+  stdio: ['ignore', 'pipe', 'pipe'],
   env,
 });
+
+function createLineHandler(handler) {
+  let buffer = '';
+  return (data) => {
+    const text = buffer + data.toString('utf8');
+    const lines = text.split('\n');
+    buffer = lines.pop();
+    lines.forEach((line) => {
+      if (line) handler(line);
+    });
+  };
+}
+
+child.stdout.on('data', createLineHandler(stdOutLineHandler));
+child.stderr.on('data', createLineHandler(stdOutLineHandler));
 
 child.on('exit', (code) => {
   process.exit(code ?? 0);
