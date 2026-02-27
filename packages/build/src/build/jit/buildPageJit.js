@@ -57,6 +57,9 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
   }
 
   try {
+    // Reset errors from previous JIT builds — the cached context accumulates them.
+    buildContext.errors = [];
+
     // Pages without a source file (e.g., default 404) can only be served from
     // their pre-built artifact — they have no YAML to re-resolve from.
     // All user pages (with refId) always JIT-resolve from source YAML so that
@@ -71,19 +74,20 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       }
     }
 
-    // Resolve the page file from scratch — same as a normal full build of the page file.
-    // The refId traces back to the refMap entry with the page's source file path.
-    const storedRef = buildContext.refMap[pageEntry.refId];
-    if (!storedRef?.path) {
+    // Resolve the page file from scratch using the source file path determined
+    // by createPageRegistry's parent chain walk.
+    if (!pageEntry.refPath) {
       throw new ConfigError(
         `Page "${pageId}" has no source file reference. Cannot resolve page content.`
       );
     }
-    const refDef = makeRefDefinition(storedRef.path, null, buildContext.refMap);
-    // Store path in refMap so resolveConfigLocation can find this file.
-    // makeRefDefinition only stores { parent, lineNumber } — path is on the
-    // returned refDef but not in refMap. recursiveBuild sets path for child
-    // refs (line 96), but the root refDef needs it set here.
+    const sourceVars = pageEntry.sourceRefId
+      ? buildContext.refMap[pageEntry.sourceRefId]?.vars
+      : null;
+    const refDefinition = sourceVars
+      ? { path: pageEntry.refPath, vars: sourceVars }
+      : pageEntry.refPath;
+    const refDef = makeRefDefinition(refDefinition, null, buildContext.refMap);
     buildContext.refMap[refDef.id].path = refDef.path;
 
     let processed = await recursiveBuild({
@@ -103,6 +107,15 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       input: processed,
       refDef,
     });
+
+    // When resolving from a collection file (with vars), the result is an array of pages.
+    // Find the specific page by ID.
+    if (type.isArray(processed)) {
+      processed = processed.find((p) => type.isObject(p) && p.id === pageId);
+      if (!processed) {
+        throw new ConfigError(`Page "${pageId}" not found in resolved page source file.`);
+      }
+    }
 
     // Stamp root-level content with ~r for correct error file tracing.
     // recursiveBuild stamps child _ref content via createRefReviver, but the

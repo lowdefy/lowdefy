@@ -2107,7 +2107,57 @@
     "2": {
       "parent": "1",
       "lineNumber": 13,
-      "path": "pages/login.yaml"
+      "path": "pages/login.yaml",
+      "vars": {
+        "~l": 15,
+        "pageId": "login",
+        "errorMessage": {
+          "~l": 17,
+          "_switch": {
+            "~l": 18,
+            "branches": {
+              "~arr": [
+                {
+                  "~l": 20,
+                  "if": {
+                    "~l": 20,
+                    "_eq": {
+                      "~arr": [
+                        {
+                          "~l": 22,
+                          "_url_query": "error"
+                        },
+                        "EmailCreateAccount"
+                      ],
+                      "~l": 21
+                    }
+                  },
+                  "then": "Access denied."
+                },
+                {
+                  "~l": 25,
+                  "if": {
+                    "~l": 25,
+                    "_eq": {
+                      "~arr": [
+                        {
+                          "~l": 27,
+                          "_url_query": "error"
+                        },
+                        "Verification"
+                      ],
+                      "~l": 26
+                    }
+                  },
+                  "then": "Link expired."
+                }
+              ],
+              "~l": 19
+            },
+            "default": "An error occurred."
+          }
+        }
+      }
     }
   },
   "types.json": {

@@ -94,6 +94,9 @@ async function recursiveBuild({
       refDef,
     });
     context.refMap[parsedRefDef.id].path = parsedRefDef.path;
+    if (Object.keys(parsedRefDef.vars).length > 0) {
+      context.refMap[parsedRefDef.id].vars = parsedRefDef.vars;
+    }
     const parsedFile = await recursiveBuild({
       context,
       refDef: parsedRefDef,

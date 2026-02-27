@@ -46,7 +46,7 @@ function buildShallowPages({ components, context }) {
 
   (components.pages ?? []).forEach((page, index) => {
     const entry = pageRegistry.get(page.id);
-    if (!entry || entry.refId !== null) return;
+    if (!entry || entry.refPath !== null) return;
 
     buildPage({ page, index, context });
 

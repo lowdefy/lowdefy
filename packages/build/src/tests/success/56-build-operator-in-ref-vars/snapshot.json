@@ -1959,7 +1959,53 @@
     "3": {
       "parent": "1",
       "lineNumber": 14,
-      "path": "pages/page-template.yaml"
+      "path": "pages/page-template.yaml",
+      "vars": {
+        "~l": 16,
+        "pageId": "testPage",
+        "events": {
+          "~l": 18,
+          "onClick": {
+            "~l": 19,
+            "_build.array.concat": {
+              "~arr": [
+                {
+                  "~arr": [
+                    {
+                      "~l": 21,
+                      "id": "action1",
+                      "type": "SetState",
+                      "params": {
+                        "~l": 23,
+                        "key1": "value1"
+                      }
+                    }
+                  ],
+                  "~l": 21
+                },
+                {
+                  "~arr": [
+                    {
+                      "~l": 2,
+                      "id": "action3",
+                      "type": "SetState",
+                      "params": {
+                        "~l": 4,
+                        "key3": "value3",
+                        "~r": "2"
+                      },
+                      "~r": "2"
+                    }
+                  ],
+                  "~r": "2",
+                  "~l": 2
+                }
+              ],
+              "~l": 20
+            }
+          }
+        }
+      }
     }
   },
   "types.json": {

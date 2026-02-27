@@ -1881,12 +1881,75 @@
     "2": {
       "parent": "1",
       "lineNumber": 4,
-      "path": "pages/component.yaml"
+      "path": "pages/component.yaml",
+      "vars": {
+        "~l": 6,
+        "columns": {
+          "~arr": [
+            {
+              "~l": 8,
+              "id": "column-1",
+              "label": "First"
+            },
+            {
+              "~l": 10,
+              "id": "column-2",
+              "label": "Second"
+            },
+            {
+              "~l": 12,
+              "id": "column-3",
+              "label": "Third"
+            }
+          ],
+          "~l": 7
+        }
+      }
     },
     "3": {
       "parent": "2",
       "lineNumber": 4,
-      "path": "pages/block.yaml"
+      "path": "pages/block.yaml",
+      "vars": {
+        "~l": 6,
+        "ids": {
+          "~l": 7,
+          "_build.array.map": {
+            "~l": 8,
+            "on": {
+              "~arr": [
+                {
+                  "~l": 8,
+                  "id": "column-1",
+                  "label": "First",
+                  "~r": "1"
+                },
+                {
+                  "~l": 10,
+                  "id": "column-2",
+                  "label": "Second",
+                  "~r": "1"
+                },
+                {
+                  "~l": 12,
+                  "id": "column-3",
+                  "label": "Third",
+                  "~r": "1"
+                }
+              ],
+              "~r": "1",
+              "~l": 7
+            },
+            "callback": {
+              "~l": 11,
+              "_build.function": {
+                "~l": 12,
+                "__build.args": "0.id"
+              }
+            }
+          }
+        }
+      }
     }
   },
   "types.json": {
