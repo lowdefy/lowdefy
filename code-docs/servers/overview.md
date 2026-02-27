@@ -4,9 +4,9 @@ Next.js-based servers for running Lowdefy applications.
 
 ## Package Summary
 
-| Package | Purpose | Use Case |
-|---------|---------|----------|
-| `@lowdefy/server` | Production server | Deployment |
+| Package               | Purpose            | Use Case          |
+| --------------------- | ------------------ | ----------------- |
+| `@lowdefy/server`     | Production server  | Deployment        |
 | `@lowdefy/server-dev` | Development server | Local development |
 | `@lowdefy/server-e2e` | E2E testing server | Playwright testing with auth |
 
@@ -21,14 +21,14 @@ The production and dev servers use NextAuth for authentication. The e2e server r
 
 ## Key Differences
 
-| Aspect | Production | Development | E2E |
-|--------|------------|-------------|-----|
-| Startup | `next start` | Process manager | `next start` |
-| Build | Pre-built artifacts | Dynamic rebuilding | Pre-built artifacts |
-| Watching | None | 3 concurrent watchers | None |
-| Reload | N/A | SSE-based hot reload | N/A |
-| Auth | NextAuth | NextAuth + mock user | Cookie-based |
-| Optimization | Full | Disabled | Full |
+| Aspect       | Production          | Development           | E2E                 |
+| ------------ | ------------------- | --------------------- | ------------------- |
+| Startup      | `next start`        | Process manager       | `next start`        |
+| Build        | Pre-built artifacts | Dynamic rebuilding    | Pre-built artifacts |
+| Watching     | None                | 3 concurrent watchers | None                |
+| Reload       | N/A                 | SSE-based hot reload  | N/A                 |
+| Auth         | NextAuth            | NextAuth + mock user  | Cookie-based        |
+| Optimization | Full                | Disabled              | Full                |
 
 ## Build Artifacts
 
@@ -63,30 +63,30 @@ build/
 
 ### Shared Routes
 
-| Route | Purpose |
-|-------|---------|
-| `/api/request/[pageId]/[requestId]` | Execute requests |
-| `/api/endpoints/[endpointId]` | Execute API endpoints |
-| `/api/auth/[...nextauth]` | NextAuth handlers (production/dev only) |
-| `/api/auth/session` | Session retrieval (e2e: returns cookie user) |
-| `/api/usage` | Usage logging |
+| Route                               | Purpose                                  |
+| ----------------------------------- | ---------------------------------------- |
+| `/api/request/[pageId]/[requestId]` | Execute requests                         |
+| `/api/endpoints/[endpointId]`       | Execute API endpoints                    |
+| `/api/auth/[...nextauth]`           | NextAuth handlers (production/dev only)  |
+| `/api/auth/session`                 | Session retrieval (e2e: returns cookie user) |
+| `/api/usage`                        | Usage logging                            |
 
 ### Dev-Only Routes
 
-| Route | Purpose |
-|-------|---------|
-| `/api/reload` | SSE for hot reload |
-| `/api/ping` | Health check |
-| `/api/page/[pageId]` | Page config fetch |
-| `/api/root` | Root config fetch |
+| Route                | Purpose            |
+| -------------------- | ------------------ |
+| `/api/reload`        | SSE for hot reload |
+| `/api/ping`          | Health check       |
+| `/api/page/[pageId]` | Page config fetch  |
+| `/api/root`          | Root config fetch  |
 
 ## Page Routes
 
-| Route | Purpose |
-|-------|---------|
-| `/` | Homepage (redirects to home page) |
-| `/[pageId]` | Dynamic page rendering |
-| `/404` | Not found page |
+| Route       | Purpose                           |
+| ----------- | --------------------------------- |
+| `/`         | Homepage (redirects to home page) |
+| `/[pageId]` | Dynamic page rendering            |
+| `/404`      | Not found page                    |
 
 ## Context Object
 

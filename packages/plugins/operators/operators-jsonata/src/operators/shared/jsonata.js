@@ -38,7 +38,7 @@ function evaluate(data, expression, bindings) {
     }
     return result;
   } catch (error) {
-    throw new Error(`JSONata evaluation error: ${error.message}`);
+    throw new Error('JSONata evaluation error.', { cause: error });
   }
 }
 

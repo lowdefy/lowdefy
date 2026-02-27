@@ -25,7 +25,7 @@ function createLink({ backLink, disabledLink, lowdefy, newOriginLink, noLink, sa
       [!props.pageId, !props.back, !props.home, !props.href, !props.url].filter((v) => !v).length >
       1
     ) {
-      throw Error(
+      throw new Error(
         `Invalid Link: To avoid ambiguity, only one of 'back', 'home', 'href', 'pageId' or 'url' can be defined.`
       );
     }

@@ -18,7 +18,7 @@
 
 import { type } from '@lowdefy/helpers';
 import { validate } from '@lowdefy/ajv';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError } from '@lowdefy/errors';
 import lowdefySchema from '../../lowdefySchema.js';
 import validateMutualExclusivity from './validateMutualExclusivity.js';
 
@@ -27,11 +27,7 @@ function validateAuthConfig({ components, context }) {
     components.auth = {};
   }
   if (!type.isObject(components.auth)) {
-    throw new ConfigError({
-      message: 'lowdefy.auth is not an object.',
-      configKey: components['~k'],
-      context,
-    });
+    throw new ConfigError('lowdefy.auth is not an object.', { configKey: components['~k'] });
   }
   if (type.isNone(components.auth.api)) {
     components.auth.api = {};
@@ -89,11 +85,7 @@ function validateAuthConfig({ components, context }) {
         }
       }
 
-      throw new ConfigError({
-        message: `Auth ${error.message}.`,
-        configKey,
-        context,
-      });
+      throw new ConfigError(`Auth ${error.message}.`, { configKey });
     });
   }
 
@@ -102,13 +94,11 @@ function validateAuthConfig({ components, context }) {
 
   // Validate NEXTAUTH_SECRET is set when auth providers are configured
   if (components.auth.providers.length > 0 && type.isNone(process.env.NEXTAUTH_SECRET)) {
-    throw new ConfigError({
-      message:
-        'Auth providers are configured but NEXTAUTH_SECRET environment variable is not set. ' +
+    throw new ConfigError(
+      'Auth providers are configured but NEXTAUTH_SECRET environment variable is not set. ' +
         'Set NEXTAUTH_SECRET to a secure random string (e.g., generate with `openssl rand -base64 32`).',
-      configKey: components.auth.providers['~k'] ?? components.auth['~k'],
-      context,
-    });
+      { configKey: components.auth.providers['~k'] ?? components.auth['~k'] }
+    );
   }
 
   return components;

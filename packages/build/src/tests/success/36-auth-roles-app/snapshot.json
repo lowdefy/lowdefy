@@ -1521,7 +1521,7 @@
       "~k": "1u"
     },
     "auth": {
-      "public": false,
+      "public": true,
       "~k": "3n"
     },
     "pageId": "404",

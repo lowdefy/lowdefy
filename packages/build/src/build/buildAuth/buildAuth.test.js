@@ -234,6 +234,48 @@ test('buildAuth all protected', async () => {
   });
 });
 
+test('buildAuth 404 page is always public even when all pages are protected', async () => {
+  const components = {
+    auth: {
+      pages: {
+        protected: true,
+        roles: {},
+      },
+    },
+    pages: [
+      { id: 'a', type: 'Context' },
+      { id: '404', type: 'Result' },
+    ],
+  };
+  const res = buildAuth({ components, context });
+  expect(res.pages).toEqual([
+    { id: 'a', type: 'Context', auth: { public: false } },
+    { id: '404', type: 'Result', auth: { public: true } },
+  ]);
+});
+
+test('buildAuth 404 page is always public with explicit public list', async () => {
+  const components = {
+    auth: {
+      pages: {
+        public: ['a'],
+        roles: {},
+      },
+    },
+    pages: [
+      { id: 'a', type: 'Context' },
+      { id: 'b', type: 'Context' },
+      { id: '404', type: 'Result' },
+    ],
+  };
+  const res = buildAuth({ components, context });
+  expect(res.pages).toEqual([
+    { id: 'a', type: 'Context', auth: { public: true } },
+    { id: 'b', type: 'Context', auth: { public: false } },
+    { id: '404', type: 'Result', auth: { public: true } },
+  ]);
+});
+
 test('buildAuth roles', async () => {
   const components = {
     auth: {

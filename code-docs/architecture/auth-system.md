@@ -5,6 +5,7 @@ How authentication integrates with Lowdefy.
 ## Overview
 
 Lowdefy authentication is built on Auth.js (NextAuth.js) and provides:
+
 - OAuth/OIDC providers (Google, GitHub, Auth0, etc.)
 - Credentials authentication
 - Database adapters for session storage
@@ -67,8 +68,8 @@ function buildAuth({ components, context }) {
   components.auth.configured = configured;
 
   validateAuthConfig({ components });
-  buildApiAuth({ components });      // API endpoint protection
-  buildPageAuth({ components });     // Page protection
+  buildApiAuth({ components }); // API endpoint protection
+  buildPageAuth({ components }); // Page protection
   buildAuthPlugins({ components, context });
 
   return components;
@@ -146,7 +147,7 @@ function getNextAuthConfig({ authJson, logger, plugins, secrets }) {
     session: authConfig.session,
     theme: authConfig.theme,
     cookies: authConfig?.advanced?.cookies,
-    debug: authConfig.debug
+    debug: authConfig.debug,
   };
 }
 ```
@@ -171,6 +172,7 @@ function createProviders({ authConfig, plugins }) {
 **File:** `packages/plugins/plugins/plugin-next-auth/src/auth/providers.js`
 
 60+ providers including:
+
 - OAuth: Google, GitHub, Discord, LinkedIn, Twitter
 - Enterprise: Okta, Azure AD, Keycloak, Auth0
 - SAML: BoxyHQ SAML
@@ -189,8 +191,15 @@ async function jwtCallback({ token, user, account, profile, isNewUser }) {
   // Extract OIDC claims
   if (profile) {
     token = {
-      id, sub, name, given_name, family_name,
-      email, email_verified, picture, ...token
+      id,
+      sub,
+      name,
+      given_name,
+      family_name,
+      email,
+      email_verified,
+      picture,
+      ...token,
     };
   }
 
@@ -253,7 +262,11 @@ async function signInCallback({ account, credentials, email, profile, user }) {
 
   for (const plugin of signInCallbackPlugins) {
     allowSignIn = await plugin.fn({
-      account, credentials, email, profile, user
+      account,
+      credentials,
+      email,
+      profile,
+      user,
     });
     if (allowSignIn === false) break;
   }
@@ -302,7 +315,7 @@ function createAuthorize({ session }) {
     if (auth.public === false) {
       if (auth.roles) {
         // Role-based: user must have one of the required roles
-        return authenticated && auth.roles.some(role => roles.includes(role));
+        return authenticated && auth.roles.some((role) => roles.includes(role));
       }
       // Auth-only: user must be authenticated
       return authenticated;
@@ -324,11 +337,11 @@ async function getPageConfig({ authorize, readConfigFile }, { pageId }) {
   const pageConfig = await readConfigFile(`pages/${pageId}/${pageId}.json`);
 
   if (pageConfig && authorize(pageConfig)) {
-    const { auth, ...rest } = pageConfig;  // Remove auth metadata
+    const { auth, ...rest } = pageConfig; // Remove auth metadata
     return { ...rest };
   }
 
-  return null;  // 404 for unauthorized
+  return null; // 404 for unauthorized
 }
 ```
 
@@ -390,7 +403,7 @@ function AuthConfigured({ authConfig, children, serverSession }) {
 }
 ```
 
-## The _user Operator
+## The \_user Operator
 
 **File:** `packages/plugins/operators/operators-js/src/operators/shared/user.js`
 
@@ -407,6 +420,7 @@ function _user({ arrayIndices, location, params, user }) {
 ```
 
 **Usage:**
+
 ```yaml
 # In block properties
 content:
@@ -441,6 +455,7 @@ async function handler({ context, req, res }) {
 ```
 
 Handles:
+
 - `/api/auth/signin` - Login
 - `/api/auth/signout` - Logout
 - `/api/auth/callback/[provider]` - OAuth callbacks
@@ -453,12 +468,12 @@ Handles:
 
 ```javascript
 const events = {
-  createUser,   // First login - user created
-  linkAccount,  // Account linked to user
-  signIn,       // User signed in
-  signOut,      // User signed out
-  updateUser,   // Profile updated
-  session       // Session events
+  createUser, // First login - user created
+  linkAccount, // Account linked to user
+  signIn, // User signed in
+  signOut, // User signed out
+  updateUser, // Profile updated
+  session, // Session events
 };
 ```
 
@@ -503,18 +518,18 @@ Page Component
 
 ## Key Files
 
-| Component | File |
-|-----------|------|
-| Config Validation | `packages/build/src/build/buildAuth/validateAuthConfig.js` |
-| Page Protection | `packages/build/src/build/buildAuth/buildPageAuth.js` |
-| API Protection | `packages/build/src/build/buildAuth/buildApiAuth.js` |
-| NextAuth Config | `packages/api/src/routes/auth/getNextAuthConfig.js` |
-| Providers | `packages/api/src/routes/auth/createProviders.js` |
-| Session Callback | `packages/api/src/routes/auth/callbacks/createSessionCallback.js` |
-| JWT Callback | `packages/api/src/routes/auth/callbacks/createJWTCallback.js` |
-| Authorization | `packages/api/src/context/createAuthorize.js` |
-| _user Operator | `packages/plugins/operators/operators-js/src/operators/shared/user.js` |
-| API Route | `packages/servers/server/pages/api/auth/[...nextauth].js` |
+| Component         | File                                                                   |
+| ----------------- | ---------------------------------------------------------------------- |
+| Config Validation | `packages/build/src/build/buildAuth/validateAuthConfig.js`             |
+| Page Protection   | `packages/build/src/build/buildAuth/buildPageAuth.js`                  |
+| API Protection    | `packages/build/src/build/buildAuth/buildApiAuth.js`                   |
+| NextAuth Config   | `packages/api/src/routes/auth/getNextAuthConfig.js`                    |
+| Providers         | `packages/api/src/routes/auth/createProviders.js`                      |
+| Session Callback  | `packages/api/src/routes/auth/callbacks/createSessionCallback.js`      |
+| JWT Callback      | `packages/api/src/routes/auth/callbacks/createJWTCallback.js`          |
+| Authorization     | `packages/api/src/context/createAuthorize.js`                          |
+| \_user Operator   | `packages/plugins/operators/operators-js/src/operators/shared/user.js` |
+| API Route         | `packages/servers/server/pages/api/auth/[...nextauth].js`              |
 
 ## Mock User for Testing (Dev Server Only)
 
@@ -523,11 +538,13 @@ The dev server supports mock users for testing, bypassing the login flow.
 ### Configuration
 
 **Environment Variable (takes precedence):**
+
 ```bash
 LOWDEFY_DEV_USER='{"sub":"test-user","email":"test@example.com","roles":["admin"]}'
 ```
 
 **Config File:**
+
 ```yaml
 auth:
   providers:
@@ -579,13 +596,13 @@ async function getMockSession() {
 
 ### Key Files
 
-| File | Purpose |
-|------|---------|
-| `server-dev/lib/server/auth/getMockSession.js` | Core mock session logic |
-| `server-dev/lib/server/auth/checkMockUserWarning.js` | Startup warning |
-| `server-dev/lib/server/auth/getServerSession.js` | Server-side integration |
-| `server-dev/pages/api/auth/[...nextauth].js` | Client-side integration |
-| `build/src/lowdefySchema.js` | Schema for `auth.dev.mockUser` |
+| File                                                 | Purpose                        |
+| ---------------------------------------------------- | ------------------------------ |
+| `server-dev/lib/server/auth/getMockSession.js`       | Core mock session logic        |
+| `server-dev/lib/server/auth/checkMockUserWarning.js` | Startup warning                |
+| `server-dev/lib/server/auth/getServerSession.js`     | Server-side integration        |
+| `server-dev/pages/api/auth/[...nextauth].js`         | Client-side integration        |
+| `build/src/lowdefySchema.js`                         | Schema for `auth.dev.mockUser` |
 
 ### Security Note
 

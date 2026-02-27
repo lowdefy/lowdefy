@@ -17,23 +17,28 @@
 import { logClientError } from '@lowdefy/api';
 
 import apiWrapper from '../../lib/server/apiWrapper.js';
-import captureSentryError from '../../lib/server/sentry/captureSentryError.js';
 
 async function handler({ context, req, res }) {
   if (req.method !== 'POST') {
     throw new Error('Only POST requests are supported.');
   }
-  const response = await logClientError(context, req.body);
 
-  // Capture client error to Sentry (no-op if Sentry not configured)
-  captureSentryError({
-    error: new Error(req.body.message),
-    context,
-    configLocation: response.source
-      ? { source: response.source, config: response.config, link: response.link }
-      : null,
-  });
+  const origin = req.headers.origin;
+  if (!origin) {
+    res.status(403).json({ error: 'Forbidden' });
+    return;
+  }
+  try {
+    if (new URL(origin).host !== req.headers.host) {
+      res.status(403).json({ error: 'Forbidden' });
+      return;
+    }
+  } catch {
+    res.status(403).json({ error: 'Forbidden' });
+    return;
+  }
 
+  const { error, ...response } = await logClientError(context, req.body);
   res.status(200).json(response);
 }
 

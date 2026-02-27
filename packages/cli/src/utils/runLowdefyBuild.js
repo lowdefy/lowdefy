@@ -18,7 +18,7 @@ import { spawnProcess } from '@lowdefy/node-utils';
 import { createStdOutLineHandler } from '@lowdefy/logger/cli';
 
 async function runLowdefyBuild({ context, directory }) {
-  context.logger.ui.spin('Running Lowdefy build.');
+  context.logger.info({ spin: true }, 'Running Lowdefy build.');
   try {
     await spawnProcess({
       args: ['run', 'build:lowdefy'],
@@ -39,7 +39,7 @@ async function runLowdefyBuild({ context, directory }) {
   } catch (error) {
     throw new Error('Lowdefy build failed.');
   }
-  context.logger.ui.log('Lowdefy build successful.');
+  context.logger.info('Lowdefy build successful.');
 }
 
 export default runLowdefyBuild;

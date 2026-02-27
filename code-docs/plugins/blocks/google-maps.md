@@ -4,8 +4,8 @@
 
 ## Block
 
-| Block | Purpose |
-|-------|---------|
+| Block        | Purpose             |
+| ------------ | ------------------- |
 | `GoogleMaps` | Google Maps display |
 
 ## Usage
@@ -29,18 +29,18 @@
 
 ## Properties
 
-| Property | Purpose |
-|----------|---------|
-| `apiKey` | Google Maps API key |
-| `center` | Map center coordinates |
-| `zoom` | Zoom level (1-20) |
-| `markers` | Array of marker objects |
+| Property    | Purpose                             |
+| ----------- | ----------------------------------- |
+| `apiKey`    | Google Maps API key                 |
+| `center`    | Map center coordinates              |
+| `zoom`      | Zoom level (1-20)                   |
+| `markers`   | Array of marker objects             |
 | `mapTypeId` | roadmap, satellite, hybrid, terrain |
-| `style` | Container style |
+| `style`     | Container style                     |
 
 ## Events
 
-| Event | Payload |
-|-------|---------|
+| Event           | Payload             |
+| --------------- | ------------------- |
 | `onMarkerClick` | Clicked marker data |
-| `onMapClick` | Click coordinates |
+| `onMapClick`    | Click coordinates   |

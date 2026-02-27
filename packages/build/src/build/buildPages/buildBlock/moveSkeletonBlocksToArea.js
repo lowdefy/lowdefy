@@ -15,36 +15,29 @@
 */
 
 import { set, type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError } from '@lowdefy/errors';
 
-function recMoveSkeletonBlocksToArea(block, blockId, pageId, context) {
+function recMoveSkeletonBlocksToArea(block, blockId, pageId) {
   if (!type.isNone(block.blocks)) {
     if (!type.isArray(block.blocks)) {
-      throw new ConfigError({
-        message: `Skeleton blocks at ${blockId} on page ${pageId} is not an array.`,
-        received: block.blocks,
-        configKey: block['~k'],
-        context,
-      });
+      throw new ConfigError(
+        `Skeleton blocks at ${blockId} on page ${pageId} is not an array.`,
+        { received: block.blocks, configKey: block['~k'] }
+      );
     }
     set(block, 'areas.content.blocks', block.blocks);
     delete block.blocks;
   }
   Object.keys(block.areas || {}).forEach((area) => {
     block.areas[area].blocks.forEach((block, i) => {
-      recMoveSkeletonBlocksToArea(block, `${blockId}.areas.${area}.${i}.blocks`, pageId, context);
+      recMoveSkeletonBlocksToArea(block, `${blockId}.areas.${area}.${i}.blocks`, pageId);
     });
   });
 }
 
 function moveSkeletonBlocksToArea(block, pageContext) {
   if (type.isObject(block.skeleton)) {
-    recMoveSkeletonBlocksToArea(
-      block.skeleton,
-      `${block.blockId}.skeleton`,
-      pageContext.pageId,
-      pageContext.context
-    );
+    recMoveSkeletonBlocksToArea(block.skeleton, `${block.blockId}.skeleton`, pageContext.pageId);
   }
 }
 

@@ -21,7 +21,7 @@ function Link({ methods: { link }, params }) {
   try {
     link(linkParams);
   } catch (e) {
-    throw new Error('Invalid Link, check action params.');
+    throw new Error('Invalid Link, check action params.', { cause: e });
   }
 }
 

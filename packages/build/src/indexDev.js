@@ -17,5 +17,4 @@
 export { default as shallowBuild } from './build/jit/shallowBuild.js';
 export { default as buildPageJit } from './build/jit/buildPageJit.js';
 export { default as createPageRegistry } from './build/jit/createPageRegistry.js';
-export { default as createFileDependencyMap } from './build/jit/createFileDependencyMap.js';
 export { default as createContext } from './createContext.js';

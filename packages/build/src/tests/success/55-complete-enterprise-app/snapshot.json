@@ -3810,7 +3810,7 @@
       "~k": "a5"
     },
     "auth": {
-      "public": false,
+      "public": true,
       "~k": "dh"
     },
     "pageId": "404",

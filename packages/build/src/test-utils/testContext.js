@@ -55,28 +55,21 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
     connectionIds: new Set(),
   };
 
-  const mergedLogger = {
+  context.logger = {
     ...defaultLogger,
     ...logger,
   };
 
-  // Wrap logger.warn to handle config warning params (like createContext does)
-  const originalWarn = mergedLogger.warn;
-  context.logger = {
-    ...mergedLogger,
-    warn: (warningOrParams) => {
-      // Plain string or object without message - pass through
-      if (typeof warningOrParams === 'string' || !warningOrParams.message) {
-        originalWarn(warningOrParams);
-        return;
-      }
-      // Params object with message - handle prodError
-      if (warningOrParams.prodError && context.stage === 'prod') {
-        throw new Error(warningOrParams.message);
-      }
-      originalWarn(warningOrParams.message);
-    },
+  // handleWarning works like a simplified version of the production handleWarning
+  context.handleWarning = (warning) => {
+    if (warning.prodError && context.stage === 'prod') {
+      throw new Error(warning.message);
+    }
+    context.logger.warn(warning.message);
   };
+
+  // handleError delegates to logger.error
+  context.handleError = context.logger.error;
 
   return context;
 }

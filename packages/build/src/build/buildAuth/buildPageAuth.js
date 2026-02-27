@@ -17,7 +17,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError } from '@lowdefy/errors';
 import getPageRoles from './getPageRoles.js';
 import getProtectedPages from './getProtectedPages.js';
 
@@ -30,13 +30,18 @@ function buildPageAuth({ components, context }) {
   }
 
   (components.pages || []).forEach((page) => {
+    // The 404 page must always be public so unauthenticated users can see it.
+    if (page.id === '404') {
+      page.auth = {
+        public: true,
+      };
+      return;
+    }
     if (pageRoles[page.id]) {
       if (configPublicPages.includes(page.id)) {
-        throw new ConfigError({
-          message: `Page "${page.id}" is both protected by roles and public.`,
+        throw new ConfigError(`Page "${page.id}" is both protected by roles and public.`, {
           received: pageRoles[page.id],
           configKey: page['~k'],
-          context,
         });
       }
       page.auth = {

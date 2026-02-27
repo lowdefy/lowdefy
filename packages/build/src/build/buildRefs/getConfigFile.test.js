@@ -59,7 +59,7 @@ test('getConfigFile throws formatted error when file does not exist', async () =
   );
 });
 
-test('getConfigFile error includes line number in source', async () => {
+test('getConfigFile error stores filePath and lineNumber for handler resolution', async () => {
   mockReadConfigFile.mockResolvedValue(null);
   const refDef = { path: 'missing.yaml', lineNumber: 25 };
 
@@ -67,7 +67,8 @@ test('getConfigFile error includes line number in source', async () => {
     await getConfigFile({ context, refDef, referencedFrom: 'pages/home.yaml' });
     throw new Error('Expected error to be thrown');
   } catch (error) {
-    expect(error.source).toBe('/test/config/pages/home.yaml:25');
+    expect(error.filePath).toBe('pages/home.yaml');
+    expect(error.lineNumber).toBe(25);
   }
 });
 
@@ -124,7 +125,7 @@ test('getConfigFile does not suggest path for normal paths', async () => {
   await expect(errorPromise).rejects.not.toThrow('Tip:');
 });
 
-test('getConfigFile includes all error details in message and source', async () => {
+test('getConfigFile includes all error details in message and location fields', async () => {
   mockReadConfigFile.mockResolvedValue(null);
   const refDef = { path: '../missing.yaml', lineNumber: 42 };
 
@@ -132,7 +133,8 @@ test('getConfigFile includes all error details in message and source', async () 
     await getConfigFile({ context, refDef, referencedFrom: 'pages/test.yaml' });
     throw new Error('Expected error to be thrown');
   } catch (error) {
-    expect(error.source).toBe('/test/config/pages/test.yaml:42');
+    expect(error.filePath).toBe('pages/test.yaml');
+    expect(error.lineNumber).toBe(42);
     expect(error.message).toContain('Referenced file does not exist: "../missing.yaml"');
     expect(error.message).toContain('Resolved to: /test/missing.yaml'); // path.resolve normalizes ../
     expect(error.message).toContain('Did you mean "missing.yaml"?');

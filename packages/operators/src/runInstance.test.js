@@ -168,7 +168,7 @@ test('error', () => {
       params: [functions],
       instanceType: 'object',
     })
-  ).toThrowErrorMatchingInlineSnapshot(`"_op.error - Function error."`);
+  ).toThrowErrorMatchingInlineSnapshot(`"Function error."`);
 });
 
 test('typeCheck', () => {

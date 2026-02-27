@@ -17,7 +17,7 @@
 */
 
 import { jest } from '@jest/globals';
-import { ConfigError } from '@lowdefy/errors/client';
+import { ConfigError } from '@lowdefy/errors';
 
 import testContext from './testContext.js';
 

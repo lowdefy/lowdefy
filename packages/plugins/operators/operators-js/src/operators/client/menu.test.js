@@ -132,7 +132,7 @@ test('_menu null', () => {
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
   expect(res.errors.length).toBe(1);
-  expect(res.errors[0].rawMessage).toBe('_menu must be of type string, number or object.');
+  expect(res.errors[0]._message).toBe('_menu must be of type string, number or object.');
   expect(res.errors[0].message).toBe(
     '_menu must be of type string, number or object. at locationId.'
   );
@@ -172,7 +172,7 @@ test('_menu params object value not string', () => {
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
   expect(res.errors.length).toBe(1);
-  expect(res.errors[0].rawMessage).toBe('_menu.value must be of type string.');
+  expect(res.errors[0]._message).toBe('_menu.value must be of type string.');
   expect(res.errors[0].message).toBe('_menu.value must be of type string. at locationId.');
 });
 
@@ -186,7 +186,7 @@ test('_menu params object index not number', () => {
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
   expect(res.errors.length).toBe(1);
-  expect(res.errors[0].rawMessage).toBe('_menu.index must be of type number.');
+  expect(res.errors[0]._message).toBe('_menu.index must be of type number.');
   expect(res.errors[0].message).toBe('_menu.index must be of type number. at locationId.');
 });
 
@@ -245,7 +245,7 @@ test('_menu param object invalid', () => {
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual(null);
   expect(res.errors.length).toBe(1);
-  expect(res.errors[0].rawMessage).toBe('_menu must be of type string, number or object.');
+  expect(res.errors[0]._message).toBe('_menu must be of type string, number or object.');
   expect(res.errors[0].message).toBe(
     '_menu must be of type string, number or object. at locationId.'
   );

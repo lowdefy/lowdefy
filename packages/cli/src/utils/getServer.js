@@ -21,7 +21,7 @@ import fetchNpmTarball from './fetchNpmTarball.js';
 
 async function getServer({ context, packageName, directory }) {
   if (context.lowdefyVersion === 'local') {
-    context.logger.ui.warn(`Running local ${packageName}.`);
+    context.logger.warn(`Running local ${packageName}.`);
     return;
   }
 
@@ -34,19 +34,19 @@ async function getServer({ context, packageName, directory }) {
     const serverPackageConfig = JSON.parse(await readFile(path.join(directory, 'package.json')));
     if (serverPackageConfig.version !== context.lowdefyVersion) {
       fetchServer = true;
-      context.logger.ui.warn(`Removing ${packageName} with version ${serverPackageConfig.version}`);
+      context.logger.warn(`Removing ${packageName} with version ${serverPackageConfig.version}`);
       await cleanDirectory(directory);
     }
   }
 
   if (fetchServer) {
-    context.logger.ui.spin(`Fetching ${packageName} from npm.`);
+    context.logger.info({ spin: true }, `Fetching ${packageName} from npm.`);
     await fetchNpmTarball({
       packageName,
       version: context.lowdefyVersion,
       directory,
     });
-    context.logger.ui.log(`Fetched ${packageName} from npm.`);
+    context.logger.info(`Fetched ${packageName} from npm.`);
   }
 }
 
