@@ -5,6 +5,7 @@ AWS integration plugin for Lowdefy.
 ## Overview
 
 This plugin provides:
+
 - S3 bucket connections
 - S3 file operations
 - AWS authentication helpers
@@ -13,8 +14,8 @@ This plugin provides:
 
 ### Connection Type
 
-| Type | Purpose |
-|------|---------|
+| Type       | Purpose              |
+| ---------- | -------------------- |
 | `S3Bucket` | Connect to S3 bucket |
 
 ### Configuration
@@ -34,13 +35,13 @@ connections:
 
 ### Properties
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `region` | string | AWS region |
-| `bucket` | string | Bucket name |
-| `accessKeyId` | string | AWS access key |
-| `secretAccessKey` | string | AWS secret key |
-| `endpoint` | string | Custom endpoint (for S3-compatible services) |
+| Property          | Type   | Description                                  |
+| ----------------- | ------ | -------------------------------------------- |
+| `region`          | string | AWS region                                   |
+| `bucket`          | string | Bucket name                                  |
+| `accessKeyId`     | string | AWS access key                               |
+| `secretAccessKey` | string | AWS secret key                               |
+| `endpoint`        | string | Custom endpoint (for S3-compatible services) |
 
 ## S3 Request Types
 
@@ -117,7 +118,7 @@ requests:
     properties:
       key:
         _state: fileKey
-      expiresIn: 3600    # seconds
+      expiresIn: 3600 # seconds
 ```
 
 ### S3PresignedPutUrl
@@ -183,16 +184,8 @@ Required S3 permissions:
   "Statement": [
     {
       "Effect": "Allow",
-      "Action": [
-        "s3:GetObject",
-        "s3:PutObject",
-        "s3:DeleteObject",
-        "s3:ListBucket"
-      ],
-      "Resource": [
-        "arn:aws:s3:::my-bucket",
-        "arn:aws:s3:::my-bucket/*"
-      ]
+      "Action": ["s3:GetObject", "s3:PutObject", "s3:DeleteObject", "s3:ListBucket"],
+      "Resource": ["arn:aws:s3:::my-bucket", "arn:aws:s3:::my-bucket/*"]
     }
   ]
 }

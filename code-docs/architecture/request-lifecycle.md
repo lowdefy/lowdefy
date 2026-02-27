@@ -5,6 +5,7 @@ How data flows from user action to database and back in Lowdefy.
 ## Overview
 
 The request lifecycle involves:
+
 1. User action triggers an event
 2. Event executes actions (including `request` action)
 3. HTTP request sent to API endpoint
@@ -97,7 +98,11 @@ callActions() {
 function request(params) {
   // params: string | array | { all: true }
   return context._internal.Requests.callRequests({
-    actions, arrayIndices, blockId, event, params
+    actions,
+    arrayIndices,
+    blockId,
+    event,
+    params,
   });
 }
 ```
@@ -114,13 +119,16 @@ class Requests {
     // Parse payload with operators
     const { output: payload } = parser.parse({
       input: requestConfig.payload,
-      location: requestId
+      location: requestId,
     });
 
     // Track request state
     const request = {
-      blockId, loading: true, payload,
-      requestId, response: null
+      blockId,
+      loading: true,
+      payload,
+      requestId,
+      response: null,
     };
 
     this.context.requests[requestId].unshift(request);
@@ -129,7 +137,10 @@ class Requests {
 
   async fetch(request) {
     const response = await this.context._internal.lowdefy._internal.callRequest({
-      blockId, pageId, payload: serialize(request.payload), requestId
+      blockId,
+      pageId,
+      payload: serialize(request.payload),
+      requestId,
     });
 
     request.response = deserialize(response.response);
@@ -151,7 +162,7 @@ function createCallRequest({ basePath }) {
     return request({
       url: `${basePath}/api/request/${pageId}/${requestId}`,
       method: 'POST',
-      body: { payload }
+      body: { payload },
     });
   };
 }
@@ -213,9 +224,10 @@ async function callRequest(context, { blockId, pageId, payload, requestId }) {
 **File:** `packages/api/src/routes/request/callRequestResolver.js`
 
 ```javascript
-async function callRequestResolver(context, {
-  connectionProperties, requestConfig, requestProperties, requestResolver
-}) {
+async function callRequestResolver(
+  context,
+  { connectionProperties, requestConfig, requestProperties, requestResolver }
+) {
   const response = await requestResolver({
     blockId,
     endpointId,
@@ -224,7 +236,7 @@ async function callRequestResolver(context, {
     pageId,
     payload,
     request: requestProperties,
-    requestId: requestConfig.requestId
+    requestId: requestConfig.requestId,
   });
   return response;
 }
@@ -238,9 +250,7 @@ async function callRequestResolver(context, {
 function getConnection({ connections }, { connectionConfig }) {
   const connection = connections[connectionConfig.type];
   if (!connection) {
-    throw new ConfigurationError(
-      `Connection type "${connectionConfig.type}" not found.`
-    );
+    throw new ConfigurationError(`Connection type "${connectionConfig.type}" not found.`);
   }
   return connection;
 }
@@ -251,12 +261,10 @@ function getConnection({ connections }, { connectionConfig }) {
 **File:** `packages/api/src/routes/request/getRequestResolver.js`
 
 ```javascript
-function getRequestResolver({ }, { connection, requestConfig }) {
+function getRequestResolver({}, { connection, requestConfig }) {
   const requestResolver = connection.requests[requestConfig.type];
   if (!requestResolver) {
-    throw new ConfigurationError(
-      `Request type "${requestConfig.type}" not found.`
-    );
+    throw new ConfigurationError(`Request type "${requestConfig.type}" not found.`);
   }
   return requestResolver;
 }
@@ -270,7 +278,9 @@ function getRequestResolver({ }, { connection, requestConfig }) {
 
 ```javascript
 export default {
-  schema: { /* JSON Schema */ },
+  schema: {
+    /* JSON Schema */
+  },
   requests: {
     MongoDBAggregation,
     MongoDBDeleteMany,
@@ -280,9 +290,9 @@ export default {
     MongoDBInsertMany,
     MongoDBInsertOne,
     MongoDBUpdateMany,
-    MongoDBUpdateOne
-  }
-}
+    MongoDBUpdateOne,
+  },
+};
 ```
 
 ### Request Handler Example
@@ -304,7 +314,7 @@ async function MongodbFindOne({ request, connection }) {
 
 MongodbFindOne.meta = {
   checkRead: true,
-  checkWrite: false
+  checkWrite: false,
 };
 ```
 
@@ -317,17 +327,13 @@ MongodbFindOne.meta = {
 ```javascript
 function checkConnectionRead(context, { connectionProperties, requestResolver }) {
   if (requestResolver.meta.checkRead && connectionProperties.read === false) {
-    throw new ConfigurationError(
-      `Connection does not allow reads.`
-    );
+    throw new ConfigurationError(`Connection does not allow reads.`);
   }
 }
 
 function checkConnectionWrite(context, { connectionProperties, requestResolver }) {
   if (requestResolver.meta.checkWrite && connectionProperties.write !== true) {
-    throw new ConfigurationError(
-      `Connection does not allow writes.`
-    );
+    throw new ConfigurationError(`Connection does not allow writes.`);
   }
 }
 ```
@@ -337,9 +343,10 @@ function checkConnectionWrite(context, { connectionProperties, requestResolver }
 **File:** `packages/api/src/routes/request/validateSchemas.js`
 
 ```javascript
-function validateSchemas(context, {
-  connection, connectionProperties, requestResolver, requestProperties
-}) {
+function validateSchemas(
+  context,
+  { connection, connectionProperties, requestResolver, requestProperties }
+) {
   validate({ schema: connection.schema, data: connectionProperties });
   validate({ schema: requestResolver.schema, data: requestProperties });
 }
@@ -360,7 +367,7 @@ class State {
   resetState() {
     // Restore from frozenState snapshot
     const frozen = deserializeFromString(this.frozenState);
-    Object.keys(frozen).forEach(key => this.set(key, frozen[key]));
+    Object.keys(frozen).forEach((key) => this.set(key, frozen[key]));
   }
 }
 ```
@@ -373,14 +380,14 @@ class State {
 const ctx = {
   pageId: config.pageId,
   eventLog: [],
-  requests: {},      // Indexed by requestId
+  requests: {}, // Indexed by requestId
   state: {},
   _internal: {
     State: new State(ctx),
     Actions: new Actions(ctx),
     Requests: new Requests(ctx),
-    update: () => _internal.RootAreas.update()
-  }
+    update: () => _internal.RootAreas.update(),
+  },
 };
 
 // Access in templates:
@@ -402,9 +409,9 @@ async function callEndpoint(context, { blockId, endpointId, pageId, payload }) {
 
   const routineContext = { arrayIndices: [], items: {} };
 
-  const { error, response, status } = await runRoutine(
-    context, routineContext, { routine: endpointConfig.routine }
-  );
+  const { error, response, status } = await runRoutine(context, routineContext, {
+    routine: endpointConfig.routine,
+  });
 
   return { error, response, status, success: !['error', 'reject'].includes(status) };
 }
@@ -473,20 +480,20 @@ async function runRoutine(context, routineContext, { routine }) {
 
 ## Key Files
 
-| Component | File |
-|-----------|------|
-| Event Trigger | `packages/engine/src/Events.js` |
-| Action Runner | `packages/engine/src/Actions.js` |
-| Request Manager | `packages/engine/src/Requests.js` |
-| HTTP Client | `packages/client/src/createCallRequest.js` |
-| Server Handler | `packages/api/src/routes/request/callRequest.js` |
-| Connection Resolver | `packages/api/src/routes/request/getConnection.js` |
-| Request Resolver | `packages/api/src/routes/request/getRequestResolver.js` |
-| Operator Evaluator | `packages/api/src/routes/request/evaluateOperators.js` |
-| Authorization | `packages/api/src/routes/request/authorizeRequest.js` |
-| Validation | `packages/api/src/routes/request/validateSchemas.js` |
-| Endpoint Handler | `packages/api/src/routes/endpoints/callEndpoint.js` |
-| State Manager | `packages/engine/src/State.js` |
+| Component           | File                                                    |
+| ------------------- | ------------------------------------------------------- |
+| Event Trigger       | `packages/engine/src/Events.js`                         |
+| Action Runner       | `packages/engine/src/Actions.js`                        |
+| Request Manager     | `packages/engine/src/Requests.js`                       |
+| HTTP Client         | `packages/client/src/createCallRequest.js`              |
+| Server Handler      | `packages/api/src/routes/request/callRequest.js`        |
+| Connection Resolver | `packages/api/src/routes/request/getConnection.js`      |
+| Request Resolver    | `packages/api/src/routes/request/getRequestResolver.js` |
+| Operator Evaluator  | `packages/api/src/routes/request/evaluateOperators.js`  |
+| Authorization       | `packages/api/src/routes/request/authorizeRequest.js`   |
+| Validation          | `packages/api/src/routes/request/validateSchemas.js`    |
+| Endpoint Handler    | `packages/api/src/routes/endpoints/callEndpoint.js`     |
+| State Manager       | `packages/engine/src/State.js`                          |
 
 ## Architectural Patterns
 

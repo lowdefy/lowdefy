@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { shouldSuppressBuildCheck } from '@lowdefy/errors';
+
 /**
  * Collects an exception (ConfigError or ConfigWarning) instead of throwing immediately.
  * Allows the build to continue and collect all exceptions before stopping.
@@ -23,7 +25,7 @@
  */
 function collectExceptions(context, exception) {
   // Skip suppressed exceptions (from ~ignoreBuildChecks)
-  if (exception.suppressed) {
+  if (shouldSuppressBuildCheck(exception, context.keyMap)) {
     return;
   }
 
@@ -31,13 +33,6 @@ function collectExceptions(context, exception) {
     // If no error collection array, throw immediately (fallback for tests)
     throw exception;
   }
-
-  // Deduplicate by source:line only (same file:line = same exception)
-  const dedupKey = exception.source ?? exception.message;
-  if (context.seenSourceLines?.has(dedupKey)) {
-    return;
-  }
-  context.seenSourceLines?.add(dedupKey);
 
   // Collect exception object - logging happens at checkpoints in index.js
   context.errors.push(exception);

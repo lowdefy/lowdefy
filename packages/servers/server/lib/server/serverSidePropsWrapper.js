@@ -22,7 +22,7 @@ import config from '../build/config.js';
 import createLogger from './log/createLogger.js';
 import fileCache from './fileCache.js';
 import getServerSession from './auth/getServerSession.js';
-import logError from './log/logError.js';
+import createHandleError from './log/createHandleError.js';
 import logRequest from './log/logRequest.js';
 import getAuthOptions from './auth/getAuthOptions.js';
 
@@ -35,6 +35,9 @@ function serverSidePropsWrapper(handler) {
       buildDirectory: path.join(process.cwd(), 'build'),
       config,
       fileCache,
+      handleError: async (err) => {
+        console.error(err);
+      },
       headers: nextContext?.req?.headers,
       logger: console,
       nextContext,
@@ -43,6 +46,7 @@ function serverSidePropsWrapper(handler) {
     };
     try {
       context.logger = createLogger({ rid: context.rid });
+      context.handleError = createHandleError({ context });
       context.authOptions = getAuthOptions(context);
       context.session = await getServerSession(context);
       createApiContext(context);
@@ -51,7 +55,7 @@ function serverSidePropsWrapper(handler) {
       const response = await handler({ context, nextContext });
       return response;
     } catch (error) {
-      logError({ error, context });
+      await context.handleError(error);
       throw error;
     }
   };

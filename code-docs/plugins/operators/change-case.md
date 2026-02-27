@@ -4,8 +4,8 @@ String case conversion operator using [change-case](https://github.com/blakeembr
 
 ## Operator
 
-| Operator | Purpose |
-|----------|---------|
+| Operator       | Purpose             |
+| -------------- | ------------------- |
 | `_change_case` | Convert string case |
 
 ## Usage
@@ -19,19 +19,19 @@ result:
 
 ## Case Types
 
-| Case | Input | Output |
-|------|-------|--------|
-| `camelCase` | hello world | helloWorld |
-| `capitalCase` | hello world | Hello World |
+| Case           | Input       | Output      |
+| -------------- | ----------- | ----------- |
+| `camelCase`    | hello world | helloWorld  |
+| `capitalCase`  | hello world | Hello World |
 | `constantCase` | hello world | HELLO_WORLD |
-| `dotCase` | hello world | hello.world |
-| `headerCase` | hello world | Hello-World |
-| `noCase` | helloWorld | hello world |
-| `paramCase` | hello world | hello-world |
-| `pascalCase` | hello world | HelloWorld |
-| `pathCase` | hello world | hello/world |
+| `dotCase`      | hello world | hello.world |
+| `headerCase`   | hello world | Hello-World |
+| `noCase`       | helloWorld  | hello world |
+| `paramCase`    | hello world | hello-world |
+| `pascalCase`   | hello world | HelloWorld  |
+| `pathCase`     | hello world | hello/world |
 | `sentenceCase` | hello world | Hello world |
-| `snakeCase` | hello world | hello_world |
+| `snakeCase`    | hello world | hello_world |
 
 ## Examples
 

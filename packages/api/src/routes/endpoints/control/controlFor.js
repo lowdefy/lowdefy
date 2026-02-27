@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { PluginError } from '@lowdefy/errors/server';
+import { ConfigError } from '@lowdefy/errors';
 import runRoutine from '../runRoutine.js';
 
 async function controlFor(context, routineContext, { control }) {
@@ -39,11 +39,10 @@ async function controlFor(context, routineContext, { control }) {
   });
 
   if (!Array.isArray(array)) {
-    throw new PluginError({
-      message: `Invalid :for in endpoint "${endpointId}" - :in must evaluate to an array.`,
-      received: array,
-      configKey: control['~k'],
-    });
+    throw new ConfigError(
+      `Invalid :for in endpoint "${endpointId}" - :in must evaluate to an array.`,
+      { received: array, configKey: control['~k'] }
+    );
   }
 
   if (!control[':do']) {

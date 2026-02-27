@@ -5,6 +5,7 @@
 ## Overview
 
 AG Grid is a powerful JavaScript data grid with:
+
 - Virtual scrolling (millions of rows)
 - Column sorting, filtering, grouping
 - Cell editing
@@ -13,8 +14,8 @@ AG Grid is a powerful JavaScript data grid with:
 
 ## Block
 
-| Block | Purpose |
-|-------|---------|
+| Block          | Purpose                   |
+| -------------- | ------------------------- |
 | `AgGridAlpine` | AG Grid with Alpine theme |
 
 ## Basic Usage
@@ -39,26 +40,26 @@ AG Grid is a powerful JavaScript data grid with:
 
 ## Key Properties
 
-| Property | Purpose |
-|----------|---------|
-| `rowData` | Array of row objects |
-| `columnDefs` | Column definitions |
+| Property        | Purpose                 |
+| --------------- | ----------------------- |
+| `rowData`       | Array of row objects    |
+| `columnDefs`    | Column definitions      |
 | `defaultColDef` | Default column settings |
-| `pagination` | Enable pagination |
-| `rowSelection` | 'single' or 'multiple' |
+| `pagination`    | Enable pagination       |
+| `rowSelection`  | 'single' or 'multiple'  |
 
 ## Column Definition
 
 ```yaml
 columnDefs:
-  - field: name           # Data field
-    headerName: Name      # Display name
-    sortable: true        # Enable sort
-    filter: true          # Enable filter
-    editable: true        # Enable editing
-    width: 150            # Column width
-    pinned: left          # Pin column
-    cellRenderer: name    # Custom renderer
+  - field: name # Data field
+    headerName: Name # Display name
+    sortable: true # Enable sort
+    filter: true # Enable filter
+    editable: true # Enable editing
+    width: 150 # Column width
+    pinned: left # Pin column
+    cellRenderer: name # Custom renderer
 ```
 
 ## Events
@@ -88,6 +89,7 @@ events:
 ### Why Separate Package?
 
 AG Grid is large (~500KB). Separating it:
+
 - Keeps core bundle small
 - Only loads when needed
 - Optional dependency

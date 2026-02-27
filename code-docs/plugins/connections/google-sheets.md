@@ -4,8 +4,8 @@
 
 ## Connection Type
 
-| Type | Purpose |
-|------|---------|
+| Type          | Purpose                  |
+| ------------- | ------------------------ |
 | `GoogleSheet` | Connect to Google Sheets |
 
 ## Connection Configuration
@@ -22,13 +22,13 @@ connections:
 
 ## Request Types
 
-| Type | Purpose |
-|------|---------|
-| `GoogleSheetGetMany` | Read rows |
-| `GoogleSheetGetOne` | Read single row |
-| `GoogleSheetAppendOne` | Append row |
-| `GoogleSheetUpdateOne` | Update row |
-| `GoogleSheetDeleteOne` | Delete row |
+| Type                   | Purpose         |
+| ---------------------- | --------------- |
+| `GoogleSheetGetMany`   | Read rows       |
+| `GoogleSheetGetOne`    | Read single row |
+| `GoogleSheetAppendOne` | Append row      |
+| `GoogleSheetUpdateOne` | Update row      |
+| `GoogleSheetDeleteOne` | Delete row      |
 
 ## GoogleSheetGetMany
 

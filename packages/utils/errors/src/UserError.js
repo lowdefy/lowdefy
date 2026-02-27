@@ -14,19 +14,14 @@
   limitations under the License.
 */
 
-import formatErrorMessage from './formatErrorMessage.js';
-
 class UserError extends Error {
   constructor(message, { blockId, metaData, pageId } = {}) {
     super(message);
     this.name = 'UserError';
+    this.isLowdefyError = true;
     this.blockId = blockId;
     this.metaData = metaData;
     this.pageId = pageId;
-  }
-
-  print() {
-    return formatErrorMessage(this);
   }
 }
 

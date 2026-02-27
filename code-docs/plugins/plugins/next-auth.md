@@ -5,6 +5,7 @@ Authentication plugin for Lowdefy using Auth.js (NextAuth.js).
 ## Overview
 
 This plugin provides:
+
 - OAuth providers (Google, GitHub, etc.)
 - Credentials provider
 - Database adapters
@@ -37,19 +38,19 @@ auth:
 
 ### Available Providers
 
-| Provider | Type |
-|----------|------|
-| Google | `GoogleProvider` |
-| GitHub | `GitHubProvider` |
+| Provider | Type               |
+| -------- | ------------------ |
+| Google   | `GoogleProvider`   |
+| GitHub   | `GitHubProvider`   |
 | Facebook | `FacebookProvider` |
-| Twitter | `TwitterProvider` |
+| Twitter  | `TwitterProvider`  |
 | LinkedIn | `LinkedInProvider` |
-| Apple | `AppleProvider` |
-| Discord | `DiscordProvider` |
-| Slack | `SlackProvider` |
-| Okta | `OktaProvider` |
-| Azure AD | `AzureADProvider` |
-| Cognito | `CognitoProvider` |
+| Apple    | `AppleProvider`    |
+| Discord  | `DiscordProvider`  |
+| Slack    | `SlackProvider`    |
+| Okta     | `OktaProvider`     |
+| Azure AD | `AzureADProvider`  |
+| Cognito  | `CognitoProvider`  |
 
 ### Credentials Provider
 
@@ -183,9 +184,9 @@ auth:
 ```yaml
 auth:
   session:
-    strategy: jwt          # jwt or database
-    maxAge: 2592000        # 30 days
-    updateAge: 86400       # 24 hours
+    strategy: jwt # jwt or database
+    maxAge: 2592000 # 30 days
+    updateAge: 86400 # 24 hours
 ```
 
 ## Login/Logout Actions
@@ -208,10 +209,10 @@ events:
 
 ## Environment Variables
 
-| Variable | Purpose |
-|----------|---------|
+| Variable          | Purpose                           |
+| ----------------- | --------------------------------- |
 | `NEXTAUTH_SECRET` | Session encryption key (required) |
-| `NEXTAUTH_URL` | App URL (for OAuth callbacks) |
+| `NEXTAUTH_URL`    | App URL (for OAuth callbacks)     |
 
 ## Example Configuration
 
@@ -237,5 +238,5 @@ auth:
 
   session:
     strategy: jwt
-    maxAge: 604800    # 7 days
+    maxAge: 604800 # 7 days
 ```

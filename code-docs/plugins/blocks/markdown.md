@@ -4,9 +4,9 @@ Markdown rendering blocks for Lowdefy.
 
 ## Blocks
 
-| Block | Purpose |
-|-------|---------|
-| `Markdown` | Render markdown content |
+| Block              | Purpose                           |
+| ------------------ | --------------------------------- |
+| `Markdown`         | Render markdown content           |
 | `MarkdownWithCode` | Markdown with syntax highlighting |
 
 ## Markdown Block
@@ -30,7 +30,7 @@ Renders markdown to HTML:
 
 Adds syntax highlighting for code blocks:
 
-```yaml
+````yaml
 - id: tutorial
   type: MarkdownWithCode
   properties:
@@ -41,12 +41,12 @@ Adds syntax highlighting for code blocks:
       const hello = 'world';
       console.log(hello);
       ```
-```
+````
 
 ## Properties
 
-| Property | Purpose |
-|----------|---------|
-| `content` | Markdown string |
-| `skipHtml` | Disable raw HTML in markdown |
-| `linkTarget` | Default link target (_blank, etc.) |
+| Property     | Purpose                             |
+| ------------ | ----------------------------------- |
+| `content`    | Markdown string                     |
+| `skipHtml`   | Disable raw HTML in markdown        |
+| `linkTarget` | Default link target (\_blank, etc.) |

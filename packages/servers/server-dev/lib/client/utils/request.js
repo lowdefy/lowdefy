@@ -27,9 +27,7 @@ async function request({ url, method = 'GET', body }) {
   }
   if (!res.ok) {
     const body = await res.json();
-    console.log(res);
-    console.log(body);
-    throw new Error(body.message || 'Request error');
+    throw new Error(body?.['~e']?.message ?? body?.message ?? 'Request error');
   }
   return res.json();
 }

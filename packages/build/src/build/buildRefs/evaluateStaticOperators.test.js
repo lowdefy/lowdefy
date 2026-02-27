@@ -36,10 +36,13 @@ const mockContext = {
   logger: {
     warn: jest.fn(),
   },
+  errors: [],
+  keyMap: {},
 };
 
 beforeEach(() => {
   mockContext.logger.warn.mockClear();
+  mockContext.errors = [];
 });
 
 describe('evaluateStaticOperators', () => {
@@ -316,5 +319,20 @@ describe('evaluateStaticOperators', () => {
     });
     expect(output.pages[0].blocks[0].properties.staticValue).toBe(300);
     expect(output.pages[0].blocks[0].properties.dynamicValue).toEqual({ _state: 'cardState' });
+  });
+
+  test('static operator with invalid params collects error in context.errors', () => {
+    const input = {
+      result: { _sum: 'not-an-array' },
+    };
+    const output = evaluateStaticOperators({
+      context: mockContext,
+      input,
+      refDef: { path: 'test.yaml' },
+    });
+    expect(output.result).toBeNull();
+    expect(mockContext.errors).toHaveLength(1);
+    expect(mockContext.errors[0].message).toContain('_sum takes an array type as input.');
+    expect(mockContext.errors[0].filePath).toBe('test.yaml');
   });
 });

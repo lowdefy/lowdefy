@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigError, PluginError, UserError } from '@lowdefy/errors/client';
+import { ActionError, ConfigError, UserError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 import getActionMethods from './actions/getActionMethods.js';
 
@@ -31,7 +31,7 @@ class Actions {
   }
 
   logActionError({ error, action }) {
-    const logError = this.context._internal.lowdefy._internal.logError;
+    const handleError = this.context._internal.lowdefy._internal.handleError;
     const actionId = action?.id || '';
 
     // Deduplicate by error message + action id
@@ -43,13 +43,13 @@ class Actions {
 
     // User-facing errors log to browser console only, never to terminal
     if (error instanceof UserError) {
-      console.error(error.print());
+      this.context._internal.lowdefy._internal.logger.error(error);
       return;
     }
 
-    // ConfigError, PluginError, ServiceError - use logError (-> terminal)
-    if (logError) {
-      logError(error);
+    // Lowdefy errors - use handleError (-> terminal)
+    if (handleError) {
+      handleError(error);
     }
   }
 
@@ -161,10 +161,10 @@ class Actions {
 
   async callAction({ action, arrayIndices, block, event, index, progress, responses }) {
     if (!this.actions[action.type]) {
-      const error = new ConfigError({
-        message: `Invalid action type "${action.type}" at "${block.blockId}".`,
-        configKey: action['~k'],
-      });
+      const error = new ConfigError(
+        `Invalid action type "${action.type}" at "${block.blockId}".`,
+        { configKey: action['~k'] }
+      );
       throw { error, action, index };
     }
     const { output: parsedAction, errors: parserErrors } = this.context._internal.parser.parse({
@@ -206,17 +206,15 @@ class Actions {
         progress();
       }
     } catch (err) {
-      const error =
-        err instanceof ConfigError || err instanceof PluginError || err instanceof UserError
-          ? err
-          : new PluginError({
-              error: err,
-              pluginType: 'action',
-              pluginName: action.type,
-              received: parsedAction.params,
-              location: block.blockId,
-              configKey: action['~k'],
-            });
+      const error = err.isLowdefyError
+        ? err
+        : new ActionError(err.message, {
+            cause: err,
+            typeName: action.type,
+            received: parsedAction.params,
+            location: block.blockId,
+            configKey: action['~k'],
+          });
 
       responses[action.id] = { error, index, type: action.type };
       const { output: parsedMessages, errors: parserErrors } = this.context._internal.parser.parse({

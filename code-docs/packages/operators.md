@@ -5,6 +5,7 @@ Framework for parsing and evaluating Lowdefy operators. Provides parsers for bui
 ## Purpose
 
 This package provides:
+
 - `BuildParser` - Evaluates operators at build time
 - `ServerParser` - Evaluates operators on the server (requests)
 - `WebParser` - Evaluates operators in the browser (UI reactivity)
@@ -53,12 +54,12 @@ Used by `@lowdefy/build` for build-time evaluation:
 const parser = new BuildParser({
   operators: buildOperators,
   payload: {
-    env,           // Environment variables
-    variables,     // Build-time variables from _var
-    refDef,        // Current _ref definition being processed
-    path,          // Current file path
+    env, // Environment variables
+    variables, // Build-time variables from _var
+    refDef, // Current _ref definition being processed
+    path, // Current file path
   },
-  jsMap,           // Map of JavaScript functions
+  jsMap, // Map of JavaScript functions
 });
 
 const result = parser.parse({
@@ -68,6 +69,7 @@ const result = parser.parse({
 ```
 
 **Build-time operators:**
+
 - `_ref` - Include other files
 - `_var` - Build variables
 - `_build.env` - Environment at build time
@@ -81,16 +83,16 @@ Used by `@lowdefy/api` for server-side evaluation:
 const parser = new ServerParser({
   operators: serverOperators,
   payload: {
-    secrets,       // Application secrets
-    user,          // Current authenticated user
-    payload,       // Request payload from client
-    urlQuery,      // URL query parameters
-    pageId,        // Current page ID
-    requestId,     // Current request ID
-    global,        // Global state
-    input,         // Page input data
+    secrets, // Application secrets
+    user, // Current authenticated user
+    payload, // Request payload from client
+    urlQuery, // URL query parameters
+    pageId, // Current page ID
+    requestId, // Current request ID
+    global, // Global state
+    input, // Page input data
     lowdefyGlobal, // Lowdefy app configuration
-    apiResponses,  // Previous request responses
+    apiResponses, // Previous request responses
   },
 });
 
@@ -101,6 +103,7 @@ const result = parser.parse({
 ```
 
 **Server-only operators:**
+
 - `_secret` - Access secrets (never sent to client)
 - `_user` - Current user session
 - `_payload` - Request payload from action
@@ -113,18 +116,18 @@ Used by `@lowdefy/engine` for client-side evaluation:
 const parser = new WebParser({
   operators: webOperators,
   payload: {
-    state,         // Page state object
-    urlQuery,      // URL query parameters
-    input,         // Navigation input data
-    global,        // Global state (cross-page)
-    requests,      // Request responses cache
-    event,         // Current event object
-    eventLog,      // Array of previous events
-    user,          // Authenticated user
-    actions,       // Actions context for _actions_log
+    state, // Page state object
+    urlQuery, // URL query parameters
+    input, // Navigation input data
+    global, // Global state (cross-page)
+    requests, // Request responses cache
+    event, // Current event object
+    eventLog, // Array of previous events
+    user, // Authenticated user
+    actions, // Actions context for _actions_log
     lowdefyGlobal, // Lowdefy app configuration
-    blockId,       // Current block ID
-    pageId,        // Current page ID
+    blockId, // Current block ID
+    pageId, // Current page ID
   },
 });
 
@@ -135,6 +138,7 @@ const result = parser.parse({
 ```
 
 **Client operators:**
+
 - `_state` - Page state values
 - `_url_query` - URL parameters
 - `_input` - Navigation input
@@ -201,14 +205,14 @@ Execute operator classes:
 const result = runClass(OperatorClass, {
   params,
   location,
-  ...context
+  ...context,
 });
 
 // For instance-based operators
 const result = runInstance(operatorInstance, {
   params,
   location,
-  ...context
+  ...context,
 });
 ```
 
@@ -271,6 +275,7 @@ Input Object (with operators)
 ### Why Three Parsers?
 
 Different contexts have different:
+
 - Available operators (`_secret` only on server)
 - Payload data (state only on client)
 - Security requirements
@@ -278,6 +283,7 @@ Different contexts have different:
 ### Why Underscore Prefix?
 
 The `_` prefix:
+
 - Clear visual distinction from data
 - Won't conflict with user keys
 - Easy to parse (just check first char)
@@ -291,8 +297,8 @@ Operators can contain operators:
 title:
   _if:
     test:
-      _gt:                    # Evaluated first
-        - _state: count       # Evaluated first
+      _gt: # Evaluated first
+        - _state: count # Evaluated first
         - 10
     then: Many items
     else: Few items
@@ -303,6 +309,7 @@ Inner operators evaluate first, then outer.
 ### Why Not Just JavaScript?
 
 Operators in YAML provide:
+
 - Portable configuration (no code execution)
 - Safe evaluation (sandboxed)
 - Declarative intent (easier to reason about)
@@ -313,6 +320,7 @@ Operators in YAML provide:
 ### Server-Only Operators
 
 Some operators must never run on the client:
+
 - `_secret` - Would expose secrets
 - `_user.password` - Sensitive data
 
@@ -321,6 +329,7 @@ The parsers enforce this by only including safe operators.
 ### Sandboxed Evaluation
 
 Operators cannot:
+
 - Access arbitrary JavaScript
 - Make network requests
 - Access filesystem
@@ -349,5 +358,6 @@ throw new Error('_sum requires array of numbers.');
 ```
 
 The parsers (WebParser, ServerParser, BuildParser) catch operator errors and format them with:
+
 - Received value as JSON
 - Location in config

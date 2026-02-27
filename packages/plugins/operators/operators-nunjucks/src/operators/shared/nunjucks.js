@@ -33,8 +33,7 @@ function _nunjucks({ params, state, payload, runtime }) {
       const template = nunjucksFunction(templateString);
       return template(on);
     } catch (e) {
-      // log e to LowdefyError
-      throw new Error(`_nunjucks failed to parse nunjucks template.`);
+      throw new Error('_nunjucks failed to parse nunjucks template.', { cause: e });
     }
   }
   return null;

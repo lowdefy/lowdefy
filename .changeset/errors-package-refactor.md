@@ -1,25 +1,29 @@
 ---
 '@lowdefy/errors': minor
+'@lowdefy/helpers': minor
 '@lowdefy/api': patch
+'@lowdefy/client': patch
 '@lowdefy/operators': patch
 '@lowdefy/build': patch
+'@lowdefy/logger': patch
+'@lowdefy/engine': patch
 ---
 
 refactor: Consolidate error classes into @lowdefy/errors package with environment-specific subpaths
 
 **Error Package Restructure**
 
-- New `@lowdefy/errors` package with environment-specific subpaths:
+- New `@lowdefy/errors` package with all error classes (`ConfigError`, `PluginError`, `ServiceError`, `UserError`, `LowdefyInternalError`, `ConfigWarning`)
   - `@lowdefy/errors/build` - Build-time errors with sync resolution via keyMap/refMap
-  - `@lowdefy/errors/server` - Server-side errors (re-exports base classes)
-  - `@lowdefy/errors/client` - Client-side errors with async resolution via API
 - Moved ConfigMessage, resolveConfigLocation from node-utils to errors/build
 
-**ConfigError String Overload**
+**TC39 Standard Constructor Signatures**
 
-- ConfigError now accepts simple string form for plugin convenience:
+- All error constructors standardized to `new MyError(message, { cause, ...options })`:
   ```javascript
-  throw new ConfigError('Property must be a string.');
+  new ConfigError('Property must be a string.', { configKey });
+  new OperatorError(e.message, { cause: e, typeName: '_if', received: params });
+  new ServiceError(undefined, { cause: error, service: 'MongoDB', configKey });
   ```
 - Plugins throw simple errors without knowing about configKey
 - Interface layer adds configKey before re-throwing
@@ -28,20 +32,22 @@ refactor: Consolidate error classes into @lowdefy/errors package with environmen
 
 - Interface layer now adds configKey to ALL error types (not just PluginError):
   - ConfigError: adds configKey if not present, re-throws
-  - ServiceError: created via `new ServiceError({ error, service, configKey })`
+  - ServiceError: created via `new ServiceError(undefined, { cause: error, service, configKey })`
   - Plain Error: wraps in PluginError with configKey
 - Helps developers trace any error back to its config source, including service/network errors
 
-**Property Extraction from Wrapped Errors**
+**Cause Chain Support**
 
-- ConfigError and PluginError now extract `received` and `configKey` from the wrapped error:
+- All error classes use TC39 `error.cause` instead of custom stack copying
+- CLI logger walks cause chain displaying `Caused by:` lines
+- `extractErrorProps` recursively serializes Error causes for pino JSON logs
+- ConfigError and PluginError extract `received` and `configKey` from `cause`:
   ```javascript
-  new ConfigError({ error: plainError }) // extracts plainError.received and plainError.configKey
-  new PluginError({ error: plainError }) // same extraction
+  new ConfigError(undefined, { cause: plainError }); // extracts cause.received and cause.configKey
+  new PluginError(undefined, { cause: plainError }); // same extraction
   ```
 
-**Error Message Pattern**
+**Error Display**
 
-- All error classes have `.print()` method using shared `formatErrorMessage()`
-- `formatErrorMessage()` appends `Received: <JSON>` when `error.received` is defined
+- `errorToDisplayString()` formats errors for display, appending `Received: <JSON>` when `error.received` is defined
 - `rawMessage` stores the original unformatted message on PluginError

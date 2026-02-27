@@ -4,12 +4,12 @@ YAML parsing and stringification operators.
 
 ## Operators
 
-| Operator | Purpose |
-|----------|---------|
-| `_yaml_parse` | Parse YAML string |
+| Operator          | Purpose                |
+| ----------------- | ---------------------- |
+| `_yaml_parse`     | Parse YAML string      |
 | `_yaml_stringify` | Convert to YAML string |
 
-## _yaml_parse
+## \_yaml_parse
 
 Parse YAML string to object:
 
@@ -19,7 +19,7 @@ data:
     _state: yamlString
 ```
 
-## _yaml_stringify
+## \_yaml_stringify
 
 Convert object to YAML string:
 

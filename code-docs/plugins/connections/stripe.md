@@ -4,8 +4,8 @@
 
 ## Connection Type
 
-| Type | Purpose |
-|------|---------|
+| Type     | Purpose               |
+| -------- | --------------------- |
 | `Stripe` | Connect to Stripe API |
 
 ## Connection Configuration
@@ -21,8 +21,8 @@ connections:
 
 ## Request Types
 
-| Type | Purpose |
-|------|---------|
+| Type            | Purpose                 |
+| --------------- | ----------------------- |
 | `StripeRequest` | Generic Stripe API call |
 
 ## Making Stripe API Calls
@@ -55,7 +55,7 @@ requests:
       resource: paymentIntents
       method: create
       params:
-        amount: 2000    # $20.00 in cents
+        amount: 2000 # $20.00 in cents
         currency: usd
         customer:
           _state: customerId

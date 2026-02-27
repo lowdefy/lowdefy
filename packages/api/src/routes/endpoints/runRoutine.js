@@ -42,7 +42,7 @@ async function runRoutine(context, routineContext, { routine }) {
     }
     throw new Error('Invalid routine.', { cause: { routine } });
   } catch (error) {
-    context.logger.error(error);
+    await context.handleError(error);
     return { status: 'error', error };
   }
 }

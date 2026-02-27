@@ -47,11 +47,7 @@ const runClass = ({ location, meta, methodName, operator, params, functions, def
   }
 
   if (meta[methodName].noArgs) {
-    try {
-      return functions[methodName]();
-    } catch (e) {
-      throw new Error(`${operator} - ${e.message}`);
-    }
+    return functions[methodName]();
   }
   let args = [];
   if (meta[methodName].singleArg || meta[methodName].property) {
@@ -82,11 +78,7 @@ const runClass = ({ location, meta, methodName, operator, params, functions, def
   if (meta[methodName].property) {
     return functions[methodName];
   }
-  try {
-    return functions[methodName](...args);
-  } catch (e) {
-    throw new Error(`${operator}.${methodName} - ${e.message}`);
-  }
+  return functions[methodName](...args);
 };
 
 export default runClass;

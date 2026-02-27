@@ -113,7 +113,7 @@ test('axios error', async () => {
   };
   const connection = {};
   await expect(AxiosHttp({ request, connection })).rejects.toThrow(
-    'Request failed with status code 404; Http response "404: Not Found".'
+    'Http response "404: Not Found".'
   );
 });
 

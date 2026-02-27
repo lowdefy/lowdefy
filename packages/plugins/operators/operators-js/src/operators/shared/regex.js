@@ -39,8 +39,7 @@ function _regex({ location, params, state }) {
     const re = new RegExp(pattern, params.flags || 'gm');
     return re.test(on);
   } catch (e) {
-    // log e to LowdefyError
-    throw new Error(`_regex failed to execute RegExp.test.`);
+    throw new Error('_regex failed to execute RegExp.test.', { cause: e });
   }
 }
 

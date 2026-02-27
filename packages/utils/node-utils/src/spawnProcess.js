@@ -17,16 +17,23 @@
 import { spawn } from 'child_process';
 
 function createStdIOHandler({ lineHandler }) {
+  let buffer = '';
   function handler(data) {
-    data
-      .toString('utf8')
-      .split('\n')
-      .forEach((line) => {
-        if (line) {
-          lineHandler(line);
-        }
-      });
+    const text = buffer + data.toString('utf8');
+    const lines = text.split('\n');
+    buffer = lines.pop();
+    lines.forEach((line) => {
+      if (line) {
+        lineHandler(line);
+      }
+    });
   }
+  handler.flush = () => {
+    if (buffer) {
+      lineHandler(buffer);
+      buffer = '';
+    }
+  };
   return handler;
 }
 
@@ -42,8 +49,12 @@ function spawnProcess({
     stdErrLineHandler = stdOutLineHandler;
   }
   const process = spawn(command, args, processOptions);
-  process.stdout.on('data', createStdIOHandler({ lineHandler: stdOutLineHandler }));
-  process.stderr.on('data', createStdIOHandler({ lineHandler: stdErrLineHandler }));
+  const stdOutHandler = createStdIOHandler({ lineHandler: stdOutLineHandler });
+  const stdErrHandler = createStdIOHandler({ lineHandler: stdErrLineHandler });
+  process.stdout.on('data', stdOutHandler);
+  process.stderr.on('data', stdErrHandler);
+  process.stdout.on('end', stdOutHandler.flush);
+  process.stderr.on('end', stdErrHandler.flush);
 
   if (returnProcess) {
     return process;
