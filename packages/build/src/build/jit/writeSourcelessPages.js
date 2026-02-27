@@ -14,19 +14,19 @@
   limitations under the License.
 */
 
-import PAGE_CONTENT_KEYS from './pageContentKeys.js';
-
-// Strip shallow pages to stubs before schema validation.
-// Stubs keep id + type (required by block schema) and ~shallow marker.
-// Non-shallow pages (no skipped refs) keep their full content.
-function stripShallowPages({ components, shallowPageIndices }) {
-  (components.pages ?? []).forEach((page, i) => {
-    if (!shallowPageIndices.has(i)) return;
-    for (const key of PAGE_CONTENT_KEYS) {
-      delete page[key];
+async function writeSourcelessPages({ sourcelessPageArtifacts, context }) {
+  for (const artifact of sourcelessPageArtifacts) {
+    await context.writeBuildArtifact(
+      `pages/${artifact.pageId}/${artifact.pageId}.json`,
+      artifact.pageJson
+    );
+    for (const request of artifact.requests) {
+      await context.writeBuildArtifact(
+        `pages/${artifact.pageId}/requests/${request.requestId}.json`,
+        request.requestJson
+      );
     }
-    page['~shallow'] = true;
-  });
+  }
 }
 
-export default stripShallowPages;
+export default writeSourcelessPages;

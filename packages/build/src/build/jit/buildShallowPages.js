@@ -14,14 +14,13 @@
   limitations under the License.
 */
 
-import { ConfigError, shouldSuppressBuildCheck } from '@lowdefy/errors';
+import { serializer } from '@lowdefy/helpers';
+
 import buildPage from '../buildPages/buildPage.js';
+import jsMapParser from '../buildJs/jsMapParser.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 import createPageRegistry from './createPageRegistry.js';
-import validateLinkReferences from '../buildPages/validateLinkReferences.js';
-import validatePayloadReferences from '../buildPages/validatePayloadReferences.js';
-import validateServerStateReferences from '../buildPages/validateServerStateReferences.js';
-import validateStateReferences from '../buildPages/validateStateReferences.js';
+import PAGE_CONTENT_KEYS from './pageContentKeys.js';
 
 function buildShallowPages({ components, context }) {
   // Set pageId on all pages (normally done by buildPage in buildPages).
@@ -32,54 +31,51 @@ function buildShallowPages({ components, context }) {
     }
   }
 
-  // Extract page registry BEFORE buildPage (which transforms page.id to `page:${pageId}`).
-  // Registry uses original page.id as the map key.
   const pageRegistry = createPageRegistry({ components, context });
 
-  // Build non-shallow pages (fully resolved, including injected defaults like 404).
-  // Shallow pages are deferred to JIT resolution.
   const checkDuplicatePageId = createCheckDuplicateId({
     message: 'Duplicate pageId "{{ id }}".',
   });
-  context.linkActionRefs = [];
+  for (const page of components.pages ?? []) {
+    checkDuplicatePageId({ id: page.id, configKey: page['~k'] });
+  }
 
-  const failedPageIndices = new Set();
+  // Build sourceless pages (e.g., default 404) — no YAML to JIT-resolve from.
+  context.linkActionRefs = [];
+  const sourcelessPageArtifacts = [];
 
   (components.pages ?? []).forEach((page, index) => {
-    checkDuplicatePageId({ id: page.id, configKey: page['~k'] });
-    if (page['~shallow']) return;
-    try {
-      const result = buildPage({ page, index, context });
-      if (result?.failed) {
-        failedPageIndices.add(index);
-      }
-    } catch (error) {
-      // Skip suppressed ConfigErrors (via ~ignoreBuildChecks)
-      if (
-        error instanceof ConfigError &&
-        shouldSuppressBuildCheck(error, context.keyMap)
-      ) {
-        return;
-      }
-      context.errors.push(error);
-      failedPageIndices.add(index);
+    const entry = pageRegistry.get(page.id);
+    if (!entry || entry.refId !== null) return;
+
+    buildPage({ page, index, context });
+
+    const pageRequests = [...(page.requests ?? [])];
+    delete page.requests;
+    const cleanPage = jsMapParser({ input: page, jsMap: context.jsMap, env: 'client' });
+    const cleanRequests = jsMapParser({
+      input: pageRequests,
+      jsMap: context.jsMap,
+      env: 'server',
+    });
+    const builtPage = { ...cleanPage, requests: cleanRequests };
+
+    sourcelessPageArtifacts.push({
+      pageId: builtPage.pageId,
+      pageJson: serializer.serializeToString(builtPage),
+      requests: (builtPage.requests ?? []).map((req) => ({
+        requestId: req.requestId,
+        requestJson: serializer.serializeToString(req),
+      })),
+    });
+
+    // Strip content for subsequent skeleton steps
+    for (const key of PAGE_CONTENT_KEYS) {
+      delete page[key];
     }
   });
 
-  // Validate references for non-shallow pages
-  validateLinkReferences({
-    linkActionRefs: context.linkActionRefs,
-    pageIds: (components.pages ?? []).map((p) => p.pageId),
-    context,
-  });
-  (components.pages ?? []).forEach((page, index) => {
-    if (page['~shallow'] || failedPageIndices.has(index)) return;
-    validateStateReferences({ page, context });
-    validatePayloadReferences({ page, context });
-    validateServerStateReferences({ page, context });
-  });
-
-  return pageRegistry;
+  return { pageRegistry, sourcelessPageArtifacts };
 }
 
 export default buildShallowPages;

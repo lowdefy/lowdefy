@@ -24,7 +24,6 @@ function createPageRegistry({ components, context }) {
       pageId: page.id,
       auth: page.auth,
       refId,
-      shallow: !!page['~shallow'],
     });
   });
 

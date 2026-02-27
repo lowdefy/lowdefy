@@ -16,23 +16,12 @@
 
 import PAGE_CONTENT_KEYS from './pageContentKeys.js';
 
-function containsShallowMarker(value) {
-  if (value == null || typeof value !== 'object') return false;
-  if (value['~shallow'] === true) return true;
-  return Object.values(value).some(containsShallowMarker);
-}
-
-function findShallowPageIndices(pages) {
-  const indices = new Set();
-  (pages ?? []).forEach((page, i) => {
+function stripPageContent({ components }) {
+  for (const page of components.pages ?? []) {
     for (const key of PAGE_CONTENT_KEYS) {
-      if (containsShallowMarker(page[key])) {
-        indices.add(i);
-        break;
-      }
+      delete page[key];
     }
-  });
-  return indices;
+  }
 }
 
-export default findShallowPageIndices;
+export default stripPageContent;

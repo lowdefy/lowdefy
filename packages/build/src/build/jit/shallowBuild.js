@@ -56,11 +56,8 @@ import writePluginImports from '../writePluginImports/writePluginImports.js';
 import addInstalledTypes from './addInstalledTypes.js';
 import buildJsShallow from './buildJsShallow.js';
 import buildShallowPages from './buildShallowPages.js';
-import findShallowPageIndices from './findShallowPageIndices.js';
-import serializePreBuiltPages from './serializePreBuiltPages.js';
-import stripPreBuiltPages from './stripPreBuiltPages.js';
-import stripShallowPages from './stripShallowPages.js';
-import writePreBuiltPages from './writePreBuiltPages.js';
+import stripPageContent from './stripPageContent.js';
+import writeSourcelessPages from './writeSourcelessPages.js';
 
 const SHALLOW_STOP_PATHS = PAGE_CONTENT_KEYS.map((key) => `pages.*.${key}`);
 
@@ -87,8 +84,7 @@ async function shallowBuild(options) {
 
     // addKeys + testSchema first for error location info
     tryBuildStep(addKeys, 'addKeys', { components, context });
-    const shallowPageIndices = findShallowPageIndices(components.pages);
-    stripShallowPages({ components, shallowPageIndices });
+    stripPageContent({ components });
     tryBuildStep(testSchema, 'testSchema', { components, context });
 
     logCollectedErrors(context);
@@ -103,12 +99,9 @@ async function shallowBuild(options) {
     tryBuildStep(buildConnections, 'buildConnections', { components, context });
     tryBuildStep(buildApi, 'buildApi', { components, context });
 
-    const pageRegistry = buildShallowPages({ components, context });
+    const { pageRegistry, sourcelessPageArtifacts } = buildShallowPages({ components, context });
 
     tryBuildStep(buildJsShallow, 'buildJsShallow', { components, context });
-
-    const preBuiltPageArtifacts = serializePreBuiltPages({ components });
-    stripPreBuiltPages({ components });
 
     tryBuildStep(buildMenu, 'buildMenu', { components, context });
     tryBuildStep(buildTypes, 'buildTypes', { components, context });
@@ -126,7 +119,7 @@ async function shallowBuild(options) {
 
     // Write all build artifacts
     await cleanBuildDirectory({ context });
-    await writePreBuiltPages({ preBuiltPageArtifacts, context });
+    await writeSourcelessPages({ sourcelessPageArtifacts, context });
     await writeApp({ components, context });
     await writeAuth({ components, context });
     await writeConnections({ components, context });

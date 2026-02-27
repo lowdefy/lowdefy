@@ -54,8 +54,11 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
   }
 
   try {
-    // Non-shallow pages were pre-built during skeleton build — read from disk.
-    if (pageEntry.shallow === false) {
+    // Pages without a source file (e.g., default 404) can only be served from
+    // their pre-built artifact — they have no YAML to re-resolve from.
+    // All user pages (with refId) always JIT-resolve from source YAML so that
+    // page-only edits are picked up without a skeleton rebuild.
+    if (!pageEntry.refId) {
       const pagePath = path.join(
         buildContext.directories.build,
         'pages',

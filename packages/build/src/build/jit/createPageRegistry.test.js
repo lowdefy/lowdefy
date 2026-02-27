@@ -47,7 +47,6 @@ test('createPageRegistry creates registry from pages', () => {
   expect(entry.pageId).toBe('home');
   expect(entry.auth).toEqual({ public: true });
   expect(entry.refId).toBe('ref-1');
-  expect(entry.shallow).toBe(false);
 });
 
 test('createPageRegistry creates registry with multiple pages', () => {
@@ -121,19 +120,3 @@ test('createPageRegistry stores page auth', () => {
   expect(registry.get('admin').auth).toEqual({ roles: ['admin'] });
 });
 
-test('createPageRegistry marks shallow pages from ~shallow marker', () => {
-  const keyMap = {};
-  const pages = [
-    { id: 'home', type: 'PageHeaderMenu', '~shallow': true },
-    { id: 'dashboard', type: 'PageSiderMenu', '~shallow': true },
-    { id: '404', type: 'PageHeaderMenu' },
-  ];
-  pages.forEach((p, i) => addPageKey(p, `k${i}`, undefined, keyMap));
-  const registry = createPageRegistry({
-    components: { pages },
-    context: { keyMap },
-  });
-  expect(registry.get('home').shallow).toBe(true);
-  expect(registry.get('dashboard').shallow).toBe(true);
-  expect(registry.get('404').shallow).toBe(false);
-});
