@@ -27,6 +27,7 @@ import validateServerStateReferences from '../buildPages/validateServerStateRefe
 import validateStateReferences from '../buildPages/validateStateReferences.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 import createContext from '../../createContext.js';
+import createRefReviver from '../buildRefs/createRefReviver.js';
 import evaluateBuildOperators from '../buildRefs/evaluateBuildOperators.js';
 import evaluateStaticOperators from '../buildRefs/evaluateStaticOperators.js';
 import jsMapParser from '../buildJs/jsMapParser.js';
@@ -39,11 +40,13 @@ import writePageJit from './writePageJit.js';
 
 async function buildPageJit({ pageId, pageRegistry, context, directories, logger }) {
   // Use provided context or create a minimal one for JIT builds
-  const buildContext = context ?? createContext({
-    directories,
-    logger: logger ?? console,
-    stage: 'dev',
-  });
+  const buildContext =
+    context ??
+    createContext({
+      directories,
+      logger: logger ?? console,
+      stage: 'dev',
+    });
 
   const pageEntry = type.isFunction(pageRegistry.get)
     ? pageRegistry.get(pageId)
@@ -59,12 +62,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     // All user pages (with refId) always JIT-resolve from source YAML so that
     // page-only edits are picked up without a skeleton rebuild.
     if (!pageEntry.refId) {
-      const pagePath = path.join(
-        buildContext.directories.build,
-        'pages',
-        pageId,
-        `${pageId}.json`
-      );
+      const pagePath = path.join(buildContext.directories.build, 'pages', pageId, `${pageId}.json`);
       try {
         const content = await fs.promises.readFile(pagePath, 'utf8');
         return serializer.deserialize(JSON.parse(content));
@@ -82,6 +80,12 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       );
     }
     const refDef = makeRefDefinition(storedRef.path, null, buildContext.refMap);
+    // Store path in refMap so resolveConfigLocation can find this file.
+    // makeRefDefinition only stores { parent, lineNumber } — path is on the
+    // returned refDef but not in refMap. recursiveBuild sets path for child
+    // refs (line 96), but the root refDef needs it set here.
+    buildContext.refMap[refDef.id].path = refDef.path;
+
     let processed = await recursiveBuild({
       context: buildContext,
       refDef,
@@ -99,6 +103,13 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       input: processed,
       refDef,
     });
+
+    // Stamp root-level content with ~r for correct error file tracing.
+    // recursiveBuild stamps child _ref content via createRefReviver, but the
+    // root file's own objects have no parent to do this. Without ~r, addKeys
+    // can't link objects to their source file and errors fall back to lowdefy.yaml.
+    const reviver = createRefReviver(refDef.id);
+    processed = serializer.copy(processed, { reviver });
 
     // Apply skeleton-computed auth (buildAuth ran during skeleton build)
     processed.auth = pageEntry.auth;
