@@ -26,9 +26,9 @@
   How it works:
     1. Builds the monorepo (pnpm build:turbo)
     2. Imports CLI logger from built dist (for spinners and formatted output)
-    3. Copies server-dev to <config-dir>/.lowdefy/dev (isolated from monorepo)
-    4. Rewrites @lowdefy/* deps to link: paths pointing at monorepo packages
-    5. Adds pnpm.overrides so runtime-written version strings still resolve locally
+    3. Copies server-dev to <config-dir>/.lowdefy/dev, patches next.config.js
+    4. Scans monorepo packages, patches less-loader paths for transitive deps
+    5. Rewrites @lowdefy/* deps to link: paths + adds pnpm.overrides
     6. Handles workspace:* plugins from external pnpm monorepos
     7. Runs pnpm install in the isolated copy
     8. Starts the dev server manager (node manager/run.mjs)
@@ -124,9 +124,9 @@ fs.cpSync(SERVER_DEV_DIR, devDir, {
   },
 });
 
-// Patch next.config.js to pin react/react-dom to the dev dir's copies.
-// Linked @lowdefy/* packages would otherwise resolve react from the monorepo's
-// node_modules, creating duplicate React instances and breaking hooks.
+// Patch next.config.js: pin react/react-dom to the dev dir's copies so linked
+// @lowdefy/* packages share a single instance (prevents "invalid hook call" errors).
+// A second patch for less-loader paths is applied after the package scan (step 4b).
 const nextConfigPath = path.join(devDir, 'next.config.js');
 const nextConfigContent = fs.readFileSync(nextConfigPath, 'utf8');
 fs.writeFileSync(
@@ -135,10 +135,6 @@ fs.writeFileSync(
     'webpack: (config, { isServer }) => {',
     [
       'webpack: (config, { isServer }) => {',
-      `    // Pin react/react-dom to the dev dir's copies so linked packages`,
-      `    // share a single instance (prevents "invalid hook call" errors).`,
-      `    // Must alias to the package directory, not the entry file, so that`,
-      `    // sub-path imports like react/jsx-runtime still resolve.`,
       `    const reactDir = require('path').dirname(require.resolve('react/package.json'));`,
       `    const reactDomDir = require('path').dirname(require.resolve('react-dom/package.json'));`,
       `    config.resolve.alias = {`,
@@ -187,6 +183,33 @@ function scanForPackages(dir, depth) {
 
 scanForPackages(path.join(REPO_ROOT, 'packages'), 0);
 logger.info({ succeed: true }, `Found ${packageMap.size} @lowdefy/* packages.`);
+
+// -- Step 4b: Patch less-loader paths in next.config.js --
+// Linked @lowdefy/* packages use pnpm symlinks for their deps (e.g. antd lives
+// at blocks-antd/node_modules/antd, not the root). Collect all linked packages'
+// node_modules so the Less compiler can resolve transitive deps like antd.
+const lessPaths = [...packageMap.values()]
+  .map((dir) => path.join(dir, 'node_modules'))
+  .filter((dir) => fs.existsSync(dir));
+
+if (lessPaths.length > 0) {
+  const currentConfig = fs.readFileSync(nextConfigPath, 'utf8');
+  const pathsLiteral = lessPaths.map((p) => JSON.stringify(p)).join(', ');
+  fs.writeFileSync(
+    nextConfigPath,
+    currentConfig.replace(
+      'const nextConfig = withLess({',
+      [
+        'const nextConfig = withLess({',
+        `  lessLoaderOptions: {`,
+        `    lessOptions: {`,
+        `      paths: [${pathsLiteral}],`,
+        `    },`,
+        `  },`,
+      ].join('\n')
+    )
+  );
+}
 
 // -- Step 5: Rewrite deps + add pnpm.overrides --
 
