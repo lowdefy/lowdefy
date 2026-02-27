@@ -1,0 +1,8 @@
+id: home
+type: Box
+blocks:
+  - id: stateRef
+    type: Paragraph
+    properties:
+      content:
+        _state: undefinedKey
