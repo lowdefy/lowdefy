@@ -42,8 +42,6 @@ class WebParser {
       this.context._internal.lowdefy;
     const reviver = (_, value) => {
       if (!type.isObject(value)) return value;
-      const configKey = value['~k'];
-      delete value['~k'];
 
       if (Object.keys(value).length !== 1) return value;
 
@@ -53,6 +51,7 @@ class WebParser {
       const [op, methodName] = `_${key.substring(operatorPrefix.length)}`.split('.');
       if (type.isUndefined(this.operators[op])) return value;
 
+      const configKey = value['~k'];
       const params = value[key];
       const operatorLocation = applyArrayIndices(arrayIndices, location);
       try {

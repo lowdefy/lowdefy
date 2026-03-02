@@ -43,8 +43,6 @@ class ServerParser {
     const errors = [];
     const reviver = (_, value) => {
       if (!type.isObject(value)) return value;
-      const configKey = value['~k'];
-      delete value['~k'];
       if (Object.keys(value).length !== 1) return value;
 
       const key = Object.keys(value)[0];
@@ -52,6 +50,7 @@ class ServerParser {
 
       const [op, methodName] = `_${key.substring(operatorPrefix.length)}`.split('.');
       if (type.isUndefined(this.operators[op])) return value;
+      const configKey = value['~k'];
       const params = value[key];
       try {
         const res = this.operators[op]({
