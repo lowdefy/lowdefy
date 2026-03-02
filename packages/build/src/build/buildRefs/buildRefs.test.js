@@ -46,9 +46,11 @@ const context = testContext({
 // collectExceptions needs errors[] and keyMap to collect instead of throwing
 context.errors = [];
 context.keyMap = context.keyMap ?? {};
+context.unresolvedRefVars = context.unresolvedRefVars ?? {};
 
 beforeEach(() => {
   context.errors = [];
+  context.unresolvedRefVars = {};
   mockLogWarn.mockClear();
   mockReadConfigFile.mockClear();
 });
@@ -1431,5 +1433,78 @@ _build.sum: A`,
     });
     expect(context.errors).toHaveLength(1);
     expect(context.errors[0].message).toContain('_sum takes an array type as input.');
+  });
+});
+
+describe('unresolvedRefVars', () => {
+  test('buildRefs does not store vars on refMap entries', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+ref:
+  _ref:
+    path: file.yaml
+    vars:
+      var1: value`,
+      },
+      {
+        path: 'file.yaml',
+        content: `
+field:
+  _var: var1`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    await buildRefs({ context });
+    const refMapEntries = Object.values(context.refMap);
+    refMapEntries.forEach((entry) => {
+      expect(entry).not.toHaveProperty('vars');
+    });
+  });
+
+  test('buildRefs populates unresolvedRefVars for refs with vars', async () => {
+    context.unresolvedRefVars = {};
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+ref:
+  _ref:
+    path: file.yaml
+    vars:
+      var1: value`,
+      },
+      {
+        path: 'file.yaml',
+        content: `
+field:
+  _var: var1`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    await buildRefs({ context });
+    const varsEntries = Object.values(context.unresolvedRefVars);
+    expect(varsEntries.length).toBeGreaterThan(0);
+    expect(varsEntries[0]).toEqual(expect.objectContaining({ var1: 'value' }));
+  });
+
+  test('buildRefs does not populate unresolvedRefVars for refs without vars', async () => {
+    context.unresolvedRefVars = {};
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+ref:
+  _ref: file.yaml`,
+      },
+      {
+        path: 'file.yaml',
+        content: `field: value`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    await buildRefs({ context });
+    expect(Object.keys(context.unresolvedRefVars)).toHaveLength(0);
   });
 });

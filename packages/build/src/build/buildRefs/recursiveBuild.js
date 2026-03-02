@@ -29,6 +29,7 @@ async function recursiveBuild({
   context,
   refDef,
   count,
+  content,
   referencedFrom,
   refChainSet = new Set(),
   refChainList = [],
@@ -56,7 +57,7 @@ async function recursiveBuild({
       'Maximum recursion depth of references exceeded (10000 levels). This likely indicates a circular reference.'
     );
   }
-  let fileContent = await getRefContent({ context, refDef, referencedFrom });
+  let fileContent = content ?? await getRefContent({ context, refDef, referencedFrom });
   const { foundRefs, fileContentBuiltRefs } = getRefsFromFile(
     fileContent,
     refDef.id,
@@ -94,8 +95,8 @@ async function recursiveBuild({
       refDef,
     });
     context.refMap[parsedRefDef.id].path = parsedRefDef.path;
-    if (Object.keys(parsedRefDef.vars).length > 0) {
-      context.refMap[parsedRefDef.id].vars = parsedRefDef.vars;
+    if (Object.keys(newRefDef.vars).length > 0) {
+      context.unresolvedRefVars[newRefDef.id] = newRefDef.vars;
     }
     const parsedFile = await recursiveBuild({
       context,

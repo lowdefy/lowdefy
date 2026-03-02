@@ -21,7 +21,7 @@ import { type } from '@lowdefy/helpers';
 // while page files are self-contained or receive vars from a collection file.
 // Stop at the first ref called WITHOUT vars — that's the page file.
 // When ALL refs have vars (module pages), fall back to the first child of root.
-function findPageSourceRef(refId, refMap) {
+function findPageSourceRef(refId, refMap, unresolvedRefVars) {
   let current = refId;
   let firstChildOfRoot = null;
 
@@ -29,16 +29,21 @@ function findPageSourceRef(refId, refMap) {
     const entry = refMap[current];
     if (!entry) return null;
 
+    const hasVars = !type.isNone(unresolvedRefVars[current]);
+
     // Track the first child of root as fallback
     const parentEntry = !type.isNone(entry.parent) ? refMap[entry.parent] : null;
     if (parentEntry && type.isNone(parentEntry.parent) && !firstChildOfRoot) {
-      firstChildOfRoot = { refId: current, path: entry.path, vars: entry.vars ?? null };
+      firstChildOfRoot = {
+        path: entry.path,
+        unresolvedVars: unresolvedRefVars[current] ?? null,
+      };
     }
 
     // First ref without vars = self-contained page file
-    if (!entry.vars || Object.keys(entry.vars).length === 0) {
+    if (!hasVars) {
       if (!type.isNone(entry.parent)) {
-        return { refId: current, path: entry.path, vars: null };
+        return { path: entry.path, unresolvedVars: null };
       }
       // Reached root — use first child of root
       return firstChildOfRoot;
@@ -51,20 +56,20 @@ function findPageSourceRef(refId, refMap) {
 
 function createPageRegistry({ components, context }) {
   const registry = new Map();
+  const unresolvedRefVars = context.unresolvedRefVars ?? {};
 
   (components.pages ?? []).forEach((page) => {
     // Read ~r from keyMap — addKeys moves ~r there and deletes it from objects.
     const refId = context.keyMap[page['~k']]?.['~r'] ?? null;
-    const sourceRef = !type.isNone(refId) ? findPageSourceRef(refId, context.refMap) : null;
+    const sourceRef = !type.isNone(refId)
+      ? findPageSourceRef(refId, context.refMap, unresolvedRefVars)
+      : null;
     registry.set(page.id, {
       pageId: page.id,
       auth: page.auth,
       refId,
       refPath: sourceRef?.path ?? null,
-      // Store the source ref's ID so buildPageJit can look up vars from refMap.
-      // Vars themselves are NOT stored here — they can be enormous (entire resolved
-      // page templates) and would blow up serialization of the page registry.
-      sourceRefId: sourceRef?.refId ?? null,
+      unresolvedVars: sourceRef?.unresolvedVars ?? null,
     });
   });
 

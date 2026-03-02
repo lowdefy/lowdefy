@@ -85,11 +85,27 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
         `Page "${pageId}" has no source file reference. Cannot resolve page content.`
       );
     }
-    const sourceVars = pageEntry.sourceRefId
-      ? buildContext.refMap[pageEntry.sourceRefId]?.vars
-      : null;
-    const refDefinition = sourceVars
-      ? { path: pageEntry.refPath, vars: sourceVars }
+
+    // Resolve unresolved vars (which may contain inner _ref objects) fresh from disk
+    let resolvedVars = null;
+    if (pageEntry.unresolvedVars) {
+      const varRefDef = makeRefDefinition({}, null, buildContext.refMap);
+      resolvedVars = await recursiveBuild({
+        context: buildContext,
+        refDef: varRefDef,
+        count: 0,
+        content: pageEntry.unresolvedVars,
+        referencedFrom: pageEntry.refPath,
+      });
+      resolvedVars = await evaluateBuildOperators({
+        context: buildContext,
+        input: resolvedVars,
+        refDef: varRefDef,
+      });
+    }
+
+    const refDefinition = resolvedVars
+      ? { path: pageEntry.refPath, vars: resolvedVars }
       : pageEntry.refPath;
     const refDef = makeRefDefinition(refDefinition, null, buildContext.refMap);
     buildContext.refMap[refDef.id].path = refDef.path;
