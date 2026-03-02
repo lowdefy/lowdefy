@@ -56,9 +56,13 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     return null;
   }
 
+  // Reset errors for this build. Keep a local reference so that concurrent
+  // JIT builds (different pages sharing buildContext) cannot corrupt our
+  // error list by reassigning buildContext.errors during an await.
+  const buildErrors = [];
+  buildContext.errors = buildErrors;
+
   try {
-    // Reset errors from previous JIT builds — the cached context accumulates them.
-    buildContext.errors = [];
 
     // Pages without a source file (e.g., default 404) can only be served from
     // their pre-built artifact — they have no YAML to re-resolve from.
@@ -182,11 +186,11 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     const finalPage = { ...cleanPage, requests: cleanRequests };
 
     // Check for collected errors from validation steps
-    if (buildContext.errors.length > 0) {
+    if (buildErrors.length > 0) {
       const error = new ConfigError(
-        `Page "${pageId}" build failed with ${buildContext.errors.length} error(s).`
+        `Page "${pageId}" build failed with ${buildErrors.length} error(s).`
       );
-      error.buildErrors = buildContext.errors;
+      error.buildErrors = buildErrors;
       throw error;
     }
 
@@ -196,8 +200,8 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     return finalPage;
   } catch (err) {
     // Attach any collected errors to the thrown error
-    if (buildContext.errors.length > 0 && !err.buildErrors) {
-      err.buildErrors = [err, ...buildContext.errors];
+    if (buildErrors.length > 0 && !err.buildErrors) {
+      err.buildErrors = [err, ...buildErrors];
     }
     if (err.isLowdefyError) {
       throw err;

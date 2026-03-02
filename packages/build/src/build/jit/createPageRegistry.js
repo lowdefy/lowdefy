@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 // Walk up from ~r to find the page's source file for JIT re-resolution.
 // Templates receive vars (they need id, title, etc. from the page file),
 // while page files are self-contained or receive vars from a collection file.
@@ -23,19 +25,19 @@ function findPageSourceRef(refId, refMap) {
   let current = refId;
   let firstChildOfRoot = null;
 
-  while (current != null) {
+  while (!type.isNone(current)) {
     const entry = refMap[current];
     if (!entry) return null;
 
     // Track the first child of root as fallback
-    const parentEntry = entry.parent != null ? refMap[entry.parent] : null;
-    if (parentEntry && parentEntry.parent == null && !firstChildOfRoot) {
+    const parentEntry = !type.isNone(entry.parent) ? refMap[entry.parent] : null;
+    if (parentEntry && type.isNone(parentEntry.parent) && !firstChildOfRoot) {
       firstChildOfRoot = { refId: current, path: entry.path, vars: entry.vars ?? null };
     }
 
     // First ref without vars = self-contained page file
     if (!entry.vars || Object.keys(entry.vars).length === 0) {
-      if (entry.parent != null) {
+      if (!type.isNone(entry.parent)) {
         return { refId: current, path: entry.path, vars: null };
       }
       // Reached root — use first child of root
@@ -53,7 +55,7 @@ function createPageRegistry({ components, context }) {
   (components.pages ?? []).forEach((page) => {
     // Read ~r from keyMap — addKeys moves ~r there and deletes it from objects.
     const refId = context.keyMap[page['~k']]?.['~r'] ?? null;
-    const sourceRef = refId != null ? findPageSourceRef(refId, context.refMap) : null;
+    const sourceRef = !type.isNone(refId) ? findPageSourceRef(refId, context.refMap) : null;
     registry.set(page.id, {
       pageId: page.id,
       auth: page.auth,
