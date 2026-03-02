@@ -50,7 +50,7 @@ export const test = base.extend({
     // eslint-disable-next-line no-empty-pattern
     async ({}, use) => {
       const mocksFile = process.env.LOWDEFY_E2E_MOCKS_FILE;
-      const mocks = loadStaticMocks(mocksFile || undefined);
+      const mocks = loadStaticMocks(mocksFile);
       await use(mocks);
     },
     { scope: 'worker' },
