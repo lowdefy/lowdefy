@@ -239,6 +239,37 @@ test('createPageRegistry handles direct page ref without template', () => {
   expect(entry.unresolvedVars).toBeNull();
 });
 
+test('createPageRegistry handles resolver ref chain (child of root has no path)', () => {
+  // Resolver (no path) → template view.yaml (vars) → layout.yaml.njk (vars)
+  // Child of root (ref-resolver) has no path. Fall back to closest descendant
+  // with a path: ref-template (view.yaml) with its vars.
+  const refMap = buildRefMap({
+    'ref-root': { parent: null, path: 'lowdefy.yaml' },
+    'ref-resolver': { parent: 'ref-root', path: null },
+    'ref-template': { parent: 'ref-resolver', path: 'view.yaml' },
+    'ref-layout': { parent: 'ref-template', path: 'layout.yaml.njk' },
+  });
+  const unresolvedRefVars = {
+    'ref-resolver': { app_name: 'myapp', workflows: [] },
+    'ref-template': { action_config: { action: 'initial-details' }, workflow_type: 'device' },
+    'ref-layout': { id: 'device-initial-details-view', title: 'View' },
+  };
+  const keyMap = {};
+  const page = { id: 'device-initial-details-view', type: 'PageHeaderMenu' };
+  addPageKey(page, 'k1', 'ref-layout', keyMap);
+
+  const registry = createPageRegistry({
+    components: { pages: [page] },
+    context: { keyMap, refMap, unresolvedRefVars },
+  });
+  const entry = registry.get('device-initial-details-view');
+  expect(entry.refPath).toBe('view.yaml');
+  expect(entry.unresolvedVars).toEqual({
+    action_config: { action: 'initial-details' },
+    workflow_type: 'device',
+  });
+});
+
 test('createPageRegistry handles missing refMap entry gracefully', () => {
   const refMap = buildRefMap({
     'ref-root': { parent: null, path: 'lowdefy.yaml' },

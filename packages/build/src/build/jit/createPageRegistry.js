@@ -21,23 +21,45 @@ import { type } from '@lowdefy/helpers';
 // while page files are self-contained or receive vars from a collection file.
 // Stop at the first ref called WITHOUT vars — that's the page file.
 // When ALL refs have vars (module pages), fall back to the first child of root.
+// When the child of root has no path (resolver refs), fall back to the closest
+// descendant with a valid path so JIT can re-resolve from the template file.
+//
+// Resolver ref limitation: the resolver's own vars are discarded — only the
+// template's vars are preserved. This works because the resolver already
+// computed the vars to pass to the template during the skeleton build, so the
+// template + its vars are self-sufficient. Trade-off: changes to resolver JS
+// require a skeleton rebuild; JIT only picks up template/YAML edits.
 function findPageSourceRef(refId, refMap, unresolvedRefVars) {
   let current = refId;
   let firstChildOfRoot = null;
+  // Track the most recent entry with a valid path, walking up from the leaf.
+  // Used as fallback when the child of root has no path (e.g., resolver refs).
+  let lastWithPath = null;
 
   while (!type.isNone(current)) {
     const entry = refMap[current];
-    if (!entry) return null;
+    if (!entry) {
+      return null;
+    }
 
     const hasVars = !type.isNone(unresolvedRefVars[current]);
+
+    if (entry.path) {
+      lastWithPath = {
+        path: entry.path,
+        unresolvedVars: unresolvedRefVars[current] ?? null,
+      };
+    }
 
     // Track the first child of root as fallback
     const parentEntry = !type.isNone(entry.parent) ? refMap[entry.parent] : null;
     if (parentEntry && type.isNone(parentEntry.parent) && !firstChildOfRoot) {
-      firstChildOfRoot = {
-        path: entry.path,
-        unresolvedVars: unresolvedRefVars[current] ?? null,
-      };
+      // When the child of root has no path (resolver ref), fall back to the
+      // closest descendant with a valid path. This allows JIT to re-resolve
+      // resolver-generated pages from their template file with the correct vars.
+      firstChildOfRoot = entry.path
+        ? { path: entry.path, unresolvedVars: unresolvedRefVars[current] ?? null }
+        : lastWithPath;
     }
 
     // First ref without vars = self-contained page file
@@ -60,10 +82,12 @@ function createPageRegistry({ components, context }) {
 
   (components.pages ?? []).forEach((page) => {
     // Read ~r from keyMap — addKeys moves ~r there and deletes it from objects.
-    const refId = context.keyMap[page['~k']]?.['~r'] ?? null;
+    const keyMapEntry = context.keyMap[page['~k']];
+    const refId = keyMapEntry?.['~r'] ?? null;
     const sourceRef = !type.isNone(refId)
       ? findPageSourceRef(refId, context.refMap, unresolvedRefVars)
       : null;
+
     registry.set(page.id, {
       pageId: page.id,
       auth: page.auth,
