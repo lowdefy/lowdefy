@@ -241,16 +241,17 @@ test('createPageRegistry handles direct page ref without template', () => {
 
 test('createPageRegistry handles resolver ref chain (child of root has no path)', () => {
   // Resolver (no path) → template view.yaml (vars) → layout.yaml.njk (vars)
-  // Child of root (ref-resolver) has no path. Fall back to closest descendant
-  // with a path: ref-template (view.yaml) with its vars.
+  // Child of root (ref-resolver) has no path. Go shallower — capture the
+  // resolver's info so JIT can re-run it with freshly resolved vars.
+  const resolverOriginal = { resolver: 'resolvers/pages.js', vars: { app_name: { _ref: 'app-config.yaml' }, workflows: { _ref: 'workflows.yaml' } } };
   const refMap = buildRefMap({
     'ref-root': { parent: null, path: 'lowdefy.yaml' },
-    'ref-resolver': { parent: 'ref-root', path: null },
+    'ref-resolver': { parent: 'ref-root', path: null, original: resolverOriginal },
     'ref-template': { parent: 'ref-resolver', path: 'view.yaml' },
     'ref-layout': { parent: 'ref-template', path: 'layout.yaml.njk' },
   });
   const unresolvedRefVars = {
-    'ref-resolver': { app_name: 'myapp', workflows: [] },
+    'ref-resolver': { app_name: { _ref: 'app-config.yaml' }, workflows: { _ref: 'workflows.yaml' } },
     'ref-template': { action_config: { action: 'initial-details' }, workflow_type: 'device' },
     'ref-layout': { id: 'device-initial-details-view', title: 'View' },
   };
@@ -263,11 +264,10 @@ test('createPageRegistry handles resolver ref chain (child of root has no path)'
     context: { keyMap, refMap, unresolvedRefVars },
   });
   const entry = registry.get('device-initial-details-view');
-  expect(entry.refPath).toBe('view.yaml');
-  expect(entry.unresolvedVars).toEqual({
-    action_config: { action: 'initial-details' },
-    workflow_type: 'device',
-  });
+  expect(entry.refPath).toBeNull();
+  // Unresolved vars live in resolverOriginal.vars — not duplicated in unresolvedVars
+  expect(entry.unresolvedVars).toBeNull();
+  expect(entry.resolverOriginal).toEqual(resolverOriginal);
 });
 
 test('createPageRegistry handles missing refMap entry gracefully', () => {

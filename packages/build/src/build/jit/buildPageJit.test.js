@@ -346,6 +346,135 @@ type: TextInput
   expect(contentBlocks[1].blockId).toBe('block2');
 });
 
+test('buildPageJit resolves resolver page without vars', async () => {
+  const context = createTestContext();
+  mockFiles([]);
+
+  // No vars key on resolverOriginal — resolvedVars stays null,
+  // so resolverOriginal is passed through as-is to makeRefDefinition.
+  const pageRegistry = new Map([
+    [
+      'resolved-page',
+      {
+        pageId: 'resolved-page',
+        auth: { public: true },
+        refId: 'ref-resolver',
+        refPath: null,
+        unresolvedVars: null,
+        resolverOriginal: {
+          resolver: 'src/test-utils/buildRefs/testJitPageResolver.js',
+        },
+      },
+    ],
+  ]);
+
+  const result = await buildPageJit({
+    pageId: 'resolved-page',
+    pageRegistry,
+    context,
+  });
+
+  expect(result.id).toBe('page:resolved-page');
+  expect(result.type).toBe('PageHeaderMenu');
+  // Resolver receives empty vars (makeRefDefinition default), falls back to defaults
+  expect(result.properties.title).toBe('Default');
+});
+
+test('buildPageJit resolves resolver page by re-running the resolver with fresh vars', async () => {
+  const context = createTestContext();
+  mockFiles([
+    {
+      path: 'config.yaml',
+      content: `MyApp`,
+    },
+  ]);
+
+  const pageRegistry = new Map([
+    [
+      'home',
+      {
+        pageId: 'home',
+        auth: { public: true },
+        refId: 'ref-resolver',
+        refPath: null,
+        unresolvedVars: null,
+        resolverOriginal: {
+          resolver: 'src/test-utils/buildRefs/testJitPageResolver.js',
+          vars: {
+            pageId: 'home',
+            app_name: { _ref: 'config.yaml' },
+          },
+        },
+      },
+    ],
+  ]);
+
+  const result = await buildPageJit({
+    pageId: 'home',
+    pageRegistry,
+    context,
+  });
+
+  expect(result.id).toBe('page:home');
+  expect(result.type).toBe('PageHeaderMenu');
+  expect(result.properties.title).toBe('MyApp');
+});
+
+test('buildPageJit resolver page picks up config file changes on subsequent JIT builds', async () => {
+  const context = createTestContext();
+
+  // First build: config.yaml has 'AppV1'
+  mockFiles([
+    {
+      path: 'config.yaml',
+      content: `AppV1`,
+    },
+  ]);
+
+  const pageEntry = {
+    pageId: 'home',
+    auth: { public: true },
+    refId: 'ref-resolver',
+    refPath: null,
+    unresolvedVars: null,
+    resolverOriginal: {
+      resolver: 'src/test-utils/buildRefs/testJitPageResolver.js',
+      vars: {
+        pageId: 'home',
+        app_name: { _ref: 'config.yaml' },
+      },
+    },
+  };
+  const pageRegistry = new Map([['home', pageEntry]]);
+
+  const result1 = await buildPageJit({
+    pageId: 'home',
+    pageRegistry,
+    context,
+  });
+  expect(result1.properties.title).toBe('AppV1');
+
+  // Second build: config.yaml changed on disk
+  makeId.reset();
+  context.errors = [];
+  context.typeCounters.blocks = (await import('../../utils/createCounter.js')).default();
+  context.typeCounters.actions = (await import('../../utils/createCounter.js')).default();
+
+  mockFiles([
+    {
+      path: 'config.yaml',
+      content: `AppV2`,
+    },
+  ]);
+
+  const result2 = await buildPageJit({
+    pageId: 'home',
+    pageRegistry,
+    context,
+  });
+  expect(result2.properties.title).toBe('AppV2');
+});
+
 test('buildPageJit throws when inner _ref in vars references missing file', async () => {
   const context = createTestContext();
   mockFiles([
@@ -380,4 +509,39 @@ type: PageHeaderMenu
       context,
     })
   ).rejects.toThrow('Referenced file does not exist: "components/missing.yaml"');
+});
+
+test('buildPageJit resolver page traces errors back to resolver when inner _ref fails', async () => {
+  const context = createTestContext();
+  mockFiles([]);
+
+  const pageRegistry = new Map([
+    [
+      'home',
+      {
+        pageId: 'home',
+        auth: { public: true },
+        refId: 'ref-resolver',
+        refPath: null,
+        unresolvedVars: null,
+        resolverOriginal: {
+          resolver: 'src/test-utils/buildRefs/testJitPageResolver.js',
+          vars: {
+            app_name: { _ref: 'config/missing.yaml' },
+          },
+        },
+      },
+    ],
+  ]);
+
+  await expect(
+    buildPageJit({
+      pageId: 'home',
+      pageRegistry,
+      context,
+    })
+  ).rejects.toMatchObject({
+    message: expect.stringContaining('Referenced file does not exist: "config/missing.yaml"'),
+    filePath: 'src/test-utils/buildRefs/testJitPageResolver.js',
+  });
 });

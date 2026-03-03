@@ -80,22 +80,25 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
 
     // Resolve the page file from scratch using the source file path determined
     // by createPageRegistry's parent chain walk.
-    if (!pageEntry.refPath) {
+    if (!pageEntry.refPath && !pageEntry.resolverOriginal) {
       throw new ConfigError(
         `Page "${pageId}" has no source file reference. Cannot resolve page content.`
       );
     }
 
-    // Resolve unresolved vars (which may contain inner _ref objects) fresh from disk
+    // Resolve unresolved vars (which may contain inner _ref objects) fresh from disk.
+    // For resolver pages, unresolved vars live in resolverOriginal.vars (single source).
+    // For file-backed pages, they're stored separately in unresolvedVars.
+    const unresolvedVars = pageEntry.unresolvedVars ?? pageEntry.resolverOriginal?.vars;
     let resolvedVars = null;
-    if (pageEntry.unresolvedVars) {
+    if (unresolvedVars) {
       const varRefDef = makeRefDefinition({}, null, buildContext.refMap);
       resolvedVars = await recursiveBuild({
         context: buildContext,
         refDef: varRefDef,
         count: 0,
-        content: pageEntry.unresolvedVars,
-        referencedFrom: pageEntry.refPath,
+        content: unresolvedVars,
+        referencedFrom: pageEntry.refPath ?? pageEntry.resolverOriginal?.resolver,
       });
       resolvedVars = await evaluateBuildOperators({
         context: buildContext,
@@ -104,11 +107,20 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       });
     }
 
-    const refDefinition = resolvedVars
-      ? { path: pageEntry.refPath, vars: resolvedVars }
-      : pageEntry.refPath;
-    const refDef = makeRefDefinition(refDefinition, null, buildContext.refMap);
-    buildContext.refMap[refDef.id].path = refDef.path;
+    let refDef;
+    if (pageEntry.resolverOriginal) {
+      const resolverDefinition = resolvedVars
+        ? { ...pageEntry.resolverOriginal, vars: resolvedVars }
+        : pageEntry.resolverOriginal;
+      refDef = makeRefDefinition(resolverDefinition, null, buildContext.refMap);
+      buildContext.refMap[refDef.id].path = null;
+    } else {
+      const refDefinition = resolvedVars
+        ? { path: pageEntry.refPath, vars: resolvedVars }
+        : pageEntry.refPath;
+      refDef = makeRefDefinition(refDefinition, null, buildContext.refMap);
+      buildContext.refMap[refDef.id].path = refDef.path;
+    }
 
     let processed = await recursiveBuild({
       context: buildContext,

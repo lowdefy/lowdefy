@@ -95,6 +95,10 @@ async function recursiveBuild({
       refDef,
     });
     context.refMap[parsedRefDef.id].path = parsedRefDef.path;
+    // Store original definition for resolver refs so JIT can re-run them
+    if (!parsedRefDef.path) {
+      context.refMap[parsedRefDef.id].original = newRefDef.original;
+    }
     if (Object.keys(newRefDef.vars).length > 0) {
       context.unresolvedRefVars[newRefDef.id] = newRefDef.vars;
     }
@@ -102,7 +106,7 @@ async function recursiveBuild({
       context,
       refDef: parsedRefDef,
       count: count + 1,
-      referencedFrom: refDef.path,
+      referencedFrom: refDef.path ?? referencedFrom,
       refChainSet,
       refChainList,
       shallowOptions,

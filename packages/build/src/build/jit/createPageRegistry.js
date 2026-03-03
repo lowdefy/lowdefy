@@ -21,20 +21,11 @@ import { type } from '@lowdefy/helpers';
 // while page files are self-contained or receive vars from a collection file.
 // Stop at the first ref called WITHOUT vars — that's the page file.
 // When ALL refs have vars (module pages), fall back to the first child of root.
-// When the child of root has no path (resolver refs), fall back to the closest
-// descendant with a valid path so JIT can re-resolve from the template file.
-//
-// Resolver ref limitation: the resolver's own vars are discarded — only the
-// template's vars are preserved. This works because the resolver already
-// computed the vars to pass to the template during the skeleton build, so the
-// template + its vars are self-sufficient. Trade-off: changes to resolver JS
-// require a skeleton rebuild; JIT only picks up template/YAML edits.
+// When the child of root has no path (resolver ref), go shallower — capture
+// the resolver's info so JIT can re-run it with freshly resolved vars.
 function findPageSourceRef(refId, refMap, unresolvedRefVars) {
   let current = refId;
   let firstChildOfRoot = null;
-  // Track the most recent entry with a valid path, walking up from the leaf.
-  // Used as fallback when the child of root has no path (e.g., resolver refs).
-  let lastWithPath = null;
 
   while (!type.isNone(current)) {
     const entry = refMap[current];
@@ -44,22 +35,15 @@ function findPageSourceRef(refId, refMap, unresolvedRefVars) {
 
     const hasVars = !type.isNone(unresolvedRefVars[current]);
 
-    if (entry.path) {
-      lastWithPath = {
-        path: entry.path,
-        unresolvedVars: unresolvedRefVars[current] ?? null,
-      };
-    }
-
     // Track the first child of root as fallback
     const parentEntry = !type.isNone(entry.parent) ? refMap[entry.parent] : null;
     if (parentEntry && type.isNone(parentEntry.parent) && !firstChildOfRoot) {
-      // When the child of root has no path (resolver ref), fall back to the
-      // closest descendant with a valid path. This allows JIT to re-resolve
-      // resolver-generated pages from their template file with the correct vars.
+      // Resolver ref: capture the resolver's original definition and vars
+      // so JIT can re-run the resolver (instead of falling through to the
+      // template file below it, which would discard the resolver's vars).
       firstChildOfRoot = entry.path
         ? { path: entry.path, unresolvedVars: unresolvedRefVars[current] ?? null }
-        : lastWithPath;
+        : { path: null, original: refMap[current].original };
     }
 
     // First ref without vars = self-contained page file
@@ -94,6 +78,7 @@ function createPageRegistry({ components, context }) {
       refId,
       refPath: sourceRef?.path ?? null,
       unresolvedVars: sourceRef?.unresolvedVars ?? null,
+      resolverOriginal: sourceRef?.original ?? null,
     });
   });
 

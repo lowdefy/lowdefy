@@ -1350,6 +1350,31 @@ _ref: target`,
       stage: 'test',
     });
   });
+
+  test('buildRefs stores original definition on refMap for resolver refs (no path)', async () => {
+    context.refMap = {};
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+_ref:
+  resolver: src/test-utils/buildRefs/testBuildRefsResolver.js
+  vars:
+    var: var1`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    await buildRefs({ context });
+    // Find the refMap entry for the resolver ref (not the root lowdefy.yaml entry)
+    const resolverEntry = Object.values(context.refMap).find(
+      (entry) => !entry.path && entry.original
+    );
+    expect(resolverEntry).toBeDefined();
+    expect(resolverEntry.original.resolver).toBe(
+      'src/test-utils/buildRefs/testBuildRefsResolver.js'
+    );
+    expect(resolverEntry.original.vars.var).toBe('var1');
+  });
 });
 
 describe('Evaluate build time operators', () => {

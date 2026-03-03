@@ -46,7 +46,8 @@ function buildShallowPages({ components, context }) {
 
   (components.pages ?? []).forEach((page, index) => {
     const entry = pageRegistry.get(page.id);
-    if (!entry || entry.refPath !== null) return;
+    // Skip pages with a source file (JIT-resolved) and resolver pages (JIT re-run)
+    if (!entry || entry.refPath !== null || entry.resolverOriginal) return;
 
     buildPage({ page, index, context });
 
