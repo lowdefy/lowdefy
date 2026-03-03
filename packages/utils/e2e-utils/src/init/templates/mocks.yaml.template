@@ -1,6 +1,15 @@
-# E2E Request Mocks
-# Define mocked responses for requests that can't run in test environments
-# (Atlas Search, vector search, external APIs, etc.)
+# E2E Mocks
+# Define mocked responses, API endpoints, and default test user
+
+# Default user session - applied to all tests automatically.
+# Override per-test with ldf.user({ ... }) or clear with ldf.user(null).
+# Requires the e2e server (lowdefy build --server e2e).
+# user:
+#   name: Test User
+#   email: test@example.com
+#   image: https://example.com/avatar.png
+#   roles:
+#     - admin
 
 # Request mocks - mock Lowdefy requests
 requests:

@@ -14,141 +14,100 @@
   limitations under the License.
 */
 
+async function fulfillRoute(route, { response, error }) {
+  if (error) {
+    await route.fulfill({
+      status: 500,
+      contentType: 'application/json',
+      body: JSON.stringify({ name: 'Error', message: error }),
+    });
+  } else {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ success: true, response }),
+    });
+  }
+}
+
+function capturePayload(route) {
+  const postData = route.request().postData();
+  if (!postData) return null;
+  try {
+    const parsed = JSON.parse(postData);
+    return parsed.payload;
+  } catch {
+    return postData;
+  }
+}
+
 function createMockManager({ page }) {
   const activeMocks = new Map();
   const capturedRequests = new Map();
 
-  async function mockRequest(requestId, { response, error, pageId }) {
-    const key = pageId ? `request:${pageId}:${requestId}` : `request:${requestId}`;
-
+  async function registerRoute(key, pattern, handler) {
     if (activeMocks.has(key)) {
       await page.unroute(activeMocks.get(key).pattern);
     }
+    await page.route(pattern, handler);
+    activeMocks.set(key, { pattern, handler });
+  }
 
+  async function mockRequest(requestId, { response, error, pageId }) {
+    const key = pageId ? `request:${pageId}:${requestId}` : `request:${requestId}`;
     // If pageId is provided, match only that page's requests
     // Otherwise, match all pages (wildcard)
     const pattern = pageId
       ? `**/api/request/${pageId}/${requestId}`
       : `**/api/request/*/${requestId}`;
+
     const handler = async (route) => {
-      // Capture the request body for assertions
-      const postData = route.request().postData();
-      let payload = null;
-      if (postData) {
-        try {
-          const parsed = JSON.parse(postData);
-          payload = parsed.payload;
-        } catch {
-          payload = postData;
-        }
-      }
       capturedRequests.set(requestId, {
-        payload,
+        payload: capturePayload(route),
         timestamp: Date.now(),
       });
-
-      if (error) {
-        await route.fulfill({
-          status: 500,
-          contentType: 'application/json',
-          body: JSON.stringify({ name: 'Error', message: error }),
-        });
-      } else {
-        await route.fulfill({
-          status: 200,
-          contentType: 'application/json',
-          body: JSON.stringify({ success: true, response }),
-        });
-      }
+      await fulfillRoute(route, { response, error });
     };
 
-    await page.route(pattern, handler);
-    activeMocks.set(key, { pattern, handler });
+    await registerRoute(key, pattern, handler);
   }
 
   async function mockApi(apiId, { response, error, method }) {
     const key = `api:${apiId}`;
-
-    if (activeMocks.has(key)) {
-      await page.unroute(activeMocks.get(key).pattern);
-    }
-
     const pattern = `**/api/endpoints/${apiId}`;
+
     const handler = async (route) => {
       if (method && route.request().method() !== method.toUpperCase()) {
         await route.continue();
         return;
       }
-
-      if (error) {
-        await route.fulfill({
-          status: 500,
-          contentType: 'application/json',
-          body: JSON.stringify({ name: 'Error', message: error }),
-        });
-      } else {
-        await route.fulfill({
-          status: 200,
-          contentType: 'application/json',
-          body: JSON.stringify({ success: true, response }),
-        });
-      }
+      await fulfillRoute(route, { response, error });
     };
 
-    await page.route(pattern, handler);
-    activeMocks.set(key, { pattern, handler });
+    await registerRoute(key, pattern, handler);
   }
 
   async function applyStaticMocks(mocks) {
-    // New format: { requests: [...], api: [...] }
     const { requests = [], api = [] } = mocks ?? {};
 
-    // Apply request mocks
     for (const config of requests) {
       // Playwright glob: * matches single segment, ** matches multiple
       // User wildcards like fetch_* should stay as-is (matches fetch_users, fetch_items)
-      const requestPattern = config.requestId;
       const pagePattern = config.pageId ?? '*';
-
-      const pattern = `**/api/request/${pagePattern}/${requestPattern}`;
+      const pattern = `**/api/request/${pagePattern}/${config.requestId}`;
       const key = `static:request:${config.pageId ?? '*'}:${config.requestId}`;
 
       const handler = async (route) => {
-        const postData = route.request().postData();
-        let payload = null;
-        if (postData) {
-          try {
-            const parsed = JSON.parse(postData);
-            payload = parsed.payload;
-          } catch {
-            payload = postData;
-          }
-        }
         capturedRequests.set(config.requestId, {
-          payload,
+          payload: capturePayload(route),
           timestamp: Date.now(),
         });
-
-        if (config.error) {
-          await route.fulfill({
-            status: 500,
-            contentType: 'application/json',
-            body: JSON.stringify({ name: 'Error', message: config.error }),
-          });
-        } else {
-          await route.fulfill({
-            status: 200,
-            contentType: 'application/json',
-            body: JSON.stringify({ success: true, response: config.response }),
-          });
-        }
+        await fulfillRoute(route, { response: config.response, error: config.error });
       };
 
-      await page.route(pattern, handler);
-      activeMocks.set(key, { pattern, handler });
+      await registerRoute(key, pattern, handler);
     }
 
-    // Apply API mocks
     for (const config of api) {
       const pattern = `**/api/endpoints/${config.endpointId}`;
       const key = `static:api:${config.endpointId}`;
@@ -158,24 +117,10 @@ function createMockManager({ page }) {
           await route.continue();
           return;
         }
-
-        if (config.error) {
-          await route.fulfill({
-            status: 500,
-            contentType: 'application/json',
-            body: JSON.stringify({ name: 'Error', message: config.error }),
-          });
-        } else {
-          await route.fulfill({
-            status: 200,
-            contentType: 'application/json',
-            body: JSON.stringify({ success: true, response: config.response }),
-          });
-        }
+        await fulfillRoute(route, { response: config.response, error: config.error });
       };
 
-      await page.route(pattern, handler);
-      activeMocks.set(key, { pattern, handler });
+      await registerRoute(key, pattern, handler);
     }
   }
 

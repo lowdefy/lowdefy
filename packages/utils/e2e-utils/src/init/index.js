@@ -18,11 +18,12 @@
 
 /* eslint-disable no-console */
 
+import path from 'path';
 import prompts from 'prompts';
 
 import detectApps from './detectApps.js';
 import generateFiles from './generateFiles.js';
-import installDeps, { detectPackageManager, buildInstallCommand } from './installDeps.js';
+import installDeps, { detectPackageManager } from './installDeps.js';
 import updateGitignore from './updateGitignore.js';
 
 async function init() {
@@ -91,19 +92,41 @@ async function init() {
 
   const useMongoDB = mongoResponse.useMongoDB;
 
-  // Step 4: Generate files for each selected app
-  for (const app of selectedApps) {
-    generateFiles({ cwd, app, useMongoDB });
+  // Step 4: Ask about version preference
+  const versionResponse = await prompts({
+    type: 'select',
+    name: 'version',
+    message: 'Which version do you want to install?',
+    choices: [
+      { title: 'Stable (recommended for production)', value: 'stable' },
+      {
+        title: 'Experimental (latest features, may have breaking changes)',
+        value: 'experimental',
+      },
+    ],
+  });
+
+  // Handle Ctrl+C
+  if (!versionResponse.version) {
+    console.log('\nSetup cancelled.');
+    process.exit(0);
   }
 
-  // Step 5: Update .gitignore
+  const useExperimental = versionResponse.version === 'experimental';
+
+  // Step 5: Generate files and write dependencies to package.json
+  for (const app of selectedApps) {
+    generateFiles({ cwd, app, useExperimental, useMongoDB });
+  }
+
+  // Step 6: Update .gitignore
   updateGitignore(cwd);
 
-  // Step 6: Ask about dependency installation
+  // Step 7: Ask about dependency installation
   const installResponse = await prompts({
     type: 'confirm',
     name: 'install',
-    message: 'Would you like to install dependencies now?',
+    message: 'Would you like to run install now?',
     initial: true,
   });
 
@@ -114,44 +137,20 @@ async function init() {
   }
 
   if (installResponse.install) {
-    // Step 7: Ask about version preference
-    const versionResponse = await prompts({
-      type: 'select',
-      name: 'version',
-      message: 'Which version do you want to install?',
-      choices: [
-        { title: 'Stable (recommended for production)', value: 'stable' },
-        {
-          title: 'Experimental (latest features, may have breaking changes)',
-          value: 'experimental',
-        },
-      ],
-    });
-
-    // Handle Ctrl+C
-    if (!versionResponse.version) {
-      console.log('\nSetup cancelled.');
-      process.exit(0);
+    // Step 8: Install dependencies for each selected app
+    for (const app of selectedApps) {
+      const appDir = path.join(cwd, app.path);
+      installDeps({ appDir });
     }
-
-    const useExperimental = versionResponse.version === 'experimental';
-
-    // Step 8: Install dependencies
-    installDeps({ cwd, useExperimental, useMongoDB });
   } else {
-    // Print manual install instructions
-    const packageManager = detectPackageManager(cwd);
-    const stableCmd = buildInstallCommand({ packageManager, useExperimental: false, useMongoDB });
-    const experimentalCmd = buildInstallCommand({
-      packageManager,
-      useExperimental: true,
-      useMongoDB,
-    });
-
-    console.log('\nTo install dependencies manually:');
-    console.log(`\n  Stable:       ${stableCmd}`);
-    console.log(`  Experimental: ${experimentalCmd}`);
-    console.log('\n  Then run: npx playwright install chromium');
+    // Print manual install instructions per app
+    for (const app of selectedApps) {
+      const packageManager = detectPackageManager(path.join(cwd, app.path));
+      console.log(`\nTo install dependencies manually in ${app.path}:`);
+      console.log(`  cd ${app.path}`);
+      console.log(`  ${packageManager} install`);
+      console.log('  npx playwright install chromium');
+    }
   }
 
   // Step 9: Print completion summary
