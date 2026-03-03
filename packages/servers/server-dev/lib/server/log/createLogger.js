@@ -17,7 +17,7 @@
 import { createNodeLogger } from '@lowdefy/logger/node';
 
 const logger = createNodeLogger({
-  name: 'lowdefy_server',
+  name: 'lowdefy_server_dev',
   level: process.env.LOWDEFY_LOG_LEVEL ?? 'info',
   base: { pid: undefined, hostname: undefined },
 });
