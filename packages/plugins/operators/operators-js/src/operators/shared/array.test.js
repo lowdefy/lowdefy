@@ -1470,7 +1470,7 @@ describe('_array.length', () => {
 
 test('_array called with no method or params', () => {
   expect(() => _array({ location: 'location' })).toThrowErrorMatchingInlineSnapshot(
-    `"_array.undefined is not supported, use one of the following: concat, copyWithin, every, fill, filter, find, findIndex, flat, includes, indexOf, join, lastIndexOf, map, reduce, reduceRight, reverse, slice, some, sort, splice, length."`
+    `"_array requires a method. Use one of the following: concat, copyWithin, every, fill, filter, find, findIndex, flat, includes, indexOf, join, lastIndexOf, map, reduce, reduceRight, reverse, slice, some, sort, splice, length."`
   );
 });
 

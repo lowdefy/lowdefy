@@ -50,11 +50,11 @@ async function logClientError(context, serializedError) {
   let validationError = null;
 
   if (validationConfig && !type.isNone(error.received)) {
-    const schemas = await context.readConfigFile(validationConfig.schemaFile);
-    if (schemas) {
-      const schema = schemas[error.typeName];
-      if (schema) {
-        try {
+    try {
+      const schemas = await context.readConfigFile(validationConfig.schemaFile);
+      if (schemas) {
+        const schema = schemas[error.typeName];
+        if (schema) {
           const data =
             error.name === 'OperatorError' ? Object.values(error.received)[0] : error.received;
 
@@ -91,10 +91,10 @@ async function logClientError(context, serializedError) {
               cause: error,
             });
           }
-        } catch (e) {
-          logger.warn(e);
         }
       }
+    } catch (e) {
+      logger.warn(e);
     }
   }
 
