@@ -146,14 +146,18 @@ context.typeCounters = {
 ├── package.json
 ├── src/
 │   ├── blocks.js          # Named exports for all blocks
+│   ├── schemas.js         # Named exports for all block schemas
 │   ├── types.js           # Type declarations
 │   └── blocks/
 │       ├── Anchor/
-│       │   └── Anchor.js
+│       │   ├── Anchor.js
+│       │   └── schema.js  # JSON schema for Anchor properties
 │       ├── Box/
-│       │   └── Box.js
+│       │   ├── Box.js
+│       │   └── schema.js
 │       └── Icon/
-│           └── Icon.js
+│           ├── Icon.js
+│           └── schema.js
 └── dist/
 ```
 
@@ -242,19 +246,26 @@ export default {
 @lowdefy/actions-core/
 ├── src/
 │   ├── actions.js
+│   ├── schemas.js         # Named exports for all action schemas
 │   ├── types.js
 │   └── actions/
-│       ├── CallAPI.js
-│       ├── Request.js
-│       └── SetState.js
+│       ├── CallAPI/
+│       │   ├── CallAPI.js
+│       │   └── schema.js  # JSON schema for CallAPI params
+│       ├── Request/
+│       │   ├── Request.js
+│       │   └── schema.js
+│       └── SetState/
+│           ├── SetState.js
+│           └── schema.js
 ```
 
 **actions.js:**
 
 ```javascript
-export { default as CallAPI } from './actions/CallAPI.js';
-export { default as Request } from './actions/Request.js';
-export { default as SetState } from './actions/SetState.js';
+export { default as CallAPI } from './actions/CallAPI/CallAPI.js';
+export { default as Request } from './actions/Request/Request.js';
+export { default as SetState } from './actions/SetState/SetState.js';
 ```
 
 ## Import Generation
@@ -263,16 +274,19 @@ export { default as SetState } from './actions/SetState.js';
 
 **File:** `packages/build/src/build/writePluginImports/`
 
-| Output File                   | Generator                   | Purpose             |
-| ----------------------------- | --------------------------- | ------------------- |
-| `plugins/blocks.js`           | `writeBlockImports.js`      | Block components    |
-| `plugins/connections.js`      | `writeConnectionImports.js` | Connection handlers |
-| `plugins/actions.js`          | `writeActionImports.js`     | Action handlers     |
-| `plugins/operators/client.js` | `writeOperatorImports.js`   | Client operators    |
-| `plugins/operators/server.js` | `writeOperatorImports.js`   | Server operators    |
-| `plugins/auth/*.js`           | `writeAuthImports.js`       | Auth components     |
-| `plugins/styles.less`         | `writeStyleImports.js`      | Block styles        |
-| `plugins/icons.js`            | `writeIconImports.js`       | Icon components     |
+| Output File                    | Generator                   | Purpose                |
+| ------------------------------ | --------------------------- | ---------------------- |
+| `plugins/blocks.js`            | `writeBlockImports.js`      | Block components       |
+| `plugins/connections.js`       | `writeConnectionImports.js` | Connection handlers    |
+| `plugins/actions.js`           | `writeActionImports.js`     | Action handlers        |
+| `plugins/operators/client.js`  | `writeOperatorImports.js`   | Client operators       |
+| `plugins/operators/server.js`  | `writeOperatorImports.js`   | Server operators       |
+| `plugins/auth/*.js`            | `writeAuthImports.js`       | Auth components        |
+| `plugins/styles.less`          | `writeStyleImports.js`      | Block styles           |
+| `plugins/icons.js`             | `writeIconImports.js`       | Icon components        |
+| `plugins/blockSchemas.json`    | `writeBlockSchemaMap.js`    | Block property schemas |
+| `plugins/actionSchemas.json`   | `writeActionSchemaMap.js`   | Action param schemas   |
+| `plugins/operatorSchemas.json` | `writeOperatorSchemaMap.js` | Operator param schemas |
 
 ### Import Template
 
@@ -410,11 +424,12 @@ plugins:
 
 ## Schema Validation
 
-Each plugin type includes JSON Schema for validation:
+### Connection/Request Schemas (Server-Side, Proactive)
 
-### Connection Schema
+Connections and requests include inline JSON schemas validated at request time via `validateSchemas` in `@lowdefy/api`:
 
 ```javascript
+// Connection schema — inline on the connection export
 export default {
   schema: {
     type: 'object',
@@ -428,26 +443,83 @@ export default {
   },
   requests: { ... }
 }
-```
 
-### Request Schema
-
-```javascript
+// Request schema — attached to the resolver function
 MongoDBFind.schema = {
   type: 'object',
   properties: {
     query: { type: 'object' },
-    options: {
-      type: 'object',
-      properties: {
-        limit: { type: 'number' },
-        skip: { type: 'number' },
-        sort: { type: 'object' },
-      },
-    },
+    options: { type: 'object' },
   },
 };
 ```
+
+### Block/Action/Operator Schemas (Runtime, Reactive)
+
+Blocks, actions, and operators export schemas via a separate `schema.js` file. These are collected at build time and used for **reactive** validation — when an error occurs, the `received` data is validated against the schema to produce a more helpful diagnostic message.
+
+**Schema definition pattern:**
+
+```javascript
+// Block schema (e.g., blocks/Button/schema.js)
+export default {
+  type: 'object',
+  properties: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      title: { type: 'string' },
+      type: { type: 'string', enum: ['default', 'primary', 'dashed', 'link'] },
+    },
+  },
+};
+
+// Action schema (e.g., actions/SetState/schema.js)
+export default {
+  type: 'object',
+  params: {
+    type: 'object',
+    description: 'Key-value pairs to set in state.',
+  },
+};
+
+// Operator schema (e.g., operators/shared/get.schema.js)
+export default {
+  type: 'object',
+  params: {
+    type: 'object',
+    required: ['from'],
+    properties: {
+      from: { description: 'Object or array to get value from.' },
+      key: { type: 'string' },
+      default: { description: 'Default value if key does not exist.' },
+    },
+    additionalProperties: false,
+  },
+};
+```
+
+**Build-time collection:** `writePluginImports` generates schema map JSON files:
+
+| Plugin Type | Build Artifact                 | Schema Key   |
+| ----------- | ------------------------------ | ------------ |
+| Blocks      | `plugins/blockSchemas.json`    | `properties` |
+| Actions     | `plugins/actionSchemas.json`   | `params`     |
+| Operators   | `plugins/operatorSchemas.json` | `params`     |
+
+**Runtime validation flow:** When a `BlockError`, `ActionError`, or `OperatorError` reaches the server via `/api/client-error`, `logClientError` reads the schema map, validates the `received` data, and produces a `ConfigError` with a human-readable message if validation fails. See [api.md](../packages/api.md#client-error-logging--plugin-schema-validation).
+
+**Package export convention:** Schemas are exported via a `/schemas` entry point:
+
+```json
+{
+  "exports": {
+    "./schemas": "./dist/schemas.js"
+  }
+}
+```
+
+**Custom plugin schemas:** Custom plugins can provide schemas via `typesMap.schemas` in the build context, which takes priority over package-exported schemas.
 
 ## Key Files
 

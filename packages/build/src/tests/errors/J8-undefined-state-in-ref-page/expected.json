@@ -1,0 +1,10 @@
+{
+  "tests": [
+    {
+      "mode": "dev",
+      "exactWarnings": [
+        "{{fixturesDir}}/J8-undefined-state-in-ref-page/pages/home.yaml:7\n[ConfigWarning] _state references \"undefinedKey\" on page \"home\", but no input block with id \"undefinedKey\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState."
+      ]
+    }
+  ]
+}

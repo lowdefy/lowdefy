@@ -240,6 +240,21 @@ test('combination', () => {
   );
 });
 
+test('undefined methodName throws with available methods', () => {
+  expect(() =>
+    runInstance({
+      location,
+      meta,
+      operator,
+      methodName: undefined,
+      params: [functions],
+      instanceType: 'object',
+    })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"_op requires a method. Use one of the following: singleArg, namedArgs, spreadArgs, nameAndSpread, property, typeCheck, combination, error, noFunction, returnInstance."`
+  );
+});
+
 test('calling an undefined function', () => {
   expect(() =>
     runInstance({

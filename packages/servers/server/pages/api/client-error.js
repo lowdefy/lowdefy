@@ -39,6 +39,10 @@ async function handler({ context, req, res }) {
     return;
   }
 
+  // Strip received from payload — prod doesn't need it for schema validation
+  if (req.body?.['~e']) {
+    delete req.body['~e'].received;
+  }
   const { error, ...response } = await logClientError(context, req.body);
 
   // Capture client error to Sentry (no-op if Sentry not configured)

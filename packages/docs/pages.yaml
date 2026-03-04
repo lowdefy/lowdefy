@@ -50,6 +50,13 @@
 - _ref: users/reference/MongoDBAdapter.yaml
 - _ref: users/reference/Auth0LogoutCallback.yaml
 
+- _ref: testing/e2e-introduction.yaml
+- _ref: testing/e2e-getting-started.yaml
+- _ref: testing/e2e-writing-tests.yaml
+- _ref: testing/e2e-mocking.yaml
+- _ref: testing/e2e-auth.yaml
+- _ref: testing/e2e-configuration.yaml
+
 - _ref: blocks/input/AutoComplete.yaml
 - _ref: blocks/input/ButtonSelector.yaml
 - _ref: blocks/input/CheckboxSelector.yaml

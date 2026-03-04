@@ -42,7 +42,7 @@ function buildTypeClass(
       throw new ConfigError(message, { configKey, checkSlug: 'types' });
     }
     store[typeName] = {
-      originalTypeName: definitions[typeName].originalTypeName,
+      originalTypeName: definitions[typeName].originalTypeName ?? typeName,
       package: definitions[typeName].package,
       version: definitions[typeName].version,
       count: counts[typeName],

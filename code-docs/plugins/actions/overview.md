@@ -129,6 +129,18 @@ events:
         pageId: list
 ```
 
+## Runtime Schema Validation
+
+Each action can export a `schema.js` file describing its expected `params` shape. These schemas are collected at build time into `plugins/actionSchemas.json`.
+
+When an `ActionError` occurs at runtime, the server validates the `received` params against the action's schema and produces a diagnostic `ConfigError`:
+
+```
+[ConfigError] Action "SetState" required param "value" is missing.
+```
+
+This is **reactive** validation — it only runs when an error is caught, not on every execution. See [plugin-system.md](../../architecture/plugin-system.md#blockactionoperator-schemas-runtime-reactive) for schema format details.
+
 ## Design Decisions
 
 ### Why Sequential Execution?

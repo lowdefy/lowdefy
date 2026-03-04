@@ -1,0 +1,9 @@
+# J5: Undefined State Reference in Page Loaded via _ref
+# =====================================================
+# Tests that _state references in a page loaded via _ref correctly
+# report the file path as the page file, not lowdefy.yaml.
+
+lowdefy: local
+
+pages:
+  - _ref: pages/home.yaml

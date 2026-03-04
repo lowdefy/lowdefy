@@ -52,6 +52,7 @@ class ErrorBoundary extends Component {
         typeName: blockType,
         location: blockId,
         configKey,
+        received: this.props.properties,
       });
     } else {
       wrappedError = new LowdefyInternalError(error.message, { cause: error });

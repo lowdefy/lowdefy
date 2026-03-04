@@ -109,7 +109,7 @@ test('parse location not string', () => {
   );
 });
 
-test('operator returns value and removes ~k', () => {
+test('operator returns value with ~k present', () => {
   const input = { a: { _test: { params: true, '~k': 'c' }, '~k': 'b' }, '~k': 'a' };
   const location = 'location.$';
   const parser = new WebParser({ context, operators });

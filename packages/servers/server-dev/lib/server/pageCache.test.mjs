@@ -36,17 +36,6 @@ test('invalidateAll clears all compiled pages', () => {
   expect(cache.isCompiled('dashboard')).toBe(false);
 });
 
-test('invalidatePages removes specific pages', () => {
-  const cache = new PageCache();
-  cache.markCompiled('home');
-  cache.markCompiled('dashboard');
-  cache.markCompiled('settings');
-  cache.invalidatePages(['home', 'settings']);
-  expect(cache.isCompiled('home')).toBe(false);
-  expect(cache.isCompiled('dashboard')).toBe(true);
-  expect(cache.isCompiled('settings')).toBe(false);
-});
-
 test('acquireBuildLock returns true for first request', async () => {
   const cache = new PageCache();
   const shouldBuild = await cache.acquireBuildLock('home');
@@ -88,54 +77,4 @@ test('releaseBuildLock does nothing for non-existent lock', () => {
   const cache = new PageCache();
   // Should not throw
   cache.releaseBuildLock('nonexistent');
-});
-
-test('acquireSkeletonLock waits for page builds', async () => {
-  const cache = new PageCache();
-  const buildOrder = [];
-
-  // Start a page build
-  await cache.acquireBuildLock('home');
-
-  // Start skeleton lock acquisition (should wait)
-  const skeletonPromise = cache.acquireSkeletonLock().then(() => {
-    buildOrder.push('skeleton-acquired');
-  });
-
-  // Release page build
-  buildOrder.push('page-released');
-  cache.releaseBuildLock('home');
-
-  await skeletonPromise;
-  expect(buildOrder).toEqual(['page-released', 'skeleton-acquired']);
-  cache.releaseSkeletonLock();
-});
-
-test('acquireBuildLock waits for skeleton lock', async () => {
-  const cache = new PageCache();
-  const buildOrder = [];
-
-  // Acquire skeleton lock
-  await cache.acquireSkeletonLock();
-
-  // Start page build (should wait for skeleton)
-  const pagePromise = cache.acquireBuildLock('home').then((result) => {
-    buildOrder.push('page-acquired');
-    return result;
-  });
-
-  // Release skeleton
-  buildOrder.push('skeleton-released');
-  cache.releaseSkeletonLock();
-
-  const shouldBuild = await pagePromise;
-  expect(shouldBuild).toBe(true);
-  expect(buildOrder).toEqual(['skeleton-released', 'page-acquired']);
-  cache.releaseBuildLock('home');
-});
-
-test('releaseSkeletonLock does nothing when no lock exists', () => {
-  const cache = new PageCache();
-  // Should not throw
-  cache.releaseSkeletonLock();
 });

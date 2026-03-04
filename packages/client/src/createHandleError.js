@@ -44,9 +44,6 @@ function createHandleError(lowdefy) {
       // Client-originated errors — send to server for logging + location resolution
       try {
         const serialized = serializer.serialize(error);
-        if (serialized?.['~e']) {
-          delete serialized['~e'].received;
-        }
         const response = await fetch(`${lowdefy?.basePath ?? ''}/api/client-error`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -54,9 +51,16 @@ function createHandleError(lowdefy) {
           credentials: 'same-origin',
         });
         if (response.ok) {
-          const { source: resolvedSource } = await response.json();
+          const { source: resolvedSource, configError: serializedConfigError } =
+            await response.json();
           if (resolvedSource) {
             error.source = resolvedSource;
+          }
+          // If server produced a consolidated ConfigError, log it and return early
+          // (cause chain includes original error)
+          if (serializedConfigError) {
+            logger.error(serializer.deserialize(serializedConfigError));
+            return;
           }
         }
       } catch {
