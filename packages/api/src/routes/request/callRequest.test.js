@@ -625,7 +625,7 @@ test('connection properties schema error', async () => {
   mockTestRequest.mockImplementation(defaultResolverImp);
 
   await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigError);
-  await expect(callRequest(context, defaultParams)).rejects.toThrow('must be string');
+  await expect(callRequest(context, defaultParams)).rejects.toThrow('must be type "string"');
 });
 
 test('request properties schema error', async () => {
@@ -647,7 +647,7 @@ test('request properties schema error', async () => {
   mockTestRequest.mockImplementation(defaultResolverImp);
 
   await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigError);
-  await expect(callRequest(context, defaultParams)).rejects.toThrow('must be string');
+  await expect(callRequest(context, defaultParams)).rejects.toThrow('must be type "string"');
 });
 
 test('checkRead, read explicitly true', async () => {

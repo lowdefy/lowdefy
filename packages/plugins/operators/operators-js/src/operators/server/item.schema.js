@@ -1,0 +1,45 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+export default {
+  type: 'object',
+  params: {
+    oneOf: [
+      { type: 'string', description: 'Dot-notation path to value in items object.' },
+      { type: 'integer', description: 'Index to access in items object.' },
+      { type: 'boolean', enum: [true], description: 'Return all items data.' },
+      {
+        type: 'object',
+        properties: {
+          key: {
+            oneOf: [
+              { type: 'string', description: 'Dot-notation path to value in items object.' },
+              { type: 'integer', description: 'Index to access in items object.' },
+            ],
+          },
+          default: {
+            description: 'Default value if key does not exist.',
+          },
+          all: {
+            type: 'boolean',
+            description: 'Return all items data.',
+          },
+        },
+        additionalProperties: false,
+      },
+    ],
+  },
+};

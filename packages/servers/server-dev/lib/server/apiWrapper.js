@@ -82,7 +82,7 @@ function apiWrapper(handler) {
       secrets,
     };
     try {
-      context.logger = createLogger({ rid: context.rid });
+      context.logger = createLogger();
       context.handleError = createHandleError({ context });
       context.authOptions = getAuthOptions(context);
       if (!req.url.startsWith('/api/auth')) {

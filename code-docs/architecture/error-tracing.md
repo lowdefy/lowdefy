@@ -452,13 +452,17 @@ function createHandleError(lowdefy) {
         logger.error(error);
         return;
       }
-      // Client-originated errors — send to server for logging + location resolution
-      const serialized = serializer.serialize(error);  // ~e marker
-      if (serialized?.['~e']) delete serialized['~e'].received;
+      // Client-originated errors — send to server for logging + schema validation + location resolution
+      const serialized = serializer.serialize(error);  // ~e marker, received preserved
       const response = await fetch(`${lowdefy?.basePath ?? ''}/api/client-error`, { ... });
       if (response.ok) {
-        const { source } = await response.json();
+        const { source, configError: serializedConfigError } = await response.json();
         if (source) error.source = source;
+        // If server produced a ConfigError from schema validation, log it instead
+        if (serializedConfigError) {
+          logger.error(serializer.deserialize(serializedConfigError));
+          return;
+        }
       }
       logger.error(error);
       return;
@@ -473,8 +477,8 @@ function createHandleError(lowdefy) {
 
 - **Deduplication:** Same error logged only once per session
 - **Server-originated errors skip round-trip:** If `error.source` is already set (from the serialized 500 response), logs to browser only — no `/api/client-error` call
-- **Client-originated errors use client-error API:** Serializes with `serializer.serialize()`, sends to server for logging + location resolution
-- **Received excluded:** Removed from payload before sending (can be large)
+- **Client-originated errors use client-error API:** Serializes with `serializer.serialize()`, sends to server for logging, schema validation, and location resolution
+- **Schema validation errors:** If the server produces a `ConfigError` from schema validation (returned as `configError`), the client logs that instead of the original error — the `ConfigError` includes the original error in its cause chain
 - **Display:** Browser logger formats Lowdefy errors with `errorToDisplayString`
 
 #### UserError — Client-Only, Console-Only
@@ -500,15 +504,29 @@ Client-only:
 
 In `Actions.js`, `UserError` is detected by `instanceof` and routed to the browser logger only.
 
-#### Server-Side Client Error Logging
+#### Server-Side Client Error Logging & Schema Validation
 
 `logClientError` (`packages/api/src/routes/log/logClientError.js`) processes **client-originated** errors only (e.g., operator parse failures, block errors). Server-originated errors are logged once by the server's `handleError` and never sent back via this endpoint.
 
 1. Deserializes error via `serializer.deserialize()` — restores correct error class
-2. Calls `loadAndResolveErrorLocation()` — reads keyMap/refMap from build artifacts
-3. Sets `error.source` and `error.config`
-4. Logs via `logger.error(error)`
-5. Returns `{ source }` to client for browser display
+2. **Schema validation** — for `BlockError`, `ActionError`, `OperatorError` with `received` data:
+   - Reads schema from build artifact (e.g., `plugins/blockSchemas.json`)
+   - Validates `received` data against the plugin's JSON schema
+   - If invalid, formats AJV errors into readable messages and creates a `ConfigError` with the original error as `cause`
+3. Calls `loadAndResolveErrorLocation()` — reads keyMap/refMap from build artifacts
+4. Sets `error.source` and `error.config`
+5. Logs the `ConfigError` (if schema validation failed) or original error via `logger.error()`
+6. Returns `{ source, configError }` to client — client logs the `ConfigError` if present
+
+**Example:** A `BlockError` with `received: { title: 123 }` for a Button block is validated against the Button schema. Since `title` should be a string, the server produces:
+
+```
+/Users/dev/app/pages/home.yaml:15
+[ConfigError] Block "Button" property "title" must be type "string".
+  Caused by: [BlockError] Error rendering block "submitBtn".
+```
+
+See [api.md](../packages/api.md#client-error-logging--plugin-schema-validation) for implementation details.
 
 ## Runtime Error Tracing
 

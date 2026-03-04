@@ -56,6 +56,9 @@ Uses `@lowdefy/server-dev` instead of `@lowdefy/server`, outputs to `directories
 │       ├── connections/{connectionId}.json
 │       ├── api/{endpointId}.json
 │       └── plugins/
+│           ├── actionSchemas.json     # Action param schemas (for runtime validation)
+│           ├── blockSchemas.json      # Block property schemas (for runtime validation)
+│           ├── operatorSchemas.json   # Operator param schemas (for runtime validation)
 │           └── operators/
 │               ├── clientJsMap.js
 │               └── serverJsMap.js
@@ -109,6 +112,9 @@ writeApp(), writeAuth(), writeConfig()
 writeConnections(), writePages(), writeRequests()
 writeApi(), writeGlobal(), writeMenus()
 writeMaps(), writeTypes(), writePluginImports()
+// writePluginImports includes:
+//   - Import files (blocks.js, actions.js, operators/*.js, etc.)
+//   - Schema maps (blockSchemas.json, actionSchemas.json, operatorSchemas.json)
 ```
 
 ## The buildRefs System
@@ -364,6 +370,9 @@ pages:
 | `packages/build/src/build/buildJs/buildJs.js` | JS extraction |
 | `packages/build/src/build/addKeys.js` | Path tracking |
 | `packages/build/src/build/buildTypes.js` | Type manifest |
+| `packages/build/src/build/writePluginImports/writeBlockSchemaMap.js` | Block schema collection |
+| `packages/build/src/build/writePluginImports/writeActionSchemaMap.js` | Action schema collection |
+| `packages/build/src/build/writePluginImports/writeOperatorSchemaMap.js` | Operator schema collection |
 
 ## Dev Mode: Shallow Build + JIT Page Build
 

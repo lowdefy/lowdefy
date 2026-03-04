@@ -968,15 +968,963 @@
     },
     "~k": "x"
   },
-  "plugins/actions.js": "import {  as SetState } from '@lowdefy/actions-core/actions';\nimport {  as Link } from '@lowdefy/actions-core/actions';\nexport default {\n  SetState,\n  Link,\n  };",
+  "plugins/actionSchemas.json": {
+    "SetState": {
+      "type": "object",
+      "params": {
+        "type": "object",
+        "description": "Key-value pairs to set in the page state."
+      }
+    },
+    "Link": {
+      "type": "object",
+      "params": {
+        "oneOf": [
+          {
+            "type": "string",
+            "description": "Shorthand for pageId."
+          },
+          {
+            "type": "object",
+            "description": "Link parameters.",
+            "properties": {
+              "pageId": {
+                "type": "string",
+                "description": "The pageId to link to."
+              },
+              "url": {
+                "type": "string",
+                "description": "An external URL to link to."
+              },
+              "newWindow": {
+                "type": "boolean",
+                "description": "Open the link in a new window."
+              },
+              "urlQuery": {
+                "type": "object",
+                "description": "URL query parameters."
+              },
+              "input": {
+                "type": "object",
+                "description": "Input to pass to the linked page."
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "plugins/actions.js": "import { SetState as SetState } from '@lowdefy/actions-core/actions';\nimport { Link as Link } from '@lowdefy/actions-core/actions';\nexport default {\n  SetState,\n  Link,\n  };",
   "plugins/auth/adapters.js": "export default {\n  };",
   "plugins/auth/callbacks.js": "export default {\n  };",
   "plugins/auth/events.js": "export default {\n  };",
   "plugins/auth/providers.js": "export default {\n  };",
-  "plugins/blocks.js": "import {  as Box } from '@lowdefy/blocks-basic/blocks';\nimport {  as Result } from '@lowdefy/blocks-antd/blocks';\nimport {  as Button } from '@lowdefy/blocks-basic/blocks';\nimport {  as Anchor } from '@lowdefy/blocks-basic/blocks';\nimport {  as DangerousHtml } from '@lowdefy/blocks-basic/blocks';\nimport {  as Html } from '@lowdefy/blocks-basic/blocks';\nimport {  as Icon } from '@lowdefy/blocks-basic/blocks';\nimport {  as Img } from '@lowdefy/blocks-basic/blocks';\nimport {  as List } from '@lowdefy/blocks-basic/blocks';\nimport {  as Span } from '@lowdefy/blocks-basic/blocks';\nimport {  as Throw } from '@lowdefy/blocks-basic/blocks';\nimport {  as ProgressBar } from '@lowdefy/blocks-loaders/blocks';\nimport {  as Skeleton } from '@lowdefy/blocks-loaders/blocks';\nimport {  as SkeletonAvatar } from '@lowdefy/blocks-loaders/blocks';\nimport {  as SkeletonButton } from '@lowdefy/blocks-loaders/blocks';\nimport {  as SkeletonInput } from '@lowdefy/blocks-loaders/blocks';\nimport {  as SkeletonParagraph } from '@lowdefy/blocks-loaders/blocks';\nimport {  as Spinner } from '@lowdefy/blocks-loaders/blocks';\nimport {  as Message } from '@lowdefy/blocks-antd/blocks';\nexport default {\n  Box,\n  Result,\n  Button,\n  Anchor,\n  DangerousHtml,\n  Html,\n  Icon,\n  Img,\n  List,\n  Span,\n  Throw,\n  ProgressBar,\n  Skeleton,\n  SkeletonAvatar,\n  SkeletonButton,\n  SkeletonInput,\n  SkeletonParagraph,\n  Spinner,\n  Message,\n  };",
+  "plugins/blockSchemas.json": {
+    "Box": {
+      "type": "object",
+      "properties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "content": {
+            "type": "string",
+            "description": "Box content string. Overrides the \"content\" content area."
+          },
+          "style": {
+            "type": "object",
+            "description": "Css style object to apply to Box div.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      },
+      "events": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "onClick": {
+            "type": "array",
+            "description": "Trigger actions when the Box is clicked."
+          },
+          "onPaste": {
+            "type": "array",
+            "description": "Trigger actions when the element is focused and a paste event is triggered."
+          }
+        }
+      }
+    },
+    "Anchor": {
+      "type": "object",
+      "properties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "ariaLabel": {
+            "type": "string",
+            "description": "Arial-label to apply to link tag."
+          },
+          "back": {
+            "type": "boolean",
+            "description": "When the link is clicked, trigger the browser back."
+          },
+          "home": {
+            "type": "boolean",
+            "description": "When the link is clicked, route to the home page."
+          },
+          "input": {
+            "type": "object",
+            "description": "When the link is clicked, pass data as the input object to the next Lowdefy page.  Can only be used with pageId link and newTab false.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "urlQuery": {
+            "type": "object",
+            "description": "When the link is clicked, pass data as a url query to the next page.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "disabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Disable the anchor if true."
+          },
+          "icon": {
+            "type": [
+              "string",
+              "object"
+            ],
+            "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block for anchor icon.",
+            "docs": {
+              "displayType": "icon"
+            }
+          },
+          "pageId": {
+            "type": "string",
+            "description": "When the link is clicked, route to the provided Lowdefy page."
+          },
+          "href": {
+            "type": "string",
+            "description": "The href to link to when the anchor link is clicked."
+          },
+          "url": {
+            "type": "string",
+            "description": "External url to link to when the anchor link is clicked."
+          },
+          "rel": {
+            "type": "string",
+            "default": "noopener noreferrer",
+            "description": "The relationship of the linked URL as space-separated link types."
+          },
+          "newTab": {
+            "type": "boolean",
+            "default": false,
+            "description": "Open link in a new tab when the anchor link is clicked."
+          },
+          "replace": {
+            "type": "boolean",
+            "default": false,
+            "description": "Prevent adding a new entry into browser history by replacing the url instead of pushing into history. Can only be used with pageId link and newTab false."
+          },
+          "scroll": {
+            "type": "boolean",
+            "default": false,
+            "description": "Disable scrolling to the top of the page after page transition. Can only be used with pageId link and newTab false."
+          },
+          "style": {
+            "type": "object",
+            "description": "Css style object to applied to anchor.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "title": {
+            "type": "string",
+            "description": "Text to display in the anchor."
+          }
+        }
+      },
+      "events": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "onClick": {
+            "type": "array",
+            "description": "Called when Anchor is clicked."
+          }
+        }
+      }
+    },
+    "DangerousHtml": {
+      "type": "object",
+      "properties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "html": {
+            "type": "string",
+            "description": "Content to be rendered as Html.",
+            "docs": {
+              "displayType": "text-area"
+            }
+          },
+          "DOMPurifyOptions": {
+            "type": "object",
+            "description": "Customize DOMPurify options. Options are only applied when the block is mounted, thus any parsed settings is only applied at first render.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "style": {
+            "type": "object",
+            "description": "Css style object to apply to Html div.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      }
+    },
+    "Html": {
+      "type": "object",
+      "properties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "html": {
+            "type": "string",
+            "description": "Content to be rendered as Html.",
+            "docs": {
+              "displayType": "text-area"
+            }
+          },
+          "style": {
+            "type": "object",
+            "description": "Css style object to apply to Html div.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      },
+      "events": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "onTextSelection": {
+            "type": "array",
+            "description": "Trigger action when text is selected and pass selected text to the event object."
+          }
+        }
+      }
+    },
+    "Icon": {
+      "type": "object",
+      "properties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "color": {
+            "type": "string",
+            "description": "Primary icon color.",
+            "docs": {
+              "displayType": "color"
+            }
+          },
+          "name": {
+            "type": "string",
+            "default": "AiOutlineCloseCircle",
+            "description": "Name of icon to be displayed."
+          },
+          "rotate": {
+            "type": "number",
+            "description": "Number of degrees to rotate the icon."
+          },
+          "size": {
+            "type": [
+              "string",
+              "number"
+            ],
+            "description": "Size of the icon.",
+            "docs": {
+              "displayType": "number"
+            }
+          },
+          "spin": {
+            "type": "boolean",
+            "default": false,
+            "description": "Continuously spin icon with animation."
+          },
+          "title": {
+            "type": "string",
+            "description": "Icon hover title for accessibility."
+          },
+          "style": {
+            "type": "object",
+            "description": "CSS style object.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "disableLoadingIcon": {
+            "type": "boolean",
+            "default": false,
+            "description": "While loading after the icon has been clicked, don't render the loading icon."
+          }
+        }
+      },
+      "events": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "onClick": {
+            "type": "array",
+            "description": "Trigger actions when icon is clicked."
+          }
+        }
+      }
+    },
+    "Img": {
+      "type": "object",
+      "properties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "src"
+        ],
+        "properties": {
+          "src": {
+            "type": "string",
+            "description": "The image URL."
+          },
+          "alt": {
+            "type": "string",
+            "description": "Alternative text description of the image."
+          },
+          "crossOrigin": {
+            "type": "string",
+            "enum": [
+              "anonymous",
+              "use-credentials"
+            ],
+            "description": "Indicates if the fetching of the image must be done using a CORS request."
+          },
+          "decoding": {
+            "type": "string",
+            "enum": [
+              "sync",
+              "async",
+              "auto"
+            ],
+            "description": "An image decoding hint to the browser. Sync for atomic presentation with other content, async,  to reduce delay in presenting other content and auto leave to browser to decide."
+          },
+          "height": {
+            "type": "number",
+            "description": "Height of the image."
+          },
+          "loading": {
+            "type": "string",
+            "enum": [
+              "eager",
+              "lazy"
+            ],
+            "description": "How the browser should load the image. Eager loads the image immediately, lazy, defers loading until the image it reaches a calculated distance from the viewport, as defined by the browser."
+          },
+          "sizes": {
+            "type": "string",
+            "description": "Indicating a set of source sizes of strings separated by commas."
+          },
+          "srcSet": {
+            "type": "string",
+            "description": "Possible image sources for the user agent to use, strings separated by commas.",
+            "docs": {
+              "displayType": "text-area"
+            }
+          },
+          "style": {
+            "type": "object",
+            "description": "Css style object to applied to the image.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "width": {
+            "type": "number",
+            "description": "Width of the image."
+          }
+        }
+      }
+    },
+    "List": {
+      "type": "object",
+      "properties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "direction": {
+            "type": "string",
+            "enum": [
+              "row",
+              "column",
+              "row-reverse",
+              "column-reverse"
+            ],
+            "description": "List content along a 'row' or down a 'column'. Applies the 'flex-direction' css property to the List block."
+          },
+          "wrap": {
+            "type": "string",
+            "enum": [
+              "wrap",
+              "nowrap",
+              "wrap-reverse"
+            ],
+            "description": "Specifies wrapping style to be applied to List block as 'wrap', 'nowrap' or 'wrap-reverse'. Applies the 'flex-wrap' css property to the List block - defaults to 'wrap', requires List direction to be set."
+          },
+          "scroll": {
+            "type": "boolean",
+            "description": "Specifies whether scrolling should be applied to the List, can be true or false. Applies the 'overflow' css property to the List block - defaults to 'visible', requires List direction to be set."
+          },
+          "style": {
+            "type": "object",
+            "description": "Css style object to apply to List block.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      },
+      "events": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "onClick": {
+            "type": "array",
+            "description": "Trigger actions when the List is clicked."
+          }
+        }
+      }
+    },
+    "Span": {
+      "type": "object",
+      "properties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "content": {
+            "type": "string",
+            "description": "Span content string. Overrides the \"content\" content area."
+          },
+          "style": {
+            "type": "object",
+            "description": "Css style object to apply to Span div.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      },
+      "events": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "onClick": {
+            "type": "array",
+            "description": "Trigger actions when the Span is clicked."
+          }
+        }
+      }
+    },
+    "Throw": {
+      "type": "object",
+      "properties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Error message to throw.",
+            "default": "Intentional error thrown by Throw block"
+          }
+        }
+      },
+      "events": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {}
+      }
+    },
+    "Result": {
+      "type": "object",
+      "properties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "icon": {
+            "type": [
+              "string",
+              "object"
+            ],
+            "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon to use as result image.",
+            "docs": {
+              "displayType": "icon"
+            }
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "success",
+              "error",
+              "info",
+              "warning",
+              "404",
+              "403",
+              "500"
+            ],
+            "default": "info",
+            "description": "Status of the result. Determines image and color."
+          },
+          "subTitle": {
+            "type": "string",
+            "description": "Result subtitle or secondary text - supports html."
+          },
+          "title": {
+            "type": "string",
+            "description": "Result title or primary text - supports html."
+          }
+        }
+      }
+    },
+    "Message": {
+      "type": "object",
+      "properties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "content": {
+            "type": "string",
+            "description": "The content of the message - supports html."
+          },
+          "duration": {
+            "type": "number",
+            "default": 4.5,
+            "description": "Time(seconds) before auto-dismiss, don't dismiss if set to 0."
+          },
+          "icon": {
+            "type": [
+              "string",
+              "object"
+            ],
+            "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize message icon.",
+            "docs": {
+              "displayType": "icon"
+            }
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "success",
+              "error",
+              "info",
+              "warning",
+              "loading"
+            ],
+            "default": "info",
+            "description": "Message status type."
+          },
+          "messageStyle": {
+            "type": "object",
+            "description": "Css style to applied to message.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      },
+      "events": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "onClose": {
+            "type": "array",
+            "description": "Trigger actions when message is closed."
+          }
+        }
+      }
+    },
+    "ProgressBar": {
+      "type": "object",
+      "properties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "style": {
+            "type": "object",
+            "description": "Css style object to apply to the skeleton.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "height": {
+            "type": [
+              "number",
+              "string"
+            ],
+            "description": "Height of the skeleton."
+          },
+          "width": {
+            "type": [
+              "number",
+              "string"
+            ],
+            "description": "Width of the skeleton."
+          }
+        }
+      },
+      "events": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {}
+      }
+    },
+    "Skeleton": {
+      "type": "object",
+      "properties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "style": {
+            "type": "object",
+            "description": "Css style object to apply to the skeleton.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "height": {
+            "type": [
+              "number",
+              "string"
+            ],
+            "description": "Height of the skeleton.",
+            "docs": {
+              "displayType": "string"
+            }
+          },
+          "width": {
+            "type": [
+              "number",
+              "string"
+            ],
+            "description": "Width of the skeleton.",
+            "docs": {
+              "displayType": "string"
+            }
+          }
+        }
+      },
+      "events": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {}
+      }
+    },
+    "SkeletonAvatar": {
+      "type": "object",
+      "properties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "style": {
+            "type": "object",
+            "description": "Css style object to apply to the skeleton.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "size": {
+            "type": "string",
+            "default": "medium",
+            "description": "Size of the skeleton.",
+            "enum": [
+              "small",
+              "medium",
+              "large"
+            ]
+          },
+          "shape": {
+            "type": "string",
+            "default": "round",
+            "description": "Shape of the skeleton.",
+            "enum": [
+              "square",
+              "round"
+            ]
+          }
+        }
+      },
+      "events": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {}
+      }
+    },
+    "SkeletonButton": {
+      "type": "object",
+      "properties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "style": {
+            "type": "object",
+            "description": "Css style object to apply to the skeleton.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "size": {
+            "type": "string",
+            "default": "medium",
+            "description": "Size of the skeleton.",
+            "enum": [
+              "small",
+              "medium",
+              "large"
+            ]
+          },
+          "width": {
+            "type": [
+              "number",
+              "string"
+            ],
+            "description": "Width of the skeleton.",
+            "docs": {
+              "displayType": "string"
+            }
+          }
+        }
+      },
+      "events": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {}
+      }
+    },
+    "SkeletonInput": {
+      "type": "object",
+      "properties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "labelStyle": {
+            "type": "object",
+            "description": "Css style object to apply to the label skeleton.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "inputStyle": {
+            "type": "object",
+            "description": "Css style object to apply to the input skeleton.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "size": {
+            "type": "string",
+            "default": "medium",
+            "description": "Size of the skeleton.",
+            "enum": [
+              "small",
+              "medium",
+              "large"
+            ]
+          },
+          "width": {
+            "type": [
+              "number",
+              "string"
+            ],
+            "description": "Width of the skeleton.",
+            "docs": {
+              "displayType": "string"
+            }
+          },
+          "labelHeight": {
+            "type": [
+              "number",
+              "string"
+            ],
+            "description": "Height of the skeleton.",
+            "docs": {
+              "displayType": "string"
+            }
+          },
+          "labelWidth": {
+            "type": [
+              "number",
+              "string"
+            ],
+            "description": "Width of the skeleton.",
+            "docs": {
+              "displayType": "string"
+            }
+          },
+          "inputHeight": {
+            "type": [
+              "number",
+              "string"
+            ],
+            "description": "Height of the skeleton.",
+            "docs": {
+              "displayType": "string"
+            }
+          }
+        }
+      },
+      "events": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {}
+      }
+    },
+    "SkeletonParagraph": {
+      "type": "object",
+      "properties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "style": {
+            "type": "object",
+            "description": "Css style object to apply to the skeleton.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "lines": {
+            "type": "number",
+            "default": 4,
+            "description": "Number of paragraph lines of the skeleton."
+          },
+          "width": {
+            "type": [
+              "number",
+              "string"
+            ],
+            "description": "Width of the skeleton.",
+            "docs": {
+              "displayType": "string"
+            }
+          }
+        }
+      },
+      "events": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {}
+      }
+    },
+    "Spinner": {
+      "type": "object",
+      "properties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "style": {
+            "type": "object",
+            "description": "Css style object to apply to the icon.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "size": {
+            "type": "string",
+            "description": "Size of the icon spinner.",
+            "enum": [
+              "small",
+              "medium",
+              "large"
+            ]
+          }
+        }
+      },
+      "events": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {}
+      }
+    }
+  },
+  "plugins/blocks.js": "import { Box as Box } from '@lowdefy/blocks-basic/blocks';\nimport { Result as Result } from '@lowdefy/blocks-antd/blocks';\nimport { Button as Button } from '@lowdefy/blocks-basic/blocks';\nimport { Anchor as Anchor } from '@lowdefy/blocks-basic/blocks';\nimport { DangerousHtml as DangerousHtml } from '@lowdefy/blocks-basic/blocks';\nimport { Html as Html } from '@lowdefy/blocks-basic/blocks';\nimport { Icon as Icon } from '@lowdefy/blocks-basic/blocks';\nimport { Img as Img } from '@lowdefy/blocks-basic/blocks';\nimport { List as List } from '@lowdefy/blocks-basic/blocks';\nimport { Span as Span } from '@lowdefy/blocks-basic/blocks';\nimport { Throw as Throw } from '@lowdefy/blocks-basic/blocks';\nimport { ProgressBar as ProgressBar } from '@lowdefy/blocks-loaders/blocks';\nimport { Skeleton as Skeleton } from '@lowdefy/blocks-loaders/blocks';\nimport { SkeletonAvatar as SkeletonAvatar } from '@lowdefy/blocks-loaders/blocks';\nimport { SkeletonButton as SkeletonButton } from '@lowdefy/blocks-loaders/blocks';\nimport { SkeletonInput as SkeletonInput } from '@lowdefy/blocks-loaders/blocks';\nimport { SkeletonParagraph as SkeletonParagraph } from '@lowdefy/blocks-loaders/blocks';\nimport { Spinner as Spinner } from '@lowdefy/blocks-loaders/blocks';\nimport { Message as Message } from '@lowdefy/blocks-antd/blocks';\nexport default {\n  Box,\n  Result,\n  Button,\n  Anchor,\n  DangerousHtml,\n  Html,\n  Icon,\n  Img,\n  List,\n  Span,\n  Throw,\n  ProgressBar,\n  Skeleton,\n  SkeletonAvatar,\n  SkeletonButton,\n  SkeletonInput,\n  SkeletonParagraph,\n  Spinner,\n  Message,\n  };",
   "plugins/connections.js": "export default {\n  };",
   "plugins/icons.js": "import { AiOutlineExclamationCircle, AiOutlineLoading3Quarters } from 'react-icons/ai';\nexport default {\n  AiOutlineExclamationCircle,\n  AiOutlineLoading3Quarters,\n};",
-  "plugins/operators/client.js": "import {  as _not } from '@lowdefy/operators-js/operators/client';\nimport {  as _type } from '@lowdefy/operators-js/operators/client';\nexport default {\n  _not,\n  _type,\n  };",
+  "plugins/operatorSchemas.json": {
+    "_not": {
+      "type": "object",
+      "params": {
+        "type": "boolean",
+        "description": "Boolean value to negate."
+      }
+    },
+    "_type": {
+      "type": "object",
+      "params": {
+        "oneOf": [
+          {
+            "type": "string",
+            "enum": [
+              "string",
+              "array",
+              "date",
+              "object",
+              "boolean",
+              "number",
+              "integer",
+              "null",
+              "undefined",
+              "none",
+              "primitive"
+            ],
+            "description": "Type name to test against state value at current location."
+          },
+          {
+            "type": "object",
+            "required": [
+              "type"
+            ],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "string",
+                  "array",
+                  "date",
+                  "object",
+                  "boolean",
+                  "number",
+                  "integer",
+                  "null",
+                  "undefined",
+                  "none",
+                  "primitive"
+                ],
+                "description": "Type name to test."
+              },
+              "on": {
+                "description": "Value to test the type of."
+              },
+              "key": {
+                "type": "string",
+                "description": "State key to test the type of."
+              }
+            },
+            "additionalProperties": false
+          }
+        ]
+      }
+    }
+  },
+  "plugins/operators/client.js": "import { _not as _not } from '@lowdefy/operators-js/operators/client';\nimport { _type as _type } from '@lowdefy/operators-js/operators/client';\nexport default {\n  _not,\n  _type,\n  };",
   "plugins/operators/clientJsMap.js": "\nexport default {\n  };",
   "plugins/operators/server.js": "export default {\n  };",
   "plugins/operators/serverJsMap.js": "\nexport default {\n  };",
@@ -989,11 +1937,13 @@
   "types.json": {
     "actions": {
       "SetState": {
+        "originalTypeName": "SetState",
         "package": "@lowdefy/actions-core",
         "count": 2,
         "~k": "1r"
       },
       "Link": {
+        "originalTypeName": "Link",
         "package": "@lowdefy/actions-core",
         "count": 1,
         "~k": "1s"
@@ -1017,96 +1967,115 @@
     },
     "blocks": {
       "Box": {
+        "originalTypeName": "Box",
         "package": "@lowdefy/blocks-basic",
         "count": 2,
         "~k": "1z"
       },
       "Result": {
+        "originalTypeName": "Result",
         "package": "@lowdefy/blocks-antd",
         "count": 1,
         "~k": "20"
       },
       "Button": {
+        "originalTypeName": "Button",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
         "~k": "21"
       },
       "Anchor": {
+        "originalTypeName": "Anchor",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
         "~k": "22"
       },
       "DangerousHtml": {
+        "originalTypeName": "DangerousHtml",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
         "~k": "23"
       },
       "Html": {
+        "originalTypeName": "Html",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
         "~k": "24"
       },
       "Icon": {
+        "originalTypeName": "Icon",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
         "~k": "25"
       },
       "Img": {
+        "originalTypeName": "Img",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
         "~k": "26"
       },
       "List": {
+        "originalTypeName": "List",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
         "~k": "27"
       },
       "Span": {
+        "originalTypeName": "Span",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
         "~k": "28"
       },
       "Throw": {
+        "originalTypeName": "Throw",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
         "~k": "29"
       },
       "ProgressBar": {
+        "originalTypeName": "ProgressBar",
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
         "~k": "2a"
       },
       "Skeleton": {
+        "originalTypeName": "Skeleton",
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
         "~k": "2b"
       },
       "SkeletonAvatar": {
+        "originalTypeName": "SkeletonAvatar",
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
         "~k": "2c"
       },
       "SkeletonButton": {
+        "originalTypeName": "SkeletonButton",
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
         "~k": "2d"
       },
       "SkeletonInput": {
+        "originalTypeName": "SkeletonInput",
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
         "~k": "2e"
       },
       "SkeletonParagraph": {
+        "originalTypeName": "SkeletonParagraph",
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
         "~k": "2f"
       },
       "Spinner": {
+        "originalTypeName": "Spinner",
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
         "~k": "2g"
       },
       "Message": {
+        "originalTypeName": "Message",
         "package": "@lowdefy/blocks-antd",
         "count": 1,
         "~k": "2h"
@@ -1125,11 +2094,13 @@
     "operators": {
       "client": {
         "_not": {
+          "originalTypeName": "_not",
           "package": "@lowdefy/operators-js",
           "count": 1,
           "~k": "2n"
         },
         "_type": {
+          "originalTypeName": "_type",
           "package": "@lowdefy/operators-js",
           "count": 1,
           "~k": "2o"

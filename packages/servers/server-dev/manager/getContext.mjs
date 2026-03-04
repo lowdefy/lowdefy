@@ -33,7 +33,6 @@ import shutdownServer from './processes/shutdownServer.mjs';
 import startWatchers from './processes/startWatchers.mjs';
 
 import getNextBin from './utils/getNextBin.mjs';
-import PageCache from '../lib/server/pageCache.mjs';
 
 const argv = yargs(hideBin(process.argv)).array('watch').array('watchIgnore').argv;
 
@@ -68,7 +67,6 @@ async function getContext() {
     version: env.npm_package_version,
 
     // JIT build state
-    pageCache: new PageCache(),
     pageRegistry: null,
     buildContext: null,
   };

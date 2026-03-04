@@ -20,6 +20,7 @@ class OperatorError extends PluginError {
   constructor(message, options = {}) {
     super(message, options);
     this.name = 'OperatorError';
+    this.methodName = options.methodName ?? null;
   }
 }
 

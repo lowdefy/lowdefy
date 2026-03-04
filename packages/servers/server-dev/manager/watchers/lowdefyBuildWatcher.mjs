@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import fs from 'fs';
 import path from 'path';
 import getLowdefyVersion from '../utils/getLowdefyVersion.mjs';
 import setupWatcher from '../utils/setupWatcher.mjs';
@@ -44,16 +45,18 @@ function lowdefyBuildWatcher(context) {
         lowdefyYamlModified ||
         changedFiles.some((f) => !f.startsWith('pages/') && !f.startsWith('./'));
 
-      if (isSkeletonChange || !context.pageCache) {
+      if (isSkeletonChange) {
         await context.lowdefyBuild();
       } else {
-        // Page-only changes: invalidate all pages, no skeleton rebuild needed
-        context.pageCache.invalidateAll();
+        // Page-only changes: write signal file so the server invalidates its page cache
+        const invalidatePath = path.join(context.directories.build, 'invalidatePages');
+        fs.writeFileSync(invalidatePath, String(Date.now()));
         context.logger.info('Page files changed, invalidated all pages.');
       }
-      context.reloadClients();
     } catch (error) {
       context.logger.error(error);
+    } finally {
+      await context.reloadClients();
     }
   };
   return setupWatcher({
