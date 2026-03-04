@@ -14,18 +14,27 @@
   limitations under the License.
 */
 
+import { serializer } from '@lowdefy/helpers';
+
 async function fulfillRoute(route, { response, error }) {
   if (error) {
+    const errorObj = error instanceof Error ? error : new Error(error);
+    const serialized = serializer.serialize(errorObj);
+    if (serialized?.['~e']) {
+      delete serialized['~e'].received;
+      delete serialized['~e'].stack;
+      delete serialized['~e'].configKey;
+    }
     await route.fulfill({
       status: 500,
       contentType: 'application/json',
-      body: JSON.stringify({ name: 'Error', message: error }),
+      body: JSON.stringify(serialized),
     });
   } else {
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify({ success: true, response }),
+      body: JSON.stringify({ success: true, response: serializer.serialize(response) }),
     });
   }
 }
@@ -61,8 +70,9 @@ function createMockManager({ page }) {
       ? `**/api/request/${pageId}/${requestId}`
       : `**/api/request/*/${requestId}`;
 
+    const captureKey = pageId ? `${pageId}:${requestId}` : requestId;
     const handler = async (route) => {
-      capturedRequests.set(requestId, {
+      capturedRequests.set(captureKey, {
         payload: capturePayload(route),
         timestamp: Date.now(),
       });
@@ -97,8 +107,9 @@ function createMockManager({ page }) {
       const pattern = `**/api/request/${pagePattern}/${config.requestId}`;
       const key = `static:request:${config.pageId ?? '*'}:${config.requestId}`;
 
+      const captureKey = config.pageId ? `${config.pageId}:${config.requestId}` : config.requestId;
       const handler = async (route) => {
-        capturedRequests.set(config.requestId, {
+        capturedRequests.set(captureKey, {
           payload: capturePayload(route),
           timestamp: Date.now(),
         });
@@ -131,8 +142,9 @@ function createMockManager({ page }) {
     activeMocks.clear();
   }
 
-  function getCapturedRequest(requestId) {
-    return capturedRequests.get(requestId) ?? null;
+  function getCapturedRequest(requestId, { pageId } = {}) {
+    const captureKey = pageId ? `${pageId}:${requestId}` : requestId;
+    return capturedRequests.get(captureKey) ?? null;
   }
 
   function clearCapturedRequests() {

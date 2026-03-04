@@ -22,6 +22,8 @@ import { getValidation } from '../core/validation.js';
 import { expectUrl, expectUrlQuery, setUrlQuery } from '../core/url.js';
 import { setUserCookie, clearUserCookie } from '../core/userCookie.js';
 
+import { get, type } from '@lowdefy/helpers';
+
 import createBlockMethodProxy from './createBlockMethodProxy.js';
 
 function createPageManager({ page, manifest, helperRegistry, mockManager }) {
@@ -40,7 +42,7 @@ function createPageManager({ page, manifest, helperRegistry, mockManager }) {
 
     // User session (cookie-based, for server-e2e)
     async user(userObj) {
-      if (userObj === null || userObj === undefined) {
+      if (type.isNone(userObj)) {
         await clearUserCookie(page);
         return;
       }
@@ -112,7 +114,7 @@ function createPageManager({ page, manifest, helperRegistry, mockManager }) {
 
     // State locator - ldf.state('key').do.*/expect.*/value() or ldf.state().value()
     state(key) {
-      if (!key) {
+      if (type.isNone(key)) {
         return {
           value: () => getState(page),
         };
@@ -125,7 +127,7 @@ function createPageManager({ page, manifest, helperRegistry, mockManager }) {
         expect: {
           toBe: (value, opts) => expectState(page, { key, value, ...opts }),
         },
-        value: () => getState(page).then((s) => key.split('.').reduce((o, k) => o?.[k], s)),
+        value: () => getState(page).then((s) => get(s, key)),
       };
     },
 
@@ -133,8 +135,8 @@ function createPageManager({ page, manifest, helperRegistry, mockManager }) {
     url() {
       return {
         expect: {
-          toBe: (path, opts) => expectUrl(page, { path, ...opts }),
-          toMatch: (pattern, opts) => expectUrl(page, { pattern, ...opts }),
+          toBe: (path, opts) => expectUrl(page, { url: path, ...opts }),
+          toMatch: (pattern, opts) => expectUrl(page, { url: pattern, ...opts }),
         },
         value: () => page.url(),
       };
@@ -160,7 +162,7 @@ function createPageManager({ page, manifest, helperRegistry, mockManager }) {
         return mockManager?.mockRequest(requestId, { ...options, pageId });
       },
       api: (apiId, options) => mockManager?.mockApi(apiId, options),
-      getCapturedRequest: (requestId) => mockManager?.getCapturedRequest(requestId),
+      getCapturedRequest: (requestId, opts) => mockManager?.getCapturedRequest(requestId, opts),
       clearCapturedRequests: () => mockManager?.clearCapturedRequests(),
     },
   };

@@ -16,19 +16,6 @@
 
 import { expect } from '@playwright/test';
 
-function objectContains(actual, expected) {
-  if (actual === expected) return true;
-  if (actual == null || expected == null) return false;
-  if (typeof expected !== 'object') return actual === expected;
-
-  for (const key of Object.keys(expected)) {
-    if (!objectContains(actual[key], expected[key])) {
-      return false;
-    }
-  }
-  return true;
-}
-
 async function getRequestState(page, requestId) {
   return page.evaluate((reqId) => {
     const lowdefy = window.lowdefy;
@@ -44,32 +31,43 @@ async function getRequestResponse(page, { requestId }) {
 }
 
 async function expectRequest(page, { requestId, loading, response, payload, timeout = 30000 }) {
-  await expect
-    .poll(
-      async () => {
-        const state = await getRequestState(page, requestId);
-        if (!state) return { error: 'Request not found' };
+  if (loading !== undefined) {
+    await expect
+      .poll(
+        async () => {
+          const state = await getRequestState(page, requestId);
+          return state?.loading;
+        },
+        { timeout }
+      )
+      .toBe(loading);
+  }
 
-        if (loading !== undefined && state.loading !== loading) {
-          return { loading: state.loading };
-        }
+  if (response !== undefined) {
+    await expect
+      .poll(
+        async () => {
+          const state = await getRequestState(page, requestId);
+          return state?.response;
+        },
+        { timeout }
+      )
+      .toEqual(expect.objectContaining(response));
+  }
 
-        if (response !== undefined) {
-          if (!objectContains(state.response, response)) return { response: state.response };
-        }
-
-        // Payload is stored in the request state by the Lowdefy engine.
-        // It's the evaluated payload from the request config (client-side).
-        if (payload !== undefined) {
-          const payloadMatches = objectContains(state.payload, payload);
-          if (!payloadMatches) return { payload: state.payload };
-        }
-
-        return true;
-      },
-      { timeout }
-    )
-    .toBe(true);
+  // Payload is stored in the request state by the Lowdefy engine.
+  // It's the evaluated payload from the request config (client-side).
+  if (payload !== undefined) {
+    await expect
+      .poll(
+        async () => {
+          const state = await getRequestState(page, requestId);
+          return state?.payload;
+        },
+        { timeout }
+      )
+      .toEqual(expect.objectContaining(payload));
+  }
 }
 
 export { getRequestState, getRequestResponse, expectRequest };
