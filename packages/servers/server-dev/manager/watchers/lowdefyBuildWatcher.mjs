@@ -53,9 +53,10 @@ function lowdefyBuildWatcher(context) {
         fs.writeFileSync(invalidatePath, String(Date.now()));
         context.logger.info('Page files changed, invalidated all pages.');
       }
-      context.reloadClients();
     } catch (error) {
       context.logger.error(error);
+    } finally {
+      await context.reloadClients();
     }
   };
   return setupWatcher({

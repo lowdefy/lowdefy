@@ -27,8 +27,11 @@ const nativeImport = new Function('specifier', 'return import(specifier)');
 
 async function getUserJavascriptFunction({ context, filePath }) {
   try {
-    return (await nativeImport(pathToFileURL(path.join(context.directories.config, filePath))))
-      .default;
+    const fileUrl = pathToFileURL(path.join(context.directories.config, filePath));
+    // Bust Node.js module cache so edits to resolver/transformer JS files are
+    // picked up during dev rebuilds. Each import gets a unique URL.
+    fileUrl.searchParams.set('t', Date.now());
+    return (await nativeImport(fileUrl.href)).default;
   } catch (error) {
     throw new ConfigError(`Error importing ${filePath}.`, { cause: error, filePath });
   }

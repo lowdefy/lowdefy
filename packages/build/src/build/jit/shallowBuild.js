@@ -105,17 +105,18 @@ async function shallowBuild(options) {
 
     tryBuildStep(buildMenu, 'buildMenu', { components, context });
     tryBuildStep(buildTypes, 'buildTypes', { components, context });
+
+    // Update server package.json before addInstalledTypes so that addInstalledTypes
+    // sees the full set of dependencies on every run (not just after the first build).
+    // This prevents plugin import files from differing between the initial and
+    // subsequent builds, which would trigger unnecessary Next.js rebuilds.
+    await updateServerPackageJson({ components, context });
+
     tryBuildStep(addInstalledTypes, 'addInstalledTypes', { components, context });
     tryBuildStep(buildImports, 'buildImports', { components, context });
     tryBuildStep(addKeys, 'addKeys', { components, context });
 
     logCollectedErrors(context);
-
-    // Update server package.json with plugin packages discovered during skeleton build.
-    // Connections, requests, and auth types are skeleton-level — they must be installed
-    // before Next.js builds. Page-level types (blocks, actions, operators) are handled
-    // by detectMissingPluginPackages during JIT page builds.
-    await updateServerPackageJson({ components, context });
 
     // Write all build artifacts
     await cleanBuildDirectory({ context });

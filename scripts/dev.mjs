@@ -421,6 +421,29 @@ const env = {
   PORT: port,
 };
 
+// Merge CLI --watch/--watch-ignore with cli.watch/cli.watchIgnore from lowdefy.yaml
+const yamlForCli = readLowdefyYaml();
+if (yamlForCli) {
+  const cliMatch = yamlForCli.match(/^cli:\s*\n((?:[ \t]+.*\n)*)/m);
+  if (cliMatch) {
+    const cliBlock = cliMatch[1];
+    const watchMatch = cliBlock.match(/watch:\s*\n((?:\s+-\s+.+\n)*)/);
+    const watchIgnoreMatch = cliBlock.match(/watchIgnore:\s*\n((?:\s+-\s+.+\n)*)/);
+    if (watchMatch) {
+      for (const line of watchMatch[1].split('\n')) {
+        const m = line.match(/^\s+-\s+(.+)/);
+        if (m) watchPaths.push(m[1].trim());
+      }
+    }
+    if (watchIgnoreMatch) {
+      for (const line of watchIgnoreMatch[1].split('\n')) {
+        const m = line.match(/^\s+-\s+(.+)/);
+        if (m) watchIgnorePaths.push(m[1].trim());
+      }
+    }
+  }
+}
+
 if (watchPaths.length > 0) {
   env.LOWDEFY_SERVER_DEV_WATCH = JSON.stringify(watchPaths);
 }
