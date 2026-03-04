@@ -5,6 +5,7 @@ Server-side API handler for Lowdefy applications. Executes requests, manages con
 ## Purpose
 
 This package provides the server-side logic that:
+
 - Executes data requests against configured connections
 - Handles custom API endpoints
 - Manages authentication/authorization context
@@ -14,13 +15,14 @@ This package provides the server-side logic that:
 
 ```javascript
 import {
-  callEndpoint,      // Execute custom API endpoints
-  callRequest,       // Execute data requests
-  createApiContext,  // Create server context with auth info
-  getHomeAndMenus,   // Fetch menu configuration
+  callEndpoint, // Execute custom API endpoints
+  callRequest, // Execute data requests
+  createApiContext, // Create server context with auth info
+  getHomeAndMenus, // Fetch menu configuration
   getNextAuthConfig, // Auth.js configuration
-  getPageConfig,     // Fetch page configuration
-  getRootConfig,     // Fetch app root configuration
+  getPageConfig, // Fetch page configuration
+  getRootConfig, // Fetch app root configuration
+  logClientError, // Process client errors with schema validation
   ConfigurationError,
   RequestError,
   ServerError,
@@ -108,36 +110,36 @@ Client Action (Endpoint)
 
 ### `/context/`
 
-| Module | Purpose |
-|--------|---------|
-| `createApiContext.js` | Initializes context with user session, state, and helper functions |
-| `createAuthorize.js` | Creates authorization checker for role-based access |
-| `createReadConfigFile.js` | Utility to read build output files |
-| `createEvaluateOperators.js` | Server-side operator evaluation |
-| `errors.js` | Error types: ConfigurationError, RequestError, ServerError |
+| Module                       | Purpose                                                            |
+| ---------------------------- | ------------------------------------------------------------------ |
+| `createApiContext.js`        | Initializes context with user session, state, and helper functions |
+| `createAuthorize.js`         | Creates authorization checker for role-based access                |
+| `createReadConfigFile.js`    | Utility to read build output files                                 |
+| `createEvaluateOperators.js` | Server-side operator evaluation                                    |
+| `errors.js`                  | Error types: ConfigurationError, RequestError, ServerError         |
 
 ### `/routes/request/`
 
-| Module | Purpose |
-|--------|---------|
-| `callRequest.js` | Main entry point for request execution |
-| `authorizeRequest.js` | Check if user can execute this request |
-| `getRequestConfig.js` | Load request definition from build output |
-| `getConnectionConfig.js` | Load connection definition |
-| `getConnection.js` | Get the connection handler (e.g., MongoDB client) |
-| `evaluateOperators.js` | Resolve operators in connection/request properties |
-| `checkConnectionRead.js` | Verify read permissions on connection |
-| `checkConnectionWrite.js` | Verify write permissions on connection |
-| `validateSchemas.js` | Validate properties against connection/request schemas |
-| `callRequestResolver.js` | Execute the actual resolver function |
+| Module                    | Purpose                                                |
+| ------------------------- | ------------------------------------------------------ |
+| `callRequest.js`          | Main entry point for request execution                 |
+| `authorizeRequest.js`     | Check if user can execute this request                 |
+| `getRequestConfig.js`     | Load request definition from build output              |
+| `getConnectionConfig.js`  | Load connection definition                             |
+| `getConnection.js`        | Get the connection handler (e.g., MongoDB client)      |
+| `evaluateOperators.js`    | Resolve operators in connection/request properties     |
+| `checkConnectionRead.js`  | Verify read permissions on connection                  |
+| `checkConnectionWrite.js` | Verify write permissions on connection                 |
+| `validateSchemas.js`      | Validate properties against connection/request schemas |
+| `callRequestResolver.js`  | Execute the actual resolver function                   |
 
 ### `/routes/endpoints/`
 
-| Module | Purpose |
-|--------|---------|
+| Module            | Purpose                                 |
+| ----------------- | --------------------------------------- |
 | `callEndpoint.js` | Main entry point for endpoint execution |
-| `runRoutine.js` | Execute routine steps sequentially |
-| `control/` | Control flow operators (if, try, etc.) |
+| `runRoutine.js`   | Execute routine steps sequentially      |
+| `control/`        | Control flow operators (if, try, etc.)  |
 
 ### `/routes/auth/`
 
@@ -156,6 +158,7 @@ Serves app configuration, menus, and home page info.
 ### Why Server-Side Operators?
 
 Operators like `_secret` and `_user` must run server-side because:
+
 - Secrets should never reach the client
 - User session data comes from server
 - Some operators need database access
@@ -163,11 +166,13 @@ Operators like `_secret` and `_user` must run server-side because:
 ### Why Separate Request and Endpoint?
 
 **Requests** are simple data operations:
+
 - Single connection, single operation
 - Suitable for CRUD operations
 - Limited to what the connection supports
 
 **Endpoints** are programmable APIs:
+
 - Multi-step routines with control flow
 - Can chain multiple requests
 - Support custom logic and transformations
@@ -175,6 +180,7 @@ Operators like `_secret` and `_user` must run server-side because:
 ### Connection Isolation
 
 Each request gets a fresh connection context. Connections are:
+
 - Loaded from the connection plugin
 - Validated against schemas
 - Given only the properties they need
@@ -190,11 +196,11 @@ Each request gets a fresh connection context. Connections are:
 
 Three error types for different scenarios:
 
-| Error | When Used |
-|-------|-----------|
+| Error                | When Used                                         |
+| -------------------- | ------------------------------------------------- |
 | `ConfigurationError` | Invalid config (wrong schema, missing connection) |
-| `RequestError` | Expected errors (validation failed, unauthorized) |
-| `ServerError` | Unexpected errors (connection failed, bug) |
+| `RequestError`       | Expected errors (validation failed, unauthorized) |
+| `ServerError`        | Unexpected errors (connection failed, bug)        |
 
 ### Error Classes with Config Tracing
 
@@ -206,7 +212,7 @@ import { ConfigurationError, RequestError, ServerError } from '@lowdefy/api';
 // Throw error with config location tracking
 throw new ConfigurationError({
   message: 'Connection "mongoDB" not found',
-  configKey: request['~k'],  // Links error to source YAML location
+  configKey: request['~k'], // Links error to source YAML location
 });
 
 // Error without location (still valid)
@@ -216,42 +222,79 @@ throw new ServerError({ message: 'Database connection failed' });
 **Implementation:** `packages/api/src/context/errors.js`
 
 The error classes accept an options object:
+
 - `message` (string, required): Error message
 - `configKey` (string, optional): The `~k` value for error tracing
 
 When errors reach the client or logs, the `configKey` can be resolved to show file:line location using `resolveConfigLocation` from `@lowdefy/helpers`.
 
-### Client Error Logging
+### Client Error Logging & Plugin Schema Validation
 
-Client-side errors are sent to the server for centralized logging via the `logClientError` route.
+Client-side errors are sent to the server for centralized logging via the `logClientError` route. When errors carry `received` data (the params/properties that caused the failure), the server validates them against plugin schemas to produce more helpful error messages.
 
-**Client-side usage:**
-
-```javascript
-// In blocks or client code
-try {
-  // ... code that might error
-} catch (error) {
-  // Error automatically includes configKey if thrown from block with ~k
-  throw error;
-}
-```
+**Client-side:** `lowdefy._internal.handleError(error)` serializes the error with `serializer.serialize()` (using the `~e` marker) and POSTs to `/api/client-error`. The `received` property is preserved in the payload for server-side schema validation.
 
 **Server route:** `packages/api/src/routes/log/logClientError.js`
 
-Processes client errors and:
-1. Extracts `configKey` from error
-2. Resolves location using `resolveConfigLocation`
-3. Formats error with file:line information
-4. Logs to console with structured data
-5. Optionally sends to Sentry with config context
+Processes client errors:
 
-**Output format:**
+1. Deserializes error via `serializer.deserialize()` — restores correct Lowdefy error class
+2. **Schema validation** — if the error is a `BlockError`, `ActionError`, or `OperatorError` with `received` data, validates against plugin schemas (see below)
+3. Calls `loadAndResolveErrorLocation()` — reads keyMap/refMap from build artifacts
+4. Sets `error.source` and `error.config` on the error object
+5. If validation produced a `ConfigError`, logs that (with cause chain preserving the original error)
+6. Returns `{ source, configError }` to client — `configError` is the serialized validation error if schema validation failed
+
+### `/routes/log/` — Plugin Schema Validation
+
+| Module                     | Purpose                                                            |
+| -------------------------- | ------------------------------------------------------------------ |
+| `validatePluginSchema.js`  | Validates data against a plugin's JSON schema using `@lowdefy/ajv` |
+| `formatValidationError.js` | Converts AJV errors into human-readable messages                   |
+| `logClientError.js`        | Orchestrates error logging with optional schema validation         |
+
+**Validation flow in `logClientError`:**
 
 ```
-[Config Error] Block type "Buton" not found
-  pages/home.yaml:15 at root.pages[0:home].blocks[0:header]
-  /Users/dev/app/pages/home.yaml:15
+Client sends error (e.g., BlockError with received: { title: 123 })
+    │
+    ▼
+┌──────────────────────────┐
+│ Look up schema for type  │  ◀── Read from plugins/blockSchemas.json
+└──────────────────────────┘
+    │
+    ▼
+┌──────────────────────────┐
+│  validatePluginSchema()  │  ◀── Validate received data against schema
+└──────────────────────────┘
+    │ (if invalid)
+    ▼
+┌──────────────────────────┐
+│ formatValidationError()  │  ◀── Convert AJV errors to readable messages
+└──────────────────────────┘
+    │
+    ▼
+ConfigError with cause chain → logged to terminal
 ```
+
+**Schema map files** (generated at build time):
+
+| Error Type      | Schema File                    | Schema Key   | Field Label |
+| --------------- | ------------------------------ | ------------ | ----------- |
+| `BlockError`    | `plugins/blockSchemas.json`    | `properties` | property    |
+| `ActionError`   | `plugins/actionSchemas.json`   | `params`     | param       |
+| `OperatorError` | `plugins/operatorSchemas.json` | `params`     | param       |
+
+**Example output:**
+
+```
+/Users/dev/app/pages/home.yaml:15
+[ConfigError] Block "Button" property "title" must be type "string".
+  Caused by: [BlockError] Error rendering block "submitBtn".
+```
+
+**Operator method names:** For operators with method-qualified names (e.g., `_yaml.parse`), the validation extracts params from the method-style `received` key (e.g., `{ '_yaml.parse': { on: ... } }`) and uses the display name `_yaml.parse` in error messages.
+
+**Graceful degradation:** If schema files are missing, the plugin has no schema, or validation itself fails, the original error is logged unchanged. Schema validation never prevents error logging.
 
 See [Error Tracing System](../architecture/error-tracing.md) for complete documentation.

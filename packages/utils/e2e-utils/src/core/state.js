@@ -15,6 +15,7 @@
 */
 
 import { expect } from '@playwright/test';
+import { get } from '@lowdefy/helpers';
 
 async function getState(page) {
   return page.evaluate(() => {
@@ -48,7 +49,7 @@ async function expectState(page, { key, value, timeout = 5000 }) {
     .poll(
       async () => {
         const state = await getState(page);
-        return key.split('.').reduce((obj, k) => obj?.[k], state);
+        return get(state, key);
       },
       { timeout }
     )

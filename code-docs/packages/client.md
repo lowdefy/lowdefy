@@ -5,6 +5,7 @@ React client for rendering Lowdefy pages. Orchestrates block rendering, context 
 ## Purpose
 
 This package provides:
+
 - The main `Client` React component that renders pages
 - Page context initialization and management
 - Block component mounting and lifecycle
@@ -27,7 +28,7 @@ import Client from '@lowdefy/client';
   stage={buildStage}
   types={typeDefinitions}
   window={windowObject}
-/>
+/>;
 ```
 
 ## Architecture
@@ -55,38 +56,38 @@ import Client from '@lowdefy/client';
 
 ### Core Components
 
-| Module | Purpose |
-|--------|---------|
-| `Client.js` | Main entry component, initializes lowdefy context |
-| `Context.js` | Page context provider, manages state and requests |
-| `Head.js` | HTML head management (title, meta) |
-| `DisplayMessage.js` | Toast notifications and messages |
-| `ProgressBarController.js` | Loading progress indicator |
+| Module                     | Purpose                                           |
+| -------------------------- | ------------------------------------------------- |
+| `Client.js`                | Main entry component, initializes lowdefy context |
+| `Context.js`               | Page context provider, manages state and requests |
+| `Head.js`                  | HTML head management (title, meta)                |
+| `DisplayMessage.js`        | Toast notifications and messages                  |
+| `ProgressBarController.js` | Loading progress indicator                        |
 
 ### Block Rendering (`/block/`)
 
-| Module | Purpose |
-|--------|---------|
-| `Block.js` | Renders individual blocks with their components |
-| (in engine) | Block state, events, and lifecycle |
+| Module      | Purpose                                         |
+| ----------- | ----------------------------------------------- |
+| `Block.js`  | Renders individual blocks with their components |
+| (in engine) | Block state, events, and lifecycle              |
 
 ### API Communication
 
-| Module | Purpose |
-|--------|---------|
-| `createCallRequest.js` | Creates function to call data requests |
-| `createCallAPI.js` | Creates function to call custom endpoints |
-| `request.js` | HTTP request utilities |
+| Module                 | Purpose                                   |
+| ---------------------- | ----------------------------------------- |
+| `createCallRequest.js` | Creates function to call data requests    |
+| `createCallAPI.js`     | Creates function to call custom endpoints |
+| `request.js`           | HTTP request utilities                    |
 
 ### Context Initialization
 
-| Module | Purpose |
-|--------|---------|
-| `initLowdefyContext.js` | Sets up the global lowdefy context |
-| `createLogError.js` | Creates error logging function with deduplication |
-| `setupLink.js` | Configures navigation links |
-| `createLinkComponent.js` | Creates the Link component for navigation |
-| `createIcon.js` | Creates icon rendering function |
+| Module                   | Purpose                                                      |
+| ------------------------ | ------------------------------------------------------------ |
+| `initLowdefyContext.js`  | Sets up the global lowdefy context                           |
+| `createHandleError.js`   | Creates error handler with dedup, server round-trip, display |
+| `setupLink.js`           | Configures navigation links                                  |
+| `createLinkComponent.js` | Creates the Link component for navigation                    |
+| `createIcon.js`          | Creates icon rendering function                              |
 
 ### Authentication (`/auth/`)
 
@@ -116,7 +117,8 @@ lowdefy = {
     displayMessage: fn,          // Show toast messages
     callRequest: fn,             // Call data requests
     callEndpoint: fn,            // Call API endpoints
-    logError: fn,                // Log errors with location resolution
+    handleError: fn,             // Error handler with dedup, server round-trip, display
+    logger: browserLogger,       // Shared browser logger (createBrowserLogger)
     ...
   }
 }
@@ -182,12 +184,14 @@ context = {
 ### Why Separate Client and Engine?
 
 **Client** handles React-specific concerns:
+
 - Component rendering
 - DOM interactions
 - Router integration
 - HTTP requests
 
 **Engine** handles framework-agnostic logic:
+
 - State management
 - Operator evaluation
 - Action execution
@@ -198,6 +202,7 @@ This separation allows potential non-React implementations.
 ### Why Context Per Page?
 
 Each page gets isolated context because:
+
 - State doesn't leak between pages
 - Clean slate on navigation
 - Memory efficient (old context garbage collected)
@@ -206,6 +211,7 @@ Each page gets isolated context because:
 ### Why Global Lowdefy Object?
 
 The `lowdefy` object provides:
+
 - Shared configuration across all blocks
 - Single source for auth state
 - Centralized navigation

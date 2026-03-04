@@ -16,10 +16,7 @@
   limitations under the License.
 */
 
-import fs from 'fs';
-import path from 'path';
-import { LowdefyError } from '@lowdefy/errors';
-import { ConfigError } from '@lowdefy/errors/build';
+import { BuildError, LowdefyInternalError } from '@lowdefy/errors';
 
 import createContext from '../../createContext.js';
 import logCollectedErrors from '../../utils/logCollectedErrors.js';
@@ -39,9 +36,7 @@ import buildRefs from '../buildRefs/buildRefs.js';
 import buildTypes from '../buildTypes.js';
 import cleanBuildDirectory from '../cleanBuildDirectory.js';
 import copyPublicFolder from '../copyPublicFolder.js';
-import createFileDependencyMap from './createFileDependencyMap.js';
-import createPageRegistry from './createPageRegistry.js';
-import jsMapParser from '../buildJs/jsMapParser.js';
+import PAGE_CONTENT_KEYS from './pageContentKeys.js';
 import testSchema from '../testSchema.js';
 import validateConfig from '../validateConfig.js';
 import writeApp from '../writeApp.js';
@@ -53,28 +48,18 @@ import writeGlobal from '../writeGlobal.js';
 import writeJs from '../buildJs/writeJs.js';
 import writeLogger from '../writeLogger.js';
 import writeMaps from '../writeMaps.js';
+import updateServerPackageJson from '../full/updateServerPackageJson.js';
 import writeMenus from '../writeMenus.js';
 import writePageRegistry from './writePageRegistry.js';
 import writePluginImports from '../writePluginImports/writePluginImports.js';
 
-function getInstalledPackages(directories) {
-  if (!directories.server) return null;
-  try {
-    const pkgPath = path.join(directories.server, 'package.json');
-    const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
-    return new Set(Object.keys(pkg.dependencies ?? {}));
-  } catch {
-    return null;
-  }
-}
+import addInstalledTypes from './addInstalledTypes.js';
+import buildJsShallow from './buildJsShallow.js';
+import buildShallowPages from './buildShallowPages.js';
+import stripPageContent from './stripPageContent.js';
+import writeSourcelessPages from './writeSourcelessPages.js';
 
-const SHALLOW_STOP_PATHS = [
-  'pages.*.blocks',
-  'pages.*.areas',
-  'pages.*.events',
-  'pages.*.requests',
-  'pages.*.layout',
-];
+const SHALLOW_STOP_PATHS = PAGE_CONTENT_KEYS.map((key) => `pages.*.${key}`);
 
 async function shallowBuild(options) {
   makeId.reset();
@@ -90,36 +75,17 @@ async function shallowBuild(options) {
         shallowOptions: { stopAt: SHALLOW_STOP_PATHS },
       });
     } catch (err) {
-      if (err instanceof ConfigError) {
-        context.logger.error(err);
-        const error = new Error('Build failed with 1 error(s). See above for details.');
-        error.isFormatted = true;
-        error.hideStack = true;
-        throw error;
+      if (err.isLowdefyError) {
+        context.handleError(err);
+        throw new BuildError('Build failed with 1 error(s). See above for details.');
       }
       throw err;
     }
 
     // addKeys + testSchema first for error location info
     tryBuildStep(addKeys, 'addKeys', { components, context });
-
-    // Strip shallow markers from pages before schema validation.
-    // Schema doesn't know about ~shallow placeholders — they'd fail as additional properties.
-    // Save and restore so createPageRegistry can still capture raw content later.
-    const savedPageContent = (components.pages ?? []).map((page) => {
-      const saved = {};
-      for (const key of ['blocks', 'areas', 'events', 'requests', 'layout']) {
-        if (page[key] !== undefined) {
-          saved[key] = page[key];
-          delete page[key];
-        }
-      }
-      return saved;
-    });
+    stripPageContent({ components });
     tryBuildStep(testSchema, 'testSchema', { components, context });
-    (components.pages ?? []).forEach((page, i) => {
-      Object.assign(page, savedPageContent[i]);
-    });
 
     logCollectedErrors(context);
 
@@ -133,82 +99,28 @@ async function shallowBuild(options) {
     tryBuildStep(buildConnections, 'buildConnections', { components, context });
     tryBuildStep(buildApi, 'buildApi', { components, context });
 
-    // Set pageId on pages for buildMenu (normally done by buildPage in buildPages)
-    for (const page of components.pages ?? []) {
-      if (page.id && !page.pageId) {
-        page.pageId = page.id;
-      }
-    }
+    const { pageRegistry, sourcelessPageArtifacts } = buildShallowPages({ components, context });
 
-    // Extract page registry after buildAuth (sets page.auth) and pageId assignment,
-    // but before build steps that modify page content for skeleton output.
-    const pageRegistry = createPageRegistry({ components });
+    tryBuildStep(buildJsShallow, 'buildJsShallow', { components, context });
 
     tryBuildStep(buildMenu, 'buildMenu', { components, context });
-
-    // Extract JS from non-page components only (pages JS built JIT)
-    if (components.api) {
-      components.api = jsMapParser({
-        input: components.api,
-        jsMap: context.jsMap,
-        env: 'server',
-      });
-    }
-    if (components.connections) {
-      components.connections = jsMapParser({
-        input: components.connections,
-        jsMap: context.jsMap,
-        env: 'server',
-      });
-    }
-
     tryBuildStep(buildTypes, 'buildTypes', { components, context });
 
-    // In dev mode, page content is built JIT so page-level types (actions, blocks,
-    // operators) aren't counted during skeleton build. Include all types from
-    // installed packages so they're available for client-side use. Dev server
-    // pre-installs default packages so bundle size is not a concern — only
-    // production builds tree-shake by counting exact type usage.
-    const installedPackages = getInstalledPackages(context.directories);
-    if (installedPackages) {
-      function addInstalledTypes(store, definitions) {
-        for (const [typeName, def] of Object.entries(definitions)) {
-          if (!store[typeName] && installedPackages.has(def.package)) {
-            store[typeName] = {
-              originalTypeName: def.originalTypeName,
-              package: def.package,
-              version: def.version,
-              count: 0,
-            };
-          }
-        }
-      }
-      addInstalledTypes(components.types.actions, context.typesMap.actions);
-      addInstalledTypes(components.types.blocks, context.typesMap.blocks);
-      addInstalledTypes(components.types.operators.client, context.typesMap.operators.client);
-      addInstalledTypes(components.types.operators.server, context.typesMap.operators.server);
-    }
+    // Update server package.json before addInstalledTypes so that addInstalledTypes
+    // sees the full set of dependencies on every run (not just after the first build).
+    // This prevents plugin import files from differing between the initial and
+    // subsequent builds, which would trigger unnecessary Next.js rebuilds.
+    await updateServerPackageJson({ components, context });
 
+    tryBuildStep(addInstalledTypes, 'addInstalledTypes', { components, context });
     tryBuildStep(buildImports, 'buildImports', { components, context });
     tryBuildStep(addKeys, 'addKeys', { components, context });
 
     logCollectedErrors(context);
 
-    // Build file dependency map for targeted invalidation
-    const fileDependencyMap = createFileDependencyMap({ pageRegistry, refMap: context.refMap });
-
-    // Ensure both client and server jsMap keys exist.
-    // In shallow build, only server JS is extracted (api/connections).
-    // Client JS is extracted per-page during JIT build.
-    if (!context.jsMap.client) {
-      context.jsMap.client = {};
-    }
-    if (!context.jsMap.server) {
-      context.jsMap.server = {};
-    }
-
-    // Write skeleton artifacts (everything except pages and page requests)
+    // Write all build artifacts
     await cleanBuildDirectory({ context });
+    await writeSourcelessPages({ sourcelessPageArtifacts, context });
     await writeApp({ components, context });
     await writeAuth({ components, context });
     await writeConnections({ components, context });
@@ -224,23 +136,37 @@ async function shallowBuild(options) {
     await writeMenus({ components, context });
     await writeJs({ context });
     await context.writeBuildArtifact('jsMap.json', JSON.stringify(context.jsMap));
+    await context.writeBuildArtifact(
+      'customTypesMap.json',
+      JSON.stringify(options.customTypesMap ?? {})
+    );
+    // Persist snapshot of installed packages for JIT missing-package detection.
+    // Written as a build artifact so JIT builds compare against the skeleton
+    // build state, not a potentially-updated package.json (race condition).
+    await context.writeBuildArtifact(
+      'installedPluginPackages.json',
+      JSON.stringify([...(context.installedPackages ?? [])])
+    );
     await writePluginImports({ components, context });
     await writePageRegistry({ pageRegistry, context });
     await copyPublicFolder({ components, context });
 
-    return { components, pageRegistry, fileDependencyMap, context };
+    return { components, pageRegistry, context };
   } catch (err) {
-    if (err.isFormatted) {
+    if (err instanceof BuildError) {
       throw err;
     }
-    const logger = context?.logger ?? options.logger ?? console;
-    const lowdefyErr = new LowdefyError(err.message, { cause: err });
-    lowdefyErr.stack = err.stack;
-    logger.error(lowdefyErr);
-    const error = new Error('Build failed due to internal error. See above for details.');
-    error.isFormatted = true;
-    error.hideStack = true;
-    throw error;
+    // Unexpected internal error - preserve Lowdefy errors as-is, wrap plain errors
+    const lowdefyErr = err.isLowdefyError
+      ? err
+      : new LowdefyInternalError(err.message, { cause: err });
+    if (context) {
+      context.handleError(lowdefyErr);
+    } else {
+      const logger = options.logger ?? console;
+      logger.error(lowdefyErr);
+    }
+    throw new BuildError('Build failed due to internal error. See above for details.');
   }
 }
 

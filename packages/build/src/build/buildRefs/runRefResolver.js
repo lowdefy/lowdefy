@@ -15,7 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError } from '@lowdefy/errors';
 import getUserJavascriptFunction from './getUserJavascriptFunction.js';
 
 async function runRefResolver({ context, refDef, referencedFrom }) {
@@ -27,19 +27,16 @@ async function runRefResolver({ context, refDef, referencedFrom }) {
   try {
     content = await resolverFn(refDef.path, refDef.vars, context);
   } catch (error) {
-    throw new ConfigError({
-      message: `Error calling resolver "${refDef.resolver}": ${error.message}`,
+    throw new ConfigError(`Error calling resolver "${refDef.resolver}".`, {
+      cause: error,
       filePath: referencedFrom,
       lineNumber: refDef.lineNumber,
-      configDirectory: context.directories.config,
     });
   }
   if (type.isNone(content)) {
-    throw new ConfigError({
-      message: `Resolver "${refDef.resolver}" returned "${content}".`,
+    throw new ConfigError(`Resolver "${refDef.resolver}" returned "${content}".`, {
       filePath: referencedFrom,
       lineNumber: refDef.lineNumber,
-      configDirectory: context.directories.config,
     });
   }
   return content;

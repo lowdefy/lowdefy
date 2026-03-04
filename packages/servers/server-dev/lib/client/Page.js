@@ -18,6 +18,7 @@ import React from 'react';
 import Client from '@lowdefy/client';
 
 import BuildErrorPage from './BuildErrorPage.js';
+import InstallingPluginsPage from './InstallingPluginsPage.js';
 import RestartingPage from './RestartingPage.js';
 import usePageConfig from './utils/usePageConfig.js';
 
@@ -46,6 +47,9 @@ const Page = ({
         source={pageConfig.source}
       />
     );
+  }
+  if (pageConfig.installing) {
+    return <InstallingPluginsPage packages={pageConfig.packages} />;
   }
   if (resetContext.restarting) {
     return <RestartingPage />;

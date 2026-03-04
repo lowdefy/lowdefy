@@ -26,7 +26,7 @@ const serverPackages = {
 };
 
 async function build({ context }) {
-  context.logger.ui.info('Starting build.');
+  context.logger.info('Starting build.');
 
   const directory = context.directories.server;
   const packageName = serverPackages[context.options.server] ?? '@lowdefy/server';
@@ -41,7 +41,7 @@ async function build({ context }) {
     await runNextBuild({ context, directory });
   }
   await context.sendTelemetry({ sendTypes: true });
-  context.logger.ui.succeed(`Build successful.`);
+  context.logger.info({ succeed: true }, 'Build successful.');
 }
 
 export default build;

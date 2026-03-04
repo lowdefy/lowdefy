@@ -36,7 +36,10 @@ const handler = async (req, res) => {
   };
   watcher.on('add', () => reload());
   watcher.on('change', () => reload());
-  watcher.on('unlink', () => reload());
+  // Do not reload on unlink — cleanBuildDirectory deletes build/reload during
+  // skeleton rebuilds, which would send a premature SSE event before the new
+  // build artifacts are written. The real reload comes via add/change when
+  // reloadClients() creates the file after the build completes.
 
   // TODO: This isn't working.
   req.on('close', () => {

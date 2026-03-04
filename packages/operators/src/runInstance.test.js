@@ -168,7 +168,7 @@ test('error', () => {
       params: [functions],
       instanceType: 'object',
     })
-  ).toThrowErrorMatchingInlineSnapshot(`"_op.error - Function error."`);
+  ).toThrowErrorMatchingInlineSnapshot(`"Function error."`);
 });
 
 test('typeCheck', () => {
@@ -237,6 +237,21 @@ test('combination', () => {
     })
   ).toThrowErrorMatchingInlineSnapshot(
     `"_op.combination accepts one of the following types: array, object."`
+  );
+});
+
+test('undefined methodName throws with available methods', () => {
+  expect(() =>
+    runInstance({
+      location,
+      meta,
+      operator,
+      methodName: undefined,
+      params: [functions],
+      instanceType: 'object',
+    })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"_op requires a method. Use one of the following: singleArg, namedArgs, spreadArgs, nameAndSpread, property, typeCheck, combination, error, noFunction, returnInstance."`
   );
 });
 

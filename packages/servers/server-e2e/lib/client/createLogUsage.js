@@ -13,47 +13,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { v4 as uuid } from 'uuid';
 
-// What if this fails?
-// What about public usage
-
-function createLogUsage({ usageDataRef }) {
-  let lastTimestamp = 0;
-  let isOffline = false;
-  let machine = localStorage.getItem('lowdefy_machine_id');
-  if (!machine) {
-    machine = uuid();
-    localStorage.setItem('lowdefy_machine_id', machine);
-  }
-
-  async function logUsage() {
-    if (isOffline || lastTimestamp > Date.now() - 1000 * 60 * 15) {
-      return;
-    }
-    lastTimestamp = Date.now();
-
-    const res = await fetch('/api/usage', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ user: usageDataRef.current.user, machine }),
-    });
-    const { offline, data } = await res.json();
-    if (offline) {
-      isOffline = true;
-      return;
-    }
-    await fetch('https://api.lowdefy.net/v4/telemetry/usage', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-  }
-  return logUsage;
+// E2E server: telemetry is disabled — tests should not phone home.
+function createLogUsage() {
+  return function logUsage() {};
 }
 
 export default createLogUsage;

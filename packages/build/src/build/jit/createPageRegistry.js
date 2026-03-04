@@ -14,28 +14,73 @@
   limitations under the License.
 */
 
-import { serializer } from '@lowdefy/helpers';
+import { type } from '@lowdefy/helpers';
 
-function createPageRegistry({ components }) {
+// Walk up from ~r to find the page's source file for JIT re-resolution.
+// Templates receive vars (they need id, title, etc. from the page file),
+// while page files are self-contained or receive vars from a collection file.
+// Stop at the first ref called WITHOUT vars — that's the page file.
+// When ALL refs have vars (module pages), fall back to the first child of root.
+// When the child of root has no path (resolver ref), go shallower — capture
+// the resolver's info so JIT can re-run it with freshly resolved vars.
+function findPageSourceRef(refId, refMap, unresolvedRefVars) {
+  let current = refId;
+  let firstChildOfRoot = null;
+
+  while (!type.isNone(current)) {
+    const entry = refMap[current];
+    if (!entry) {
+      return null;
+    }
+
+    const hasVars = !type.isNone(unresolvedRefVars[current]);
+
+    // Track the first child of root as fallback
+    const parentEntry = !type.isNone(entry.parent) ? refMap[entry.parent] : null;
+    if (parentEntry && type.isNone(parentEntry.parent) && !firstChildOfRoot) {
+      // Resolver ref: capture the resolver's original definition and vars
+      // so JIT can re-run the resolver (instead of falling through to the
+      // template file below it, which would discard the resolver's vars).
+      firstChildOfRoot = entry.path
+        ? { path: entry.path, unresolvedVars: unresolvedRefVars[current] ?? null }
+        : { path: null, original: refMap[current].original };
+    }
+
+    // First ref without vars = self-contained page file
+    if (!hasVars) {
+      if (!type.isNone(entry.parent)) {
+        return { path: entry.path, unresolvedVars: null };
+      }
+      // Reached root — use first child of root
+      return firstChildOfRoot;
+    }
+
+    current = entry.parent;
+  }
+  return firstChildOfRoot;
+}
+
+function createPageRegistry({ components, context }) {
   const registry = new Map();
+  const unresolvedRefVars = context.unresolvedRefVars ?? {};
 
-  for (const page of components.pages ?? []) {
-    // Deep copy raw content fields so the shallow components object can be modified
-    // independently (e.g., by skeleton build steps)
+  (components.pages ?? []).forEach((page) => {
+    // Read ~r from keyMap — addKeys moves ~r there and deletes it from objects.
+    const keyMapEntry = context.keyMap[page['~k']];
+    const refId = keyMapEntry?.['~r'] ?? null;
+    const sourceRef = !type.isNone(refId)
+      ? findPageSourceRef(refId, context.refMap, unresolvedRefVars)
+      : null;
+
     registry.set(page.id, {
       pageId: page.id,
       auth: page.auth,
-      type: page.type,
-      refId: page['~r'] ?? null,
-      rawContent: serializer.copy({
-        blocks: page.blocks,
-        areas: page.areas,
-        events: page.events,
-        requests: page.requests,
-        layout: page.layout,
-      }),
+      refId,
+      refPath: sourceRef?.path ?? null,
+      unresolvedVars: sourceRef?.unresolvedVars ?? null,
+      resolverOriginal: sourceRef?.original ?? null,
     });
-  }
+  });
 
   return registry;
 }

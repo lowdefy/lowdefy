@@ -19,6 +19,7 @@ import operators from '@lowdefy/operators-js/operators/build';
 
 import collectDynamicIdentifiers from '../collectDynamicIdentifiers.js';
 import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
+import collectExceptions from '../../utils/collectExceptions.js';
 
 // Validate and collect dynamic identifiers once at module load
 validateOperatorsDynamic({ operators });
@@ -33,18 +34,17 @@ function evaluateBuildOperators({ context, input, refDef }) {
 
   const { output, errors } = operatorsParser.parse({
     input,
-    location: refDef.path ?? refDef.resolver,
     operatorPrefix: '_build.',
   });
   if (errors.length > 0) {
     errors.forEach((error) => {
-      context.logger.warn({
-        message: error.message,
-        received: error.received,
-        operatorLocation: error.operatorLocation,
-        filePath: refDef.path,
-        lineNumber: error.operatorLocation?.line,
-      });
+      // Resolve source file path for error location.
+      // Two call sites: (1) recursiveBuild per-file where refDef.path is correct
+      // but ~r isn't set yet (createRefReviver runs after), and (2) buildRefs
+      // top-level where refDef is root lowdefy.yaml but ~r identifies the real
+      // source file via refMap. The fallback to refDef.path handles case (1).
+      error.filePath = error.refId ? context.refMap[error.refId]?.path : refDef.path;
+      collectExceptions(context, error);
     });
   }
   return output;

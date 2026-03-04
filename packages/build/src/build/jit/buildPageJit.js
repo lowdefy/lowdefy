@@ -14,9 +14,10 @@
   limitations under the License.
 */
 
+import fs from 'fs';
+import path from 'path';
 import { serializer, type } from '@lowdefy/helpers';
-import { LowdefyError } from '@lowdefy/errors';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 
 import addKeys from '../addKeys.js';
 import buildPage from '../buildPages/buildPage.js';
@@ -24,25 +25,28 @@ import validateLinkReferences from '../buildPages/validateLinkReferences.js';
 import validatePayloadReferences from '../buildPages/validatePayloadReferences.js';
 import validateServerStateReferences from '../buildPages/validateServerStateReferences.js';
 import validateStateReferences from '../buildPages/validateStateReferences.js';
-import createRefReviver from '../buildRefs/createRefReviver.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
-import preserveMetaProperties from '../../utils/preserveMetaProperties.js';
 import createContext from '../../createContext.js';
+import createRefReviver from '../buildRefs/createRefReviver.js';
 import evaluateBuildOperators from '../buildRefs/evaluateBuildOperators.js';
 import evaluateStaticOperators from '../buildRefs/evaluateStaticOperators.js';
 import jsMapParser from '../buildJs/jsMapParser.js';
 import makeRefDefinition from '../buildRefs/makeRefDefinition.js';
 import recursiveBuild from '../buildRefs/recursiveBuild.js';
+import detectMissingPluginPackages from './detectMissingPluginPackages.js';
+import updateServerPackageJsonJit from './updateServerPackageJsonJit.js';
 import validatePageTypes from './validatePageTypes.js';
 import writePageJit from './writePageJit.js';
 
 async function buildPageJit({ pageId, pageRegistry, context, directories, logger }) {
   // Use provided context or create a minimal one for JIT builds
-  const buildContext = context ?? createContext({
-    directories,
-    logger: logger ?? console,
-    stage: 'dev',
-  });
+  const buildContext =
+    context ??
+    createContext({
+      directories,
+      logger: logger ?? console,
+      stage: 'dev',
+    });
 
   const pageEntry = type.isFunction(pageRegistry.get)
     ? pageRegistry.get(pageId)
@@ -52,30 +56,108 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     return null;
   }
 
+  // Reset errors for this build. Keep a local reference so that concurrent
+  // JIT builds (different pages sharing buildContext) cannot corrupt our
+  // error list by reassigning buildContext.errors during an await.
+  const buildErrors = [];
+  buildContext.errors = buildErrors;
+
   try {
-    // Reconstruct raw page with shallow markers
-    const rawPage = {
-      id: pageEntry.pageId,
-      auth: pageEntry.auth,
-      type: pageEntry.type,
-      ...pageEntry.rawContent,
-    };
 
-    // Resolve all ~shallow markers in the page content
-    const resolvedPage = await resolveShallowRefs(rawPage, buildContext);
+    // Pages without a source file (e.g., default 404) can only be served from
+    // their pre-built artifact — they have no YAML to re-resolve from.
+    // All user pages (with refId) always JIT-resolve from source YAML so that
+    // page-only edits are picked up without a skeleton rebuild.
+    if (!pageEntry.refId) {
+      const pagePath = path.join(buildContext.directories.build, 'pages', pageId, `${pageId}.json`);
+      try {
+        const content = await fs.promises.readFile(pagePath, 'utf8');
+        return serializer.deserialize(JSON.parse(content));
+      } catch (err) {
+        if (err.code !== 'ENOENT') throw err;
+      }
+    }
 
-    // Run build operators on the resolved page content
-    const dummyRefDef = { id: 'jit-page', path: `jit:${pageId}` };
-    let processed = await evaluateBuildOperators({
+    // Resolve the page file from scratch using the source file path determined
+    // by createPageRegistry's parent chain walk.
+    if (!pageEntry.refPath && !pageEntry.resolverOriginal) {
+      throw new ConfigError(
+        `Page "${pageId}" has no source file reference. Cannot resolve page content.`
+      );
+    }
+
+    // Resolve unresolved vars (which may contain inner _ref objects) fresh from disk.
+    // For resolver pages, unresolved vars live in resolverOriginal.vars (single source).
+    // For file-backed pages, they're stored separately in unresolvedVars.
+    const unresolvedVars = pageEntry.unresolvedVars ?? pageEntry.resolverOriginal?.vars;
+    let resolvedVars = null;
+    if (unresolvedVars) {
+      const varRefDef = makeRefDefinition({}, null, buildContext.refMap);
+      resolvedVars = await recursiveBuild({
+        context: buildContext,
+        refDef: varRefDef,
+        count: 0,
+        content: unresolvedVars,
+        referencedFrom: pageEntry.refPath ?? pageEntry.resolverOriginal?.resolver,
+      });
+      resolvedVars = await evaluateBuildOperators({
+        context: buildContext,
+        input: resolvedVars,
+        refDef: varRefDef,
+      });
+    }
+
+    let refDef;
+    if (pageEntry.resolverOriginal) {
+      const resolverDefinition = resolvedVars
+        ? { ...pageEntry.resolverOriginal, vars: resolvedVars }
+        : pageEntry.resolverOriginal;
+      refDef = makeRefDefinition(resolverDefinition, null, buildContext.refMap);
+      buildContext.refMap[refDef.id].path = null;
+    } else {
+      const refDefinition = resolvedVars
+        ? { path: pageEntry.refPath, vars: resolvedVars }
+        : pageEntry.refPath;
+      refDef = makeRefDefinition(refDefinition, null, buildContext.refMap);
+      buildContext.refMap[refDef.id].path = refDef.path;
+    }
+
+    let processed = await recursiveBuild({
       context: buildContext,
-      input: resolvedPage,
-      refDef: dummyRefDef,
+      refDef,
+      count: 0,
+    });
+
+    // Top-level operator evaluation (same as buildRefs does after recursiveBuild)
+    processed = await evaluateBuildOperators({
+      context: buildContext,
+      input: processed,
+      refDef,
     });
     processed = evaluateStaticOperators({
       context: buildContext,
       input: processed,
-      refDef: dummyRefDef,
+      refDef,
     });
+
+    // When resolving from a collection file (with vars), the result is an array of pages.
+    // Find the specific page by ID.
+    if (type.isArray(processed)) {
+      processed = processed.find((p) => type.isObject(p) && p.id === pageId);
+      if (!processed) {
+        throw new ConfigError(`Page "${pageId}" not found in resolved page source file.`);
+      }
+    }
+
+    // Stamp root-level content with ~r for correct error file tracing.
+    // recursiveBuild stamps child _ref content via createRefReviver, but the
+    // root file's own objects have no parent to do this. Without ~r, addKeys
+    // can't link objects to their source file and errors fall back to lowdefy.yaml.
+    const reviver = createRefReviver(refDef.id);
+    processed = serializer.copy(processed, { reviver });
+
+    // Apply skeleton-computed auth (buildAuth ran during skeleton build)
+    processed.auth = pageEntry.auth;
 
     // Add keys to the resolved page
     addKeys({ components: processed, context: buildContext });
@@ -88,12 +170,26 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     // Build the page (validation, block processing)
     const checkDuplicatePageId = createCheckDuplicateId({
       message: 'Duplicate pageId "{{ id }}".',
-      context: buildContext,
     });
     buildPage({ page: processed, index: 0, context: buildContext, checkDuplicatePageId });
 
     // Validate that all page-level types (blocks, actions, operators) exist
     validatePageTypes({ context: buildContext });
+
+    // Detect plugin packages that are in typesMap but not installed in server
+    const missingPackages = detectMissingPluginPackages({
+      context: buildContext,
+      installedPluginPackages: buildContext.installedPluginPackages,
+    });
+    if (missingPackages.size > 0) {
+      if (buildContext.directories.server) {
+        await updateServerPackageJsonJit({
+          directories: buildContext.directories,
+          missingPackages,
+        });
+      }
+      return { installing: true, packages: [...missingPackages.keys()] };
+    }
 
     // Validate link, state, payload, and server-state references
     const pageIds = Object.keys(pageRegistry);
@@ -118,11 +214,11 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     const finalPage = { ...cleanPage, requests: cleanRequests };
 
     // Check for collected errors from validation steps
-    if (buildContext.errors.length > 0) {
-      const error = new ConfigError({
-        message: `Page "${pageId}" build failed with ${buildContext.errors.length} error(s).`,
-      });
-      error.buildErrors = buildContext.errors;
+    if (buildErrors.length > 0) {
+      const error = new ConfigError(
+        `Page "${pageId}" build failed with ${buildErrors.length} error(s).`
+      );
+      error.buildErrors = buildErrors;
       throw error;
     }
 
@@ -132,55 +228,16 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     return finalPage;
   } catch (err) {
     // Attach any collected errors to the thrown error
-    if (buildContext.errors.length > 0 && !err.buildErrors) {
-      err.buildErrors = [err, ...buildContext.errors];
+    if (buildErrors.length > 0 && !err.buildErrors) {
+      err.buildErrors = [err, ...buildErrors];
     }
-    if (err instanceof ConfigError) {
+    if (err.isLowdefyError) {
       throw err;
     }
-    const lowdefyErr = new LowdefyError(err.message, { cause: err });
-    lowdefyErr.stack = err.stack;
+    const lowdefyErr = new LowdefyInternalError(err.message, { cause: err });
     lowdefyErr.buildErrors = err.buildErrors;
     throw lowdefyErr;
   }
-}
-
-async function resolveShallowRefs(obj, context) {
-  if (type.isArray(obj)) {
-    const results = [];
-    for (const item of obj) {
-      results.push(await resolveShallowRefs(item, context));
-    }
-    return results;
-  }
-
-  if (!type.isObject(obj)) {
-    return obj;
-  }
-
-  // This is a shallow marker - resolve the ref
-  if (obj['~shallow'] === true && obj._ref !== undefined) {
-    const refDef = makeRefDefinition(obj._ref, null, context.refMap);
-    const resolved = await recursiveBuild({
-      context,
-      refDef,
-      count: 0,
-    });
-    // Set ~r on all objects so addKeys can trace them to the correct source file.
-    // In a normal build, the parent's reviver sets ~r on child ref content.
-    // Here there is no parent, so we set it explicitly.
-    const reviver = createRefReviver(refDef.id);
-    return serializer.copy(resolved, { reviver });
-  }
-
-  // Recurse into object properties
-  const result = {};
-  for (const key of Object.keys(obj)) {
-    result[key] = await resolveShallowRefs(obj[key], context);
-  }
-  // Preserve non-enumerable properties
-  preserveMetaProperties(result, obj);
-  return result;
 }
 
 export default buildPageJit;

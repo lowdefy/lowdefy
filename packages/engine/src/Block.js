@@ -71,7 +71,8 @@ class Block {
       this.meta = this.context._internal.lowdefy._internal.blockComponents[this.type].meta;
     } catch (error) {
       throw new Error(
-        `Block type ${this.type} not found at ${this.blockId}. Check your plugins to make sure the block is installed. For more info, see https://docs.lowdefy.com/plugins.`
+        `Block type ${this.type} not found at ${this.blockId}. Check your plugins to make sure the block is installed. For more info, see https://docs.lowdefy.com/plugins.`,
+        { cause: error }
       );
     }
     if (!this.isContainer() && !this.isDisplay() && !this.isInput() && !this.isList()) {

@@ -88,6 +88,7 @@ async function build(options) {
 | `buildJs/` | Compile custom JavaScript functions |
 | `buildTypes.js` | Resolve and validate block/operator types |
 | `buildImports/` | Track which plugins need to be imported |
+| `writePluginImports/` | Write import files and schema maps for runtime validation |
 | `shallowBuild.js` | Dev-only: skeleton build with `_shallow` markers |
 | `buildPageJit.js` | Dev-only: resolve page content on demand |
 | `createPageRegistry.js` | Dev-only: extract page metadata for JIT |
@@ -156,7 +157,10 @@ Build artifacts go to `.lowdefy/build/`:
 ├── connections/       # Connection configs (one per connection)
 ├── pages/             # Page configs (one per page)
 ├── requests/          # Request configs (one per request)
-├── plugins/           # Plugin import manifests
+├── plugins/           # Plugin import manifests + schema maps
+│   ├── actionSchemas.json   # Action param schemas (for runtime validation)
+│   ├── blockSchemas.json    # Block property schemas (for runtime validation)
+│   └── operatorSchemas.json # Operator param schemas (for runtime validation)
 └── js/                # Compiled JavaScript functions
 ```
 
@@ -221,6 +225,35 @@ Block and operator types are resolved at build time:
 - Generates import map for code splitting
 - Catches typos early (build fails, not runtime)
 
+### Plugin Schema Map Generation
+
+During `writePluginImports`, schema maps are generated for runtime validation:
+
+**Files:** `packages/build/src/build/writePluginImports/write{Action,Block,Operator}SchemaMap.js`
+
+Each function:
+1. Groups used plugin types by package
+2. Imports the `schemas` export from each package (e.g., `@lowdefy/actions-core/schemas`)
+3. Prioritizes custom schemas from `context.typesMap.schemas` over package schemas
+4. Writes a JSON map: `{ "TypeName": { type, properties/params, ... } }`
+
+**Schema export convention:** Plugin packages export schemas via a `/schemas` entry point:
+
+```json
+// package.json exports
+{
+  "./schemas": "./dist/schemas.js"
+}
+```
+
+```javascript
+// src/schemas.js
+export { default as SetState } from './actions/SetState/schema.js';
+export { default as Request } from './actions/Request/schema.js';
+```
+
+These schema maps are consumed by `logClientError` in `@lowdefy/api` for runtime validation. See [api.md](./api.md#client-error-logging--plugin-schema-validation) for details.
+
 ## Integration Points
 
 - **lowdefy CLI**: Calls this package for `lowdefy build`
@@ -248,25 +281,27 @@ Located in `packages/build/src/utils/`:
 | `createCheckDuplicateId.js` | Factory for duplicate ID detection |
 | `createCounter.js` | Factory for counting type usage |
 
-**Error formatting pattern:**
+**Error handling pattern:**
 ```javascript
-import { ConfigError } from '@lowdefy/node-utils';
+import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 
-// Fatal error - stops build
-throw new ConfigError({
+// Fatal error — collected via collectExceptions, build continues
+collectExceptions(context, new ConfigError({
   message: `Block type "${type}" not found.`,
   configKey: block['~k'],
-  context,
-  checkSlug: 'types',  // For ~ignoreBuildChecks suppression
-});
+  checkSlug: 'types',
+}));
 
-// Warning - logs but continues build
-context.logger.configWarning({
+// Warning — suppression, dedup, location resolution via handleWarning
+context.handleWarning(new ConfigWarning({
   message: `Deprecated feature used.`,
   configKey: obj['~k'],
-  checkSlug: 'state-refs',  // For ~ignoreBuildChecks suppression
-});
+  checkSlug: 'state-refs',
+  prodError: true,
+}));
 ```
+
+**context.handleError** and **context.handleWarning** are explicit functions wired in `createContext.js` — not logger methods. `context.logger` is plain pino with zero monkey-patching.
 
 Errors and warnings can be suppressed using `~ignoreBuildChecks` in config. See [architecture/error-tracing.md](../architecture/error-tracing.md) for details.
 

@@ -15,13 +15,25 @@
 */
 import path from 'path';
 import { pathToFileURL } from 'url';
+import { ConfigError } from '@lowdefy/errors';
+
+// Create a native import() that survives webpack bundling. When this module is
+// bundled by Next.js webpack for server-dev API routes, webpack transforms
+// import() into __webpack_require__() which can't handle file:// URLs for
+// loading user-provided resolver and transformer JS files from the config
+// directory. The Function constructor creates the import call at runtime,
+// bypassing webpack's static analysis.
+const nativeImport = new Function('specifier', 'return import(specifier)');
 
 async function getUserJavascriptFunction({ context, filePath }) {
   try {
-    return (await import(pathToFileURL(path.join(context.directories.config, filePath)))).default;
+    const fileUrl = pathToFileURL(path.join(context.directories.config, filePath));
+    // Bust Node.js module cache so edits to resolver/transformer JS files are
+    // picked up during dev rebuilds. Each import gets a unique URL.
+    fileUrl.searchParams.set('t', Date.now());
+    return (await nativeImport(fileUrl.href)).default;
   } catch (error) {
-    context.logger.error(`Error importing ${filePath}.`);
-    throw Error(error);
+    throw new ConfigError(`Error importing ${filePath}.`, { cause: error, filePath });
   }
 }
 

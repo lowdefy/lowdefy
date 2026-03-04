@@ -5,6 +5,7 @@ Actions are functions executed in response to events. They power interactivity i
 ## What Are Actions?
 
 Actions are:
+
 - Triggered by block events (onClick, onChange)
 - Executed sequentially in an event
 - Can modify state, make requests, navigate, etc.
@@ -17,16 +18,16 @@ blocks:
   - id: button
     type: Button
     events:
-      onClick:                    # Event
-        - id: updateState         # Action 1
+      onClick: # Event
+        - id: updateState # Action 1
           type: SetState
           params:
             loading: true
-        - id: saveData            # Action 2
+        - id: saveData # Action 2
           type: Request
           params:
             requestId: saveUser
-        - id: navigate            # Action 3
+        - id: navigate # Action 3
           type: Link
           params:
             pageId: success
@@ -34,23 +35,23 @@ blocks:
 
 ## Available Action Packages
 
-| Package | Purpose | Actions |
-|---------|---------|---------|
-| [@lowdefy/actions-core](./core.md) | Core actions | SetState, Request, Link, etc. |
-| [@lowdefy/actions-pdf-make](./pdf-make.md) | PDF generation | PdfMake |
+| Package                                    | Purpose        | Actions                       |
+| ------------------------------------------ | -------------- | ----------------------------- |
+| [@lowdefy/actions-core](./core.md)         | Core actions   | SetState, Request, Link, etc. |
+| [@lowdefy/actions-pdf-make](./pdf-make.md) | PDF generation | PdfMake                       |
 
 ## Action Structure
 
 Each action has:
 
 ```yaml
-- id: actionId           # Unique ID within event
-  type: ActionType       # Action type name
-  params:                # Action parameters
+- id: actionId # Unique ID within event
+  type: ActionType # Action type name
+  params: # Action parameters
     key: value
-  skip:                  # Optional: skip condition
+  skip: # Optional: skip condition
     _state: skipAction
-  onError:               # Optional: error handling
+  onError: # Optional: error handling
     - id: handleError
       type: Message
 ```
@@ -128,11 +129,24 @@ events:
         pageId: list
 ```
 
+## Runtime Schema Validation
+
+Each action can export a `schema.js` file describing its expected `params` shape. These schemas are collected at build time into `plugins/actionSchemas.json`.
+
+When an `ActionError` occurs at runtime, the server validates the `received` params against the action's schema and produces a diagnostic `ConfigError`:
+
+```
+[ConfigError] Action "SetState" required param "value" is missing.
+```
+
+This is **reactive** validation — it only runs when an error is caught, not on every execution. See [plugin-system.md](../../architecture/plugin-system.md#blockactionoperator-schemas-runtime-reactive) for schema format details.
+
 ## Design Decisions
 
 ### Why Sequential Execution?
 
 Actions run in order because:
+
 - Predictable behavior
 - Dependencies between actions
 - Easy to reason about
@@ -141,6 +155,7 @@ Actions run in order because:
 ### Why Not Async by Default?
 
 Sequential execution prevents:
+
 - Race conditions
 - Unpredictable state
 - Complex debugging

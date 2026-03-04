@@ -25,19 +25,19 @@ import { generateManifest, loadManifest } from '../testPrep/generateManifest.js'
 import { createMockManager, loadStaticMocks } from '../mocking/index.js';
 import { setUserCookie } from '../core/userCookie.js';
 
+const DEFAULT_BUILD_DIR = '.lowdefy/server/build';
+
 // Create test with ldf fixture
 export const test = base.extend({
   // Option fixtures — overridable per-project via `use` in config.
   // Multi-app configs set these per project; single-app configs use env vars.
-  buildDir: [process.env.LOWDEFY_BUILD_DIR || '.lowdefy/server/build', { option: true }],
-  mocksFile: [process.env.LOWDEFY_E2E_MOCKS_FILE || '', { option: true }],
+  // Worker-scoped so that worker fixtures can depend on them directly.
+  buildDir: [process.env.LOWDEFY_BUILD_DIR || DEFAULT_BUILD_DIR, { option: true, scope: 'worker' }],
+  mocksFile: [process.env.LOWDEFY_E2E_MOCKS_FILE || '', { option: true, scope: 'worker' }],
 
   // Worker-scoped fixtures (shared across tests in a worker)
-  // These read from process.env directly — worker fixtures cannot depend on test-scoped options.
   helperRegistry: [
-    // eslint-disable-next-line no-empty-pattern
-    async ({}, use) => {
-      const buildDir = process.env.LOWDEFY_BUILD_DIR || '.lowdefy/server/build';
+    async ({ buildDir }, use) => {
       // serverDir is the parent of buildDir (e.g., .lowdefy/server)
       const serverDir = path.dirname(buildDir);
       const registry = createHelperRegistry({ serverDir });
@@ -47,9 +47,7 @@ export const test = base.extend({
   ],
 
   staticMocks: [
-    // eslint-disable-next-line no-empty-pattern
-    async ({}, use) => {
-      const mocksFile = process.env.LOWDEFY_E2E_MOCKS_FILE;
+    async ({ mocksFile }, use) => {
       const mocks = loadStaticMocks(mocksFile || undefined);
       await use(mocks);
     },
@@ -57,9 +55,7 @@ export const test = base.extend({
   ],
 
   manifest: [
-    // eslint-disable-next-line no-empty-pattern
-    async ({}, use) => {
-      const buildDir = process.env.LOWDEFY_BUILD_DIR || '.lowdefy/server/build';
+    async ({ buildDir }, use) => {
       const manifestPath = path.join(buildDir, 'e2e-manifest.json');
       const lockPath = path.join(buildDir, 'e2e-manifest.lock');
       const lockTimeout = 30000;

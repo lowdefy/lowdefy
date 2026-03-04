@@ -19,7 +19,7 @@ import { operatorsServer } from '@lowdefy/operators-js';
 import callRequest from './callRequest.js';
 import testContext from '../../test/testContext.js';
 
-import { ConfigError, PluginError } from '@lowdefy/errors/server';
+import { ConfigError, RequestError } from '@lowdefy/errors';
 
 const { _date, _payload, _secret, _user } = operatorsServer;
 
@@ -605,7 +605,7 @@ test('request resolver throws  error', async () => {
     throw new Error('Test error.');
   });
 
-  await expect(callRequest(context, defaultParams)).rejects.toThrow(PluginError);
+  await expect(callRequest(context, defaultParams)).rejects.toThrow(RequestError);
   await expect(callRequest(context, defaultParams)).rejects.toThrow('Test error.');
 });
 
@@ -625,7 +625,7 @@ test('connection properties schema error', async () => {
   mockTestRequest.mockImplementation(defaultResolverImp);
 
   await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigError);
-  await expect(callRequest(context, defaultParams)).rejects.toThrow('must be string');
+  await expect(callRequest(context, defaultParams)).rejects.toThrow('must be type "string"');
 });
 
 test('request properties schema error', async () => {
@@ -647,7 +647,7 @@ test('request properties schema error', async () => {
   mockTestRequest.mockImplementation(defaultResolverImp);
 
   await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigError);
-  await expect(callRequest(context, defaultParams)).rejects.toThrow('must be string');
+  await expect(callRequest(context, defaultParams)).rejects.toThrow('must be type "string"');
 });
 
 test('checkRead, read explicitly true', async () => {

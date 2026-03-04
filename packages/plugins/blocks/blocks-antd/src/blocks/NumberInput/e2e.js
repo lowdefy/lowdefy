@@ -24,7 +24,7 @@ export default createBlockHelper({
   do: {
     fill: (page, blockId, val) => locator(page, blockId).fill(String(val)),
     clear: (page, blockId) => locator(page, blockId).clear(),
-    enterPressed: (page, blockId) => locator(page, blockId).press('Enter'),
+    pressEnter: (page, blockId) => locator(page, blockId).press('Enter'),
   },
   expect: {
     value: (page, blockId, val) => expect(locator(page, blockId)).toHaveValue(String(val)),

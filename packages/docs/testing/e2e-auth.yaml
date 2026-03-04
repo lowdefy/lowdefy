@@ -88,7 +88,7 @@ _ref:
             });
             ```
 
-            When no user is set and the requested page is protected, the server redirects to the first page listed in `auth.pages.public` in your `lowdefy.yaml`.
+            When no user is set and the requested page is protected, the server redirects to the 404 page. If the 404 page has logic to redirect to a login page, the user will be redirected there.
 
             ## Testing role-based access
 
@@ -137,7 +137,7 @@ _ref:
 
             ## Limitations
 
-            - **Sign-in and sign-out are not supported.** If your app calls `_auth.login()` or `_auth.logout()`, the e2e server will throw an error. Test login flows by setting the user directly with `ldf.user()` instead.
+            - **Sign-in and sign-out are not supported.** If your app uses the Login or Logout actions, the e2e server will throw an error. Test login flows by setting the user directly with `ldf.user()` instead.
             - **No session callbacks.** The user object is passed through as-is. If your production app transforms the session via callbacks (for example, mapping `userFields`), those transforms do not run in e2e tests.
 
       - _ref:

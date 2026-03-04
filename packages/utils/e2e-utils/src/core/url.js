@@ -16,12 +16,11 @@
 
 import { expect } from '@playwright/test';
 
-async function expectUrl(page, { pattern, path, timeout = 5000 }) {
-  if (pattern) {
-    await expect(page).toHaveURL(pattern, { timeout });
-  } else if (path) {
-    await expect(page).toHaveURL(path, { timeout });
+async function expectUrl(page, { url, timeout = 5000 }) {
+  if (!url) {
+    throw new Error('expectUrl requires a "url" parameter (string or RegExp).');
   }
+  await expect(page).toHaveURL(url, { timeout });
 }
 
 async function expectUrlQuery(page, { key, value, timeout = 5000 }) {

@@ -22,8 +22,12 @@ import { buildPageJit, createContext } from '@lowdefy/build/dev';
 import createLogger from './log/createLogger.js';
 import PageCache from './pageCache.mjs';
 
-const jitLogger = createLogger({ component: 'jit-build' });
+const jitLogger = createLogger({ name: 'jit-build' });
 
+function formatDuration(ms) {
+  if (ms < 1000) return `${ms}ms`;
+  return `${(ms / 1000).toFixed(2)}s`;
+}
 const pageCache = new PageCache();
 let cachedRegistryMtime = null;
 let cachedRegistry = null;
@@ -40,21 +44,17 @@ function readJsonFile(filePath) {
 }
 
 function checkPageInvalidations(buildDirectory) {
-  const invalidationPath = path.join(buildDirectory, 'invalidatePages.json');
+  const invalidatePath = path.join(buildDirectory, 'invalidatePages');
   try {
-    const stat = fs.statSync(invalidationPath);
+    const stat = fs.statSync(invalidatePath);
     if (lastInvalidationMtime && stat.mtimeMs === lastInvalidationMtime) {
       return;
     }
     lastInvalidationMtime = stat.mtimeMs;
-    const content = fs.readFileSync(invalidationPath, 'utf8');
-    const pageIds = JSON.parse(content);
-    if (Array.isArray(pageIds) && pageIds.length > 0) {
-      pageCache.invalidatePages(pageIds);
-      cachedBuildContext = null;
-    }
+    pageCache.invalidateAll();
+    cachedBuildContext = null;
   } catch {
-    // File doesn't exist yet or read error — nothing to invalidate
+    // File doesn't exist yet — nothing to invalidate
   }
 }
 
@@ -85,10 +85,14 @@ function getBuildContext(buildDirectory, configDirectory) {
   const jsMap = readJsonFile(path.join(buildDirectory, 'jsMap.json')) ?? { client: {}, server: {} };
   const connectionIds = readJsonFile(path.join(buildDirectory, 'connectionIds.json')) ?? [];
 
+  const customTypesMap = readJsonFile(path.join(buildDirectory, 'customTypesMap.json')) ?? {};
+
   cachedBuildContext = createContext({
+    customTypesMap,
     directories: {
       build: buildDirectory,
       config: configDirectory,
+      server: path.resolve(buildDirectory, '..'),
     },
     logger: jitLogger,
     stage: 'dev',
@@ -102,6 +106,11 @@ function getBuildContext(buildDirectory, configDirectory) {
   for (const id of connectionIds) {
     cachedBuildContext.connectionIds.add(id);
   }
+
+  // Load installed packages snapshot from skeleton build for missing-package detection
+  const installedPluginPackages =
+    readJsonFile(path.join(buildDirectory, 'installedPluginPackages.json')) ?? [];
+  cachedBuildContext.installedPluginPackages = new Set(installedPluginPackages);
 
   return cachedBuildContext;
 }
@@ -123,16 +132,27 @@ async function buildPageIfNeeded({ pageId, buildDirectory, configDirectory }) {
     return true;
   }
 
+  jitLogger.info({ spin: true }, `Building page "${pageId}"...`);
+  const startTime = Date.now();
   try {
     const context = getBuildContext(buildDirectory, configDirectory);
-    const startTime = Date.now();
-    await buildPageJit({
+    const result = await buildPageJit({
       pageId,
       pageRegistry: registry,
       context,
     });
+    if (result && result.installing) {
+      jitLogger.info(
+        `Installing plugin packages for page "${pageId}": ${result.packages.join(', ')}. ` +
+          'The page will be available after the server restarts.'
+      );
+      return result;
+    }
     pageCache.markCompiled(pageId);
-    jitLogger.info(`Built page "${pageId}" in ${Date.now() - startTime}ms.`);
+    jitLogger.info(
+      { succeed: true, color: 'white' },
+      `Built page "${pageId}" in ${formatDuration(Date.now() - startTime)}.`
+    );
     return true;
   } finally {
     pageCache.releaseBuildLock(pageId);
@@ -140,4 +160,3 @@ async function buildPageIfNeeded({ pageId, buildDirectory, configDirectory }) {
 }
 
 export default buildPageIfNeeded;
-export { pageCache };

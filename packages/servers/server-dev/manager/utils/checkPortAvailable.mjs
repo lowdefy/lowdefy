@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { BuildError } from '@lowdefy/errors';
 import net from 'net';
 
 function checkPortAvailable(port) {
@@ -21,11 +22,11 @@ function checkPortAvailable(port) {
     const server = net.createServer();
     server.once('error', (err) => {
       if (err.code === 'EADDRINUSE') {
-        const error = new Error(
-          `Port ${port} is already in use. Stop the other process or use a different port with --port.`
+        reject(
+          new BuildError(
+            `Port ${port} is already in use. Stop the other process or use a different port with --port.`
+          )
         );
-        error.isFormatted = true;
-        reject(error);
       } else {
         reject(err);
       }

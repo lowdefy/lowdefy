@@ -4,17 +4,17 @@ Shared utility packages used throughout Lowdefy.
 
 ## Package Summary
 
-| Package | Purpose | Runtime |
-|---------|---------|---------|
-| `@lowdefy/helpers` | Core helper functions | Universal |
-| `@lowdefy/node-utils` | Node.js file/process utilities | Node.js |
-| `@lowdefy/logger` | Logging utilities (node, dev, cli, browser) | Universal |
-| `@lowdefy/ajv` | JSON Schema validation | Universal |
-| `@lowdefy/block-utils` | Block runtime utilities | Browser |
-| `@lowdefy/block-dev` | Block testing utilities | Node.js |
-| `@lowdefy/e2e-utils` | Playwright e2e testing for apps | Node.js |
-| `@lowdefy/nunjucks` | Template engine wrapper | Universal |
-| `@lowdefy/jest-yaml-transform` | YAML Jest transformer | Node.js |
+| Package                        | Purpose                                     | Runtime   |
+| ------------------------------ | ------------------------------------------- | --------- |
+| `@lowdefy/helpers`             | Core helper functions                       | Universal |
+| `@lowdefy/node-utils`          | Node.js file/process utilities              | Node.js   |
+| `@lowdefy/logger`              | Logging utilities (node, dev, cli, browser) | Universal |
+| `@lowdefy/ajv`                 | JSON Schema validation                      | Universal |
+| `@lowdefy/block-utils`         | Block runtime utilities                     | Browser   |
+| `@lowdefy/block-dev`           | Block testing utilities                     | Node.js   |
+| `@lowdefy/e2e-utils`           | Playwright e2e testing for apps             | Node.js   |
+| `@lowdefy/nunjucks`            | Template engine wrapper                     | Universal |
+| `@lowdefy/jest-yaml-transform` | YAML Jest transformer                       | Node.js   |
 
 ## Dependency Graph
 

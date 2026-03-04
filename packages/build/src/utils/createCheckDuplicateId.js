@@ -15,19 +15,15 @@
 */
 
 import { nunjucksFunction } from '@lowdefy/nunjucks';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError } from '@lowdefy/errors';
 
-function createCheckDuplicateId({ message, context }) {
+function createCheckDuplicateId({ message }) {
   const template = nunjucksFunction(message);
   const ids = new Set();
   function checkDuplicateId({ id, blockId, configKey, eventId, menuId, pageId }) {
     if (ids.has(id.toLowerCase())) {
       const errorMessage = template({ id, blockId, eventId, menuId, pageId });
-      throw new ConfigError({
-        message: errorMessage,
-        configKey,
-        context,
-      });
+      throw new ConfigError(errorMessage, { configKey });
     }
     ids.add(id.toLowerCase());
   }

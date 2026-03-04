@@ -4,8 +4,8 @@ HTTP/REST API connection for Lowdefy using [Axios](https://axios-http.com/docs/i
 
 ## Connection Type
 
-| Type | Purpose |
-|------|---------|
+| Type        | Purpose                   |
+| ----------- | ------------------------- |
 | `AxiosHttp` | Connect to HTTP/REST APIs |
 
 ## Connection Configuration
@@ -25,17 +25,17 @@ connections:
 
 ## Properties
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `baseUrl` | string | Base URL for requests |
-| `headers` | object | Default headers |
-| `timeout` | number | Request timeout (ms) |
-| `auth` | object | Basic auth credentials |
+| Property  | Type   | Description            |
+| --------- | ------ | ---------------------- |
+| `baseUrl` | string | Base URL for requests  |
+| `headers` | object | Default headers        |
+| `timeout` | number | Request timeout (ms)   |
+| `auth`    | object | Basic auth credentials |
 
 ## Request Type
 
-| Type | Purpose |
-|------|---------|
+| Type        | Purpose           |
+| ----------- | ----------------- |
 | `AxiosHttp` | Make HTTP request |
 
 ## Request Configuration
@@ -56,15 +56,15 @@ requests:
 
 ## Request Properties
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `url` | string | Request URL (appended to baseUrl) |
-| `method` | string | HTTP method (GET, POST, PUT, DELETE, PATCH) |
-| `params` | object | URL query parameters |
-| `data` | any | Request body |
-| `headers` | object | Request-specific headers |
-| `timeout` | number | Override connection timeout |
-| `responseType` | string | Expected response type |
+| Property       | Type   | Description                                 |
+| -------------- | ------ | ------------------------------------------- |
+| `url`          | string | Request URL (appended to baseUrl)           |
+| `method`       | string | HTTP method (GET, POST, PUT, DELETE, PATCH) |
+| `params`       | object | URL query parameters                        |
+| `data`         | any    | Request body                                |
+| `headers`      | object | Request-specific headers                    |
+| `timeout`      | number | Override connection timeout                 |
+| `responseType` | string | Expected response type                      |
 
 ## Examples
 
@@ -170,11 +170,13 @@ requests:
 ## Response Handling
 
 The response includes:
+
 - `data` - Response body
 - `status` - HTTP status code
 - `headers` - Response headers
 
 Access in state:
+
 ```yaml
 _request: getUsers.data
 ```
@@ -182,11 +184,13 @@ _request: getUsers.data
 ## Error Handling
 
 HTTP errors throw RequestError with:
+
 - Status code
 - Response data
 - Original error message
 
 Handle in actions:
+
 ```yaml
 events:
   onClick:

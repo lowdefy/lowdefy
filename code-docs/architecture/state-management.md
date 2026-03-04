@@ -5,6 +5,7 @@ How Lowdefy manages page and application state.
 ## Overview
 
 Lowdefy state management is:
+
 - **Expression-based**: All data access through operators
 - **Reactive**: Changes automatically trigger re-renders
 - **Hierarchical**: Page state → global state → URL state
@@ -12,12 +13,12 @@ Lowdefy state management is:
 
 ## State Types
 
-| Operator | Source | Scope | Mutable |
-|----------|--------|-------|---------|
-| `_state` | `context.state` | Page | Yes |
-| `_input` | `lowdefy.inputs[contextId]` | Page | Read-only |
-| `_global` | `lowdefy.lowdefyGlobal` | App | Read-only |
-| `_url_query` | `window.location.search` | Browser | External |
+| Operator     | Source                      | Scope   | Mutable   |
+| ------------ | --------------------------- | ------- | --------- |
+| `_state`     | `context.state`             | Page    | Yes       |
+| `_input`     | `lowdefy.inputs[contextId]` | Page    | Read-only |
+| `_global`    | `lowdefy.lowdefyGlobal`     | App     | Read-only |
+| `_url_query` | `window.location.search`    | Browser | External  |
 
 ## State Class
 
@@ -51,9 +52,9 @@ class State {
 
   resetState() {
     // Restore to frozen initial state
-    Object.keys(this.context.state).forEach(key => delete this.context.state[key]);
+    Object.keys(this.context.state).forEach((key) => delete this.context.state[key]);
     const frozen = deserializeFromString(this.frozenState);
-    Object.keys(frozen).forEach(key => this.set(key, frozen[key]));
+    Object.keys(frozen).forEach((key) => this.set(key, frozen[key]));
   }
 
   swapItems(field, from, to) {
@@ -113,7 +114,7 @@ State.freezeState()  // Snapshot for reset
 
 ## State Operators
 
-### _state Operator
+### \_state Operator
 
 **File:** `packages/plugins/operators/operators-js/src/operators/shared/state.js`
 
@@ -130,6 +131,7 @@ function _state({ arrayIndices, location, params, state }) {
 ```
 
 **Usage:**
+
 ```yaml
 # Simple access
 value:
@@ -142,7 +144,7 @@ value:
     default: "Anonymous"
 ```
 
-### _input Operator
+### \_input Operator
 
 **File:** `packages/plugins/operators/operators-js/src/operators/client/input.js`
 
@@ -158,7 +160,7 @@ function _input({ arrayIndices, input, location, params }) {
 }
 ```
 
-### _global Operator
+### \_global Operator
 
 **File:** `packages/plugins/operators/operators-js/src/operators/client/global.js`
 
@@ -174,7 +176,7 @@ function _global({ arrayIndices, location, lowdefyGlobal, params }) {
 }
 ```
 
-### _url_query Operator
+### \_url_query Operator
 
 **File:** `packages/plugins/operators/operators-js/src/operators/client/url_query.js`
 
@@ -192,10 +194,11 @@ function _url_query({ arrayIndices, globals, location, params }) {
 ```
 
 **Usage:**
+
 ```yaml
 # URL: ?user=john&id=123
 userId:
-  _url_query: id    # Returns "123"
+  _url_query: id # Returns "123"
 ```
 
 ## Input Block State Binding
@@ -300,10 +303,7 @@ evaluate = (visibleParent, repeat) => {
 function createSetState({ arrayIndices, context }) {
   return function setState(params) {
     Object.keys(params).forEach((key) => {
-      context._internal.State.set(
-        applyArrayIndices(arrayIndices, key),
-        params[key]
-      );
+      context._internal.State.set(applyArrayIndices(arrayIndices, key), params[key]);
     });
     context._internal.RootAreas.reset();
     context._internal.update();
@@ -312,6 +312,7 @@ function createSetState({ arrayIndices, context }) {
 ```
 
 **Usage:**
+
 ```yaml
 events:
   onClick:
@@ -331,9 +332,7 @@ events:
 function createReset({ context }) {
   return function reset() {
     context._internal.State.resetState();
-    context._internal.RootAreas.reset(
-      deserializeFromString(context._internal.State.frozenState)
-    );
+    context._internal.RootAreas.reset(deserializeFromString(context._internal.State.frozenState));
   };
 }
 ```
@@ -384,6 +383,7 @@ async callRequest({ actions, arrayIndices, blockId, event, requestId }) {
 ```
 
 **Example:**
+
 ```yaml
 requests:
   - id: saveUser
@@ -444,7 +444,7 @@ React useState triggers re-render
 **File:** `packages/utils/helpers/src/get.js`
 
 ```javascript
-get(object, 'user.profile.name', { default: null, copy: true })
+get(object, 'user.profile.name', { default: null, copy: true });
 
 // Supports:
 // - Dot notation: 'a.b.c'
@@ -458,7 +458,7 @@ get(object, 'user.profile.name', { default: null, copy: true })
 **File:** `packages/utils/helpers/src/set.js`
 
 ```javascript
-set(state, 'user.profile.name', 'John')
+set(state, 'user.profile.name', 'John');
 
 // Features:
 // - Auto-creates intermediate objects
@@ -471,9 +471,9 @@ set(state, 'user.profile.name', 'John')
 **File:** `packages/utils/helpers/src/type.js`
 
 ```javascript
-type.enforceType('string', value)
-type.enforceType('array', value)
-type.enforceType('object', value)
+type.enforceType('string', value);
+type.enforceType('array', value);
+type.enforceType('object', value);
 ```
 
 ## Example State Flow
@@ -481,30 +481,41 @@ type.enforceType('object', value)
 **Scenario:** User enters name, triggers request
 
 1. **User Input**
+
    - User types "John" in `text_input_1`
 
 2. **setValue Called**
+
    - `block.setValue('John')`
 
 3. **State Updated**
+
    - `State.set('text_input_1', 'John')`
    - `context.state['text_input_1'] = 'John'`
 
 4. **Update Triggered**
+
    - `context._internal.update()`
 
 5. **Evaluation**
+
    - All blocks re-evaluated
    - Request payload parsed:
      ```javascript
-     { name: { _state: 'text_input_1' } }
+     {
+       name: {
+         _state: 'text_input_1';
+       }
+     }
      // Becomes: { name: 'John' }
      ```
 
 6. **Request Made**
+
    - Payload sent to backend
 
 7. **Response**
+
    - Stored in `context.requests[requestId]`
 
 8. **Display**
@@ -513,25 +524,26 @@ type.enforceType('object', value)
 ## Visibility and State Cleanup
 
 When blocks become invisible:
+
 - State for hidden input blocks is deleted
 - Prevents stale data from accumulating
 - Re-initializes when block becomes visible again
 
 ## Key Files
 
-| Component | File |
-|-----------|------|
-| State Class | `packages/engine/src/State.js` |
-| Context Factory | `packages/engine/src/getContext.js` |
-| Block Engine | `packages/engine/src/Block.js` |
-| Areas Manager | `packages/engine/src/Areas.js` |
-| SetState Action | `packages/engine/src/actions/createSetState.js` |
-| Reset Action | `packages/engine/src/actions/createReset.js` |
-| _state Operator | `packages/plugins/operators/operators-js/src/operators/shared/state.js` |
-| _input Operator | `packages/plugins/operators/operators-js/src/operators/client/input.js` |
-| _global Operator | `packages/plugins/operators/operators-js/src/operators/client/global.js` |
-| _url_query Operator | `packages/plugins/operators/operators-js/src/operators/client/url_query.js` |
-| React Block | `packages/client/src/block/Block.js` |
+| Component            | File                                                                        |
+| -------------------- | --------------------------------------------------------------------------- |
+| State Class          | `packages/engine/src/State.js`                                              |
+| Context Factory      | `packages/engine/src/getContext.js`                                         |
+| Block Engine         | `packages/engine/src/Block.js`                                              |
+| Areas Manager        | `packages/engine/src/Areas.js`                                              |
+| SetState Action      | `packages/engine/src/actions/createSetState.js`                             |
+| Reset Action         | `packages/engine/src/actions/createReset.js`                                |
+| \_state Operator     | `packages/plugins/operators/operators-js/src/operators/shared/state.js`     |
+| \_input Operator     | `packages/plugins/operators/operators-js/src/operators/client/input.js`     |
+| \_global Operator    | `packages/plugins/operators/operators-js/src/operators/client/global.js`    |
+| \_url_query Operator | `packages/plugins/operators/operators-js/src/operators/client/url_query.js` |
+| React Block          | `packages/client/src/block/Block.js`                                        |
 
 ## Architectural Patterns
 

@@ -18,7 +18,7 @@ import { spawnProcess } from '@lowdefy/node-utils';
 
 function installPlugins({ logger, packageManagerCmd }) {
   return async () => {
-    logger.ui.spin('Installing plugins...');
+    logger.info({ spin: true }, 'Installing plugins...');
     await spawnProcess({
       processOptions: {
         // https://nodejs.org/en/blog/vulnerability/april-2024-security-releases-2#command-injection-via-args-parameter-of-child_processspawn-without-shell-option-enabled-on-windows-cve-2024-27980---high
@@ -28,7 +28,7 @@ function installPlugins({ logger, packageManagerCmd }) {
       args: ['install', '--no-frozen-lockfile'],
       stdOutLineHandler: (line) => logger.debug(line),
     });
-    logger.ui.log('Installed plugins.');
+    logger.info('Installed plugins.');
   };
 }
 

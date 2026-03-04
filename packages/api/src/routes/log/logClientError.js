@@ -14,48 +14,125 @@
   limitations under the License.
 */
 
-import { resolveConfigLocation } from '@lowdefy/errors/build';
-import { deserializeError } from '@lowdefy/errors/server';
+import { ConfigError, loadAndResolveErrorLocation } from '@lowdefy/errors';
+import { serializer, type } from '@lowdefy/helpers';
 
-async function logClientError(context, data) {
+import formatValidationError from './formatValidationError.js';
+import validatePluginSchema from './validatePluginSchema.js';
+
+const validationConfigs = {
+  BlockError: {
+    schemaFile: 'plugins/blockSchemas.json',
+    schemaKey: 'properties',
+    pluginLabel: 'Block',
+    fieldLabel: 'property',
+  },
+  ActionError: {
+    schemaFile: 'plugins/actionSchemas.json',
+    schemaKey: 'params',
+    pluginLabel: 'Action',
+    fieldLabel: 'param',
+  },
+  OperatorError: {
+    schemaFile: 'plugins/operatorSchemas.json',
+    schemaKey: 'params',
+    pluginLabel: 'Operator',
+    fieldLabel: 'param',
+  },
+};
+
+async function logClientError(context, serializedError) {
   const { logger } = context;
+  const error = serializer.deserialize(serializedError);
 
-  // Deserialize the error from the client
-  const error = deserializeError(data);
+  // Schema validation for plugin errors with received data
+  const validationConfig = validationConfigs[error.name];
+  let validationError = null;
 
-  // Resolve config location if error has configKey
-  if (error.configKey) {
+  if (validationConfig && !type.isNone(error.received)) {
     try {
-      const [keyMap, refMap] = await Promise.all([
-        context.readConfigFile('keyMap.json'),
-        context.readConfigFile('refMap.json'),
-      ]);
+      const schemas = await context.readConfigFile(validationConfig.schemaFile);
+      if (schemas) {
+        const schema = schemas[error.typeName];
+        if (schema) {
+          const data =
+            error.name === 'OperatorError' ? Object.values(error.received)[0] : error.received;
 
-      const location = resolveConfigLocation({
-        configKey: error.configKey,
-        keyMap,
-        refMap,
-        configDirectory: context.configDirectory,
-      });
+          const ajvErrors = validatePluginSchema({
+            data,
+            schema,
+            schemaKey: validationConfig.schemaKey,
+          });
 
-      if (location) {
-        error.source = location.source;
-        error.config = location.config;
-        error.link = location.link;
+          if (ajvErrors) {
+            const displayName =
+              error.name === 'OperatorError' && error.methodName
+                ? `${error.typeName}.${error.methodName}`
+                : error.typeName;
+
+            const messages = ajvErrors.map((ajvError) =>
+              formatValidationError({
+                ajvError,
+                pluginLabel: validationConfig.pluginLabel,
+                typeName: displayName,
+                fieldLabel: validationConfig.fieldLabel,
+              })
+            );
+
+            const message =
+              messages.length === 1
+                ? messages[0]
+                : `${validationConfig.pluginLabel} "${displayName}" has invalid ${
+                    validationConfig.schemaKey
+                  }:\n${messages.map((m) => `  - ${m}`).join('\n')}`;
+
+            validationError = new ConfigError(message, {
+              configKey: error.configKey,
+              cause: error,
+            });
+          }
+        }
       }
-    } catch (err) {
-      logger.warn({ event: 'warn_maps_load_failed', error: err.message });
+    } catch (e) {
+      logger.warn(e);
     }
   }
 
-  // Log error - logger handles formatting
+  const location = await loadAndResolveErrorLocation({
+    error,
+    readConfigFile: context.readConfigFile,
+    configDirectory: context.configDirectory,
+  });
+
+  if (location) {
+    error.source = location.source;
+    error.config = location.config;
+  }
+
+  // If validation produced a ConfigError, log only that (cause chain shows original)
+  if (validationError) {
+    if (location) {
+      validationError.source = location.source;
+      validationError.config = location.config;
+    }
+    logger.error(validationError);
+
+    return {
+      success: true,
+      source: error.source ?? null,
+      config: error.config ?? null,
+      error,
+      configError: serializer.serialize(validationError),
+    };
+  }
+
   logger.error(error);
 
   return {
     success: true,
     source: error.source ?? null,
     config: error.config ?? null,
-    link: error.link ?? null,
+    error,
   };
 }
 

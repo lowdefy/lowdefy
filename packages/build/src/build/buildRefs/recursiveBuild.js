@@ -14,7 +14,7 @@
   limitations under the License.
 */
 import { serializer, type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError } from '@lowdefy/errors';
 import createRefReviver from './createRefReviver.js';
 import evaluateBuildOperators from './evaluateBuildOperators.js';
 import getKey from './getKey.js';
@@ -29,6 +29,7 @@ async function recursiveBuild({
   context,
   refDef,
   count,
+  content,
   referencedFrom,
   refChainSet = new Set(),
   refChainList = [],
@@ -41,12 +42,10 @@ async function recursiveBuild({
   if (currentPath) {
     if (refChainSet.has(currentPath)) {
       const chainDisplay = [...refChainList, currentPath].join('\n  -> ');
-      throw new ConfigError({
-        message: `Circular reference detected. File "${currentPath}" references itself through:\n  -> ${chainDisplay}`,
-        filePath: referencedFrom,
-        lineNumber: refDef.lineNumber,
-        configDirectory: context.directories.config,
-      });
+      throw new ConfigError(
+        `Circular reference detected. File "${currentPath}" references itself through:\n  -> ${chainDisplay}`,
+        { filePath: referencedFrom ?? null, lineNumber: referencedFrom ? refDef.lineNumber : null }
+      );
     }
     refChainSet.add(currentPath);
     refChainList.push(currentPath);
@@ -54,12 +53,11 @@ async function recursiveBuild({
 
   // Keep count as a fallback safety limit
   if (count > 10000) {
-    throw new ConfigError({
-      message: `Maximum recursion depth of references exceeded (10000 levels). This likely indicates a circular reference.`,
-      context,
-    });
+    throw new ConfigError(
+      'Maximum recursion depth of references exceeded (10000 levels). This likely indicates a circular reference.'
+    );
   }
-  let fileContent = await getRefContent({ context, refDef, referencedFrom });
+  let fileContent = content ?? await getRefContent({ context, refDef, referencedFrom });
   const { foundRefs, fileContentBuiltRefs } = getRefsFromFile(
     fileContent,
     refDef.id,
@@ -97,11 +95,18 @@ async function recursiveBuild({
       refDef,
     });
     context.refMap[parsedRefDef.id].path = parsedRefDef.path;
+    // Store original definition for resolver refs so JIT can re-run them
+    if (!parsedRefDef.path) {
+      context.refMap[parsedRefDef.id].original = newRefDef.original;
+    }
+    if (Object.keys(newRefDef.vars).length > 0) {
+      context.unresolvedRefVars[newRefDef.id] = newRefDef.vars;
+    }
     const parsedFile = await recursiveBuild({
       context,
       refDef: parsedRefDef,
       count: count + 1,
-      referencedFrom: refDef.path,
+      referencedFrom: refDef.path ?? referencedFrom,
       refChainSet,
       refChainList,
       shallowOptions,

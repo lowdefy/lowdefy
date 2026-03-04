@@ -16,7 +16,6 @@
 
 import { getPageConfig, getRootConfig } from '@lowdefy/api';
 
-import authJson from '../lib/build/auth.js';
 import serverSidePropsWrapper from '../lib/server/serverSidePropsWrapper.js';
 import Page from '../lib/client/Page.js';
 
@@ -29,17 +28,6 @@ async function getServerSidePropsHandler({ context, nextContext }) {
   ]);
 
   if (!pageConfig) {
-    // If auth is configured and user is not authenticated, redirect to first public page
-    if (authJson.configured && !session) {
-      const loginPage = authJson.pages?.public?.[0] ?? '404';
-      logger.info({ event: 'redirect_auth', pageId, loginPage });
-      return {
-        redirect: {
-          destination: `/${loginPage}`,
-          permanent: false,
-        },
-      };
-    }
     logger.info({ event: 'redirect_page_not_found', pageId });
     return {
       redirect: {

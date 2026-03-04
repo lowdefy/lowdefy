@@ -14,16 +14,18 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { Suspense } from 'react';
 
 import { useRouter } from 'next/router';
 
 import Head from 'next/head';
 import Link from 'next/link';
 
+import BuildingPage from './BuildingPage.js';
 import Reload from './Reload.js';
 import Page from './Page.js';
 import setPageId from './setPageId.js';
+import { getReloadVersion } from './utils/useMutateCache.js';
 import useRootConfig from './utils/useRootConfig.js';
 
 import actions from '../../build/plugins/actions.js';
@@ -44,24 +46,26 @@ const App = ({ auth, lowdefy }) => {
   return (
     <Reload basePath={router.basePath} lowdefy={lowdefy}>
       {(resetContext) => (
-        <Page
-          auth={auth}
-          Components={{ Head, Link }}
-          config={{
-            rootConfig,
-          }}
-          jsMap={staticJsMap}
-          lowdefy={lowdefy}
-          pageId={pageId}
-          resetContext={resetContext}
-          router={router}
-          types={{
-            actions,
-            blocks,
-            icons,
-            operators,
-          }}
-        />
+        <Suspense key={`${pageId}_${getReloadVersion()}`} fallback={<BuildingPage />}>
+          <Page
+            auth={auth}
+            Components={{ Head, Link }}
+            config={{
+              rootConfig,
+            }}
+            jsMap={staticJsMap}
+            lowdefy={lowdefy}
+            pageId={pageId}
+            resetContext={resetContext}
+            router={router}
+            types={{
+              actions,
+              blocks,
+              icons,
+              operators,
+            }}
+          />
+        </Suspense>
       )}
     </Reload>
   );

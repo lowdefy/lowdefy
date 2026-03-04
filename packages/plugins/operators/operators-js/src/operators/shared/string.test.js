@@ -515,7 +515,7 @@ describe('_string.normalize', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"_string.normalize - The normalization form should be one of NFC, NFD, NFKC, NFKD."`
+      `"The normalization form should be one of NFC, NFD, NFKC, NFKD."`
     );
     expect(() =>
       string({
@@ -1317,7 +1317,7 @@ describe('_string.length', () => {
 
 test('_string called with no method or params', () => {
   expect(() => string({ location: 'location' })).toThrowErrorMatchingInlineSnapshot(
-    `"_string.undefined is not supported, use one of the following: charAt, concat, endsWith, includes, indexOf, lastIndexOf, match, normalize, padEnd, padStart, repeat, replace, search, slice, split, startsWith, substring, toLowerCase, toUpperCase, trim, trimEnd, trimStart, length."`
+    `"_string requires a method. Use one of the following: charAt, concat, endsWith, includes, indexOf, lastIndexOf, match, normalize, padEnd, padStart, repeat, replace, search, slice, split, startsWith, substring, toLowerCase, toUpperCase, trim, trimEnd, trimStart, length."`
   );
 });
 

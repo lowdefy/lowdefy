@@ -15,7 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors/build';
+import { ConfigError } from '@lowdefy/errors';
 import page404 from './404.js';
 
 function addDefaultPages({ components, context }) {
@@ -27,20 +27,14 @@ function addDefaultPages({ components, context }) {
     components.pages = [];
   }
   if (!type.isArray(components.pages)) {
-    throw new ConfigError({
-      message: 'lowdefy.pages is not an array.',
-      received: components.pages,
-      context,
-    });
+    throw new ConfigError('lowdefy.pages is not an array.', { received: components.pages });
   }
 
   const pageIds = components.pages.map((page, index) => {
     if (!type.isObject(page)) {
-      throw new ConfigError({
-        message: `pages[${index}] is not an object.`,
+      throw new ConfigError(`pages[${index}] is not an object.`, {
         received: page,
         configKey: page?.['~k'],
-        context,
       });
     }
     return page.id;

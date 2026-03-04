@@ -168,7 +168,7 @@ test('noArgsError', () => {
       methodName: 'noArgsError',
       params: null,
     })
-  ).toThrowErrorMatchingInlineSnapshot(`"_op - No Args function error."`);
+  ).toThrowErrorMatchingInlineSnapshot(`"No Args function error."`);
 });
 
 test('property', () => {
@@ -204,7 +204,7 @@ test('error', () => {
       methodName: 'error',
       params: [],
     })
-  ).toThrowErrorMatchingInlineSnapshot(`"_op.error - Function error."`);
+  ).toThrowErrorMatchingInlineSnapshot(`"Function error."`);
 });
 
 test('typeCheck', () => {

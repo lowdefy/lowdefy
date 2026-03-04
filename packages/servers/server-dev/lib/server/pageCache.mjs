@@ -18,7 +18,6 @@ class PageCache {
   constructor() {
     this.compiledPages = new Set();
     this.buildLocks = new Map();
-    this.skeletonLock = null;
   }
 
   isCompiled(pageId) {
@@ -30,11 +29,6 @@ class PageCache {
   }
 
   async acquireBuildLock(pageId) {
-    // Wait for any skeleton rebuild first
-    if (this.skeletonLock) {
-      await this.skeletonLock;
-    }
-
     // If page build already in progress, wait for it
     if (this.buildLocks.has(pageId)) {
       await this.buildLocks.get(pageId);
@@ -59,45 +53,8 @@ class PageCache {
     }
   }
 
-  async acquireSkeletonLock() {
-    // Wait for all in-progress page builds to complete
-    await Promise.all(this.buildLocks.values());
-    let resolve;
-    this.skeletonLock = new Promise((r) => {
-      resolve = r;
-    });
-    this.skeletonLock.resolve = resolve;
-  }
-
-  releaseSkeletonLock() {
-    if (this.skeletonLock) {
-      this.skeletonLock.resolve();
-      this.skeletonLock = null;
-    }
-  }
-
   invalidateAll() {
     this.compiledPages.clear();
-  }
-
-  invalidatePages(pageIds) {
-    for (const pageId of pageIds) {
-      this.compiledPages.delete(pageId);
-    }
-  }
-
-  invalidateByFiles(changedFiles, fileDependencyMap) {
-    const affectedPages = new Set();
-    for (const filePath of changedFiles) {
-      const pageIds = fileDependencyMap.get(filePath);
-      if (pageIds) {
-        for (const pageId of pageIds) {
-          affectedPages.add(pageId);
-        }
-      }
-    }
-    this.invalidatePages(affectedPages);
-    return affectedPages;
   }
 }
 

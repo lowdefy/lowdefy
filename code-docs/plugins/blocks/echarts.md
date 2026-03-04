@@ -5,6 +5,7 @@
 ## Overview
 
 ECharts is a powerful charting library supporting:
+
 - Line, bar, pie, scatter charts
 - Heatmaps, treemaps, sunburst
 - Geographic maps
@@ -13,8 +14,8 @@ ECharts is a powerful charting library supporting:
 
 ## Block
 
-| Block | Purpose |
-|-------|---------|
+| Block    | Purpose               |
+| -------- | --------------------- |
 | `EChart` | ECharts visualization |
 
 ## Basic Usage
@@ -41,12 +42,12 @@ ECharts is a powerful charting library supporting:
 
 ## Key Properties
 
-| Property | Purpose |
-|----------|---------|
-| `height` | Chart height (required) |
-| `width` | Chart width (default: 100%) |
+| Property | Purpose                      |
+| -------- | ---------------------------- |
+| `height` | Chart height (required)      |
+| `width`  | Chart width (default: 100%)  |
 | `option` | ECharts configuration object |
-| `theme` | ECharts theme name |
+| `theme`  | ECharts theme name           |
 
 ## Chart Types
 
@@ -87,5 +88,6 @@ events:
 ### Why Separate Package?
 
 ECharts is large (~800KB minified). Separating it:
+
 - Reduces bundle size for apps without charts
 - Loads on demand

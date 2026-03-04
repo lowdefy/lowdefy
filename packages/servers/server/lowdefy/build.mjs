@@ -20,6 +20,7 @@ import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
 import build from '@lowdefy/build';
+import { BuildError } from '@lowdefy/errors';
 import { createNodeLogger } from '@lowdefy/logger/node';
 import createCustomPluginTypesMap from './createCustomPluginTypesMap.mjs';
 
@@ -59,8 +60,7 @@ async function run() {
 }
 
 run().catch((error) => {
-  // If error is already formatted (from error collection), just show the message
-  if (error.isFormatted || error.hideStack) {
+  if (error instanceof BuildError) {
     console.error(error.message);
     process.exit(1);
   }

@@ -41,39 +41,22 @@ function lowdefyBuildWatcher(context) {
     }
 
     try {
-      // Check if only page-level files changed (targeted invalidation)
       const isSkeletonChange =
         lowdefyYamlModified ||
-        changedFiles.some(
-          (f) =>
-            !context.fileDependencyMap?.has(f) && !f.startsWith('pages/') && !f.startsWith('./')
-        );
+        changedFiles.some((f) => !f.startsWith('pages/') && !f.startsWith('./'));
 
-      if (isSkeletonChange || !context.pageCache) {
-        // Full skeleton rebuild
+      if (isSkeletonChange) {
         await context.lowdefyBuild();
       } else {
-        // Targeted invalidation: only clear affected pages
-        const affectedPages = context.pageCache.invalidateByFiles(
-          changedFiles,
-          context.fileDependencyMap
-        );
-        if (affectedPages.size > 0) {
-          // Write invalidated page IDs to a file so the Next.js server process
-          // (which has its own PageCache) knows which pages to rebuild.
-          const invalidationPath = path.join(context.directories.build, 'invalidatePages.json');
-          fs.writeFileSync(invalidationPath, JSON.stringify([...affectedPages]));
-          context.logger.ui.log(
-            `Invalidated ${affectedPages.size} page(s): ${[...affectedPages].join(', ')}`
-          );
-        } else {
-          // Unknown file changed - do full rebuild to be safe
-          await context.lowdefyBuild();
-        }
+        // Page-only changes: write signal file so the server invalidates its page cache
+        const invalidatePath = path.join(context.directories.build, 'invalidatePages');
+        fs.writeFileSync(invalidatePath, String(Date.now()));
+        context.logger.info('Page files changed, invalidated all pages.');
       }
-      context.reloadClients();
     } catch (error) {
       context.logger.error(error);
+    } finally {
+      await context.reloadClients();
     }
   };
   return setupWatcher({

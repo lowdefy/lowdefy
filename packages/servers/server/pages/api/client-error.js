@@ -23,18 +23,36 @@ async function handler({ context, req, res }) {
   if (req.method !== 'POST') {
     throw new Error('Only POST requests are supported.');
   }
-  const response = await logClientError(context, req.body);
+
+  const origin = req.headers.origin;
+  if (!origin) {
+    res.status(403).json({ error: 'Forbidden' });
+    return;
+  }
+  try {
+    if (new URL(origin).host !== req.headers.host) {
+      res.status(403).json({ error: 'Forbidden' });
+      return;
+    }
+  } catch {
+    res.status(403).json({ error: 'Forbidden' });
+    return;
+  }
+
+  // Strip received from payload — prod doesn't need it for schema validation
+  if (req.body?.['~e']) {
+    delete req.body['~e'].received;
+  }
+  const { error, ...response } = await logClientError(context, req.body);
 
   // Capture client error to Sentry (no-op if Sentry not configured)
   captureSentryError({
-    error: new Error(req.body.message),
+    error,
     context,
-    configLocation: response.source
-      ? { source: response.source, config: response.config, link: response.link }
-      : null,
+    configLocation: response.source ? { source: response.source, config: response.config } : null,
   });
 
-  res.status(200).json(response);
+  res.status(200).json({ success: true });
 }
 
 export default apiWrapper(handler);

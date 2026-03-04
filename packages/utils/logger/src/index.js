@@ -14,6 +14,6 @@
   limitations under the License.
 */
 
-import { createNodeLogger, wrapErrorLogger } from './node/index.js';
+import { createNodeLogger } from './node/index.js';
 
-export { createNodeLogger, wrapErrorLogger };
+export { createNodeLogger };

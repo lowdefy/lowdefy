@@ -5,6 +5,7 @@ Grid-based responsive layout system for Lowdefy blocks. Built on Ant Design's gr
 ## Purpose
 
 This package provides:
+
 - `BlockLayout` - Wrapper for individual blocks with responsive sizing
 - `Area` - Container for groups of blocks with grid layout
 
@@ -39,22 +40,12 @@ Lowdefy uses a 24-column grid system (from Ant Design):
 Wraps each block with responsive column sizing:
 
 ```javascript
-const BlockLayout = ({
-  id,
-  blockStyle,
-  children,
-  layout = {},
-  makeCssClass
-}) => {
+const BlockLayout = ({ id, blockStyle, children, layout = {}, makeCssClass }) => {
   if (layout.disabled) {
     // No grid, just a div
     return <div id={id}>{children}</div>;
   }
-  return (
-    <Col {...deriveLayout(layout)}>
-      {children}
-    </Col>
-  );
+  return <Col {...deriveLayout(layout)}>{children}</Col>;
 };
 ```
 
@@ -67,25 +58,25 @@ blocks:
   - id: sidebar
     type: Box
     layout:
-      span: 6           # Default span (24-column grid)
-      xs: 24            # Extra small screens: full width
-      sm: 12            # Small screens: half width
-      md: 8             # Medium screens: 1/3 width
-      lg: 6             # Large screens: 1/4 width
-      xl: 6             # Extra large: 1/4 width
-      align: top        # Vertical alignment (top/middle/bottom)
+      span: 6 # Default span (24-column grid)
+      xs: 24 # Extra small screens: full width
+      sm: 12 # Small screens: half width
+      md: 8 # Medium screens: 1/3 width
+      lg: 6 # Large screens: 1/4 width
+      xl: 6 # Extra large: 1/4 width
+      align: top # Vertical alignment (top/middle/bottom)
 ```
 
 ### Responsive Breakpoints
 
-| Breakpoint | Screen Width | Typical Device |
-|------------|-------------|----------------|
-| `xs` | < 576px | Mobile |
-| `sm` | >= 576px | Tablet portrait |
-| `md` | >= 768px | Tablet landscape |
-| `lg` | >= 992px | Desktop |
-| `xl` | >= 1200px | Large desktop |
-| `xxl` | >= 1600px | Extra large |
+| Breakpoint | Screen Width | Typical Device   |
+| ---------- | ------------ | ---------------- |
+| `xs`       | < 576px      | Mobile           |
+| `sm`       | >= 576px     | Tablet portrait  |
+| `md`       | >= 768px     | Tablet landscape |
+| `lg`       | >= 992px     | Desktop          |
+| `xl`       | >= 1200px    | Large desktop    |
+| `xxl`      | >= 1600px    | Extra large      |
 
 ### Alignment
 
@@ -107,11 +98,7 @@ Container that creates a flex row for blocks:
 ```javascript
 // Simplified
 const Area = ({ children, layout, makeCssClass }) => (
-  <Row
-    gutter={layout.gutter}
-    justify={layout.justify}
-    align={layout.align}
-  >
+  <Row gutter={layout.gutter} justify={layout.justify} align={layout.align}>
     {children}
   </Row>
 );
@@ -122,9 +109,9 @@ const Area = ({ children, layout, makeCssClass }) => (
 ```yaml
 areas:
   content:
-    gutter: 16          # Gap between blocks (pixels or [h, v])
-    justify: start      # Horizontal: start/center/end/space-between/space-around
-    align: top          # Vertical: top/middle/bottom/stretch
+    gutter: 16 # Gap between blocks (pixels or [h, v])
+    justify: start # Horizontal: start/center/end/space-between/space-around
+    align: top # Vertical: top/middle/bottom/stretch
     blocks: [...]
 ```
 
@@ -140,6 +127,7 @@ areas:
 ### Why 24 Columns?
 
 24 is divisible by 2, 3, 4, 6, 8, 12:
+
 - Half width: 12 cols
 - Third width: 8 cols
 - Quarter width: 6 cols
@@ -150,6 +138,7 @@ More flexible than 12-column grids.
 ### Layout Disabled Mode
 
 When `layout.disabled: true`:
+
 - Block renders without grid wrapper
 - Useful for full-width content
 - Avoids flex interference
@@ -188,12 +177,12 @@ blocks:
     type: Box
     layout:
       span: 6
-      xs: 24        # Full width on mobile
+      xs: 24 # Full width on mobile
   - id: content
     type: Box
     layout:
       span: 18
-      xs: 24        # Full width on mobile
+      xs: 24 # Full width on mobile
 ```
 
 ### Three Equal Columns
@@ -224,5 +213,5 @@ areas:
       - id: centered
         type: Box
         layout:
-          span: 12    # Half width, centered
+          span: 12 # Half width, centered
 ```

@@ -27,7 +27,6 @@ function buildConnections({ components, context }) {
   // Only check for duplicates here (schema can't do that)
   const checkDuplicateConnectionId = createCheckDuplicateId({
     message: 'Duplicate connectionId "{{ id }}".',
-    context,
   });
 
   (components.connections ?? []).forEach((connection) => {

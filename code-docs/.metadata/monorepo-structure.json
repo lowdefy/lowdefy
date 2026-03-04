@@ -54,10 +54,7 @@
         "@lowdefy/operators-uuid",
         "@lowdefy/operators-yaml"
       ],
-      "actions": [
-        "@lowdefy/actions-core",
-        "@lowdefy/actions-pdf-make"
-      ],
+      "actions": ["@lowdefy/actions-core", "@lowdefy/actions-pdf-make"],
       "plugins": [
         "@lowdefy/plugin-auth0",
         "@lowdefy/plugin-aws",
@@ -65,10 +62,7 @@
         "@lowdefy/plugin-next-auth"
       ]
     },
-    "servers": [
-      "@lowdefy/server",
-      "@lowdefy/server-dev"
-    ],
+    "servers": ["@lowdefy/server", "@lowdefy/server-dev"],
     "utils": [
       "@lowdefy/ajv",
       "@lowdefy/block-dev",

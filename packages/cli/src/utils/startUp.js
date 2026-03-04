@@ -52,9 +52,9 @@ async function startUp({ context, options = {}, command }) {
   context.sendTelemetry = getSendTelemetry(context);
 
   if (type.isNone(lowdefyVersion)) {
-    context.logger.ui.log(`Running 'lowdefy ${context.command}'.`);
+    context.logger.info(`Running 'lowdefy ${context.command}'.`);
   } else {
-    context.logger.ui.log(
+    context.logger.info(
       `Running 'lowdefy ${context.command}'. Lowdefy app version ${lowdefyVersion}.`
     );
   }

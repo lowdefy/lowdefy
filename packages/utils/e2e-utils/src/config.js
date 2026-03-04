@@ -73,8 +73,7 @@ function createConfig({
       reuseExistingServer: true,
       timeout,
       cwd: absoluteAppDir,
-      // Exposes window.lowdefy for state testing
-      env: { NEXT_PUBLIC_LOWDEFY_E2E: 'true' },
+      // Stage="e2e" in Page.js exposes window.lowdefy for state testing
     },
   });
 }

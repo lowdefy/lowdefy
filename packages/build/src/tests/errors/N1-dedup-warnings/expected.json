@@ -5,7 +5,7 @@
       "description": "Same state key referenced twice on same page produces only ONE warning (validation deduplicates by key per page). Tests exact 2-line format.",
       "warningCount": 1,
       "exactWarnings": [
-        "{{fixturesDir}}/N1-dedup-warnings/lowdefy.yaml:28\n[Config Warning] _state references \"undefinedKey\" on page \"home\", but no input block with id \"undefinedKey\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState."
+        "{{fixturesDir}}/N1-dedup-warnings/lowdefy.yaml:28\n[ConfigWarning] _state references \"undefinedKey\" on page \"home\", but no input block with id \"undefinedKey\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState."
       ]
     }
   ]
