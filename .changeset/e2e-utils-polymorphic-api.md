@@ -25,7 +25,7 @@ Add e2e testing package for Lowdefy apps
 
 **@lowdefy/client**
 
-- Expose `window.lowdefy` when `NEXT_PUBLIC_LOWDEFY_E2E=true` for e2e state/validation access
+- Expose `window.lowdefy` when `stage="e2e"` for e2e state/validation access
 
 **@lowdefy/blocks-antd**
 

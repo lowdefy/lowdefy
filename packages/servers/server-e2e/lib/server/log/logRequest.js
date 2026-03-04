@@ -15,7 +15,7 @@
 */
 
 function logRequest({ context }) {
-  const { user = {} } = context;
+  const { user = {} } = context.session ?? {};
   context.logger.debug({
     user: {
       id: user.id,

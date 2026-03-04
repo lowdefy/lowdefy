@@ -46,6 +46,7 @@ const Page = ({ auth, lowdefy, pageConfig, rootConfig }) => {
         icons,
         operators,
       }}
+      stage="e2e"
       window={window}
     />
   );

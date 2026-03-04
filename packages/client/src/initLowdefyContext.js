@@ -68,7 +68,7 @@ function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, 
     lowdefy._internal.logger = createBrowserLogger();
     lowdefy._internal.handleError = createHandleError(lowdefy);
 
-    if (stage === 'dev' || process.env.NEXT_PUBLIC_LOWDEFY_E2E === 'true') {
+    if (stage === 'dev' || stage === 'e2e') {
       window.lowdefy = lowdefy;
     }
   }
