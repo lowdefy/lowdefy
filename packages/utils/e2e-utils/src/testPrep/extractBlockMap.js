@@ -33,7 +33,7 @@ function extractBlockMap({ pageConfig, typesBlocks }) {
       if (packageName) {
         blockMap[obj.blockId] = {
           type: obj.type,
-          helper: `${packageName}/e2e/${obj.type}`,
+          helper: `${packageName}/e2e`,
         };
       }
     }

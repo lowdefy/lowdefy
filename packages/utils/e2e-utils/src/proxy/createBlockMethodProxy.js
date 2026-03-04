@@ -24,11 +24,14 @@ function createBlockMethodProxy({ page, blockId, blockInfo, helperRegistry, mode
         if (methodName === 'then') return undefined;
 
         return async (...args) => {
-          const helper = await helperRegistry.get(blockInfo.helper);
+          const helper = await helperRegistry.get(blockInfo.helper, blockInfo.type);
           if (!helper) {
             throw new Error(
               `Block type "${blockInfo.type}" does not have e2e helpers.\n` +
-                `Add e2e.js to: ${blockInfo.helper.replace('/e2e/', '/src/blocks/')}/e2e.js`
+                `Add e2e.js to: ${blockInfo.helper.replace(
+                  '/e2e',
+                  `/src/blocks/${blockInfo.type}`
+                )}/e2e.js and export from e2e barrel file.`
             );
           }
 
