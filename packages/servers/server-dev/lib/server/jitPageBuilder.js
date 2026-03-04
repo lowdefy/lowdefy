@@ -23,6 +23,11 @@ import createLogger from './log/createLogger.js';
 import PageCache from './pageCache.mjs';
 
 const jitLogger = createLogger({ name: 'jit-build' });
+
+function formatDuration(ms) {
+  if (ms < 1000) return `${ms}ms`;
+  return `${(ms / 1000).toFixed(2)}s`;
+}
 const pageCache = new PageCache();
 let cachedRegistryMtime = null;
 let cachedRegistry = null;
@@ -127,9 +132,10 @@ async function buildPageIfNeeded({ pageId, buildDirectory, configDirectory }) {
     return true;
   }
 
+  jitLogger.info({ spin: true }, `Building page "${pageId}"...`);
+  const startTime = Date.now();
   try {
     const context = getBuildContext(buildDirectory, configDirectory);
-    const startTime = Date.now();
     const result = await buildPageJit({
       pageId,
       pageRegistry: registry,
@@ -143,7 +149,10 @@ async function buildPageIfNeeded({ pageId, buildDirectory, configDirectory }) {
       return result;
     }
     pageCache.markCompiled(pageId);
-    jitLogger.info(`Built page "${pageId}" in ${Date.now() - startTime}ms.`);
+    jitLogger.info(
+      { succeed: true, color: 'white' },
+      `Built page "${pageId}" in ${formatDuration(Date.now() - startTime)}.`
+    );
     return true;
   } finally {
     pageCache.releaseBuildLock(pageId);
