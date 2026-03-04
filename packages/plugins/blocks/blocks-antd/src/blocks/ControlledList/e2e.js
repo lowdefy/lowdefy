@@ -28,7 +28,5 @@ export default createBlockHelper({
   expect: {
     itemCount: (page, blockId, count) =>
       expect(locator(page, blockId).locator('.ant-list-item')).toHaveCount(count),
-    empty: (page, blockId) =>
-      expect(locator(page, blockId).locator('.ant-list-item')).toHaveCount(0),
   },
 });
