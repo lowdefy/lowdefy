@@ -24,10 +24,26 @@ function addPageKey(page, keyMapId, refId, keyMap) {
   keyMap[keyMapId] = entry;
 }
 
-const emptyContext = { keyMap: {} };
-const defaults = { context: emptyContext };
+// Build a refMap with parent chain entries
+function buildRefMap(entries) {
+  const refMap = {};
+  for (const [id, entry] of Object.entries(entries)) {
+    refMap[id] = entry;
+  }
+  return refMap;
+}
 
-test('createPageRegistry creates registry from pages', () => {
+test('createPageRegistry creates registry from pages with simple ref chain', () => {
+  // home.yaml (no vars) → layout.yaml.njk (vars)
+  // ~r points to layout ref, walk should find home.yaml
+  const refMap = buildRefMap({
+    'ref-root': { parent: null, path: 'lowdefy.yaml' },
+    'ref-home': { parent: 'ref-root', path: 'home.yaml' },
+    'ref-layout': { parent: 'ref-home', path: 'layout.yaml.njk' },
+  });
+  const unresolvedRefVars = {
+    'ref-layout': { id: 'home' },
+  };
   const keyMap = {};
   const page = {
     id: 'home',
@@ -35,22 +51,26 @@ test('createPageRegistry creates registry from pages', () => {
     type: 'PageHeaderMenu',
     blocks: [{ id: 'block1', type: 'TextInput' }],
   };
-  addPageKey(page, 'k1', 'ref-1', keyMap);
+  addPageKey(page, 'k1', 'ref-layout', keyMap);
   const components = { pages: [page] };
   const registry = createPageRegistry({
     components,
-    context: { keyMap },
+    context: { keyMap, refMap, unresolvedRefVars },
   });
   expect(registry.size).toBe(1);
 
   const entry = registry.get('home');
   expect(entry.pageId).toBe('home');
   expect(entry.auth).toEqual({ public: true });
-  expect(entry.refId).toBe('ref-1');
-  expect(entry.shallow).toBe(false);
+  expect(entry.refId).toBe('ref-layout');
+  expect(entry.refPath).toBe('home.yaml');
+  expect(entry.unresolvedVars).toBeNull();
 });
 
 test('createPageRegistry creates registry with multiple pages', () => {
+  const refMap = buildRefMap({
+    'ref-root': { parent: null, path: 'lowdefy.yaml' },
+  });
   const keyMap = {};
   const pages = [
     { id: 'home', type: 'PageHeaderMenu', blocks: [] },
@@ -61,7 +81,7 @@ test('createPageRegistry creates registry with multiple pages', () => {
   const components = { pages };
   const registry = createPageRegistry({
     components,
-    context: { keyMap },
+    context: { keyMap, refMap, unresolvedRefVars: {} },
   });
   expect(registry.size).toBe(3);
   expect(registry.has('home')).toBe(true);
@@ -70,42 +90,43 @@ test('createPageRegistry creates registry with multiple pages', () => {
 });
 
 test('createPageRegistry returns empty registry when no pages', () => {
-  const registry = createPageRegistry({ components: {}, ...defaults });
+  const registry = createPageRegistry({
+    components: {},
+    context: { keyMap: {}, refMap: {} },
+  });
   expect(registry.size).toBe(0);
 });
 
 test('createPageRegistry returns empty registry when pages is null', () => {
-  const registry = createPageRegistry({ components: { pages: null }, ...defaults });
+  const registry = createPageRegistry({
+    components: { pages: null },
+    context: { keyMap: {}, refMap: {} },
+  });
   expect(registry.size).toBe(0);
 });
 
-test('createPageRegistry reads refId from keyMap via ~k', () => {
-  const keyMap = {};
-  const page = { id: 'home', type: 'PageHeaderMenu' };
-  addPageKey(page, 'k1', 'ref-42', keyMap);
-  const components = { pages: [page] };
-  const registry = createPageRegistry({
-    components,
-    context: { keyMap },
+test('createPageRegistry stores null refPath and unresolvedVars when ~r not in keyMap', () => {
+  const refMap = buildRefMap({
+    'ref-root': { parent: null, path: 'lowdefy.yaml' },
   });
-  const entry = registry.get('home');
-  expect(entry.refId).toBe('ref-42');
-});
-
-test('createPageRegistry stores null refId when ~r not in keyMap', () => {
   const keyMap = {};
   const page = { id: 'home', type: 'PageHeaderMenu' };
   addPageKey(page, 'k1', undefined, keyMap);
   const components = { pages: [page] };
   const registry = createPageRegistry({
     components,
-    context: { keyMap },
+    context: { keyMap, refMap, unresolvedRefVars: {} },
   });
   const entry = registry.get('home');
   expect(entry.refId).toBeNull();
+  expect(entry.refPath).toBeNull();
+  expect(entry.unresolvedVars).toBeNull();
 });
 
 test('createPageRegistry stores page auth', () => {
+  const refMap = buildRefMap({
+    'ref-root': { parent: null, path: 'lowdefy.yaml' },
+  });
   const keyMap = {};
   const pages = [
     { id: 'home', auth: { public: true } },
@@ -115,25 +136,154 @@ test('createPageRegistry stores page auth', () => {
   const components = { pages };
   const registry = createPageRegistry({
     components,
-    context: { keyMap },
+    context: { keyMap, refMap, unresolvedRefVars: {} },
   });
   expect(registry.get('home').auth).toEqual({ public: true });
   expect(registry.get('admin').auth).toEqual({ roles: ['admin'] });
 });
 
-test('createPageRegistry marks shallow pages from ~shallow marker', () => {
-  const keyMap = {};
-  const pages = [
-    { id: 'home', type: 'PageHeaderMenu', '~shallow': true },
-    { id: 'dashboard', type: 'PageSiderMenu', '~shallow': true },
-    { id: '404', type: 'PageHeaderMenu' },
-  ];
-  pages.forEach((p, i) => addPageKey(p, `k${i}`, undefined, keyMap));
-  const registry = createPageRegistry({
-    components: { pages },
-    context: { keyMap },
+test('createPageRegistry walks parent chain to find page file without vars', () => {
+  // pages.yaml (no vars) → home.yaml (no vars) → layout.yaml.njk (vars)
+  // Walk from ref-layout: has vars → go to ref-home: no vars, not root → return home.yaml
+  const refMap = buildRefMap({
+    'ref-root': { parent: null, path: 'lowdefy.yaml' },
+    'ref-pages': { parent: 'ref-root', path: 'pages.yaml' },
+    'ref-home': { parent: 'ref-pages', path: 'home.yaml' },
+    'ref-layout': { parent: 'ref-home', path: 'layout.yaml.njk' },
   });
-  expect(registry.get('home').shallow).toBe(true);
-  expect(registry.get('dashboard').shallow).toBe(true);
-  expect(registry.get('404').shallow).toBe(false);
+  const unresolvedRefVars = {
+    'ref-layout': { id: 'home' },
+  };
+  const keyMap = {};
+  const page = { id: 'home', type: 'PageHeaderMenu' };
+  addPageKey(page, 'k1', 'ref-layout', keyMap);
+
+  const registry = createPageRegistry({
+    components: { pages: [page] },
+    context: { keyMap, refMap, unresolvedRefVars },
+  });
+  const entry = registry.get('home');
+  expect(entry.refPath).toBe('home.yaml');
+  expect(entry.unresolvedVars).toBeNull();
+});
+
+test('createPageRegistry uses collection file when page ref has vars', () => {
+  // pages.yaml (no vars) → home.yaml (WITH vars) → layout.yaml.njk (vars)
+  // Walk from ref-layout: has vars → ref-home: has vars → ref-pages: no vars, not root → return pages.yaml
+  const refMap = buildRefMap({
+    'ref-root': { parent: null, path: 'lowdefy.yaml' },
+    'ref-pages': { parent: 'ref-root', path: 'pages.yaml' },
+    'ref-home': { parent: 'ref-pages', path: 'home.yaml' },
+    'ref-layout': { parent: 'ref-home', path: 'layout.yaml.njk' },
+  });
+  const unresolvedRefVars = {
+    'ref-home': { id: 'home', title: 'Home' },
+    'ref-layout': { id: 'home' },
+  };
+  const keyMap = {};
+  const page = { id: 'home', type: 'PageHeaderMenu' };
+  addPageKey(page, 'k1', 'ref-layout', keyMap);
+
+  const registry = createPageRegistry({
+    components: { pages: [page] },
+    context: { keyMap, refMap, unresolvedRefVars },
+  });
+  const entry = registry.get('home');
+  expect(entry.refPath).toBe('pages.yaml');
+  expect(entry.unresolvedVars).toBeNull();
+});
+
+test('createPageRegistry falls back to first child of root when all refs have vars', () => {
+  // module.yaml (vars) → admin.yaml (vars) → layout.yaml.njk (vars)
+  // All have vars, so fall back to first child of root (module.yaml)
+  const refMap = buildRefMap({
+    'ref-root': { parent: null, path: 'lowdefy.yaml' },
+    'ref-module': { parent: 'ref-root', path: 'module.yaml' },
+    'ref-admin': { parent: 'ref-module', path: 'admin.yaml' },
+    'ref-layout': { parent: 'ref-admin', path: 'layout.yaml.njk' },
+  });
+  const unresolvedRefVars = {
+    'ref-module': { section: 'admin' },
+    'ref-admin': { id: 'admin-home' },
+    'ref-layout': { id: 'admin-home' },
+  };
+  const keyMap = {};
+  const page = { id: 'admin-home', type: 'PageHeaderMenu' };
+  addPageKey(page, 'k1', 'ref-layout', keyMap);
+
+  const registry = createPageRegistry({
+    components: { pages: [page] },
+    context: { keyMap, refMap, unresolvedRefVars },
+  });
+  const entry = registry.get('admin-home');
+  expect(entry.refPath).toBe('module.yaml');
+  expect(entry.unresolvedVars).toEqual({ section: 'admin' });
+});
+
+test('createPageRegistry handles direct page ref without template', () => {
+  // home.yaml (no vars) — directly referenced, no template
+  const refMap = buildRefMap({
+    'ref-root': { parent: null, path: 'lowdefy.yaml' },
+    'ref-home': { parent: 'ref-root', path: 'home.yaml' },
+  });
+  const keyMap = {};
+  const page = { id: 'home', type: 'PageHeaderMenu' };
+  addPageKey(page, 'k1', 'ref-home', keyMap);
+
+  const registry = createPageRegistry({
+    components: { pages: [page] },
+    context: { keyMap, refMap, unresolvedRefVars: {} },
+  });
+  const entry = registry.get('home');
+  expect(entry.refPath).toBe('home.yaml');
+  expect(entry.unresolvedVars).toBeNull();
+});
+
+test('createPageRegistry handles resolver ref chain (child of root has no path)', () => {
+  // Resolver (no path) → template view.yaml (vars) → layout.yaml.njk (vars)
+  // Child of root (ref-resolver) has no path. Go shallower — capture the
+  // resolver's info so JIT can re-run it with freshly resolved vars.
+  const resolverOriginal = { resolver: 'resolvers/pages.js', vars: { app_name: { _ref: 'app-config.yaml' }, workflows: { _ref: 'workflows.yaml' } } };
+  const refMap = buildRefMap({
+    'ref-root': { parent: null, path: 'lowdefy.yaml' },
+    'ref-resolver': { parent: 'ref-root', path: null, original: resolverOriginal },
+    'ref-template': { parent: 'ref-resolver', path: 'view.yaml' },
+    'ref-layout': { parent: 'ref-template', path: 'layout.yaml.njk' },
+  });
+  const unresolvedRefVars = {
+    'ref-resolver': { app_name: { _ref: 'app-config.yaml' }, workflows: { _ref: 'workflows.yaml' } },
+    'ref-template': { action_config: { action: 'initial-details' }, workflow_type: 'device' },
+    'ref-layout': { id: 'device-initial-details-view', title: 'View' },
+  };
+  const keyMap = {};
+  const page = { id: 'device-initial-details-view', type: 'PageHeaderMenu' };
+  addPageKey(page, 'k1', 'ref-layout', keyMap);
+
+  const registry = createPageRegistry({
+    components: { pages: [page] },
+    context: { keyMap, refMap, unresolvedRefVars },
+  });
+  const entry = registry.get('device-initial-details-view');
+  expect(entry.refPath).toBeNull();
+  // Unresolved vars live in resolverOriginal.vars — not duplicated in unresolvedVars
+  expect(entry.unresolvedVars).toBeNull();
+  expect(entry.resolverOriginal).toEqual(resolverOriginal);
+});
+
+test('createPageRegistry handles missing refMap entry gracefully', () => {
+  const refMap = buildRefMap({
+    'ref-root': { parent: null, path: 'lowdefy.yaml' },
+  });
+  const keyMap = {};
+  const page = { id: 'home', type: 'PageHeaderMenu' };
+  addPageKey(page, 'k1', 'ref-missing', keyMap);
+
+  const registry = createPageRegistry({
+    components: { pages: [page] },
+    context: { keyMap, refMap, unresolvedRefVars: {} },
+  });
+  const entry = registry.get('home');
+  expect(entry.refId).toBe('ref-missing');
+  expect(entry.refPath).toBeNull();
+  expect(entry.unresolvedVars).toBeNull();
 });

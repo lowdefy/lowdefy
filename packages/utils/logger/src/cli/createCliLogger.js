@@ -86,7 +86,8 @@ function createOraPrint({ logLevel }) {
         });
       },
       spin: (text) => spinner.start(text),
-      succeed: (text) => spinner.succeed(colors.green(text)),
+      succeed: (text, { color } = {}) =>
+        spinner.succeed(color ? colorize(text, color, 'info') : colors.green(text)),
     },
     logLevel
   );
@@ -163,7 +164,7 @@ function createCliLogger({ logLevel } = {}) {
         return;
       }
       if (first?.succeed) {
-        print.succeed(second);
+        print.succeed(second, { color: first?.color });
         return;
       }
       if (first?.source) {

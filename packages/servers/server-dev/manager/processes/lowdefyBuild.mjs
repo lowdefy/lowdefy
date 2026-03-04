@@ -17,32 +17,29 @@
 import { shallowBuild } from '@lowdefy/build/dev';
 import createCustomPluginTypesMap from '../utils/createCustomPluginTypesMap.mjs';
 
-function lowdefyBuild({ directories, logger, options, pageCache }) {
+function formatDuration(ms) {
+  if (ms < 1000) return `${ms}ms`;
+  return `${(ms / 1000).toFixed(2)}s`;
+}
+
+function lowdefyBuild({ directories, logger, options }) {
   return async () => {
-    logger.info({ spin: true }, 'Building config...');
+    logger.info('Building config...');
+    const startTime = Date.now();
     const customTypesMap = await createCustomPluginTypesMap({ directories, logger });
 
-    if (pageCache) {
-      await pageCache.acquireSkeletonLock();
-    }
-    try {
-      const result = await shallowBuild({
-        customTypesMap,
-        directories,
-        logger,
-        refResolver: options.refResolver,
-        stage: 'dev',
-      });
+    const result = await shallowBuild({
+      customTypesMap,
+      directories,
+      logger,
+      refResolver: options.refResolver,
+      stage: 'dev',
+    });
 
-      // Return result so getContext can store registries
-      logger.info('Built config.');
-      return result;
-    } finally {
-      if (pageCache) {
-        pageCache.invalidateAll();
-        pageCache.releaseSkeletonLock();
-      }
-    }
+    // Return result so getContext can store registries
+    const duration = Date.now() - startTime;
+    logger.info({ succeed: true }, `Built config in ${formatDuration(duration)}.`);
+    return result;
   };
 }
 

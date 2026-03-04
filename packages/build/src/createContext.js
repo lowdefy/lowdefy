@@ -34,6 +34,7 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
     readConfigFile: createReadConfigFile({ directories }),
     refMap: {},
     refResolver,
+    unresolvedRefVars: {},
     seenSourceLines: new Set(),
     stage,
     typeCounters: {

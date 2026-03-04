@@ -191,8 +191,13 @@ export default MyBlock;
 
 ### Connections/Requests
 
+Connections throw simple errors. The request interface layer catches and wraps them in `RequestError`:
+
 ```javascript
 async function MongoDBFindOne({ request, connection }) {
+  if (!request.collection) {
+    throw new Error('MongoDBFindOne requires "collection" property.');
+  }
   const { collection, client } = await getCollection({ connection });
   try {
     return await collection.findOne(request.query);
@@ -249,20 +254,6 @@ function MyThrowAction({ params }) {
   });
 }
 export default MyThrowAction;
-```
-
-### Connections/Requests
-
-Connections throw simple errors. The request interface layer catches and wraps them in `RequestError`:
-
-```javascript
-async function MongoDBFindOne({ request, connection }) {
-  if (!request.collection) {
-    // Simple error - interface layer adds request as received value
-    throw new Error('MongoDBFindOne requires "collection" property.');
-  }
-  // ... execute query
-}
 ```
 
 ## Error Handling
@@ -328,106 +319,7 @@ context.handleWarning(
 );
 ```
 
-### Plugin Interface Layer and Error Propagation
-
-**How errors flow from plugins:**
-
-```
-Plugin code throws Error (no configKey - plugin doesn't know about ~k)
-        ↓
-Interface layer catches
-        ↓
-Add configKey to ANY error (for location tracing)
-        ↓
-Then handle by type:
-  - ConfigError  → re-throw (for location resolution)
-  - ServiceError → wrap with new ServiceError(undefined, { cause: error, service, configKey })
-  - Plain Error  → wrap in typed error (OperatorError, ActionError, etc.)
-        ↓
-Error bubbles to top-level handler
-        ↓
-logError() resolves configKey → file:line using keyMap/refMap
-```
-
-**Plugin code throws simple errors:**
-
-```javascript
-// In plugin code (operator, action, request) - throw simple error
-function _myOperator({ params }) {
-  if (typeof params !== 'object') {
-    throw new Error('_myOperator requires an object.');
-  }
-}
-```
-
-**Plugin code throws ConfigError without configKey:**
-
-Plugins should NOT know about `configKey` - they just report what's wrong. The interface layer adds location context. ConfigError supports a simple string form for plugin convenience:
-
-```javascript
-// In plugin code (operator, action, request, block)
-// Plugin throws simple ConfigError - no configKey needed
-import { ConfigError } from '@lowdefy/errors';
-
-function _myOperator({ params }) {
-  if (typeof params.value !== 'string') {
-    // Simple string form - interface layer adds configKey
-    throw new ConfigError('_myOperator "value" must be a string.');
-  }
-  return params.value.toUpperCase();
-}
-
-async function MongoDBFind({ request }) {
-  if (!request.collection) {
-    throw new ConfigError('MongoDBFind requires "collection" property.');
-  }
-  // ... execute query
-}
-```
-
-**Interface layer adds configKey to ALL errors:**
-
-```javascript
-import { ConfigError, OperatorError, ServiceError } from '@lowdefy/errors';
-
-// In operator parser - add configKey to ANY error, then handle by type
-try {
-  return operator({ params, ...context });
-} catch (e) {
-  // Add configKey to any error for location tracing
-  if (!e.configKey) {
-    e.configKey = obj['~k'];
-  }
-
-  if (e instanceof ConfigError) {
-    throw e;
-  }
-
-  if (ServiceError.isServiceError(e)) {
-    throw new ServiceError(undefined, {
-      cause: e,
-      service: connectionId,
-      configKey: obj['~k'],
-    });
-  }
-
-  // Plain errors get wrapped in typed error with context
-  throw new OperatorError(e.message, {
-    cause: e,
-    typeName: '_if',
-    received: params,
-    location: 'blockId.events.onClick',
-    configKey: obj['~k'],
-  });
-}
-```
-
-**Why this pattern:**
-
-- **Plugins stay simple** - they don't need to know about `~k` keys or config tracking
-- **ALL errors get configKey first** - one place for the assignment, cleaner code
-- **ConfigError string form** - plugins can throw `new ConfigError('message')` for simplicity
-- **Plain Error becomes typed error** (OperatorError, ActionError, etc.) - adds received value and location for debugging
+Plugins can also throw `ConfigError` without `configKey` — the interface layer adds it. For the full error propagation flow, see `code-docs/architecture/error-tracing.md`.
 
 ### Service Errors
 
@@ -465,8 +357,21 @@ See `code-docs/architecture/error-tracing.md` for the complete error system.
 ## Testing
 
 - Test files: `{name}.test.js` co-located with source
-- Run: `pnpm test` or `pnpm -r --filter=@lowdefy/helpers test`
 - **Do not create tests for blocks** (currently disabled)
+- **NEVER run `pnpm jest` or `npx jest` directly** — always use `pnpm test`
+
+### Running Tests
+
+```bash
+# All tests (from repo root)
+pnpm test
+
+# Single package
+pnpm --filter=@lowdefy/api test
+
+# Single package with jest flags (no `--` separator — it breaks flag parsing)
+pnpm --filter=@lowdefy/api test --testPathPattern='validatePluginSchema' --no-coverage
+```
 
 ### Cross-Package Changes
 

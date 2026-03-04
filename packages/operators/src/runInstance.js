@@ -17,6 +17,11 @@
 import { type } from '@lowdefy/helpers';
 
 const runInstance = ({ location, meta, methodName, operator, params, instanceType }) => {
+  if (type.isUndefined(methodName)) {
+    throw new Error(
+      `${operator} requires a method. Use one of the following: ${Object.keys(meta).join(', ')}.`
+    );
+  }
   if (!meta[methodName]) {
     throw new Error(
       `${operator}.${methodName} is not supported, use one of the following: ${Object.keys(
