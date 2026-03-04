@@ -39,10 +39,10 @@ async function runNextBuild({ context, directory }) {
         // https://nodejs.org/en/blog/vulnerability/april-2024-security-releases-2#command-injection-via-args-parameter-of-child_processspawn-without-shell-option-enabled-on-windows-cve-2024-27980---high
         shell: process.platform === 'win32',
         cwd: directory,
-      },
-      env: {
-        ...process.env,
-        NEXT_TELEMETRY_DISABLED: context.options.disableTelemetry ? '1' : undefined,
+        env: {
+          ...process.env,
+          NEXT_TELEMETRY_DISABLED: context.options.disableTelemetry ? '1' : undefined,
+        },
       },
     });
   } catch (error) {
