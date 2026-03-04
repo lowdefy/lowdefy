@@ -97,30 +97,30 @@ describe('createStdOutLineHandler', () => {
     const logger = createMockLogger();
     const handler = createStdOutLineHandler({ context: { logger } });
 
-    handler(JSON.stringify({ level: 30, spin: true, msg: 'Building...' }));
+    handler(JSON.stringify({ level: 30, spin: 'start', msg: 'Building...' }));
     expect(logger.info).toHaveBeenCalledWith(
-      { source: undefined, color: undefined, spin: true, succeed: undefined },
+      { source: undefined, color: undefined, spin: 'start' },
       'Building...'
     );
 
     logger.info.mockClear();
-    handler(JSON.stringify({ level: 30, succeed: true, msg: 'Done' }));
+    handler(JSON.stringify({ level: 30, spin: 'succeed', msg: 'Done' }));
     expect(logger.info).toHaveBeenCalledWith(
-      { source: undefined, color: undefined, spin: undefined, succeed: true },
+      { source: undefined, color: undefined, spin: 'succeed' },
       'Done'
     );
 
     logger.info.mockClear();
     handler(JSON.stringify({ level: 30, color: 'blue', msg: 'src/config.yaml:5' }));
     expect(logger.info).toHaveBeenCalledWith(
-      { source: undefined, color: 'blue', spin: undefined, succeed: undefined },
+      { source: undefined, color: 'blue', spin: undefined },
       'src/config.yaml:5'
     );
 
     logger.info.mockClear();
     handler(JSON.stringify({ level: 30, source: '/path/file.yaml:10', msg: 'Something happened' }));
     expect(logger.info).toHaveBeenCalledWith(
-      { source: '/path/file.yaml:10', color: undefined, spin: undefined, succeed: undefined },
+      { source: '/path/file.yaml:10', color: undefined, spin: undefined },
       'Something happened'
     );
   });
@@ -157,7 +157,7 @@ describe('createStdOutLineHandler', () => {
 
     handler(JSON.stringify({ level: 30, some: 'data', count: 42 }));
     expect(logger.info).toHaveBeenCalledWith(
-      { source: undefined, color: undefined, spin: undefined, succeed: undefined },
+      { source: undefined, color: undefined, spin: undefined },
       '  some: data'
     );
     expect(logger.info).toHaveBeenCalledWith('  count: 42');
@@ -169,7 +169,7 @@ describe('createStdOutLineHandler', () => {
 
     handler(JSON.stringify({ level: 20, url: '/api/root', method: 'GET' }));
     expect(logger.debug).toHaveBeenCalledWith(
-      { source: undefined, color: undefined, spin: undefined, succeed: undefined },
+      { source: undefined, color: undefined, spin: undefined },
       '  url: /api/root'
     );
     expect(logger.debug).toHaveBeenCalledWith('  method: GET');
@@ -181,7 +181,7 @@ describe('createStdOutLineHandler', () => {
 
     handler(JSON.stringify({ level: 20, user: { id: 'abc' }, url: '/api/root' }));
     expect(logger.debug).toHaveBeenCalledWith(
-      { source: undefined, color: undefined, spin: undefined, succeed: undefined },
+      { source: undefined, color: undefined, spin: undefined },
       '  user: {"id":"abc"}'
     );
     expect(logger.debug).toHaveBeenCalledWith('  url: /api/root');
@@ -191,9 +191,11 @@ describe('createStdOutLineHandler', () => {
     const logger = createMockLogger();
     const handler = createStdOutLineHandler({ context: { logger } });
 
-    handler(JSON.stringify({ level: 20, msg: 'adapter_getSessionAndUser', rid: '123', args: ['a'] }));
+    handler(
+      JSON.stringify({ level: 20, msg: 'adapter_getSessionAndUser', rid: '123', args: ['a'] })
+    );
     expect(logger.debug).toHaveBeenCalledWith(
-      { source: undefined, color: undefined, spin: undefined, succeed: undefined },
+      { source: undefined, color: undefined, spin: undefined },
       'adapter_getSessionAndUser'
     );
     expect(logger.debug).toHaveBeenCalledWith('  rid: 123');
@@ -216,7 +218,7 @@ describe('createStdOutLineHandler', () => {
       })
     );
     expect(logger.debug).toHaveBeenCalledWith(
-      { source: undefined, color: undefined, spin: undefined, succeed: undefined },
+      { source: undefined, color: undefined, spin: undefined },
       'request'
     );
     expect(logger.debug).toHaveBeenCalledWith('  url: /api/root');

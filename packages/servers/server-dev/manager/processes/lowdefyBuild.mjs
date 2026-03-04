@@ -24,7 +24,7 @@ function formatDuration(ms) {
 
 function lowdefyBuild({ directories, logger, options }) {
   return async () => {
-    logger.info('Building config...');
+    logger.info({ spin: 'start' }, 'Building config...');
     const startTime = Date.now();
     const customTypesMap = await createCustomPluginTypesMap({ directories, logger });
 
@@ -38,7 +38,7 @@ function lowdefyBuild({ directories, logger, options }) {
 
     // Return result so getContext can store registries
     const duration = Date.now() - startTime;
-    logger.info({ succeed: true }, `Built config in ${formatDuration(duration)}.`);
+    logger.info({ spin: 'succeed' }, `Built config in ${formatDuration(duration)}.`);
     return result;
   };
 }
