@@ -21,6 +21,8 @@ _ref:
     filePath: operators/_dayjs.yaml
     description: |
       The `_dayjs` operator converts date objects to strings, using a specified format.
+
+      > Migrating from v4? The `_moment` operator was renamed to `_dayjs` in v5. See the [v4 to v5 migration guide](/v4-to-v5) for details.
     methods:
       - name: format
         types: |

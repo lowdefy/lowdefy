@@ -30,7 +30,9 @@ _ref:
 
             The `_moment` operator has been renamed to `_dayjs`. The underlying library has changed from [Moment.js](https://momentjs.com/) to [Day.js](https://day.js.org/), which is significantly smaller (~2KB vs ~70KB).
 
-            This is a simple find-and-replace in your YAML config files:
+            A codemod is available to automate the rename — run `lowdefy codemod dayjs` in your project directory.
+
+            Alternatively, this is a simple find-and-replace in your YAML config files:
 
             ### Before (v4)
             ```yaml
