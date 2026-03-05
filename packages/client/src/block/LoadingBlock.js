@@ -86,7 +86,6 @@ const LoadingBlock = ({
           blockStyle={skeleton.style ?? blockStyle}
           id={`s-bl-${blockId}-${skeleton.id}`}
           layout={skeleton.layout ?? blockLayout}
-          makeCssClass={makeCssClass}
         >
           <Component
             basePath={lowdefy.basePath}

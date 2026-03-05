@@ -29,11 +29,11 @@ const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
         <Area
           area={block.eval.areas[areaKey]}
           areaKey={areaKey}
-          areaStyle={[areaStyle, block.eval.areas[areaKey]?.style]}
+          areaStyle={{ ...areaStyle, ...block.eval.areas[areaKey]?.style }}
+          areaClassName={block.eval.class?.[areaKey]}
           id={`ar-${block.blockId}-${SBlock.id}-${areaKey}`}
           key={`ar-${block.blockId}-${SBlock.id}-${areaKey}`}
           layout={block.eval.layout}
-          makeCssClass={makeCssClass}
         >
           {SBlock.areas[areaKey].blocks.map((bl) => (
             <Block
@@ -52,10 +52,10 @@ const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
   });
   return (
     <BlockLayout
-      blockStyle={block.eval.style}
+      blockStyle={block.eval.styles?.block}
+      blockClassName={block.eval.class?.block}
       id={`bl-${block.blockId}`}
       layout={block.eval.layout}
-      makeCssClass={makeCssClass}
     >
       <Component
         methods={Object.assign(block.methods, {
@@ -71,6 +71,7 @@ const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
         })}
         basePath={lowdefy.basePath}
         blockId={block.blockId}
+        classNames={block.eval.class}
         components={lowdefy._internal.components}
         events={block.eval.events}
         key={block.blockId}
@@ -80,6 +81,7 @@ const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
         pageId={lowdefy.pageId}
         properties={block.eval.properties}
         required={block.eval.required}
+        styles={block.eval.styles}
         validation={block.eval.validation}
       />
     </BlockLayout>

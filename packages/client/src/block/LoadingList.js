@@ -38,11 +38,10 @@ const LoadingList = ({
         <Area
           area={skeleton.areas[areaKey]}
           areaKey={areaKey}
-          areaStyle={[areaStyle, skeleton.areas[areaKey]?.style]}
+          areaStyle={{ ...areaStyle, ...skeleton.areas[areaKey]?.style }}
           id={`s-ar-${blockId}-${skeleton.id}-${areaKey}`}
           key={`s-ar-${blockId}-${skeleton.id}-${areaKey}-${i}`}
           layout={skeleton.layout ?? blockLayout}
-          makeCssClass={makeCssClass}
         >
           {skeleton.areas[areaKey].blocks.map((skl, k) => (
             <LoadingBlock
@@ -63,7 +62,6 @@ const LoadingList = ({
       blockStyle={skeleton.style ?? blockStyle}
       id={`s-bl-${blockId}-${skeleton.id}`}
       layout={skeleton.layout ?? blockLayout}
-      makeCssClass={makeCssClass}
     >
       <Component
         basePath={lowdefy.basePath}

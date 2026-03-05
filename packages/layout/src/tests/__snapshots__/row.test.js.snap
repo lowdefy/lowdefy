@@ -1,33 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`align bottom 1`] = `
-.emotion-1 {
-  height: 200px;
-}
-
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
     id="bl-align bottom23456"
   >
     <div
       id="align bottom23456"
     >
       <div
-        class="ant-row ant-row-bottom emotion-1"
+        class="ant-row ant-row-bottom css-dev-only-do-not-override-1enej14 css-var-root"
         id="align bottom-content23456"
       >
         <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-10 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-One23456"
+          style="background: rgb(64, 160, 255);"
         >
           <div
             id="One23456"
@@ -37,8 +26,9 @@ exports[`align bottom 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-10 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Two23456"
+          style="background: rgb(255, 79, 175);"
         >
           <div
             id="Two23456"
@@ -54,33 +44,22 @@ exports[`align bottom 1`] = `
 `;
 
 exports[`align bottom wrap behavior 1`] = `
-.emotion-1 {
-  height: 200px;
-}
-
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
     id="bl-align bottom wrap behavior23456"
   >
     <div
       id="align bottom wrap behavior23456"
     >
       <div
-        class="ant-row ant-row-bottom emotion-1"
+        class="ant-row ant-row-bottom css-dev-only-do-not-override-1enej14 css-var-root"
         id="align bottom wrap behavior-content23456"
       >
         <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-One23456"
+          style="background: rgb(64, 160, 255);"
         >
           <div
             id="One23456"
@@ -90,8 +69,9 @@ exports[`align bottom wrap behavior 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Two23456"
+          style="background: rgb(255, 79, 175);"
         >
           <div
             id="Two23456"
@@ -107,33 +87,22 @@ exports[`align bottom wrap behavior 1`] = `
 `;
 
 exports[`align middle 1`] = `
-.emotion-1 {
-  height: 200px;
-}
-
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
     id="bl-align middle23456"
   >
     <div
       id="align middle23456"
     >
       <div
-        class="ant-row ant-row-middle emotion-1"
+        class="ant-row ant-row-middle css-dev-only-do-not-override-1enej14 css-var-root"
         id="align middle-content23456"
       >
         <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-10 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-One23456"
+          style="background: rgb(64, 160, 255);"
         >
           <div
             id="One23456"
@@ -143,8 +112,9 @@ exports[`align middle 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-10 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Two23456"
+          style="background: rgb(255, 79, 175);"
         >
           <div
             id="Two23456"
@@ -160,33 +130,22 @@ exports[`align middle 1`] = `
 `;
 
 exports[`align middle wrap behavior 1`] = `
-.emotion-1 {
-  height: 200px;
-}
-
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
     id="bl-align middle wrap behavior23456"
   >
     <div
       id="align middle wrap behavior23456"
     >
       <div
-        class="ant-row ant-row-middle emotion-1"
+        class="ant-row ant-row-middle css-dev-only-do-not-override-1enej14 css-var-root"
         id="align middle wrap behavior-content23456"
       >
         <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-One23456"
+          style="background: rgb(64, 160, 255);"
         >
           <div
             id="One23456"
@@ -196,8 +155,9 @@ exports[`align middle wrap behavior 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Two23456"
+          style="background: rgb(255, 79, 175);"
         >
           <div
             id="Two23456"
@@ -213,33 +173,22 @@ exports[`align middle wrap behavior 1`] = `
 `;
 
 exports[`align top 1`] = `
-.emotion-1 {
-  height: 200px;
-}
-
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
     id="bl-align top23456"
   >
     <div
       id="align top23456"
     >
       <div
-        class="ant-row ant-row-top emotion-1"
+        class="ant-row ant-row-top css-dev-only-do-not-override-1enej14 css-var-root"
         id="align top-content23456"
       >
         <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-10 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-One23456"
+          style="background: rgb(64, 160, 255);"
         >
           <div
             id="One23456"
@@ -249,8 +198,9 @@ exports[`align top 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-10 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Two23456"
+          style="background: rgb(255, 79, 175);"
         >
           <div
             id="Two23456"
@@ -266,33 +216,22 @@ exports[`align top 1`] = `
 `;
 
 exports[`align top wrap behavior 1`] = `
-.emotion-1 {
-  height: 200px;
-}
-
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
     id="bl-align top wrap behavior23456"
   >
     <div
       id="align top wrap behavior23456"
     >
       <div
-        class="ant-row ant-row-top emotion-1"
+        class="ant-row ant-row-top css-dev-only-do-not-override-1enej14 css-var-root"
         id="align top wrap behavior-content23456"
       >
         <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-One23456"
+          style="background: rgb(64, 160, 255);"
         >
           <div
             id="One23456"
@@ -302,8 +241,9 @@ exports[`align top wrap behavior 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Two23456"
+          style="background: rgb(255, 79, 175);"
         >
           <div
             id="Two23456"
@@ -319,34 +259,23 @@ exports[`align top wrap behavior 1`] = `
 `;
 
 exports[`direction column 1`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
-.emotion-4 {
-  background: #40AA55;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
     id="bl-direction column23456"
   >
     <div
       id="direction column23456"
     >
       <div
-        class="ant-row emotion-1"
+        class="ant-row css-dev-only-do-not-override-1enej14 css-var-root"
         id="direction column-content23456"
         style="flex-direction: column;"
       >
         <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-8 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-One23456"
+          style="background: rgb(64, 160, 255);"
         >
           <div
             id="One23456"
@@ -356,8 +285,9 @@ exports[`direction column 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-8 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Two23456"
+          style="background: rgb(255, 79, 175);"
         >
           <div
             id="Two23456"
@@ -367,8 +297,9 @@ exports[`direction column 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-8 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Three23456"
+          style="background: rgb(64, 170, 85);"
         >
           <div
             id="Three23456"
@@ -384,34 +315,23 @@ exports[`direction column 1`] = `
 `;
 
 exports[`direction column-reverse 1`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
-.emotion-4 {
-  background: #40AA55;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
     id="bl-direction column-reverse23456"
   >
     <div
       id="direction column-reverse23456"
     >
       <div
-        class="ant-row emotion-1"
+        class="ant-row css-dev-only-do-not-override-1enej14 css-var-root"
         id="direction column-reverse-content23456"
         style="flex-direction: column-reverse;"
       >
         <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-8 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-One23456"
+          style="background: rgb(64, 160, 255);"
         >
           <div
             id="One23456"
@@ -421,8 +341,9 @@ exports[`direction column-reverse 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-8 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Two23456"
+          style="background: rgb(255, 79, 175);"
         >
           <div
             id="Two23456"
@@ -432,8 +353,9 @@ exports[`direction column-reverse 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-8 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Three23456"
+          style="background: rgb(64, 170, 85);"
         >
           <div
             id="Three23456"
@@ -449,34 +371,23 @@ exports[`direction column-reverse 1`] = `
 `;
 
 exports[`direction row 1`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
-.emotion-4 {
-  background: #40AA55;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
     id="bl-direction row23456"
   >
     <div
       id="direction row23456"
     >
       <div
-        class="ant-row emotion-1"
+        class="ant-row css-dev-only-do-not-override-1enej14 css-var-root"
         id="direction row-content23456"
         style="flex-direction: row;"
       >
         <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-One23456"
+          style="background: rgb(64, 160, 255);"
         >
           <div
             id="One23456"
@@ -486,8 +397,9 @@ exports[`direction row 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Two23456"
+          style="background: rgb(255, 79, 175);"
         >
           <div
             id="Two23456"
@@ -497,8 +409,9 @@ exports[`direction row 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Three23456"
+          style="background: rgb(64, 170, 85);"
         >
           <div
             id="Three23456"
@@ -514,34 +427,23 @@ exports[`direction row 1`] = `
 `;
 
 exports[`direction row-reverse 1`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
-.emotion-4 {
-  background: #40AA55;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
     id="bl-direction row-reverse23456"
   >
     <div
       id="direction row-reverse23456"
     >
       <div
-        class="ant-row emotion-1"
+        class="ant-row css-dev-only-do-not-override-1enej14 css-var-root"
         id="direction row-reverse-content23456"
         style="flex-direction: row-reverse;"
       >
         <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-One23456"
+          style="background: rgb(64, 160, 255);"
         >
           <div
             id="One23456"
@@ -551,8 +453,9 @@ exports[`direction row-reverse 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Two23456"
+          style="background: rgb(255, 79, 175);"
         >
           <div
             id="Two23456"
@@ -562,8 +465,9 @@ exports[`direction row-reverse 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Three23456"
+          style="background: rgb(64, 170, 85);"
         >
           <div
             id="Three23456"
@@ -579,31 +483,23 @@ exports[`direction row-reverse 1`] = `
 `;
 
 exports[`gutter as integer 1`] = `
-.emotion-2>* {
-  background: #40a0FF;
-}
-
-.emotion-3>* {
-  background: #FF4FaF;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
     id="bl-gutter as integer23456"
   >
     <div
       id="gutter as integer23456"
     >
       <div
-        class="ant-row emotion-1"
+        class="ant-row css-dev-only-do-not-override-1enej14 css-var-root"
         id="gutter as integer-content23456"
-        style="margin: -15px -15px -15px -15px;"
+        style="margin-inline: -15px; row-gap: 30px;"
       >
         <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-One23456"
-          style="padding: 15px 15px 15px 15px;"
+          style="padding-inline: 15px;"
         >
           <div
             id="One23456"
@@ -613,9 +509,9 @@ exports[`gutter as integer 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Two23456"
-          style="padding: 15px 15px 15px 15px;"
+          style="padding-inline: 15px;"
         >
           <div
             id="Two23456"
@@ -625,9 +521,9 @@ exports[`gutter as integer 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-10 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Three23456"
-          style="padding: 15px 15px 15px 15px;"
+          style="padding-inline: 15px;"
         >
           <div
             id="Three23456"
@@ -637,9 +533,9 @@ exports[`gutter as integer 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-10 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Four23456"
-          style="padding: 15px 15px 15px 15px;"
+          style="padding-inline: 15px;"
         >
           <div
             id="Four23456"
@@ -655,31 +551,23 @@ exports[`gutter as integer 1`] = `
 `;
 
 exports[`gutter for col and row 1`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
     id="bl-gutter for col and row23456"
   >
     <div
       id="gutter for col and row23456"
     >
       <div
-        class="ant-row emotion-1"
+        class="ant-row css-dev-only-do-not-override-1enej14 css-var-root"
         id="gutter for col and row-content23456"
-        style="margin: -10px -25px -10px -25px;"
+        style="margin-inline: -25px; row-gap: 20px;"
       >
         <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-One23456"
-          style="padding: 10px 25px 10px 25px;"
+          style="padding-inline: 25px; background: rgb(64, 160, 255);"
         >
           <div
             id="One23456"
@@ -689,9 +577,9 @@ exports[`gutter for col and row 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Two23456"
-          style="padding: 10px 25px 10px 25px;"
+          style="padding-inline: 25px; background: rgb(255, 79, 175);"
         >
           <div
             id="Two23456"
@@ -701,9 +589,9 @@ exports[`gutter for col and row 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-10 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Three23456"
-          style="padding: 10px 25px 10px 25px;"
+          style="padding-inline: 25px; background: rgb(255, 79, 175);"
         >
           <div
             id="Three23456"
@@ -713,9 +601,9 @@ exports[`gutter for col and row 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-10 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Four23456"
-          style="padding: 10px 25px 10px 25px;"
+          style="padding-inline: 25px; background: rgb(64, 160, 255);"
         >
           <div
             id="Four23456"
@@ -731,31 +619,23 @@ exports[`gutter for col and row 1`] = `
 `;
 
 exports[`gutter is object 1`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
     id="bl-gutter is object23456"
   >
     <div
       id="gutter is object23456"
     >
       <div
-        class="ant-row emotion-1"
+        class="ant-row css-dev-only-do-not-override-1enej14 css-var-root"
         id="gutter is object-content23456"
-        style="margin: -30px -30px -30px -30px;"
+        style=""
       >
         <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-One23456"
-          style="padding: 30px 30px 30px 30px;"
+          style="background: rgb(64, 160, 255);"
         >
           <div
             id="One23456"
@@ -765,9 +645,9 @@ exports[`gutter is object 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Two23456"
-          style="padding: 30px 30px 30px 30px;"
+          style="background: rgb(255, 79, 175);"
         >
           <div
             id="Two23456"
@@ -777,9 +657,9 @@ exports[`gutter is object 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-10 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Three23456"
-          style="padding: 30px 30px 30px 30px;"
+          style="background: rgb(255, 79, 175);"
         >
           <div
             id="Three23456"
@@ -789,9 +669,9 @@ exports[`gutter is object 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-10 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Four23456"
-          style="padding: 30px 30px 30px 30px;"
+          style="background: rgb(64, 160, 255);"
         >
           <div
             id="Four23456"
@@ -807,33 +687,22 @@ exports[`gutter is object 1`] = `
 `;
 
 exports[`justify center 1`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
-.emotion-4 {
-  background: #40AA55;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
     id="bl-justify center23456"
   >
     <div
       id="justify center23456"
     >
       <div
-        class="ant-row ant-row-center emotion-1"
+        class="ant-row ant-row-center css-dev-only-do-not-override-1enej14 css-var-root"
         id="justify center-content23456"
       >
         <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-One23456"
+          style="background: rgb(64, 160, 255);"
         >
           <div
             id="One23456"
@@ -843,8 +712,9 @@ exports[`justify center 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Two23456"
+          style="background: rgb(255, 79, 175);"
         >
           <div
             id="Two23456"
@@ -854,8 +724,9 @@ exports[`justify center 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Three23456"
+          style="background: rgb(64, 170, 85);"
         >
           <div
             id="Three23456"
@@ -871,33 +742,22 @@ exports[`justify center 1`] = `
 `;
 
 exports[`justify end 1`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
-.emotion-4 {
-  background: #40AA55;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
     id="bl-justify end23456"
   >
     <div
       id="justify end23456"
     >
       <div
-        class="ant-row ant-row-end emotion-1"
+        class="ant-row ant-row-end css-dev-only-do-not-override-1enej14 css-var-root"
         id="justify end-content23456"
       >
         <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-One23456"
+          style="background: rgb(64, 160, 255);"
         >
           <div
             id="One23456"
@@ -907,8 +767,9 @@ exports[`justify end 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Two23456"
+          style="background: rgb(255, 79, 175);"
         >
           <div
             id="Two23456"
@@ -918,8 +779,9 @@ exports[`justify end 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Three23456"
+          style="background: rgb(64, 170, 85);"
         >
           <div
             id="Three23456"
@@ -935,33 +797,22 @@ exports[`justify end 1`] = `
 `;
 
 exports[`justify space-around 1`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
-.emotion-4 {
-  background: #40AA55;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
     id="bl-justify space-around23456"
   >
     <div
       id="justify space-around23456"
     >
       <div
-        class="ant-row ant-row-space-around emotion-1"
+        class="ant-row ant-row-space-around css-dev-only-do-not-override-1enej14 css-var-root"
         id="justify space-around-content23456"
       >
         <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-One23456"
+          style="background: rgb(64, 160, 255);"
         >
           <div
             id="One23456"
@@ -971,8 +822,9 @@ exports[`justify space-around 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Two23456"
+          style="background: rgb(255, 79, 175);"
         >
           <div
             id="Two23456"
@@ -982,8 +834,9 @@ exports[`justify space-around 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Three23456"
+          style="background: rgb(64, 170, 85);"
         >
           <div
             id="Three23456"
@@ -999,33 +852,22 @@ exports[`justify space-around 1`] = `
 `;
 
 exports[`justify space-between 1`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
-.emotion-4 {
-  background: #40AA55;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
     id="bl-justify space-between23456"
   >
     <div
       id="justify space-between23456"
     >
       <div
-        class="ant-row ant-row-space-between emotion-1"
+        class="ant-row ant-row-space-between css-dev-only-do-not-override-1enej14 css-var-root"
         id="justify space-between-content23456"
       >
         <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-One23456"
+          style="background: rgb(64, 160, 255);"
         >
           <div
             id="One23456"
@@ -1035,8 +877,9 @@ exports[`justify space-between 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Two23456"
+          style="background: rgb(255, 79, 175);"
         >
           <div
             id="Two23456"
@@ -1046,8 +889,9 @@ exports[`justify space-between 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Three23456"
+          style="background: rgb(64, 170, 85);"
         >
           <div
             id="Three23456"
@@ -1063,33 +907,22 @@ exports[`justify space-between 1`] = `
 `;
 
 exports[`justify start 1`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
-.emotion-4 {
-  background: #40AA55;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
     id="bl-justify start23456"
   >
     <div
       id="justify start23456"
     >
       <div
-        class="ant-row ant-row-start emotion-1"
+        class="ant-row ant-row-start css-dev-only-do-not-override-1enej14 css-var-root"
         id="justify start-content23456"
       >
         <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-One23456"
+          style="background: rgb(64, 160, 255);"
         >
           <div
             id="One23456"
@@ -1099,8 +932,9 @@ exports[`justify start 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Two23456"
+          style="background: rgb(255, 79, 175);"
         >
           <div
             id="Two23456"
@@ -1110,8 +944,9 @@ exports[`justify start 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Three23456"
+          style="background: rgb(64, 170, 85);"
         >
           <div
             id="Three23456"
@@ -1127,34 +962,23 @@ exports[`justify start 1`] = `
 `;
 
 exports[`overflow hidden 1`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
-.emotion-4 {
-  background: #40AA55;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
     id="bl-overflow hidden23456"
   >
     <div
       id="overflow hidden23456"
     >
       <div
-        class="ant-row emotion-1"
+        class="ant-row css-dev-only-do-not-override-1enej14 css-var-root"
         id="overflow hidden-content23456"
         style="flex-wrap: nowrap; overflow: hidden;"
       >
         <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-One23456"
+          style="background: rgb(64, 160, 255);"
         >
           <div
             id="One23456"
@@ -1164,8 +988,9 @@ exports[`overflow hidden 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-8 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Two23456"
+          style="background: rgb(255, 79, 175);"
         >
           <div
             id="Two23456"
@@ -1175,8 +1000,9 @@ exports[`overflow hidden 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-15"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-15 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Three23456"
+          style="background: rgb(64, 170, 85);"
         >
           <div
             id="Three23456"
@@ -1192,34 +1018,23 @@ exports[`overflow hidden 1`] = `
 `;
 
 exports[`overflow scroll 1`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
-.emotion-4 {
-  background: #40AA55;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
     id="bl-overflow scroll23456"
   >
     <div
       id="overflow scroll23456"
     >
       <div
-        class="ant-row emotion-1"
+        class="ant-row css-dev-only-do-not-override-1enej14 css-var-root"
         id="overflow scroll-content23456"
         style="flex-wrap: nowrap; overflow: scroll;"
       >
         <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-One23456"
+          style="background: rgb(64, 160, 255);"
         >
           <div
             id="One23456"
@@ -1229,8 +1044,9 @@ exports[`overflow scroll 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-8 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Two23456"
+          style="background: rgb(255, 79, 175);"
         >
           <div
             id="Two23456"
@@ -1240,8 +1056,9 @@ exports[`overflow scroll 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-15"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-15 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Three23456"
+          style="background: rgb(64, 170, 85);"
         >
           <div
             id="Three23456"
@@ -1257,34 +1074,23 @@ exports[`overflow scroll 1`] = `
 `;
 
 exports[`overflow visible 1`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
-.emotion-4 {
-  background: #40AA55;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
     id="bl-overflow visible23456"
   >
     <div
       id="overflow visible23456"
     >
       <div
-        class="ant-row emotion-1"
+        class="ant-row css-dev-only-do-not-override-1enej14 css-var-root"
         id="overflow visible-content23456"
         style="flex-wrap: nowrap; overflow: visible;"
       >
         <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-One23456"
+          style="background: rgb(64, 160, 255);"
         >
           <div
             id="One23456"
@@ -1294,8 +1100,9 @@ exports[`overflow visible 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-8 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Two23456"
+          style="background: rgb(255, 79, 175);"
         >
           <div
             id="Two23456"
@@ -1305,8 +1112,9 @@ exports[`overflow visible 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-15"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-15 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Three23456"
+          style="background: rgb(64, 170, 85);"
         >
           <div
             id="Three23456"
@@ -1322,34 +1130,23 @@ exports[`overflow visible 1`] = `
 `;
 
 exports[`wrap nowrap 1`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
-.emotion-4 {
-  background: #40AA55;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
     id="bl-wrap nowrap23456"
   >
     <div
       id="wrap nowrap23456"
     >
       <div
-        class="ant-row emotion-1"
+        class="ant-row css-dev-only-do-not-override-1enej14 css-var-root"
         id="wrap nowrap-content23456"
         style="flex-wrap: nowrap;"
       >
         <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-10 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-One23456"
+          style="background: rgb(64, 160, 255);"
         >
           <div
             id="One23456"
@@ -1359,8 +1156,9 @@ exports[`wrap nowrap 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-10 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Two23456"
+          style="background: rgb(255, 79, 175);"
         >
           <div
             id="Two23456"
@@ -1370,8 +1168,9 @@ exports[`wrap nowrap 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-10 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Three23456"
+          style="background: rgb(64, 170, 85);"
         >
           <div
             id="Three23456"
@@ -1387,34 +1186,23 @@ exports[`wrap nowrap 1`] = `
 `;
 
 exports[`wrap wrap-reverse 1`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
-.emotion-4 {
-  background: #40AA55;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
     id="bl-wrap wrap-reverse23456"
   >
     <div
       id="wrap wrap-reverse23456"
     >
       <div
-        class="ant-row emotion-1"
+        class="ant-row css-dev-only-do-not-override-1enej14 css-var-root"
         id="wrap wrap-reverse-content23456"
         style="flex-wrap: wrap-reverse;"
       >
         <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-One23456"
+          style="background: rgb(64, 160, 255);"
         >
           <div
             id="One23456"
@@ -1424,8 +1212,9 @@ exports[`wrap wrap-reverse 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-8 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Two23456"
+          style="background: rgb(255, 79, 175);"
         >
           <div
             id="Two23456"
@@ -1435,8 +1224,9 @@ exports[`wrap wrap-reverse 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-15"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-15 css-dev-only-do-not-override-1enej14 css-var-root"
           id="bl-Three23456"
+          style="background: rgb(64, 170, 85);"
         >
           <div
             id="Three23456"

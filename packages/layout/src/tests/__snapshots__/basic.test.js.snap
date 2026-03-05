@@ -3,11 +3,11 @@
 exports[`Button 1`] = `
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
     id="bl-Button23456"
   >
     <button
-      class="ant-btn ant-btn-default"
+      class="ant-btn css-dev-only-do-not-override-1enej14 css-var-root ant-btn-default ant-btn-color-default ant-btn-variant-outlined"
       id="Button23456"
       type="button"
     >
@@ -22,11 +22,10 @@ exports[`Button 1`] = `
 exports[`Disabled Col 1`] = `
 <div>
   <div
-    class="emotion-0"
     id="bl-Disabled Col23456"
   >
     <input
-      class="ant-input"
+      class="ant-input css-dev-only-do-not-override-1enej14 ant-input-outlined css-var-root ant-input-css-var"
       id="Disabled Col23456"
       type="text"
       value=""
@@ -38,11 +37,11 @@ exports[`Disabled Col 1`] = `
 exports[`Input 1`] = `
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
     id="bl-Input23456"
   >
     <input
-      class="ant-input"
+      class="ant-input css-dev-only-do-not-override-1enej14 ant-input-outlined css-var-root ant-input-css-var"
       id="Input23456"
       type="text"
       value=""
@@ -54,11 +53,11 @@ exports[`Input 1`] = `
 exports[`Input 2`] = `
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
     id="bl-Input23456"
   >
     <input
-      class="ant-input"
+      class="ant-input css-dev-only-do-not-override-1enej14 ant-input-outlined css-var-root ant-input-css-var"
       id="Input23456"
       type="text"
       value=""
@@ -70,7 +69,7 @@ exports[`Input 2`] = `
 exports[`Paragraph span: 12 1`] = `
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 css-dev-only-do-not-override-1enej14 css-var-root"
     id="bl-Paragraph span: 1223456"
   >
     <div
@@ -83,15 +82,11 @@ exports[`Paragraph span: 12 1`] = `
 `;
 
 exports[`Paragraph style 1`] = `
-.emotion-0 {
-  background: white;
-  border-radius: 20px;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
     id="bl-Paragraph style23456"
+    style="background: white; border-radius: 20px;"
   >
     <div
       id="Paragraph style23456"

@@ -224,8 +224,9 @@ test('parse block style', async () => {
     pageConfig,
   });
   const { textInput } = context._internal.RootAreas.map;
-  expect(textInput.style).toEqual({ _state: 'key' });
-  expect(textInput.eval.style).toEqual('value');
+  // Build normalizes style → styles.block
+  expect(textInput.styles).toEqual({ block: { _state: 'key' } });
+  expect(textInput.eval.styles).toEqual({ block: 'value' });
 });
 
 test('default value for style', async () => {

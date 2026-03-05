@@ -29,11 +29,11 @@ const InputContainer = ({ block, Blocks, Component, context, loading, lowdefy })
       <Area
         area={block.eval.areas[areaKey]}
         areaKey={areaKey}
-        areaStyle={[areaStyle, block.eval.areas[areaKey]?.style]}
+        areaStyle={{ ...areaStyle, ...block.eval.areas[areaKey]?.style }}
+        areaClassName={block.eval.class?.[areaKey]}
         id={`ar-${block.blockId}-${areaKey}`}
         key={`ar-${block.blockId}-${areaKey}-${i}`}
         layout={block.eval.layout}
-        makeCssClass={makeCssClass}
       >
         {areas[areaKey].blocks.map((bl, k) => (
           <Block
@@ -50,10 +50,10 @@ const InputContainer = ({ block, Blocks, Component, context, loading, lowdefy })
   });
   return (
     <BlockLayout
-      blockStyle={block.eval.style}
+      blockStyle={block.eval.styles?.block}
+      blockClassName={block.eval.class?.block}
       id={`bl-${block.blockId}`}
       layout={block.eval.layout}
-      makeCssClass={makeCssClass}
     >
       <Component
         methods={Object.assign(block.methods, {
@@ -70,6 +70,7 @@ const InputContainer = ({ block, Blocks, Component, context, loading, lowdefy })
         })}
         basePath={lowdefy.basePath}
         blockId={block.blockId}
+        classNames={block.eval.class}
         components={lowdefy._internal.components}
         content={content}
         events={block.eval.events}
@@ -79,6 +80,7 @@ const InputContainer = ({ block, Blocks, Component, context, loading, lowdefy })
         pageId={lowdefy.pageId}
         properties={block.eval.properties}
         required={block.eval.required}
+        styles={block.eval.styles}
         validation={block.eval.validation}
         value={block.value}
       />

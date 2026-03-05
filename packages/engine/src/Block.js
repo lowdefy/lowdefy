@@ -23,6 +23,7 @@ class Block {
     const {
       id,
       blockId,
+      class: blockClass,
       events,
       layout,
       loading,
@@ -30,6 +31,7 @@ class Block {
       required,
       skeleton,
       style,
+      styles,
       validate,
       visible,
       type: blockType,
@@ -51,19 +53,23 @@ class Block {
     this.properties = type.isNone(properties) ? {} : properties;
     this.required = type.isNone(required) ? false : required;
     this.skeleton = type.isNone(skeleton) ? null : skeleton;
+    this.class = type.isNone(blockClass) ? {} : blockClass;
     this.style = type.isNone(style) ? {} : style;
+    this.styles = type.isNone(styles) ? {} : styles;
     this.validate = type.isNone(validate) ? [] : validate;
     this.visible = type.isNone(visible) ? true : visible;
     this.type = blockType;
     this.areas = areas;
 
     this.areasLayoutEval = {};
+    this.classEval = {};
     this.layoutEval = {};
     this.loadingEval = {};
     this.propertiesEval = {};
     this.requiredEval = {};
     this.skeletonEval = {};
     this.styleEval = {};
+    this.stylesEval = {};
     this.validationEval = {};
     this.visibleEval = {};
 
@@ -306,7 +312,9 @@ class Block {
 
       this.validateEval();
 
+      this.classEval = this.parse(this.class);
       this.styleEval = this.parse(this.style);
+      this.stylesEval = this.parse(this.styles);
       this.layoutEval = this.parse(this.layout);
       this.loadingEval = this.parse(this.loading);
       this.skeletonEval = this.parse(this.skeleton);
@@ -391,12 +399,14 @@ class Block {
   evalToString = () => {
     return serializer.serializeToString({
       areasLayoutEval: this.areasLayoutEval,
+      classEval: this.classEval,
       layoutEval: this.layoutEval,
       loadingEval: this.loadingEval,
       propertiesEval: this.propertiesEval,
       requiredEval: this.requiredEval,
       skeletonEval: this.skeletonEval,
       styleEval: this.styleEval,
+      stylesEval: this.stylesEval,
       validationEval: this.validationEval,
       value: this.value,
       visibleEval: this.visibleEval,
@@ -468,7 +478,9 @@ class Block {
     // Collect parse errors from all eval results
     const parseErrors = [
       ...(this.propertiesEval.errors || []),
+      ...(this.classEval.errors || []),
       ...(this.styleEval.errors || []),
+      ...(this.stylesEval.errors || []),
       ...(this.layoutEval.errors || []),
       ...(this.visibleEval.errors || []),
       ...(this.loadingEval.errors || []),
@@ -479,6 +491,7 @@ class Block {
 
     this.eval = {
       areas: this.areasLayoutEval.output,
+      class: this.classEval.output,
       configKey: this.configKey,
       events: type.isNone(this.Events.events) ? null : this.Events.events,
       parseErrors: parseErrors.length > 0 ? parseErrors : null,
@@ -488,6 +501,7 @@ class Block {
       required: this.requiredEval.output,
       layout: this.layoutEval.output,
       style: this.styleEval.output,
+      styles: this.stylesEval.output,
       validation: {
         ...(this.validationEval.output || {}),
         status:

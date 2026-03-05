@@ -70,9 +70,9 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
       return (
         <BlockLayout
           id={`bl-${block.blockId}`}
-          blockStyle={block.eval.style}
+          blockStyle={block.eval.styles?.block}
+          blockClassName={block.eval.class?.block}
           layout={block.eval.layout}
-          makeCssClass={makeCssClass}
         >
           <Component
             methods={Object.assign(block.methods, {
@@ -84,6 +84,7 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
             })}
             basePath={lowdefy.basePath}
             blockId={block.blockId}
+            classNames={block.eval.class}
             components={lowdefy._internal.components}
             events={block.eval.events}
             key={block.blockId}
@@ -92,6 +93,7 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
             pageId={lowdefy.pageId}
             properties={block.eval.properties}
             required={block.eval.required}
+            styles={block.eval.styles}
             validation={block.eval.validation}
             value={block.value}
           />
@@ -112,9 +114,9 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
       return (
         <BlockLayout
           id={`bl-${block.blockId}`}
-          blockStyle={block.eval.style}
+          blockStyle={block.eval.styles?.block}
+          blockClassName={block.eval.class?.block}
           layout={block.eval.layout}
-          makeCssClass={makeCssClass}
         >
           <Component
             methods={Object.assign(block.methods, {
@@ -125,6 +127,7 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
             })}
             basePath={lowdefy.basePath}
             blockId={block.blockId}
+            classNames={block.eval.class}
             components={lowdefy._internal.components}
             events={block.eval.events}
             key={block.blockId}
@@ -133,6 +136,7 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
             pageId={lowdefy.pageId}
             properties={block.eval.properties}
             required={block.eval.required}
+            styles={block.eval.styles}
             validation={block.eval.validation}
           />
         </BlockLayout>

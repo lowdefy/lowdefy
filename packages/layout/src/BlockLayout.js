@@ -17,7 +17,6 @@
 import React from 'react';
 import { Col } from 'antd';
 import deriveLayout from './deriveLayout.js';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 
 const alignSelf = (align) => {
   if (align === 'bottom') {
@@ -32,10 +31,10 @@ const alignSelf = (align) => {
   return align;
 };
 
-const BlockLayout = ({ id, blockStyle, children, layout = {}, makeCssClass }) => {
+const BlockLayout = ({ id, blockStyle, blockClassName, children, layout = {} }) => {
   if (layout.disabled) {
     return (
-      <div id={id} className={makeCssClass(blockStyle)}>
+      <div id={id} style={blockStyle} className={blockClassName}>
         {children}
       </div>
     );
@@ -43,17 +42,13 @@ const BlockLayout = ({ id, blockStyle, children, layout = {}, makeCssClass }) =>
   return (
     <Col
       {...deriveLayout(layout)}
-      style={{
-        alignSelf: alignSelf(layout.align),
-      }}
+      style={{ alignSelf: alignSelf(layout.align), ...blockStyle }}
       id={id}
-      className={makeCssClass(blockStyle)}
+      className={blockClassName}
     >
       {children}
     </Col>
   );
 };
-
-BlockLayout.defaultProps = blockDefaultProps;
 
 export default BlockLayout;

@@ -16,32 +16,29 @@
 
 import React from 'react';
 import { Row } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 
 import gutterSetup from './gutterSetup.js';
 import layoutParamsToArea from './layoutParamsToArea.js';
 
-const Area = ({ area = {}, areaKey, areaStyle, children, id, layout, makeCssClass }) => {
+const Area = ({ area = {}, areaKey, areaStyle, areaClassName, children, id, layout }) => {
   const derivedArea = layoutParamsToArea({ area, areaKey, layout });
   return (
     <Row
       id={id}
       align={derivedArea.align}
-      className={makeCssClass(areaStyle)}
+      className={areaClassName}
       gutter={gutterSetup(derivedArea.gutter)}
       justify={derivedArea.justify}
       style={{
-        // antd keeps bottom margin which can cause overflow issues.
         flexDirection: derivedArea.direction,
         flexWrap: derivedArea.wrap,
         overflow: derivedArea.overflow,
+        ...areaStyle,
       }}
     >
       {children}
     </Row>
   );
 };
-
-Area.defaultProps = blockDefaultProps;
 
 export default Area;

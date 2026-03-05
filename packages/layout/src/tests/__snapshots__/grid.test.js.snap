@@ -1,11 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`2 column stacking 1`] = `
-.emotion-4 {
-  height: 80px;
-}
-
-.emotion-5 {
+.emotion-10 {
   background: #269;
   border: 2px solid #00aaee;
   text-align: center;
@@ -13,47 +9,36 @@ exports[`2 column stacking 1`] = `
   color: #fff;
 }
 
-.emotion-8 {
-  height: 40px;
-}
-
-.emotion-10 {
-  height: 20px;
-}
-
-.emotion-12 {
-  height: 30px;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 emotion-0 emotion-1"
     id="bl-2 column stacking23456"
   >
     <div
       id="2 column stacking23456"
     >
       <div
-        class="ant-row emotion-1"
+        class="ant-row emotion-0 emotion-1"
         id="2 column stacking-content23456"
       >
         <div
-          class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-6"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-6 emotion-0 emotion-1"
           id="bl-b123456"
         >
           <div
             id="b123456"
           >
             <div
-              class="ant-row emotion-1"
+              class="ant-row emotion-0 emotion-1"
               id="b1-content23456"
             >
               <div
-                class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+                class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 emotion-0 emotion-1"
                 id="bl-tile_one23456"
+                style="height: 80px;"
               >
                 <div
-                  class="emotion-5"
+                  class="emotion-10"
                   id="tile_one23456"
                 >
                   tile_one23456
@@ -63,44 +48,47 @@ exports[`2 column stacking 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-18"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-18 emotion-0 emotion-1"
           id="bl-b223456"
         >
           <div
             id="b223456"
           >
             <div
-              class="ant-row emotion-1"
+              class="ant-row emotion-0 emotion-1"
               id="b2-content23456"
             >
               <div
-                class="ant-col emotion-8 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+                class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 emotion-0 emotion-1"
                 id="bl-tile_two23456"
+                style="height: 40px;"
               >
                 <div
-                  class="emotion-5"
+                  class="emotion-10"
                   id="tile_two23456"
                 >
                   tile_two23456
                 </div>
               </div>
               <div
-                class="ant-col emotion-10 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+                class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 emotion-0 emotion-1"
                 id="bl-tile_three23456"
+                style="height: 20px;"
               >
                 <div
-                  class="emotion-5"
+                  class="emotion-10"
                   id="tile_three23456"
                 >
                   tile_three23456
                 </div>
               </div>
               <div
-                class="ant-col emotion-12 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+                class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 emotion-0 emotion-1"
                 id="bl-tile_four23456"
+                style="height: 30px;"
               >
                 <div
-                  class="emotion-5"
+                  class="emotion-10"
                   id="tile_four23456"
                 >
                   tile_four23456
@@ -116,7 +104,7 @@ exports[`2 column stacking 1`] = `
 `;
 
 exports[`4 block grid 1`] = `
-.emotion-3 {
+.emotion-6 {
   background: #269;
   border: 2px solid #00aaee;
   text-align: center;
@@ -126,55 +114,55 @@ exports[`4 block grid 1`] = `
 
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 emotion-0 emotion-1"
     id="bl-4 block grid23456"
   >
     <div
       id="4 block grid23456"
     >
       <div
-        class="ant-row emotion-1"
+        class="ant-row emotion-0 emotion-1"
         id="4 block grid-content23456"
       >
         <div
-          class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 emotion-0 emotion-1"
           id="bl-tile_one23456"
         >
           <div
-            class="emotion-3"
+            class="emotion-6"
             id="tile_one23456"
           >
             tile_one23456
           </div>
         </div>
         <div
-          class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 emotion-0 emotion-1"
           id="bl-tile_two23456"
         >
           <div
-            class="emotion-3"
+            class="emotion-6"
             id="tile_two23456"
           >
             tile_two23456
           </div>
         </div>
         <div
-          class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 emotion-0 emotion-1"
           id="bl-tile_three23456"
         >
           <div
-            class="emotion-3"
+            class="emotion-6"
             id="tile_three23456"
           >
             tile_three23456
           </div>
         </div>
         <div
-          class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 emotion-0 emotion-1"
           id="bl-tile_four23456"
         >
           <div
-            class="emotion-3"
+            class="emotion-6"
             id="tile_four23456"
           >
             tile_four23456
@@ -187,7 +175,7 @@ exports[`4 block grid 1`] = `
 `;
 
 exports[`4 block grid with gutter 1`] = `
-.emotion-3 {
+.emotion-6 {
   background: #269;
   border: 2px solid #00aaee;
   text-align: center;
@@ -197,60 +185,60 @@ exports[`4 block grid with gutter 1`] = `
 
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 emotion-0 emotion-1"
     id="bl-4 block grid with gutter23456"
   >
     <div
       id="4 block grid with gutter23456"
     >
       <div
-        class="ant-row emotion-1"
+        class="ant-row emotion-0 emotion-1"
         id="4 block grid with gutter-content23456"
-        style="margin: -25px -25px -25px -25px;"
+        style="margin-inline: -25px; row-gap: 50px;"
       >
         <div
-          class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 emotion-0 emotion-1"
           id="bl-tile_one23456"
-          style="padding: 25px 25px 25px 25px;"
+          style="padding-inline: 25px;"
         >
           <div
-            class="emotion-3"
+            class="emotion-6"
             id="tile_one23456"
           >
             tile_one23456
           </div>
         </div>
         <div
-          class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 emotion-0 emotion-1"
           id="bl-tile_two23456"
-          style="padding: 25px 25px 25px 25px;"
+          style="padding-inline: 25px;"
         >
           <div
-            class="emotion-3"
+            class="emotion-6"
             id="tile_two23456"
           >
             tile_two23456
           </div>
         </div>
         <div
-          class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 emotion-0 emotion-1"
           id="bl-tile_three23456"
-          style="padding: 25px 25px 25px 25px;"
+          style="padding-inline: 25px;"
         >
           <div
-            class="emotion-3"
+            class="emotion-6"
             id="tile_three23456"
           >
             tile_three23456
           </div>
         </div>
         <div
-          class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 emotion-0 emotion-1"
           id="bl-tile_four23456"
-          style="padding: 25px 25px 25px 25px;"
+          style="padding-inline: 25px;"
         >
           <div
-            class="emotion-3"
+            class="emotion-6"
             id="tile_four23456"
           >
             tile_four23456
@@ -263,11 +251,7 @@ exports[`4 block grid with gutter 1`] = `
 `;
 
 exports[`4 block grid with various heights 1`] = `
-.emotion-2 {
-  height: 50px;
-}
-
-.emotion-3 {
+.emotion-6 {
   background: #269;
   border: 2px solid #00aaee;
   text-align: center;
@@ -275,69 +259,61 @@ exports[`4 block grid with various heights 1`] = `
   color: #fff;
 }
 
-.emotion-4 {
-  height: 40px;
-}
-
-.emotion-6 {
-  height: 20px;
-}
-
-.emotion-8 {
-  height: 30px;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 emotion-0 emotion-1"
     id="bl-4 block grid with various heights23456"
   >
     <div
       id="4 block grid with various heights23456"
     >
       <div
-        class="ant-row emotion-1"
+        class="ant-row emotion-0 emotion-1"
         id="4 block grid with various heights-content23456"
       >
         <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 emotion-0 emotion-1"
           id="bl-tile_one23456"
+          style="height: 50px;"
         >
           <div
-            class="emotion-3"
+            class="emotion-6"
             id="tile_one23456"
           >
             tile_one23456
           </div>
         </div>
         <div
-          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 emotion-0 emotion-1"
           id="bl-tile_two23456"
+          style="height: 40px;"
         >
           <div
-            class="emotion-3"
+            class="emotion-6"
             id="tile_two23456"
           >
             tile_two23456
           </div>
         </div>
         <div
-          class="ant-col emotion-6 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 emotion-0 emotion-1"
           id="bl-tile_three23456"
+          style="height: 20px;"
         >
           <div
-            class="emotion-3"
+            class="emotion-6"
             id="tile_three23456"
           >
             tile_three23456
           </div>
         </div>
         <div
-          class="ant-col emotion-8 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 emotion-0 emotion-1"
           id="bl-tile_four23456"
+          style="height: 30px;"
         >
           <div
-            class="emotion-3"
+            class="emotion-6"
             id="tile_four23456"
           >
             tile_four23456
@@ -350,7 +326,7 @@ exports[`4 block grid with various heights 1`] = `
 `;
 
 exports[`4 sequential blocks 1`] = `
-.emotion-3 {
+.emotion-6 {
   background: #269;
   border: 2px solid #00aaee;
   text-align: center;
@@ -360,55 +336,55 @@ exports[`4 sequential blocks 1`] = `
 
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 emotion-0 emotion-1"
     id="bl-4 sequential blocks23456"
   >
     <div
       id="4 sequential blocks23456"
     >
       <div
-        class="ant-row emotion-1"
+        class="ant-row emotion-0 emotion-1"
         id="4 sequential blocks-content23456"
       >
         <div
-          class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 emotion-0 emotion-1"
           id="bl-tile_one23456"
         >
           <div
-            class="emotion-3"
+            class="emotion-6"
             id="tile_one23456"
           >
             tile_one23456
           </div>
         </div>
         <div
-          class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 emotion-0 emotion-1"
           id="bl-tile_two23456"
         >
           <div
-            class="emotion-3"
+            class="emotion-6"
             id="tile_two23456"
           >
             tile_two23456
           </div>
         </div>
         <div
-          class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 emotion-0 emotion-1"
           id="bl-tile_three23456"
         >
           <div
-            class="emotion-3"
+            class="emotion-6"
             id="tile_three23456"
           >
             tile_three23456
           </div>
         </div>
         <div
-          class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 emotion-0 emotion-1"
           id="bl-tile_four23456"
         >
           <div
-            class="emotion-3"
+            class="emotion-6"
             id="tile_four23456"
           >
             tile_four23456
@@ -421,11 +397,7 @@ exports[`4 sequential blocks 1`] = `
 `;
 
 exports[`typical dashboard 1`] = `
-.emotion-2 {
-  height: 80px;
-}
-
-.emotion-3 {
+.emotion-6 {
   background: #269;
   border: 2px solid #00aaee;
   text-align: center;
@@ -435,84 +407,84 @@ exports[`typical dashboard 1`] = `
 
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 emotion-0 emotion-1"
     id="bl-typical dashboard23456"
   >
     <div
       id="typical dashboard23456"
     >
       <div
-        class="ant-row emotion-1"
+        class="ant-row emotion-0 emotion-1"
         id="typical dashboard-content23456"
-        style="margin: -5px -5px -5px -5px;"
+        style="margin-inline: -5px; row-gap: 10px;"
       >
         <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-8 emotion-0 emotion-1"
           id="bl-tile_one23456"
-          style="padding: 5px 5px 5px 5px;"
+          style="padding-inline: 5px; height: 80px;"
         >
           <div
-            class="emotion-3"
+            class="emotion-6"
             id="tile_one23456"
           >
             tile_one23456
           </div>
         </div>
         <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-8 emotion-0 emotion-1"
           id="bl-tile_two23456"
-          style="padding: 5px 5px 5px 5px;"
+          style="padding-inline: 5px; height: 80px;"
         >
           <div
-            class="emotion-3"
+            class="emotion-6"
             id="tile_two23456"
           >
             tile_two23456
           </div>
         </div>
         <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-8 emotion-0 emotion-1"
           id="bl-tile_three23456"
-          style="padding: 5px 5px 5px 5px;"
+          style="padding-inline: 5px; height: 80px;"
         >
           <div
-            class="emotion-3"
+            class="emotion-6"
             id="tile_three23456"
           >
             tile_three23456
           </div>
         </div>
         <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 emotion-0 emotion-1"
           id="bl-tile_four23456"
-          style="padding: 5px 5px 5px 5px;"
+          style="padding-inline: 5px; height: 80px;"
         >
           <div
-            class="emotion-3"
+            class="emotion-6"
             id="tile_four23456"
           >
             tile_four23456
           </div>
         </div>
         <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 emotion-0 emotion-1"
           id="bl-tile_five23456"
-          style="padding: 5px 5px 5px 5px;"
+          style="padding-inline: 5px; height: 80px;"
         >
           <div
-            class="emotion-3"
+            class="emotion-6"
             id="tile_five23456"
           >
             tile_five23456
           </div>
         </div>
         <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 emotion-0 emotion-1"
           id="bl-tile_six23456"
-          style="padding: 5px 5px 5px 5px;"
+          style="padding-inline: 5px; height: 80px;"
         >
           <div
-            class="emotion-3"
+            class="emotion-6"
             id="tile_six23456"
           >
             tile_six23456
