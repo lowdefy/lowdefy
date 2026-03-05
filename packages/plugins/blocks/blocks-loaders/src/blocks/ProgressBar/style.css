@@ -17,7 +17,7 @@
 @layer components {
   .progress-bar-loader {
     height: 100%;
-    width: var(--progress); // initial 0%
+    width: var(--progress); /* initial 0% */
     background: var(--ant-color-primary);
     transition: var(--transition);
     opacity: var(--opacity);
@@ -33,13 +33,15 @@
   }
 
   .progress-bar-shadow {
-    box-shadow: 0 0 10px var(--ant-color-primary), 0 0 10px var(--ant-color-primary);
+    box-shadow:
+      0 0 10px var(--ant-color-primary),
+      0 0 10px var(--ant-color-primary);
     width: 20px;
     opacity: 1;
     position: absolute;
     height: 100%;
     transition: var(--transition);
     transform: rotate(3deg) translate(0px, -4px);
-    left: calc(var(--progress) - 20px); // initial -10rem
+    left: calc(var(--progress) - 20px); /* initial -10rem */
   }
 }
