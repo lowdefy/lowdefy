@@ -8,58 +8,7 @@ exports[`align 1`] = `
   >
     <div
       id="align23456"
-    >
-      <div
-        class="ant-row css-dev-only-do-not-override-1enej14 css-var-root"
-        id="align-content23456"
-      >
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-One23456"
-          style="align-self: flex-start; background: rgb(64, 160, 255);"
-        >
-          <button
-            class="ant-btn css-dev-only-do-not-override-1enej14 css-var-root ant-btn-default ant-btn-color-default ant-btn-variant-outlined"
-            id="One23456"
-            type="button"
-          >
-            <span>
-              One23456
-            </span>
-          </button>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Two23456"
-          style="align-self: center; background: rgb(255, 79, 175);"
-        >
-          <button
-            class="ant-btn css-dev-only-do-not-override-1enej14 css-var-root ant-btn-default ant-btn-color-default ant-btn-variant-outlined"
-            id="Two23456"
-            type="button"
-          >
-            <span>
-              Two23456
-            </span>
-          </button>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Three23456"
-          style="align-self: flex-end; background: rgb(64, 170, 85);"
-        >
-          <button
-            class="ant-btn css-dev-only-do-not-override-1enej14 css-var-root ant-btn-default ant-btn-color-default ant-btn-variant-outlined"
-            id="Three23456"
-            type="button"
-          >
-            <span>
-              Three23456
-            </span>
-          </button>
-        </div>
-      </div>
-    </div>
+    />
   </div>
 </div>
 `;

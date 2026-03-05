@@ -822,7 +822,7 @@
       "subTitle": "Sorry, the page you are visiting does not exist.",
       "~k": "f"
     },
-    "areas": {
+    "slots": {
       "extra": {
         "blocks": {
           "~arr": [
@@ -889,7 +889,7 @@
   "pages/home/home.json": {
     "id": "page:home",
     "type": "Box",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [

@@ -878,7 +878,7 @@
       "subTitle": "Sorry, the page you are visiting does not exist.",
       "~k": "n"
     },
-    "areas": {
+    "slots": {
       "extra": {
         "blocks": {
           "~arr": [
@@ -945,7 +945,7 @@
   "pages/home/home.json": {
     "id": "page:home",
     "type": "PageHeaderMenu",
-    "areas": {
+    "slots": {
       "header": {
         "blocks": {
           "~arr": [

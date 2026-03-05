@@ -858,7 +858,7 @@
       "subTitle": "Sorry, the page you are visiting does not exist.",
       "~k": "j"
     },
-    "areas": {
+    "slots": {
       "extra": {
         "blocks": {
           "~arr": [
@@ -925,7 +925,7 @@
   "pages/home/home.json": {
     "id": "page:home",
     "type": "Card",
-    "areas": {
+    "slots": {
       "title": {
         "blocks": {
           "~arr": [

@@ -48,7 +48,7 @@ test('Update block value using SetState', async () => {
     lowdefy,
     pageConfig,
   });
-  const { button, textInput } = context._internal.RootAreas.map;
+  const { button, textInput } = context._internal.RootSlots.map;
 
   textInput.setValue('abc');
   expect(textInput.value).toBe('abc');
@@ -85,7 +85,7 @@ test('Set block value to null using set state', async () => {
     lowdefy,
     pageConfig,
   });
-  const { button, textInput } = context._internal.RootAreas.map;
+  const { button, textInput } = context._internal.RootSlots.map;
 
   textInput.setValue('abc');
   expect(textInput.value).toBe('abc');
@@ -122,8 +122,8 @@ test('Set nested block value to null using set state', async () => {
     lowdefy,
     pageConfig,
   });
-  const { button } = context._internal.RootAreas.map;
-  const textInput = context._internal.RootAreas.map['nested.textInput'];
+  const { button } = context._internal.RootSlots.map;
+  const textInput = context._internal.RootSlots.map['nested.textInput'];
 
   textInput.setValue('abc');
   expect(textInput.value).toBe('abc');
@@ -161,8 +161,8 @@ test('Set nested block value to null using set state applies default value', asy
     lowdefy,
     pageConfig,
   });
-  const { button } = context._internal.RootAreas.map;
-  const selector = context._internal.RootAreas.map['nested.selector'];
+  const { button } = context._internal.RootSlots.map;
+  const selector = context._internal.RootSlots.map['nested.selector'];
 
   selector.setValue(['abc']);
   expect(selector.value).toEqual(['abc']);
@@ -199,7 +199,7 @@ test('Set block id to null explicitly does not apply default null value ', async
     lowdefy,
     pageConfig,
   });
-  const { button, selector } = context._internal.RootAreas.map;
+  const { button, selector } = context._internal.RootSlots.map;
 
   selector.setValue(['abc']);
   expect(selector.value).toEqual(['abc']);

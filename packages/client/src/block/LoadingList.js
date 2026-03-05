@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { Area, BlockLayout } from '@lowdefy/layout';
+import { Slot, BlockLayout } from '@lowdefy/layout';
 import { makeCssClass } from '@lowdefy/block-utils';
 
 import LoadingBlock from './LoadingBlock.js';
@@ -33,17 +33,17 @@ const LoadingList = ({
   const content = {};
   const contentList = [];
   new Array(3).forEach(() => {
-    Object.keys(skeleton.areas).forEach((areaKey, i) => {
-      content[areaKey] = (areaStyle) => (
-        <Area
-          area={skeleton.areas[areaKey]}
-          areaKey={areaKey}
-          areaStyle={{ ...areaStyle, ...skeleton.areas[areaKey]?.style }}
-          id={`s-ar-${blockId}-${skeleton.id}-${areaKey}`}
-          key={`s-ar-${blockId}-${skeleton.id}-${areaKey}-${i}`}
+    Object.keys(skeleton.slots).forEach((slotKey, i) => {
+      content[slotKey] = (slotStyle) => (
+        <Slot
+          slot={skeleton.slots[slotKey]}
+          slotKey={slotKey}
+          slotStyle={{ ...slotStyle, ...skeleton.slots[slotKey]?.style }}
+          id={`s-ar-${blockId}-${skeleton.id}-${slotKey}`}
+          key={`s-ar-${blockId}-${skeleton.id}-${slotKey}-${i}`}
           layout={skeleton.layout ?? blockLayout}
         >
-          {skeleton.areas[areaKey].blocks.map((skl, k) => (
+          {skeleton.slots[slotKey].blocks.map((skl, k) => (
             <LoadingBlock
               blockId={blockId}
               context={context}
@@ -52,7 +52,7 @@ const LoadingList = ({
               skeleton={skl}
             />
           ))}
-        </Area>
+        </Slot>
       );
     });
     contentList.push({ ...content });

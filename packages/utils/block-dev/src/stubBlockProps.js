@@ -64,9 +64,9 @@ const stubBlockProps = ({ block, meta, logger = () => null, initialValue, schema
   // block defaults
   block.blockId = block.id;
   if (meta.category === 'list' || meta.category === 'container' || meta.category === 'context') {
-    if (!block.areas) block.areas = {};
-    if (!block.areas.content) block.areas.content = {};
-    if (block.blocks) block.areas.content.blocks = block.blocks;
+    if (!block.slots) block.slots = {};
+    if (!block.slots.content) block.slots.content = {};
+    if (block.blocks) block.slots.content.blocks = block.blocks;
   }
   block.events = block.events || {};
   block.eventLog = [];
@@ -94,7 +94,7 @@ const stubBlockProps = ({ block, meta, logger = () => null, initialValue, schema
   // block category defaults
   if (meta.category === 'list') {
     block.list = [];
-    (block.areas.content.blocks || []).forEach((bl, i) => {
+    (block.slots.content.blocks || []).forEach((bl, i) => {
       block.list.push({
         content: () => (
           <div
@@ -118,9 +118,9 @@ const stubBlockProps = ({ block, meta, logger = () => null, initialValue, schema
   }
   if (meta.category === 'container') {
     block.content = {};
-    Object.keys(block.areas).forEach((key) => {
+    Object.keys(block.slots).forEach((key) => {
       block.content[key] = () => (
-        <div data-testid={`area-${key}`} key={key} style={{ border: '1px solid red', padding: 10 }}>
+        <div data-testid={`slot-${key}`} key={key} style={{ border: '1px solid red', padding: 10 }}>
           {key}
         </div>
       );

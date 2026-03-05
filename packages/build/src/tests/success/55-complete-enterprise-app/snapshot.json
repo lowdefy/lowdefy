@@ -3761,7 +3761,7 @@
       "subTitle": "Sorry, the page you are visiting does not exist.",
       "~k": "a4"
     },
-    "areas": {
+    "slots": {
       "extra": {
         "blocks": {
           "~arr": [
@@ -3911,7 +3911,7 @@
       },
       "~k": "6d"
     },
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -3935,7 +3935,7 @@
               },
               "~k": "6y",
               "blockId": "form",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -4017,7 +4017,7 @@
                         "type": "Box",
                         "~k": "7i",
                         "blockId": "actions",
-                        "areas": {
+                        "slots": {
                           "content": {
                             "blocks": {
                               "~arr": [
@@ -4349,7 +4349,7 @@
       },
       "~k": "3u"
     },
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -4358,7 +4358,7 @@
               "type": "Box",
               "~k": "40",
               "blockId": "toolbar",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -4518,7 +4518,7 @@
               },
               "~k": "4r",
               "blockId": "customerList",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -4566,7 +4566,7 @@
                         },
                         "~k": "4v",
                         "blockId": "customerCard",
-                        "areas": {
+                        "slots": {
                           "content": {
                             "blocks": {
                               "~arr": [
@@ -4823,7 +4823,7 @@
       },
       "~k": "24"
     },
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -4849,7 +4849,7 @@
               "type": "Box",
               "~k": "2e",
               "blockId": "statsRow",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -4862,7 +4862,7 @@
                         },
                         "~k": "2g",
                         "blockId": "totalCustomers",
-                        "areas": {
+                        "slots": {
                           "content": {
                             "blocks": {
                               "~arr": [
@@ -4897,7 +4897,7 @@
                         },
                         "~k": "2m",
                         "blockId": "totalOrders",
-                        "areas": {
+                        "slots": {
                           "content": {
                             "blocks": {
                               "~arr": [
@@ -4932,7 +4932,7 @@
                         },
                         "~k": "2s",
                         "blockId": "revenue",
-                        "areas": {
+                        "slots": {
                           "content": {
                             "blocks": {
                               "~arr": [
@@ -4968,7 +4968,7 @@
                         },
                         "~k": "2y",
                         "blockId": "growth",
-                        "areas": {
+                        "slots": {
                           "content": {
                             "blocks": {
                               "~arr": [
@@ -5060,7 +5060,7 @@
       "status": "info",
       "~k": "9b"
     },
-    "areas": {
+    "slots": {
       "extra": {
         "blocks": {
           "~arr": [
@@ -5214,7 +5214,7 @@
     },
     "pageId": "orders",
     "blockId": "orders",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -5270,7 +5270,7 @@
     },
     "pageId": "reports",
     "blockId": "reports",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -5326,7 +5326,7 @@
     },
     "pageId": "settings",
     "blockId": "settings",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -5349,7 +5349,7 @@
               },
               "~k": "8j",
               "blockId": "settingsForm",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [

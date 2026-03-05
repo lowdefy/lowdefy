@@ -1472,7 +1472,7 @@
       "subTitle": "Sorry, the page you are visiting does not exist.",
       "~k": "1t"
     },
-    "areas": {
+    "slots": {
       "extra": {
         "blocks": {
           "~arr": [
@@ -1555,7 +1555,7 @@
     },
     "pageId": "admin-panel",
     "blockId": "admin-panel",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -1601,7 +1601,7 @@
     },
     "pageId": "dashboard",
     "blockId": "dashboard",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -1636,7 +1636,7 @@
       "status": "info",
       "~k": "m"
     },
-    "areas": {
+    "slots": {
       "extra": {
         "blocks": {
           "~arr": [
@@ -1708,7 +1708,7 @@
     },
     "pageId": "profile",
     "blockId": "profile",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -1754,7 +1754,7 @@
     },
     "pageId": "reports",
     "blockId": "reports",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -1800,7 +1800,7 @@
     },
     "pageId": "team",
     "blockId": "team",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -1846,7 +1846,7 @@
     },
     "pageId": "user-management",
     "blockId": "user-management",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [

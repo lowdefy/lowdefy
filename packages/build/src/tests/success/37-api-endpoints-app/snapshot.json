@@ -931,7 +931,7 @@
       "subTitle": "Sorry, the page you are visiting does not exist.",
       "~k": "p"
     },
-    "areas": {
+    "slots": {
       "extra": {
         "blocks": {
           "~arr": [
@@ -1008,7 +1008,7 @@
     },
     "pageId": "about",
     "blockId": "about",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -1058,7 +1058,7 @@
     },
     "pageId": "home",
     "blockId": "home",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [

@@ -1737,7 +1737,7 @@
       "subTitle": "Sorry, the page you are visiting does not exist.",
       "~k": "2s"
     },
-    "areas": {
+    "slots": {
       "extra": {
         "blocks": {
           "~arr": [
@@ -1814,7 +1814,7 @@
     },
     "pageId": "about",
     "blockId": "about",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -1854,7 +1854,7 @@
     },
     "pageId": "clothing",
     "blockId": "clothing",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -1894,7 +1894,7 @@
     },
     "pageId": "consulting",
     "blockId": "consulting",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -1934,7 +1934,7 @@
     },
     "pageId": "contact",
     "blockId": "contact",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -1974,7 +1974,7 @@
     },
     "pageId": "electronics",
     "blockId": "electronics",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -2014,7 +2014,7 @@
     },
     "pageId": "featured",
     "blockId": "featured",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -2054,7 +2054,7 @@
     },
     "pageId": "home",
     "blockId": "home",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -2094,7 +2094,7 @@
     },
     "pageId": "privacy",
     "blockId": "privacy",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -2134,7 +2134,7 @@
     },
     "pageId": "products",
     "blockId": "products",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -2174,7 +2174,7 @@
     },
     "pageId": "support",
     "blockId": "support",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -2214,7 +2214,7 @@
     },
     "pageId": "terms",
     "blockId": "terms",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [

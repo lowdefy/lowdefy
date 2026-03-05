@@ -1270,7 +1270,7 @@
       "subTitle": "Sorry, the page you are visiting does not exist.",
       "~k": "27"
     },
-    "areas": {
+    "slots": {
       "extra": {
         "blocks": {
           "~arr": [
@@ -1347,7 +1347,7 @@
     },
     "pageId": "registration",
     "blockId": "registration",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -1366,7 +1366,7 @@
               "type": "Card",
               "~k": "a",
               "blockId": "form",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [

@@ -17,7 +17,7 @@
 import { set, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
-function recMoveSkeletonBlocksToArea(block, blockId, pageId) {
+function recMoveSkeletonBlocksToSlot(block, blockId, pageId) {
   if (!type.isNone(block.blocks)) {
     if (!type.isArray(block.blocks)) {
       throw new ConfigError(
@@ -25,20 +25,20 @@ function recMoveSkeletonBlocksToArea(block, blockId, pageId) {
         { received: block.blocks, configKey: block['~k'] }
       );
     }
-    set(block, 'areas.content.blocks', block.blocks);
+    set(block, 'slots.content.blocks', block.blocks);
     delete block.blocks;
   }
-  Object.keys(block.areas || {}).forEach((area) => {
-    block.areas[area].blocks.forEach((block, i) => {
-      recMoveSkeletonBlocksToArea(block, `${blockId}.areas.${area}.${i}.blocks`, pageId);
+  Object.keys(block.slots || {}).forEach((slot) => {
+    block.slots[slot].blocks.forEach((block, i) => {
+      recMoveSkeletonBlocksToSlot(block, `${blockId}.slots.${slot}.${i}.blocks`, pageId);
     });
   });
 }
 
-function moveSkeletonBlocksToArea(block, pageContext) {
+function moveSkeletonBlocksToSlot(block, pageContext) {
   if (type.isObject(block.skeleton)) {
-    recMoveSkeletonBlocksToArea(block.skeleton, `${block.blockId}.skeleton`, pageContext.pageId);
+    recMoveSkeletonBlocksToSlot(block.skeleton, `${block.blockId}.skeleton`, pageContext.pageId);
   }
 }
 
-export default moveSkeletonBlocksToArea;
+export default moveSkeletonBlocksToSlot;

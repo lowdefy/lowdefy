@@ -838,7 +838,7 @@
       "subTitle": "Sorry, the page you are visiting does not exist.",
       "~k": "f"
     },
-    "areas": {
+    "slots": {
       "extra": {
         "blocks": {
           "~arr": [
@@ -920,7 +920,7 @@
       },
       "~k": "x"
     },
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [

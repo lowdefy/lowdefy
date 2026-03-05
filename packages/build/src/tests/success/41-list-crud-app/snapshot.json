@@ -1112,7 +1112,7 @@
       "subTitle": "Sorry, the page you are visiting does not exist.",
       "~k": "1h"
     },
-    "areas": {
+    "slots": {
       "extra": {
         "blocks": {
           "~arr": [
@@ -1229,7 +1229,7 @@
     },
     "pageId": "todos",
     "blockId": "todos",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -1329,7 +1329,7 @@
               },
               "~k": "x",
               "blockId": "todoList",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -1338,7 +1338,7 @@
                         "type": "Box",
                         "~k": "11",
                         "blockId": "todoItem",
-                        "areas": {
+                        "slots": {
                           "content": {
                             "blocks": {
                               "~arr": [

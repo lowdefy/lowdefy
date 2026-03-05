@@ -1679,7 +1679,7 @@
       "subTitle": "Sorry, the page you are visiting does not exist.",
       "~k": "3m"
     },
-    "areas": {
+    "slots": {
       "extra": {
         "blocks": {
           "~arr": [
@@ -1777,7 +1777,7 @@
     },
     "pageId": "home",
     "blockId": "home",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -1800,7 +1800,7 @@
               },
               "~k": "1y",
               "blockId": "searchSection",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -1873,7 +1873,7 @@
               },
               "~k": "2a",
               "blockId": "filterSection",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -1919,7 +1919,7 @@
               },
               "~k": "2i",
               "blockId": "createSection",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -2025,7 +2025,7 @@
               },
               "~k": "30",
               "blockId": "editSection",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -2069,7 +2069,7 @@
               },
               "~k": "37",
               "blockId": "resultsList",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -2085,7 +2085,7 @@
                         },
                         "~k": "3b",
                         "blockId": "itemCard",
-                        "areas": {
+                        "slots": {
                           "content": {
                             "blocks": {
                               "~arr": [

@@ -1773,7 +1773,7 @@
       "subTitle": "Sorry, the page you are visiting does not exist.",
       "~k": "43"
     },
-    "areas": {
+    "slots": {
       "extra": {
         "blocks": {
           "~arr": [
@@ -1850,7 +1850,7 @@
     },
     "pageId": "about",
     "blockId": "about",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -1973,7 +1973,7 @@
     },
     "pageId": "home",
     "blockId": "home",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -1996,7 +1996,7 @@
               },
               "~k": "i",
               "blockId": "stateCard",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -2154,7 +2154,7 @@
               },
               "~k": "1b",
               "blockId": "linkCard",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -2278,7 +2278,7 @@
               },
               "~k": "1w",
               "blockId": "messageCard",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -2407,7 +2407,7 @@
               },
               "~k": "2h",
               "blockId": "advancedCard",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -2573,7 +2573,7 @@
               },
               "~k": "3b",
               "blockId": "debounceCard",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [

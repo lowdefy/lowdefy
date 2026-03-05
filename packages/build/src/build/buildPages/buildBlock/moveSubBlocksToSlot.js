@@ -17,7 +17,7 @@
 import { set, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
-function moveSubBlocksToArea(block, pageContext) {
+function moveSubBlocksToSlot(block, pageContext) {
   if (!type.isNone(block.blocks)) {
     if (!type.isArray(block.blocks)) {
       throw new ConfigError(
@@ -25,9 +25,9 @@ function moveSubBlocksToArea(block, pageContext) {
         { received: block.blocks, configKey: block['~k'] }
       );
     }
-    set(block, 'areas.content.blocks', block.blocks);
+    set(block, 'slots.content.blocks', block.blocks);
     delete block.blocks;
   }
 }
 
-export default moveSubBlocksToArea;
+export default moveSubBlocksToSlot;

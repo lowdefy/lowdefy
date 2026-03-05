@@ -190,7 +190,7 @@ areas:
   expect(result.id).toBe('page:home');
   expect(result.type).toBe('PageHeaderMenu');
   // The sidebar var should have been resolved from components/sidebar.yaml
-  const contentBlocks = result.areas?.content?.blocks ?? [];
+  const contentBlocks = result.slots?.content?.blocks ?? [];
   expect(contentBlocks).toHaveLength(1);
   expect(contentBlocks[0].blockId).toBe('sidebar_title');
   expect(contentBlocks[0].type).toBe('Title');
@@ -240,7 +240,7 @@ areas:
     pageRegistry,
     context,
   });
-  const contentBlocks1 = result1.areas?.content?.blocks ?? [];
+  const contentBlocks1 = result1.slots?.content?.blocks ?? [];
   expect(contentBlocks1[0].blockId).toBe('sidebar_v1');
 
   // Second build: sidebar file changed on disk
@@ -277,7 +277,7 @@ areas:
     pageRegistry,
     context,
   });
-  const contentBlocks2 = result2.areas?.content?.blocks ?? [];
+  const contentBlocks2 = result2.slots?.content?.blocks ?? [];
   expect(contentBlocks2[0].blockId).toBe('sidebar_v2');
 });
 
@@ -340,7 +340,7 @@ type: TextInput
   });
 
   expect(result.id).toBe('page:home');
-  const contentBlocks = result.areas?.content?.blocks ?? [];
+  const contentBlocks = result.slots?.content?.blocks ?? [];
   expect(contentBlocks).toHaveLength(2);
   expect(contentBlocks[0].blockId).toBe('block1');
   expect(contentBlocks[1].blockId).toBe('block2');

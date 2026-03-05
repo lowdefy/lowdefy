@@ -709,6 +709,31 @@ export default {
             type: 'Block "events" should be an object.',
           },
         },
+        slots: {
+          type: 'object',
+          patternProperties: {
+            '^.*$': {
+              type: 'object',
+              properties: {
+                blocks: {
+                  type: 'array',
+                  items: {
+                    $ref: '#/definitions/block',
+                  },
+                  errorMessage: {
+                    type: 'Block "slots.{slotKey}.blocks" should be an array.',
+                  },
+                },
+              },
+              errorMessage: {
+                type: 'Block "slots.{slotKey}" should be an object.',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Block "slots" should be an object.',
+          },
+        },
         areas: {
           type: 'object',
           patternProperties: {

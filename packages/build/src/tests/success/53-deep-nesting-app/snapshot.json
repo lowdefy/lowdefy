@@ -966,7 +966,7 @@
       "subTitle": "Sorry, the page you are visiting does not exist.",
       "~k": "v"
     },
-    "areas": {
+    "slots": {
       "extra": {
         "blocks": {
           "~arr": [
@@ -1043,7 +1043,7 @@
     },
     "pageId": "nested",
     "blockId": "nested",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -1056,7 +1056,7 @@
               },
               "~k": "8",
               "blockId": "level1",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -1065,7 +1065,7 @@
                         "type": "Box",
                         "~k": "b",
                         "blockId": "level2",
-                        "areas": {
+                        "slots": {
                           "content": {
                             "blocks": {
                               "~arr": [
@@ -1078,7 +1078,7 @@
                                   },
                                   "~k": "d",
                                   "blockId": "level3",
-                                  "areas": {
+                                  "slots": {
                                     "content": {
                                       "blocks": {
                                         "~arr": [
@@ -1087,7 +1087,7 @@
                                             "type": "Box",
                                             "~k": "g",
                                             "blockId": "level4",
-                                            "areas": {
+                                            "slots": {
                                               "content": {
                                                 "blocks": {
                                                   "~arr": [
@@ -1100,7 +1100,7 @@
                                                       },
                                                       "~k": "i",
                                                       "blockId": "level5",
-                                                      "areas": {
+                                                      "slots": {
                                                         "content": {
                                                           "blocks": {
                                                             "~arr": [
@@ -1109,7 +1109,7 @@
                                                                 "type": "Box",
                                                                 "~k": "l",
                                                                 "blockId": "level6",
-                                                                "areas": {
+                                                                "slots": {
                                                                   "content": {
                                                                     "blocks": {
                                                                       "~arr": [

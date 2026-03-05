@@ -80,12 +80,12 @@ const Client = ({
               <Head
                 Component={Components.Head}
                 properties={
-                  context._internal.RootAreas.map[config.pageConfig.blockId].eval.properties
+                  context._internal.RootSlots.map[config.pageConfig.blockId].eval.properties
                 }
               />
               <Block
-                block={context._internal.RootAreas.map[config.pageConfig.blockId]}
-                Blocks={context._internal.RootAreas}
+                block={context._internal.RootSlots.map[config.pageConfig.blockId]}
+                Blocks={context._internal.RootSlots}
                 context={context}
                 lowdefy={lowdefy}
                 parentLoading={false}

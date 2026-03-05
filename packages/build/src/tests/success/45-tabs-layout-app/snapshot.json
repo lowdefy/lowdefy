@@ -1229,7 +1229,7 @@
       "subTitle": "Sorry, the page you are visiting does not exist.",
       "~k": "22"
     },
-    "areas": {
+    "slots": {
       "extra": {
         "blocks": {
           "~arr": [
@@ -1306,7 +1306,7 @@
     },
     "pageId": "home",
     "blockId": "home",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -1327,7 +1327,7 @@
                 "defaultActiveKey": "overview",
                 "~k": "b"
               },
-              "areas": {
+              "slots": {
                 "overview": {
                   "blocks": {
                     "~arr": [
@@ -1357,7 +1357,7 @@
                         "type": "Box",
                         "~k": "j",
                         "blockId": "overviewStats",
-                        "areas": {
+                        "slots": {
                           "content": {
                             "blocks": {
                               "~arr": [
@@ -1442,7 +1442,7 @@
                         },
                         "~k": "y",
                         "blockId": "detailsForm",
-                        "areas": {
+                        "slots": {
                           "content": {
                             "blocks": {
                               "~arr": [
@@ -1498,7 +1498,7 @@
                         "type": "Card",
                         "~k": "19",
                         "blockId": "settingsList",
-                        "areas": {
+                        "slots": {
                           "content": {
                             "blocks": {
                               "~arr": [
@@ -1576,7 +1576,7 @@
               },
               "~k": "1k",
               "blockId": "nestedTabs",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -1587,7 +1587,7 @@
                           "type": "card",
                           "~k": "1o"
                         },
-                        "areas": {
+                        "slots": {
                           "tab1": {
                             "blocks": {
                               "~arr": [

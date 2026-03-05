@@ -19,60 +19,60 @@
 import { serializer, type } from '@lowdefy/helpers';
 import Block from './Block.js';
 
-class Areas {
-  constructor({ arrayIndices = [], areas, context }) {
+class Slots {
+  constructor({ arrayIndices = [], slots, context }) {
     this.id = Math.random()
       .toString(36)
       .replace(/[^a-z]+/g, '')
       .substring(0, 5);
-    this.areas = serializer.copy(areas || []);
+    this.slots = serializer.copy(slots || []);
     this.arrayIndices = arrayIndices;
     this.context = context;
     this.map = {};
     this.recCount = 0;
-    this.subAreas = {};
+    this.subSlots = {};
   }
 
   init = (initState) => {
-    this.initAreaBlocks();
+    this.initSlotBlocks();
     this.loopBlocks((block) => {
-      this.context._internal.RootAreas.map[block.blockId] = block;
+      this.context._internal.RootSlots.map[block.blockId] = block;
     });
     this.reset(initState);
   };
 
-  // Replace Area blocks array with Block instances
-  initAreaBlocks = () => {
-    if (type.isObject(this.areas)) {
-      Object.values(this.areas).forEach((area) => {
-        // Handle areas with no blocks - render as empty
-        const blocksConfig = area.blocks ?? [];
-        const blocks = blocksConfig.map((areaBlock) => new Block(this, areaBlock));
-        area.blocks = blocks;
+  // Replace Slot blocks array with Block instances
+  initSlotBlocks = () => {
+    if (type.isObject(this.slots)) {
+      Object.values(this.slots).forEach((slot) => {
+        // Handle slots with no blocks - render as empty
+        const blocksConfig = slot.blocks ?? [];
+        const blocks = blocksConfig.map((slotBlock) => new Block(this, slotBlock));
+        slot.blocks = blocks;
       });
     }
   };
 
   loopBlocks = (fn) => {
-    if (type.isObject(this.areas)) {
-      Object.values(this.areas).forEach((areaArray) => {
-        if (type.isArray(areaArray.blocks)) {
-          areaArray.blocks.forEach(fn);
+    if (type.isObject(this.slots)) {
+      Object.values(this.slots).forEach((slotArray) => {
+        if (type.isArray(slotArray.blocks)) {
+          slotArray.blocks.forEach(fn);
         }
       });
     }
   };
 
-  loopSubAreas = (fn) => {
-    Object.values(this.subAreas).forEach((subAreasArray) => {
-      subAreasArray.forEach(fn);
+  loopSubSlots = (fn) => {
+    Object.values(this.subSlots).forEach((subSlotsArray) => {
+      subSlotsArray.forEach(fn);
     });
   };
 
   reset = (initWithState) => {
     const initState = serializer.copy(initWithState || this.context.state);
     this.loopBlocks((block) => {
-      block.reset(this.subAreas, initState);
+      block.reset(this.subSlots, initState);
     });
   };
 
@@ -88,7 +88,7 @@ class Areas {
     this.loopBlocks((block) => {
       if (!block.isVisible()) {
         if (block.isContainer()) {
-          block.loopSubAreas((subAreasClass) => subAreasClass.recContainerDelState(toDelete));
+          block.loopSubSlots((subSlotsClass) => subSlotsClass.recContainerDelState(toDelete));
         }
         toDelete.add(block.blockId);
       } else {
@@ -103,7 +103,7 @@ class Areas {
   recContainerDelState = (toDelete) => {
     this.loopBlocks((block) => {
       if (block.isContainer()) {
-        block.loopSubAreas((subAreasClass) => subAreasClass.recContainerDelState(toDelete));
+        block.loopSubSlots((subSlotsClass) => subSlotsClass.recContainerDelState(toDelete));
       } else {
         toDelete.add(block.blockId);
       }
@@ -125,8 +125,8 @@ class Areas {
       this.arrayIndices[i] = newIndices[i];
     });
     this.loopBlocks((block) => block.updateArrayIndices());
-    this.loopSubAreas((subAreasClass) =>
-      subAreasClass.recUpdateArrayIndices(oldIndices, newIndices)
+    this.loopSubSlots((subSlotsClass) =>
+      subSlotsClass.recUpdateArrayIndices(oldIndices, newIndices)
     );
   };
 
@@ -136,7 +136,7 @@ class Areas {
       if (!type.isNone(getValidate)) result.push(getValidate);
     });
 
-    this.loopSubAreas((subAreasClass) => subAreasClass.getValidateRec(match, result));
+    this.loopSubSlots((subSlotsClass) => subSlotsClass.getValidateRec(match, result));
     return result;
   };
 
@@ -145,12 +145,12 @@ class Areas {
       this.context._internal.State.set(block.blockId, undefined);
     });
 
-    this.loopSubAreas((subAreasClass) => subAreasClass.recSetUndefined());
+    this.loopSubSlots((subSlotsClass) => subSlotsClass.recSetUndefined());
   };
 
   recRemoveBlocksFromMap = () => {
     this.loopBlocks((block) => block.deleteFromMap());
-    this.loopSubAreas((subAreasClass) => subAreasClass.recRemoveBlocksFromMap());
+    this.loopSubSlots((subSlotsClass) => subSlotsClass.recRemoveBlocksFromMap());
   };
 
   validate = (match) => {
@@ -162,7 +162,7 @@ class Areas {
 
   resetValidationRec = (match) => {
     this.loopBlocks((block) => block.resetValidation(match));
-    this.loopSubAreas((subAreasClass) => subAreasClass.resetValidationRec(match));
+    this.loopSubSlots((subSlotsClass) => subSlotsClass.resetValidationRec(match));
   };
 
   resetValidation = (match) => {
@@ -177,8 +177,8 @@ class Areas {
 
   renderBlocks = () => {
     this.loopBlocks((block) => block.render());
-    this.loopSubAreas((subAreasClass) => subAreasClass.renderBlocks());
+    this.loopSubSlots((subSlotsClass) => subSlotsClass.renderBlocks());
   };
 }
 
-export default Areas;
+export default Slots;

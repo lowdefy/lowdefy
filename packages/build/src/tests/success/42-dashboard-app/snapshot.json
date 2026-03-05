@@ -1105,7 +1105,7 @@
       "subTitle": "Sorry, the page you are visiting does not exist.",
       "~k": "1i"
     },
-    "areas": {
+    "slots": {
       "extra": {
         "blocks": {
           "~arr": [
@@ -1176,7 +1176,7 @@
       "title": "Dashboard",
       "~k": "6"
     },
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -1185,7 +1185,7 @@
               "type": "Box",
               "~k": "a",
               "blockId": "row1",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -1202,7 +1202,7 @@
                         },
                         "~k": "c",
                         "blockId": "card1",
-                        "areas": {
+                        "slots": {
                           "content": {
                             "blocks": {
                               "~arr": [
@@ -1238,7 +1238,7 @@
                         },
                         "~k": "i",
                         "blockId": "card2",
-                        "areas": {
+                        "slots": {
                           "content": {
                             "blocks": {
                               "~arr": [
@@ -1274,7 +1274,7 @@
                         },
                         "~k": "o",
                         "blockId": "card3",
-                        "areas": {
+                        "slots": {
                           "content": {
                             "blocks": {
                               "~arr": [
@@ -1309,7 +1309,7 @@
                         },
                         "~k": "u",
                         "blockId": "card4",
-                        "areas": {
+                        "slots": {
                           "content": {
                             "blocks": {
                               "~arr": [
@@ -1345,7 +1345,7 @@
               "type": "Box",
               "~k": "10",
               "blockId": "chartsRow",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -1362,7 +1362,7 @@
                         },
                         "~k": "12",
                         "blockId": "mainChart",
-                        "areas": {
+                        "slots": {
                           "content": {
                             "blocks": {
                               "~arr": [
@@ -1397,7 +1397,7 @@
                         },
                         "~k": "18",
                         "blockId": "pieChart",
-                        "areas": {
+                        "slots": {
                           "content": {
                             "blocks": {
                               "~arr": [

@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { Area, BlockLayout } from '../../index.js';
+import { Slot, BlockLayout } from '../../index.js';
 
 import Block from './Block.js';
 import Box from './Box.js';
@@ -44,7 +44,7 @@ const Loading = ({ loading, children, showLoading = true }) =>
 
 const AutoBlock = ({ block, makeCssClass }) => {
   const content = {};
-  let areas;
+  let slots;
   let Comp = Blocks[block.type];
   let category = 'block';
   if (!Comp) {
@@ -59,26 +59,26 @@ const AutoBlock = ({ block, makeCssClass }) => {
   switch (category) {
     case 'container':
       if (block.blocks) {
-        areas = { content: { blocks: block.blocks } };
+        slots = { content: { blocks: block.blocks } };
       }
-      if (block.areas) {
-        areas = block.areas;
+      if (block.slots) {
+        slots = block.slots;
       }
-      Object.keys(areas || {}).forEach((areaKey) => {
-        content[areaKey] = (areaStyle) => (
-          <Area
-            area={areas[areaKey]}
-            areaKey={areaKey}
-            areaStyle={[areaStyle, areas[areaKey]?.style]}
-            id={`${block.id}-${areaKey}${randomId()}`}
-            key={`${block.id}-${areaKey}`}
+      Object.keys(slots || {}).forEach((slotKey) => {
+        content[slotKey] = (slotStyle) => (
+          <Slot
+            slot={slots[slotKey]}
+            slotKey={slotKey}
+            slotStyle={[slotStyle, slots[slotKey]?.style]}
+            id={`${block.id}-${slotKey}${randomId()}`}
+            key={`${block.id}-${slotKey}`}
             layout={block.layout}
             makeCssClass={makeCssClass}
           >
-            {(areas[areaKey].blocks || []).map((bl, i) => (
+            {(slots[slotKey].blocks || []).map((bl, i) => (
               <BindAutoBlock key={`${bl.id}-${i}`} block={bl} makeCssClass={makeCssClass} />
             ))}
-          </Area>
+          </Slot>
         );
       });
       return (

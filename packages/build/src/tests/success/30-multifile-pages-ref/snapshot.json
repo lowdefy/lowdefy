@@ -1052,7 +1052,7 @@
       "subTitle": "Sorry, the page you are visiting does not exist.",
       "~k": "11"
     },
-    "areas": {
+    "slots": {
       "extra": {
         "blocks": {
           "~arr": [
@@ -1129,7 +1129,7 @@
     },
     "pageId": "about",
     "blockId": "about",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -1179,7 +1179,7 @@
     },
     "pageId": "contact",
     "blockId": "contact",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -1249,7 +1249,7 @@
     },
     "pageId": "home",
     "blockId": "home",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [

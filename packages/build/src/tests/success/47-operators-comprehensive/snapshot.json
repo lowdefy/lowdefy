@@ -1748,7 +1748,7 @@
       "subTitle": "Sorry, the page you are visiting does not exist.",
       "~k": "3x"
     },
-    "areas": {
+    "slots": {
       "extra": {
         "blocks": {
           "~arr": [
@@ -1825,7 +1825,7 @@
     },
     "pageId": "home",
     "blockId": "home",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -1856,7 +1856,7 @@
               },
               "~k": "f",
               "blockId": "conditionalBlock",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -1887,7 +1887,7 @@
               },
               "~k": "m",
               "blockId": "arrayDemo",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -1948,7 +1948,7 @@
                         },
                         "~k": "u",
                         "blockId": "filteredUsers",
-                        "areas": {
+                        "slots": {
                           "content": {
                             "blocks": {
                               "~arr": [
@@ -1990,7 +1990,7 @@
               },
               "~k": "18",
               "blockId": "mathDemo",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -2044,7 +2044,7 @@
               },
               "~k": "1h",
               "blockId": "stringDemo",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -2108,7 +2108,7 @@
               },
               "~k": "1u",
               "blockId": "objectDemo",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -2151,7 +2151,7 @@
               },
               "~k": "23",
               "blockId": "comparisonDemo",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -2253,7 +2253,7 @@
               },
               "~k": "2n",
               "blockId": "logicalDemo",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -2366,7 +2366,7 @@
               },
               "~k": "3a",
               "blockId": "typeDemo",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -2418,7 +2418,7 @@
               },
               "~k": "3k",
               "blockId": "dateDemo",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [

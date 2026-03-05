@@ -2005,7 +2005,7 @@
       "subTitle": "Sorry, the page you are visiting does not exist.",
       "~k": "4d"
     },
-    "areas": {
+    "slots": {
       "extra": {
         "blocks": {
           "~arr": [
@@ -2082,7 +2082,7 @@
     },
     "pageId": "create-user",
     "blockId": "create-user",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -2101,7 +2101,7 @@
               "type": "Card",
               "~k": "2e",
               "blockId": "form",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -2132,7 +2132,7 @@
                         "type": "Box",
                         "~k": "2k",
                         "blockId": "actions",
-                        "areas": {
+                        "slots": {
                           "content": {
                             "blocks": {
                               "~arr": [
@@ -2352,7 +2352,7 @@
     },
     "pageId": "edit-user",
     "blockId": "edit-user",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -2371,7 +2371,7 @@
               "type": "Card",
               "~k": "3v",
               "blockId": "form",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -2672,7 +2672,7 @@
     },
     "pageId": "users",
     "blockId": "users",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -2681,7 +2681,7 @@
               "type": "Box",
               "~k": "10",
               "blockId": "header",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -2750,7 +2750,7 @@
               },
               "~k": "1a",
               "blockId": "userList",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -2766,7 +2766,7 @@
                         },
                         "~k": "1e",
                         "blockId": "userCard",
-                        "areas": {
+                        "slots": {
                           "content": {
                             "blocks": {
                               "~arr": [
@@ -2788,7 +2788,7 @@
                                   "type": "Box",
                                   "~k": "1l",
                                   "blockId": "actions",
-                                  "areas": {
+                                  "slots": {
                                     "content": {
                                       "blocks": {
                                         "~arr": [

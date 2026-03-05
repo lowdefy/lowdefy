@@ -21,7 +21,7 @@ async function getValidation(page, blockId) {
     const lowdefy = window.lowdefy;
     const pageId = lowdefy?.pageId;
     const context = lowdefy?.contexts?.[`page:${pageId}`];
-    const block = context?._internal?.RootAreas?.map?.[id];
+    const block = context?._internal?.RootSlots?.map?.[id];
     return block?.validationEval?.output;
   }, blockId);
 }

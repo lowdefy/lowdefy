@@ -8,37 +8,7 @@ exports[`align bottom 1`] = `
   >
     <div
       id="align bottom23456"
-    >
-      <div
-        class="ant-row ant-row-bottom css-dev-only-do-not-override-1enej14 css-var-root"
-        id="align bottom-content23456"
-      >
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-10 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-One23456"
-          style="background: rgb(64, 160, 255);"
-        >
-          <div
-            id="One23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-10 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Two23456"
-          style="background: rgb(255, 79, 175);"
-        >
-          <div
-            id="Two23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-      </div>
-    </div>
+    />
   </div>
 </div>
 `;
@@ -51,37 +21,7 @@ exports[`align bottom wrap behavior 1`] = `
   >
     <div
       id="align bottom wrap behavior23456"
-    >
-      <div
-        class="ant-row ant-row-bottom css-dev-only-do-not-override-1enej14 css-var-root"
-        id="align bottom wrap behavior-content23456"
-      >
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-One23456"
-          style="background: rgb(64, 160, 255);"
-        >
-          <div
-            id="One23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Two23456"
-          style="background: rgb(255, 79, 175);"
-        >
-          <div
-            id="Two23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-      </div>
-    </div>
+    />
   </div>
 </div>
 `;
@@ -94,37 +34,7 @@ exports[`align middle 1`] = `
   >
     <div
       id="align middle23456"
-    >
-      <div
-        class="ant-row ant-row-middle css-dev-only-do-not-override-1enej14 css-var-root"
-        id="align middle-content23456"
-      >
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-10 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-One23456"
-          style="background: rgb(64, 160, 255);"
-        >
-          <div
-            id="One23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-10 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Two23456"
-          style="background: rgb(255, 79, 175);"
-        >
-          <div
-            id="Two23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-      </div>
-    </div>
+    />
   </div>
 </div>
 `;
@@ -137,37 +47,7 @@ exports[`align middle wrap behavior 1`] = `
   >
     <div
       id="align middle wrap behavior23456"
-    >
-      <div
-        class="ant-row ant-row-middle css-dev-only-do-not-override-1enej14 css-var-root"
-        id="align middle wrap behavior-content23456"
-      >
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-One23456"
-          style="background: rgb(64, 160, 255);"
-        >
-          <div
-            id="One23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Two23456"
-          style="background: rgb(255, 79, 175);"
-        >
-          <div
-            id="Two23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-      </div>
-    </div>
+    />
   </div>
 </div>
 `;
@@ -180,37 +60,7 @@ exports[`align top 1`] = `
   >
     <div
       id="align top23456"
-    >
-      <div
-        class="ant-row ant-row-top css-dev-only-do-not-override-1enej14 css-var-root"
-        id="align top-content23456"
-      >
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-10 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-One23456"
-          style="background: rgb(64, 160, 255);"
-        >
-          <div
-            id="One23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-10 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Two23456"
-          style="background: rgb(255, 79, 175);"
-        >
-          <div
-            id="Two23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-      </div>
-    </div>
+    />
   </div>
 </div>
 `;
@@ -223,37 +73,7 @@ exports[`align top wrap behavior 1`] = `
   >
     <div
       id="align top wrap behavior23456"
-    >
-      <div
-        class="ant-row ant-row-top css-dev-only-do-not-override-1enej14 css-var-root"
-        id="align top wrap behavior-content23456"
-      >
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-One23456"
-          style="background: rgb(64, 160, 255);"
-        >
-          <div
-            id="One23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Two23456"
-          style="background: rgb(255, 79, 175);"
-        >
-          <div
-            id="Two23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-      </div>
-    </div>
+    />
   </div>
 </div>
 `;
@@ -266,50 +86,7 @@ exports[`direction column 1`] = `
   >
     <div
       id="direction column23456"
-    >
-      <div
-        class="ant-row css-dev-only-do-not-override-1enej14 css-var-root"
-        id="direction column-content23456"
-        style="flex-direction: column;"
-      >
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-8 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-One23456"
-          style="background: rgb(64, 160, 255);"
-        >
-          <div
-            id="One23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-8 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Two23456"
-          style="background: rgb(255, 79, 175);"
-        >
-          <div
-            id="Two23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-8 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Three23456"
-          style="background: rgb(64, 170, 85);"
-        >
-          <div
-            id="Three23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-      </div>
-    </div>
+    />
   </div>
 </div>
 `;
@@ -322,50 +99,7 @@ exports[`direction column-reverse 1`] = `
   >
     <div
       id="direction column-reverse23456"
-    >
-      <div
-        class="ant-row css-dev-only-do-not-override-1enej14 css-var-root"
-        id="direction column-reverse-content23456"
-        style="flex-direction: column-reverse;"
-      >
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-8 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-One23456"
-          style="background: rgb(64, 160, 255);"
-        >
-          <div
-            id="One23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-8 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Two23456"
-          style="background: rgb(255, 79, 175);"
-        >
-          <div
-            id="Two23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-8 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Three23456"
-          style="background: rgb(64, 170, 85);"
-        >
-          <div
-            id="Three23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-      </div>
-    </div>
+    />
   </div>
 </div>
 `;
@@ -378,50 +112,7 @@ exports[`direction row 1`] = `
   >
     <div
       id="direction row23456"
-    >
-      <div
-        class="ant-row css-dev-only-do-not-override-1enej14 css-var-root"
-        id="direction row-content23456"
-        style="flex-direction: row;"
-      >
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-One23456"
-          style="background: rgb(64, 160, 255);"
-        >
-          <div
-            id="One23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Two23456"
-          style="background: rgb(255, 79, 175);"
-        >
-          <div
-            id="Two23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Three23456"
-          style="background: rgb(64, 170, 85);"
-        >
-          <div
-            id="Three23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-      </div>
-    </div>
+    />
   </div>
 </div>
 `;
@@ -434,50 +125,7 @@ exports[`direction row-reverse 1`] = `
   >
     <div
       id="direction row-reverse23456"
-    >
-      <div
-        class="ant-row css-dev-only-do-not-override-1enej14 css-var-root"
-        id="direction row-reverse-content23456"
-        style="flex-direction: row-reverse;"
-      >
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-One23456"
-          style="background: rgb(64, 160, 255);"
-        >
-          <div
-            id="One23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Two23456"
-          style="background: rgb(255, 79, 175);"
-        >
-          <div
-            id="Two23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Three23456"
-          style="background: rgb(64, 170, 85);"
-        >
-          <div
-            id="Three23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-      </div>
-    </div>
+    />
   </div>
 </div>
 `;
@@ -490,62 +138,7 @@ exports[`gutter as integer 1`] = `
   >
     <div
       id="gutter as integer23456"
-    >
-      <div
-        class="ant-row css-dev-only-do-not-override-1enej14 css-var-root"
-        id="gutter as integer-content23456"
-        style="margin-inline: -15px; row-gap: 30px;"
-      >
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-One23456"
-          style="padding-inline: 15px;"
-        >
-          <div
-            id="One23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Two23456"
-          style="padding-inline: 15px;"
-        >
-          <div
-            id="Two23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-10 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Three23456"
-          style="padding-inline: 15px;"
-        >
-          <div
-            id="Three23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-10 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Four23456"
-          style="padding-inline: 15px;"
-        >
-          <div
-            id="Four23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-      </div>
-    </div>
+    />
   </div>
 </div>
 `;
@@ -558,62 +151,7 @@ exports[`gutter for col and row 1`] = `
   >
     <div
       id="gutter for col and row23456"
-    >
-      <div
-        class="ant-row css-dev-only-do-not-override-1enej14 css-var-root"
-        id="gutter for col and row-content23456"
-        style="margin-inline: -25px; row-gap: 20px;"
-      >
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-One23456"
-          style="padding-inline: 25px; background: rgb(64, 160, 255);"
-        >
-          <div
-            id="One23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Two23456"
-          style="padding-inline: 25px; background: rgb(255, 79, 175);"
-        >
-          <div
-            id="Two23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-10 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Three23456"
-          style="padding-inline: 25px; background: rgb(255, 79, 175);"
-        >
-          <div
-            id="Three23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-10 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Four23456"
-          style="padding-inline: 25px; background: rgb(64, 160, 255);"
-        >
-          <div
-            id="Four23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-      </div>
-    </div>
+    />
   </div>
 </div>
 `;
@@ -626,62 +164,7 @@ exports[`gutter is object 1`] = `
   >
     <div
       id="gutter is object23456"
-    >
-      <div
-        class="ant-row css-dev-only-do-not-override-1enej14 css-var-root"
-        id="gutter is object-content23456"
-        style=""
-      >
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-One23456"
-          style="background: rgb(64, 160, 255);"
-        >
-          <div
-            id="One23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Two23456"
-          style="background: rgb(255, 79, 175);"
-        >
-          <div
-            id="Two23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-10 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Three23456"
-          style="background: rgb(255, 79, 175);"
-        >
-          <div
-            id="Three23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-10 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Four23456"
-          style="background: rgb(64, 160, 255);"
-        >
-          <div
-            id="Four23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-      </div>
-    </div>
+    />
   </div>
 </div>
 `;
@@ -694,49 +177,7 @@ exports[`justify center 1`] = `
   >
     <div
       id="justify center23456"
-    >
-      <div
-        class="ant-row ant-row-center css-dev-only-do-not-override-1enej14 css-var-root"
-        id="justify center-content23456"
-      >
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-One23456"
-          style="background: rgb(64, 160, 255);"
-        >
-          <div
-            id="One23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Two23456"
-          style="background: rgb(255, 79, 175);"
-        >
-          <div
-            id="Two23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Three23456"
-          style="background: rgb(64, 170, 85);"
-        >
-          <div
-            id="Three23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-      </div>
-    </div>
+    />
   </div>
 </div>
 `;
@@ -749,49 +190,7 @@ exports[`justify end 1`] = `
   >
     <div
       id="justify end23456"
-    >
-      <div
-        class="ant-row ant-row-end css-dev-only-do-not-override-1enej14 css-var-root"
-        id="justify end-content23456"
-      >
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-One23456"
-          style="background: rgb(64, 160, 255);"
-        >
-          <div
-            id="One23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Two23456"
-          style="background: rgb(255, 79, 175);"
-        >
-          <div
-            id="Two23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Three23456"
-          style="background: rgb(64, 170, 85);"
-        >
-          <div
-            id="Three23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-      </div>
-    </div>
+    />
   </div>
 </div>
 `;
@@ -804,49 +203,7 @@ exports[`justify space-around 1`] = `
   >
     <div
       id="justify space-around23456"
-    >
-      <div
-        class="ant-row ant-row-space-around css-dev-only-do-not-override-1enej14 css-var-root"
-        id="justify space-around-content23456"
-      >
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-One23456"
-          style="background: rgb(64, 160, 255);"
-        >
-          <div
-            id="One23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Two23456"
-          style="background: rgb(255, 79, 175);"
-        >
-          <div
-            id="Two23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Three23456"
-          style="background: rgb(64, 170, 85);"
-        >
-          <div
-            id="Three23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-      </div>
-    </div>
+    />
   </div>
 </div>
 `;
@@ -859,49 +216,7 @@ exports[`justify space-between 1`] = `
   >
     <div
       id="justify space-between23456"
-    >
-      <div
-        class="ant-row ant-row-space-between css-dev-only-do-not-override-1enej14 css-var-root"
-        id="justify space-between-content23456"
-      >
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-One23456"
-          style="background: rgb(64, 160, 255);"
-        >
-          <div
-            id="One23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Two23456"
-          style="background: rgb(255, 79, 175);"
-        >
-          <div
-            id="Two23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Three23456"
-          style="background: rgb(64, 170, 85);"
-        >
-          <div
-            id="Three23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-      </div>
-    </div>
+    />
   </div>
 </div>
 `;
@@ -914,49 +229,7 @@ exports[`justify start 1`] = `
   >
     <div
       id="justify start23456"
-    >
-      <div
-        class="ant-row ant-row-start css-dev-only-do-not-override-1enej14 css-var-root"
-        id="justify start-content23456"
-      >
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-One23456"
-          style="background: rgb(64, 160, 255);"
-        >
-          <div
-            id="One23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Two23456"
-          style="background: rgb(255, 79, 175);"
-        >
-          <div
-            id="Two23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-4 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Three23456"
-          style="background: rgb(64, 170, 85);"
-        >
-          <div
-            id="Three23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-      </div>
-    </div>
+    />
   </div>
 </div>
 `;
@@ -969,50 +242,7 @@ exports[`overflow hidden 1`] = `
   >
     <div
       id="overflow hidden23456"
-    >
-      <div
-        class="ant-row css-dev-only-do-not-override-1enej14 css-var-root"
-        id="overflow hidden-content23456"
-        style="flex-wrap: nowrap; overflow: hidden;"
-      >
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-One23456"
-          style="background: rgb(64, 160, 255);"
-        >
-          <div
-            id="One23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-8 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Two23456"
-          style="background: rgb(255, 79, 175);"
-        >
-          <div
-            id="Two23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-15 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Three23456"
-          style="background: rgb(64, 170, 85);"
-        >
-          <div
-            id="Three23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-      </div>
-    </div>
+    />
   </div>
 </div>
 `;
@@ -1025,50 +255,7 @@ exports[`overflow scroll 1`] = `
   >
     <div
       id="overflow scroll23456"
-    >
-      <div
-        class="ant-row css-dev-only-do-not-override-1enej14 css-var-root"
-        id="overflow scroll-content23456"
-        style="flex-wrap: nowrap; overflow: scroll;"
-      >
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-One23456"
-          style="background: rgb(64, 160, 255);"
-        >
-          <div
-            id="One23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-8 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Two23456"
-          style="background: rgb(255, 79, 175);"
-        >
-          <div
-            id="Two23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-15 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Three23456"
-          style="background: rgb(64, 170, 85);"
-        >
-          <div
-            id="Three23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-      </div>
-    </div>
+    />
   </div>
 </div>
 `;
@@ -1081,50 +268,7 @@ exports[`overflow visible 1`] = `
   >
     <div
       id="overflow visible23456"
-    >
-      <div
-        class="ant-row css-dev-only-do-not-override-1enej14 css-var-root"
-        id="overflow visible-content23456"
-        style="flex-wrap: nowrap; overflow: visible;"
-      >
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-One23456"
-          style="background: rgb(64, 160, 255);"
-        >
-          <div
-            id="One23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-8 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Two23456"
-          style="background: rgb(255, 79, 175);"
-        >
-          <div
-            id="Two23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-15 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Three23456"
-          style="background: rgb(64, 170, 85);"
-        >
-          <div
-            id="Three23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-      </div>
-    </div>
+    />
   </div>
 </div>
 `;
@@ -1137,50 +281,7 @@ exports[`wrap nowrap 1`] = `
   >
     <div
       id="wrap nowrap23456"
-    >
-      <div
-        class="ant-row css-dev-only-do-not-override-1enej14 css-var-root"
-        id="wrap nowrap-content23456"
-        style="flex-wrap: nowrap;"
-      >
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-10 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-One23456"
-          style="background: rgb(64, 160, 255);"
-        >
-          <div
-            id="One23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-10 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Two23456"
-          style="background: rgb(255, 79, 175);"
-        >
-          <div
-            id="Two23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-10 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Three23456"
-          style="background: rgb(64, 170, 85);"
-        >
-          <div
-            id="Three23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-      </div>
-    </div>
+    />
   </div>
 </div>
 `;
@@ -1193,50 +294,7 @@ exports[`wrap wrap-reverse 1`] = `
   >
     <div
       id="wrap wrap-reverse23456"
-    >
-      <div
-        class="ant-row css-dev-only-do-not-override-1enej14 css-var-root"
-        id="wrap wrap-reverse-content23456"
-        style="flex-wrap: wrap-reverse;"
-      >
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-One23456"
-          style="background: rgb(64, 160, 255);"
-        >
-          <div
-            id="One23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-8 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Two23456"
-          style="background: rgb(255, 79, 175);"
-        >
-          <div
-            id="Two23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-15 css-dev-only-do-not-override-1enej14 css-var-root"
-          id="bl-Three23456"
-          style="background: rgb(64, 170, 85);"
-        >
-          <div
-            id="Three23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-      </div>
-    </div>
+    />
   </div>
 </div>
 `;

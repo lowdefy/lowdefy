@@ -57,10 +57,10 @@ test('normalizeClassAndStyles moves style to styles.block', () => {
     ],
   };
   const res = buildPages({ components, context });
-  expect(get(res, 'pages.0.areas.content.blocks.0.styles')).toEqual({
+  expect(get(res, 'pages.0.slots.content.blocks.0.styles')).toEqual({
     block: { marginTop: 20 },
   });
-  expect(get(res, 'pages.0.areas.content.blocks.0.style')).toBeUndefined();
+  expect(get(res, 'pages.0.slots.content.blocks.0.style')).toBeUndefined();
 });
 
 test('normalizeClassAndStyles converts class string to object', () => {
@@ -81,7 +81,7 @@ test('normalizeClassAndStyles converts class string to object', () => {
     ],
   };
   const res = buildPages({ components, context });
-  expect(get(res, 'pages.0.areas.content.blocks.0.class')).toEqual({
+  expect(get(res, 'pages.0.slots.content.blocks.0.class')).toEqual({
     block: 'shadow-lg',
   });
 });
@@ -104,7 +104,7 @@ test('normalizeClassAndStyles converts class array to object', () => {
     ],
   };
   const res = buildPages({ components, context });
-  expect(get(res, 'pages.0.areas.content.blocks.0.class')).toEqual({
+  expect(get(res, 'pages.0.slots.content.blocks.0.class')).toEqual({
     block: ['shadow-lg', 'p-4'],
   });
 });
@@ -127,7 +127,7 @@ test('normalizeClassAndStyles keeps class object unchanged', () => {
     ],
   };
   const res = buildPages({ components, context });
-  expect(get(res, 'pages.0.areas.content.blocks.0.class')).toEqual({
+  expect(get(res, 'pages.0.slots.content.blocks.0.class')).toEqual({
     block: 'a',
     header: 'b',
   });
@@ -154,11 +154,11 @@ test('normalizeClassAndStyles moves properties.style to styles.element', () => {
     ],
   };
   const res = buildPages({ components, context });
-  expect(get(res, 'pages.0.areas.content.blocks.0.styles')).toEqual({
+  expect(get(res, 'pages.0.slots.content.blocks.0.styles')).toEqual({
     element: { color: 'red' },
   });
-  expect(get(res, 'pages.0.areas.content.blocks.0.properties.style')).toBeUndefined();
-  expect(get(res, 'pages.0.areas.content.blocks.0.properties.title')).toEqual('Test');
+  expect(get(res, 'pages.0.slots.content.blocks.0.properties.style')).toBeUndefined();
+  expect(get(res, 'pages.0.slots.content.blocks.0.properties.title')).toEqual('Test');
 });
 
 test('normalizeClassAndStyles merges style and styles.block with styles.block overriding', () => {
@@ -180,10 +180,10 @@ test('normalizeClassAndStyles merges style and styles.block with styles.block ov
     ],
   };
   const res = buildPages({ components, context });
-  expect(get(res, 'pages.0.areas.content.blocks.0.styles')).toEqual({
+  expect(get(res, 'pages.0.slots.content.blocks.0.styles')).toEqual({
     block: { marginTop: 20, padding: 5, color: 'blue' },
   });
-  expect(get(res, 'pages.0.areas.content.blocks.0.style')).toBeUndefined();
+  expect(get(res, 'pages.0.slots.content.blocks.0.style')).toBeUndefined();
 });
 
 test('normalizeClassAndStyles merges properties.style and styles.element with styles.element overriding', () => {
@@ -207,10 +207,10 @@ test('normalizeClassAndStyles merges properties.style and styles.element with st
     ],
   };
   const res = buildPages({ components, context });
-  expect(get(res, 'pages.0.areas.content.blocks.0.styles')).toEqual({
+  expect(get(res, 'pages.0.slots.content.blocks.0.styles')).toEqual({
     element: { color: 'red', fontSize: 16, fontWeight: 'bold' },
   });
-  expect(get(res, 'pages.0.areas.content.blocks.0.properties.style')).toBeUndefined();
+  expect(get(res, 'pages.0.slots.content.blocks.0.properties.style')).toBeUndefined();
 });
 
 test('normalizeClassAndStyles throws ConfigError for responsive breakpoint keys in style', () => {
@@ -253,9 +253,9 @@ test('normalizeClassAndStyles does not modify block without style, class, or sty
     ],
   };
   const res = buildPages({ components, context });
-  expect(get(res, 'pages.0.areas.content.blocks.0.styles')).toBeUndefined();
-  expect(get(res, 'pages.0.areas.content.blocks.0.class')).toBeUndefined();
-  expect(get(res, 'pages.0.areas.content.blocks.0.style')).toBeUndefined();
+  expect(get(res, 'pages.0.slots.content.blocks.0.styles')).toBeUndefined();
+  expect(get(res, 'pages.0.slots.content.blocks.0.class')).toBeUndefined();
+  expect(get(res, 'pages.0.slots.content.blocks.0.style')).toBeUndefined();
 });
 
 test('normalizeClassAndStyles preserves operator objects in style (not treated as breakpoints)', () => {
@@ -276,7 +276,7 @@ test('normalizeClassAndStyles preserves operator objects in style (not treated a
     ],
   };
   const res = buildPages({ components, context });
-  expect(get(res, 'pages.0.areas.content.blocks.0.styles')).toEqual({
+  expect(get(res, 'pages.0.slots.content.blocks.0.styles')).toEqual({
     block: { _if: { test: true, then: { marginTop: 20 }, else: { marginTop: 0 } } },
   });
 });
@@ -302,10 +302,10 @@ test('normalizeClassAndStyles handles both style and properties.style together',
     ],
   };
   const res = buildPages({ components, context });
-  expect(get(res, 'pages.0.areas.content.blocks.0.styles')).toEqual({
+  expect(get(res, 'pages.0.slots.content.blocks.0.styles')).toEqual({
     block: { marginTop: 20 },
     element: { color: 'red' },
   });
-  expect(get(res, 'pages.0.areas.content.blocks.0.style')).toBeUndefined();
-  expect(get(res, 'pages.0.areas.content.blocks.0.properties.style')).toBeUndefined();
+  expect(get(res, 'pages.0.slots.content.blocks.0.style')).toBeUndefined();
+  expect(get(res, 'pages.0.slots.content.blocks.0.properties.style')).toBeUndefined();
 });

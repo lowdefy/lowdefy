@@ -19,8 +19,9 @@ import buildRequests from './buildRequests.js';
 import buildSubBlocks from './buildSubBlocks.js';
 import countBlockOperators from './countBlockOperators.js';
 import countBlockTypes from './countBlockTypes.js';
-import moveSubBlocksToArea from './moveSubBlocksToArea.js';
-import moveSkeletonBlocksToArea from './moveSkeletonBlocksToArea.js';
+import moveAreasToSlots from './moveAreasToSlots.js';
+import moveSubBlocksToSlot from './moveSubBlocksToSlot.js';
+import moveSkeletonBlocksToSlot from './moveSkeletonBlocksToSlot.js';
 import normalizeClassAndStyles from './normalizeClassAndStyles.js';
 import setBlockId from './setBlockId.js';
 import validateBlock from './validateBlock.js';
@@ -29,13 +30,14 @@ import validateCssKeys from './validateCssKeys.js';
 function buildBlock(block, pageContext) {
   validateBlock(block, pageContext);
   setBlockId(block, pageContext);
+  moveAreasToSlots(block, pageContext);
   countBlockOperators(block, pageContext);
   buildEvents(block, pageContext);
   buildRequests(block, pageContext);
   normalizeClassAndStyles(block, pageContext);
   validateCssKeys(block, pageContext);
-  moveSubBlocksToArea(block, pageContext);
-  moveSkeletonBlocksToArea(block, pageContext);
+  moveSubBlocksToSlot(block, pageContext);
+  moveSkeletonBlocksToSlot(block, pageContext);
   countBlockTypes(block, pageContext);
   buildSubBlocks(block, pageContext);
 }

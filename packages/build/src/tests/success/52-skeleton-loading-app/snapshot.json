@@ -1016,7 +1016,7 @@
       "subTitle": "Sorry, the page you are visiting does not exist.",
       "~k": "15"
     },
-    "areas": {
+    "slots": {
       "extra": {
         "blocks": {
           "~arr": [
@@ -1093,7 +1093,7 @@
     },
     "pageId": "home",
     "blockId": "home",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -1144,7 +1144,7 @@
               },
               "~k": "e",
               "blockId": "loadingCard",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -1171,7 +1171,7 @@
               "type": "Box",
               "~k": "l",
               "blockId": "avatarSkeleton",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -1215,7 +1215,7 @@
               "type": "Box",
               "~k": "t",
               "blockId": "buttonSkeleton",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [

@@ -1283,7 +1283,7 @@
       "subTitle": "Sorry, the page you are visiting does not exist.",
       "~k": "20"
     },
-    "areas": {
+    "slots": {
       "extra": {
         "blocks": {
           "~arr": [
@@ -1360,7 +1360,7 @@
     },
     "pageId": "dashboard",
     "blockId": "dashboard",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -1376,7 +1376,7 @@
                 },
                 "~k": "2j"
               },
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -1413,7 +1413,7 @@
               "type": "Box",
               "~k": "r",
               "blockId": "metrics",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -1430,7 +1430,7 @@
                         },
                         "~k": "t",
                         "blockId": "{{ id }}_metric",
-                        "areas": {
+                        "slots": {
                           "content": {
                             "blocks": {
                               "~arr": [
@@ -1465,7 +1465,7 @@
                         },
                         "~k": "z",
                         "blockId": "{{ id }}_metric",
-                        "areas": {
+                        "slots": {
                           "content": {
                             "blocks": {
                               "~arr": [
@@ -1509,7 +1509,7 @@
                 },
                 "~k": "2s"
               },
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -1557,7 +1557,7 @@
     },
     "pageId": "settings",
     "blockId": "settings",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -1573,7 +1573,7 @@
                 },
                 "~k": "30"
               },
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -1614,7 +1614,7 @@
               },
               "~k": "1k",
               "blockId": "settingsForm",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -1660,7 +1660,7 @@
                 },
                 "~k": "35"
               },
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [

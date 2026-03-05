@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import Area from './Area.js';
+import Slot from './Slot.js';
 import BlockLayout from './BlockLayout.js';
 
-export { Area, BlockLayout };
+export { Slot, BlockLayout };

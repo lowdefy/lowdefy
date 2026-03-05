@@ -175,14 +175,6 @@ exports[`4 block grid 1`] = `
 `;
 
 exports[`4 block grid with gutter 1`] = `
-.emotion-6 {
-  background: #269;
-  border: 2px solid #00aaee;
-  text-align: center;
-  font-size: 12px;
-  color: #fff;
-}
-
 <div>
   <div
     class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 emotion-0 emotion-1"
@@ -190,75 +182,12 @@ exports[`4 block grid with gutter 1`] = `
   >
     <div
       id="4 block grid with gutter23456"
-    >
-      <div
-        class="ant-row emotion-0 emotion-1"
-        id="4 block grid with gutter-content23456"
-        style="margin-inline: -25px; row-gap: 50px;"
-      >
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 emotion-0 emotion-1"
-          id="bl-tile_one23456"
-          style="padding-inline: 25px;"
-        >
-          <div
-            class="emotion-6"
-            id="tile_one23456"
-          >
-            tile_one23456
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 emotion-0 emotion-1"
-          id="bl-tile_two23456"
-          style="padding-inline: 25px;"
-        >
-          <div
-            class="emotion-6"
-            id="tile_two23456"
-          >
-            tile_two23456
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 emotion-0 emotion-1"
-          id="bl-tile_three23456"
-          style="padding-inline: 25px;"
-        >
-          <div
-            class="emotion-6"
-            id="tile_three23456"
-          >
-            tile_three23456
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 emotion-0 emotion-1"
-          id="bl-tile_four23456"
-          style="padding-inline: 25px;"
-        >
-          <div
-            class="emotion-6"
-            id="tile_four23456"
-          >
-            tile_four23456
-          </div>
-        </div>
-      </div>
-    </div>
+    />
   </div>
 </div>
 `;
 
 exports[`4 block grid with various heights 1`] = `
-.emotion-6 {
-  background: #269;
-  border: 2px solid #00aaee;
-  text-align: center;
-  font-size: 12px;
-  color: #fff;
-}
-
 <div>
   <div
     class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 emotion-0 emotion-1"
@@ -266,61 +195,7 @@ exports[`4 block grid with various heights 1`] = `
   >
     <div
       id="4 block grid with various heights23456"
-    >
-      <div
-        class="ant-row emotion-0 emotion-1"
-        id="4 block grid with various heights-content23456"
-      >
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 emotion-0 emotion-1"
-          id="bl-tile_one23456"
-          style="height: 50px;"
-        >
-          <div
-            class="emotion-6"
-            id="tile_one23456"
-          >
-            tile_one23456
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 emotion-0 emotion-1"
-          id="bl-tile_two23456"
-          style="height: 40px;"
-        >
-          <div
-            class="emotion-6"
-            id="tile_two23456"
-          >
-            tile_two23456
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 emotion-0 emotion-1"
-          id="bl-tile_three23456"
-          style="height: 20px;"
-        >
-          <div
-            class="emotion-6"
-            id="tile_three23456"
-          >
-            tile_three23456
-          </div>
-        </div>
-        <div
-          class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 emotion-0 emotion-1"
-          id="bl-tile_four23456"
-          style="height: 30px;"
-        >
-          <div
-            class="emotion-6"
-            id="tile_four23456"
-          >
-            tile_four23456
-          </div>
-        </div>
-      </div>
-    </div>
+    />
   </div>
 </div>
 `;

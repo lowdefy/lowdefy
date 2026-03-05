@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import layoutParamsToArea from './layoutParamsToArea.js';
+import layoutParamsToSlot from './layoutParamsToSlot.js';
 
-test('empty area and layout', () => {
+test('empty slot and layout', () => {
   const layout = {};
-  const area = {};
-  const areaKey = 'content';
-  expect(layoutParamsToArea({ areaKey, area, layout })).toEqual(area);
+  const slot = {};
+  const slotKey = 'content';
+  expect(layoutParamsToSlot({ slotKey, slot, layout })).toEqual(slot);
 });
 
 test('layout fields', () => {
@@ -32,9 +32,9 @@ test('layout fields', () => {
     contentOverflow: 5,
     contentGutter: 6,
   };
-  const area = {};
-  const areaKey = 'content';
-  expect(layoutParamsToArea({ areaKey, area, layout })).toEqual({
+  const slot = {};
+  const slotKey = 'content';
+  expect(layoutParamsToSlot({ slotKey, slot, layout })).toEqual({
     align: 1,
     justify: 2,
     direction: 3,
@@ -44,9 +44,9 @@ test('layout fields', () => {
   });
 });
 
-test('area fields', () => {
+test('slot fields', () => {
   const layout = {};
-  const area = {
+  const slot = {
     align: 1,
     justify: 2,
     direction: 3,
@@ -54,36 +54,8 @@ test('area fields', () => {
     overflow: 5,
     gutter: 6,
   };
-  const areaKey = 'content';
-  expect(layoutParamsToArea({ areaKey, area, layout })).toEqual({
-    align: 1,
-    justify: 2,
-    direction: 3,
-    wrap: 4,
-    overflow: 5,
-    gutter: 6,
-  });
-});
-
-test('area and layout', () => {
-  const layout = {
-    contentAlign: 11,
-    contentJustify: 22,
-    contentDirection: 33,
-    contentWrap: 44,
-    contentOverflow: 55,
-    contentGutter: 66,
-  };
-  const area = {
-    align: 1,
-    justify: 2,
-    direction: 3,
-    wrap: 4,
-    overflow: 5,
-    gutter: 6,
-  };
-  const areaKey = 'content';
-  expect(layoutParamsToArea({ areaKey, area, layout })).toEqual({
+  const slotKey = 'content';
+  expect(layoutParamsToSlot({ slotKey, slot, layout })).toEqual({
     align: 1,
     justify: 2,
     direction: 3,
@@ -93,7 +65,7 @@ test('area and layout', () => {
   });
 });
 
-test('some area and layout', () => {
+test('slot and layout', () => {
   const layout = {
     contentAlign: 11,
     contentJustify: 22,
@@ -102,13 +74,41 @@ test('some area and layout', () => {
     contentOverflow: 55,
     contentGutter: 66,
   };
-  const area = {
+  const slot = {
+    align: 1,
+    justify: 2,
+    direction: 3,
+    wrap: 4,
+    overflow: 5,
+    gutter: 6,
+  };
+  const slotKey = 'content';
+  expect(layoutParamsToSlot({ slotKey, slot, layout })).toEqual({
+    align: 1,
+    justify: 2,
+    direction: 3,
+    wrap: 4,
+    overflow: 5,
+    gutter: 6,
+  });
+});
+
+test('some slot and layout', () => {
+  const layout = {
+    contentAlign: 11,
+    contentJustify: 22,
+    contentDirection: 33,
+    contentWrap: 44,
+    contentOverflow: 55,
+    contentGutter: 66,
+  };
+  const slot = {
     align: 1,
     justify: 2,
     direction: 3,
   };
-  const areaKey = 'content';
-  expect(layoutParamsToArea({ areaKey, area, layout })).toEqual({
+  const slotKey = 'content';
+  expect(layoutParamsToSlot({ slotKey, slot, layout })).toEqual({
     align: 1,
     justify: 2,
     direction: 3,
@@ -118,7 +118,7 @@ test('some area and layout', () => {
   });
 });
 
-test('some area and layout with 0', () => {
+test('some slot and layout with 0', () => {
   const layout = {
     contentAlign: 11,
     contentJustify: 22,
@@ -127,7 +127,7 @@ test('some area and layout with 0', () => {
     contentOverflow: 55,
     contentGutter: 66,
   };
-  const area = {
+  const slot = {
     align: 0,
     justify: 0,
     direction: 0,
@@ -135,8 +135,8 @@ test('some area and layout with 0', () => {
     overflow: 0,
     gutter: 0,
   };
-  const areaKey = 'content';
-  expect(layoutParamsToArea({ areaKey, area, layout })).toEqual({
+  const slotKey = 'content';
+  expect(layoutParamsToSlot({ slotKey, slot, layout })).toEqual({
     align: 0,
     justify: 0,
     direction: 0,
@@ -146,7 +146,7 @@ test('some area and layout with 0', () => {
   });
 });
 
-test('area and layout not content', () => {
+test('slot and layout not content', () => {
   const layout = {
     contentAlign: 11,
     contentJustify: 22,
@@ -155,11 +155,11 @@ test('area and layout not content', () => {
     contentOverflow: 55,
     contentGutter: 66,
   };
-  const area = {
+  const slot = {
     align: 1,
   };
-  const areaKey = 'none';
-  expect(layoutParamsToArea({ areaKey, area, layout })).toEqual({
+  const slotKey = 'none';
+  expect(layoutParamsToSlot({ slotKey, slot, layout })).toEqual({
     align: 1,
   });
 });

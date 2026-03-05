@@ -1444,7 +1444,7 @@
       "subTitle": "Sorry, the page you are visiting does not exist.",
       "~k": "22"
     },
-    "areas": {
+    "slots": {
       "extra": {
         "blocks": {
           "~arr": [
@@ -1521,7 +1521,7 @@
     },
     "pageId": "page-001",
     "blockId": "page-001",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -1561,7 +1561,7 @@
     },
     "pageId": "page-002",
     "blockId": "page-002",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -1601,7 +1601,7 @@
     },
     "pageId": "page-003",
     "blockId": "page-003",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -1641,7 +1641,7 @@
     },
     "pageId": "page-004",
     "blockId": "page-004",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -1681,7 +1681,7 @@
     },
     "pageId": "page-005",
     "blockId": "page-005",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -1721,7 +1721,7 @@
     },
     "pageId": "page-006",
     "blockId": "page-006",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -1761,7 +1761,7 @@
     },
     "pageId": "page-007",
     "blockId": "page-007",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -1801,7 +1801,7 @@
     },
     "pageId": "page-008",
     "blockId": "page-008",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [

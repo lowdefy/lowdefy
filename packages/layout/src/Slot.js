@@ -18,22 +18,22 @@ import React from 'react';
 import { Row } from 'antd';
 
 import gutterSetup from './gutterSetup.js';
-import layoutParamsToArea from './layoutParamsToArea.js';
+import layoutParamsToSlot from './layoutParamsToSlot.js';
 
-const Area = ({ area = {}, areaKey, areaStyle, areaClassName, children, id, layout }) => {
-  const derivedArea = layoutParamsToArea({ area, areaKey, layout });
+const Slot = ({ slot = {}, slotKey, slotStyle, slotClassName, children, id, layout }) => {
+  const derivedSlot = layoutParamsToSlot({ slot, slotKey, layout });
   return (
     <Row
       id={id}
-      align={derivedArea.align}
-      className={areaClassName}
-      gutter={gutterSetup(derivedArea.gutter)}
-      justify={derivedArea.justify}
+      align={derivedSlot.align}
+      className={slotClassName}
+      gutter={gutterSetup(derivedSlot.gutter)}
+      justify={derivedSlot.justify}
       style={{
-        flexDirection: derivedArea.direction,
-        flexWrap: derivedArea.wrap,
-        overflow: derivedArea.overflow,
-        ...areaStyle,
+        flexDirection: derivedSlot.direction,
+        flexWrap: derivedSlot.wrap,
+        overflow: derivedSlot.overflow,
+        ...slotStyle,
       }}
     >
       {children}
@@ -41,4 +41,4 @@ const Area = ({ area = {}, areaKey, areaStyle, areaClassName, children, id, layo
   );
 };
 
-export default Area;
+export default Slot;

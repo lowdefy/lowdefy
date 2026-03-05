@@ -1384,7 +1384,7 @@
       "subTitle": "Sorry, the page you are visiting does not exist.",
       "~k": "2p"
     },
-    "areas": {
+    "slots": {
       "extra": {
         "blocks": {
           "~arr": [
@@ -1485,7 +1485,7 @@
     },
     "pageId": "wizard",
     "blockId": "wizard",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -1542,7 +1542,7 @@
               },
               "~k": "j",
               "blockId": "step1",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -1638,7 +1638,7 @@
               },
               "~k": "10",
               "blockId": "step2",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -1767,7 +1767,7 @@
               },
               "~k": "1n",
               "blockId": "step3",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [

@@ -20,18 +20,18 @@ import { ConfigError } from '@lowdefy/errors';
 import buildBlock from './buildBlock.js';
 
 function buildSubBlocks(block, pageContext) {
-  if (type.isObject(block.areas)) {
-    Object.keys(block.areas).forEach((key) => {
-      if (type.isNone(block.areas[key].blocks)) {
-        block.areas[key].blocks = [];
+  if (type.isObject(block.slots)) {
+    Object.keys(block.slots).forEach((key) => {
+      if (type.isNone(block.slots[key].blocks)) {
+        block.slots[key].blocks = [];
       }
-      if (!type.isArray(block.areas[key].blocks)) {
+      if (!type.isArray(block.slots[key].blocks)) {
         throw new ConfigError(
-          `Expected blocks to be an array at ${block.blockId} in area ${key} on page ${pageContext.pageId}.`,
-          { received: block.areas[key].blocks, configKey: block.areas[key]['~k'] ?? block['~k'] }
+          `Expected blocks to be an array at ${block.blockId} in slot ${key} on page ${pageContext.pageId}.`,
+          { received: block.slots[key].blocks, configKey: block.slots[key]['~k'] ?? block['~k'] }
         );
       }
-      block.areas[key].blocks.map((blk) => buildBlock(blk, pageContext));
+      block.slots[key].blocks.map((blk) => buildBlock(blk, pageContext));
     });
   }
 }

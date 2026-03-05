@@ -1215,7 +1215,7 @@
       "subTitle": "Sorry, the page you are visiting does not exist.",
       "~k": "20"
     },
-    "areas": {
+    "slots": {
       "extra": {
         "blocks": {
           "~arr": [
@@ -1292,7 +1292,7 @@
     },
     "pageId": "home",
     "blockId": "home",
-    "areas": {
+    "slots": {
       "content": {
         "blocks": {
           "~arr": [
@@ -1311,7 +1311,7 @@
               "type": "Box",
               "~k": "a",
               "blockId": "responsiveRow",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -1332,7 +1332,7 @@
                         },
                         "~k": "c",
                         "blockId": "card1",
-                        "areas": {
+                        "slots": {
                           "content": {
                             "blocks": {
                               "~arr": [
@@ -1371,7 +1371,7 @@
                         },
                         "~k": "i",
                         "blockId": "card2",
-                        "areas": {
+                        "slots": {
                           "content": {
                             "blocks": {
                               "~arr": [
@@ -1410,7 +1410,7 @@
                         },
                         "~k": "o",
                         "blockId": "card3",
-                        "areas": {
+                        "slots": {
                           "content": {
                             "blocks": {
                               "~arr": [
@@ -1449,7 +1449,7 @@
                         },
                         "~k": "u",
                         "blockId": "card4",
-                        "areas": {
+                        "slots": {
                           "content": {
                             "blocks": {
                               "~arr": [
@@ -1488,7 +1488,7 @@
               },
               "~k": "10",
               "blockId": "gutterDemo",
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
@@ -1505,7 +1505,7 @@
                         },
                         "~k": "13",
                         "blockId": "gutterCard1",
-                        "areas": {
+                        "slots": {
                           "content": {
                             "blocks": {
                               "~arr": [
@@ -1540,7 +1540,7 @@
                         },
                         "~k": "19",
                         "blockId": "gutterCard2",
-                        "areas": {
+                        "slots": {
                           "content": {
                             "blocks": {
                               "~arr": [
@@ -1575,7 +1575,7 @@
                         },
                         "~k": "1f",
                         "blockId": "gutterCard3",
-                        "areas": {
+                        "slots": {
                           "content": {
                             "blocks": {
                               "~arr": [
@@ -1627,7 +1627,7 @@
                 },
                 "~k": "32"
               },
-              "areas": {
+              "slots": {
                 "content": {
                   "blocks": {
                     "~arr": [
