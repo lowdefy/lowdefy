@@ -30,7 +30,7 @@ exports[`objects with media 1`] = `
   a: a;
 }
 
-@media screen and (min-width: 576px) {
+@media screen and (min-width: 640px) {
   .emotion-0 {
     a: sm;
     c: 1px;
@@ -43,13 +43,13 @@ exports[`objects with media 1`] = `
   }
 }
 
-@media screen and (min-width: 992px) {
+@media screen and (min-width: 1024px) {
   .emotion-0 {
     a: lg;
   }
 }
 
-@media screen and (min-width: 1200px) {
+@media screen and (min-width: 1280px) {
   .emotion-0 {
     a: xl;
   }
@@ -66,7 +66,7 @@ exports[`objects with media 2`] = `
   a: x;
 }
 
-@media screen and (min-width: 576px) {
+@media screen and (min-width: 640px) {
   .emotion-0 {
     a: sm;
     c: 1px;
@@ -79,19 +79,19 @@ exports[`objects with media 2`] = `
   }
 }
 
-@media screen and (min-width: 992px) {
+@media screen and (min-width: 1024px) {
   .emotion-0 {
     a: lg;
   }
 }
 
-@media screen and (min-width: 1200px) {
+@media screen and (min-width: 1280px) {
   .emotion-0 {
     a: xl;
   }
 }
 
-@media screen and (min-width: 576px) {
+@media screen and (min-width: 640px) {
   .emotion-0 {
     a: smsm;
   }
@@ -103,7 +103,7 @@ exports[`objects with media 2`] = `
   }
 }
 
-@media screen and (min-width: 992px) {
+@media screen and (min-width: 1024px) {
   .emotion-0 {
     a: lg;
   }
@@ -113,7 +113,7 @@ exports[`objects with media 2`] = `
   }
 }
 
-@media screen and (min-width: 1200px) {
+@media screen and (min-width: 1280px) {
   .emotion-0 {
     a: xl;
   }
@@ -126,18 +126,18 @@ exports[`objects with media 2`] = `
 
 exports[`objects with media, styleObjectOnly 1`] = `
 Object {
-  "@media screen and (minWidth: 1200px)": Object {
+  "@media screen and (minWidth: 1024px)": Object {
+    "a": "lg",
+  },
+  "@media screen and (minWidth: 1280px)": Object {
     "a": "xl",
   },
-  "@media screen and (minWidth: 576px)": Object {
+  "@media screen and (minWidth: 640px)": Object {
     "a": "sm",
     "c": 1,
   },
   "@media screen and (minWidth: 768px)": Object {
     "a": "md",
-  },
-  "@media screen and (minWidth: 992px)": Object {
-    "a": "lg",
   },
   "a": "a",
 }
@@ -145,23 +145,23 @@ Object {
 
 exports[`objects with media, styleObjectOnly 2`] = `
 Object {
-  "@media screen and (minWidth: 1200px)": Object {
-    "a": "xl",
-  },
-  "@media screen and (minWidth: 576px)": Object {
-    "a": "smsm",
-    "c": 1,
-  },
-  "@media screen and (minWidth: 768px)": Object {
-    "a": "md",
-  },
-  "@media screen and (minWidth: 992px)": Object {
+  "@media screen and (minWidth: 1024px)": Object {
     "a": "lg",
     "c": Object {
       "sm": Object {
         "a": "1",
       },
     },
+  },
+  "@media screen and (minWidth: 1280px)": Object {
+    "a": "xl",
+  },
+  "@media screen and (minWidth: 640px)": Object {
+    "a": "smsm",
+    "c": 1,
+  },
+  "@media screen and (minWidth: 768px)": Object {
+    "a": "md",
   },
   "a": "x",
 }
