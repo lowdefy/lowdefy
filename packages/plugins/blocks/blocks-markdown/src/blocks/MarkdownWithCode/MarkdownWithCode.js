@@ -21,7 +21,7 @@ import ReactMarkdown from 'react-markdown';
 
 import gfm from 'remark-gfm';
 
-import '../codeblock.css';
+import '../../codeblock.css';
 
 // See https://github.com/react-syntax-highlighter/react-syntax-highlighter/issues/393 for esm issue.
 import { github } from 'react-syntax-highlighter/dist/cjs/styles/hljs/index.js';

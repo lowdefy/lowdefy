@@ -20,8 +20,8 @@ import ReactMarkdown from 'react-markdown';
 
 import gfm from 'remark-gfm';
 
-import '../style.css';
-import '../codeblock.css';
+import '../../style.css';
+import '../../codeblock.css';
 
 const Markdown = ({ blockId, classNames, properties, styles }) => (
   <div id={blockId} className={classNames?.element} style={styles?.element}>
