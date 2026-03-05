@@ -43,7 +43,7 @@
   "dependencies": {
     "@lowdefy/block-utils": "4.5.2",
     "@lowdefy/helpers": "4.5.2",
-    "antd": "4.24.14",
+    "antd": "^6.3.0",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
