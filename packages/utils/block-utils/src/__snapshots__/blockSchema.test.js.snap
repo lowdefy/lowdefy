@@ -26,6 +26,19 @@ Object {
       },
       "type": "array",
     },
+    "class": Object {
+      "oneOf": Array [
+        Object {
+          "type": "string",
+        },
+        Object {
+          "additionalProperties": Object {
+            "type": "string",
+          },
+          "type": "object",
+        },
+      ],
+    },
     "events": Object {
       "type": "object",
     },
@@ -222,6 +235,12 @@ Object {
       ],
     },
     "style": Object {
+      "type": "object",
+    },
+    "styles": Object {
+      "additionalProperties": Object {
+        "type": "object",
+      },
       "type": "object",
     },
     "type": Object {

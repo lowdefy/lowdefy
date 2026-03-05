@@ -17,14 +17,15 @@
 import React from 'react';
 import { blockDefaultProps, HtmlComponent } from '@lowdefy/block-utils';
 
-const HtmlBlock = ({ blockId, events, properties, methods }) => (
+const HtmlBlock = ({ blockId, classNames, events, properties, methods, styles }) => (
   <HtmlComponent
     div={true}
     events={events}
     html={properties.html}
     id={blockId}
     methods={methods}
-    style={properties.style}
+    className={classNames?.element}
+    style={styles?.element}
   />
 );
 

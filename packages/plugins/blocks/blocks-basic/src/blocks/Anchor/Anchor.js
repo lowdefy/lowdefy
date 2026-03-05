@@ -18,16 +18,25 @@ import React from 'react';
 import { get } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
-const AnchorBlock = ({ blockId, events, components: { Icon, Link }, methods, properties }) => {
+const AnchorBlock = ({
+  blockId,
+  classNames,
+  events,
+  components: { Icon, Link },
+  methods,
+  properties,
+  styles,
+}) => {
   const disabled = properties.disabled || get(events, 'onClick.loading');
   const { icon, title, ...linkProperties } = properties;
   return (
     <Link
       id={blockId}
-      className={methods.makeCssClass([
-        properties.style,
-        disabled && { color: '#BEBEBE', cursor: 'not-allowed' },
-      ])}
+      className={classNames?.element}
+      style={{
+        ...(disabled ? { color: '#BEBEBE', cursor: 'not-allowed' } : {}),
+        ...styles?.element,
+      }}
       disabled={disabled}
       onClick={() => methods.triggerEvent({ name: 'onClick' })}
       {...linkProperties}

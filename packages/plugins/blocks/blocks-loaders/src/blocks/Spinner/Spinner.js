@@ -20,7 +20,7 @@ import { blockDefaultProps } from '@lowdefy/block-utils';
 
 import './style.css';
 
-const Spinner = ({ properties, methods }) => {
+const Spinner = ({ classNames, properties, styles }) => {
   let size = properties.size ?? 20;
   if (type.isString(size)) {
     switch (properties.size) {
@@ -36,15 +36,14 @@ const Spinner = ({ properties, methods }) => {
   }
   return (
     <span
-      className={methods.makeCssClass([
-        {
-          height: size,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        },
-        properties.style,
-      ])}
+      className={classNames?.element}
+      style={{
+        height: size,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        ...styles?.element,
+      }}
     >
       <svg
         viewBox="0 0 1024 1024"

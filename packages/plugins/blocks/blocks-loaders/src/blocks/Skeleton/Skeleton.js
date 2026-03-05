@@ -19,11 +19,15 @@ import { blockDefaultProps } from '@lowdefy/block-utils';
 
 import './style.css';
 
-const Skeleton = ({ properties, methods }) => {
+const Skeleton = ({ classNames, properties, styles }) => {
   return (
     <div
-      className={'skeleton ' + methods.makeCssClass(properties.style)}
-      style={{ width: properties.width ?? '100%', height: properties.height ?? '100%' }}
+      className={'skeleton' + (classNames?.element ? ' ' + classNames.element : '')}
+      style={{
+        width: properties.width ?? '100%',
+        height: properties.height ?? '100%',
+        ...styles?.element,
+      }}
     />
   );
 };

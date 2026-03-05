@@ -68,8 +68,8 @@ const components = {
     );
   },
 };
-const MarkdownWithCode = ({ blockId, properties, methods }) => (
-  <div id={blockId} className={methods.makeCssClass(properties.style)}>
+const MarkdownWithCode = ({ blockId, classNames, properties, styles }) => (
+  <div id={blockId} className={classNames?.element} style={styles?.element}>
     <ReactMarkdown
       className="markdown-body"
       skipHtml={properties.skipHtml}

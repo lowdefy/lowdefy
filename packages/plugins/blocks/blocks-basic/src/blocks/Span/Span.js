@@ -17,15 +17,13 @@
 import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
-const Span = ({ blockId, content, events, methods, properties }) => (
+const Span = ({ blockId, classNames, content, events, methods, properties, styles }) => (
   <span
     id={blockId}
     data-testid={blockId}
     onClick={() => methods.triggerEvent({ name: 'onClick' })}
-    className={methods.makeCssClass([
-      { outline: 'none', cursor: events.onClick && 'pointer' },
-      properties.style,
-    ])}
+    className={classNames?.element}
+    style={{ outline: 'none', cursor: events.onClick && 'pointer', ...styles?.element }}
   >
     {properties.content || (content.content && content.content())}
   </span>

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import { blockDefaultProps } from '@lowdefy/block-utils';
 
 import './style.css';
 
-const ProgressBar = ({ blockId, methods, style, properties }) => {
+const ProgressBar = ({ blockId, classNames, properties, styles }) => {
   const {
     progress = 30,
     height = 4,
@@ -32,8 +32,9 @@ const ProgressBar = ({ blockId, methods, style, properties }) => {
   return (
     <div
       id={blockId}
-      className={methods.makeCssClass(style)}
+      className={classNames?.element}
       style={{
+        ...styles?.element,
         '--height': `${height}px`,
         '--progress': `${progress}%`,
         '--transition': `all ${transitionTime}ms ease`,

@@ -33,9 +33,9 @@ class DangerousMarkdown extends React.Component {
   }
 
   render() {
-    const { blockId, properties, methods } = this.props;
+    const { blockId, classNames, properties, styles } = this.props;
     return (
-      <div id={blockId} className={methods.makeCssClass(properties.style)}>
+      <div id={blockId} className={classNames?.element} style={styles?.element}>
         <ReactMarkdown
           className="markdown-body markdown-default-code"
           remarkPlugins={[gfm]}

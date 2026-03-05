@@ -22,7 +22,7 @@ import Skeleton from '../Skeleton/Skeleton.js';
 
 import './style.css';
 
-const SkeletonAvatar = ({ properties, methods }) => {
+const SkeletonAvatar = ({ classNames, properties, styles }) => {
   let size = properties.size ?? 32;
   if (type.isString(size)) {
     switch (properties.size) {
@@ -38,12 +38,14 @@ const SkeletonAvatar = ({ properties, methods }) => {
   }
   return (
     <Skeleton
-      methods={methods}
-      properties={{
-        style: {
-          ...{ borderRadius: properties.shape === 'square' ? '0' : size / 2 },
-          ...(properties.style || {}),
+      classNames={classNames}
+      styles={{
+        element: {
+          borderRadius: properties.shape === 'square' ? '0' : size / 2,
+          ...styles?.element,
         },
+      }}
+      properties={{
         width: size,
         height: size,
       }}
