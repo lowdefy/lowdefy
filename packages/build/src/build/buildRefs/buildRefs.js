@@ -18,6 +18,7 @@ import recursiveBuild from './recursiveBuild.js';
 import makeRefDefinition from './makeRefDefinition.js';
 import evaluateBuildOperators from './evaluateBuildOperators.js';
 import evaluateStaticOperators from './evaluateStaticOperators.js';
+import collectTypeNames from '../collectTypeNames.js';
 
 async function buildRefs({ context, shallowOptions }) {
   const refDef = makeRefDefinition('lowdefy.yaml', null, context.refMap);
@@ -28,10 +29,15 @@ async function buildRefs({ context, shallowOptions }) {
     shallowOptions,
   });
   // First: evaluate _build.* operators (e.g., _build.env)
+  // Pass typeNames so page objects act as type boundaries, preventing ~dyn markers
+  // from ~shallow content (blocks, events) from bubbling up and blocking evaluation
+  // of _build.array at the pages level.
+  const typeNames = collectTypeNames({ typesMap: context.typesMap });
   components = await evaluateBuildOperators({
     context,
     input: components,
     refDef,
+    typeNames,
   });
   // Second: evaluate static operators (_sum, _if, etc.) that don't depend on runtime data
   components = evaluateStaticOperators({

@@ -40,6 +40,12 @@ beforeEach(() => {
   mockReadConfigFile.mockReset();
   context.refMap = {};
   context.keyMap = {};
+  // Provide typesMap so collectTypeNames creates type boundaries at page objects.
+  // Without this, ~dyn from ~shallow content bubbles past page objects and prevents
+  // _build.array at the pages level from evaluating.
+  context.typesMap = {
+    blocks: { PageHeaderMenu: {}, PageSiderMenu: {}, TextInput: {} },
+  };
 });
 
 test('buildRefs with shallowOptions stops resolution at matching paths', async () => {
@@ -337,6 +343,67 @@ pages:
   expect(res.pages[0].id).toBe('page_home');
   // Events should be shallow
   expect(res.pages[0].events['~shallow']).toBe(true);
+});
+
+test('buildRefs shallow: _build.array at pages level evaluates when page content is ~shallow', async () => {
+  const files = [
+    {
+      path: 'lowdefy.yaml',
+      content: `
+pages:
+  _build.array.concat:
+    - _ref: pages/group.yaml
+`,
+    },
+    {
+      path: 'pages/group.yaml',
+      content: `
+- _ref: pages/home.yaml
+- _ref: pages/settings.yaml
+`,
+    },
+    {
+      path: 'pages/home.yaml',
+      content: `
+id: home
+type: PageHeaderMenu
+blocks:
+  _ref: pages/home/blocks.yaml
+`,
+    },
+    {
+      path: 'pages/settings.yaml',
+      content: `
+id: settings
+type: PageSiderMenu
+blocks:
+  _ref: pages/settings/blocks.yaml
+`,
+    },
+    {
+      path: 'pages/home/blocks.yaml',
+      content: `- id: block1`,
+    },
+    {
+      path: 'pages/settings/blocks.yaml',
+      content: `- id: block2`,
+    },
+  ];
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+  const res = await buildRefs({
+    context,
+    shallowOptions: true,
+  });
+  // _build.array.concat at pages level must evaluate — pages must be an array.
+  // Without type boundaries, ~dyn from ~shallow blocks bubbles up and prevents
+  // _build.array from evaluating, leaving pages as an object (crash).
+  expect(Array.isArray(res.pages)).toBe(true);
+  expect(res.pages).toHaveLength(2);
+  expect(res.pages[0].id).toBe('home');
+  expect(res.pages[1].id).toBe('settings');
+  // Page content refs should be shallow-marked
+  expect(res.pages[0].blocks['~shallow']).toBe(true);
+  expect(res.pages[1].blocks['~shallow']).toBe(true);
 });
 
 test('buildRefs shallow: static operator wrapping ~shallow content is preserved', async () => {
