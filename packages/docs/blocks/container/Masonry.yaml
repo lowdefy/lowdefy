@@ -15,13 +15,14 @@
 _ref:
   path: templates/blocks/template.yaml.njk
   vars:
-    block_type: Alert
+    block_type: Masonry
     category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Alert/schema.json
-    filePath: blocks/container/Alert.yaml
-    init_property_values:
-      message: Alerts help to highlight important information.
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Masonry/schema.json
+    filePath: blocks/container/Masonry.yaml
     description_content: |
-      Alert is used to render user feedback messages in a Alert styled frame.
+      A masonry (Pinterest-style) layout container. Child blocks are arranged in columns with items filling available vertical space. Supports responsive column counts and configurable gutters.
     slots:
-      - action
+      - content
+    init_property_values:
+      columns: 3
+      gutter: 16

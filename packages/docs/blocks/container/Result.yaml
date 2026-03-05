@@ -21,7 +21,7 @@ _ref:
     filePath: blocks/container/Result.yaml
     description_content: |
       Used to provide feedback the results of a task or error.
-    areas:
+    slots:
       - content
       - extra
     examples:

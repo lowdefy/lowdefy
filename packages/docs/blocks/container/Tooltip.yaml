@@ -22,7 +22,7 @@ _ref:
       A simple text popup tip. Can be used to display extra information about its children blocks.
     init_state_values:
       block.properties.title: Tooltip title
-    areas:
+    slots:
       - content
     examples:
       - title: Button tooltip

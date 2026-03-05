@@ -21,7 +21,7 @@ _ref:
     filePath: blocks/container/Span.yaml
     description_content: |
       A Span is a container that places sub-blocks into a html `<span>`.
-      The Span has a single area, `content`.
+      The Span has a single slot, `content`.
 
-    areas:
+    slots:
       - content

@@ -21,9 +21,10 @@ _ref:
     filePath: blocks/container/Card.yaml
     description_content: |
       A Card container places blocks on a white background with a card border.
-      The Card has `content`, `title` and `extra` areas. The `title` area replaces `properties.title` if defined.
+      The Card has `content`, `title` and `extra` slots. The `title` slot replaces `properties.title` if defined.
+      Use `styles.header`, `styles.body`, and `styles.actions` to customize card sections (replaces `headStyle` and `bodyStyle` from v4).
 
-    areas:
+    slots:
       - content
       - cover
       - extra

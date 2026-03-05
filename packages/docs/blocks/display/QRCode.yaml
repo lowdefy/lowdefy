@@ -15,13 +15,11 @@
 _ref:
   path: templates/blocks/template.yaml.njk
   vars:
-    block_type: Alert
-    category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Alert/schema.json
-    filePath: blocks/container/Alert.yaml
-    init_property_values:
-      message: Alerts help to highlight important information.
+    block_type: QRCode
+    category: display
+    schema: ../plugins/blocks/blocks-antd/src/blocks/QRCode/schema.json
+    filePath: blocks/display/QRCode.yaml
     description_content: |
-      Alert is used to render user feedback messages in a Alert styled frame.
-    slots:
-      - action
+      Renders a QR code from a text value. Supports customization of size, color, error correction level, and an optional centered icon.
+    init_property_values:
+      value: https://lowdefy.com

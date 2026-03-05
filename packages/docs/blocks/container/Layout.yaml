@@ -22,7 +22,7 @@ _ref:
     description_content: |
       The `Layout` block provides a page container for a [layout](https://4x.ant.design/components/layout/) area with content. It can be used as a wrapper, in which `Header`, `Sider`, `Content,` `Footer` or `Layout` itself can be nested.
 
-    areas:
+    slots:
       - content
 
     examples:

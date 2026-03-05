@@ -1,0 +1,60 @@
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "value": {
+        "type": "string",
+        "description": "Scanned text."
+      },
+      "size": {
+        "type": "integer",
+        "default": 160,
+        "description": "QRCode size in pixels."
+      },
+      "color": {
+        "type": "string",
+        "default": "#000000",
+        "description": "QRCode color."
+      },
+      "bgColor": {
+        "type": "string",
+        "default": "transparent",
+        "description": "QRCode background color."
+      },
+      "errorLevel": {
+        "type": "string",
+        "enum": ["L", "M", "Q", "H"],
+        "default": "M",
+        "description": "Error correction level."
+      },
+      "icon": {
+        "type": "string",
+        "description": "Icon URL in the center of the QR code."
+      },
+      "iconSize": {
+        "type": "integer",
+        "default": 40,
+        "description": "Icon size in pixels."
+      },
+      "type": {
+        "type": "string",
+        "enum": ["canvas", "svg"],
+        "default": "canvas",
+        "description": "Render type."
+      },
+      "bordered": {
+        "type": "boolean",
+        "default": true,
+        "description": "Whether has border style."
+      },
+      "status": {
+        "type": "string",
+        "enum": ["active", "expired", "loading", "scanned"],
+        "default": "active",
+        "description": "QRCode status."
+      }
+    }
+  }
+}

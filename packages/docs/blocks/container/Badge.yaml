@@ -23,5 +23,5 @@ _ref:
       Small numerical value or status descriptor for UI elements. Badge is used as a container block, describing its content block.
     init_property_values:
       count: 1
-    areas:
+    slots:
       - content

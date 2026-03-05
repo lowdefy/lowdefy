@@ -1,0 +1,45 @@
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "type": {
+        "type": "string",
+        "enum": ["default", "primary"],
+        "default": "default",
+        "description": "Setting button type."
+      },
+      "shape": {
+        "type": "string",
+        "enum": ["circle", "square"],
+        "default": "circle",
+        "description": "Setting button shape."
+      },
+      "description": {
+        "type": "string",
+        "description": "Text and other."
+      },
+      "tooltip": {
+        "type": "string",
+        "description": "The text shown in the tooltip."
+      },
+      "icon": {
+        "type": ["string", "object"],
+        "description": "Icon for the button."
+      },
+      "href": {
+        "type": "string",
+        "description": "The target of hyperlink."
+      },
+      "target": {
+        "type": "string",
+        "description": "Specifies where to display the linked URL."
+      },
+      "badge": {
+        "type": "object",
+        "description": "Badge configuration for the button."
+      }
+    }
+  }
+}

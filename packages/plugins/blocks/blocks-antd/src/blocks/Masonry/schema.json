@@ -1,0 +1,22 @@
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "columns": {
+        "type": ["integer", "object"],
+        "description": "Number of columns, or responsive breakpoint object."
+      },
+      "gutter": {
+        "type": ["number", "array"],
+        "description": "Gap between items. Number or [horizontal, vertical] array."
+      },
+      "sequential": {
+        "type": "boolean",
+        "default": false,
+        "description": "Whether to render items sequentially."
+      }
+    }
+  }
+}

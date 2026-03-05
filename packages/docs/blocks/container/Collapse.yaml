@@ -19,7 +19,7 @@ _ref:
     category: container
     schema: ../plugins/blocks/blocks-antd/src/blocks/Collapse/schema.json
     description_content: |
-      A container with collapsible panels. The area keys are user defined, and should be listed under the `panels` property. Each panel also has a 'extra' content area, the key of which can be defined in the `panels.$.extraKey` property.
+      A container with collapsible panels. The slot keys are user defined, and should be listed under the `panels` property. Each panel also has an 'extra' content slot, the key of which can be defined in the `panels.$.extraKey` property. Use `variant` to control the collapse style (replaces `bordered` from v4), and `expandIconPlacement` to position the expand icon.
     init_state_values:
       block.properties.panels:
         - key: panel1
@@ -30,8 +30,8 @@ _ref:
         - key: panel3
           disabled: true
           title: Panel 3
-    user_defined_areas: true
-    areas:
+    user_defined_slots: true
+    slots:
       - panel1
       - panel1Extra
       - panel2

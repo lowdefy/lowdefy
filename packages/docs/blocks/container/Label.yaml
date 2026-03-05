@@ -23,6 +23,6 @@ _ref:
       A container that provides a label for a input block. Most input block use Label by default.
     init_property_values:
       title: Input title
-    areas:
+    slots:
       - content
       # - label

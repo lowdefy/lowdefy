@@ -22,10 +22,10 @@ _ref:
     schema: ../plugins/blocks/blocks-antd/src/blocks/TimelineList/schema.json
     filePath: blocks/TimelineList/TimelineList.yaml
     description_content: |
-      The TimelineList block renders a content area for all items in the array. All list blocks create a array in state at their block `id`. The list content areas are rendered for each index in the array. See the [List Concept](/lists) page for a detailed description on how to work with lists.
+      The TimelineList block renders a content slot for all items in the array. All list blocks create an array in state at their block `id`. The list content slots are rendered for each index in the array. See the [List Concept](/lists) page for a detailed description on how to work with lists.
 
       The timeline nodes can be customized based on the array data.
-    areas:
+    slots:
       - content
     init_state_values:
       shipment_events:

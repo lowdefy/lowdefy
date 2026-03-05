@@ -22,7 +22,7 @@ _ref:
       A popover container. Can be used to display extra information or options inside the popover.
     init_state_values:
       block.properties.title: Popover title
-    areas:
+    slots:
       - content
       - popover
     examples:
@@ -39,7 +39,7 @@ _ref:
                 title: Settings
                 icon: AiOutlineSetting
                 block: true
-          areas:
+          slots:
             popover:
               blocks:
                 - id: profile

@@ -20,7 +20,7 @@ _ref:
     schema: ../plugins/blocks/blocks-antd/src/blocks/PageSiderMenu/schema.json
     filePath: blocks/container/PageSiderMenu.yaml
     description_content: |
-      The Page Sider Menu block provides a structured layout for a page with a header, sider including menu, content and footer area.
+      The Page Sider Menu block provides a structured layout for a page with a header, sider including menu, content and footer slots.
     init_state_values:
       block.properties.menu.links:
         - id: home
@@ -46,7 +46,7 @@ _ref:
                 - id: page3
                   type: MenuLink
                   pageId: page3
-    areas:
+    slots:
       - content
       - footer
       - header

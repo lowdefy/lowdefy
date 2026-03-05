@@ -20,7 +20,7 @@ _ref:
     schema: ../plugins/blocks/blocks-antd/src/blocks/Notification/schema.json
     filePath: blocks/display/Notification.yaml
     description_content: |
-      Display a popup notification on the page.
+      Display a popup notification on the page. Use `title` for the notification heading (replaces `message` from v4) and `description` for the body text.
 
       > To display a notification, invoke the open method.
 

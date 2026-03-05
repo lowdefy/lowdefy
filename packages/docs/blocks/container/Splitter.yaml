@@ -15,13 +15,19 @@
 _ref:
   path: templates/blocks/template.yaml.njk
   vars:
-    block_type: Alert
+    block_type: Splitter
     category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Alert/schema.json
-    filePath: blocks/container/Alert.yaml
-    init_property_values:
-      message: Alerts help to highlight important information.
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Splitter/schema.json
+    filePath: blocks/container/Splitter.yaml
     description_content: |
-      Alert is used to render user feedback messages in a Alert styled frame.
+      A resizable split-pane container. Panels are defined in the `panels` property with a `key` for each panel. Content slots match the panel keys. Panels can be resized by dragging the divider, and optionally collapsed.
+    user_defined_slots: true
+    init_state_values:
+      block.properties.panels:
+        - key: left
+          defaultSize: '50%'
+        - key: right
+          defaultSize: '50%'
     slots:
-      - action
+      - left
+      - right

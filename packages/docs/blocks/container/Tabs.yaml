@@ -20,7 +20,8 @@ _ref:
     schema: ../plugins/blocks/blocks-antd/src/blocks/Tabs/schema.json
     description_content: |
       Tabs to easily switch between different views.
-      The key of each tabs is the area keys of the container and there is an `extra` content area.
+      The key of each tab is the slot keys of the container and there is an `extra` content slot.
+      Use `tabPlacement` to position tabs (replaces `tabPosition` from v4).
     init_state_values:
       block.properties.extraAreaKey: extra
       block.properties.tabs:
@@ -32,8 +33,8 @@ _ref:
         - key: tab3
           disabled: true
           title: Tab 3
-    user_defined_areas: true
-    areas:
+    user_defined_slots: true
+    slots:
       - tab1
       - tab2
       - tab3

@@ -143,6 +143,11 @@
           pageId: custom-styling
           properties:
             title: Custom Styling
+        - id: theming
+          type: MenuLink
+          pageId: theming
+          properties:
+            title: Theming
         - id: custom-html
           type: MenuLink
           pageId: custom-html
@@ -334,6 +339,9 @@
         - id: CheckboxSwitch
           type: MenuLink
           pageId: CheckboxSwitch
+        - id: ColorPicker
+          type: MenuLink
+          pageId: ColorPicker
         - id: ColorSelector
           type: MenuLink
           pageId: ColorSelector
@@ -373,6 +381,9 @@
         - id: RatingSlider
           type: MenuLink
           pageId: RatingSlider
+        - id: Segmented
+          type: MenuLink
+          pageId: Segmented
         - id: S3UploadButton
           type: MenuLink
           pageId: S3UploadButton
@@ -445,6 +456,9 @@
         - id: EChart
           type: MenuLink
           pageId: EChart
+        - id: FloatButton
+          type: MenuLink
+          pageId: FloatButton
         - id: Html
           type: MenuLink
           pageId: Html
@@ -478,6 +492,9 @@
         - id: Progress
           type: MenuLink
           pageId: Progress
+        - id: QRCode
+          type: MenuLink
+          pageId: QRCode
         - id: S3Download
           type: MenuLink
           pageId: S3Download
@@ -505,6 +522,9 @@
         - id: Title
           type: MenuLink
           pageId: Title
+        - id: Tour
+          type: MenuLink
+          pageId: Tour
 
     - id: blocks_container
       type: MenuGroup
@@ -530,9 +550,9 @@
         - id: Collapse
           type: MenuLink
           pageId: Collapse
-        - id: Comment
+        - id: ConfigProvider
           type: MenuLink
-          pageId: Comment
+          pageId: ConfigProvider
         - id: ConfirmModal
           type: MenuLink
           pageId: ConfirmModal
@@ -542,6 +562,9 @@
         - id: Drawer
           type: MenuLink
           pageId: Drawer
+        - id: Flex
+          type: MenuLink
+          pageId: Flex
         - id: Footer
           type: MenuLink
           pageId: Footer
@@ -563,6 +586,9 @@
         - id: Layout
           type: MenuLink
           pageId: Layout
+        - id: Masonry
+          type: MenuLink
+          pageId: Masonry
         - id: Modal
           type: MenuLink
           pageId: Modal
@@ -584,6 +610,9 @@
         - id: Span
           type: MenuLink
           pageId: Span
+        - id: Splitter
+          type: MenuLink
+          pageId: Splitter
         - id: Spinner
           type: MenuLink
           pageId: Spinner
@@ -593,6 +622,9 @@
         - id: Tooltip
           type: MenuLink
           pageId: Tooltip
+        - id: Watermark
+          type: MenuLink
+          pageId: Watermark
 
     - id: blocks_list
       type: MenuGroup
@@ -925,6 +957,9 @@
         - id: _switch
           type: MenuLink
           pageId: _switch
+        - id: _theme
+          type: MenuLink
+          pageId: _theme
         - id: _type
           type: MenuLink
           pageId: _type

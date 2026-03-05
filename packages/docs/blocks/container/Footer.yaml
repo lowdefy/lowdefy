@@ -22,5 +22,5 @@ _ref:
     description_content: |
       The `Footer` block provides a page container for a [footer](https://4x.ant.design/components/layout/) area with content.
 
-    areas:
+    slots:
       - content

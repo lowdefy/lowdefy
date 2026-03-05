@@ -15,13 +15,14 @@
 _ref:
   path: templates/blocks/template.yaml.njk
   vars:
-    block_type: Alert
-    category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Alert/schema.json
-    filePath: blocks/container/Alert.yaml
-    init_property_values:
-      message: Alerts help to highlight important information.
+    block_type: Segmented
+    category: input
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Segmented/schema.json
+    filePath: blocks/input/Segmented.yaml
     description_content: |
-      Alert is used to render user feedback messages in a Alert styled frame.
-    slots:
-      - action
+      A segmented control input for selecting between a set of options. Similar to a radio group but with a pill/tab-style visual appearance.
+    init_property_values:
+      options:
+        - Option A
+        - Option B
+        - Option C

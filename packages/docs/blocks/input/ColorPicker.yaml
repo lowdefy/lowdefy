@@ -15,13 +15,9 @@
 _ref:
   path: templates/blocks/template.yaml.njk
   vars:
-    block_type: Alert
-    category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Alert/schema.json
-    filePath: blocks/container/Alert.yaml
-    init_property_values:
-      message: Alerts help to highlight important information.
+    block_type: ColorPicker
+    category: input
+    schema: ../plugins/blocks/blocks-antd/src/blocks/ColorPicker/schema.json
+    filePath: blocks/input/ColorPicker.yaml
     description_content: |
-      Alert is used to render user feedback messages in a Alert styled frame.
-    slots:
-      - action
+      A color picker input that allows users to select a color value. Supports RGB, HEX, and HSB formats, preset palettes, and a clear option.

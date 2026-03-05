@@ -1,0 +1,235 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: theming
+    pageTitle: Theming
+    section: Concepts
+    filePath: concepts/theming.yaml
+    content:
+      - id: md1
+        type: MarkdownWithCode
+        properties:
+          content: |
+            Lowdefy uses the [Ant Design](https://ant.design/) design token system for theming. This allows you to customize colors, typography, spacing, and more at the app level, component type level, or individual block level.
+
+            ## App-level theme
+
+            Configure your app's theme in `lowdefy.yaml` under `theme.antd`:
+
+            ```yaml
+            lowdefy: 5.0.0
+            theme:
+              antd:
+                token:
+                  colorPrimary: '#6366f1'
+                  colorSuccess: '#22c55e'
+                  colorWarning: '#f59e0b'
+                  colorError: '#ef4444'
+                  fontSize: 14
+                  borderRadius: 8
+            ```
+
+            ### Seed tokens
+
+            Seed tokens are the base values from which all other tokens are derived. The most commonly used seed tokens are:
+
+            | Token | Type | Description |
+            |---|---|---|
+            | `colorPrimary` | string | Primary brand color |
+            | `colorSuccess` | string | Success state color |
+            | `colorWarning` | string | Warning state color |
+            | `colorError` | string | Error state color |
+            | `colorInfo` | string | Info state color |
+            | `colorBgBase` | string | Base background color |
+            | `colorTextBase` | string | Base text color |
+            | `fontSize` | number | Base font size (px) |
+            | `borderRadius` | number | Base border radius (px) |
+            | `wireframe` | boolean | Enable wireframe style |
+            | `fontFamily` | string | Font family |
+
+            From these seed tokens, antd derives hundreds of map tokens (e.g. `colorPrimaryHover`, `colorBgContainer`, `fontSizeLG`) automatically.
+
+            ## Algorithms
+
+            Algorithms transform seed tokens into map tokens. Antd provides three built-in algorithms:
+
+            ```yaml
+            # Dark mode
+            theme:
+              antd:
+                algorithm: dark
+
+            # Compact mode
+            theme:
+              antd:
+                algorithm: compact
+
+            # Combine multiple algorithms
+            theme:
+              antd:
+                algorithm:
+                  - dark
+                  - compact
+            ```
+
+            | Algorithm | Description |
+            |---|---|
+            | `default` | Default light theme |
+            | `dark` | Dark color scheme |
+            | `compact` | Reduced spacing and smaller sizes |
+
+            ## Per-component-type overrides
+
+            Override design tokens for all instances of a component type:
+
+            ```yaml
+            theme:
+              antd:
+                token:
+                  colorPrimary: '#6366f1'
+                components:
+                  Button:
+                    fontWeight: 700
+                    paddingInline: 24
+                  Card:
+                    headerBg: '#f5f5f5'
+                    bodyPadding: '24px'
+                  Input:
+                    activeBorderColor: '#6366f1'
+            ```
+
+            Each antd component has its own set of component tokens. See the individual block documentation pages for commonly used tokens, or the [antd component token reference](https://ant.design/components/overview/) for the full list.
+
+            ## Per-block overrides
+
+            Override design tokens for a single block instance using `properties.theme`:
+
+            ```yaml
+            - id: special_button
+              type: Button
+              properties:
+                title: Special Button
+                theme:
+                  fontWeight: 700
+                  paddingInline: 24
+                  primaryColor: '#6366f1'
+            ```
+
+            Under the hood, `properties.theme` wraps the block in a scoped `ConfigProvider` with the specified component tokens.
+
+            ## ConfigProvider block
+
+            For scoped theming of a group of blocks, use the `ConfigProvider` container block:
+
+            ```yaml
+            - id: dark_section
+              type: ConfigProvider
+              properties:
+                algorithm: dark
+                token:
+                  colorPrimary: '#a855f7'
+              blocks:
+                - id: themed_card
+                  type: Card
+                  properties:
+                    title: Dark Themed Card
+                - id: themed_button
+                  type: Button
+                  properties:
+                    title: Click Me
+            ```
+
+            ConfigProvider creates a theme scope — all child blocks inherit the specified theme tokens and algorithm.
+
+            ## The `_theme` operator
+
+            Access seed tokens in expressions using the `_theme` operator:
+
+            ```yaml
+            # String form — get a single token
+            color:
+              _theme: colorPrimary
+
+            # Object form — with default value
+            background:
+              _theme:
+                key: colorBgContainer
+                default: '#ffffff'
+
+            # Get all tokens
+            allTokens:
+              _theme:
+                all: true
+            ```
+
+            The `_theme` operator resolves seed tokens from `theme.antd.token`. For derived tokens (like hover/active variants), use CSS variables instead: `var(--ant-color-primary-hover)`.
+
+            See the [`_theme` operator reference](/_theme) for full documentation.
+
+            ## CSS variables
+
+            All antd design tokens are available as CSS variables with the `--ant-` prefix. This is useful in `public/styles.css` or when using CSS-based customizations:
+
+            ```css
+            .my-custom-class {
+              color: var(--ant-color-primary);
+              background: var(--ant-color-bg-container);
+              border: 1px solid var(--ant-color-border);
+              border-radius: var(--ant-border-radius);
+            }
+            ```
+
+            Token names are converted from camelCase to kebab-case for the CSS variable name (e.g. `colorPrimary` → `--ant-color-primary`).
+
+            ## Dark mode
+
+            Enable dark mode app-wide with a single configuration line:
+
+            ```yaml
+            theme:
+              antd:
+                algorithm: dark
+            ```
+
+            Or scope dark mode to a section using ConfigProvider:
+
+            ```yaml
+            - id: dark_section
+              type: ConfigProvider
+              properties:
+                algorithm: dark
+              blocks:
+                # All blocks here will use dark theme
+            ```
+
+            ## TLDR
+              - Configure app theme via `theme.antd` in `lowdefy.yaml`.
+              - Seed tokens (`colorPrimary`, `fontSize`, etc.) drive all derived tokens automatically.
+              - Use `algorithm: dark` or `algorithm: compact` for theme variants.
+              - Override tokens per component type via `theme.antd.components`.
+              - Override tokens per block via `properties.theme`.
+              - Use `ConfigProvider` block for scoped theming of block groups.
+              - Access tokens in expressions with the `_theme` operator.
+              - Access derived tokens in CSS via `var(--ant-color-primary-hover)`.
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Custom Styling
+            previous_page_id: custom-styling
+            next_page_title: Custom HTML
+            next_page_id: custom-html

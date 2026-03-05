@@ -1,0 +1,21 @@
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "token": {
+        "type": "object",
+        "description": "Theme token configuration. Customize design tokens like colorPrimary, fontSize, etc."
+      },
+      "algorithm": {
+        "type": ["string", "array"],
+        "description": "Theme algorithm. Can be \"default\", \"dark\", \"compact\", or an array of these values."
+      },
+      "components": {
+        "type": "object",
+        "description": "Component-level token overrides. Keys are component names, values are token objects."
+      }
+    }
+  }
+}

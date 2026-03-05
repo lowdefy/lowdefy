@@ -21,10 +21,10 @@ _ref:
     filePath: blocks/container/Modal.yaml
     description_content: |
       A popup container, presenting the user with a modal dialog.
-      The Modal has a `content` and a `footer` content area. The default `footer` area is the `Ok` and `Cancel` buttons; defining a `footer` area overwrites these buttons.
+      The Modal has a `content` and a `footer` content slot. The default `footer` slot contains the `Ok` and `Cancel` buttons; defining a `footer` slot overwrites these buttons.
 
       > To open the modal, invoke a modal method.
-    areas:
+    slots:
       - content
       - footer
     methods:

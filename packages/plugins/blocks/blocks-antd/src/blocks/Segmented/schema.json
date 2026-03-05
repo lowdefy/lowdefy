@@ -1,0 +1,28 @@
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "options": {
+        "type": "array",
+        "description": "Options for the segmented control. Array of strings or { label, value, icon, disabled } objects."
+      },
+      "size": {
+        "type": "string",
+        "enum": ["small", "middle", "large"],
+        "description": "Size of the segmented control."
+      },
+      "block": {
+        "type": "boolean",
+        "default": false,
+        "description": "Option to fit width to its parent's width."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Disable the segmented control."
+      }
+    }
+  }
+}
