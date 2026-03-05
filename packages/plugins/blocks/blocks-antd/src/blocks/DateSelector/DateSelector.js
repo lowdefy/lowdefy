@@ -15,22 +15,27 @@
 */
 
 import React, { useState } from 'react';
-import moment from 'moment';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc.js';
 import { type } from '@lowdefy/helpers';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 import { DatePicker } from 'antd';
 
 import Label from '../Label/Label.js';
+import withTheme from '../withTheme.js';
 import disabledDate from '../../disabledDate.js';
+
+dayjs.extend(utc);
 
 const DateSelector = ({
   blockId,
+  classNames = {},
   components: { Icon },
   events,
   loading,
   methods,
   properties,
   required,
+  styles = {},
   validation,
   value,
 }) => {
@@ -45,14 +50,15 @@ const DateSelector = ({
       required={required}
       content={{
         content: () => (
-          <div className={methods.makeCssClass({ width: '100%' })}>
+          <div style={{ width: '100%' }}>
             <div id={`${blockId}_${elementId}_popup`} />
             <DatePicker
               id={`${blockId}_input`}
               allowClear={properties.allowClear !== false}
               autoFocus={properties.autoFocus}
-              bordered={properties.bordered}
-              className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
+              variant={properties.bordered === false ? 'borderless' : properties.variant}
+              className={classNames.element}
+              style={{ width: '100%', ...styles.element }}
               disabled={properties.disabled || loading}
               format={properties.format ?? 'YYYY-MM-DD'}
               getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
@@ -71,11 +77,11 @@ const DateSelector = ({
               onChange={(newVal) => {
                 const val = !newVal
                   ? null
-                  : moment.utc(newVal.add(newVal.utcOffset(), 'minutes')).startOf('day').toDate();
+                  : dayjs.utc(newVal.add(newVal.utcOffset(), 'minutes')).startOf('day').toDate();
                 methods.setValue(val);
                 methods.triggerEvent({ name: 'onChange', event: { value: val } });
               }}
-              value={type.isDate(value) ? moment.utc(value).startOf('day') : null}
+              value={type.isDate(value) ? dayjs.utc(value).startOf('day') : null}
             />
           </div>
         ),
@@ -84,11 +90,11 @@ const DateSelector = ({
   );
 };
 
-DateSelector.defaultProps = blockDefaultProps;
 DateSelector.meta = {
   valueType: 'date',
   category: 'input',
   icons: [...Label.meta.icons, 'AiOutlineCalendar'],
+  cssKeys: ['element', 'popup'],
 };
 
-export default DateSelector;
+export default withTheme('DatePicker', DateSelector);

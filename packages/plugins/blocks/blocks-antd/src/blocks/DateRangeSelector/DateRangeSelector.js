@@ -16,29 +16,34 @@
 
 import React, { useState } from 'react';
 import { DatePicker } from 'antd';
-import moment from 'moment';
-import { blockDefaultProps } from '@lowdefy/block-utils';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc.js';
 import { type } from '@lowdefy/helpers';
 
 import Label from '../Label/Label.js';
+import withTheme from '../withTheme.js';
 import disabledDate from '../../disabledDate.js';
+
+dayjs.extend(utc);
 
 const RangePicker = DatePicker.RangePicker;
 
 const rangeValue = (value, format) => {
-  if (value && format) return value.map((val) => moment.utc(val, format).startOf('day'));
-  if (value) return value.map((val) => moment.utc(val).startOf('day'));
+  if (value && format) return value.map((val) => dayjs.utc(val, format).startOf('day'));
+  if (value) return value.map((val) => dayjs.utc(val).startOf('day'));
   return null;
 };
 
 const DateRangeSelector = ({
   blockId,
+  classNames = {},
   components: { Icon },
   events,
   loading,
   methods,
   properties,
   required,
+  styles = {},
   validation,
   value,
 }) => {
@@ -53,14 +58,15 @@ const DateRangeSelector = ({
       required={required}
       content={{
         content: () => (
-          <div className={methods.makeCssClass({ width: '100%' })}>
+          <div style={{ width: '100%' }}>
             <div id={`${blockId}_${elementId}_popup`} />
             <RangePicker
               id={`${blockId}_input`}
               allowClear={properties.allowClear !== false}
               autoFocus={properties.autoFocus}
-              bordered={properties.bordered}
-              className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
+              variant={properties.bordered === false ? 'borderless' : properties.variant}
+              className={classNames.element}
+              style={{ width: '100%', ...styles.element }}
               disabled={properties.disabled || loading}
               disabledDate={disabledDate(properties.disabledDates)}
               format={properties.format ?? 'YYYY-MM-DD'}
@@ -85,7 +91,7 @@ const DateRangeSelector = ({
                 const val = !newVal
                   ? null
                   : newVal.map((val) =>
-                      moment.utc(val.add(val.utcOffset(), 'minutes')).startOf('day').toDate()
+                      dayjs.utc(val.add(val.utcOffset(), 'minutes')).startOf('day').toDate()
                     );
                 methods.setValue(val);
                 methods.triggerEvent({ name: 'onChange', event: { value: val } });
@@ -99,11 +105,11 @@ const DateRangeSelector = ({
   );
 };
 
-DateRangeSelector.defaultProps = blockDefaultProps;
 DateRangeSelector.meta = {
   valueType: 'array',
   category: 'input',
   icons: [...Label.meta.icons, 'AiOutlineCalendar'],
+  cssKeys: ['element', 'popup'],
 };
 
-export default DateRangeSelector;
+export default withTheme('DatePicker', DateRangeSelector);
