@@ -16,7 +16,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { Carousel } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-utils';
+import withTheme from '../withTheme.js';
 
 const getSlides = ({ content, properties }) => {
   let slides = properties.slides;
@@ -28,7 +28,7 @@ const getSlides = ({ content, properties }) => {
   return slides;
 };
 
-const CarouselBlock = ({ blockId, content, properties, methods }) => {
+const CarouselBlock = ({ blockId, classNames = {}, content, properties, methods, styles = {} }) => {
   const slides = getSlides({ content, properties });
 
   const carousel = useRef();
@@ -68,7 +68,8 @@ const CarouselBlock = ({ blockId, content, properties, methods }) => {
       }}
       onInit={() => methods.triggerEvent({ name: 'onInit' })}
       onSwipe={() => methods.triggerEvent({ name: 'onSwipe' })}
-      className={methods.makeCssClass(properties.style)}
+      className={classNames.element}
+      style={styles.element}
       ref={carousel}
     >
       {slides?.map((slide) => (
@@ -78,10 +79,10 @@ const CarouselBlock = ({ blockId, content, properties, methods }) => {
   );
 };
 
-CarouselBlock.defaultProps = blockDefaultProps;
 CarouselBlock.meta = {
   category: 'container',
   icons: [],
+  cssKeys: ['element'],
 };
 
-export default CarouselBlock;
+export default withTheme('Carousel', CarouselBlock);

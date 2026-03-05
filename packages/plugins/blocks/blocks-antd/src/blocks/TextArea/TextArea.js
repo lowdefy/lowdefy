@@ -16,21 +16,23 @@
 
 import React from 'react';
 import { type } from '@lowdefy/helpers';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 import { Input } from 'antd';
 
 import Label from '../Label/Label.js';
+import withTheme from '../withTheme.js';
 import useRunAfterUpdate from '../../useRunAfterUpdate.js';
 
 const TextAreaComp = Input.TextArea;
 
 const TextAreaBlock = ({
   blockId,
+  classNames = {},
   components,
   events,
   loading,
   properties,
   required,
+  styles = {},
   validation,
   value,
   methods,
@@ -51,8 +53,9 @@ const TextAreaBlock = ({
               id={`${blockId}_input`}
               allowClear={properties.allowClear}
               autoFocus={properties.autoFocus}
-              bordered={properties.bordered}
-              className={methods.makeCssClass(properties.inputStyle)}
+              variant={properties.bordered === false ? 'borderless' : properties.variant}
+              className={classNames.element}
+              style={styles.element}
               disabled={properties.disabled || loading}
               maxLength={properties.maxLength}
               placeholder={properties.placeholder}
@@ -92,11 +95,11 @@ const TextAreaBlock = ({
   );
 };
 
-TextAreaBlock.defaultProps = blockDefaultProps;
 TextAreaBlock.meta = {
   valueType: 'string',
   category: 'input',
   icons: [...Label.meta.icons],
+  cssKeys: ['element'],
 };
 
-export default TextAreaBlock;
+export default withTheme('Input', TextAreaBlock);

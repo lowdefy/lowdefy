@@ -16,21 +16,23 @@
 
 import React from 'react';
 import { AutoComplete } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
 import Label from '../Label/Label.js';
+import withTheme from '../withTheme.js';
 
 const Option = AutoComplete.Option;
 
 const AutoCompleteInput = ({
   blockId,
+  classNames = {},
   components,
   events,
   loading,
   methods,
   properties,
   required,
+  styles = {},
   validation,
   value,
 }) => {
@@ -48,8 +50,9 @@ const AutoCompleteInput = ({
             id={`${blockId}_input`}
             autoFocus={properties.autoFocus}
             backfill={properties.backfill}
-            bordered={properties.bordered}
-            className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
+            variant={properties.bordered === false ? 'borderless' : properties.variant}
+            className={classNames.element}
+            style={{ width: '100%', ...styles.element }}
             defaultOpen={properties.defaultOpen}
             disabled={properties.disabled || loading}
             placeholder={properties.placeholder ?? 'Type or select item'}
@@ -78,7 +81,7 @@ const AutoCompleteInput = ({
           >
             {(properties.options || []).map((opt, i) => (
               <Option
-                className={methods.makeCssClass(properties.optionsStyle)}
+                style={properties.optionsStyle}
                 id={`${blockId}_${i}`}
                 key={i}
                 value={`${opt}`}
@@ -93,11 +96,11 @@ const AutoCompleteInput = ({
   );
 };
 
-AutoCompleteInput.defaultProps = blockDefaultProps;
 AutoCompleteInput.meta = {
   valueType: 'string',
   category: 'input',
   icons: [...Label.meta.icons],
+  cssKeys: ['element'],
 };
 
-export default AutoCompleteInput;
+export default withTheme('AutoComplete', AutoCompleteInput);

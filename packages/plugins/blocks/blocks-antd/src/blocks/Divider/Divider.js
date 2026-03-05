@@ -16,25 +16,28 @@
 
 import React from 'react';
 import { Divider } from 'antd';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import { renderHtml } from '@lowdefy/block-utils';
 
-const DividerBlock = ({ blockId, properties, methods }) => (
+import withTheme from '../withTheme.js';
+
+const DividerBlock = ({ blockId, classNames = {}, properties, styles = {}, methods }) => (
   <Divider
     id={blockId}
+    className={classNames.element}
     dashed={properties.dashed}
-    orientation={properties.orientation}
+    titlePlacement={properties.titlePlacement}
     plain={properties.plain}
-    style={properties.style}
-    type={properties.type}
+    style={styles.element}
+    orientation={properties.type}
   >
     {renderHtml({ html: properties.title, methods })}
   </Divider>
 );
 
-DividerBlock.defaultProps = blockDefaultProps;
 DividerBlock.meta = {
   category: 'display',
   icons: [],
+  cssKeys: ['element'],
 };
 
-export default DividerBlock;
+export default withTheme('Divider', DividerBlock);
