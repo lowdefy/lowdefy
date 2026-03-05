@@ -46,6 +46,7 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
+    "@ant-design/cssinjs": "^2.1.0",
     "@lowdefy/actions-core": "4.5.2",
     "@lowdefy/api": "4.5.2",
     "@lowdefy/block-utils": "4.5.2",
@@ -65,6 +66,7 @@
     "@lowdefy/operators-nunjucks": "4.5.2",
     "@lowdefy/operators-uuid": "4.5.2",
     "@lowdefy/plugin-next-auth": "4.5.2",
+    "antd": "^6.3.0",
     "@sentry/nextjs": "8.53.0",
     "next": "13.5.4",
     "next-auth": "4.24.5",
