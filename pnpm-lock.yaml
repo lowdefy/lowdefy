@@ -1315,15 +1315,15 @@ importers:
       '@lowdefy/helpers':
         specifier: 4.5.2
         version: link:../../../utils/helpers
+      dayjs:
+        specifier: ^1.11.10
+        version: 1.11.19
       google-spreadsheet:
         specifier: 3.3.0
         version: 3.3.0(encoding@0.1.13)
       mingo:
         specifier: 6.4.9
         version: 6.4.9
-      moment:
-        specifier: 2.29.4
-        version: 2.29.4
     devDependencies:
       '@jest/globals':
         specifier: 28.1.3
