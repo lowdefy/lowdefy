@@ -36,7 +36,6 @@ import buildRefs from '../buildRefs/buildRefs.js';
 import buildTypes from '../buildTypes.js';
 import cleanBuildDirectory from '../cleanBuildDirectory.js';
 import copyPublicFolder from '../copyPublicFolder.js';
-import PAGE_CONTENT_KEYS from './pageContentKeys.js';
 import testSchema from '../testSchema.js';
 import validateConfig from '../validateConfig.js';
 import writeApp from '../writeApp.js';
@@ -59,8 +58,6 @@ import buildShallowPages from './buildShallowPages.js';
 import stripPageContent from './stripPageContent.js';
 import writeSourcelessPages from './writeSourcelessPages.js';
 
-const SHALLOW_STOP_PATHS = PAGE_CONTENT_KEYS.map((key) => `pages.*.${key}`);
-
 async function shallowBuild(options) {
   makeId.reset();
 
@@ -72,7 +69,7 @@ async function shallowBuild(options) {
     try {
       components = await buildRefs({
         context,
-        shallowOptions: { stopAt: SHALLOW_STOP_PATHS },
+        shallowOptions: true,
       });
     } catch (err) {
       if (err.isLowdefyError) {

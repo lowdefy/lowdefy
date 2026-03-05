@@ -40,9 +40,10 @@ function getTime() {
   return `${pad(t.getHours())}:${pad(t.getMinutes())}:${pad(t.getSeconds())}`;
 }
 
-// Standard pino levels + spin/succeed at info level
+// Standard pino levels + spin/succeed/fail for spinner control
 const logLevelValues = {
   error: 50,
+  fail: 50,
   warn: 40,
   succeed: 30,
   spin: 30,
@@ -70,24 +71,28 @@ function createOraPrint({ logLevel }) {
     prefixText: () => colors.gray(getTime()),
     color: 'blue',
   });
+
+  // Write a log line. If spinner is active, output above it without stopping it.
+  function writeLine(symbol, text) {
+    if (spinner.isSpinning) {
+      spinner.clear();
+      process.stderr.write(`${colors.gray(getTime())} ${symbol} ${text}\n`);
+      spinner.render();
+    } else {
+      spinner.stopAndPersist({ symbol, text });
+    }
+  }
+
   return filterLevels(
     {
-      error: (text, { color } = {}) => spinner.fail(colorize(text, color, 'error')),
-      warn: (text, { color } = {}) => spinner.warn(colorize(text, color, 'warn')),
-      info: (text, { color } = {}) =>
-        spinner.stopAndPersist({ symbol: '∙', text: colorize(text, color, 'info') }),
-      debug: (text, { color } = {}) => {
-        if (spinner.isSpinning) {
-          spinner.stopAndPersist({ symbol: '∙' });
-        }
-        spinner.stopAndPersist({
-          symbol: colors.gray('+'),
-          text: colorize(text, color, 'debug'),
-        });
-      },
+      error: (text, { color } = {}) => writeLine('✖', colorize(text, color, 'error')),
+      warn: (text, { color } = {}) => writeLine('⚠', colorize(text, color, 'warn')),
+      info: (text, { color } = {}) => writeLine('∙', colorize(text, color, 'info')),
+      debug: (text, { color } = {}) => writeLine(colors.gray('+'), colorize(text, color, 'debug')),
       spin: (text) => spinner.start(text),
       succeed: (text, { color } = {}) =>
         spinner.succeed(color ? colorize(text, color, 'info') : colors.green(text)),
+      fail: (text, { color } = {}) => spinner.fail(colorize(text, color ?? 'red', 'error')),
     },
     logLevel
   );
@@ -102,6 +107,7 @@ function createBasicPrint({ logLevel = 'info' }) {
       debug: (text) => console.debug(text),
       spin: (text) => console.log(text),
       succeed: (text) => console.log(text),
+      fail: (text) => console.error(text),
     },
     logLevel
   );
@@ -159,12 +165,16 @@ function createCliLogger({ logLevel } = {}) {
 
     // 2. Pino two-arg form: (mergeObj, messageString)
     if (typeof second === 'string') {
-      if (first?.spin) {
+      if (first?.spin === 'start') {
         print.spin(second);
         return;
       }
-      if (first?.succeed) {
+      if (first?.spin === 'succeed') {
         print.succeed(second, { color: first?.color });
+        return;
+      }
+      if (first?.spin === 'fail') {
+        print.fail(second, { color: first?.color });
         return;
       }
       if (first?.source) {

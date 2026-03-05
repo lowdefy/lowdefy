@@ -98,7 +98,7 @@ const stdOutLineHandler = createStdOutLineHandler({ context });
 
 // -- Step 3: Copy server-dev to isolated location --
 
-logger.info({ spin: true }, 'Copying server-dev to dev directory...');
+logger.info({ spin: 'start' }, 'Copying server-dev to dev directory...');
 
 const SKIP_DIRS = new Set(['node_modules', '.next', '.turbo']);
 
@@ -145,11 +145,11 @@ fs.writeFileSync(
   )
 );
 
-logger.info({ succeed: true }, 'Copied server-dev to dev directory.');
+logger.info({ spin: 'succeed' }, 'Copied server-dev to dev directory.');
 
 // -- Step 4: Build @lowdefy/* package map --
 
-logger.info({ spin: true }, 'Scanning monorepo packages...');
+logger.info({ spin: 'start' }, 'Scanning monorepo packages...');
 
 const packageMap = new Map();
 
@@ -181,7 +181,7 @@ function scanForPackages(dir, depth) {
 }
 
 scanForPackages(path.join(REPO_ROOT, 'packages'), 0);
-logger.info({ succeed: true }, `Found ${packageMap.size} @lowdefy/* packages.`);
+logger.info({ spin: 'succeed' }, `Found ${packageMap.size} @lowdefy/* packages.`);
 
 // -- Step 5: Rewrite deps + add pnpm.overrides --
 
@@ -212,10 +212,10 @@ function rewritePackageJson(filePath) {
   fs.writeFileSync(filePath, JSON.stringify(pkg, null, 2) + '\n');
 }
 
-logger.info({ spin: true }, 'Rewriting package.json files with link: paths...');
+logger.info({ spin: 'start' }, 'Rewriting package.json files with link: paths...');
 rewritePackageJson(path.join(devDir, 'package.json'));
 rewritePackageJson(path.join(devDir, 'package.original.json'));
-logger.info({ succeed: true }, 'Rewrote package.json files.');
+logger.info({ spin: 'succeed' }, 'Rewrote package.json files.');
 
 // -- Step 6: Handle custom plugins from lowdefy.yaml --
 
@@ -365,7 +365,7 @@ addCustomPlugins();
 
 // -- Step 7: Create isolated workspace --
 
-logger.info({ spin: true }, 'Creating isolated pnpm workspace...');
+logger.info({ spin: 'start' }, 'Creating isolated pnpm workspace...');
 fs.writeFileSync(path.join(devDir, 'pnpm-workspace.yaml'), 'packages: []\n');
 
 // Copy .npmrc to ensure strict-peer-dependencies=false is set
@@ -373,17 +373,17 @@ if (!fs.existsSync(path.join(devDir, '.npmrc'))) {
   fs.writeFileSync(path.join(devDir, '.npmrc'), 'strict-peer-dependencies=false\n');
 }
 
-logger.info({ succeed: true }, 'Created isolated pnpm workspace.');
+logger.info({ spin: 'succeed' }, 'Created isolated pnpm workspace.');
 
 // -- Step 8: Install dependencies --
 
-logger.info({ spin: true }, 'Installing dependencies...');
+logger.info({ spin: 'start' }, 'Installing dependencies...');
 execSync('pnpm install --no-lockfile', { cwd: devDir, stdio: 'inherit' });
-logger.info({ succeed: true }, 'Dependencies installed.');
+logger.info({ spin: 'succeed' }, 'Dependencies installed.');
 
 // -- Step 9: Start the dev server --
 
-logger.info({ spin: true }, 'Starting dev server...');
+logger.info({ spin: 'start' }, 'Starting dev server...');
 
 const env = {
   ...process.env,

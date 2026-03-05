@@ -14,16 +14,15 @@
   limitations under the License.
 */
 
-function pathMatches(path, pattern) {
-  const regex = new RegExp(
-    '^' + pattern.replace(/\./g, '\\.').replace(/\*/g, '[^.]+') + '(\\.|$)'
-  );
-  return regex.test(path);
+import PAGE_CONTENT_KEYS from './pageContentKeys.js';
+
+function isPageContentPath(jsonPath) {
+  if (!jsonPath.startsWith('pages.')) return false;
+  const segments = jsonPath.split('.');
+  for (let i = 1; i < segments.length; i++) {
+    if (PAGE_CONTENT_KEYS.includes(segments[i])) return true;
+  }
+  return false;
 }
 
-function shouldSkipResolution(path, stopPatterns) {
-  if (!stopPatterns || stopPatterns.length === 0) return false;
-  return stopPatterns.some((pattern) => pathMatches(path, pattern));
-}
-
-export { pathMatches, shouldSkipResolution };
+export default isPageContentPath;

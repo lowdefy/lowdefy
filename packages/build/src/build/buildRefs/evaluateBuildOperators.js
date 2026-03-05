@@ -25,11 +25,12 @@ import collectExceptions from '../../utils/collectExceptions.js';
 validateOperatorsDynamic({ operators });
 const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
 
-function evaluateBuildOperators({ context, input, refDef }) {
+function evaluateBuildOperators({ context, input, refDef, typeNames }) {
   const operatorsParser = new BuildParser({
     env: process.env,
     operators,
     dynamicIdentifiers,
+    ...(typeNames ? { typeNames } : {}),
   });
 
   const { output, errors } = operatorsParser.parse({
