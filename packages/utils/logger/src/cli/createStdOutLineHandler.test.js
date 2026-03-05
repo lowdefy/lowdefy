@@ -191,7 +191,9 @@ describe('createStdOutLineHandler', () => {
     const logger = createMockLogger();
     const handler = createStdOutLineHandler({ context: { logger } });
 
-    handler(JSON.stringify({ level: 20, msg: 'adapter_getSessionAndUser', rid: '123', args: ['a'] }));
+    handler(
+      JSON.stringify({ level: 20, msg: 'adapter_getSessionAndUser', rid: '123', args: ['a'] })
+    );
     expect(logger.debug).toHaveBeenCalledWith(
       { source: undefined, color: undefined, spin: undefined, succeed: undefined },
       'adapter_getSessionAndUser'

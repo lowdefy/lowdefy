@@ -4,15 +4,16 @@ Next.js-based servers for running Lowdefy applications.
 
 ## Package Summary
 
-| Package               | Purpose            | Use Case          |
-| --------------------- | ------------------ | ----------------- |
-| `@lowdefy/server`     | Production server  | Deployment        |
-| `@lowdefy/server-dev` | Development server | Local development |
+| Package               | Purpose            | Use Case                     |
+| --------------------- | ------------------ | ---------------------------- |
+| `@lowdefy/server`     | Production server  | Deployment                   |
+| `@lowdefy/server-dev` | Development server | Local development            |
 | `@lowdefy/server-e2e` | E2E testing server | Playwright testing with auth |
 
 ## Architecture
 
 All three servers are built on Next.js 13.5.4 and share:
+
 - Core API handlers for requests and endpoints
 - Plugin loading from build artifacts
 - Page rendering with server-side props
@@ -63,13 +64,13 @@ build/
 
 ### Shared Routes
 
-| Route                               | Purpose                                  |
-| ----------------------------------- | ---------------------------------------- |
-| `/api/request/[pageId]/[requestId]` | Execute requests                         |
-| `/api/endpoints/[endpointId]`       | Execute API endpoints                    |
-| `/api/auth/[...nextauth]`           | NextAuth handlers (production/dev only)  |
+| Route                               | Purpose                                      |
+| ----------------------------------- | -------------------------------------------- |
+| `/api/request/[pageId]/[requestId]` | Execute requests                             |
+| `/api/endpoints/[endpointId]`       | Execute API endpoints                        |
+| `/api/auth/[...nextauth]`           | NextAuth handlers (production/dev only)      |
 | `/api/auth/session`                 | Session retrieval (e2e: returns cookie user) |
-| `/api/usage`                        | Usage logging                            |
+| `/api/usage`                        | Usage logging                                |
 
 ### Dev-Only Routes
 

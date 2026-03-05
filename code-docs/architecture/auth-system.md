@@ -614,14 +614,14 @@ The e2e server (`@lowdefy/server-e2e`) provides a separate auth mechanism for Pl
 
 ### Comparison with Dev Server Mock User
 
-| Aspect | Dev Server Mock User | E2E Server Cookie Auth |
-|--------|---------------------|----------------------|
-| Set by | Env var or `auth.dev.mockUser` | `ldf.user()` in test code |
-| Scope | Global (all requests) | Per browser context |
-| Transforms | Runs through session callback | No transforms (direct mapping) |
-| Change mid-test | No | Yes (`ldf.user(newUser)`) |
-| Clear mid-test | No | Yes (`ldf.user(null)`) |
-| Server | `@lowdefy/server-dev` | `@lowdefy/server-e2e` |
+| Aspect          | Dev Server Mock User           | E2E Server Cookie Auth         |
+| --------------- | ------------------------------ | ------------------------------ |
+| Set by          | Env var or `auth.dev.mockUser` | `ldf.user()` in test code      |
+| Scope           | Global (all requests)          | Per browser context            |
+| Transforms      | Runs through session callback  | No transforms (direct mapping) |
+| Change mid-test | No                             | Yes (`ldf.user(newUser)`)      |
+| Clear mid-test  | No                             | Yes (`ldf.user(null)`)         |
+| Server          | `@lowdefy/server-dev`          | `@lowdefy/server-e2e`          |
 
 ### How It Works
 
@@ -653,13 +653,13 @@ if (authJson.configured && !session) {
 
 ### Key Files
 
-| File | Purpose |
-|------|---------|
-| `server-e2e/lib/server/auth/getServerSession.js` | Reads cookie, returns `{ user }` |
-| `server-e2e/lib/client/auth/AuthE2E.js` | Client auth (no NextAuth) |
-| `server-e2e/pages/api/auth/session.js` | Returns `context.session ?? {}` |
-| `e2e-utils/src/core/userCookie.js` | Sets/clears cookie via Playwright |
-| `e2e-utils/src/proxy/createPageManager.js` | Exposes `ldf.user()` API |
+| File                                             | Purpose                           |
+| ------------------------------------------------ | --------------------------------- |
+| `server-e2e/lib/server/auth/getServerSession.js` | Reads cookie, returns `{ user }`  |
+| `server-e2e/lib/client/auth/AuthE2E.js`          | Client auth (no NextAuth)         |
+| `server-e2e/pages/api/auth/session.js`           | Returns `context.session ?? {}`   |
+| `e2e-utils/src/core/userCookie.js`               | Sets/clears cookie via Playwright |
+| `e2e-utils/src/proxy/createPageManager.js`       | Exposes `ldf.user()` API          |
 
 See [server-e2e.md](../servers/server-e2e.md) for full server architecture.
 

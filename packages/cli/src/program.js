@@ -85,7 +85,10 @@ program
   .option('--no-next-build', 'Do not build the Next.js server.')
   .addOption(options.refResolver)
   .addOption(
-    new Option('--server <server>', 'Server package variant. Use "e2e" for @lowdefy/server-e2e.').choices(['e2e'])
+    new Option(
+      '--server <server>',
+      'Server package variant. Use "e2e" for @lowdefy/server-e2e.'
+    ).choices(['e2e'])
   )
   .addOption(options.serverDirectory)
   .action(runCommand({ cliVersion, handler: build }));
