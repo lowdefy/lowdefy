@@ -15,7 +15,6 @@
 */
 
 import Area from './Area.js';
-import Slot from './Slot.js';
 import BlockLayout from './BlockLayout.js';
 
-export { Area, Slot, BlockLayout };
+export { Area, BlockLayout };
