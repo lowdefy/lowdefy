@@ -14,10 +14,17 @@
   limitations under the License.
 */
 
-function getBlock(page, blockId) {
-  // Use the framework-provided wrapper ID (bl-{blockId}) which is guaranteed
-  // to exist for all block types, applied by BlockLayout in packages/client
-  return page.locator(`#bl-${blockId}`);
-}
+import { createBlockHelper } from '@lowdefy/e2e-utils';
+import { expect } from '@playwright/test';
 
-export default getBlock;
+const locator = (page, blockId) => page.locator(`#${blockId}`);
+
+export default createBlockHelper({
+  locator,
+  expect: {
+    label: (page, blockId, text) =>
+      expect(locator(page, blockId).locator('.ant-form-item-label')).toHaveText(text),
+    required: (page, blockId) =>
+      expect(locator(page, blockId).locator('.ant-form-item-required')).toBeVisible(),
+  },
+});

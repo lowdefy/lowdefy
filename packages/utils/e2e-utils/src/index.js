@@ -1,0 +1,57 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+// Core helpers
+import { getBlock } from './core/locators.js';
+import { goto, waitForReady, expectNavigation, waitForPage } from './core/navigation.js';
+import { getRequestState, getRequestResponse, expectRequest } from './core/requests.js';
+import { getState, getBlockState, setState, expectState } from './core/state.js';
+import {
+  getValidation,
+  expectValidationStatus,
+  expectValidationError,
+  expectValidationWarning,
+  expectValidationSuccess,
+} from './core/validation.js';
+import { expectUrl, expectUrlQuery, setUrlQuery } from './core/url.js';
+
+export { getBlock };
+export { goto, waitForReady, expectNavigation, waitForPage };
+export { getRequestState, getRequestResponse, expectRequest };
+export { getState, getBlockState, setState, expectState };
+export {
+  getValidation,
+  expectValidationStatus,
+  expectValidationError,
+  expectValidationWarning,
+  expectValidationSuccess,
+};
+export { expectUrl, expectUrlQuery, setUrlQuery };
+
+// Test prep utilities
+import { generateManifest, loadManifest } from './testPrep/generateManifest.js';
+export { generateManifest, loadManifest };
+
+// Proxy utilities
+import createBlockHelper from './proxy/createBlockHelper.js';
+import createHelperRegistry from './proxy/createHelperRegistry.js';
+import createBlockMethodProxy from './proxy/createBlockMethodProxy.js';
+import createPageManager from './proxy/createPageManager.js';
+export { createBlockHelper, createHelperRegistry, createBlockMethodProxy, createPageManager };
+
+// Mocking utilities
+import { createMockManager, loadStaticMocks } from './mocking/index.js';
+export { createMockManager, loadStaticMocks };
