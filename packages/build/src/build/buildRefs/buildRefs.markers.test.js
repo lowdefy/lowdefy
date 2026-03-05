@@ -480,3 +480,178 @@ result:
     expect(res.result).toBe(30);
   });
 });
+
+describe('~r on array-root ref', () => {
+  test('~r tags array and each element when ref resolves to array', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+blocks:
+  _ref: blocks.yaml`,
+      },
+      {
+        path: 'blocks.yaml',
+        content: `
+- id: b1
+  type: Button
+- id: b2
+  type: Input`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    const blocksRefId = findRefId(context.refMap, 'blocks.yaml');
+    expect(blocksRefId).toBeDefined();
+    // Array itself is tagged
+    expect(res.blocks['~r']).toBe(blocksRefId);
+    // Each element is tagged
+    expect(res.blocks[0]['~r']).toBe(blocksRefId);
+    expect(res.blocks[1]['~r']).toBe(blocksRefId);
+  });
+});
+
+describe('operator result in var preserves parent ~r', () => {
+  test('_build.array.concat in var values preserves root ~r', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+out:
+  _ref:
+    path: template.yaml
+    vars:
+      items:
+        _build.array.concat:
+          - - a: 1
+          - - b: 2`,
+      },
+      {
+        path: 'template.yaml',
+        content: `
+list:
+  _var: items`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    const rootId = findRootRefId(context.refMap);
+    expect(rootId).toBeDefined();
+    expect(res.out.list).toEqual([{ a: 1 }, { b: 2 }]);
+    // Var values originated in lowdefy.yaml, so ~r points to root
+    expect(res.out.list[0]['~r']).toBe(rootId);
+    expect(res.out.list[1]['~r']).toBe(rootId);
+  });
+});
+
+describe('sibling ref branches', () => {
+  test('same file in sibling ref branches does not trigger circular error', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+first:
+  _ref: shared.yaml
+second:
+  _ref: wrapper.yaml`,
+      },
+      {
+        path: 'wrapper.yaml',
+        content: `
+inner:
+  _ref: shared.yaml`,
+      },
+      {
+        path: 'shared.yaml',
+        content: `field: value`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(res.first.field).toBe('value');
+    expect(res.second.inner.field).toBe('value');
+  });
+});
+
+describe('~r on resolver ref output', () => {
+  test('resolver ref output gets ~r and refMap entry with original', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+_ref:
+  resolver: src/test-utils/buildRefs/testBuildRefsResolver.js
+  vars:
+    var: var1`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    // Result has ~r set
+    expect(res['~r']).toBeDefined();
+    // Nested object (vars) is tagged
+    expect(res.vars['~r']).toBeDefined();
+    // refMap entry has original and no path property
+    const resolverEntry = Object.values(context.refMap).find(
+      (entry) => !entry.path && entry.original
+    );
+    expect(resolverEntry).toBeDefined();
+    expect(resolverEntry.original.resolver).toBe(
+      'src/test-utils/buildRefs/testBuildRefsResolver.js'
+    );
+  });
+});
+
+describe('build operator error filePath', () => {
+  test('build operator error in ref file has correct filePath', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+result:
+  _ref: file.yaml`,
+      },
+      {
+        path: 'file.yaml',
+        content: `
+bad:
+  _build.sum: not-an-array`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    // Errors are collected, not thrown
+    await buildRefs({ context });
+    expect(context.errors.length).toBeGreaterThanOrEqual(1);
+    const sumError = context.errors.find((e) => e.message && e.message.includes('_sum'));
+    expect(sumError).toBeDefined();
+    expect(sumError.filePath).toBe('file.yaml');
+  });
+});
+
+describe('~r on nunjucks-rendered ref content', () => {
+  test('nunjucks template ref output gets ~r for template file', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+out:
+  _ref:
+    path: template.yaml.njk
+    vars:
+      name: test`,
+      },
+      {
+        path: 'template.yaml.njk',
+        content: `name: {{ name }}
+nested:
+  value: 1`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    const templateRefId = findRefId(context.refMap, 'template.yaml.njk');
+    expect(templateRefId).toBeDefined();
+    expect(res.out['~r']).toBe(templateRefId);
+    expect(res.out.nested['~r']).toBe(templateRefId);
+  });
+});

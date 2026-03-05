@@ -545,3 +545,71 @@ test('buildPageJit resolver page traces errors back to resolver when inner _ref 
     filePath: 'src/test-utils/buildRefs/testJitPageResolver.js',
   });
 });
+
+test('two JIT builds with object vars produce identical results and do not mutate unresolvedVars', async () => {
+  const context = createTestContext();
+  mockFiles([
+    {
+      path: 'page-template.yaml',
+      content: `
+id: home
+type: PageHeaderMenu
+areas:
+  content:
+    blocks:
+      _var: header`,
+    },
+    {
+      path: 'header.yaml',
+      content: `
+- id: h1
+  type: Title`,
+    },
+  ]);
+
+  const pageEntry = {
+    pageId: 'home',
+    auth: { public: true },
+    refId: 'ref-home',
+    refPath: 'page-template.yaml',
+    unresolvedVars: { header: { _ref: 'header.yaml' } },
+  };
+  const pageRegistry = new Map([['home', pageEntry]]);
+
+  // First build
+  const result1 = await buildPageJit({
+    pageId: 'home',
+    pageRegistry,
+    context,
+  });
+
+  const contentBlocks1 = result1.areas?.content?.blocks ?? [];
+  expect(contentBlocks1).toHaveLength(1);
+  expect(contentBlocks1[0].blockId).toBe('h1');
+
+  // Verify unresolvedVars not mutated after first build
+  expect(pageEntry.unresolvedVars.header).toEqual({ _ref: 'header.yaml' });
+
+  // Reset for second build
+  makeId.reset();
+  context.errors = [];
+  context.typeCounters.blocks = (await import('../../utils/createCounter.js')).default();
+  context.typeCounters.actions = (await import('../../utils/createCounter.js')).default();
+
+  // Second build
+  const result2 = await buildPageJit({
+    pageId: 'home',
+    pageRegistry,
+    context,
+  });
+
+  const contentBlocks2 = result2.areas?.content?.blocks ?? [];
+  expect(contentBlocks2).toHaveLength(1);
+  expect(contentBlocks2[0].blockId).toBe('h1');
+
+  // Both builds produce structurally identical results
+  expect(contentBlocks1[0].blockId).toBe(contentBlocks2[0].blockId);
+
+  // unresolvedVars still not mutated
+  expect(pageEntry.unresolvedVars.header).toEqual({ _ref: 'header.yaml' });
+});
