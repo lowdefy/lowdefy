@@ -1663,31 +1663,6 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
 
-  packages/plugins/operators/operators-moment:
-    dependencies:
-      '@lowdefy/operators':
-        specifier: 4.5.2
-        version: link:../../../operators
-      moment:
-        specifier: 2.29.4
-        version: 2.29.4
-    devDependencies:
-      '@swc/cli':
-        specifier: 0.1.63
-        version: 0.1.63(@swc/core@1.3.99(@swc/helpers@0.5.5))(chokidar@3.6.0)
-      '@swc/core':
-        specifier: 1.3.99
-        version: 1.3.99(@swc/helpers@0.5.5)
-      '@swc/jest':
-        specifier: 0.2.29
-        version: 0.2.29(@swc/core@1.3.99(@swc/helpers@0.5.5))
-      jest:
-        specifier: 28.1.3
-        version: 28.1.3(@types/node@20.6.2)
-      jest-environment-jsdom:
-        specifier: 28.1.3
-        version: 28.1.3
-
   packages/plugins/operators/operators-mql:
     dependencies:
       '@lowdefy/helpers':
@@ -20138,7 +20113,8 @@ snapshots:
 
   module-details-from-path@1.0.4: {}
 
-  moment@2.29.4: {}
+  moment@2.29.4:
+    optional: true
 
   mongodb-connection-string-url@2.6.0:
     dependencies:

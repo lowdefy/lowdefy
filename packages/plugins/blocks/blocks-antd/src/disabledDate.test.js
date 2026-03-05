@@ -14,48 +14,48 @@
   limitations under the License.
 */
 
-import moment from 'moment';
+import dayjs from 'dayjs';
 import disabledDate from './disabledDate.js';
 
 test('default', () => {
   const fn = disabledDate();
-  expect(fn(moment(new Date(0)))).toEqual(false);
+  expect(fn(dayjs(new Date(0)))).toEqual(false);
 });
 
 test('disabledDate.min', () => {
   const fn = disabledDate({
     min: new Date('2020-01-01T00:00:00.000Z'),
   });
-  expect(fn(moment('2019-12-31T23:59:00.000Z'))).toEqual(true);
-  expect(fn(moment('2020-01-01T00:00:00.000Z'))).toEqual(false);
-  expect(fn(moment('2020-01-01T01:00:00.000Z'))).toEqual(false);
+  expect(fn(dayjs('2019-12-31T23:59:00.000Z'))).toEqual(true);
+  expect(fn(dayjs('2020-01-01T00:00:00.000Z'))).toEqual(false);
+  expect(fn(dayjs('2020-01-01T01:00:00.000Z'))).toEqual(false);
 });
 
 test('disabledDate.min invalid', () => {
   const fn = disabledDate({
     min: 0,
   });
-  expect(fn(moment('2019-12-31T23:59:00.000Z'))).toEqual(false);
-  expect(fn(moment('2020-01-01T00:00:00.000Z'))).toEqual(false);
-  expect(fn(moment('2020-01-01T01:00:00.000Z'))).toEqual(false);
+  expect(fn(dayjs('2019-12-31T23:59:00.000Z'))).toEqual(false);
+  expect(fn(dayjs('2020-01-01T00:00:00.000Z'))).toEqual(false);
+  expect(fn(dayjs('2020-01-01T01:00:00.000Z'))).toEqual(false);
 });
 
 test('disabledDate.max', () => {
   const fn = disabledDate({
     max: new Date('2020-01-01T00:00:00.000Z'),
   });
-  expect(fn(moment('2020-01-01T00:00:00.000Z'))).toEqual(false);
-  expect(fn(moment('2020-01-01T23:59:00.000Z'))).toEqual(false);
-  expect(fn(moment('2020-01-02T00:00:00.000Z'))).toEqual(true);
+  expect(fn(dayjs('2020-01-01T00:00:00.000Z'))).toEqual(false);
+  expect(fn(dayjs('2020-01-01T23:59:00.000Z'))).toEqual(false);
+  expect(fn(dayjs('2020-01-02T00:00:00.000Z'))).toEqual(true);
 });
 
 test('disabledDate.max invalid', () => {
   const fn = disabledDate({
     max: 'x',
   });
-  expect(fn(moment('2019-12-31T23:59:00.000Z'))).toEqual(false);
-  expect(fn(moment('2020-01-01T00:00:00.000Z'))).toEqual(false);
-  expect(fn(moment('2020-01-01T01:00:00.000Z'))).toEqual(false);
+  expect(fn(dayjs('2019-12-31T23:59:00.000Z'))).toEqual(false);
+  expect(fn(dayjs('2020-01-01T00:00:00.000Z'))).toEqual(false);
+  expect(fn(dayjs('2020-01-01T01:00:00.000Z'))).toEqual(false);
 });
 
 test('disabledDate.dates', () => {
@@ -63,12 +63,12 @@ test('disabledDate.dates', () => {
     dates: [new Date('2020-01-01T00:00:00.000Z'), new Date('2020-01-05T00:00:00.000Z')],
   });
 
-  expect(fn(moment('2020-01-01T00:00:00.000Z'))).toEqual(true);
-  expect(fn(moment('2020-01-01T01:00:00.000Z'))).toEqual(true);
-  expect(fn(moment('2020-01-05T00:00:00.000Z'))).toEqual(true);
-  expect(fn(moment('2020-01-05T12:00:00.000Z'))).toEqual(true);
-  expect(fn(moment('2020-01-06T00:00:00.000Z'))).toEqual(false);
-  expect(fn(moment('2020-01-04T23:59:00.000Z'))).toEqual(false);
+  expect(fn(dayjs('2020-01-01T00:00:00.000Z'))).toEqual(true);
+  expect(fn(dayjs('2020-01-01T01:00:00.000Z'))).toEqual(true);
+  expect(fn(dayjs('2020-01-05T00:00:00.000Z'))).toEqual(true);
+  expect(fn(dayjs('2020-01-05T12:00:00.000Z'))).toEqual(true);
+  expect(fn(dayjs('2020-01-06T00:00:00.000Z'))).toEqual(false);
+  expect(fn(dayjs('2020-01-04T23:59:00.000Z'))).toEqual(false);
 });
 
 test('disabledDate.dates - invalid: schema to throw', () => {
@@ -76,12 +76,12 @@ test('disabledDate.dates - invalid: schema to throw', () => {
     dates: ['x', new Date('2020-01-05T00:00:00.000Z')],
   });
 
-  expect(fn(moment('2020-01-01T00:00:00.000Z'))).toEqual(false);
-  expect(fn(moment('2020-01-01T01:00:00.000Z'))).toEqual(false);
-  expect(fn(moment('2020-01-05T00:00:00.000Z'))).toEqual(true);
-  expect(fn(moment('2020-01-05T12:00:00.000Z'))).toEqual(true);
-  expect(fn(moment('2020-01-06T00:00:00.000Z'))).toEqual(false);
-  expect(fn(moment('2020-01-04T23:59:00.000Z'))).toEqual(false);
+  expect(fn(dayjs('2020-01-01T00:00:00.000Z'))).toEqual(false);
+  expect(fn(dayjs('2020-01-01T01:00:00.000Z'))).toEqual(false);
+  expect(fn(dayjs('2020-01-05T00:00:00.000Z'))).toEqual(true);
+  expect(fn(dayjs('2020-01-05T12:00:00.000Z'))).toEqual(true);
+  expect(fn(dayjs('2020-01-06T00:00:00.000Z'))).toEqual(false);
+  expect(fn(dayjs('2020-01-04T23:59:00.000Z'))).toEqual(false);
 });
 
 test('disabledDate.range', () => {
@@ -89,13 +89,13 @@ test('disabledDate.range', () => {
     ranges: [[new Date('2020-01-02T00:00:00.000Z'), new Date('2020-01-05T00:00:00.000Z')]],
   });
 
-  expect(fn(moment('2020-01-01T00:00:00.000Z'))).toEqual(false);
-  expect(fn(moment('2020-01-01T23:59:00.000Z'))).toEqual(false);
-  expect(fn(moment('2020-01-02T00:00:00.000Z'))).toEqual(true);
-  expect(fn(moment('2020-01-04T23:00:00.000Z'))).toEqual(true);
-  expect(fn(moment('2020-01-05T00:00:00.000Z'))).toEqual(true);
-  expect(fn(moment('2020-01-05T23:59:00.000Z'))).toEqual(true);
-  expect(fn(moment('2020-01-06T00:00:00.000Z'))).toEqual(false);
+  expect(fn(dayjs('2020-01-01T00:00:00.000Z'))).toEqual(false);
+  expect(fn(dayjs('2020-01-01T23:59:00.000Z'))).toEqual(false);
+  expect(fn(dayjs('2020-01-02T00:00:00.000Z'))).toEqual(true);
+  expect(fn(dayjs('2020-01-04T23:00:00.000Z'))).toEqual(true);
+  expect(fn(dayjs('2020-01-05T00:00:00.000Z'))).toEqual(true);
+  expect(fn(dayjs('2020-01-05T23:59:00.000Z'))).toEqual(true);
+  expect(fn(dayjs('2020-01-06T00:00:00.000Z'))).toEqual(false);
 });
 
 test('disabledDate.range - invalid: schema to throw', () => {
@@ -103,11 +103,11 @@ test('disabledDate.range - invalid: schema to throw', () => {
     ranges: [new Date('2020-01-02T00:00:00.000Z'), new Date('2020-01-05T00:00:00.000Z')],
   });
 
-  expect(fn(moment('2020-01-01T00:00:00.000Z'))).toEqual(false);
-  expect(fn(moment('2020-01-01T23:59:00.000Z'))).toEqual(false);
-  expect(fn(moment('2020-01-02T00:00:00.000Z'))).toEqual(false);
-  expect(fn(moment('2020-01-04T23:00:00.000Z'))).toEqual(false);
-  expect(fn(moment('2020-01-05T00:00:00.000Z'))).toEqual(false);
-  expect(fn(moment('2020-01-05T23:59:00.000Z'))).toEqual(false);
-  expect(fn(moment('2020-01-06T00:00:00.000Z'))).toEqual(false);
+  expect(fn(dayjs('2020-01-01T00:00:00.000Z'))).toEqual(false);
+  expect(fn(dayjs('2020-01-01T23:59:00.000Z'))).toEqual(false);
+  expect(fn(dayjs('2020-01-02T00:00:00.000Z'))).toEqual(false);
+  expect(fn(dayjs('2020-01-04T23:00:00.000Z'))).toEqual(false);
+  expect(fn(dayjs('2020-01-05T00:00:00.000Z'))).toEqual(false);
+  expect(fn(dayjs('2020-01-05T23:59:00.000Z'))).toEqual(false);
+  expect(fn(dayjs('2020-01-06T00:00:00.000Z'))).toEqual(false);
 });
