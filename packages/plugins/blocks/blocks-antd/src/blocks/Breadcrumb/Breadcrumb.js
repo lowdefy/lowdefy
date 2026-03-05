@@ -17,39 +17,35 @@
 import React from 'react';
 import { type, get } from '@lowdefy/helpers';
 import { Breadcrumb } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-utils';
+
+import withTheme from '../withTheme.js';
 
 const BreadcrumbBlock = ({
   blockId,
+  classNames = {},
   events,
   components: { Icon, Link },
   methods,
   properties,
   rename,
+  styles = {},
 }) => {
   const onClickActionName = get(rename, 'events.onClick', { default: 'onClick' });
   return (
     <Breadcrumb
       id={blockId}
+      className={classNames.element}
       separator={properties.separator}
-      className={methods.makeCssClass(properties.style)}
-    >
-      {(properties.list || []).map((link, index) => (
-        <Breadcrumb.Item
-          key={index}
-          onClick={
-            events[onClickActionName] &&
-            (() => methods.triggerEvent({ name: onClickActionName, event: { link, index } }))
-          }
-        >
+      style={styles.element}
+      items={(properties.list ?? []).map((link, index) => ({
+        key: index,
+        title: (
           <Link
             id={`${blockId}_${index}`}
-            className={methods.makeCssClass([
-              {
-                cursor: events[onClickActionName] && 'pointer',
-              },
-              link.style,
-            ])}
+            style={{
+              cursor: events[onClickActionName] && 'pointer',
+              ...(type.isObject(link) ? link.style : {}),
+            }}
             {...(type.isObject(link) ? link : {})}
           >
             {() => (
@@ -72,16 +68,19 @@ const BreadcrumbBlock = ({
               </>
             )}
           </Link>
-        </Breadcrumb.Item>
-      ))}
-    </Breadcrumb>
+        ),
+        onClick:
+          events[onClickActionName] &&
+          (() => methods.triggerEvent({ name: onClickActionName, event: { link, index } })),
+      }))}
+    />
   );
 };
 
-BreadcrumbBlock.defaultProps = blockDefaultProps;
 BreadcrumbBlock.meta = {
   category: 'display',
   icons: [],
+  styles: ['element'],
 };
 
-export default BreadcrumbBlock;
+export default withTheme('Breadcrumb', BreadcrumbBlock);
