@@ -3,8 +3,9 @@
 exports[`align bottom 1`] = `
 <div>
   <div
-    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
+    class="lf-col"
     id="bl-align bottom23456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <div
       id="align bottom23456"
@@ -16,8 +17,9 @@ exports[`align bottom 1`] = `
 exports[`align bottom wrap behavior 1`] = `
 <div>
   <div
-    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
+    class="lf-col"
     id="bl-align bottom wrap behavior23456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <div
       id="align bottom wrap behavior23456"
@@ -29,8 +31,9 @@ exports[`align bottom wrap behavior 1`] = `
 exports[`align middle 1`] = `
 <div>
   <div
-    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
+    class="lf-col"
     id="bl-align middle23456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <div
       id="align middle23456"
@@ -42,8 +45,9 @@ exports[`align middle 1`] = `
 exports[`align middle wrap behavior 1`] = `
 <div>
   <div
-    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
+    class="lf-col"
     id="bl-align middle wrap behavior23456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <div
       id="align middle wrap behavior23456"
@@ -55,8 +59,9 @@ exports[`align middle wrap behavior 1`] = `
 exports[`align top 1`] = `
 <div>
   <div
-    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
+    class="lf-col"
     id="bl-align top23456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <div
       id="align top23456"
@@ -68,8 +73,9 @@ exports[`align top 1`] = `
 exports[`align top wrap behavior 1`] = `
 <div>
   <div
-    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
+    class="lf-col"
     id="bl-align top wrap behavior23456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <div
       id="align top wrap behavior23456"
@@ -81,8 +87,9 @@ exports[`align top wrap behavior 1`] = `
 exports[`direction column 1`] = `
 <div>
   <div
-    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
+    class="lf-col"
     id="bl-direction column23456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <div
       id="direction column23456"
@@ -94,8 +101,9 @@ exports[`direction column 1`] = `
 exports[`direction column-reverse 1`] = `
 <div>
   <div
-    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
+    class="lf-col"
     id="bl-direction column-reverse23456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <div
       id="direction column-reverse23456"
@@ -107,8 +115,9 @@ exports[`direction column-reverse 1`] = `
 exports[`direction row 1`] = `
 <div>
   <div
-    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
+    class="lf-col"
     id="bl-direction row23456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <div
       id="direction row23456"
@@ -120,8 +129,9 @@ exports[`direction row 1`] = `
 exports[`direction row-reverse 1`] = `
 <div>
   <div
-    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
+    class="lf-col"
     id="bl-direction row-reverse23456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <div
       id="direction row-reverse23456"
@@ -133,8 +143,9 @@ exports[`direction row-reverse 1`] = `
 exports[`gutter as integer 1`] = `
 <div>
   <div
-    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
+    class="lf-col"
     id="bl-gutter as integer23456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <div
       id="gutter as integer23456"
@@ -146,8 +157,9 @@ exports[`gutter as integer 1`] = `
 exports[`gutter for col and row 1`] = `
 <div>
   <div
-    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
+    class="lf-col"
     id="bl-gutter for col and row23456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <div
       id="gutter for col and row23456"
@@ -159,8 +171,9 @@ exports[`gutter for col and row 1`] = `
 exports[`gutter is object 1`] = `
 <div>
   <div
-    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
+    class="lf-col"
     id="bl-gutter is object23456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <div
       id="gutter is object23456"
@@ -172,8 +185,9 @@ exports[`gutter is object 1`] = `
 exports[`justify center 1`] = `
 <div>
   <div
-    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
+    class="lf-col"
     id="bl-justify center23456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <div
       id="justify center23456"
@@ -185,8 +199,9 @@ exports[`justify center 1`] = `
 exports[`justify end 1`] = `
 <div>
   <div
-    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
+    class="lf-col"
     id="bl-justify end23456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <div
       id="justify end23456"
@@ -198,8 +213,9 @@ exports[`justify end 1`] = `
 exports[`justify space-around 1`] = `
 <div>
   <div
-    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
+    class="lf-col"
     id="bl-justify space-around23456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <div
       id="justify space-around23456"
@@ -211,8 +227,9 @@ exports[`justify space-around 1`] = `
 exports[`justify space-between 1`] = `
 <div>
   <div
-    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
+    class="lf-col"
     id="bl-justify space-between23456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <div
       id="justify space-between23456"
@@ -224,8 +241,9 @@ exports[`justify space-between 1`] = `
 exports[`justify start 1`] = `
 <div>
   <div
-    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
+    class="lf-col"
     id="bl-justify start23456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <div
       id="justify start23456"
@@ -237,8 +255,9 @@ exports[`justify start 1`] = `
 exports[`overflow hidden 1`] = `
 <div>
   <div
-    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
+    class="lf-col"
     id="bl-overflow hidden23456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <div
       id="overflow hidden23456"
@@ -250,8 +269,9 @@ exports[`overflow hidden 1`] = `
 exports[`overflow scroll 1`] = `
 <div>
   <div
-    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
+    class="lf-col"
     id="bl-overflow scroll23456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <div
       id="overflow scroll23456"
@@ -263,8 +283,9 @@ exports[`overflow scroll 1`] = `
 exports[`overflow visible 1`] = `
 <div>
   <div
-    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
+    class="lf-col"
     id="bl-overflow visible23456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <div
       id="overflow visible23456"
@@ -276,8 +297,9 @@ exports[`overflow visible 1`] = `
 exports[`wrap nowrap 1`] = `
 <div>
   <div
-    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
+    class="lf-col"
     id="bl-wrap nowrap23456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <div
       id="wrap nowrap23456"
@@ -289,8 +311,9 @@ exports[`wrap nowrap 1`] = `
 exports[`wrap wrap-reverse 1`] = `
 <div>
   <div
-    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
+    class="lf-col"
     id="bl-wrap wrap-reverse23456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <div
       id="wrap wrap-reverse23456"

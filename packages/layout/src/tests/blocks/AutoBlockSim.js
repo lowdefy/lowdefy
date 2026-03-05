@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { Slot, BlockLayout } from '../../index.js';
+import { Area, BlockLayout } from '../../index.js';
 
 import Block from './Block.js';
 import Box from './Box.js';
@@ -42,7 +42,7 @@ const randomId = () => Math.random().toString().slice(3, 8);
 const Loading = ({ loading, children, showLoading = true }) =>
   loading && showLoading ? <span>Loading</span> : <>{children}</>;
 
-const AutoBlock = ({ block, makeCssClass }) => {
+const AutoBlock = ({ block }) => {
   const content = {};
   let slots;
   let Comp = Blocks[block.type];
@@ -65,27 +65,25 @@ const AutoBlock = ({ block, makeCssClass }) => {
         slots = block.slots;
       }
       Object.keys(slots || {}).forEach((slotKey) => {
-        content[slotKey] = (slotStyle) => (
-          <Slot
-            slot={slots[slotKey]}
-            slotKey={slotKey}
-            slotStyle={[slotStyle, slots[slotKey]?.style]}
+        content[slotKey] = () => (
+          <Area
+            area={slots[slotKey]}
+            areaKey={slotKey}
             id={`${block.id}-${slotKey}${randomId()}`}
             key={`${block.id}-${slotKey}`}
             layout={block.layout}
-            makeCssClass={makeCssClass}
+            style={slots[slotKey]?.style}
           >
             {(slots[slotKey].blocks || []).map((bl, i) => (
-              <BindAutoBlock key={`${bl.id}-${i}`} block={bl} makeCssClass={makeCssClass} />
+              <BindAutoBlock key={`${bl.id}-${i}`} block={bl} />
             ))}
-          </Slot>
+          </Area>
         );
       });
       return (
         <Comp
           blockId={`${block.id}${randomId()}`}
           content={content}
-          makeCssClass={makeCssClass}
           properties={block.properties}
         />
       );
@@ -93,23 +91,21 @@ const AutoBlock = ({ block, makeCssClass }) => {
       return (
         <Comp
           blockId={`${block.id}${randomId()}`}
-          makeCssClass={makeCssClass}
           properties={block.properties}
         />
       );
   }
 };
 
-const BindAutoBlock = ({ block, state, makeCssClass }) => {
+const BindAutoBlock = ({ block, state }) => {
   return (
     <Loading id={`${block.id}-loading`} showLoading>
       <BlockLayout
-        blockStyle={block.style}
         id={`bl-${block.id}${randomId()}`}
         layout={block.layout}
-        makeCssClass={makeCssClass}
+        style={block.style}
       >
-        <AutoBlock block={block} state={state} makeCssClass={makeCssClass} />
+        <AutoBlock block={block} state={state} />
       </BlockLayout>
     </Loading>
   );

@@ -3,8 +3,9 @@
 exports[`basic kanban 1`] = `
 <div>
   <div
-    class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 css-dev-only-do-not-override-1enej14 css-var-root"
+    class="lf-col"
     id="bl-basic kanban23456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <div
       id="basic kanban23456"
