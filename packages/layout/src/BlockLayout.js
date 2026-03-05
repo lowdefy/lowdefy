@@ -15,40 +15,40 @@
 */
 
 import React from 'react';
-import { Col } from 'antd';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 import deriveLayout from './deriveLayout.js';
 
-const alignSelf = (align) => {
-  if (align === 'bottom') {
-    return 'flex-end';
-  }
-  if (align === 'top') {
-    return 'flex-start';
-  }
-  if (align === 'middle') {
-    return 'center';
-  }
-  return align;
+const ALIGN_SELF_MAP = {
+  top: 'flex-start',
+  middle: 'center',
+  bottom: 'flex-end',
 };
 
-const BlockLayout = ({ id, blockStyle, blockClassName, children, layout = {} }) => {
+const BlockLayout = ({ id, children, layout = {}, className, style }) => {
   if (layout.disabled) {
     return (
-      <div id={id} style={blockStyle} className={blockClassName}>
+      <div id={id} className={className} style={style}>
         {children}
       </div>
     );
   }
+
+  const derived = deriveLayout(layout);
+
   return (
-    <Col
-      {...deriveLayout(layout)}
-      style={{ alignSelf: alignSelf(layout.align), ...blockStyle }}
+    <div
       id={id}
-      className={blockClassName}
+      className={[derived.className, className].filter(Boolean).join(' ')}
+      style={{
+        ...derived.style,
+        alignSelf: ALIGN_SELF_MAP[layout.selfAlign] ?? layout.selfAlign,
+        ...style,
+      }}
     >
       {children}
-    </Col>
+    </div>
   );
 };
 
+BlockLayout.defaultProps = blockDefaultProps;
 export default BlockLayout;
