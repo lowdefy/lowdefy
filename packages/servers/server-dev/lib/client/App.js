@@ -38,6 +38,10 @@ const App = ({ auth, lowdefy }) => {
   const router = useRouter();
   const { data: rootConfig } = useRootConfig(router.basePath);
 
+  if (rootConfig?.theme) {
+    lowdefy.theme = rootConfig.theme;
+  }
+
   const { redirect, pageId } = setPageId(router, rootConfig);
   if (redirect) {
     router.push(`/${pageId}`);

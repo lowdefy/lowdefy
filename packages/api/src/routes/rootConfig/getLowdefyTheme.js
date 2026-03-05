@@ -14,22 +14,9 @@
   limitations under the License.
 */
 
-import getHomeAndMenus from './getHomeAndMenus.js';
-import getLowdefyGlobal from './getLowdefyGlobal.js';
-import getLowdefyTheme from './getLowdefyTheme.js';
-
-async function getRootConfig(context) {
-  const [lowdefyGlobal, theme, { home, menus }] = await Promise.all([
-    getLowdefyGlobal(context),
-    getLowdefyTheme(context),
-    getHomeAndMenus(context),
-  ]);
-  return {
-    home,
-    lowdefyGlobal,
-    menus,
-    theme,
-  };
+async function getLowdefyTheme({ readConfigFile }) {
+  const theme = await readConfigFile('theme.json');
+  return theme || {};
 }
 
-export default getRootConfig;
+export default getLowdefyTheme;

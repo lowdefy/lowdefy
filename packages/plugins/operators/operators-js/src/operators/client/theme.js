@@ -14,22 +14,18 @@
   limitations under the License.
 */
 
-import getHomeAndMenus from './getHomeAndMenus.js';
-import getLowdefyGlobal from './getLowdefyGlobal.js';
-import getLowdefyTheme from './getLowdefyTheme.js';
+import { getFromObject } from '@lowdefy/operators';
 
-async function getRootConfig(context) {
-  const [lowdefyGlobal, theme, { home, menus }] = await Promise.all([
-    getLowdefyGlobal(context),
-    getLowdefyTheme(context),
-    getHomeAndMenus(context),
-  ]);
-  return {
-    home,
-    lowdefyGlobal,
-    menus,
-    theme,
-  };
+function _theme({ arrayIndices, location, theme, params }) {
+  return getFromObject({
+    arrayIndices,
+    location,
+    object: theme?.antd?.token ?? {},
+    operator: '_theme',
+    params,
+  });
 }
 
-export default getRootConfig;
+_theme.dynamic = true;
+
+export default _theme;

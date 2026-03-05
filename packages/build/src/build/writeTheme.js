@@ -14,22 +14,16 @@
   limitations under the License.
 */
 
-import getHomeAndMenus from './getHomeAndMenus.js';
-import getLowdefyGlobal from './getLowdefyGlobal.js';
-import getLowdefyTheme from './getLowdefyTheme.js';
+import { type, serializer } from '@lowdefy/helpers';
 
-async function getRootConfig(context) {
-  const [lowdefyGlobal, theme, { home, menus }] = await Promise.all([
-    getLowdefyGlobal(context),
-    getLowdefyTheme(context),
-    getHomeAndMenus(context),
-  ]);
-  return {
-    home,
-    lowdefyGlobal,
-    menus,
-    theme,
-  };
+async function writeTheme({ components, context }) {
+  if (type.isNone(components.theme)) {
+    components.theme = {};
+  }
+  if (!type.isObject(components.theme)) {
+    throw new Error('Theme is not an object.');
+  }
+  await context.writeBuildArtifact('theme.json', serializer.serializeToString(components.theme));
 }
 
-export default getRootConfig;
+export default writeTheme;

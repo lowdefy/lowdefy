@@ -53,6 +53,10 @@ function App({ Component, pageProps: { session, rootConfig, pageConfig } }) {
   const usageDataRef = useRef({});
   const lowdefyRef = useRef({ eventCallback: createLogUsage({ usageDataRef }) });
 
+  if (rootConfig?.theme) {
+    lowdefyRef.current.theme = rootConfig.theme;
+  }
+
   const handleError = useCallback((error) => {
     if (lowdefyRef.current?._internal?.handleError) {
       lowdefyRef.current._internal.handleError(error);

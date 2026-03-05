@@ -16,6 +16,7 @@
 
 import fs from 'fs';
 import path from 'path';
+import { ConfigWarning } from '@lowdefy/errors';
 import { mergeObjects } from '@lowdefy/helpers';
 
 const BRIDGE_DEFAULTS = {
@@ -68,6 +69,15 @@ function buildThemeVars(tailwindConfig) {
 }
 
 async function writeGlobalsCss({ components, context }) {
+  if (fs.existsSync(path.join(context.directories.config, 'public/styles.less'))) {
+    context.handleWarning(
+      new ConfigWarning(
+        'public/styles.less is deprecated. Migrate to: (1) "theme" key in lowdefy.yaml for token overrides (recommended), (2) public/styles.css for custom CSS.',
+        { prodError: true }
+      )
+    );
+  }
+
   const tailwindConfig = components.theme?.tailwind;
   const themeVars = buildThemeVars(tailwindConfig);
 
