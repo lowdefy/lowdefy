@@ -147,7 +147,9 @@
           "displayType": "manual",
           "block": {
             "id": "block_properties_placeholder",
-            "layout": { "_global": "settings_input_layout" },
+            "layout": {
+              "_global": "settings_input_layout"
+            },
             "type": "Label",
             "properties": {
               "title": "placeholder",
@@ -158,7 +160,9 @@
             "blocks": [
               {
                 "id": "block.properties.placeholder.0",
-                "layout": { "span": 12 },
+                "layout": {
+                  "span": 12
+                },
                 "type": "TextInput",
                 "properties": {
                   "size": "small",
@@ -169,7 +173,9 @@
               },
               {
                 "id": "block.properties.placeholder.1",
-                "layout": { "span": 12 },
+                "layout": {
+                  "span": 12
+                },
                 "type": "TextInput",
                 "properties": {
                   "size": "small",
@@ -204,6 +210,13 @@
       "title": {
         "type": "string",
         "description": "Title to describe the input component, if no title is specified the block id is displayed - supports html."
+      },
+      "theme": {
+        "type": "object",
+        "description": "Antd design token overrides for this block. See <a href=\"https://ant.design/components/overview#design-token\">antd design tokens</a>.",
+        "docs": {
+          "displayType": "yaml"
+        }
       }
     }
   },
@@ -216,5 +229,6 @@
         "description": "Trigger actions when selection is changed."
       }
     }
-  }
+  },
+  "cssKeys": ["element", "popup"]
 }

@@ -65,6 +65,13 @@
         "type": "string",
         "enum": ["success", "error", "info", "warning"],
         "description": "Notification status type."
+      },
+      "theme": {
+        "type": "object",
+        "description": "Antd design token overrides for this block. See <a href=\"https://ant.design/components/overview#design-token\">antd design tokens</a>.",
+        "docs": {
+          "displayType": "yaml"
+        }
       }
     }
   },
@@ -81,5 +88,6 @@
         "description": "Trigger actions when notification is clicked."
       }
     }
-  }
+  },
+  "cssKeys": ["element"]
 }

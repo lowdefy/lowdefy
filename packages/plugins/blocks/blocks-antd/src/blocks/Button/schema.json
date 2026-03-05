@@ -73,6 +73,13 @@
         "type": "string",
         "enum": ["solid", "outlined", "dashed", "filled", "text", "link"],
         "description": "Button visual variant. When set, takes precedence over type."
+      },
+      "theme": {
+        "type": "object",
+        "description": "Antd design token overrides for this block. See <a href=\"https://ant.design/components/overview#design-token\">antd design tokens</a>.",
+        "docs": {
+          "displayType": "yaml"
+        }
       }
     }
   },
@@ -85,5 +92,6 @@
         "description": "Trigger action when button is clicked."
       }
     }
-  }
+  },
+  "cssKeys": ["element", "icon"]
 }

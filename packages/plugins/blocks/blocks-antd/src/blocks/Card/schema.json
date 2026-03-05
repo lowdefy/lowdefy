@@ -42,6 +42,13 @@
       "title": {
         "type": "string",
         "description": "Title to show in the title area - supports html. Overwritten by blocks in the title content area."
+      },
+      "theme": {
+        "type": "object",
+        "description": "Antd design token overrides for this block. See <a href=\"https://ant.design/components/overview#design-token\">antd design tokens</a>.",
+        "docs": {
+          "displayType": "yaml"
+        }
       }
     }
   },
@@ -54,5 +61,6 @@
         "description": "Trigger actions when the Card is clicked."
       }
     }
-  }
+  },
+  "cssKeys": ["element", "header", "body", "cover", "actions", "extra"]
 }
