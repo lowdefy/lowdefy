@@ -96,6 +96,6 @@ PaginationBlock.meta = {
   },
   category: 'input',
   icons: [],
-  styles: ['blocks/Pagination/style.less'],
+  styles: [],
 };
 export default PaginationBlock;

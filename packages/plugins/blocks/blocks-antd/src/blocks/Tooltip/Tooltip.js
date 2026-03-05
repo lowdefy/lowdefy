@@ -46,7 +46,7 @@ TooltipBlock.defaultProps = blockDefaultProps;
 TooltipBlock.meta = {
   category: 'container',
   icons: [],
-  styles: ['blocks/Tooltip/style.less'],
+  styles: [],
 };
 
 export default TooltipBlock;

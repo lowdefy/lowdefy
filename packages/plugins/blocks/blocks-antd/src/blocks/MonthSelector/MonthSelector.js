@@ -90,7 +90,7 @@ MonthSelector.meta = {
   valueType: 'date',
   category: 'input',
   icons: [...Label.meta.icons, 'AiOutlineCalendar'],
-  styles: ['blocks/MonthSelector/style.less'],
+  styles: [],
 };
 
 export default MonthSelector;

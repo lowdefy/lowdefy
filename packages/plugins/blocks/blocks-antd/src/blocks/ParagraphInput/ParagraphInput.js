@@ -144,7 +144,7 @@ ParagraphInput.meta = {
   valueType: 'string',
   category: 'input',
   icons: [],
-  styles: ['blocks/ParagraphInput/style.less'],
+  styles: [],
 };
 
 export default ParagraphInput;

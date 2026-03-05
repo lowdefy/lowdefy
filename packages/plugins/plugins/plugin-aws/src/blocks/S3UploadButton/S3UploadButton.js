@@ -86,7 +86,7 @@ S3UploadButtonBlock.meta = {
   valueType: 'object',
   category: 'input',
   icons: ['AiOutlineUpload'],
-  styles: ['blocks/S3UploadButton/style.less'],
+  styles: [],
 };
 
 export default S3UploadButtonBlock;

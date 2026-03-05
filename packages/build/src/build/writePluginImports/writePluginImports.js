@@ -23,7 +23,8 @@ import writeConnectionImports from './writeConnectionImports.js';
 import writeIconImports from './writeIconImports.js';
 import writeOperatorImports from './writeOperatorImports.js';
 import writeOperatorSchemaMap from './writeOperatorSchemaMap.js';
-import writeStyleImports from './writeStyleImports.js';
+import writeBlockStyles from './writeBlockStyles.js';
+import writeGlobalsCss from './writeGlobalsCss.js';
 
 async function writePluginImports({ components, context }) {
   await writeActionImports({ components, context });
@@ -35,7 +36,8 @@ async function writePluginImports({ components, context }) {
   await writeIconImports({ components, context });
   await writeOperatorImports({ components, context });
   await writeOperatorSchemaMap({ components, context });
-  await writeStyleImports({ components, context });
+  await writeBlockStyles({ components, context });
+  await writeGlobalsCss({ components, context });
 }
 
 export default writePluginImports;

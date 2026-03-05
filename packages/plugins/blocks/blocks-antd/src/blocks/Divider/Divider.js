@@ -35,7 +35,7 @@ DividerBlock.defaultProps = blockDefaultProps;
 DividerBlock.meta = {
   category: 'display',
   icons: [],
-  styles: ['blocks/Divider/style.less'],
+  styles: [],
 };
 
 export default DividerBlock;

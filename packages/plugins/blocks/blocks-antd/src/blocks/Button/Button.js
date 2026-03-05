@@ -83,7 +83,7 @@ ButtonBlock.defaultProps = blockDefaultProps;
 ButtonBlock.meta = {
   category: 'display',
   icons: [],
-  styles: ['blocks/Button/style.less'],
+  styles: [],
 };
 
 export default ButtonBlock;

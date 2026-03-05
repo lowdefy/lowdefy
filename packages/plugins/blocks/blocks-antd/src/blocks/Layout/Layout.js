@@ -28,7 +28,7 @@ LayoutBlock.defaultProps = blockDefaultProps;
 LayoutBlock.meta = {
   category: 'container',
   icons: [],
-  styles: ['blocks/Layout/style.less'],
+  styles: [],
 };
 
 export default LayoutBlock;

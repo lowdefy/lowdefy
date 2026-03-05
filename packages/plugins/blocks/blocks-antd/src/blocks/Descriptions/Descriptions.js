@@ -80,7 +80,7 @@ DescriptionsBlock.defaultProps = blockDefaultProps;
 DescriptionsBlock.meta = {
   category: 'container',
   icons: [],
-  styles: ['blocks/Descriptions/style.less'],
+  styles: [],
 };
 
 export default DescriptionsBlock;

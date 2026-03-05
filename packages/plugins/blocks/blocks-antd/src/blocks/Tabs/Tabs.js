@@ -87,7 +87,7 @@ TabsBlock.defaultProps = blockDefaultProps;
 TabsBlock.meta = {
   category: 'container',
   icons: [],
-  styles: ['blocks/Tabs/style.less'],
+  styles: [],
 };
 
 export default TabsBlock;

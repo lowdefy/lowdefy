@@ -82,7 +82,7 @@ CarouselBlock.defaultProps = blockDefaultProps;
 CarouselBlock.meta = {
   category: 'container',
   icons: [],
-  styles: ['blocks/Carousel/style.less'],
+  styles: [],
 };
 
 export default CarouselBlock;

@@ -98,7 +98,7 @@ AutoCompleteInput.meta = {
   valueType: 'string',
   category: 'input',
   icons: [...Label.meta.icons],
-  styles: ['blocks/AutoComplete/style.less'],
+  styles: [],
 };
 
 export default AutoCompleteInput;

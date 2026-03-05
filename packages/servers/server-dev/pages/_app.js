@@ -18,11 +18,26 @@ import React, { Suspense, useCallback, useRef } from 'react';
 import dynamic from 'next/dynamic';
 
 import { ErrorBoundary } from '@lowdefy/block-utils';
+import { StyleProvider } from '@ant-design/cssinjs';
+import { ConfigProvider, theme as antdTheme } from 'antd';
 
 import Auth from '../lib/client/auth/Auth.js';
 
 // Must be in _app due to next specifications.
-import '../build/plugins/styles.less';
+import '../build/globals.css';
+
+const algorithmMap = {
+  default: antdTheme.defaultAlgorithm,
+  dark: antdTheme.darkAlgorithm,
+  compact: antdTheme.compactAlgorithm,
+};
+
+function resolveAlgorithm(algorithm) {
+  if (Array.isArray(algorithm)) {
+    return algorithm.map((a) => algorithmMap[a] || antdTheme.defaultAlgorithm);
+  }
+  return algorithmMap[algorithm] || antdTheme.defaultAlgorithm;
+}
 
 function App({ Component }) {
   const lowdefyRef = useRef({});
@@ -36,15 +51,26 @@ function App({ Component }) {
   }, []);
 
   return (
-    <ErrorBoundary fullPage onError={handleError}>
-      <Suspense fallback="">
-        <Auth>
-          {(auth) => {
-            return <Component auth={auth} lowdefy={lowdefyRef.current} />;
-          }}
-        </Auth>
-      </Suspense>
-    </ErrorBoundary>
+    <StyleProvider layer>
+      <ConfigProvider
+        theme={{
+          ...lowdefyRef.current.theme?.antd,
+          cssVar: { key: ',:root' },
+          hashed: false,
+          algorithm: resolveAlgorithm(lowdefyRef.current.theme?.antd?.algorithm),
+        }}
+      >
+        <ErrorBoundary fullPage onError={handleError}>
+          <Suspense fallback="">
+            <Auth>
+              {(auth) => {
+                return <Component auth={auth} lowdefy={lowdefyRef.current} />;
+              }}
+            </Auth>
+          </Suspense>
+        </ErrorBoundary>
+      </ConfigProvider>
+    </StyleProvider>
   );
 }
 

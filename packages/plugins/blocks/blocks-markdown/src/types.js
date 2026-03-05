@@ -26,5 +26,5 @@ Object.keys(blocks).forEach((block) => {
 export default {
   blocks: Object.keys(blocks),
   icons,
-  styles: { default: ['style.less'], ...styles },
+  styles: { default: ['style.css'], ...styles },
 };

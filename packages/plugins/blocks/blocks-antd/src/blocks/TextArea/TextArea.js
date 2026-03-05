@@ -97,7 +97,7 @@ TextAreaBlock.meta = {
   valueType: 'string',
   category: 'input',
   icons: [...Label.meta.icons],
-  styles: ['blocks/TextArea/style.less'],
+  styles: [],
 };
 
 export default TextAreaBlock;

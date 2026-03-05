@@ -36,7 +36,7 @@ Markdown.defaultProps = blockDefaultProps;
 Markdown.meta = {
   category: 'container',
   icons: [],
-  styles: ['codeblock.less'],
+  styles: ['codeblock.css'],
 };
 
 export default Markdown;

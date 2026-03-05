@@ -40,7 +40,7 @@ AffixBlock.defaultProps = blockDefaultProps;
 AffixBlock.meta = {
   category: 'container',
   icons: [],
-  styles: ['blocks/Affix/style.less'],
+  styles: [],
 };
 
 export default AffixBlock;

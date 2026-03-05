@@ -63,7 +63,7 @@ NotificationBlock.defaultProps = blockDefaultProps;
 NotificationBlock.meta = {
   category: 'display',
   icons: [],
-  styles: ['blocks/Notification/style.less'],
+  styles: [],
 };
 
 export default NotificationBlock;

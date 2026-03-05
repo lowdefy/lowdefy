@@ -69,7 +69,7 @@ ColorSelector.meta = {
   valueType: 'string',
   category: 'input',
   icons: [...Label.meta.icons],
-  styles: ['blocks/ColorSelector/style.less'],
+  styles: ['blocks/ColorSelector/style.css'],
 };
 
 export default ColorSelector;

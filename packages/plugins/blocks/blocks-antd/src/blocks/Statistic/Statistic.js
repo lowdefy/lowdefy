@@ -65,7 +65,7 @@ StatisticBlock.defaultProps = blockDefaultProps;
 StatisticBlock.meta = {
   category: 'display',
   icons: [],
-  styles: ['blocks/Statistic/style.less'],
+  styles: [],
 };
 
 export default StatisticBlock;

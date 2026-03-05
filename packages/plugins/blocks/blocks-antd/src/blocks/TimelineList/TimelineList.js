@@ -82,7 +82,7 @@ TimelineList.defaultProps = blockDefaultProps;
 TimelineList.meta = {
   category: 'list',
   icons: [],
-  styles: ['blocks/TimelineList/style.less'],
+  styles: [],
 };
 
 export default TimelineList;

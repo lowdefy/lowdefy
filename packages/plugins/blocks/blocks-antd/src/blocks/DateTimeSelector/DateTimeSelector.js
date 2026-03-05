@@ -118,7 +118,7 @@ DateTimeSelector.meta = {
   valueType: 'date',
   category: 'input',
   icons: [...Label.meta.icons, 'AiOutlineCalendar'],
-  styles: ['blocks/DateTimeSelector/style.less'],
+  styles: [],
 };
 
 export default DateTimeSelector;

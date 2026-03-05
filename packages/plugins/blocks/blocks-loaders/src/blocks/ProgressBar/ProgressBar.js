@@ -51,7 +51,7 @@ ProgressBar.defaultProps = blockDefaultProps;
 ProgressBar.meta = {
   category: 'display',
   icons: [],
-  styles: ['blocks/ProgressBar/style.less'],
+  styles: ['blocks/ProgressBar/style.css'],
 };
 
 export default ProgressBar;

@@ -140,7 +140,7 @@ TitleInput.meta = {
   valueType: 'string',
   category: 'input',
   icons: [],
-  styles: ['blocks/TitleInput/style.less'],
+  styles: [],
 };
 
 export default TitleInput;

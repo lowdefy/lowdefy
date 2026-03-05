@@ -55,7 +55,7 @@ S3Download.defaultProps = blockDefaultProps;
 S3Download.meta = {
   category: 'display',
   icons: [],
-  styles: ['blocks/S3Download/style.less'],
+  styles: [],
 };
 
 export default S3Download;

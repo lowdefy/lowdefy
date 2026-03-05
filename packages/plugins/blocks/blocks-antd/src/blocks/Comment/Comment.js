@@ -51,7 +51,7 @@ CommentBlock.defaultProps = blockDefaultProps;
 CommentBlock.meta = {
   category: 'container',
   icons: [],
-  styles: ['blocks/Comment/style.less'],
+  styles: [],
 };
 
 export default CommentBlock;

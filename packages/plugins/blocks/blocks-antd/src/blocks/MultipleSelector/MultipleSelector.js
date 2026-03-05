@@ -194,7 +194,7 @@ MultipleSelector.meta = {
   valueType: 'array',
   category: 'input',
   icons: [...Label.meta.icons],
-  styles: ['blocks/MultipleSelector/style.less'],
+  styles: [],
 };
 
 export default MultipleSelector;

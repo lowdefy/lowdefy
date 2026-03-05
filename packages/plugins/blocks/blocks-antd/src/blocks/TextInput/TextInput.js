@@ -143,7 +143,7 @@ TextInput.meta = {
   valueType: 'string',
   category: 'input',
   icons: [...Label.meta.icons],
-  styles: ['blocks/TextInput/style.less'],
+  styles: [],
 };
 
 export default TextInput;

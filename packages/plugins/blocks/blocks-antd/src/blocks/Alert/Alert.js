@@ -54,7 +54,7 @@ AlertBlock.defaultProps = blockDefaultProps;
 AlertBlock.meta = {
   category: 'container',
   icons: [],
-  styles: ['blocks/Alert/style.less'],
+  styles: [],
 };
 
 export default AlertBlock;

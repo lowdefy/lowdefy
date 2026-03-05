@@ -107,7 +107,7 @@ RadioSelector.meta = {
   valueType: 'any',
   category: 'input',
   icons: [...Label.meta.icons],
-  styles: ['blocks/RadioSelector/style.less'],
+  styles: [],
 };
 
 export default RadioSelector;

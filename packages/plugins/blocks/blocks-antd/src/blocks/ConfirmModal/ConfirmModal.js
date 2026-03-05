@@ -87,7 +87,7 @@ ConfirmModal.defaultProps = blockDefaultProps;
 ConfirmModal.meta = {
   category: 'container',
   icons: [],
-  styles: ['blocks/ConfirmModal/style.less'],
+  styles: [],
 };
 
 export default ConfirmModal;

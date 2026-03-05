@@ -75,7 +75,7 @@ CollapseBlock.defaultProps = blockDefaultProps;
 CollapseBlock.meta = {
   category: 'container',
   icons: [],
-  styles: ['blocks/Collapse/style.less'],
+  styles: [],
 };
 
 export default CollapseBlock;

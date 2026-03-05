@@ -238,7 +238,7 @@ RatingSlider.meta = {
   valueType: 'any',
   category: 'input',
   icons: [...Label.meta.icons, 'AiOutlineFrown', 'AiOutlineSmile'],
-  styles: ['blocks/RatingSlider/style.less'],
+  styles: [],
 };
 
 export default RatingSlider;

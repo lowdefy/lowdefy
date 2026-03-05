@@ -30,7 +30,7 @@ Skeleton.defaultProps = blockDefaultProps;
 Skeleton.meta = {
   category: 'display',
   icons: [],
-  styles: ['blocks/Skeleton/style.less'],
+  styles: ['blocks/Skeleton/style.css'],
 };
 
 export default Skeleton;

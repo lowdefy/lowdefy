@@ -365,7 +365,7 @@ PageSiderMenu.defaultProps = blockDefaultProps;
 PageSiderMenu.meta = {
   category: 'container',
   icons: ['AiOutlineMenuFold', 'AiOutlineMenuUnfold', ...MobileMenu.meta.icons],
-  styles: ['blocks/PageSiderMenu/style.less'],
+  styles: [],
 };
 
 export default PageSiderMenu;

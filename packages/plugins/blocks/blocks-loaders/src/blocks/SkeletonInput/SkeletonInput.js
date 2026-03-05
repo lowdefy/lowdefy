@@ -59,7 +59,7 @@ SkeletonInput.defaultProps = blockDefaultProps;
 SkeletonInput.meta = {
   category: 'display',
   icons: [],
-  styles: ['blocks/SkeletonInput/style.less'],
+  styles: ['blocks/SkeletonInput/style.css'],
 };
 
 export default SkeletonInput;

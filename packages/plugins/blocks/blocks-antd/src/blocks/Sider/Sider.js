@@ -63,7 +63,7 @@ SiderBlock.defaultProps = blockDefaultProps;
 SiderBlock.meta = {
   category: 'container',
   icons: [],
-  styles: ['blocks/Sider/style.less'],
+  styles: [],
 };
 
 export default SiderBlock;

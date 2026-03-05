@@ -1299,6 +1299,17 @@ export default {
         },
       },
     },
+    theme: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        antd: { type: 'object' },
+        tailwind: { type: 'object' },
+      },
+      errorMessage: {
+        type: 'App "theme" should be an object.',
+      },
+    },
     plugins: {
       type: 'array',
       items: {

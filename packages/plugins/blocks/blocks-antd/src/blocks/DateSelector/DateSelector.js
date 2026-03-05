@@ -89,7 +89,7 @@ DateSelector.meta = {
   valueType: 'date',
   category: 'input',
   icons: [...Label.meta.icons, 'AiOutlineCalendar'],
-  styles: ['blocks/DateSelector/style.less'],
+  styles: [],
 };
 
 export default DateSelector;

@@ -1,8 +1,7 @@
 const { withSentryConfig } = require('@sentry/nextjs');
-const withLess = require('next-with-less');
 const lowdefyConfig = require('./build/config.json');
 
-const nextConfig = withLess({
+const nextConfig = {
   basePath: lowdefyConfig.basePath,
   reactStrictMode: true,
   webpack: (config, { isServer }) => {
@@ -27,7 +26,7 @@ const nextConfig = withLess({
   eslint: {
     ignoreDuringBuilds: true,
   },
-});
+};
 
 // Only wrap with Sentry if SENTRY_DSN is configured
 // This enables source map uploads when SENTRY_AUTH_TOKEN is present

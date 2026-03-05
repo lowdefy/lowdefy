@@ -39,7 +39,7 @@ ResultBlock.defaultProps = blockDefaultProps;
 ResultBlock.meta = {
   category: 'container',
   icons: [],
-  styles: ['blocks/Result/style.less'],
+  styles: [],
 };
 
 export default ResultBlock;

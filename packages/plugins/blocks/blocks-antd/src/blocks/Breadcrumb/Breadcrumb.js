@@ -82,7 +82,7 @@ BreadcrumbBlock.defaultProps = blockDefaultProps;
 BreadcrumbBlock.meta = {
   category: 'display',
   icons: [],
-  styles: ['blocks/Breadcrumb/style.less'],
+  styles: [],
 };
 
 export default BreadcrumbBlock;

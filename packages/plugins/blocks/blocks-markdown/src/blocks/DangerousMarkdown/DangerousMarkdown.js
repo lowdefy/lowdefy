@@ -50,7 +50,7 @@ DangerousMarkdown.defaultProps = blockDefaultProps;
 DangerousMarkdown.meta = {
   category: 'container',
   icons: [],
-  styles: ['codeblock.less'],
+  styles: ['codeblock.css'],
 };
 
 export default DangerousMarkdown;

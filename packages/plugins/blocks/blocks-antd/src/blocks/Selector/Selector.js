@@ -156,7 +156,7 @@ Selector.meta = {
   valueType: 'any',
   category: 'input',
   icons: [...Label.meta.icons],
-  styles: ['blocks/Selector/style.less'],
+  styles: [],
 };
 
 export default Selector;

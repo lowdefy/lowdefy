@@ -104,7 +104,7 @@ DateRangeSelector.meta = {
   valueType: 'array',
   category: 'input',
   icons: [...Label.meta.icons, 'AiOutlineCalendar'],
-  styles: ['blocks/DateRangeSelector/style.less'],
+  styles: [],
 };
 
 export default DateRangeSelector;
