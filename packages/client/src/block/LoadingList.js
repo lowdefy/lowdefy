@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { Slot, BlockLayout } from '@lowdefy/layout';
+import { Area, BlockLayout } from '@lowdefy/layout';
 import { makeCssClass } from '@lowdefy/block-utils';
 
 import LoadingBlock from './LoadingBlock.js';
@@ -34,11 +34,11 @@ const LoadingList = ({
   const contentList = [];
   new Array(3).forEach(() => {
     Object.keys(skeleton.slots).forEach((slotKey, i) => {
-      content[slotKey] = (slotStyle) => (
-        <Slot
-          slot={skeleton.slots[slotKey]}
-          slotKey={slotKey}
-          slotStyle={{ ...slotStyle, ...skeleton.slots[slotKey]?.style }}
+      content[slotKey] = () => (
+        <Area
+          area={skeleton.slots[slotKey]}
+          areaKey={slotKey}
+          style={skeleton.slots[slotKey]?.style}
           id={`s-ar-${blockId}-${skeleton.id}-${slotKey}`}
           key={`s-ar-${blockId}-${skeleton.id}-${slotKey}-${i}`}
           layout={skeleton.layout ?? blockLayout}
@@ -52,14 +52,14 @@ const LoadingList = ({
               skeleton={skl}
             />
           ))}
-        </Slot>
+        </Area>
       );
     });
     contentList.push({ ...content });
   });
   return (
     <BlockLayout
-      blockStyle={skeleton.style ?? blockStyle}
+      style={skeleton.style ?? blockStyle}
       id={`s-bl-${blockId}-${skeleton.id}`}
       layout={skeleton.layout ?? blockLayout}
     >

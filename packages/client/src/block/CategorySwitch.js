@@ -72,8 +72,8 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
       return (
         <BlockLayout
           id={`bl-${block.blockId}`}
-          blockStyle={block.eval.styles?.block}
-          blockClassName={classNames.block}
+          style={block.eval.styles?.block}
+          className={classNames.block}
           layout={block.eval.layout}
         >
           <Component
@@ -116,8 +116,8 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
       return (
         <BlockLayout
           id={`bl-${block.blockId}`}
-          blockStyle={block.eval.styles?.block}
-          blockClassName={classNames.block}
+          style={block.eval.styles?.block}
+          className={classNames.block}
           layout={block.eval.layout}
         >
           <Component

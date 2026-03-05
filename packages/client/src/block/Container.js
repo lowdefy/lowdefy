@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { Slot, BlockLayout } from '@lowdefy/layout';
+import { Area, BlockLayout } from '@lowdefy/layout';
 import { cn, makeCssClass } from '@lowdefy/block-utils';
 
 import Block from './Block.js';
@@ -27,12 +27,12 @@ const Container = ({ block, Blocks, Component, context, loading, lowdefy }) => {
   // eslint-disable-next-line prefer-destructuring
   const slots = Blocks.subSlots[block.id][0].slots;
   Object.keys(slots).forEach((slotKey, i) => {
-    content[slotKey] = (slotStyle) => (
-      <Slot
-        slot={block.eval.slots[slotKey]}
-        slotKey={slotKey}
-        slotStyle={{ ...slotStyle, ...block.eval.slots[slotKey]?.style }}
-        slotClassName={cn(block.eval.class?.[slotKey])}
+    content[slotKey] = () => (
+      <Area
+        area={block.eval.slots[slotKey]}
+        areaKey={slotKey}
+        style={block.eval.slots[slotKey]?.style}
+        className={cn(block.eval.class?.[slotKey])}
         id={`ar-${block.blockId}-${slotKey}`}
         key={`ar-${block.blockId}-${slotKey}-${i}`}
         layout={block.eval.layout}
@@ -47,13 +47,13 @@ const Container = ({ block, Blocks, Component, context, loading, lowdefy }) => {
             parentLoading={loading}
           />
         ))}
-      </Slot>
+      </Area>
     );
   });
   return (
     <BlockLayout
-      blockStyle={block.eval.styles?.block}
-      blockClassName={classNames.block}
+      style={block.eval.styles?.block}
+      className={classNames.block}
       id={`bl-${block.blockId}`}
       layout={block.eval.layout}
     >

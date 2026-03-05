@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { Slot, BlockLayout } from '@lowdefy/layout';
+import { Area, BlockLayout } from '@lowdefy/layout';
 import { cn, makeCssClass } from '@lowdefy/block-utils';
 
 import Block from './Block.js';
@@ -27,12 +27,12 @@ const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
   const contentList = [];
   Blocks.subSlots[block.id].forEach((SBlock) => {
     Object.keys(SBlock.slots).forEach((slotKey) => {
-      content[slotKey] = (slotStyle) => (
-        <Slot
-          slot={block.eval.slots[slotKey]}
-          slotKey={slotKey}
-          slotStyle={{ ...slotStyle, ...block.eval.slots[slotKey]?.style }}
-          slotClassName={cn(block.eval.class?.[slotKey])}
+      content[slotKey] = () => (
+        <Area
+          area={block.eval.slots[slotKey]}
+          areaKey={slotKey}
+          style={block.eval.slots[slotKey]?.style}
+          className={cn(block.eval.class?.[slotKey])}
           id={`ar-${block.blockId}-${SBlock.id}-${slotKey}`}
           key={`ar-${block.blockId}-${SBlock.id}-${slotKey}`}
           layout={block.eval.layout}
@@ -47,15 +47,15 @@ const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
               parentLoading={loading}
             />
           ))}
-        </Slot>
+        </Area>
       );
     });
     contentList.push({ ...content });
   });
   return (
     <BlockLayout
-      blockStyle={block.eval.styles?.block}
-      blockClassName={classNames.block}
+      style={block.eval.styles?.block}
+      className={classNames.block}
       id={`bl-${block.blockId}`}
       layout={block.eval.layout}
     >
