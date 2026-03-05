@@ -100,9 +100,10 @@ const MobileMenu = ({
               properties={{
                 collapsed: false,
                 theme: 'light',
-                ...(mergeObjects(properties, { style: { marginTop: 24 } }) || {}),
+                ...properties,
                 mode: 'inline',
               }}
+              styles={{ element: { marginTop: 24 } }}
               rename={{
                 events: {
                   onClick: 'onMenuItemClick',
