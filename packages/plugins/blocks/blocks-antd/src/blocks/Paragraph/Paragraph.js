@@ -109,7 +109,6 @@ ParagraphBlock.defaultProps = blockDefaultProps;
 ParagraphBlock.meta = {
   category: 'display',
   icons: [],
-  styles: [],
 };
 
 export default ParagraphBlock;

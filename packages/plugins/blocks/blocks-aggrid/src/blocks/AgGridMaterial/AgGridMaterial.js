@@ -36,7 +36,6 @@ AgGridMaterial.defaultProps = blockDefaultProps;
 AgGridMaterial.meta = {
   category: 'display',
   icons: [],
-  styles: ['blocks/AgGridMaterial/style.less'],
 };
 
 export default AgGridMaterial;

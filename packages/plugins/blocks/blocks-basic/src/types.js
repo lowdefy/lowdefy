@@ -18,18 +18,10 @@
 import * as blocks from './blocks.js';
 
 const icons = {};
-const styles = {};
 Object.keys(blocks).forEach((block) => {
   icons[block] = blocks[block].meta.icons ?? [];
-  styles[block] = blocks[block].meta.styles ?? [];
 });
 export default {
   blocks: Object.keys(blocks),
   icons,
-  styles: { default: [], ...styles },
 };
-
-// export default {
-//   blocks: ['Anchor', 'Box', 'DangerousHtml', 'Html', 'Icon', 'Img', 'List', 'Span'],
-//   styles: { default: ['style.less'], Anchor: ['blocks/Anchor/style.less']  },
-// };

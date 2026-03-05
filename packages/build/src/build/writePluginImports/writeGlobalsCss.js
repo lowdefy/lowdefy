@@ -82,9 +82,6 @@ async function writeGlobalsCss({ components, context }) {
 
 @import "tailwindcss";
 
-/* Block plugin styles — wrapped in components layer */
-@import "./plugins/styles.css" layer(components);
-
 ${importUserStyles ? '/* User custom styles */\n@import "../../public/styles.css" layer(components);\n\n' : ''}/* Content sources — Tailwind v4 uses automatic detection + explicit @source for node_modules */
 @source "../node_modules/@lowdefy/blocks-*/dist/**/*.js";
 

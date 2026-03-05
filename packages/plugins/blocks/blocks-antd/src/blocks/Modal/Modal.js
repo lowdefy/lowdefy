@@ -95,7 +95,6 @@ ModalBlock.defaultProps = blockDefaultProps;
 ModalBlock.meta = {
   category: 'container',
   icons: [],
-  styles: [],
 };
 
 export default ModalBlock;

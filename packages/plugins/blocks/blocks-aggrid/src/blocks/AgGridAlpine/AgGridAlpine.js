@@ -36,7 +36,6 @@ AgGridAlpine.defaultProps = blockDefaultProps;
 AgGridAlpine.meta = {
   category: 'display',
   icons: [],
-  styles: ['blocks/AgGridAlpine/style.less'],
 };
 
 export default AgGridAlpine;

@@ -97,7 +97,6 @@ QRScanner.meta = {
   valueType: 'object',
   category: 'input',
   icons: [],
-  styles: [],
 };
 
 export default QRScanner;

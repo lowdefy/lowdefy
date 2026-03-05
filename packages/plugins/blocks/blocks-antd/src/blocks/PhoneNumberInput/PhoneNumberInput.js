@@ -271,7 +271,6 @@ PhoneNumberInput.meta = {
   valueType: 'object',
   category: 'input',
   icons: [...Label.meta.icons],
-  styles: [],
 };
 
 export default PhoneNumberInput;

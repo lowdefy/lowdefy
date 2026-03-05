@@ -38,7 +38,6 @@ Box.defaultProps = blockDefaultProps;
 Box.meta = {
   category: 'container',
   icons: [],
-  styles: [],
 };
 
 export default Box;

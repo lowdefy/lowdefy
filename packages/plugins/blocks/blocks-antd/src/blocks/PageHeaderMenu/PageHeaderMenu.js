@@ -249,7 +249,6 @@ PageHeaderMenu.defaultProps = blockDefaultProps;
 PageHeaderMenu.meta = {
   category: 'container',
   icons: [...MobileMenu.meta.icons],
-  styles: [],
 };
 
 export default PageHeaderMenu;

@@ -75,7 +75,6 @@ CheckboxSwitch.meta = {
   valueType: 'boolean',
   category: 'input',
   icons: [...Label.meta.icons],
-  styles: [],
 };
 
 export default CheckboxSwitch;

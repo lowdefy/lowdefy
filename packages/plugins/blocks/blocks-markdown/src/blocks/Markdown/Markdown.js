@@ -20,6 +20,9 @@ import ReactMarkdown from 'react-markdown';
 
 import gfm from 'remark-gfm';
 
+import '../style.css';
+import '../codeblock.css';
+
 const Markdown = ({ blockId, properties, methods }) => (
   <div id={blockId} className={methods.makeCssClass(properties.style)}>
     <ReactMarkdown
@@ -36,7 +39,6 @@ Markdown.defaultProps = blockDefaultProps;
 Markdown.meta = {
   category: 'container',
   icons: [],
-  styles: ['codeblock.css'],
 };
 
 export default Markdown;

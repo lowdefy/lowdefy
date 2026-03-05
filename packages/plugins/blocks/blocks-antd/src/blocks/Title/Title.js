@@ -114,7 +114,6 @@ TitleBlock.defaultProps = blockDefaultProps;
 TitleBlock.meta = {
   category: 'display',
   icons: [],
-  styles: [],
 };
 
 export default TitleBlock;

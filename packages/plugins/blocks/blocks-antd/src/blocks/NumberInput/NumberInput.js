@@ -86,7 +86,6 @@ NumberInput.meta = {
   valueType: 'number',
   category: 'input',
   icons: [...Label.meta.icons],
-  styles: [],
 };
 
 export default NumberInput;

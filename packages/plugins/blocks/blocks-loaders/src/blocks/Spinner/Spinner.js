@@ -18,6 +18,8 @@ import React from 'react';
 import { type } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
+import './style.css';
+
 const Spinner = ({ properties, methods }) => {
   let size = properties.size ?? 20;
   if (type.isString(size)) {
@@ -67,7 +69,6 @@ Spinner.defaultProps = blockDefaultProps;
 Spinner.meta = {
   category: 'display',
   icons: [],
-  styles: ['blocks/Spinner/style.css'],
 };
 
 export default Spinner;

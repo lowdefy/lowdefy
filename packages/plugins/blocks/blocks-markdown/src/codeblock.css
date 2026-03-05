@@ -1,14 +1,16 @@
-.markdown-default-code pre {
-  background-color: var(--ant-color-bg-layout);
-  padding: 0.5em;
-  word-wrap: normal;
-}
+@layer components {
+  .markdown-default-code pre {
+    background-color: var(--ant-color-bg-layout);
+    padding: 0.5em;
+    word-wrap: normal;
+  }
 
-.markdown-default-code pre > code {
-  background: transparent;
-  border: 0;
-  margin: 0;
-  padding: 0;
-  white-space: pre;
-  word-break: normal;
+  .markdown-default-code pre > code {
+    background: transparent;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    white-space: pre;
+    word-break: normal;
+  }
 }

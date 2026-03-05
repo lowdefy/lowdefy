@@ -19,6 +19,8 @@ import { blockDefaultProps } from '@lowdefy/block-utils';
 
 import Skeleton from '../Skeleton/Skeleton.js';
 
+import './style.css';
+
 const SkeletonParagraph = ({ properties, methods }) => {
   const lines = [...Array(properties.lines ?? 4).keys()];
   return (
@@ -45,7 +47,6 @@ SkeletonParagraph.defaultProps = blockDefaultProps;
 SkeletonParagraph.meta = {
   category: 'display',
   icons: [],
-  styles: ['blocks/SkeletonParagraph/style.css'],
 };
 
 export default SkeletonParagraph;

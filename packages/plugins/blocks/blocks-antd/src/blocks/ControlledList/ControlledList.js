@@ -151,7 +151,6 @@ ControlledListBlock.meta = {
   valueType: 'array',
   category: 'list',
   icons: ['AiOutlinePlus', 'AiOutlineMinusCircle'],
-  styles: [],
 };
 
 export default ControlledListBlock;

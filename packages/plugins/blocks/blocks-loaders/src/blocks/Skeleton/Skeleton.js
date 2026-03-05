@@ -17,6 +17,8 @@
 import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
+import './style.css';
+
 const Skeleton = ({ properties, methods }) => {
   return (
     <div
@@ -30,7 +32,6 @@ Skeleton.defaultProps = blockDefaultProps;
 Skeleton.meta = {
   category: 'display',
   icons: [],
-  styles: ['blocks/Skeleton/style.css'],
 };
 
 export default Skeleton;

@@ -98,7 +98,6 @@ TreeSelector.meta = {
   category: 'input',
   valueType: 'array',
   icons: [],
-  styles: [],
 };
 
 export default TreeSelector;

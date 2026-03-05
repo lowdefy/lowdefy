@@ -109,16 +109,6 @@ function createPluginTypesMap({ packageName, packageTypes, typePrefix = '', type
     version,
   });
 
-  if (type.isObject(packageTypes.styles)) {
-    Object.entries(packageTypes.styles).forEach(([blockType, styles]) => {
-      if (blockType === 'default') {
-        typesMap.styles.packages[packageName] = styles;
-      } else {
-        typesMap.styles.blocks[`${typePrefix}${blockType}`] = styles;
-      }
-    });
-  }
-
   if (type.isObject(packageTypes.icons)) {
     Object.entries(packageTypes.icons).forEach(([blockType, icons]) => {
       typesMap.icons[`${typePrefix}${blockType}`] = icons;

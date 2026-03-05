@@ -108,7 +108,6 @@ CheckboxSelector.meta = {
   valueType: 'array',
   category: 'input',
   icons: [...Label.meta.icons],
-  styles: [],
 };
 
 export default CheckboxSelector;

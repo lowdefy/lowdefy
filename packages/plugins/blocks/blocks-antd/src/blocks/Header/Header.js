@@ -36,7 +36,6 @@ HeaderBlock.defaultProps = blockDefaultProps;
 HeaderBlock.meta = {
   category: 'container',
   icons: [],
-  styles: [],
 };
 
 export default HeaderBlock;

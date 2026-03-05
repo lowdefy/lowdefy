@@ -60,7 +60,6 @@ GoogleMapsHeatmap.defaultProps = blockDefaultProps;
 GoogleMapsHeatmap.meta = {
   category: 'container',
   icons: [],
-  styles: [],
 };
 
 export default GoogleMapsHeatmap;

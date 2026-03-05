@@ -22,6 +22,9 @@ import ReactMarkdown from 'react-markdown';
 import gfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 
+import '../style.css';
+import '../codeblock.css';
+
 class DangerousMarkdown extends React.Component {
   constructor(props) {
     super(props);
@@ -50,7 +53,6 @@ DangerousMarkdown.defaultProps = blockDefaultProps;
 DangerousMarkdown.meta = {
   category: 'container',
   icons: [],
-  styles: ['codeblock.css'],
 };
 
 export default DangerousMarkdown;

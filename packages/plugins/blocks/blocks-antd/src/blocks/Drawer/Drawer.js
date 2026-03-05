@@ -114,7 +114,6 @@ DrawerBlock.defaultProps = blockDefaultProps;
 DrawerBlock.meta = {
   category: 'container',
   icons: [],
-  styles: [],
 };
 
 export default DrawerBlock;

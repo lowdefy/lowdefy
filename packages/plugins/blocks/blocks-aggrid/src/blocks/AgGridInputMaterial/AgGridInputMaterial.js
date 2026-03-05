@@ -55,7 +55,6 @@ AgGridInputMaterial.meta = {
   category: 'input',
   valueType: 'array',
   icons: [],
-  styles: ['blocks/AgGridInputMaterial/style.less'],
 };
 
 export default AgGridInputMaterial;

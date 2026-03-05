@@ -56,7 +56,6 @@ List.meta = {
   category: 'list',
   valueType: 'array',
   icons: [],
-  styles: [],
 };
 
 export default List;

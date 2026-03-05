@@ -48,7 +48,6 @@ AvatarBlock.defaultProps = blockDefaultProps;
 AvatarBlock.meta = {
   category: 'display',
   icons: [],
-  styles: [],
 };
 
 export default AvatarBlock;

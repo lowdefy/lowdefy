@@ -19,6 +19,8 @@ import { blockDefaultProps } from '@lowdefy/block-utils';
 
 import Skeleton from '../Skeleton/Skeleton.js';
 
+import './style.css';
+
 const SkeletonInput = ({ properties, methods }) => {
   let inputHeight;
   switch (properties.size) {
@@ -59,7 +61,6 @@ SkeletonInput.defaultProps = blockDefaultProps;
 SkeletonInput.meta = {
   category: 'display',
   icons: [],
-  styles: ['blocks/SkeletonInput/style.css'],
 };
 
 export default SkeletonInput;

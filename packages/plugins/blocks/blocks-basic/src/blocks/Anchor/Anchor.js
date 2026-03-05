@@ -56,7 +56,6 @@ AnchorBlock.defaultProps = blockDefaultProps;
 AnchorBlock.meta = {
   category: 'display',
   icons: ['AiOutlineLoading3Quarters'],
-  styles: [],
 };
 
 export default AnchorBlock;

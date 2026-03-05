@@ -28,7 +28,6 @@ LayoutBlock.defaultProps = blockDefaultProps;
 LayoutBlock.meta = {
   category: 'container',
   icons: [],
-  styles: [],
 };
 
 export default LayoutBlock;

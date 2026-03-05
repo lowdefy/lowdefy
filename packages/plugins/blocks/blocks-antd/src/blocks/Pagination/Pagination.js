@@ -96,6 +96,5 @@ PaginationBlock.meta = {
   },
   category: 'input',
   icons: [],
-  styles: [],
 };
 export default PaginationBlock;

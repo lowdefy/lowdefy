@@ -30,7 +30,6 @@ ContentBlock.defaultProps = blockDefaultProps;
 ContentBlock.meta = {
   category: 'container',
   icons: [],
-  styles: [],
 };
 
 export default ContentBlock;

@@ -46,7 +46,6 @@ BadgeBlock.defaultProps = blockDefaultProps;
 BadgeBlock.meta = {
   category: 'container',
   icons: [],
-  styles: [],
 };
 
 export default BadgeBlock;

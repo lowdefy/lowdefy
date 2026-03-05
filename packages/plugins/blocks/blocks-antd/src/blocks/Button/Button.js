@@ -83,7 +83,6 @@ ButtonBlock.defaultProps = blockDefaultProps;
 ButtonBlock.meta = {
   category: 'display',
   icons: [],
-  styles: [],
 };
 
 export default ButtonBlock;

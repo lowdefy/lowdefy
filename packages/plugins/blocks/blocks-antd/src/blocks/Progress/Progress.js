@@ -41,7 +41,6 @@ ProgressBlock.defaultProps = blockDefaultProps;
 ProgressBlock.meta = {
   category: 'display',
   icons: [],
-  styles: [],
 };
 
 export default ProgressBlock;

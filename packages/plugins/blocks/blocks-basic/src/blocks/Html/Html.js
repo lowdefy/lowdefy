@@ -32,7 +32,6 @@ HtmlBlock.defaultProps = blockDefaultProps;
 HtmlBlock.meta = {
   category: 'display',
   icons: [],
-  styles: [],
 };
 
 export default HtmlBlock;

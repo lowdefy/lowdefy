@@ -19,6 +19,8 @@ import { blockDefaultProps } from '@lowdefy/block-utils';
 
 import Skeleton from '../Skeleton/Skeleton.js';
 
+import './style.css';
+
 const SkeletonButton = ({ properties, methods }) => {
   let height;
   switch (properties.size) {
@@ -50,7 +52,6 @@ SkeletonButton.defaultProps = blockDefaultProps;
 SkeletonButton.meta = {
   category: 'display',
   icons: [],
-  styles: ['blocks/SkeletonButton/style.css'],
 };
 
 export default SkeletonButton;

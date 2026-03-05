@@ -62,7 +62,6 @@ TagBlock.defaultProps = blockDefaultProps;
 TagBlock.meta = {
   category: 'display',
   icons: [],
-  styles: [],
 };
 
 export default TagBlock;

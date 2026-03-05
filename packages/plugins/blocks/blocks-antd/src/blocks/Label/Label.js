@@ -117,7 +117,6 @@ Label.defaultProps = blockDefaultProps;
 Label.meta = {
   category: 'container',
   icons: ['AiFillCloseCircle', 'AiFillCheckCircle', 'AiOutlineLoading', 'AiFillExclamationCircle'],
-  styles: [],
 };
 
 export default Label;

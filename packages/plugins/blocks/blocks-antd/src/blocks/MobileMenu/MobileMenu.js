@@ -120,7 +120,6 @@ MobileMenu.defaultProps = blockDefaultProps;
 MobileMenu.meta = {
   category: 'display',
   icons: ['AiOutlineMenuUnfold', 'AiOutlineMenuFold'],
-  styles: [],
 };
 
 export default MobileMenu;

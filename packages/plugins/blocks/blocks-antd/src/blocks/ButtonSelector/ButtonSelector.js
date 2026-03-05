@@ -100,7 +100,6 @@ ButtonSelector.meta = {
   valueType: 'any',
   category: 'input',
   icons: [...Label.meta.icons],
-  styles: [],
 };
 
 export default ButtonSelector;

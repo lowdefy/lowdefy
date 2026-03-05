@@ -17,6 +17,8 @@
 import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
+import './style.css';
+
 const ProgressBar = ({ blockId, methods, style, properties }) => {
   const {
     progress = 30,
@@ -51,7 +53,6 @@ ProgressBar.defaultProps = blockDefaultProps;
 ProgressBar.meta = {
   category: 'display',
   icons: [],
-  styles: ['blocks/ProgressBar/style.css'],
 };
 
 export default ProgressBar;

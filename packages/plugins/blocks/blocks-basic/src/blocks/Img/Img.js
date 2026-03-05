@@ -37,7 +37,6 @@ ImgBlock.defaultProps = blockDefaultProps;
 ImgBlock.meta = {
   category: 'display',
   icons: [],
-  styles: [],
 };
 
 export default ImgBlock;

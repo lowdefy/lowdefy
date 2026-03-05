@@ -86,7 +86,6 @@ PasswordInput.meta = {
   valueType: 'string',
   category: 'input',
   icons: [...Label.meta.icons],
-  styles: [],
 };
 
 export default PasswordInput;

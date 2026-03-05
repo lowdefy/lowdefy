@@ -38,7 +38,6 @@ PopoverBlock.defaultProps = blockDefaultProps;
 PopoverBlock.meta = {
   category: 'container',
   icons: [],
-  styles: [],
 };
 
 export default PopoverBlock;

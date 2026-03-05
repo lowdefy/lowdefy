@@ -44,7 +44,6 @@ CardBlock.defaultProps = blockDefaultProps;
 CardBlock.meta = {
   category: 'container',
   icons: [],
-  styles: [],
 };
 
 export default CardBlock;

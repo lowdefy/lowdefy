@@ -266,7 +266,6 @@ MenuComp.defaultProps = blockDefaultProps;
 MenuComp.meta = {
   category: 'display',
   icons: [],
-  styles: [],
 };
 
 export default MenuComp;

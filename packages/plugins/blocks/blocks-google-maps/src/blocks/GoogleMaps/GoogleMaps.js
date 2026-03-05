@@ -26,7 +26,6 @@ GoogleMaps.defaultProps = blockDefaultProps;
 GoogleMaps.meta = {
   category: 'container',
   icons: [],
-  styles: [],
 };
 
 export default GoogleMaps;

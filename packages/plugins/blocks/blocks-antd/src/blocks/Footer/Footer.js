@@ -33,7 +33,6 @@ FooterBlock.defaultProps = blockDefaultProps;
 FooterBlock.meta = {
   category: 'container',
   icons: [],
-  styles: [],
 };
 
 export default FooterBlock;

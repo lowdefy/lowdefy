@@ -38,7 +38,6 @@ DocSearchBlock.defaultProps = blockDefaultProps;
 DocSearchBlock.meta = {
   category: 'display',
   icons: [],
-  styles: [],
 };
 
 export default DocSearchBlock;
