@@ -4,6 +4,12 @@ const lowdefyConfig = require('./build/config.json');
 const nextConfig = {
   basePath: lowdefyConfig.basePath,
   reactStrictMode: true,
+  transpilePackages: [
+    '@lowdefy/client',
+    '@lowdefy/blocks-loaders',
+    '@lowdefy/blocks-color-selectors',
+    '@lowdefy/blocks-markdown',
+  ],
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {
@@ -22,7 +28,6 @@ const nextConfig = {
   poweredByHeader: false,
   // productionBrowserSourceMaps: true
   output: process.env.LOWDEFY_BUILD_OUTPUT_STANDALONE === '1' ? 'standalone' : undefined,
-  outputFileTracing: true,
   eslint: {
     ignoreDuringBuilds: true,
   },
