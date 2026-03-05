@@ -157,7 +157,7 @@ _ref:
                 properties:
                   title: New ticket # The title in the browser tab.
                 layout:
-                  contentJustify: center # Center the contents of the page
+                  justify: center # Center the contents of the page
                 blocks:
                   # ...
                 ```

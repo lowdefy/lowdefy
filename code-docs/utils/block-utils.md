@@ -19,45 +19,23 @@ import { makeCssClass, ErrorBoundary, HtmlComponent } from '@lowdefy/block-utils
 
 ## Functions
 
-### makeCssClass(styles, styleObjectOnly)
+### makeCssClass (deprecated)
 
-Generate CSS classes using Emotion:
-
-```javascript
-// Simple styles
-const className = makeCssClass({
-  color: 'red',
-  fontSize: '16px',
-});
-
-// With media queries (shorthand)
-const responsiveClass = makeCssClass({
-  fontSize: '14px',
-  '@media sm': {
-    fontSize: '16px',
-  },
-  '@media lg': {
-    fontSize: '18px',
-  },
-});
-
-// Style object only (no class generation)
-const styleObject = makeCssClass({ color: 'blue' }, true);
-```
-
-**Media Query Shortcuts:**
-
-| Shortcut | Breakpoint | CSS                                     |
-| -------- | ---------- | --------------------------------------- |
-| `xs`     | 576px      | `@media screen and (max-width: 576px)`  |
-| `sm`     | 768px      | `@media screen and (max-width: 768px)`  |
-| `md`     | 992px      | `@media screen and (max-width: 992px)`  |
-| `lg`     | 1200px     | `@media screen and (max-width: 1200px)` |
-| `xl`     | 1600px     | `@media screen and (max-width: 1600px)` |
+> **Note:** `makeCssClass()` has been removed as part of the antd v6 upgrade. Blocks now receive `className` and `style` props directly. See `@lowdefy/client` for the new pattern where `classNames.block`/`styles.block` are passed to BlockLayout.
 
 ### mediaToCssObject(styles, styleObjectOnly)
 
-Transform shorthand media queries to CSS objects:
+Transform shorthand media queries to CSS objects. Breakpoint values align with Tailwind CSS v4:
+
+| Shortcut | Breakpoint | CSS                                     |
+| -------- | ---------- | --------------------------------------- |
+| `xs`     | 640px      | `@media screen and (max-width: 640px)`  |
+| `sm`     | 768px      | `@media screen and (max-width: 768px)`  |
+| `md`     | 1024px     | `@media screen and (max-width: 1024px)` |
+| `lg`     | 1280px     | `@media screen and (max-width: 1280px)` |
+| `xl`     | 1536px     | `@media screen and (max-width: 1536px)` |
+
+The `xxl` breakpoint has been renamed to `2xl`.
 
 ```javascript
 const input = {

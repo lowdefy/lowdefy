@@ -1,6 +1,6 @@
 # @lowdefy/layout
 
-Grid-based responsive layout system for Lowdefy blocks. Built on Ant Design's grid.
+CSS custom properties grid-based responsive layout system for Lowdefy blocks.
 
 ## Purpose
 
@@ -17,16 +17,16 @@ import { Area, BlockLayout } from '@lowdefy/layout';
 
 ## Architecture
 
-Lowdefy uses a 24-column grid system (from Ant Design):
+Lowdefy uses a 24-column CSS custom properties grid:
 
 ```
 ┌────────────────────────────────────────────────────────────────────┐
 │                          Page (24 cols)                             │
 │ ┌────────────────────────────────────────────────────────────────┐ │
-│ │                         Area (Row)                              │ │
+│ │                       Area (.lf-row)                            │ │
 │ │ ┌──────────────┐ ┌──────────────┐ ┌──────────────────────────┐ │ │
 │ │ │ BlockLayout  │ │ BlockLayout  │ │      BlockLayout         │ │ │
-│ │ │   (8 cols)   │ │   (8 cols)   │ │       (8 cols)           │ │ │
+│ │ │  (.lf-col)   │ │  (.lf-col)   │ │      (.lf-col)           │ │ │
 │ │ │   ┌──────┐   │ │   ┌──────┐   │ │       ┌──────┐           │ │ │
 │ │ │   │Block │   │ │   │Block │   │ │       │Block │           │ │ │
 │ │ │   └──────┘   │ │   └──────┘   │ │       └──────┘           │ │ │
@@ -37,15 +37,18 @@ Lowdefy uses a 24-column grid system (from Ant Design):
 
 ## BlockLayout Component
 
-Wraps each block with responsive column sizing:
+Wraps each block with responsive column sizing using CSS custom properties:
 
 ```javascript
-const BlockLayout = ({ id, blockStyle, children, layout = {}, makeCssClass }) => {
+const BlockLayout = ({ id, children, layout = {}, classNames, styles }) => {
   if (layout.disabled) {
-    // No grid, just a div
     return <div id={id}>{children}</div>;
   }
-  return <Col {...deriveLayout(layout)}>{children}</Col>;
+  return (
+    <div id={id} className="lf-col" style={computeColStyle(layout)}>
+      {children}
+    </div>
+  );
 };
 ```
 
@@ -64,43 +67,61 @@ blocks:
       md: 8 # Medium screens: 1/3 width
       lg: 6 # Large screens: 1/4 width
       xl: 6 # Extra large: 1/4 width
-      align: top # Vertical alignment (top/middle/bottom)
+      selfAlign: top # Vertical alignment (top/middle/bottom)
+      gap: 16 # Gap between content area children (flows to Area)
+      align: middle # Content area vertical alignment (flows to Area)
+      justify: center # Content area horizontal distribution (flows to Area)
+      direction: row # Content area flex-direction (flows to Area)
+      wrap: wrap # Content area flex-wrap (flows to Area)
+      overflow: visible # Content area overflow (flows to Area)
 ```
+
+The `selfAlign` property controls the block's own vertical alignment in its parent row (maps to `align-self`). The `gap`, `align`, `justify`, `direction`, `wrap`, and `overflow` properties flow through `layoutParamsToArea.js` to set defaults for the block's content area.
 
 ### Responsive Breakpoints
 
 | Breakpoint | Screen Width | Typical Device   |
 | ---------- | ------------ | ---------------- |
-| `xs`       | < 576px      | Mobile           |
-| `sm`       | >= 576px     | Tablet portrait  |
+| `xs`       | < 640px      | Mobile           |
+| `sm`       | >= 640px     | Tablet portrait  |
 | `md`       | >= 768px     | Tablet landscape |
-| `lg`       | >= 992px     | Desktop          |
-| `xl`       | >= 1200px    | Large desktop    |
-| `xxl`      | >= 1600px    | Extra large      |
+| `lg`       | >= 1024px    | Desktop          |
+| `xl`       | >= 1280px    | Large desktop    |
+| `2xl`      | >= 1536px    | Extra large      |
 
 ### Alignment
 
-Vertical alignment within a row:
+Vertical self-alignment within a row:
 
 ```javascript
-const alignSelf = (align) => {
-  if (align === 'bottom') return 'flex-end';
-  if (align === 'top') return 'flex-start';
-  if (align === 'middle') return 'center';
-  return align;
+const alignSelf = (selfAlign) => {
+  if (selfAlign === 'bottom') return 'flex-end';
+  if (selfAlign === 'top') return 'flex-start';
+  if (selfAlign === 'middle') return 'center';
+  return selfAlign;
 };
 ```
 
 ## Area Component
 
-Container that creates a flex row for blocks:
+Container that creates a flex row for blocks using CSS custom properties:
 
 ```javascript
-// Simplified
-const Area = ({ children, layout, makeCssClass }) => (
-  <Row gutter={layout.gutter} justify={layout.justify} align={layout.align}>
+const Area = ({ children, layout }) => (
+  <div
+    className="lf-row"
+    style={{
+      '--lf-gap-x': `${layout.gap}px`,
+      '--lf-gap-y': `${layout.gap}px`,
+      justifyContent: layout.justify,
+      alignItems: layout.align,
+      flexDirection: layout.direction,
+      flexWrap: layout.wrap,
+      overflow: layout.overflow,
+    }}
+  >
     {children}
-  </Row>
+  </div>
 );
 ```
 
@@ -109,20 +130,33 @@ const Area = ({ children, layout, makeCssClass }) => (
 ```yaml
 areas:
   content:
-    gutter: 16 # Gap between blocks (pixels or [h, v])
+    gap: 16 # Gap between blocks (pixels or [h, v])
     justify: start # Horizontal: start/center/end/space-between/space-around
     align: top # Vertical: top/middle/bottom/stretch
+    direction: row # Flex direction
+    wrap: wrap # Flex wrap
+    overflow: visible # Overflow behavior
     blocks: [...]
 ```
 
+## grid.css
+
+The grid system is implemented via `grid.css`, which defines the gap-adjusted flex-basis formula:
+
+```
+flex-basis = (span / 24) * (100% + gap) - gap
+```
+
+This ensures that columns correctly account for gap spacing. CSS custom properties `--lf-gap-x` and `--lf-gap-y` are set on the `.lf-row` container and consumed by `.lf-col` children to calculate their width.
+
 ## Design Decisions
 
-### Why Ant Design Grid?
+### Why CSS Custom Properties Grid?
 
-- Battle-tested responsive system
-- 24-column flexibility
-- Built-in breakpoints
-- Consistent with Ant Design blocks
+- No external grid dependency (Ant Design `Row`/`Col` removed)
+- Lighter bundle — only CSS, no runtime JS for grid calculations
+- Tailwind CSS breakpoint alignment for consistency with utility classes
+- Gap-adjusted flex-basis formula handles spacing without padding hacks
 
 ### Why 24 Columns?
 
@@ -145,9 +179,9 @@ When `layout.disabled: true`:
 
 ## Integration Points
 
-- **@lowdefy/client**: Uses Area and BlockLayout for rendering
+- **@lowdefy/client**: Uses Area and BlockLayout for rendering. Container.js, InputContainer.js etc. pass `classNames.block`/`styles.block` to BlockLayout.
 - **@lowdefy/block-utils**: Provides `blockDefaultProps`
-- **antd**: Provides Row and Col components
+- **@lowdefy/build**: Imports `grid.css` in generated `globals.css`
 
 ## Usage in Block Tree
 

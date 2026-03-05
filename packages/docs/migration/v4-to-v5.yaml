@@ -26,6 +26,24 @@ _ref:
           maxWidth: 800
         properties:
           content: |
+            This guide covers all breaking changes and new features when upgrading from Lowdefy v4 to v5.
+
+            ## Summary of breaking changes
+
+            | Change | Impact | Action |
+            |---|---|---|
+            | `_moment` → `_dayjs` | All apps using `_moment` | Find-and-replace |
+            | `areas` → `slots` | All container blocks | Find-and-replace (backwards compatible) |
+            | `styles.less` → `styles.css` | Apps with custom Less styles | Rewrite in CSS |
+            | Less variables → theme tokens | Apps using `@primary-color` etc. | Move to `theme.antd.token` |
+            | `style.sm` responsive → Tailwind | Apps using responsive style breakpoints | Use Tailwind classes |
+            | `bordered` → `variant` | 16 input/display blocks | Update property |
+            | `visible` → `open` | Modal | Update property |
+            | Button `type`/`danger` → `color`/`variant` | Button blocks | Update properties |
+            | Inline style props → `styles.*` | Card, Modal, Drawer, etc. | Update properties |
+            | Comment block removed | Apps using Comment | Use Card + Flex + Avatar |
+            | Property renames | Various blocks | See table below |
+
             ## `_moment` renamed to `_dayjs`
 
             The `_moment` operator has been renamed to `_dayjs`. The underlying library has changed from [Moment.js](https://momentjs.com/) to [Day.js](https://day.js.org/), which is significantly smaller (~2KB vs ~70KB).
@@ -66,36 +84,21 @@ _ref:
               withSuffix: true
             ```
 
-            ## `thresholds` parameter dropped
+            ### `thresholds` parameter dropped
 
             The `thresholds` parameter on `humanizeDuration` is accepted but ignored in v5. Day.js uses fixed thresholds internally. If you relied on custom thresholds, the output may differ slightly.
 
-            ### Before (v4)
-            ```yaml
-            _moment.humanizeDuration:
-              on: 50000
-              thresholds:
-                ss: 10
-            ```
-
-            ### After (v5)
-            ```yaml
-            # thresholds is accepted but ignored — remove it for clarity
-            _dayjs.humanizeDuration:
-              on: 50000
-            ```
-
-            ## Locale names
+            ### Locale names
 
             The `_dayjs` operator auto-normalizes locale names (e.g. `en-US` becomes `en`, `zh-CN` becomes `zh-cn`). In nunjucks date filters, locale names must be lowercase.
 
             22 locales are bundled: `af`, `de`, `en`, `es`, `fr`, `hi`, `it`, `ja`, `ko`, `nl`, `pl`, `pt`, `ru`, `sv`, `th`, `tr`, `uk`, `vi`, `zh-cn`, `zh-tw`, `ar`, `he`. Uncommon locales fall back to English silently.
 
-            ## AgGrid cell renderers
+            ### AgGrid cell renderers
 
             If you use `_moment` inside `_function` blocks (e.g. AgGrid cell renderers), update the operator name:
 
-            ### Before (v4)
+            #### Before (v4)
             ```yaml
             cellRenderer:
               _function:
@@ -105,7 +108,7 @@ _ref:
                   format: 'D MMM YYYY'
             ```
 
-            ### After (v5)
+            #### After (v5)
             ```yaml
             cellRenderer:
               _function:
@@ -114,3 +117,447 @@ _ref:
                     __args: 0.data.date
                   format: 'D MMM YYYY'
             ```
+
+            ## Layout Grid System
+
+            The layout grid system has been rewritten from the Ant Design Row/Col grid to a standalone CSS custom properties grid using Tailwind CSS breakpoints.
+
+            ### Breakpoint changes
+
+            Breakpoint values have shifted to match Tailwind CSS v4 defaults, and `xxl` has been renamed to `2xl`:
+
+            | Breakpoint | v4 | v5 |
+            |---|---|---|
+            | `xs` | < 576px | < 640px |
+            | `sm` | >= 576px | >= 640px |
+            | `md` | >= 768px | >= 768px |
+            | `lg` | >= 992px | >= 1024px |
+            | `xl` | >= 1200px | >= 1280px |
+            | `xxl` / `2xl` | >= 1600px | >= 1536px |
+
+            Update any `xxl` responsive keys to `2xl`:
+
+            ```yaml
+            # Before
+            layout:
+              span: 8
+              xxl:
+                span: 4
+
+            # After
+            layout:
+              span: 8
+              2xl:
+                span: 4
+            ```
+
+            ### `gutter` renamed to `gap`
+
+            The `gutter` property on area/slot config has been renamed to `gap`:
+
+            ```yaml
+            # Before
+            slots:
+              content:
+                gutter: 16
+
+            # After
+            slots:
+              content:
+                gap: 16
+            ```
+
+            ### `content*` prefix removed from layout properties
+
+            Layout properties that controlled the content area no longer use the `content` prefix. These properties are set on the parent block's `layout` and flow to the content area as defaults:
+
+            | v4 | v5 |
+            |---|---|
+            | `contentGutter` / `contentGap` | `gap` |
+            | `contentAlign` | `align` |
+            | `contentJustify` | `justify` |
+            | `contentDirection` | `direction` |
+            | `contentWrap` | `wrap` |
+            | `contentOverflow` | `overflow` |
+
+            ```yaml
+            # Before
+            layout:
+              span: 12
+              contentGutter: 16
+              contentAlign: middle
+              contentJustify: center
+              contentDirection: column
+
+            # After
+            layout:
+              span: 12
+              gap: 16
+              align: middle
+              justify: center
+              direction: column
+            ```
+
+            ### `layout.align` renamed to `layout.selfAlign`
+
+            The `layout.align` property (which controlled the block's own vertical alignment within its parent row) has been renamed to `layout.selfAlign`. The `layout.align` property now controls content area children alignment:
+
+            ```yaml
+            # Before — block self-alignment
+            layout:
+              span: 6
+              align: top
+
+            # After — renamed to selfAlign
+            layout:
+              span: 6
+              selfAlign: top
+            ```
+
+            ### `span: 0` behavior change
+
+            Setting `span: 0` now hides the block (`display: none`) instead of making it full-width.
+
+            ### `_media` operator
+
+            The `_media` operator now returns `"2xl"` instead of `"xxl"` for the largest breakpoint. Update any comparisons:
+
+            ```yaml
+            # Before
+            _if:
+              condition:
+                _eq:
+                  - _media: size
+                  - xxl
+              then: ...
+
+            # After
+            _if:
+              condition:
+                _eq:
+                  - _media: size
+                  - 2xl
+              then: ...
+            ```
+
+            ### Responsive `style` breakpoints removed
+
+            Responsive breakpoint settings on the `style` property have been removed. Only `layout` supports responsive breakpoints. Use Tailwind CSS responsive classes via `class` instead:
+
+            ```yaml
+            # Before
+            style:
+              padding: 64
+              sm:
+                padding: 32
+
+            # After
+            class: "p-16 sm:p-8"
+            ```
+
+            A codemod is available to automate many of these changes — run `lowdefy codemod layout` in your project directory.
+
+            ## `areas` renamed to `slots`
+
+            The `areas` key on container and list blocks has been renamed to `slots`. This change is **backwards compatible** — `areas` will still work but is deprecated. We recommend updating to `slots` for consistency with the new documentation.
+
+            ### Before (v4)
+            ```yaml
+            - id: my_card
+              type: Card
+              areas:
+                content:
+                  blocks:
+                    - id: my_block
+                      type: Box
+            ```
+
+            ### After (v5)
+            ```yaml
+            - id: my_card
+              type: Card
+              slots:
+                content:
+                  blocks:
+                    - id: my_block
+                      type: Box
+            ```
+
+            ## Style system migration
+
+            The entire styling system has changed from Less/emotion to CSS-in-JS with Tailwind CSS.
+
+            ### `styles.less` → `styles.css`
+
+            Rename your `public/styles.less` file to `public/styles.css` and convert any Less syntax to plain CSS.
+
+            #### Before (v4)
+            ```less
+            @primary-color: #2ac8bb;
+            @new-color: #2ac8bb;
+
+            h1 {
+              font-size: 32px;
+              color: @new-color;
+            }
+            ```
+
+            #### After (v5)
+            ```css
+            h1 {
+              font-size: 32px;
+              color: #2ac8bb;
+            }
+            ```
+
+            For theme variable overrides, use `theme.antd.token` in `lowdefy.yaml` instead:
+
+            ```yaml
+            theme:
+              antd:
+                token:
+                  colorPrimary: '#2ac8bb'
+            ```
+
+            ### Responsive `style` breakpoints → Tailwind classes
+
+            The responsive `style.sm`, `style.md` etc. syntax has been removed. Use Tailwind CSS responsive classes via the `class` property instead:
+
+            #### Before (v4)
+            ```yaml
+            - id: my_card
+              type: Card
+              style:
+                padding: 64
+                sm:
+                  padding: 32
+            ```
+
+            #### After (v5)
+            ```yaml
+            - id: my_card
+              type: Card
+              class: "p-16 sm:p-8"
+            ```
+
+            ### Inline style props → `styles.*`
+
+            Block-specific inline style properties have been replaced with the unified `styles` object:
+
+            | Block | Remove | Use instead |
+            |---|---|---|
+            | Card | `headerStyle`, `bodyStyle` | `styles.header`, `styles.body` |
+            | Modal | `bodyStyle`, `maskStyle` | `styles.body`, `styles.mask` |
+            | Drawer | `drawerStyle`, `headerStyle`, `bodyStyle`, `maskStyle`, `contentWrapperStyle` | `styles.wrapper`, `styles.header`, `styles.body`, `styles.mask`, `styles.content` |
+            | Tabs | `tabBarStyle` | `styles.tabBar` |
+            | ConfirmModal | `bodyStyle` | `styles.body` |
+            | Statistic | `valueStyle` | `styles.value` |
+            | Descriptions | `contentStyle`, `labelStyle` | `styles.content`, `styles.label` |
+            | Tooltip | `overlayStyle` | `styles.inner` |
+
+            #### Before (v4)
+            ```yaml
+            - id: my_card
+              type: Card
+              properties:
+                bodyStyle:
+                  backgroundColor: "#f0f0f0"
+                headerStyle:
+                  fontWeight: bold
+            ```
+
+            #### After (v5)
+            ```yaml
+            - id: my_card
+              type: Card
+              styles:
+                body:
+                  backgroundColor: "#f0f0f0"
+                header:
+                  fontWeight: bold
+            ```
+
+            ## Theme migration
+
+            Less variables are replaced by antd design tokens. Configure tokens in `lowdefy.yaml`:
+
+            | Less variable (v4) | Theme token (v5) |
+            |---|---|
+            | `@primary-color` | `colorPrimary` |
+            | `@success-color` | `colorSuccess` |
+            | `@warning-color` | `colorWarning` |
+            | `@error-color` | `colorError` |
+            | `@font-size-base` | `fontSize` |
+            | `@border-radius-base` | `borderRadius` |
+            | `@text-color` | `colorTextBase` |
+            | `@heading-color` | `colorTextHeading` |
+            | `@disabled-color` | `colorTextDisabled` |
+            | `@border-color-base` | `colorBorder` |
+            | `@body-background` | `colorBgBase` |
+            | `@component-background` | `colorBgContainer` |
+
+            #### Before (v4)
+            ```less
+            @primary-color: #6366f1;
+            @border-radius-base: 8px;
+            ```
+
+            #### After (v5)
+            ```yaml
+            # lowdefy.yaml
+            theme:
+              antd:
+                token:
+                  colorPrimary: '#6366f1'
+                  borderRadius: 8
+            ```
+
+            Dark and compact modes:
+            ```yaml
+            # Before: @import 'antd/dist/antd.dark.less';
+            # After:
+            theme:
+              antd:
+                algorithm: dark
+            ```
+
+            See the [Theming](/theming) concept page for full details.
+
+            ## Property renames
+
+            | Block | Old property | New property |
+            |---|---|---|
+            | Modal | `visible` | `open` |
+            | Tooltip | `defaultVisible` | `defaultOpen` |
+            | Tooltip | event `onVisibleChange` | event `onOpenChange` |
+            | Progress | `gapPosition` | `gapPlacement` |
+            | Carousel | `dotPosition` | `dotPlacement` |
+            | Collapse | `expandIconPosition` | `expandIconPlacement` |
+            | Collapse | `bordered` | `variant` (`outlined` / `borderless`) |
+            | Notification | `message` | `title` |
+            | Tabs | `tabPosition` | `tabPlacement` |
+            | Divider | `type` | `orientation` |
+            | Divider | `orientation` | `titlePlacement` (`start` / `center` / `end`) |
+
+            ## `bordered` → `variant`
+
+            16 blocks have replaced the `bordered` boolean with a `variant` enum for more control:
+
+            | Old | New |
+            |---|---|
+            | `bordered: true` (default) | `variant: outlined` (default) |
+            | `bordered: false` | `variant: borderless` |
+            | — | `variant: filled` (new option) |
+
+            Affected blocks: AutoComplete, Card, Collapse, Descriptions, DateSelector, DateRangeSelector, DateTimeSelector, MonthSelector, WeekSelector, MultipleSelector, NumberInput, PasswordInput, PhoneNumberInput, Selector, TextArea, TextInput.
+
+            ## Button `type`/`danger` → `color`/`variant`
+
+            The Button block has a new property API:
+
+            | Old (v4) | New (v5) |
+            |---|---|
+            | `type: primary` | `color: primary`, `variant: solid` |
+            | `type: dashed` | `variant: dashed` |
+            | `type: text` | `variant: text` |
+            | `type: link` | `variant: link` |
+            | `danger: true` | `color: danger` |
+
+            #### Before (v4)
+            ```yaml
+            - id: my_button
+              type: Button
+              properties:
+                title: Delete
+                type: primary
+                danger: true
+            ```
+
+            #### After (v5)
+            ```yaml
+            - id: my_button
+              type: Button
+              properties:
+                title: Delete
+                color: danger
+                variant: solid
+            ```
+
+            ## Date blocks
+
+            The internal date library has changed from Moment.js to Day.js. Standard date format strings (`YYYY-MM-DD`, `YYYY-MM-DD HH:mm:ss`) work identically. If you use custom format strings, verify they produce the expected output — some moment.js-specific tokens may differ in dayjs.
+
+            Date blocks also have the `bordered` → `variant` change described above.
+
+            ## Removed blocks
+
+            ### Comment
+
+            The Comment block has been removed (it was removed from antd v5). Use a composition pattern with Card, Flex, Avatar, and Paragraph instead:
+
+            ```yaml
+            - id: comment
+              type: Card
+              properties:
+                size: small
+              blocks:
+                - id: comment_header
+                  type: Flex
+                  properties:
+                    align: center
+                    gap: small
+                  blocks:
+                    - id: avatar
+                      type: Avatar
+                      properties:
+                        color: '#402B18'
+                        content: TD
+                    - id: author
+                      type: Paragraph
+                      properties:
+                        content: "**The Dude** — 18 January, 1998"
+                - id: comment_content
+                  type: Paragraph
+                  properties:
+                    content: "Yeah, well, you know, that's just, like, your opinion, man."
+            ```
+
+            ## New blocks
+
+            The following blocks are new in v5:
+
+            | Block | Category | Description |
+            |---|---|---|
+            | [FloatButton](/FloatButton) | display | Floating action button |
+            | [Tour](/Tour) | display | Guided tour component |
+            | [QRCode](/QRCode) | display | QR code generator |
+            | [ColorPicker](/ColorPicker) | input | Color picker input |
+            | [Segmented](/Segmented) | input | Segmented control input |
+            | [Flex](/Flex) | container | Flexbox layout container |
+            | [Splitter](/Splitter) | container | Resizable split-pane container |
+            | [Masonry](/Masonry) | container | Masonry (Pinterest-style) layout |
+            | [Watermark](/Watermark) | container | Watermark overlay container |
+            | [ConfigProvider](/ConfigProvider) | container | Scoped theme provider |
+
+            ## New features
+
+            - **`class` property** — Apply Tailwind CSS classes to any block. See [Custom Styling](/custom-styling).
+            - **`styles` property** — Apply inline styles to specific parts of a block using CSS keys.
+            - **`properties.theme`** — Override antd design tokens per block.
+            - **`_theme` operator** — Access theme seed tokens in expressions. See [`_theme`](/_theme).
+            - **Theming system** — App-level, component-level, and block-level theme customization. See [Theming](/theming).
+
+            ## Common pitfalls
+
+            1. **`styles.less` not loading** — Rename to `styles.css`. Less is no longer supported.
+            2. **`style.sm` not working** — Use `class: "... sm:..."` with Tailwind responsive classes instead.
+            3. **`bordered: false` not working** — Use `variant: borderless`.
+            4. **`@primary-color` not working** — Use `theme.antd.token.colorPrimary` in `lowdefy.yaml`.
+            5. **Button looks different** — Update `type` to `color`/`variant`. See the mapping table above.
+            6. **`areas` deprecated warning** — Rename `areas` to `slots` in your config.
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: V3 to V4
+            previous_page_id: v3-to-v4

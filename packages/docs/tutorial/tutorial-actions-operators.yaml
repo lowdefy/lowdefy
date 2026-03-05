@@ -147,7 +147,7 @@ _ref:
           - id: content_card
             type: Card
             layout:
-              contentGutter: 16
+              gap: 16
             blocks:
               - id: page_heading
                 type: Title
@@ -322,7 +322,7 @@ _ref:
           - id: example_3_content_card
             type: Card
             layout:
-              contentGutter: 16
+              gap: 16
             blocks:
               - id: page_heading
                 type: Title

@@ -91,7 +91,7 @@ blocks:
           - {{ category }}
           - {{ block_type }}
     layout:
-      contentGutter: 16
+      gap: 16
     areas:
       header:
         blocks:
@@ -124,18 +124,18 @@ blocks:
                 value type: {{ value_type }}
                 ```
           {% endif %}
-          {% if areas %}
-          - id: areas_list
+          {% if slots %}
+          - id: slots_list
             type: Markdown
             properties:
               content: |
-                {% if user_defined_areas -%}
+                {% if user_defined_slots -%}
                 ```
-                areas: [key]
+                slots: [key]
                 ```
                 {% else %}
                 ```
-                areas: {{ areas | join(', ') }}
+                slots: {{ slots | join(', ') }}
                 ```
                 {% endif %}
           {% endif %}
@@ -184,15 +184,15 @@ blocks:
                           _var: schema
                         transformer: templates/blocks/defaultValueTransformer.js
 
-                {% if areas %}
-                areas:
-                  {% for area in areas %}
-                  {{ area }}:
+                {% if slots %}
+                slots:
+                  {% for slot in slots %}
+                  {{ slot }}:
                     gutter: 0
                     style:
                       border: 1px dashed red
                     blocks:
-                      - id: block_area_{{ area }}
+                      - id: block_slot_{{ slot }}
                         type: Html
                         style:
                           background: '#f0f2f5'
@@ -200,7 +200,7 @@ blocks:
                           padding: 2px 5px
                           color: red
                         properties:
-                          html: {{ area }}
+                          html: {{ slot }}
                   {% endfor %}
                 {% endif %}
               {% if methods %}

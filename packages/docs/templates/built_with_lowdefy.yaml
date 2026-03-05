@@ -3,13 +3,13 @@ type: Affix
 properties:
   offsetBottom: 0
 layout:
-  contentDirection: row-reverse
+  direction: row-reverse
 blocks:
   - id: tag
     type: Box
     layout:
       flex: 0 1 auto
-      contentAlign: middle
+      align: middle
     style:
       padding: 2px 4px
       background: '#1990FF'

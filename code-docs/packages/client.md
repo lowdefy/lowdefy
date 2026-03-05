@@ -222,7 +222,7 @@ Blocks receive it as a prop, not via React context, for performance.
 ## Integration Points
 
 - **@lowdefy/engine**: Provides state management and actions
-- **@lowdefy/layout**: Provides layout components
+- **@lowdefy/layout**: Provides layout components. Container.js, InputContainer.js, etc. pass `classNames.block`/`styles.block` to BlockLayout, and layout components accept `className`/`style` props instead of the deprecated `makeCssClass`/`blockStyle`/`areaStyle` pattern.
 - **@lowdefy/block-utils**: Block helper utilities
 - **Block plugins**: Actual UI components
 - **Next.js**: Router and head management

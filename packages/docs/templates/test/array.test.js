@@ -56,7 +56,7 @@ test('array propertiesFormTransformer', () => {
         ],
         "id": "block.properties.options",
         "layout": Object {
-          "contentGutter": 0,
+          "gap": 0,
         },
         "properties": Object {
           "itemStyle": Object {
@@ -186,7 +186,7 @@ test('array schemaArrayObject propertiesFormTransformer', () => {
             ],
             "id": "block.properties.options.$",
             "layout": Object {
-              "contentGutter": 0,
+              "gap": 0,
             },
             "properties": Object {
               "bodyStyle": Object {
@@ -200,7 +200,7 @@ test('array schemaArrayObject propertiesFormTransformer', () => {
         ],
         "id": "block.properties.options",
         "layout": Object {
-          "contentGutter": 0,
+          "gap": 0,
         },
         "properties": Object {
           "itemStyle": Object {
@@ -423,7 +423,7 @@ test('array schemaOneOfPrimitive propertiesFormTransformer', () => {
             },
             "id": "$",
             "layout": Object {
-              "contentGutter": 0,
+              "gap": 0,
             },
             "properties": Object {
               "bodyStyle": Object {
@@ -442,7 +442,7 @@ test('array schemaOneOfPrimitive propertiesFormTransformer', () => {
         ],
         "id": "block.properties.options",
         "layout": Object {
-          "contentGutter": 0,
+          "gap": 0,
         },
         "properties": Object {
           "itemStyle": Object {
@@ -629,7 +629,7 @@ test('array schemaPrimitiveOneOf propertiesFormTransformer', () => {
                 ],
                 "id": "__string_arr_block.properties.options",
                 "layout": Object {
-                  "contentGutter": 0,
+                  "gap": 0,
                 },
                 "properties": Object {
                   "itemStyle": Object {
@@ -675,7 +675,7 @@ test('array schemaPrimitiveOneOf propertiesFormTransformer', () => {
                 ],
                 "id": "__number_arr_block.properties.options",
                 "layout": Object {
-                  "contentGutter": 0,
+                  "gap": 0,
                 },
                 "properties": Object {
                   "itemStyle": Object {
@@ -725,7 +725,7 @@ test('array schemaPrimitiveOneOf propertiesFormTransformer', () => {
         },
         "id": "options",
         "layout": Object {
-          "contentGutter": 0,
+          "gap": 0,
         },
         "properties": Object {
           "bodyStyle": Object {
@@ -906,7 +906,7 @@ test('array schemaOneOfArrayStrArrayYaml propertiesFormTransformer', () => {
                 ],
                 "id": "__string_arr_block.properties.options",
                 "layout": Object {
-                  "contentGutter": 0,
+                  "gap": 0,
                 },
                 "properties": Object {
                   "itemStyle": Object {
@@ -955,7 +955,7 @@ test('array schemaOneOfArrayStrArrayYaml propertiesFormTransformer', () => {
                 ],
                 "id": "__object_arr_block.properties.options",
                 "layout": Object {
-                  "contentGutter": 0,
+                  "gap": 0,
                 },
                 "properties": Object {
                   "itemStyle": Object {
@@ -1005,7 +1005,7 @@ test('array schemaOneOfArrayStrArrayYaml propertiesFormTransformer', () => {
         },
         "id": "options",
         "layout": Object {
-          "contentGutter": 0,
+          "gap": 0,
         },
         "properties": Object {
           "bodyStyle": Object {
@@ -1178,7 +1178,7 @@ test('array propertiesFormTransformer schemaNestedArray', () => {
                 ],
                 "id": "block.properties.arr1.$.arr2",
                 "layout": Object {
-                  "contentGutter": 0,
+                  "gap": 0,
                 },
                 "properties": Object {
                   "itemStyle": Object {
@@ -1213,7 +1213,7 @@ test('array propertiesFormTransformer schemaNestedArray', () => {
             ],
             "id": "block.properties.arr1.$",
             "layout": Object {
-              "contentGutter": 0,
+              "gap": 0,
             },
             "properties": Object {
               "bodyStyle": Object {
@@ -1227,7 +1227,7 @@ test('array propertiesFormTransformer schemaNestedArray', () => {
         ],
         "id": "block.properties.arr1",
         "layout": Object {
-          "contentGutter": 0,
+          "gap": 0,
         },
         "properties": Object {
           "itemStyle": Object {

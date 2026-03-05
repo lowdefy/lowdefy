@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- id: block.layout.align
+- id: block.layout.selfAlign
   type: ButtonSelector
   properties:
-    title: align
+    title: selfAlign
     size: small
     options:
       - bottom
@@ -24,7 +24,7 @@
     label:
       span: 8
       align: right
-      extra: Align content in the block vertically.
+      extra: Align the block vertically in the parent area.
 - id: block.layout.span
   type: NumberInput
   properties:
@@ -79,36 +79,9 @@
       span: 8
       align: right
       extra: Css order to change where render order or elements in the raster.
-- id: block.layout.offset
-  type: NumberInput
-  properties:
-    title: offset
-    size: small
-    label:
-      span: 8
-      align: right
-      extra: Number of grid cells to shift the block to the right.
-- id: block.layout.pull
-  type: NumberInput
-  properties:
-    title: pull
-    size: small
-    label:
-      span: 8
-      align: right
-      extra: The number of grid cells that raster is moved to the left.
-- id: block.layout.push
-  type: NumberInput
-  properties:
-    title: push
-    size: small
-    label:
-      span: 8
-      align: right
-      extra: The number of grid cells that raster is moved to the right.
 - id: layout_block_input
   type: Markdown
   properties:
     content: |
       #### Responsive Setup
-      All the above settings can be defined for the various responsive breakpoints, eg: `{ xs: ... sm: ... md: ... lg: ... xl: ... xxl: ... }`
+      All the above settings can be defined for the various responsive breakpoints, eg: `{ xs: ... sm: ... md: ... lg: ... xl: ... 2xl: ... }`
