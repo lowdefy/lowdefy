@@ -37,7 +37,7 @@
   ],
   "scripts": {
     "build": "cp package.json package.original.json || copy package.json package.original.json",
-    "start": "node --import @lowdefy/build/register-css-loader manager/run.mjs",
+    "start": "node manager/run.mjs",
     "lint": "next lint",
     "next": "next",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",

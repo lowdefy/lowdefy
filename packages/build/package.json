@@ -39,14 +39,13 @@
   "exports": {
     ".": "./dist/index.js",
     "./dev": "./dist/indexDev.js",
-    "./buildTestPage": "./dist/build/full/buildTestPage.js",
-    "./register-css-loader": "./dist/scripts/register-css-loader.js"
+    "./buildTestPage": "./dist/build/full/buildTestPage.js"
   },
   "files": [
     "dist/*"
   ],
   "scripts": {
-    "build": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start && node --import ./dist/scripts/register-css-loader.js dist/scripts/generateDefaultTypes.js",
+    "build": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start && node dist/scripts/generateDefaultTypes.js",
     "clean": "rm -rf dist",
     "prepublishOnly": "pnpm build",
     "start": "node dist/scripts/run.js",
