@@ -16,9 +16,18 @@
 
 import React, { useEffect } from 'react';
 import { Modal } from 'antd';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import { renderHtml } from '@lowdefy/block-utils';
 
-const ConfirmModal = ({ blockId, events, content, components: { Icon }, methods, properties }) => {
+const ConfirmModal = ({
+  blockId,
+  classNames = {},
+  events,
+  content,
+  components: { Icon },
+  methods,
+  properties,
+  styles = {},
+}) => {
   useEffect(() => {
     methods.registerMethod('open', (args = {}) => {
       const additionalProps = {};
@@ -31,11 +40,12 @@ const ConfirmModal = ({ blockId, events, content, components: { Icon }, methods,
       Modal[args.status || properties.status || 'confirm']({
         id: `${blockId}_confirm_modal`,
         title: renderHtml({ html: properties.title, methods }),
-        bodyStyle: methods.makeCssClass(properties.bodyStyle, true),
         content:
           (content.content && content.content()) ??
           renderHtml({ html: properties.content, methods }),
-        className: methods.makeCssClass(properties.modalStyle),
+        className: classNames.element,
+        style: styles.element,
+        styles: { body: styles.body },
         closable: properties.closable,
         okText: properties.okText ?? 'Ok',
         okButtonProps: properties.okButton?.icon
@@ -83,10 +93,10 @@ const ConfirmModal = ({ blockId, events, content, components: { Icon }, methods,
   return <div id={blockId} />;
 };
 
-ConfirmModal.defaultProps = blockDefaultProps;
 ConfirmModal.meta = {
   category: 'container',
   icons: [],
+  cssKeys: ['element', 'body'],
 };
 
 export default ConfirmModal;

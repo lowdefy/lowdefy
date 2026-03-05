@@ -16,24 +16,29 @@
 
 import React from 'react';
 import { Tooltip } from 'antd';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import { renderHtml } from '@lowdefy/block-utils';
 
-const TooltipBlock = ({ blockId, content, properties, methods }) => (
+import withTheme from '../withTheme.js';
+
+const TooltipBlock = ({ blockId, classNames = {}, content, properties, methods, styles = {} }) => (
   <Tooltip
     id={blockId}
     title={renderHtml({ html: properties.title, methods })}
-    overlayStyle={methods.makeCssClass(properties.overlayStyle, true)}
     arrowPointAtCenter={properties.arrowPointAtCenter}
     autoAdjustOverflow={properties.autoAdjustOverflow}
     color={properties.color}
-    defaultVisible={properties.defaultVisible}
+    defaultOpen={properties.defaultOpen}
     destroyTooltipOnHide={properties.destroyTooltipOnHide}
     mouseEnterDelay={properties.mouseEnterDelay}
     mouseLeaveDelay={properties.mouseLeaveDelay}
     placement={properties.placement}
     trigger={properties.trigger ?? 'hover'}
     zIndex={properties.zIndex}
-    onVisibleChange={() => methods.triggerEvent({ name: 'onVisibleChange' })}
+    onOpenChange={() => methods.triggerEvent({ name: 'onOpenChange' })}
+    className={classNames.element}
+    classNames={{ inner: classNames.inner }}
+    style={styles.element}
+    styles={{ inner: styles.inner }}
   >
     {content.content && content.content()}
     {
@@ -42,10 +47,10 @@ const TooltipBlock = ({ blockId, content, properties, methods }) => (
   </Tooltip>
 );
 
-TooltipBlock.defaultProps = blockDefaultProps;
 TooltipBlock.meta = {
   category: 'container',
   icons: [],
+  cssKeys: ['element', 'inner'],
 };
 
-export default TooltipBlock;
+export default withTheme('Tooltip', TooltipBlock);

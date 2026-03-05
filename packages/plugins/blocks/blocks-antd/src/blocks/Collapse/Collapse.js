@@ -17,9 +17,20 @@
 import React from 'react';
 import { Collapse } from 'antd';
 import { serializer, type } from '@lowdefy/helpers';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import { renderHtml } from '@lowdefy/block-utils';
 
-const CollapseBlock = ({ blockId, events, content, components: { Icon }, methods, properties }) => {
+import withTheme from '../withTheme.js';
+
+const CollapseBlock = ({
+  blockId,
+  classNames = {},
+  events,
+  content,
+  components: { Icon },
+  methods,
+  properties,
+  styles = {},
+}) => {
   const panels =
     properties.panels ||
     Object.keys(content)
@@ -37,7 +48,7 @@ const CollapseBlock = ({ blockId, events, content, components: { Icon }, methods
     <Collapse
       id={blockId}
       defaultActiveKey={properties.defaultActiveKey || panels[0].key}
-      bordered={properties.bordered}
+      variant={properties.bordered === false ? 'borderless' : properties.variant}
       accordion={properties.accordion}
       onChange={(activeKey) => methods.triggerEvent({ name: 'onChange', event: { activeKey } })}
       expandIcon={
@@ -50,8 +61,12 @@ const CollapseBlock = ({ blockId, events, content, components: { Icon }, methods
           />
         ))
       }
-      expandIconPosition={properties.expandIconPosition}
+      expandIconPlacement={properties.expandIconPlacement}
       destroyInactivePanel={properties.destroyInactivePanel}
+      className={classNames.element}
+      classNames={{ header: classNames.header, content: classNames.content }}
+      style={styles.element}
+      styles={{ header: styles.header, content: styles.content }}
       // eslint-disable-next-line react/jsx-props-no-spreading
       {...additionalProps}
     >
@@ -71,10 +86,10 @@ const CollapseBlock = ({ blockId, events, content, components: { Icon }, methods
   );
 };
 
-CollapseBlock.defaultProps = blockDefaultProps;
 CollapseBlock.meta = {
   category: 'container',
   icons: [],
+  cssKeys: ['element', 'header', 'content'],
 };
 
-export default CollapseBlock;
+export default withTheme('Collapse', CollapseBlock);
