@@ -65,7 +65,7 @@ pages:
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   const res = await buildRefs({
     context,
-    shallowOptions: { stopAt: ['pages.0.blocks'] },
+    shallowOptions: true,
   });
   // The blocks ref should be replaced with a shallow marker
   expect(res.pages[0].blocks['~shallow']).toBe(true);
@@ -105,7 +105,7 @@ pages:
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   const res = await buildRefs({
     context,
-    shallowOptions: { stopAt: ['pages.*.blocks'] },
+    shallowOptions: true,
   });
   // config ref should be fully resolved (doesn't match stop pattern)
   expect(res.config).toEqual({ theme: 'dark' });
@@ -145,9 +145,7 @@ pages:
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   const res = await buildRefs({
     context,
-    shallowOptions: {
-      stopAt: ['pages.*.blocks', 'pages.*.events', 'pages.*.requests'],
-    },
+    shallowOptions: true,
   });
   expect(res.pages[0].blocks['~shallow']).toBe(true);
   expect(res.pages[0].events['~shallow']).toBe(true);
@@ -182,7 +180,7 @@ pages:
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   const res = await buildRefs({
     context,
-    shallowOptions: { stopAt: ['pages.*.blocks'] },
+    shallowOptions: true,
   });
   expect(res.pages[0].blocks['~shallow']).toBe(true);
   expect(res.pages[0].blocks._ref).toBe('pages/home/blocks.yaml');
@@ -239,7 +237,7 @@ pages:
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   const res = await buildRefs({
     context,
-    shallowOptions: { stopAt: ['pages.*.blocks'] },
+    shallowOptions: true,
   });
   expect(res.pages[0].blocks['~shallow']).toBe(true);
   // Original ref should be preserved (object form with path and vars)
@@ -249,7 +247,7 @@ pages:
   });
 });
 
-test('buildRefs with empty stopAt resolves all refs', async () => {
+test('buildRefs without shallowOptions resolves page content refs', async () => {
   const files = [
     {
       path: 'lowdefy.yaml',
@@ -268,9 +266,8 @@ pages:
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   const res = await buildRefs({
     context,
-    shallowOptions: { stopAt: [] },
   });
-  // Empty stopAt means nothing is skipped
+  // Without shallowOptions, nothing is skipped
   expect(res.pages[0].blocks).toEqual([{ id: 'block1' }]);
 });
 
@@ -300,7 +297,7 @@ pages:
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   const res = await buildRefs({
     context,
-    shallowOptions: { stopAt: ['pages.*.blocks'] },
+    shallowOptions: true,
   });
   // The operator should be preserved as-is (not evaluated) because its
   // arguments are ~shallow placeholders containing dynamic content.
@@ -334,7 +331,7 @@ pages:
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   const res = await buildRefs({
     context,
-    shallowOptions: { stopAt: ['pages.*.events'] },
+    shallowOptions: true,
   });
   // Page id should be evaluated (no ~shallow args)
   expect(res.pages[0].id).toBe('page_home');
@@ -366,7 +363,7 @@ pages:
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   const res = await buildRefs({
     context,
-    shallowOptions: { stopAt: ['pages.*.blocks'] },
+    shallowOptions: true,
   });
   // The _if operator wraps a ~shallow ref in its 'then' branch.
   // After top-level static operator evaluation, the _if should be preserved
