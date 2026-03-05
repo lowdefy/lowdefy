@@ -309,7 +309,7 @@
       "~k_parent": "3n"
     },
     "52": {
-      "key": "root.pages[0:home:Box].blocks[9:dateDemo:Card].blocks[1:formattedDate:Paragraph].properties.content._moment",
+      "key": "root.pages[0:home:Box].blocks[9:dateDemo:Card].blocks[1:formattedDate:Paragraph].properties.content._dayjs",
       "~k_parent": "3r"
     },
     "53": {
@@ -981,7 +981,7 @@
       "~l": 262
     },
     "3s": {
-      "key": "root.pages[0:home:Box].blocks[9:dateDemo:Card].blocks[1:formattedDate:Paragraph].properties.content._moment",
+      "key": "root.pages[0:home:Box].blocks[9:dateDemo:Card].blocks[1:formattedDate:Paragraph].properties.content._dayjs",
       "~k_parent": "3r",
       "~l": 263
     },
@@ -1322,7 +1322,7 @@
       "~k_parent": "6v"
     },
     "7b": {
-      "key": "root.types.operators.client._moment",
+      "key": "root.types.operators.client._dayjs",
       "~k_parent": "6v"
     },
     "7c": {
@@ -2438,7 +2438,7 @@
                         "type": "Paragraph",
                         "properties": {
                           "content": {
-                            "_moment": {
+                            "_dayjs": {
                               "format": "YYYY-MM-DD HH:mm:ss",
                               "on": {
                                 "~d": 1705320000000
@@ -4440,14 +4440,14 @@
         ]
       }
     },
-    "_moment": {
+    "_dayjs": {
       "type": "object",
       "params": {
-        "description": "Moment method params. Accepts array positional args or object with named args (on, locale, format/withSuffix/thresholds)."
+        "description": "Dayjs method params. Accepts array positional args or object with named args (on, locale, format/withSuffix/thresholds)."
       }
     }
   },
-  "plugins/operators/client.js": "import { _if as _if } from '@lowdefy/operators-js/operators/client';\nimport { _state as _state } from '@lowdefy/operators-js/operators/client';\nimport { _array as _array } from '@lowdefy/operators-js/operators/client';\nimport { _global as _global } from '@lowdefy/operators-js/operators/client';\nimport { _function as _function } from '@lowdefy/operators-js/operators/client';\nimport { _eq as _eq } from '@lowdefy/operators-js/operators/client';\nimport { _args as _args } from '@lowdefy/operators-js/operators/client';\nimport { _string as _string } from '@lowdefy/operators-js/operators/client';\nimport { _json as _json } from '@lowdefy/operators-js/operators/client';\nimport { _object as _object } from '@lowdefy/operators-js/operators/client';\nimport { _gt as _gt } from '@lowdefy/operators-js/operators/client';\nimport { _and as _and } from '@lowdefy/operators-js/operators/client';\nimport { _or as _or } from '@lowdefy/operators-js/operators/client';\nimport { _not as _not } from '@lowdefy/operators-js/operators/client';\nimport { _type as _type } from '@lowdefy/operators-js/operators/client';\nimport { _moment as _moment } from '@lowdefy/operators-moment/operators/client';\nexport default {\n  _if,\n  _state,\n  _array,\n  _global,\n  _function,\n  _eq,\n  _args,\n  _string,\n  _json,\n  _object,\n  _gt,\n  _and,\n  _or,\n  _not,\n  _type,\n  _moment,\n  };",
+  "plugins/operators/client.js": "import { _if as _if } from '@lowdefy/operators-js/operators/client';\nimport { _state as _state } from '@lowdefy/operators-js/operators/client';\nimport { _array as _array } from '@lowdefy/operators-js/operators/client';\nimport { _global as _global } from '@lowdefy/operators-js/operators/client';\nimport { _function as _function } from '@lowdefy/operators-js/operators/client';\nimport { _eq as _eq } from '@lowdefy/operators-js/operators/client';\nimport { _args as _args } from '@lowdefy/operators-js/operators/client';\nimport { _string as _string } from '@lowdefy/operators-js/operators/client';\nimport { _json as _json } from '@lowdefy/operators-js/operators/client';\nimport { _object as _object } from '@lowdefy/operators-js/operators/client';\nimport { _gt as _gt } from '@lowdefy/operators-js/operators/client';\nimport { _and as _and } from '@lowdefy/operators-js/operators/client';\nimport { _or as _or } from '@lowdefy/operators-js/operators/client';\nimport { _not as _not } from '@lowdefy/operators-js/operators/client';\nimport { _type as _type } from '@lowdefy/operators-js/operators/client';\nimport { _dayjs as _dayjs } from '@lowdefy/operators-dayjs/operators/client';\nexport default {\n  _if,\n  _state,\n  _array,\n  _global,\n  _function,\n  _eq,\n  _args,\n  _string,\n  _json,\n  _object,\n  _gt,\n  _and,\n  _or,\n  _not,\n  _type,\n  _dayjs,\n  };",
   "plugins/operators/clientJsMap.js": "\nexport default {\n  };",
   "plugins/operators/server.js": "export default {\n  };",
   "plugins/operators/serverJsMap.js": "\nexport default {\n  };",
@@ -4753,9 +4753,9 @@
           "count": 2,
           "~k": "7a"
         },
-        "_moment": {
-          "originalTypeName": "_moment",
-          "package": "@lowdefy/operators-moment",
+        "_dayjs": {
+          "originalTypeName": "_dayjs",
+          "package": "@lowdefy/operators-dayjs",
           "count": 1,
           "~k": "7b"
         },

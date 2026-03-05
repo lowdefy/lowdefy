@@ -193,15 +193,15 @@ importers:
       '@lowdefy/operators-change-case':
         specifier: 4.5.2
         version: link:../plugins/operators/operators-change-case
+      '@lowdefy/operators-dayjs':
+        specifier: 4.5.2
+        version: link:../plugins/operators/operators-dayjs
       '@lowdefy/operators-diff':
         specifier: 4.5.2
         version: link:../plugins/operators/operators-diff
       '@lowdefy/operators-jsonata':
         specifier: 4.5.2
         version: link:../plugins/operators/operators-jsonata
-      '@lowdefy/operators-moment':
-        specifier: 4.5.2
-        version: link:../plugins/operators/operators-moment
       '@lowdefy/operators-mql':
         specifier: 4.5.2
         version: link:../plugins/operators/operators-mql
@@ -2105,15 +2105,15 @@ importers:
       '@lowdefy/operators-change-case':
         specifier: 4.5.2
         version: link:../../plugins/operators/operators-change-case
+      '@lowdefy/operators-dayjs':
+        specifier: 4.5.2
+        version: link:../../plugins/operators/operators-dayjs
       '@lowdefy/operators-diff':
         specifier: 4.5.2
         version: link:../../plugins/operators/operators-diff
       '@lowdefy/operators-js':
         specifier: 4.5.2
         version: link:../../plugins/operators/operators-js
-      '@lowdefy/operators-moment':
-        specifier: 4.5.2
-        version: link:../../plugins/operators/operators-moment
       '@lowdefy/operators-mql':
         specifier: 4.5.2
         version: link:../../plugins/operators/operators-mql

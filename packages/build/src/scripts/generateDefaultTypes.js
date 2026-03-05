@@ -46,7 +46,7 @@ const defaultPackages = [
   '@lowdefy/operators-diff',
   '@lowdefy/operators-js',
   '@lowdefy/operators-jsonata',
-  '@lowdefy/operators-moment',
+  '@lowdefy/operators-dayjs',
   '@lowdefy/operators-mql',
   '@lowdefy/operators-nunjucks',
   '@lowdefy/operators-uuid',

@@ -210,7 +210,7 @@ const snapshotTypesMap = {
       _function: { package: '@lowdefy/operators-js' },
       _random: { package: '@lowdefy/operators-js' },
       _uuid: { package: '@lowdefy/operators-uuid' },
-      _moment: { package: '@lowdefy/operators-moment' },
+      _dayjs: { package: '@lowdefy/operators-dayjs' },
       _regex: { package: '@lowdefy/operators-js' },
       _hash: { package: '@lowdefy/operators-js' },
       _base64: { package: '@lowdefy/operators-js' },
