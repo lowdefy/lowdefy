@@ -27,7 +27,6 @@ export { default as Carousel } from './blocks/Carousel/e2e.js';
 export { default as CheckboxSelector } from './blocks/CheckboxSelector/e2e.js';
 export { default as CheckboxSwitch } from './blocks/CheckboxSwitch/e2e.js';
 export { default as Collapse } from './blocks/Collapse/e2e.js';
-export { default as Comment } from './blocks/Comment/e2e.js';
 export { default as ConfirmModal } from './blocks/ConfirmModal/e2e.js';
 export { default as Content } from './blocks/Content/e2e.js';
 export { default as ControlledList } from './blocks/ControlledList/e2e.js';

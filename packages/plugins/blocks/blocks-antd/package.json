@@ -60,13 +60,10 @@
     "antd": "^6.3.0",
     "classnames": "2.3.2",
     "dayjs": "^1.11.10",
-    "moment": "2.29.4",
     "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "tinycolor2": "1.6.0"
+    "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "@emotion/jest": "11.10.5",
     "@lowdefy/block-dev": "4.5.2",
     "@lowdefy/block-dev-e2e": "4.5.2",
     "@lowdefy/e2e-utils": "4.5.2",

@@ -27,7 +27,6 @@ export { default as Carousel } from './blocks/Carousel/schema.js';
 export { default as CheckboxSelector } from './blocks/CheckboxSelector/schema.js';
 export { default as CheckboxSwitch } from './blocks/CheckboxSwitch/schema.js';
 export { default as Collapse } from './blocks/Collapse/schema.js';
-export { default as Comment } from './blocks/Comment/schema.js';
 export { default as ConfirmModal } from './blocks/ConfirmModal/schema.js';
 export { default as Content } from './blocks/Content/schema.js';
 export { default as ControlledList } from './blocks/ControlledList/schema.js';

@@ -777,22 +777,13 @@ importers:
       dayjs:
         specifier: ^1.11.10
         version: 1.11.19
-      moment:
-        specifier: 2.29.4
-        version: 2.29.4
       react:
         specifier: 18.2.0
         version: 18.2.0
       react-dom:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
-      tinycolor2:
-        specifier: 1.6.0
-        version: 1.6.0
     devDependencies:
-      '@emotion/jest':
-        specifier: 11.10.5
-        version: 11.10.5
       '@lowdefy/block-dev':
         specifier: 4.5.2
         version: link:../../../utils/block-dev
@@ -10977,9 +10968,6 @@ packages:
 
   tiny-inflate@1.0.3:
     resolution: {integrity: sha512-pkY1fj1cKHb2seWDy0B16HeWyczlJA9/WW3u3c4z/NiWDsO3DOU5D7nhTLE9CF0yXv/QZFY7sEJmj24dK+Rrqw==}
-
-  tinycolor2@1.6.0:
-    resolution: {integrity: sha512-XPaBkWQJdsf3pLKJV9p4qN/S+fm2Oj8AIPo1BTUhg5oxkvm9+SVEGFdhyOz7tTdUTfvxMiAs4sp6/eZO2Ew+pw==}
 
   tinyglobby@0.2.15:
     resolution: {integrity: sha512-j2Zq4NyQYG5XMST4cbs02Ak8iJUdxRM0XI5QyxXuZOzKOINmWurp3smXu3y5wDcJrptwpSjgXHzIQxR0omXljQ==}
@@ -22193,8 +22181,6 @@ snapshots:
   tildify@2.0.0: {}
 
   tiny-inflate@1.0.3: {}
-
-  tinycolor2@1.6.0: {}
 
   tinyglobby@0.2.15:
     dependencies:
