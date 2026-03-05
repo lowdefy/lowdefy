@@ -2598,9 +2598,9 @@ importers:
       '@lowdefy/helpers':
         specifier: 4.5.2
         version: link:../helpers
-      moment:
-        specifier: 2.29.4
-        version: 2.29.4
+      dayjs:
+        specifier: ^1.11.10
+        version: 1.11.19
     devDependencies:
       '@swc/cli':
         specifier: 0.1.63
