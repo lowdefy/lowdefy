@@ -68,15 +68,30 @@ const deriveFlex = ({ flex, grow, shrink, size }) => {
   return `${sanitizeGrow(grow)} ${sanitizeShrink(shrink)} ${sanitizeSize(size)}`;
 };
 
-const diffOffsetAndSpan = (obj) => {
-  if (obj.offset && !obj.span) {
-    obj.span = 24 - obj.offset;
-    return obj;
+const resolveSpan = (span, offset) => {
+  if (type.isNone(span)) {
+    return offset ? 24 - offset : 24;
   }
-  if (!obj.span) {
-    obj.span = 24;
+  return span;
+};
+
+const applyBreakpoint = (cssVars, classes, bp, obj) => {
+  const suffix = bp ? `-${bp}` : '';
+  const span = resolveSpan(obj.span, obj.offset);
+
+  cssVars[`--lf-display${suffix}`] = span === 0 ? 'none' : 'initial';
+  cssVars[`--lf-span${suffix}`] = span;
+
+  if (!type.isNone(obj.offset)) cssVars[`--lf-offset${suffix}`] = obj.offset;
+  if (!type.isNone(obj.order)) cssVars[`--lf-order${suffix}`] = obj.order;
+  if (!type.isNone(obj.push)) {
+    cssVars[`--lf-push${suffix}`] = obj.push;
+    if (!classes.includes('lf-col-push')) classes.push('lf-col-push');
   }
-  return obj;
+  if (!type.isNone(obj.pull)) {
+    cssVars[`--lf-pull${suffix}`] = obj.pull;
+    if (!classes.includes('lf-col-pull')) classes.push('lf-col-pull');
+  }
 };
 
 const deriveLayout = ({
@@ -94,36 +109,81 @@ const deriveLayout = ({
   md,
   lg,
   xl,
-  xxl,
+  '2xl': bp2xl,
 }) => {
-  let colProps = {
-    xs: { span: 24 },
-    sm: { span: 24 },
-    md: diffOffsetAndSpan({ offset, order, pull, push, span }),
-  };
   const flexValue = deriveFlex({ flex, grow, shrink, size });
   if (flexValue) {
-    colProps = { flex: flexValue, order };
+    return {
+      className: '',
+      style: { flex: flexValue, order },
+    };
   }
+
+  const classes = ['lf-col'];
+  const cssVars = {};
+
+  // Base (xs): always full width
+  cssVars['--lf-span'] = 24;
+
+  // md: uses top-level span/offset/order/push/pull
+  // Always emit --lf-span-md to break the CSS var() fallback chain
+  const mdSpan = resolveSpan(span, offset);
+  cssVars['--lf-span-md'] = mdSpan;
+  if (mdSpan === 0) cssVars['--lf-display-md'] = 'none';
+  if (!type.isNone(offset)) cssVars['--lf-offset-md'] = offset;
+  if (!type.isNone(order)) cssVars['--lf-order-md'] = order;
+  if (!type.isNone(push)) {
+    cssVars['--lf-push-md'] = push;
+    classes.push('lf-col-push');
+  }
+  if (!type.isNone(pull)) {
+    cssVars['--lf-pull-md'] = pull;
+    classes.push('lf-col-pull');
+  }
+
+  // sm: cascades down to xs (base vars) AND sets -sm vars
   if (type.isObject(sm)) {
-    colProps.sm = { ...colProps.sm, ...diffOffsetAndSpan(sm) };
-    colProps.xs = { ...colProps.xs, ...diffOffsetAndSpan(sm) };
+    const smObj = { ...sm };
+    const smSpan = resolveSpan(smObj.span, smObj.offset);
+    cssVars['--lf-span'] = smSpan;
+    cssVars['--lf-display'] = smSpan === 0 ? 'none' : 'initial';
+    if (!type.isNone(smObj.offset)) cssVars['--lf-offset'] = smObj.offset;
+    if (!type.isNone(smObj.order)) cssVars['--lf-order'] = smObj.order;
+    if (!type.isNone(smObj.push)) {
+      cssVars['--lf-push'] = smObj.push;
+      if (!classes.includes('lf-col-push')) classes.push('lf-col-push');
+    }
+    if (!type.isNone(smObj.pull)) {
+      cssVars['--lf-pull'] = smObj.pull;
+      if (!classes.includes('lf-col-pull')) classes.push('lf-col-pull');
+    }
+    applyBreakpoint(cssVars, classes, 'sm', smObj);
   }
+
+  // xs: applied AFTER sm, overrides the sm→xs cascade
   if (type.isObject(xs)) {
-    colProps.xs = { ...colProps.xs, ...diffOffsetAndSpan(xs) };
+    applyBreakpoint(cssVars, classes, null, { ...xs });
   }
+
+  // md override: spread-merge with baseline
   if (type.isObject(md)) {
-    colProps.md = { ...colProps.md, ...diffOffsetAndSpan(md) };
+    applyBreakpoint(cssVars, classes, 'md', {
+      offset,
+      order,
+      push,
+      pull,
+      ...md,
+    });
   }
-  if (type.isObject(lg)) {
-    colProps.lg = diffOffsetAndSpan(lg);
-  }
-  if (type.isObject(xl)) {
-    colProps.xl = diffOffsetAndSpan(xl);
-  }
-  if (type.isObject(xxl)) {
-    colProps.xxl = diffOffsetAndSpan(xxl);
-  }
-  return colProps;
+
+  // lg, xl, 2xl: direct assignment — no baseline merge
+  if (type.isObject(lg)) applyBreakpoint(cssVars, classes, 'lg', lg);
+  if (type.isObject(xl)) applyBreakpoint(cssVars, classes, 'xl', xl);
+  if (type.isObject(bp2xl)) applyBreakpoint(cssVars, classes, '2xl', bp2xl);
+
+  return {
+    className: classes.join(' '),
+    style: cssVars,
+  };
 };
 export default deriveLayout;
