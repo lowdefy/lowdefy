@@ -1,0 +1,337 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+@layer components {
+  /* =====================================================
+     Row (Area)
+
+     --_gap is the resolved horizontal gap at the current
+     breakpoint. It's used for column-gap on the row AND
+     inherited by child .lf-col elements for the flex-basis
+     gap adjustment formula.
+     ===================================================== */
+  .lf-row {
+    --_gap: var(--lf-gap-x, 0px);
+    display: flex;
+    /* flex-wrap is set via inline style (derivedArea.wrap ?? 'wrap') */
+    column-gap: var(--_gap);
+    row-gap: var(--lf-gap-y, 0px);
+  }
+
+  @media (min-width: 640px) {
+    .lf-row {
+      --_gap: var(--lf-gap-x-sm, var(--lf-gap-x, 0px));
+      column-gap: var(--_gap);
+      row-gap: var(--lf-gap-y-sm, var(--lf-gap-y, 0px));
+    }
+  }
+  @media (min-width: 768px) {
+    .lf-row {
+      --_gap: var(--lf-gap-x-md, var(--lf-gap-x-sm, var(--lf-gap-x, 0px)));
+      column-gap: var(--_gap);
+      row-gap: var(--lf-gap-y-md, var(--lf-gap-y-sm, var(--lf-gap-y, 0px)));
+    }
+  }
+  @media (min-width: 1024px) {
+    .lf-row {
+      --_gap: var(--lf-gap-x-lg, var(--lf-gap-x-md, var(--lf-gap-x-sm, var(--lf-gap-x, 0px))));
+      column-gap: var(--_gap);
+      row-gap: var(--lf-gap-y-lg, var(--lf-gap-y-md, var(--lf-gap-y-sm, var(--lf-gap-y, 0px))));
+    }
+  }
+  @media (min-width: 1280px) {
+    .lf-row {
+      --_gap: var(
+        --lf-gap-x-xl,
+        var(--lf-gap-x-lg, var(--lf-gap-x-md, var(--lf-gap-x-sm, var(--lf-gap-x, 0px))))
+      );
+      column-gap: var(--_gap);
+      row-gap: var(
+        --lf-gap-y-xl,
+        var(--lf-gap-y-lg, var(--lf-gap-y-md, var(--lf-gap-y-sm, var(--lf-gap-y, 0px))))
+      );
+    }
+  }
+  @media (min-width: 1536px) {
+    .lf-row {
+      --_gap: var(
+        --lf-gap-x-2xl,
+        var(
+          --lf-gap-x-xl,
+          var(--lf-gap-x-lg, var(--lf-gap-x-md, var(--lf-gap-x-sm, var(--lf-gap-x, 0px))))
+        )
+      );
+      column-gap: var(--_gap);
+      row-gap: var(
+        --lf-gap-y-2xl,
+        var(
+          --lf-gap-y-xl,
+          var(--lf-gap-y-lg, var(--lf-gap-y-md, var(--lf-gap-y-sm, var(--lf-gap-y, 0px))))
+        )
+      );
+    }
+  }
+
+  /* =====================================================
+     Col (BlockLayout)
+
+     The flex-basis formula accounts for CSS gap to ensure
+     columns + gaps sum to exactly the container width:
+
+       flex-basis = span/24 * (100% + gap) - gap
+
+     Proof: for N columns summing to 24 spans with (N-1) gaps:
+       sum(span_i/24 * (W + G) - G) + (N-1)*G
+       = (W + G) * sum(span_i)/24 - N*G + (N-1)*G
+       = (W + G) * 1 - G = W  ✓
+
+     The --_gap variable is inherited from the parent .lf-row.
+     When gap is 0, the formula simplifies to span/24 * 100%.
+     ===================================================== */
+  .lf-col {
+    display: var(--lf-display, initial);
+    min-height: 1px;
+    flex: 0 0 calc(var(--lf-span, 24) / 24 * (100% + var(--_gap, 0px)) - var(--_gap, 0px));
+    max-width: calc(var(--lf-span, 24) / 24 * (100% + var(--_gap, 0px)) - var(--_gap, 0px));
+    margin-inline-start: calc(var(--lf-offset, 0) / 24 * (100% + var(--_gap, 0px)));
+    order: var(--lf-order, 0);
+  }
+
+  /* Push/pull: only apply positioning when class is present */
+  .lf-col-push {
+    position: relative;
+    inset-inline-start: calc(var(--lf-push, 0) / 24 * (100% + var(--_gap, 0px)));
+  }
+  .lf-col-pull {
+    position: relative;
+    inset-inline-end: calc(var(--lf-pull, 0) / 24 * (100% + var(--_gap, 0px)));
+  }
+
+  /* --- sm (≥640px) --- */
+  @media (min-width: 640px) {
+    .lf-col {
+      display: var(--lf-display-sm, var(--lf-display, initial));
+      flex: 0 0
+        calc(
+          var(--lf-span-sm, var(--lf-span, 24)) / 24 * (100% + var(--_gap, 0px)) - var(--_gap, 0px)
+        );
+      max-width: calc(
+        var(--lf-span-sm, var(--lf-span, 24)) / 24 * (100% + var(--_gap, 0px)) - var(--_gap, 0px)
+      );
+      margin-inline-start: calc(
+        var(--lf-offset-sm, var(--lf-offset, 0)) / 24 * (100% + var(--_gap, 0px))
+      );
+      order: var(--lf-order-sm, var(--lf-order, 0));
+    }
+    .lf-col-push {
+      inset-inline-start: calc(
+        var(--lf-push-sm, var(--lf-push, 0)) / 24 * (100% + var(--_gap, 0px))
+      );
+    }
+    .lf-col-pull {
+      inset-inline-end: calc(var(--lf-pull-sm, var(--lf-pull, 0)) / 24 * (100% + var(--_gap, 0px)));
+    }
+  }
+
+  /* --- md (≥768px) --- */
+  @media (min-width: 768px) {
+    .lf-col {
+      display: var(--lf-display-md, var(--lf-display-sm, var(--lf-display, initial)));
+      flex: 0 0
+        calc(
+          var(--lf-span-md, var(--lf-span-sm, var(--lf-span, 24))) / 24 * (100% + var(--_gap, 0px)) -
+            var(--_gap, 0px)
+        );
+      max-width: calc(
+        var(--lf-span-md, var(--lf-span-sm, var(--lf-span, 24))) / 24 * (100% + var(--_gap, 0px)) -
+          var(--_gap, 0px)
+      );
+      margin-inline-start: calc(
+        var(--lf-offset-md, var(--lf-offset-sm, var(--lf-offset, 0))) / 24 *
+          (100% + var(--_gap, 0px))
+      );
+      order: var(--lf-order-md, var(--lf-order-sm, var(--lf-order, 0)));
+    }
+    .lf-col-push {
+      inset-inline-start: calc(
+        var(--lf-push-md, var(--lf-push-sm, var(--lf-push, 0))) / 24 * (100% + var(--_gap, 0px))
+      );
+    }
+    .lf-col-pull {
+      inset-inline-end: calc(
+        var(--lf-pull-md, var(--lf-pull-sm, var(--lf-pull, 0))) / 24 * (100% + var(--_gap, 0px))
+      );
+    }
+  }
+
+  /* --- lg (≥1024px) --- */
+  @media (min-width: 1024px) {
+    .lf-col {
+      display: var(
+        --lf-display-lg,
+        var(--lf-display-md, var(--lf-display-sm, var(--lf-display, initial)))
+      );
+      flex: 0 0
+        calc(
+          var(--lf-span-lg, var(--lf-span-md, var(--lf-span-sm, var(--lf-span, 24)))) / 24 *
+            (100% + var(--_gap, 0px)) - var(--_gap, 0px)
+        );
+      max-width: calc(
+        var(--lf-span-lg, var(--lf-span-md, var(--lf-span-sm, var(--lf-span, 24)))) / 24 *
+          (100% + var(--_gap, 0px)) - var(--_gap, 0px)
+      );
+      margin-inline-start: calc(
+        var(--lf-offset-lg, var(--lf-offset-md, var(--lf-offset-sm, var(--lf-offset, 0)))) / 24 *
+          (100% + var(--_gap, 0px))
+      );
+      order: var(--lf-order-lg, var(--lf-order-md, var(--lf-order-sm, var(--lf-order, 0))));
+    }
+    .lf-col-push {
+      inset-inline-start: calc(
+        var(--lf-push-lg, var(--lf-push-md, var(--lf-push-sm, var(--lf-push, 0)))) / 24 *
+          (100% + var(--_gap, 0px))
+      );
+    }
+    .lf-col-pull {
+      inset-inline-end: calc(
+        var(--lf-pull-lg, var(--lf-pull-md, var(--lf-pull-sm, var(--lf-pull, 0)))) / 24 *
+          (100% + var(--_gap, 0px))
+      );
+    }
+  }
+
+  /* --- xl (≥1280px) --- */
+  @media (min-width: 1280px) {
+    .lf-col {
+      display: var(
+        --lf-display-xl,
+        var(--lf-display-lg, var(--lf-display-md, var(--lf-display-sm, var(--lf-display, initial))))
+      );
+      flex: 0 0
+        calc(
+          var(
+              --lf-span-xl,
+              var(--lf-span-lg, var(--lf-span-md, var(--lf-span-sm, var(--lf-span, 24))))
+            ) / 24 * (100% + var(--_gap, 0px)) - var(--_gap, 0px)
+        );
+      max-width: calc(
+        var(
+            --lf-span-xl,
+            var(--lf-span-lg, var(--lf-span-md, var(--lf-span-sm, var(--lf-span, 24))))
+          ) / 24 * (100% + var(--_gap, 0px)) - var(--_gap, 0px)
+      );
+      margin-inline-start: calc(
+        var(
+            --lf-offset-xl,
+            var(--lf-offset-lg, var(--lf-offset-md, var(--lf-offset-sm, var(--lf-offset, 0))))
+          ) / 24 * (100% + var(--_gap, 0px))
+      );
+      order: var(
+        --lf-order-xl,
+        var(--lf-order-lg, var(--lf-order-md, var(--lf-order-sm, var(--lf-order, 0))))
+      );
+    }
+    .lf-col-push {
+      inset-inline-start: calc(
+        var(
+            --lf-push-xl,
+            var(--lf-push-lg, var(--lf-push-md, var(--lf-push-sm, var(--lf-push, 0))))
+          ) / 24 * (100% + var(--_gap, 0px))
+      );
+    }
+    .lf-col-pull {
+      inset-inline-end: calc(
+        var(
+            --lf-pull-xl,
+            var(--lf-pull-lg, var(--lf-pull-md, var(--lf-pull-sm, var(--lf-pull, 0))))
+          ) / 24 * (100% + var(--_gap, 0px))
+      );
+    }
+  }
+
+  /* --- 2xl (≥1536px) --- */
+  @media (min-width: 1536px) {
+    .lf-col {
+      display: var(
+        --lf-display-2xl,
+        var(
+          --lf-display-xl,
+          var(
+            --lf-display-lg,
+            var(--lf-display-md, var(--lf-display-sm, var(--lf-display, initial)))
+          )
+        )
+      );
+      flex: 0 0
+        calc(
+          var(
+              --lf-span-2xl,
+              var(
+                --lf-span-xl,
+                var(--lf-span-lg, var(--lf-span-md, var(--lf-span-sm, var(--lf-span, 24))))
+              )
+            ) / 24 * (100% + var(--_gap, 0px)) - var(--_gap, 0px)
+        );
+      max-width: calc(
+        var(
+            --lf-span-2xl,
+            var(
+              --lf-span-xl,
+              var(--lf-span-lg, var(--lf-span-md, var(--lf-span-sm, var(--lf-span, 24))))
+            )
+          ) / 24 * (100% + var(--_gap, 0px)) - var(--_gap, 0px)
+      );
+      margin-inline-start: calc(
+        var(
+            --lf-offset-2xl,
+            var(
+              --lf-offset-xl,
+              var(--lf-offset-lg, var(--lf-offset-md, var(--lf-offset-sm, var(--lf-offset, 0))))
+            )
+          ) / 24 * (100% + var(--_gap, 0px))
+      );
+      order: var(
+        --lf-order-2xl,
+        var(
+          --lf-order-xl,
+          var(--lf-order-lg, var(--lf-order-md, var(--lf-order-sm, var(--lf-order, 0))))
+        )
+      );
+    }
+    .lf-col-push {
+      inset-inline-start: calc(
+        var(
+            --lf-push-2xl,
+            var(
+              --lf-push-xl,
+              var(--lf-push-lg, var(--lf-push-md, var(--lf-push-sm, var(--lf-push, 0))))
+            )
+          ) / 24 * (100% + var(--_gap, 0px))
+      );
+    }
+    .lf-col-pull {
+      inset-inline-end: calc(
+        var(
+            --lf-pull-2xl,
+            var(
+              --lf-pull-xl,
+              var(--lf-pull-lg, var(--lf-pull-md, var(--lf-pull-sm, var(--lf-pull, 0))))
+            )
+          ) / 24 * (100% + var(--_gap, 0px))
+      );
+    }
+  }
+}
