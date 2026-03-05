@@ -151,6 +151,14 @@ test('writeGlobalsCss includes styles.css import when file exists', async () => 
   expect(css).toContain('@import "../../public/styles.css" layer(components);');
 });
 
+test('writeGlobalsCss includes grid.css import', async () => {
+  const context = createContext();
+  await writeGlobalsCss({ components: {}, context });
+
+  const css = context.writeBuildArtifact.mock.calls[0][1];
+  expect(css).toContain('@import "@lowdefy/layout/grid.css";');
+});
+
 test('writeGlobalsCss omits styles.css import when file does not exist', async () => {
   const context = createContext();
   await writeGlobalsCss({ components: {}, context });
