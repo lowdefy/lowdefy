@@ -17,7 +17,8 @@
 import { createBlockHelper } from '@lowdefy/e2e-utils';
 import { expect } from '@playwright/test';
 
-const locator = (page, blockId) => page.locator(`#${blockId}`);
+const locator = (page, blockId) => page.locator(`#bl-${blockId}`);
+const resultLocator = (page, blockId) => locator(page, blockId).locator('.ant-result');
 
 export default createBlockHelper({
   locator,
@@ -27,10 +28,14 @@ export default createBlockHelper({
     subTitle: (page, blockId, text) =>
       expect(locator(page, blockId).locator('.ant-result-subtitle')).toHaveText(text),
     status: (page, blockId, status) =>
-      expect(locator(page, blockId)).toHaveClass(new RegExp(`ant-result-${status}`)),
-    success: (page, blockId) => expect(locator(page, blockId)).toHaveClass(/ant-result-success/),
-    error: (page, blockId) => expect(locator(page, blockId)).toHaveClass(/ant-result-error/),
-    info: (page, blockId) => expect(locator(page, blockId)).toHaveClass(/ant-result-info/),
-    warning: (page, blockId) => expect(locator(page, blockId)).toHaveClass(/ant-result-warning/),
+      expect(resultLocator(page, blockId)).toHaveClass(new RegExp(`ant-result-${status}`)),
+    success: (page, blockId) =>
+      expect(resultLocator(page, blockId)).toHaveClass(/ant-result-success/),
+    error: (page, blockId) =>
+      expect(resultLocator(page, blockId)).toHaveClass(/ant-result-error/),
+    info: (page, blockId) =>
+      expect(resultLocator(page, blockId)).toHaveClass(/ant-result-info/),
+    warning: (page, blockId) =>
+      expect(resultLocator(page, blockId)).toHaveClass(/ant-result-warning/),
   },
 });

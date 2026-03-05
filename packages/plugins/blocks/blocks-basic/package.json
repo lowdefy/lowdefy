@@ -34,9 +34,9 @@
   "exports": {
     "./*": "./dist/*",
     "./blocks": "./dist/blocks.js",
+    "./e2e": "./dist/e2e.js",
     "./schemas": "./dist/schemas.js",
-    "./types": "./dist/types.js",
-    "./e2e/List": "./dist/blocks/List/e2e.js"
+    "./types": "./dist/types.js"
   },
   "files": [
     "dist/*"

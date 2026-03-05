@@ -238,20 +238,20 @@ blocks-antd exports e2e helpers for Playwright testing via `@lowdefy/e2e-utils`.
 
 ### Blocks with E2E Helpers
 
-| Block | Actions (`do.*`) | Assertions (`expect.*`) |
-|-------|------------------|------------------------|
-| `Alert` | - | visible, hidden, type, message |
-| `Button` | click | visible, disabled, enabled, loading, text, type |
-| `Card` | - | visible, hidden, title |
-| `Descriptions` | - | visible, hidden, item |
-| `NumberInput` | fill, clear | visible, value, disabled |
-| `PageHeaderMenu` | - | visible, title |
-| `Paragraph` | - | visible, text |
-| `Result` | - | visible, hidden, status, title |
-| `Selector` | select, clear, search | visible, value, disabled, enabled |
-| `Statistic` | - | visible, value, title |
-| `TextArea` | fill, clear | visible, value, disabled |
-| `TextInput` | fill, clear | visible, value, disabled |
+| Block            | Actions (`do.*`)      | Assertions (`expect.*`)                         |
+| ---------------- | --------------------- | ----------------------------------------------- |
+| `Alert`          | -                     | visible, hidden, type, message                  |
+| `Button`         | click                 | visible, disabled, enabled, loading, text, type |
+| `Card`           | -                     | visible, hidden, title                          |
+| `Descriptions`   | -                     | visible, hidden, item                           |
+| `NumberInput`    | fill, clear           | visible, value, disabled                        |
+| `PageHeaderMenu` | -                     | visible, title                                  |
+| `Paragraph`      | -                     | visible, text                                   |
+| `Result`         | -                     | visible, hidden, status, title                  |
+| `Selector`       | select, clear, search | visible, value, disabled, enabled               |
+| `Statistic`      | -                     | visible, value, title                           |
+| `TextArea`       | fill, clear           | visible, value, disabled                        |
+| `TextInput`      | fill, clear           | visible, value, disabled                        |
 
 ### Helper Export Pattern
 
@@ -293,12 +293,12 @@ Common assertions (`visible`, `hidden`, `disabled`, `enabled`, `validationError`
 
 Different blocks use different DOM locators:
 
-| Block | Locator Pattern |
-|-------|-----------------|
-| `TextInput`, `NumberInput` | `#${blockId}_input` |
-| `Button` | `#bl-${blockId} .ant-btn` |
-| `Alert` | `#bl-${blockId} .ant-alert` |
-| `Selector` | `#bl-${blockId} .ant-select` |
+| Block                      | Locator Pattern              |
+| -------------------------- | ---------------------------- |
+| `TextInput`, `NumberInput` | `#${blockId}_input`          |
+| `Button`                   | `#bl-${blockId} .ant-btn`    |
+| `Alert`                    | `#bl-${blockId} .ant-alert`  |
+| `Selector`                 | `#bl-${blockId} .ant-select` |
 
 Note: Ant Design components don't always forward the `id` prop, hence the `#bl-${blockId}` wrapper pattern.
 
