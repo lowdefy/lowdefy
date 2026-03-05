@@ -23,7 +23,7 @@ import getRefPositions from '../jit/getRefPositions.js';
 import getRefsFromFile from './getRefsFromFile.js';
 import populateRefs from './populateRefs.js';
 import runTransformer from './runTransformer.js';
-import { shouldSkipResolution } from '../jit/pathMatcher.js';
+import isPageContentPath from '../jit/isPageContentPath.js';
 
 async function recursiveBuild({
   context,
@@ -78,7 +78,7 @@ async function recursiveBuild({
   for (const newRefDef of foundRefs.values()) {
     // Check if this ref should be skipped (shallow build)
     const refJsonPath = refPositions?.get(newRefDef.id) ?? '';
-    if (shallowOptions && shouldSkipResolution(refJsonPath, shallowOptions.stopAt)) {
+    if (shallowOptions && isPageContentPath(refJsonPath)) {
       // Store shallow marker instead of resolving
       parsedFiles[newRefDef.id] = {
         '~shallow': true,
