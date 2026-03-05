@@ -1,13 +1,13 @@
-# @lowdefy/operators-moment
+# @lowdefy/operators-dayjs
 
-Date and time operators using [Moment.js](https://momentjs.com/docs/).
+Date and time operators using [Day.js](https://day.js.org/).
 
 ## Operators
 
-| Operator  | Purpose                    |
-| --------- | -------------------------- |
-| `_moment` | Full Moment.js operations  |
-| `_date`   | Simplified date operations |
+| Operator | Purpose                    |
+| -------- | -------------------------- |
+| `_dayjs` | Full Day.js operations     |
+| `_date`  | Simplified date operations |
 
 ## \_date
 
@@ -39,20 +39,20 @@ nextWeek:
         - days
 ```
 
-## \_moment
+## \_dayjs
 
-Full Moment.js API:
+Full Day.js API:
 
 ```yaml
-# Create moment
+# Create dayjs instance
 date:
-  _moment:
+  _dayjs:
     - '2024-01-15'
     - YYYY-MM-DD
 
 # Chain operations
 result:
-  _moment:
+  _dayjs:
     on:
       _state: startDate
     operations:
@@ -84,7 +84,7 @@ result:
 
 ```yaml
 ago:
-  _moment:
+  _dayjs:
     on:
       _state: createdAt
     operations:
@@ -95,7 +95,7 @@ ago:
 
 ```yaml
 daysBetween:
-  _moment:
+  _dayjs:
     on:
       _state: endDate
     operations:
@@ -108,10 +108,17 @@ daysBetween:
 
 ```yaml
 isAfter:
-  _moment:
+  _dayjs:
     on:
       _state: date1
     operations:
       - - isAfter
         - _state: date2
 ```
+
+## Breaking Changes from v4
+
+- `_moment` renamed to `_dayjs` — simple find-and-replace in YAML config
+- `thresholds` parameter on `humanizeDuration` is accepted but ignored
+- Locale names are auto-normalized (e.g. `en-US` → `en`)
+- 22 bundled locales; uncommon locales fall back to English

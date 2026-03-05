@@ -139,7 +139,7 @@ _ref:
                 width: 160
                 cellRenderer:
                   _function:
-                    __moment.format:
+                    __dayjs.format:
                       on:
                         __args: 0.data.date
                       format: 'D MMM YYYY'

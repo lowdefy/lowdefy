@@ -859,9 +859,9 @@
         - id: _menu
           type: MenuLink
           pageId: _menu
-        - id: _moment
+        - id: _dayjs
           type: MenuLink
-          pageId: _moment
+          pageId: _dayjs
         - id: _mql
           type: MenuLink
           pageId: _mql
@@ -999,6 +999,11 @@
           pageId: v3-to-v4
           properties:
             title: V3 to V4
+        - id: v4-to-v5
+          type: MenuLink
+          pageId: v4-to-v5
+          properties:
+            title: V4 to V5
     - id: versions
       type: MenuGroup
       properties:

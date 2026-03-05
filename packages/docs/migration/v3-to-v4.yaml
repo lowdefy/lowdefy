@@ -207,7 +207,7 @@ _ref:
 
                 The [`_var`](/_var) operator `name` param has been renamed to `key` to be more consistent with other getter operators.
 
-                The `_format` operator has been replaced with the [`_intl`](/_intl) and [`_moment`](/_moment) operator, with some minor schema changes.
+                The `_format` operator has been replaced with the [`_intl`](/_intl) and [`_moment`](/_moment) operator, with some minor schema changes. Note: `_moment` was renamed to [`_dayjs`](/_dayjs) in v5.
 
                 The format of dates in the output of the  [`_json.stringify`](/_json) and [`_yaml.stringify`](/_yaml) operators, as well as in URL query parameters has changed from `_date: {iso_date_string}` to `~d: {iso_date_string}`.
 

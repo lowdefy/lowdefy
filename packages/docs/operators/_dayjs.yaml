@@ -16,11 +16,11 @@ _ref:
   path: templates/operators.yaml.njk
   transformer: templates/operatorsMethodTransformer.js
   vars:
-    pageId: _moment
-    pageTitle: _moment
-    filePath: operators/_moment.yaml
+    pageId: _dayjs
+    pageTitle: _dayjs
+    filePath: operators/_dayjs.yaml
     description: |
-      The `_moment` operator converts date objects to strings, using a specified format.
+      The `_dayjs` operator converts date objects to strings, using a specified format.
     methods:
       - name: format
         types: |
@@ -32,19 +32,19 @@ _ref:
           })
           ```
         description: |
-          The `_moment.format` formats dates using the [moment.js](https://momentjs.com/docs/#/displaying/format/) library.
+          The `_dayjs.format` formats dates using the [Day.js](https://day.js.org/docs/en/display/format) library.
         arguments: |
           ###### object
             - `on: date | string`: The date to format.
             - `locale: string`: A string with a locale name.
-            - `format: string`: A date [format string](https://momentjs.com/docs/#/displaying/format/).
+            - `format: string`: A date [format string](https://day.js.org/docs/en/display/format).
         examples: |
           ###### Format a date:
           ```yaml
-          _moment.format:
+          _dayjs.format:
             on:
               _date: 2019-06-04
-            format: 'd MMM YYYY'
+            format: 'D MMM YYYY'
           ```
           Returns: `"4 Jun 2019"`.
 
@@ -54,22 +54,22 @@ _ref:
           (arguments: {
             on: number,
             locale?: string,
-            thresholds?: string,
             withSuffix?: boolean
           })
           ```
         description: |
-          The `_moment.humanizeDuration` formats durations in milliseconds using the [moment.js](https://momentjs.com/docs/#/durations/humanize/)
+          The `_dayjs.humanizeDuration` formats durations in milliseconds using [Day.js](https://day.js.org/docs/en/plugin/duration).
         arguments: |
           ###### object
             - `on: number`: The duration in milliseconds to format.
-            - `locale: string`: A string with a locale name.
-            - `thresholds: object`: Thresholds define when a unit is considered a minute, an hour and so on. For example, by default more than 45 seconds is considered a minute, more than 22 hours is considered a day and so on. See [here](https://momentjs.com/docs/#/customization/relative-time-threshold/)
+            - `locale: string`: A string with a locale name. Locale names are auto-normalized (e.g. `en-US` becomes `en`).
             - `withSuffix: boolean`: By default, the return string is describing a duration `a month` (suffix-less). If you want an oriented duration `in a month`, `a month ago` (with suffix), pass in true.
+
+            > **Note:** The `thresholds` parameter from v4 is accepted but ignored in v5. Day.js uses fixed thresholds internally.
         examples: |
-          ###### Format a date:
+          ###### Format a duration:
           ```yaml
-          _moment.humanizeDuration:
+          _dayjs.humanizeDuration:
             on: 245923000
             withSuffix: true
           ```
