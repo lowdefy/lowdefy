@@ -15,18 +15,21 @@
 */
 
 import React, { useState } from 'react';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 import { Popover } from 'antd';
 
-const PopoverBlock = ({ blockId, content, methods, properties }) => {
+import withTheme from '../withTheme.js';
+
+const PopoverBlock = ({ blockId, classNames = {}, content, methods, properties, styles = {} }) => {
   const [elementId] = useState((0 | (Math.random() * 9e2)) + 1e2);
   return (
     <Popover
       id={blockId}
       {...properties}
+      className={classNames.element}
       content={content.popover && content.popover()}
       onOpenChange={() => methods.triggerEvent({ name: 'onOpenChange' })}
       getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
+      style={styles.element}
     >
       {content.content && content.content()}
       <div id={`${blockId}_${elementId}_popup`} />
@@ -34,10 +37,10 @@ const PopoverBlock = ({ blockId, content, methods, properties }) => {
   );
 };
 
-PopoverBlock.defaultProps = blockDefaultProps;
 PopoverBlock.meta = {
   category: 'container',
   icons: [],
+  cssKeys: ['element', 'inner', 'title', 'content'],
 };
 
-export default PopoverBlock;
+export default withTheme('Popover', PopoverBlock);

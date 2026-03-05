@@ -14,21 +14,11 @@
   limitations under the License.
 */
 
-import React from 'react';
-import { Layout } from 'antd';
+import { clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
-const Content = Layout.Content;
+function cn(...inputs) {
+  return twMerge(clsx(inputs));
+}
 
-const ContentBlock = ({ blockId, classNames = {}, content, properties, styles = {} }) => (
-  <Content id={blockId} className={classNames.element} style={styles.element}>
-    {content.content && content.content()}
-  </Content>
-);
-
-ContentBlock.meta = {
-  category: 'container',
-  icons: [],
-  cssKeys: ['element'],
-};
-
-export default ContentBlock;
+export default cn;

@@ -23,6 +23,7 @@ import InputContainer from './InputContainer.js';
 import Container from './Container.js';
 import List from './List.js';
 import LoadingBlock from './LoadingBlock.js';
+import resolveClassNames from './resolveClassNames.js';
 
 const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
   if (!block.eval) return null; // TODO: check Renderer updates before eval is executed for the first time on lists. See #520
@@ -43,6 +44,7 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
     );
   }
 
+  const classNames = resolveClassNames(block.eval.class);
   switch (Component.meta.category) {
     case 'list':
       return (
@@ -71,7 +73,7 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
         <BlockLayout
           id={`bl-${block.blockId}`}
           blockStyle={block.eval.styles?.block}
-          blockClassName={block.eval.class?.block}
+          blockClassName={classNames.block}
           layout={block.eval.layout}
         >
           <Component
@@ -84,7 +86,7 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
             })}
             basePath={lowdefy.basePath}
             blockId={block.blockId}
-            classNames={block.eval.class}
+            classNames={classNames}
             components={lowdefy._internal.components}
             events={block.eval.events}
             key={block.blockId}
@@ -115,7 +117,7 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
         <BlockLayout
           id={`bl-${block.blockId}`}
           blockStyle={block.eval.styles?.block}
-          blockClassName={block.eval.class?.block}
+          blockClassName={classNames.block}
           layout={block.eval.layout}
         >
           <Component
@@ -127,7 +129,7 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
             })}
             basePath={lowdefy.basePath}
             blockId={block.blockId}
-            classNames={block.eval.class}
+            classNames={classNames}
             components={lowdefy._internal.components}
             events={block.eval.events}
             key={block.blockId}

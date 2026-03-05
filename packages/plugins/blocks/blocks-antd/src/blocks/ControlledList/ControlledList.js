@@ -17,17 +17,19 @@
 import React, { useEffect } from 'react';
 import { get } from '@lowdefy/helpers';
 import { List, Typography } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 
 import Button from '../Button/Button.js';
+import withTheme from '../withTheme.js';
 
 const ControlledListBlock = ({
   blockId,
+  classNames = {},
   components: { Icon, Link },
   events,
   list,
   methods,
   properties,
+  styles = {},
 }) => {
   useEffect(() => {
     methods.registerMethod('moveItemDown', methods.moveItemDown);
@@ -41,30 +43,23 @@ const ControlledListBlock = ({
       methods.pushItem({});
     }
   }
-  const styles = {
-    header: {
-      display: 'flex',
-      flexDirection: 'row',
-      flexWrap: 'nowrap',
-      justifyContent: 'space-between',
-    },
-    footer: {
-      display: 'flex',
-      flexDirection: 'row',
-      flexWrap: 'nowrap',
-      justifyContent: 'space-between',
-    },
-    item: {
-      width: '100%',
-    },
-  };
   return (
     <List
       id={blockId}
+      className={classNames.element}
       size={properties.size}
+      style={styles.element}
       header={
         (properties.title || (properties.addToFront && !properties.hideAddButton)) && (
-          <div className={methods.makeCssClass([styles.header, properties.headerStyle])}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              flexWrap: 'nowrap',
+              justifyContent: 'space-between',
+              ...properties.headerStyle,
+            }}
+          >
             {properties.title ? (
               <Typography.Text strong>{properties.title}</Typography.Text>
             ) : (
@@ -91,7 +86,15 @@ const ControlledListBlock = ({
       footer={
         !properties.addToFront &&
         !properties.hideAddButton && (
-          <div className={methods.makeCssClass([styles.footer, properties.footerStyle])}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              flexWrap: 'nowrap',
+              justifyContent: 'space-between',
+              ...properties.footerStyle,
+            }}
+          >
             <br />
             <Button
               blockId={`${blockId}_add_button`}
@@ -115,7 +118,7 @@ const ControlledListBlock = ({
       renderItem={(item, i) => (
         <List.Item
           key={`${blockId}_${i}`}
-          className={methods.makeCssClass([styles.item, properties.itemStyle])}
+          style={{ width: '100%', ...properties.itemStyle }}
           extra={
             !properties.hideRemoveButton &&
             list.length > (properties.minItems ?? 0) && [
@@ -146,11 +149,11 @@ const ControlledListBlock = ({
   );
 };
 
-ControlledListBlock.defaultProps = blockDefaultProps;
 ControlledListBlock.meta = {
   valueType: 'array',
   category: 'list',
   icons: ['AiOutlinePlus', 'AiOutlineMinusCircle'],
+  cssKeys: ['element'],
 };
 
-export default ControlledListBlock;
+export default withTheme('List', ControlledListBlock);

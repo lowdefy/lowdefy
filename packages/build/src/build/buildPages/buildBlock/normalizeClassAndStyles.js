@@ -54,8 +54,8 @@ function normalizeClassAndStyles(block, pageContext) {
     delete block.style;
   }
 
-  // Normalize class string → { block: value }
-  if (type.isString(block.class)) {
+  // Normalize class string or array → { block: value }
+  if (type.isString(block.class) || type.isArray(block.class)) {
     block.class = { block: block.class };
   }
 }

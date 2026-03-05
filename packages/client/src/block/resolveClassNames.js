@@ -14,21 +14,15 @@
   limitations under the License.
 */
 
-import React from 'react';
-import { Layout } from 'antd';
+import { cn } from '@lowdefy/block-utils';
 
-const Content = Layout.Content;
+function resolveClassNames(evalClass) {
+  if (!evalClass) return {};
+  const resolved = {};
+  for (const [key, value] of Object.entries(evalClass)) {
+    resolved[key] = cn(value);
+  }
+  return resolved;
+}
 
-const ContentBlock = ({ blockId, classNames = {}, content, properties, styles = {} }) => (
-  <Content id={blockId} className={classNames.element} style={styles.element}>
-    {content.content && content.content()}
-  </Content>
-);
-
-ContentBlock.meta = {
-  category: 'container',
-  icons: [],
-  cssKeys: ['element'],
-};
-
-export default ContentBlock;
+export default resolveClassNames;

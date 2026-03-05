@@ -16,11 +16,13 @@
 
 import React from 'react';
 import { Area, BlockLayout } from '@lowdefy/layout';
-import { makeCssClass } from '@lowdefy/block-utils';
+import { cn, makeCssClass } from '@lowdefy/block-utils';
 
 import Block from './Block.js';
+import resolveClassNames from './resolveClassNames.js';
 
 const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
+  const classNames = resolveClassNames(block.eval.class);
   const content = {};
   const contentList = [];
   Blocks.subAreas[block.id].forEach((SBlock) => {
@@ -30,7 +32,7 @@ const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
           area={block.eval.areas[areaKey]}
           areaKey={areaKey}
           areaStyle={{ ...areaStyle, ...block.eval.areas[areaKey]?.style }}
-          areaClassName={block.eval.class?.[areaKey]}
+          areaClassName={cn(block.eval.class?.[areaKey])}
           id={`ar-${block.blockId}-${SBlock.id}-${areaKey}`}
           key={`ar-${block.blockId}-${SBlock.id}-${areaKey}`}
           layout={block.eval.layout}
@@ -53,7 +55,7 @@ const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
   return (
     <BlockLayout
       blockStyle={block.eval.styles?.block}
-      blockClassName={block.eval.class?.block}
+      blockClassName={classNames.block}
       id={`bl-${block.blockId}`}
       layout={block.eval.layout}
     >
@@ -71,7 +73,7 @@ const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
         })}
         basePath={lowdefy.basePath}
         blockId={block.blockId}
-        classNames={block.eval.class}
+        classNames={classNames}
         components={lowdefy._internal.components}
         events={block.eval.events}
         key={block.blockId}

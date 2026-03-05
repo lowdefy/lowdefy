@@ -86,6 +86,29 @@ test('normalizeClassAndStyles converts class string to object', () => {
   });
 });
 
+test('normalizeClassAndStyles converts class array to object', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Input',
+            class: ['shadow-lg', 'p-4'],
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildPages({ components, context });
+  expect(get(res, 'pages.0.areas.content.blocks.0.class')).toEqual({
+    block: ['shadow-lg', 'p-4'],
+  });
+});
+
 test('normalizeClassAndStyles keeps class object unchanged', () => {
   const components = {
     pages: [

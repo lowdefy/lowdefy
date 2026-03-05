@@ -15,7 +15,6 @@
 */
 
 import React, { useState, useEffect } from 'react';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 import { mergeObjects, get } from '@lowdefy/helpers';
 
 import Button from '../Button/Button.js';
@@ -25,6 +24,7 @@ import Menu from '../Menu/Menu.js';
 const MobileMenu = ({
   basePath,
   blockId,
+  classNames = {},
   components,
   events,
   methods,
@@ -32,6 +32,7 @@ const MobileMenu = ({
   pageId,
   properties,
   rename,
+  styles = {},
 }) => {
   const [openState, setOpen] = useState(false);
   useEffect(() => {
@@ -45,7 +46,7 @@ const MobileMenu = ({
     });
   });
   return (
-    <div id={blockId}>
+    <div id={blockId} className={classNames.element} style={styles.element}>
       <Button
         blockId={`${blockId}_button`}
         components={components}
@@ -116,10 +117,10 @@ const MobileMenu = ({
   );
 };
 
-MobileMenu.defaultProps = blockDefaultProps;
 MobileMenu.meta = {
   category: 'display',
   icons: ['AiOutlineMenuUnfold', 'AiOutlineMenuFold'],
+  cssKeys: ['element'],
 };
 
 export default MobileMenu;

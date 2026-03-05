@@ -16,11 +16,13 @@
 
 import React from 'react';
 import { Area, BlockLayout } from '@lowdefy/layout';
-import { makeCssClass } from '@lowdefy/block-utils';
+import { cn, makeCssClass } from '@lowdefy/block-utils';
 
 import Block from './Block.js';
+import resolveClassNames from './resolveClassNames.js';
 
 const InputContainer = ({ block, Blocks, Component, context, loading, lowdefy }) => {
+  const classNames = resolveClassNames(block.eval.class);
   const content = {};
   // eslint-disable-next-line prefer-destructuring
   const areas = Blocks.subAreas[block.id][0].areas;
@@ -30,7 +32,7 @@ const InputContainer = ({ block, Blocks, Component, context, loading, lowdefy })
         area={block.eval.areas[areaKey]}
         areaKey={areaKey}
         areaStyle={{ ...areaStyle, ...block.eval.areas[areaKey]?.style }}
-        areaClassName={block.eval.class?.[areaKey]}
+        areaClassName={cn(block.eval.class?.[areaKey])}
         id={`ar-${block.blockId}-${areaKey}`}
         key={`ar-${block.blockId}-${areaKey}-${i}`}
         layout={block.eval.layout}
@@ -51,7 +53,7 @@ const InputContainer = ({ block, Blocks, Component, context, loading, lowdefy })
   return (
     <BlockLayout
       blockStyle={block.eval.styles?.block}
-      blockClassName={block.eval.class?.block}
+      blockClassName={classNames.block}
       id={`bl-${block.blockId}`}
       layout={block.eval.layout}
     >
@@ -70,7 +72,7 @@ const InputContainer = ({ block, Blocks, Component, context, loading, lowdefy })
         })}
         basePath={lowdefy.basePath}
         blockId={block.blockId}
-        classNames={block.eval.class}
+        classNames={classNames}
         components={lowdefy._internal.components}
         content={content}
         events={block.eval.events}

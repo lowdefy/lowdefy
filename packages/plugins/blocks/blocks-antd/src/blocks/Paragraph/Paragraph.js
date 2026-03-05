@@ -15,16 +15,26 @@
 */
 
 import React from 'react';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import { renderHtml } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 import { Typography } from 'antd';
 
+import withTheme from '../withTheme.js';
+
 const Paragraph = Typography.Paragraph;
 
-const ParagraphBlock = ({ blockId, components: { Icon }, events, methods, properties }) => (
+const ParagraphBlock = ({
+  blockId,
+  classNames = {},
+  components: { Icon },
+  events,
+  methods,
+  properties,
+  styles = {},
+}) => (
   <Paragraph
     id={blockId}
-    className={methods.makeCssClass(properties.style)}
+    className={classNames.element}
     code={properties.code}
     copyable={
       type.isObject(properties.copyable)
@@ -98,6 +108,7 @@ const ParagraphBlock = ({ blockId, components: { Icon }, events, methods, proper
     italic={properties.italic}
     mark={properties.mark}
     strong={properties.strong}
+    style={styles.element}
     type={properties.type}
     underline={properties.underline}
   >
@@ -105,10 +116,10 @@ const ParagraphBlock = ({ blockId, components: { Icon }, events, methods, proper
   </Paragraph>
 );
 
-ParagraphBlock.defaultProps = blockDefaultProps;
 ParagraphBlock.meta = {
   category: 'display',
   icons: [],
+  cssKeys: ['element'],
 };
 
-export default ParagraphBlock;
+export default withTheme('Typography', ParagraphBlock);

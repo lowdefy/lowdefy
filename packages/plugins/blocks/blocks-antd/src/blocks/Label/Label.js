@@ -18,7 +18,7 @@
 // MIT Copyright (c) 2015-present Ant UED, https://xtech.antfin.com/ - 2020-09-08
 
 import React from 'react';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import { renderHtml } from '@lowdefy/block-utils';
 import { Col, Row } from 'antd';
 import classNames from 'classnames';
 import CSSMotion from '@rc-component/motion';
@@ -32,28 +32,25 @@ const validationKeyMap = {
 
 let iconMap;
 
-const Label = ({
-  blockId,
-  components: { Icon },
-  content,
-  methods,
-  properties,
-  required,
-  validation,
-}) => {
+const Label = ({ blockId, components: { Icon }, content, properties, required, validation }) => {
   const {
     extraClassName,
+    extraStyle,
     feedbackClassName,
+    feedbackStyle,
     iconClassName,
     label,
     labelClassName,
     labelCol,
     labelColClassName,
+    labelColStyle,
+    labelStyle,
     rowClassName,
+    rowStyle,
     showExtra,
     showFeedback,
     wrapperCol,
-  } = labelLogic({ blockId, content, methods, properties, required, validation });
+  } = labelLogic({ blockId, content, properties, required, validation });
   if (!iconMap) {
     iconMap = {
       error: () => <Icon properties="AiFillCloseCircle" />,
@@ -71,11 +68,16 @@ const Label = ({
     ) : null;
 
   return (
-    <Row id={blockId} className={rowClassName}>
+    <Row id={blockId} className={rowClassName} style={rowStyle}>
       {label && (
-        <Col {...labelCol} className={labelColClassName}>
-          <label htmlFor={`${blockId}_input`} className={labelClassName} title={label}>
-            {renderHtml({ html: label, methods })}
+        <Col {...labelCol} className={labelColClassName} style={labelColStyle}>
+          <label
+            htmlFor={`${blockId}_input`}
+            className={labelClassName}
+            style={labelStyle}
+            title={label}
+          >
+            {renderHtml({ html: label })}
           </label>
         </Col>
       )}
@@ -94,15 +96,15 @@ const Label = ({
             removeOnLeave
           >
             {({ className: motionClassName }) => (
-              <div className={classNames(extraClassName, motionClassName)}>
+              <div className={classNames(extraClassName, motionClassName)} style={extraStyle}>
                 {showFeedback ? (
-                  <div className={classNames(feedbackClassName)}>
+                  <div className={feedbackClassName} style={feedbackStyle}>
                     {validation[validationKeyMap[validation.status]] &&
                       validation[validationKeyMap[validation.status]].length > 0 &&
                       validation[validationKeyMap[validation.status]][0]}
                   </div>
                 ) : (
-                  renderHtml({ html: properties.extra, methods })
+                  renderHtml({ html: properties.extra })
                 )}
               </div>
             )}
@@ -113,10 +115,10 @@ const Label = ({
   );
 };
 
-Label.defaultProps = blockDefaultProps;
 Label.meta = {
   category: 'container',
   icons: ['AiFillCloseCircle', 'AiFillCheckCircle', 'AiOutlineLoading', 'AiFillExclamationCircle'],
+  cssKeys: ['element'],
 };
 
 export default Label;

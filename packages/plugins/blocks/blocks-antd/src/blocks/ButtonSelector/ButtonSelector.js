@@ -15,26 +15,67 @@
 */
 
 import React from 'react';
-import { Radio } from 'antd';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import { ConfigProvider, Radio } from 'antd';
+import { renderHtml } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
 import Label from '../Label/Label.js';
 import getValueIndex from '../../getValueIndex.js';
 import getUniqueValues from '../../getUniqueValues.js';
+import withTheme from '../withTheme.js';
 
 const ButtonSelector = ({
   blockId,
+  classNames = {},
   components,
   events,
   loading,
   properties,
   required,
+  styles = {},
   validation,
   value,
   methods,
 }) => {
   const uniqueValueOptions = getUniqueValues(properties.options || []);
+  const radioGroup = (
+    <Radio.Group
+      id={`${blockId}_input`}
+      className={classNames.element}
+      disabled={properties.disabled || loading}
+      size={properties.size}
+      buttonStyle={properties.buttonStyle ? properties.buttonStyle : 'solid'}
+      style={styles.element}
+      onChange={(event) => {
+        const value = type.isPrimitive(uniqueValueOptions[event.target.value])
+          ? uniqueValueOptions[event.target.value]
+          : uniqueValueOptions[event.target.value].value;
+        methods.setValue(value);
+        methods.triggerEvent({ name: 'onChange', event: { value } });
+      }}
+      value={type.isNone(value) ? undefined : getValueIndex(value, properties.options || [])}
+    >
+      {uniqueValueOptions.map((opt, i) =>
+        type.isPrimitive(opt) ? (
+          <Radio.Button id={`${blockId}_${i}`} key={i} value={`${i}`}>
+            {renderHtml({ html: `${opt}`, methods })}
+          </Radio.Button>
+        ) : (
+          <Radio.Button
+            id={`${blockId}_${i}`}
+            key={i}
+            value={`${i}`}
+            disabled={opt.disabled}
+            style={opt.style}
+          >
+            {type.isNone(opt.label)
+              ? renderHtml({ html: `${opt.value}`, methods })
+              : renderHtml({ html: opt.label, methods })}
+          </Radio.Button>
+        )
+      )}
+    </Radio.Group>
+  );
   return (
     <Label
       blockId={blockId}
@@ -44,62 +85,24 @@ const ButtonSelector = ({
       validation={validation}
       required={required}
       content={{
-        content: () => (
-          <Radio.Group
-            id={`${blockId}_input`}
-            className={methods.makeCssClass([
-              properties.color && {
-                '& > label.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled)':
-                  {
-                    backgroundColor: `${properties.color} !important`,
-                    borderColor: `${properties.color} !important`,
-                  },
-              },
-              properties.inputStyle,
-            ])}
-            disabled={properties.disabled || loading}
-            size={properties.size}
-            buttonStyle={properties.buttonStyle ? properties.buttonStyle : 'solid'}
-            onChange={(event) => {
-              const value = type.isPrimitive(uniqueValueOptions[event.target.value])
-                ? uniqueValueOptions[event.target.value]
-                : uniqueValueOptions[event.target.value].value;
-              methods.setValue(value);
-              methods.triggerEvent({ name: 'onChange', event: { value } });
-            }}
-            value={type.isNone(value) ? undefined : getValueIndex(value, properties.options || [])}
-          >
-            {uniqueValueOptions.map((opt, i) =>
-              type.isPrimitive(opt) ? (
-                <Radio.Button id={`${blockId}_${i}`} key={i} value={`${i}`}>
-                  {renderHtml({ html: `${opt}`, methods })}
-                </Radio.Button>
-              ) : (
-                <Radio.Button
-                  id={`${blockId}_${i}`}
-                  key={i}
-                  value={`${i}`}
-                  disabled={opt.disabled}
-                  className={methods.makeCssClass(opt.style)}
-                >
-                  {type.isNone(opt.label)
-                    ? renderHtml({ html: `${opt.value}`, methods })
-                    : renderHtml({ html: opt.label, methods })}
-                </Radio.Button>
-              )
-            )}
-          </Radio.Group>
-        ),
+        content: () =>
+          properties.color ? (
+            <ConfigProvider theme={{ components: { Radio: { colorPrimary: properties.color } } }}>
+              {radioGroup}
+            </ConfigProvider>
+          ) : (
+            radioGroup
+          ),
       }}
     />
   );
 };
 
-ButtonSelector.defaultProps = blockDefaultProps;
 ButtonSelector.meta = {
   valueType: 'any',
   category: 'input',
   icons: [...Label.meta.icons],
+  cssKeys: ['element'],
 };
 
-export default ButtonSelector;
+export default withTheme('Radio', ButtonSelector);

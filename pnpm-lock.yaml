@@ -2373,6 +2373,9 @@ importers:
       '@lowdefy/helpers':
         specifier: 4.5.2
         version: link:../helpers
+      clsx:
+        specifier: 2.1.1
+        version: 2.1.1
       dompurify:
         specifier: 3.2.4
         version: 3.2.4
@@ -2382,6 +2385,9 @@ importers:
       react-dom:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
+      tailwind-merge:
+        specifier: 2.6.0
+        version: 2.6.0
     devDependencies:
       '@babel/core':
         specifier: 7.23.3
@@ -10860,6 +10866,9 @@ packages:
   synckit@0.8.5:
     resolution: {integrity: sha512-L1dapNV6vu2s/4Sputv8xGsCdAVlb5nRDMFU/E27D44l5U6cw1g0dGd45uLc+OXjNMmF4ntiMdCimzcjFKQI8Q==}
     engines: {node: ^14.18.0 || >=16.0.0}
+
+  tailwind-merge@2.6.0:
+    resolution: {integrity: sha512-P+Vu1qXfzediirmHOC3xKGAYeZtPcV9g76X+xg2FD4tYgR71ewMA35Y3sCz3zhiN/dwefRpJX0yBcgwi1fXNQA==}
 
   tailwindcss@3.4.19:
     resolution: {integrity: sha512-3ofp+LL8E+pK/JuPLPggVAIaEuhvIz4qNcf3nA1Xn2o/7fb7s/TYpHhwGDv1ZU3PkBluUVaF8PyCHcm48cKLWQ==}
@@ -22018,6 +22027,8 @@ snapshots:
     dependencies:
       '@pkgr/utils': 2.4.2
       tslib: 2.6.2
+
+  tailwind-merge@2.6.0: {}
 
   tailwindcss@3.4.19:
     dependencies:

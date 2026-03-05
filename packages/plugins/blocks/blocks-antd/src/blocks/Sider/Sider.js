@@ -15,7 +15,6 @@
 */
 
 import React, { useState, useEffect } from 'react';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 import { get } from '@lowdefy/helpers';
 import { Layout } from 'antd';
 
@@ -31,7 +30,15 @@ const triggerSetOpen = async ({ state, setOpen, methods, rename }) => {
   setOpen(state);
 };
 
-const SiderBlock = ({ blockId, properties, content, methods, rename }) => {
+const SiderBlock = ({
+  blockId,
+  classNames = {},
+  properties,
+  content,
+  methods,
+  rename,
+  styles = {},
+}) => {
   const [openState, setOpen] = useState(!properties.initialCollapsed);
   useEffect(() => {
     methods.registerMethod(get(rename, 'methods.toggleOpen', { default: 'toggleOpen' }), () =>
@@ -44,12 +51,13 @@ const SiderBlock = ({ blockId, properties, content, methods, rename }) => {
   return (
     <Sider
       id={blockId}
-      className={`${methods.makeCssClass([{ overflow: 'auto' }, properties.style])} hide-on-print`}
+      className={classNames.element ? `${classNames.element} hide-on-print` : 'hide-on-print'}
       breakpoint={properties.breakpoint}
       collapsed={!openState}
       collapsedWidth={properties.collapsedWidth}
       collapsible={properties.collapsible}
       reverseArrow={properties.reverseArrow}
+      style={{ overflow: 'auto', ...styles.element }}
       theme={properties.theme}
       width={properties.width}
       onBreakpoint={() => methods.triggerEvent({ name: 'onBreakpoint' })}
@@ -59,10 +67,10 @@ const SiderBlock = ({ blockId, properties, content, methods, rename }) => {
   );
 };
 
-SiderBlock.defaultProps = blockDefaultProps;
 SiderBlock.meta = {
   category: 'container',
   icons: [],
+  cssKeys: ['element'],
 };
 
 export default SiderBlock;

@@ -32,8 +32,24 @@ Object {
           "type": "string",
         },
         Object {
-          "additionalProperties": Object {
+          "items": Object {
             "type": "string",
+          },
+          "type": "array",
+        },
+        Object {
+          "additionalProperties": Object {
+            "oneOf": Array [
+              Object {
+                "type": "string",
+              },
+              Object {
+                "items": Object {
+                  "type": "string",
+                },
+                "type": "array",
+              },
+            ],
           },
           "type": "object",
         },

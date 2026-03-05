@@ -16,18 +16,21 @@
 
 import React, { useState } from 'react';
 import { Typography } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
+
+import withTheme from '../withTheme.js';
 
 const Paragraph = Typography.Paragraph;
 
 const ParagraphInput = ({
   blockId,
+  classNames = {},
   components: { Icon },
   events,
   loading,
   methods,
   properties,
+  styles = {},
   value,
 }) => {
   const [editing, setEdit] = useState(false);
@@ -47,7 +50,7 @@ const ParagraphInput = ({
   return (
     <Paragraph
       id={blockId}
-      className={methods.makeCssClass(properties.style)}
+      className={classNames.element}
       code={properties.code}
       copyable={
         type.isObject(properties.copyable)
@@ -131,6 +134,7 @@ const ParagraphInput = ({
       italic={properties.italic}
       mark={properties.mark}
       strong={properties.strong}
+      style={styles.element}
       type={properties.type}
       underline={properties.underline}
     >
@@ -139,11 +143,11 @@ const ParagraphInput = ({
   );
 };
 
-ParagraphInput.defaultProps = blockDefaultProps;
 ParagraphInput.meta = {
   valueType: 'string',
   category: 'input',
   icons: [],
+  cssKeys: ['element'],
 };
 
-export default ParagraphInput;
+export default withTheme('Typography', ParagraphInput);

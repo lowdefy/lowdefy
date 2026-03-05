@@ -17,9 +17,17 @@
 import React, { useEffect } from 'react';
 import { message } from 'antd';
 import { type } from '@lowdefy/helpers';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import { renderHtml } from '@lowdefy/block-utils';
 
-const MessageBlock = ({ blockId, components: { Icon }, events, methods, properties }) => {
+const MessageBlock = ({
+  blockId,
+  classNames = {},
+  components: { Icon },
+  events,
+  methods,
+  properties,
+  styles = {},
+}) => {
   useEffect(() => {
     methods.registerMethod('open', (args = {}) => {
       return message[args.status ?? properties.status ?? 'success']({
@@ -34,17 +42,18 @@ const MessageBlock = ({ blockId, components: { Icon }, events, methods, properti
             properties={args.icon ?? properties.icon}
           />
         ),
-        className: methods.makeCssClass(properties.messageStyle),
+        className: classNames.element,
+        style: styles.element,
       });
     });
   });
   return <div id={blockId} />;
 };
 
-MessageBlock.defaultProps = blockDefaultProps;
 MessageBlock.meta = {
   category: 'display',
   icons: [],
+  cssKeys: ['element'],
 };
 
 export default MessageBlock;

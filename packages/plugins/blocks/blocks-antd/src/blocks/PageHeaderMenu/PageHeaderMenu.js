@@ -15,7 +15,6 @@
 */
 
 import React from 'react';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 import { get, mergeObjects, type } from '@lowdefy/helpers';
 
 import Breadcrumb from '../Breadcrumb/Breadcrumb.js';
@@ -37,78 +36,11 @@ const PageHeaderMenu = ({
   pageId,
   properties,
 }) => {
-  const styles = {
-    layout: {
-      minHeight: '100vh',
-    },
-    header: {
-      display: 'flex',
-      alignItems: 'center',
-      padding: '0 46px',
-      xs: { padding: '0 10px' },
-      sm: { padding: '0 15px' },
-      md: { padding: '0 30px' },
-      lg: { padding: '0 46px' },
-    },
-    headerContent: {
-      display: 'flex',
-      flex: '1 1 auto',
-      alignItems: 'center',
-      justifyContent: 'flex-end',
-    },
-    logo: {
-      margin: '0px 30px',
-      flex: '0 1 auto',
-      width: 130,
-      xs: { margin: '0 5px', width: 40 },
-      sm: { margin: '0 10px', width: 130 },
-      md: { margin: '0 15px' },
-    },
-    lgMenu: {
-      flex: '1 1 auto',
-      xs: { display: 'none' },
-      sm: { display: 'none' },
-      md: { display: 'none' },
-      lg: { display: 'flex' },
-    },
-    mdMenu: {
-      flex: '0 1 auto',
-      paddingLeft: '1rem',
-      xs: { display: 'flex' },
-      sm: { display: 'flex' },
-      md: { display: 'flex' },
-      lg: { display: 'none' },
-    },
-    desktop: {
-      display: 'none',
-      lg: { display: 'block' },
-    },
-    mobile: {
-      display: 'block',
-      lg: { display: 'none' },
-    },
-    body: {
-      padding: '0 40px 40px 40px',
-      xs: { padding: '0 5px 5px 5px' },
-      sm: { padding: '0 10px 10px 10px' },
-      md: { padding: '0 20px 20px 20px' },
-      lg: { padding: '0 40px 40px 40px' },
-    },
-    breadcrumb: {
-      margin: '16px 0',
-    },
-    noBreadcrumb: {
-      padding: '20px 0',
-      xs: { padding: '5px 0' },
-      sm: { padding: '5px 0' },
-      md: { padding: '10px 0' },
-    },
-  };
   return (
     <Layout
       blockId={blockId}
       events={events}
-      properties={{ style: mergeObjects([styles.layout, properties.style]) }}
+      properties={{ style: mergeObjects([{ minHeight: '100vh' }, properties.style]) }}
       components={{ Icon, Link }}
       content={{
         content: () => (
@@ -119,12 +51,21 @@ const PageHeaderMenu = ({
               components={{ Icon, Link }}
               properties={mergeObjects([
                 {
-                  style: styles.header,
+                  style: {
+                    display: 'flex',
+                    alignItems: 'center',
+                    padding: '0 46px',
+                  },
                 },
                 properties.header,
               ])}
+              styles={{
+                element: {
+                  display: 'flex',
+                  alignItems: 'center',
+                },
+              }}
               content={{
-                // TODO: use next/image
                 content: () => (
                   <>
                     <Link home={true}>
@@ -145,12 +86,13 @@ const PageHeaderMenu = ({
                             }-theme.png`
                           }
                           alt={properties.logo?.alt ?? 'Lowdefy'}
-                          className={methods.makeCssClass([styles.logo, properties.logo?.style])}
+                          className="mx-1.5 sm:mx-2.5 md:mx-4 lg:mx-[30px] shrink w-10 sm:w-[130px]"
+                          style={properties.logo?.style}
                         />
                       </picture>
                     </Link>
-                    <div className={methods.makeCssClass(styles.headerContent)}>
-                      <div className={methods.makeCssClass([styles.desktop, styles.lgMenu])}>
+                    <div className="flex flex-auto items-center justify-end">
+                      <div className="hidden lg:flex flex-auto">
                         <Menu
                           blockId={`${blockId}_menu`}
                           basePath={basePath}
@@ -177,7 +119,7 @@ const PageHeaderMenu = ({
                             properties.header?.contentStyle,
                           ])
                         )}
-                      <div className={methods.makeCssClass([styles.mobile, styles.mdMenu])}>
+                      <div className="flex lg:hidden shrink pl-4">
                         <MobileMenu
                           blockId={`${blockId}_mobile_menu`}
                           basePath={basePath}
@@ -198,7 +140,19 @@ const PageHeaderMenu = ({
               blockId={`${blockId}_content`}
               components={{ Icon, Link }}
               events={events}
-              properties={mergeObjects([{ style: styles.body }, properties.content])}
+              properties={mergeObjects([
+                {
+                  style: {
+                    padding: '0 40px 40px 40px',
+                  },
+                },
+                properties.content,
+              ])}
+              styles={{
+                element: {
+                  padding: '0 40px 40px 40px',
+                },
+              }}
               content={{
                 content: () => (
                   <>
@@ -210,7 +164,7 @@ const PageHeaderMenu = ({
                         events={events}
                         methods={methods}
                         properties={mergeObjects([
-                          { style: styles.breadcrumb },
+                          { style: { margin: '16px 0' } },
                           properties.breadcrumb,
                         ])}
                         rename={{
@@ -220,7 +174,7 @@ const PageHeaderMenu = ({
                         }}
                       />
                     ) : (
-                      <div className={methods.makeCssClass(styles.noBreadcrumb)} />
+                      <div className="py-1.5 sm:py-1.5 md:py-2.5 lg:py-5" />
                     )}
                     {content.content && content.content()}
                   </>
@@ -245,10 +199,10 @@ const PageHeaderMenu = ({
   );
 };
 
-PageHeaderMenu.defaultProps = blockDefaultProps;
 PageHeaderMenu.meta = {
   category: 'container',
   icons: [...MobileMenu.meta.icons],
+  cssKeys: ['element'],
 };
 
 export default PageHeaderMenu;

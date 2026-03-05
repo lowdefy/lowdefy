@@ -37,9 +37,12 @@ export default {
     class: {
       oneOf: [
         { type: 'string' },
+        { type: 'array', items: { type: 'string' } },
         {
           type: 'object',
-          additionalProperties: { type: 'string' },
+          additionalProperties: {
+            oneOf: [{ type: 'string' }, { type: 'array', items: { type: 'string' } }],
+          },
         },
       ],
     },
