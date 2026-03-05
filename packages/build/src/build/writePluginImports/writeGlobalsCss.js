@@ -64,7 +64,7 @@ function objectToThemeVars(obj, prefix) {
 }
 
 function buildThemeVars(tailwindConfig) {
-  const merged = mergeObjects([BRIDGE_DEFAULTS, tailwindConfig ?? {}]);
+  const merged = mergeObjects([{}, BRIDGE_DEFAULTS, tailwindConfig ?? {}]);
   return objectToThemeVars(merged).join('\n');
 }
 
