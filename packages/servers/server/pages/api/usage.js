@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 // TODO
 // import crypto from 'crypto';
 
-import appJson from '../../build/app.json';
+import appJson from '../../lib/build/app.js';
 import packageJson from '../../package.json';
 import apiWrapper from '../../lib/server/apiWrapper.js';
 // import validateLicense from '../../lib/server/validateLicense.js';

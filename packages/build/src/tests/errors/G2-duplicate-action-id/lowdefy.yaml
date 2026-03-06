@@ -1,0 +1,29 @@
+# G2: Duplicate Action ID
+# ========================
+# Tests that duplicate action ids in the same event throw an error with location.
+#
+# Expected error:
+#   [Config Error] Duplicate actionId "linkAction" in event "onClick".
+#
+# The error points to line 26 where the duplicate action is defined.
+
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: button
+        type: Button
+        properties:
+          title: Duplicate Actions
+        events:
+          onClick:
+            - id: linkAction
+              type: SetState
+              params:
+                key: value1
+            - id: linkAction
+              type: SetState
+              params:
+                key: value2

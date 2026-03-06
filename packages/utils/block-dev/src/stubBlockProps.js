@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ const stubBlockProps = ({ block, meta, logger = () => null, initialValue, schema
     try {
       validate[block.type] = schemaTest(schema);
     } catch (error) {
-      throw new Error(`Schema error in ${block.type} - ${error.message}`);
+      throw new Error(`Schema error in ${block.type}.`, { cause: error });
     }
   }
   block.schemaErrors = !validate[block.type](block);

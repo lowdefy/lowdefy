@@ -1,0 +1,25 @@
+id: dashboard
+type: Box
+properties:
+  title: Dashboard
+blocks:
+  - id: welcome
+    type: Title
+    properties:
+      content:
+        _nunjucks: 'Welcome, {{ user.name }}!'
+        user:
+          _user: true
+  - id: stats
+    type: Box
+    blocks:
+      - id: stat1
+        type: Statistic
+        properties:
+          title: Total Items
+          value: 42
+      - id: stat2
+        type: Statistic
+        properties:
+          title: Active Users
+          value: 128

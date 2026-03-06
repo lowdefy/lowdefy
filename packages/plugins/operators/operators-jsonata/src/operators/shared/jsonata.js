@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ function evaluate(data, expression, bindings) {
     }
     return result;
   } catch (error) {
-    throw new Error(`JSONata evaluation error: ${error.message}`);
+    throw new Error('JSONata evaluation error.', { cause: error });
   }
 }
 
@@ -59,5 +59,7 @@ function _jsonata({ params, location, methodName }) {
     defaultFunction: 'evaluate',
   });
 }
+
+_jsonata.dynamic = true;
 
 export default _jsonata;

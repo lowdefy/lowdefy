@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 import { jest } from '@jest/globals';
 
 import buildApi from './buildApi.js';
-import testContext from '../../test/testContext.js';
+import testContext from '../../test-utils/testContext.js';
 
 const mockLogWarn = jest.fn();
 const mockLog = jest.fn();
@@ -71,7 +71,7 @@ test('step id is not a string', () => {
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    'Step id is not a string at endpoint "test_step_id_not_string". Received true.'
+    'Step id is not a string at endpoint "test_step_id_not_string".'
   );
 });
 
@@ -93,7 +93,7 @@ test('step type not a string', () => {
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    'Step type is not a string at "stepId" on endpoint "test_step_type_not_string". Received 1.'
+    'Step type is not a string at "stepId" on endpoint "test_step_type_not_string".'
   );
 });
 
@@ -154,7 +154,7 @@ test('connectionId is not a string', () => {
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    'Step connectionId is not a string at endpoint "test_no_connectionId". Received false.'
+    'Step connectionId is not a string at endpoint "test_no_connectionId".'
   );
 });
 test('valid routine step config nested array', () => {

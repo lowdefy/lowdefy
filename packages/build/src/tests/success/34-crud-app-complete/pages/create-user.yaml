@@ -1,0 +1,68 @@
+id: create-user
+type: Box
+properties:
+  title: Create User
+requests:
+  - id: createUser
+    type: MongoDBInsertOne
+    connectionId: db
+    payload:
+      name:
+        _state: name
+      email:
+        _state: email
+    properties:
+      doc:
+        name:
+          _payload: name
+        email:
+          _payload: email
+        createdAt:
+          _date: '2024-01-15T12:00:00.000Z'
+blocks:
+  - id: title
+    type: Title
+    properties:
+      content: Create New User
+  - id: form
+    type: Card
+    blocks:
+      - id: name
+        type: TextInput
+        required: true
+        properties:
+          title: Name
+      - id: email
+        type: TextInput
+        required: true
+        properties:
+          title: Email
+      - id: actions
+        type: Box
+        blocks:
+          - id: submitBtn
+            type: Button
+            properties:
+              title: Create User
+              type: primary
+            events:
+              onClick:
+                - id: validate
+                  type: Validate
+                - id: create
+                  type: Request
+                  params: createUser
+                - id: redirect
+                  type: Link
+                  params:
+                    pageId: users
+          - id: cancelBtn
+            type: Button
+            properties:
+              title: Cancel
+            events:
+              onClick:
+                - id: goBack
+                  type: Link
+                  params:
+                    pageId: users

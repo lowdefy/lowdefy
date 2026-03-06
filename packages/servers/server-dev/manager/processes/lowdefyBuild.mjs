@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,21 +14,32 @@
   limitations under the License.
 */
 
-import build from '@lowdefy/build';
+import { shallowBuild } from '@lowdefy/build/dev';
 import createCustomPluginTypesMap from '../utils/createCustomPluginTypesMap.mjs';
+
+function formatDuration(ms) {
+  if (ms < 1000) return `${ms}ms`;
+  return `${(ms / 1000).toFixed(2)}s`;
+}
 
 function lowdefyBuild({ directories, logger, options }) {
   return async () => {
-    logger.info({ print: 'spin' }, 'Building config...');
+    logger.info({ spin: 'start' }, 'Building config...');
+    const startTime = Date.now();
     const customTypesMap = await createCustomPluginTypesMap({ directories, logger });
-    await build({
+
+    const result = await shallowBuild({
       customTypesMap,
       directories,
       logger,
       refResolver: options.refResolver,
       stage: 'dev',
     });
-    logger.info({ print: 'log' }, 'Built config.');
+
+    // Return result so getContext can store registries
+    const duration = Date.now() - startTime;
+    logger.info({ spin: 'succeed' }, `Built config in ${formatDuration(duration)}.`);
+    return result;
   };
 }
 

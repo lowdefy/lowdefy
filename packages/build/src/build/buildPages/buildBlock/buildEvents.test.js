@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@
 import { jest } from '@jest/globals';
 
 import { get } from '@lowdefy/helpers';
-import buildPages from '../buildPages.js';
-import testContext from '../../../test/testContext.js';
+import buildPages from '../../full/buildPages.js';
+import testContext from '../../../test-utils/testContext.js';
 
 const mockLogWarn = jest.fn();
 const mockLog = jest.fn();
@@ -186,7 +186,7 @@ test('block events actions try not an array', () => {
       context,
     })
   ).toThrow(
-    'Try actions must be an array at "block_1" in event "onClick.try" on page "page_1". Received {"id":"action_1","type":"Reset"}'
+    'Try actions must be an array at "block_1" in event "onClick.try" on page "page_1".'
   );
 });
 
@@ -210,7 +210,7 @@ test('block events actions not an array', () => {
     ],
   };
   expect(() => buildPages({ components, context })).toThrow(
-    'Actions must be an array at "block_1" in event "onClick" on page "page_1". Received undefined'
+    'Actions must be an array at "block_1" in event "onClick" on page "page_1".'
   );
 });
 
@@ -240,7 +240,7 @@ test('block events actions catch not an array', () => {
     ],
   };
   expect(() => buildPages({ components, context })).toThrow(
-    'Catch actions must be an array at "block_1" in event "onClick.catch" on page "page_1". Received {"id":"action_1","type":"Reset"}'
+    'Catch actions must be an array at "block_1" in event "onClick.catch" on page "page_1".'
   );
 });
 
@@ -312,7 +312,7 @@ test('action type is not a string', () => {
     ],
   };
   expect(() => buildPages({ components, context })).toThrow(
-    'Action type is not a string on action "reset" on event "onClick" on block "block_1" on page "page_1". Received undefined.'
+    'Action type is not a string on action "reset" on event "onClick" on block "block_1" on page "page_1".'
   );
 });
 
@@ -349,7 +349,7 @@ test('block events action id is not a string', () => {
     ],
   };
   expect(() => buildPages({ components, context })).toThrow(
-    'Action id is not a string on event "onClick" on block "block_1" on page "page_1". Received true.'
+    'Action id is not a string on event "onClick" on block "block_1" on page "page_1".'
   );
 });
 

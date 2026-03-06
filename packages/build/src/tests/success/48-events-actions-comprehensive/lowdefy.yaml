@@ -1,0 +1,253 @@
+# 48: Events and Actions Comprehensive
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    properties:
+      title: Events & Actions Demo
+    events:
+      onInit:
+        - id: initState
+          type: SetState
+          params:
+            counter: 0
+            history: []
+      onMount:
+        - id: mounted
+          type: SetState
+          params:
+            mounted: true
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Events & Actions Demo
+      
+      # SetState actions
+      - id: stateCard
+        type: Card
+        properties:
+          title: State Management
+        blocks:
+          - id: counterDisplay
+            type: Statistic
+            properties:
+              title: Counter
+              value:
+                _state: counter
+          - id: incrementBtn
+            type: Button
+            properties:
+              title: Increment
+            events:
+              onClick:
+                - id: increment
+                  type: SetState
+                  params:
+                    counter:
+                      _sum:
+                        - _state: counter
+                        - 1
+          - id: decrementBtn
+            type: Button
+            properties:
+              title: Decrement
+            events:
+              onClick:
+                - id: decrement
+                  type: SetState
+                  params:
+                    counter:
+                      _sum:
+                        - _state: counter
+                        - -1
+          - id: resetBtn
+            type: Button
+            properties:
+              title: Reset
+              danger: true
+            events:
+              onClick:
+                - id: reset
+                  type: Reset
+      
+      # Link actions
+      - id: linkCard
+        type: Card
+        properties:
+          title: Navigation Actions
+        blocks:
+          - id: homeLink
+            type: Button
+            properties:
+              title: Go Home
+            events:
+              onClick:
+                - id: goHome
+                  type: Link
+                  params:
+                    home: true
+          - id: pageLink
+            type: Button
+            properties:
+              title: Go to About
+            events:
+              onClick:
+                - id: goAbout
+                  type: Link
+                  params:
+                    pageId: about
+          - id: urlLink
+            type: Button
+            properties:
+              title: External Link
+            events:
+              onClick:
+                - id: goExternal
+                  type: Link
+                  params:
+                    url: https://example.com
+                    newTab: true
+      
+      # DisplayMessage actions
+      - id: messageCard
+        type: Card
+        properties:
+          title: Messages
+        blocks:
+          - id: successMsg
+            type: Button
+            properties:
+              title: Success
+              type: primary
+            events:
+              onClick:
+                - id: showSuccess
+                  type: DisplayMessage
+                  params:
+                    content: Operation successful!
+                    status: success
+                    duration: 3
+          - id: errorMsg
+            type: Button
+            properties:
+              title: Error
+              danger: true
+            events:
+              onClick:
+                - id: showError
+                  type: DisplayMessage
+                  params:
+                    content: Something went wrong!
+                    status: error
+          - id: warningMsg
+            type: Button
+            properties:
+              title: Warning
+            events:
+              onClick:
+                - id: showWarning
+                  type: DisplayMessage
+                  params:
+                    content: Please be careful!
+                    status: warning
+      
+      # Action with skip and async
+      - id: advancedCard
+        type: Card
+        properties:
+          title: Advanced Actions
+        blocks:
+          - id: conditionalAction
+            type: Button
+            properties:
+              title: Conditional Action (only if counter > 5)
+            events:
+              onClick:
+                - id: conditionalMsg
+                  type: DisplayMessage
+                  skip:
+                    _lte:
+                      - _state: counter
+                      - 5
+                  params:
+                    content: Counter is greater than 5!
+                    status: success
+          - id: asyncAction
+            type: Button
+            properties:
+              title: Async Actions
+            events:
+              onClick:
+                - id: action1
+                  type: DisplayMessage
+                  async: true
+                  params:
+                    content: Action 1 started
+                - id: action2
+                  type: DisplayMessage
+                  async: true
+                  params:
+                    content: Action 2 started
+          - id: waitAction
+            type: Button
+            properties:
+              title: Wait Action
+            events:
+              onClick:
+                - id: showStart
+                  type: DisplayMessage
+                  params:
+                    content: Starting...
+                - id: wait
+                  type: Wait
+                  params:
+                    ms: 1000
+                - id: showEnd
+                  type: DisplayMessage
+                  params:
+                    content: Done!
+      
+      # Debounce events
+      - id: debounceCard
+        type: Card
+        properties:
+          title: Debounced Events
+        blocks:
+          - id: searchInput
+            type: TextInput
+            properties:
+              placeholder: Type to search (debounced)...
+            events:
+              onChange:
+                debounce:
+                  ms: 500
+                try:
+                  - id: searchAction
+                    type: DisplayMessage
+                    params:
+                      content:
+                        _nunjucks: 'Searching for: {{ query }}'
+                        query:
+                          _state: searchInput
+  
+  - id: about
+    type: Box
+    properties:
+      title: About
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: About Page
+      - id: backBtn
+        type: Button
+        properties:
+          title: Go Back
+        events:
+          onClick:
+            - id: goBack
+              type: Link
+              params:
+                back: true

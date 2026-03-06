@@ -1,0 +1,73 @@
+# 41: List CRUD Application
+lowdefy: local
+
+pages:
+  - id: todos
+    type: Box
+    properties:
+      title: Todo List
+    events:
+      onInit:
+        - id: initTodos
+          type: SetState
+          params:
+            todos:
+              - id: 1
+                text: Learn Lowdefy
+                done: false
+              - id: 2
+                text: Build an app
+                done: false
+    blocks:
+      - id: newTodo
+        type: TextInput
+        properties:
+          placeholder: Add new todo...
+      - id: addBtn
+        type: Button
+        properties:
+          title: Add
+        events:
+          onClick:
+            - id: addTodo
+              type: SetState
+              params:
+                todos:
+                  _array:
+                    concat:
+                      - _state: todos
+                      - - id:
+                            _random: uuid
+                          text:
+                            _state: newTodo
+                          done: false
+            - id: clearInput
+              type: SetState
+              params:
+                newTodo: ''
+      - id: todoList
+        type: List
+        properties:
+          data:
+            _state: todos
+        blocks:
+          - id: todoItem
+            type: Box
+            blocks:
+              - id: checkbox
+                type: Switch
+                properties:
+                  checked:
+                    _state: todoList.$.done
+              - id: text
+                type: Paragraph
+                style:
+                  textDecoration:
+                    _if:
+                      test:
+                        _state: todoList.$.done
+                      then: line-through
+                      else: none
+                properties:
+                  content:
+                    _state: todoList.$.text

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -116,7 +116,7 @@ test('KnexBuilder, more than one method', async () => {
     query: [{ select: ['*'], where: ['name', 'steve'] }],
   };
   await expect(KnexBuilder({ request, connection })).rejects.toThrow(
-    'Invalid query, more than one method defined in a method object, received ["select","where"].'
+    'Invalid query, more than one method defined in a method object.'
   );
 });
 
@@ -126,7 +126,7 @@ test('KnexBuilder, method args not an array', async () => {
     query: [{ select: '*' }],
   };
   await expect(KnexBuilder({ request, connection })).rejects.toThrow(
-    'Invalid query, method "select" arguments should be an array, received "*".'
+    'Invalid query, method "select" arguments should be an array.'
   );
 });
 

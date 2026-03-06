@@ -1,0 +1,108 @@
+# 36: Role-based Authorization Application
+lowdefy: local
+name: Role-based App
+
+auth:
+  providers:
+    - id: credentials
+      type: CredentialsProvider
+      properties:
+        name: credentials
+        credentials:
+          email:
+            label: Email
+            type: email
+          password:
+            label: Password
+            type: password
+  pages:
+    protected: true
+    public:
+      - login
+    roles:
+      admin:
+        - admin-panel
+        - user-management
+      manager:
+        - reports
+        - team
+      user:
+        - dashboard
+        - profile
+  callbacks:
+    - id: jwt
+      type: JwtCallback
+    - id: session
+      type: SessionCallback
+
+pages:
+  - id: login
+    type: Result
+    properties:
+      title: Login
+      status: info
+    areas:
+      extra:
+        blocks:
+          - id: loginBtn
+            type: Button
+            properties:
+              title: Sign In
+            events:
+              onClick:
+                - id: login
+                  type: Login
+  - id: dashboard
+    type: Box
+    properties:
+      title: Dashboard
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: User Dashboard
+  - id: profile
+    type: Box
+    properties:
+      title: Profile
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: My Profile
+  - id: reports
+    type: Box
+    properties:
+      title: Reports
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Manager Reports
+  - id: team
+    type: Box
+    properties:
+      title: Team
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Team Management
+  - id: admin-panel
+    type: Box
+    properties:
+      title: Admin Panel
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Administration
+  - id: user-management
+    type: Box
+    properties:
+      title: User Management
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Manage Users

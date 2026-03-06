@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 */
 
 import addCustomPluginsAsDeps from '../../utils/addCustomPluginsAsDeps.js';
+import checkPortAvailable from '../../utils/checkPortAvailable.js';
 import installServer from '../../utils/installServer.js';
 import resetServerPackageJson from '../../utils/resetServerPackageJson.js';
 import runDevServer from './runDevServer.js';
@@ -22,7 +23,8 @@ import getServer from '../../utils/getServer.js';
 
 async function dev({ context }) {
   const directory = context.directories.dev;
-  context.print.info('Starting development server.');
+  context.logger.info('Starting development server.');
+  await checkPortAvailable({ port: context.options.port });
   await getServer({ context, packageName: '@lowdefy/server-dev', directory });
   await resetServerPackageJson({ context, directory });
   await addCustomPluginsAsDeps({ context, directory });

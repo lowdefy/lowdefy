@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import fetchNpmTarball from './fetchNpmTarball.js';
 
 async function getServer({ context, packageName, directory }) {
   if (context.lowdefyVersion === 'local') {
-    context.print.warn(`Running local ${packageName}.`);
+    context.logger.warn(`Running local ${packageName}.`);
     return;
   }
 
@@ -34,19 +34,19 @@ async function getServer({ context, packageName, directory }) {
     const serverPackageConfig = JSON.parse(await readFile(path.join(directory, 'package.json')));
     if (serverPackageConfig.version !== context.lowdefyVersion) {
       fetchServer = true;
-      context.print.warn(`Removing ${packageName} with version ${serverPackageConfig.version}`);
+      context.logger.warn(`Removing ${packageName} with version ${serverPackageConfig.version}`);
       await cleanDirectory(directory);
     }
   }
 
   if (fetchServer) {
-    context.print.spin(`Fetching ${packageName} from npm.`);
+    context.logger.info({ spin: 'start' }, `Fetching ${packageName} from npm.`);
     await fetchNpmTarball({
       packageName,
       version: context.lowdefyVersion,
       directory,
     });
-    context.print.log(`Fetched ${packageName} from npm.`);
+    context.logger.info(`Fetched ${packageName} from npm.`);
   }
 }
 

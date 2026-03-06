@@ -1,0 +1,13 @@
+id: about
+type: Box
+properties:
+  title: About
+blocks:
+  - id: title
+    type: Title
+    properties:
+      content: About This Demo
+  - id: description
+    type: Paragraph
+    properties:
+      content: This is a multi-page application that demonstrates page references.

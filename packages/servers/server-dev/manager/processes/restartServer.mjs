@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -19,9 +19,9 @@ import startServer from './startServer.mjs';
 function restartServer(context) {
   return () => {
     context.shutdownServer();
-    context.logger.info({ print: 'spin' }, 'Restarting server...');
+    context.logger.info({ spin: 'start' }, 'Restarting server...');
     startServer(context);
-    context.logger.info({ print: 'succeed' }, 'Restarted server.');
+    context.logger.info({ spin: 'succeed' }, 'Restarted server.');
   };
 }
 

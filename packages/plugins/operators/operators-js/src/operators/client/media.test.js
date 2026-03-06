@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -85,6 +85,6 @@ test('_media height', () => {
 
 test('_media throw on no innerWidth', () => {
   expect(() => media({ params: true, location: 'locationId', globals: { window: {} } })).toThrow(
-    'Operator Error: device window width not available for _media. Received: true at locationId.'
+    'device window width not available for _media.'
   );
 });

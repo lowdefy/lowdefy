@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,9 +16,16 @@
 
 import { getServerSession as getNextAuthServerSession } from 'next-auth/next';
 
-import authJson from '../../../build/auth.json';
+import authJson from '../../build/auth.js';
+import getMockSession from './getMockSession.js';
 
-function getServerSession({ authOptions, req, res }) {
+async function getServerSession({ authOptions, req, res }) {
+  // Check for mock user first (dev server only)
+  const mockSession = await getMockSession();
+  if (mockSession) {
+    return mockSession;
+  }
+
   if (authJson.configured === true) {
     return getNextAuthServerSession(req, res, authOptions);
   }

@@ -1,0 +1,24 @@
+# A3: Duplicate Connection ID
+# ============================
+# Tests that duplicate connection ids throw an error with location.
+#
+# Expected error:
+#   [Config Error] Duplicate connectionId "testApi".
+#
+# The error points to line 17 where the duplicate connection is defined.
+
+lowdefy: local
+
+connections:
+  - id: testApi
+    type: AxiosHttp
+    properties:
+      baseURL: http://example.com
+  - id: testApi
+    type: AxiosHttp
+    properties:
+      baseURL: http://other.com
+
+pages:
+  - id: home
+    type: Box

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -17,18 +17,21 @@
 import path from 'path';
 import { createApiContext } from '@lowdefy/api';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
+import { serializer } from '@lowdefy/helpers';
 import { v4 as uuid } from 'uuid';
 
-import config from '../../build/config.json';
+import config from '../build/config.js';
 import connections from '../../build/plugins/connections.js';
 import createLogger from './log/createLogger.js';
 import fileCache from './fileCache.js';
 import getServerSession from './auth/getServerSession.js';
-import logError from './log/logError.js';
+import createHandleError from './log/createHandleError.js';
 import logRequest from './log/logRequest.js';
 import operators from '../../build/plugins/operators/server.js';
 import jsMap from '../../build/plugins/operators/serverJsMap.js';
 import getAuthOptions from './auth/getAuthOptions.js';
+import loggerConfig from '../build/logger.js';
+import setSentryUser from './sentry/setSentryUser.js';
 
 const secrets = getSecretsFromEnv();
 
@@ -43,6 +46,9 @@ function apiWrapper(handler) {
       fileCache,
       headers: req?.headers,
       jsMap,
+      handleError: async (err) => {
+        console.error(err);
+      },
       logger: console,
       operators,
       req,
@@ -51,9 +57,15 @@ function apiWrapper(handler) {
     };
     try {
       context.logger = createLogger({ rid: context.rid });
+      context.handleError = createHandleError({ context });
       context.authOptions = getAuthOptions(context);
       if (!req.url.startsWith('/api/auth')) {
         context.session = await getServerSession(context);
+        // Set Sentry user context for authenticated requests
+        setSentryUser({
+          user: context.session?.user,
+          sentryConfig: loggerConfig.sentry,
+        });
       }
       createApiContext(context);
       logRequest({ context });
@@ -61,8 +73,14 @@ function apiWrapper(handler) {
       const response = await handler({ context, req, res });
       return response;
     } catch (error) {
-      logError({ error, context });
-      res.status(500).json({ name: error.name, message: error.message });
+      await context.handleError(error);
+      const serialized = serializer.serialize(error);
+      if (serialized?.['~e']) {
+        delete serialized['~e'].received;
+        delete serialized['~e'].stack;
+        delete serialized['~e'].configKey;
+      }
+      res.status(500).json(serialized);
     }
   };
 }

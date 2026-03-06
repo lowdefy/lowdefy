@@ -1,0 +1,131 @@
+# 54: Many Pages Application
+lowdefy: local
+name: Large App
+
+menus:
+  - id: default
+    links:
+      - id: home
+        type: MenuLink
+        pageId: page-001
+        properties:
+          title: Home
+      - id: section1
+        type: MenuGroup
+        properties:
+          title: Section 1
+        links:
+          - id: link1
+            type: MenuLink
+            pageId: page-002
+            properties:
+              title: Page 2
+          - id: link2
+            type: MenuLink
+            pageId: page-003
+            properties:
+              title: Page 3
+          - id: link3
+            type: MenuLink
+            pageId: page-004
+            properties:
+              title: Page 4
+          - id: link4
+            type: MenuLink
+            pageId: page-005
+            properties:
+              title: Page 5
+      - id: section2
+        type: MenuGroup
+        properties:
+          title: Section 2
+        links:
+          - id: link5
+            type: MenuLink
+            pageId: page-006
+            properties:
+              title: Page 6
+          - id: link6
+            type: MenuLink
+            pageId: page-007
+            properties:
+              title: Page 7
+          - id: link7
+            type: MenuLink
+            pageId: page-008
+            properties:
+              title: Page 8
+
+pages:
+  - id: page-001
+    type: Box
+    properties:
+      title: Page 1
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Page 1 Content
+  - id: page-002
+    type: Box
+    properties:
+      title: Page 2
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Page 2 Content
+  - id: page-003
+    type: Box
+    properties:
+      title: Page 3
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Page 3 Content
+  - id: page-004
+    type: Box
+    properties:
+      title: Page 4
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Page 4 Content
+  - id: page-005
+    type: Box
+    properties:
+      title: Page 5
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Page 5 Content
+  - id: page-006
+    type: Box
+    properties:
+      title: Page 6
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Page 6 Content
+  - id: page-007
+    type: Box
+    properties:
+      title: Page 7
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Page 7 Content
+  - id: page-008
+    type: Box
+    properties:
+      title: Page 8
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Page 8 Content

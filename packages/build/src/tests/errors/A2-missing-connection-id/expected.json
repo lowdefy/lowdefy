@@ -1,0 +1,14 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": [
+        "should have required property \"id\""
+      ],
+      "errorContains": [
+        "Connection should have required property \"id\".",
+        "lowdefy.yaml:13"
+      ]
+    }
+  ]
+}

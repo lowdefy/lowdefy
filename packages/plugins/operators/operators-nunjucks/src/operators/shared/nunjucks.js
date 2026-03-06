@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 import { type } from '@lowdefy/helpers';
 import { nunjucksFunction } from '@lowdefy/nunjucks';
 
-function _nunjucks({ location, params, state, payload, runtime }) {
+function _nunjucks({ params, state, payload, runtime }) {
   let templateString;
   let on;
   if (type.isObject(params) && type.isString(params.template)) {
@@ -33,15 +33,12 @@ function _nunjucks({ location, params, state, payload, runtime }) {
       const template = nunjucksFunction(templateString);
       return template(on);
     } catch (e) {
-      // log e to LowdefyError
-      throw new Error(
-        `Operator Error: _nunjucks failed to parse nunjucks template. Received: ${JSON.stringify(
-          params
-        )} at ${location}.`
-      );
+      throw new Error('_nunjucks failed to parse nunjucks template.', { cause: e });
     }
   }
   return null;
 }
+
+_nunjucks.dynamic = false;
 
 export default _nunjucks;

@@ -1,0 +1,12 @@
+{
+  "tests": [
+    {
+      "mode": "dev",
+      "noWarnings": ["undefinedKey", "selectedUser"]
+    },
+    {
+      "mode": "prod",
+      "noErrors": ["undefinedKey", "selectedUser"]
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ function validateConfig({ components }) {
   }
   if (type.isString(components.config.basePath)) {
     if (components.config.basePath[0] !== '/') {
-      throw Error('Base path must start with "/".');
+      throw new Error('Base path must start with "/".');
     }
   }
   return components;

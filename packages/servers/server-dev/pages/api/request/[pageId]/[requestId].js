@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -23,8 +23,11 @@ async function handler({ context, req, res }) {
     throw new Error('Only POST requests are supported.');
   }
   const { pageId, requestId } = req.query;
-  const { blockId, payload } = req.body;
-  context.logger.info({ event: 'call_request', pageId, requestId, blockId });
+  const { actionId, blockId, payload } = req.body;
+  context.logger.info(
+    { color: 'gray' },
+    `Request: ${pageId} · ${blockId} · ${actionId} → ${requestId}`
+  );
   const response = await callRequest(context, { blockId, pageId, payload, requestId });
   res.status(200).json(response);
 }

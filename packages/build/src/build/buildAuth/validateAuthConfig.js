@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -18,16 +18,16 @@
 
 import { type } from '@lowdefy/helpers';
 import { validate } from '@lowdefy/ajv';
+import { ConfigError } from '@lowdefy/errors';
 import lowdefySchema from '../../lowdefySchema.js';
-
 import validateMutualExclusivity from './validateMutualExclusivity.js';
 
-async function validateAuthConfig({ components }) {
+function validateAuthConfig({ components, context }) {
   if (type.isNone(components.auth)) {
     components.auth = {};
   }
   if (!type.isObject(components.auth)) {
-    throw new Error('lowdefy.auth is not an object.');
+    throw new ConfigError('lowdefy.auth is not an object.', { configKey: components['~k'] });
   }
   if (type.isNone(components.auth.api)) {
     components.auth.api = {};
@@ -60,13 +60,46 @@ async function validateAuthConfig({ components }) {
     components.auth.theme = {};
   }
 
-  validate({
+  const { valid, errors } = validate({
     schema: lowdefySchema.definitions.authConfig,
     data: components.auth,
+    returnErrors: true,
   });
 
-  validateMutualExclusivity({ components, entity: 'api' });
-  validateMutualExclusivity({ components, entity: 'pages' });
+  if (!valid) {
+    errors.forEach((error) => {
+      // Try to get configKey from the item in the error path
+      const instancePath = error.instancePath.split('/').filter(Boolean);
+      let configKey = components.auth['~k'];
+      let currentData = components.auth;
+
+      for (const part of instancePath) {
+        if (type.isArray(currentData)) {
+          const index = parseInt(part, 10);
+          currentData = currentData[index];
+        } else {
+          currentData = currentData?.[part];
+        }
+        if (currentData?.['~k']) {
+          configKey = currentData['~k'];
+        }
+      }
+
+      throw new ConfigError(`Auth ${error.message}.`, { configKey });
+    });
+  }
+
+  validateMutualExclusivity({ components, context, entity: 'api' });
+  validateMutualExclusivity({ components, context, entity: 'pages' });
+
+  // Validate NEXTAUTH_SECRET is set when auth providers are configured
+  if (components.auth.providers.length > 0 && type.isNone(process.env.NEXTAUTH_SECRET)) {
+    throw new ConfigError(
+      'Auth providers are configured but NEXTAUTH_SECRET environment variable is not set. ' +
+        'Set NEXTAUTH_SECRET to a secure random string (e.g., generate with `openssl rand -base64 32`).',
+      { configKey: components.auth.providers['~k'] ?? components.auth['~k'] }
+    );
+  }
 
   return components;
 }

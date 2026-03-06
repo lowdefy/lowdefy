@@ -1,0 +1,26 @@
+# G1: Invalid Page Link
+# ======================
+# Tests that Link actions referencing non-existent pages warn in dev mode
+# and throw an error in prod mode.
+#
+# Expected warning (dev) / error (prod):
+#   [Config Warning/Error] Page "nonExistentPage" not found.
+#
+# The error points to line 22 where the Link action is defined.
+
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: invalidLink
+        type: Button
+        properties:
+          title: Go to Invalid Page
+        events:
+          onClick:
+            - id: linkAction
+              type: Link
+              params:
+                pageId: nonExistentPage

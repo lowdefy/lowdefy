@@ -7,7 +7,7 @@ function controlSetState(context, routineContext, { control }) {
   const evaluatedSetState = evaluateOperators({
     input: control[':set_state'],
     items,
-    location: 'TODO:',
+    location: control['~k'] ?? ':set_state',
   });
 
   logger.debug({

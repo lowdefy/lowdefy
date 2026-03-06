@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,10 +14,8 @@
   limitations under the License.
 */
 
-import pino from 'pino';
-
-// TODO: Pino does not serialize error.cause properties if the cause object is not an Error (or Error-like)
-const logger = pino({
+import { createNodeLogger } from '@lowdefy/logger/node';
+const logger = createNodeLogger({
   name: 'lowdefy_server',
   level: process.env.LOWDEFY_LOG_LEVEL ?? 'info',
   base: { pid: undefined, hostname: undefined },

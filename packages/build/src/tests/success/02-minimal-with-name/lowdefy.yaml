@@ -1,0 +1,7 @@
+# 02: Minimal Config with App Name
+lowdefy: local
+name: My Test App
+
+pages:
+  - id: home
+    type: Box

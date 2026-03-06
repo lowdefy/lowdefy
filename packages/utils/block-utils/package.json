@@ -42,6 +42,7 @@
   },
   "dependencies": {
     "@emotion/css": "11.11.2",
+    "@lowdefy/errors": "4.5.2",
     "@lowdefy/helpers": "4.5.2",
     "dompurify": "3.2.4",
     "react": "18.2.0",

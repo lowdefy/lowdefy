@@ -1,0 +1,30 @@
+{
+  "tests": [
+    {
+      "mode": "dev",
+      "warnings": [
+        "_state references \"contact_company_ids\"",
+        "_state is not available in request properties"
+      ],
+      "warningContains": [
+        "lowdefy.yaml:33",
+        "lowdefy.yaml:37"
+      ],
+      "noWarnings": [
+        "_state references \"x\""
+      ]
+    },
+    {
+      "mode": "prod",
+      "errors": [
+        "_state references \"contact_company_ids\"",
+        "_state is not available in request properties"
+      ],
+      "errorContains": [
+        "lowdefy.yaml:33",
+        "lowdefy.yaml:37"
+      ],
+      "expectThrow": true
+    }
+  ]
+}

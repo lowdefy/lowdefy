@@ -1,0 +1,251 @@
+# 49: Request and Payload Application
+lowdefy: local
+
+connections:
+  - id: api
+    type: AxiosHttp
+    properties:
+      baseURL: https://api.example.com
+  - id: db
+    type: MongoDBCollection
+    properties:
+      databaseUri: mongodb://localhost:27017/test
+      collection: items
+      write: true
+
+pages:
+  - id: home
+    type: Box
+    properties:
+      title: Requests Demo
+    requests:
+      # Simple GET request
+      - id: getItems
+        type: AxiosHttp
+        connectionId: api
+        properties:
+          url: /items
+          method: GET
+      
+      # GET with query parameters
+      - id: searchItems
+        type: AxiosHttp
+        connectionId: api
+        payload:
+          query:
+            _state: searchQuery
+          limit:
+            _state: pageSize
+        properties:
+          url: /items/search
+          method: GET
+          params:
+            q:
+              _payload: query
+            limit:
+              _payload: limit
+      
+      # POST with body
+      - id: createItem
+        type: AxiosHttp
+        connectionId: api
+        payload:
+          name:
+            _state: newItemName
+          description:
+            _state: newItemDesc
+        properties:
+          url: /items
+          method: POST
+          data:
+            name:
+              _payload: name
+            description:
+              _payload: description
+      
+      # MongoDB find
+      - id: findItems
+        type: MongoDBFind
+        connectionId: db
+        payload:
+          status:
+            _state: statusFilter
+        properties:
+          query:
+            status:
+              _payload: status
+          options:
+            sort:
+              createdAt: -1
+            limit: 20
+      
+      # MongoDB insert
+      - id: insertItem
+        type: MongoDBInsertOne
+        connectionId: db
+        payload:
+          name:
+            _state: itemName
+          value:
+            _state: itemValue
+        properties:
+          doc:
+            name:
+              _payload: name
+            value:
+              _payload: value
+            createdAt:
+              "_date: '2024-01-15T12:00:00.000Z'"
+      
+      # MongoDB update
+      - id: updateItem
+        type: MongoDBUpdateOne
+        connectionId: db
+        payload:
+          id:
+            _state: selectedItemId
+          newName:
+            _state: editName
+        properties:
+          filter:
+            _id:
+              _payload: id
+          update:
+            $set:
+              name:
+                _payload: newName
+              updatedAt:
+                "_date: '2024-01-15T12:00:00.000Z'"
+      
+      # MongoDB aggregate
+      - id: aggregateStats
+        type: MongoDBAggregate
+        connectionId: db
+        properties:
+          pipeline:
+            - $group:
+                _id: $status
+                count:
+                  $sum: 1
+                totalValue:
+                  $sum: $value
+    events:
+      onInit:
+        - id: loadItems
+          type: Request
+          params: getItems
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Request & Payload Demo
+      
+      - id: searchSection
+        type: Card
+        properties:
+          title: Search
+        blocks:
+          - id: searchQuery
+            type: TextInput
+            properties:
+              placeholder: Search items...
+          - id: pageSize
+            type: NumberInput
+            properties:
+              title: Page Size
+              defaultValue: 10
+          - id: searchBtn
+            type: Button
+            properties:
+              title: Search
+            events:
+              onClick:
+                - id: doSearch
+                  type: Request
+                  params: searchItems
+      
+      - id: filterSection
+        type: Card
+        properties:
+          title: Filter Items
+        blocks:
+          - id: statusFilter
+            type: Selector
+            properties:
+              title: Status Filter
+              options:
+                - value: active
+                  label: Active
+                - value: inactive
+                  label: Inactive
+
+      - id: createSection
+        type: Card
+        properties:
+          title: Create Item
+        blocks:
+          - id: itemName
+            type: TextInput
+            required: true
+            properties:
+              title: Item Name
+          - id: itemValue
+            type: NumberInput
+            properties:
+              title: Item Value
+          - id: newItemName
+            type: TextInput
+            required: true
+            properties:
+              title: Name
+          - id: newItemDesc
+            type: TextArea
+            properties:
+              title: Description
+          - id: createBtn
+            type: Button
+            properties:
+              title: Create
+              type: primary
+            events:
+              onClick:
+                - id: validate
+                  type: Validate
+                - id: doCreate
+                  type: Request
+                  params: createItem
+                - id: refresh
+                  type: Request
+                  params: getItems
+
+      - id: editSection
+        type: Card
+        properties:
+          title: Edit Item
+        blocks:
+          - id: selectedItemId
+            type: TextInput
+            properties:
+              title: Selected Item ID
+          - id: editName
+            type: TextInput
+            properties:
+              title: New Name
+      
+      - id: resultsList
+        type: List
+        properties:
+          data:
+            _request: getItems
+        blocks:
+          - id: itemCard
+            type: Card
+            properties:
+              title:
+                _state: resultsList.$.name
+            blocks:
+              - id: itemDesc
+                type: Paragraph
+                properties:
+                  content:
+                    _state: resultsList.$.description

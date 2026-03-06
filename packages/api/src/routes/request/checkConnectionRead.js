@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -13,19 +13,25 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { ConfigurationError } from '../../context/errors.js';
+import { ConfigError } from '@lowdefy/errors';
 
 function checkConnectionRead(
   { logger },
   { connectionConfig, connectionProperties, requestConfig, requestResolver }
 ) {
   if (requestResolver.meta.checkRead && connectionProperties.read === false) {
-    const err = new ConfigurationError(
-      `Connection "${connectionConfig.connectionId}" does not allow reads.`
+    const configKey = requestConfig['~k'];
+    const err = new ConfigError(
+      `Connection "${connectionConfig.connectionId}" does not allow reads.`,
+      { configKey }
     );
     logger.debug(
       {
-        params: { connectionId: connectionConfig.connectionId, requestId: requestConfig.requestId },
+        params: {
+          connectionId: connectionConfig.connectionId,
+          requestId: requestConfig.requestId,
+          configKey,
+        },
         err,
       },
       err.message

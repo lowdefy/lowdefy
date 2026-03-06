@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -86,7 +86,7 @@ async function nextBuildWatcher(context) {
       })
     );
     if (!build) {
-      context.logger.info({ print: 'succeed' }, 'Reloaded app.');
+      context.logger.info({ spin: 'succeed' }, 'Reloaded app.');
       return;
     }
 
@@ -94,6 +94,16 @@ async function nextBuildWatcher(context) {
     if (install) {
       context.logger.warn('Plugin dependencies have changed and will be reinstalled.');
       await context.installPlugins();
+      // Rebuild Lowdefy artifacts (blocks.js, icons.js, styles.less, etc.)
+      // so newly installed packages are included in the Next.js bundle.
+      await context.lowdefyBuild();
+      // Re-hash all tracked files to avoid detecting our own build output
+      // changes as new changes on the next watcher callback.
+      await Promise.all(
+        trackedFiles.map(async (filePath) => {
+          hashes[filePath] = await sha1(filePath);
+        })
+      );
     }
     await context.nextBuild();
     context.restartServer();

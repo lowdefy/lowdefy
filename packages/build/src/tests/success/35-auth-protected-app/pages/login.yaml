@@ -1,0 +1,19 @@
+id: login
+type: Result
+properties:
+  title: Welcome
+  subTitle: Please sign in to continue
+  status: info
+areas:
+  extra:
+    blocks:
+      - id: loginBtn
+        type: Button
+        properties:
+          title: Sign in with Google
+          type: primary
+          icon: AiOutlineGoogle
+        events:
+          onClick:
+            - id: login
+              type: Login

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,36 +16,22 @@
 
 import { type } from '@lowdefy/helpers';
 
-function _divide({ params, location }) {
+function _divide({ params }) {
   if (!type.isArray(params)) {
-    throw new Error(
-      `Operator Error: _divide takes an array type as input. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`_divide takes an array type as input.`);
   }
   if (params.length !== 2) {
-    throw new Error(
-      `Operator Error: _divide takes an array of length 2 as input. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`_divide takes an array of length 2 as input.`);
   }
   if (!type.isNumber(params[0]) || !type.isNumber(params[1])) {
-    throw new Error(
-      `Operator Error: _divide takes an array of 2 numbers. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`_divide takes an array of 2 numbers.`);
   }
   if (params[1] === 0) {
-    throw new Error(
-      `Operator Error: _divide by zero not allowed. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`_divide by zero not allowed.`);
   }
   return params[0] / params[1];
 }
+
+_divide.dynamic = false;
 
 export default _divide;

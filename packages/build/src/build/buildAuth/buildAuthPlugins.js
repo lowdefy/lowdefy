@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,26 +14,42 @@
   limitations under the License.
 */
 import { type } from '@lowdefy/helpers';
+import { ConfigError } from '@lowdefy/errors';
 
-function buildAuthPlugin({ counter, pluginConfig, typeClass }) {
+import collectExceptions from '../../utils/collectExceptions.js';
+
+function buildAuthPlugin({ counter, pluginConfig, typeClass, context }) {
   if (type.isArray(pluginConfig)) {
     pluginConfig.forEach((plugin) => {
+      const configKey = plugin['~k'];
       if (type.isUndefined(plugin.id)) {
-        throw new Error(`Auth ${typeClass} id missing.`);
+        collectExceptions(
+          context,
+          new ConfigError(`Auth ${typeClass} id missing.`, { configKey })
+        );
+        return;
       }
       if (!type.isString(plugin.id)) {
-        throw new Error(
-          `Auth ${typeClass} id is not a string. Received ${JSON.stringify(plugin.id)}.`
+        collectExceptions(
+          context,
+          new ConfigError(`Auth ${typeClass} id is not a string.`, {
+            received: plugin.id,
+            configKey,
+          })
         );
+        return;
       }
       if (!type.isString(plugin.type)) {
-        throw new Error(
-          `Auth ${typeClass} type is not a string at ${typeClass} "${
-            plugin.id
-          }". Received ${JSON.stringify(plugin.type)}.`
+        collectExceptions(
+          context,
+          new ConfigError(`Auth ${typeClass} type is not a string at ${typeClass} "${plugin.id}".`, {
+            received: plugin.type,
+            configKey,
+          })
         );
+        return;
       }
-      counter.increment(plugin.type);
+      counter.increment(plugin.type, plugin['~k']);
     });
   }
 }
@@ -43,20 +59,32 @@ function buildAdapter({ components, context }) {
   if (type.isNone(adapter)) {
     return;
   }
+  const configKey = adapter['~k'];
   if (type.isUndefined(adapter.id)) {
-    throw new Error(`Auth adapter id missing.`);
+    collectExceptions(
+      context,
+      new ConfigError('Auth adapter id missing.', { configKey })
+    );
+    return;
   }
   if (!type.isString(adapter.id)) {
-    throw new Error(`Auth adapter id is not a string. Received ${JSON.stringify(adapter.id)}.`);
+    collectExceptions(
+      context,
+      new ConfigError('Auth adapter id is not a string.', { received: adapter.id, configKey })
+    );
+    return;
   }
   if (!type.isString(adapter.type)) {
-    throw new Error(
-      `Auth adapter type is not a string at adapter "${adapter.id}". Received ${JSON.stringify(
-        adapter.type
-      )}.`
+    collectExceptions(
+      context,
+      new ConfigError(`Auth adapter type is not a string at adapter "${adapter.id}".`, {
+        received: adapter.type,
+        configKey,
+      })
     );
+    return;
   }
-  context.typeCounters.auth.adapters.increment(adapter.type);
+  context.typeCounters.auth.adapters.increment(adapter.type, adapter['~k']);
 }
 
 function buildAuthPlugins({ components, context }) {
@@ -67,16 +95,19 @@ function buildAuthPlugins({ components, context }) {
     counter: counters.callbacks,
     pluginConfig: authConfig.callbacks,
     typeClass: 'callback',
+    context,
   });
   buildAuthPlugin({
     counter: counters.events,
     pluginConfig: authConfig.events,
     typeClass: 'event',
+    context,
   });
   buildAuthPlugin({
     counter: counters.providers,
     pluginConfig: authConfig.providers,
     typeClass: 'provider',
+    context,
   });
 }
 

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -113,7 +113,7 @@ test('axios error', async () => {
   };
   const connection = {};
   await expect(AxiosHttp({ request, connection })).rejects.toThrow(
-    'Request failed with status code 404; Http response "404: Not Found"; Data: "".'
+    'Http response "404: Not Found".'
   );
 });
 

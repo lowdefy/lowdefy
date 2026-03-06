@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,25 +14,48 @@
   limitations under the License.
 */
 
-import React, { useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import dynamic from 'next/dynamic';
 
 import { ErrorBoundary } from '@lowdefy/block-utils';
 
 import Auth from '../lib/client/auth/Auth.js';
 import createLogUsage from '../lib/client/createLogUsage.js';
+import initSentryClient from '../lib/client/sentry/initSentryClient.js';
+import loggerConfig from '../lib/build/logger.js';
+import setSentryUser from '../lib/client/sentry/setSentryUser.js';
 
 // Must be in _app due to next specifications.
 import '../build/plugins/styles.less';
 
+// Initialize Sentry client once on module load
+initSentryClient({
+  sentryDsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
+  sentryConfig: loggerConfig.sentry,
+});
+
 function App({ Component, pageProps: { session, rootConfig, pageConfig } }) {
   const usageDataRef = useRef({});
   const lowdefyRef = useRef({ eventCallback: createLogUsage({ usageDataRef }) });
+
+  const handleError = useCallback((error) => {
+    if (lowdefyRef.current?._internal?.handleError) {
+      lowdefyRef.current._internal.handleError(error);
+    } else {
+      console.error(error);
+    }
+  }, []);
+
   return (
-    <ErrorBoundary fullPage>
+    <ErrorBoundary fullPage onError={handleError}>
       <Auth session={session}>
         {(auth) => {
           usageDataRef.current.user = auth.session?.hashed_id;
+          // Set Sentry user context when auth changes
+          setSentryUser({
+            user: auth.session,
+            sentryConfig: loggerConfig.sentry,
+          });
           return (
             <Component
               auth={auth}

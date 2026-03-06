@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import { operatorsServer } from '@lowdefy/operators-js';
 import callRequest from './callRequest.js';
 import testContext from '../../test/testContext.js';
 
-import { ConfigurationError, RequestError } from '../../context/errors.js';
+import { ConfigError, RequestError } from '@lowdefy/errors';
 
 const { _date, _payload, _secret, _user } = operatorsServer;
 
@@ -220,7 +220,7 @@ test('call request, protected auth without user', async () => {
   );
   mockTestRequest.mockImplementation(defaultResolverImp);
 
-  await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigurationError);
+  await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigError);
   await expect(callRequest(context, defaultParams)).rejects.toThrow(
     'Request "requestId" does not exist.'
   );
@@ -234,7 +234,7 @@ test('request does not exist', async () => {
     payload: {},
     requestId: 'doesNotExist',
   };
-  await expect(callRequest(context, params)).rejects.toThrow(ConfigurationError);
+  await expect(callRequest(context, params)).rejects.toThrow(ConfigError);
   await expect(callRequest(context, params)).rejects.toThrow(
     'Request "doesNotExist" does not exist.'
   );
@@ -257,7 +257,7 @@ test('request does not have a connectionId', async () => {
 
   mockTestRequest.mockImplementation(defaultResolverImp);
 
-  await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigurationError);
+  await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigError);
   await expect(callRequest(context, defaultParams)).rejects.toThrow(
     'Request "requestId" does not specify a connection.'
   );
@@ -280,7 +280,7 @@ test('request is not a valid request type', async () => {
   );
   mockTestRequest.mockImplementation(defaultResolverImp);
 
-  await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigurationError);
+  await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigError);
   await expect(callRequest(context, defaultParams)).rejects.toThrow(
     'Request type "InvalidType" can not be found.'
   );
@@ -303,7 +303,7 @@ test('connection does not exist', async () => {
   );
   mockTestRequest.mockImplementation(defaultResolverImp);
 
-  await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigurationError);
+  await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigError);
   await expect(callRequest(context, defaultParams)).rejects.toThrow(
     'Connection "doesNotExist" does not exist.'
   );
@@ -324,7 +324,7 @@ test('connection does not have correct type', async () => {
   );
   mockTestRequest.mockImplementation(defaultResolverImp);
 
-  await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigurationError);
+  await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigError);
   await expect(callRequest(context, defaultParams)).rejects.toThrow(
     'Connection type "OtherConnection" can not be found.'
   );
@@ -576,7 +576,7 @@ test('request properties operator error', async () => {
   mockTestRequest.mockImplementation(defaultResolverImp);
 
   await expect(callRequest(context, defaultParams)).rejects.toThrow(Error);
-  await expect(callRequest(context, defaultParams)).rejects.toThrow('Error: Test error.');
+  await expect(callRequest(context, defaultParams)).rejects.toThrow('Test error.');
 });
 
 test('connection properties operator error', async () => {
@@ -596,7 +596,7 @@ test('connection properties operator error', async () => {
   mockTestRequest.mockImplementation(defaultResolverImp);
 
   await expect(callRequest(context, defaultParams)).rejects.toThrow(Error);
-  await expect(callRequest(context, defaultParams)).rejects.toThrow('Error: Test error.');
+  await expect(callRequest(context, defaultParams)).rejects.toThrow('Test error.');
 });
 
 test('request resolver throws  error', async () => {
@@ -624,8 +624,8 @@ test('connection properties schema error', async () => {
   );
   mockTestRequest.mockImplementation(defaultResolverImp);
 
-  await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigurationError);
-  await expect(callRequest(context, defaultParams)).rejects.toThrow('must be string');
+  await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigError);
+  await expect(callRequest(context, defaultParams)).rejects.toThrow('must be type "string"');
 });
 
 test('request properties schema error', async () => {
@@ -646,8 +646,8 @@ test('request properties schema error', async () => {
   );
   mockTestRequest.mockImplementation(defaultResolverImp);
 
-  await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigurationError);
-  await expect(callRequest(context, defaultParams)).rejects.toThrow('must be string');
+  await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigError);
+  await expect(callRequest(context, defaultParams)).rejects.toThrow('must be type "string"');
 });
 
 test('checkRead, read explicitly true', async () => {
@@ -712,7 +712,7 @@ test('checkRead, read explicitly false', async () => {
   );
   mockTestRequestCheckRead.mockImplementation(defaultResolverImp);
 
-  await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigurationError);
+  await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigError);
   await expect(callRequest(context, defaultParams)).rejects.toThrow(
     'Connection "testConnection" does not allow reads.'
   );
@@ -815,7 +815,7 @@ test('checkWrite, write explicitly false', async () => {
   );
   mockTestRequestCheckWrite.mockImplementation(defaultResolverImp);
 
-  await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigurationError);
+  await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigError);
   await expect(callRequest(context, defaultParams)).rejects.toThrow(
     'Connection "testConnection" does not allow writes.'
   );
@@ -843,7 +843,7 @@ test('checkWrite, write not set', async () => {
   );
   mockTestRequestCheckWrite.mockImplementation(defaultResolverImp);
 
-  await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigurationError);
+  await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigError);
   await expect(callRequest(context, defaultParams)).rejects.toThrow(
     'Connection "testConnection" does not allow writes.'
   );

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -220,7 +220,7 @@ test('params not correct type', () => {
       operator,
       location,
     })
-  ).toThrow('Operator Error: _operator params must be of type string, integer, boolean or object.');
+  ).toThrow('_operator params must be of type string, integer, boolean or object.');
 });
 
 test('params key not a string', () => {
@@ -232,7 +232,7 @@ test('params key not a string', () => {
       operator,
       location,
     })
-  ).toThrow('Operator Error: _operator.key must be of type string or integer.');
+  ).toThrow('_operator.key must be of type string or integer.');
 });
 
 test('replace arrayIndices', () => {

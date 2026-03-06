@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 import applyArrayIndices from './applyArrayIndices.js';
 import cachedPromises from './cachedPromises.js';
+import extractErrorProps from './extractErrorProps.js';
 import get from './get.js';
 import LRUCache from './LRUCache.js';
 import mergeObjects from './mergeObjects.js';
@@ -32,6 +33,7 @@ import wait from './wait.js';
 export {
   applyArrayIndices,
   cachedPromises,
+  extractErrorProps,
   get,
   LRUCache,
   mergeObjects,

@@ -1,0 +1,18 @@
+# 20: Page with Various Properties
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    properties:
+      title: Home Page Title
+    blocks:
+      - id: button
+        type: Button
+        properties:
+          title: Submit
+          type: primary
+          size: large
+          block: true
+          disabled: false
+          icon: AiOutlineCheck

@@ -1,0 +1,13 @@
+id: home
+type: Box
+properties:
+  title: API Demo
+blocks:
+  - id: title
+    type: Title
+    properties:
+      content: API Endpoints Demo
+  - id: description
+    type: Paragraph
+    properties:
+      content: This app demonstrates API endpoints with various controls.

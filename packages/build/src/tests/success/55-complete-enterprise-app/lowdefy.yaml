@@ -1,0 +1,42 @@
+# 55: Complete Enterprise Application
+lowdefy: local
+name: Enterprise CRM
+version: 2.0.0
+license: MIT
+
+config:
+  homePageId: dashboard
+  basePath: /crm
+
+connections:
+  _ref: config/connections.yaml
+
+auth:
+  _ref: config/auth.yaml
+
+global:
+  _ref: config/global.yaml
+
+logger:
+  sentry:
+    client: true
+    server: true
+    tracesSampleRate: 0.1
+    replaysOnErrorSampleRate: 0.5
+    feedback: true
+    userFields:
+      - id
+      - email
+      - roles
+
+menus:
+  _ref: config/menus.yaml
+
+pages:
+  - _ref: pages/dashboard.yaml
+  - _ref: pages/customers.yaml
+  - _ref: pages/customer-detail.yaml
+  - _ref: pages/orders.yaml
+  - _ref: pages/reports.yaml
+  - _ref: pages/settings.yaml
+  - _ref: pages/login.yaml

@@ -1,0 +1,266 @@
+# 47: Comprehensive Operators Usage
+lowdefy: local
+name: Operators Demo
+
+global:
+  settings:
+    maxItems: 100
+    currency: USD
+  users:
+    - id: 1
+      name: Alice
+      active: true
+    - id: 2
+      name: Bob
+      active: false
+
+pages:
+  - id: home
+    type: Box
+    properties:
+      title: Operators Demo
+    blocks:
+      # Toggle for conditional rendering
+      - id: showAdvanced
+        type: Switch
+        properties:
+          title: Show Advanced Options
+
+      # Conditional rendering with _if
+      - id: conditionalBlock
+        type: Box
+        visible:
+          _if:
+            test:
+              _state: showAdvanced
+            then: true
+            else: false
+        blocks:
+          - id: advancedTitle
+            type: Title
+            properties:
+              content: Advanced Options
+
+      # Array operations
+      - id: arrayDemo
+        type: Card
+        properties:
+          title: Array Operations
+        blocks:
+          - id: arrayLength
+            type: Statistic
+            properties:
+              title: User Count
+              value:
+                _array:
+                  length:
+                    _global: users
+          - id: filteredUsers
+            type: List
+            properties:
+              data:
+                _array:
+                  filter:
+                    on:
+                      _global: users
+                    callback:
+                      _function:
+                        __eq:
+                          - __args: 0.active
+                          - true
+            blocks:
+              - id: userName
+                type: Paragraph
+                properties:
+                  content:
+                    _state: filteredUsers.$.name
+
+      # Math operations
+      - id: mathDemo
+        type: Card
+        properties:
+          title: Math Operations
+        blocks:
+          - id: sumResult
+            type: Statistic
+            properties:
+              title: Sum
+              value:
+                _sum:
+                  - 10
+                  - 20
+                  - 30
+          - id: productResult
+            type: Statistic
+            properties:
+              title: Product
+              value:
+                _product:
+                  - 2
+                  - 3
+                  - 4
+          - id: divideResult
+            type: Statistic
+            properties:
+              title: Division
+              value:
+                _divide:
+                  - 100
+                  - 4
+
+      # String operations
+      - id: stringDemo
+        type: Card
+        properties:
+          title: String Operations
+        blocks:
+          - id: upperCase
+            type: Paragraph
+            properties:
+              content:
+                _string.toUpperCase:
+                  _state: textInput
+          - id: stringLength
+            type: Statistic
+            properties:
+              title: Length
+              value:
+                _string.length:
+                  _state: textInput
+          - id: textInput
+            type: TextInput
+            properties:
+              title: Enter Text
+
+      # Object operations
+      - id: objectDemo
+        type: Card
+        properties:
+          title: Object Operations
+        blocks:
+          - id: objectKeys
+            type: Paragraph
+            properties:
+              content:
+                _json.stringify:
+                  _object:
+                    keys:
+                      _global: settings
+
+      # Comparison operators
+      - id: comparisonDemo
+        type: Card
+        properties:
+          title: Comparisons
+        blocks:
+          - id: eqResult
+            type: Tag
+            visible:
+              _eq:
+                - _state: value1
+                - _state: value2
+            properties:
+              title: Values are equal
+              color: green
+          - id: gtResult
+            type: Tag
+            visible:
+              _gt:
+                - _state: numberInput
+                - 50
+            properties:
+              title: Greater than 50
+              color: blue
+          - id: value1
+            type: TextInput
+            properties:
+              title: Value 1
+          - id: value2
+            type: TextInput
+            properties:
+              title: Value 2
+          - id: numberInput
+            type: NumberInput
+            properties:
+              title: Number
+
+      # Logical operators
+      - id: logicalDemo
+        type: Card
+        properties:
+          title: Logical Operations
+        blocks:
+          - id: andResult
+            type: Alert
+            visible:
+              _and:
+                - _state: checkbox1
+                - _state: checkbox2
+            properties:
+              type: success
+              message: Both checkboxes are checked!
+          - id: orResult
+            type: Alert
+            visible:
+              _or:
+                - _state: checkbox1
+                - _state: checkbox2
+            properties:
+              type: info
+              message: At least one checkbox is checked
+          - id: notResult
+            type: Alert
+            visible:
+              _not:
+                _state: checkbox1
+            properties:
+              type: warning
+              message: Checkbox 1 is not checked
+          - id: checkbox1
+            type: Switch
+            properties:
+              title: Checkbox 1
+          - id: checkbox2
+            type: Switch
+            properties:
+              title: Checkbox 2
+
+      # Type checking
+      - id: typeDemo
+        type: Card
+        properties:
+          title: Type Checking
+        blocks:
+          - id: isString
+            type: Tag
+            visible:
+              _type:
+                type: string
+                on:
+                  _state: typeInput
+            properties:
+              title: Is String
+          - id: typeInput
+            type: TextInput
+            properties:
+              title: Type Input
+
+      # Date operations
+      - id: dateDemo
+        type: Card
+        properties:
+          title: Date Operations
+        blocks:
+          - id: currentDate
+            type: Paragraph
+            properties:
+              content:
+                _date: '2024-01-15T12:00:00.000Z'
+          - id: formattedDate
+            type: Paragraph
+            properties:
+              content:
+                _moment:
+                  format: YYYY-MM-DD HH:mm:ss
+                  on:
+                    _date: '2024-01-15T12:00:00.000Z'

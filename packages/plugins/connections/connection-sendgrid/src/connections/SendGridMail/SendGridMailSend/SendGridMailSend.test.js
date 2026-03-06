@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -252,7 +252,7 @@ test('request throws an error with response body', async () => {
     from: { name: 'a@b.om', email: 'a.cc@mm.co' },
   };
   await expect(() => SendGridMailSend({ request, connection })).rejects.toThrow(
-    '["Test error 1.","Test error 2."]'
+    'SendGrid request failed.'
   );
 });
 

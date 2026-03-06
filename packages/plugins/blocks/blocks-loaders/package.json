@@ -34,6 +34,7 @@
   "exports": {
     "./*": "./dist/*",
     "./blocks": "./dist/blocks.js",
+    "./schemas": "./dist/schemas.js",
     "./types": "./dist/types.js"
   },
   "files": [
@@ -43,8 +44,7 @@
     "build": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start && pnpm copyfiles",
     "clean": "rm -rf dist",
     "copyfiles": "copyfiles -u 1 \"./src/**/*\" dist -e \"./src/**/*.js\" -e \"./src/**/*.yaml\" -e \"./src/**/*.snap\"",
-    "prepublishOnly": "pnpm build",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+    "prepublishOnly": "pnpm build"
   },
   "dependencies": {
     "@lowdefy/block-utils": "4.5.2",
@@ -53,19 +53,9 @@
     "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "@emotion/jest": "11.10.5",
-    "@lowdefy/block-dev": "4.5.2",
-    "@lowdefy/jest-yaml-transform": "4.5.2",
     "@swc/cli": "0.1.63",
     "@swc/core": "1.3.99",
-    "@swc/jest": "0.2.29",
-    "@testing-library/dom": "8.19.1",
-    "@testing-library/react": "13.4.0",
-    "@testing-library/user-event": "14.4.3",
-    "copyfiles": "2.4.1",
-    "jest": "28.1.3",
-    "jest-environment-jsdom": "28.1.3",
-    "jest-serializer-html": "7.1.0"
+    "copyfiles": "2.4.1"
   },
   "publishConfig": {
     "access": "public"

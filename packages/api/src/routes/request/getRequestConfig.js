@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { ConfigurationError } from '../../context/errors.js';
+import { ConfigError } from '@lowdefy/errors';
 
 async function getRequestConfig({ logger, readConfigFile }, { pageId, requestId }) {
   const request = await readConfigFile(`pages/${pageId}/requests/${requestId}.json`);
   if (!request) {
-    const err = new ConfigurationError(`Request "${requestId}" does not exist.`);
+    const err = new ConfigError(`Request "${requestId}" does not exist.`);
     logger.debug({ params: { pageId, requestId }, err }, err.message);
     throw err;
   }

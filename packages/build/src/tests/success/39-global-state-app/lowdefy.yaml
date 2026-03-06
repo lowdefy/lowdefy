@@ -1,0 +1,133 @@
+# 39: Global State Management Application
+lowdefy: local
+name: Global State Demo
+
+global:
+  theme: light
+  language: en
+  notifications: true
+  user:
+    preferences:
+      fontSize: medium
+      compactMode: false
+  cart:
+    items: []
+    total: 0
+  settings:
+    currency: USD
+    timezone: UTC
+
+pages:
+  - id: home
+    type: Box
+    properties:
+      title: Home
+    events:
+      onInit:
+        - id: loadUserPrefs
+          type: SetGlobal
+          params:
+            lastVisited:
+              _date: '2024-01-15T12:00:00.000Z'
+    blocks:
+      - id: themeDisplay
+        type: Paragraph
+        properties:
+          content:
+            _nunjucks: 'Current theme: {{ theme }}'
+            theme:
+              _global: theme
+      - id: langDisplay
+        type: Paragraph
+        properties:
+          content:
+            _nunjucks: 'Language: {{ lang }}'
+            lang:
+              _global: language
+  - id: settings
+    type: Box
+    properties:
+      title: Settings
+    blocks:
+      - id: themeSelect
+        type: Selector
+        properties:
+          title: Theme
+          options:
+            - value: light
+              label: Light
+            - value: dark
+              label: Dark
+        events:
+          onChange:
+            - id: updateTheme
+              type: SetGlobal
+              params:
+                theme:
+                  _state: themeSelect
+      - id: langSelect
+        type: Selector
+        properties:
+          title: Language
+          options:
+            - value: en
+              label: English
+            - value: es
+              label: Spanish
+            - value: fr
+              label: French
+        events:
+          onChange:
+            - id: updateLang
+              type: SetGlobal
+              params:
+                language:
+                  _state: langSelect
+      - id: notifSwitch
+        type: Switch
+        properties:
+          title: Enable Notifications
+        events:
+          onChange:
+            - id: updateNotif
+              type: SetGlobal
+              params:
+                notifications:
+                  _state: notifSwitch
+  - id: cart
+    type: Box
+    properties:
+      title: Shopping Cart
+    blocks:
+      - id: cartTitle
+        type: Title
+        properties:
+          content: Your Cart
+      - id: itemCount
+        type: Statistic
+        properties:
+          title: Items
+          value:
+            _array:
+              length:
+                _global: cart.items
+      - id: total
+        type: Statistic
+        properties:
+          title: Total
+          prefix: $
+          value:
+            _global: cart.total
+      - id: clearCart
+        type: Button
+        properties:
+          title: Clear Cart
+          danger: true
+        events:
+          onClick:
+            - id: clear
+              type: SetGlobal
+              params:
+                cart:
+                  items: []
+                  total: 0

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -55,22 +55,20 @@ test('_date negative int', () => {
 });
 
 test('_date null', () => {
-  expect(() => _date({ params: null, location })).toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _date.__default accepts one of the following types: number, string.
-          Received: {\\"_date.__default\\":null} at location."
-  `);
+  expect(() => _date({ params: null, location })).toThrowErrorMatchingInlineSnapshot(
+    `"_date.__default accepts one of the following types: number, string."`
+  );
 });
 
 test('_date invalid operator type', () => {
-  expect(() => _date({ params: {}, location })).toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _date.__default accepts one of the following types: number, string.
-          Received: {\\"_date.__default\\":{}} at location."
-  `);
+  expect(() => _date({ params: {}, location })).toThrowErrorMatchingInlineSnapshot(
+    `"_date.__default accepts one of the following types: number, string."`
+  );
 });
 
 test('_date invalid string', () => {
   expect(() => _date({ params: 'abc', location })).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _date.__default - abc could not resolve as a valid javascript date. Received: {\\"_date.__default\\":\\"abc\\"} at location."`
+    `"abc could not resolve as a valid javascript date."`
   );
 });
 

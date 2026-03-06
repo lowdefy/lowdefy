@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -145,9 +145,7 @@ test('_jsonata non-string expression throws', () => {
       params: { on: { a: 1 }, expr: 123 },
       location: 'locationId',
     })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _jsonata.evaluate - Expression must be a string. Received: {\\"_jsonata.evaluate\\":{\\"on\\":{\\"a\\":1},\\"expr\\":123}} at locationId."`
-  );
+  ).toThrowErrorMatchingInlineSnapshot(`"Expression must be a string."`);
 });
 
 test('_jsonata invalid expression throws', () => {

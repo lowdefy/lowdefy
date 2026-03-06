@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,25 +16,33 @@
 
 import basicTypes from '@lowdefy/blocks-basic/types';
 import loaderTypes from '@lowdefy/blocks-loaders/types';
+import { ConfigError, ConfigWarning } from '@lowdefy/errors';
+
+import findSimilarString from '../utils/findSimilarString.js';
 
 function buildTypeClass(
   context,
   { counter, definitions, store, typeClass, warnIfMissing = false }
 ) {
   const counts = counter.getCounts();
+  const definedTypes = Object.keys(definitions);
   Object.keys(counts).forEach((typeName) => {
     if (!definitions[typeName]) {
+      const configKey = counter.getLocation(typeName);
+
+      let message = `${typeClass} type "${typeName}" was used but is not defined.`;
+      const suggestion = findSimilarString({ input: typeName, candidates: definedTypes });
+      if (suggestion) {
+        message += ` Did you mean "${suggestion}"?`;
+      }
       if (warnIfMissing) {
-        if (typeName === '_id') {
-          return;
-        }
-        context.logger.warn(`${typeClass} type "${typeName}" was used but is not defined.`);
+        context.handleWarning(new ConfigWarning(message, { configKey, checkSlug: 'types' }));
         return;
       }
-      throw new Error(`${typeClass} type "${typeName}" was used but is not defined.`);
+      throw new ConfigError(message, { configKey, checkSlug: 'types' });
     }
     store[typeName] = {
-      originalTypeName: definitions[typeName].originalTypeName,
+      originalTypeName: definitions[typeName].originalTypeName ?? typeName,
       package: definitions[typeName].package,
       version: definitions[typeName].version,
       count: counts[typeName],

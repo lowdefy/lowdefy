@@ -1,0 +1,8 @@
+{
+  "tests": [
+    {
+      "mode": "dev",
+      "noWarnings": ["_staet"]
+    }
+  ]
+}

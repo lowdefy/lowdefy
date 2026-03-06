@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
   limitations under the License.
 */
 import { jest } from '@jest/globals';
+import { ActionError } from '@lowdefy/errors';
 
 import testContext from '../../test/testContext.js';
 
@@ -230,27 +231,29 @@ test('CallMethod with args not an array', async () => {
         },
         type: 'CallMethod',
       },
-      error: {
-        error: new Error(
-          'Failed to call method "blockMethod" on block "textInput": "args" should be an array. Received "{"blockId":"textInput","method":"blockMethod","args":"arg"}".'
-        ),
-        index: 0,
-        type: 'CallMethod',
-      },
+      error: expect.any(ActionError),
+      index: 0,
     },
     responses: {
       a: {
-        type: 'CallMethod',
+        action: {
+          id: 'a',
+          params: {
+            args: 'arg',
+            blockId: 'textInput',
+            method: 'blockMethod',
+          },
+          type: 'CallMethod',
+        },
+        error: expect.any(ActionError),
         index: 0,
-        error: new Error(
-          'Failed to call method "blockMethod" on block "textInput": "args" should be an array. Received "{"blockId":"textInput","method":"blockMethod","args":"arg"}".'
-        ),
       },
     },
     success: false,
     startTimestamp: { date: 0 },
     endTimestamp: { date: 0 },
   });
+  expect(res.error.error._message).toContain('"args" should be an array');
   expect(blockMethod.mock.calls).toEqual([]);
 });
 
@@ -497,26 +500,27 @@ test('CallMethod with method does not exist', async () => {
         },
         type: 'CallMethod',
       },
-      error: {
-        error: new Error(
-          'Failed to call method "no-method" on block "textInput". Check if "no-method" is a valid block method for block "textInput". Received "{"blockId":"textInput","method":"no-method"}".'
-        ),
-        index: 0,
-        type: 'CallMethod',
-      },
+      error: expect.any(ActionError),
+      index: 0,
     },
     responses: {
       a: {
-        type: 'CallMethod',
+        action: {
+          id: 'a',
+          params: {
+            blockId: 'textInput',
+            method: 'no-method',
+          },
+          type: 'CallMethod',
+        },
+        error: expect.any(ActionError),
         index: 0,
-        error: new Error(
-          'Failed to call method "no-method" on block "textInput". Check if "no-method" is a valid block method for block "textInput". Received "{"blockId":"textInput","method":"no-method"}".'
-        ),
       },
     },
     success: false,
     startTimestamp: { date: 0 },
     endTimestamp: { date: 0 },
   });
+  expect(res.error.error._message).toContain('is a valid block method');
   expect(blockMethod.mock.calls).toEqual([]);
 });

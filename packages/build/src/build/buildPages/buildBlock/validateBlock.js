@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,38 +15,42 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { ConfigError } from '@lowdefy/errors';
 
 function validateBlock(block, { pageId }) {
+  const configKey = block?.['~k'];
   if (!type.isObject(block)) {
-    throw new Error(
-      `Expected block to be an object on page "${pageId}". Received ${JSON.stringify(block)}.`
-    );
+    throw new ConfigError(`Expected block to be an object on page "${pageId}".`, {
+      received: block,
+      configKey,
+    });
   }
   if (type.isUndefined(block.id)) {
-    throw new Error(`Block id missing at page "${pageId}".`);
+    throw new ConfigError(`Block id missing at page "${pageId}".`, { configKey });
   }
   if (!type.isString(block.id)) {
-    throw new Error(
-      `Block id is not a string at page "${pageId}". Received ${JSON.stringify(block.id)}.`
-    );
+    throw new ConfigError(`Block id is not a string at page "${pageId}".`, {
+      received: block.id,
+      configKey,
+    });
   }
   if (type.isNone(block.type)) {
-    throw new Error(`Block type is not defined at "${block.id}" on page "${pageId}".`);
+    throw new ConfigError(`Block type is not defined at "${block.id}" on page "${pageId}".`, {
+      configKey,
+    });
   }
   if (!type.isString(block.type)) {
-    throw new Error(
-      `Block type is not a string at "${block.id}" on page "${pageId}". Received ${JSON.stringify(
-        block.type
-      )}.`
-    );
+    throw new ConfigError(`Block type is not a string at "${block.id}" on page "${pageId}".`, {
+      received: block.type,
+      configKey,
+    });
   }
   if (!type.isNone(block.requests)) {
     if (!type.isArray(block.requests)) {
-      throw new Error(
-        `Requests is not an array at "${block.id}" on page "${pageId}". Received ${JSON.stringify(
-          block.requests
-        )}`
-      );
+      throw new ConfigError(`Requests is not an array at "${block.id}" on page "${pageId}".`, {
+        received: block.requests,
+        configKey,
+      });
     }
   }
 }

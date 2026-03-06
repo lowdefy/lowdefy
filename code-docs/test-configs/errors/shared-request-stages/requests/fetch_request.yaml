@@ -1,0 +1,14 @@
+id:
+  _var: id
+type: MongoDBAggregation
+connectionId: my-collection
+payload:
+  _var: payload
+properties:
+  pipeline:
+    - $match:
+        $or:
+          - status:
+              _payload: filter.status
+          - input:
+              _payload: input

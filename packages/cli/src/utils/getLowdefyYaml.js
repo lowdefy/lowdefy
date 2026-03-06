@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,11 +16,13 @@
 
 import path from 'path';
 import { get, type } from '@lowdefy/helpers';
+import { ConfigError } from '@lowdefy/errors';
 import { readFile } from '@lowdefy/node-utils';
 import YAML from 'yaml';
 
 async function getLowdefyYaml({ configDirectory, requiresLowdefyYaml }) {
-  let lowdefyYaml = await readFile(path.join(configDirectory, 'lowdefy.yaml'));
+  const filePath = 'lowdefy.yaml';
+  let lowdefyYaml = await readFile(path.join(configDirectory, filePath));
   if (!lowdefyYaml) {
     lowdefyYaml = await readFile(path.join(configDirectory, 'lowdefy.yml'));
   }
@@ -36,7 +38,7 @@ async function getLowdefyYaml({ configDirectory, requiresLowdefyYaml }) {
   try {
     lowdefy = YAML.parse(lowdefyYaml);
   } catch (error) {
-    throw new Error(`Could not parse "lowdefy.yaml" file. Received error ${error.message}.`);
+    throw new ConfigError('Could not parse YAML.', { cause: error, filePath });
   }
   if (!lowdefy.lowdefy) {
     throw new Error(
@@ -44,11 +46,10 @@ async function getLowdefyYaml({ configDirectory, requiresLowdefyYaml }) {
     );
   }
   if (!type.isString(lowdefy.lowdefy)) {
-    throw new Error(
-      `Version number specified in "lowdefy.yaml" file should be a string. Received ${JSON.stringify(
-        lowdefy.lowdefy
-      )}.`
-    );
+    throw new ConfigError('Version number specified in "lowdefy.yaml" file should be a string.', {
+      received: lowdefy.lowdefy,
+      filePath,
+    });
   }
   // TODO: Validate plugins
   return {

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -26,11 +26,8 @@ async function request({ url, method = 'GET', body }) {
     return null;
   }
   if (!res.ok) {
-    // TODO: check
     const body = await res.json();
-    console.log(res);
-    console.log(body);
-    throw new Error(body.message || 'Request error');
+    throw new Error(body?.['~e']?.message ?? body?.message ?? 'Request error');
   }
   return res.json();
 }

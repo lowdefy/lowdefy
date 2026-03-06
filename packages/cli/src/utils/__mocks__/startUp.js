@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -21,10 +21,12 @@ async function mockStartUpImp({ context, options = {} }) {
   context.cliVersion = 'cliVersion';
   context.commandLineOptions = options;
 
-  context.print = {
-    info: jest.fn(),
-    succeed: jest.fn(),
-    log: jest.fn(),
+  context.logger = {
+    ui: {
+      info: jest.fn(),
+      succeed: jest.fn(),
+      log: jest.fn(),
+    },
   };
 
   context.configDirectory = options.configDirectory ?? 'configDirectory';

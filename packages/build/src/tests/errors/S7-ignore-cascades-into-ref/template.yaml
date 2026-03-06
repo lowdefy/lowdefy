@@ -1,0 +1,5 @@
+id: refBlock
+type: Paragraph
+properties:
+  content:
+    _state: undefinedKey

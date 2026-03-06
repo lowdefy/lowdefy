@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,9 +15,10 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { ConfigError } from '@lowdefy/errors';
 import page404 from './404.js';
 
-function addDefaultPages({ components }) {
+function addDefaultPages({ components, context }) {
   // If not copied, the same object is mutated by build every time
   // build runs for dev server. See #647
   const defaultPages = [JSON.parse(JSON.stringify(page404))];
@@ -26,12 +27,15 @@ function addDefaultPages({ components }) {
     components.pages = [];
   }
   if (!type.isArray(components.pages)) {
-    throw new Error('lowdefy.pages is not an array.');
+    throw new ConfigError('lowdefy.pages is not an array.', { received: components.pages });
   }
 
   const pageIds = components.pages.map((page, index) => {
     if (!type.isObject(page)) {
-      throw new Error(`pages[${index}] is not an object. Received ${JSON.stringify(page)}`);
+      throw new ConfigError(`pages[${index}] is not an object.`, {
+        received: page,
+        configKey: page?.['~k'],
+      });
     }
     return page.id;
   });

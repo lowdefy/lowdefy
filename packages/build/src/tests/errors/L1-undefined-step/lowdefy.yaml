@@ -1,0 +1,37 @@
+# L1: Undefined Step Reference
+# =============================
+# Tests that _step references to undefined step ids warn in dev mode.
+# Step IDs are defined by the "id" property of each step in the routine.
+#
+# Expected warning:
+#   [Config Warning] _step references "nonExistentStep" in endpoint "testEndpoint",
+#   but no step with id "nonExistentStep" exists in the routine.
+#
+# The error points to line 30 where the _step operator is used.
+
+lowdefy: local
+
+connections:
+  - id: testDb
+    type: MongoDBCollection
+    properties:
+      databaseUri:
+        _env: MONGO_URI
+      collection: test
+
+api:
+  - id: testEndpoint
+    type: Endpoint
+    routine:
+      - id: step1
+        type: MongoDBInsertOne
+        connectionId: testDb
+        properties:
+          doc:
+            name: test
+      - :return:
+          _step: nonExistentStep
+
+pages:
+  - id: home
+    type: Box

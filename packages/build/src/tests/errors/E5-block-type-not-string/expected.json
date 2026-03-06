@@ -1,0 +1,14 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": [
+        "Block \"type\" should be a string"
+      ],
+      "errorContains": [
+        "Block \"type\" should be a string.",
+        "lowdefy.yaml:17"
+      ]
+    }
+  ]
+}

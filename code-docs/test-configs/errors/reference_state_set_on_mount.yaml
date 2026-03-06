@@ -1,0 +1,26 @@
+lowdefy: local
+name: lowdefy-app
+pages:
+  - id: testing
+    type: PageHeaderMenu
+    events:
+      onMount:
+        - id: set_selector_options
+          type: SetState
+          params:
+            selector_options:
+              - label: Option 1
+                value: option_1
+              - label: Option 2
+                value: option_2
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Test1 Page
+      - id: test_selector
+        type: Selector
+        properties:
+          title: Normal Selector
+          options:
+            _state: selector_options

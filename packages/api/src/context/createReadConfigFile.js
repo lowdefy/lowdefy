@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,14 +15,14 @@
 */
 
 import path from 'path';
-import { cachedPromises } from '@lowdefy/helpers';
+import { cachedPromises, serializer } from '@lowdefy/helpers';
 import { getFileExtension, readFile } from '@lowdefy/node-utils';
 
 function createReadConfigFile({ buildDirectory, fileCache }) {
   async function readConfigFile(filePath) {
     const fileContent = await readFile(path.resolve(buildDirectory, filePath));
     if (getFileExtension(filePath) === 'json') {
-      return JSON.parse(fileContent);
+      return serializer.deserializeFromString(fileContent);
     }
     return fileContent;
   }

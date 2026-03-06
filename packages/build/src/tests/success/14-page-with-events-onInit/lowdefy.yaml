@@ -1,0 +1,12 @@
+# 14: Page with onInit Event
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    events:
+      onInit:
+        - id: initState
+          type: SetState
+          params:
+            loaded: true

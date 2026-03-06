@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,13 +14,15 @@
   limitations under the License.
 */
 
+import checkPortAvailable from '../../utils/checkPortAvailable.js';
 import runStart from './runStart.js';
 // TODO: Handle "spawn yarn ENOENT" error if no built server exists.
 
 async function build({ context }) {
+  await checkPortAvailable({ port: context.options.port });
   context.sendTelemetry({ sendTypes: true });
   const serverProcess = runStart({ context, directory: context.directories.server });
-  context.print.succeed('Started server.');
+  context.logger.info({ spin: 'succeed' }, 'Started server.');
   await serverProcess;
 }
 

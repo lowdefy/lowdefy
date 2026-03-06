@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,8 +16,50 @@
   limitations under the License.
 */
 
+import {
+  ActionError,
+  BlockError,
+  BuildError,
+  ConfigError,
+  ConfigWarning,
+  LowdefyInternalError,
+  OperatorError,
+  PluginError,
+  RequestError,
+  ServiceError,
+  UserError,
+} from '@lowdefy/errors';
+
+import extractErrorProps from './extractErrorProps.js';
 import type from './type.js';
 import stableStringify from './stableStringify.js';
+
+const lowdefyErrorTypes = {
+  ActionError,
+  BlockError,
+  BuildError,
+  ConfigError,
+  ConfigWarning,
+  LowdefyInternalError,
+  OperatorError,
+  PluginError,
+  RequestError,
+  ServiceError,
+  UserError,
+};
+
+function propsToError(data) {
+  const ErrorClass = lowdefyErrorTypes[data.name] || Error;
+  const error = Object.create(ErrorClass.prototype);
+  for (const [k, v] of Object.entries(data)) {
+    if (k === 'cause' && v !== null && typeof v === 'object' && v.message !== undefined) {
+      error[k] = propsToError(v);
+    } else {
+      error[k] = v;
+    }
+  }
+  return error;
+}
 
 const makeReplacer = (customReplacer, isoStringDates) => (key, value) => {
   let dateReplacer = (date) => ({ '~d': date.valueOf() });
@@ -29,13 +71,7 @@ const makeReplacer = (customReplacer, isoStringDates) => (key, value) => {
     newValue = customReplacer(key, value);
   }
   if (type.isError(newValue)) {
-    return {
-      '~e': {
-        name: newValue.name,
-        message: newValue.message,
-        value: newValue.toString(),
-      },
-    };
+    return { '~e': extractErrorProps(newValue) };
   }
   if (type.isObject(newValue)) {
     Object.keys(newValue).forEach((k) => {
@@ -61,15 +97,36 @@ const makeReplacer = (customReplacer, isoStringDates) => (key, value) => {
         configurable: true,
       });
     }
+    if (newValue['~l']) {
+      Object.defineProperty(newValue, '~l', {
+        value: newValue['~l'],
+        enumerable: true,
+        writable: true,
+        configurable: true,
+      });
+    }
     return newValue;
   }
   if (type.isArray(newValue)) {
-    return newValue.map((item) => {
+    const mappedArray = newValue.map((item) => {
       if (type.isDate(item)) {
         return dateReplacer(item);
       }
       return item;
     });
+    // Preserve ~l, ~k, ~r on arrays by wrapping in a marker object
+    if (
+      newValue['~l'] !== undefined ||
+      newValue['~k'] !== undefined ||
+      newValue['~r'] !== undefined
+    ) {
+      const wrapper = { '~arr': mappedArray };
+      if (newValue['~r'] !== undefined) wrapper['~r'] = newValue['~r'];
+      if (newValue['~k'] !== undefined) wrapper['~k'] = newValue['~k'];
+      if (newValue['~l'] !== undefined) wrapper['~l'] = newValue['~l'];
+      return wrapper;
+    }
+    return mappedArray;
   }
   return newValue;
 };
@@ -77,31 +134,67 @@ const makeReplacer = (customReplacer, isoStringDates) => (key, value) => {
 const makeReviver = (customReviver) => (key, value) => {
   let newValue = value;
   if (type.isObject(newValue)) {
-    if (newValue['~r']) {
-      Object.defineProperty(newValue, '~r', {
-        value: newValue['~r'],
-        enumerable: false,
-        writable: true,
-        configurable: true,
-      });
-    }
-    if (newValue['~k']) {
-      Object.defineProperty(newValue, '~k', {
-        value: newValue['~k'],
-        enumerable: false,
-        writable: true,
-        configurable: true,
-      });
+    // Restore arrays that were wrapped with ~arr marker
+    if (type.isArray(newValue['~arr'])) {
+      const arr = newValue['~arr'];
+      if (newValue['~r']) {
+        Object.defineProperty(arr, '~r', {
+          value: newValue['~r'],
+          enumerable: false,
+          writable: true,
+          configurable: true,
+        });
+      }
+      if (newValue['~k']) {
+        Object.defineProperty(arr, '~k', {
+          value: newValue['~k'],
+          enumerable: false,
+          writable: true,
+          configurable: true,
+        });
+      }
+      if (newValue['~l']) {
+        Object.defineProperty(arr, '~l', {
+          value: newValue['~l'],
+          enumerable: false,
+          writable: true,
+          configurable: true,
+        });
+      }
+      newValue = arr;
+    } else {
+      if (newValue['~r']) {
+        Object.defineProperty(newValue, '~r', {
+          value: newValue['~r'],
+          enumerable: false,
+          writable: true,
+          configurable: true,
+        });
+      }
+      if (newValue['~k']) {
+        Object.defineProperty(newValue, '~k', {
+          value: newValue['~k'],
+          enumerable: false,
+          writable: true,
+          configurable: true,
+        });
+      }
+      if (newValue['~l']) {
+        Object.defineProperty(newValue, '~l', {
+          value: newValue['~l'],
+          enumerable: false,
+          writable: true,
+          configurable: true,
+        });
+      }
     }
   }
   if (customReviver) {
-    newValue = customReviver(key, value);
+    newValue = customReviver(key, newValue);
   }
   if (type.isObject(newValue)) {
     if (!type.isUndefined(newValue['~e'])) {
-      const error = new Error(newValue['~e'].message);
-      error.name = newValue['~e'].name;
-      return error;
+      return propsToError(newValue['~e']);
     }
     if (!type.isUndefined(newValue['~d'])) {
       const result = new Date(newValue['~d']);

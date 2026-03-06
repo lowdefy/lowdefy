@@ -1,0 +1,14 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": [
+        "Duplicate connectionId"
+      ],
+      "errorContains": [
+        "Duplicate connectionId \"testApi\".",
+        "lowdefy.yaml:17"
+      ]
+    }
+  ]
+}

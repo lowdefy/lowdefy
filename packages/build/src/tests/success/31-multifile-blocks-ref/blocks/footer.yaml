@@ -1,0 +1,11 @@
+id: footer
+type: Box
+style:
+  backgroundColor: '#f0f0f0'
+  padding: 16
+  marginTop: 24
+blocks:
+  - id: copyright
+    type: Paragraph
+    properties:
+      content: © 2024 My Company

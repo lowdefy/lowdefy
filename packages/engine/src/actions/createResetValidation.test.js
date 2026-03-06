@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
   limitations under the License.
 */
 import { jest } from '@jest/globals';
+import { UserError } from '@lowdefy/errors';
 
 import testContext from '../../test/testContext.js';
 
@@ -119,23 +120,26 @@ test('RestValidation after required field', async () => {
         id: 'validate',
         type: 'Validate',
       },
-      error: {
-        error: new Error('Your input has 1 validation error.'),
-        index: 0,
-        type: 'Validate',
-      },
+      error: expect.any(UserError),
+      index: 0,
     },
     responses: {
       validate: {
-        type: 'Validate',
+        action: {
+          id: 'validate',
+          type: 'Validate',
+        },
+        error: expect.any(UserError),
         index: 0,
-        error: new Error('Your input has 1 validation error.'),
       },
     },
     success: false,
     startTimestamp: { date: 0 },
     endTimestamp: { date: 0 },
   });
+  expect(button.Events.events.onClick.history[0].error.error.message).toContain(
+    'Your input has 1 validation error'
+  );
   expect(text1.eval.validation).toEqual({
     errors: ['This field is required'],
     status: 'error',
@@ -164,19 +168,19 @@ test('RestValidation after required field', async () => {
         id: 'validate',
         type: 'Validate',
       },
-      error: {
-        error: new Error('Your input has 1 validation error.'),
-        index: 0,
-        type: 'Validate',
-      },
+      error: expect.any(UserError),
+      index: 0,
     },
     event: undefined,
     eventName: 'onClick',
     responses: {
       validate: {
-        error: new Error('Your input has 1 validation error.'),
+        action: {
+          id: 'validate',
+          type: 'Validate',
+        },
+        error: expect.any(UserError),
         index: 0,
-        type: 'Validate',
       },
     },
     startTimestamp: {

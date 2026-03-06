@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -23,16 +23,12 @@ function createCallMethod({ arrayIndices, context }) {
       context._internal.RootAreas.map[applyArrayIndices(arrayIndices, blockId)].methods[method];
     if (!type.isArray(args)) {
       throw new Error(
-        `Failed to call method "${method}" on block "${blockId}": "args" should be an array. Received "${JSON.stringify(
-          params
-        )}".`
+        `Failed to call method "${method}" on block "${blockId}": "args" should be an array.`
       );
     }
     if (!type.isFunction(blockMethod)) {
       throw new Error(
-        `Failed to call method "${method}" on block "${blockId}". Check if "${method}" is a valid block method for block "${blockId}". Received "${JSON.stringify(
-          params
-        )}".`
+        `Failed to call method "${method}" on block "${blockId}". Check if "${method}" is a valid block method for block "${blockId}".`
       );
     }
     return blockMethod(...args);

@@ -1,0 +1,24 @@
+# G3: Missing Action ID
+# ======================
+# Tests that actions without an id throw an error with location.
+#
+# Expected error:
+#   [Config Error] Action id missing at "onClick" on "button" on page "home".
+#
+# The error points to line 22 where the action without id is defined.
+
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: button
+        type: Button
+        properties:
+          title: Missing Action ID
+        events:
+          onClick:
+            - type: SetState
+              params:
+                key: value

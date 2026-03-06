@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,27 +16,127 @@
 
 /* eslint-disable no-param-reassign */
 
+import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 import { getFileExtension, getFileSubExtension } from '@lowdefy/node-utils';
 import JSON5 from 'json5';
-import YAML from 'yaml';
+import YAML, { isMap, isSeq, isPair, isScalar } from 'yaml';
 
 import parseNunjucks from './parseNunjucks.js';
+import setNonEnumerableProperty from '../../utils/setNonEnumerableProperty.js';
+
+function getLineNumber(content, offset) {
+  if (offset == null || offset < 0) return null;
+  return content.substring(0, offset).split('\n').length;
+}
+
+function addLineNumbers(node, content, result) {
+  if (isMap(node)) {
+    const obj = result || {};
+    if (node.range) {
+      setNonEnumerableProperty(obj, '~l', getLineNumber(content, node.range[0]));
+    }
+    for (const pair of node.items) {
+      if (isPair(pair) && isScalar(pair.key)) {
+        const key = pair.key.value;
+        const value = pair.value;
+        // Use key's line number for the value's ~l (more useful for error messages)
+        const keyLineNumber = pair.key.range ? getLineNumber(content, pair.key.range[0]) : null;
+        if (isMap(value)) {
+          const mapResult = addLineNumbers(value, content, {});
+          // Override ~l with key's line number if available
+          if (keyLineNumber) {
+            setNonEnumerableProperty(mapResult, '~l', keyLineNumber);
+          }
+          obj[key] = mapResult;
+        } else if (isSeq(value)) {
+          const arrResult = addLineNumbers(value, content, []);
+          // Override ~l with key's line number if available
+          if (keyLineNumber) {
+            setNonEnumerableProperty(arrResult, '~l', keyLineNumber);
+          }
+          obj[key] = arrResult;
+        } else if (isScalar(value)) {
+          obj[key] = value.value;
+        } else {
+          obj[key] = value?.toJSON?.() ?? value;
+        }
+      }
+    }
+    return obj;
+  }
+
+  if (isSeq(node)) {
+    const arr = result || [];
+    if (node.range) {
+      setNonEnumerableProperty(arr, '~l', getLineNumber(content, node.range[0]));
+    }
+    for (const item of node.items) {
+      if (isMap(item)) {
+        arr.push(addLineNumbers(item, content, {}));
+      } else if (isSeq(item)) {
+        arr.push(addLineNumbers(item, content, []));
+      } else if (isScalar(item)) {
+        arr.push(item.value);
+      } else {
+        arr.push(item?.toJSON?.() ?? item);
+      }
+    }
+    return arr;
+  }
+
+  if (isScalar(node)) {
+    return node.value;
+  }
+
+  return node?.toJSON?.() ?? node;
+}
+
+function parseYamlWithLineNumbers(content) {
+  const doc = YAML.parseDocument(content);
+  if (doc.errors && doc.errors.length > 0) {
+    throw new Error(doc.errors[0].message);
+  }
+  return addLineNumbers(doc.contents, content);
+}
 
 function parseRefContent({ content, refDef }) {
   const { path, vars } = refDef;
   if (type.isString(path)) {
     let ext = getFileExtension(path);
     if (ext === 'njk') {
-      content = parseNunjucks(content, vars);
+      try {
+        content = parseNunjucks(content, vars);
+      } catch (error) {
+        throw new ConfigError(`Nunjucks error in "${path}".`, {
+          cause: error,
+          filePath: path,
+        });
+      }
       ext = getFileSubExtension(path);
     }
 
     if (ext === 'yaml' || ext === 'yml') {
-      content = YAML.parse(content);
+      try {
+        content = parseYamlWithLineNumbers(content);
+      } catch (error) {
+        const lineMatch = error.message.match(/at line (\d+)/);
+        throw new ConfigError(`YAML parse error in "${path}".`, {
+          cause: error,
+          filePath: path,
+          lineNumber: lineMatch ? lineMatch[1] : null,
+        });
+      }
     }
     if (ext === 'json') {
-      content = JSON5.parse(content);
+      try {
+        content = JSON5.parse(content);
+      } catch (error) {
+        throw new ConfigError(`JSON parse error in "${path}".`, {
+          cause: error,
+          filePath: path,
+        });
+      }
     }
   }
 

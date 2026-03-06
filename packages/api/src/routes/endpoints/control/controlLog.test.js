@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -78,7 +78,12 @@ test('log level is not a string', async () => {
   const { res, context } = await runTest({ routine });
 
   expect(res.status).toEqual('error');
-  expect(res.error).toEqual(new Error('Unrecognised type for :level. Received true.'));
+  // ConfigError stores received separately - message doesn't include "Received true."
+  expect(res.error.name).toBe('ConfigError');
+  expect(res.error.message).toBe(
+    'Invalid :log in endpoint "endpointId" - :level must be a string.'
+  );
+  expect(res.error.received).toBe(true);
   expect(context.logger.debug.mock.calls).toEqual([[{ event: 'debug_control_log' }]]);
 });
 
@@ -92,7 +97,9 @@ test('invalid log level', async () => {
   const { res, context } = await runTest({ routine });
 
   expect(res.status).toEqual('error');
-  expect(res.error).toEqual(new Error('Invalid log level for :log. Received none.'));
+  expect(res.error).toEqual(
+    new Error('Invalid :log in endpoint "endpointId" - unrecognised log level. Received "none".')
+  );
   expect(context.logger.debug.mock.calls).toEqual([[{ event: 'debug_control_log' }]]);
 });
 

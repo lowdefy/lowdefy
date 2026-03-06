@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -35,18 +35,10 @@ test('_and true', () => {
   expect(_and({ params: [true, true], location })).toEqual(true);
 });
 test('_and errors', () => {
-  expect(() => _and({ params: 'hello', location })).toThrow(
-    'Operator Error: _and takes an array type. Received: "hello" at location.'
-  );
-  expect(() => _and({ params: null, location })).toThrow(
-    'Operator Error: _and takes an array type. Received: null at location.'
-  );
-  expect(() => _and({ params: true, location })).toThrow(
-    'Operator Error: _and takes an array type. Received: true at location.'
-  );
-  expect(() => _and({ params: false, location })).toThrow(
-    'Operator Error: _and takes an array type. Received: false at location.'
-  );
+  expect(() => _and({ params: 'hello', location })).toThrow('_and takes an array type.');
+  expect(() => _and({ params: null, location })).toThrow('_and takes an array type.');
+  expect(() => _and({ params: true, location })).toThrow('_and takes an array type.');
+  expect(() => _and({ params: false, location })).toThrow('_and takes an array type.');
 });
 
 test('_and evaluated in ServerParser', () => {

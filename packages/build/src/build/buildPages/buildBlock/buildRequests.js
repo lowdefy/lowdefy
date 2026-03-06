@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,37 +15,59 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { ConfigError } from '@lowdefy/errors';
 
 function buildRequest(request, pageContext) {
-  const { auth, checkDuplicateRequestId, pageId, typeCounters } = pageContext;
+  const { auth, checkDuplicateRequestId, context, pageId, typeCounters } = pageContext;
+  const configKey = request['~k'];
   if (type.isUndefined(request.id)) {
-    throw new Error(`Request id missing at page "${pageId}".`);
+    throw new ConfigError(`Request id missing at page "${pageId}".`, { configKey });
   }
   if (!type.isString(request.id)) {
-    throw new Error(
-      `Request id is not a string at page "${pageId}". Received ${JSON.stringify(request.id)}.`
-    );
+    throw new ConfigError(`Request id is not a string at page "${pageId}".`, {
+      received: request.id,
+      configKey,
+    });
   }
-  checkDuplicateRequestId({ id: request.id, pageId });
+  checkDuplicateRequestId({ id: request.id, configKey, pageId });
   if (request.id.includes('.')) {
-    throw new Error(
-      `Request id "${request.id}" at page "${pageId}" should not include a period (".").`
+    throw new ConfigError(
+      `Request id "${request.id}" at page "${pageId}" should not include a period (".").`,
+      { configKey }
     );
   }
 
   if (!type.isString(request.type)) {
-    throw new Error(
-      `Request type is not a string at at request at "${
-        request.id
-      }" at page "${pageId}". Received ${JSON.stringify(request.type)}.`
+    throw new ConfigError(
+      `Request type is not a string at request "${request.id}" at page "${pageId}".`,
+      { received: request.type, configKey }
     );
   }
-  typeCounters.requests.increment(request.type);
+  typeCounters.requests.increment(request.type, configKey);
+
+  // Validate connectionId references an existing connection
+  if (!type.isNone(request.connectionId)) {
+    if (!type.isString(request.connectionId)) {
+      throw new ConfigError(
+        `Request "${request.id}" at page "${pageId}" connectionId is not a string.`,
+        { received: request.connectionId, configKey }
+      );
+    }
+    if (!context.connectionIds.has(request.connectionId)) {
+      throw new ConfigError(
+        `Request "${request.id}" at page "${pageId}" references non-existent connection "${request.connectionId}".`,
+        { configKey, checkSlug: 'connection-refs' }
+      );
+    }
+  }
 
   if (type.isUndefined(request.payload)) request.payload = {};
 
   if (!type.isObject(request.payload)) {
-    throw new Error(`Request "${request.id}" at page "${pageId}" payload should be an object.`);
+    throw new ConfigError(
+      `Request "${request.id}" at page "${pageId}" payload should be an object.`,
+      { configKey }
+    );
   }
 
   request.auth = auth;

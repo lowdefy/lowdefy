@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { ConfigError } from '@lowdefy/errors';
 import buildRoutine from './buildRoutine.js';
 import countControl from './countControl.js';
 import countOperators from '../../../utils/countOperators.js';
@@ -55,39 +56,39 @@ function getAdditionalKeys(controlType, keys) {
   return keys.filter((item) => !controlTypes[controlType].required.includes(item));
 }
 
-function checkMissingRequiredControls({ controlType, keys }, { endpointId }) {
+function checkMissingRequiredControls({ controlType, keys, control }, endpointContext) {
+  const { endpointId } = endpointContext;
   const missingControls = controlTypes[controlType].required.filter((item) => !keys.includes(item));
   if (missingControls.length > 0) {
-    throw new Error(
-      `Missing required control type(s) for endpoint ${endpointId}. Missing ${JSON.stringify(
-        missingControls
-      )}`
+    throw new ConfigError(
+      `Missing required control type(s) for endpoint ${endpointId}.`,
+      { received: missingControls, configKey: control?.['~k'] }
     );
   }
 }
 
-function checkInvalidControls({ controlType, keys }, { endpointId }) {
+function checkInvalidControls({ controlType, keys, control }, endpointContext) {
+  const { endpointId } = endpointContext;
   const additionalControls = getAdditionalKeys(controlType, keys);
   const invalidControls = additionalControls.filter(
     (item) => !controlTypes[controlType].optional.includes(item)
   );
 
   if (invalidControls.length > 0) {
-    throw new Error(
-      `Invalid control type(s) for endpoint ${endpointId}. Received ${JSON.stringify(
-        invalidControls
-      )}`
+    throw new ConfigError(
+      `Invalid control type(s) for endpoint ${endpointId}.`,
+      { received: invalidControls, configKey: control?.['~k'] }
     );
   }
 }
 
 function handleSwitch(control, endpointContext) {
+  const { endpointId } = endpointContext;
   const switchArray = control[':switch'];
   if (!type.isArray(control[':switch'])) {
-    throw new Error(
-      `Type given for :switch control is invalid at endpoint ${
-        endpointContext.endpointId
-      }. Received ${JSON.stringify(control[':switch'])}`
+    throw new ConfigError(
+      `Type given for :switch control is invalid at endpoint ${endpointId}.`,
+      { received: control[':switch'], configKey: control['~k'] }
     );
   }
 
@@ -95,6 +96,7 @@ function handleSwitch(control, endpointContext) {
     const input = {
       controlType: ':switch',
       keys: [':switch', ...Object.keys(caseObj)],
+      control: caseObj,
     };
     checkMissingRequiredControls(input, endpointContext);
     checkInvalidControls(input, endpointContext);
@@ -110,20 +112,19 @@ function handleSwitch(control, endpointContext) {
 }
 
 function validateControl(control, endpointContext) {
+  const { endpointId } = endpointContext;
   const keys = Object.keys(control);
   const intersection = keys.filter((item) => Object.keys(controlTypes).includes(item));
   if (intersection.length === 0) {
-    throw new Error(
-      `Invalid control type(s) for endpoint ${
-        endpointContext.endpointId
-      }. Received "${JSON.stringify(keys)}"`
+    throw new ConfigError(
+      `Invalid control type(s) for endpoint ${endpointId}.`,
+      { received: keys, configKey: control['~k'] }
     );
   }
   if (intersection.length > 1) {
-    throw new Error(
-      `More than one control type found for endpoint ${
-        endpointContext.endpointId
-      }. Received ${JSON.stringify(intersection)}`
+    throw new ConfigError(
+      `More than one control type found for endpoint ${endpointId}.`,
+      { received: intersection, configKey: control['~k'] }
     );
   }
 
@@ -133,8 +134,8 @@ function validateControl(control, endpointContext) {
     return controlType;
   }
 
-  checkMissingRequiredControls({ controlType, keys }, endpointContext);
-  checkInvalidControls({ controlType, keys }, endpointContext);
+  checkMissingRequiredControls({ controlType, keys, control }, endpointContext);
+  checkInvalidControls({ controlType, keys, control }, endpointContext);
 
   return controlType;
 }

@@ -1,0 +1,14 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": [
+        "Duplicate requestId"
+      ],
+      "errorContains": [
+        "Duplicate requestId \"myRequest\" on page \"home\".",
+        "lowdefy.yaml:27"
+      ]
+    }
+  ]
+}

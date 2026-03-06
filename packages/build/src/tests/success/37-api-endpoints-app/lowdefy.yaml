@@ -1,0 +1,7 @@
+# 37: API Endpoints Application (demonstrates multi-file pages)
+lowdefy: local
+name: API Endpoints Demo
+
+pages:
+  - _ref: pages/home.yaml
+  - _ref: pages/about.yaml

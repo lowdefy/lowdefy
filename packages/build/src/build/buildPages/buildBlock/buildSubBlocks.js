@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { ConfigError } from '@lowdefy/errors';
 
 import buildBlock from './buildBlock.js';
 
@@ -25,10 +26,9 @@ function buildSubBlocks(block, pageContext) {
         block.areas[key].blocks = [];
       }
       if (!type.isArray(block.areas[key].blocks)) {
-        throw new Error(
-          `Expected blocks to be an array at ${block.blockId} in area ${key} on page ${
-            pageContext.pageId
-          }. Received ${JSON.stringify(block.areas[key].blocks)}`
+        throw new ConfigError(
+          `Expected blocks to be an array at ${block.blockId} in area ${key} on page ${pageContext.pageId}.`,
+          { received: block.areas[key].blocks, configKey: block.areas[key]['~k'] ?? block['~k'] }
         );
       }
       block.areas[key].blocks.map((blk) => buildBlock(blk, pageContext));

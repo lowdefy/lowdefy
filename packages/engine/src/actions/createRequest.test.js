@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
   limitations under the License.
 */
 import { jest } from '@jest/globals';
+import { ActionError } from '@lowdefy/errors';
 
 import testContext from '../../test/testContext.js';
 
@@ -29,7 +30,7 @@ const mockReqResponses = {
     success: true,
     response: 2,
   },
-  req_error: new Error('Request error'),
+  req_error: expect.any(ActionError),
 };
 
 const mockCallRequest = jest.fn();
@@ -103,6 +104,7 @@ test('Request call one request', async () => {
   const promise = button.triggerEvent({ name: 'onClick' });
   expect(context.requests.req_one).toEqual([
     {
+      actionId: 'a',
       blockId: 'button',
       loading: true,
       payload: {},
@@ -165,6 +167,7 @@ test('Request call all requests', async () => {
   expect(context.requests).toEqual({
     req_one: [
       {
+        actionId: 'a',
         blockId: 'button',
         loading: true,
         payload: {},
@@ -174,6 +177,7 @@ test('Request call all requests', async () => {
     ],
     req_two: [
       {
+        actionId: 'a',
         blockId: 'button',
         loading: true,
         payload: {
@@ -188,6 +192,7 @@ test('Request call all requests', async () => {
   expect(context.requests).toEqual({
     req_one: [
       {
+        actionId: 'a',
         blockId: 'button',
         loading: false,
         payload: {},
@@ -198,6 +203,7 @@ test('Request call all requests', async () => {
     ],
     req_two: [
       {
+        actionId: 'a',
         blockId: 'button',
         loading: false,
         payload: {
@@ -261,6 +267,7 @@ test('Request call array of requests', async () => {
   expect(context.requests).toEqual({
     req_one: [
       {
+        actionId: 'a',
         blockId: 'button',
         loading: true,
         payload: {},
@@ -270,6 +277,7 @@ test('Request call array of requests', async () => {
     ],
     req_two: [
       {
+        actionId: 'a',
         blockId: 'button',
         loading: true,
         payload: {
@@ -284,6 +292,7 @@ test('Request call array of requests', async () => {
   expect(context.requests).toEqual({
     req_one: [
       {
+        actionId: 'a',
         blockId: 'button',
         loading: false,
         payload: {},
@@ -294,6 +303,7 @@ test('Request call array of requests', async () => {
     ],
     req_two: [
       {
+        actionId: 'a',
         blockId: 'button',
         loading: false,
         payload: {
@@ -385,8 +395,9 @@ test('Request call request error', async () => {
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(context.requests.req_error).toEqual([
     {
+      actionId: 'a',
       blockId: 'button',
-      error: new Error('Request error'),
+      error: expect.any(ActionError),
       loading: false,
       payload: {},
       requestId: 'req_error',
@@ -405,17 +416,18 @@ test('Request call request error', async () => {
         params: 'req_error',
         type: 'Request',
       },
-      error: {
-        error: new Error('Request error'),
-        index: 0,
-        type: 'Request',
-      },
+      error: expect.any(ActionError),
+      index: 0,
     },
     responses: {
       a: {
-        type: 'Request',
+        action: {
+          id: 'a',
+          params: 'req_error',
+          type: 'Request',
+        },
+        error: expect.any(ActionError),
         index: 0,
-        error: new Error('Request error'),
       },
     },
     success: false,

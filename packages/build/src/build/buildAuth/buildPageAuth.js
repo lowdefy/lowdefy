@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -17,10 +17,11 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { ConfigError } from '@lowdefy/errors';
 import getPageRoles from './getPageRoles.js';
 import getProtectedPages from './getProtectedPages.js';
 
-function buildPageAuth({ components }) {
+function buildPageAuth({ components, context }) {
   const protectedPages = getProtectedPages({ components });
   const pageRoles = getPageRoles({ components });
   let configPublicPages = [];
@@ -29,13 +30,19 @@ function buildPageAuth({ components }) {
   }
 
   (components.pages || []).forEach((page) => {
+    // The 404 page must always be public so unauthenticated users can see it.
+    if (page.id === '404') {
+      page.auth = {
+        public: true,
+      };
+      return;
+    }
     if (pageRoles[page.id]) {
       if (configPublicPages.includes(page.id)) {
-        throw new Error(
-          `Page "${page.id}" is both protected by roles ${JSON.stringify(
-            pageRoles[page.id]
-          )} and public.`
-        );
+        throw new ConfigError(`Page "${page.id}" is both protected by roles and public.`, {
+          received: pageRoles[page.id],
+          configKey: page['~k'],
+        });
       }
       page.auth = {
         public: false,

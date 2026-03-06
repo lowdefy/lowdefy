@@ -1,0 +1,12 @@
+# Request template with _var.default containing _state
+# The _state reference should report THIS file's line number, not the parent's
+
+id: insert_contact
+type: MongoDBInsertOne
+connectionId: mongodb
+payload:
+  contact_company_ids:
+    _var:
+      key: contact_company_ids
+      default:
+        _state: contact_company_ids

@@ -1,0 +1,16 @@
+# S8: ~ignoreBuildChecks Cascades Into _ref Returning Array
+# =========================================================
+# Tests that ~ignoreBuildChecks on a _ref propagates into resolved content
+# when the referenced file returns an array of blocks (not a single object).
+#
+# Expected: NO warning for the child block's undefined _state reference.
+
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      _ref:
+        path: template.yaml
+        ~ignoreBuildChecks: true

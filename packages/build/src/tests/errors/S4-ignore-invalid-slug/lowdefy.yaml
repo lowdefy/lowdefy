@@ -1,0 +1,16 @@
+# S4: Invalid Check Slug in ~ignoreBuildChecks
+# =============================================
+# Tests that an invalid check slug in ~ignoreBuildChecks throws an error.
+#
+# Expected: ConfigError with "Invalid check slug(s)"
+
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    ~ignoreBuildChecks:
+      - invalid-slug
+    blocks:
+      - id: test
+        type: Paragraph

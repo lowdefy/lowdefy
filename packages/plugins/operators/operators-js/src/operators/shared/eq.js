@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,22 +16,16 @@
 
 import { type } from '@lowdefy/helpers';
 
-function _eq({ params, location }) {
+function _eq({ params }) {
   if (!type.isArray(params)) {
-    throw new Error(
-      `Operator Error: _eq takes an array type as input. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`_eq takes an array type as input.`);
   }
   if (params.length !== 2) {
-    throw new Error(
-      `Operator Error: _eq takes an array of length 2 as input. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`_eq takes an array of length 2 as input.`);
   }
   return params[0] === params[1];
 }
+
+_eq.dynamic = false;
 
 export default _eq;

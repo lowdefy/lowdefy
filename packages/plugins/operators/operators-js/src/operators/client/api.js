@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,13 +16,9 @@
 
 import { get, type } from '@lowdefy/helpers';
 
-function _api({ params, apiResponses, location }) {
+function _api({ params, apiResponses }) {
   if (!type.isString(params)) {
-    throw new Error(
-      `Operator Error: _api accepts a string value. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`_api accepts a string value.`);
   }
 
   const splitKey = params.split('.');
@@ -41,5 +37,7 @@ function _api({ params, apiResponses, location }) {
 
   return null;
 }
+
+_api.dynamic = true;
 
 export default _api;

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ServerError } from './errors.js';
+import { ConfigError } from '@lowdefy/errors';
 
 function createAuthorize({ session }) {
   // Next-auth getSession provides a session object if the user is authenticated
@@ -22,7 +22,8 @@ function createAuthorize({ session }) {
 
   const authenticated = !!session;
   const roles = session?.user?.roles ?? [];
-  function authorize({ auth }) {
+  function authorize(config) {
+    const { auth } = config;
     if (auth.public === true) return true;
     if (auth.public === false) {
       if (auth.roles) {
@@ -30,7 +31,10 @@ function createAuthorize({ session }) {
       }
       return authenticated;
     }
-    throw new ServerError('Invalid auth configuration');
+    throw new ConfigError('auth.public must be true or false.', {
+      received: auth.public,
+      configKey: config['~k'],
+    });
   }
   return authorize;
 }

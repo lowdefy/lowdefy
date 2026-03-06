@@ -1,0 +1,7 @@
+# 01: Minimal Valid Config
+# Tests the absolute minimum required configuration
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box

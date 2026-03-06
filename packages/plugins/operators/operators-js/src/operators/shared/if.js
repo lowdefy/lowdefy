@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,18 +14,16 @@
   limitations under the License.
 */
 
-function _if({ location, params }) {
+function _if({ params }) {
   if (params.test === true) {
     return params.then;
   }
   if (params.test === false) {
     return params.else;
   }
-  throw new Error(
-    `Operator Error: _if takes a boolean type for parameter test. Received: ${JSON.stringify(
-      params
-    )} at ${location}.`
-  );
+  throw new Error(`_if takes a boolean type for parameter test.`);
 }
+
+_if.dynamic = false;
 
 export default _if;

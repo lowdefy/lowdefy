@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -24,10 +24,10 @@ import validateAuthConfig from './validateAuthConfig.js';
 
 function buildAuth({ components, context }) {
   const configured = !type.isNone(components.auth);
-  validateAuthConfig({ components });
+  validateAuthConfig({ components, context });
   components.auth.configured = configured;
-  buildApiAuth({ components });
-  buildPageAuth({ components });
+  buildApiAuth({ components, context });
+  buildPageAuth({ components, context });
   buildAuthPlugins({ components, context });
 
   return components;

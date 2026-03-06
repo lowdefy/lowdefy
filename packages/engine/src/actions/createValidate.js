@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,18 +14,19 @@
   limitations under the License.
 */
 
+import { UserError } from '@lowdefy/errors';
+
 import getBlockMatcher from '../getBlockMatcher.js';
 
 function createValidate({ context }) {
   return function validate(params) {
     const validationErrors = context._internal.RootAreas.validate(getBlockMatcher(params));
     if (validationErrors.length > 0) {
-      const error = new Error(
+      throw new UserError(
         `Your input has ${validationErrors.length} validation error${
           validationErrors.length !== 1 ? 's' : ''
         }.`
       );
-      throw error;
     }
   };
 }

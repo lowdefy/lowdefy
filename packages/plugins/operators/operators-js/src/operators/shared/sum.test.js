@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -36,12 +36,12 @@ test('_sum ignores non number parameters', () => {
 
 test('_sum invalid parameters', () => {
   expect(() => sum({ params: null, location: 'locationId' })).toThrow(
-    'Operator Error: _sum takes an array type as input. Received: null at locationId.'
+    '_sum takes an array type as input.'
   );
   expect(() => sum({ params: 'a', location: 'locationId' })).toThrow(
-    'Operator Error: _sum takes an array type as input. Received: "a" at locationId.'
+    '_sum takes an array type as input.'
   );
   expect(() => sum({ params: false, location: 'locationId' })).toThrow(
-    'Operator Error: _sum takes an array type as input. Received: false at locationId.'
+    '_sum takes an array type as input.'
   );
 });

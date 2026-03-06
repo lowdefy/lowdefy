@@ -1,0 +1,41 @@
+# N1: Validation-Level Deduplication of Warnings
+# ==============================================
+# Tests that same state key referenced multiple times on same page
+# produces only ONE warning (validation deduplicates by key per page).
+#
+# This is existing behavior from validateStateReferences.js that
+# stores only the first occurrence of each state key reference.
+#
+# Expected:
+#   1 warning about "undefinedKey" (not 2, despite 2 references)
+
+lowdefy: local
+
+menus:
+  - id: main
+    links:
+      - id: home
+        type: MenuLink
+        pageId: home
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: stateRef1
+        type: Paragraph
+        properties:
+          content:
+            _state: undefinedKey
+      - id: stateRef2
+        type: Paragraph
+        properties:
+          content:
+            _state: undefinedKey
+  - id: '404'
+    type: Box
+    blocks:
+      - id: notFound
+        type: Paragraph
+        properties:
+          content: Page not found

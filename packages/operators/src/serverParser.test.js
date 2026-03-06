@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
 
 /* eslint-disable max-classes-per-file */
 import { jest } from '@jest/globals';
+
+import { ConfigError, OperatorError } from '@lowdefy/errors';
 
 import ServerParser from './serverParser.js';
 
@@ -76,7 +78,7 @@ test('parse location not string', () => {
   );
 });
 
-test('operator returns value and removes ~k', () => {
+test('operator returns value with ~k present', () => {
   const input = { a: { _test: { params: true, '~k': 'c' }, '~k': 'b' }, '~k': 'a' };
   const parser = new ServerParser({ operators, payload, secrets, state, steps, user });
   const res = parser.parse({ args, input, location });
@@ -145,7 +147,6 @@ test('operator returns value and removes ~k', () => {
             "user": Object {
               "user": true,
             },
-            "verbose": undefined,
           },
           "payload": Object {
             "payload": true,
@@ -195,10 +196,91 @@ test('undefined operator', () => {
   expect(res.errors).toEqual([]);
 });
 
-test('operator errors with verbose', () => {
+test('operator errors', () => {
   const input = { a: { _error: { params: true } } };
   const parser = new ServerParser({ operators, payload, secrets, user });
   const res = parser.parse({ args, input, location });
   expect(res.output).toEqual({ a: null });
-  expect(res.errors).toEqual([new Error('Test error.')]);
+  expect(res.errors.length).toBe(1);
+  expect(res.errors[0]).toBeInstanceOf(OperatorError);
+  expect(res.errors[0].name).toBe('OperatorError');
+  expect(res.errors[0]._message).toBe('Test error.');
+  expect(res.errors[0].message).toBe('Test error. at location.');
+  expect(res.errors[0].received).toEqual({ _error: { params: true } });
+});
+
+test('operator errors include configKey from ~k', () => {
+  const input = { a: { _error: { params: true } } };
+  Object.defineProperty(input.a, '~k', {
+    value: 'config-key-456',
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  const parser = new ServerParser({ operators, payload, secrets, user });
+  const res = parser.parse({ args, input, location });
+  expect(res.output).toEqual({ a: null });
+  expect(res.errors.length).toBe(1);
+  expect(res.errors[0]).toBeInstanceOf(OperatorError);
+  expect(res.errors[0].name).toBe('OperatorError');
+  expect(res.errors[0]._message).toBe('Test error.');
+  expect(res.errors[0].received).toEqual({ _error: { params: true } });
+  expect(res.errors[0].configKey).toBe('config-key-456');
+});
+
+test('operator errors preserve existing configKey', () => {
+  const errorWithConfigKey = new Error('Pre-configured error');
+  errorWithConfigKey.configKey = 'existing-key';
+  const operatorsWithPreConfiguredError = {
+    ...operators,
+    _errorWithKey: jest.fn(() => {
+      throw errorWithConfigKey;
+    }),
+  };
+  const input = { a: { _errorWithKey: { params: true } } };
+  Object.defineProperty(input.a, '~k', {
+    value: 'new-key',
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  const parser = new ServerParser({
+    operators: operatorsWithPreConfiguredError,
+    payload,
+    secrets,
+    user,
+  });
+  const res = parser.parse({ args, input, location });
+  expect(res.errors.length).toBe(1);
+  expect(res.errors[0]).toBeInstanceOf(OperatorError);
+  expect(res.errors[0].configKey).toBe('existing-key');
+});
+
+test('ConfigError from operator is preserved', () => {
+  const operatorsWithConfigError = {
+    ...operators,
+    _configError: jest.fn(() => {
+      throw new ConfigError('Invalid config value.');
+    }),
+  };
+  const input = { a: { _configError: { params: true } } };
+  Object.defineProperty(input.a, '~k', {
+    value: 'config-key-789',
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  const parser = new ServerParser({
+    operators: operatorsWithConfigError,
+    payload,
+    secrets,
+    user,
+  });
+  const res = parser.parse({ args, input, location });
+  expect(res.output).toEqual({ a: null });
+  expect(res.errors.length).toBe(1);
+  expect(res.errors[0]).toBeInstanceOf(ConfigError);
+  expect(res.errors[0].name).toBe('ConfigError');
+  expect(res.errors[0].message).toBe('Invalid config value.');
+  expect(res.errors[0].configKey).toBe('config-key-789');
 });

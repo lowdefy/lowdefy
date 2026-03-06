@@ -1,0 +1,30 @@
+# Contact page with invalid action type error
+# Expected error: Action type "InvalidAction" was used but is not defined
+# Expected location: pages/contact.yaml:XX (this file, not lowdefy.yaml)
+
+id: contact
+type: PageHeaderMenu
+
+blocks:
+  - id: content
+    type: Card
+    properties:
+      title: Contact Page - Test Invalid Action Type
+
+    blocks:
+      - id: contactForm
+        type: TextInput
+        properties:
+          title: Your Name
+
+      - id: submitButton
+        type: Button
+        properties:
+          title: Submit
+        events:
+          onClick:
+            # ERROR: Invalid action type (should show pages/contact.yaml line number)
+            - id: invalidAction
+              type: InvalidAction
+              params:
+                message: Test

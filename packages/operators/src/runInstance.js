@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -17,21 +17,24 @@
 import { type } from '@lowdefy/helpers';
 
 const runInstance = ({ location, meta, methodName, operator, params, instanceType }) => {
+  if (type.isUndefined(methodName)) {
+    throw new Error(
+      `${operator} requires a method. Use one of the following: ${Object.keys(meta).join(', ')}.`
+    );
+  }
   if (!meta[methodName]) {
     throw new Error(
-      `Operator Error: ${operator}.${methodName} is not supported, use one of the following: ${Object.keys(
+      `${operator}.${methodName} is not supported, use one of the following: ${Object.keys(
         meta
-      ).join(', ')}.
-      Received: {"${operator}.${methodName}":${JSON.stringify(params)}} at ${location}.`
+      ).join(', ')}.`
     );
   }
   // validate params type
   if (meta[methodName].validTypes && !meta[methodName].validTypes.includes(type.typeOf(params))) {
     throw new Error(
-      `Operator Error: ${operator}.${methodName} accepts one of the following types: ${meta[
+      `${operator}.${methodName} accepts one of the following types: ${meta[
         methodName
-      ].validTypes.join(', ')}.
-      Received: {"${operator}.${methodName}":${JSON.stringify(params)}} at ${location}.`
+      ].validTypes.join(', ')}.`
     );
   }
 
@@ -54,10 +57,7 @@ const runInstance = ({ location, meta, methodName, operator, params, instanceTyp
         !type.isArray(params[meta[methodName].spreadArgs])
       ) {
         throw new Error(
-          `Operator Error: ${operator}.${methodName} takes an array as input argument for ${
-            meta[methodName].spreadArgs
-          }.
-          Received: {"${operator}.${methodName}":${JSON.stringify(params)}} at ${location}.`
+          `${operator}.${methodName} takes an array as input argument for ${meta[methodName].spreadArgs}.`
         );
       }
       args.push(...(params[meta[methodName].spreadArgs] || []));
@@ -69,35 +69,25 @@ const runInstance = ({ location, meta, methodName, operator, params, instanceTyp
   }
 
   if (type.typeOf(instance) !== instanceType) {
-    throw new Error(`Operator Error: ${operator}.${methodName} must be evaluated on an ${instanceType} instance. For named args provide an ${instanceType} instance to the "on" property, for listed args provide and ${instanceType} instance as the first element in the operator argument array.
-    Received: {"${operator}.${methodName}":${JSON.stringify(params)}} at ${location}.`);
+    throw new Error(
+      `${operator}.${methodName} must be evaluated on an ${instanceType} instance. For named args provide an ${instanceType} instance to the "on" property, for listed args provide an ${instanceType} instance as the first element in the operator argument array.`
+    );
   }
   // Error for invalid method key.
   if (type.isNone(instance[methodName])) {
     throw new Error(
-      `Operator Error: ${operator} must be evaluated using one of the following: ${Object.keys(
-        meta
-      ).join(', ')}.
-      Received: {"${operator}.${methodName}":${JSON.stringify(params)}} at ${location}.`
+      `${operator} must be evaluated using one of the following: ${Object.keys(meta).join(', ')}.`
     );
   }
   // for property
   if (meta[methodName].property) {
     return instance[methodName];
   }
-  try {
-    const result = instance[methodName](...args);
-    if (meta[methodName].returnInstance) {
-      return instance;
-    }
-    return result;
-  } catch (e) {
-    throw new Error(
-      `Operator Error: ${operator}.${methodName} - ${
-        e.message
-      } Received: {"${operator}.${methodName}":${JSON.stringify(params)}} at ${location}.`
-    );
+  const result = instance[methodName](...args);
+  if (meta[methodName].returnInstance) {
+    return instance;
   }
+  return result;
 };
 
 export default runInstance;

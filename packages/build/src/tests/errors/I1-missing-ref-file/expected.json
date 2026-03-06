@@ -1,0 +1,25 @@
+{
+  "tests": [
+    {
+      "mode": "dev",
+      "errors": [
+        "Referenced file does not exist"
+      ],
+      "errorContains": [
+        "Referenced file does not exist: \"nonexistent.yaml\".",
+        "lowdefy.yaml:15"
+      ]
+    },
+    {
+      "mode": "prod",
+      "errors": [
+        "Referenced file does not exist"
+      ],
+      "errorContains": [
+        "Referenced file does not exist: \"nonexistent.yaml\".",
+        "lowdefy.yaml:15"
+      ],
+      "expectThrow": true
+    }
+  ]
+}

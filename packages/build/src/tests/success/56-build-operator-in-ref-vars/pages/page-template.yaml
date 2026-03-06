@@ -1,0 +1,9 @@
+# Page template that uses _var to insert events
+id:
+  _var: pageId
+type: Box
+blocks:
+  - id: button
+    type: Button
+    events:
+      _var: events

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -27,11 +27,7 @@ const breakpoints = {
 function _media({ arrayIndices, location, params, globals }) {
   const { window } = globals;
   if (!window?.innerWidth) {
-    throw new Error(
-      `Operator Error: device window width not available for _media. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`device window width not available for _media.`);
   }
   let size;
   switch (true) {
@@ -67,5 +63,7 @@ function _media({ arrayIndices, location, params, globals }) {
     params,
   });
 }
+
+_media.dynamic = true;
 
 export default _media;

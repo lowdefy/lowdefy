@@ -1,0 +1,19 @@
+# 11: Page with Named Areas
+lowdefy: local
+
+pages:
+  - id: home
+    type: Card
+    areas:
+      title:
+        blocks:
+          - id: cardTitle
+            type: Title
+            properties:
+              content: Card Title
+      content:
+        blocks:
+          - id: cardContent
+            type: Paragraph
+            properties:
+              content: Card content goes here

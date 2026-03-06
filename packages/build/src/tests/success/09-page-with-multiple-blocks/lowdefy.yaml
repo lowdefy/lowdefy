@@ -1,0 +1,19 @@
+# 09: Page with Multiple Blocks
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: heading
+        type: Title
+        properties:
+          content: Welcome
+      - id: intro
+        type: Paragraph
+        properties:
+          content: This is the intro text.
+      - id: cta
+        type: Button
+        properties:
+          title: Click Me

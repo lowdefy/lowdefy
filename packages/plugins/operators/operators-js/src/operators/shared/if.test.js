@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -31,15 +31,15 @@ test('_if else', () => {
 });
 test('_if errors', () => {
   expect(() => _if({ params: { then: 1, else: 2 }, location })).toThrow(
-    'Operator Error: _if takes a boolean type for parameter test. Received: {"then":1,"else":2} at location.'
+    '_if takes a boolean type for parameter test.'
   );
   expect(() => _if({ params: { test: { a: [1, 3] }, then: 1, else: 2 }, location })).toThrow(
-    'Operator Error: _if takes a boolean type for parameter test. Received: {"test":{"a":[1,3]},"then":1,"else":2} at location.'
+    '_if takes a boolean type for parameter test.'
   );
   expect(() => _if({ params: { test: 'True', then: 1, else: 2 }, location })).toThrow(
-    'Operator Error: _if takes a boolean type for parameter test. Received: {"test":"True","then":1,"else":2} at location.'
+    '_if takes a boolean type for parameter test.'
   );
   expect(() => _if({ params: { test: 1, then: 1, else: 2 }, location })).toThrow(
-    'Operator Error: _if takes a boolean type for parameter test. Received: {"test":1,"then":1,"else":2} at location.'
+    '_if takes a boolean type for parameter test.'
   );
 });

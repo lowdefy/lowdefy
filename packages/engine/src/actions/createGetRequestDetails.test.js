@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
   limitations under the License.
 */
 import { jest } from '@jest/globals';
+import { ActionError } from '@lowdefy/errors';
 
 import testContext from '../../test/testContext.js';
 
@@ -118,6 +119,7 @@ test('getRequestDetails params is true', async () => {
         response: {
           req_one: [
             {
+              actionId: 'a',
               blockId: 'button',
               loading: false,
               payload: {},
@@ -184,6 +186,7 @@ test('getRequestDetails params is req_one', async () => {
       b: {
         response: [
           {
+            actionId: 'a',
             blockId: 'button',
             loading: false,
             payload: {},
@@ -239,13 +242,8 @@ test('getRequestDetails params is none', async () => {
     endTimestamp: { date: 0 },
     error: {
       action: { id: 'b', type: 'Action' },
-      error: {
-        error: new Error(
-          'Method Error: getRequestDetails params must be of type string, integer, boolean or object. Received: undefined at button.'
-        ),
-        index: 1,
-        type: 'Action',
-      },
+      error: expect.any(ActionError),
+      index: 1,
     },
     event: undefined,
     eventName: 'onClick',
@@ -256,16 +254,17 @@ test('getRequestDetails params is none', async () => {
         type: 'Request',
       },
       b: {
-        error: new Error(
-          'Method Error: getRequestDetails params must be of type string, integer, boolean or object. Received: undefined at button.'
-        ),
+        action: { id: 'b', type: 'Action' },
+        error: expect.any(ActionError),
         index: 1,
-        type: 'Action',
       },
     },
     startTimestamp: { date: 0 },
     success: false,
   });
+  expect(res.error.error._message).toContain(
+    'params must be of type string, integer, boolean or object'
+  );
 });
 
 test('getRequestDetails params.key is null', async () => {
@@ -378,6 +377,7 @@ test('getRequestDetails params.all is true', async () => {
         response: {
           req_one: [
             {
+              actionId: 'a',
               blockId: 'button',
               loading: false,
               payload: {},
@@ -445,13 +445,8 @@ test('getRequestDetails params.key is not string or int', async () => {
         },
         type: 'Action',
       },
-      error: {
-        error: new Error(
-          'Method Error: getRequestDetails params.key must be of type string or integer. Received: {"key":{}} at button.'
-        ),
-        index: 1,
-        type: 'Action',
-      },
+      error: expect.any(ActionError),
+      index: 1,
     },
     responses: {
       a: {
@@ -460,16 +455,21 @@ test('getRequestDetails params.key is not string or int', async () => {
         type: 'Request',
       },
       b: {
-        error: new Error(
-          'Method Error: getRequestDetails params.key must be of type string or integer. Received: {"key":{}} at button.'
-        ),
+        action: {
+          id: 'b',
+          params: {
+            key: {},
+          },
+          type: 'Action',
+        },
+        error: expect.any(ActionError),
         index: 1,
-        type: 'Action',
       },
     },
     startTimestamp: { date: 0 },
     success: false,
   });
+  expect(res.error.error._message).toContain('params.key must be of type string or integer');
 });
 
 test('getRequestDetails params.key is req_one', async () => {
@@ -522,6 +522,7 @@ test('getRequestDetails params.key is req_one', async () => {
       b: {
         response: [
           {
+            actionId: 'a',
             blockId: 'button',
             loading: false,
             payload: {},

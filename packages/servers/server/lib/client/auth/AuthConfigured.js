@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
 import React, { useEffect, useRef } from 'react';
 import { getSession, SessionProvider, signIn, signOut, useSession } from 'next-auth/react';
 
-import lowdefyConfig from '../../../build/config.json';
+import lowdefyConfig from '../../build/config.js';
 
 function Session({ children }) {
   const wasAuthenticated = useRef(false);
