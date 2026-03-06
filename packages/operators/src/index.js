@@ -15,6 +15,11 @@
 */
 
 import BuildParser from './buildParser.js';
+import evaluateOperators, {
+  setDynamicMarker,
+  hasDynamicMarker,
+  hasDynChild,
+} from './evaluateOperators.js';
 import getFromArray from './getFromArray.js';
 import getFromObject from './getFromObject.js';
 import ServerParser from './serverParser.js';
@@ -22,4 +27,16 @@ import runClass from './runClass.js';
 import runInstance from './runInstance.js';
 import WebParser from './webParser.js';
 
-export { BuildParser, getFromArray, getFromObject, ServerParser, runClass, runInstance, WebParser };
+export {
+  BuildParser,
+  evaluateOperators,
+  setDynamicMarker,
+  hasDynamicMarker,
+  hasDynChild,
+  getFromArray,
+  getFromObject,
+  ServerParser,
+  runClass,
+  runInstance,
+  WebParser,
+};
