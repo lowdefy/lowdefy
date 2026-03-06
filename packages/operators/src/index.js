@@ -14,7 +14,6 @@
   limitations under the License.
 */
 
-import BuildParser from './buildParser.js';
 import evaluateOperators, {
   setDynamicMarker,
   hasDynamicMarker,
@@ -28,7 +27,6 @@ import runInstance from './runInstance.js';
 import WebParser from './webParser.js';
 
 export {
-  BuildParser,
   evaluateOperators,
   setDynamicMarker,
   hasDynamicMarker,
