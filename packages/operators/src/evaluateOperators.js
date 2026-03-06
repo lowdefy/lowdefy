@@ -19,7 +19,7 @@ import { type } from '@lowdefy/helpers';
 
 function setDynamicMarker(node) {
   if (type.isObject(node) || type.isArray(node)) {
-    Object.defineProperty(node, '~dyn', { value: true, enumerable: false });
+    Object.defineProperty(node, '~dyn', { value: true, enumerable: false, configurable: true });
   }
   return node;
 }

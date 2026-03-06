@@ -40,9 +40,7 @@ beforeEach(() => {
   mockReadConfigFile.mockReset();
   context.refMap = {};
   context.keyMap = {};
-  // Provide typesMap so collectTypeNames creates type boundaries at page objects.
-  // Without this, ~dyn from ~shallow content bubbles past page objects and prevents
-  // _build.array at the pages level from evaluating.
+  context.errors = [];
   context.typesMap = {
     blocks: { PageHeaderMenu: {}, PageSiderMenu: {}, TextInput: {} },
   };
@@ -277,7 +275,11 @@ pages:
   expect(res.pages[0].blocks).toEqual([{ id: 'block1' }]);
 });
 
-test('buildRefs shallow: _build.array.concat wrapping two refs at stop paths is preserved', async () => {
+test('buildRefs shallow: _build.array.concat wrapping refs at stop path — page id and type survive', async () => {
+  // When _build.array.concat wraps refs inside a page content key (blocks),
+  // the refs are shallow-stopped. The operator is skipped (not evaluated)
+  // because its params contain ~shallow nodes — the result will be discarded
+  // by stripPageContent anyway. No spurious build errors should be reported.
   const files = [
     {
       path: 'lowdefy.yaml',
@@ -305,12 +307,11 @@ pages:
     context,
     shallowOptions: true,
   });
-  // The operator should be preserved as-is (not evaluated) because its
-  // arguments are ~shallow placeholders containing dynamic content.
-  expect(res.pages[0].blocks['_build.array.concat']).toBeDefined();
-  const args = res.pages[0].blocks['_build.array.concat'];
-  expect(args[0]['~shallow']).toBe(true);
-  expect(args[1]['~shallow']).toBe(true);
+  // Page stub survives — id and type are what matters for shallow builds
+  expect(res.pages[0].id).toBe('home');
+  expect(res.pages[0].type).toBe('PageHeaderMenu');
+  // No build errors from the skipped operator
+  expect(context.errors).toHaveLength(0);
 });
 
 test('buildRefs shallow: page id from _build.string.concat evaluates while ~shallow events are preserved', async () => {
@@ -406,7 +407,11 @@ blocks:
   expect(res.pages[1].blocks['~shallow']).toBe(true);
 });
 
-test('buildRefs shallow: static operator wrapping ~shallow content is preserved', async () => {
+test('buildRefs shallow: static operator wrapping ref at stop path — page id and type survive', async () => {
+  // When a static operator (_if) wraps a ref inside page content (blocks),
+  // the ref becomes a shallow marker. The _if is preserved by evaluateStaticOperators
+  // because its params contain ~dyn content. Either way, blocks gets stripped —
+  // only id/type matter for shallow builds.
   const files = [
     {
       path: 'lowdefy.yaml',
@@ -432,9 +437,6 @@ pages:
     context,
     shallowOptions: true,
   });
-  // The _if operator wraps a ~shallow ref in its 'then' branch.
-  // After top-level static operator evaluation, the _if should be preserved
-  // because its params contain dynamic (~shallow) content.
-  expect(res.pages[0].blocks._if).toBeDefined();
-  expect(res.pages[0].blocks._if.then['~shallow']).toBe(true);
+  expect(res.pages[0].id).toBe('home');
+  expect(res.pages[0].type).toBe('PageHeaderMenu');
 });

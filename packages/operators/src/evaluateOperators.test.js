@@ -202,10 +202,11 @@ test('_build.* operators ignore dynamic params — evaluates even with ~dyn in p
   const _echo = jest.fn(({ params }) => params);
   const ops = { _echo };
   const input = { a: { '_build.echo': { nested: 'value' } } };
-  // Manually set ~dyn on the params object
+  // Manually set ~dyn on the params object (configurable so setDynamicMarker can redefine)
   Object.defineProperty(input.a['_build.echo'], '~dyn', {
     value: true,
     enumerable: false,
+    configurable: true,
   });
   const res = evaluateOperators({
     input,

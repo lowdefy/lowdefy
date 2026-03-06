@@ -77,7 +77,7 @@ class WalkContext {
       refId,
       sourceRefId: this.refId,
       vars: vars ?? {},
-      path: '',
+      path: this.path,
       currentFile: filePath ?? this.currentFile,
       refChain: newChain,
       operators: this.operators,
@@ -105,6 +105,22 @@ function isBuildOperator(node) {
   const keys = Object.keys(node);
   const nonTildeKeys = keys.filter((k) => !k.startsWith('~'));
   return nonTildeKeys.length === 1 && nonTildeKeys[0].startsWith('_build.');
+}
+
+// Check if a value has ~shallow nodes as direct children.
+// Used to skip _build.* evaluation when params are shallow-stopped refs
+// that will be discarded by stripPageContent anyway.
+function hasShallowChild(value) {
+  if (!type.isObject(value) && !type.isArray(value)) return false;
+  if (type.isObject(value) && value['~shallow'] === true) return true;
+  if (type.isArray(value)) {
+    return value.some(
+      (item) => type.isObject(item) && item['~shallow'] === true
+    );
+  }
+  return Object.values(value).some(
+    (item) => type.isObject(item) && item['~shallow'] === true
+  );
 }
 
 // Set ~r as non-enumerable if not already present
@@ -260,7 +276,7 @@ async function resolveRef(node, ctx) {
   const lineNumber = node['~l'];
   const refDef = makeRefDefinition(node._ref, ctx.refId, ctx.refMap, lineNumber);
 
-  // 2. Resolve dynamic path/vars: clone before resolving to prevent mutation
+  // 2. Resolve dynamic path/vars/key: clone before resolving to prevent mutation
   if (type.isObject(refDef.path)) {
     refDef.path = await resolve(cloneForResolve(refDef.path), ctx);
   }
@@ -269,6 +285,9 @@ async function resolveRef(node, ctx) {
     if (type.isObject(refDef.vars[varKey]) || type.isArray(refDef.vars[varKey])) {
       refDef.vars[varKey] = await resolve(cloneForResolve(refDef.vars[varKey]), ctx);
     }
+  }
+  if (type.isObject(refDef.key)) {
+    refDef.key = await resolve(cloneForResolve(refDef.key), ctx);
   }
 
   // 3. Update refMap with resolved path; store original for resolver refs
@@ -352,21 +371,20 @@ async function resolve(node, ctx) {
     return resolveRef(node, ctx);
   }
 
-  // 3. Object with _var
+  // 4. Object with _var
   if (type.isObject(node) && !type.isUndefined(node._var)) {
     return resolveVar(node, ctx);
   }
 
-  // 4. Array — walk children in-place
+  // 5. Array — walk children in-place
   if (type.isArray(node)) {
     for (let i = 0; i < node.length; i++) {
       node[i] = await resolve(node[i], ctx.child(String(i)));
     }
-    tagRef(node, ctx.refId);
     return node;
   }
 
-  // 5. Object — walk children in-place
+  // 6. Object — walk children in-place
   const keys = Object.keys(node);
   for (const key of keys) {
     node[key] = await resolve(node[key], ctx.child(key));
@@ -374,12 +392,18 @@ async function resolve(node, ctx) {
 
   // Check if this is a _build.* operator
   if (isBuildOperator(node)) {
+    const opKey = Object.keys(node).find((k) => !k.startsWith('~'));
+    // Skip evaluation when params contain shallow-stopped refs — the result
+    // will be discarded by stripPageContent, so evaluating would only produce
+    // spurious build errors.
+    if (hasShallowChild(node[opKey])) {
+      return node;
+    }
     const result = evaluateBuildOperator(node, ctx);
     tagRefDeep(result, ctx.refId);
     return result;
   }
 
-  tagRef(node, ctx.refId);
   return node;
 }
 

@@ -492,7 +492,7 @@ describe('vars', () => {
     });
   });
 
-  test("buildRefs var default value can be empty string, boolean false or 0, but not NaN nor Inf which aren't JSON serializable", async () => {
+  test('buildRefs var default value can be empty string, boolean false, 0, NaN, or Infinity', async () => {
     const files = [
       {
         path: 'lowdefy.yaml',
@@ -532,8 +532,8 @@ describe('vars', () => {
       ref: {
         field_empty_str: '',
         field_false: false,
-        field_NaN: null,
-        field_Inf: null,
+        field_NaN: NaN,
+        field_Inf: Infinity,
         field_zero: 0,
       },
     });

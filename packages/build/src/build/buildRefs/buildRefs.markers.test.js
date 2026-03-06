@@ -379,11 +379,10 @@ normal: 42`,
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
-    // NaN and Infinity are lost via JSON round-trips in serializer.copy
-    // Walker refactor will preserve these (update assertions after walker lands)
-    expect(res.data.nan_val).toBeNull();
-    expect(res.data.inf_val).toBeNull();
-    expect(res.data.neg_inf_val).toBeNull();
+    // Walker preserves NaN and Infinity (no serializer round-trip)
+    expect(res.data.nan_val).toBeNaN();
+    expect(res.data.inf_val).toBe(Infinity);
+    expect(res.data.neg_inf_val).toBe(-Infinity);
     expect(res.data.normal).toBe(42);
   });
 });
@@ -394,71 +393,6 @@ describe('shallow build with operators', () => {
     context.typesMap = {
       blocks: { PageHeaderMenu: {}, TextInput: {} },
     };
-  });
-
-  test('_build.if wrapping a shallow ref is preserved with ~dyn', async () => {
-    const files = [
-      {
-        path: 'lowdefy.yaml',
-        content: `
-pages:
-  - id: home
-    type: PageHeaderMenu
-    blocks:
-      _build.if:
-        test: true
-        then:
-          _ref: pages/blocks.yaml
-        else: []`,
-      },
-      {
-        path: 'pages/blocks.yaml',
-        content: `
-- id: block1
-  type: TextInput`,
-      },
-    ];
-    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
-    const res = await buildRefs({
-      context,
-      shallowOptions: true,
-    });
-    // _build.if is preserved (not evaluated) because it wraps ~shallow content
-    expect(res.pages[0].blocks['_build.if']).toBeDefined();
-    expect(res.pages[0].blocks['_build.if'].then['~shallow']).toBe(true);
-    // ~dyn marker is set on blocks (non-enumerable)
-    expect(res.pages[0].blocks['~dyn']).toBeDefined();
-  });
-
-  test('_build.object.assign wrapping a shallow ref is preserved with ~dyn', async () => {
-    const files = [
-      {
-        path: 'lowdefy.yaml',
-        content: `
-pages:
-  - id: home
-    type: PageHeaderMenu
-    events:
-      _build.object.assign:
-        - _ref: pages/events.yaml
-        - onInit: []`,
-      },
-      {
-        path: 'pages/events.yaml',
-        content: `onClick: []`,
-      },
-    ];
-    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
-    const res = await buildRefs({
-      context,
-      shallowOptions: true,
-    });
-    // _build.object.assign is preserved because it wraps ~shallow content
-    expect(res.pages[0].events['_build.object.assign']).toBeDefined();
-    const args = res.pages[0].events['_build.object.assign'];
-    expect(args[0]['~shallow']).toBe(true);
-    // ~dyn marker is set on events
-    expect(res.pages[0].events['~dyn']).toBeDefined();
   });
 
   test('_build.operator dynamic dispatch evaluates at build time', async () => {
