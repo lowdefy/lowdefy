@@ -47,6 +47,17 @@ function hasDynamicMarker(value) {
   return hasDynChild(value);
 }
 
+function hasShallowMarker(value) {
+  if (!type.isObject(value) && !type.isArray(value)) return false;
+  if (type.isObject(value) && value['~shallow'] === true) return true;
+  const items = type.isArray(value) ? value : Object.values(value);
+  return items.some(
+    (item) =>
+      (type.isObject(item) && item['~shallow'] === true) ||
+      (type.isArray(item) && hasShallowMarker(item))
+  );
+}
+
 function evaluateOperators({
   input,
   operators,
@@ -153,6 +164,12 @@ function evaluateOperators({
       if (hasDynamicMarker(node[key])) {
         return setDynamicMarker(node);
       }
+    }
+
+    // Shallow marker check — _build.* operators can't process ~shallow placeholders.
+    // These are unresolved refs from shallow builds that will be discarded later.
+    if (isBuildOperator && hasShallowMarker(node[key])) {
+      return node;
     }
 
     const configKey = node['~k'];
