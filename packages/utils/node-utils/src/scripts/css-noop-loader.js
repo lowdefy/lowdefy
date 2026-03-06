@@ -1,4 +1,3 @@
-/* eslint-disable import/namespace */
 /*
   Copyright 2020-2026 Lowdefy, Inc
 
@@ -15,11 +14,23 @@
   limitations under the License.
 */
 
-import * as connections from './connections.js';
+export function resolve(specifier, context, next) {
+  if (specifier.endsWith('.css') || specifier.endsWith('.less')) {
+    return {
+      url: 'data:text/javascript,export default {}',
+      shortCircuit: true,
+    };
+  }
+  return next(specifier, context);
+}
 
-export default {
-  connections: Object.keys(connections),
-  requests: Object.keys(connections)
-    .map((connection) => Object.keys(connections[connection].requests))
-    .flat(),
-};
+export function load(url, context, next) {
+  if (url === 'data:text/javascript,export default {}') {
+    return {
+      format: 'module',
+      source: 'export default {}',
+      shortCircuit: true,
+    };
+  }
+  return next(url, context);
+}

@@ -34,13 +34,13 @@
     "./*": "./dist/*",
     "./connections/*": "./dist/connections/*",
     "./blocks": "./dist/blocks.js",
-    "./types": "./dist/types.js"
+    "./types": "./dist/types.json"
   },
   "files": [
     "dist/*"
   ],
   "scripts": {
-    "build": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start --copy-files",
+    "build": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start --copy-files && extract-plugin-types",
     "clean": "rm -rf dist",
     "copyfiles": "copyfiles -u 1 \"./src/**/*\" dist -e \"./src/**/*.js\" -e \"./src/**/*.yaml\" -e \"./src/**/*.snap\""
   },
@@ -58,6 +58,7 @@
     "@lowdefy/ajv": "4.5.2",
     "@lowdefy/block-dev": "4.5.2",
     "@lowdefy/jest-yaml-transform": "4.5.2",
+    "@lowdefy/node-utils": "4.5.2",
     "@swc/cli": "0.1.63",
     "@swc/core": "1.3.99",
     "@swc/jest": "0.2.29",

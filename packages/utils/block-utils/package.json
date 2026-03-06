@@ -26,9 +26,6 @@
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
   "type": "module",
-  "bin": {
-    "extract-block-types": "./dist/scripts/extract-block-types.mjs"
-  },
   "exports": {
     ".": "./dist/index.js",
     "./*": "./dist/*"
