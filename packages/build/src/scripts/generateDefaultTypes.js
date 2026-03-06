@@ -15,10 +15,13 @@
   limitations under the License.
 */
 
+import { createRequire } from 'node:module';
 import path from 'path';
 import { readFile, writeFile } from '@lowdefy/node-utils';
 
 import createPluginTypesMap from '../utils/createPluginTypesMap.js';
+
+const require = createRequire(import.meta.url);
 
 const defaultPackages = [
   '@lowdefy/actions-core',
@@ -75,25 +78,19 @@ async function generateDefaultTypesMap() {
       server: {},
     },
     requests: {},
-    styles: {
-      packages: {},
-      blocks: {},
-    },
   };
 
-  await Promise.all(
-    defaultPackages.map(async (packageName) => {
-      const { default: types } = await import(`${packageName}/types`);
-      const version =
-        packageFile.devDependencies[packageName] || packageFile.dependencies[packageName];
-      createPluginTypesMap({
-        packageTypes: types,
-        typesMap: defaultTypesMap,
-        packageName,
-        version,
-      });
-    })
-  );
+  for (const packageName of defaultPackages) {
+    const types = require(`${packageName}/types`);
+    const version =
+      packageFile.devDependencies[packageName] || packageFile.dependencies[packageName];
+    createPluginTypesMap({
+      packageTypes: types,
+      typesMap: defaultTypesMap,
+      packageName,
+      version,
+    });
+  }
 
   await writeFile(
     path.resolve(process.cwd(), './dist/defaultTypesMap.js'),

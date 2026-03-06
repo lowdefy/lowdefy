@@ -38,13 +38,13 @@
     "./blocks": "./dist/blocks.js",
     "./e2e": "./dist/e2e.js",
     "./schemas": "./dist/schemas.js",
-    "./types": "./dist/types.js"
+    "./types": "./dist/types.json"
   },
   "files": [
     "dist/*"
   ],
   "scripts": {
-    "build": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start && pnpm copyfiles",
+    "build": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start && pnpm copyfiles && extract-block-types",
     "clean": "rm -rf dist",
     "copyfiles": "copyfiles -u 1 \"./src/**/*\" dist -e \"./src/**/*.js\" -e \"./src/**/*.yaml\" -e \"./src/**/*.snap\"",
     "e2e": "playwright test --config e2e/playwright.config.js",

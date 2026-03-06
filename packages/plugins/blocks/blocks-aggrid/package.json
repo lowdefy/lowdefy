@@ -37,13 +37,13 @@
     "./*": "./dist/*",
     "./blocks": "./dist/blocks.js",
     "./schemas": "./dist/schemas.js",
-    "./types": "./dist/types.js"
+    "./types": "./dist/types.json"
   },
   "files": [
     "dist/*"
   ],
   "scripts": {
-    "build": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start && pnpm copyfiles",
+    "build": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start && pnpm copyfiles && extract-block-types",
     "clean": "rm -rf dist",
     "copyfiles": "copyfiles -u 1 \"./src/**/*\" dist -e \"./src/**/*.js\" -e \"./src/**/*.yaml\" -e \"./src/**/*.snap\"",
     "prepublishOnly": "pnpm build",

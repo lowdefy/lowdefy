@@ -14,9 +14,12 @@
   limitations under the License.
 */
 
-import basicTypes from '@lowdefy/blocks-basic/types';
-import loaderTypes from '@lowdefy/blocks-loaders/types';
+import { createRequire } from 'node:module';
 import { ConfigError, ConfigWarning } from '@lowdefy/errors';
+
+const require = createRequire(import.meta.url);
+const basicTypes = require('@lowdefy/blocks-basic/types');
+const loaderTypes = require('@lowdefy/blocks-loaders/types');
 
 import findSimilarString from '../utils/findSimilarString.js';
 
