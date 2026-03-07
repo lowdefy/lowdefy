@@ -68,7 +68,7 @@
     "@lowdefy/operators-nunjucks": "4.5.2",
     "@lowdefy/operators-uuid": "4.5.2",
     "antd": "6.3.1",
-    "next": "15.5.12",
+    "next": "16.1.6",
     "pino": "8.16.2",
     "process": "0.11.10",
     "react": "18.2.0",
@@ -78,7 +78,7 @@
   },
   "devDependencies": {
     "@lowdefy/build": "4.5.2",
-    "@next/eslint-plugin-next": "15.5.12",
+    "@next/eslint-plugin-next": "16.1.6",
     "@tailwindcss/postcss": "4.2.1",
     "tailwindcss": "4.2.1",
     "webpack": "5.94.0",
