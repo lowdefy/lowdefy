@@ -30,6 +30,7 @@ class LowdefyDocument extends Document {
           <link rel="manifest" href={`${basePath}/manifest.webmanifest`} />
           <link rel="icon" type="image/svg+xml" href={`${basePath}/icon.svg`} />
           <link rel="apple-touch-icon" href={`${basePath}/apple-touch-icon.png`} />
+          <link id="tailwind-jit-css" rel="stylesheet" href={`${basePath}/tailwind-jit.css`} />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <script
             dangerouslySetInnerHTML={{

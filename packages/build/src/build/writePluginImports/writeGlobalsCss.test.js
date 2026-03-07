@@ -79,7 +79,7 @@ test('writeGlobalsCss includes layer order and tailwind import', async () => {
   expect(css).toContain('@import "tailwindcss";');
   expect(css).toContain('@source "../node_modules/@lowdefy/blocks-*/dist/**/*.js";');
   expect(css).toContain('@source "./tailwind-classes.js";');
-  expect(css).toContain('@source "./tailwind-page-sources.js";');
+  expect(css).toContain('@import "./tailwind-candidates.css";');
 });
 
 test('writeGlobalsCss deep merges theme.tailwind overrides with defaults', async () => {
@@ -184,15 +184,14 @@ test('writeGlobalsCss writes empty tailwind-classes.js when no classes collected
   expect(classesCall[1]).toContain('export default ""');
 });
 
-test('writeGlobalsCss writes empty tailwind-page-sources.js', async () => {
+test('writeGlobalsCss writes initial tailwind-candidates.css', async () => {
   const context = createContext();
   await writeGlobalsCss({ components: {}, context });
 
-  const sourcesCall = context.writeBuildArtifact.mock.calls.find(
-    (call) => call[0] === 'tailwind-page-sources.js'
+  const candidatesCall = context.writeBuildArtifact.mock.calls.find(
+    (call) => call[0] === 'tailwind-candidates.css'
   );
-  expect(sourcesCall).toBeDefined();
-  expect(sourcesCall[1]).toContain('export default ""');
+  expect(candidatesCall).toBeDefined();
 });
 
 test('writeGlobalsCss omits styles.css import when file does not exist', async () => {
