@@ -55,7 +55,7 @@ function App({ Component }) {
       <ConfigProvider
         theme={{
           ...lowdefyRef.current.theme?.antd,
-          cssVar: { key: ',:root' },
+          cssVar: { key: 'lowdefy' },
           hashed: false,
           algorithm: resolveAlgorithm(lowdefyRef.current.theme?.antd?.algorithm),
         }}

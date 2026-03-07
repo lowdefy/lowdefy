@@ -17,7 +17,7 @@ This is the default block package included with Lowdefy. It provides:
 
 ### CSS Variables Mode
 
-Ant Design runs in CSS variables mode (`cssVar: { key: ',:root' }`, `hashed: false`) configured in the server's `_app.js`. This means antd tokens are exposed as `--ant-*` CSS variables on `:root`, allowing Tailwind and custom CSS to reference them. No Less or CSS-in-JS hashing at runtime.
+Ant Design runs in CSS variables mode (`cssVar: { key: 'lowdefy' }`, `hashed: false`) configured in the server's `_app.js`. The `<Html>` element has `className="lowdefy"` in `_document.js` so the CSS variables are set on `:root`, allowing Tailwind and custom CSS to reference `--ant-*` tokens. No Less or CSS-in-JS hashing at runtime.
 
 ### `withTheme` HOC
 
