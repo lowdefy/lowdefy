@@ -22,7 +22,7 @@ import { renderHtml } from '@lowdefy/block-utils';
 const MessageBlock = ({
   blockId,
   classNames = {},
-  components: { Icon },
+  components: { Icon } = {},
   events,
   methods,
   properties,

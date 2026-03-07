@@ -60,6 +60,7 @@ const Client = ({
         id="lowdefy-display-message"
         key={`${config.pageConfig.id}-display-message`}
         Component={lowdefy._internal.blockComponents.Message}
+        components={lowdefy._internal.components}
         methods={{
           registerMethod: (_, method) => {
             lowdefy._internal.displayMessage = method;
