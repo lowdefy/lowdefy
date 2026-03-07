@@ -61,7 +61,7 @@ function propsToError(data) {
   return error;
 }
 
-const makeReplacer = (customReplacer, isoStringDates) => (key, value) => {
+const makeReplacer = (customReplacer, isoStringDates, skipMarkers) => (key, value) => {
   let dateReplacer = (date) => ({ '~d': date.valueOf() });
   if (isoStringDates) {
     dateReplacer = (date) => ({ '~d': date.toISOString() });
@@ -81,29 +81,31 @@ const makeReplacer = (customReplacer, isoStringDates) => (key, value) => {
         newValue[k] = dateReplacer(newValue[k]);
       }
     });
-    if (newValue['~r']) {
-      Object.defineProperty(newValue, '~r', {
-        value: newValue['~r'],
-        enumerable: true,
-        writable: true,
-        configurable: true,
-      });
-    }
-    if (newValue['~k']) {
-      Object.defineProperty(newValue, '~k', {
-        value: newValue['~k'],
-        enumerable: true,
-        writable: true,
-        configurable: true,
-      });
-    }
-    if (newValue['~l']) {
-      Object.defineProperty(newValue, '~l', {
-        value: newValue['~l'],
-        enumerable: true,
-        writable: true,
-        configurable: true,
-      });
+    if (!skipMarkers) {
+      if (newValue['~r']) {
+        Object.defineProperty(newValue, '~r', {
+          value: newValue['~r'],
+          enumerable: true,
+          writable: true,
+          configurable: true,
+        });
+      }
+      if (newValue['~k']) {
+        Object.defineProperty(newValue, '~k', {
+          value: newValue['~k'],
+          enumerable: true,
+          writable: true,
+          configurable: true,
+        });
+      }
+      if (newValue['~l']) {
+        Object.defineProperty(newValue, '~l', {
+          value: newValue['~l'],
+          enumerable: true,
+          writable: true,
+          configurable: true,
+        });
+      }
     }
     return newValue;
   }
@@ -116,9 +118,10 @@ const makeReplacer = (customReplacer, isoStringDates) => (key, value) => {
     });
     // Preserve ~l, ~k, ~r on arrays by wrapping in a marker object
     if (
-      newValue['~l'] !== undefined ||
-      newValue['~k'] !== undefined ||
-      newValue['~r'] !== undefined
+      !skipMarkers &&
+      (newValue['~l'] !== undefined ||
+        newValue['~k'] !== undefined ||
+        newValue['~r'] !== undefined)
     ) {
       const wrapper = { '~arr': mappedArray };
       if (newValue['~r'] !== undefined) wrapper['~r'] = newValue['~r'];
@@ -229,13 +232,13 @@ const serializeToString = (json, options = {}) => {
   }
   if (options.stable) {
     return stableStringify(json, {
-      replacer: makeReplacer(options.replacer),
+      replacer: makeReplacer(options.replacer, undefined, options.skipMarkers),
       space: options.space,
     });
   }
   return JSON.stringify(
     json,
-    makeReplacer(options.replacer, options.isoStringDates),
+    makeReplacer(options.replacer, options.isoStringDates, options.skipMarkers),
     options.space
   );
 };

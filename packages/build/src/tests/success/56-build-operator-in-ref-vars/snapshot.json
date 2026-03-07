@@ -64,19 +64,19 @@
     "7": {
       "key": "root.pages[0:testPage:Box]",
       "~k_parent": "6",
-      "~r": "3",
+      "~r": "2",
       "~l": 2
     },
     "8": {
       "key": "root.pages[0:testPage:Box].blocks",
       "~k_parent": "7",
-      "~r": "3",
+      "~r": "2",
       "~l": 5
     },
     "9": {
       "key": "root.pages[0:testPage:Box].blocks[0:button:Button]",
       "~k_parent": "8",
-      "~r": "3",
+      "~r": "2",
       "~l": 6
     },
     "10": {
@@ -288,7 +288,7 @@
     "b": {
       "key": "root.pages[0:testPage:Box].blocks[0:button:Button].events.onClick",
       "~k_parent": "a",
-      "~r": "3"
+      "~r": "1"
     },
     "c": {
       "key": "root.pages[0:testPage:Box].blocks[0:button:Button].events.onClick[0:action1:SetState]",
@@ -305,13 +305,13 @@
     "e": {
       "key": "root.pages[0:testPage:Box].blocks[0:button:Button].events.onClick[1:action3:SetState]",
       "~k_parent": "b",
-      "~r": "2",
+      "~r": "3",
       "~l": 2
     },
     "f": {
       "key": "root.pages[0:testPage:Box].blocks[0:button:Button].events.onClick[1:action3:SetState].params",
       "~k_parent": "e",
-      "~r": "2",
+      "~r": "3",
       "~l": 4
     },
     "h": {
@@ -1956,13 +1956,13 @@
     },
     "2": {
       "parent": "1",
-      "lineNumber": 25,
-      "path": "shared/actions.yaml"
+      "lineNumber": 14,
+      "path": "pages/page-template.yaml"
     },
     "3": {
       "parent": "1",
-      "lineNumber": 14,
-      "path": "pages/page-template.yaml"
+      "lineNumber": 25,
+      "path": "shared/actions.yaml"
     }
   },
   "types.json": {

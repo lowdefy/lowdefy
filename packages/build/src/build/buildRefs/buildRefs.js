@@ -14,32 +14,47 @@
   limitations under the License.
 */
 
-import recursiveBuild from './recursiveBuild.js';
+import operators from '@lowdefy/operators-js/operators/build';
+
+import { resolve, WalkContext } from './walker.js';
+import getRefContent from './getRefContent.js';
 import makeRefDefinition from './makeRefDefinition.js';
-import evaluateBuildOperators from './evaluateBuildOperators.js';
 import evaluateStaticOperators from './evaluateStaticOperators.js';
-import collectTypeNames from '../collectTypeNames.js';
+import collectDynamicIdentifiers from '../collectDynamicIdentifiers.js';
+import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
+import isPageContentPath from '../jit/isPageContentPath.js';
+
+// Validate and collect dynamic identifiers once at module load
+validateOperatorsDynamic({ operators });
+const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
 
 async function buildRefs({ context, shallowOptions }) {
+  context.unresolvedRefVars = context.unresolvedRefVars ?? {};
   const refDef = makeRefDefinition('lowdefy.yaml', null, context.refMap);
-  let components = await recursiveBuild({
+
+  const ctx = new WalkContext({
+    buildContext: context,
+    refId: refDef.id,
+    sourceRefId: null,
+    vars: {},
+    path: '',
+    currentFile: refDef.path,
+    refChain: new Set(refDef.path ? [refDef.path] : []),
+    operators,
+    env: process.env,
+    dynamicIdentifiers,
+    shouldStop: shallowOptions ? (path) => isPageContentPath(path) : null,
+  });
+
+  const content = await getRefContent({
     context,
     refDef,
-    count: 0,
-    shallowOptions,
+    referencedFrom: null,
   });
-  // First: evaluate _build.* operators (e.g., _build.env)
-  // Pass typeNames so page objects act as type boundaries, preventing ~dyn markers
-  // from ~shallow content (blocks, events) from bubbling up and blocking evaluation
-  // of _build.array at the pages level.
-  const typeNames = collectTypeNames({ typesMap: context.typesMap });
-  components = await evaluateBuildOperators({
-    context,
-    input: components,
-    refDef,
-    typeNames,
-  });
-  // Second: evaluate static operators (_sum, _if, etc.) that don't depend on runtime data
+
+  let components = await resolve(content, ctx);
+
+  // Evaluate static operators (_sum, _if, etc.) that don't depend on runtime data
   components = evaluateStaticOperators({
     context,
     input: components,
