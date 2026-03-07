@@ -7,3 +7,4 @@ packages:
 onlyBuiltDependencies:
   - '@swc/core'
   - esbuild
+  - '@sentry/cli'
