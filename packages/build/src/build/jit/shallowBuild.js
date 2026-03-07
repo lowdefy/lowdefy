@@ -81,7 +81,7 @@ async function shallowBuild(options) {
 
     // addKeys + testSchema first for error location info
     tryBuildStep(addKeys, 'addKeys', { components, context });
-    stripPageContent({ components });
+    stripPageContent({ components, context });
     tryBuildStep(testSchema, 'testSchema', { components, context });
 
     logCollectedErrors(context);
