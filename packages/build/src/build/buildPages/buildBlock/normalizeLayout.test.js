@@ -107,23 +107,11 @@ test('normalizeLayout does not overwrite existing new key with deprecated value'
   expect(pageContext.context.handleWarning).toHaveBeenCalledTimes(1);
 });
 
-test('normalizeLayout renames layout.align to selfAlign and warns', () => {
+test('normalizeLayout leaves layout.align untouched (ambiguous at build time)', () => {
   const pageContext = createPageContext();
   const block = { blockId: 'b1', layout: { align: 'center' } };
   normalizeLayout(block, pageContext);
-  expect(block.layout).toEqual({ selfAlign: 'center' });
-  expect(pageContext.context.handleWarning).toHaveBeenCalledTimes(1);
-  expect(pageContext.context.handleWarning.mock.calls[0][0].message).toContain(
-    'layout.align for self-alignment is deprecated'
-  );
-  expect(pageContext.context.handleWarning.mock.calls[0][0].message).toContain('layout.selfAlign');
-});
-
-test('normalizeLayout does not rename align when selfAlign already set', () => {
-  const pageContext = createPageContext();
-  const block = { blockId: 'b1', layout: { align: 'center', selfAlign: 'top' } };
-  normalizeLayout(block, pageContext);
-  expect(block.layout).toEqual({ align: 'center', selfAlign: 'top' });
+  expect(block.layout).toEqual({ align: 'center' });
   expect(pageContext.context.handleWarning).not.toHaveBeenCalled();
 });
 

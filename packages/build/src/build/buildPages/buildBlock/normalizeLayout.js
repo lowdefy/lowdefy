@@ -46,18 +46,6 @@ function normalizeLayout(block, pageContext) {
     }
   }
 
-  // layout.align used for self-alignment is deprecated → layout.selfAlign
-  if (!type.isNone(layout.align) && type.isNone(layout.selfAlign)) {
-    pageContext.context.handleWarning(
-      new ConfigWarning(
-        `Block "${block.blockId}": layout.align for self-alignment is deprecated. Use layout.selfAlign instead.`,
-        { configKey: block['~k'], prodError: true }
-      )
-    );
-    layout.selfAlign = layout.align;
-    delete layout.align;
-  }
-
   // Warn about gutter in slot/area configs
   for (const slot of Object.values(block.slots ?? {})) {
     if (!type.isNone(slot.gutter)) {
