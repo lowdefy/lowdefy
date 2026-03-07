@@ -23,6 +23,7 @@ import moveAreasToSlots from './moveAreasToSlots.js';
 import moveSubBlocksToSlot from './moveSubBlocksToSlot.js';
 import moveSkeletonBlocksToSlot from './moveSkeletonBlocksToSlot.js';
 import normalizeClassAndStyles from './normalizeClassAndStyles.js';
+import normalizeLayout from './normalizeLayout.js';
 import setBlockId from './setBlockId.js';
 import validateBlock from './validateBlock.js';
 import validateCssKeys from './validateCssKeys.js';
@@ -30,6 +31,7 @@ import validateCssKeys from './validateCssKeys.js';
 function buildBlock(block, pageContext) {
   validateBlock(block, pageContext);
   setBlockId(block, pageContext);
+  normalizeLayout(block, pageContext);
   moveAreasToSlots(block, pageContext);
   countBlockOperators(block, pageContext);
   buildEvents(block, pageContext);

@@ -112,6 +112,18 @@ function getBuildContext(buildDirectory, configDirectory) {
     readJsonFile(path.join(buildDirectory, 'installedPluginPackages.json')) ?? [];
   cachedBuildContext.installedPluginPackages = new Set(installedPluginPackages);
 
+  // Restore Tailwind classes from skeleton build so JIT pages merge rather than overwrite
+  const tailwindClassesPath = path.join(buildDirectory, 'tailwind-classes.js');
+  try {
+    const content = fs.readFileSync(tailwindClassesPath, 'utf8');
+    const match = content.match(/export default "(.*)"/);
+    if (match) {
+      cachedBuildContext.tailwindClasses = new Set(match[1].split(' ').filter(Boolean));
+    }
+  } catch {
+    // File doesn't exist yet — will be created by first JIT build
+  }
+
   return cachedBuildContext;
 }
 

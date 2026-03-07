@@ -78,6 +78,8 @@ test('writeGlobalsCss includes layer order and tailwind import', async () => {
   expect(css).toContain('@layer theme, base, antd, components, utilities;');
   expect(css).toContain('@import "tailwindcss";');
   expect(css).toContain('@source "../node_modules/@lowdefy/blocks-*/dist/**/*.js";');
+  expect(css).toContain('@source "./tailwind-classes.js";');
+  expect(css).toContain('@source "./tailwind-page-sources.js";');
 });
 
 test('writeGlobalsCss deep merges theme.tailwind overrides with defaults', async () => {
@@ -157,6 +159,40 @@ test('writeGlobalsCss includes grid.css import', async () => {
 
   const css = context.writeBuildArtifact.mock.calls[0][1];
   expect(css).toContain('@import "@lowdefy/layout/grid.css";');
+});
+
+test('writeGlobalsCss writes tailwind-classes.js with collected classes', async () => {
+  const context = createContext();
+  context.tailwindClasses = new Set(['m-4', 'p-2', 'text-red-500']);
+  await writeGlobalsCss({ components: {}, context });
+
+  const classesCall = context.writeBuildArtifact.mock.calls.find(
+    (call) => call[0] === 'tailwind-classes.js'
+  );
+  expect(classesCall).toBeDefined();
+  expect(classesCall[1]).toContain('m-4 p-2 text-red-500');
+});
+
+test('writeGlobalsCss writes empty tailwind-classes.js when no classes collected', async () => {
+  const context = createContext();
+  await writeGlobalsCss({ components: {}, context });
+
+  const classesCall = context.writeBuildArtifact.mock.calls.find(
+    (call) => call[0] === 'tailwind-classes.js'
+  );
+  expect(classesCall).toBeDefined();
+  expect(classesCall[1]).toContain('export default ""');
+});
+
+test('writeGlobalsCss writes empty tailwind-page-sources.js', async () => {
+  const context = createContext();
+  await writeGlobalsCss({ components: {}, context });
+
+  const sourcesCall = context.writeBuildArtifact.mock.calls.find(
+    (call) => call[0] === 'tailwind-page-sources.js'
+  );
+  expect(sourcesCall).toBeDefined();
+  expect(sourcesCall[1]).toContain('export default ""');
 });
 
 test('writeGlobalsCss omits styles.css import when file does not exist', async () => {

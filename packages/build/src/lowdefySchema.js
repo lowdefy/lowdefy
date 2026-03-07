@@ -576,6 +576,30 @@ export default {
             type: 'Block "style" should be an object.',
           },
         },
+        class: {
+          oneOf: [
+            { type: 'string' },
+            { type: 'array', items: { type: 'string' } },
+            {
+              type: 'object',
+              additionalProperties: {
+                oneOf: [{ type: 'string' }, { type: 'array', items: { type: 'string' } }],
+              },
+            },
+          ],
+          errorMessage: {
+            type: 'Block "class" should be a string, array of strings, or object.',
+          },
+        },
+        styles: {
+          type: 'object',
+          additionalProperties: {
+            type: 'object',
+          },
+          errorMessage: {
+            type: 'Block "styles" should be an object.',
+          },
+        },
         visible: {},
         loading: {},
         blocks: {
