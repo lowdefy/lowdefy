@@ -17,7 +17,7 @@
 import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
-import './style.css';
+import cssStyles from './style.module.css';
 
 const ProgressBar = ({ blockId, classNames, properties, styles }) => {
   const {
@@ -41,9 +41,9 @@ const ProgressBar = ({ blockId, classNames, properties, styles }) => {
         '--opacity': progress < 100 ? 1 : 0,
       }}
     >
-      <div className="progress-bar-container">
-        <div className="progress-bar-loader">
-          {shadow ? <div className="progress-bar-shadow" /> : null}
+      <div className={cssStyles['progress-bar-container']}>
+        <div className={cssStyles['progress-bar-loader']}>
+          {shadow ? <div className={cssStyles['progress-bar-shadow']} /> : null}
         </div>
       </div>
     </div>

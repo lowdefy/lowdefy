@@ -16,6 +16,4 @@
 
 import Client from './Client.js';
 
-import './style.css';
-
 export default Client;

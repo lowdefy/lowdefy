@@ -20,8 +20,6 @@ import Label from '@lowdefy/blocks-antd/blocks/Label/Label.js';
 
 import ColorPicker from './ColorPicker.js';
 
-import './style.css';
-
 const ColorSelector = ({
   blockId,
   classNames,

@@ -20,6 +20,8 @@ import { omit, type } from '@lowdefy/helpers';
 import Icon from '@ant-design/icons';
 import { blockDefaultProps, ErrorBoundary, makeCssClass } from '@lowdefy/block-utils';
 
+import iconStyles from './style.module.css';
+
 const lowdefyProps = [
   'actionLog',
   'basePath',
@@ -57,7 +59,7 @@ const createIcon = (Icons) => {
       className: classNames({
         [makeCssClass([{ cursor: (onClick || events.onClick) && 'pointer' }, propertiesObj.style])]:
           true,
-        'icon-spin': spin,
+        [iconStyles['icon-spin']]: spin,
       }),
       rotate: propertiesObj.rotate,
       color: propertiesObj.color,

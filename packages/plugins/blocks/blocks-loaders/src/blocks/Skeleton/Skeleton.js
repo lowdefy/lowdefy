@@ -17,12 +17,12 @@
 import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
-import './style.css';
+import cssStyles from './style.module.css';
 
 const Skeleton = ({ classNames, properties, styles }) => {
   return (
     <div
-      className={'skeleton' + (classNames?.element ? ' ' + classNames.element : '')}
+      className={cssStyles.skeleton + (classNames?.element ? ' ' + classNames.element : '')}
       style={{
         width: properties.width ?? '100%',
         height: properties.height ?? '100%',

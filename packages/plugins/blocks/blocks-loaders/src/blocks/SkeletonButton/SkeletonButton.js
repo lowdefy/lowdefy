@@ -19,8 +19,6 @@ import { blockDefaultProps } from '@lowdefy/block-utils';
 
 import Skeleton from '../Skeleton/Skeleton.js';
 
-import './style.css';
-
 const SkeletonButton = ({ classNames, properties, styles }) => {
   let height;
   switch (properties.size) {

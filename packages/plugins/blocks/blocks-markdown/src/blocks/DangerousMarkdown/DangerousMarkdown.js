@@ -22,8 +22,8 @@ import ReactMarkdown from 'react-markdown';
 import gfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 
-import '../../style.css';
-import '../../codeblock.css';
+import markdownStyles from '../../style.module.css';
+import codeblockStyles from '../../codeblock.module.css';
 
 class DangerousMarkdown extends React.Component {
   constructor(props) {
@@ -37,7 +37,7 @@ class DangerousMarkdown extends React.Component {
     return (
       <div id={blockId} className={classNames?.element} style={styles?.element}>
         <ReactMarkdown
-          className="markdown-body markdown-default-code"
+          className={`${markdownStyles['markdown-body']} ${codeblockStyles['markdown-default-code']}`}
           remarkPlugins={[gfm]}
           rehypePlugins={[rehypeRaw]}
           skipHtml={false}

@@ -18,7 +18,7 @@ import React from 'react';
 import { type } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
-import './style.css';
+import cssStyles from './style.module.css';
 
 const Spinner = ({ classNames, properties, styles }) => {
   let size = properties.size ?? 20;
@@ -53,7 +53,7 @@ const Spinner = ({ classNames, properties, styles }) => {
         height={size}
         fill="currentColor"
         aria-hidden="true"
-        className="spinner"
+        className={cssStyles.spinner}
       >
         <path
           fill="#bfbfbf"

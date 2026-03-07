@@ -19,6 +19,7 @@ import { HexColorPicker, HexColorInput } from 'react-colorful';
 import classNames from 'classnames';
 
 import useClickOutside from './useClickOutside.js';
+import cssStyles from './style.module.css';
 
 const DEFAULT_COLOR = '#000000';
 
@@ -42,16 +43,16 @@ export const ColorPicker = ({
   return (
     <div
       className={classNames({
-        'color-picker': true,
+        [cssStyles['color-picker']]: true,
         [className]: true,
       })}
     >
       <div
         className={classNames({
-          'color-picker-swatch': true,
-          'color-picker-swatch-sm': size === 'small',
-          'color-picker-swatch-lg': size === 'large',
-          'color-picker-swatch-disabled': disabled,
+          [cssStyles['color-picker-swatch']]: true,
+          [cssStyles['color-picker-swatch-sm']]: size === 'small',
+          [cssStyles['color-picker-swatch-lg']]: size === 'large',
+          [cssStyles['color-picker-swatch-disabled']]: disabled,
         })}
         style={{ backgroundColor: value }}
         onClick={() => !disabled && toggle(true)}
@@ -59,9 +60,9 @@ export const ColorPicker = ({
       {!hideInput && (
         <HexColorInput
           className={classNames({
-            'color-picker-input': true,
-            'color-picker-input-sm ': size === 'small',
-            'color-picker-input-lg': size === 'large',
+            [cssStyles['color-picker-input']]: true,
+            [cssStyles['color-picker-input-sm']]: size === 'small',
+            [cssStyles['color-picker-input-lg']]: size === 'large',
             'ant-input': true,
             'ant-input-sm': size === 'small',
             'ant-input-lg': size === 'large',
@@ -75,7 +76,7 @@ export const ColorPicker = ({
         />
       )}
       {isOpen && (
-        <div className="color-picker-popover" ref={popover}>
+        <div className={cssStyles['color-picker-popover']} ref={popover}>
           <HexColorPicker color={value ?? DEFAULT_COLOR} onChange={onChange} />
         </div>
       )}

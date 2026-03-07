@@ -19,8 +19,6 @@ import { blockDefaultProps } from '@lowdefy/block-utils';
 
 import Skeleton from '../Skeleton/Skeleton.js';
 
-import './style.css';
-
 const SkeletonParagraph = ({ classNames, properties, styles }) => {
   const lines = [...Array(properties.lines ?? 4).keys()];
   return (

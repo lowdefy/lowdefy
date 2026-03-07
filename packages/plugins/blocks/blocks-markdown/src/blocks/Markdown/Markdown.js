@@ -20,13 +20,13 @@ import ReactMarkdown from 'react-markdown';
 
 import gfm from 'remark-gfm';
 
-import '../../style.css';
-import '../../codeblock.css';
+import markdownStyles from '../../style.module.css';
+import codeblockStyles from '../../codeblock.module.css';
 
 const Markdown = ({ blockId, classNames, properties, styles }) => (
   <div id={blockId} className={classNames?.element} style={styles?.element}>
     <ReactMarkdown
-      className="markdown-body markdown-default-code"
+      className={`${markdownStyles['markdown-body']} ${codeblockStyles['markdown-default-code']}`}
       skipHtml={properties.skipHtml}
       remarkPlugins={[gfm]}
     >

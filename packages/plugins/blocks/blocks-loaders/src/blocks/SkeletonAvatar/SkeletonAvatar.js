@@ -20,8 +20,6 @@ import { blockDefaultProps } from '@lowdefy/block-utils';
 
 import Skeleton from '../Skeleton/Skeleton.js';
 
-import './style.css';
-
 const SkeletonAvatar = ({ classNames, properties, styles }) => {
   let size = properties.size ?? 32;
   if (type.isString(size)) {
