@@ -15,7 +15,6 @@
 */
 
 import React from 'react';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 
 const Span = ({ blockId, classNames, content, events, methods, properties, styles }) => (
   <span
@@ -29,7 +28,6 @@ const Span = ({ blockId, classNames, content, events, methods, properties, style
   </span>
 );
 
-Span.defaultProps = blockDefaultProps;
 Span.meta = {
   category: 'container',
   icons: [],

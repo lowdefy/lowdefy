@@ -15,7 +15,6 @@
 */
 
 import React from 'react';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 import ReactMarkdown from 'react-markdown';
 
 import gfm from 'remark-gfm';
@@ -35,7 +34,6 @@ const Markdown = ({ blockId, classNames, properties, styles }) => (
   </div>
 );
 
-Markdown.defaultProps = blockDefaultProps;
 Markdown.meta = {
   category: 'container',
   icons: [],

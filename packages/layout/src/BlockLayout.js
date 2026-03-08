@@ -15,7 +15,6 @@
 */
 
 import React from 'react';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 import deriveLayout from './deriveLayout.js';
 
 const ALIGN_SELF_MAP = {
@@ -50,5 +49,4 @@ const BlockLayout = ({ id, children, layout = {}, className, style }) => {
   );
 };
 
-BlockLayout.defaultProps = blockDefaultProps;
 export default BlockLayout;

@@ -15,11 +15,9 @@
 */
 
 import React from 'react';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 
 const IconBlock = ({ components: { Icon }, ...props }) => <Icon {...props} />;
 
-IconBlock.defaultProps = blockDefaultProps;
 IconBlock.meta = {
   category: 'display',
   icons: [],

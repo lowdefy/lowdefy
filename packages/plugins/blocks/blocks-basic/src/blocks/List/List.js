@@ -15,7 +15,6 @@
 */
 
 import React, { useEffect } from 'react';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 import Box from '../Box/Box.js';
 
 const List = ({ blockId, classNames, events, list, methods, properties, styles }) => {
@@ -53,7 +52,6 @@ const List = ({ blockId, classNames, events, list, methods, properties, styles }
   );
 };
 
-List.defaultProps = blockDefaultProps;
 List.meta = {
   category: 'list',
   valueType: 'array',

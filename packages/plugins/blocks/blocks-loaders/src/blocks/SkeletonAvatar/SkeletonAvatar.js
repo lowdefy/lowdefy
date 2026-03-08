@@ -16,8 +16,6 @@
 
 import React from 'react';
 import { type } from '@lowdefy/helpers';
-import { blockDefaultProps } from '@lowdefy/block-utils';
-
 import Skeleton from '../Skeleton/Skeleton.js';
 
 const SkeletonAvatar = ({ classNames, properties, styles }) => {
@@ -51,7 +49,6 @@ const SkeletonAvatar = ({ classNames, properties, styles }) => {
   );
 };
 
-SkeletonAvatar.defaultProps = blockDefaultProps;
 SkeletonAvatar.meta = {
   category: 'display',
   icons: [],

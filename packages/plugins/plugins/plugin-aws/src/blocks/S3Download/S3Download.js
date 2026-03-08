@@ -16,7 +16,6 @@
 
 import React, { useEffect } from 'react';
 import { Upload } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 
 const downloadFile = async ({ file, methods }) => {
   const s3DownloadPolicy = await methods.triggerEvent({
@@ -51,7 +50,6 @@ const S3Download = ({ blockId, methods, properties }) => {
   );
 };
 
-S3Download.defaultProps = blockDefaultProps;
 S3Download.meta = {
   category: 'display',
   icons: [],

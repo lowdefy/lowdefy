@@ -135,20 +135,6 @@ import { blockSchema } from '@lowdefy/block-utils';
 // }
 ```
 
-### blockDefaultProps
-
-Standard prop defaults:
-
-```javascript
-import { blockDefaultProps } from '@lowdefy/block-utils';
-
-const MyBlock = ({ properties, methods, ...rest }) => {
-  // ...
-};
-
-MyBlock.defaultProps = blockDefaultProps;
-```
-
 ## Dependencies
 
 - React 18.2.0
@@ -162,7 +148,7 @@ MyBlock.defaultProps = blockDefaultProps;
 ### Styled Block
 
 ```javascript
-import { makeCssClass, blockDefaultProps } from '@lowdefy/block-utils';
+import { makeCssClass } from '@lowdefy/block-utils';
 
 const Button = ({ properties, methods }) => {
   const className = makeCssClass({
@@ -184,8 +170,6 @@ const Button = ({ properties, methods }) => {
     </button>
   );
 };
-
-Button.defaultProps = blockDefaultProps;
 ```
 
 ### Block with HTML Content
@@ -206,12 +190,11 @@ const RichText = ({ properties }) => {
 
 ## Key Files
 
-| File                       | Purpose                    |
-| -------------------------- | -------------------------- |
-| `src/makeCssClass.js`      | CSS class generation       |
-| `src/mediaToCssObject.js`  | Media query transformation |
-| `src/renderHtml.js`        | HTML sanitization          |
-| `src/ErrorBoundary.js`     | Error boundary component   |
-| `src/HtmlComponent.js`     | Safe HTML component        |
-| `src/blockSchema.js`       | Default block schema       |
-| `src/blockDefaultProps.js` | Default props              |
+| File                      | Purpose                    |
+| ------------------------- | -------------------------- |
+| `src/makeCssClass.js`     | CSS class generation       |
+| `src/mediaToCssObject.js` | Media query transformation |
+| `src/renderHtml.js`       | HTML sanitization          |
+| `src/ErrorBoundary.js`    | Error boundary component   |
+| `src/HtmlComponent.js`    | Safe HTML component        |
+| `src/blockSchema.js`      | Default block schema       |

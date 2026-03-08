@@ -15,7 +15,6 @@
 */
 
 import React, { useEffect } from 'react';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 import { Button } from '@lowdefy/blocks-antd/blocks';
 
 import { Upload } from 'antd';
@@ -81,7 +80,6 @@ const S3UploadButtonBlock = ({ blockId, components, events, methods, properties,
   );
 };
 
-S3UploadButtonBlock.defaultProps = blockDefaultProps;
 S3UploadButtonBlock.meta = {
   valueType: 'object',
   category: 'input',

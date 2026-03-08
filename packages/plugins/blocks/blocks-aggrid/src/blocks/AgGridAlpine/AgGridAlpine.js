@@ -15,7 +15,6 @@
 */
 
 import React from 'react';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 
 import '@ag-grid-community/styles/ag-grid.css';
 import '@ag-grid-community/styles/ag-theme-alpine.css';
@@ -35,7 +34,6 @@ const AgGridAlpine = ({ blockId, events, loading, methods, properties }) => (
   </div>
 );
 
-AgGridAlpine.defaultProps = blockDefaultProps;
 AgGridAlpine.meta = {
   category: 'display',
   icons: [],

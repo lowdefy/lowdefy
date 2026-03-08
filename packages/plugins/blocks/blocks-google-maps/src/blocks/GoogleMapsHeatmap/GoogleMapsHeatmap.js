@@ -16,7 +16,6 @@
 */
 
 import React from 'react';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 import { HeatmapLayer } from '@react-google-maps/api';
 import Map from '../Map.js';
 
@@ -56,7 +55,6 @@ const GoogleMapsHeatmap = ({ blockId, content, methods, properties }) => (
   </Map>
 );
 
-GoogleMapsHeatmap.defaultProps = blockDefaultProps;
 GoogleMapsHeatmap.meta = {
   category: 'container',
   icons: [],

@@ -15,7 +15,6 @@
 */
 
 import React from 'react';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 
 const ImgBlock = ({ blockId, classNames, events, properties, methods, styles }) => {
   return (
@@ -30,7 +29,6 @@ const ImgBlock = ({ blockId, classNames, events, properties, methods, styles }) 
   );
 };
 
-ImgBlock.defaultProps = blockDefaultProps;
 ImgBlock.meta = {
   category: 'display',
   icons: [],

@@ -16,7 +16,6 @@
 
 import React from 'react';
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 import ReactMarkdown from 'react-markdown';
 
 import gfm from 'remark-gfm';
@@ -85,7 +84,6 @@ const MarkdownWithCode = ({ blockId, classNames, properties, styles }) => (
   </div>
 );
 
-MarkdownWithCode.defaultProps = blockDefaultProps;
 MarkdownWithCode.meta = {
   category: 'container',
   icons: [],

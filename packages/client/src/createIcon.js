@@ -18,7 +18,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { omit, type } from '@lowdefy/helpers';
 import Icon from '@ant-design/icons';
-import { blockDefaultProps, ErrorBoundary, makeCssClass } from '@lowdefy/block-utils';
+import { ErrorBoundary, makeCssClass } from '@lowdefy/block-utils';
 
 import iconStyles from './style.module.css';
 
@@ -100,7 +100,6 @@ const createIcon = (Icons) => {
     );
   };
   const AntIcon = (all) => <Icon component={() => <IconBlock {...all} />} />;
-  AntIcon.defaultProps = blockDefaultProps;
   return AntIcon;
 };
 

@@ -180,7 +180,6 @@ When `layout.disabled: true`:
 ## Integration Points
 
 - **@lowdefy/client**: Uses Area and BlockLayout for rendering. Container.js, InputContainer.js etc. pass `classNames.block`/`styles.block` to BlockLayout.
-- **@lowdefy/block-utils**: Provides `blockDefaultProps`
 - **@lowdefy/build**: Imports `grid.css` in generated `globals.css`
 
 ## Usage in Block Tree

@@ -15,8 +15,6 @@
 */
 
 import React from 'react';
-import { blockDefaultProps } from '@lowdefy/block-utils';
-
 import Skeleton from '../Skeleton/Skeleton.js';
 
 const SkeletonButton = ({ classNames, properties, styles }) => {
@@ -48,7 +46,6 @@ const SkeletonButton = ({ classNames, properties, styles }) => {
   );
 };
 
-SkeletonButton.defaultProps = blockDefaultProps;
 SkeletonButton.meta = {
   category: 'display',
   icons: [],

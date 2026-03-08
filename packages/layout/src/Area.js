@@ -15,7 +15,6 @@
 */
 
 import React from 'react';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 import layoutParamsToArea from './layoutParamsToArea.js';
 import deriveAreaStyle from './deriveAreaStyle.js';
 
@@ -58,5 +57,4 @@ const Area = ({ area = {}, areaKey, children, id, layout, className, style }) =>
   );
 };
 
-Area.defaultProps = blockDefaultProps;
 export default Area;
