@@ -2,6 +2,8 @@
 
 import Link from 'next/link';
 import Markdown from 'react-markdown';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { GithubOutlined, LinkedinOutlined } from '@ant-design/icons';
 import authors from '@/lib/authors';
 import articles from '@/content/articles';
@@ -25,6 +27,30 @@ const markdownComponents = {
       >
         {children}
       </a>
+    );
+  },
+  code: ({ children, className, ...props }) => {
+    const match = /language-(\w+)/.exec(className || '');
+    if (match) {
+      return (
+        <SyntaxHighlighter
+          style={oneDark}
+          language={match[1]}
+          PreTag="div"
+          customStyle={{
+            margin: 0,
+            borderRadius: 0,
+            background: '#1e293b',
+          }}
+        >
+          {String(children).replace(/\n$/, '')}
+        </SyntaxHighlighter>
+      );
+    }
+    return (
+      <code className={className} {...props}>
+        {children}
+      </code>
     );
   },
 };
