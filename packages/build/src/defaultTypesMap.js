@@ -6,6 +6,7 @@ const defaultTypesMap = {
     events: {},
     providers: {},
   },
+  blockMetas: {},
   blocks: {},
   connections: {},
   icons: {},

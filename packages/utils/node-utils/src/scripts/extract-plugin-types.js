@@ -18,11 +18,54 @@
 
 import { register } from 'node:module';
 import { pathToFileURL } from 'node:url';
-import { writeFileSync, existsSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 // Register CSS/LESS no-op loader before any plugin imports.
 register('./css-noop-loader.js', import.meta.url);
+
+// Resolve a meta field (cssKeys or slots): explicit value > auto-detected > omitted.
+// - Array: use as-is
+// - false/null: explicit opt-out (written as false in types.json)
+// - undefined: auto-detect from source (if nothing found, omit)
+function resolveMetaField(explicitValue, autoDetected) {
+  if (Array.isArray(explicitValue)) return explicitValue;
+  if (explicitValue === false || explicitValue === null) return false;
+  if (autoDetected && autoDetected.length > 0) return autoDetected;
+  return undefined;
+}
+
+// Scan block source file for content.XXX, styles.XXX, and classNames.XXX patterns.
+function autoDetectFromSource(blockName, baseDir) {
+  const filePath = resolve(baseDir, `blocks/${blockName}/${blockName}.js`);
+  if (!existsSync(filePath)) return {};
+
+  const source = readFileSync(filePath, 'utf-8');
+  const result = {};
+
+  // Auto-detect slots from content.XXX / content?.XXX usage
+  const slots = new Set();
+  for (const match of source.matchAll(/content\??\.(\w+)/g)) {
+    slots.add(match[1]);
+  }
+  if (slots.size > 0) {
+    result.slots = [...slots].sort();
+  }
+
+  // Auto-detect cssKeys from styles.XXX / styles?.XXX / classNames.XXX / classNames?.XXX usage
+  const cssKeys = new Set();
+  for (const match of source.matchAll(/styles\??\.(\w+)/g)) {
+    cssKeys.add(match[1]);
+  }
+  for (const match of source.matchAll(/classNames\??\.(\w+)/g)) {
+    cssKeys.add(match[1]);
+  }
+  if (cssKeys.size > 0) {
+    result.cssKeys = [...cssKeys].sort();
+  }
+
+  return result;
+}
 
 // Module files to auto-detect and the type category they map to.
 const MODULE_FILES = [
@@ -58,8 +101,20 @@ async function main() {
     if (file === 'blocks.js') {
       types.blocks = entries.map(([name]) => name);
       types.icons = {};
+      types.blockMetas = {};
       for (const [name, block] of entries) {
         types.icons[name] = block.meta?.icons ?? [];
+
+        const detected = autoDetectFromSource(name, baseDir);
+        const slots = resolveMetaField(block.meta?.slots, detected.slots);
+        const cssKeys = resolveMetaField(block.meta?.cssKeys, detected.cssKeys);
+
+        const meta = {};
+        if (slots !== undefined) meta.slots = slots;
+        if (cssKeys !== undefined) meta.cssKeys = cssKeys;
+        if (Object.keys(meta).length > 0) {
+          types.blockMetas[name] = meta;
+        }
       }
     } else if (file === 'connections.js') {
       types.connections = entries.map(([name]) => name);

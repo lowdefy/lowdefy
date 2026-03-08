@@ -42,6 +42,7 @@ async function createCustomPluginTypesMap({ directories, logger }) {
       events: {},
       providers: {},
     },
+    blockMetas: {},
     blocks: {},
     connections: {},
     icons: {},

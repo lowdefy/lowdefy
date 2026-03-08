@@ -114,6 +114,12 @@ function createPluginTypesMap({ packageName, packageTypes, typePrefix = '', type
       typesMap.icons[`${typePrefix}${blockType}`] = icons;
     });
   }
+
+  if (type.isObject(packageTypes.blockMetas)) {
+    Object.entries(packageTypes.blockMetas).forEach(([blockType, meta]) => {
+      typesMap.blockMetas[`${typePrefix}${blockType}`] = meta;
+    });
+  }
 }
 
 export default createPluginTypesMap;

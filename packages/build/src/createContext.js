@@ -58,6 +58,8 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
     writeBuildArtifact: createWriteBuildArtifact({ directories }),
   };
 
+  context.blockMetas = context.typesMap.blockMetas ?? {};
+
   context.handleError = createBuildHandleError({ context });
   context.handleWarning = createHandleWarning({ context });
 

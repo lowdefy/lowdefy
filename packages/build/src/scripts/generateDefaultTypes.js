@@ -70,6 +70,7 @@ async function generateDefaultTypesMap() {
       events: {},
       providers: {},
     },
+    blockMetas: {},
     blocks: {},
     connections: {},
     icons: {},

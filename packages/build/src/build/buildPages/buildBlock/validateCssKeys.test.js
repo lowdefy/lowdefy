@@ -34,6 +34,13 @@ test('validateCssKeys does nothing when no block meta found', () => {
   expect(pageContext.context.handleWarning).not.toHaveBeenCalled();
 });
 
+test('validateCssKeys does nothing when cssKeys is false (opt-out)', () => {
+  const pageContext = createPageContext({ Input: { cssKeys: false } });
+  const block = { blockId: 'b1', type: 'Input', style: { foo: {} } };
+  validateCssKeys(block, pageContext);
+  expect(pageContext.context.handleWarning).not.toHaveBeenCalled();
+});
+
 test('validateCssKeys does nothing when block has no style or class', () => {
   const pageContext = createPageContext({ Input: { cssKeys: ['element'] } });
   const block = { blockId: 'b1', type: 'Input' };

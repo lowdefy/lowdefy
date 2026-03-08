@@ -19,6 +19,7 @@ import { ConfigWarning } from '@lowdefy/errors';
 function validateCssKeys(block, pageContext) {
   const blockMeta = pageContext.context.blockMetas?.[block.type];
   if (!blockMeta) return;
+  if (blockMeta.cssKeys === false) return;
 
   const validKeys = new Set(['block', ...(blockMeta.cssKeys ?? ['element'])]);
 
