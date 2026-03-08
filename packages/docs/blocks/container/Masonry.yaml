@@ -21,8 +21,86 @@ _ref:
     filePath: blocks/container/Masonry.yaml
     description_content: |
       A masonry (Pinterest-style) layout container. Child blocks are arranged in columns with items filling available vertical space. Supports responsive column counts and configurable gutters.
+
+      For dynamic data-driven masonry with add/remove capabilities, use [MasonryList](/MasonryList) instead.
     slots:
       - content
     init_property_values:
       columns: 3
       gutter: 16
+    examples:
+      - title: Three-column card layout
+        block:
+          id: masonry_example
+          type: Masonry
+          properties:
+            columns: 3
+            gutter: 16
+          blocks:
+            - id: card_1
+              type: Card
+              properties:
+                title: Short Card
+              blocks:
+                - id: card_1_text
+                  type: Paragraph
+                  properties:
+                    content: A short card.
+            - id: card_2
+              type: Card
+              properties:
+                title: Tall Card
+              blocks:
+                - id: card_2_text
+                  type: Paragraph
+                  properties:
+                    content: >
+                      This card has more content so it's taller.
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                      Sed do eiusmod tempor incididunt.
+            - id: card_3
+              type: Card
+              properties:
+                title: Medium Card
+              blocks:
+                - id: card_3_text
+                  type: Paragraph
+                  properties:
+                    content: A medium-height card with some content.
+            - id: card_4
+              type: Card
+              properties:
+                title: Another Card
+              blocks:
+                - id: card_4_text
+                  type: Paragraph
+                  properties:
+                    content: Short content.
+      - title: Responsive columns
+        block:
+          id: masonry_responsive
+          type: Masonry
+          properties:
+            columns:
+              xs: 1
+              sm: 2
+              md: 3
+              lg: 4
+            gutter: 12
+          blocks:
+            - id: r_card_1
+              type: Card
+              properties:
+                title: Item 1
+            - id: r_card_2
+              type: Card
+              properties:
+                title: Item 2
+            - id: r_card_3
+              type: Card
+              properties:
+                title: Item 3
+            - id: r_card_4
+              type: Card
+              properties:
+                title: Item 4

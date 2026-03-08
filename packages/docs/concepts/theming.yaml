@@ -216,6 +216,82 @@ _ref:
                 # All blocks here will use dark theme
             ```
 
+            ## Tailwind theme bridge (`theme.tailwind`)
+
+            Lowdefy automatically bridges antd design tokens to Tailwind CSS theme variables. This means Tailwind utility classes like `text-primary` or `bg-bg-container` resolve to the current antd theme — including when you switch to dark mode.
+
+            ### Default bridged tokens
+
+            The following Tailwind tokens are mapped to antd CSS variables by default:
+
+            | Tailwind class prefix | Maps to antd token |
+            |---|---|
+            | `text-primary`, `bg-primary`, `border-primary` | `colorPrimary` |
+            | `*-primary-hover` | `colorPrimaryHover` |
+            | `*-primary-active` | `colorPrimaryActive` |
+            | `*-primary-bg` | `colorPrimaryBg` |
+            | `*-success` | `colorSuccess` |
+            | `*-warning` | `colorWarning` |
+            | `*-error` | `colorError` |
+            | `*-info` | `colorInfo` |
+            | `*-text-primary` | `colorText` |
+            | `*-text-secondary` | `colorTextSecondary` |
+            | `*-bg-container` | `colorBgContainer` |
+            | `*-bg-layout` | `colorBgLayout` |
+            | `*-border` | `colorBorder` |
+            | `rounded`, `rounded-sm`, `rounded-lg` | `borderRadius` variants |
+            | `text-sm`, `text-lg` (font-size) | `fontSize` variants |
+            | `font-sans` | `fontFamily` |
+
+            This means you can write:
+
+            ```yaml
+            - id: themed_box
+              type: Box
+              class: "bg-bg-container text-text-primary border border-border rounded-lg p-4"
+            ```
+
+            And the colors will automatically match your antd theme, including dark mode.
+
+            ### Adding custom Tailwind tokens
+
+            Use `theme.tailwind` in `lowdefy.yaml` to add custom tokens or override bridge defaults:
+
+            ```yaml
+            theme:
+              antd:
+                token:
+                  colorPrimary: '#7c3aed'
+              tailwind:
+                color:
+                  accent: '#7c3aed'
+                  surface: '#f8fafc'
+                  on-surface: '#1e293b'
+                spacing:
+                  section: '3rem'
+            ```
+
+            You can then use these in `class`:
+
+            ```yaml
+            - id: my_section
+              type: Box
+              class: "bg-surface text-on-surface p-section"
+            ```
+
+            Custom tokens are deep-merged with the default bridge, so all antd-bridged tokens remain available.
+
+            ### Overriding bridge defaults
+
+            To change how a bridge token resolves, set the same key in `theme.tailwind`:
+
+            ```yaml
+            theme:
+              tailwind:
+                color:
+                  primary: '#ff4d4f'  # Now a static color, no longer follows antd token
+            ```
+
             ## TLDR
               - Configure app theme via `theme.antd` in `lowdefy.yaml`.
               - Seed tokens (`colorPrimary`, `fontSize`, etc.) drive all derived tokens automatically.
@@ -225,6 +301,8 @@ _ref:
               - Use `ConfigProvider` block for scoped theming of block groups.
               - Access tokens in expressions with the `_theme` operator.
               - Access derived tokens in CSS via `var(--ant-color-primary-hover)`.
+              - Tailwind utility classes (`text-primary`, `bg-bg-container`, etc.) automatically reflect the antd theme.
+              - Add custom Tailwind tokens via `theme.tailwind` in `lowdefy.yaml`.
 
       - _ref:
           path: templates/navigation_buttons.yaml

@@ -69,6 +69,18 @@ _ref:
               class: "p-4 sm:p-8 lg:p-16"
             ```
 
+            ### Theme-aware Tailwind classes
+
+            Lowdefy bridges antd design tokens to Tailwind, so utility classes like `text-primary` and `bg-bg-container` automatically reflect your theme configuration (including dark mode):
+
+            ```yaml
+            - id: themed_card
+              type: Box
+              class: "bg-bg-container text-text-primary border border-border rounded-lg p-4"
+            ```
+
+            See [Theming](/theming) for the full list of bridged tokens and how to add custom Tailwind tokens via `theme.tailwind`.
+
             ## The `styles` property
 
             The `styles` property applies inline CSS styles to specific parts of a block. Each block declares which style targets (called **CSS keys**) it supports in its `meta.cssKeys`. Common CSS keys include `block` (the layout wrapper), `element` (the main component), `header`, `body`, `footer`, etc.

@@ -20,7 +20,67 @@ _ref:
     pageTitle: _dayjs
     filePath: operators/_dayjs.yaml
     description: |
-      The `_dayjs` operator converts date objects to strings, using a specified format.
+      The `_dayjs` operator provides date manipulation and formatting using the [Day.js](https://day.js.org/) library.
+
+      It supports two modes:
+      - **Method mode**: Call a specific method like `_dayjs.format` or `_dayjs.humanizeDuration`.
+      - **Chain mode**: Chain multiple Day.js operations together using an array.
+
+      #### Chain mode
+
+      Pass an array where the first element is the input date (or `"now"`), followed by method calls:
+
+      ```yaml
+      _dayjs:
+        - "now"
+        - subtract:
+            - 3
+            - days
+        - fromNow
+      ```
+      Returns: `"3 days ago"`
+
+      Each step is either a string (method called with no arguments) or an object (key is the method name, value is the arguments).
+
+      ```yaml
+      # Format a specific date
+      _dayjs:
+        - "2024-03-15"
+        - format: "YYYY-MM-DD"
+      ```
+      Returns: `"2024-03-15"`
+
+      ```yaml
+      # Add 1 month and format
+      _dayjs:
+        - "2024-01-01"
+        - add:
+            - 1
+            - month
+        - format: "D MMM YYYY"
+      ```
+      Returns: `"1 Feb 2024"`
+
+      ```yaml
+      # Get start of month
+      _dayjs:
+        - "2024-03-15"
+        - startOf: month
+        - format: "YYYY-MM-DD"
+      ```
+      Returns: `"2024-03-01"`
+
+      ```yaml
+      # Calculate difference in days
+      _dayjs:
+        - "2024-03-15"
+        - diff:
+            - "2024-03-10"
+            - days
+      ```
+      Returns: `5`
+
+      **Supported chain methods:** `add`, `subtract`, `startOf`, `endOf`, `set`, `utc`, `local`, `locale`, `isBefore`, `isAfter`, `isSame`, `format`, `fromNow`, `from`, `toNow`, `to`, `diff`, `valueOf`, `unix`, `toISOString`, `toJSON`, `toString`, `daysInMonth`, `year`, `month`, `date`, `day`, `hour`, `minute`, `second`, `millisecond`, `week`.
 
       > Migrating from v4? The `_moment` operator was renamed to `_dayjs` in v5. See the [v4 to v5 migration guide](/v4-to-v5) for details.
     methods:
