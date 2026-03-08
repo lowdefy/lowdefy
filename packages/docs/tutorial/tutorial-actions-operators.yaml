@@ -53,7 +53,6 @@ _ref:
                     properties:
                       title: Reset
                       block: true
-                      type: default
                       icon: AiOutlineClear
             ################ -------- Copy from here -------- ################
                     events:
@@ -123,7 +122,8 @@ _ref:
                     properties:
                       title: Submit
                       block: true
-                      type: primary
+                      color: primary
+                      variant: solid
                       icon: AiOutlineSave
             ################ -------- Copy from here -------- ################
                     events:
@@ -139,10 +139,11 @@ _ref:
       - id: example_2
         type: PageHeaderMenu
         properties:
-          style:
-            minHeight: 300px
           menu:
             links: []
+        style:
+          --element:
+            minHeight: 300px
         blocks:
           - id: content_card
             type: Card
@@ -179,7 +180,6 @@ _ref:
                 properties:
                   title: Reset
                   block: true
-                  type: default
                   icon: AiOutlineClear
                 events:
                   onClick:
@@ -192,7 +192,8 @@ _ref:
                 properties:
                   title: Submit
                   block: true
-                  type: primary
+                  color: primary
+                  variant: solid
                   icon: AiOutlineSave
                 events:
                   onClick:
@@ -314,10 +315,11 @@ _ref:
       - id: example_3
         type: PageHeaderMenu
         properties:
-          style:
-            minHeight: 300px
           menu:
             links: []
+        style:
+          --element:
+            minHeight: 300px
         blocks:
           - id: example_3_content_card
             type: Card

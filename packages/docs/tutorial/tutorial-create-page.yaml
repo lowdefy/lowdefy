@@ -96,8 +96,6 @@ _ref:
         layout:
           justify: center
         properties:
-          style:
-            minHeight: 300px
           menu:
             links:
               - id: new-ticket
@@ -109,6 +107,9 @@ _ref:
                 properties:
                   title: welcome
 
+        style:
+          --element:
+            minHeight: 300px
         blocks:
           - id: content_card
             type: Card

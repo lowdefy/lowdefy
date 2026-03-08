@@ -122,8 +122,6 @@ _ref:
       - id: example1
         type: PageHeaderMenu
         properties:
-          style:
-            minHeight: 300px
           menu:
             links:
               - id: welcome
@@ -131,10 +129,13 @@ _ref:
                 properties:
                   title: welcome
 
+        style:
+          --element:
+            minHeight: 300px
         blocks:
           - id: content_card
             type: Card
-            areas:
+            slots:
               content:
                 blocks:
                   - id: content
@@ -146,7 +147,7 @@ _ref:
                       icon:
                         name: AiOutlineHeart
                         color: '#f00'
-                    areas:
+                    slots:
                       extra:
                         blocks:
                           - id: docs_button
@@ -198,7 +199,7 @@ _ref:
                     type: PageHeaderMenu
                     properties:
                       title: Welcome
-                    areas:
+                    slots:
                       content:
                         justify: center
                         blocks:
@@ -215,7 +216,7 @@ _ref:
                                   icon:
                                     name: AiOutlineHeart
                                     color: '#f00'
-                                areas:
+                                slots:
                                   extra:
                                     blocks:
                                       - id: docs_button

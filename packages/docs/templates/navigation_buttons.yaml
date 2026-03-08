@@ -31,7 +31,6 @@ blocks:
       size: large
       title:
         _var: previous_page_title
-      type: default
     events:
       onClick:
         - id: link_back
@@ -54,7 +53,6 @@ blocks:
       size: large
       title:
         _var: next_page_title
-      type: default
     events:
       onClick:
         - id: link_forward

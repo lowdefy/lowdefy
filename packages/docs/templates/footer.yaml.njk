@@ -31,7 +31,7 @@
     margin: auto
   layout:
     size: 300
-  areas:
+  slots:
     content:
       justify: space-around
       align: middle
@@ -229,9 +229,7 @@
 {% if filePath %}
 - id: edit_on_gh_box
   type: Box
-  style:
-    lg:
-      paddingRight: 40
+  class: "lg:pr-10"
   layout:
     justify: end
   blocks:

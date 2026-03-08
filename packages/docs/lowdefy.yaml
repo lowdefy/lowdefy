@@ -16,6 +16,11 @@ name: '@lowdefy/docs'
 lowdefy: local
 license: Apache-2.0
 
+theme:
+  antd:
+    token:
+      borderRadius: 4
+
 cli:
   disableTelemetry: true
   watchIgnore:

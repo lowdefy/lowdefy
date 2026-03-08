@@ -62,7 +62,7 @@ blocks:
           - {{ block_type }}
     layout:
       gap: 16
-    areas:
+    slots:
       header:
         blocks:
           _ref: templates/header.yaml
@@ -101,11 +101,11 @@ blocks:
               content: |
                 {% if user_defined_areas -%}
                 ```
-                areas: [key]
+                slots: [key]
                 ```
                 {% else %}
                 ```
-                areas: {{ areas | join(', ') }}
+                slots: {{ areas | join(', ') }}
                 ```
                 {% endif %}
           {% endif %}

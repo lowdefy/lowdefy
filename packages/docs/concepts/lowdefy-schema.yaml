@@ -159,7 +159,7 @@ _ref:
           panels:
             - title: Pages example
               key: example
-        areas:
+        slots:
           example:
             blocks:
               - id: pages_example

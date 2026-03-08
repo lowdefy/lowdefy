@@ -53,7 +53,7 @@ _ref:
           background: '#d9d9d9'
           padding: 16px
           marginTop: 16px
-        areas:
+        slots:
           content:
             style:
               border: '1px dashed #eb2f96'
@@ -112,7 +112,7 @@ _ref:
         blocks:
           - id: ex_areas_area1
             type: Box
-            areas:
+            slots:
               content:
                 style:
                   border: '1px dashed #eb2f96'
@@ -126,7 +126,7 @@ _ref:
                         <div style="background: #1890ff; font-size: 16px; font-weight: 500;">Block 1</div>
           - id: ex_areas_area2
             type: Box
-            areas:
+            slots:
               content:
                 style:
                   border: '1px dashed #eb2f96'
@@ -141,7 +141,7 @@ _ref:
                         <div style="background: #40a9ff; font-size: 16px; font-weight: 500;">Block 2</div>
           - id: ex_areas_area3
             type: Box
-            areas:
+            slots:
               content:
                 style:
                   border: '1px dashed #eb2f96'
@@ -181,7 +181,7 @@ _ref:
           background: '#d9d9d9'
           padding: 16px
           marginTop: 16px
-        areas:
+        slots:
           content:
             style:
               border: '1px dashed #eb2f96'
@@ -238,7 +238,7 @@ _ref:
           background: '#d9d9d9'
           padding: 16px
           marginTop: 16px
-        areas:
+        slots:
           content:
             style:
               border: '1px dashed #eb2f96'
@@ -381,7 +381,7 @@ _ref:
               key: pull
             - title: Push example
               key: push
-        areas:
+        slots:
           align:
             blocks:
               - id: markdown_align_examples
@@ -421,7 +421,7 @@ _ref:
                   background: '#d9d9d9'
                   padding: 16px
                   marginTop: 16px
-                areas:
+                slots:
                   content:
                     style:
                       border: '1px dashed #eb2f96'
@@ -491,7 +491,7 @@ _ref:
                   background: '#d9d9d9'
                   padding: 16px
                   marginTop: 16px
-                areas:
+                slots:
                   content:
                     style:
                       border: '1px dashed #eb2f96'
@@ -540,7 +540,7 @@ _ref:
                   background: '#d9d9d9'
                   padding: 16px
                   marginTop: 16px
-                areas:
+                slots:
                   content:
                     style:
                       border: '1px dashed #eb2f96'
@@ -594,7 +594,7 @@ _ref:
                   background: '#d9d9d9'
                   padding: 16px
                   marginTop: 16px
-                areas:
+                slots:
                   content:
                     style:
                       border: '1px dashed #eb2f96'
@@ -649,7 +649,7 @@ _ref:
                   background: '#d9d9d9'
                   padding: 16px
                   marginTop: 16px
-                areas:
+                slots:
                   content:
                     style:
                       border: '1px dashed #eb2f96'
@@ -708,7 +708,7 @@ _ref:
               key: gap
             - title: Justify example
               key: justify
-        areas:
+        slots:
           align:
             blocks:
               - id: markdown_align_layout_example
@@ -769,7 +769,7 @@ _ref:
                       content: '##### Area 1 - `align: top`'
                   - id: ex_area_align_area1
                     type: Box
-                    areas:
+                    slots:
                       content:
                         align: top
                         style:
@@ -799,7 +799,7 @@ _ref:
                       content: '##### Area 2 - `align: middle`'
                   - id: ex_area_align_area2
                     type: Box
-                    areas:
+                    slots:
                       content:
                         align: middle
                         style:
@@ -829,7 +829,7 @@ _ref:
                       content: '##### Area 3 - `align: bottom`'
                   - id: ex_area_align_area3
                     type: Box
-                    areas:
+                    slots:
                       content:
                         align: bottom
                         style:
@@ -924,7 +924,7 @@ _ref:
                       content: '##### Area 1 - `direction: row`'
                   - id: ex_area_direction_area1
                     type: Box
-                    areas:
+                    slots:
                       content:
                         direction: row
                         style:
@@ -954,7 +954,7 @@ _ref:
                       content: '##### Area 2 - `direction: row-reverse`'
                   - id: ex_area_direction_area2
                     type: Box
-                    areas:
+                    slots:
                       content:
                         direction: row-reverse
                         style:
@@ -984,7 +984,7 @@ _ref:
                       content: '##### Area 3 - `direction: column`'
                   - id: ex_area_direction_area3
                     type: Box
-                    areas:
+                    slots:
                       content:
                         direction: column
                         style:
@@ -1014,7 +1014,7 @@ _ref:
                       content: '##### Area 4  - `direction: column-reverse`'
                   - id: ex_area_direction_area4
                     type: Box
-                    areas:
+                    slots:
                       content:
                         direction: column-reverse
                         style:
@@ -1093,7 +1093,7 @@ _ref:
                       content: '##### Area 1 - `gap: 16`'
                   - id: ex_area_gutter_area1
                     type: Box
-                    areas:
+                    slots:
                       content:
                         gap: 16
                         style:
@@ -1130,7 +1130,7 @@ _ref:
                       content: '##### Area 2 - `gap: [8, 32]`'
                   - id: ex_area_gutter_area2
                     type: Box
-                    areas:
+                    slots:
                       content:
                         gap: [8, 32]
                         style:
@@ -1263,7 +1263,7 @@ _ref:
                       content: '##### Area 1 - `justify: start`'
                   - id: ex_area_justify_area1
                     type: Box
-                    areas:
+                    slots:
                       content:
                         justify: start
                         style:
@@ -1302,7 +1302,7 @@ _ref:
                       content: '##### Area 2 - `justify: end`'
                   - id: ex_area_justify_area2
                     type: Box
-                    areas:
+                    slots:
                       content:
                         justify: end
                         style:
@@ -1341,7 +1341,7 @@ _ref:
                       content: '##### Area 3 - `justify: center`'
                   - id: ex_area_justify_area3
                     type: Box
-                    areas:
+                    slots:
                       content:
                         justify: center
                         style:
@@ -1380,7 +1380,7 @@ _ref:
                       content: '##### Area 4 - `justify: space-around`'
                   - id: ex_area_justify_area4
                     type: Box
-                    areas:
+                    slots:
                       content:
                         justify: space-around
                         style:
@@ -1419,7 +1419,7 @@ _ref:
                       content: '##### Area 5 - `justify: space-between`'
                   - id: ex_area_justify_area5
                     type: Box
-                    areas:
+                    slots:
                       content:
                         justify: space-between
                         style:

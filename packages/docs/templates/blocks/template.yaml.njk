@@ -92,7 +92,7 @@ blocks:
           - {{ block_type }}
     layout:
       gap: 16
-    areas:
+    slots:
       header:
         blocks:
           _ref: templates/header.yaml
@@ -401,7 +401,7 @@ blocks:
                         _eq:
                           - _var: category
                           - context
-                areas:
+                slots:
                   properties:
                     blocks:
                       _ref:

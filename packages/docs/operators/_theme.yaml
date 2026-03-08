@@ -75,7 +75,8 @@ _ref:
         type: Paragraph
         properties:
           content: The theme's primary color is set to...
-          style:
+        style:
+          --element:
             color:
               _theme: colorPrimary
       ```

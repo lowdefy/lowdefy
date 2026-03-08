@@ -80,7 +80,8 @@ _ref:
           icon: AiOutlineRocket
           size: large
           title: Start the tutorial
-          type: primary
+          color: primary
+          variant: solid
         events:
           onClick:
             - id: link_forward
