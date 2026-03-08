@@ -80,7 +80,7 @@ const BreadcrumbBlock = ({
 BreadcrumbBlock.meta = {
   category: 'display',
   icons: [],
-  styles: ['element'],
+  cssKeys: ['element'],
 };
 
 export default withTheme('Breadcrumb', BreadcrumbBlock);

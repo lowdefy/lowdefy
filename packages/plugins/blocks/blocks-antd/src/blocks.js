@@ -45,6 +45,7 @@ export { default as Header } from './blocks/Header/Header.js';
 export { default as Label } from './blocks/Label/Label.js';
 export { default as Layout } from './blocks/Layout/Layout.js';
 export { default as Masonry } from './blocks/Masonry/Masonry.js';
+export { default as MasonryList } from './blocks/MasonryList/MasonryList.js';
 export { default as Menu } from './blocks/Menu/Menu.js';
 export { default as Message } from './blocks/Message/Message.js';
 export { default as MobileMenu } from './blocks/MobileMenu/MobileMenu.js';

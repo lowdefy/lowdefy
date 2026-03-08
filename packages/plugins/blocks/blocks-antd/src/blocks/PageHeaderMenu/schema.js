@@ -16,6 +16,7 @@
 
 export default {
   type: 'object',
+  cssKeys: ['element', 'header', 'logo', 'menu', 'content', 'breadcrumb', 'footer'],
   properties: {
     type: 'object',
     additionalProperties: false,

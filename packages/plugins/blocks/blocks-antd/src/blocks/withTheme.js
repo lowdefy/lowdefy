@@ -16,15 +16,19 @@
 
 import React from 'react';
 import { ConfigProvider } from 'antd';
+import { type } from '@lowdefy/helpers';
 
 function withTheme(antdComponentName, BlockComponent) {
   const Wrapped = (props) => {
     const { theme, ...restProperties } = props.properties;
-    const rendered = <BlockComponent {...props} properties={restProperties} />;
-    if (!theme) return rendered;
+    // Only intercept object themes (design tokens for ConfigProvider).
+    // String themes (e.g. Menu's 'dark'/'light') pass through to the component.
+    if (!type.isObject(theme)) {
+      return <BlockComponent {...props} />;
+    }
     return (
       <ConfigProvider theme={{ components: { [antdComponentName]: theme } }}>
-        {rendered}
+        <BlockComponent {...props} properties={restProperties} />
       </ConfigProvider>
     );
   };

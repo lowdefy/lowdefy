@@ -88,3 +88,19 @@
     list:
       - label: Page One
       - label: Page two
+- id: properties.theme
+  type: Breadcrumb
+  properties:
+    theme:
+      itemColor: '#888'
+      lastItemColor: '#1890ff'
+      linkColor: '#1890ff'
+      linkHoverColor: '#40a9ff'
+      separatorColor: '#ccc'
+      separatorMargin: 12
+    list:
+      - label: Home
+        pageId: home
+      - label: Settings
+        pageId: settings
+      - label: Profile

@@ -28,6 +28,7 @@ import MobileMenu from '../MobileMenu/MobileMenu.js';
 const PageHeaderMenu = ({
   basePath,
   blockId,
+  classNames = {},
   components: { Icon, Link },
   content,
   events,
@@ -35,13 +36,16 @@ const PageHeaderMenu = ({
   methods,
   pageId,
   properties,
+  styles = {},
 }) => {
   return (
     <Layout
       blockId={blockId}
       events={events}
-      properties={{ style: mergeObjects([{ minHeight: '100vh' }, properties.style]) }}
       components={{ Icon, Link }}
+      styles={{
+        element: mergeObjects([{ minHeight: '100vh' }, properties.style, styles.element]),
+      }}
       content={{
         content: () => (
           <>
@@ -49,6 +53,7 @@ const PageHeaderMenu = ({
               blockId={`${blockId}_header`}
               events={events}
               components={{ Icon, Link }}
+              classNames={{ element: classNames.header }}
               properties={mergeObjects([
                 {
                   style: {
@@ -60,10 +65,13 @@ const PageHeaderMenu = ({
                 properties.header,
               ])}
               styles={{
-                element: {
-                  display: 'flex',
-                  alignItems: 'center',
-                },
+                element: mergeObjects([
+                  {
+                    display: 'flex',
+                    alignItems: 'center',
+                  },
+                  styles.header,
+                ]),
               }}
               content={{
                 content: () => (
@@ -86,8 +94,11 @@ const PageHeaderMenu = ({
                             }-theme.png`
                           }
                           alt={properties.logo?.alt ?? 'Lowdefy'}
-                          className="mx-1.5 sm:mx-2.5 md:mx-4 lg:mx-[30px] shrink w-10 sm:w-[130px]"
-                          style={properties.logo?.style}
+                          className={
+                            classNames.logo ??
+                            'mx-1.5 sm:mx-2.5 md:mx-4 lg:mx-[30px] shrink w-10 sm:w-[130px]'
+                          }
+                          style={mergeObjects([properties.logo?.style, styles.logo])}
                         />
                       </picture>
                     </Link>
@@ -97,6 +108,7 @@ const PageHeaderMenu = ({
                           blockId={`${blockId}_menu`}
                           basePath={basePath}
                           components={{ Icon, Link }}
+                          classNames={{ element: classNames.menu }}
                           events={events}
                           methods={methods}
                           menus={menus}
@@ -110,6 +122,7 @@ const PageHeaderMenu = ({
                             properties.menu,
                             properties.menuLg,
                           ])}
+                          styles={{ element: styles.menu }}
                         />
                       </div>
                       {content.header &&
@@ -139,6 +152,7 @@ const PageHeaderMenu = ({
             <Content
               blockId={`${blockId}_content`}
               components={{ Icon, Link }}
+              classNames={{ element: classNames.content }}
               events={events}
               properties={mergeObjects([
                 {
@@ -149,9 +163,12 @@ const PageHeaderMenu = ({
                 properties.content,
               ])}
               styles={{
-                element: {
-                  padding: '0 40px 40px 40px',
-                },
+                element: mergeObjects([
+                  {
+                    padding: '0 40px 40px 40px',
+                  },
+                  styles.content,
+                ]),
               }}
               content={{
                 content: () => (
@@ -161,12 +178,14 @@ const PageHeaderMenu = ({
                         blockId={`${blockId}_breadcrumb`}
                         basePath={basePath}
                         components={{ Icon, Link }}
+                        classNames={{ element: classNames.breadcrumb }}
                         events={events}
                         methods={methods}
                         properties={mergeObjects([
                           { style: { margin: '16px 0' } },
                           properties.breadcrumb,
                         ])}
+                        styles={{ element: styles.breadcrumb }}
                         rename={{
                           events: {
                             onClick: 'onBreadcrumbClick',
@@ -185,8 +204,10 @@ const PageHeaderMenu = ({
               <Footer
                 blockId={`${blockId}_footer`}
                 components={{ Icon, Link }}
+                classNames={{ element: classNames.footer }}
                 events={events}
                 properties={properties.footer}
+                styles={{ element: styles.footer }}
                 content={{
                   content: () => content.footer(),
                 }}
@@ -202,7 +223,7 @@ const PageHeaderMenu = ({
 PageHeaderMenu.meta = {
   category: 'container',
   icons: [...MobileMenu.meta.icons],
-  cssKeys: ['element'],
+  cssKeys: ['element', 'header', 'logo', 'menu', 'content', 'breadcrumb', 'footer'],
 };
 
 export default PageHeaderMenu;

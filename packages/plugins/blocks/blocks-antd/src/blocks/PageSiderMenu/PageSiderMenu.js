@@ -31,6 +31,7 @@ import Sider from '../Sider/Sider.js';
 const PageSiderMenu = ({
   basePath,
   blockId,
+  classNames = {},
   components: { Icon, Link },
   events,
   content,
@@ -38,6 +39,7 @@ const PageSiderMenu = ({
   methods,
   pageId,
   properties,
+  styles = {},
 }) => {
   const [openSiderState, setSiderOpen] = useState(!properties.sider?.initialCollapsed);
   useEffect(() => {
@@ -55,13 +57,16 @@ const PageSiderMenu = ({
       blockId={blockId}
       components={{ Icon, Link }}
       events={events}
-      properties={{ style: mergeObjects([{ minHeight: '100vh' }, properties.style]) }}
+      styles={{
+        element: mergeObjects([{ minHeight: '100vh' }, properties.style, styles.element]),
+      }}
       content={{
         content: () => (
           <>
             <Header
               blockId={`${blockId}_header`}
               components={{ Icon, Link }}
+              classNames={{ element: classNames.header }}
               events={events}
               properties={mergeObjects([
                 {
@@ -75,11 +80,14 @@ const PageSiderMenu = ({
                 properties.header,
               ])}
               styles={{
-                element: {
-                  display: 'flex',
-                  alignItems: 'center',
-                  flexDirection: 'row-reverse',
-                },
+                element: mergeObjects([
+                  {
+                    display: 'flex',
+                    alignItems: 'center',
+                    flexDirection: 'row-reverse',
+                  },
+                  styles.header,
+                ]),
               }}
               content={{
                 content: () => (
@@ -137,8 +145,11 @@ const PageSiderMenu = ({
                             }-theme.png`
                           }
                           alt={properties.logo?.alt ?? 'Lowdefy'}
-                          className="mr-[30px] shrink w-10 sm:w-[130px] mx-1.5 sm:mx-2.5 md:mx-4"
-                          style={properties.logo?.style}
+                          className={
+                            classNames.logo ??
+                            'mr-[30px] shrink w-10 sm:w-[130px] mx-1.5 sm:mx-2.5 md:mx-4'
+                          }
+                          style={mergeObjects([properties.logo?.style, styles.logo])}
                         />
                       </picture>
                     </Link>
@@ -165,7 +176,8 @@ const PageSiderMenu = ({
                         },
                         properties.sider,
                       ])}
-                      classNames={{ element: 'hidden lg:block' }}
+                      classNames={{ element: classNames.sider ?? 'hidden lg:block' }}
+                      styles={{ element: styles.sider }}
                       rename={{
                         methods: {
                           toggleOpen: '_toggleSiderOpen',
@@ -185,6 +197,7 @@ const PageSiderMenu = ({
                               blockId={`${blockId}_menu`}
                               components={{ Icon, Link }}
                               basePath={basePath}
+                              classNames={{ element: classNames.menu ?? 'hidden lg:block' }}
                               events={events}
                               methods={methods}
                               menus={menus}
@@ -197,7 +210,7 @@ const PageSiderMenu = ({
                                 properties.menu,
                                 properties.menuLg,
                               ])}
-                              classNames={{ element: 'hidden lg:block' }}
+                              styles={{ element: styles.menu }}
                               rename={{
                                 methods: {
                                   toggleOpen: 'toggleMobileMenuOpen',
@@ -270,6 +283,7 @@ const PageSiderMenu = ({
                     <Content
                       blockId={`${blockId}_content`}
                       components={{ Icon, Link }}
+                      classNames={{ element: classNames.content }}
                       events={events}
                       properties={mergeObjects([
                         {
@@ -280,9 +294,12 @@ const PageSiderMenu = ({
                         properties.content,
                       ])}
                       styles={{
-                        element: {
-                          padding: '0 40px 40px 40px',
-                        },
+                        element: mergeObjects([
+                          {
+                            padding: '0 40px 40px 40px',
+                          },
+                          styles.content,
+                        ]),
                       }}
                       content={{
                         content: () => (
@@ -292,12 +309,14 @@ const PageSiderMenu = ({
                                 blockId={`${blockId}_breadcrumb`}
                                 basePath={basePath}
                                 components={{ Icon, Link }}
+                                classNames={{ element: classNames.breadcrumb }}
                                 events={events}
                                 methods={methods}
                                 properties={mergeObjects([
                                   { style: { margin: '16px 0' } },
                                   properties.breadcrumb,
                                 ])}
+                                styles={{ element: styles.breadcrumb }}
                                 rename={{
                                   events: {
                                     onClick: 'onBreadcrumbClick',
@@ -312,8 +331,10 @@ const PageSiderMenu = ({
                               <Footer
                                 blockId={`${blockId}_footer`}
                                 components={{ Icon, Link }}
+                                classNames={{ element: classNames.footer }}
                                 events={events}
                                 properties={properties.footer}
+                                styles={{ element: styles.footer }}
                                 content={{
                                   content: () => content.footer(),
                                 }}
@@ -337,7 +358,7 @@ const PageSiderMenu = ({
 PageSiderMenu.meta = {
   category: 'container',
   icons: ['AiOutlineMenuFold', 'AiOutlineMenuUnfold', ...MobileMenu.meta.icons],
-  cssKeys: ['element'],
+  cssKeys: ['element', 'header', 'logo', 'sider', 'menu', 'content', 'breadcrumb', 'footer'],
 };
 
 export default PageSiderMenu;

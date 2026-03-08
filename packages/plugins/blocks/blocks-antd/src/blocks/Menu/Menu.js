@@ -18,6 +18,8 @@ import React from 'react';
 import { Menu } from 'antd';
 import { type, get } from '@lowdefy/helpers';
 
+import withTheme from '../withTheme.js';
+
 const getDefaultMenu = (menus, menuId = 'default', links) => {
   if (type.isArray(links)) return links;
   if (!type.isArray(menus)) return [];
@@ -83,7 +85,13 @@ function buildMenuItems({
         <Icon blockId={`${link.id}_icon`} events={events} properties={link.properties.icon} />
       ) : undefined,
       label: (
-        <Link id={link.pageId ?? link.id ?? i} style={link.style} {...link}>
+        <Link
+          id={link.pageId ?? link.id ?? i}
+          style={link.style}
+          url={link.url ?? link.properties?.url}
+          newTab={link.newTab ?? link.properties?.newTab}
+          {...link}
+        >
           {getTitle(link)}
         </Link>
       ),
@@ -114,7 +122,7 @@ const MenuComp = ({
     exProps.inlineIndent = properties.inlineIndent;
   }
   const menu = getDefaultMenu(menus, properties.menuId, properties.links);
-  const theme = properties.theme ?? 'dark';
+  const theme = properties.theme;
 
   const items = buildMenuItems({
     links: menu,
@@ -193,4 +201,4 @@ MenuComp.meta = {
   cssKeys: ['element', 'item'],
 };
 
-export default MenuComp;
+export default withTheme('Menu', MenuComp);

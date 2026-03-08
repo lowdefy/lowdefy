@@ -14,17 +14,22 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Masonry } from 'antd';
 
 import withTheme from '../withTheme.js';
 
-const MasonryBlock = ({ blockId, classNames = {}, content, properties, styles = {} }) => {
-  const rendered = content.content && content.content();
-  const children = React.Children.toArray(rendered?.props?.children ?? []);
-  const items = children.map((child, i) => ({
-    key: child.key ?? i,
-    children: child,
+const MasonryListBlock = ({ blockId, classNames = {}, list, methods, properties, styles = {} }) => {
+  useEffect(() => {
+    methods.registerMethod('pushItem', methods.pushItem);
+    methods.registerMethod('removeItem', methods.removeItem);
+    methods.registerMethod('unshiftItem', methods.unshiftItem);
+    methods.registerMethod('moveItemUp', methods.moveItemUp);
+    methods.registerMethod('moveItemDown', methods.moveItemDown);
+  });
+  const items = (list || []).map((item, i) => ({
+    key: `${blockId}_${i}`,
+    children: item.content && item.content(),
   }));
   return (
     <Masonry
@@ -39,10 +44,11 @@ const MasonryBlock = ({ blockId, classNames = {}, content, properties, styles = 
   );
 };
 
-MasonryBlock.meta = {
-  category: 'container',
+MasonryListBlock.meta = {
+  valueType: 'array',
+  category: 'list',
   icons: [],
   cssKeys: ['element'],
 };
 
-export default withTheme('Masonry', MasonryBlock);
+export default withTheme('Masonry', MasonryListBlock);

@@ -34,7 +34,7 @@ const TourBlock = ({ blockId, classNames = {}, methods, properties, styles = {} 
       id={blockId}
       className={classNames.element}
       style={styles.element}
-      open={properties.open}
+      open={properties.open === true}
       steps={steps}
       current={properties.current}
       type={properties.type}

@@ -99,6 +99,7 @@ const ButtonBlock = ({
       onClick={onClick || (() => methods.triggerEvent({ name: onClickActionName }))}
     >
       {!properties.hideTitle &&
+        !(properties.shape === 'circle' && type.isNone(properties.title)) &&
         renderHtml({
           html: type.isNone(properties.title) ? blockId : properties.title,
           methods,

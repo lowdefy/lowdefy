@@ -127,8 +127,14 @@ class Block {
   };
 
   _initList = () => {
-    // TODO: to initialize new object in array, the new value should be passed by method to unshiftItem and pushItem
-    this.unshiftItem = () => {
+    this.unshiftItem = (initialValue) => {
+      // Save current list state before wipe. Display blocks (Card, Paragraph) read
+      // from state via _state operators and don't store values internally, so the
+      // state wipe below would lose their data without this save/restore.
+      const currentArr = get(this.context.state, this.blockId);
+      const savedItems = type.isArray(currentArr)
+        ? currentArr.map((item) => serializer.copy(item))
+        : [];
       this.loopSubSlots((slotsClass, i) => {
         slotsClass.recUpdateArrayIndices(
           this.arrayIndices.concat([i]),
@@ -141,17 +147,28 @@ class Block {
       this.context._internal.State.set(this.blockId, undefined);
       // set slot block and sub slots values undefined, so as not to pass values to new blocks
       this.subSlots[0].recSetUndefined();
+      // Restore shifted items at their new indices
+      savedItems.forEach((item, i) => {
+        this.context._internal.State.set(`${this.blockId}.${i + 1}`, item);
+      });
+      if (initialValue !== undefined) {
+        this.context._internal.State.set(`${this.blockId}.0`, initialValue);
+      }
       this.update = true;
       this.context._internal.update();
     };
 
-    this.pushItem = () => {
+    this.pushItem = (initialValue) => {
+      const index = this.subSlots.length;
       this.subSlots.push(
         this.newSlots({
-          arrayIndices: this.arrayIndices.concat([this.subSlots.length]),
+          arrayIndices: this.arrayIndices.concat([index]),
           initState: {},
         })
       );
+      if (initialValue !== undefined) {
+        this.context._internal.State.set(`${this.blockId}.${index}`, initialValue);
+      }
       this.update = true;
       this.context._internal.update();
     };
