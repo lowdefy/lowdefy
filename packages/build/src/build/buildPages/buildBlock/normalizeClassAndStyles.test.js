@@ -283,6 +283,144 @@ test('normalizeClassAndStyles does not modify block without style, class, or sty
   expect(get(res, 'pages.0.slots.content.blocks.0.class')).toBeUndefined();
 });
 
+test('normalizeClassAndStyles throws for nested object in flat style', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Input',
+            style: { color: 'red', hover: { color: 'blue' } },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context })).toThrow(
+    'Style property "hover" has a nested object value'
+  );
+});
+
+test('normalizeClassAndStyles throws for nested object in --block slot', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Input',
+            style: { '--block': { color: 'red', typography: { fontSize: 14 } } },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context })).toThrow(
+    'Style property "typography" has a nested object value'
+  );
+});
+
+test('normalizeClassAndStyles throws for nested object in --element slot', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Input',
+            style: { '--element': { padding: 10, wrapper: { margin: 5 } } },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context })).toThrow(
+    'Style property "wrapper" has a nested object value'
+  );
+});
+
+test('normalizeClassAndStyles allows operator object as style value', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Input',
+            style: { '--block': { color: { _state: 'theme.color' } } },
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildPages({ components, context });
+  expect(get(res, 'pages.0.slots.content.blocks.0.style')).toEqual({
+    block: { color: { _state: 'theme.color' } },
+  });
+});
+
+test('normalizeClassAndStyles allows operator as entire slot value', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Input',
+            style: {
+              '--block': {
+                _if: { test: true, then: { color: 'red' }, else: { color: 'blue' } },
+              },
+            },
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildPages({ components, context });
+  expect(get(res, 'pages.0.slots.content.blocks.0.style')).toEqual({
+    block: { _if: { test: true, then: { color: 'red' }, else: { color: 'blue' } } },
+  });
+});
+
+test('normalizeClassAndStyles does not treat _id as an operator in style validation', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Input',
+            style: { '--block': { color: 'red', nested: { _id: 'some_id' } } },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context })).toThrow(
+    'Style property "nested" has a nested object value'
+  );
+});
+
 test('normalizeClassAndStyles preserves operator objects in style (not treated as breakpoints)', () => {
   const components = {
     pages: [

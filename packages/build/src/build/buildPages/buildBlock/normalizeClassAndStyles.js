@@ -19,6 +19,18 @@ import { ConfigError } from '@lowdefy/errors';
 
 const breakpointKeys = new Set(['xs', 'sm', 'md', 'lg', 'xl', '2xl']);
 
+// Keys that look like operators (single key starting with _) but are not.
+const KNOWN_NON_OPERATORS = new Set(['_id']);
+
+function isOperator(value) {
+  const nonTildeKeys = Object.keys(value).filter((k) => !k.startsWith('~'));
+  if (nonTildeKeys.length !== 1) return false;
+  const key = nonTildeKeys[0];
+  const [op] = key.split('.');
+  const operator = op.replace(/^(_+)/gm, '_');
+  return operator.length > 1 && operator[0] === '_' && !KNOWN_NON_OPERATORS.has(operator);
+}
+
 function stripDashPrefix(key) {
   return key.startsWith('--') ? key.slice(2) : key;
 }
@@ -59,6 +71,20 @@ function normalizeStyle(block) {
       result.block = result.block ? { ...plainCSS, ...result.block } : plainCSS;
     }
     block.style = result;
+
+    // Validate no nested objects in style slot values (except operators)
+    for (const [slotKey, slotStyle] of Object.entries(block.style)) {
+      if (!type.isObject(slotStyle) || isOperator(slotStyle)) continue;
+      for (const [cssKey, cssValue] of Object.entries(slotStyle)) {
+        if (cssKey.startsWith('~')) continue;
+        if (type.isObject(cssValue) && !isOperator(cssValue)) {
+          throw new ConfigError(
+            `Block "${block.blockId}": Style property "${cssKey}" has a nested object value. CSS properties must be simple values (strings, numbers) or operators.`,
+            { configKey: block['~k'] }
+          );
+        }
+      }
+    }
   }
 }
 
