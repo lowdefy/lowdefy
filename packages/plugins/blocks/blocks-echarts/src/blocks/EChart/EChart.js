@@ -114,7 +114,6 @@ EChart.defaultProps = blockDefaultProps;
 EChart.meta = {
   category: 'display',
   icons: [],
-  styles: [],
 };
 
 export default EChart;

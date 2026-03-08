@@ -16,17 +16,53 @@
 
 import { type } from '@lowdefy/helpers';
 
-const layoutParamsToArea = ({ areaKey, area = {}, layout = {} }) => {
+function resolveDeprecated(layout, newName, ...oldNames) {
+  if (!type.isNone(layout[newName])) {
+    return layout[newName];
+  }
+  for (const oldName of oldNames) {
+    if (!type.isNone(layout[oldName])) {
+      console.warn(`[Lowdefy] layout.${oldName} is deprecated. Use layout.${newName} instead.`);
+      return layout[oldName];
+    }
+  }
+  return undefined;
+}
+
+function resolveLayoutAlign(layout) {
+  if (!type.isNone(layout.align) && type.isNone(layout.selfAlign)) {
+    console.warn(
+      '[Lowdefy] layout.align for self-alignment is deprecated. Use layout.selfAlign instead.'
+    );
+    return undefined;
+  }
+  return layout.align;
+}
+
+function layoutParamsToArea({ areaKey, area = {}, layout = {} }) {
+  // Normalize area.gutter → area.gap (deprecated)
+  if (!type.isNone(area.gutter) && type.isNone(area.gap)) {
+    console.warn('[Lowdefy] slots.content.gutter is deprecated. Use gap instead.');
+    area.gap = area.gutter;
+  }
+
   if (areaKey !== 'content') {
     return area;
   }
-  area.align = type.isNone(area.align) ? layout.contentAlign : area.align;
-  area.direction = type.isNone(area.direction) ? layout.contentDirection : area.direction;
-  area.gutter = type.isNone(area.gutter) ? layout.contentGutter : area.gutter;
-  area.justify = type.isNone(area.justify) ? layout.contentJustify : area.justify;
-  area.overflow = type.isNone(area.overflow) ? layout.contentOverflow : area.overflow;
-  area.wrap = type.isNone(area.wrap) ? layout.contentWrap : area.wrap;
+
+  const layoutAlign = resolveLayoutAlign(layout);
+
+  if (type.isNone(area.gap))
+    area.gap = resolveDeprecated(layout, 'gap', 'contentGutter', 'contentGap');
+  if (type.isNone(area.align)) area.align = layoutAlign;
+  if (type.isNone(area.justify))
+    area.justify = resolveDeprecated(layout, 'justify', 'contentJustify');
+  if (type.isNone(area.direction))
+    area.direction = resolveDeprecated(layout, 'direction', 'contentDirection');
+  if (type.isNone(area.wrap)) area.wrap = resolveDeprecated(layout, 'wrap', 'contentWrap');
+  if (type.isNone(area.overflow))
+    area.overflow = resolveDeprecated(layout, 'overflow', 'contentOverflow');
   return area;
-};
+}
 
 export default layoutParamsToArea;

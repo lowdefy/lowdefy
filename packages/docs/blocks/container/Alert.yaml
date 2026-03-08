@@ -23,5 +23,5 @@ _ref:
       message: Alerts help to highlight important information.
     description_content: |
       Alert is used to render user feedback messages in a Alert styled frame.
-    areas:
+    slots:
       - action

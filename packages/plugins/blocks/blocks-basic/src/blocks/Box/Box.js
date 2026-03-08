@@ -17,17 +17,15 @@
 import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
-const Box = ({ blockId, content, events, methods, properties }) => {
+const Box = ({ blockId, classNames, content, events, methods, properties, styles }) => {
   return (
     <div
       id={blockId}
       data-testid={blockId}
       onClick={() => methods.triggerEvent({ name: 'onClick' })}
       onPaste={() => methods.triggerEvent({ name: 'onPaste' })}
-      className={methods.makeCssClass([
-        { outline: 'none', cursor: events.onClick && 'pointer' },
-        properties.style,
-      ])}
+      className={classNames?.element}
+      style={{ outline: 'none', cursor: events.onClick && 'pointer', ...styles?.element }}
     >
       {properties.content || (content.content && content.content())}
     </div>
@@ -38,7 +36,6 @@ Box.defaultProps = blockDefaultProps;
 Box.meta = {
   category: 'container',
   icons: [],
-  styles: [],
 };
 
 export default Box;

@@ -232,5 +232,6 @@
         "description": "Trigger action when mobile menu group is opened."
       }
     }
-  }
+  },
+  "cssKeys": ["element"]
 }

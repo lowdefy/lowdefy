@@ -16,14 +16,27 @@
 
 import React from 'react';
 import { Result } from 'antd';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import { renderHtml } from '@lowdefy/block-utils';
 
-const ResultBlock = ({ blockId, components: { Icon }, events, content, methods, properties }) => (
+import withTheme from '../withTheme.js';
+
+const ResultBlock = ({
+  blockId,
+  classNames = {},
+  components: { Icon },
+  events,
+  content,
+  methods,
+  properties,
+  styles = {},
+}) => (
   <Result
     id={blockId}
+    className={classNames.element}
     title={renderHtml({ html: properties.title, methods })}
     subTitle={renderHtml({ html: properties.subTitle, methods })}
     status={properties.status}
+    style={styles.element}
     icon={
       properties.icon && (
         <Icon blockId={`${blockId}_icon`} events={events} properties={properties.icon} />
@@ -35,11 +48,10 @@ const ResultBlock = ({ blockId, components: { Icon }, events, content, methods, 
   </Result>
 );
 
-ResultBlock.defaultProps = blockDefaultProps;
 ResultBlock.meta = {
   category: 'container',
   icons: [],
-  styles: ['blocks/Result/style.less'],
+  cssKeys: ['element'],
 };
 
-export default ResultBlock;
+export default withTheme('Result', ResultBlock);

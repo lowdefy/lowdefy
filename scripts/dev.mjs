@@ -27,7 +27,7 @@
     1. Builds the monorepo (pnpm build:turbo)
     2. Imports CLI logger from built dist (for spinners and formatted output)
     3. Copies server-dev to <config-dir>/.lowdefy/dev, patches next.config.js
-    4. Scans monorepo packages, patches less-loader paths for transitive deps
+    4. Scans monorepo packages
     5. Rewrites @lowdefy/* deps to link: paths + adds pnpm.overrides
     6. Handles workspace:* plugins from external pnpm monorepos
     7. Runs pnpm install in the isolated copy
@@ -126,7 +126,6 @@ fs.cpSync(SERVER_DEV_DIR, devDir, {
 
 // Patch next.config.js: pin react/react-dom to the dev dir's copies so linked
 // @lowdefy/* packages share a single instance (prevents "invalid hook call" errors).
-// A second patch for less-loader paths is applied after the package scan (step 4b).
 const nextConfigPath = path.join(devDir, 'next.config.js');
 const nextConfigContent = fs.readFileSync(nextConfigPath, 'utf8');
 fs.writeFileSync(
@@ -183,33 +182,6 @@ function scanForPackages(dir, depth) {
 
 scanForPackages(path.join(REPO_ROOT, 'packages'), 0);
 logger.info({ spin: 'succeed' }, `Found ${packageMap.size} @lowdefy/* packages.`);
-
-// -- Step 4b: Patch less-loader paths in next.config.js --
-// Linked @lowdefy/* packages use pnpm symlinks for their deps (e.g. antd lives
-// at blocks-antd/node_modules/antd, not the root). Collect all linked packages'
-// node_modules so the Less compiler can resolve transitive deps like antd.
-const lessPaths = [...packageMap.values()]
-  .map((dir) => path.join(dir, 'node_modules'))
-  .filter((dir) => fs.existsSync(dir));
-
-if (lessPaths.length > 0) {
-  const currentConfig = fs.readFileSync(nextConfigPath, 'utf8');
-  const pathsLiteral = lessPaths.map((p) => JSON.stringify(p)).join(', ');
-  fs.writeFileSync(
-    nextConfigPath,
-    currentConfig.replace(
-      'const nextConfig = withLess({',
-      [
-        'const nextConfig = withLess({',
-        `  lessLoaderOptions: {`,
-        `    lessOptions: {`,
-        `      paths: [${pathsLiteral}],`,
-        `    },`,
-        `  },`,
-      ].join('\n')
-    )
-  );
-}
 
 // -- Step 5: Rewrite deps + add pnpm.overrides --
 

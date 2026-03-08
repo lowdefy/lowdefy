@@ -15,14 +15,49 @@
 */
 
 import React from 'react';
-import { Button } from 'antd';
+import { Button, ConfigProvider } from 'antd';
 import { get, type } from '@lowdefy/helpers';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import { renderHtml } from '@lowdefy/block-utils';
 
-import color from '../../color.js';
+import withTheme from '../withTheme.js';
+
+const ANTD_COLOR_PRESETS = new Set([
+  'default',
+  'primary',
+  'danger',
+  'blue',
+  'purple',
+  'cyan',
+  'green',
+  'magenta',
+  'pink',
+  'red',
+  'orange',
+  'yellow',
+  'volcano',
+  'geekblue',
+  'lime',
+  'gold',
+]);
+
+function getButtonProps(properties) {
+  if (properties.variant) {
+    return {
+      color: properties.color,
+      variant: properties.variant,
+    };
+  }
+
+  const buttonType = properties.type ?? 'primary';
+  if (buttonType === 'danger') {
+    return { color: 'danger', variant: 'solid' };
+  }
+  return { type: buttonType };
+}
 
 const ButtonBlock = ({
   blockId,
+  classNames = {},
   components: { Icon },
   events,
   loading,
@@ -30,30 +65,24 @@ const ButtonBlock = ({
   onClick,
   properties,
   rename,
+  styles = {},
 }) => {
   const onClickActionName = get(rename, 'events.onClick', { default: 'onClick' });
-  return (
+  const { color: buttonColor, variant, type: buttonType } = getButtonProps(properties);
+
+  const isPresetColor = ANTD_COLOR_PRESETS.has(properties.color);
+  const resolvedColor = isPresetColor ? buttonColor : properties.color ? 'primary' : buttonColor;
+
+  const button = (
     <Button
       block={properties.block}
-      className={methods.makeCssClass([
-        {
-          backgroundColor: properties.color,
-          borderColor: properties.color,
-          '&:active': properties.color && {
-            backgroundColor: color(properties.color, 7),
-            borderColor: color(properties.color, 7),
-          },
-          '&:hover': properties.color && {
-            backgroundColor: color(properties.color, 5),
-            borderColor: color(properties.color, 5),
-          },
-          '&:focus': properties.color && {
-            backgroundColor: properties.color,
-            borderColor: properties.color,
-          },
-        },
-        properties.style,
-      ])}
+      className={classNames.element}
+      style={styles.element}
+      classNames={{ icon: classNames.icon }}
+      styles={{ icon: styles.icon }}
+      color={resolvedColor}
+      variant={variant}
+      type={buttonType}
       disabled={properties.disabled || get(events, `${onClickActionName}.loading`) || loading}
       ghost={properties.ghost}
       danger={properties.danger}
@@ -62,7 +91,6 @@ const ButtonBlock = ({
       loading={get(events, `${onClickActionName}.loading`)}
       shape={properties.shape}
       size={properties.size}
-      type={get(properties, 'type', { default: 'primary' })}
       icon={
         properties.icon && (
           <Icon blockId={`${blockId}_icon`} events={events} properties={properties.icon} />
@@ -77,13 +105,21 @@ const ButtonBlock = ({
         })}
     </Button>
   );
+
+  if (properties.color && !isPresetColor) {
+    return (
+      <ConfigProvider theme={{ token: { colorPrimary: properties.color } }}>
+        {button}
+      </ConfigProvider>
+    );
+  }
+  return button;
 };
 
-ButtonBlock.defaultProps = blockDefaultProps;
 ButtonBlock.meta = {
   category: 'display',
   icons: [],
-  styles: ['blocks/Button/style.less'],
+  cssKeys: ['element', 'icon'],
 };
 
-export default ButtonBlock;
+export default withTheme('Button', ButtonBlock);

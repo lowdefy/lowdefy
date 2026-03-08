@@ -26,6 +26,35 @@ Object {
       },
       "type": "array",
     },
+    "class": Object {
+      "oneOf": Array [
+        Object {
+          "type": "string",
+        },
+        Object {
+          "items": Object {
+            "type": "string",
+          },
+          "type": "array",
+        },
+        Object {
+          "additionalProperties": Object {
+            "oneOf": Array [
+              Object {
+                "type": "string",
+              },
+              Object {
+                "items": Object {
+                  "type": "string",
+                },
+                "type": "array",
+              },
+            ],
+          },
+          "type": "object",
+        },
+      ],
+    },
     "events": Object {
       "type": "object",
     },
@@ -222,6 +251,12 @@ Object {
       ],
     },
     "style": Object {
+      "type": "object",
+    },
+    "styles": Object {
+      "additionalProperties": Object {
+        "type": "object",
+      },
       "type": "object",
     },
     "type": Object {

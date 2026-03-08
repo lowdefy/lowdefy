@@ -16,13 +16,13 @@
 
 import React from 'react';
 import { Input } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-utils';
-
 import Label from '../Label/Label.js';
+import withTheme from '../withTheme.js';
 import useRunAfterUpdate from '../../useRunAfterUpdate.js';
 
 const TextInput = ({
   blockId,
+  classNames = {},
   components: { Icon, Link },
   events,
   loading,
@@ -30,6 +30,7 @@ const TextInput = ({
   onChange,
   properties,
   required,
+  styles = {},
   validation,
   value,
 }) => {
@@ -49,8 +50,9 @@ const TextInput = ({
               id={`${blockId}_input`}
               allowClear={properties.allowClear}
               autoFocus={properties.autoFocus}
-              bordered={properties.bordered}
-              className={methods.makeCssClass(properties.inputStyle)}
+              variant={properties.bordered === false ? 'borderless' : properties.variant}
+              className={classNames.element}
+              style={styles.element}
               disabled={properties.disabled || loading}
               maxLength={properties.maxLength}
               placeholder={properties.placeholder}
@@ -138,12 +140,11 @@ const TextInput = ({
   );
 };
 
-TextInput.defaultProps = blockDefaultProps;
 TextInput.meta = {
   valueType: 'string',
   category: 'input',
   icons: [...Label.meta.icons],
-  styles: ['blocks/TextInput/style.less'],
+  cssKeys: ['element'],
 };
 
-export default TextInput;
+export default withTheme('Input', TextInput);

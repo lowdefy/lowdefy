@@ -16,35 +16,48 @@
 
 import React from 'react';
 import { Card } from 'antd';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import { renderHtml } from '@lowdefy/block-utils';
 
-const CardBlock = ({ blockId, content, properties, methods, events }) => (
+import withTheme from '../withTheme.js';
+
+const CardBlock = ({
+  blockId,
+  classNames = {},
+  content,
+  properties,
+  methods,
+  events,
+  styles = {},
+}) => (
   <Card
     id={blockId}
     title={content.title ? content.title() : renderHtml({ html: properties.title, methods })}
-    headStyle={methods.makeCssClass(properties.headerStyle, true)}
-    bodyStyle={methods.makeCssClass(properties.bodyStyle, true)}
-    bordered={properties.bordered}
+    variant={properties.bordered === false ? 'borderless' : properties.variant}
     cover={content.cover && content.cover()}
     extra={content.extra && content.extra()}
     hoverable={properties.hoverable}
     size={properties.size}
     type={properties.inner ? 'inner' : null}
     onClick={() => methods.triggerEvent({ name: 'onClick' })}
-    className={methods.makeCssClass([
-      { outline: 'none', cursor: events.onClick && 'pointer' },
-      properties.style,
-    ])}
+    className={classNames.element}
+    classNames={{
+      header: classNames.header,
+      body: classNames.body,
+      cover: classNames.cover,
+      actions: classNames.actions,
+      extra: classNames.extra,
+    }}
+    style={{ outline: 'none', cursor: events.onClick && 'pointer', ...styles.element }}
+    styles={{ header: styles.header, body: styles.body }}
   >
     {content.content && content.content()}
   </Card>
 );
 
-CardBlock.defaultProps = blockDefaultProps;
 CardBlock.meta = {
   category: 'container',
   icons: [],
-  styles: ['blocks/Card/style.less'],
+  cssKeys: ['element', 'header', 'body', 'cover', 'actions', 'extra'],
 };
 
-export default CardBlock;
+export default withTheme('Card', CardBlock);

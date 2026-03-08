@@ -18,7 +18,7 @@ import React, { useEffect } from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 import Box from '../Box/Box.js';
 
-const List = ({ blockId, events, list, methods, properties }) => {
+const List = ({ blockId, classNames, events, list, methods, properties, styles }) => {
   useEffect(() => {
     methods.registerMethod('pushItem', methods.pushItem);
     methods.registerMethod('unshiftItem', methods.unshiftItem);
@@ -30,8 +30,10 @@ const List = ({ blockId, events, list, methods, properties }) => {
     <Box
       blockId={blockId}
       events={events}
-      properties={{
-        style: {
+      properties={{}}
+      classNames={classNames}
+      styles={{
+        element: {
           ...(properties.direction
             ? {
                 display: 'flex',
@@ -40,7 +42,7 @@ const List = ({ blockId, events, list, methods, properties }) => {
                 overflow: properties.scroll ? 'auto' : 'visible',
               }
             : {}),
-          ...properties.style,
+          ...styles?.element,
         },
       }}
       methods={methods}
@@ -56,7 +58,6 @@ List.meta = {
   category: 'list',
   valueType: 'array',
   icons: [],
-  styles: [],
 };
 
 export default List;

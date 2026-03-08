@@ -55,7 +55,6 @@ AgGridInputBalham.meta = {
   category: 'input',
   valueType: 'array',
   icons: [],
-  styles: ['blocks/AgGridInputBalham/style.less'],
 };
 
 export default AgGridInputBalham;

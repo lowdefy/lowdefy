@@ -16,10 +16,10 @@
 
 import React from 'react';
 import { Input, Select } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 import regions from './regions.js';
 
 import Label from '../Label/Label.js';
+import withTheme from '../withTheme.js';
 import getValueIndex from '../../getValueIndex.js';
 import getUniqueValues from '../../getUniqueValues.js';
 
@@ -59,11 +59,8 @@ function AddOnSelect({
   return (
     <Select
       id={`${blockId}_select_input`}
-      bordered={properties.bordered}
-      className={methods.makeCssClass([
-        { minWidth: 100 },
-        methods.makeCssClass(properties.selectStyle),
-      ])}
+      variant={properties.bordered === false ? 'borderless' : properties.variant}
+      style={{ minWidth: 100, ...properties.selectStyle }}
       defaultValue={defaultValue}
       disabled={properties.disabled || loading}
       dropdownMatchSelectWidth={false}
@@ -110,7 +107,7 @@ function AddOnSelect({
             : `${opt.value.flag} ${opt.value.name} ${opt.value.dial_code}`;
         return (
           <Option
-            className={methods.makeCssClass([properties.optionsStyle])}
+            style={properties.optionsStyle}
             filterString={displayLabel}
             id={`${blockId}_${i}`}
             key={`${i}`}
@@ -127,12 +124,14 @@ function AddOnSelect({
 
 const PhoneNumberInput = ({
   blockId,
+  classNames = {},
   components: { Icon, Link },
   events,
   loading,
   methods,
   properties,
   required,
+  styles = {},
   validation,
   value,
 }) => {
@@ -191,8 +190,11 @@ const PhoneNumberInput = ({
               }
               allowClear={properties.allowClear}
               autoFocus={properties.autoFocus}
-              bordered={properties.bordered}
-              className={`ldf-phone-number-input ${methods.makeCssClass(properties.inputStyle)}`}
+              variant={properties.bordered === false ? 'borderless' : properties.variant}
+              className={`ldf-phone-number-input${
+                classNames.element ? ` ${classNames.element}` : ''
+              }`}
+              style={styles.element}
               disabled={properties.disabled || loading}
               maxLength={properties.maxLength}
               placeholder={properties.placeholder}
@@ -266,12 +268,11 @@ const PhoneNumberInput = ({
   );
 };
 
-PhoneNumberInput.defaultProps = blockDefaultProps;
 PhoneNumberInput.meta = {
   valueType: 'object',
   category: 'input',
   icons: [...Label.meta.icons],
-  styles: ['blocks/PhoneNumberInput/style.less'],
+  cssKeys: ['element'],
 };
 
-export default PhoneNumberInput;
+export default withTheme('Input', PhoneNumberInput);

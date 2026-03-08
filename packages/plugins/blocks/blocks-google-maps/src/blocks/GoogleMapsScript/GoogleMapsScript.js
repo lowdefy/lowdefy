@@ -45,7 +45,6 @@ GoogleMapsScript.defaultProps = blockDefaultProps;
 GoogleMapsScript.meta = {
   category: 'container',
   icons: [],
-  styles: [],
 };
 
 export default GoogleMapsScript;

@@ -18,7 +18,7 @@ const avatar = (path) => ({
   id: `${path}_avatar_card`,
   type: 'Card',
   layout: {
-    contentGutter: 0,
+    gap: 0,
   },
   properties: {
     size: 'small',
@@ -66,7 +66,7 @@ const button = (path) => ({
   id: `${path}_button_card`,
   type: 'Card',
   layout: {
-    contentGutter: 0,
+    gap: 0,
   },
   properties: {
     size: 'small',
@@ -135,7 +135,7 @@ const oneOf = ({ propertyName, propertyDescription, nameSpace }) => {
     id: propertyName,
     type: 'Card',
     layout: {
-      contentGutter: 0,
+      gap: 0,
     },
     properties: {
       size: 'small',
@@ -312,7 +312,7 @@ function makeBlockDefinition({
         id: `${nameSpace}${propertyName}`,
         type: 'Card',
         layout: {
-          contentGutter: 0,
+          gap: 0,
         },
         properties: {
           size: 'small',
@@ -337,7 +337,7 @@ function makeBlockDefinition({
         id: `${nameSpace}${propertyName}`,
         type: 'ControlledList',
         layout: {
-          contentGutter: 0,
+          gap: 0,
         },
         properties: {
           size: 'small',

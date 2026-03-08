@@ -26,7 +26,6 @@ Throw.defaultProps = blockDefaultProps;
 Throw.meta = {
   category: 'display',
   icons: [],
-  styles: [],
 };
 
 export default Throw;

@@ -15,28 +15,73 @@
 */
 
 import React from 'react';
-import { Radio, Space } from 'antd';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import { ConfigProvider, Radio, Space } from 'antd';
+import { renderHtml } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
 import Label from '../Label/Label.js';
 import getValueIndex from '../../getValueIndex.js';
 import getUniqueValues from '../../getUniqueValues.js';
+import withTheme from '../withTheme.js';
 
 const RadioGroup = Radio.Group;
 
 const RadioSelector = ({
   blockId,
+  classNames = {},
   components,
   events,
   loading,
   properties,
   required,
+  styles = {},
   validation,
   value,
   methods,
 }) => {
   const uniqueValueOptions = getUniqueValues(properties.options || []);
+  const radioGroup = (
+    <RadioGroup
+      id={`${blockId}_input`}
+      className={classNames.element}
+      disabled={properties.disabled || loading}
+      style={styles.element}
+      onChange={(event) => {
+        const val = type.isPrimitive(uniqueValueOptions[event.target.value])
+          ? uniqueValueOptions[event.target.value]
+          : uniqueValueOptions[event.target.value].value;
+        methods.setValue(val);
+        methods.triggerEvent({ name: 'onChange', event: { value: val } });
+      }}
+      value={`${getValueIndex(value, uniqueValueOptions)}`}
+    >
+      <Space
+        direction={properties.direction}
+        wrap={type.isNone(properties.wrap) ? true : properties.wrap}
+        align={type.isNone(properties.align) ? 'start' : properties.align}
+      >
+        {uniqueValueOptions.map((opt, i) =>
+          type.isPrimitive(opt) ? (
+            <Radio id={`${blockId}_${opt}`} key={i} value={`${i}`}>
+              {renderHtml({ html: `${opt}`, methods })}
+            </Radio>
+          ) : (
+            <Radio
+              id={`${blockId}_${i}`}
+              key={i}
+              value={`${i}`}
+              disabled={opt.disabled}
+              style={opt.style}
+            >
+              {type.isNone(opt.label)
+                ? renderHtml({ html: `${opt.value}`, methods })
+                : renderHtml({ html: opt.label, methods })}
+            </Radio>
+          )
+        )}
+      </Space>
+    </RadioGroup>
+  );
   return (
     <Label
       blockId={blockId}
@@ -46,68 +91,24 @@ const RadioSelector = ({
       validation={validation}
       required={required}
       content={{
-        content: () => (
-          <RadioGroup
-            id={`${blockId}_input`}
-            className={methods.makeCssClass([
-              properties.color && {
-                '& > label > span.ant-radio-checked:not(.ant-radio-disabled) > span': {
-                  borderColor: `${properties.color} !important`,
-                  '&:after': {
-                    backgroundColor: `${properties.color} !important`,
-                  },
-                },
-              },
-              properties.inputStyle,
-            ])}
-            disabled={properties.disabled || loading}
-            onChange={(event) => {
-              const val = type.isPrimitive(uniqueValueOptions[event.target.value])
-                ? uniqueValueOptions[event.target.value]
-                : uniqueValueOptions[event.target.value].value;
-              methods.setValue(val);
-              methods.triggerEvent({ name: 'onChange', event: { value: val } });
-            }}
-            value={`${getValueIndex(value, uniqueValueOptions)}`}
-          >
-            <Space
-              direction={properties.direction}
-              wrap={type.isNone(properties.wrap) ? true : properties.wrap}
-              align={type.isNone(properties.align) ? 'start' : properties.align}
-            >
-              {uniqueValueOptions.map((opt, i) =>
-                type.isPrimitive(opt) ? (
-                  <Radio id={`${blockId}_${opt}`} key={i} value={`${i}`}>
-                    {renderHtml({ html: `${opt}`, methods })}
-                  </Radio>
-                ) : (
-                  <Radio
-                    id={`${blockId}_${i}`}
-                    key={i}
-                    value={`${i}`}
-                    disabled={opt.disabled}
-                    className={methods.makeCssClass(opt.style)}
-                  >
-                    {type.isNone(opt.label)
-                      ? renderHtml({ html: `${opt.value}`, methods })
-                      : renderHtml({ html: opt.label, methods })}
-                  </Radio>
-                )
-              )}
-            </Space>
-          </RadioGroup>
-        ),
+        content: () =>
+          properties.color ? (
+            <ConfigProvider theme={{ components: { Radio: { colorPrimary: properties.color } } }}>
+              {radioGroup}
+            </ConfigProvider>
+          ) : (
+            radioGroup
+          ),
       }}
     />
   );
 };
 
-RadioSelector.defaultProps = blockDefaultProps;
 RadioSelector.meta = {
   valueType: 'any',
   category: 'input',
   icons: [...Label.meta.icons],
-  styles: ['blocks/RadioSelector/style.less'],
+  cssKeys: ['element'],
 };
 
-export default RadioSelector;
+export default withTheme('Radio', RadioSelector);

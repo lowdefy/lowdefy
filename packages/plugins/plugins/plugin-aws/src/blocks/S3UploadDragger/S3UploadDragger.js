@@ -87,7 +87,7 @@ S3UploadDragger.meta = {
   valueType: 'object',
   category: 'input',
   icons: [],
-  styles: ['blocks/S3UploadDragger/style.less'],
+  styles: [],
 };
 
 export default S3UploadDragger;

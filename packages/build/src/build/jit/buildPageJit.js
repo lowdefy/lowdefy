@@ -17,7 +17,9 @@
 import fs from 'fs';
 import path from 'path';
 import { serializer, type } from '@lowdefy/helpers';
-import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
+import { ConfigError, LowdefyInternalError, resolveConfigLocation } from '@lowdefy/errors';
+
+import operators from '@lowdefy/operators-js/operators/build';
 
 import addKeys from '../addKeys.js';
 import buildPage from '../buildPages/buildPage.js';
@@ -25,18 +27,44 @@ import validateLinkReferences from '../buildPages/validateLinkReferences.js';
 import validatePayloadReferences from '../buildPages/validatePayloadReferences.js';
 import validateServerStateReferences from '../buildPages/validateServerStateReferences.js';
 import validateStateReferences from '../buildPages/validateStateReferences.js';
+import collectDynamicIdentifiers from '../collectDynamicIdentifiers.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 import createContext from '../../createContext.js';
-import createRefReviver from '../buildRefs/createRefReviver.js';
-import evaluateBuildOperators from '../buildRefs/evaluateBuildOperators.js';
 import evaluateStaticOperators from '../buildRefs/evaluateStaticOperators.js';
+import getRefContent from '../buildRefs/getRefContent.js';
 import jsMapParser from '../buildJs/jsMapParser.js';
 import makeRefDefinition from '../buildRefs/makeRefDefinition.js';
-import recursiveBuild from '../buildRefs/recursiveBuild.js';
+import { resolve, WalkContext, cloneForResolve, tagRefDeep } from '../buildRefs/walker.js';
+import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
 import detectMissingPluginPackages from './detectMissingPluginPackages.js';
 import updateServerPackageJsonJit from './updateServerPackageJsonJit.js';
 import validatePageTypes from './validatePageTypes.js';
 import writePageJit from './writePageJit.js';
+
+validateOperatorsDynamic({ operators });
+const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
+
+// Resolve configKey → source using the in-memory keyMap so the server error
+// handler does not read the stale skeleton keyMap from disk.  JIT builds assign
+// fresh ~k values (makeId starts at 0 in the server process) that collide with
+// the skeleton build's keyMap entries, causing wrong line numbers.
+function resolveJitErrorLocations(error, buildContext) {
+  const errors = error.buildErrors ?? [error];
+  for (const err of errors) {
+    if (!err || !err.configKey) continue;
+    const location = resolveConfigLocation({
+      configKey: err.configKey,
+      keyMap: buildContext.keyMap,
+      refMap: buildContext.refMap,
+      configDirectory: buildContext.directories.config,
+    });
+    if (location) {
+      err.source = location.source;
+      err.config = location.config;
+      delete err.configKey;
+    }
+  }
+}
 
 async function buildPageJit({ pageId, pageRegistry, context, directories, logger }) {
   // Use provided context or create a minimal one for JIT builds
@@ -93,18 +121,20 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     let resolvedVars = null;
     if (unresolvedVars) {
       const varRefDef = makeRefDefinition({}, null, buildContext.refMap);
-      resolvedVars = await recursiveBuild({
-        context: buildContext,
-        refDef: varRefDef,
-        count: 0,
-        content: unresolvedVars,
-        referencedFrom: pageEntry.refPath ?? pageEntry.resolverOriginal?.resolver,
+      const varCtx = new WalkContext({
+        buildContext,
+        refId: varRefDef.id,
+        sourceRefId: null,
+        vars: {},
+        path: '',
+        currentFile: pageEntry.refPath ?? pageEntry.resolverOriginal?.resolver ?? '',
+        refChain: new Set(),
+        operators,
+        env: process.env,
+        dynamicIdentifiers,
+        shouldStop: null,
       });
-      resolvedVars = await evaluateBuildOperators({
-        context: buildContext,
-        input: resolvedVars,
-        refDef: varRefDef,
-      });
+      resolvedVars = await resolve(cloneForResolve(unresolvedVars), varCtx);
     }
 
     let refDef;
@@ -122,18 +152,25 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       buildContext.refMap[refDef.id].path = refDef.path;
     }
 
-    let processed = await recursiveBuild({
+    const pageContent = await getRefContent({
       context: buildContext,
       refDef,
-      count: 0,
+      referencedFrom: null,
     });
-
-    // Top-level operator evaluation (same as buildRefs does after recursiveBuild)
-    processed = await evaluateBuildOperators({
-      context: buildContext,
-      input: processed,
-      refDef,
+    const pageCtx = new WalkContext({
+      buildContext,
+      refId: refDef.id,
+      sourceRefId: null,
+      vars: refDef.vars ?? {},
+      path: '',
+      currentFile: refDef.path ?? '',
+      refChain: new Set(),
+      operators,
+      env: process.env,
+      dynamicIdentifiers,
+      shouldStop: null,
     });
+    let processed = await resolve(pageContent, pageCtx);
     processed = evaluateStaticOperators({
       context: buildContext,
       input: processed,
@@ -149,12 +186,9 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       }
     }
 
-    // Stamp root-level content with ~r for correct error file tracing.
-    // recursiveBuild stamps child _ref content via createRefReviver, but the
-    // root file's own objects have no parent to do this. Without ~r, addKeys
-    // can't link objects to their source file and errors fall back to lowdefy.yaml.
-    const reviver = createRefReviver(refDef.id);
-    processed = serializer.copy(processed, { reviver });
+    // Tag all objects with ~r for ref provenance (normally done inside _ref
+    // resolution by the walker; JIT resolves the page file directly).
+    tagRefDeep(processed, refDef.id);
 
     // Apply skeleton-computed auth (buildAuth ran during skeleton build)
     processed.auth = pageEntry.auth;
@@ -231,6 +265,8 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     if (buildErrors.length > 0 && !err.buildErrors) {
       err.buildErrors = [err, ...buildErrors];
     }
+    // Resolve error locations using in-memory keyMap before re-throwing
+    resolveJitErrorLocations(err, buildContext);
     if (err.isLowdefyError) {
       throw err;
     }

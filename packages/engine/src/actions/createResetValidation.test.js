@@ -101,9 +101,9 @@ test('RestValidation after required field', async () => {
     pageConfig,
     operators: lowdefy._internal.operators,
   });
-  const button = context._internal.RootAreas.map['button'];
-  const reset = context._internal.RootAreas.map['reset'];
-  const text1 = context._internal.RootAreas.map['text1'];
+  const button = context._internal.RootSlots.map['button'];
+  const reset = context._internal.RootSlots.map['reset'];
+  const text1 = context._internal.RootSlots.map['text1'];
   expect(text1.eval.validation).toEqual({
     errors: ['This field is required'],
     status: null,

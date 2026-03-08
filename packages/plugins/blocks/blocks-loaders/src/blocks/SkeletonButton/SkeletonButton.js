@@ -19,7 +19,7 @@ import { blockDefaultProps } from '@lowdefy/block-utils';
 
 import Skeleton from '../Skeleton/Skeleton.js';
 
-const SkeletonButton = ({ properties, methods }) => {
+const SkeletonButton = ({ classNames, properties, styles }) => {
   let height;
   switch (properties.size) {
     case 'small':
@@ -33,12 +33,14 @@ const SkeletonButton = ({ properties, methods }) => {
   }
   return (
     <Skeleton
-      methods={methods}
-      properties={{
-        style: {
-          ...{ borderRadius: properties.shape === 'round' && height / 2 },
-          ...(properties.style || {}),
+      classNames={classNames}
+      styles={{
+        element: {
+          borderRadius: properties.shape === 'round' && height / 2,
+          ...styles?.element,
         },
+      }}
+      properties={{
         width: properties.width ?? '100%',
         height,
       }}
@@ -50,7 +52,6 @@ SkeletonButton.defaultProps = blockDefaultProps;
 SkeletonButton.meta = {
   category: 'display',
   icons: [],
-  styles: ['blocks/SkeletonButton/style.less'],
 };
 
 export default SkeletonButton;

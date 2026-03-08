@@ -265,6 +265,13 @@
       "renderTags": {
         "type": "boolean",
         "description": "When true, the selected option labels are rendered as tags in the selector input. This field must be true to render option tag values."
+      },
+      "theme": {
+        "type": "object",
+        "description": "Antd design token overrides for this block. See <a href=\"https://ant.design/components/overview#design-token\">antd design tokens</a>.",
+        "docs": {
+          "displayType": "yaml"
+        }
       }
     }
   },
@@ -293,5 +300,6 @@
         "description": "Trigger actions when input is changed. 'value' is passed to the _event operator to be used in actions such as search queries."
       }
     }
-  }
+  },
+  "cssKeys": ["element"]
 }

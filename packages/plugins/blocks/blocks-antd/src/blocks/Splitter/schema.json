@@ -1,0 +1,61 @@
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "layout": {
+        "type": "string",
+        "enum": ["horizontal", "vertical"],
+        "default": "horizontal",
+        "description": "Layout direction of the splitter."
+      },
+      "panels": {
+        "type": "array",
+        "description": "Panel configuration array. Each panel has key, size, min, max, defaultSize, collapsible, resizable.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "key": {
+              "type": "string",
+              "description": "Unique panel key, used to match content slots."
+            },
+            "size": {
+              "type": ["number", "string"],
+              "description": "Controlled panel size."
+            },
+            "min": {
+              "type": ["number", "string"],
+              "description": "Minimum size threshold."
+            },
+            "max": {
+              "type": ["number", "string"],
+              "description": "Maximum size threshold."
+            },
+            "defaultSize": {
+              "type": ["number", "string"],
+              "description": "Default panel size."
+            },
+            "collapsible": {
+              "type": ["boolean", "object"],
+              "description": "Whether the panel is collapsible."
+            },
+            "resizable": {
+              "type": "boolean",
+              "default": true,
+              "description": "Whether the panel is resizable."
+            }
+          }
+        }
+      },
+      "theme": {
+        "type": "object",
+        "description": "Antd design token overrides for this block. See <a href=\"https://ant.design/components/overview#design-token\">antd design tokens</a>.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      }
+    }
+  },
+  "cssKeys": ["element"]
+}

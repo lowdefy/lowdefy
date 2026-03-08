@@ -1,0 +1,50 @@
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "open": {
+        "type": "boolean",
+        "default": false,
+        "description": "Whether to show the tour."
+      },
+      "steps": {
+        "type": "array",
+        "description": "Tour steps. Each step has title, description, target (blockId string), placement, etc."
+      },
+      "current": {
+        "type": "integer",
+        "description": "Current step index."
+      },
+      "type": {
+        "type": "string",
+        "enum": ["default", "primary"],
+        "default": "default",
+        "description": "Type of the tour."
+      },
+      "placement": {
+        "type": "string",
+        "description": "Position of the guide card relative to the target element."
+      },
+      "mask": {
+        "type": ["boolean", "object"],
+        "default": true,
+        "description": "Whether to enable mask."
+      },
+      "arrow": {
+        "type": ["boolean", "object"],
+        "default": true,
+        "description": "Whether to show the arrow."
+      },
+      "theme": {
+        "type": "object",
+        "description": "Antd design token overrides for this block. See <a href=\"https://ant.design/components/overview#design-token\">antd design tokens</a>.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      }
+    }
+  },
+  "cssKeys": ["element"]
+}

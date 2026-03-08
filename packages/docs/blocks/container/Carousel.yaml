@@ -21,7 +21,7 @@ _ref:
     filePath: blocks/container/Carousel.yaml
     description_content: |
       Carousel to navigate through different slides consisting of blocks.
-      The key of each slide is the area keys of the container.
+      The key of each slide is the slot keys of the container.
       ### Methods
 
         - `goTo`: Set the current slide to a specific slide.
@@ -34,8 +34,8 @@ _ref:
         - key: slide1
         - key: slide2
         - key: slide3
-    user_defined_areas: true
-    areas:
+    user_defined_slots: true
+    slots:
       - slide1
       - slide2
       - slide3
@@ -51,7 +51,7 @@ _ref:
               - key: slide_one
               - key: slide_two
               - key: slide_three
-          areas:
+          slots:
             slide_one:
               blocks:
                 - id: side_1
@@ -103,7 +103,7 @@ _ref:
                 settings:
                   slidesToShow: 1
                   slidesToScroll: 1
-          areas:
+          slots:
             slide_one:
               blocks:
                 - id: side_1

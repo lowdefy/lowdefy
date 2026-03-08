@@ -55,7 +55,6 @@ AgGridInputAlpineDark.meta = {
   category: 'input',
   valueType: 'array',
   icons: [],
-  styles: ['blocks/AgGridInputAlpineDark/style.less'],
 };
 
 export default AgGridInputAlpineDark;

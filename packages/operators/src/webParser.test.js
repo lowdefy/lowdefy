@@ -273,6 +273,7 @@ test('operator returns value with ~k present', () => {
           "state": Object {
             "state": true,
           },
+          "theme": undefined,
           "user": Object {
             "user": true,
           },

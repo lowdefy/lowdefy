@@ -7,13 +7,20 @@
   "type": "module",
   "exports": {
     "./connections": "./src/connections.js",
-    "./types": "./src/types.js"
+    "./types": "./dist/types.json"
   },
   "files": [
-    "src/*"
+    "src/*",
+    "dist/*"
   ],
+  "scripts": {
+    "build": "extract-plugin-types"
+  },
   "dependencies": {
     "@lowdefy/errors": "4.5.2"
+  },
+  "devDependencies": {
+    "@lowdefy/node-utils": "4.5.2"
   },
   "publishConfig": {
     "access": "public"

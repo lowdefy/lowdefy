@@ -20,8 +20,8 @@ _ref:
     schema: ../plugins/blocks/blocks-basic/src/blocks/List/schema.json
     filePath: blocks/list/List.yaml
     description_content: |
-      The List block renders a content area for all items in the array. All list blocks create a array in state at their block `id`. The list content areas are rendered for each index in the array. See the [List Concept](/lists) page for a detailed description on how to work with lists.
-    areas:
+      The List block renders a content slot for all items in the array. All list blocks create an array in state at their block `id`. The list content slots are rendered for each index in the array. See the [List Concept](/lists) page for a detailed description on how to work with lists.
+    slots:
       - content
     init_state_values:
       todos:
@@ -76,7 +76,7 @@ _ref:
           id: todo_app
           type: Box
           layout:
-            contentGutter: 16
+            gap: 16
           blocks:
             - id: todo_input
               type: TextInput
@@ -106,7 +106,7 @@ _ref:
             - id: todos
               type: List
               layout:
-                contentGutter: 16
+                gap: 16
               blocks:
                 - id: todos.$
                   type: TitleInput

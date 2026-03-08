@@ -576,6 +576,30 @@ export default {
             type: 'Block "style" should be an object.',
           },
         },
+        class: {
+          oneOf: [
+            { type: 'string' },
+            { type: 'array', items: { type: 'string' } },
+            {
+              type: 'object',
+              additionalProperties: {
+                oneOf: [{ type: 'string' }, { type: 'array', items: { type: 'string' } }],
+              },
+            },
+          ],
+          errorMessage: {
+            type: 'Block "class" should be a string, array of strings, or object.',
+          },
+        },
+        styles: {
+          type: 'object',
+          additionalProperties: {
+            type: 'object',
+          },
+          errorMessage: {
+            type: 'Block "styles" should be an object.',
+          },
+        },
         visible: {},
         loading: {},
         blocks: {
@@ -707,6 +731,31 @@ export default {
           },
           errorMessage: {
             type: 'Block "events" should be an object.',
+          },
+        },
+        slots: {
+          type: 'object',
+          patternProperties: {
+            '^.*$': {
+              type: 'object',
+              properties: {
+                blocks: {
+                  type: 'array',
+                  items: {
+                    $ref: '#/definitions/block',
+                  },
+                  errorMessage: {
+                    type: 'Block "slots.{slotKey}.blocks" should be an array.',
+                  },
+                },
+              },
+              errorMessage: {
+                type: 'Block "slots.{slotKey}" should be an object.',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Block "slots" should be an object.',
           },
         },
         areas: {
@@ -1297,6 +1346,17 @@ export default {
             type: 'App "config.homePageId" should be a string.',
           },
         },
+      },
+    },
+    theme: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        antd: { type: 'object' },
+        tailwind: { type: 'object' },
+      },
+      errorMessage: {
+        type: 'App "theme" should be an object.',
       },
     },
     plugins: {

@@ -67,5 +67,6 @@
         "description": "Trigger actions on breakpoint change."
       }
     }
-  }
+  },
+  "cssKeys": ["element"]
 }

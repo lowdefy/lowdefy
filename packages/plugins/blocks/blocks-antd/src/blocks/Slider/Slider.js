@@ -15,20 +15,21 @@
 */
 
 import React from 'react';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 import { Slider } from 'antd';
-import classNames from 'classnames';
 
 import Label from '../Label/Label.js';
+import withTheme from '../withTheme.js';
 
 const SliderBlock = ({
   blockId,
+  classNames = {},
   components: { Icon, Link },
   events,
   loading,
   methods,
   properties,
   required,
+  styles = {},
   validation,
   value,
 }) => {
@@ -37,7 +38,6 @@ const SliderBlock = ({
       blockId={blockId}
       components={{ Icon, Link }}
       events={events}
-      methods={methods}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       required={required}
       validation={validation}
@@ -45,7 +45,7 @@ const SliderBlock = ({
         content: () => (
           <Slider
             id={`${blockId}_input`}
-            className={classNames(methods.makeCssClass(properties.inputStyle))}
+            className={classNames.element}
             disabled={properties.disabled || loading}
             dots={properties.dots}
             handleStyle={properties.handleStyle}
@@ -57,6 +57,7 @@ const SliderBlock = ({
             range={properties.range}
             reverse={properties.reverse}
             step={properties.step}
+            style={styles.element}
             tooltip={properties.tooltip}
             trackStyle={properties.trackStyle}
             vertical={properties.vertical}
@@ -72,12 +73,11 @@ const SliderBlock = ({
   );
 };
 
-SliderBlock.defaultProps = blockDefaultProps;
 SliderBlock.meta = {
   valueType: 'any',
   category: 'input',
   icons: [...Label.meta.icons],
-  styles: ['blocks/Slider/style.less'],
+  cssKeys: ['element'],
 };
 
-export default SliderBlock;
+export default withTheme('Slider', SliderBlock);

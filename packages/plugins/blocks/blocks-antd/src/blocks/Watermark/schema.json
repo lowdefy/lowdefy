@@ -1,0 +1,50 @@
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "text": {
+        "type": ["string", "array"],
+        "description": "Watermark text content. Maps to antd \"content\" prop."
+      },
+      "font": {
+        "type": "object",
+        "description": "Font style configuration with color, fontSize, fontWeight, fontFamily, fontStyle."
+      },
+      "gap": {
+        "type": "array",
+        "description": "Gap between watermarks as [horizontal, vertical]."
+      },
+      "offset": {
+        "type": "array",
+        "description": "Offset of the watermark from the top-left as [x, y]."
+      },
+      "rotate": {
+        "type": "number",
+        "default": -22,
+        "description": "Rotation angle of watermark in degrees."
+      },
+      "zIndex": {
+        "type": "integer",
+        "description": "Z-index of the watermark."
+      },
+      "width": {
+        "type": "number",
+        "description": "Width of the watermark."
+      },
+      "height": {
+        "type": "number",
+        "description": "Height of the watermark."
+      },
+      "theme": {
+        "type": "object",
+        "description": "Antd design token overrides for this block. See <a href=\"https://ant.design/components/overview#design-token\">antd design tokens</a>.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      }
+    }
+  },
+  "cssKeys": ["element"]
+}

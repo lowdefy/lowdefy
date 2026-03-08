@@ -120,6 +120,13 @@
       "uncheckedText": {
         "type": "string",
         "description": "Text to shown when switch is not checked (false)."
+      },
+      "theme": {
+        "type": "object",
+        "description": "Antd design token overrides for this block. See <a href=\"https://ant.design/components/overview#design-token\">antd design tokens</a>.",
+        "docs": {
+          "displayType": "yaml"
+        }
       }
     }
   },
@@ -132,5 +139,6 @@
         "description": "Trigger action when switch is changed."
       }
     }
-  }
+  },
+  "cssKeys": ["element"]
 }

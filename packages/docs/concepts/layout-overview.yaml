@@ -24,22 +24,20 @@ _ref:
         type: Markdown
         properties:
           content: |
-            Containers blocks are used to arrange blocks on a page. Blocks of category `container` and `list` all function as container blocks. Container blocks have content areas into which a list of blocks are rendered. `List` category blocks can render container areas for each element in the data array.
+            Containers blocks are used to arrange blocks on a page. Blocks of category `container` and `list` all function as container blocks. Container blocks have content slots into which a list of blocks are rendered. `List` category blocks can render content slots for each element in the data array.
 
-            Blocks on a page can be arranged using a __span__ or __flex__ layout. Blocks in __span__ layout are placed in a 24 column grid system, whereas __flex__ blocks dynamically grows or shrink to fit content into a row depending on content size and screen size.
+            Blocks on a page can be arranged using a __span__ or __flex__ layout. Blocks in __span__ layout are placed in a 24 column CSS custom properties grid, whereas __flex__ blocks dynamically grows or shrink to fit content into a row depending on content size and screen size.
 
-            Under the hood, Lowdefy layouts are based on the [Ant Design Grid System](https://ant.design/components/grid/). The content areas are implemented as a row, and blocks are implemented as a column.
+            # Content slots
 
-            # Content areas
+            Each container has content slots - these are named areas where nested blocks can be placed. All container blocks have a primary content slot. This slot is called `content`. Container blocks might have other content slots, like `header`, `footer`, or `title`. These content slots are implemented specifically by the block.
 
-            Each container has content areas - these are areas where nested blocks can be placed. All container blocks have a primary content area. This area is called `content`. Container blocks might have other content areas, like `header`, `footer`, or `title`. These content areas are implemented specifically by the block.
-
-            To place blocks in the primary content area of a container, the block definitions for those blocks can be placed inside the `blocks` array of the container block.
+            To place blocks in the primary content slot of a container, the block definitions for those blocks can be placed inside the `blocks` array of the container block.
 
             > In the following examples, blocks of type `Container` will represent a generic container block, and blocks of type `Block` will represent a generic block. The `Container` block might be a [`Box`](/Box), a [`Card`](/Card), a [`PageHeaderMenu`](/PageHeaderMenu) or any other container block. The `Block` blocks could be any type of block, including other container blocks.
 
 
-            ###### Two blocks in the primary content area (`content`) of a container:
+            ###### Two blocks in the primary content slot (`content`) of a container:
             ```yaml
             - id: container
               type: Container
@@ -81,16 +79,16 @@ _ref:
           marginTop: 16px
         properties:
           content: |
-            To place blocks in other content areas, the block definitions can be placed in the `blocks` array of the specific area in the `areas` object:
+            To place blocks in other content slots, the block definitions can be placed in the `blocks` array of the specific slot in the `slots` object:
 
-            > Note the blocks are placed under `areas.[areaName].blocks`
+            > Note the blocks are placed under `slots.[slotName].blocks`
 
 
-            ###### Blocks in the `header`, `content` and `footer` areas:
+            ###### Blocks in the `header`, `content` and `footer` slots:
             ```yaml
             - id: container
               type: Container
-              areas:
+              slots:
                 header:
                   blocks:
                     - id: block1
@@ -110,7 +108,7 @@ _ref:
           padding: 16px
           marginTop: 16px
         layout:
-          contentGutter: 16
+          gap: 16
         blocks:
           - id: ex_areas_area1
             type: Box
@@ -162,16 +160,16 @@ _ref:
           marginTop: 16px
         properties:
           content: |
-            Placing blocks both in the `blocks` array, as well as under the `areas.content.blocks` array is an anti-pattern, and in this case the blocks under `blocks` will overwrite those under `areas.content.blocks`.
+            Placing blocks both in the `blocks` array, as well as under the `slots.content.blocks` array is an anti-pattern, and in this case the blocks under `blocks` will overwrite those under `slots.content.blocks`.
 
-            ###### Anti-pattern: Blocks in the `blocks` and `areas.content.blocks`:
+            ###### Anti-pattern: Blocks in the `blocks` and `slots.content.blocks`:
             ```yaml
             - id: container
               type: Container
               blocks:
                 - id: block1
                   type: Block
-              areas:
+              slots:
                 content:
                   blocks:
                     - id: block2
@@ -204,7 +202,7 @@ _ref:
           content: |
             # Layouts using span
 
-            Each content area has 24 columns. Blocks have a `span` property, which determines how many columns the block occupies. Blocks are laid out horizontally, until the sum of the spans is more than 24, then the last block block is wrapped to the next row.
+            Each content slot has 24 columns. Blocks have a `span` property, which determines how many columns the block occupies. Blocks are laid out horizontally, until the sum of the spans is more than 24, then the last block block is wrapped to the next row.
 
             By default a block is given a span of 24. This is what makes blocks lay out vertically below each other.
 
@@ -309,16 +307,22 @@ _ref:
 
             The `layout` object on blocks can be used to control how a block is placed in the layout. The `layout` properties that can be defined are:
 
-            - `align`: _Enum_ - Align block vertically in the area. Options are `top`, `middle`, and `bottom`. Default `top.`
+            - `selfAlign`: _Enum_ - Align block vertically in the area. Options are `top`, `middle`, and `bottom`. Default `top.`
+            - `align`: _Enum_ - Align content area children vertically. Options are `top`, `middle`, and `bottom`. Default `top.` This value flows to the content area as a default.
             - `flex`: _String_ - Set the [`flex`](https://developer.mozilla.org/en-US/docs/Web/CSS/flex) CSS property. This overwrites the `grow`, `shrink`, and `size` properties.
+            - `gap`: _Number_ | _Array_ - Set the gap (space) between blocks in the content area. If an array, the first element is the horizontal gap, and the second is the vertical gap. This value flows to the content area as a default.
             - `grow`: _Number_ - Set the [`flex-grow`](https://developer.mozilla.org/en-US/docs/Web/CSS/flex-grow) CSS property. Default 0.
+            - `justify`: _Enum_ - Justify content area children horizontally. Options are `start`, `end`, `center`, `space-around`, and `space-between`. Default `start`. This value flows to the content area as a default.
+            - `direction`: _Enum_ - Set the flex-direction for the content area. Options are `row`, `row-reverse`, `column`, and `column-reverse`. Default `row`. This value flows to the content area as a default.
+            - `wrap`: _Enum_ - Set the flex-wrap for the content area. Options are `wrap`, `nowrap`, and `wrap-reverse`. Default `wrap`. This value flows to the content area as a default.
+            - `overflow`: _Enum_ - Set the overflow for the content area. Options are `visible`, `hidden`, `scroll`, and `auto`. Default `visible`. This value flows to the content area as a default.
             - `order`: _Number_ - Change the order blocks are rendered in. By default blocks are rendered in the order they appear in the blocks array.
             - `offset`: _Number_ - Number of grid cells to shift the block to the right.
             - `pull`: _Number_ - Shift the block this number of cells to the left. This will make it overlap above with previous blocks.
             - `push`: _Number_ - Shift the block this number of cells to the right. This will make it overlap under with the following blocks.
             - `shrink`: _Number_ - Set the [`flex-shrink`](https://developer.mozilla.org/en-US/docs/Web/CSS/flex-shrink) CSS property. Default 1.
             - `size`: _String_ | _Number_ - Set the [`flex-basis`](https://developer.mozilla.org/en-US/docs/Web/CSS/flex-basis) CSS property. Default `auto`.
-            - `span`: _Number_ - Number of grid cells the block should occupy.
+            - `span`: _Number_ - Number of grid cells the block should occupy. Setting `span: 0` hides the block (`display: none`).
 
             ### Responsive layouts
       - id: video_responsive
@@ -337,16 +341,16 @@ _ref:
           marginTop: 16px
         properties:
           content: |
-            All the settings defined in the Block `layout` and `style` properties can be defined for the various responsive breakpoints. Breakpoints apply to all window width sizes smaller than the breakpoint width, where the smallest breakpoint setting takes precedence.
+            All the settings defined in the Block `layout` properties can be defined for the various responsive breakpoints. Breakpoints apply to all window width sizes smaller than the breakpoint width, where the smallest breakpoint setting takes precedence.
 
             The responsive breakpoints are:
 
-              - `xs`: window width less than 576px
-              - `sm`: window width greater than 576px
+              - `xs`: window width less than 640px
+              - `sm`: window width greater than 640px
               - `md`: window width greater than 768px
-              - `lg`: window width greater than 992px
-              - `xl`: window width greater than 1200px
-              - `xxl`: window width greater than  1600px
+              - `lg`: window width greater than 1024px
+              - `xl`: window width greater than 1280px
+              - `2xl`: window width greater than 1536px
 
             The responsive layout settings are applied to the `layout` object. For example making a block half container width and full container width for devices like tablets or smaller:
             ```yaml
@@ -358,17 +362,9 @@ _ref:
                 span: 24
             ```
 
-            The same can be done for the `style` object, for example, making reducing padding on xs and sm devices:
-            ```yaml
-            id: responsive_block
-            type: Box
-            style:
-              padding: 64
-              sm:
-                padding: 32
-            ```
+            > **Note:** Responsive breakpoint settings on `style` have been removed. Only `layout` supports responsive breakpoints. Use Tailwind responsive classes via `class` for responsive styling instead.
 
-            The responsive breakpoint settings applies to all properties in `layout` and `style` objects on blocks.
+            See the [Migration Guide](/v4-to-v5) for details on all layout changes.
 
             ### Block layout properties usage examples:
       - id: usage_examples_collapse
@@ -405,17 +401,17 @@ _ref:
                         - id: block2
                           type: Block
                           layout:
-                            align: top
+                            selfAlign: top
                             span: 6
                         - id: block3
                           type: Block
                           layout:
-                            align: middle
+                            selfAlign: middle
                             span: 6
                         - id: block4
                           type: Block
                           layout:
-                            align: bottom
+                            selfAlign: bottom
                             span: 6
                     ```
 
@@ -435,7 +431,7 @@ _ref:
                         type: Html
                         style:
                           textAlign: center
-                        layout: # Default align value is `top`.
+                        layout: # Default selfAlign value is `top`.
                           span: 6
                         properties:
                           html: |
@@ -445,7 +441,7 @@ _ref:
                         style:
                           textAlign: center
                         layout:
-                          align: top
+                          selfAlign: top
                           span: 6
                         properties:
                           html: |
@@ -455,7 +451,7 @@ _ref:
                         style:
                           textAlign: center
                         layout:
-                          align: middle
+                          selfAlign: middle
                           span: 6
                         properties:
                           html: |
@@ -465,7 +461,7 @@ _ref:
                         style:
                           textAlign: center
                         layout:
-                          align: bottom
+                          selfAlign: bottom
                           span: 6
                         properties:
                           html: |
@@ -691,10 +687,12 @@ _ref:
             The properties that can be set are:
               - `align`: _Enum_ - Align blocks vertically in the area. Options are `top`, `middle`, and `bottom`. Default `top.`
               - `direction`: _Enum_ - Set the [`flex-direction`](https://developer.mozilla.org/en-US/docs/Web/CSS/flex-direction) CSS property for the area. Options are `row`, `row-reverse`, `column`, and and `column-reverse`. Default `row`.
-              - `gutter`: _Number_ | _Array_  - Create gutter (space) between blocks placed in the area. If an array, the first element is the horizontal gutter, and the second is the vertical gutter.
+              - `gap`: _Number_ | _Array_  - Create gap (space) between blocks placed in the area. If an array, the first element is the horizontal gap, and the second is the vertical gap.
               - `justify`: _Enum_ - Justify blocks horizontally inside the area. Options are `start`, `end`, `center`, `space-around`, and `space-between`. Default `start`.
               - `overflow`: _Enum_ - Set the [`overflow`](https://developer.mozilla.org/en-US/docs/Web/CSS/overflow) CSS property for the area. Options are `visible`, `hidden`, `scroll`, and `space-between`. Default `visible`.
               - `wrap`: _Enum_ - Set the [`flex-wrap`](https://developer.mozilla.org/en-US/docs/Web/CSS/flex-wrap) CSS property for the area. Options are `wrap`, `nowrap`, and `wrap-reverse`. Default `wrap`.
+
+            > **Note:** The `gap`, `align`, `justify`, `direction`, `wrap`, and `overflow` properties can also be set on the parent block's `layout` object, where they flow to the content area as defaults.
 
             ### Area layout properties examples:
 
@@ -706,8 +704,8 @@ _ref:
               key: align
             - title: Direction example
               key: direction
-            - title: Gutter example
-              key: gutter
+            - title: Gap example
+              key: gap
             - title: Justify example
               key: justify
         areas:
@@ -722,7 +720,7 @@ _ref:
                     ```yaml
                     - id: container
                       type: Container
-                      areas:
+                      slots:
                         area1:
                           align: top
                           blocks:
@@ -763,7 +761,7 @@ _ref:
                   padding: 16px
                   marginTop: 16px
                 layout:
-                  contentGutter: 16
+                  gap: 16
                 blocks:
                   - id: ex_area_align_area1_title
                     type: Markdown
@@ -866,7 +864,7 @@ _ref:
                     ```yaml
                     - id: container
                       type: Container
-                      areas:
+                      slots:
                         area1:
                           direction: row
                           blocks:
@@ -918,7 +916,7 @@ _ref:
                   padding: 16px
                   marginTop: 16px
                 layout:
-                  contentGutter: 16
+                  gap: 16
                 blocks:
                   - id: ex_area_direction_area1_title
                     type: Markdown
@@ -1040,7 +1038,7 @@ _ref:
                             properties:
                               html: |
                                 <div style="background: #40a9ff; font-size: 16px; font-weight: 500;">Block 8</div>
-          gutter:
+          gap:
             blocks:
               - id: markdown_gutter_example
                 type: Markdown
@@ -1051,9 +1049,9 @@ _ref:
                     ```yaml
                     - id: container
                       type: Container
-                      areas:
+                      slots:
                         area1:
-                          gutter: 16
+                          gap: 16
                           blocks:
                             - id: block1
                               type: Block
@@ -1067,7 +1065,7 @@ _ref:
                               type: Block
 
                         area2:
-                          gutter: [8, 32]
+                          gap: [8, 32]
                           blocks:
                             - id: block4
                               type: Block
@@ -1087,17 +1085,17 @@ _ref:
                   padding: 16px
                   marginTop: 16px
                 layout:
-                  contentGutter: 16
+                  gap: 16
                 blocks:
                   - id: ex_area_gutter_area1_title
                     type: Markdown
                     properties:
-                      content: '##### Area 1 - `gutter: 16`'
+                      content: '##### Area 1 - `gap: 16`'
                   - id: ex_area_gutter_area1
                     type: Box
                     areas:
                       content:
-                        gutter: 16
+                        gap: 16
                         style:
                           border: '1px dashed #eb2f96'
                         blocks:
@@ -1129,12 +1127,12 @@ _ref:
                   - id: ex_area_gutter_area2_title
                     type: Markdown
                     properties:
-                      content: '##### Area 2 - `gutter: [8, 32]`'
+                      content: '##### Area 2 - `gap: [8, 32]`'
                   - id: ex_area_gutter_area2
                     type: Box
                     areas:
                       content:
-                        gutter: [8, 32]
+                        gap: [8, 32]
                         style:
                           border: '1px dashed #eb2f96'
                         blocks:
@@ -1174,7 +1172,7 @@ _ref:
                     ```yaml
                     - id: container
                       type: Container
-                      areas:
+                      slots:
                         area1:
                           justify: start
                           blocks:
@@ -1257,7 +1255,7 @@ _ref:
                   padding: 16px
                   marginTop: 16px
                 layout:
-                  contentGutter: 16
+                  gap: 16
                 blocks:
                   - id: ex_area_justify_area1_title
                     type: Markdown

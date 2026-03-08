@@ -15,20 +15,27 @@
 */
 
 import React from 'react';
-import { Typography } from 'antd';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import { ConfigProvider, Typography } from 'antd';
+import { renderHtml } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
+
+import withTheme from '../withTheme.js';
 
 const Title = Typography.Title;
 
-const TitleBlock = ({ blockId, components: { Icon }, events, properties, methods }) => {
-  return (
+const TitleBlock = ({
+  blockId,
+  classNames = {},
+  components: { Icon },
+  events,
+  properties,
+  methods,
+  styles = {},
+}) => {
+  const titleEl = (
     <Title
       id={blockId}
-      className={methods.makeCssClass([
-        properties.color && { color: `${properties.color} !important` },
-        properties.style,
-      ])}
+      className={classNames.element}
       code={properties.code}
       copyable={
         type.isObject(properties.copyable)
@@ -102,19 +109,26 @@ const TitleBlock = ({ blockId, components: { Icon }, events, properties, methods
       italic={properties.italic}
       level={properties.level}
       mark={properties.mark}
+      style={styles.element}
       type={properties.type}
       underline={properties.underline}
     >
       {renderHtml({ html: properties.content, methods })}
     </Title>
   );
+  return properties.color ? (
+    <ConfigProvider theme={{ components: { Typography: { colorText: properties.color } } }}>
+      {titleEl}
+    </ConfigProvider>
+  ) : (
+    titleEl
+  );
 };
 
-TitleBlock.defaultProps = blockDefaultProps;
 TitleBlock.meta = {
   category: 'display',
   icons: [],
-  styles: ['blocks/Title/style.less'],
+  cssKeys: ['element'],
 };
 
-export default TitleBlock;
+export default withTheme('Typography', TitleBlock);

@@ -171,7 +171,7 @@ test('yaml schemaNested propertiesFormTransformer', () => {
         ],
         "id": "block.properties.obj",
         "layout": Object {
-          "contentGutter": 0,
+          "gap": 0,
         },
         "properties": Object {
           "bodyStyle": Object {
@@ -314,7 +314,7 @@ test('yaml schemaYamlInArray propertiesFormTransformer', () => {
         ],
         "id": "block.properties.arr",
         "layout": Object {
-          "contentGutter": 0,
+          "gap": 0,
         },
         "properties": Object {
           "itemStyle": Object {
@@ -474,7 +474,7 @@ test('yaml schemaYamlInObjectInArray propertiesFormTransformer', () => {
             ],
             "id": "block.properties.arr.$",
             "layout": Object {
-              "contentGutter": 0,
+              "gap": 0,
             },
             "properties": Object {
               "bodyStyle": Object {
@@ -488,7 +488,7 @@ test('yaml schemaYamlInObjectInArray propertiesFormTransformer', () => {
         ],
         "id": "block.properties.arr",
         "layout": Object {
-          "contentGutter": 0,
+          "gap": 0,
         },
         "properties": Object {
           "itemStyle": Object {

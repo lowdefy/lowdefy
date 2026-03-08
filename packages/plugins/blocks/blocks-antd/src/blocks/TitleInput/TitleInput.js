@@ -15,19 +15,22 @@
 */
 
 import React, { useState } from 'react';
-import { Typography } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-utils';
+import { ConfigProvider, Typography } from 'antd';
 import { type } from '@lowdefy/helpers';
+
+import withTheme from '../withTheme.js';
 
 const Title = Typography.Title;
 
 const TitleInput = ({
   blockId,
+  classNames = {},
   components: { Icon },
   events,
   loading,
   methods,
   properties,
+  styles = {},
   value,
 }) => {
   const [editing, setEdit] = useState(false);
@@ -44,19 +47,17 @@ const TitleInput = ({
       methods.triggerEvent({ name: 'onChange', event: { value: val } });
     },
   };
-  return (
+  const titleEl = (
     <Title
       id={blockId}
+      className={classNames.element}
       code={properties.code}
       italic={properties.italic}
       level={properties.level}
       mark={properties.mark}
+      style={styles.element}
       type={properties.type}
       underline={properties.underline}
-      className={methods.makeCssClass([
-        properties.color && { color: `${properties.color} !important` },
-        properties.style,
-      ])}
       copyable={
         type.isObject(properties.copyable)
           ? {
@@ -134,13 +135,20 @@ const TitleInput = ({
       {!type.isNone(value) ? value.toString() : ''}
     </Title>
   );
+  return properties.color ? (
+    <ConfigProvider theme={{ components: { Typography: { colorText: properties.color } } }}>
+      {titleEl}
+    </ConfigProvider>
+  ) : (
+    titleEl
+  );
 };
-TitleInput.defaultProps = blockDefaultProps;
+
 TitleInput.meta = {
   valueType: 'string',
   category: 'input',
   icons: [],
-  styles: ['blocks/TitleInput/style.less'],
+  cssKeys: ['element'],
 };
 
-export default TitleInput;
+export default withTheme('Typography', TitleInput);

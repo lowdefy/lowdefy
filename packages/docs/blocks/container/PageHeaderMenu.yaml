@@ -20,7 +20,7 @@ _ref:
     schema: ../plugins/blocks/blocks-antd/src/blocks/PageHeaderMenu/schema.json
     filePath: blocks/container/PageHeaderMenu.yaml
     description_content: |
-      The Page Header Menu block provides a structured layout for a page with a header containing a menu, content and footer area.
+      The Page Header Menu block provides a structured layout for a page with a header containing a menu, content and footer slots.
     init_state_values:
       block.properties.menu.links:
         - id: home
@@ -46,7 +46,7 @@ _ref:
                 - id: page3
                   type: MenuLink
                   pageId: page3
-    areas:
+    slots:
       - content
       - footer
       - header

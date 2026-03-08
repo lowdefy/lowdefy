@@ -16,18 +16,16 @@
 
 import React from 'react';
 
-const Blank = ({ blockId, makeCssClass, children }) => (
+const Blank = ({ blockId, children }) => (
   <div
     id={blockId}
-    className={makeCssClass([
-      {
-        background: '#900000',
-        border: '2px solid #f00',
-        textAlign: 'center',
-        fontSize: 12,
-        color: '#fff',
-      },
-    ])}
+    style={{
+      background: '#900000',
+      border: '2px solid #f00',
+      textAlign: 'center',
+      fontSize: 12,
+      color: '#fff',
+    }}
   >
     {children}
   </div>

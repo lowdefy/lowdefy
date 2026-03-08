@@ -38,30 +38,32 @@ _ref:
                 All Lowdefy blocks are categorized according to their primary function:
                 - `display` - Display page elements.
                 - `input` - Modify a value in [`state`](/page-and-app-state).
-                - `container` - Render other blocks into [`content areas`](/layout).
-                - `list` - Render `content areas` and blocks for each element in the data array represented in [`state`](/page-and-app-state).
+                - `container` - Render other blocks into [`content slots`](/layout).
+                - `list` - Render `content slots` and blocks for each element in the data array represented in [`state`](/page-and-app-state).
 
-                When `state` updates or a requests call completes, the Lowdefy engine re-evaluates all operators and re-renders blocks for which the operator evaluation is different from the previous render result. The result is _live updates_ to all blocks on a page. Operators can be used to build _live update_ logic into all block fields, except for the `id`, `type`, `areas` and `blocks` fields.
+                When `state` updates or a requests call completes, the Lowdefy engine re-evaluates all operators and re-renders blocks for which the operator evaluation is different from the previous render result. The result is _live updates_ to all blocks on a page. Operators can be used to build _live update_ logic into all block fields, except for the `id`, `type`, `slots` and `blocks` fields.
 
                 The schema for a Lowdefy block is:
 
                 - `id: string`: An identifier for a block. For `Input` blocks the block `id` sets the field key which the block will modify in `state`. Field _dot-notation_ can be used to express fields which are nested in objects or arrays.
                 - `type: string`: __Required__ - This is the block type identifier and defines what block to use. The block type used must either be a default block type or can defined in the app's [`plugins`](/plugins) configuration.
                 - `properties: object`: All the settings passed to a block component. __Operators are evaluated__.
-                - `blocks: array`: A array of blocks to render to the default `content` area for `container` and `list` blocks. See [layout](/layout-overview) for more details on how to use the `blocks` array.
-                - `areas: object`: Used to set the content areas and content layout settings for `container` and `list` blocks. See [layout](/layout-overview) for more details on how to use `areas`.
+                - `blocks: array`: An array of blocks to render to the default `content` slot for `container` and `list` blocks. See [layout](/layout-overview) for more details on how to use the `blocks` array.
+                - `slots: object`: Used to set the content slots and content layout settings for `container` and `list` blocks. See [layout](/layout-overview) for more details on how to use `slots`.
                 - `events: object`: Used to define [`actions`](/events-and-actions) that run when the block triggers an [`event`](/events-and-actions).
                 - `layout: object`: Used to define the [layout](/layout-overview) settings for a block. __Operators are evaluated__.
                 - `skeleton: object`: Used to overwrite a block's default loading behavior by rendering a skeleton. Any block types from [`@lowdefy/blocks-basic`](https://github.com/lowdefy/lowdefy/tree/main/packages/plugins/blocks/blocks-basic/src/blocks) and [`@lowdefy/blocks-loaders`](https://github.com/lowdefy/lowdefy/tree/main/packages/plugins/blocks/blocks-loaders/src/blocks) can be used in the skeleton definition, including sub-blocks. __Operators are evaluated__.
                 - `loading: boolean`: When true, renders the block in loading. If a `skeleton` is defined, it will be rendered, else the block's default loading behavior will be rendered. __Operators are evaluated__.
                 - `required: boolean | string`: For `input` blocks, whether or not a value is required in `state` when the [`Validate`](/Validate) action is called. Can be either a boolean or a string that is used as the validation error message . __Operators are evaluated__.
-                - `style: css object`: Used to apply css style settings to the block's top level `div` element. __Operators are evaluated__.
+                - `class: string | array | object`: CSS class names to apply to the block. Supports Tailwind CSS utility classes. __Operators are evaluated__.
+                - `style: css object`: Shorthand for `styles.block`. Used to apply css style settings to the block's layout wrapper. __Operators are evaluated__.
+                - `styles: object`: Inline CSS styles keyed by CSS key targets (e.g. `element`, `header`, `body`). __Operators are evaluated__.
                 - `validate: array`: A list of validation tests to pass when the [`Validate`](/Validate) action is called. __Operators are evaluated__.
                 - `visible: boolean`: Controls whether or not to render a block. Operators are generally used here, and must evaluate to `false` to make the block invisible. Blocks with `visible: false` are excluded from `state`. __Operators are evaluated__.
 
                 ## Block types
 
-                Lowdefy has a set of default block types as defined in the Lowdefy docs. Most of the default Lowdefy blocks aim to cover a very generic implementation of the [Ant Design](https://ant.design/components/overview/) React component library, but some addition component libraries are also included. To use all the default block types, you can simply use the block `type` key, such as [`Button`](/Button), [`TextInput`](/TextInput), or [`Box`](/Box).
+                Lowdefy has a set of default block types as defined in the Lowdefy docs. Most of the default Lowdefy blocks aim to cover a very generic implementation of the [Ant Design](https://ant.design/components/overview) React component library, but some addition component libraries are also included. To use all the default block types, you can simply use the block `type` key, such as [`Button`](/Button), [`TextInput`](/TextInput), or [`Box`](/Box).
 
                 ###### Default block type config example:
                 ```yaml

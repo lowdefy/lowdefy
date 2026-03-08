@@ -15,22 +15,43 @@
 */
 
 import React from 'react';
-import { Checkbox, Space } from 'antd';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import { Checkbox, ConfigProvider, Space } from 'antd';
+import { renderHtml } from '@lowdefy/block-utils';
 
 import Label from '../Label/Label.js';
+import withTheme from '../withTheme.js';
 
 const CheckboxSwitch = ({
   blockId,
+  classNames = {},
   components,
   events,
   loading,
   properties,
   required,
+  styles = {},
   validation,
   value,
   methods,
 }) => {
+  const checkbox = (
+    <Checkbox
+      id={`${blockId}_input`}
+      checked={value}
+      className={classNames.element}
+      disabled={properties.disabled || loading}
+      style={{
+        marginRight: properties.description ? '30px' : undefined,
+        ...styles.element,
+      }}
+      onChange={(e) => {
+        methods.setValue(e.target.checked);
+        methods.triggerEvent({ name: 'onChange', event: { value: e.target.checked } });
+      }}
+    >
+      <Space wrap={true}>{renderHtml({ html: properties.description, methods })}</Space>
+    </Checkbox>
+  );
   return (
     <Label
       blockId={blockId}
@@ -40,42 +61,26 @@ const CheckboxSwitch = ({
       validation={validation}
       required={required}
       content={{
-        content: () => (
-          <Checkbox
-            id={`${blockId}_input`}
-            checked={value}
-            disabled={properties.disabled || loading}
-            className={methods.makeCssClass([
-              properties.color && {
-                '& > span.ant-checkbox-checked:not(.ant-checkbox-disabled) > span': {
-                  backgroundColor: `${properties.color} !important`,
-                  borderColor: `${properties.color} !important`,
-                },
-              },
-              properties.description && {
-                marginRight: '30px', // stops the checkbox description from overlapping with the validation symbol
-              },
-              properties.inputStyle,
-            ])}
-            onChange={(e) => {
-              methods.setValue(e.target.checked);
-              methods.triggerEvent({ name: 'onChange', event: { value: e.target.checked } });
-            }}
-          >
-            <Space wrap={true}>{renderHtml({ html: properties.description, methods })}</Space>
-          </Checkbox>
-        ),
+        content: () =>
+          properties.color ? (
+            <ConfigProvider
+              theme={{ components: { Checkbox: { colorPrimary: properties.color } } }}
+            >
+              {checkbox}
+            </ConfigProvider>
+          ) : (
+            checkbox
+          ),
       }}
     />
   );
 };
 
-CheckboxSwitch.defaultProps = blockDefaultProps;
 CheckboxSwitch.meta = {
   valueType: 'boolean',
   category: 'input',
   icons: [...Label.meta.icons],
-  styles: ['blocks/CheckboxSwitch/style.less'],
+  cssKeys: ['element'],
 };
 
-export default CheckboxSwitch;
+export default withTheme('Checkbox', CheckboxSwitch);

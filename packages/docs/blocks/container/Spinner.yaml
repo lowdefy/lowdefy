@@ -21,5 +21,5 @@ _ref:
     filePath: blocks/container/Spinner.yaml
     description_content: |
       A loading spinner. Can be used as a display block, or as container wrapping another block, with the `spinning` property set in `state`.
-    areas:
+    slots:
       - content

@@ -134,7 +134,7 @@ test('oneOf propertiesFormTransformer', () => {
         },
         "id": "field",
         "layout": Object {
-          "contentGutter": 0,
+          "gap": 0,
         },
         "properties": Object {
           "bodyStyle": Object {
@@ -359,7 +359,7 @@ test('oneOf schemaStrObj propertiesFormTransformer', () => {
                 ],
                 "id": "__object_block.properties.field",
                 "layout": Object {
-                  "contentGutter": 0,
+                  "gap": 0,
                 },
                 "properties": Object {
                   "bodyStyle": Object {
@@ -409,7 +409,7 @@ test('oneOf schemaStrObj propertiesFormTransformer', () => {
         },
         "id": "field",
         "layout": Object {
-          "contentGutter": 0,
+          "gap": 0,
         },
         "properties": Object {
           "bodyStyle": Object {
@@ -666,7 +666,7 @@ test('oneOf propertiesFormTransformer schemaOneOfStrYaml', () => {
         },
         "id": "field",
         "layout": Object {
-          "contentGutter": 0,
+          "gap": 0,
         },
         "properties": Object {
           "bodyStyle": Object {

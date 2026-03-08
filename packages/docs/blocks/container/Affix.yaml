@@ -21,6 +21,6 @@ _ref:
     filePath: blocks/container/Affix.yaml
     description_content: |
       An Affix block makes it's content stick to the viewport.
-      The Affix has a single area, `content`.
-    areas:
+      The Affix has a single slot, `content`.
+    slots:
       - content

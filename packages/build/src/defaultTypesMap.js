@@ -19,10 +19,6 @@ const defaultTypesMap = {
     blocks: {},
     operators: {},
   },
-  styles: {
-    packages: {},
-    blocks: {},
-  },
 };
 
 export default defaultTypesMap;

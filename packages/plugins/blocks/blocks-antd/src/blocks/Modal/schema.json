@@ -97,6 +97,13 @@
         "type": "integer",
         "default": 1000,
         "description": "The z-index of the modal. Useful when displaying two modals simultaneously."
+      },
+      "theme": {
+        "type": "object",
+        "description": "Antd design token overrides for this block. See <a href=\"https://ant.design/components/overview#design-token\">antd design tokens</a>.",
+        "docs": {
+          "displayType": "yaml"
+        }
       }
     }
   },
@@ -121,5 +128,6 @@
         "description": "Trigger actions after onOk or onCancel is completed."
       }
     }
-  }
+  },
+  "cssKeys": ["element", "header", "body", "footer", "mask", "wrapper", "content"]
 }

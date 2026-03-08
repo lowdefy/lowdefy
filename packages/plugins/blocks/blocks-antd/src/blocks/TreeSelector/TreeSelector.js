@@ -16,7 +16,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { Tree } from 'antd';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import { renderHtml } from '@lowdefy/block-utils';
+
+import withTheme from '../withTheme.js';
 
 const transformData = (data, valueMap, prefix = '') => {
   return data.map(({ children, disabled, disableCheckbox, label, value }, i) => {
@@ -44,7 +46,15 @@ const getValueKeys = (value, valueMap) => {
   return [];
 };
 
-const TreeSelector = ({ blockId, properties, content, methods, value }) => {
+const TreeSelector = ({
+  blockId,
+  classNames = {},
+  properties,
+  content,
+  methods,
+  styles = {},
+  value,
+}) => {
   const treeData = properties.options;
   const valueMap = {};
   const transformedData = transformData(treeData, valueMap);
@@ -76,6 +86,7 @@ const TreeSelector = ({ blockId, properties, content, methods, value }) => {
   return (
     <Tree
       id={blockId}
+      className={classNames.element}
       checkable={properties.checkable}
       disabled={properties.disabled}
       defaultExpandAll={properties.defaultExpandAll}
@@ -83,6 +94,7 @@ const TreeSelector = ({ blockId, properties, content, methods, value }) => {
       selectable={properties.selectable}
       multiple={false}
       content={content.options && content.options()}
+      style={styles.element}
       treeData={transformedData}
       onSelect={onSelect}
       onExpand={onExpand}
@@ -93,12 +105,11 @@ const TreeSelector = ({ blockId, properties, content, methods, value }) => {
   );
 };
 
-TreeSelector.defaultProps = blockDefaultProps;
 TreeSelector.meta = {
   category: 'input',
   valueType: 'array',
   icons: [],
-  styles: ['blocks/TreeSelector/style.less'],
+  cssKeys: ['element'],
 };
 
-export default TreeSelector;
+export default withTheme('TreeSelect', TreeSelector);

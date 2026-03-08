@@ -22,5 +22,5 @@ _ref:
     description_content: |
       The `Header` block provides a page container for a [header](https://4x.ant.design/components/layout/) area with content.
 
-    areas:
+    slots:
       - content

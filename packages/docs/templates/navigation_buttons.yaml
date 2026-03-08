@@ -18,7 +18,7 @@ style:
   marginTop: 40px
   marginBottom: 80px
 layout:
-  contentGutter: 16
+  gap: 16
 blocks:
   - id: previous_button
     type: Button

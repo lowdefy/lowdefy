@@ -36,13 +36,15 @@ _ref:
 
       - `width: number`: The width of the window in pixels.
       - `height: number`: The height of the window in pixels.
-      - `size: enum`: One of `xs`, `sm`, `md`, `lg`, `xl`, `xxl`. The sizes are determined by comparing the window width to the following breakpoints (in pixels):
-        - `xs`: `width < 576px`
-        - `sm`: `576px <= width < 768px`
-        - `md`: `768px <= width < 992px`
-        - `lg`: `992px <= width < 1200px`
-        - `xl`: `1200px <= width < 1600px`
-        - `xxl`: `1600px <= width`
+      - `size: enum`: One of `xs`, `sm`, `md`, `lg`, `xl`, `2xl`. The sizes are determined by comparing the window width to the following breakpoints (in pixels):
+        - `xs`: `width < 640px`
+        - `sm`: `640px <= width < 768px`
+        - `md`: `768px <= width < 1024px`
+        - `lg`: `1024px <= width < 1280px`
+        - `xl`: `1280px <= width < 1536px`
+        - `2xl`: `1536px <= width`
+
+      > **Note:** In v4, the largest breakpoint was `xxl` (1600px). It has been renamed to `2xl` (1536px) to align with Tailwind CSS breakpoints. See the [Migration Guide](/v4-to-v5) for details.
 
     arguments: |
       ###### string

@@ -28,13 +28,13 @@
   "exports": {
     "./*": "./dist/*",
     "./blocks": "./dist/blocks.js",
-    "./types": "./dist/types.js"
+    "./types": "./dist/types.json"
   },
   "files": [
     "dist/*"
   ],
   "scripts": {
-    "build": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start && pnpm copyfiles",
+    "build": "swc src --out-dir dist --config-file ../../../../.swcrc --cli-config-file ../../../../.swc-cli.json && pnpm copyfiles && extract-plugin-types",
     "clean": "rm -rf dist",
     "copyfiles": "copyfiles -u 1 \"./src/**/*\" dist -e \"./src/**/*.js\" -e \"./src/**/*.yaml\" -e \"./src/**/*.snap\"",
     "prepublishOnly": "pnpm build"
@@ -46,8 +46,8 @@
     "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "@swc/cli": "0.1.63",
-    "@swc/core": "1.3.99",
+    "@swc/cli": "0.8.0",
+    "@swc/core": "1.15.18",
     "copyfiles": "2.4.1"
   },
   "publishConfig": {

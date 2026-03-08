@@ -45,7 +45,7 @@ Additional operators:
 
 - `@lowdefy/operators-change-case`
 - `@lowdefy/operators-diff`
-- `@lowdefy/operators-moment`
+- `@lowdefy/operators-dayjs`
 - `@lowdefy/operators-mql`
 - `@lowdefy/operators-nunjucks`
 - `@lowdefy/operators-uuid`

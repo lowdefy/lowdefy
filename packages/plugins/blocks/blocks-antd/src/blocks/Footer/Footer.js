@@ -16,24 +16,23 @@
 
 import React from 'react';
 import { Layout } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 
 const Footer = Layout.Footer;
 
-const FooterBlock = ({ blockId, content, methods, properties }) => (
+const FooterBlock = ({ blockId, classNames = {}, content, properties, styles = {} }) => (
   <Footer
     id={blockId}
-    className={`${methods.makeCssClass([{ margin: 'auto' }, properties.style])} hide-on-print`}
+    className={classNames.element ? `${classNames.element} hide-on-print` : 'hide-on-print'}
+    style={{ margin: 'auto', ...styles.element }}
   >
     {content.content && content.content()}
   </Footer>
 );
 
-FooterBlock.defaultProps = blockDefaultProps;
 FooterBlock.meta = {
   category: 'container',
   icons: [],
-  styles: ['blocks/Footer/style.less'],
+  cssKeys: ['element'],
 };
 
 export default FooterBlock;

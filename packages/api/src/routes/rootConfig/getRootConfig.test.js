@@ -38,6 +38,11 @@ test('getRootConfig', async () => {
         global: true,
       };
     }
+    if (path === 'theme.json') {
+      return {
+        antd: { token: { colorPrimary: '#00b96b' } },
+      };
+    }
     return null;
   });
   const menus = [
@@ -63,6 +68,9 @@ test('getRootConfig', async () => {
     },
     lowdefyGlobal: {
       global: true,
+    },
+    theme: {
+      antd: { token: { colorPrimary: '#00b96b' } },
     },
     menus: [
       {

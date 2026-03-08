@@ -111,6 +111,13 @@
         "type": "boolean",
         "default": false,
         "description": "Apply underline style."
+      },
+      "theme": {
+        "type": "object",
+        "description": "Antd design token overrides for this block. See <a href=\"https://ant.design/components/overview#design-token\">antd design tokens</a>.",
+        "docs": {
+          "displayType": "yaml"
+        }
       }
     }
   },
@@ -131,5 +138,6 @@
         "description": "Trigger action when text is selected and pass selected text to the event object."
       }
     }
-  }
+  },
+  "cssKeys": ["element"]
 }

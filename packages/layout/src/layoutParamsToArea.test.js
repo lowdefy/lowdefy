@@ -14,7 +14,19 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
+
 import layoutParamsToArea from './layoutParamsToArea.js';
+
+let warnSpy;
+
+beforeEach(() => {
+  warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+});
+
+afterEach(() => {
+  warnSpy.mockRestore();
+});
 
 test('empty area and layout', () => {
   const layout = {};
@@ -23,9 +35,8 @@ test('empty area and layout', () => {
   expect(layoutParamsToArea({ areaKey, area, layout })).toEqual(area);
 });
 
-test('layout fields', () => {
+test('deprecated layout content* fields map to new area names', () => {
   const layout = {
-    contentAlign: 1,
     contentJustify: 2,
     contentDirection: 3,
     contentWrap: 4,
@@ -35,13 +46,27 @@ test('layout fields', () => {
   const area = {};
   const areaKey = 'content';
   expect(layoutParamsToArea({ areaKey, area, layout })).toEqual({
-    align: 1,
     justify: 2,
     direction: 3,
     wrap: 4,
     overflow: 5,
-    gutter: 6,
+    gap: 6,
   });
+  expect(warnSpy).toHaveBeenCalledWith(
+    '[Lowdefy] layout.contentGutter is deprecated. Use layout.gap instead.'
+  );
+  expect(warnSpy).toHaveBeenCalledWith(
+    '[Lowdefy] layout.contentJustify is deprecated. Use layout.justify instead.'
+  );
+  expect(warnSpy).toHaveBeenCalledWith(
+    '[Lowdefy] layout.contentDirection is deprecated. Use layout.direction instead.'
+  );
+  expect(warnSpy).toHaveBeenCalledWith(
+    '[Lowdefy] layout.contentWrap is deprecated. Use layout.wrap instead.'
+  );
+  expect(warnSpy).toHaveBeenCalledWith(
+    '[Lowdefy] layout.contentOverflow is deprecated. Use layout.overflow instead.'
+  );
 });
 
 test('area fields', () => {
@@ -52,7 +77,7 @@ test('area fields', () => {
     direction: 3,
     wrap: 4,
     overflow: 5,
-    gutter: 6,
+    gap: 6,
   };
   const areaKey = 'content';
   expect(layoutParamsToArea({ areaKey, area, layout })).toEqual({
@@ -61,11 +86,11 @@ test('area fields', () => {
     direction: 3,
     wrap: 4,
     overflow: 5,
-    gutter: 6,
+    gap: 6,
   });
 });
 
-test('area and layout', () => {
+test('area and layout, area takes priority', () => {
   const layout = {
     contentAlign: 11,
     contentJustify: 22,
@@ -80,7 +105,7 @@ test('area and layout', () => {
     direction: 3,
     wrap: 4,
     overflow: 5,
-    gutter: 6,
+    gap: 6,
   };
   const areaKey = 'content';
   expect(layoutParamsToArea({ areaKey, area, layout })).toEqual({
@@ -89,7 +114,7 @@ test('area and layout', () => {
     direction: 3,
     wrap: 4,
     overflow: 5,
-    gutter: 6,
+    gap: 6,
   });
 });
 
@@ -114,7 +139,7 @@ test('some area and layout', () => {
     direction: 3,
     wrap: 44,
     overflow: 55,
-    gutter: 66,
+    gap: 66,
   });
 });
 
@@ -133,7 +158,7 @@ test('some area and layout with 0', () => {
     direction: 0,
     wrap: 0,
     overflow: 0,
-    gutter: 0,
+    gap: 0,
   };
   const areaKey = 'content';
   expect(layoutParamsToArea({ areaKey, area, layout })).toEqual({
@@ -142,7 +167,7 @@ test('some area and layout with 0', () => {
     direction: 0,
     wrap: 0,
     overflow: 0,
-    gutter: 0,
+    gap: 0,
   });
 });
 
@@ -162,4 +187,92 @@ test('area and layout not content', () => {
   expect(layoutParamsToArea({ areaKey, area, layout })).toEqual({
     align: 1,
   });
+});
+
+test('new layout property names', () => {
+  const layout = {
+    gap: 16,
+    align: 'top',
+    selfAlign: 'bottom',
+    justify: 'center',
+    direction: 'row',
+    wrap: 'wrap',
+    overflow: 'scroll',
+  };
+  const area = {};
+  const areaKey = 'content';
+  expect(layoutParamsToArea({ areaKey, area, layout })).toEqual({
+    gap: 16,
+    align: 'top',
+    justify: 'center',
+    direction: 'row',
+    wrap: 'wrap',
+    overflow: 'scroll',
+  });
+  expect(warnSpy).not.toHaveBeenCalled();
+});
+
+test('deprecated contentGutter emits warning', () => {
+  const layout = { contentGutter: 16 };
+  const area = {};
+  const areaKey = 'content';
+  expect(layoutParamsToArea({ areaKey, area, layout })).toEqual({ gap: 16 });
+  expect(warnSpy).toHaveBeenCalledWith(
+    '[Lowdefy] layout.contentGutter is deprecated. Use layout.gap instead.'
+  );
+});
+
+test('deprecated contentGap emits warning', () => {
+  const layout = { contentGap: 16 };
+  const area = {};
+  const areaKey = 'content';
+  expect(layoutParamsToArea({ areaKey, area, layout })).toEqual({ gap: 16 });
+  expect(warnSpy).toHaveBeenCalledWith(
+    '[Lowdefy] layout.contentGap is deprecated. Use layout.gap instead.'
+  );
+});
+
+test('area.gutter normalizes to area.gap with warning', () => {
+  const layout = {};
+  const area = { gutter: 20 };
+  const areaKey = 'content';
+  expect(layoutParamsToArea({ areaKey, area, layout })).toEqual({ gutter: 20, gap: 20 });
+  expect(warnSpy).toHaveBeenCalledWith(
+    '[Lowdefy] slots.content.gutter is deprecated. Use gap instead.'
+  );
+});
+
+test('align without selfAlign is old self-alignment behavior', () => {
+  const layout = { align: 'top' };
+  const area = {};
+  const areaKey = 'content';
+  const result = layoutParamsToArea({ areaKey, area, layout });
+  expect(result.align).toBeUndefined();
+  expect(warnSpy).toHaveBeenCalledWith(
+    '[Lowdefy] layout.align for self-alignment is deprecated. Use layout.selfAlign instead.'
+  );
+});
+
+test('align with selfAlign is content alignment', () => {
+  const layout = { align: 'top', selfAlign: 'bottom' };
+  const area = {};
+  const areaKey = 'content';
+  const result = layoutParamsToArea({ areaKey, area, layout });
+  expect(result.align).toBe('top');
+  expect(warnSpy).not.toHaveBeenCalled();
+});
+
+test('new name takes priority over deprecated', () => {
+  const layout = { gap: 10, contentGutter: 20 };
+  const area = {};
+  const areaKey = 'content';
+  expect(layoutParamsToArea({ areaKey, area, layout })).toEqual({ gap: 10 });
+  expect(warnSpy).not.toHaveBeenCalled();
+});
+
+test('area.gap takes priority over layout.gap', () => {
+  const layout = { gap: 10 };
+  const area = { gap: 5 };
+  const areaKey = 'content';
+  expect(layoutParamsToArea({ areaKey, area, layout })).toEqual({ gap: 5 });
 });

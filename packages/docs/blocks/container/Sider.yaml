@@ -22,5 +22,5 @@ _ref:
     description_content: |
       The `Sider` block provides a page container for a [sider](https://4x.ant.design/components/layout/) area with content.
 
-    areas:
+    slots:
       - content

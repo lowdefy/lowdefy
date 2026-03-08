@@ -39,9 +39,9 @@
         - id: feedback_box
           type: Box
           layout:
-            contentGutter: 16
-            contentJustify: space-around
-            contentAlign: middle
+            gap: 16
+            justify: space-around
+            align: middle
           visible:
             _not:
               _state: feedback_sent
@@ -146,9 +146,9 @@
                   - _state: feedback.score
                   - null
               layout:
-                contentGutter: 16
-                contentJustify: space-around
-                contentAlign: middle
+                gap: 16
+                justify: space-around
+                align: middle
               blocks:
                 - id: feedback.email
                   type: TextInput
@@ -177,7 +177,7 @@
                 - id: fb_box
                   type: Box
                   layout:
-                    contentJustify: end
+                    justify: end
                   blocks:
                     - id: feedback.send
                       type: Button
@@ -233,7 +233,7 @@
     lg:
       paddingRight: 40
   layout:
-    contentJustify: end
+    justify: end
   blocks:
     - id: edit_on_github
       type: Anchor
@@ -253,7 +253,7 @@
 - id: footer_box
   type: Box
   layout:
-    contentGutter: 46
+    gap: 46
   style:
     paddingLeft: 23px
   blocks:
@@ -281,7 +281,7 @@
         - id: community_links
           type: Box
           layout:
-            contentJustify: space-around
+            justify: space-around
             size: 200
           blocks:
             - id: lowdefy_twitter
@@ -390,8 +390,8 @@
         - id: footer_cta_box
           type: Box
           layout:
-            contentGutter: [12, 0]
-            contentJustify: center
+            gap: [12, 0]
+            justify: center
           blocks:
             - id: email
               type: TextInput
@@ -455,7 +455,7 @@
       type: Box
       layout:
         span: 6
-        contentGutter: 8
+        gap: 8
       blocks:
         - id: github_anchor
           type: Anchor
@@ -498,7 +498,7 @@
               - _media: size
               - xs
       layout:
-        contentJustify: center
+        justify: center
       blocks:
         - id: footer_logo
           type: Html
@@ -510,7 +510,7 @@
         - id: community_links
           type: Box
           layout:
-            contentJustify: space-around
+            justify: space-around
             size: 200
           blocks:
             - id: lowdefy_twitter

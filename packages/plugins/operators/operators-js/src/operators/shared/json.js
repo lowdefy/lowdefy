@@ -23,7 +23,12 @@ function parse(input) {
 }
 
 function stringify(input, options) {
-  return serializer.serializeToString(input, { space: 2, isoStringDates: true, ...options });
+  return serializer.serializeToString(input, {
+    space: 2,
+    isoStringDates: true,
+    skipMarkers: true,
+    ...options,
+  });
 }
 
 const functions = { parse, stringify };

@@ -84,7 +84,7 @@ test('object propertiesFormTransformer', () => {
         ],
         "id": "block.properties.field",
         "layout": Object {
-          "contentGutter": 0,
+          "gap": 0,
         },
         "properties": Object {
           "bodyStyle": Object {
@@ -275,7 +275,7 @@ test('object schemaNested propertiesFormTransformer', () => {
             ],
             "id": "block.properties.field.obj",
             "layout": Object {
-              "contentGutter": 0,
+              "gap": 0,
             },
             "properties": Object {
               "bodyStyle": Object {
@@ -306,7 +306,7 @@ test('object schemaNested propertiesFormTransformer', () => {
         ],
         "id": "block.properties.field",
         "layout": Object {
-          "contentGutter": 0,
+          "gap": 0,
         },
         "properties": Object {
           "bodyStyle": Object {

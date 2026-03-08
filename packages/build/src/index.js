@@ -48,6 +48,7 @@ import writeConfig from './build/writeConfig.js';
 import writeConnections from './build/writeConnections.js';
 import writeApi from './build/writeApi.js';
 import writeGlobal from './build/writeGlobal.js';
+import writeTheme from './build/writeTheme.js';
 import writeJs from './build/buildJs/writeJs.js';
 import writeLogger from './build/writeLogger.js';
 import writeMaps from './build/writeMaps.js';
@@ -114,6 +115,7 @@ async function build(options) {
     await writePages({ components, context });
     await writeConfig({ components, context });
     await writeGlobal({ components, context });
+    await writeTheme({ components, context });
     await writeLogger({ components, context });
     await writeMaps({ components, context });
     await writeMenus({ components, context });

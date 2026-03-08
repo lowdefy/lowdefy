@@ -23,6 +23,7 @@ import InputContainer from './InputContainer.js';
 import Container from './Container.js';
 import List from './List.js';
 import LoadingBlock from './LoadingBlock.js';
+import resolveClassNames from './resolveClassNames.js';
 
 const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
   if (!block.eval) return null; // TODO: check Renderer updates before eval is executed for the first time on lists. See #520
@@ -43,6 +44,7 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
     );
   }
 
+  const classNames = resolveClassNames(block.eval.class);
   switch (Component.meta.category) {
     case 'list':
       return (
@@ -70,9 +72,9 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
       return (
         <BlockLayout
           id={`bl-${block.blockId}`}
-          blockStyle={block.eval.style}
+          style={block.eval.styles?.block}
+          className={classNames.block}
           layout={block.eval.layout}
-          makeCssClass={makeCssClass}
         >
           <Component
             methods={Object.assign(block.methods, {
@@ -84,6 +86,7 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
             })}
             basePath={lowdefy.basePath}
             blockId={block.blockId}
+            classNames={classNames}
             components={lowdefy._internal.components}
             events={block.eval.events}
             key={block.blockId}
@@ -92,6 +95,7 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
             pageId={lowdefy.pageId}
             properties={block.eval.properties}
             required={block.eval.required}
+            styles={block.eval.styles}
             validation={block.eval.validation}
             value={block.value}
           />
@@ -112,9 +116,9 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
       return (
         <BlockLayout
           id={`bl-${block.blockId}`}
-          blockStyle={block.eval.style}
+          style={block.eval.styles?.block}
+          className={classNames.block}
           layout={block.eval.layout}
-          makeCssClass={makeCssClass}
         >
           <Component
             methods={Object.assign(block.methods, {
@@ -125,6 +129,7 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
             })}
             basePath={lowdefy.basePath}
             blockId={block.blockId}
+            classNames={classNames}
             components={lowdefy._internal.components}
             events={block.eval.events}
             key={block.blockId}
@@ -133,6 +138,7 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
             pageId={lowdefy.pageId}
             properties={block.eval.properties}
             required={block.eval.required}
+            styles={block.eval.styles}
             validation={block.eval.validation}
           />
         </BlockLayout>

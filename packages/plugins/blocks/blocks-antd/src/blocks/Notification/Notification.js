@@ -15,22 +15,31 @@
 */
 
 import React, { useEffect } from 'react';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import { renderHtml } from '@lowdefy/block-utils';
 import { notification } from 'antd';
 import { type } from '@lowdefy/helpers';
 
 import Button from '../Button/Button.js';
 
-const NotificationBlock = ({ blockId, components: { Icon }, events, methods, properties }) => {
+const NotificationBlock = ({
+  blockId,
+  classNames = {},
+  components: { Icon },
+  events,
+  methods,
+  properties,
+  styles = {},
+}) => {
   useEffect(() => {
     methods.registerMethod('open', (args = {}) => {
       notification[args.status || properties.status || 'success']({
         id: `${blockId}_notification`,
         bottom: properties.bottom,
-        className: methods.makeCssClass(properties.notificationStyle),
+        className: classNames.element,
+        style: styles.element,
         description: renderHtml({ html: args.description || properties.description, methods }),
         duration: type.isNone(args.duration) ? properties.duration : args.duration,
-        message: renderHtml({ html: args.message || properties.message || blockId, methods }),
+        message: renderHtml({ html: args.title || properties.title || blockId, methods }),
         onClick: () => methods.triggerEvent({ name: 'onClick' }),
         onClose: () => methods.triggerEvent({ name: 'onClose' }),
         placement: properties.placement,
@@ -59,11 +68,10 @@ const NotificationBlock = ({ blockId, components: { Icon }, events, methods, pro
   return <div id={blockId} />;
 };
 
-NotificationBlock.defaultProps = blockDefaultProps;
 NotificationBlock.meta = {
   category: 'display',
   icons: [],
-  styles: ['blocks/Notification/style.less'],
+  cssKeys: ['element'],
 };
 
 export default NotificationBlock;

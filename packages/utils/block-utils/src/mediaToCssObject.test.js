@@ -72,7 +72,7 @@ test('object with all media', () => {
     md: { a: 'md' },
     lg: { a: 'lg' },
     xl: { a: 'xl' },
-    xxl: { a: 'xxl' },
+    '2xl': { a: '2xl' },
   };
   expect(mediaToCssObject(obj)).toMatchSnapshot();
 });
@@ -85,7 +85,7 @@ test('object with all media with styleObjectOnly option', () => {
     md: { a: 'md' },
     lg: { a: 'lg' },
     xl: { a: 'xl' },
-    xxl: { a: 'xxl' },
+    '2xl': { a: '2xl' },
   };
   expect(mediaToCssObject(obj, true)).toMatchSnapshot();
 });
@@ -98,7 +98,7 @@ test('string with all media', () => {
     @media md{ a: 'md' }
     @media lg { a: 'lg' }
     @media xl{ a: 'xl' }
-    @media xxl  { a: 'xxl' }
+    @media 2xl  { a: '2xl' }
   }`;
   expect(mediaToCssObject(obj)).toMatchSnapshot();
 });
@@ -106,11 +106,11 @@ test('string with all media', () => {
 test('array of mixed types with all media', () => {
   const obj = [`{a: 'a', @media xs { a: 'xs' }}`, 1, true, { xl: { a: 'xl' } }];
   expect(mediaToCssObject(obj)).toEqual([
-    `{a: 'a', @media screen and (max-width: 576px) { a: 'xs' }}`,
+    `{a: 'a', @media screen and (max-width: 640px) { a: 'xs' }}`,
     {},
     {},
     {
-      '@media screen and (min-width: 1200px)': {
+      '@media screen and (min-width: 1280px)': {
         a: 'xl',
       },
     },

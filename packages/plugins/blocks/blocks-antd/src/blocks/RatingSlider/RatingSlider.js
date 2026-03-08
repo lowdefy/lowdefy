@@ -15,13 +15,12 @@
 */
 
 import React, { useState } from 'react';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 import { get, mergeObjects, serializer, type } from '@lowdefy/helpers';
-import { Slider } from 'antd';
-import classNames from 'classnames';
+import { ConfigProvider, Slider } from 'antd';
 
 import CheckboxSelector from '../CheckboxSelector/CheckboxSelector.js';
 import Label from '../Label/Label.js';
+import withTheme from '../withTheme.js';
 
 const includeMarks = (minMax, minMin, step = 1) => {
   const marks = {};
@@ -45,38 +44,16 @@ const includeMarks = (minMax, minMin, step = 1) => {
   return marks;
 };
 
-const styles = {
-  iconLeft: {
-    flex: '0 0 1',
-    fontSize: '20px',
-    padding: '6px 6px 0 0',
-  },
-  iconRight: {
-    flex: '0 0 1',
-    fontSize: '20px',
-    padding: '6px 0 0 6px',
-  },
-  checkbox: {
-    flex: '0 0 1',
-    paddingTop: 6,
-  },
-  slider: {
-    flex: 'auto',
-  },
-  content: {
-    display: 'flex',
-    flexDirection: 'row',
-  },
-};
-
 const RatingSlider = ({
   blockId,
+  classNames = {},
   components: { Icon, Link },
   events,
   loading,
   methods,
   properties,
   required,
+  styles = {},
   validation,
   value,
 }) => {
@@ -97,6 +74,55 @@ const RatingSlider = ({
   const minMin = parseFloat((minMax[0] - (properties.step ?? 1)).toPrecision(8));
   const validationColor =
     validation.status === 'error' ? '#ff4d4f' : validation.status === 'warning' ? '#faad14' : null;
+
+  const sliderTheme = {};
+  if (properties.color) {
+    sliderTheme.colorPrimary = properties.color;
+  }
+  if (validationColor) {
+    sliderTheme.railBg = validationColor;
+  }
+  const hasSliderTheme = Object.keys(sliderTheme).length > 0;
+
+  const slider = (
+    <Slider
+      id={`${blockId}_input`}
+      className={classNames.element}
+      components={{ Icon, Link }}
+      events={events}
+      autoFocus={properties.autoFocus}
+      disabled={
+        properties.disabled || (check === true && !properties.disableNotApplicable) || loading
+      }
+      dots={get(properties, 'showDots', { default: true })}
+      tooltipVisible={
+        value === null || properties.tooltipVisible === 'never'
+          ? false
+          : properties.tooltipVisible === 'always'
+            ? true
+            : undefined
+      }
+      tipFormatter={(val) => `${val}`}
+      marks={
+        properties.marks ??
+        (get(properties, 'showMarks', { default: true })
+          ? includeMarks(minMax, minMin, properties.step ?? 1)
+          : undefined)
+      }
+      min={minMin}
+      max={minMax[1]}
+      range={false}
+      step={properties.step ?? 1}
+      style={{ flex: 'auto', ...styles.element }}
+      onChange={(val) => {
+        const v = val === minMin ? null : val;
+        methods.setValue(v);
+        methods.triggerEvent({ name: 'onChange', event: { value: v } });
+      }}
+      value={value === null ? minMin : value}
+    />
+  );
+
   return (
     <Label
       blockId={blockId}
@@ -109,12 +135,11 @@ const RatingSlider = ({
       content={{
         content: () => (
           <div
-            className={methods.makeCssClass([
-              styles.content,
-              {
-                paddingRight: validation.status && 30,
-              },
-            ])}
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              paddingRight: validation.status ? 30 : undefined,
+            }}
           >
             {!required && !properties.disableNotApplicable && (
               <CheckboxSelector
@@ -128,7 +153,7 @@ const RatingSlider = ({
                     disabled: properties.disabled || loading,
                   },
                   properties.CheckboxInput,
-                  { style: styles.checkbox },
+                  { style: { flex: '0 0 1', paddingTop: 6 } },
                 ])}
                 methods={{
                   ...methods,
@@ -151,67 +176,20 @@ const RatingSlider = ({
                 properties={mergeObjects([
                   {
                     name: 'AiOutlineFrown',
-                    style: styles.iconLeft,
+                    style: { flex: '0 0 1', fontSize: '20px', padding: '6px 6px 0 0' },
                     color: properties.color,
                   },
                   propertiesIconMin,
                 ])}
               />
             )}
-            <Slider
-              id={`${blockId}_input`}
-              components={{ Icon, Link }}
-              events={events}
-              className={classNames(
-                methods.makeCssClass([
-                  properties.color && {
-                    '& > div.ant-slider-track': {
-                      backgroundColor: `${properties.color} !important`,
-                    },
-                    '& > div.ant-slider-handle': { borderColor: `${properties.color} !important` },
-                    '& > div.ant-slider-step > span.ant-slider-dot-active': {
-                      borderColor: `${properties.color} !important`,
-                    },
-                  },
-                  validationColor && {
-                    '& > div.ant-slider-rail': { backgroundColor: `${validationColor} !important` },
-                  },
-                ]),
-                methods.makeCssClass(styles.slider),
-                methods.makeCssClass(properties.inputStyle)
-              )}
-              autoFocus={properties.autoFocus}
-              disabled={
-                properties.disabled ||
-                (check === true && !properties.disableNotApplicable) ||
-                loading
-              }
-              dots={get(properties, 'showDots', { default: true })}
-              tooltipVisible={
-                value === null || properties.tooltipVisible === 'never'
-                  ? false
-                  : properties.tooltipVisible === 'always'
-                    ? true
-                    : undefined
-              }
-              tipFormatter={(val) => `${val}`}
-              marks={
-                properties.marks ??
-                (get(properties, 'showMarks', { default: true })
-                  ? includeMarks(minMax, minMin, properties.step ?? 1)
-                  : undefined)
-              }
-              min={minMin}
-              max={minMax[1]}
-              range={false}
-              step={properties.step ?? 1}
-              onChange={(val) => {
-                const v = val === minMin ? null : val;
-                methods.setValue(v);
-                methods.triggerEvent({ name: 'onChange', event: { value: v } });
-              }}
-              value={value === null ? minMin : value}
-            />
+            {hasSliderTheme ? (
+              <ConfigProvider theme={{ components: { Slider: sliderTheme } }}>
+                {slider}
+              </ConfigProvider>
+            ) : (
+              slider
+            )}
             {!properties.disableIcons && (
               <Icon
                 blockId={`${blockId}_iconMax`}
@@ -219,7 +197,7 @@ const RatingSlider = ({
                 properties={mergeObjects([
                   {
                     name: 'AiOutlineSmile',
-                    style: styles.iconRight,
+                    style: { flex: '0 0 1', fontSize: '20px', padding: '6px 0 0 6px' },
                     color: properties.color,
                   },
                   propertiesIconMax,
@@ -233,12 +211,11 @@ const RatingSlider = ({
   );
 };
 
-RatingSlider.defaultProps = blockDefaultProps;
 RatingSlider.meta = {
   valueType: 'any',
   category: 'input',
   icons: [...Label.meta.icons, 'AiOutlineFrown', 'AiOutlineSmile'],
-  styles: ['blocks/RatingSlider/style.less'],
+  cssKeys: ['element'],
 };
 
-export default RatingSlider;
+export default withTheme('Slider', RatingSlider);

@@ -14,10 +14,18 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 import PAGE_CONTENT_KEYS from './pageContentKeys.js';
 
-function stripPageContent({ components }) {
+function stripPageContent({ components, context }) {
   for (const page of components.pages ?? []) {
+    // Only strip pages that have a source ref (will be JIT-rebuilt).
+    // Inline pages (no ~r) must keep their content for buildShallowPages.
+    const keyMapEntry = context.keyMap[page['~k']];
+    const refId = keyMapEntry?.['~r'] ?? null;
+    if (type.isNone(refId)) continue;
+
     for (const key of PAGE_CONTENT_KEYS) {
       delete page[key];
     }

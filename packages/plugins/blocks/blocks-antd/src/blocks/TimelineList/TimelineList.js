@@ -16,11 +16,21 @@
 
 import React from 'react';
 import { Timeline } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 import { get, mergeObjects, serializer, type } from '@lowdefy/helpers';
 
+import withTheme from '../withTheme.js';
+
 // TODO: need to pass value to list blocks to render item level settings.
-const TimelineList = ({ blockId, components: { Icon }, events, list, methods, properties }) => {
+const TimelineList = ({
+  blockId,
+  classNames = {},
+  components: { Icon },
+  events,
+  list,
+  methods,
+  properties,
+  styles = {},
+}) => {
   // Temporary fix until list blocks get value from state
   const value = properties.data;
   const other = {};
@@ -30,7 +40,7 @@ const TimelineList = ({ blockId, components: { Icon }, events, list, methods, pr
   return (
     <Timeline
       id={blockId}
-      className={methods.makeCssClass([{ padding: '5px 0px 0px 5px' }, properties.style])}
+      className={classNames.element}
       pending={properties.pending}
       pendingDot={
         properties.pendingDotIcon && (
@@ -42,6 +52,7 @@ const TimelineList = ({ blockId, components: { Icon }, events, list, methods, pr
         )
       }
       reverse={properties.reverse}
+      style={{ padding: '5px 0px 0px 5px', ...styles.element }}
       {...other}
     >
       {(list || []).map((child, i) => {
@@ -78,11 +89,10 @@ const TimelineList = ({ blockId, components: { Icon }, events, list, methods, pr
   );
 };
 
-TimelineList.defaultProps = blockDefaultProps;
 TimelineList.meta = {
   category: 'list',
   icons: [],
-  styles: ['blocks/TimelineList/style.less'],
+  cssKeys: ['element'],
 };
 
-export default TimelineList;
+export default withTheme('Timeline', TimelineList);

@@ -66,7 +66,7 @@ async function build(options) {
   await writeMaps({ components, context });
   await writeMenus({ components, context });
   await writeTypes({ components, context });
-  await writePluginImports({ components, context });
+  await writePluginImports({ components, context });  // includes writeGlobalsCss
   await writeJs({ components, context });
   await updateServerPackageJson({ components, context });
   await copyPublicFolder({ components, context });
@@ -128,9 +128,32 @@ Validates config against the Lowdefy JSON schema:
 
 Processes page definitions:
 - Validates block hierarchy
-- Resolves area definitions
+- Resolves area/slot definitions
 - Processes skeleton configurations
 - Handles page-level properties
+
+Each block goes through these build-time transforms in `buildBlock.js`:
+
+#### `moveAreasToSlots` (deprecation transform)
+
+At build time, if a block has `areas`, it is copied to `slots` and the `areas` key is deleted. If both `areas` and `slots` are present, the build throws a `ConfigError`. A `ConfigWarning` is emitted when `areas` is encountered, advising migration to `slots`.
+
+```javascript
+// Before build:
+{ areas: { content: { blocks: [...] } } }
+// After build:
+{ slots: { content: { blocks: [...] } } }
+```
+
+#### `normalizeClassAndStyles` (styling normalization)
+
+Normalizes the various `class` and `style`/`styles` config forms into a canonical shape:
+
+1. **`properties.style`** is moved to `styles.element` (the component's own style, distinct from the layout wrapper).
+2. **`block.style`** (top-level) is moved to `styles.block` (the layout wrapper style). Responsive breakpoint keys in `style` are rejected with a `ConfigError` — use Tailwind classes instead.
+3. **`block.class`** as a string or array is normalized to `{ block: value }` (object form).
+
+The `breakpointKeys` used for validation are: `['xs', 'sm', 'md', 'lg', 'xl', '2xl']`. Note: `xxl` has been replaced with `2xl` to align with Tailwind v4 conventions.
 
 ### Menu Building (`buildMenu.js`)
 
@@ -224,6 +247,19 @@ Block and operator types are resolved at build time:
 - Validates types exist in configured plugins
 - Generates import map for code splitting
 - Catches typos early (build fails, not runtime)
+
+### `writeGlobalsCss` (CSS Generation)
+
+Replaces the old `writeStyleImports`. Generates `globals.css` which is imported by the server's `_app.js`. The generated file includes:
+
+1. **Layer order declaration** — `@layer theme, base, antd, components, utilities;` to lock CSS cascade priority.
+2. **Tailwind CSS v4 import** — `@import "tailwindcss";`
+3. **Grid CSS import** — `@import "@lowdefy/layout/grid.css";` for the layout grid system.
+4. **Optional user styles** — imports `public/styles.css` if present (in the `components` layer).
+5. **Content sources** — `@source` directive for Tailwind to scan block packages for class usage.
+6. **Antd-to-Tailwind theme bridge** — `@theme` block that maps `--ant-*` CSS variables to Tailwind design tokens (colors, radius, font-size, font-family). Users can override these via `theme.tailwind` in `lowdefy.yaml`.
+
+If `public/styles.less` is detected, a `ConfigWarning` with `prodError: true` is emitted, advising migration.
 
 ### Plugin Schema Map Generation
 

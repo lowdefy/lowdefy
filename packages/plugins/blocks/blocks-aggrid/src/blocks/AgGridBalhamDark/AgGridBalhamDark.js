@@ -36,7 +36,6 @@ AgGridBalhamDark.defaultProps = blockDefaultProps;
 AgGridBalhamDark.meta = {
   category: 'display',
   icons: [],
-  styles: ['blocks/AgGridBalhamDark/style.less'],
 };
 
 export default AgGridBalhamDark;

@@ -21,10 +21,10 @@ _ref:
     filePath: blocks/container/ConfirmModal.yaml
     description_content: |
       A popup container, presenting the user with a modal confirmation dialog.
-      The ConfirmModal has a single area, `content`.
+      The ConfirmModal has a single slot, `content`.
 
       > To open the confirm modal, invoke the open method.
-    areas:
+    slots:
       - content
     methods:
       - name: open

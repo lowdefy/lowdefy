@@ -18,11 +18,11 @@
 import { type } from '@lowdefy/helpers';
 
 const breakpoints = {
-  xs: 576,
+  xs: 640,
   sm: 768,
-  md: 992,
-  lg: 1200,
-  xl: 1600,
+  md: 1024,
+  lg: 1280,
+  xl: 1536,
 };
 const mediaReact = {
   xs: `@media screen and (maxWidth: ${breakpoints.xs}px)`,
@@ -30,7 +30,7 @@ const mediaReact = {
   md: `@media screen and (minWidth: ${breakpoints.sm}px)`,
   lg: `@media screen and (minWidth: ${breakpoints.md}px)`,
   xl: `@media screen and (minWidth: ${breakpoints.lg}px)`,
-  xxl: `@media screen and (minWidth: ${breakpoints.xl}px)`,
+  '2xl': `@media screen and (minWidth: ${breakpoints.xl}px)`,
 };
 const media = {
   xs: `@media screen and (max-width: ${breakpoints.xs}px)`,
@@ -38,9 +38,9 @@ const media = {
   md: `@media screen and (min-width: ${breakpoints.sm}px)`,
   lg: `@media screen and (min-width: ${breakpoints.md}px)`,
   xl: `@media screen and (min-width: ${breakpoints.lg}px)`,
-  xxl: `@media screen and (min-width: ${breakpoints.xl}px)`,
+  '2xl': `@media screen and (min-width: ${breakpoints.xl}px)`,
 };
-const mediaRegex = /@media\s+(xs|sm|md|lg|xl|xxl)\s*{/gm;
+const mediaRegex = /@media\s+(xs|sm|md|lg|xl|2xl)\s*{/gm;
 const setReplacer = (_, group) => media[group] + ' {';
 
 const mediaToCssObject = (styles, styleObjectOnly) => {
@@ -65,7 +65,7 @@ const mediaToCssObject = (styles, styleObjectOnly) => {
     if (styleObjectOnly) {
       mq = mediaReact;
     }
-    const { xs, sm, md, lg, xl, xxl, ...others } = style;
+    const { xs, sm, md, lg, xl, '2xl': xxl, ...others } = style;
     if (xs) {
       others[mq.xs] = xs;
     }
@@ -82,7 +82,7 @@ const mediaToCssObject = (styles, styleObjectOnly) => {
       others[mq.xl] = xl;
     }
     if (xxl) {
-      others[mq.xxl] = xxl;
+      others[mq['2xl']] = xxl;
     }
     return others;
   });

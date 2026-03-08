@@ -15,24 +15,31 @@
 */
 
 import React, { useState } from 'react';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 import { DatePicker } from 'antd';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc.js';
+import weekOfYear from 'dayjs/plugin/weekOfYear.js';
+import advancedFormat from 'dayjs/plugin/advancedFormat.js';
 import { type } from '@lowdefy/helpers';
-import moment from 'moment';
 
-import disabledDate from '../../disabledDate.js';
 import Label from '../Label/Label.js';
+import withTheme from '../withTheme.js';
+import disabledDate from '../../disabledDate.js';
 
-const WeekPicker = DatePicker.WeekPicker;
+dayjs.extend(utc);
+dayjs.extend(weekOfYear);
+dayjs.extend(advancedFormat);
 
 const WeekSelector = ({
   blockId,
+  classNames = {},
   components: { Icon, Link },
   events,
   loading,
   methods,
   properties,
   required,
+  styles = {},
   validation,
   value,
 }) => {
@@ -47,14 +54,16 @@ const WeekSelector = ({
       required={required}
       content={{
         content: () => (
-          <div className={methods.makeCssClass({ width: '100%' })}>
+          <div style={{ width: '100%' }}>
             <div id={`${blockId}_${elementId}_popup`} />
-            <WeekPicker
+            <DatePicker
               id={`${blockId}_input`}
+              picker="week"
               allowClear={properties.allowClear !== false}
               autoFocus={properties.autoFocus}
-              bordered={properties.bordered}
-              className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
+              variant={properties.bordered === false ? 'borderless' : properties.variant}
+              className={classNames.element}
+              style={{ width: '100%', ...styles.element }}
               disabled={properties.disabled || loading}
               disabledDate={disabledDate(properties.disabledDates)}
               format={properties.format ?? 'YYYY-wo'}
@@ -72,11 +81,11 @@ const WeekSelector = ({
               onChange={(newVal) => {
                 const val = !newVal
                   ? null
-                  : moment.utc(newVal.add(newVal.utcOffset(), 'minutes')).startOf('week').toDate();
+                  : dayjs.utc(newVal.add(newVal.utcOffset(), 'minutes')).startOf('week').toDate();
                 methods.setValue(val);
                 methods.triggerEvent({ name: 'onChange', event: { value: val } });
               }}
-              value={value && type.isDate(value) ? moment.utc(value).startOf('week') : null}
+              value={value && type.isDate(value) ? dayjs.utc(value).startOf('week') : null}
             />
           </div>
         ),
@@ -85,12 +94,11 @@ const WeekSelector = ({
   );
 };
 
-WeekSelector.defaultProps = blockDefaultProps;
 WeekSelector.meta = {
   valueType: 'date',
   category: 'input',
   icons: [...Label.meta.icons, 'AiOutlineCalendar'],
-  styles: ['blocks/WeekSelector/style.less'],
+  cssKeys: ['element', 'popup'],
 };
 
-export default WeekSelector;
+export default withTheme('DatePicker', WeekSelector);

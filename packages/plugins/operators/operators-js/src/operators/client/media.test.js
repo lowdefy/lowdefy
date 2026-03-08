@@ -72,7 +72,7 @@ test('_media size', () => {
       location: 'locationId',
       globals: { window: { innerHeight: 300, innerWidth: 1900 } },
     })
-  ).toEqual('xxl');
+  ).toEqual('2xl');
 });
 
 test('_media width', () => {

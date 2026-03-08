@@ -45,13 +45,13 @@ _ref:
             properties:
               title: View tickets # The title in the browser tab.
             layout:
-              contentJustify: center # Center the contents of the page.
+              justify: center # Center the contents of the page.
             blocks:
               - id: content_card
                 type: Card
                 layout:
                   size: 1000 # Set the size of the card so it does not fill the full screen.
-                  contentGutter: 28 # Make a 28px gap between all blocks in this card.
+                  gap: 28 # Make a 28px gap between all blocks in this card.
                 blocks:
                   - id: page_heading
                     type: Title

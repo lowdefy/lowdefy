@@ -20,7 +20,7 @@ _ref:
     schema: ../plugins/blocks/blocks-antd/src/blocks/Button/schema.json
     filePath: blocks/display/Button.yaml
     description_content: |
-      Button block.
+      Button block. Use `color` and `variant` properties to control the button appearance (replaces `type` and `danger` from v4).
 
     examples:
       - title: Block and ghost button with icon
@@ -32,12 +32,13 @@ _ref:
             block: true
             ghost: true
             icon: AiOutlineRocket
-      - title: Round and type danger
+      - title: Round danger button
         block:
           id: danger_example
           type: Button
           properties:
             title: Delete Forever
             shape: round
-            type: danger
+            color: danger
+            variant: solid
             icon: AiOutlineWarning

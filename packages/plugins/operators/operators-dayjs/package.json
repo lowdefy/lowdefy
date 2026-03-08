@@ -1,0 +1,64 @@
+{
+  "name": "@lowdefy/operators-dayjs",
+  "version": "4.5.2",
+  "license": "Apache-2.0",
+  "description": "",
+  "homepage": "https://lowdefy.com",
+  "keywords": [
+    "lowdefy",
+    "lowdefy operator",
+    "lowdefy plugin"
+  ],
+  "bugs": {
+    "url": "https://github.com/lowdefy/lowdefy/issues"
+  },
+  "contributors": [
+    {
+      "name": "Sam Tolmay",
+      "url": "https://github.com/SamTolmay"
+    },
+    {
+      "name": "Gerrie van Wyk",
+      "url": "https://github.com/Gervwyk"
+    },
+    {
+      "name": "Stephanie Smit",
+      "url": "https://github.com/StephanieJKS"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lowdefy/lowdefy.git"
+  },
+  "type": "module",
+  "exports": {
+    "./operators/client": "./dist/operatorsClient.js",
+    "./operators/server": "./dist/operatorsServer.js",
+    "./schemas": "./dist/schemas.js",
+    "./types": "./dist/types.json"
+  },
+  "files": [
+    "dist/*"
+  ],
+  "scripts": {
+    "build": "swc src --out-dir dist --config-file ../../../../.swcrc --cli-config-file ../../../../.swc-cli.json --copy-files && extract-plugin-types",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "pnpm build",
+    "test": "TZ=UTC node --experimental-vm-modules node_modules/jest/bin/jest.js"
+  },
+  "dependencies": {
+    "@lowdefy/operators": "4.5.2",
+    "dayjs": "1.11.19"
+  },
+  "devDependencies": {
+    "@lowdefy/node-utils": "4.5.2",
+    "@swc/cli": "0.8.0",
+    "@swc/core": "1.15.18",
+    "@swc/jest": "0.2.39",
+    "jest": "28.1.3",
+    "jest-environment-jsdom": "28.1.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

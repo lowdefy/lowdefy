@@ -16,13 +16,14 @@
 
 import { applyArrayIndices, get, serializer, swap, type } from '@lowdefy/helpers';
 import Events from './Events.js';
-import Areas from './Areas.js';
+import Slots from './Slots.js';
 
 class Block {
   constructor({ context, arrayIndices }, blockConfig) {
     const {
       id,
       blockId,
+      class: blockClass,
       events,
       layout,
       loading,
@@ -30,10 +31,11 @@ class Block {
       required,
       skeleton,
       style,
+      styles,
       validate,
       visible,
       type: blockType,
-      areas,
+      slots,
     } = blockConfig;
 
     this.context = context;
@@ -51,19 +53,23 @@ class Block {
     this.properties = type.isNone(properties) ? {} : properties;
     this.required = type.isNone(required) ? false : required;
     this.skeleton = type.isNone(skeleton) ? null : skeleton;
+    this.class = type.isNone(blockClass) ? {} : blockClass;
     this.style = type.isNone(style) ? {} : style;
+    this.styles = type.isNone(styles) ? {} : styles;
     this.validate = type.isNone(validate) ? [] : validate;
     this.visible = type.isNone(visible) ? true : visible;
     this.type = blockType;
-    this.areas = areas;
+    this.slots = slots;
 
-    this.areasLayoutEval = {};
+    this.slotsLayoutEval = {};
+    this.classEval = {};
     this.layoutEval = {};
     this.loadingEval = {};
     this.propertiesEval = {};
     this.requiredEval = {};
     this.skeletonEval = {};
     this.styleEval = {};
+    this.stylesEval = {};
     this.validationEval = {};
     this.visibleEval = {};
 
@@ -81,15 +87,15 @@ class Block {
       );
     }
 
-    if (!type.isNone(areas)) {
-      this.areasLayout = {};
-      Object.keys(areas).forEach((key) => {
+    if (!type.isNone(slots)) {
+      this.slotsLayout = {};
+      Object.keys(slots).forEach((key) => {
         // eslint-disable-next-line no-unused-vars
-        const { blocks, ...areaLayout } = areas[key];
-        this.areasLayout[key] = { ...areaLayout };
+        const { blocks, ...slotLayout } = slots[key];
+        this.slotsLayout[key] = { ...slotLayout };
       });
     } else {
-      this.areasLayout = {};
+      this.slotsLayout = {};
     }
 
     this.methods = {};
@@ -123,26 +129,26 @@ class Block {
   _initList = () => {
     // TODO: to initialize new object in array, the new value should be passed by method to unshiftItem and pushItem
     this.unshiftItem = () => {
-      this.loopSubAreas((areasClass, i) => {
-        areasClass.recUpdateArrayIndices(
+      this.loopSubSlots((slotsClass, i) => {
+        slotsClass.recUpdateArrayIndices(
           this.arrayIndices.concat([i]),
           this.arrayIndices.concat([i + 1])
         );
       });
-      this.subAreas.unshift(
-        this.newAreas({ arrayIndices: this.arrayIndices.concat([0]), initState: {} })
+      this.subSlots.unshift(
+        this.newSlots({ arrayIndices: this.arrayIndices.concat([0]), initState: {} })
       );
       this.context._internal.State.set(this.blockId, undefined);
-      // set area block and sub areas values undefined, so as not to pass values to new blocks
-      this.subAreas[0].recSetUndefined();
+      // set slot block and sub slots values undefined, so as not to pass values to new blocks
+      this.subSlots[0].recSetUndefined();
       this.update = true;
       this.context._internal.update();
     };
 
     this.pushItem = () => {
-      this.subAreas.push(
-        this.newAreas({
-          arrayIndices: this.arrayIndices.concat([this.subAreas.length]),
+      this.subSlots.push(
+        this.newSlots({
+          arrayIndices: this.arrayIndices.concat([this.subSlots.length]),
           initState: {},
         })
       );
@@ -152,16 +158,16 @@ class Block {
 
     this.removeItem = (index) => {
       this.context._internal.State.removeItem(this.blockId, index);
-      const lastArea = this.subAreas[this.subAreas.length - 1];
-      lastArea.recRemoveBlocksFromMap();
-      const largerAreas = this.subAreas.slice(index + 1);
-      largerAreas.forEach((areasClass, i) => {
-        areasClass.recUpdateArrayIndices(
+      const lastSlot = this.subSlots[this.subSlots.length - 1];
+      lastSlot.recRemoveBlocksFromMap();
+      const largerSlots = this.subSlots.slice(index + 1);
+      largerSlots.forEach((slotsClass, i) => {
+        slotsClass.recUpdateArrayIndices(
           this.arrayIndices.concat([index + i + 1]),
           this.arrayIndices.concat([index + i])
         );
       });
-      this.subAreas.splice(index, 1);
+      this.subSlots.splice(index, 1);
 
       this.update = true;
       this.context._internal.update();
@@ -170,39 +176,39 @@ class Block {
     this.moveItemUp = (index) => {
       if (index === 0) return;
       this.context._internal.State.swapItems(this.blockId, index - 1, index);
-      this.subAreas[index - 1].recUpdateArrayIndices(
+      this.subSlots[index - 1].recUpdateArrayIndices(
         this.arrayIndices.concat([index - 1]),
         this.arrayIndices.concat([index])
       );
-      this.subAreas[index].recUpdateArrayIndices(
+      this.subSlots[index].recUpdateArrayIndices(
         this.arrayIndices.concat([index]),
         this.arrayIndices.concat([index - 1])
       );
-      swap(this.subAreas, index - 1, index);
+      swap(this.subSlots, index - 1, index);
       this.update = true;
       this.context._internal.update();
     };
 
     this.moveItemDown = (index) => {
-      if (index === this.subAreas.length - 1) return;
+      if (index === this.subSlots.length - 1) return;
       this.context._internal.State.swapItems(this.blockId, index, index + 1);
-      this.subAreas[index + 1].recUpdateArrayIndices(
+      this.subSlots[index + 1].recUpdateArrayIndices(
         this.arrayIndices.concat([index + 1]),
         this.arrayIndices.concat([index])
       );
-      this.subAreas[index].recUpdateArrayIndices(
+      this.subSlots[index].recUpdateArrayIndices(
         this.arrayIndices.concat([index]),
         this.arrayIndices.concat([index + 1])
       );
-      swap(this.subAreas, index, index + 1);
+      swap(this.subSlots, index, index + 1);
       this.update = true;
       this.context._internal.update();
     };
   };
 
-  loopSubAreas = (fn) => {
-    if (this.subAreas) {
-      this.subAreas.forEach(fn);
+  loopSubSlots = (fn) => {
+    if (this.subSlots) {
+      this.subSlots.forEach(fn);
     }
   };
 
@@ -223,18 +229,18 @@ class Block {
     this.methods[methodName] = method;
   };
 
-  newAreas = ({ arrayIndices, initState }) => {
-    const areasClass = new Areas({
+  newSlots = ({ arrayIndices, initState }) => {
+    const slotsClass = new Slots({
       arrayIndices,
-      areas: this.areas,
+      slots: this.slots,
       context: this.context,
     });
-    areasClass.init(initState);
+    slotsClass.init(initState);
 
-    return areasClass;
+    return slotsClass;
   };
 
-  reset = (parentSubAreas, initWithState) => {
+  reset = (parentSubSlots, initWithState) => {
     this.update = true;
     this.showValidation = false;
     if (this.isInput() || this.isList()) {
@@ -247,40 +253,40 @@ class Block {
         this.context._internal.State.set(this.blockId, blockValue);
       }
       if (this.isList()) {
-        if (!type.isArray(this.subAreas)) {
-          this.subAreas = [];
-          parentSubAreas[this.id] = this.subAreas;
+        if (!type.isArray(this.subSlots)) {
+          this.subSlots = [];
+          parentSubSlots[this.id] = this.subSlots;
         }
         if (type.isArray(blockValue)) {
           blockValue.forEach((item, i) => {
-            if (!this.subAreas[i]) {
-              this.subAreas.push(
-                this.newAreas({
+            if (!this.subSlots[i]) {
+              this.subSlots.push(
+                this.newSlots({
                   arrayIndices: this.arrayIndices.concat([i]),
                   initState: initWithState,
                 })
               );
             } else {
-              this.subAreas[i].reset(initWithState);
+              this.subSlots[i].reset(initWithState);
             }
           });
-          this.subAreas.splice(blockValue.length);
+          this.subSlots.splice(blockValue.length);
         }
       } else {
         this.value = blockValue;
       }
     }
     if (this.isContainer()) {
-      if (!type.isArray(this.subAreas)) {
-        this.subAreas = [];
-        parentSubAreas[this.id] = this.subAreas;
+      if (!type.isArray(this.subSlots)) {
+        this.subSlots = [];
+        parentSubSlots[this.id] = this.subSlots;
       }
-      if (!this.subAreas[0]) {
-        this.subAreas.push(
-          this.newAreas({ arrayIndices: this.arrayIndices, initState: initWithState })
+      if (!this.subSlots[0]) {
+        this.subSlots.push(
+          this.newSlots({ arrayIndices: this.arrayIndices, initState: initWithState })
         );
       } else {
-        this.subAreas[0].reset(initWithState);
+        this.subSlots[0].reset(initWithState);
       }
     }
   };
@@ -306,16 +312,18 @@ class Block {
 
       this.validateEval();
 
+      this.classEval = this.parse(this.class);
       this.styleEval = this.parse(this.style);
+      this.stylesEval = this.parse(this.styles);
       this.layoutEval = this.parse(this.layout);
       this.loadingEval = this.parse(this.loading);
       this.skeletonEval = this.parse(this.skeleton);
-      this.areasLayoutEval = this.parse(this.areasLayout);
+      this.slotsLayoutEval = this.parse(this.slotsLayout);
     }
 
     if (this.isContainer() || this.isList()) {
-      this.loopSubAreas((areasClass) => {
-        repeat.value = areasClass.recEval(this.visibleEval.output) || repeat.value;
+      this.loopSubSlots((slotsClass) => {
+        repeat.value = slotsClass.recEval(this.visibleEval.output) || repeat.value;
       });
     }
     const after = this.evalToString();
@@ -390,13 +398,15 @@ class Block {
 
   evalToString = () => {
     return serializer.serializeToString({
-      areasLayoutEval: this.areasLayoutEval,
+      slotsLayoutEval: this.slotsLayoutEval,
+      classEval: this.classEval,
       layoutEval: this.layoutEval,
       loadingEval: this.loadingEval,
       propertiesEval: this.propertiesEval,
       requiredEval: this.requiredEval,
       skeletonEval: this.skeletonEval,
       styleEval: this.styleEval,
+      stylesEval: this.stylesEval,
       validationEval: this.validationEval,
       value: this.value,
       visibleEval: this.visibleEval,
@@ -407,8 +417,8 @@ class Block {
     if (!this.isVisible()) return;
 
     if (this.isContainer() || this.isList()) {
-      if (this.subAreas && this.subAreas.length > 0) {
-        this.loopSubAreas((subAreasClass) => subAreasClass.updateState());
+      if (this.subSlots && this.subSlots.length > 0) {
+        this.loopSubSlots((subSlotsClass) => subSlotsClass.updateState());
         return; // Don't add to set
       } else {
         this.context._internal.State.set(this.blockId, type.enforceType(this.meta.valueType, null));
@@ -426,7 +436,7 @@ class Block {
 
   updateArrayIndices = () => {
     this.blockId = applyArrayIndices(this.arrayIndices, this.blockIdPattern);
-    this.context._internal.RootAreas.map[this.blockId] = this;
+    this.context._internal.RootSlots.map[this.blockId] = this;
   };
 
   getValidate = (match) => {
@@ -450,7 +460,7 @@ class Block {
   };
 
   deleteFromMap = () => {
-    delete this.context._internal.RootAreas.map[this.blockId];
+    delete this.context._internal.RootSlots.map[this.blockId];
   };
 
   resetValidation = (match) => {
@@ -468,17 +478,20 @@ class Block {
     // Collect parse errors from all eval results
     const parseErrors = [
       ...(this.propertiesEval.errors || []),
+      ...(this.classEval.errors || []),
       ...(this.styleEval.errors || []),
+      ...(this.stylesEval.errors || []),
       ...(this.layoutEval.errors || []),
       ...(this.visibleEval.errors || []),
       ...(this.loadingEval.errors || []),
       ...(this.requiredEval.errors || []),
       ...(this.skeletonEval.errors || []),
-      ...(this.areasLayoutEval.errors || []),
+      ...(this.slotsLayoutEval.errors || []),
     ];
 
     this.eval = {
-      areas: this.areasLayoutEval.output,
+      slots: this.slotsLayoutEval.output,
+      class: this.classEval.output,
       configKey: this.configKey,
       events: type.isNone(this.Events.events) ? null : this.Events.events,
       parseErrors: parseErrors.length > 0 ? parseErrors : null,
@@ -488,6 +501,7 @@ class Block {
       required: this.requiredEval.output,
       layout: this.layoutEval.output,
       style: this.styleEval.output,
+      styles: this.stylesEval.output,
       validation: {
         ...(this.validationEval.output || {}),
         status:

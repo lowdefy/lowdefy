@@ -101,7 +101,7 @@ S3UploadPhoto.meta = {
   valueType: 'object',
   category: 'input',
   icons: ['AiOutlineLoading', 'AiOutlineCamera'],
-  styles: ['blocks/S3UploadPhoto/style.less'],
+  styles: [],
 };
 
 export default S3UploadPhoto;

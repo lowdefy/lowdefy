@@ -4,3 +4,7 @@ packages:
   - packages/servers/*
   - packages/utils/*
   - packages/ides/*
+onlyBuiltDependencies:
+  - '@swc/core'
+  - esbuild
+  - '@sentry/cli'

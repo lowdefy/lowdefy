@@ -16,24 +16,32 @@
 
 import React from 'react';
 import { Avatar } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 
-const AvatarBlock = ({ blockId, events, components: { Icon }, methods, properties }) => (
+import withTheme from '../withTheme.js';
+
+const AvatarBlock = ({
+  blockId,
+  classNames = {},
+  events,
+  components: { Icon },
+  methods,
+  properties,
+  styles = {},
+}) => (
   <Avatar
     id={blockId}
     alt={properties.alt}
+    className={classNames.element}
     gap={properties.gap}
     shape={properties.shape}
     size={properties.size}
     src={properties.src}
     onClick={() => methods.triggerEvent({ name: 'onClick' })}
-    className={methods.makeCssClass([
-      {
-        backgroundColor: !properties.src && properties.color,
-        cursor: events.onClick && 'pointer',
-      },
-      properties.style,
-    ])}
+    style={{
+      backgroundColor: !properties.src && properties.color,
+      cursor: events.onClick && 'pointer',
+      ...styles.element,
+    }}
     icon={
       properties.icon && (
         <Icon blockId={`${blockId}_icon`} events={events} properties={properties.icon} />
@@ -44,11 +52,10 @@ const AvatarBlock = ({ blockId, events, components: { Icon }, methods, propertie
   </Avatar>
 );
 
-AvatarBlock.defaultProps = blockDefaultProps;
 AvatarBlock.meta = {
   category: 'display',
   icons: [],
-  styles: ['blocks/Avatar/style.less'],
+  cssKeys: ['element'],
 };
 
-export default AvatarBlock;
+export default withTheme('Avatar', AvatarBlock);

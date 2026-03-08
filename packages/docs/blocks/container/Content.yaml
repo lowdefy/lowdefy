@@ -22,5 +22,5 @@ _ref:
     description_content: |
       The `Content` block provides a page container for a [content](https://4x.ant.design/components/layout/) area.
 
-    areas:
+    slots:
       - content

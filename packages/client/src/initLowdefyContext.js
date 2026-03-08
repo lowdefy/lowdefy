@@ -57,6 +57,7 @@ function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, 
     lowdefy.contexts = {};
     lowdefy.inputs = {};
     lowdefy.lowdefyGlobal = config.rootConfig.lowdefyGlobal;
+    lowdefy.theme = config.rootConfig.theme ?? {};
 
     lowdefy._internal.callAPI = createCallAPI(lowdefy);
     lowdefy._internal.auth = createAuthMethods(lowdefy, auth);

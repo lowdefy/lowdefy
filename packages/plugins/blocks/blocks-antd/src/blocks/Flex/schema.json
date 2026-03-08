@@ -1,0 +1,55 @@
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "vertical": {
+        "type": "boolean",
+        "default": false,
+        "description": "Whether the main axis direction is vertical."
+      },
+      "wrap": {
+        "type": ["boolean", "string"],
+        "description": "Set whether the element is displayed in a single line or in multiple lines."
+      },
+      "justify": {
+        "type": "string",
+        "enum": [
+          "flex-start",
+          "center",
+          "flex-end",
+          "space-between",
+          "space-around",
+          "space-evenly"
+        ],
+        "description": "Set the alignment of elements on the main axis."
+      },
+      "align": {
+        "type": "string",
+        "enum": ["flex-start", "center", "flex-end", "stretch", "baseline"],
+        "description": "Set the alignment of elements on the cross axis."
+      },
+      "gap": {
+        "type": ["string", "number"],
+        "description": "Set the gap between items. Can be \"small\", \"middle\", \"large\", or a number."
+      },
+      "flex": {
+        "type": ["string", "number"],
+        "description": "Flex CSS shorthand property."
+      },
+      "component": {
+        "type": "string",
+        "description": "Custom element type."
+      },
+      "theme": {
+        "type": "object",
+        "description": "Antd design token overrides for this block. See <a href=\"https://ant.design/components/overview#design-token\">antd design tokens</a>.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      }
+    }
+  },
+  "cssKeys": ["element"]
+}

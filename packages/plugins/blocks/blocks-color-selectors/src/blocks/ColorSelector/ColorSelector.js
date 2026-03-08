@@ -22,12 +22,14 @@ import ColorPicker from './ColorPicker.js';
 
 const ColorSelector = ({
   blockId,
+  classNames,
   components,
   events,
   loading,
   methods,
   properties,
   required,
+  styles,
   validation,
   value,
 }) => {
@@ -44,10 +46,8 @@ const ColorSelector = ({
         content: () => (
           <ColorPicker
             id={`${blockId}_input`}
-            className={methods.makeCssClass([
-              { marginBottom: '0px !important' },
-              properties.inputStyle,
-            ])}
+            className={classNames?.element}
+            style={{ marginBottom: '0px', ...styles?.element }}
             onChange={(newColor) => {
               methods.setValue(newColor);
               methods.triggerEvent({ name: 'onChange', event: { value: newColor } });
@@ -69,7 +69,6 @@ ColorSelector.meta = {
   valueType: 'string',
   category: 'input',
   icons: [...Label.meta.icons],
-  styles: ['blocks/ColorSelector/style.less'],
 };
 
 export default ColorSelector;
