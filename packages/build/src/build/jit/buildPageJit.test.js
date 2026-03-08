@@ -546,6 +546,57 @@ test('buildPageJit resolver page traces errors back to resolver when inner _ref 
   });
 });
 
+test('buildPageJit resolves error location using in-memory keyMap for undefined action type', async () => {
+  const context = createTestContext();
+  mockFiles([
+    {
+      path: 'page-with-action.yaml',
+      content: `id: action-page
+type: PageHeaderMenu
+blocks:
+  - id: btn1
+    type: Button
+    events:
+      onClick:
+        - id: my_action
+          type: UndefinedAction
+          params:
+            message: test`,
+    },
+  ]);
+
+  const pageEntry = {
+    pageId: 'action-page',
+    auth: { public: true },
+    refId: 'ref-action-page',
+    refPath: 'page-with-action.yaml',
+  };
+  const pageRegistry = new Map([['action-page', pageEntry]]);
+
+  await expect(
+    buildPageJit({
+      pageId: 'action-page',
+      pageRegistry,
+      context,
+    })
+  ).rejects.toMatchObject({
+    message: expect.stringContaining('Action type "UndefinedAction" was used but is not defined'),
+    // configKey should be deleted and replaced with source
+    source: expect.stringContaining('page-with-action.yaml'),
+  });
+
+  // Verify configKey was removed (so error handler does not read stale disk keyMap)
+  try {
+    await buildPageJit({
+      pageId: 'action-page',
+      pageRegistry,
+      context,
+    });
+  } catch (err) {
+    expect(err.configKey).toBeUndefined();
+  }
+});
+
 test('two JIT builds with object vars produce identical results and do not mutate unresolvedVars', async () => {
   const context = createTestContext();
   mockFiles([
@@ -583,7 +634,7 @@ areas:
     context,
   });
 
-  const contentBlocks1 = result1.areas?.content?.blocks ?? [];
+  const contentBlocks1 = result1.slots?.content?.blocks ?? [];
   expect(contentBlocks1).toHaveLength(1);
   expect(contentBlocks1[0].blockId).toBe('h1');
 
@@ -603,7 +654,7 @@ areas:
     context,
   });
 
-  const contentBlocks2 = result2.areas?.content?.blocks ?? [];
+  const contentBlocks2 = result2.slots?.content?.blocks ?? [];
   expect(contentBlocks2).toHaveLength(1);
   expect(contentBlocks2[0].blockId).toBe('h1');
 

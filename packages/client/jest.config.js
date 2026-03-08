@@ -8,6 +8,9 @@ export default {
   errorOnDeprecated: true,
   testEnvironment: 'jsdom',
   testPathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/src/test'],
+  moduleNameMapper: {
+    '\\.(css|less)$': '<rootDir>/src/test/__mocks__/styleMock.js',
+  },
   transform: {
     '^.+\\.(t|j)sx?$': ['@swc/jest', { configFile: '../../.swcrc.test' }],
     '\\.yaml$': '@lowdefy/jest-yaml-transform',
