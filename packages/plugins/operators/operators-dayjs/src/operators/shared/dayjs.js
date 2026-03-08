@@ -21,6 +21,7 @@ import relativeTime from 'dayjs/plugin/relativeTime.js';
 import advancedFormat from 'dayjs/plugin/advancedFormat.js';
 import weekOfYear from 'dayjs/plugin/weekOfYear.js';
 import customParseFormat from 'dayjs/plugin/customParseFormat.js';
+import { type } from '@lowdefy/helpers';
 import { runClass } from '@lowdefy/operators';
 
 import '../../locales.js';
@@ -52,7 +53,87 @@ const meta = {
 
 const functions = { format, humanizeDuration };
 
+// Allowed dayjs instance methods for chaining mode.
+const allowedChainMethods = new Set([
+  'add',
+  'subtract',
+  'startOf',
+  'endOf',
+  'set',
+  'utc',
+  'local',
+  'locale',
+  // Query methods
+  'isBefore',
+  'isAfter',
+  'isSame',
+  // Display methods
+  'format',
+  'fromNow',
+  'from',
+  'toNow',
+  'to',
+  'diff',
+  'valueOf',
+  'unix',
+  'toISOString',
+  'toJSON',
+  'toString',
+  'daysInMonth',
+  // Getter methods
+  'year',
+  'month',
+  'date',
+  'day',
+  'hour',
+  'minute',
+  'second',
+  'millisecond',
+  'week',
+]);
+
+// Chain mode: _dayjs: ["now", {"subtract": [3, "days"]}, "fromNow"]
+// First element is the input (or "now"), rest are chained method calls.
+function runChain(params) {
+  const [input, ...steps] = params;
+  let instance = input === 'now' ? dayjs() : dayjs(input);
+
+  for (const step of steps) {
+    if (type.isString(step)) {
+      if (!allowedChainMethods.has(step)) {
+        throw new Error(
+          `_dayjs chain method "${step}" is not supported. Allowed methods: ${[
+            ...allowedChainMethods,
+          ].join(', ')}.`
+        );
+      }
+      const result = instance[step]();
+      if (!dayjs.isDayjs(result)) return result;
+      instance = result;
+    } else if (type.isObject(step)) {
+      const method = Object.keys(step)[0];
+      if (!allowedChainMethods.has(method)) {
+        throw new Error(
+          `_dayjs chain method "${method}" is not supported. Allowed methods: ${[
+            ...allowedChainMethods,
+          ].join(', ')}.`
+        );
+      }
+      const args = type.isArray(step[method]) ? step[method] : [step[method]];
+      const result = instance[method](...args);
+      if (!dayjs.isDayjs(result)) return result;
+      instance = result;
+    }
+  }
+
+  return instance.toISOString();
+}
+
 function _dayjs({ params, location, methodName }) {
+  // Chain mode: when no methodName and params is an array starting with a string/date
+  if (!methodName && type.isArray(params) && params.length >= 1) {
+    return runChain(params);
+  }
   return runClass({
     functions,
     location,

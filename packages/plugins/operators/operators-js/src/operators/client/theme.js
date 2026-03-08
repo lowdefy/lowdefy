@@ -20,7 +20,7 @@ function _theme({ arrayIndices, location, theme, params }) {
   return getFromObject({
     arrayIndices,
     location,
-    object: theme?.antd?.token ?? {},
+    object: theme?._resolvedAntdToken ?? theme?.antd?.token ?? {},
     operator: '_theme',
     params,
   });

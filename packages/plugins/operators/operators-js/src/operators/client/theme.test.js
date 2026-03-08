@@ -87,3 +87,29 @@ test('_theme defaults to empty object when antd.token is missing', async () => {
     ],
   ]);
 });
+
+test('_theme uses _resolvedAntdToken when available', async () => {
+  const lowdefyOperators = await import('@lowdefy/operators');
+  lowdefyOperators.getFromObject.mockReset();
+  const _theme = (await import('./theme.js')).default;
+  _theme({
+    arrayIndices: [],
+    location: 'location',
+    params: 'colorPrimary',
+    theme: {
+      _resolvedAntdToken: { colorPrimary: '#1677ff', borderRadius: 6 },
+      antd: { token: { colorPrimary: '#00b96b' } },
+    },
+  });
+  expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
+    [
+      {
+        arrayIndices: [],
+        location: 'location',
+        object: { colorPrimary: '#1677ff', borderRadius: 6 },
+        operator: '_theme',
+        params: 'colorPrimary',
+      },
+    ],
+  ]);
+});

@@ -49,6 +49,15 @@ function resolveAlgorithm(algorithm) {
   return algorithmMap[algorithm] || antdTheme.defaultAlgorithm;
 }
 
+function ThemeTokenResolver({ lowdefyRef, children }) {
+  const { token } = antdTheme.useToken();
+  if (!lowdefyRef.current.theme) {
+    lowdefyRef.current.theme = {};
+  }
+  lowdefyRef.current.theme._resolvedAntdToken = token;
+  return children;
+}
+
 function App({ Component, pageProps: { session, rootConfig, pageConfig } }) {
   const usageDataRef = useRef({});
   const lowdefyRef = useRef({ eventCallback: createLogUsage({ usageDataRef }) });
@@ -75,26 +84,28 @@ function App({ Component, pageProps: { session, rootConfig, pageConfig } }) {
           algorithm: resolveAlgorithm(lowdefyRef.current.theme?.antd?.algorithm),
         }}
       >
-        <ErrorBoundary fullPage onError={handleError}>
-          <Auth session={session}>
-            {(auth) => {
-              usageDataRef.current.user = auth.session?.hashed_id;
-              // Set Sentry user context when auth changes
-              setSentryUser({
-                user: auth.session,
-                sentryConfig: loggerConfig.sentry,
-              });
-              return (
-                <Component
-                  auth={auth}
-                  lowdefy={lowdefyRef.current}
-                  rootConfig={rootConfig}
-                  pageConfig={pageConfig}
-                />
-              );
-            }}
-          </Auth>
-        </ErrorBoundary>
+        <ThemeTokenResolver lowdefyRef={lowdefyRef}>
+          <ErrorBoundary fullPage onError={handleError}>
+            <Auth session={session}>
+              {(auth) => {
+                usageDataRef.current.user = auth.session?.hashed_id;
+                // Set Sentry user context when auth changes
+                setSentryUser({
+                  user: auth.session,
+                  sentryConfig: loggerConfig.sentry,
+                });
+                return (
+                  <Component
+                    auth={auth}
+                    lowdefy={lowdefyRef.current}
+                    rootConfig={rootConfig}
+                    pageConfig={pageConfig}
+                  />
+                );
+              }}
+            </Auth>
+          </ErrorBoundary>
+        </ThemeTokenResolver>
       </ConfigProvider>
     </StyleProvider>
   );

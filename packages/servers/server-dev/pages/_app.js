@@ -39,6 +39,15 @@ function resolveAlgorithm(algorithm) {
   return algorithmMap[algorithm] || antdTheme.defaultAlgorithm;
 }
 
+function ThemeTokenResolver({ lowdefyRef, children }) {
+  const { token } = antdTheme.useToken();
+  if (!lowdefyRef.current.theme) {
+    lowdefyRef.current.theme = {};
+  }
+  lowdefyRef.current.theme._resolvedAntdToken = token;
+  return children;
+}
+
 function App({ Component }) {
   const lowdefyRef = useRef({});
 
@@ -60,15 +69,17 @@ function App({ Component }) {
           algorithm: resolveAlgorithm(lowdefyRef.current.theme?.antd?.algorithm),
         }}
       >
-        <ErrorBoundary fullPage onError={handleError}>
-          <Suspense fallback="">
-            <Auth>
-              {(auth) => {
-                return <Component auth={auth} lowdefy={lowdefyRef.current} />;
-              }}
-            </Auth>
-          </Suspense>
-        </ErrorBoundary>
+        <ThemeTokenResolver lowdefyRef={lowdefyRef}>
+          <ErrorBoundary fullPage onError={handleError}>
+            <Suspense fallback="">
+              <Auth>
+                {(auth) => {
+                  return <Component auth={auth} lowdefy={lowdefyRef.current} />;
+                }}
+              </Auth>
+            </Suspense>
+          </ErrorBoundary>
+        </ThemeTokenResolver>
       </ConfigProvider>
     </StyleProvider>
   );

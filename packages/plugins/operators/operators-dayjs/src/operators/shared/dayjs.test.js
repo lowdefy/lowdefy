@@ -146,3 +146,95 @@ describe('_dayjs.humanizeDuration', () => {
     ).toEqual('7 days');
   });
 });
+
+describe('_dayjs chain mode', () => {
+  test('chain with "now" and format', () => {
+    const result = _dayjs({
+      params: ['now', { format: 'YYYY' }],
+      location: 'locationId',
+    });
+    expect(result).toEqual(new Date().getFullYear().toString());
+  });
+
+  test('chain with date input and format', () => {
+    const result = _dayjs({
+      params: ['2019-06-13T08:20:23.345Z', { format: 'YYYY-MM-DD' }],
+      location: 'locationId',
+    });
+    expect(result).toEqual('2019-06-13');
+  });
+
+  test('chain subtract and format', () => {
+    const result = _dayjs({
+      params: ['2024-03-15T00:00:00.000Z', { subtract: [3, 'days'] }, { format: 'YYYY-MM-DD' }],
+      location: 'locationId',
+    });
+    expect(result).toEqual('2024-03-12');
+  });
+
+  test('chain add and format', () => {
+    const result = _dayjs({
+      params: ['2024-01-01T00:00:00.000Z', { add: [1, 'month'] }, { format: 'YYYY-MM-DD' }],
+      location: 'locationId',
+    });
+    expect(result).toEqual('2024-02-01');
+  });
+
+  test('chain fromNow returns relative string', () => {
+    const result = _dayjs({
+      params: ['2000-01-01T00:00:00.000Z', 'fromNow'],
+      location: 'locationId',
+    });
+    expect(typeof result).toBe('string');
+    expect(result).toContain('years ago');
+  });
+
+  test('chain startOf and format', () => {
+    const result = _dayjs({
+      params: ['2024-03-15T14:30:00.000Z', { startOf: 'month' }, { format: 'YYYY-MM-DD' }],
+      location: 'locationId',
+    });
+    expect(result).toEqual('2024-03-01');
+  });
+
+  test('chain with single element returns ISO string', () => {
+    const result = _dayjs({
+      params: ['2024-01-01T00:00:00.000Z'],
+      location: 'locationId',
+    });
+    expect(result).toEqual('2024-01-01T00:00:00.000Z');
+  });
+
+  test('chain diff returns a number', () => {
+    const result = _dayjs({
+      params: ['2024-03-15T00:00:00.000Z', { diff: ['2024-03-10T00:00:00.000Z', 'days'] }],
+      location: 'locationId',
+    });
+    expect(result).toEqual(5);
+  });
+
+  test('chain isBefore returns boolean', () => {
+    const result = _dayjs({
+      params: ['2024-01-01T00:00:00.000Z', { isBefore: '2024-06-01T00:00:00.000Z' }],
+      location: 'locationId',
+    });
+    expect(result).toBe(true);
+  });
+
+  test('chain throws on disallowed method', () => {
+    expect(() =>
+      _dayjs({
+        params: ['now', 'constructor'],
+        location: 'locationId',
+      })
+    ).toThrow('_dayjs chain method "constructor" is not supported');
+  });
+
+  test('chain with now, subtract, fromNow (user scenario)', () => {
+    const result = _dayjs({
+      params: ['now', { subtract: [3, 'days'] }, 'fromNow'],
+      location: 'locationId',
+    });
+    expect(result).toEqual('3 days ago');
+  });
+});
