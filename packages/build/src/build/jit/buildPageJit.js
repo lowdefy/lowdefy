@@ -17,7 +17,7 @@
 import fs from 'fs';
 import path from 'path';
 import { serializer, type } from '@lowdefy/helpers';
-import { ConfigError, LowdefyInternalError, resolveConfigLocation } from '@lowdefy/errors';
+import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 
 import operators from '@lowdefy/operators-js/operators/build';
 
@@ -38,33 +38,12 @@ import { resolve, WalkContext, cloneForResolve, tagRefDeep } from '../buildRefs/
 import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
 import detectMissingPluginPackages from './detectMissingPluginPackages.js';
 import updateServerPackageJsonJit from './updateServerPackageJsonJit.js';
+import writeMaps from '../writeMaps.js';
 import validatePageTypes from './validatePageTypes.js';
 import writePageJit from './writePageJit.js';
 
 validateOperatorsDynamic({ operators });
 const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
-
-// Resolve configKey → source using the in-memory keyMap so the server error
-// handler does not read the stale skeleton keyMap from disk.  JIT builds assign
-// fresh ~k values (makeId starts at 0 in the server process) that collide with
-// the skeleton build's keyMap entries, causing wrong line numbers.
-function resolveJitErrorLocations(error, buildContext) {
-  const errors = error.buildErrors ?? [error];
-  for (const err of errors) {
-    if (!err || !err.configKey) continue;
-    const location = resolveConfigLocation({
-      configKey: err.configKey,
-      keyMap: buildContext.keyMap,
-      refMap: buildContext.refMap,
-      configDirectory: buildContext.directories.config,
-    });
-    if (location) {
-      err.source = location.source;
-      err.config = location.config;
-      delete err.configKey;
-    }
-  }
-}
 
 async function buildPageJit({ pageId, pageRegistry, context, directories, logger }) {
   // Use provided context or create a minimal one for JIT builds
@@ -196,6 +175,10 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     // Add keys to the resolved page
     addKeys({ components: processed, context: buildContext });
 
+    // Write keyMap/refMap so the error handler reads JIT entries from disk.
+    // JIT addKeys assigns fresh ~k values that aren't in the skeleton keyMap.
+    await writeMaps({ context: buildContext });
+
     // Initialize linkActionRefs for buildPage (normally done by buildPages)
     if (!buildContext.linkActionRefs) {
       buildContext.linkActionRefs = [];
@@ -265,8 +248,6 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     if (buildErrors.length > 0 && !err.buildErrors) {
       err.buildErrors = [err, ...buildErrors];
     }
-    // Resolve error locations using in-memory keyMap before re-throwing
-    resolveJitErrorLocations(err, buildContext);
     if (err.isLowdefyError) {
       throw err;
     }
