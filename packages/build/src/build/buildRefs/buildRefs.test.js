@@ -1437,6 +1437,84 @@ answer:
     expect(context.errors[0].message).toContain('_sum takes an array type as input.');
   });
 
+  test('Evaluate build time operator inside _var default value', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+ref:
+  _ref:
+    path: template.yaml`,
+      },
+      {
+        path: 'template.yaml',
+        content: `
+events:
+  onChange:
+    _var:
+      key: onChange
+      default:
+        _build.array.concat:
+          - - id: action_one
+              type: SetState
+          - - id: action_two
+              type: Request`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(res).toEqual({
+      ref: {
+        events: {
+          onChange: [
+            { id: 'action_one', type: 'SetState' },
+            { id: 'action_two', type: 'Request' },
+          ],
+        },
+      },
+    });
+  });
+
+  test('Evaluate _ref inside _var default value', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+ref:
+  _ref:
+    path: template.yaml`,
+      },
+      {
+        path: 'template.yaml',
+        content: `
+actions:
+  _var:
+    key: actions
+    default:
+      _build.array.concat:
+        - - id: action_one
+            type: SetState
+        - _ref: extra_actions.yaml`,
+      },
+      {
+        path: 'extra_actions.yaml',
+        content: `
+- id: action_two
+  type: Request`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(res).toEqual({
+      ref: {
+        actions: [
+          { id: 'action_one', type: 'SetState' },
+          { id: 'action_two', type: 'Request' },
+        ],
+      },
+    });
+  });
+
   test('Build time operator error in referenced file', async () => {
     const files = [
       {

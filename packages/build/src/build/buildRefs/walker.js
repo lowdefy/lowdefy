@@ -371,9 +371,11 @@ async function resolve(node, ctx) {
     return resolveRef(node, ctx);
   }
 
-  // 4. Object with _var
+  // 4. Object with _var — resolve, then re-walk the result so any
+  //    _ref or _build.* operators inside the default value get processed.
   if (type.isObject(node) && !type.isUndefined(node._var)) {
-    return resolveVar(node, ctx);
+    const varResult = resolveVar(node, ctx);
+    return resolve(varResult, ctx);
   }
 
   // 5. Array — walk children in-place
