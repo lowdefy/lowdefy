@@ -17,6 +17,9 @@
 import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
+import '@ag-grid-community/styles/ag-grid.css';
+import '@ag-grid-community/styles/ag-theme-material.css';
+
 import AgGrid from '../../AgGrid.js';
 
 const AgGridMaterial = ({ blockId, events, loading, methods, properties }) => (
