@@ -41,12 +41,15 @@ _ref:
 
       The value in state is an array of values with the selected node value first followed by any parent node values.
 
+      > TreeSelector supports the `label` property for label configuration (title, inline, colon, extra, etc.) like other input blocks.
+
     examples:
-      - title: Tree list of type and category with connecting line and single select.
+      - title: Tree list with connecting line and single select.
         block:
           id: tree_list_type_category
           type: TreeSelector
           properties:
+            title: Categories
             showLine: true
             options:
               - label: Type
@@ -67,3 +70,47 @@ _ref:
                     value: 2
                   - label: Three
                     value: 3
+      - title: Tree with label configuration.
+        block:
+          id: tree_with_label
+          type: TreeSelector
+          properties:
+            title: Select a Node
+            label:
+              extra: Select a node from the tree below.
+              colon: true
+            showLine: true
+            defaultExpandAll: true
+            options:
+              - label: Fruits
+                value: fruits
+                children:
+                  - label: Apple
+                    value: apple
+                  - label: Banana
+                    value: banana
+              - label: Vegetables
+                value: vegetables
+                children:
+                  - label: Carrot
+                    value: carrot
+                  - label: Broccoli
+                    value: broccoli
+      - title: Tree with inline label.
+        block:
+          id: tree_inline_label
+          type: TreeSelector
+          properties:
+            title: Pick Item
+            label:
+              inline: true
+              span: 6
+              colon: true
+            options:
+              - label: Parent
+                value: parent
+                children:
+                  - label: Child A
+                    value: a
+                  - label: Child B
+                    value: b

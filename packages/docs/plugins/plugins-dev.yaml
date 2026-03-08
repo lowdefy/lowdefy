@@ -123,26 +123,21 @@ _ref:
             };
             ```
 
-            When developing blocks, the names of any react-icons used by the block, as well the path to any CSS or LESS files used by the block also need to be included in the types object, as discussed in more detail [here](/plugins-blocks).
+            Block plugin types are extracted automatically at build time using the `extract-plugin-types` script. The script reads block exports and generates a static `types.json` with block names and `meta.icons`. CSS files are handled via standard imports in the block source.
 
-            ###### Example `types.js` for blocks
+            ###### Example `types.json` for blocks
 
-            ```js
-            import * as blocks from './blocks.js';
-
-            const icons = {};
-            const styles = {};
-            Object.keys(blocks).forEach((block) => {
-              icons[block] = blocks[block].meta.icons || [];
-              styles[block] = blocks[block].meta.styles || [];
-            });
-
-            export default {
-              blocks: Object.keys(blocks),
-              icons,
-              styles: { default: [], ...styles },
-            };
+            ```json
+            {
+              "blocks": ["MyBlock", "MyOtherBlock"],
+              "icons": {
+                "MyBlock": ["AiOutlineAlert"],
+                "MyOtherBlock": []
+              }
+            }
             ```
+
+            See the [default Lowdefy block packages](https://github.com/lowdefy/lowdefy/tree/main/packages/plugins/blocks) for full examples.
 
             ### Named export files
 
