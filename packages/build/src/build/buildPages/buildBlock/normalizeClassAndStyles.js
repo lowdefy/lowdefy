@@ -60,15 +60,6 @@ function normalizeStyle(block) {
     }
     block.style = result;
   }
-
-  // Backwards compatibility: old styles (plural) merges into style
-  if (type.isObject(block.styles)) {
-    if (!block.style) block.style = {};
-    for (const [key, value] of Object.entries(block.styles)) {
-      block.style[key] = block.style[key] ? { ...block.style[key], ...value } : value;
-    }
-    delete block.styles;
-  }
 }
 
 function normalizeClass(block) {

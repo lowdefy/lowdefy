@@ -82,7 +82,7 @@ const InputContainer = ({ block, Blocks, Component, context, loading, lowdefy })
         pageId={lowdefy.pageId}
         properties={block.eval.properties}
         required={block.eval.required}
-        styles={block.eval.style}
+        styles={block.eval.style ?? {}}
         validation={block.eval.validation}
         value={block.value}
       />

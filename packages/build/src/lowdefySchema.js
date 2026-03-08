@@ -591,15 +591,6 @@ export default {
             type: 'Block "class" should be a string, array of strings, or object.',
           },
         },
-        styles: {
-          type: 'object',
-          additionalProperties: {
-            type: 'object',
-          },
-          errorMessage: {
-            type: 'Block "styles" should be an object.',
-          },
-        },
         visible: {},
         loading: {},
         blocks: {

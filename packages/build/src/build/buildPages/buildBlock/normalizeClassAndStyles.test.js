@@ -210,55 +210,6 @@ test('normalizeClassAndStyles handles -- prefixed keys in style', () => {
   });
 });
 
-test('normalizeClassAndStyles merges old styles (plural) into style', () => {
-  const components = {
-    pages: [
-      {
-        id: 'page_1',
-        type: 'Container',
-        auth,
-        blocks: [
-          {
-            id: 'block_1',
-            type: 'Input',
-            styles: { block: { padding: 5, color: 'blue' }, element: { fontSize: 16 } },
-          },
-        ],
-      },
-    ],
-  };
-  const res = buildPages({ components, context });
-  expect(get(res, 'pages.0.slots.content.blocks.0.style')).toEqual({
-    block: { padding: 5, color: 'blue' },
-    element: { fontSize: 16 },
-  });
-  expect(get(res, 'pages.0.slots.content.blocks.0.styles')).toBeUndefined();
-});
-
-test('normalizeClassAndStyles merges flat style with old styles.block (styles.block overrides)', () => {
-  const components = {
-    pages: [
-      {
-        id: 'page_1',
-        type: 'Container',
-        auth,
-        blocks: [
-          {
-            id: 'block_1',
-            type: 'Input',
-            style: { marginTop: 20, padding: 10 },
-            styles: { block: { padding: 5, color: 'blue' } },
-          },
-        ],
-      },
-    ],
-  };
-  const res = buildPages({ components, context });
-  expect(get(res, 'pages.0.slots.content.blocks.0.style')).toEqual({
-    block: { marginTop: 20, padding: 5, color: 'blue' },
-  });
-  expect(get(res, 'pages.0.slots.content.blocks.0.styles')).toBeUndefined();
-});
 
 test('normalizeClassAndStyles merges properties.style and --element (--element overrides)', () => {
   const components = {
