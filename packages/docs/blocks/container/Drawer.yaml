@@ -21,7 +21,7 @@ _ref:
     filePath: blocks/container/Drawer.yaml
     description_content: |
       A panel which slides in from the edge of the screen.
-      The Drawer has `content` and `extra` slots. Use `styles.header`, `styles.body`, and `styles.footer` to customize drawer sections (replaces `headerStyle`, `bodyStyle`, and `footerStyle` from v4).
+      The Drawer has `content` and `extra` slots. Use `style: { --header }`, `style: { --body }`, and `style: { --footer }` to customize drawer sections (replaces `headerStyle`, `bodyStyle`, and `footerStyle` from v4).
 
       > To open the drawer, invoke a drawer method.
     slots:

@@ -40,7 +40,7 @@ _ref:
             | `bordered` → `variant` | 16 input/display blocks | Update property |
             | `visible` → `open` | Modal | Update property |
             | Button `type`/`danger` → `color`/`variant` | Button blocks | Update properties |
-            | Inline style props → `styles.*` | Card, Modal, Drawer, etc. | Update properties |
+            | Inline style props → `style: { --key }` | Card, Modal, Drawer, etc. | Update properties |
             | Comment block removed | Apps using Comment | Use Card + Flex + Avatar |
             | Property renames | Various blocks | See table below |
 
@@ -340,20 +340,20 @@ _ref:
               class: "p-16 sm:p-8"
             ```
 
-            ### Inline style props → `styles.*`
+            ### Inline style props → `style: { --key }`
 
-            Block-specific inline style properties have been replaced with the unified `styles` object:
+            Block-specific inline style properties have been replaced with the unified `style` property using `--`-prefixed CSS slot keys:
 
             | Block | Remove | Use instead |
             |---|---|---|
-            | Card | `headerStyle`, `bodyStyle` | `styles.header`, `styles.body` |
-            | Modal | `bodyStyle`, `maskStyle` | `styles.body`, `styles.mask` |
-            | Drawer | `drawerStyle`, `headerStyle`, `bodyStyle`, `maskStyle`, `contentWrapperStyle` | `styles.wrapper`, `styles.header`, `styles.body`, `styles.mask`, `styles.content` |
-            | Tabs | `tabBarStyle` | `styles.tabBar` |
-            | ConfirmModal | `bodyStyle` | `styles.body` |
-            | Statistic | `valueStyle` | `styles.value` |
-            | Descriptions | `contentStyle`, `labelStyle` | `styles.content`, `styles.label` |
-            | Tooltip | `overlayStyle` | `styles.inner` |
+            | Card | `headerStyle`, `bodyStyle` | `style: { --header }`, `style: { --body }` |
+            | Modal | `bodyStyle`, `maskStyle` | `style: { --body }`, `style: { --mask }` |
+            | Drawer | `drawerStyle`, `headerStyle`, `bodyStyle`, `maskStyle`, `contentWrapperStyle` | `style: { --wrapper }`, `style: { --header }`, `style: { --body }`, `style: { --mask }`, `style: { --content }` |
+            | Tabs | `tabBarStyle` | `style: { --tabBar }` |
+            | ConfirmModal | `bodyStyle` | `style: { --body }` |
+            | Statistic | `valueStyle` | `style: { --value }` |
+            | Descriptions | `contentStyle`, `labelStyle` | `style: { --content }`, `style: { --label }` |
+            | Tooltip | `overlayStyle` | `style: { --inner }` |
 
             #### Before (v4)
             ```yaml
@@ -370,10 +370,10 @@ _ref:
             ```yaml
             - id: my_card
               type: Card
-              styles:
-                body:
+              style:
+                --body:
                   backgroundColor: "#f0f0f0"
-                header:
+                --header:
                   fontWeight: bold
             ```
 
@@ -542,7 +542,7 @@ _ref:
             ## New features
 
             - **`class` property** — Apply Tailwind CSS classes to any block. See [Custom Styling](/custom-styling).
-            - **`styles` property** — Apply inline styles to specific parts of a block using CSS keys.
+            - **`style` with `--` keys** — Apply inline styles to specific parts of a block using CSS slot keys (e.g. `style: { --header: {...} }`).
             - **`properties.theme`** — Override antd design tokens per block.
             - **`_theme` operator** — Access theme seed tokens in expressions. See [`_theme`](/_theme).
             - **Theming system** — App-level, component-level, and block-level theme customization. See [Theming](/theming).

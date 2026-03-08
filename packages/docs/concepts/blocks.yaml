@@ -56,8 +56,7 @@ _ref:
                 - `loading: boolean`: When true, renders the block in loading. If a `skeleton` is defined, it will be rendered, else the block's default loading behavior will be rendered. __Operators are evaluated__.
                 - `required: boolean | string`: For `input` blocks, whether or not a value is required in `state` when the [`Validate`](/Validate) action is called. Can be either a boolean or a string that is used as the validation error message . __Operators are evaluated__.
                 - `class: string | array | object`: CSS class names to apply to the block. Supports Tailwind CSS utility classes. __Operators are evaluated__.
-                - `style: css object`: Shorthand for `styles.block`. Used to apply css style settings to the block's layout wrapper. __Operators are evaluated__.
-                - `styles: object`: Inline CSS styles keyed by CSS key targets (e.g. `element`, `header`, `body`). __Operators are evaluated__.
+                - `style: css object`: Inline CSS styles. Flat CSS targets the layout wrapper. Use `--`-prefixed keys (e.g. `--element`, `--header`, `--body`) to target specific block parts. __Operators are evaluated__.
                 - `validate: array`: A list of validation tests to pass when the [`Validate`](/Validate) action is called. __Operators are evaluated__.
                 - `visible: boolean`: Controls whether or not to render a block. Operators are generally used here, and must evaluate to `false` to make the block invisible. Blocks with `visible: false` are excluded from `state`. __Operators are evaluated__.
 

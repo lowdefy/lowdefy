@@ -23,7 +23,7 @@ _ref:
       __type_block.properties.value: number
       __number_block.properties.value: 33.3
     description_content: |
-      A statistic block renders indicator numbers. Use `styles.value` and `styles.prefix` to customize styling (replaces `valueStyle` from v4).
+      A statistic block renders indicator numbers. Use `style: { --value }` and `style: { --prefix }` to customize styling (replaces `valueStyle` from v4).
 
     examples:
       - title: Basic statistic

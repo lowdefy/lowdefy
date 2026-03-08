@@ -34,7 +34,7 @@ _ref:
           span: 3
 
     description_content: |
-      Display multiple read-only fields in groups. Commonly used to display a detailed set of data. Use `styles.label` and `styles.content` to customize item styling (replaces `labelStyle` and `contentStyle` from v4).
+      Display multiple read-only fields in groups. Commonly used to display a detailed set of data. Use `style: { --label }` and `style: { --content }` to customize item styling (replaces `labelStyle` and `contentStyle` from v4).
 
     examples:
       - title: Object data example

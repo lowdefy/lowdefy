@@ -22,7 +22,7 @@ _ref:
     description_content: |
       A Card container places blocks on a white background with a card border.
       The Card has `content`, `title` and `extra` slots. The `title` slot replaces `properties.title` if defined.
-      Use `styles.header`, `styles.body`, and `styles.actions` to customize card sections (replaces `headStyle` and `bodyStyle` from v4).
+      Use `style: { --header }`, `style: { --body }`, and `style: { --actions }` to customize card sections (replaces `headStyle` and `bodyStyle` from v4).
 
     slots:
       - content
