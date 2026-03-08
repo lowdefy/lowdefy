@@ -7,6 +7,7 @@ import { MenuOutlined, CloseOutlined, GithubOutlined } from '@ant-design/icons';
 import { useGitHubStats, formatStars } from '@/hooks/useGitHubStats';
 
 const navigation = [
+  { name: 'Articles', href: '/articles' },
   { name: 'Docs', href: 'https://docs.lowdefy.com' },
   { name: 'Discord', href: 'https://discord.gg/WmcJgXt' },
 ];
