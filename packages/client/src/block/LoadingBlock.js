@@ -17,6 +17,7 @@ import React, { useEffect } from 'react';
 import { BlockLayout } from '@lowdefy/layout';
 import { makeCssClass } from '@lowdefy/block-utils';
 
+import blockDefaults from './blockDefaults.js';
 import LoadingContainer from './LoadingContainer.js';
 import LoadingList from './LoadingList.js';
 
@@ -88,6 +89,7 @@ const LoadingBlock = ({
           layout={skeleton.layout ?? blockLayout}
         >
           <Component
+            {...blockDefaults}
             basePath={lowdefy.basePath}
             blockId={blockId}
             components={lowdefy._internal.components}

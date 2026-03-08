@@ -19,6 +19,7 @@ import { Area, BlockLayout } from '@lowdefy/layout';
 import { cn, makeCssClass } from '@lowdefy/block-utils';
 
 import Block from './Block.js';
+import blockDefaults from './blockDefaults.js';
 import resolveClassNames from './resolveClassNames.js';
 
 const InputContainer = ({ block, Blocks, Component, context, loading, lowdefy }) => {
@@ -58,6 +59,7 @@ const InputContainer = ({ block, Blocks, Component, context, loading, lowdefy })
       layout={block.eval.layout}
     >
       <Component
+        {...blockDefaults}
         methods={Object.assign(block.methods, {
           makeCssClass,
           registerEvent: block.registerEvent,
@@ -80,10 +82,10 @@ const InputContainer = ({ block, Blocks, Component, context, loading, lowdefy })
         loading={loading}
         menus={lowdefy.menus}
         pageId={lowdefy.pageId}
-        properties={block.eval.properties}
+        properties={block.eval.properties ?? {}}
         required={block.eval.required}
         styles={block.eval.style ?? {}}
-        validation={block.eval.validation}
+        validation={block.eval.validation ?? { status: null, errors: [], warnings: [] }}
         value={block.value}
       />
     </BlockLayout>
