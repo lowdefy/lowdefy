@@ -1690,12 +1690,21 @@ importers:
       '@lowdefy/block-utils':
         specifier: 4.5.2
         version: link:../../utils/block-utils
+      '@lowdefy/blocks-aggrid':
+        specifier: 4.5.2
+        version: link:../../plugins/blocks/blocks-aggrid
       '@lowdefy/blocks-antd':
         specifier: 4.5.2
         version: link:../../plugins/blocks/blocks-antd
       '@lowdefy/blocks-basic':
         specifier: 4.5.2
         version: link:../../plugins/blocks/blocks-basic
+      '@lowdefy/blocks-color-selectors':
+        specifier: 4.5.2
+        version: link:../../plugins/blocks/blocks-color-selectors
+      '@lowdefy/blocks-echarts':
+        specifier: 4.5.2
+        version: link:../../plugins/blocks/blocks-echarts
       '@lowdefy/blocks-loaders':
         specifier: 4.5.2
         version: link:../../plugins/blocks/blocks-loaders
@@ -1726,6 +1735,9 @@ importers:
       '@lowdefy/node-utils':
         specifier: 4.5.2
         version: link:../../utils/node-utils
+      '@lowdefy/operators-dayjs':
+        specifier: 4.5.2
+        version: link:../../plugins/operators/operators-dayjs
       '@lowdefy/operators-js':
         specifier: 4.5.2
         version: link:../../plugins/operators/operators-js
@@ -1808,6 +1820,9 @@ importers:
       '@lowdefy/blocks-aggrid':
         specifier: 4.5.2
         version: link:../../plugins/blocks/blocks-aggrid
+      '@lowdefy/blocks-algolia':
+        specifier: 4.5.2
+        version: link:../../plugins/blocks/blocks-algolia
       '@lowdefy/blocks-antd':
         specifier: 4.5.2
         version: link:../../plugins/blocks/blocks-antd
@@ -1835,9 +1850,18 @@ importers:
       '@lowdefy/client':
         specifier: 4.5.2
         version: link:../../client
+      '@lowdefy/connection-axios-http':
+        specifier: 4.5.2
+        version: link:../../plugins/connections/connection-axios-http
+      '@lowdefy/connection-mongodb':
+        specifier: 4.5.2
+        version: link:../../plugins/connections/connection-mongodb
       '@lowdefy/connection-test':
         specifier: 4.5.2
         version: link:../../plugins/connections/connection-test
+      '@lowdefy/docs':
+        specifier: workspace:*
+        version: link:../../docs
       '@lowdefy/engine':
         specifier: 4.5.2
         version: link:../../engine
@@ -1880,6 +1904,9 @@ importers:
       '@lowdefy/operators-yaml':
         specifier: 4.5.2
         version: link:../../plugins/operators/operators-yaml
+      '@lowdefy/plugin-aws':
+        specifier: 4.5.2
+        version: link:../../plugins/plugins/plugin-aws
       '@lowdefy/plugin-next-auth':
         specifier: 4.5.2
         version: link:../../plugins/plugins/plugin-next-auth

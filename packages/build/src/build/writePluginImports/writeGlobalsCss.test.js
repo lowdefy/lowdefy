@@ -36,7 +36,7 @@ beforeEach(() => {
 
 function createContext() {
   return {
-    directories: { config: '/app' },
+    directories: { config: '/app', build: '/app/build' },
     handleWarning: jest.fn(),
     writeBuildArtifact: jest.fn(),
   };
@@ -125,16 +125,13 @@ test('writeGlobalsCss adds new tailwind entries alongside defaults', async () =>
   expect(css).toContain('--color-primary: var(--ant-color-primary);');
 });
 
-test('writeGlobalsCss emits deprecation warning for styles.less', async () => {
+test('writeGlobalsCss throws ConfigError for styles.less', async () => {
   mockExistsSync.mockImplementation((filePath) => filePath.endsWith('styles.less'));
   const context = createContext();
 
-  await writeGlobalsCss({ components: {}, context });
-
-  expect(context.handleWarning).toHaveBeenCalledTimes(1);
-  const warning = context.handleWarning.mock.calls[0][0];
-  expect(warning.message).toContain('styles.less is deprecated');
-  expect(warning.prodError).toBe(true);
+  await expect(writeGlobalsCss({ components: {}, context })).rejects.toThrow(
+    'styles.less is deprecated'
+  );
 });
 
 test('writeGlobalsCss does not emit warning when styles.less does not exist', async () => {
@@ -150,7 +147,7 @@ test('writeGlobalsCss includes styles.css import when file exists', async () => 
   await writeGlobalsCss({ components: {}, context });
 
   const css = context.writeBuildArtifact.mock.calls[0][1];
-  expect(css).toContain('@import "../../public/styles.css" layer(components);');
+  expect(css).toContain('@import "../public/styles.css" layer(components);');
 });
 
 test('writeGlobalsCss includes grid.css import', async () => {

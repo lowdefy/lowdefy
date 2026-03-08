@@ -31,7 +31,8 @@ function collectFromValue(value, classes) {
 }
 
 function walkBlocks(blocks, classes) {
-  for (const block of blocks ?? []) {
+  if (!Array.isArray(blocks)) return;
+  for (const block of blocks) {
     if (block.class !== undefined) {
       collectFromValue(block.class, classes);
     }
