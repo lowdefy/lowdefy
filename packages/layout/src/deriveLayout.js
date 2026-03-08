@@ -79,7 +79,7 @@ const applyBreakpoint = (cssVars, classes, bp, obj) => {
   const suffix = bp ? `-${bp}` : '';
   const span = resolveSpan(obj.span, obj.offset);
 
-  cssVars[`--lf-display${suffix}`] = span === 0 ? 'none' : 'initial';
+  cssVars[`--lf-display${suffix}`] = span === 0 ? 'none' : 'block';
   cssVars[`--lf-span${suffix}`] = span;
 
   if (!type.isNone(obj.offset)) cssVars[`--lf-offset${suffix}`] = obj.offset;
@@ -146,7 +146,7 @@ const deriveLayout = ({
     const smObj = { ...sm };
     const smSpan = resolveSpan(smObj.span, smObj.offset);
     cssVars['--lf-span'] = smSpan;
-    cssVars['--lf-display'] = smSpan === 0 ? 'none' : 'initial';
+    cssVars['--lf-display'] = smSpan === 0 ? 'none' : 'block';
     if (!type.isNone(smObj.offset)) cssVars['--lf-offset'] = smObj.offset;
     if (!type.isNone(smObj.order)) cssVars['--lf-order'] = smObj.order;
     if (!type.isNone(smObj.push)) {

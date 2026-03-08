@@ -102,7 +102,7 @@
      When gap is 0, the formula simplifies to span/24 * 100%.
      ===================================================== */
   .lf-col {
-    display: var(--lf-display, initial);
+    display: var(--lf-display, block);
     min-height: 1px;
     flex: 0 0 calc(var(--lf-span, 24) / 24 * (100% + var(--_gap, 0px)) - var(--_gap, 0px));
     max-width: calc(var(--lf-span, 24) / 24 * (100% + var(--_gap, 0px)) - var(--_gap, 0px));
@@ -123,7 +123,7 @@
   /* --- sm (≥640px) --- */
   @media (min-width: 640px) {
     .lf-col {
-      display: var(--lf-display-sm, var(--lf-display, initial));
+      display: var(--lf-display-sm, var(--lf-display, block));
       flex: 0 0
         calc(
           var(--lf-span-sm, var(--lf-span, 24)) / 24 * (100% + var(--_gap, 0px)) - var(--_gap, 0px)
@@ -149,7 +149,7 @@
   /* --- md (≥768px) --- */
   @media (min-width: 768px) {
     .lf-col {
-      display: var(--lf-display-md, var(--lf-display-sm, var(--lf-display, initial)));
+      display: var(--lf-display-md, var(--lf-display-sm, var(--lf-display, block)));
       flex: 0 0
         calc(
           var(--lf-span-md, var(--lf-span-sm, var(--lf-span, 24))) / 24 * (100% + var(--_gap, 0px)) -
@@ -182,7 +182,7 @@
     .lf-col {
       display: var(
         --lf-display-lg,
-        var(--lf-display-md, var(--lf-display-sm, var(--lf-display, initial)))
+        var(--lf-display-md, var(--lf-display-sm, var(--lf-display, block)))
       );
       flex: 0 0
         calc(
@@ -218,7 +218,7 @@
     .lf-col {
       display: var(
         --lf-display-xl,
-        var(--lf-display-lg, var(--lf-display-md, var(--lf-display-sm, var(--lf-display, initial))))
+        var(--lf-display-lg, var(--lf-display-md, var(--lf-display-sm, var(--lf-display, block))))
       );
       flex: 0 0
         calc(
@@ -269,10 +269,7 @@
         --lf-display-2xl,
         var(
           --lf-display-xl,
-          var(
-            --lf-display-lg,
-            var(--lf-display-md, var(--lf-display-sm, var(--lf-display, initial)))
-          )
+          var(--lf-display-lg, var(--lf-display-md, var(--lf-display-sm, var(--lf-display, block))))
         )
       );
       flex: 0 0

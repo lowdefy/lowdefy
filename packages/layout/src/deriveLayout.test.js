@@ -64,13 +64,13 @@ test('set sm properties', () => {
     className: 'lf-col lf-col-push lf-col-pull',
     style: {
       '--lf-span': 5,
-      '--lf-display': 'initial',
+      '--lf-display': 'block',
       '--lf-offset': 1,
       '--lf-order': 2,
       '--lf-push': 4,
       '--lf-pull': 3,
       '--lf-span-sm': 5,
-      '--lf-display-sm': 'initial',
+      '--lf-display-sm': 'block',
       '--lf-offset-sm': 1,
       '--lf-order-sm': 2,
       '--lf-push-sm': 4,
@@ -94,7 +94,7 @@ test('set xs properties', () => {
     className: 'lf-col lf-col-push lf-col-pull',
     style: {
       '--lf-span': 5,
-      '--lf-display': 'initial',
+      '--lf-display': 'block',
       '--lf-offset': 1,
       '--lf-order': 2,
       '--lf-push': 4,
@@ -125,13 +125,13 @@ test('set xs and md properties', () => {
     className: 'lf-col lf-col-push lf-col-pull',
     style: {
       '--lf-span': 5,
-      '--lf-display': 'initial',
+      '--lf-display': 'block',
       '--lf-offset': 1,
       '--lf-order': 2,
       '--lf-push': 4,
       '--lf-pull': 3,
       '--lf-span-md': 55,
-      '--lf-display-md': 'initial',
+      '--lf-display-md': 'block',
       '--lf-offset-md': 11,
       '--lf-order-md': 22,
       '--lf-push-md': 44,
@@ -162,14 +162,14 @@ test('set xs and sm properties', () => {
     style: {
       // xs overrides sm→base cascade
       '--lf-span': 5,
-      '--lf-display': 'initial',
+      '--lf-display': 'block',
       '--lf-offset': 1,
       '--lf-order': 2,
       '--lf-push': 4,
       '--lf-pull': 3,
       // sm breakpoint
       '--lf-span-sm': 55,
-      '--lf-display-sm': 'initial',
+      '--lf-display-sm': 'block',
       '--lf-offset-sm': 11,
       '--lf-order-sm': 22,
       '--lf-push-sm': 44,
@@ -190,7 +190,7 @@ test('set lg property', () => {
     style: {
       ...defaultStyle,
       '--lf-span-lg': 24,
-      '--lf-display-lg': 'initial',
+      '--lf-display-lg': 'block',
       '--lf-order-lg': 2,
     },
   });
@@ -207,7 +207,7 @@ test('set xl property', () => {
     style: {
       ...defaultStyle,
       '--lf-span-xl': 24,
-      '--lf-display-xl': 'initial',
+      '--lf-display-xl': 'block',
       '--lf-order-xl': 2,
     },
   });
@@ -224,7 +224,7 @@ test('set 2xl property', () => {
     style: {
       ...defaultStyle,
       '--lf-span-2xl': 24,
-      '--lf-display-2xl': 'initial',
+      '--lf-display-2xl': 'block',
       '--lf-order-2xl': 2,
     },
   });
@@ -359,7 +359,7 @@ test('set offset will reduce span md', () => {
     style: {
       '--lf-span': 24,
       '--lf-span-md': 20,
-      '--lf-display-md': 'initial',
+      '--lf-display-md': 'block',
       '--lf-offset-md': 4,
     },
   });
@@ -371,7 +371,7 @@ test('set offset will reduce span xs', () => {
     className: 'lf-col',
     style: {
       '--lf-span': 20,
-      '--lf-display': 'initial',
+      '--lf-display': 'block',
       '--lf-offset': 4,
       '--lf-span-md': 24,
     },
@@ -384,10 +384,10 @@ test('set offset will reduce span sm', () => {
     className: 'lf-col',
     style: {
       '--lf-span': 20,
-      '--lf-display': 'initial',
+      '--lf-display': 'block',
       '--lf-offset': 4,
       '--lf-span-sm': 20,
-      '--lf-display-sm': 'initial',
+      '--lf-display-sm': 'block',
       '--lf-offset-sm': 4,
       '--lf-span-md': 24,
     },
@@ -401,7 +401,7 @@ test('set offset will reduce span lg', () => {
     style: {
       ...defaultStyle,
       '--lf-span-lg': 20,
-      '--lf-display-lg': 'initial',
+      '--lf-display-lg': 'block',
       '--lf-offset-lg': 4,
     },
   });
@@ -414,7 +414,7 @@ test('set offset will reduce span xl', () => {
     style: {
       ...defaultStyle,
       '--lf-span-xl': 20,
-      '--lf-display-xl': 'initial',
+      '--lf-display-xl': 'block',
       '--lf-offset-xl': 4,
     },
   });
@@ -427,7 +427,7 @@ test('set offset will reduce span 2xl', () => {
     style: {
       ...defaultStyle,
       '--lf-span-2xl': 20,
-      '--lf-display-2xl': 'initial',
+      '--lf-display-2xl': 'block',
       '--lf-offset-2xl': 4,
     },
   });
@@ -455,7 +455,7 @@ test('xs: { span: 0 }, md: { span: 8 } hides at xs, shows at md', () => {
       '--lf-span': 0,
       '--lf-display': 'none',
       '--lf-span-md': 8,
-      '--lf-display-md': 'initial',
+      '--lf-display-md': 'block',
     },
   });
 });
@@ -491,7 +491,7 @@ test('2xl key works as breakpoint', () => {
     style: {
       ...defaultStyle,
       '--lf-span-2xl': 4,
-      '--lf-display-2xl': 'initial',
+      '--lf-display-2xl': 'block',
       '--lf-offset-2xl': 2,
     },
   });
@@ -515,9 +515,9 @@ test('sm cascades to base and xs overrides', () => {
     style: {
       // xs overrides the sm→base cascade
       '--lf-span': 6,
-      '--lf-display': 'initial',
+      '--lf-display': 'block',
       '--lf-span-sm': 12,
-      '--lf-display-sm': 'initial',
+      '--lf-display-sm': 'block',
       '--lf-span-md': 24,
     },
   });
@@ -534,7 +534,7 @@ test('md override merges with top-level baseline', () => {
     style: {
       '--lf-span': 24,
       '--lf-span-md': 16,
-      '--lf-display-md': 'initial',
+      '--lf-display-md': 'block',
       '--lf-offset-md': 2,
       '--lf-order-md': 1,
     },
