@@ -224,9 +224,9 @@ test('parse block style', async () => {
     pageConfig,
   });
   const { textInput } = context._internal.RootSlots.map;
-  // Build normalizes style → styles.block
-  expect(textInput.styles).toEqual({ block: { _state: 'key' } });
-  expect(textInput.eval.styles).toEqual({ block: 'value' });
+  // Build normalizes flat style → style.block
+  expect(textInput.style).toEqual({ block: { _state: 'key' } });
+  expect(textInput.eval.style).toEqual({ block: 'value' });
 });
 
 test('default value for style', async () => {

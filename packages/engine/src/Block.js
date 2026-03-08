@@ -31,7 +31,6 @@ class Block {
       required,
       skeleton,
       style,
-      styles,
       validate,
       visible,
       type: blockType,
@@ -55,7 +54,6 @@ class Block {
     this.skeleton = type.isNone(skeleton) ? null : skeleton;
     this.class = type.isNone(blockClass) ? {} : blockClass;
     this.style = type.isNone(style) ? {} : style;
-    this.styles = type.isNone(styles) ? {} : styles;
     this.validate = type.isNone(validate) ? [] : validate;
     this.visible = type.isNone(visible) ? true : visible;
     this.type = blockType;
@@ -69,7 +67,6 @@ class Block {
     this.requiredEval = {};
     this.skeletonEval = {};
     this.styleEval = {};
-    this.stylesEval = {};
     this.validationEval = {};
     this.visibleEval = {};
 
@@ -331,7 +328,6 @@ class Block {
 
       this.classEval = this.parse(this.class);
       this.styleEval = this.parse(this.style);
-      this.stylesEval = this.parse(this.styles);
       this.layoutEval = this.parse(this.layout);
       this.loadingEval = this.parse(this.loading);
       this.skeletonEval = this.parse(this.skeleton);
@@ -423,7 +419,6 @@ class Block {
       requiredEval: this.requiredEval,
       skeletonEval: this.skeletonEval,
       styleEval: this.styleEval,
-      stylesEval: this.stylesEval,
       validationEval: this.validationEval,
       value: this.value,
       visibleEval: this.visibleEval,
@@ -497,7 +492,6 @@ class Block {
       ...(this.propertiesEval.errors || []),
       ...(this.classEval.errors || []),
       ...(this.styleEval.errors || []),
-      ...(this.stylesEval.errors || []),
       ...(this.layoutEval.errors || []),
       ...(this.visibleEval.errors || []),
       ...(this.loadingEval.errors || []),
@@ -518,7 +512,6 @@ class Block {
       required: this.requiredEval.output,
       layout: this.layoutEval.output,
       style: this.styleEval.output,
-      styles: this.stylesEval.output,
       validation: {
         ...(this.validationEval.output || {}),
         status:

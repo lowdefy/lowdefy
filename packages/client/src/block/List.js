@@ -54,7 +54,7 @@ const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
   });
   return (
     <BlockLayout
-      style={block.eval.styles?.block}
+      style={block.eval.style?.block}
       className={classNames.block}
       id={`bl-${block.blockId}`}
       layout={block.eval.layout}
@@ -83,7 +83,7 @@ const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
         pageId={lowdefy.pageId}
         properties={block.eval.properties}
         required={block.eval.required}
-        styles={block.eval.styles}
+        styles={block.eval.style}
         validation={block.eval.validation}
       />
     </BlockLayout>

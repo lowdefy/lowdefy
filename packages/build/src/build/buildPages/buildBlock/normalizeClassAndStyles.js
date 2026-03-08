@@ -17,47 +17,77 @@
 import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
-const breakpointKeys = ['xs', 'sm', 'md', 'lg', 'xl', '2xl'];
+const breakpointKeys = new Set(['xs', 'sm', 'md', 'lg', 'xl', '2xl']);
 
-function normalizeClassAndStyles(block, pageContext) {
-  // Move properties.style → styles.element (deprecation transform)
-  // properties.style is the component's own style, separate from layout wrapper
+function stripDashPrefix(key) {
+  return key.startsWith('--') ? key.slice(2) : key;
+}
+
+function normalizeStyle(block) {
+  // properties.style → element slot (deprecation: component's own style maps to --element)
   if (!type.isNone(block.properties?.style)) {
-    if (!block.styles) block.styles = {};
-    if (block.styles.element) {
-      block.styles.element = { ...block.properties.style, ...block.styles.element };
-    } else {
-      block.styles.element = block.properties.style;
-    }
+    if (!block.style) block.style = {};
+    const existing = block.style['--element'];
+    block.style['--element'] = existing
+      ? { ...block.properties.style, ...existing }
+      : block.properties.style;
     delete block.properties.style;
   }
 
-  // Validate no responsive breakpoint keys in style
-  if (!type.isNone(block.style) && type.isObject(block.style)) {
-    const found = Object.keys(block.style).filter((k) => breakpointKeys.includes(k));
-    if (found.length > 0) {
+  // Partition plain CSS → block slot, -- keys → strip prefix (single pass)
+  if (type.isObject(block.style)) {
+    const invalidKeys = Object.keys(block.style).filter(
+      (k) => !k.startsWith('--') && breakpointKeys.has(k)
+    );
+    if (invalidKeys.length > 0) {
       throw new ConfigError(
-        `Block "${block.blockId}": Responsive breakpoint keys (${found.join(', ')}) in "style" are no longer supported. Use CSS classes instead:\n  class: "p-16 sm:p-8"`,
+        `Block "${block.blockId}": Responsive breakpoint keys (${invalidKeys.join(', ')}) in "style" are no longer supported. Use CSS classes instead:\n  class: "p-16 sm:p-8"`,
         { configKey: block['~k'] }
       );
     }
-  }
 
-  // Normalize style → styles.block (top-level style = layout wrapper)
-  if (!type.isNone(block.style)) {
-    if (!block.styles) block.styles = {};
-    if (block.styles.block) {
-      block.styles.block = { ...block.style, ...block.styles.block };
-    } else {
-      block.styles.block = block.style;
+    const result = {};
+    const plainCSS = {};
+    for (const [key, value] of Object.entries(block.style)) {
+      if (key.startsWith('--')) {
+        result[stripDashPrefix(key)] = value;
+      } else {
+        plainCSS[key] = value;
+      }
     }
-    delete block.style;
+    if (Object.keys(plainCSS).length > 0) {
+      result.block = result.block ? { ...plainCSS, ...result.block } : plainCSS;
+    }
+    block.style = result;
   }
 
-  // Normalize class string or array → { block: value }
+  // Backwards compatibility: old styles (plural) merges into style
+  if (type.isObject(block.styles)) {
+    if (!block.style) block.style = {};
+    for (const [key, value] of Object.entries(block.styles)) {
+      block.style[key] = block.style[key] ? { ...block.style[key], ...value } : value;
+    }
+    delete block.styles;
+  }
+}
+
+function normalizeClass(block) {
   if (type.isString(block.class) || type.isArray(block.class)) {
     block.class = { block: block.class };
+    return;
   }
+  if (type.isObject(block.class) && Object.keys(block.class).some((k) => k.startsWith('--'))) {
+    const normalized = {};
+    for (const [key, value] of Object.entries(block.class)) {
+      normalized[stripDashPrefix(key)] = value;
+    }
+    block.class = normalized;
+  }
+}
+
+function normalizeClassAndStyles(block, pageContext) {
+  normalizeStyle(block);
+  normalizeClass(block);
 }
 
 export default normalizeClassAndStyles;

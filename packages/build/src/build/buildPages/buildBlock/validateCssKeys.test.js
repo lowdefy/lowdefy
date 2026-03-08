@@ -29,12 +29,12 @@ function createPageContext(blockMetas = {}) {
 
 test('validateCssKeys does nothing when no block meta found', () => {
   const pageContext = createPageContext();
-  const block = { blockId: 'b1', type: 'Unknown', styles: { foo: {} } };
+  const block = { blockId: 'b1', type: 'Unknown', style: { foo: {} } };
   validateCssKeys(block, pageContext);
   expect(pageContext.context.handleWarning).not.toHaveBeenCalled();
 });
 
-test('validateCssKeys does nothing when block has no styles or class', () => {
+test('validateCssKeys does nothing when block has no style or class', () => {
   const pageContext = createPageContext({ Input: { cssKeys: ['element'] } });
   const block = { blockId: 'b1', type: 'Input' };
   validateCssKeys(block, pageContext);
@@ -43,7 +43,7 @@ test('validateCssKeys does nothing when block has no styles or class', () => {
 
 test('validateCssKeys allows "block" key (always valid)', () => {
   const pageContext = createPageContext({ Input: { cssKeys: ['element'] } });
-  const block = { blockId: 'b1', type: 'Input', styles: { block: { color: 'red' } } };
+  const block = { blockId: 'b1', type: 'Input', style: { block: { color: 'red' } } };
   validateCssKeys(block, pageContext);
   expect(pageContext.context.handleWarning).not.toHaveBeenCalled();
 });
@@ -53,25 +53,25 @@ test('validateCssKeys allows keys from block meta cssKeys', () => {
   const block = {
     blockId: 'b1',
     type: 'Input',
-    styles: { block: {}, element: {}, label: {} },
+    style: { block: {}, element: {}, label: {} },
   };
   validateCssKeys(block, pageContext);
   expect(pageContext.context.handleWarning).not.toHaveBeenCalled();
 });
 
-test('validateCssKeys warns on unknown key in styles', () => {
+test('validateCssKeys warns on unknown key in style', () => {
   const pageContext = createPageContext({ Input: { cssKeys: ['element'] } });
   const block = {
     blockId: 'b1',
     type: 'Input',
-    styles: { header: { color: 'blue' } },
+    style: { header: { color: 'blue' } },
   };
   validateCssKeys(block, pageContext);
   expect(pageContext.context.handleWarning).toHaveBeenCalledTimes(1);
   expect(pageContext.context.handleWarning.mock.calls[0][0].message).toContain(
-    'Unknown CSS key "header" in "styles"'
+    'Unknown CSS key "--header" in "style"'
   );
-  expect(pageContext.context.handleWarning.mock.calls[0][0].message).toContain('block, element');
+  expect(pageContext.context.handleWarning.mock.calls[0][0].message).toContain('--block, --element');
 });
 
 test('validateCssKeys warns on unknown key in class', () => {
@@ -84,7 +84,7 @@ test('validateCssKeys warns on unknown key in class', () => {
   validateCssKeys(block, pageContext);
   expect(pageContext.context.handleWarning).toHaveBeenCalledTimes(1);
   expect(pageContext.context.handleWarning.mock.calls[0][0].message).toContain(
-    'Unknown CSS key "footer" in "class"'
+    'Unknown CSS key "--footer" in "class"'
   );
 });
 
@@ -93,7 +93,7 @@ test('validateCssKeys defaults cssKeys to ["element"] when not specified in meta
   const block = {
     blockId: 'b1',
     type: 'Box',
-    styles: { element: {}, block: {} },
+    style: { element: {}, block: {} },
   };
   validateCssKeys(block, pageContext);
   expect(pageContext.context.handleWarning).not.toHaveBeenCalled();
@@ -104,7 +104,7 @@ test('validateCssKeys warns on multiple unknown keys', () => {
   const block = {
     blockId: 'b1',
     type: 'Input',
-    styles: { header: {}, footer: {} },
+    style: { header: {}, footer: {} },
     class: { sidebar: 'p-4' },
   };
   validateCssKeys(block, pageContext);

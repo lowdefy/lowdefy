@@ -22,11 +22,11 @@ function validateCssKeys(block, pageContext) {
 
   const validKeys = new Set(['block', ...(blockMeta.cssKeys ?? ['element'])]);
 
-  for (const key of Object.keys(block.styles ?? {})) {
+  for (const key of Object.keys(block.style ?? {})) {
     if (!validKeys.has(key)) {
       pageContext.context.handleWarning(
         new ConfigWarning(
-          `Block "${block.blockId}" (${block.type}): Unknown CSS key "${key}" in "styles". Valid keys: ${[...validKeys].join(', ')}.`,
+          `Block "${block.blockId}" (${block.type}): Unknown CSS key "--${key}" in "style". Valid keys: ${[...validKeys].map((k) => `--${k}`).join(', ')}.`,
           { configKey: block['~k'] }
         )
       );
@@ -36,7 +36,7 @@ function validateCssKeys(block, pageContext) {
     if (!validKeys.has(key)) {
       pageContext.context.handleWarning(
         new ConfigWarning(
-          `Block "${block.blockId}" (${block.type}): Unknown CSS key "${key}" in "class". Valid keys: ${[...validKeys].join(', ')}.`,
+          `Block "${block.blockId}" (${block.type}): Unknown CSS key "--${key}" in "class". Valid keys: ${[...validKeys].map((k) => `--${k}`).join(', ')}.`,
           { configKey: block['~k'] }
         )
       );

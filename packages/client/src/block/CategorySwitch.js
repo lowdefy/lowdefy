@@ -36,7 +36,7 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
       <LoadingBlock
         blockLayout={block.eval.layout}
         blockProperties={block.eval.properties}
-        blockStyle={block.eval.style}
+        blockStyle={block.eval.style?.block}
         context={context}
         lowdefy={lowdefy}
         skeleton={block.eval.skeleton}
@@ -72,7 +72,7 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
       return (
         <BlockLayout
           id={`bl-${block.blockId}`}
-          style={block.eval.styles?.block}
+          style={block.eval.style?.block}
           className={classNames.block}
           layout={block.eval.layout}
         >
@@ -95,7 +95,7 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
             pageId={lowdefy.pageId}
             properties={block.eval.properties}
             required={block.eval.required}
-            styles={block.eval.styles}
+            styles={block.eval.style}
             validation={block.eval.validation}
             value={block.value}
           />
@@ -116,7 +116,7 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
       return (
         <BlockLayout
           id={`bl-${block.blockId}`}
-          style={block.eval.styles?.block}
+          style={block.eval.style?.block}
           className={classNames.block}
           layout={block.eval.layout}
         >
@@ -138,7 +138,7 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
             pageId={lowdefy.pageId}
             properties={block.eval.properties}
             required={block.eval.required}
-            styles={block.eval.styles}
+            styles={block.eval.style}
             validation={block.eval.validation}
           />
         </BlockLayout>
