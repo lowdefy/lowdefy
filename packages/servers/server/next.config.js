@@ -1,15 +1,11 @@
 const { withSentryConfig } = require('@sentry/nextjs');
 const lowdefyConfig = require('./build/config.json');
+const blockPackages = require('./build/blockPackages.json');
 
 const nextConfig = {
   basePath: lowdefyConfig.basePath,
   reactStrictMode: true,
-  transpilePackages: [
-    '@lowdefy/client',
-    '@lowdefy/blocks-loaders',
-    '@lowdefy/blocks-color-selectors',
-    '@lowdefy/blocks-markdown',
-  ],
+  transpilePackages: ['@lowdefy/client', ...blockPackages],
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {
