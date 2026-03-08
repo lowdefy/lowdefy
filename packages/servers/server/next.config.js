@@ -6,6 +6,7 @@ const nextConfig = {
   basePath: lowdefyConfig.basePath,
   reactStrictMode: true,
   transpilePackages: ['@lowdefy/client', ...blockPackages],
+  turbopack: {},
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {
@@ -24,9 +25,6 @@ const nextConfig = {
   poweredByHeader: false,
   // productionBrowserSourceMaps: true
   output: process.env.LOWDEFY_BUILD_OUTPUT_STANDALONE === '1' ? 'standalone' : undefined,
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
 };
 
 // Only wrap with Sentry if SENTRY_DSN is configured
