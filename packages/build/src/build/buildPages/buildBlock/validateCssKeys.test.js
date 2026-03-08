@@ -1,0 +1,112 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import { jest } from '@jest/globals';
+
+import validateCssKeys from './validateCssKeys.js';
+
+function createPageContext(blockMetas = {}) {
+  return {
+    context: {
+      handleWarning: jest.fn(),
+      blockMetas,
+    },
+  };
+}
+
+test('validateCssKeys does nothing when no block meta found', () => {
+  const pageContext = createPageContext();
+  const block = { blockId: 'b1', type: 'Unknown', styles: { foo: {} } };
+  validateCssKeys(block, pageContext);
+  expect(pageContext.context.handleWarning).not.toHaveBeenCalled();
+});
+
+test('validateCssKeys does nothing when block has no styles or class', () => {
+  const pageContext = createPageContext({ Input: { cssKeys: ['element'] } });
+  const block = { blockId: 'b1', type: 'Input' };
+  validateCssKeys(block, pageContext);
+  expect(pageContext.context.handleWarning).not.toHaveBeenCalled();
+});
+
+test('validateCssKeys allows "block" key (always valid)', () => {
+  const pageContext = createPageContext({ Input: { cssKeys: ['element'] } });
+  const block = { blockId: 'b1', type: 'Input', styles: { block: { color: 'red' } } };
+  validateCssKeys(block, pageContext);
+  expect(pageContext.context.handleWarning).not.toHaveBeenCalled();
+});
+
+test('validateCssKeys allows keys from block meta cssKeys', () => {
+  const pageContext = createPageContext({ Input: { cssKeys: ['element', 'label'] } });
+  const block = {
+    blockId: 'b1',
+    type: 'Input',
+    styles: { block: {}, element: {}, label: {} },
+  };
+  validateCssKeys(block, pageContext);
+  expect(pageContext.context.handleWarning).not.toHaveBeenCalled();
+});
+
+test('validateCssKeys warns on unknown key in styles', () => {
+  const pageContext = createPageContext({ Input: { cssKeys: ['element'] } });
+  const block = {
+    blockId: 'b1',
+    type: 'Input',
+    styles: { header: { color: 'blue' } },
+  };
+  validateCssKeys(block, pageContext);
+  expect(pageContext.context.handleWarning).toHaveBeenCalledTimes(1);
+  expect(pageContext.context.handleWarning.mock.calls[0][0].message).toContain(
+    'Unknown CSS key "header" in "styles"'
+  );
+  expect(pageContext.context.handleWarning.mock.calls[0][0].message).toContain('block, element');
+});
+
+test('validateCssKeys warns on unknown key in class', () => {
+  const pageContext = createPageContext({ Input: { cssKeys: ['element'] } });
+  const block = {
+    blockId: 'b1',
+    type: 'Input',
+    class: { footer: 'text-sm' },
+  };
+  validateCssKeys(block, pageContext);
+  expect(pageContext.context.handleWarning).toHaveBeenCalledTimes(1);
+  expect(pageContext.context.handleWarning.mock.calls[0][0].message).toContain(
+    'Unknown CSS key "footer" in "class"'
+  );
+});
+
+test('validateCssKeys defaults cssKeys to ["element"] when not specified in meta', () => {
+  const pageContext = createPageContext({ Box: {} });
+  const block = {
+    blockId: 'b1',
+    type: 'Box',
+    styles: { element: {}, block: {} },
+  };
+  validateCssKeys(block, pageContext);
+  expect(pageContext.context.handleWarning).not.toHaveBeenCalled();
+});
+
+test('validateCssKeys warns on multiple unknown keys', () => {
+  const pageContext = createPageContext({ Input: { cssKeys: ['element'] } });
+  const block = {
+    blockId: 'b1',
+    type: 'Input',
+    styles: { header: {}, footer: {} },
+    class: { sidebar: 'p-4' },
+  };
+  validateCssKeys(block, pageContext);
+  expect(pageContext.context.handleWarning).toHaveBeenCalledTimes(3);
+});
