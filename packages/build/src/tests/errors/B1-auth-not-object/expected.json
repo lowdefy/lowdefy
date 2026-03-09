@@ -1,0 +1,14 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": [
+        "should be an object"
+      ],
+      "errorContains": [
+        "App \"auth\" should be an object.",
+        "lowdefy.yaml:11"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+# 12: Page with Explicit Content Area
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    areas:
+      content:
+        blocks:
+          - id: mainContent
+            type: Paragraph
+            properties:
+              content: Main content area

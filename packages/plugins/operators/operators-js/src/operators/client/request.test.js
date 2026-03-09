@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -98,11 +98,9 @@ test('_request true gives null', () => {
   const parser = new WebParser({ context, operators });
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _request accepts a string value. Received: true at locationId.],
-    ]
-  `);
+  expect(res.errors.length).toBe(1);
+  expect(res.errors[0]._message).toBe('_request accepts a string value.');
+  expect(res.errors[0].message).toBe('_request accepts a string value. at locationId.');
 });
 
 test('_request return full array', () => {
@@ -126,11 +124,9 @@ test('_request null', () => {
   const parser = new WebParser({ context, operators });
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _request accepts a string value. Received: null at locationId.],
-    ]
-  `);
+  expect(res.errors.length).toBe(1);
+  expect(res.errors[0]._message).toBe('_request accepts a string value.');
+  expect(res.errors[0].message).toBe('_request accepts a string value. at locationId.');
 });
 
 test('_request loading true', () => {

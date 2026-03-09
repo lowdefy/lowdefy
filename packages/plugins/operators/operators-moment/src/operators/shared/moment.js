@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -26,10 +26,11 @@ function humanizeDuration(on, locale = 'en', withSuffix = false, thresholds) {
 }
 
 const meta = {
-  format: { namedArgs: ['on', 'locale', 'format'], validTypes: ['array', 'object'] },
+  format: { namedArgs: ['on', 'locale', 'format'], validTypes: ['array', 'object'], dynamic: true },
   humanizeDuration: {
     namedArgs: ['on', 'locale', 'withSuffix', 'thresholds'],
     validTypes: ['array', 'object'],
+    dynamic: true,
   },
 };
 
@@ -45,5 +46,8 @@ function _moment({ params, location, methodName }) {
     params,
   });
 }
+
+_moment.dynamic = false;
+_moment.meta = meta;
 
 export default _moment;

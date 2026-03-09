@@ -1,0 +1,11 @@
+id: pageFooter
+type: Box
+style:
+  marginTop: 24
+  paddingTop: 16
+  borderTop: 1px solid #e8e8e8
+blocks:
+  - id: footerText
+    type: Paragraph
+    properties:
+      content: © 2024 Company Name

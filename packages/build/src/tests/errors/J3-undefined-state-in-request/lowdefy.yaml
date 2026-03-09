@@ -1,0 +1,37 @@
+# J3: Undefined State Reference in Request Payload
+# =================================================
+# Tests that _state references in request payloads warn when the
+# referenced key doesn't exist as an input block id.
+#
+# This reproduces the scenario where a request payload references
+# a state key that doesn't have a corresponding input block.
+#
+# Expected warning:
+#   [Config Warning] _state references "contact_company_ids" on page "contacts-new",
+#   but no input block with id "contact_company_ids" exists.
+#
+# The error points to line 30 where the _state operator is used in the payload.
+
+lowdefy: local
+
+connections:
+  - id: mongodb
+    type: MongoDBCollection
+    properties:
+      databaseUri: mongodb://localhost:27017
+      databaseName: test
+      collection: contacts
+
+pages:
+  - id: contacts-new
+    type: Box
+    requests:
+      - id: insert_contact
+        type: MongoDBInsertOne
+        connectionId: mongodb
+        payload:
+          contact_company_ids:
+            _state: contact_company_ids
+    blocks:
+      - id: name
+        type: TextInput

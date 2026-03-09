@@ -1,0 +1,41 @@
+# N2: Deduplication Across Multiple Files
+# ========================================
+# Tests that errors/warnings from different files are NOT deduplicated
+# (each file location is distinct) but identical messages from the
+# SAME file:line ARE deduplicated.
+#
+# Structure:
+#   - pages/page1.yaml references "sharedKey" (undefined)
+#   - pages/page2.yaml references "sharedKey" (undefined) - same key, different file
+#   - pages/page3.yaml references "uniqueKey" (undefined) - different key
+#
+# Expected:
+#   3 warnings total (one per file), NOT deduplicated despite same message text
+#   for sharedKey, because each is at a different file:line location.
+
+lowdefy: local
+
+menus:
+  - id: main
+    links:
+      - id: page1
+        type: MenuLink
+        pageId: page1
+      - id: page2
+        type: MenuLink
+        pageId: page2
+      - id: page3
+        type: MenuLink
+        pageId: page3
+
+pages:
+  - _ref: pages/page1.yaml
+  - _ref: pages/page2.yaml
+  - _ref: pages/page3.yaml
+  - id: '404'
+    type: Box
+    blocks:
+      - id: notFound
+        type: Paragraph
+        properties:
+          content: Page not found

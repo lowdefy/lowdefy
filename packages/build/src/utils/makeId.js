@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,14 +14,21 @@
   limitations under the License.
 */
 
-let id_counter = 0;
-
-function makeId(reset) {
-  if (reset) {
-    id_counter = 0;
+class MakeId {
+  constructor() {
+    this.counter = 0;
   }
-  id_counter++;
-  return id_counter.toString(36);
+
+  next() {
+    this.counter++;
+    return this.counter.toString(36);
+  }
+
+  reset() {
+    this.counter = 0;
+  }
 }
+
+const makeId = new MakeId();
 
 export default makeId;

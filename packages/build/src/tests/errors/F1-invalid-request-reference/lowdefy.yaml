@@ -1,0 +1,31 @@
+# F1: Invalid Request Reference
+# ==============================
+# Tests that referencing a non-existent request in an action warns in dev mode
+# and throws an error in prod mode.
+#
+# Expected warning (dev) / error (prod):
+#   [Config Warning/Error] Request "nonExistentRequest" not defined on page "home".
+#
+# The error points to line 28 where the Request action is defined.
+
+lowdefy: local
+
+connections:
+  - id: testApi
+    type: AxiosHttp
+    properties:
+      baseURL: http://example.com
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: button
+        type: Button
+        properties:
+          title: Call Invalid Request
+        events:
+          onClick:
+            - id: callRequest
+              type: Request
+              params: nonExistentRequest

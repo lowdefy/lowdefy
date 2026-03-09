@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ test('writeFile should create directories if they do not exist', async () => {
 
 test('readFile error id filepath is not a string', async () => {
   await expect(writeFile(true, `Test Write File`)).rejects.toThrow(
-    'Could not write file, file path should be a string, received true.'
+    'Could not write file, file path should be a string.'
   );
 });
 

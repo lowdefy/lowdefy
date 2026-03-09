@@ -1,0 +1,83 @@
+id: edit-user
+type: Box
+properties:
+  title: Edit User
+requests:
+  - id: getUser
+    type: MongoDBFindOne
+    connectionId: db
+    payload:
+      id:
+        _url_query: id
+    properties:
+      query:
+        _id:
+          _payload: id
+  - id: updateUser
+    type: MongoDBUpdateOne
+    connectionId: db
+    payload:
+      id:
+        _url_query: id
+      name:
+        _state: name
+      email:
+        _state: email
+    properties:
+      filter:
+        _id:
+          _payload: id
+      update:
+        $set:
+          name:
+            _payload: name
+          email:
+            _payload: email
+          updatedAt:
+            _date: '2024-01-15T12:00:00.000Z'
+events:
+  onInit:
+    - id: fetchUser
+      type: Request
+      params: getUser
+    - id: setState
+      type: SetState
+      params:
+        name:
+          _request: getUser.name
+        email:
+          _request: getUser.email
+blocks:
+  - id: title
+    type: Title
+    properties:
+      content: Edit User
+  - id: form
+    type: Card
+    blocks:
+      - id: name
+        type: TextInput
+        required: true
+        properties:
+          title: Name
+      - id: email
+        type: TextInput
+        required: true
+        properties:
+          title: Email
+      - id: submitBtn
+        type: Button
+        properties:
+          title: Save Changes
+          type: primary
+        events:
+          onClick:
+            - id: validate
+              type: Validate
+            - id: update
+              type: Request
+              params: updateUser
+            - id: redirect
+              type: Link
+              params:
+                pageId: users

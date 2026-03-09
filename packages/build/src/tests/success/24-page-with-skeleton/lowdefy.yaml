@@ -1,0 +1,15 @@
+# 24: Page with Loading Skeleton
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    skeleton:
+      type: SkeletonParagraph
+      properties:
+        rows: 3
+    blocks:
+      - id: content
+        type: Paragraph
+        properties:
+          content: Loaded content

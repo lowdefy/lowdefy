@@ -1,0 +1,38 @@
+{
+  "tests": [
+    {
+      "mode": "dev",
+      "warnings": [
+        "anotherUndefined",
+        "undefinedState",
+        "undefinedPayload"
+      ],
+      "warningContains": [
+        "_state references \"anotherUndefined\" on page \"home\", but no input block with id \"anotherUndefined\" exists on this page.",
+        "lowdefy.yaml:36",
+        "_state references \"undefinedState\" on page \"home\", but no input block with id \"undefinedState\" exists on this page.",
+        "lowdefy.yaml:25",
+        "_payload references \"undefinedPayload\" in request \"testRequest\" on page \"home\", but no key \"undefinedPayload\" exists in the request payload definition.",
+        "lowdefy.yaml:30"
+      ]
+    },
+    {
+      "mode": "prod",
+      "errors": [
+        "anotherUndefined",
+        "undefinedState",
+        "undefinedPayload"
+      ],
+      "errorContains": [
+        "_state references \"anotherUndefined\" on page \"home\", but no input block with id \"anotherUndefined\" exists on this page.",
+        "lowdefy.yaml:36",
+        "_state references \"undefinedState\" on page \"home\", but no input block with id \"undefinedState\" exists on this page.",
+        "lowdefy.yaml:25",
+        "_payload references \"undefinedPayload\" in request \"testRequest\" on page \"home\", but no key \"undefinedPayload\" exists in the request payload definition.",
+        "lowdefy.yaml:30"
+      ],
+      "errorCount": 3,
+      "expectThrow": true
+    }
+  ]
+}

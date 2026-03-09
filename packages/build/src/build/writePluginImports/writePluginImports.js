@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,20 +15,26 @@
 */
 
 import writeActionImports from './writeActionImports.js';
+import writeActionSchemaMap from './writeActionSchemaMap.js';
 import writeAuthImports from './writeAuthImports.js';
 import writeBlockImports from './writeBlockImports.js';
+import writeBlockSchemaMap from './writeBlockSchemaMap.js';
 import writeConnectionImports from './writeConnectionImports.js';
 import writeIconImports from './writeIconImports.js';
 import writeOperatorImports from './writeOperatorImports.js';
+import writeOperatorSchemaMap from './writeOperatorSchemaMap.js';
 import writeStyleImports from './writeStyleImports.js';
 
 async function writePluginImports({ components, context }) {
   await writeActionImports({ components, context });
+  await writeActionSchemaMap({ components, context });
   await writeAuthImports({ components, context });
   await writeBlockImports({ components, context });
+  await writeBlockSchemaMap({ components, context });
   await writeConnectionImports({ components, context });
   await writeIconImports({ components, context });
   await writeOperatorImports({ components, context });
+  await writeOperatorSchemaMap({ components, context });
   await writeStyleImports({ components, context });
 }
 

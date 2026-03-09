@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigurationError } from '../../context/errors.js';
+import { ConfigError } from '@lowdefy/errors';
 
 function authorizeApiEndpoint({ authorize, logger }, { endpointConfig }) {
   if (!authorize(endpointConfig)) {
@@ -23,7 +23,7 @@ function authorizeApiEndpoint({ authorize, logger }, { endpointConfig }) {
       authorized: false,
       auth_config: endpointConfig.auth,
     });
-    throw new ConfigurationError(`API Endpoint "${endpointConfig.endpointId}" does not exist.`);
+    throw new ConfigError(`API Endpoint "${endpointConfig.endpointId}" does not exist.`);
   }
   logger.debug({
     event: 'debug_api_authorize',

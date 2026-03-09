@@ -1,0 +1,13 @@
+id: pageHeader
+type: Box
+style:
+  marginBottom: 24
+blocks:
+  - id: breadcrumb
+    type: Breadcrumb
+  - id: pageTitle
+    type: Title
+    properties:
+      level: 2
+      content:
+        _global: appName

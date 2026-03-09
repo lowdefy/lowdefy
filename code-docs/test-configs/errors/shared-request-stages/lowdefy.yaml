@@ -1,0 +1,33 @@
+lowdefy: local
+name: lowdefy-app
+connections:
+  - id: my-collection
+    type: MongoDBCollection
+    properties:
+      collection: my-collection
+      databaseUri:
+        _secret: MONGODB_URI
+pages:
+  - id: new_page
+    type: PageHeaderMenu
+    requests:
+      - _ref:
+          path: requests/fetch_request.yaml
+          vars:
+            id: fetch_request_1
+            payload:
+              filter:
+                status: active
+      - _ref:
+          path: requests/fetch_request.yaml
+          vars:
+            id: fetch_request_2
+            payload:
+              input: searching
+    events:
+      onMount:
+        - id: fetch_request
+          type: Request
+          params:
+            - fetch_request_1
+            - fetch_request_2

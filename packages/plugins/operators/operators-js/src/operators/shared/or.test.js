@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -35,18 +35,10 @@ test('_or true', () => {
   expect(_or({ params: [false, true], location })).toEqual(true);
 });
 test('_or errors', () => {
-  expect(() => _or({ params: 'hello', location })).toThrow(
-    'Operator Error: _or takes an array type. Received: "hello" at location.'
-  );
-  expect(() => _or({ params: null, location })).toThrow(
-    'Operator Error: _or takes an array type. Received: null at location.'
-  );
-  expect(() => _or({ params: true, location })).toThrow(
-    'Operator Error: _or takes an array type. Received: true at location.'
-  );
-  expect(() => _or({ params: false, location })).toThrow(
-    'Operator Error: _or takes an array type. Received: false at location.'
-  );
+  expect(() => _or({ params: 'hello', location })).toThrow('_or takes an array type.');
+  expect(() => _or({ params: null, location })).toThrow('_or takes an array type.');
+  expect(() => _or({ params: true, location })).toThrow('_or takes an array type.');
+  expect(() => _or({ params: false, location })).toThrow('_or takes an array type.');
 });
 
 test('_or evaluated in ServerParser', () => {

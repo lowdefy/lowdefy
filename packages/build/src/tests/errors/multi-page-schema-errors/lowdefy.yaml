@@ -1,0 +1,36 @@
+# Multi-Page Schema Errors Test
+# Tests that multiple schema errors across pages are ALL collected.
+# Schema validation runs before buildPages, so these are caught in testSchema.
+#
+# Page 1: Missing block id (schema error)
+# Page 2: Missing block id (schema error)
+# Page 3: Missing block id (schema error)
+#
+# Expected behavior: ALL schema errors should be collected and reported together.
+
+lowdefy: local
+
+pages:
+  - id: page1
+    type: Box
+    blocks:
+      - type: Paragraph
+        # Missing block id - schema error
+        properties:
+          content: Block 1 has no id
+
+  - id: page2
+    type: Box
+    blocks:
+      - type: Paragraph
+        # Missing block id - schema error
+        properties:
+          content: Block 2 has no id
+
+  - id: page3
+    type: Box
+    blocks:
+      - type: Paragraph
+        # Missing block id - schema error
+        properties:
+          content: Block 3 has no id

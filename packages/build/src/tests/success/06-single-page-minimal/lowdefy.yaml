@@ -1,0 +1,6 @@
+# 06: Single Page Minimal
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box

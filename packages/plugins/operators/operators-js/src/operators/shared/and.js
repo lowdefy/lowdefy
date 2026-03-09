@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,15 +16,13 @@
 
 import { type } from '@lowdefy/helpers';
 
-function _and({ params, location }) {
+function _and({ params }) {
   if (!type.isArray(params)) {
-    throw new Error(
-      `Operator Error: _and takes an array type. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`_and takes an array type.`);
   }
   return !!params.reduce((acc, el) => acc && el, true);
 }
+
+_and.dynamic = false;
 
 export default _and;

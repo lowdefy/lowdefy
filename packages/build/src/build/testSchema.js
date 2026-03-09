@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,8 +15,10 @@
 */
 
 import { validate } from '@lowdefy/ajv';
+import { ConfigError, shouldSuppressBuildCheck } from '@lowdefy/errors';
+
+import findConfigKey from '../utils/findConfigKey.js';
 import lowdefySchema from '../lowdefySchema.js';
-import formatErrorMessage from '../utils/formatErrorMessage.js';
 
 function testSchema({ components, context }) {
   const { valid, errors } = validate({
@@ -26,8 +28,51 @@ function testSchema({ components, context }) {
   });
 
   if (!valid) {
-    context.logger.warn('Schema not valid.');
-    errors.map((error) => context.logger.warn(formatErrorMessage({ error, components })));
+    // Filter out anyOf/oneOf cascade errors - these are always accompanied by
+    // more specific validation errors and just add noise
+    let filteredErrors = errors.filter(
+      (error) => error.keyword !== 'anyOf' && error.keyword !== 'oneOf'
+    );
+
+    // Hierarchical deduplication: if an error exists at a child path,
+    // filter out errors at parent paths (prefer more specific errors)
+    filteredErrors = filteredErrors.filter((error) => {
+      const hasChildError = filteredErrors.some(
+        (other) => other !== error && other.instancePath.startsWith(error.instancePath + '/')
+      );
+      return !hasChildError;
+    });
+
+    // Same-path deduplication: only show first error per unique path
+    // (multiple errors at same path are usually cascade errors from schema branches)
+    const seenPaths = new Set();
+    filteredErrors = filteredErrors.filter((error) => {
+      if (seenPaths.has(error.instancePath)) {
+        return false;
+      }
+      seenPaths.add(error.instancePath);
+      return true;
+    });
+
+    filteredErrors.forEach((error) => {
+      const instancePath = error.instancePath.split('/').slice(1).filter(Boolean);
+      const configKey = findConfigKey({ components, instancePath });
+
+      let message = error.message;
+      if (error.params?.additionalProperty) {
+        message = `${message} - "${error.params.additionalProperty}"`;
+      }
+
+      const configError = new ConfigError(message, { configKey, checkSlug: 'schema' });
+      if (!shouldSuppressBuildCheck(configError, context.keyMap)) {
+        if (!context.errors) {
+          // If no error collection array, throw immediately (fallback for tests)
+          throw configError;
+        }
+        // Collect error object - logging happens at checkpoints in index.js
+        context.errors.push(configError);
+      }
+    });
   }
 }
 

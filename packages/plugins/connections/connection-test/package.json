@@ -1,0 +1,21 @@
+{
+  "name": "@lowdefy/connection-test",
+  "version": "4.5.2",
+  "license": "Apache-2.0",
+  "description": "Lowdefy test connection for debugging requests and errors.",
+  "homepage": "https://lowdefy.com",
+  "type": "module",
+  "exports": {
+    "./connections": "./src/connections.js",
+    "./types": "./src/types.js"
+  },
+  "files": [
+    "src/*"
+  ],
+  "dependencies": {
+    "@lowdefy/errors": "4.5.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

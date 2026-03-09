@@ -1,0 +1,159 @@
+id: customer-detail
+type: PageHeaderMenu
+properties:
+  title: Customer Details
+requests:
+  - id: getCustomer
+    type: MongoDBFindOne
+    connectionId: db
+    payload:
+      id:
+        _url_query: id
+    properties:
+      query:
+        _id:
+          _payload: id
+  - id: saveCustomer
+    type: MongoDBUpdateOne
+    connectionId: db
+    payload:
+      id:
+        _url_query: id
+      name:
+        _state: name
+      email:
+        _state: email
+      phone:
+        _state: phone
+      status:
+        _state: status
+      notes:
+        _state: notes
+    properties:
+      filter:
+        _id:
+          _payload: id
+      update:
+        $set:
+          name:
+            _payload: name
+          email:
+            _payload: email
+          phone:
+            _payload: phone
+          status:
+            _payload: status
+          notes:
+            _payload: notes
+          updatedAt:
+            _date: '2024-01-15T12:00:00.000Z'
+      options:
+        upsert: true
+events:
+  onInit:
+    - id: checkIfEdit
+      type: SetState
+      skip:
+        _not:
+          _url_query: id
+      params:
+        isEdit: true
+    - id: loadCustomer
+      type: Request
+      skip:
+        _not:
+          _url_query: id
+      params: getCustomer
+    - id: populateForm
+      type: SetState
+      skip:
+        _not:
+          _url_query: id
+      params:
+        name:
+          _request: getCustomer.name
+        email:
+          _request: getCustomer.email
+        phone:
+          _request: getCustomer.phone
+        status:
+          _request: getCustomer.status
+        notes:
+          _request: getCustomer.notes
+areas:
+  content:
+    blocks:
+      - id: form
+        type: Card
+        properties:
+          title:
+            _if:
+              test:
+                _state: isEdit
+              then: Edit Customer
+              else: New Customer
+        blocks:
+          - id: name
+            type: TextInput
+            required: Name is required
+            properties:
+              title: Name
+          - id: email
+            type: TextInput
+            required: Email is required
+            properties:
+              title: Email
+          - id: phone
+            type: TextInput
+            properties:
+              title: Phone
+          - id: status
+            type: Selector
+            properties:
+              title: Status
+              options:
+                - value: active
+                  label: Active
+                - value: inactive
+                  label: Inactive
+                - value: pending
+                  label: Pending
+          - id: notes
+            type: TextArea
+            properties:
+              title: Notes
+              rows: 4
+          - id: actions
+            type: Box
+            blocks:
+              - id: saveBtn
+                type: Button
+                properties:
+                  title: Save
+                  type: primary
+                events:
+                  onClick:
+                    - id: validate
+                      type: Validate
+                    - id: save
+                      type: Request
+                      params: saveCustomer
+                    - id: success
+                      type: DisplayMessage
+                      params:
+                        content: Customer saved successfully!
+                        status: success
+                    - id: redirect
+                      type: Link
+                      params:
+                        pageId: customers
+              - id: cancelBtn
+                type: Button
+                properties:
+                  title: Cancel
+                events:
+                  onClick:
+                    - id: goBack
+                      type: Link
+                      params:
+                        pageId: customers

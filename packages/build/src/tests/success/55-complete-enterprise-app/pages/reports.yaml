@@ -1,0 +1,13 @@
+id: reports
+type: PageHeaderMenu
+properties:
+  title: Reports
+blocks:
+  - id: title
+    type: Title
+    properties:
+      content: Analytics & Reports
+  - id: placeholder
+    type: Paragraph
+    properties:
+      content: Reports and analytics interface

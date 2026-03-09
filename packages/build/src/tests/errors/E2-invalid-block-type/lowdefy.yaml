@@ -1,0 +1,20 @@
+# E2: Invalid Block Type
+# =======================
+# Tests that using an undefined block type throws an error with a suggestion.
+#
+# Expected error:
+#   [Config Error] Block type "Buton" was used but is not defined.
+#   Did you mean "Button"?
+#
+# The error points to line 16 where the invalid block is defined.
+
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: invalidBlock
+        type: Buton
+        properties:
+          title: Click Me

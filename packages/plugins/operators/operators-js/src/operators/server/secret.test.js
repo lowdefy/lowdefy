@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -69,13 +69,13 @@ test('secret get all is not allowed', async () => {
   const secret = (await import('./secret.js')).default;
 
   expect(() => secret({ params: true })).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: Getting all secrets is not allowed. Received: true at undefined."`
+    `"Getting all secrets is not allowed."`
   );
   expect(() => secret({ params: { all: true } })).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: Getting all secrets is not allowed. Received: {\\"all\\":true} at undefined."`
+    `"Getting all secrets is not allowed."`
   );
   expect(() => secret({ params: { all: 'yes' } })).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: Getting all secrets is not allowed. Received: {\\"all\\":\\"yes\\"} at undefined."`
+    `"Getting all secrets is not allowed."`
   );
 });
 

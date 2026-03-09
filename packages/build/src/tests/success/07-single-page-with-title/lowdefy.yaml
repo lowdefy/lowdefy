@@ -1,0 +1,8 @@
+# 07: Single Page with Title Property
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    properties:
+      title: My Home Page

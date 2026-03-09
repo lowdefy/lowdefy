@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,9 +14,10 @@
   limitations under the License.
 */
 
-function createRequest({ actions, arrayIndices, blockId, context, event }) {
+function createRequest({ actionId, actions, arrayIndices, blockId, context, event }) {
   return function request(params) {
     return context._internal.Requests.callRequests({
+      actionId,
       actions,
       arrayIndices,
       blockId,

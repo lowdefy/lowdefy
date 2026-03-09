@@ -1,0 +1,19 @@
+# S7: ~ignoreBuildChecks Cascades Into _ref
+# ==========================================
+# Tests that ~ignoreBuildChecks on a _ref propagates into the
+# resolved content, suppressing warnings from within the referenced file.
+#
+# The _ref has ~ignoreBuildChecks: true, and the referenced template
+# contains an undefined _state reference. The warning should be suppressed.
+#
+# Expected: NO warning for the child block's undefined _state reference.
+
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - _ref:
+          path: template.yaml
+          ~ignoreBuildChecks: true

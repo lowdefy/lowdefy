@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,10 +15,10 @@
 */
 
 import { spawnProcess } from '@lowdefy/node-utils';
-import createStdOutLineHandler from './createStdOutLineHandler.js';
+import { createStdOutLineHandler } from '@lowdefy/logger/cli';
 
 async function runLowdefyBuild({ context, directory }) {
-  context.print.spin('Running Lowdefy build.');
+  context.logger.info({ spin: 'start' }, 'Running Lowdefy build.');
   try {
     await spawnProcess({
       args: ['run', 'build:lowdefy'],
@@ -39,7 +39,7 @@ async function runLowdefyBuild({ context, directory }) {
   } catch (error) {
     throw new Error('Lowdefy build failed.');
   }
-  context.print.log('Lowdefy build successful.');
+  context.logger.info('Lowdefy build successful.');
 }
 
 export default runLowdefyBuild;

@@ -46,17 +46,31 @@ jobs:
       - name: Package VS Code Extention
         run: pnpm --filter lowdefy-vscode package
 
-      #
-      # - name: Print changesets steps context
-      #   env:
-      #     CONTEXT: ${{ toJson(steps.changesets) }}
-      #   run: echo "$CONTEXT"
+      - name: Generate release notes
+        if: ${{ github.head_ref == 'changeset-release/main' }}
+        id: release-notes
+        run: |
+          npm install -g @anthropic-ai/claude-code
+          node scripts/release-notes.mjs --output-file=/tmp/release-notes.md
+
+          # Extract version from script output
+          VERSION=$(node -e "
+            const fs = require('fs');
+            const pkg = JSON.parse(fs.readFileSync('packages/cli/package.json', 'utf-8'));
+            console.log('v' + pkg.version);
+          ")
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
 
       - name: Create Github Release
         uses: softprops/action-gh-release@v2
         if: ${{ github.head_ref == 'changeset-release/main' }}
         with:
+          tag_name: ${{ steps.release-notes.outputs.version }}
+          name: ${{ steps.release-notes.outputs.version }}
           draft: true
+          body_path: /tmp/release-notes.md
           files: |
             lowdefy-vscode-*.vsix
           target_commitish: ${{ github.sha }}

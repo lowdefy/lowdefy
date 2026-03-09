@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -17,9 +17,10 @@
 async function controlReject(context, routineContext, { control }) {
   const { evaluateOperators } = context;
   const { items } = routineContext;
+  const location = control['~k'] ?? ':reject';
 
-  const message = evaluateOperators({ input: control[':reject'], items, location: 'TODO' });
-  const cause = evaluateOperators({ input: control[':cause'], items, location: 'TODO' });
+  const message = evaluateOperators({ input: control[':reject'], items, location });
+  const cause = evaluateOperators({ input: control[':cause'], items, location });
   const error = new Error(message, { cause });
 
   context.logger.warn({

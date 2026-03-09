@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 */
 
 import { jest } from '@jest/globals';
+import { ActionError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import testContext from '../../test/testContext.js';
@@ -26,11 +27,9 @@ const lowdefy = {
         const linkParams = type.isString(params) ? { pageId: params } : params;
         try {
           link(linkParams);
-        } catch (error) {
-          console.log(error);
-          throw new Error(
-            `Invalid Link, check action params. Received "${JSON.stringify(params)}".`
-          );
+        } catch (e) {
+          console.log(e);
+          throw new Error('Invalid Link, check action params.');
         }
       },
     },
@@ -153,16 +152,19 @@ test('Link error', async () => {
         },
         type: 'Link',
       },
-      error: {
-        error: new Error('Invalid Link, check action params. Received "{"invalid":true}".'),
-        index: 0,
-        type: 'Link',
-      },
+      error: expect.any(ActionError),
+      index: 0,
     },
     responses: {
       a: {
-        type: 'Link',
-        error: new Error('Invalid Link, check action params. Received "{"invalid":true}".'),
+        action: {
+          id: 'a',
+          params: {
+            invalid: true,
+          },
+          type: 'Link',
+        },
+        error: expect.any(ActionError),
         index: 0,
       },
     },
@@ -170,4 +172,5 @@ test('Link error', async () => {
     startTimestamp: { date: 0 },
     endTimestamp: { date: 0 },
   });
+  expect(res.error.error._message).toContain('Invalid Link, check action params');
 });

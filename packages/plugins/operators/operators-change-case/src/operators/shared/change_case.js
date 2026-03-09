@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -46,14 +46,10 @@ const changeCase = {
   trainCase,
 };
 
-const prep = (args, { location }) => {
+const prep = (args) => {
   const options = args[1];
   if (!type.isNone(options) && !type.isObject(options)) {
-    throw new Error(
-      `Operator Error: options must be an object. Received ${JSON.stringify(
-        options
-      )} at ${location}.`
-    );
+    throw new Error(`options must be an object.`);
   }
   return args;
 };
@@ -119,5 +115,7 @@ function change_case({ params, location, methodName }) {
     params,
   });
 }
+
+change_case.dynamic = false;
 
 export default change_case;

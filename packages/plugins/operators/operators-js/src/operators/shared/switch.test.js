@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -48,14 +48,12 @@ test('_switch evaluates to the default case', () => {
 
 test('switch params branches not an array', () => {
   expect(() => _switch({ params: { branches: '1, 0' }, location: 'locationId' })).toThrow(
-    'Operator Error: switch takes an array type as input for the branches. Received: {"branches":"1, 0"} at locationId.'
+    'switch takes an array type as input for the branches.'
   );
 });
 
 test("switch params branches if doesn't evaluate to boolean ", () => {
   expect(() =>
     _switch({ params: { branches: [{ if: '1, 0', then: 'A' }] }, location: 'locationId' })
-  ).toThrow(
-    'Operator Error: switch takes a boolean type for parameter "if". Received: {"branches":[{"if":"1, 0","then":"A"}]} at locationId.'
-  );
+  ).toThrow('switch takes a boolean type for parameter "if".');
 });

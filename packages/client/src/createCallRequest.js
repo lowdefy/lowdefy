@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -17,11 +17,11 @@
 import request from './request.js';
 
 function createCallRequest({ basePath }) {
-  function callRequest({ pageId, payload, requestId }) {
+  function callRequest({ actionId, blockId, pageId, payload, requestId }) {
     return request({
       url: `${basePath}/api/request/${pageId}/${requestId}`,
       method: 'POST',
-      body: { payload },
+      body: { actionId, blockId, payload },
     });
   }
   return callRequest;

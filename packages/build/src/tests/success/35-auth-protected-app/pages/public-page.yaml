@@ -1,0 +1,13 @@
+id: public-page
+type: Box
+properties:
+  title: Public Page
+blocks:
+  - id: title
+    type: Title
+    properties:
+      content: This page is public
+  - id: content
+    type: Paragraph
+    properties:
+      content: Anyone can see this page without signing in.

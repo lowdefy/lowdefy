@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,13 +14,15 @@
   limitations under the License.
 */
 
-import { ConfigurationError } from '../../context/errors.js';
+import { ConfigError } from '@lowdefy/errors';
 
 function getRequestResolver({ logger }, { connection, requestConfig }) {
   const requestResolver = connection.requests[requestConfig.type];
 
   if (!requestResolver) {
-    const err = new ConfigurationError(`Request type "${requestConfig.type}" can not be found.`);
+    const err = new ConfigError(`Request type "${requestConfig.type}" can not be found.`, {
+      configKey: requestConfig['~k'],
+    });
     logger.debug(
       { params: { id: requestConfig.requestId, type: requestConfig.type }, err },
       err.message

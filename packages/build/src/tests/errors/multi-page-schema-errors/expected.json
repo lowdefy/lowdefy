@@ -1,0 +1,16 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "description": "Multiple schema errors across pages should ALL be collected",
+      "errorContains": [
+        "Block should have required property \"id\"",
+        "lowdefy.yaml:17",
+        "lowdefy.yaml:25",
+        "lowdefy.yaml:33"
+      ],
+      "errorCount": 3,
+      "expectThrow": true
+    }
+  ]
+}

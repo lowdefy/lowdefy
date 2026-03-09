@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 */
 
 import axios from 'axios';
-import createPrint from './createPrint.js';
+import createCliLogger from '@lowdefy/logger/cli';
 
 async function logError({ error, context = {} }) {
   try {
@@ -41,9 +41,9 @@ async function logError({ error, context = {} }) {
 }
 
 async function errorHandler({ context, error }) {
-  const print = createPrint({ logLevel: 'info' });
-  print.error(error.message);
-  if (!context.disableTelemetry) {
+  const logger = context?.logger ?? createCliLogger({ logLevel: 'info' });
+  logger.error(error);
+  if (!context?.disableTelemetry) {
     await logError({ context, error });
   }
 }

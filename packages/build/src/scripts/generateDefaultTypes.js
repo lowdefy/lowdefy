@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ const defaultPackages = [
   '@lowdefy/blocks-qr',
   '@lowdefy/connection-axios-http',
   '@lowdefy/connection-elasticsearch',
+  '@lowdefy/connection-test',
   '@lowdefy/connection-google-sheets',
   '@lowdefy/connection-knex',
   '@lowdefy/connection-mongodb',

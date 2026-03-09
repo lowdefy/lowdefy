@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -36,11 +36,7 @@ async function Redis({ request, connection }) {
   }
 
   if (!type.isArray(parameters)) {
-    throw new Error(
-      `Invalid parameters, command "${command}" parameters should be an array, received ${JSON.stringify(
-        parameters
-      )}.`
-    );
+    throw new Error(`Invalid parameters, command "${command}" parameters should be an array.`);
   }
 
   const upperCaseModifiers = Object.entries(modifiers).reduce((acc, [key, value]) => {

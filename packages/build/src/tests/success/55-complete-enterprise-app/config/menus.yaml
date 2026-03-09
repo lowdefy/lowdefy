@@ -1,0 +1,42 @@
+- id: default
+  links:
+    - id: dashboard
+      type: MenuLink
+      pageId: dashboard
+      properties:
+        title: Dashboard
+        icon: AiOutlineDashboard
+    - id: customers
+      type: MenuGroup
+      properties:
+        title: Customers
+        icon: AiOutlineTeam
+      links:
+        - id: all-customers
+          type: MenuLink
+          pageId: customers
+          properties:
+            title: All Customers
+        - id: add-customer
+          type: MenuLink
+          pageId: customer-detail
+          properties:
+            title: Add Customer
+    - id: orders
+      type: MenuLink
+      pageId: orders
+      properties:
+        title: Orders
+        icon: AiOutlineShoppingCart
+    - id: reports
+      type: MenuLink
+      pageId: reports
+      properties:
+        title: Reports
+        icon: AiOutlineBarChart
+    - id: settings
+      type: MenuLink
+      pageId: settings
+      properties:
+        title: Settings
+        icon: AiOutlineSetting

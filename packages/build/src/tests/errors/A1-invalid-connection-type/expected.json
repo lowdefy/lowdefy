@@ -1,0 +1,14 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": [
+        "NonExistentConnection"
+      ],
+      "errorContains": [
+        "Connection type \"NonExistentConnection\" was used but is not defined.",
+        "lowdefy.yaml:14"
+      ]
+    }
+  ]
+}

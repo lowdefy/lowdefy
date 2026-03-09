@@ -1,0 +1,27 @@
+# G4: Action Type Not String
+# ===========================
+# Tests that action types must be strings, not objects or other types.
+#
+# Expected error:
+#   [Config Error] Action type is not a string at "action1" on "onClick"
+#   on "button" on page "home".
+#
+# The error points to line 22 where the action with object type is defined.
+
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: button
+        type: Button
+        properties:
+          title: Bad Action Type
+        events:
+          onClick:
+            - id: action1
+              type:
+                invalid: object
+              params:
+                key: value

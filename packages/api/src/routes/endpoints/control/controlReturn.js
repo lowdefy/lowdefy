@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -17,7 +17,11 @@
 async function controlReturn(context, routineContext, { control }) {
   const { evaluateOperators } = context;
   const { items } = routineContext;
-  const response = evaluateOperators({ input: control[':return'], items, location: 'TODO' });
+  const response = evaluateOperators({
+    input: control[':return'],
+    items,
+    location: control['~k'] ?? ':return',
+  });
 
   context.logger.debug({
     event: 'debug_control_return',

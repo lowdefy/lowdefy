@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,14 +14,16 @@
   limitations under the License.
 */
 
-import { ConfigurationError } from '../../context/errors.js';
+import { ConfigError } from '@lowdefy/errors';
 
 async function getConnectionConfig({ logger, readConfigFile }, { requestConfig }) {
   const { connectionId, requestId } = requestConfig;
   let err;
 
   if (!connectionId) {
-    err = new ConfigurationError(`Request "${requestId}" does not specify a connection.`);
+    err = new ConfigError(`Request "${requestId}" does not specify a connection.`, {
+      configKey: requestConfig['~k'],
+    });
     logger.debug({ params: { requestId }, err }, err.message);
     throw err;
   }
@@ -29,7 +31,9 @@ async function getConnectionConfig({ logger, readConfigFile }, { requestConfig }
   const connection = await readConfigFile(`connections/${connectionId}.json`);
 
   if (!connection) {
-    err = new ConfigurationError(`Connection "${connectionId}" does not exist.`);
+    err = new ConfigError(`Connection "${connectionId}" does not exist.`, {
+      configKey: requestConfig['~k'],
+    });
     logger.debug({ params: { requestId }, err }, err.message);
     throw err;
   }

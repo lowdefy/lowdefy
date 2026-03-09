@@ -1,0 +1,40 @@
+# E2E Mocks
+# Define mocked responses, API endpoints, and default test user
+
+# Default user session - applied to all tests automatically.
+# Override per-test with ldf.user({ ... }) or clear with ldf.user(null).
+# Requires the e2e server (lowdefy build --server e2e).
+# user:
+#   name: Test User
+#   email: test@example.com
+#   image: https://example.com/avatar.png
+#   roles:
+#     - admin
+
+# Request mocks - mock Lowdefy requests
+requests:
+  # Example: Mock a MongoDB Atlas Search request
+  # - requestId: atlas_search
+  #   response:
+  #     - _id: doc-1
+  #       title: Search Result
+  #       score: 0.95
+
+  # Example: Mock with pageId (only applies to specific page)
+  # - requestId: fetch_data
+  #   pageId: admin-dashboard
+  #   response: []
+
+  # Example: Mock with wildcard patterns
+  # - requestId: fetch_*
+  #   pageId: admin-*
+  #   response: []
+
+# API mocks - mock custom API endpoints
+api:
+  # Example: Mock an external API endpoint
+  # - endpointId: external_api
+  #   method: POST
+  #   response:
+  #     results: []
+  #     total: 0

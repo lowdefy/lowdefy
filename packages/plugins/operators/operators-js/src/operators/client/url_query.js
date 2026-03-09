@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -20,11 +20,7 @@ import { urlQuery } from '@lowdefy/helpers';
 function _url_query({ arrayIndices, globals, location, params }) {
   const { window } = globals;
   if (!window?.location) {
-    throw new Error(
-      `Operator Error: Browser window.location not available for _url_query. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`Browser window.location not available for _url_query.`);
   }
   return getFromObject({
     arrayIndices,
@@ -34,5 +30,7 @@ function _url_query({ arrayIndices, globals, location, params }) {
     params,
   });
 }
+
+_url_query.dynamic = true;
 
 export default _url_query;

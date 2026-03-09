@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,11 +16,16 @@
 
 import { execSync } from 'child_process';
 
-function checkPnpmIsInstalled({ print, pnpmCmd }) {
+function checkPnpmIsInstalled({ logger, pnpmCmd }) {
+  const ui =
+    logger?.ui ??
+    logger ?? {
+      error: (message) => console.error(message),
+    };
   try {
     execSync(`${pnpmCmd} --version`, { stdio: 'ignore' });
   } catch (e) {
-    print.error(`
+    ui.error(`
 -------------------------------------------------------------
   The package manager "pnpm" is required to run Lowdefy.
   Install pnpm as describe here:

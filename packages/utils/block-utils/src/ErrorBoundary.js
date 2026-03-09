@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
 
 import React, { Component } from 'react';
 
+import { BlockError, LowdefyInternalError } from '@lowdefy/errors';
+
 import ErrorPage from './ErrorPage.js';
 
 class ErrorBoundary extends Component {
@@ -29,6 +31,36 @@ class ErrorBoundary extends Component {
 
   static getDerivedStateFromError(error) {
     return { hasError: true, error };
+  }
+
+  componentDidCatch(error) {
+    const { blockId, blockType, configKey, onError } = this.props;
+
+    // Preserve known error types
+    if (error.isLowdefyError) {
+      if (onError) {
+        onError(error);
+      }
+      return;
+    }
+
+    // Wrap unknown errors based on context
+    let wrappedError;
+    if (blockId) {
+      wrappedError = new BlockError(error.message, {
+        cause: error,
+        typeName: blockType,
+        location: blockId,
+        configKey,
+        received: this.props.properties,
+      });
+    } else {
+      wrappedError = new LowdefyInternalError(error.message, { cause: error });
+    }
+
+    if (onError) {
+      onError(wrappedError);
+    }
   }
 
   render() {

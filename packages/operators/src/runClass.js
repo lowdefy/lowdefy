@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -24,41 +24,30 @@ const runClass = ({ location, meta, methodName, operator, params, functions, def
       methodName = defaultFunction;
     } else {
       throw new Error(
-        `Operator Error: ${operator} requires a valid method name, use one of the following: ${Object.keys(
+        `${operator} requires a valid method name, use one of the following: ${Object.keys(
           meta
-        ).join(', ')}.
-        Received: {"${operator}.${methodName}":${JSON.stringify(params)}} at ${location}.`
+        ).join(', ')}.`
       );
     }
   }
   if (!meta[methodName] && !functions[methodName]) {
     throw new Error(
-      `Operator Error: ${operator}.${methodName} is not supported, use one of the following: ${Object.keys(
+      `${operator}.${methodName} is not supported, use one of the following: ${Object.keys(
         meta
-      ).join(', ')}.
-      Received: {"${operator}.${methodName}":${JSON.stringify(params)}} at ${location}.`
+      ).join(', ')}.`
     );
   }
   // validate params type
   if (meta[methodName].validTypes && !meta[methodName].validTypes.includes(type.typeOf(params))) {
     throw new Error(
-      `Operator Error: ${operator}.${methodName} accepts one of the following types: ${meta[
+      `${operator}.${methodName} accepts one of the following types: ${meta[
         methodName
-      ].validTypes.join(', ')}.
-      Received: {"${operator}.${methodName}":${JSON.stringify(params)}} at ${location}.`
+      ].validTypes.join(', ')}.`
     );
   }
 
   if (meta[methodName].noArgs) {
-    try {
-      return functions[methodName]();
-    } catch (e) {
-      throw new Error(
-        `Operator Error: ${operator}: - ${e.message} Received: {"${operator}":${JSON.stringify(
-          params
-        )}} at ${location}.`
-      );
-    }
+    return functions[methodName]();
   }
   let args = [];
   if (meta[methodName].singleArg || meta[methodName].property) {
@@ -74,10 +63,7 @@ const runClass = ({ location, meta, methodName, operator, params, functions, def
         !type.isArray(params[meta[methodName].spreadArgs])
       ) {
         throw new Error(
-          `Operator Error: ${operator}.${methodName} takes an array as input argument for ${
-            meta[methodName].spreadArgs
-          }.
-          Received: {"${operator}.${methodName}":${JSON.stringify(params)}} at ${location}.`
+          `${operator}.${methodName} takes an array as input argument for ${meta[methodName].spreadArgs}.`
         );
       }
       args.push(...(params[meta[methodName].spreadArgs] || []));
@@ -92,15 +78,7 @@ const runClass = ({ location, meta, methodName, operator, params, functions, def
   if (meta[methodName].property) {
     return functions[methodName];
   }
-  try {
-    return functions[methodName](...args);
-  } catch (e) {
-    throw new Error(
-      `Operator Error: ${operator}.${methodName} - ${
-        e.message
-      } Received: {"${operator}.${methodName}":${JSON.stringify(params)}} at ${location}.`
-    );
-  }
+  return functions[methodName](...args);
 };
 
 export default runClass;

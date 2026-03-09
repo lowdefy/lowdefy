@@ -1,7 +1,7 @@
 /* eslint-disable prefer-promise-reject-errors */
 
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 */
 
 import { jest } from '@jest/globals';
+import { ConfigError } from '@lowdefy/errors';
 
 import testContext from './testContext.js';
 
@@ -263,17 +264,20 @@ test('triggerEvent error', async () => {
         },
         type: 'Error',
       },
-      error: {
-        error: new Error('Invalid action type "Error" at "button".'),
-        index: 0,
-        type: 'Error',
-      },
+      error: expect.any(ConfigError),
+      index: 0,
     },
     responses: {
       e: {
-        type: 'Error',
+        action: {
+          id: 'e',
+          params: {
+            a: 'a',
+          },
+          type: 'Error',
+        },
+        error: expect.any(ConfigError),
         index: 0,
-        error: new Error('Invalid action type "Error" at "button".'),
       },
     },
     success: false,

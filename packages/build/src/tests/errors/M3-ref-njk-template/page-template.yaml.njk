@@ -1,0 +1,17 @@
+# Nunjucks template that generates a page with _state reference.
+# The blockId var (undefinedBlockId) doesn't exist as an input block.
+id: {{ pageId }}
+type: Box
+requests:
+  - id: testRequest
+    type: AxiosHttp
+    connectionId: testApi
+    payload:
+      # This _state reference uses the blockId var which is undefined
+      userData:
+        _state: {{ blockId }}
+    properties:
+      url: /api/test
+blocks:
+  - id: content
+    type: TextInput

@@ -1,0 +1,20 @@
+# E5: Block Type Not String
+# ==========================
+# Tests that block types must be strings, not objects or other types.
+#
+# Expected error:
+#   [Config Error] Block type is not a string at "badType" on page "home".
+#
+# The error points to line 16 where the block with object type is defined.
+
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: badType
+        type:
+          invalid: object
+        properties:
+          title: Type is object

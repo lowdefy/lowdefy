@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,8 +16,13 @@
   limitations under the License.
 */
 
+import { BuildError, LowdefyInternalError } from '@lowdefy/errors';
+
 import createContext from './createContext.js';
 import createPluginTypesMap from './utils/createPluginTypesMap.js';
+import logCollectedErrors from './utils/logCollectedErrors.js';
+import makeId from './utils/makeId.js';
+import tryBuildStep from './utils/tryBuildStep.js';
 
 import addDefaultPages from './build/addDefaultPages/addDefaultPages.js';
 import addKeys from './build/addKeys.js';
@@ -26,15 +31,16 @@ import buildAuth from './build/buildAuth/buildAuth.js';
 import buildConnections from './build/buildConnections.js';
 import buildApi from './build/buildApi/buildApi.js';
 import buildImports from './build/buildImports/buildImports.js';
-import buildJs from './build/buildJs/buildJs.js';
+import buildJs from './build/full/buildJs.js';
+import buildLogger from './build/buildLogger.js';
 import buildMenu from './build/buildMenu.js';
-import buildPages from './build/buildPages/buildPages.js';
+import buildPages from './build/full/buildPages.js';
 import buildRefs from './build/buildRefs/buildRefs.js';
 import buildTypes from './build/buildTypes.js';
 import cleanBuildDirectory from './build/cleanBuildDirectory.js';
 import copyPublicFolder from './build/copyPublicFolder.js';
 import testSchema from './build/testSchema.js';
-import updateServerPackageJson from './build/updateServerPackageJson.js';
+import updateServerPackageJson from './build/full/updateServerPackageJson.js';
 import validateConfig from './build/validateConfig.js';
 import writeApp from './build/writeApp.js';
 import writeAuth from './build/writeAuth.js';
@@ -43,45 +49,95 @@ import writeConnections from './build/writeConnections.js';
 import writeApi from './build/writeApi.js';
 import writeGlobal from './build/writeGlobal.js';
 import writeJs from './build/buildJs/writeJs.js';
+import writeLogger from './build/writeLogger.js';
 import writeMaps from './build/writeMaps.js';
 import writeMenus from './build/writeMenus.js';
-import writePages from './build/writePages.js';
+import writePages from './build/full/writePages.js';
 import writePluginImports from './build/writePluginImports/writePluginImports.js';
-import writeRequests from './build/writeRequests.js';
-import writeTypes from './build/writeTypes.js';
+import writeRequests from './build/full/writeRequests.js';
+import writeTypes from './build/full/writeTypes.js';
 
 async function build(options) {
-  const context = createContext(options);
-  const components = await buildRefs({ context });
-  testSchema({ components, context });
-  buildApp({ components, context });
-  validateConfig({ components, context });
-  addDefaultPages({ components, context });
-  buildAuth({ components, context });
-  buildConnections({ components, context });
-  buildApi({ components, context });
-  buildPages({ components, context });
-  buildMenu({ components, context });
-  buildJs({ components, context });
-  addKeys({ components, context });
-  buildTypes({ components, context });
-  buildImports({ components, context });
-  await cleanBuildDirectory({ context });
-  await writeApp({ components, context });
-  await writeAuth({ components, context });
-  await writeConnections({ components, context });
-  await writeApi({ components, context });
-  await writeRequests({ components, context });
-  await writePages({ components, context });
-  await writeConfig({ components, context });
-  await writeGlobal({ components, context });
-  await writeMaps({ components, context });
-  await writeMenus({ components, context });
-  await writeTypes({ components, context });
-  await writePluginImports({ components, context });
-  await writeJs({ components, context });
-  await updateServerPackageJson({ components, context });
-  await copyPublicFolder({ components, context });
+  // Reset makeId counter for each build (dev server may run multiple builds)
+  makeId.reset();
+
+  let context;
+  try {
+    context = createContext(options);
+
+    let components;
+    try {
+      components = await buildRefs({ context });
+    } catch (err) {
+      // Handle ConfigError from buildRefs (e.g., missing _ref files)
+      if (err.isLowdefyError) {
+        context.handleError(err);
+        throw new BuildError('Build failed with 1 error(s). See above for details.');
+      }
+      throw err;
+    }
+
+    // Build steps - collect all errors before stopping
+    // addKeys runs first so testSchema has ~k markers for error location info
+    tryBuildStep(addKeys, 'addKeys', { components, context });
+    tryBuildStep(testSchema, 'testSchema', { components, context });
+
+    // Schema errors mean structurally invalid data - stop before processing further
+    logCollectedErrors(context);
+
+    tryBuildStep(buildApp, 'buildApp', { components, context });
+    tryBuildStep(buildLogger, 'buildLogger', { components, context });
+    tryBuildStep(validateConfig, 'validateConfig', { components, context });
+    tryBuildStep(addDefaultPages, 'addDefaultPages', { components, context });
+    // addKeys runs again to add keys to any new objects created by earlier build steps
+    tryBuildStep(addKeys, 'addKeys', { components, context });
+    tryBuildStep(buildAuth, 'buildAuth', { components, context });
+    tryBuildStep(buildConnections, 'buildConnections', { components, context });
+    tryBuildStep(buildApi, 'buildApi', { components, context });
+    tryBuildStep(buildPages, 'buildPages', { components, context });
+    tryBuildStep(buildMenu, 'buildMenu', { components, context });
+    tryBuildStep(buildJs, 'buildJs', { components, context });
+    tryBuildStep(buildTypes, 'buildTypes', { components, context });
+    tryBuildStep(buildImports, 'buildImports', { components, context });
+    // Final addKeys pass to ensure all objects (including those created by build steps) have ~k
+    tryBuildStep(addKeys, 'addKeys', { components, context });
+    // Check if there are any collected errors before writing
+    logCollectedErrors(context);
+
+    // Write steps - only if no errors
+    await cleanBuildDirectory({ context });
+    await writeApp({ components, context });
+    await writeAuth({ components, context });
+    await writeConnections({ components, context });
+    await writeApi({ components, context });
+    await writeRequests({ components, context });
+    await writePages({ components, context });
+    await writeConfig({ components, context });
+    await writeGlobal({ components, context });
+    await writeLogger({ components, context });
+    await writeMaps({ components, context });
+    await writeMenus({ components, context });
+    await writeTypes({ components, context });
+    await writePluginImports({ components, context });
+    await writeJs({ components, context });
+    await updateServerPackageJson({ components, context });
+    await copyPublicFolder({ components, context });
+  } catch (err) {
+    if (err instanceof BuildError) {
+      throw err;
+    }
+    // Unexpected internal error - preserve Lowdefy errors as-is, wrap plain errors
+    const lowdefyErr = err.isLowdefyError
+      ? err
+      : new LowdefyInternalError(err.message, { cause: err });
+    if (context) {
+      context.handleError(lowdefyErr);
+    } else {
+      const logger = options.logger ?? console;
+      logger.error(lowdefyErr);
+    }
+    throw new BuildError('Build failed due to internal error. See above for details.');
+  }
 }
 
 export { createPluginTypesMap };

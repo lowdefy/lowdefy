@@ -1,0 +1,21 @@
+# 10: Page with Nested Blocks (blocks within blocks)
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: container
+        type: Box
+        blocks:
+          - id: inner1
+            type: Title
+            properties:
+              content: Inner Title
+          - id: inner2
+            type: Box
+            blocks:
+              - id: deepest
+                type: Paragraph
+                properties:
+                  content: Deeply nested content

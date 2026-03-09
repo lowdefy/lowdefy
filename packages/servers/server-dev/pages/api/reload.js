@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -31,12 +31,15 @@ const handler = async (req, res) => {
     try {
       res.write(`event: reload\ndata: ${JSON.stringify({})}\n\n`);
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   };
   watcher.on('add', () => reload());
   watcher.on('change', () => reload());
-  watcher.on('unlink', () => reload());
+  // Do not reload on unlink — cleanBuildDirectory deletes build/reload during
+  // skeleton rebuilds, which would send a premature SSE event before the new
+  // build artifacts are written. The real reload comes via add/change when
+  // reloadClients() creates the file after the build completes.
 
   // TODO: This isn't working.
   req.on('close', () => {

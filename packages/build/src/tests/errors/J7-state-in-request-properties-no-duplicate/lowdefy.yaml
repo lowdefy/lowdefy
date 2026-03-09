@@ -1,0 +1,41 @@
+# J7: _state in Request Properties — Correct Line, No Duplicate Warning
+# =====================================================================
+# Tests two fixes:
+#   1. The warning points to the _state object (line 35) not the request (line 29).
+#   2. Only the "not available in request properties" warning fires — no
+#      duplicate "undefined state reference" warning for the same key.
+#
+# The _state in the payload (line 33) references a key with no input block,
+# so it should still produce a separate "undefined state reference" warning.
+#
+# Expected warnings (dev mode):
+#   line 33 — _state references "contact_company_ids" … but no input block exists
+#   line 35 — _state is not available in request properties
+
+lowdefy: local
+
+connections:
+  - id: mongodb
+    type: MongoDBCollection
+    properties:
+      databaseUri: mongodb://localhost:27017
+      databaseName: test
+      collection: contacts
+
+pages:
+  - id: contacts-new
+    type: Box
+    requests:
+      - id: insert_contact
+        type: MongoDBInsertOne
+        connectionId: mongodb
+        payload:
+          contact_company_ids:
+            _state: contact_company_ids
+        properties:
+          doc:
+            name:
+              _state: x
+    blocks:
+      - id: name
+        type: TextInput

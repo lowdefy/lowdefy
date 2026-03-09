@@ -1,0 +1,11 @@
+# 08: Page with Single Block
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: heading
+        type: Title
+        properties:
+          content: Welcome

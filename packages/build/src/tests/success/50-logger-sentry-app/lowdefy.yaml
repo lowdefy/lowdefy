@@ -1,0 +1,40 @@
+# 50: Logger with Sentry Configuration
+lowdefy: local
+name: Sentry Logging Demo
+
+logger:
+  sentry:
+    client: true
+    server: true
+    tracesSampleRate: 0.2
+    replaysSessionSampleRate: 0.1
+    replaysOnErrorSampleRate: 1.0
+    feedback: true
+    environment: production
+    userFields:
+      - id
+      - email
+      - name
+      - roles
+
+pages:
+  - id: home
+    type: Box
+    properties:
+      title: Home
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Logger Demo
+      - id: triggerError
+        type: Button
+        properties:
+          title: Trigger Error
+          danger: true
+        events:
+          onClick:
+            - id: throwError
+              type: Throw
+              params:
+                message: Test error for Sentry

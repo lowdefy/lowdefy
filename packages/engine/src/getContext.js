@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -21,39 +21,52 @@ import Areas from './Areas.js';
 import Requests from './Requests.js';
 import State from './State.js';
 
-const blockData = ({
-  areas,
-  blockId,
-  blocks,
-  events,
-  field,
-  id,
-  layout,
-  pageId,
-  properties,
-  requests,
-  required,
-  style,
-  type,
-  validate,
-  visible,
-}) => ({
-  areas,
-  blockId,
-  blocks,
-  events,
-  field,
-  id,
-  layout,
-  pageId,
-  properties,
-  requests,
-  required,
-  style,
-  type,
-  validate,
-  visible,
-});
+const blockData = (config) => {
+  const {
+    areas,
+    blockId,
+    blocks,
+    events,
+    field,
+    id,
+    layout,
+    pageId,
+    properties,
+    requests,
+    required,
+    style,
+    type,
+    validate,
+    visible,
+  } = config;
+  const result = {
+    areas,
+    blockId,
+    blocks,
+    events,
+    field,
+    id,
+    layout,
+    pageId,
+    properties,
+    requests,
+    required,
+    style,
+    type,
+    validate,
+    visible,
+  };
+  // Preserve ~k (configKey) for error tracing - it's non-enumerable so must be copied explicitly
+  if (config['~k']) {
+    Object.defineProperty(result, '~k', {
+      value: config['~k'],
+      enumerable: false,
+      writable: true,
+      configurable: true,
+    });
+  }
+  return result;
+};
 
 function getContext({
   config,

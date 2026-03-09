@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -19,7 +19,9 @@ import path from 'path';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
-import createLogger from './utils/createLogger.mjs';
+import pino from 'pino';
+import { createNodeLogger } from '@lowdefy/logger/node';
+import checkMockUserWarning from './processes/checkMockUserWarning.mjs';
 import initialBuild from './processes/initialBuild.mjs';
 import installPlugins from './processes/installPlugins.mjs';
 import lowdefyBuild from './processes/lowdefyBuild.mjs';
@@ -46,7 +48,12 @@ async function getContext() {
       config: path.resolve(argv.configDirectory ?? env.LOWDEFY_DIRECTORY_CONFIG ?? process.cwd()),
       server: process.cwd(),
     },
-    logger: createLogger({ level: env.LOWDEFY_LOG_LEVEL }),
+    logger: createNodeLogger({
+      name: 'lowdefy build',
+      level: env.LOWDEFY_LOG_LEVEL ?? 'info',
+      base: { pid: undefined, hostname: undefined },
+      destination: pino.destination({ dest: 1, sync: true }),
+    }),
     options: {
       port: argv.port ?? env.PORT ?? 3000,
       refResolver: argv.refResolver ?? env.LOWDEFY_BUILD_REF_RESOLVER,
@@ -58,12 +65,27 @@ async function getContext() {
           : [],
     },
     version: env.npm_package_version,
+
+    // JIT build state
+    pageRegistry: null,
+    buildContext: null,
   };
 
   context.packageManagerCmd = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm';
+  context.checkMockUserWarning = checkMockUserWarning(context);
   context.initialBuild = initialBuild(context);
   context.installPlugins = installPlugins(context);
-  context.lowdefyBuild = lowdefyBuild(context);
+
+  // Wrap lowdefyBuild to capture and store the shallow build result
+  const buildFn = lowdefyBuild(context);
+  context.lowdefyBuild = async () => {
+    const result = await buildFn();
+    if (result) {
+      context.pageRegistry = result.pageRegistry;
+      context.buildContext = result.context;
+    }
+  };
+
   context.nextBuild = nextBuild(context);
   context.readDotEnv = readDotEnv(context);
   context.reloadClients = reloadClients(context);

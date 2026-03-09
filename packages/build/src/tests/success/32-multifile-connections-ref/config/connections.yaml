@@ -1,0 +1,11 @@
+- id: api
+  type: AxiosHttp
+  properties:
+    baseURL: https://api.example.com
+    headers:
+      Content-Type: application/json
+- id: db
+  type: MongoDBCollection
+  properties:
+    databaseUri: mongodb://localhost:27017/myapp
+    collection: users

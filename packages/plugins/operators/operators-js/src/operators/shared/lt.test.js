@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -48,19 +48,15 @@ test('_lt param 0 greater than param 1', () => {
 });
 
 test('_lt params not an array', () => {
-  expect(() => lt({ params: '1, 0', location })).toThrow(
-    'Operator Error: _lt takes an array type as input. Received: "1, 0" at locationId.'
-  );
+  expect(() => lt({ params: '1, 0', location })).toThrow('_lt takes an array type as input.');
 });
 
 test('_lt params array with length 1', () => {
-  expect(() => lt({ params: [1], location })).toThrow(
-    'Operator Error: _lt takes an array of length 2 as input. Received: [1] at locationId.'
-  );
+  expect(() => lt({ params: [1], location })).toThrow('_lt takes an array of length 2 as input.');
 });
 
 test('_lt params array with length 3', () => {
   expect(() => lt({ params: [1, 2, 3], location })).toThrow(
-    'Operator Error: _lt takes an array of length 2 as input. Received: [1,2,3] at locationId.'
+    '_lt takes an array of length 2 as input.'
   );
 });

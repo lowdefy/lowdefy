@@ -1,0 +1,13 @@
+id: test_page
+type: Box
+blocks:
+  - _ref:
+      path: pages/block.yaml
+      vars:
+        ids:
+          _build.array.map:
+            on:
+              _var: columns
+            callback:
+              _build.function:
+                __build.args: 0.id

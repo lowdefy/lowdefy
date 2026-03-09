@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { ConfigError } from '@lowdefy/errors';
 import getUserJavascriptFunction from './getUserJavascriptFunction.js';
 
 async function runRefResolver({ context, refDef, referencedFrom }) {
@@ -26,14 +27,17 @@ async function runRefResolver({ context, refDef, referencedFrom }) {
   try {
     content = await resolverFn(refDef.path, refDef.vars, context);
   } catch (error) {
-    throw new Error(
-      `Error calling resolver "${refDef.resolver}" from "${referencedFrom}": ${error.message}`
-    );
+    throw new ConfigError(`Error calling resolver "${refDef.resolver}".`, {
+      cause: error,
+      filePath: referencedFrom,
+      lineNumber: refDef.lineNumber,
+    });
   }
   if (type.isNone(content)) {
-    throw new Error(
-      `Tried to reference with resolver "${refDef.resolver}" from "${referencedFrom}", but received "${content}".`
-    );
+    throw new ConfigError(`Resolver "${refDef.resolver}" returned "${content}".`, {
+      filePath: referencedFrom,
+      lineNumber: refDef.lineNumber,
+    });
   }
   return content;
 }

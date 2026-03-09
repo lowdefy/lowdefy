@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -17,12 +17,17 @@
 import { spawnProcess } from '@lowdefy/node-utils';
 
 async function installServer({ context, directory }) {
-  context.print.spin('Installing dependencies.');
+  // Skip dependency installation for local development (monorepo already has deps installed)
+  if (context.lowdefyVersion === 'local') {
+    context.logger.info('Skipping dependency installation for local development.');
+    return;
+  }
+  context.logger.info({ spin: 'start' }, 'Installing dependencies.');
   try {
     await spawnProcess({
       command: context.pnpmCmd,
       args: ['install', '--no-frozen-lockfile'],
-      stdOutLineHandler: (line) => context.print.debug(line),
+      stdOutLineHandler: (line) => context.logger.debug(line),
       processOptions: {
         cwd: directory,
         // https://nodejs.org/en/blog/vulnerability/april-2024-security-releases-2#command-injection-via-args-parameter-of-child_processspawn-without-shell-option-enabled-on-windows-cve-2024-27980---high
@@ -30,10 +35,10 @@ async function installServer({ context, directory }) {
       },
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     throw new Error('Dependency installation failed.');
   }
-  context.print.log('Dependencies install successfully.');
+  context.logger.info('Dependencies install successfully.');
 }
 
 export default installServer;

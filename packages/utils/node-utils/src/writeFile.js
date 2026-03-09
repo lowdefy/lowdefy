@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -24,9 +24,7 @@ const writeFilePromise = promisify(fs.writeFile);
 
 async function writeFile(filePath, content) {
   if (!type.isString(filePath)) {
-    throw new Error(
-      `Could not write file, file path should be a string, received ${JSON.stringify(filePath)}.`
-    );
+    throw new Error('Could not write file, file path should be a string.');
   }
 
   try {

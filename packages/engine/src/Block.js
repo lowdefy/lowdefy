@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -19,9 +19,8 @@ import Events from './Events.js';
 import Areas from './Areas.js';
 
 class Block {
-  constructor(
-    { context, arrayIndices },
-    {
+  constructor({ context, arrayIndices }, blockConfig) {
+    const {
       id,
       blockId,
       events,
@@ -35,10 +34,11 @@ class Block {
       visible,
       type: blockType,
       areas,
-    }
-  ) {
+    } = blockConfig;
+
     this.context = context;
     this.arrayIndices = arrayIndices;
+    this.configKey = blockConfig['~k'];
 
     this.idPattern = id;
     this.blockIdPattern = blockId;
@@ -71,7 +71,8 @@ class Block {
       this.meta = this.context._internal.lowdefy._internal.blockComponents[this.type].meta;
     } catch (error) {
       throw new Error(
-        `Block type ${this.type} not found at ${this.blockId}. Check your plugins to make sure the block is installed. For more info, see https://docs.lowdefy.com/plugins.`
+        `Block type ${this.type} not found at ${this.blockId}. Check your plugins to make sure the block is installed. For more info, see https://docs.lowdefy.com/plugins.`,
+        { cause: error }
       );
     }
     if (!this.isContainer() && !this.isDisplay() && !this.isInput() && !this.isList()) {
@@ -463,9 +464,24 @@ class Block {
     if (!this.update) return;
 
     this.update = false;
+
+    // Collect parse errors from all eval results
+    const parseErrors = [
+      ...(this.propertiesEval.errors || []),
+      ...(this.styleEval.errors || []),
+      ...(this.layoutEval.errors || []),
+      ...(this.visibleEval.errors || []),
+      ...(this.loadingEval.errors || []),
+      ...(this.requiredEval.errors || []),
+      ...(this.skeletonEval.errors || []),
+      ...(this.areasLayoutEval.errors || []),
+    ];
+
     this.eval = {
       areas: this.areasLayoutEval.output,
+      configKey: this.configKey,
       events: type.isNone(this.Events.events) ? null : this.Events.events,
+      parseErrors: parseErrors.length > 0 ? parseErrors : null,
       properties: this.propertiesEval.output,
       loading: this.loadingEval.output,
       skeleton: this.skeletonEval.output,

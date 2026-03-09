@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -18,11 +18,7 @@ import { getFromObject } from '@lowdefy/operators';
 
 function _secret({ location, params, secrets = {} }) {
   if (params === true || params.all) {
-    throw new Error(
-      `Operator Error: Getting all secrets is not allowed. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`Getting all secrets is not allowed.`);
   }
   // Filter out OpenID Connect and JSON web token secrets
   // eslint-disable-next-line no-unused-vars
@@ -34,5 +30,7 @@ function _secret({ location, params, secrets = {} }) {
     params,
   });
 }
+
+_secret.dynamic = true;
 
 export default _secret;

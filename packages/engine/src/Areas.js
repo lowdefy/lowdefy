@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -45,7 +45,9 @@ class Areas {
   initAreaBlocks = () => {
     if (type.isObject(this.areas)) {
       Object.values(this.areas).forEach((area) => {
-        const blocks = area.blocks.map((areaBlock) => new Block(this, areaBlock));
+        // Handle areas with no blocks - render as empty
+        const blocksConfig = area.blocks ?? [];
+        const blocks = blocksConfig.map((areaBlock) => new Block(this, areaBlock));
         area.blocks = blocks;
       });
     }

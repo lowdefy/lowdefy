@@ -1,0 +1,6 @@
+# 22: Auto-generated 404 Page (no custom 404)
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box

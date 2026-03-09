@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,13 +16,9 @@
 
 import { type } from '@lowdefy/helpers';
 
-function _product({ params, location }) {
+function _product({ params }) {
   if (!type.isArray(params)) {
-    throw new Error(
-      `Operator Error: _product takes an array type as input. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`_product takes an array type as input.`);
   }
   return params.reduce((accumulator, value) => {
     if (type.isNumber(value)) {
@@ -31,5 +27,7 @@ function _product({ params, location }) {
     return accumulator;
   }, 1);
 }
+
+_product.dynamic = false;
 
 export default _product;

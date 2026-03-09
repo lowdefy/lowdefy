@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -211,7 +211,7 @@ test('switch case with missing :then', async () => {
     ],
   };
   const { res, context } = await runTest({ routine });
-  const error = new Error('Invalid switch :case - missing :then');
+  const error = new Error('Invalid :switch :case in endpoint "endpointId" - missing :then.');
   expect(res.status).toEqual('error');
   expect(res.error).toEqual(error);
   expect(context.logger.debug.mock.calls).toEqual([

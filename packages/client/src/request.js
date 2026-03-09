@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { serializer } from '@lowdefy/helpers';
+
 async function request({ url, method = 'GET', body }) {
   const res = await fetch(url, {
     method,
@@ -23,10 +25,10 @@ async function request({ url, method = 'GET', body }) {
     body: JSON.stringify(body),
   });
   if (!res.ok) {
-    // TODO: check
     const body = await res.json();
-    console.log(res);
-    console.log(body);
+    if (body?.['~e']) {
+      throw serializer.deserialize(body);
+    }
     throw new Error(body.message || 'Request error');
   }
   return res.json();

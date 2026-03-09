@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { ConfigurationError } from '../../context/errors.js';
+import { ConfigError } from '@lowdefy/errors';
 
 async function getEndpointConfig({ logger, readConfigFile }, { endpointId }) {
   const endpoint = await readConfigFile(`api/${endpointId}.json`);
   if (!endpoint) {
-    const err = new ConfigurationError(`API Endpoint "${endpointId}" does not exist.`);
+    const err = new ConfigError(`API Endpoint "${endpointId}" does not exist.`);
     logger.debug({ params: { endpointId }, err }, err.message);
     throw err;
   }

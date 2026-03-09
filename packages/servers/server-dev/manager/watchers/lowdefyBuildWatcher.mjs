@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import fs from 'fs';
 import path from 'path';
 import getLowdefyVersion from '../utils/getLowdefyVersion.mjs';
 import setupWatcher from '../utils/setupWatcher.mjs';
@@ -23,9 +24,13 @@ function lowdefyBuildWatcher(context) {
     path.isAbsolute(item) ? item : path.resolve(context.directories.config, item);
 
   const callback = async (filePaths) => {
-    const lowdefyYamlModified = filePaths
+    const changedFiles = filePaths
       .flat()
-      .some((filePath) => filePath.includes('lowdefy.yaml') || filePath.includes('lowdefy.yml'));
+      .map((filePath) => path.relative(context.directories.config, filePath));
+
+    const lowdefyYamlModified = changedFiles.some(
+      (filePath) => filePath === 'lowdefy.yaml' || filePath === 'lowdefy.yml'
+    );
     if (lowdefyYamlModified) {
       const lowdefyVersion = await getLowdefyVersion(context);
       if (lowdefyVersion !== context.version && lowdefyVersion !== 'local') {
@@ -35,8 +40,24 @@ function lowdefyBuildWatcher(context) {
       }
     }
 
-    await context.lowdefyBuild();
-    context.reloadClients();
+    try {
+      const isSkeletonChange =
+        lowdefyYamlModified ||
+        changedFiles.some((f) => !f.startsWith('pages/') && !f.startsWith('./'));
+
+      if (isSkeletonChange) {
+        await context.lowdefyBuild();
+      } else {
+        // Page-only changes: write signal file so the server invalidates its page cache
+        const invalidatePath = path.join(context.directories.build, 'invalidatePages');
+        fs.writeFileSync(invalidatePath, String(Date.now()));
+        context.logger.info('Page files changed, invalidated all pages.');
+      }
+    } catch (error) {
+      context.logger.error(error);
+    } finally {
+      await context.reloadClients();
+    }
   };
   return setupWatcher({
     callback,

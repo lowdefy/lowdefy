@@ -1,0 +1,7 @@
+# 04: Minimal Config with License
+lowdefy: local
+license: MIT
+
+pages:
+  - id: home
+    type: Box

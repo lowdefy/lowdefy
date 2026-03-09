@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -17,10 +17,11 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { ConfigError } from '@lowdefy/errors';
 import getApiRoles from './getApiRoles.js';
 import getProtectedApi from './getProtectedApi.js';
 
-function buildApiAuth({ components }) {
+function buildApiAuth({ components, context }) {
   const protectedApiEndpoints = getProtectedApi({ components });
   const apiRoles = getApiRoles({ components });
   let configPublicApi = [];
@@ -31,11 +32,10 @@ function buildApiAuth({ components }) {
   (components.api || []).forEach((endpoint) => {
     if (apiRoles[endpoint.id]) {
       if (configPublicApi.includes(endpoint.id)) {
-        throw new Error(
-          `Page "${endpoint.id}" is both protected by roles ${JSON.stringify(
-            apiRoles[endpoint.id]
-          )} and public.`
-        );
+        throw new ConfigError(`Endpoint "${endpoint.id}" is both protected by roles and public.`, {
+          received: apiRoles[endpoint.id],
+          configKey: endpoint['~k'],
+        });
       }
       endpoint.auth = {
         public: false,

@@ -1,0 +1,137 @@
+# 46: Responsive Layout Application
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    properties:
+      title: Responsive Layout Demo
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Responsive Layout Demo
+      - id: responsiveRow
+        type: Box
+        blocks:
+          - id: card1
+            type: Card
+            layout:
+              xs: 24
+              sm: 24
+              md: 12
+              lg: 8
+              xl: 6
+            properties:
+              title: Card 1
+            blocks:
+              - id: content1
+                type: Paragraph
+                properties:
+                  content: Full width on mobile, half on tablet, quarter on desktop
+          - id: card2
+            type: Card
+            layout:
+              xs: 24
+              sm: 12
+              md: 12
+              lg: 8
+              xl: 6
+            properties:
+              title: Card 2
+            blocks:
+              - id: content2
+                type: Paragraph
+                properties:
+                  content: Responsive card
+          - id: card3
+            type: Card
+            layout:
+              xs: 24
+              sm: 12
+              md: 12
+              lg: 8
+              xl: 6
+            properties:
+              title: Card 3
+            blocks:
+              - id: content3
+                type: Paragraph
+                properties:
+                  content: Adapts to screen size
+          - id: card4
+            type: Card
+            layout:
+              xs: 24
+              sm: 24
+              md: 24
+              lg: 24
+              xl: 6
+            properties:
+              title: Card 4
+            blocks:
+              - id: content4
+                type: Paragraph
+                properties:
+                  content: Full width except on xl screens
+      - id: gutterDemo
+        type: Box
+        layout:
+          gutter: 16
+        blocks:
+          - id: gutterCard1
+            type: Card
+            layout:
+              span: 8
+            properties:
+              title: Gutter 1
+            blocks:
+              - id: gc1
+                type: Paragraph
+                properties:
+                  content: With 16px gutter
+          - id: gutterCard2
+            type: Card
+            layout:
+              span: 8
+            properties:
+              title: Gutter 2
+            blocks:
+              - id: gc2
+                type: Paragraph
+                properties:
+                  content: Spacing between cards
+          - id: gutterCard3
+            type: Card
+            layout:
+              span: 8
+            properties:
+              title: Gutter 3
+            blocks:
+              - id: gc3
+                type: Paragraph
+                properties:
+                  content: Consistent spacing
+      - id: flexDemo
+        type: Box
+        layout:
+          flex:
+            direction: row
+            justify: space-between
+            align: center
+        style:
+          padding: 16
+          backgroundColor: '#f5f5f5'
+        blocks:
+          - id: flexItem1
+            type: Button
+            properties:
+              title: Left
+          - id: flexItem2
+            type: Button
+            properties:
+              title: Center
+          - id: flexItem3
+            type: Button
+            properties:
+              title: Right

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,11 +16,12 @@
 */
 
 import path from 'path';
-import pino from 'pino';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
 import build from '@lowdefy/build';
+import { BuildError } from '@lowdefy/errors';
+import { createNodeLogger } from '@lowdefy/logger/node';
 import createCustomPluginTypesMap from './createCustomPluginTypesMap.mjs';
 
 const argv = yargs(hideBin(process.argv)).argv;
@@ -39,16 +40,15 @@ async function run() {
 
   const customTypesMap = await createCustomPluginTypesMap({ directories });
 
-  const logger = pino({
+  let logger;
+  logger = createNodeLogger({
     name: 'lowdefy_build',
     level: process.env.LOWDEFY_LOG_LEVEL ?? 'info',
     base: { pid: undefined, hostname: undefined },
-    mixin: (context, level) => {
-      return {
-        ...context,
-        print: context.print ?? logger.levels.labels[level],
-      };
-    },
+    mixin: (context, level) => ({
+      ...context,
+      print: context.print ?? logger.levels.labels[level],
+    }),
   });
 
   await build({
@@ -59,4 +59,11 @@ async function run() {
   });
 }
 
-run();
+run().catch((error) => {
+  if (error instanceof BuildError) {
+    console.error(error.message);
+    process.exit(1);
+  }
+  // Otherwise, show full error with stack trace
+  throw error;
+});

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 import NextAuth from 'next-auth';
 
 import apiWrapper from '../../../lib/server/apiWrapper.js';
-import authJson from '../../../build/auth.json';
+import authJson from '../../../lib/build/auth.js';
 
 async function handler({ context, req, res }) {
   if (authJson.configured !== true) {

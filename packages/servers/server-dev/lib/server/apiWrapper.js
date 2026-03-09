@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -13,35 +13,68 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import fs from 'fs';
 import path from 'path';
 import { createApiContext } from '@lowdefy/api';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
+import { serializer } from '@lowdefy/helpers';
 import { v4 as uuid } from 'uuid';
 
-import config from '../../build/config.json';
+import config from '../build/config.js';
 import connections from '../../build/plugins/connections.js';
 import createLogger from './log/createLogger.js';
 import fileCache from './fileCache.js';
 import getServerSession from './auth/getServerSession.js';
-import logError from './log/logError.js';
+import createHandleError from './log/createHandleError.js';
 import logRequest from './log/logRequest.js';
 import operators from '../../build/plugins/operators/server.js';
-import jsMap from '../../build/plugins/operators/serverJsMap.js';
+import staticJsMap from '../../build/plugins/operators/serverJsMap.js';
 import getAuthOptions from './auth/getAuthOptions.js';
 
 const secrets = getSecretsFromEnv();
 
+// Dynamic JS map loading for JIT-built pages
+let cachedJsMapMtime = null;
+let cachedJsMap = staticJsMap;
+
+function loadDynamicJsMap(buildDirectory) {
+  const jsMapPath = path.join(buildDirectory, 'plugins', 'operators', 'serverJsMap.js');
+  try {
+    const stat = fs.statSync(jsMapPath);
+    if (cachedJsMapMtime && stat.mtimeMs === cachedJsMapMtime) {
+      return cachedJsMap;
+    }
+    cachedJsMapMtime = stat.mtimeMs;
+    // For server-side, we can read and eval the JS file
+    const content = fs.readFileSync(jsMapPath, 'utf8');
+    const fn = new Function('exports', content.replace('export default', 'exports.default ='));
+    const exports = {};
+    fn(exports);
+    cachedJsMap = { ...staticJsMap, ...(exports.default ?? {}) };
+    return cachedJsMap;
+  } catch {
+    return cachedJsMap;
+  }
+}
+
 function apiWrapper(handler) {
   return async function wrappedHandler(req, res) {
+    const buildDirectory = path.join(process.cwd(), 'build');
+    const jsMap = loadDynamicJsMap(buildDirectory);
+
     const context = {
       // Important to give absolute path so Next can trace build files
       rid: uuid(),
-      buildDirectory: path.join(process.cwd(), 'build'),
+      buildDirectory,
+      configDirectory: process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd(),
       config,
       connections,
       fileCache,
       headers: req?.headers,
       jsMap,
+      handleError: async (err) => {
+        console.error(err);
+      },
       logger: console,
       operators,
       req,
@@ -49,7 +82,8 @@ function apiWrapper(handler) {
       secrets,
     };
     try {
-      context.logger = createLogger({ rid: context.rid });
+      context.logger = createLogger();
+      context.handleError = createHandleError({ context });
       context.authOptions = getAuthOptions(context);
       if (!req.url.startsWith('/api/auth')) {
         context.session = await getServerSession(context);
@@ -61,8 +95,14 @@ function apiWrapper(handler) {
       // TODO: Log response time?
       return response;
     } catch (error) {
-      logError({ error, context });
-      res.status(500).json({ name: error.name, message: error.message });
+      await context.handleError(error);
+      const serialized = serializer.serialize(error);
+      if (serialized?.['~e']) {
+        delete serialized['~e'].received;
+        delete serialized['~e'].stack;
+        delete serialized['~e'].configKey;
+      }
+      res.status(500).json(serialized);
     }
   };
 }

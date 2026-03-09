@@ -1,0 +1,24 @@
+# About page with invalid block type error
+# Expected error: Block type "InvalidBlockType" was used but is not defined
+# Expected location: pages/about.yaml:XX (this file, not lowdefy.yaml)
+
+id: about
+type: PageHeaderMenu
+
+blocks:
+  - id: content
+    type: Card
+    properties:
+      title: About Page - Test Invalid Block Type
+
+    blocks:
+      - id: intro
+        type: Paragraph
+        properties:
+          content: This is the about page.
+
+      # ERROR: Invalid block type (should show pages/about.yaml line number)
+      - id: invalidBlock
+        type: InvalidBlockType
+        properties:
+          someProperty: test value

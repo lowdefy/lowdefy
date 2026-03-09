@@ -37,6 +37,7 @@
   "type": "module",
   "exports": {
     "./actions": "./dist/actions.js",
+    "./schemas": "./dist/schemas.js",
     "./types": "./dist/types.js"
   },
   "files": [
@@ -49,6 +50,7 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
+    "@lowdefy/errors": "4.5.2",
     "@lowdefy/helpers": "4.5.2"
   },
   "devDependencies": {

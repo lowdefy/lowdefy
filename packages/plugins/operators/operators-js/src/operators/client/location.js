@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -34,18 +34,10 @@ const validProperties = [
 function _location({ arrayIndices, basePath, home, location, pageId, params, globals }) {
   const { window } = globals;
   if (!window?.location) {
-    throw new Error(
-      `Operator Error: Browser window.location not available for _location. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`Browser window.location not available for _location.`);
   }
   if (!validProperties.includes(params)) {
-    throw new Error(
-      `Operator Error: _location only returns values for ${validProperties.join(
-        ', '
-      )}. Received: ${JSON.stringify(params)} at ${location}.`
-    );
+    throw new Error(`_location only returns values for ${validProperties.join(', ')}.`);
   }
   const windowLocation = {
     basePath,
@@ -69,5 +61,7 @@ function _location({ arrayIndices, basePath, home, location, pageId, params, glo
     params,
   });
 }
+
+_location.dynamic = true;
 
 export default _location;

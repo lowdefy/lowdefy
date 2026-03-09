@@ -1,0 +1,13 @@
+id: orders
+type: PageHeaderMenu
+properties:
+  title: Orders
+blocks:
+  - id: title
+    type: Title
+    properties:
+      content: Order Management
+  - id: placeholder
+    type: Paragraph
+    properties:
+      content: Order management interface

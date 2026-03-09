@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,21 +15,27 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { ConfigError } from '@lowdefy/errors';
 
 async function controlLog(context, routineContext, { control }) {
-  const { logger, evaluateOperators } = context;
+  const { endpointId, logger, evaluateOperators } = context;
   const { items } = routineContext;
+  const location = control['~k'] ?? ':log';
 
   logger.debug({ event: 'debug_control_log' });
-  const log = evaluateOperators({ input: control[':log'], items, location: 'TODO:' });
-  const logLevel =
-    evaluateOperators({ input: control[':level'], items, location: 'TODO:' }) ?? 'info';
+  const log = evaluateOperators({ input: control[':log'], items, location });
+  const logLevel = evaluateOperators({ input: control[':level'], items, location }) ?? 'info';
 
   if (!type.isString(logLevel)) {
-    throw new Error(`Unrecognised type for :level. Received ${logLevel}.`);
+    throw new ConfigError(`Invalid :log in endpoint "${endpointId}" - :level must be a string.`, {
+      received: logLevel,
+      configKey: control['~k'],
+    });
   }
   if (!logger[logLevel]) {
-    throw new Error(`Invalid log level for :log. Received ${logLevel}.`);
+    throw new Error(
+      `Invalid :log in endpoint "${endpointId}" - unrecognised log level. Received "${logLevel}".`
+    );
   }
 
   logger[logLevel](log);

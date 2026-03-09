@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React, { Suspense, useRef } from 'react';
+import React, { Suspense, useCallback, useRef } from 'react';
 import dynamic from 'next/dynamic';
 
 import { ErrorBoundary } from '@lowdefy/block-utils';
@@ -26,10 +26,23 @@ import '../build/plugins/styles.less';
 
 function App({ Component }) {
   const lowdefyRef = useRef({});
+
+  const handleError = useCallback((error) => {
+    if (lowdefyRef.current?._internal?.handleError) {
+      lowdefyRef.current._internal.handleError(error);
+    } else {
+      console.error(error);
+    }
+  }, []);
+
   return (
-    <ErrorBoundary fullPage>
+    <ErrorBoundary fullPage onError={handleError}>
       <Suspense fallback="">
-        <Auth>{(auth) => <Component auth={auth} lowdefy={lowdefyRef.current} />}</Auth>
+        <Auth>
+          {(auth) => {
+            return <Component auth={auth} lowdefy={lowdefyRef.current} />;
+          }}
+        </Auth>
       </Suspense>
     </ErrorBoundary>
   );

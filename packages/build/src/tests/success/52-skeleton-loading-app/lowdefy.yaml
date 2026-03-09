@@ -1,0 +1,64 @@
+# 52: Skeleton Loading Application
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    properties:
+      title: Loading States Demo
+    blocks:
+      # State toggle inputs
+      - id: isLoading
+        type: Switch
+        properties:
+          title: Card Loading State
+      - id: avatarLoaded
+        type: Switch
+        properties:
+          title: Avatar Loaded
+      - id: btnLoading
+        type: Switch
+        properties:
+          title: Button Loading
+
+      - id: loadingCard
+        type: Card
+        loading:
+          _state: isLoading
+        skeleton:
+          type: SkeletonParagraph
+          properties:
+            rows: 3
+        blocks:
+          - id: content
+            type: Paragraph
+            properties:
+              content: This content shows after loading
+      - id: avatarSkeleton
+        type: Box
+        blocks:
+          - id: avatar
+            type: SkeletonAvatar
+            loading:
+              _not:
+                _state: avatarLoaded
+          - id: actualAvatar
+            type: Avatar
+            visible:
+              _state: avatarLoaded
+            properties:
+              src: https://example.com/avatar.jpg
+      - id: buttonSkeleton
+        type: Box
+        blocks:
+          - id: skelBtn
+            type: SkeletonButton
+            loading:
+              _state: btnLoading
+          - id: realBtn
+            type: Button
+            visible:
+              _not:
+                _state: btnLoading
+            properties:
+              title: Click Me

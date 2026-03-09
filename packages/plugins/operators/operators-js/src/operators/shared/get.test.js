@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -83,9 +83,7 @@ test('_get throws if params is not a object', async () => {
     location: 'location',
     params: 'params',
   };
-  expect(() => get(input)).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _get takes an object as params. Received: \\"params\\" at location."`
-  );
+  expect(() => get(input)).toThrowErrorMatchingInlineSnapshot(`"_get takes an object as params."`);
 });
 
 test('_get throws if from is not a object, array or null', async () => {
@@ -100,6 +98,6 @@ test('_get throws if from is not a object, array or null', async () => {
     },
   };
   expect(() => get(input)).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _get.from is not an object or array. Received: {\\"from\\":1,\\"key\\":\\"a\\"} at location."`
+    `"_get.from is not an object or array."`
   );
 });

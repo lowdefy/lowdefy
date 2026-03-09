@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -98,9 +98,6 @@ test('_nunjucks invalid template', () => {
   const parser = new ServerParser({ operators, payload, secrets: {}, user: {} });
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _nunjucks failed to parse nunjucks template. Received: "String with {{ string  embedded" at locationId.],
-    ]
-  `);
+  expect(res.errors.length).toBe(1);
+  expect(res.errors[0].message).toBe('_nunjucks failed to parse nunjucks template. at locationId.');
 });

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,14 +15,14 @@
 */
 
 import { set, type } from '@lowdefy/helpers';
+import { ConfigError } from '@lowdefy/errors';
 
 function recMoveSkeletonBlocksToArea(block, blockId, pageId) {
   if (!type.isNone(block.blocks)) {
     if (!type.isArray(block.blocks)) {
-      throw new Error(
-        `Skeleton blocks at ${blockId} on page ${pageId} is not an array. Received ${JSON.stringify(
-          block.blocks
-        )}`
+      throw new ConfigError(
+        `Skeleton blocks at ${blockId} on page ${pageId} is not an array.`,
+        { received: block.blocks, configKey: block['~k'] }
       );
     }
     set(block, 'areas.content.blocks', block.blocks);

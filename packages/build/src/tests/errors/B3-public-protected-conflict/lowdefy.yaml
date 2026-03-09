@@ -1,0 +1,23 @@
+# B3: Public/Protected Conflict
+# ==============================
+# Tests that public and protected pages are mutually exclusive.
+#
+# Expected error:
+#   [Config Error] "protected" and "public" page lists are mutually exclusive.
+#
+# The error points to line 13 where auth.pages is defined.
+
+lowdefy: local
+
+auth:
+  pages:
+    public:
+      - home
+    protected:
+      - dashboard
+
+pages:
+  - id: home
+    type: Box
+  - id: dashboard
+    type: Box

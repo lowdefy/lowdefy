@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -33,12 +33,12 @@ test('_if_none evaluates false for everything else', () => {
 
 test('_if_none params not an array', () => {
   expect(() => if_none({ params: '1, 0', location: 'locationId' })).toThrow(
-    'Operator Error: _if_none takes an array type as input. Received: "1, 0" at locationId.'
+    '_if_none takes an array type as input.'
   );
 });
 
 test('_if_none params array with length 1', () => {
   expect(() => if_none({ params: [1], location: 'locationId' })).toThrow(
-    'Operator Error: _if_none takes an array of length 2 as input. Received: [1] at locationId.'
+    '_if_none takes an array of length 2 as input.'
   );
 });

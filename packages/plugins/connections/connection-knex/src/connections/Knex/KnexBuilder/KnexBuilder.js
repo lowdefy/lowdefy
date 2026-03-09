@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -25,20 +25,12 @@ async function KnexBuilder({ request, connection }) {
   }
   for (const method of request.query) {
     if (Object.keys(method).length !== 1) {
-      throw new Error(
-        `Invalid query, more than one method defined in a method object, received ${JSON.stringify(
-          Object.keys(method)
-        )}.`
-      );
+      throw new Error('Invalid query, more than one method defined in a method object.');
     }
     const methodName = Object.keys(method)[0];
     const methodArgs = method[methodName];
     if (!type.isArray(methodArgs)) {
-      throw new Error(
-        `Invalid query, method "${methodName}" arguments should be an array, received ${JSON.stringify(
-          methodArgs
-        )}.`
-      );
+      throw new Error(`Invalid query, method "${methodName}" arguments should be an array.`);
     }
     if (!type.isFunction(client[methodName])) {
       throw new Error(`Invalid query builder method "${methodName}".`);

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { ConfigError, OperatorError } from '@lowdefy/errors';
 import { applyArrayIndices, serializer, type } from '@lowdefy/helpers';
 
 class WebParser {
@@ -41,9 +42,6 @@ class WebParser {
       this.context._internal.lowdefy;
     const reviver = (_, value) => {
       if (!type.isObject(value)) return value;
-      // TODO: pass ~k in errors.
-      // const _k = value['~k'];
-      delete value['~k'];
 
       if (Object.keys(value).length !== 1) return value;
 
@@ -53,6 +51,9 @@ class WebParser {
       const [op, methodName] = `_${key.substring(operatorPrefix.length)}`.split('.');
       if (type.isUndefined(this.operators[op])) return value;
 
+      const configKey = value['~k'];
+      const params = value[key];
+      const operatorLocation = applyArrayIndices(arrayIndices, location);
       try {
         const res = this.operators[op]({
           actions,
@@ -66,14 +67,14 @@ class WebParser {
           home,
           input: inputs[this.context.id],
           jsMap: this.context.jsMap,
-          location: applyArrayIndices(arrayIndices, location),
+          location: operatorLocation,
           lowdefyGlobal,
           menus,
           methodName,
           operatorPrefix,
           operators: this.operators,
           pageId,
-          params: value[key],
+          params,
           parser: this,
           requests: this.context.requests,
           runtime: 'browser',
@@ -82,8 +83,25 @@ class WebParser {
         });
         return res;
       } catch (e) {
-        errors.push(e);
-        console.error(e);
+        // ConfigError from plugin - add configKey and re-throw structure
+        if (e instanceof ConfigError) {
+          if (!e.configKey) {
+            e.configKey = configKey;
+          }
+          errors.push(e);
+          return null;
+        }
+        // Plain error from plugin - wrap in OperatorError
+        errors.push(
+          new OperatorError(e.message, {
+            cause: e,
+            typeName: op,
+            methodName,
+            received: { [key]: params },
+            location: operatorLocation,
+            configKey: e.configKey ?? configKey,
+          })
+        );
         return null;
       }
     };

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,13 +15,16 @@
 */
 
 import { nunjucksFunction } from '@lowdefy/nunjucks';
+import { ConfigError } from '@lowdefy/errors';
 
 function createCheckDuplicateId({ message }) {
   const template = nunjucksFunction(message);
   const ids = new Set();
-  function checkDuplicateId({ id, blockId, eventId, menuId, pageId }) {
-    if (ids.has(id.toLowerCase()))
-      throw new Error(template({ id, blockId, eventId, menuId, pageId }));
+  function checkDuplicateId({ id, blockId, configKey, eventId, menuId, pageId }) {
+    if (ids.has(id.toLowerCase())) {
+      const errorMessage = template({ id, blockId, eventId, menuId, pageId });
+      throw new ConfigError(errorMessage, { configKey });
+    }
     ids.add(id.toLowerCase());
   }
   return checkDuplicateId;

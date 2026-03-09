@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import { wait } from '@lowdefy/helpers';
 import opener from 'opener';
 import getContext from './getContext.mjs';
 import startServer from './processes/startServer.mjs';
+import checkPortAvailable from './utils/checkPortAvailable.mjs';
 
 /*
 The run script does the following:
@@ -76,25 +77,16 @@ The run script does the following:
   pinging the /api/ping route, until it detects a new server has started, and then reloads the window.
  */
 
-/* TODO:
-Not killing server on errors properly
-when:
-- initial build fails
-*/
-
 const context = await getContext();
 
 try {
-  try {
-    await context.initialBuild();
-  } catch (error) {
-    context.logger.error(error);
-  }
+  await context.initialBuild();
 
   // We are not waiting for the startWatchers promise to resolve (all watchers have fired the ready event)
   // because chokidar sometimes doesn't fire this event, and it seems like there isn't an issue with not waiting.
   context.startWatchers();
 
+  await checkPortAvailable(context.options.port);
   startServer(context);
   await wait(800);
   if (process.env.LOWDEFY_SERVER_DEV_OPEN_BROWSER === 'true') {

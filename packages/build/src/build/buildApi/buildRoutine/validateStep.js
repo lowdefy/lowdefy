@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,43 +15,50 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { ConfigError } from '@lowdefy/errors';
 
 function validateStep(step, { endpointId }) {
+  const configKey = step['~k'];
   if (Object.keys(step).length === 0) {
-    throw new Error(`Step is not defined at endpoint "${endpointId}"`);
+    throw new ConfigError(`Step is not defined at endpoint "${endpointId}".`, { configKey });
   }
   if (type.isUndefined(step.id)) {
-    throw new Error(`Step id missing at endpoint "${endpointId}".`);
+    throw new ConfigError(`Step id missing at endpoint "${endpointId}".`, { configKey });
   }
   if (!type.isString(step.id)) {
-    throw new Error(
-      `Step id is not a string at endpoint "${endpointId}". Received ${JSON.stringify(step.id)}.`
-    );
+    throw new ConfigError(`Step id is not a string at endpoint "${endpointId}".`, {
+      received: step.id,
+      configKey,
+    });
   }
   if (step.id.includes('.')) {
-    throw new Error(
-      `Step id "${step.id}" at api "${endpointId}" should not include a period (".").`
+    throw new ConfigError(
+      `Step id "${step.id}" at endpoint "${endpointId}" should not include a period (".").`,
+      { configKey }
     );
   }
   if (type.isNone(step.type)) {
-    throw new Error(`Step type is not defined at "${step.id}" on endpoint "${endpointId}".`);
+    throw new ConfigError(
+      `Step type is not defined at "${step.id}" on endpoint "${endpointId}".`,
+      { configKey }
+    );
   }
   if (!type.isString(step.type)) {
-    throw new Error(
-      `Step type is not a string at "${
-        step.id
-      }" on endpoint "${endpointId}". Received ${JSON.stringify(step.type)}.`
+    throw new ConfigError(
+      `Step type is not a string at "${step.id}" on endpoint "${endpointId}".`,
+      { received: step.type, configKey }
     );
   }
   if (type.isUndefined(step.connectionId)) {
-    throw new Error(`Step connectionId missing at endpoint "${endpointId}".`);
+    throw new ConfigError(`Step connectionId missing at endpoint "${endpointId}".`, {
+      configKey,
+    });
   }
   if (!type.isString(step.connectionId)) {
-    throw new Error(
-      `Step connectionId is not a string at endpoint "${endpointId}". Received ${JSON.stringify(
-        step.connectionId
-      )}.`
-    );
+    throw new ConfigError(`Step connectionId is not a string at endpoint "${endpointId}".`, {
+      received: step.connectionId,
+      configKey,
+    });
   }
 }
 

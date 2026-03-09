@@ -1,0 +1,14 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": [
+        "Action should have required property \"id\""
+      ],
+      "errorContains": [
+        "Action should have required property \"id\".",
+        "lowdefy.yaml:22"
+      ]
+    }
+  ]
+}

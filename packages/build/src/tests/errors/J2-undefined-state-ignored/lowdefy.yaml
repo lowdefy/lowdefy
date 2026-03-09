@@ -1,0 +1,19 @@
+# J2: Undefined State Reference with ~ignoreBuildChecks
+# ======================================================
+# Tests that _state reference warnings are suppressed with ~ignoreBuildChecks: true.
+# The ~ignoreBuildChecks flag is on the same object as the operator.
+#
+# Expected: NO warning should be shown.
+
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: stateRef
+        type: Paragraph
+        properties:
+          content:
+            _state: undefinedKey
+            ~ignoreBuildChecks: true

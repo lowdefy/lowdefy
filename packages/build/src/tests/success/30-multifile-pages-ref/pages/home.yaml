@@ -1,0 +1,13 @@
+id: home
+type: Box
+properties:
+  title: Home Page
+blocks:
+  - id: heading
+    type: Title
+    properties:
+      content: Welcome Home
+  - id: intro
+    type: Paragraph
+    properties:
+      content: This is the home page.

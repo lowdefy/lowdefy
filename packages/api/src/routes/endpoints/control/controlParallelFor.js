@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,21 +14,24 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/errors';
 import runRoutine from '../runRoutine.js';
 
 async function controlParallelFor(context, routineContext, { control }) {
-  const { logger, evaluateOperators } = context;
+  const { endpointId, logger, evaluateOperators } = context;
   const { items } = routineContext;
 
   const itemName = control[':parallel_for'];
   if (!itemName) {
-    throw new Error('Invalid :parallel_for - missing variable name in :parallel_for.');
+    throw new Error(
+      `Invalid :parallel_for in endpoint "${endpointId}" - missing variable name in :parallel_for.`
+    );
   }
 
   const array = evaluateOperators({
     input: control[':in'],
     items,
-    location: 'controlParallelFor',
+    location: control['~k'] ?? ':parallel_for',
   });
 
   logger.debug({
@@ -38,11 +41,14 @@ async function controlParallelFor(context, routineContext, { control }) {
   });
 
   if (!Array.isArray(array)) {
-    throw new Error('Invalid :parallel_for - evaluated :in to non-array.');
+    throw new ConfigError(
+      `Invalid :parallel_for in endpoint "${endpointId}" - :in must evaluate to an array.`,
+      { received: array, configKey: control['~k'] }
+    );
   }
 
   if (!control[':do']) {
-    throw new Error('Invalid :parallel_for - missing :do.');
+    throw new Error(`Invalid :parallel_for in endpoint "${endpointId}" - missing :do.`);
   }
 
   const promises = array.map((item, index) => {

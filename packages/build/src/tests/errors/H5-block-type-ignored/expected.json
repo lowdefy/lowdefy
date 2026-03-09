@@ -1,0 +1,8 @@
+{
+  "tests": [
+    {
+      "mode": "dev",
+      "noErrors": ["NonExistentBlock"]
+    }
+  ]
+}

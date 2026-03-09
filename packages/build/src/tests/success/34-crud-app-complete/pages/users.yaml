@@ -1,0 +1,90 @@
+id: users
+type: Box
+properties:
+  title: Users
+requests:
+  - id: getUsers
+    type: MongoDBFind
+    connectionId: db
+    properties:
+      query: {}
+      options:
+        sort:
+          createdAt: -1
+  - id: deleteUser
+    type: MongoDBDeleteOne
+    connectionId: db
+    payload:
+      id:
+        _state: userList.$._id
+    properties:
+      filter:
+        _id:
+          _payload: id
+events:
+  onInit:
+    - id: fetchUsers
+      type: Request
+      params: getUsers
+blocks:
+  - id: header
+    type: Box
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: User Management
+      - id: addBtn
+        type: Button
+        properties:
+          title: Add User
+          icon: AiOutlinePlus
+        events:
+          onClick:
+            - id: goToCreate
+              type: Link
+              params:
+                pageId: create-user
+  - id: userList
+    type: List
+    properties:
+      data:
+        _request: getUsers
+    blocks:
+      - id: userCard
+        type: Card
+        properties:
+          title:
+            _state: userList.$.name
+        blocks:
+          - id: email
+            type: Paragraph
+            properties:
+              content:
+                _state: userList.$.email
+          - id: actions
+            type: Box
+            blocks:
+              - id: editBtn
+                type: Button
+                properties:
+                  title: Edit
+                events:
+                  onClick:
+                    - id: goToEdit
+                      type: Link
+                      params:
+                        pageId: edit-user
+                        urlQuery:
+                          id:
+                            _state: userList.$._id
+              - id: deleteBtn
+                type: Button
+                properties:
+                  title: Delete
+                  danger: true
+                events:
+                  onClick:
+                    - id: confirmDelete
+                      type: Request
+                      params: deleteUser

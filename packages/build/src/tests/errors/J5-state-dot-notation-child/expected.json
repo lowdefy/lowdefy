@@ -1,0 +1,12 @@
+{
+  "tests": [
+    {
+      "mode": "dev",
+      "noWarnings": ["filter"]
+    },
+    {
+      "mode": "prod",
+      "noErrors": ["filter"]
+    }
+  ]
+}

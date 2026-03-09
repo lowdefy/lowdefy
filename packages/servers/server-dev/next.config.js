@@ -1,7 +1,7 @@
 const withLess = require('next-with-less');
 const lowdefyConfig = require('./build/config.json');
 
-module.exports = withLess({
+const nextConfig = withLess({
   basePath: lowdefyConfig.basePath,
   // reactStrictMode: true,
   webpack: (config, { isServer }) => {
@@ -28,3 +28,5 @@ module.exports = withLess({
     ignoreDuringBuilds: true,
   },
 });
+
+module.exports = nextConfig;

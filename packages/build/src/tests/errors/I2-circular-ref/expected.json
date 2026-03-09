@@ -1,0 +1,25 @@
+{
+  "tests": [
+    {
+      "mode": "dev",
+      "errors": [
+        "Circular reference detected"
+      ],
+      "errorContains": [
+        "Circular reference detected. File \"a.yaml\" references itself through:",
+        "b.yaml:4"
+      ]
+    },
+    {
+      "mode": "prod",
+      "errors": [
+        "Circular reference detected"
+      ],
+      "errorContains": [
+        "Circular reference detected. File \"a.yaml\" references itself through:",
+        "b.yaml:4"
+      ],
+      "expectThrow": true
+    }
+  ]
+}

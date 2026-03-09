@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,13 +16,9 @@
 
 import { applyArrayIndices, get, serializer, type } from '@lowdefy/helpers';
 
-function _request({ arrayIndices, params, requests, location }) {
+function _request({ arrayIndices, params, requests }) {
   if (!type.isString(params)) {
-    throw new Error(
-      `Operator Error: _request accepts a string value. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`_request accepts a string value.`);
   }
   const splitKey = params.split('.');
   const [requestId, ...keyParts] = splitKey;
@@ -38,5 +34,7 @@ function _request({ arrayIndices, params, requests, location }) {
   }
   return null;
 }
+
+_request.dynamic = true;
 
 export default _request;

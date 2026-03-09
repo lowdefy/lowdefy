@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ import { getNextAuthConfig } from '@lowdefy/api';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
 
 import adapters from '../../../build/plugins/auth/adapters.js';
-import authJson from '../../../build/auth.json';
+import authJson from '../../build/auth.js';
 import callbacks from '../../../build/plugins/auth/callbacks.js';
 import events from '../../../build/plugins/auth/events.js';
 import providers from '../../../build/plugins/auth/providers.js';
