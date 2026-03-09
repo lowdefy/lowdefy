@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-export default {
+const schema = {
   type: 'object',
   properties: {
     type: 'object',
@@ -51,6 +51,17 @@ export default {
         type: 'string',
         description: 'Custom element type.',
       },
+      theme: {
+        type: 'object',
+        description:
+          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+        docs: {
+          displayType: 'yaml',
+        },
+      },
     },
   },
+  cssKeys: ['element'],
 };
+
+export default schema;

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-export default {
+const schema = {
   type: 'object',
   properties: {
     type: 'object',
@@ -50,20 +50,6 @@ export default {
         type: 'string',
         description: 'Label title - supports html.',
       },
-      extraStyle: {
-        type: 'object',
-        description: 'Css style to applied to label extra.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
-      feedbackStyle: {
-        type: 'object',
-        description: 'Css style to applied to label feedback.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
       span: {
         type: 'number',
         description: 'Label inline span.',
@@ -73,6 +59,17 @@ export default {
         default: false,
         description: 'Render input and label inline.',
       },
+      theme: {
+        type: 'object',
+        description:
+          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+        docs: {
+          displayType: 'yaml',
+        },
+      },
     },
   },
+  cssKeys: ['element', 'extra', 'feedback'],
 };
+
+export default schema;

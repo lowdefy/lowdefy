@@ -14,19 +14,23 @@
   limitations under the License.
 */
 
-export default {
+const schema = {
   type: 'object',
   properties: {
     type: 'object',
     additionalProperties: false,
     properties: {
-      style: {
+      theme: {
         type: 'object',
-        description: 'Css style object to applied to footer.',
+        description:
+          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
         },
       },
     },
   },
+  cssKeys: ['element'],
 };
+
+export default schema;

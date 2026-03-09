@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-export default {
+const schema = {
   type: 'object',
   properties: {
     type: 'object',
@@ -92,6 +92,14 @@ export default {
         default: true,
         description: 'Show expand icon.',
       },
+      theme: {
+        type: 'object',
+        description:
+          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+        docs: {
+          displayType: 'yaml',
+        },
+      },
     },
   },
   events: {
@@ -104,4 +112,7 @@ export default {
       },
     },
   },
+  cssKeys: ['element', 'header', 'content'],
 };
+
+export default schema;

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-export default {
+const schema = {
   type: 'object',
   properties: {
     type: 'object',
@@ -27,7 +27,8 @@ export default {
       },
       color: {
         type: 'string',
-        description: 'Button color.',
+        description:
+          'Button color. Preset values: default, primary, danger, blue, purple, cyan, green, magenta, pink, red, orange, yellow, volcano, geekblue, lime, gold. Also accepts custom hex color strings.',
         docs: {
           displayType: 'color',
         },
@@ -77,13 +78,6 @@ export default {
         default: 'default',
         description: 'Size of the button.',
       },
-      style: {
-        type: 'object',
-        description: 'Css style object to applied to button.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
       title: {
         type: 'string',
         description: 'Title text on the button - supports html.',
@@ -91,8 +85,21 @@ export default {
       type: {
         type: 'string',
         default: 'primary',
-        enum: ['primary', 'default', 'dashed', 'danger', 'link', 'text'],
-        description: 'The button type.',
+        enum: ['primary', 'default', 'dashed', 'link', 'text'],
+        description: 'Deprecated - use color and variant instead. The button type.',
+      },
+      variant: {
+        type: 'string',
+        enum: ['solid', 'outlined', 'dashed', 'filled', 'text', 'link'],
+        description: 'Button visual variant. When set, takes precedence over type.',
+      },
+      theme: {
+        type: 'object',
+        description:
+          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+        docs: {
+          displayType: 'yaml',
+        },
       },
     },
   },
@@ -106,4 +113,7 @@ export default {
       },
     },
   },
+  cssKeys: ['element', 'icon'],
 };
+
+export default schema;

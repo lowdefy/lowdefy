@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-export default {
+const schema = {
   type: 'object',
   properties: {
     type: 'object',
@@ -40,13 +40,6 @@ export default {
         default: 'default',
         description: 'When true, hide the add new item button.',
       },
-      style: {
-        type: 'object',
-        description: 'Css style object to applied to content.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
       addItemButton: {
         type: 'object',
         description: 'Custom add item button properties.',
@@ -61,20 +54,6 @@ export default {
           displayType: 'icon',
         },
       },
-      footerStyle: {
-        type: 'object',
-        description: 'Css style object to applied to controlled list footer.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
-      itemStyle: {
-        type: 'object',
-        description: 'Css style object to applied to controlled list items.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
       noDataTitle: {
         type: 'string',
         description: 'Title to show when list is empty.',
@@ -84,6 +63,17 @@ export default {
         default: 0,
         description: 'Minimum number of items in the controlled list.',
       },
+      theme: {
+        type: 'object',
+        description:
+          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+        docs: {
+          displayType: 'yaml',
+        },
+      },
     },
   },
+  cssKeys: ['element', 'header', 'footer', 'item'],
 };
+
+export default schema;

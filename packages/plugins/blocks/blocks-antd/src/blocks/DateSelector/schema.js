@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-export default {
+const schema = {
   type: 'object',
   properties: {
     type: 'object',
@@ -33,12 +33,19 @@ export default {
       bordered: {
         type: 'boolean',
         default: true,
-        description: 'Whether or not the input has a border style.',
+        description:
+          "Deprecated - use variant: 'borderless'. Whether or not the input has a border style.",
       },
       disabled: {
         type: 'boolean',
         default: false,
         description: 'Disable the block if true.',
+      },
+      variant: {
+        type: 'string',
+        enum: ['outlined', 'filled', 'borderless'],
+        default: 'outlined',
+        description: "Variant style of the input. Use 'borderless' instead of bordered: false.",
       },
       disabledDates: {
         type: 'object',
@@ -89,13 +96,6 @@ export default {
           },
         },
       },
-      inputStyle: {
-        type: 'object',
-        description: 'Css style to applied to input.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
       label: {
         type: 'object',
         description: 'Label properties.',
@@ -140,27 +140,13 @@ export default {
             default: false,
             description: 'Render input and label inline.',
           },
-          extraStyle: {
-            type: 'object',
-            description: 'Css style to applied to label extra.',
-            docs: {
-              displayType: 'yaml',
-            },
-          },
-          feedbackStyle: {
-            type: 'object',
-            description: 'Css style to applied to label feedback.',
-            docs: {
-              displayType: 'yaml',
-            },
-          },
         },
       },
       format: {
         type: 'string',
         default: 'YYYY-MM-DD',
         description:
-          'Format in which to parse the date value, eg. "DD MMMM YYYY" will parse a date value of 1999-12-31 as "31 December 1999". The format has to conform to moment.js formats.',
+          'Format in which to parse the date value, eg. "DD MMMM YYYY" will parse a date value of 1999-12-31 as "31 December 1999". The format has to conform to dayjs formats.',
       },
       placeholder: {
         type: 'string',
@@ -192,6 +178,14 @@ export default {
         description:
           'Title to describe the input component, if no title is specified the block id is displayed - supports html.',
       },
+      theme: {
+        type: 'object',
+        description:
+          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+        docs: {
+          displayType: 'yaml',
+        },
+      },
     },
   },
   events: {
@@ -204,4 +198,7 @@ export default {
       },
     },
   },
+  cssKeys: ['element', 'extra', 'feedback', 'popup'],
 };
+
+export default schema;

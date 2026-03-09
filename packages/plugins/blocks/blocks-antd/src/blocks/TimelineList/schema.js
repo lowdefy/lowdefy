@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-export default {
+const schema = {
   type: 'object',
   properties: {
     type: 'object',
@@ -22,13 +22,6 @@ export default {
     properties: {
       data: {
         type: 'array',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
-      style: {
-        type: 'object',
-        description: 'Css style object to apply to timeline.',
         docs: {
           displayType: 'yaml',
         },
@@ -77,6 +70,17 @@ export default {
         description:
           'By sending alternate the timeline will distribute the nodes to the left and right.',
       },
+      theme: {
+        type: 'object',
+        description:
+          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+        docs: {
+          displayType: 'yaml',
+        },
+      },
     },
   },
+  cssKeys: ['element'],
 };
+
+export default schema;

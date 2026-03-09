@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-export default {
+const schema = {
   type: 'object',
   properties: {
     type: 'object',
@@ -48,13 +48,6 @@ export default {
         type: 'boolean',
         default: true,
         description: "Specifies wrapping of options. Applies when 'direction' is 'horizontal'.",
-      },
-      inputStyle: {
-        type: 'object',
-        description: 'Css style to applied to input.',
-        docs: {
-          displayType: 'yaml',
-        },
       },
       options: {
         default: [],
@@ -179,26 +172,20 @@ export default {
             default: false,
             description: 'Render input and label inline.',
           },
-          extraStyle: {
-            type: 'object',
-            description: 'Css style to applied to label extra.',
-            docs: {
-              displayType: 'yaml',
-            },
-          },
-          feedbackStyle: {
-            type: 'object',
-            description: 'Css style to applied to label feedback.',
-            docs: {
-              displayType: 'yaml',
-            },
-          },
         },
       },
       title: {
         type: 'string',
         description:
           'Title to describe the input component, if no title is specified the block id is displayed - supports html.',
+      },
+      theme: {
+        type: 'object',
+        description:
+          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+        docs: {
+          displayType: 'yaml',
+        },
       },
     },
   },
@@ -212,4 +199,7 @@ export default {
       },
     },
   },
+  cssKeys: ['element', 'extra', 'feedback'],
 };
+
+export default schema;

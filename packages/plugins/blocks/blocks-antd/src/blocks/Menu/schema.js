@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-export default {
+const schema = {
   type: 'object',
   properties: {
     type: 'object',
@@ -250,4 +250,7 @@ export default {
       },
     },
   },
+  cssKeys: ['element', 'item'],
 };
+
+export default schema;

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-export default {
+const schema = {
   type: 'object',
   properties: {
     type: 'object',
@@ -87,6 +87,14 @@ export default {
         description: 'Delay in milliseconds, before tooltip is hidden on mouse leave.',
         default: 0.1,
       },
+      theme: {
+        type: 'object',
+        description:
+          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+        docs: {
+          displayType: 'yaml',
+        },
+      },
     },
   },
   events: {
@@ -99,4 +107,7 @@ export default {
       },
     },
   },
+  cssKeys: ['element', 'inner', 'title', 'content'],
 };
+
+export default schema;

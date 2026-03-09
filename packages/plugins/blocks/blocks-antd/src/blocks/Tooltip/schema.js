@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-export default {
+const schema = {
   type: 'object',
   properties: {
     type: 'object',
@@ -93,6 +93,14 @@ export default {
         type: 'integer',
         description: 'The z-index of the Tooltip.',
       },
+      theme: {
+        type: 'object',
+        description:
+          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+        docs: {
+          displayType: 'yaml',
+        },
+      },
     },
   },
   events: {
@@ -105,4 +113,7 @@ export default {
       },
     },
   },
+  cssKeys: ['element', 'inner'],
 };
+
+export default schema;

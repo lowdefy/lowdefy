@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-export default {
+const schema = {
   type: 'object',
   properties: {
     type: 'object',
@@ -67,9 +67,10 @@ export default {
         type: 'string',
         description: 'The address of the image for an image avatar.',
       },
-      style: {
+      theme: {
         type: 'object',
-        description: 'Css style object to applied to avatar.',
+        description:
+          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
         },
@@ -86,4 +87,7 @@ export default {
       },
     },
   },
+  cssKeys: ['element'],
 };
+
+export default schema;

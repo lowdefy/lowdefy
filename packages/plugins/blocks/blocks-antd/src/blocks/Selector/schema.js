@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-export default {
+const schema = {
   type: 'object',
   properties: {
     type: 'object',
@@ -42,20 +42,6 @@ export default {
           "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon at far right position of the selector, shown when user is given option to clear input.",
         docs: {
           displayType: 'icon',
-        },
-      },
-      inputStyle: {
-        type: 'object',
-        description: 'Css style to applied to input.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
-      optionsStyle: {
-        type: 'object',
-        description: 'Css style to applied to option elements.',
-        docs: {
-          displayType: 'yaml',
         },
       },
       label: {
@@ -101,20 +87,6 @@ export default {
             type: 'boolean',
             default: false,
             description: 'Render input and label inline.',
-          },
-          extraStyle: {
-            type: 'object',
-            description: 'Css style to applied to label extra.',
-            docs: {
-              displayType: 'yaml',
-            },
-          },
-          feedbackStyle: {
-            type: 'object',
-            description: 'Css style to applied to label feedback.',
-            docs: {
-              displayType: 'yaml',
-            },
           },
         },
       },
@@ -252,6 +224,14 @@ export default {
         description:
           'Title to describe the input component, if no title is specified the block id is displayed - supports html.',
       },
+      theme: {
+        type: 'object',
+        description:
+          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+        docs: {
+          displayType: 'yaml',
+        },
+      },
     },
   },
   events: {
@@ -281,4 +261,7 @@ export default {
       },
     },
   },
+  cssKeys: ['element', 'extra', 'feedback', 'options'],
 };
+
+export default schema;

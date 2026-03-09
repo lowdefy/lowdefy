@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-export default {
+const schema = {
   type: 'object',
   properties: {
     type: 'object',
@@ -72,13 +72,6 @@ export default {
           displayType: 'icon',
         },
       },
-      inputStyle: {
-        type: 'object',
-        description: 'Css style to applied to input.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
       label: {
         type: 'object',
         description: 'Label properties.',
@@ -123,27 +116,6 @@ export default {
             default: false,
             description: 'Render input and label inline.',
           },
-          extraStyle: {
-            type: 'object',
-            description: 'Css style to applied to label extra.',
-            docs: {
-              displayType: 'yaml',
-            },
-          },
-          feedbackStyle: {
-            type: 'object',
-            description: 'Css style to applied to label feedback.',
-            docs: {
-              displayType: 'yaml',
-            },
-          },
-        },
-      },
-      optionsStyle: {
-        type: 'object',
-        description: 'Css style to applied to option elements.',
-        docs: {
-          displayType: 'yaml',
         },
       },
       replaceInput: {
@@ -164,13 +136,6 @@ export default {
               "The string used to replace the input that matches the pattern. The default value is ''.",
           },
         },
-        docs: {
-          displayType: 'yaml',
-        },
-      },
-      selectStyle: {
-        type: 'object',
-        description: 'Css style to applied to selector.',
         docs: {
           displayType: 'yaml',
         },
@@ -202,6 +167,14 @@ export default {
         type: 'string',
         description:
           'Title to describe the input component, if no title is specified the block id is displayed - supports html.',
+      },
+      theme: {
+        type: 'object',
+        description:
+          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+        docs: {
+          displayType: 'yaml',
+        },
       },
     },
   },
@@ -235,4 +208,7 @@ export default {
       },
     },
   },
+  cssKeys: ['element', 'extra', 'feedback', 'options', 'select'],
 };
+
+export default schema;

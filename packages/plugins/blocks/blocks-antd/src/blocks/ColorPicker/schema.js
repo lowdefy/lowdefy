@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-export default {
+const schema = {
   type: 'object',
   properties: {
     type: 'object',
@@ -51,6 +51,9 @@ export default {
       presets: {
         type: 'array',
         description: 'Preset color palettes.',
+        docs: {
+          displayType: 'yaml',
+        },
       },
       trigger: {
         type: 'string',
@@ -58,6 +61,17 @@ export default {
         default: 'click',
         description: 'Trigger mode for the color picker popup.',
       },
+      theme: {
+        type: 'object',
+        description:
+          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+        docs: {
+          displayType: 'yaml',
+        },
+      },
     },
   },
+  cssKeys: ['element'],
 };
+
+export default schema;

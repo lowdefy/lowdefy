@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-export default {
+const schema = {
   properties: {
     type: 'object',
     additionalProperties: false,
@@ -114,6 +114,14 @@ export default {
         default: 'confirm',
         description: 'Modal status type.',
       },
+      theme: {
+        type: 'object',
+        description:
+          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+        docs: {
+          displayType: 'yaml',
+        },
+      },
     },
   },
   events: {
@@ -138,4 +146,7 @@ export default {
       },
     },
   },
+  cssKeys: ['element', 'body'],
 };
+
+export default schema;

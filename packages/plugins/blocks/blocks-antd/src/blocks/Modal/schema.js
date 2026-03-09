@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-export default {
+const schema = {
   type: 'object',
   properties: {
     type: 'object',
@@ -77,13 +77,6 @@ export default {
           displayType: 'yaml',
         },
       },
-      style: {
-        type: 'object',
-        description: 'Css style to applied to modal.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
       cancelText: {
         type: 'string',
         default: 'Cancel',
@@ -116,6 +109,14 @@ export default {
         default: 1000,
         description: 'The z-index of the modal. Useful when displaying two modals simultaneously.',
       },
+      theme: {
+        type: 'object',
+        description:
+          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+        docs: {
+          displayType: 'yaml',
+        },
+      },
     },
   },
   events: {
@@ -140,4 +141,7 @@ export default {
       },
     },
   },
+  cssKeys: ['element', 'header', 'body', 'footer', 'mask', 'wrapper', 'content'],
 };
+
+export default schema;

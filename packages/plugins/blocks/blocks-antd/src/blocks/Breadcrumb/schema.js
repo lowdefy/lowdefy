@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-export default {
+const schema = {
   type: 'object',
   properties: {
     type: 'object',
@@ -24,13 +24,6 @@ export default {
         type: 'string',
         default: '/',
         description: 'Use a custom separator string.',
-      },
-      style: {
-        type: 'object',
-        description: 'Css style object to applied to breadcrumb.',
-        docs: {
-          displayType: 'yaml',
-        },
       },
       list: {
         oneOf: [
@@ -80,6 +73,14 @@ export default {
           },
         ],
       },
+      theme: {
+        type: 'object',
+        description:
+          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+        docs: {
+          displayType: 'yaml',
+        },
+      },
     },
   },
   events: {
@@ -93,4 +94,7 @@ export default {
       },
     },
   },
+  cssKeys: ['element'],
 };
+
+export default schema;

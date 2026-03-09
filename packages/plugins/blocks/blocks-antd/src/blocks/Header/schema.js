@@ -14,19 +14,12 @@
   limitations under the License.
 */
 
-export default {
+const schema = {
   type: 'object',
   properties: {
     type: 'object',
     additionalProperties: false,
     properties: {
-      style: {
-        type: 'object',
-        description: 'Css style object to applied to header.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
       theme: {
         type: 'string',
         enum: ['light', 'dark'],
@@ -35,4 +28,7 @@ export default {
       },
     },
   },
+  cssKeys: ['element'],
 };
+
+export default schema;

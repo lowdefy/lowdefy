@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-export default {
+const schema = {
   type: 'object',
   properties: {
     type: 'object',
@@ -55,7 +55,9 @@ export default {
       },
       offset: {
         type: 'array',
-        items: { type: 'number' },
+        items: {
+          type: 'number',
+        },
         description: 'Set offset of the badge dot, array of numbers for x and y offset ([x,y]).',
       },
       overflowCount: {
@@ -82,6 +84,17 @@ export default {
         type: 'string',
         description: 'Text to show when hovering over the badge.',
       },
+      theme: {
+        type: 'object',
+        description:
+          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+        docs: {
+          displayType: 'yaml',
+        },
+      },
     },
   },
+  cssKeys: ['element', 'indicator'],
 };
+
+export default schema;

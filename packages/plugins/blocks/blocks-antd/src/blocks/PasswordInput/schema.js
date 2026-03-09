@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-export default {
+const schema = {
   type: 'object',
   properties: {
     type: 'object',
@@ -38,13 +38,6 @@ export default {
       placeholder: {
         type: 'string',
         description: 'Placeholder text inside the block before user types input.',
-      },
-      inputStyle: {
-        type: 'object',
-        description: 'Css style to applied to input.',
-        docs: {
-          displayType: 'yaml',
-        },
       },
       label: {
         type: 'object',
@@ -90,20 +83,6 @@ export default {
             default: false,
             description: 'Render input and label inline.',
           },
-          extraStyle: {
-            type: 'object',
-            description: 'Css style to applied to label extra.',
-            docs: {
-              displayType: 'yaml',
-            },
-          },
-          feedbackStyle: {
-            type: 'object',
-            description: 'Css style to applied to label feedback.',
-            docs: {
-              displayType: 'yaml',
-            },
-          },
         },
       },
       size: {
@@ -121,6 +100,14 @@ export default {
         type: 'boolean',
         default: true,
         description: 'Show password visibility toggle button.',
+      },
+      theme: {
+        type: 'object',
+        description:
+          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+        docs: {
+          displayType: 'yaml',
+        },
       },
     },
   },
@@ -146,4 +133,7 @@ export default {
       },
     },
   },
+  cssKeys: ['element', 'extra', 'feedback'],
 };
+
+export default schema;

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-export default {
+const schema = {
   type: 'object',
   properties: {
     type: 'object',
@@ -60,6 +60,14 @@ export default {
         description:
           'Title to show in the title area - supports html. Overwritten by blocks in the title content area.',
       },
+      theme: {
+        type: 'object',
+        description:
+          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+        docs: {
+          displayType: 'yaml',
+        },
+      },
     },
   },
   events: {
@@ -72,4 +80,7 @@ export default {
       },
     },
   },
+  cssKeys: ['element', 'header', 'body', 'cover', 'actions', 'extra'],
 };
+
+export default schema;

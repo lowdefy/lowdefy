@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-export default {
+const schema = {
   type: 'object',
   properties: {
     type: 'object',
@@ -51,13 +51,6 @@ export default {
         default: 'dark',
         description: 'Color theme of the sidebar',
       },
-      style: {
-        type: 'object',
-        description: 'Css style object to apply to sider.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
       width: {
         type: ['string', 'number'],
         description: 'width of the sidebar',
@@ -85,4 +78,7 @@ export default {
       },
     },
   },
+  cssKeys: ['element'],
 };
+
+export default schema;

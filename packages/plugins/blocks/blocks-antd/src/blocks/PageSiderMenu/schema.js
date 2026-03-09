@@ -14,9 +14,8 @@
   limitations under the License.
 */
 
-export default {
+const schema = {
   type: 'object',
-  cssKeys: ['element', 'header', 'logo', 'sider', 'menu', 'content', 'breadcrumb', 'footer'],
   properties: {
     type: 'object',
     additionalProperties: false,
@@ -253,9 +252,10 @@ export default {
           displayType: 'yaml',
         },
       },
-      style: {
+      theme: {
         type: 'object',
-        description: 'Css style object to apply to layout.',
+        description:
+          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
         },
@@ -300,4 +300,7 @@ export default {
       },
     },
   },
+  cssKeys: ['element'],
 };
+
+export default schema;
