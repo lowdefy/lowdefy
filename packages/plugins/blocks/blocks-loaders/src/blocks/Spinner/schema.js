@@ -20,13 +20,6 @@ export default {
     type: 'object',
     additionalProperties: false,
     properties: {
-      style: {
-        type: 'object',
-        description: 'Css style object to apply to the icon.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
       size: {
         type: 'string',
         description: 'Size of the icon spinner.',

@@ -16,24 +16,11 @@
 
 export default {
   type: 'object',
+  cssKeys: ['element', 'input'],
   properties: {
     type: 'object',
     additionalProperties: false,
     properties: {
-      labelStyle: {
-        type: 'object',
-        description: 'Css style object to apply to the label skeleton.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
-      inputStyle: {
-        type: 'object',
-        description: 'Css style object to apply to the input skeleton.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
       size: {
         type: 'string',
         default: 'medium',

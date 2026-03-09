@@ -87,8 +87,8 @@ class QRScanner extends React.Component {
   }
 
   render() {
-    const { blockId, properties, methods } = this.props;
-    return <div id={blockId} className={methods.makeCssClass([properties.style])} />;
+    const { blockId, classNames, styles } = this.props;
+    return <div id={blockId} className={classNames?.element} style={styles?.element} />;
   }
 }
 

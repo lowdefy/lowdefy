@@ -68,13 +68,6 @@ export default {
           },
         },
       },
-      style: {
-        type: 'object',
-        description: 'Css style object to apply to EChart div.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
     },
   },
   events: {

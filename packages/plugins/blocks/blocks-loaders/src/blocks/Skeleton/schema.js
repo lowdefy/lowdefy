@@ -20,13 +20,6 @@ export default {
     type: 'object',
     additionalProperties: false,
     properties: {
-      style: {
-        type: 'object',
-        description: 'Css style object to apply to the skeleton.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
       height: {
         type: ['number', 'string'],
         description: 'Height of the skeleton.',

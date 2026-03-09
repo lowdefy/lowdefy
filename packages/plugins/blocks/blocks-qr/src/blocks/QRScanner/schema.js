@@ -70,10 +70,6 @@ export default {
           ],
         },
       },
-      style: {
-        type: 'object',
-        description: 'Custom css properties to apply to scanner block.',
-      },
     },
   },
   events: {

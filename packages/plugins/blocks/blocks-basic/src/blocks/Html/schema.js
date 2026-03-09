@@ -27,13 +27,6 @@ export default {
           displayType: 'text-area',
         },
       },
-      style: {
-        type: 'object',
-        description: 'Css style object to apply to Html div.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
     },
   },
   events: {

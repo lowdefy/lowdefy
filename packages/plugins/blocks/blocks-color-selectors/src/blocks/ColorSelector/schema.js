@@ -16,6 +16,7 @@
 
 export default {
   type: 'object',
+  cssKeys: ['element', 'extra', 'feedback'],
   properties: {
     type: 'object',
     properties: {
@@ -23,13 +24,6 @@ export default {
         type: 'string',
         description:
           'Title to describe the input component, if no title is specified the block id is displayed.',
-      },
-      inputStyle: {
-        type: 'object',
-        description: 'Css style to applied to input.',
-        docs: {
-          displayType: 'yaml',
-        },
       },
       disabled: {
         type: 'boolean',
@@ -84,20 +78,6 @@ export default {
             type: 'boolean',
             default: false,
             description: 'Render input and label inline.',
-          },
-          extraStyle: {
-            type: 'object',
-            description: 'Css style to applied to label extra.',
-            docs: {
-              displayType: 'yaml',
-            },
-          },
-          feedbackStyle: {
-            type: 'object',
-            description: 'Css style to applied to label feedback.',
-            docs: {
-              displayType: 'yaml',
-            },
           },
         },
       },

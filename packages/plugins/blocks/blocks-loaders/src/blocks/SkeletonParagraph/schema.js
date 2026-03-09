@@ -20,13 +20,6 @@ export default {
     type: 'object',
     additionalProperties: false,
     properties: {
-      style: {
-        type: 'object',
-        description: 'Css style object to apply to the skeleton.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
       lines: {
         type: 'number',
         default: 4,

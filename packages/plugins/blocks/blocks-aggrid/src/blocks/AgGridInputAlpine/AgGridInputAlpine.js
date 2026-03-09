@@ -1,5 +1,5 @@
 /*
-  Copyright 2021 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ const AgGridInputAlpine = ({
   methods,
   properties,
   required,
+  styles = {},
   validation,
   value,
 }) => (
@@ -37,7 +38,7 @@ const AgGridInputAlpine = ({
     className={`ag-theme-alpine ${methods.makeCssClass({
       width: '100%',
       height: properties.height ?? 500,
-      ...properties.style,
+      ...styles.element,
     })}`}
   >
     <AgGridInput

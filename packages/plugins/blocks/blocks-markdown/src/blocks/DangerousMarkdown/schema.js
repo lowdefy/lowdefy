@@ -35,13 +35,6 @@ export default {
           displayType: 'yaml',
         },
       },
-      style: {
-        type: 'object',
-        description: 'Style to apply to Markdown div.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
     },
   },
 };

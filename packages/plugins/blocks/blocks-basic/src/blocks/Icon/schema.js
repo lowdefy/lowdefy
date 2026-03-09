@@ -52,13 +52,6 @@ export default {
         type: 'string',
         description: 'Icon hover title for accessibility.',
       },
-      style: {
-        type: 'object',
-        description: 'CSS style object.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
       disableLoadingIcon: {
         type: 'boolean',
         default: false,

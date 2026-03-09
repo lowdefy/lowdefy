@@ -94,13 +94,6 @@ export default {
         description:
           'Disable scrolling to the top of the page after page transition. Can only be used with pageId link and newTab false.',
       },
-      style: {
-        type: 'object',
-        description: 'Css style object to applied to anchor.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
       title: {
         type: 'string',
         description: 'Text to display in the anchor.',

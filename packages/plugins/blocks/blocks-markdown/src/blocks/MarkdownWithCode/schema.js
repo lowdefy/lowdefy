@@ -33,13 +33,6 @@ export default {
         description:
           'By default, HTML in markdown is escaped. When true all HTML code in the markdown will not be rendered.',
       },
-      style: {
-        type: 'object',
-        description: 'Style to apply to Markdown div.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
     },
   },
 };

@@ -36,7 +36,7 @@ const SkeletonInput = ({ classNames, properties, styles }) => {
       {properties.label !== false && (
         <Skeleton
           styles={{
-            element: { marginBottom: 10, ...(properties.labelStyle || {}) },
+            element: { marginBottom: 10 },
           }}
           properties={{
             width: properties.labelWidth ?? properties.width ?? '30%',
@@ -46,7 +46,7 @@ const SkeletonInput = ({ classNames, properties, styles }) => {
       )}
       <Skeleton
         styles={{
-          element: properties.inputStyle || {},
+          element: styles?.input ?? {},
         }}
         properties={{
           width: properties.width ?? '100%',

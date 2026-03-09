@@ -37,13 +37,6 @@ export default {
         description:
           "Specifies whether scrolling should be applied to the List, can be true or false. Applies the 'overflow' css property to the List block - defaults to 'visible', requires List direction to be set.",
       },
-      style: {
-        type: 'object',
-        description: 'Css style object to apply to List block.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
     },
   },
   events: {

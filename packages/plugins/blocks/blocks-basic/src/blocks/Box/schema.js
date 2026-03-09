@@ -24,13 +24,6 @@ export default {
         type: 'string',
         description: 'Box content string. Overrides the "content" content area.',
       },
-      style: {
-        type: 'object',
-        description: 'Css style object to apply to Box div.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
     },
   },
   events: {

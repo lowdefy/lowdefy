@@ -35,13 +35,6 @@ export default {
           displayType: 'yaml',
         },
       },
-      style: {
-        type: 'object',
-        description: 'Css style object to apply to Html div.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
     },
   },
 };

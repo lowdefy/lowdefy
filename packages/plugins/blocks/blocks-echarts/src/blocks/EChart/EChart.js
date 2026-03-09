@@ -102,7 +102,7 @@ class EChart extends React.Component {
             height: this.props.properties.height ?? 300,
             ...(this.props.properties.init ?? {}),
           }}
-          style={this.props.properties.style ?? {}}
+          style={this.props.styles?.element ?? {}}
           theme={this.props.properties.theme && `custom_theme_${this.props.blockId}`}
         />
       </div>

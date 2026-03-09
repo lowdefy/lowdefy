@@ -1,5 +1,5 @@
 /*
-  Copyright 2021 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -22,13 +22,13 @@ import '@ag-grid-community/styles/ag-theme-alpine.css';
 
 import AgGrid from '../../AgGrid.js';
 
-const AgGridAlpine = ({ blockId, events, loading, methods, properties }) => (
+const AgGridAlpine = ({ blockId, events, loading, methods, properties, styles = {} }) => (
   <div
     id={blockId}
     className={`ag-theme-alpine ${methods.makeCssClass({
       width: '100%',
       height: properties.height ?? 500,
-      ...properties.style,
+      ...styles.element,
     })}`}
   >
     <AgGrid events={events} loading={loading} methods={methods} properties={properties} />

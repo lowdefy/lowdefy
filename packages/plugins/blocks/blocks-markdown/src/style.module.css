@@ -4,7 +4,8 @@
   }
 
   .markdown-body h1:hover a,
-  .markdown-body h2:hover a .markdown-body h3:hover a,
+  .markdown-body h2:hover a,
+  .markdown-body h3:hover a,
   .markdown-body h4:hover a,
   .markdown-body h5:hover a,
   .markdown-body h6:hover a {
@@ -31,16 +32,23 @@
 
   .markdown-body a {
     background-color: transparent;
+    color: var(--ant-color-link);
+    text-decoration: var(--ant-link-decoration);
   }
 
-  .markdown-body a:active,
   .markdown-body a:hover {
     outline-width: 0;
+    color: var(--ant-color-link-hover);
+    text-decoration: var(--ant-link-hover-decoration);
+  }
+
+  .markdown-body a:active {
+    outline-width: 0;
+    color: var(--ant-color-link-active);
   }
 
   .markdown-body strong {
-    font-weight: inherit;
-    font-weight: bolder;
+    font-weight: var(--ant-font-weight-strong);
   }
 
   .markdown-body img {
@@ -56,6 +64,7 @@
 
   .markdown-body code {
     background-color: var(--ant-color-bg-layout);
+    border-radius: var(--ant-border-radius-sm);
   }
 
   .markdown-body pre {
@@ -64,27 +73,6 @@
 
   .markdown-body hr {
     box-sizing: content-box;
-    height: 0;
-    overflow: visible;
-  }
-
-  .markdown-body * {
-    box-sizing: border-box;
-  }
-
-  .markdown-body a {
-    text-decoration: none;
-  }
-
-  .markdown-body a:hover {
-    text-decoration: underline;
-  }
-
-  .markdown-body strong {
-    font-weight: 600;
-  }
-
-  .markdown-body hr {
     background: transparent;
     border: 0;
     border-bottom: 1px solid var(--ant-color-split);
@@ -102,6 +90,10 @@
     clear: both;
     content: '';
     display: table;
+  }
+
+  .markdown-body * {
+    box-sizing: border-box;
   }
 
   .markdown-body td,
@@ -182,17 +174,8 @@
     margin-top: 0;
   }
 
-  .markdown-body hr {
-    background: transparent;
-    border: 0;
-    border-bottom: 1px solid var(--ant-color-split);
-    height: 0;
-    margin: 1em 0;
-    overflow: hidden;
-  }
-
   .markdown-body blockquote {
-    border-left: 0.25em solid #dfe2e5;
+    border-left: 0.25em solid var(--ant-color-border-secondary);
     color: var(--ant-color-text-secondary);
     padding: 0 1em;
   }
@@ -206,13 +189,14 @@
   }
 
   .markdown-body kbd {
-    background-color: #fafbfc;
-    border: 1px solid #c6cbd1;
-    border-bottom-color: #959da5;
-    border-radius: 3px;
-    box-shadow: inset 0 -1px 0 #959da5;
-    color: #444d56;
+    background-color: var(--ant-color-fill-quaternary);
+    border: 1px solid var(--ant-color-border);
+    border-bottom-color: var(--ant-color-border);
+    border-radius: var(--ant-border-radius-sm);
+    box-shadow: inset 0 -1px 0 var(--ant-color-border);
+    color: var(--ant-color-text);
     display: inline-block;
+    font-family: var(--ant-font-family-code);
     line-height: 11px;
     padding: 3px 5px;
     vertical-align: middle;
@@ -225,23 +209,23 @@
   }
 
   .markdown-body h1 {
-    font-size: 2em;
+    font-size: var(--ant-font-size-heading-1);
   }
 
   .markdown-body h2 {
-    font-size: 1.5em;
+    font-size: var(--ant-font-size-heading-2);
   }
 
   .markdown-body h3 {
-    font-size: 1.25em;
+    font-size: var(--ant-font-size-heading-3);
   }
 
   .markdown-body h4 {
-    font-size: 1em;
+    font-size: var(--ant-font-size-heading-4);
   }
 
   .markdown-body h5 {
-    font-size: 0.875em;
+    font-size: var(--ant-font-size-heading-5);
   }
 
   .markdown-body h6 {
@@ -282,7 +266,7 @@
   .markdown-body dl dt {
     font-size: 1em;
     font-style: italic;
-    font-weight: 600;
+    font-weight: var(--ant-font-weight-strong);
     margin-top: 1em;
     padding: 0;
   }
@@ -302,7 +286,7 @@
   }
 
   .markdown-body table th {
-    font-weight: 600;
+    font-weight: var(--ant-font-weight-strong);
   }
 
   .markdown-body table td,
@@ -338,7 +322,7 @@
   }
 
   .markdown-body pre code {
-    border-radius: 3px;
+    border-radius: var(--ant-border-radius-sm);
     background-color: transparent;
     border: 0;
     display: inline;
@@ -348,18 +332,5 @@
     overflow: visible;
     padding: 0;
     word-wrap: normal;
-  }
-
-  .markdown-body kbd {
-    background-color: var(--ant-color-split);
-    border: 1px solid #d1d5da;
-    border-bottom-color: var(--ant-color-border);
-    border-radius: 3px;
-    box-shadow: inset 0 -1px 0 var(--ant-color-border);
-    color: #444d56;
-    display: inline-block;
-    font: var(--ant-font-family-code);
-    padding: 3px 5px;
-    vertical-align: middle;
   }
 }
