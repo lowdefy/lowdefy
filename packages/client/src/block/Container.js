@@ -27,11 +27,11 @@ const Container = ({ block, Blocks, Component, context, loading, lowdefy }) => {
   // eslint-disable-next-line prefer-destructuring
   const slots = Blocks.subSlots[block.id][0].slots;
   Object.keys(slots).forEach((slotKey, i) => {
-    content[slotKey] = () => (
+    content[slotKey] = (contentStyle) => (
       <Area
         area={block.eval.slots[slotKey]}
         areaKey={slotKey}
-        style={block.eval.slots[slotKey]?.style}
+        style={{ ...block.eval.slots[slotKey]?.style, ...contentStyle }}
         className={cn(block.eval.class?.[slotKey])}
         id={`ar-${block.blockId}-${slotKey}`}
         key={`ar-${block.blockId}-${slotKey}-${i}`}

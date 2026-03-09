@@ -27,11 +27,11 @@ const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
   const contentList = [];
   Blocks.subSlots[block.id].forEach((SBlock) => {
     Object.keys(SBlock.slots).forEach((slotKey) => {
-      content[slotKey] = () => (
+      content[slotKey] = (contentStyle) => (
         <Area
           area={block.eval.slots[slotKey]}
           areaKey={slotKey}
-          style={block.eval.slots[slotKey]?.style}
+          style={{ ...block.eval.slots[slotKey]?.style, ...contentStyle }}
           className={cn(block.eval.class?.[slotKey])}
           id={`ar-${block.blockId}-${SBlock.id}-${slotKey}`}
           key={`ar-${block.blockId}-${SBlock.id}-${slotKey}`}
