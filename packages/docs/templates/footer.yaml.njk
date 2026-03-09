@@ -247,7 +247,6 @@
 
 - id: footer_divider
   type: Divider
-- _ref: templates/built_with_lowdefy.yaml
 - id: footer_box
   type: Box
   layout:
@@ -279,8 +278,8 @@
         - id: community_links
           type: Box
           layout:
-            justify: space-around
-            size: 200
+            gap: 16
+            wrap: nowrap
           blocks:
             - id: lowdefy_twitter
               type: Icon
@@ -372,6 +371,7 @@
               _global: newsletter_subscribed
           style:
             textAlign: center
+            marginTop: 0
           properties:
             content: Subscribe to our newsletter
             level: 3
@@ -383,6 +383,7 @@
               _global: newsletter_subscribed
           style:
             textAlign: center
+            marginBottom: 0
           properties:
             content: Receive the latest Lowdefy updates in your inbox.
         - id: footer_cta_box
@@ -508,8 +509,9 @@
         - id: community_links
           type: Box
           layout:
-            justify: space-around
-            size: 200
+            gap: 16
+            wrap: nowrap
+            justify: center
           blocks:
             - id: lowdefy_twitter
               type: Icon
