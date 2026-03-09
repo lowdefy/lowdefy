@@ -2125,12 +2125,6 @@ importers:
 
   packages/utils/e2e-utils:
     dependencies:
-      '@lowdefy/blocks-antd':
-        specifier: 4.5.2
-        version: link:../../plugins/blocks/blocks-antd
-      '@lowdefy/blocks-basic':
-        specifier: 4.5.2
-        version: link:../../plugins/blocks/blocks-basic
       '@lowdefy/helpers':
         specifier: 4.5.2
         version: link:../helpers
