@@ -46,7 +46,7 @@ beforeEach(() => {
   };
 });
 
-test('buildRefs with shallowOptions stops resolution at matching paths', async () => {
+test('buildRefs with shallowOptions deletes page content keys during walk', async () => {
   const files = [
     {
       path: 'lowdefy.yaml',
@@ -71,10 +71,8 @@ pages:
     context,
     shallowOptions: true,
   });
-  // The blocks ref should be replaced with a shallow marker
-  expect(res.pages[0].blocks['~shallow']).toBe(true);
-  expect(res.pages[0].blocks._ref).toBe('pages/home/blocks.yaml');
-  expect(res.pages[0].blocks._refId).toBeDefined();
+  // The blocks key should be deleted during the walk
+  expect(res.pages[0].blocks).toBeUndefined();
   // Non-matching fields should be resolved normally
   expect(res.pages[0].id).toBe('home');
   expect(res.pages[0].type).toBe('PageHeaderMenu');
@@ -113,11 +111,11 @@ pages:
   });
   // config ref should be fully resolved (doesn't match stop pattern)
   expect(res.config).toEqual({ theme: 'dark' });
-  // blocks ref should be shallow
-  expect(res.pages[0].blocks['~shallow']).toBe(true);
+  // blocks key should be deleted
+  expect(res.pages[0].blocks).toBeUndefined();
 });
 
-test('buildRefs with shallowOptions stops multiple page content refs', async () => {
+test('buildRefs with shallowOptions deletes multiple page content keys', async () => {
   const files = [
     {
       path: 'lowdefy.yaml',
@@ -151,9 +149,9 @@ pages:
     context,
     shallowOptions: true,
   });
-  expect(res.pages[0].blocks['~shallow']).toBe(true);
-  expect(res.pages[0].events['~shallow']).toBe(true);
-  expect(res.pages[0].requests['~shallow']).toBe(true);
+  expect(res.pages[0].blocks).toBeUndefined();
+  expect(res.pages[0].events).toBeUndefined();
+  expect(res.pages[0].requests).toBeUndefined();
 });
 
 test('buildRefs with shallowOptions handles multiple pages', async () => {
@@ -186,10 +184,8 @@ pages:
     context,
     shallowOptions: true,
   });
-  expect(res.pages[0].blocks['~shallow']).toBe(true);
-  expect(res.pages[0].blocks._ref).toBe('pages/home/blocks.yaml');
-  expect(res.pages[1].blocks['~shallow']).toBe(true);
-  expect(res.pages[1].blocks._ref).toBe('pages/dashboard/blocks.yaml');
+  expect(res.pages[0].blocks).toBeUndefined();
+  expect(res.pages[1].blocks).toBeUndefined();
 });
 
 test('buildRefs without shallowOptions resolves all refs normally', async () => {
@@ -218,7 +214,7 @@ pages:
   expect(res.pages[0].blocks).toEqual([{ id: 'block1', type: 'TextInput' }]);
 });
 
-test('buildRefs with shallowOptions preserves original ref path for object refs', async () => {
+test('buildRefs with shallowOptions deletes page content regardless of ref form', async () => {
   const files = [
     {
       path: 'lowdefy.yaml',
@@ -243,12 +239,8 @@ pages:
     context,
     shallowOptions: true,
   });
-  expect(res.pages[0].blocks['~shallow']).toBe(true);
-  // Original ref should be preserved (object form with path and vars)
-  expect(res.pages[0].blocks._ref).toEqual({
-    path: 'pages/home/blocks.yaml',
-    vars: { color: 'blue' },
-  });
+  // blocks key should be deleted regardless of ref form
+  expect(res.pages[0].blocks).toBeUndefined();
 });
 
 test('buildRefs without shallowOptions resolves page content refs', async () => {
@@ -277,9 +269,8 @@ pages:
 
 test('buildRefs shallow: _build.array.concat wrapping refs at stop path — page id and type survive', async () => {
   // When _build.array.concat wraps refs inside a page content key (blocks),
-  // the refs are shallow-stopped. The operator is skipped (not evaluated)
-  // because its params contain ~shallow nodes — the result will be discarded
-  // by stripPageContent anyway. No spurious build errors should be reported.
+  // the blocks key is deleted before the walker descends into it.
+  // No spurious build errors should be reported.
   const files = [
     {
       path: 'lowdefy.yaml',
@@ -310,11 +301,13 @@ pages:
   // Page stub survives — id and type are what matters for shallow builds
   expect(res.pages[0].id).toBe('home');
   expect(res.pages[0].type).toBe('PageHeaderMenu');
-  // No build errors from the skipped operator
+  // blocks key deleted
+  expect(res.pages[0].blocks).toBeUndefined();
+  // No build errors
   expect(context.errors).toHaveLength(0);
 });
 
-test('buildRefs shallow: page id from _build.string.concat evaluates while ~shallow events are preserved', async () => {
+test('buildRefs shallow: page id from _build.string.concat evaluates while page content is deleted', async () => {
   const files = [
     {
       path: 'lowdefy.yaml',
@@ -340,13 +333,13 @@ pages:
     context,
     shallowOptions: true,
   });
-  // Page id should be evaluated (no ~shallow args)
+  // Page id should be evaluated (no shallow args)
   expect(res.pages[0].id).toBe('page_home');
-  // Events should be shallow
-  expect(res.pages[0].events['~shallow']).toBe(true);
+  // Events key deleted
+  expect(res.pages[0].events).toBeUndefined();
 });
 
-test('buildRefs shallow: _build.array at pages level evaluates when page content is ~shallow', async () => {
+test('buildRefs shallow: _build.array at pages level evaluates when page content is deleted', async () => {
   const files = [
     {
       path: 'lowdefy.yaml',
@@ -396,22 +389,18 @@ blocks:
     shallowOptions: true,
   });
   // _build.array.concat at pages level must evaluate — pages must be an array.
-  // Without type boundaries, ~dyn from ~shallow blocks bubbles up and prevents
-  // _build.array from evaluating, leaving pages as an object (crash).
   expect(Array.isArray(res.pages)).toBe(true);
   expect(res.pages).toHaveLength(2);
   expect(res.pages[0].id).toBe('home');
   expect(res.pages[1].id).toBe('settings');
-  // Page content refs should be shallow-marked
-  expect(res.pages[0].blocks['~shallow']).toBe(true);
-  expect(res.pages[1].blocks['~shallow']).toBe(true);
+  // Page content keys should be deleted
+  expect(res.pages[0].blocks).toBeUndefined();
+  expect(res.pages[1].blocks).toBeUndefined();
 });
 
 test('buildRefs shallow: static operator wrapping ref at stop path — page id and type survive', async () => {
   // When a static operator (_if) wraps a ref inside page content (blocks),
-  // the ref becomes a shallow marker. The _if is preserved by evaluateStaticOperators
-  // because its params contain ~dyn content. Either way, blocks gets stripped —
-  // only id/type matter for shallow builds.
+  // the blocks key is deleted before the walker descends. Only id/type matter.
   const files = [
     {
       path: 'lowdefy.yaml',
@@ -439,4 +428,5 @@ pages:
   });
   expect(res.pages[0].id).toBe('home');
   expect(res.pages[0].type).toBe('PageHeaderMenu');
+  expect(res.pages[0].blocks).toBeUndefined();
 });

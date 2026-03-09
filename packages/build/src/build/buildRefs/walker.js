@@ -16,7 +16,7 @@
 
 import { get, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
-import { evaluateOperators, setDynamicMarker } from '@lowdefy/operators';
+import { evaluateOperators } from '@lowdefy/operators';
 import makeRefDefinition from './makeRefDefinition.js';
 import getRefContent from './getRefContent.js';
 import runTransformer from './runTransformer.js';
@@ -107,22 +107,6 @@ function isBuildOperator(node) {
   return nonTildeKeys.length === 1 && nonTildeKeys[0].startsWith('_build.');
 }
 
-// Check if a value has ~shallow nodes as direct children.
-// Used to skip _build.* evaluation when params are shallow-stopped refs
-// that will be discarded by stripPageContent anyway.
-function hasShallowChild(value) {
-  if (!type.isObject(value) && !type.isArray(value)) return false;
-  if (type.isObject(value) && value['~shallow'] === true) return true;
-  if (type.isArray(value)) {
-    return value.some(
-      (item) => type.isObject(item) && item['~shallow'] === true
-    );
-  }
-  return Object.values(value).some(
-    (item) => type.isObject(item) && item['~shallow'] === true
-  );
-}
-
 // Set ~r as non-enumerable if not already present
 function tagRef(node, refId) {
   if (type.isObject(node) || type.isArray(node)) {
@@ -203,24 +187,6 @@ function cloneDeepWithProvenance(node, sourceRefId) {
   if (node['~l'] !== undefined) setNonEnumerableProperty(clone, '~l', node['~l']);
   if (node['~k'] !== undefined) setNonEnumerableProperty(clone, '~k', node['~k']);
   return clone;
-}
-
-// Create a shallow marker for stopped refs (shallow builds)
-function createShallowMarker(refDef, ctx, lineNumber) {
-  ctx.refMap[refDef.id].path = refDef.path;
-  if (!refDef.path) {
-    ctx.refMap[refDef.id].original = refDef.original;
-  }
-  if (Object.keys(refDef.vars).length > 0) {
-    ctx.unresolvedRefVars[refDef.id] = refDef.vars;
-  }
-  const marker = {
-    '~shallow': true,
-    _ref: refDef.original,
-    _refId: refDef.id,
-  };
-  setDynamicMarker(marker);
-  return marker;
 }
 
 // Evaluate a _build.* operator using evaluateOperators
@@ -363,11 +329,6 @@ async function resolve(node, ctx) {
 
   // 2. Object with _ref
   if (type.isObject(node) && !type.isUndefined(node._ref)) {
-    if (ctx.shouldStop && ctx.shouldStop(ctx.path)) {
-      const lineNumber = node['~l'];
-      const refDef = makeRefDefinition(node._ref, ctx.refId, ctx.refMap, lineNumber);
-      return createShallowMarker(refDef, ctx, lineNumber);
-    }
     return resolveRef(node, ctx);
   }
 
@@ -389,18 +350,18 @@ async function resolve(node, ctx) {
   // 6. Object — walk children in-place
   const keys = Object.keys(node);
   for (const key of keys) {
+    if (ctx.shouldStop) {
+      const childPath = ctx.path ? `${ctx.path}.${key}` : key;
+      if (ctx.shouldStop(childPath)) {
+        delete node[key];
+        continue;
+      }
+    }
     node[key] = await resolve(node[key], ctx.child(key));
   }
 
   // Check if this is a _build.* operator
   if (isBuildOperator(node)) {
-    const opKey = Object.keys(node).find((k) => !k.startsWith('~'));
-    // Skip evaluation when params contain shallow-stopped refs — the result
-    // will be discarded by stripPageContent, so evaluating would only produce
-    // spurious build errors.
-    if (hasShallowChild(node[opKey])) {
-      return node;
-    }
     const result = evaluateBuildOperator(node, ctx);
     tagRefDeep(result, ctx.refId);
     return result;

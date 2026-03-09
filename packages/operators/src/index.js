@@ -14,11 +14,7 @@
   limitations under the License.
 */
 
-import evaluateOperators, {
-  setDynamicMarker,
-  hasDynamicMarker,
-  hasDynChild,
-} from './evaluateOperators.js';
+import evaluateOperators, { hasDynamicMarker, hasDynChild } from './evaluateOperators.js';
 import getFromArray from './getFromArray.js';
 import getFromObject from './getFromObject.js';
 import ServerParser from './serverParser.js';
@@ -28,7 +24,6 @@ import WebParser from './webParser.js';
 
 export {
   evaluateOperators,
-  setDynamicMarker,
   hasDynamicMarker,
   hasDynChild,
   getFromArray,
