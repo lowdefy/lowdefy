@@ -13,16 +13,29 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import makeCssClass from './makeCssClass.js';
 
-import React from 'react';
-import { blockDefaultProps } from '@lowdefy/block-utils';
-
-const IconBlock = ({ components: { Icon }, ...props }) => <Icon {...props} />;
-
-IconBlock.defaultProps = blockDefaultProps;
-IconBlock.meta = {
-  category: 'display',
-  icons: [],
+const blockDefaultProps = {
+  basePath: '',
+  blockId: 'undefined_id',
+  components: {},
+  content: {},
+  events: {},
+  list: [],
+  menus: [],
+  methods: {
+    makeCssClass,
+    registerEvent: () => undefined,
+    registerMethod: () => undefined,
+    triggerEvent: () => undefined,
+  },
+  properties: {},
+  required: false,
+  validation: {
+    status: null,
+    errors: [],
+    warnings: [],
+  },
 };
 
-export default IconBlock;
+export default blockDefaultProps;

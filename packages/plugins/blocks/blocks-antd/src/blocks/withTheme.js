@@ -33,6 +33,7 @@ function withTheme(antdComponentName, BlockComponent) {
     );
   };
   Wrapped.meta = BlockComponent.meta;
+  Wrapped.defaultProps = BlockComponent.defaultProps;
   Wrapped.displayName = BlockComponent.displayName || BlockComponent.name;
   return Wrapped;
 }

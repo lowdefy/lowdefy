@@ -15,6 +15,7 @@
 */
 
 import React from 'react';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 
 const Box = ({ blockId, classNames, content, events, methods, properties, styles }) => {
   return (
@@ -31,6 +32,7 @@ const Box = ({ blockId, classNames, content, events, methods, properties, styles
   );
 };
 
+Box.defaultProps = blockDefaultProps;
 Box.meta = {
   category: 'container',
   icons: [],

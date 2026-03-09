@@ -22,7 +22,6 @@ import { type } from '@lowdefy/helpers';
 import InputContainer from './InputContainer.js';
 import Container from './Container.js';
 import List from './List.js';
-import blockDefaults from './blockDefaults.js';
 import LoadingBlock from './LoadingBlock.js';
 import resolveClassNames from './resolveClassNames.js';
 
@@ -78,7 +77,6 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
           layout={block.eval.layout}
         >
           <Component
-            {...blockDefaults}
             methods={Object.assign(block.methods, {
               makeCssClass,
               registerEvent: block.registerEvent,
@@ -90,15 +88,15 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
             blockId={block.blockId}
             classNames={classNames}
             components={lowdefy._internal.components}
-            events={block.eval.events}
+            events={block.eval.events ?? {}}
             key={block.blockId}
             loading={loading}
             menus={lowdefy.menus}
             pageId={lowdefy.pageId}
-            properties={block.eval.properties ?? {}}
+            properties={block.eval.properties}
             required={block.eval.required}
             styles={block.eval.style ?? {}}
-            validation={block.eval.validation ?? { status: null, errors: [], warnings: [] }}
+            validation={block.eval.validation}
             value={block.value}
           />
         </BlockLayout>
@@ -123,7 +121,6 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
           layout={block.eval.layout}
         >
           <Component
-            {...blockDefaults}
             methods={Object.assign(block.methods, {
               makeCssClass,
               registerEvent: block.registerEvent,
@@ -134,15 +131,15 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
             blockId={block.blockId}
             classNames={classNames}
             components={lowdefy._internal.components}
-            events={block.eval.events}
+            events={block.eval.events ?? {}}
             key={block.blockId}
             loading={loading}
             menus={lowdefy.menus}
             pageId={lowdefy.pageId}
-            properties={block.eval.properties ?? {}}
+            properties={block.eval.properties}
             required={block.eval.required}
             styles={block.eval.style ?? {}}
-            validation={block.eval.validation ?? { status: null, errors: [], warnings: [] }}
+            validation={block.eval.validation}
           />
         </BlockLayout>
       );

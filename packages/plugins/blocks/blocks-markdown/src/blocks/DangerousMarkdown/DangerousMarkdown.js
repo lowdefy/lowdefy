@@ -16,6 +16,7 @@
 
 import React from 'react';
 import DOMPurify from 'dompurify';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 import ReactMarkdown from 'react-markdown';
 
 import gfm from 'remark-gfm';
@@ -48,6 +49,7 @@ class DangerousMarkdown extends React.Component {
   }
 }
 
+DangerousMarkdown.defaultProps = blockDefaultProps;
 DangerousMarkdown.meta = {
   category: 'container',
   icons: [],

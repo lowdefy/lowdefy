@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { HtmlComponent } from '@lowdefy/block-utils';
+import { blockDefaultProps, HtmlComponent } from '@lowdefy/block-utils';
 
 const HtmlBlock = ({ blockId, classNames, events, properties, methods, styles }) => (
   <HtmlComponent
@@ -29,6 +29,7 @@ const HtmlBlock = ({ blockId, classNames, events, properties, methods, styles })
   />
 );
 
+HtmlBlock.defaultProps = blockDefaultProps;
 HtmlBlock.meta = {
   category: 'display',
   icons: [],

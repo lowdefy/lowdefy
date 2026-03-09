@@ -15,12 +15,14 @@
 */
 
 import React from 'react';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 
 const Throw = ({ properties }) => {
   const message = properties.message || 'Intentional error thrown by Throw block';
   throw new Error(message);
 };
 
+Throw.defaultProps = blockDefaultProps;
 Throw.meta = {
   category: 'display',
   icons: [],

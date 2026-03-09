@@ -16,6 +16,8 @@
 
 import React from 'react';
 import { type } from '@lowdefy/helpers';
+import { blockDefaultProps } from '@lowdefy/block-utils';
+
 import cssStyles from './style.module.css';
 
 const Spinner = ({ classNames, properties, styles }) => {
@@ -62,6 +64,7 @@ const Spinner = ({ classNames, properties, styles }) => {
   );
 };
 
+Spinner.defaultProps = blockDefaultProps;
 Spinner.meta = {
   category: 'display',
   icons: [],

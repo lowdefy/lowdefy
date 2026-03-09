@@ -18,7 +18,6 @@ import React from 'react';
 import { Area, BlockLayout } from '@lowdefy/layout';
 import { makeCssClass } from '@lowdefy/block-utils';
 
-import blockDefaults from './blockDefaults.js';
 import LoadingBlock from './LoadingBlock.js';
 
 const LoadingContainer = ({
@@ -62,7 +61,6 @@ const LoadingContainer = ({
       layout={skeleton.layout ?? blockLayout}
     >
       <Component
-        {...blockDefaults}
         basePath={lowdefy.basePath}
         blockId={blockId}
         components={lowdefy._internal.components}

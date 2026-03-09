@@ -15,12 +15,14 @@
 */
 
 import React from 'react';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 import Map from '../Map.js';
 
 const GoogleMaps = ({ blockId, content, methods, properties }) => (
   <Map blockId={blockId} content={content} methods={methods} properties={properties} />
 );
 
+GoogleMaps.defaultProps = blockDefaultProps;
 GoogleMaps.meta = {
   category: 'container',
   icons: [],

@@ -15,6 +15,7 @@
 */
 
 import React from 'react';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 
 import '@ag-grid-community/styles/ag-grid.css';
 import '@ag-grid-community/styles/ag-theme-alpine.css';
@@ -52,6 +53,7 @@ const AgGridInputAlpine = ({
   </div>
 );
 
+AgGridInputAlpine.defaultProps = blockDefaultProps;
 AgGridInputAlpine.meta = {
   category: 'input',
   valueType: 'array',

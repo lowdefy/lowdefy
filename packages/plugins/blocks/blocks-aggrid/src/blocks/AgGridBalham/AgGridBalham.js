@@ -15,6 +15,7 @@
 */
 
 import React from 'react';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 
 import '@ag-grid-community/styles/ag-grid.css';
 import '@ag-grid-community/styles/ag-theme-balham.css';
@@ -34,6 +35,7 @@ const AgGridBalham = ({ blockId, events, loading, methods, properties }) => (
   </div>
 );
 
+AgGridBalham.defaultProps = blockDefaultProps;
 AgGridBalham.meta = {
   category: 'display',
   icons: [],

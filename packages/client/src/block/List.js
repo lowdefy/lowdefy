@@ -19,7 +19,6 @@ import { Area, BlockLayout } from '@lowdefy/layout';
 import { cn, makeCssClass } from '@lowdefy/block-utils';
 
 import Block from './Block.js';
-import blockDefaults from './blockDefaults.js';
 import resolveClassNames from './resolveClassNames.js';
 
 const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
@@ -61,7 +60,6 @@ const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
       layout={block.eval.layout}
     >
       <Component
-        {...blockDefaults}
         methods={Object.assign(block.methods, {
           makeCssClass,
           moveItemDown: block.moveItemDown,
@@ -77,16 +75,16 @@ const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
         blockId={block.blockId}
         classNames={classNames}
         components={lowdefy._internal.components}
-        events={block.eval.events}
+        events={block.eval.events ?? {}}
         key={block.blockId}
         list={contentList}
         loading={loading}
         menus={lowdefy.menus}
         pageId={lowdefy.pageId}
-        properties={block.eval.properties ?? {}}
+        properties={block.eval.properties}
         required={block.eval.required}
         styles={block.eval.style ?? {}}
-        validation={block.eval.validation ?? { status: null, errors: [], warnings: [] }}
+        validation={block.eval.validation}
       />
     </BlockLayout>
   );

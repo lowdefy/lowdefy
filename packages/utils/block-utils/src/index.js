@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import blockDefaultProps from './blockDefaultProps.js';
 import blockSchema from './blockSchema.js';
 import cn from './cn.js';
 import ErrorBoundary from './ErrorBoundary.js';
@@ -24,6 +25,7 @@ import mediaToCssObject from './mediaToCssObject.js';
 import renderHtml from './renderHtml.js';
 
 export {
+  blockDefaultProps,
   blockSchema,
   cn,
   ErrorBoundary,

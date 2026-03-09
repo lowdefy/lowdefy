@@ -15,6 +15,7 @@
 */
 
 import React from 'react';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 import Label from '@lowdefy/blocks-antd/blocks/Label/Label.js';
 
 import ColorPicker from './ColorPicker.js';
@@ -63,6 +64,7 @@ const ColorSelector = ({
   );
 };
 
+ColorSelector.defaultProps = blockDefaultProps;
 ColorSelector.meta = {
   valueType: 'string',
   category: 'input',
