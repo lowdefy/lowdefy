@@ -1,5 +1,79 @@
 # Change Log
 
+## 4.6.0
+
+### Minor Changes
+
+- aa0d6d363e: feat: Config-aware error tracing and Sentry integration
+
+  **Config-Aware Error Tracing (#1940)**
+
+  - Errors now trace back to exact YAML config locations with file:line
+  - Clickable VSCode links in terminal and browser
+  - Build-time validation catches typos with "Did you mean?" suggestions
+  - Service vs Config error classification
+
+  **Plugin Error Refactoring**
+
+  - Operators throw simple error messages without formatting
+  - Parsers (WebParser, ServerParser, BuildParser) format errors with received value and location
+  - Removed redundant "Operator Error:" prefix from error messages
+  - Consistent error format: "{message} Received: {params} at {location}."
+  - Actions and connections also simplified: removed inline `received` from error messages (interface layer adds it)
+  - Connection plugins (axios-http, knex, redis, sendgrid) no longer expose raw response data in errors
+
+  **Error Class Hierarchy**
+
+  - Unified error system in `@lowdefy/errors` with all error classes
+    - `@lowdefy/errors/build` - Build-time classes with sync location resolution
+  - Error classes: `LowdefyError`, `ConfigError`, `ConfigWarning`, `PluginError`, `ServiceError`
+  - `ConfigWarning` supports `prodError` flag to throw in production builds
+  - `ServiceError.isServiceError()` detects network/timeout/5xx errors
+  - `~ignoreBuildChecks` cascades through descendants to suppress warnings/errors
+
+  **Build Error Collection**
+
+  - Errors collected in `context.errors[]` instead of throwing immediately
+  - `tryBuildStep()` wrapper catches and collects errors from build steps
+  - All errors logged together before summary message for proper ordering
+
+  **Sentry Integration (#1945)**
+
+  - Zero-config Sentry support - just set SENTRY_DSN
+  - Client and server error capture with Lowdefy context (pageId, blockId, config location)
+  - Configurable sampling rates, session replay, user feedback
+  - Graceful no-op when DSN not set
+
+- f673e3ab3: feat(errors): Add UserError class and thread actionId through request pipeline
+
+  **UserError Class**
+
+  - New `UserError` in `@lowdefy/errors` for expected user-facing errors (validation failures, intentional throws)
+  - UserError logs to browser console only — never sent to the server terminal
+  - `Throw` action now throws `UserError` instead of custom `ThrowActionError`
+
+  **Engine Error Routing**
+
+  - `Actions.logActionError()` routes errors by type: `UserError` → `console.error()`, all others → `logError()` (terminal)
+  - Deduplication by error message + action ID prevents repeated logging
+
+  **actionId Threading**
+
+  - `actionId` threaded from `callAction` through `createRequest` to `Requests.callRequests`
+  - Server-dev request handler logs request trace via `logger.ui.dim()` for dimmed output
+  - Enables request logs to include the triggering action for better debugging context
+
+### Patch Changes
+
+- 8250d8d3e: fix(errors): Remove redundant try/catch in operator runners, add cause chains to remaining throws
+- Updated dependencies [aa0d6d363e]
+- Updated dependencies [aebca6ab51]
+- Updated dependencies [ab19b1bb77]
+- Updated dependencies [8ec5f1be05]
+- Updated dependencies [f673e3ab3]
+  - @lowdefy/errors@4.6.0
+  - @lowdefy/helpers@4.6.0
+
 ## 4.5.2
 
 ### Patch Changes
