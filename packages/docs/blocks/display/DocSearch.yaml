@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: DocSearch
     category: display
-    schema: ../plugins/blocks/blocks-algolia/src/blocks/DocSearch/schema.json
+    schema: ../plugins/blocks/blocks-algolia/src/blocks/DocSearch/schema.js
     filePath: blocks/display/DocSearch.yaml
     description_content:
       _nunjucks:

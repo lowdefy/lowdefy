@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: Sider
     category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Sider/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Sider/schema.js
     filePath: blocks/container/Sider.yaml
     description_content: |
       The `Sider` block provides a page container for a [sider](https://4x.ant.design/components/layout/) area with content.

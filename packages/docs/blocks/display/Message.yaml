@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: Message
     category: display
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Message/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Message/schema.js
     filePath: blocks/display/Message.yaml
     description_content: |
       Display a popup message on the page.

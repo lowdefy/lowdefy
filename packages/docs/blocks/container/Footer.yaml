@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: Footer
     category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Footer/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Footer/schema.js
     filePath: blocks/container/Footer.yaml
     description_content: |
       The `Footer` block provides a page container for a [footer](https://4x.ant.design/components/layout/) area with content.

@@ -1039,14 +1039,3 @@
           pageId: v4-to-v5
           properties:
             title: V4 to V5
-    - id: versions
-      type: MenuGroup
-      properties:
-        title: Lowdefy Versions
-        icon: AiOutlineBranches
-      links:
-        - id: v3
-          type: MenuLink
-          url: https://docs-v3.lowdefy.com
-          properties:
-            title: Version 3

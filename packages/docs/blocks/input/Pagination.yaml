@@ -18,7 +18,7 @@ _ref:
     block_type: Pagination
     value_type: object
     category: input
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Pagination/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Pagination/schema.js
     filePath: blocks/input/Pagination.yaml
     init_property_values:
       pageSizeOptions: [10, 20, 30, 40]

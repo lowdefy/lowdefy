@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: SkeletonAvatar
     category: display
-    schema: ../plugins/blocks/blocks-loaders/src/blocks/SkeletonAvatar/schema.json
+    schema: ../plugins/blocks/blocks-loaders/src/blocks/SkeletonAvatar/schema.js
     filePath: blocks/display/SkeletonAvatar.yaml
     description_content: |
       The `SkeletonAvatar` block can be used as a loading skeleton for an `Avatar` block.

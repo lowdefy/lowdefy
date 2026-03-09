@@ -18,7 +18,7 @@ _ref:
     block_type: CheckboxSelector
     value_type: any[]
     category: input
-    schema: ../plugins/blocks/blocks-antd/src/blocks/CheckboxSelector/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/CheckboxSelector/schema.js
     filePath: blocks/input/CheckboxSelector.yaml
     init_state_values:
       __type_block.properties.options: object[]

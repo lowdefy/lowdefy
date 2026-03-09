@@ -18,7 +18,7 @@ _ref:
     block_type: S3Download
     value_type: object
     category: display
-    schema: ../plugins/plugins/plugin-aws/src/blocks/S3Download/schema.json
+    schema: ../plugins/plugins/plugin-aws/src/blocks/S3Download/schema.js
     filePath: blocks/display/S3Download.yaml
     description_content: |
       The `S3Download` block allows a user to download a files from AWS S3.

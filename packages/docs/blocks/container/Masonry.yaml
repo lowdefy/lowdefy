@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: Masonry
     category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Masonry/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Masonry/schema.js
     filePath: blocks/container/Masonry.yaml
     description_content: |
       A masonry (Pinterest-style) layout container. Child blocks are arranged in columns with items filling available vertical space. Supports responsive column counts and configurable gutters.

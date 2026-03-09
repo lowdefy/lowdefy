@@ -18,7 +18,7 @@ _ref:
     block_type: TreeSelector
     value_type: any
     category: input
-    schema: ../plugins/blocks/blocks-antd/src/blocks/TreeSelector/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/TreeSelector/schema.js
     filePath: blocks/input/TreeSelector.yaml
     init_state_values:
       __type_block.properties.options: object[]

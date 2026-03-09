@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: MasonryList
     category: list
-    schema: ../plugins/blocks/blocks-antd/src/blocks/MasonryList/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/MasonryList/schema.js
     filePath: blocks/list/MasonryList.yaml
     description_content: |
       A data-driven masonry (Pinterest-style) layout that renders dynamic items from state. Items are arranged in columns, filling the shortest column first. Supports adding and removing items via `pushItem` and `removeItem` methods.

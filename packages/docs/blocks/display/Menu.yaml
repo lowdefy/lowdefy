@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: Menu
     category: display
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Menu/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Menu/schema.js
     filePath: blocks/display/Menu.yaml
     description_content: |
       A menu block used to display page links.

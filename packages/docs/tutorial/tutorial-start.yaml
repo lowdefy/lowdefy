@@ -162,8 +162,6 @@ _ref:
                                   params:
                                     url: https://docs.lowdefy.com
                                     newTab: true
-              footer:
-                blocks:
                   - id: footer
                     type: Paragraph
                     properties:

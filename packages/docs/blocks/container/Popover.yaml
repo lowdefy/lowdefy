@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: Popover
     category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Popover/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Popover/schema.js
     description_content: |
       A popover container. Can be used to display extra information or options inside the popover.
     init_state_values:

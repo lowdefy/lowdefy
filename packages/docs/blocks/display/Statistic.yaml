@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: Statistic
     category: display
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Statistic/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Statistic/schema.js
     filePath: blocks/display/Statistic.yaml
     init_state_values:
       __type_block.properties.value: number

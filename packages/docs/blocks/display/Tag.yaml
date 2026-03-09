@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: Tag
     category: display
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Tag/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Tag/schema.js
     filePath: blocks/display/Tag.yaml
     description_content: |
       A block to render a Tag component.

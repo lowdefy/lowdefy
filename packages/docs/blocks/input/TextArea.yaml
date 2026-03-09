@@ -18,7 +18,7 @@ _ref:
     block_type: TextArea
     value_type: string
     category: input
-    schema: ../plugins/blocks/blocks-antd/src/blocks/TextArea/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/TextArea/schema.js
     filePath: blocks/input/TextArea.yaml
     init_state_values:
       __type_block.properties.autoSize: boolean

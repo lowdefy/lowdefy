@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: SkeletonParagraph
     category: display
-    schema: ../plugins/blocks/blocks-loaders/src/blocks/SkeletonParagraph/schema.json
+    schema: ../plugins/blocks/blocks-loaders/src/blocks/SkeletonParagraph/schema.js
     filePath: blocks/display/SkeletonParagraph.yaml
     description_content: |
       The `SkeletonParagraph` block can be used as a loading skeleton for a `Paragraph` block.

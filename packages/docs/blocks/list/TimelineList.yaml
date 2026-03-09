@@ -19,7 +19,7 @@ _ref:
   vars:
     block_type: TimelineList
     category: list
-    schema: ../plugins/blocks/blocks-antd/src/blocks/TimelineList/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/TimelineList/schema.js
     filePath: blocks/TimelineList/TimelineList.yaml
     description_content: |
       The TimelineList block renders a content slot for all items in the array. All list blocks create an array in state at their block `id`. The list content slots are rendered for each index in the array. See the [List Concept](/lists) page for a detailed description on how to work with lists.
@@ -128,7 +128,7 @@ _ref:
                   ```
                 on:
                   value:
-                    _yaml.stringify:
+                    _custom_yaml_stringify:
                       on:
                         shipment_events:
                           _state: shipment_events

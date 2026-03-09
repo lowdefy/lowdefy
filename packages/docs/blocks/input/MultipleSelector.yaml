@@ -18,7 +18,7 @@ _ref:
     block_type: MultipleSelector
     value_type: any[]
     category: input
-    schema: ../plugins/blocks/blocks-antd/src/blocks/MultipleSelector/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/MultipleSelector/schema.js
     filePath: blocks/input/MultipleSelector.yaml
     init_state_values:
       __type_block.properties.options: object[]

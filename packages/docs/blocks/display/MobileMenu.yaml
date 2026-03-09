@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: MobileMenu
     category: display
-    schema: ../plugins/blocks/blocks-antd/src/blocks/MobileMenu/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/MobileMenu/schema.js
     description_content: |
       A menu designed for mobile devices. Renders a button that opens a Drawer with the menu inside. This menu is used by default in `PageHeaderMenu` and `PageSiderMenu` on mobile devices.
     init_state_values:

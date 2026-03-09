@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: ConfigProvider
     category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/ConfigProvider/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/ConfigProvider/schema.js
     filePath: blocks/container/ConfigProvider.yaml
     description_content: |
       A scoped theme provider container. All child blocks inherit the specified theme tokens and algorithm. Use to apply different themes (e.g., dark mode, custom colors) to sections of your page. See [Theming](/theming) for details.

@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: Result
     category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Result/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Result/schema.js
     filePath: blocks/container/Result.yaml
     description_content: |
       Used to provide feedback the results of a task or error.

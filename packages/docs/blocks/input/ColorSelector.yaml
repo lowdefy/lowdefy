@@ -18,7 +18,7 @@ _ref:
     block_type: ColorSelector
     value_type: string
     category: input
-    schema: ../plugins/blocks/blocks-color-selectors/src/blocks/ColorSelector/schema.json
+    schema: ../plugins/blocks/blocks-color-selectors/src/blocks/ColorSelector/schema.js
     filePath: blocks/input/ColorSelector.yaml
     description_content: |
       A color selector component.

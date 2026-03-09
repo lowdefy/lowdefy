@@ -18,7 +18,7 @@ _ref:
     block_type: PhoneNumberInput
     value_type: object
     category: input
-    schema: ../plugins/blocks/blocks-antd/src/blocks/PhoneNumberInput/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/PhoneNumberInput/schema.js
     filePath: blocks/input/PhoneNumberInput.yaml
     description_content: |
       The `PhoneNumberInput` block is a region dial code selector with a single line text input.

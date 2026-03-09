@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: Button
     category: display
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Button/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Button/schema.js
     filePath: blocks/display/Button.yaml
     description_content: |
       Button block. Use `color` and `variant` properties to control the button appearance (replaces `type` and `danger` from v4).

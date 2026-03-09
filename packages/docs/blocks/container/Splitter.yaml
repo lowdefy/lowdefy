@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: Splitter
     category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Splitter/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Splitter/schema.js
     filePath: blocks/container/Splitter.yaml
     description_content: |
       A resizable split-pane container. Panels are defined in the `panels` property with a `key` for each panel. Content slots match the panel keys. Panels can be resized by dragging the divider, and optionally collapsed.

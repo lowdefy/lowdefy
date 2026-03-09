@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: Watermark
     category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Watermark/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Watermark/schema.js
     filePath: blocks/container/Watermark.yaml
     description_content: |
       A container that overlays a watermark on its child content. Useful for marking content as draft, confidential, or with brand text.

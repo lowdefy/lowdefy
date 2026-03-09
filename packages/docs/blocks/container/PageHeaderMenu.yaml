@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: PageHeaderMenu
     category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/PageHeaderMenu/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/PageHeaderMenu/schema.js
     filePath: blocks/container/PageHeaderMenu.yaml
     description_content: |
       The Page Header Menu block provides a structured layout for a page with a header containing a menu, content and footer slots.

@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: Tooltip
     category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Tooltip/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Tooltip/schema.js
     description_content: |
       A simple text popup tip. Can be used to display extra information about its children blocks.
     init_state_values:

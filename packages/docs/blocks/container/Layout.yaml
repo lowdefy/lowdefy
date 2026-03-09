@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: Layout
     category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Layout/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Layout/schema.js
     filePath: blocks/container/Layout.yaml
     description_content: |
       The `Layout` block provides a page container for a [layout](https://4x.ant.design/components/layout/) area with content. It can be used as a wrapper, in which `Header`, `Sider`, `Content,` `Footer` or `Layout` itself can be nested.

@@ -18,7 +18,7 @@ _ref:
     block_type: TextInput
     value_type: string
     category: input
-    schema: ../plugins/blocks/blocks-antd/src/blocks/TextInput/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/TextInput/schema.js
     filePath: blocks/input/TextInput.yaml
     description_content: |
       The `TextInput` block is a single line text input.

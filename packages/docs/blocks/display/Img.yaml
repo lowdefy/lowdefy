@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: Img
     category: display
-    schema: ../plugins/blocks/blocks-basic/src/blocks/Img/schema.json
+    schema: ../plugins/blocks/blocks-basic/src/blocks/Img/schema.js
     filePath: blocks/display/Img.yaml
     init_property_values:
       src: 'https://docs.lowdefy.com/logo-light-theme.png'

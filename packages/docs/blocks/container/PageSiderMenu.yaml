@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: PageSiderMenu
     category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/PageSiderMenu/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/PageSiderMenu/schema.js
     filePath: blocks/container/PageSiderMenu.yaml
     description_content: |
       The Page Sider Menu block provides a structured layout for a page with a header, sider including menu, content and footer slots.

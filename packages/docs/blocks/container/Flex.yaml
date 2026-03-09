@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: Flex
     category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Flex/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Flex/schema.js
     filePath: blocks/container/Flex.yaml
     description_content: |
       A flexbox layout container. Use to arrange child blocks in a row or column with configurable alignment, justification, wrapping, and gap.

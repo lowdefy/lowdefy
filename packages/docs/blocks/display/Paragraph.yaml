@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: Paragraph
     category: display
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Paragraph/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Paragraph/schema.js
     filePath: blocks/display/Paragraph.yaml
     init_state_values:
       __type_block.properties.copyable: boolean

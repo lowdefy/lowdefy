@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: Tour
     category: display
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Tour/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Tour/schema.js
     filePath: blocks/display/Tour.yaml
     description_content: |
       A guided tour component that highlights elements on the page with step-by-step instructions. Configure steps with `target` (a block id), `title`, and `description`.

@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: Anchor
     category: display
-    schema: ../plugins/blocks/blocks-basic/src/blocks/Anchor/schema.json
+    schema: ../plugins/blocks/blocks-basic/src/blocks/Anchor/schema.js
     filePath: blocks/display/Anchor.yaml
     description_content: |
       Anchor link block. Creates a clickable icon and/ or text.

@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: Progress
     category: display
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Progress/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Progress/schema.js
     filePath: blocks/display/Progress.yaml
     init_property_values:
       percent: 30

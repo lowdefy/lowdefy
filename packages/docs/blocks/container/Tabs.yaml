@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: Tabs
     category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Tabs/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Tabs/schema.js
     description_content: |
       Tabs to easily switch between different views.
       The key of each tab is the slot keys of the container and there is an `extra` content slot.

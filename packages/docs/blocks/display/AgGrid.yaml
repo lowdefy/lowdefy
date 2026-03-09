@@ -19,7 +19,7 @@ _ref:
     category: display
     pageTitle: AgGrid
     filePath: blocks/display/AgGrid.yaml
-    schema: ../plugins/blocks/blocks-aggrid/src/blocks/AgGridAlpine/schema.json
+    schema: ../plugins/blocks/blocks-aggrid/src/blocks/AgGridAlpine/schema.js
     description_content: |
       This is a Lowdefy blocks wrapper for for [Ag-Grid](https://www.ag-grid.com/), a feature rich javascript grid and table library.
       The implementation of these blocks is a minimal wrapper for the [@ag-grid-community/core](https://www.npmjs.com/package/@ag-grid-community/core) package. This means you write normal Ag-Grid config to create tables.
@@ -222,7 +222,7 @@ _ref:
                   ```
                 on:
                   selection:
-                    _yaml.stringify:
+                    _custom_yaml_stringify:
                       - _state: selected_row
       - title: 'onCellClick'
         block:
@@ -269,7 +269,7 @@ _ref:
                   ```
                 on:
                   selection:
-                    _yaml.stringify:
+                    _custom_yaml_stringify:
                       - _state: selected_cell
       - title: 'Using rowId to preserve selection'
         description: |
@@ -339,7 +339,7 @@ _ref:
                       ```
                     on:
                       table_data:
-                        _yaml.stringify:
+                        _custom_yaml_stringify:
                           - _state: table_data
       - title: 'Server-side filter and sort'
         description: |
@@ -485,8 +485,8 @@ _ref:
 
                 on:
                   sort:
-                    _yaml.stringify:
+                    _custom_yaml_stringify:
                       - _state: table.sort
                   filter:
-                    _yaml.stringify:
+                    _custom_yaml_stringify:
                       - _state: table.filter

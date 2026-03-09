@@ -18,7 +18,7 @@ _ref:
     block_type: AutoComplete
     value_type: string
     category: input
-    schema: ../plugins/blocks/blocks-antd/src/blocks/AutoComplete/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/AutoComplete/schema.js
     filePath: blocks/input/AutoComplete.yaml
     init_property_values:
       options:

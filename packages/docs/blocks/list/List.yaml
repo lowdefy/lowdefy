@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: List
     category: list
-    schema: ../plugins/blocks/blocks-basic/src/blocks/List/schema.json
+    schema: ../plugins/blocks/blocks-basic/src/blocks/List/schema.js
     filePath: blocks/list/List.yaml
     description_content: |
       The List block renders a content slot for all items in the array. All list blocks create an array in state at their block `id`. The list content slots are rendered for each index in the array. See the [List Concept](/lists) page for a detailed description on how to work with lists.
@@ -149,7 +149,7 @@ _ref:
                   ```
                 on:
                   value:
-                    _yaml.stringify:
+                    _custom_yaml_stringify:
                       on:
                         todos:
                           _state: todos

@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: Span
     category: container
-    schema: ../plugins/blocks/blocks-basic/src/blocks/Span/schema.json
+    schema: ../plugins/blocks/blocks-basic/src/blocks/Span/schema.js
     filePath: blocks/container/Span.yaml
     description_content: |
       A Span is a container that places sub-blocks into a html `<span>`.

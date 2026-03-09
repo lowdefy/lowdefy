@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: Carousel
     category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Carousel/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Carousel/schema.js
     filePath: blocks/container/Carousel.yaml
     description_content: |
       Carousel to navigate through different slides consisting of blocks.

@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: QRCode
     category: display
-    schema: ../plugins/blocks/blocks-antd/src/blocks/QRCode/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/QRCode/schema.js
     filePath: blocks/display/QRCode.yaml
     description_content: |
       Renders a QR code from a text value. Supports customization of size, color, error correction level, and an optional centered icon.

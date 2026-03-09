@@ -19,7 +19,9 @@ license: Apache-2.0
 theme:
   antd:
     token:
-      borderRadius: 4
+      borderRadius: 24
+      colorBgLayout: '#ffffff'
+      colorPrimary: '#9366f1'
 
 cli:
   disableTelemetry: true

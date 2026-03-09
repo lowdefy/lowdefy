@@ -122,7 +122,7 @@ _ref:
                             _string.concat:
                               - |
                                 ```yaml
-                              - _yaml.stringify:
+                              - _custom_yaml_stringify:
                                   - _request: get_posts
                               - |
                                 ```

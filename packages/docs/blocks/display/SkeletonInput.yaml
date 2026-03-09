@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: SkeletonInput
     category: display
-    schema: ../plugins/blocks/blocks-loaders/src/blocks/SkeletonInput/schema.json
+    schema: ../plugins/blocks/blocks-loaders/src/blocks/SkeletonInput/schema.js
     filePath: blocks/display/SkeletonInput.yaml
     description_content: |
       The `SkeletonInput` block can be used as a loading skeleton for `Input` blocks.

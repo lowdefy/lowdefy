@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: ColorPicker
     category: input
-    schema: ../plugins/blocks/blocks-antd/src/blocks/ColorPicker/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/ColorPicker/schema.js
     filePath: blocks/input/ColorPicker.yaml
     description_content: |
       A color picker input that allows users to select a color value. Supports RGB, HEX, and HSB formats, preset palettes, and a clear option.

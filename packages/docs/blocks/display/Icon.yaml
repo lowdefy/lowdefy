@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: Icon
     category: display
-    schema: ../plugins/blocks/blocks-basic/src/blocks/Icon/schema.json
+    schema: ../plugins/blocks/blocks-basic/src/blocks/Icon/schema.js
     filePath: blocks/display/Icon.yaml
     description_content: |
       A Icon component. Render Ant Design and other icons

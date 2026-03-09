@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: FloatButton
     category: display
-    schema: ../plugins/blocks/blocks-antd/src/blocks/FloatButton/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/FloatButton/schema.js
     filePath: blocks/display/FloatButton.yaml
     description_content: |
       A floating action button that hovers over the page content. Useful for primary actions like "back to top", "help", or quick-access features.

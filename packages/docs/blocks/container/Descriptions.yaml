@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: Descriptions
     category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Descriptions/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Descriptions/schema.js
     filePath: blocks/container/Descriptions.yaml
     init_state_values:
       __type_block.properties.column: number

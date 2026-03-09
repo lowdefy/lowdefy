@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: Segmented
     category: input
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Segmented/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Segmented/schema.js
     filePath: blocks/input/Segmented.yaml
     description_content: |
       A segmented control input for selecting between a set of options. Similar to a radio group but with a pill/tab-style visual appearance.

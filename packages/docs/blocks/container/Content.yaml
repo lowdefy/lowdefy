@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: Content
     category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Content/schema.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Content/schema.js
     filePath: blocks/container/Content.yaml
     description_content: |
       The `Content` block provides a page container for a [content](https://4x.ant.design/components/layout/) area.
