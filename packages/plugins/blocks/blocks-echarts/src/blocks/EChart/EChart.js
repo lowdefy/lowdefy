@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { blockDefaultProps } from '@lowdefy/block-utils';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import { registerTheme } from 'echarts';
 import ReactECharts from 'echarts-for-react';
 
@@ -110,10 +110,9 @@ class EChart extends React.Component {
   }
 }
 
-EChart.defaultProps = blockDefaultProps;
 EChart.meta = {
   category: 'display',
   icons: [],
 };
 
-export default EChart;
+export default withBlockDefaults(EChart);

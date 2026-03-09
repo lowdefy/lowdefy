@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { blockDefaultProps } from '@lowdefy/block-utils';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 
 import '@ag-grid-community/styles/ag-grid.css';
 import '@ag-grid-community/styles/ag-theme-material.css';
@@ -53,11 +53,10 @@ const AgGridInputMaterial = ({
   </div>
 );
 
-AgGridInputMaterial.defaultProps = blockDefaultProps;
 AgGridInputMaterial.meta = {
   category: 'input',
   valueType: 'array',
   icons: [],
 };
 
-export default AgGridInputMaterial;
+export default withBlockDefaults(AgGridInputMaterial);

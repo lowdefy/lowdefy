@@ -13,28 +13,19 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-
 import React from 'react';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import blockDefaultProps from './blockDefaultProps.js';
 
-import cssStyles from './style.module.css';
+// Note: Unlike React's defaultProps, this does not replace explicitly-passed
+// undefined values. { ...defaults, ...props } keeps undefined if props has the key.
+// This matches production behavior where the framework always passes defined values.
+function withBlockDefaults(Component) {
+  const Wrapped = (props) => {
+    return <Component {...blockDefaultProps} {...props} />;
+  };
+  Wrapped.meta = Component.meta;
+  Wrapped.displayName = Component.displayName || Component.name;
+  return Wrapped;
+}
 
-const Skeleton = ({ classNames, properties, styles }) => {
-  return (
-    <div
-      className={cssStyles.skeleton + (classNames?.element ? ' ' + classNames.element : '')}
-      style={{
-        width: properties.width ?? '100%',
-        height: properties.height ?? '100%',
-        ...styles?.element,
-      }}
-    />
-  );
-};
-
-Skeleton.meta = {
-  category: 'display',
-  icons: [],
-};
-
-export default withBlockDefaults(Skeleton);
+export default withBlockDefaults;

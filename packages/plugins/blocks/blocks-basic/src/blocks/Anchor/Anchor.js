@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { get } from '@lowdefy/helpers';
-import { blockDefaultProps } from '@lowdefy/block-utils';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 
 const AnchorBlock = ({
   blockId,
@@ -61,10 +61,9 @@ const AnchorBlock = ({
   );
 };
 
-AnchorBlock.defaultProps = blockDefaultProps;
 AnchorBlock.meta = {
   category: 'display',
   icons: ['AiOutlineLoading3Quarters'],
 };
 
-export default AnchorBlock;
+export default withBlockDefaults(AnchorBlock);

@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { LoadScriptNext } from '@react-google-maps/api';
-import { blockDefaultProps } from '@lowdefy/block-utils';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 
 class GoogleMapsScript extends React.Component {
   constructor(props) {
@@ -41,10 +41,9 @@ class GoogleMapsScript extends React.Component {
   }
 }
 
-GoogleMapsScript.defaultProps = blockDefaultProps;
 GoogleMapsScript.meta = {
   category: 'container',
   icons: [],
 };
 
-export default GoogleMapsScript;
+export default withBlockDefaults(GoogleMapsScript);

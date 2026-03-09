@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { blockDefaultProps } from '@lowdefy/block-utils';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 
 import Skeleton from '../Skeleton/Skeleton.js';
 
@@ -40,10 +40,9 @@ const SkeletonParagraph = ({ classNames, properties, styles }) => {
   );
 };
 
-SkeletonParagraph.defaultProps = blockDefaultProps;
 SkeletonParagraph.meta = {
   category: 'display',
   icons: [],
 };
 
-export default SkeletonParagraph;
+export default withBlockDefaults(SkeletonParagraph);

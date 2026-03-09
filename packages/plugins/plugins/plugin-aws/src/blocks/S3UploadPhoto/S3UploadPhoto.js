@@ -15,7 +15,7 @@
 */
 
 import React, { useEffect, useState } from 'react';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import { withBlockDefaults, renderHtml } from '@lowdefy/block-utils';
 
 import { Upload } from 'antd';
 
@@ -96,7 +96,6 @@ const S3UploadPhoto = ({ blockId, components: { Icon }, events, methods, propert
   );
 };
 
-S3UploadPhoto.defaultProps = blockDefaultProps;
 S3UploadPhoto.meta = {
   valueType: 'object',
   category: 'input',
@@ -104,4 +103,4 @@ S3UploadPhoto.meta = {
   styles: [],
 };
 
-export default S3UploadPhoto;
+export default withBlockDefaults(S3UploadPhoto);

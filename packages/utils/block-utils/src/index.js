@@ -23,6 +23,7 @@ import HtmlComponent from './HtmlComponent.js';
 import makeCssClass from './makeCssClass.js';
 import mediaToCssObject from './mediaToCssObject.js';
 import renderHtml from './renderHtml.js';
+import withBlockDefaults from './withBlockDefaults.js';
 
 export {
   blockDefaultProps,
@@ -34,4 +35,5 @@ export {
   makeCssClass,
   mediaToCssObject,
   renderHtml,
+  withBlockDefaults,
 };

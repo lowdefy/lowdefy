@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { blockDefaultProps } from '@lowdefy/block-utils';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 
 import Skeleton from '../Skeleton/Skeleton.js';
 
@@ -57,10 +57,9 @@ const SkeletonInput = ({ classNames, properties, styles }) => {
   );
 };
 
-SkeletonInput.defaultProps = blockDefaultProps;
 SkeletonInput.meta = {
   category: 'display',
   icons: [],
 };
 
-export default SkeletonInput;
+export default withBlockDefaults(SkeletonInput);

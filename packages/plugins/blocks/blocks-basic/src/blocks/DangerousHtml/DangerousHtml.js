@@ -16,7 +16,7 @@
 
 import React from 'react';
 import DOMPurify from 'dompurify';
-import { blockDefaultProps } from '@lowdefy/block-utils';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
 class DangerousHtml extends React.Component {
@@ -61,10 +61,9 @@ class DangerousHtml extends React.Component {
   }
 }
 
-DangerousHtml.defaultProps = blockDefaultProps;
 DangerousHtml.meta = {
   category: 'display',
   icons: [],
 };
 
-export default DangerousHtml;
+export default withBlockDefaults(DangerousHtml);

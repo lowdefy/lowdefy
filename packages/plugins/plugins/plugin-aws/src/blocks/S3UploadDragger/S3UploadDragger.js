@@ -16,7 +16,7 @@
 
 import React, { useEffect } from 'react';
 import { Upload } from 'antd';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import { withBlockDefaults, renderHtml } from '@lowdefy/block-utils';
 
 import useFileList from '../utils/useFileList.js';
 import getS3Upload from '../utils/getS3Upload.js';
@@ -82,7 +82,6 @@ const S3UploadDragger = ({ blockId, methods, properties, value }) => {
   );
 };
 
-S3UploadDragger.defaultProps = blockDefaultProps;
 S3UploadDragger.meta = {
   valueType: 'object',
   category: 'input',
@@ -90,4 +89,4 @@ S3UploadDragger.meta = {
   styles: [],
 };
 
-export default S3UploadDragger;
+export default withBlockDefaults(S3UploadDragger);

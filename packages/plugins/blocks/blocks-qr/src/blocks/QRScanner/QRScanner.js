@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { blockDefaultProps } from '@lowdefy/block-utils';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import { Html5Qrcode } from 'html5-qrcode';
 
 const codes = {
@@ -92,11 +92,10 @@ class QRScanner extends React.Component {
   }
 }
 
-QRScanner.defaultProps = blockDefaultProps;
 QRScanner.meta = {
   valueType: 'object',
   category: 'input',
   icons: [],
 };
 
-export default QRScanner;
+export default withBlockDefaults(QRScanner);

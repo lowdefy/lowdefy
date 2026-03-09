@@ -16,24 +16,25 @@
 
 import React from 'react';
 import { ConfigProvider } from 'antd';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
 function withTheme(antdComponentName, BlockComponent) {
   const Wrapped = (props) => {
-    const { theme, ...restProperties } = props.properties;
+    const mergedProps = { ...blockDefaultProps, ...props };
+    const { theme, ...restProperties } = mergedProps.properties;
     // Only intercept object themes (design tokens for ConfigProvider).
     // String themes (e.g. Menu's 'dark'/'light') pass through to the component.
     if (!type.isObject(theme)) {
-      return <BlockComponent {...props} />;
+      return <BlockComponent {...mergedProps} />;
     }
     return (
       <ConfigProvider theme={{ components: { [antdComponentName]: theme } }}>
-        <BlockComponent {...props} properties={restProperties} />
+        <BlockComponent {...mergedProps} properties={restProperties} />
       </ConfigProvider>
     );
   };
   Wrapped.meta = BlockComponent.meta;
-  Wrapped.defaultProps = BlockComponent.defaultProps;
   Wrapped.displayName = BlockComponent.displayName || BlockComponent.name;
   return Wrapped;
 }

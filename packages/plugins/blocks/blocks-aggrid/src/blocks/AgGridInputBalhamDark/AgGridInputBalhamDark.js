@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { blockDefaultProps } from '@lowdefy/block-utils';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 
 import '@ag-grid-community/styles/ag-grid.css';
 import '@ag-grid-community/styles/ag-theme-balham.css';
@@ -53,11 +53,10 @@ const AgGridInputBalhamDark = ({
   </div>
 );
 
-AgGridInputBalhamDark.defaultProps = blockDefaultProps;
 AgGridInputBalhamDark.meta = {
   category: 'input',
   valueType: 'array',
   icons: [],
 };
 
-export default AgGridInputBalhamDark;
+export default withBlockDefaults(AgGridInputBalhamDark);
