@@ -73,7 +73,11 @@ const RatingSlider = ({
   // round to fix floating point error
   const minMin = parseFloat((minMax[0] - (properties.step ?? 1)).toPrecision(8));
   const validationColor =
-    validation.status === 'error' ? '#ff4d4f' : validation.status === 'warning' ? '#faad14' : null;
+    validation?.status === 'error'
+      ? '#ff4d4f'
+      : validation?.status === 'warning'
+        ? '#faad14'
+        : null;
 
   const sliderTheme = {};
   if (properties.color) {
@@ -95,14 +99,15 @@ const RatingSlider = ({
         properties.disabled || (check === true && !properties.disableNotApplicable) || loading
       }
       dots={get(properties, 'showDots', { default: true })}
-      tooltipVisible={
-        value === null || properties.tooltipVisible === 'never'
-          ? false
-          : properties.tooltipVisible === 'always'
-            ? true
-            : undefined
-      }
-      tipFormatter={(val) => `${val}`}
+      tooltip={{
+        open:
+          value === null || properties.tooltipVisible === 'never'
+            ? false
+            : properties.tooltipVisible === 'always'
+              ? true
+              : undefined,
+        formatter: (val) => `${val}`,
+      }}
       marks={
         properties.marks ??
         (get(properties, 'showMarks', { default: true })
@@ -138,7 +143,7 @@ const RatingSlider = ({
             style={{
               display: 'flex',
               flexDirection: 'row',
-              paddingRight: validation.status ? 30 : undefined,
+              paddingRight: validation?.status ? 30 : undefined,
             }}
           >
             {!required && !properties.disableNotApplicable && (
