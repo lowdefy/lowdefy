@@ -219,7 +219,7 @@ function mergeByPrimaryVersion(changelogs, processAll) {
 }
 
 // ---------------------------------------------------------------------------
-// 4. Get date for a version from git tags
+// 5. Get date for a version from git tags
 // ---------------------------------------------------------------------------
 
 function getVersionDate(version) {
@@ -248,7 +248,7 @@ function getVersionDate(version) {
 }
 
 // ---------------------------------------------------------------------------
-// 5. Generate developer-facing notes via Claude CLI
+// 6. Generate developer-facing notes via Claude CLI
 // ---------------------------------------------------------------------------
 
 function generateNotes(technicalNotes) {
@@ -282,10 +282,10 @@ function generateNotes(technicalNotes) {
 }
 
 // ---------------------------------------------------------------------------
-// 6. Build markdown for a version
+// 7. Build markdown for a version
 // ---------------------------------------------------------------------------
 
-function buildVersionMarkdown(entry, date) {
+function buildVersionMarkdown(entry) {
   const lines = [];
 
   // Collect technical content for Claude
@@ -350,7 +350,7 @@ function categorizePackages(packages) {
 }
 
 // ---------------------------------------------------------------------------
-// 7. Main
+// 8. Main
 // ---------------------------------------------------------------------------
 
 function main() {
@@ -379,7 +379,7 @@ function main() {
   for (const entry of merged) {
     const date = getVersionDate(entry.version);
     console.log(`  Processing v${entry.version} (${date})...`);
-    const markdown = buildVersionMarkdown(entry, date);
+    const markdown = buildVersionMarkdown(entry);
     allSections.push({ version: entry.version, date, markdown });
   }
 
@@ -390,11 +390,6 @@ function main() {
 
   writeFileSync(OUTPUT_FILE, output, 'utf-8');
   console.log(`\nWrote release notes to ${OUTPUT_FILE}`);
-
-  // Also print the version for use by the workflow
-  if (allSections.length > 0) {
-    console.log(`::set-output name=version::v${allSections[0].version}`);
-  }
 
   console.log('Done!');
 }
