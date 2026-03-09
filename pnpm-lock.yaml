@@ -2335,6 +2335,9 @@ importers:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
     devDependencies:
+      '@playwright/test':
+        specifier: 1.50.1
+        version: 1.50.1
       autoprefixer:
         specifier: ^10.4.0
         version: 10.4.24(postcss@8.5.6)
