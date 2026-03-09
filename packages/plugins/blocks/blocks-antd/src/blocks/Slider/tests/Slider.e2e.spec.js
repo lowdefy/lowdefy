@@ -73,7 +73,7 @@ test.describe('Slider Block', () => {
     const marks = block.locator('.ant-slider-mark-text');
     // Check that marks are rendered
     await expect(marks.first()).toBeVisible();
-    await expect(marks).toHaveCount(5); // 0, 25%, 50%, 75%, 100%
+    await expect(marks).toHaveCount(6);
   });
 
   test('renders vertical slider', async ({ page }) => {

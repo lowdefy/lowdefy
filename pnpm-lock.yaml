@@ -2234,12 +2234,6 @@ importers:
 
   packages/utils/e2e-utils:
     dependencies:
-      '@lowdefy/blocks-antd':
-        specifier: 4.5.2
-        version: link:../../plugins/blocks/blocks-antd
-      '@lowdefy/blocks-basic':
-        specifier: 4.5.2
-        version: link:../../plugins/blocks/blocks-basic
       '@lowdefy/helpers':
         specifier: 4.5.2
         version: link:../helpers
@@ -2450,6 +2444,9 @@ importers:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
     devDependencies:
+      '@playwright/test':
+        specifier: 1.50.1
+        version: 1.50.1
       autoprefixer:
         specifier: ^10.4.0
         version: 10.4.24(postcss@8.5.6)
