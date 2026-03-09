@@ -31,7 +31,7 @@ async function initDocker({ context }) {
   context.logger.info("Created '.dockerignore'.");
 
   await context.sendTelemetry();
-  context.logger.info({ succeed: true }, 'Docker deployment initialized.');
+  context.logger.info({ spin: 'succeed' }, 'Docker deployment initialized.');
 }
 
 export default initDocker;

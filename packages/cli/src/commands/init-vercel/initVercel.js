@@ -34,7 +34,7 @@ async function initVercel({ context }) {
   context.logger.info("Created 'README.md'.");
 
   await context.sendTelemetry();
-  context.logger.info({ succeed: true }, 'Vercel deployment initialized.');
+  context.logger.info({ spin: 'succeed' }, 'Vercel deployment initialized.');
 }
 
 export default initVercel;

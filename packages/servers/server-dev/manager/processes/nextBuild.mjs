@@ -24,7 +24,7 @@ function formatDuration(ms) {
 
 function nextBuild({ bin, logger }) {
   return async () => {
-    logger.info({ spin: true }, 'Building app...');
+    logger.info({ spin: 'start' }, 'Building app...');
     const startTime = Date.now();
     const errorLines = [];
     try {
@@ -43,7 +43,7 @@ function nextBuild({ bin, logger }) {
       }
       throw new BuildError('Next.js build failed. See above for details.');
     }
-    logger.info({ succeed: true }, `Built app in ${formatDuration(Date.now() - startTime)}.`);
+    logger.info({ spin: 'succeed' }, `Built app in ${formatDuration(Date.now() - startTime)}.`);
   };
 }
 

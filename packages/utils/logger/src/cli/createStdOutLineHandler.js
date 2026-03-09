@@ -49,19 +49,7 @@ function createStdOutLineHandler({ context }) {
 
     // Strip pino metadata — level/time/name are already handled by the CLI logger
     // Also strip CLI control fields — they are passed via the mergeObj, not displayed as data
-    const {
-      level,
-      time,
-      name,
-      pid,
-      hostname,
-      msg: _msg,
-      source,
-      color,
-      spin,
-      succeed,
-      ...data
-    } = parsed;
+    const { level, time, name, pid, hostname, msg: _msg, source, color, spin, ...data } = parsed;
     const dataEntries = Object.entries(data);
 
     if (msg == null && dataEntries.length === 0) {
@@ -78,9 +66,9 @@ function createStdOutLineHandler({ context }) {
 
     // First line gets source/color/spin/succeed, rest are plain indented lines
     if (msg) {
-      logger[levelName]({ source, color, spin, succeed }, msg);
+      logger[levelName]({ source, color, spin }, msg);
     } else if (dataLines.length > 0) {
-      logger[levelName]({ source, color, spin, succeed }, dataLines.shift());
+      logger[levelName]({ source, color, spin }, dataLines.shift());
     }
     for (const dataLine of dataLines) {
       logger[levelName](dataLine);

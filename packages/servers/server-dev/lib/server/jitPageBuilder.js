@@ -138,7 +138,7 @@ async function buildPageIfNeeded({ pageId, buildDirectory, configDirectory }) {
     return true;
   }
 
-  jitLogger.info({ spin: true }, `Building page "${pageId}"...`);
+  jitLogger.info({ spin: 'start' }, `Building page "${pageId}"...`);
   const startTime = Date.now();
   try {
     const context = getBuildContext(buildDirectory, configDirectory);
@@ -156,7 +156,7 @@ async function buildPageIfNeeded({ pageId, buildDirectory, configDirectory }) {
     }
     pageCache.markCompiled(pageId);
     jitLogger.info(
-      { succeed: true, color: 'white' },
+      { spin: 'succeed', color: 'white' },
       `Built page "${pageId}" in ${formatDuration(Date.now() - startTime)}.`
     );
     return true;
