@@ -26,6 +26,15 @@ const authors = {
     github: 'https://github.com/ACvWyk',
     linkedin: 'https://www.linkedin.com/in/albert-van-wyk-43667919/',
   },
+  lowdefy: {
+    id: 'lowdefy',
+    name: 'Lowdefy',
+    title: 'The Lowdefy Team',
+    bio: 'Config-driven web framework built on Next.js. Build internal tools, dashboards, and CRUD apps with YAML configuration.',
+    image: 'https://avatars.githubusercontent.com/u/47087496?v=4',
+    github: 'https://github.com/lowdefy',
+    linkedin: 'https://www.linkedin.com/company/lowdefy/',
+  },
 };
 
 export default authors;

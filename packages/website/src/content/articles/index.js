@@ -1,6 +1,5 @@
 import matter from 'gray-matter';
 
-import configFirstAiRaw from '../../../content/articles/why-config-first-is-the-future-of-ai-app-development.md';
 import buildFasterRaw from '../../../content/articles/lowdefy-4-6-build-faster-break-less.md';
 
 function parseArticle(slug, raw) {
@@ -18,10 +17,7 @@ function parseArticle(slug, raw) {
   };
 }
 
-const articles = [
-  parseArticle('why-config-first-is-the-future-of-ai-app-development', configFirstAiRaw),
-  parseArticle('lowdefy-4-6-build-faster-break-less', buildFasterRaw),
-]
+const articles = [parseArticle('lowdefy-4-6-build-faster-break-less', buildFasterRaw)]
   .filter((a) => !a.draft)
   .sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime());
 
