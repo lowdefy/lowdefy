@@ -34,8 +34,9 @@ import evaluateStaticOperators from '../buildRefs/evaluateStaticOperators.js';
 import getRefContent from '../buildRefs/getRefContent.js';
 import jsMapParser from '../buildJs/jsMapParser.js';
 import makeRefDefinition from '../buildRefs/makeRefDefinition.js';
-import { resolve, WalkContext, cloneForResolve } from '../buildRefs/walker.js';
+import { resolve, WalkContext, cloneForResolve, tagRefDeep } from '../buildRefs/walker.js';
 import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
+import writeMaps from '../writeMaps.js';
 import detectMissingPluginPackages from './detectMissingPluginPackages.js';
 import updateServerPackageJsonJit from './updateServerPackageJsonJit.js';
 import validatePageTypes from './validatePageTypes.js';
@@ -164,11 +165,19 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       }
     }
 
+    // Tag all objects with ~r for ref provenance (normally done inside _ref
+    // resolution by the walker; JIT resolves the page file directly).
+    tagRefDeep(processed, refDef.id);
+
     // Apply skeleton-computed auth (buildAuth ran during skeleton build)
     processed.auth = pageEntry.auth;
 
     // Add keys to the resolved page
     addKeys({ components: processed, context: buildContext });
+
+    // Write keyMap/refMap so the error handler reads JIT entries from disk.
+    // JIT addKeys assigns fresh ~k values that aren't in the skeleton keyMap.
+    await writeMaps({ context: buildContext });
 
     // Initialize linkActionRefs for buildPage (normally done by buildPages)
     if (!buildContext.linkActionRefs) {

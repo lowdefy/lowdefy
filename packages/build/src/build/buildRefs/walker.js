@@ -370,4 +370,4 @@ async function resolve(node, ctx) {
   return node;
 }
 
-export { resolve, WalkContext, cloneForResolve };
+export { resolve, WalkContext, cloneForResolve, tagRefDeep };
