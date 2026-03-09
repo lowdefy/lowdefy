@@ -430,3 +430,47 @@ pages:
   expect(res.pages[0].type).toBe('PageHeaderMenu');
   expect(res.pages[0].blocks).toBeUndefined();
 });
+
+test('buildRefs shallow: unresolvedRefVars preserves blocks keys inside vars that resolve under pages path', async () => {
+  // Regression: when a page _ref has vars containing a _ref that resolves
+  // to content with "blocks" keys, shouldStop must not strip those keys
+  // from the stored unresolved vars. JIT needs them to re-resolve the page.
+  context.unresolvedRefVars = {};
+  const files = [
+    {
+      path: 'lowdefy.yaml',
+      content: `
+pages:
+  - _ref:
+      path: template.yaml
+      vars:
+        component:
+          _ref: component.yaml`,
+    },
+    {
+      path: 'component.yaml',
+      content: `
+id: wrapper
+type: GoogleAPIProvider
+blocks:
+  - id: map
+    type: GoogleMaps`,
+    },
+    {
+      path: 'template.yaml',
+      content: `
+id: my-page
+type: PageHeaderMenu`,
+    },
+  ];
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+  await buildRefs({
+    context,
+    shallowOptions: true,
+  });
+  const varsEntries = Object.values(context.unresolvedRefVars);
+  expect(varsEntries.length).toBeGreaterThan(0);
+  // The unresolved vars should contain the original _ref, not resolved content
+  // with blocks stripped by shouldStop.
+  expect(varsEntries[0].component).toEqual({ _ref: 'component.yaml' });
+});

@@ -242,29 +242,31 @@ async function resolveRef(node, ctx) {
   const lineNumber = node['~l'];
   const refDef = makeRefDefinition(node._ref, ctx.refId, ctx.refMap, lineNumber);
 
-  // 2. Resolve dynamic path/vars/key: clone before resolving to prevent mutation
+  // 2. Store unresolved vars before resolution mutates them, and clone so
+  //    resolution operates on a copy (preserving original.vars for resolver refs).
+  const varKeys = Object.keys(refDef.vars);
+  if (varKeys.length > 0) {
+    ctx.unresolvedRefVars[refDef.id] = refDef.vars;
+    refDef.vars = cloneForResolve(refDef.vars);
+  }
+
+  // 3. Resolve dynamic path/vars/key
   if (type.isObject(refDef.path)) {
     refDef.path = await resolve(cloneForResolve(refDef.path), ctx);
   }
-  const varKeys = Object.keys(refDef.vars);
   for (const varKey of varKeys) {
     if (type.isObject(refDef.vars[varKey]) || type.isArray(refDef.vars[varKey])) {
-      refDef.vars[varKey] = await resolve(cloneForResolve(refDef.vars[varKey]), ctx);
+      refDef.vars[varKey] = await resolve(refDef.vars[varKey], ctx);
     }
   }
   if (type.isObject(refDef.key)) {
     refDef.key = await resolve(cloneForResolve(refDef.key), ctx);
   }
 
-  // 3. Update refMap with resolved path; store original for resolver refs
+  // 4. Update refMap with resolved path; store original for resolver refs
   ctx.refMap[refDef.id].path = refDef.path;
   if (!refDef.path) {
     ctx.refMap[refDef.id].original = refDef.original;
-  }
-
-  // 4. Store unresolvedRefVars if vars non-empty
-  if (varKeys.length > 0) {
-    ctx.unresolvedRefVars[refDef.id] = refDef.vars;
   }
 
   // 5. Circular detection

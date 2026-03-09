@@ -1592,6 +1592,78 @@ field:
     expect(varsEntries[0]).toEqual(expect.objectContaining({ var1: 'value' }));
   });
 
+  test('buildRefs stores unresolved _ref objects in unresolvedRefVars, not resolved content', async () => {
+    context.unresolvedRefVars = {};
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+ref:
+  _ref:
+    path: template.yaml
+    vars:
+      data:
+        _ref: data.yaml`,
+      },
+      {
+        path: 'data.yaml',
+        content: `
+id: map_script
+type: GoogleAPIProvider
+blocks:
+  - id: view_map
+    type: GoogleMaps`,
+      },
+      {
+        path: 'template.yaml',
+        content: `
+field:
+  _var: data`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    await buildRefs({ context });
+    const varsEntries = Object.values(context.unresolvedRefVars);
+    expect(varsEntries.length).toBeGreaterThan(0);
+    // The stored var should be the unresolved _ref, not the resolved content
+    expect(varsEntries[0].data).toEqual({ _ref: 'data.yaml' });
+  });
+
+  test('buildRefs unresolvedRefVars are cloned so resolution does not mutate them', async () => {
+    context.unresolvedRefVars = {};
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+ref:
+  _ref:
+    path: template.yaml
+    vars:
+      title:
+        _ref:
+          path: config.yaml
+          key: title`,
+      },
+      {
+        path: 'config.yaml',
+        content: `title: Hello`,
+      },
+      {
+        path: 'template.yaml',
+        content: `
+field:
+  _var: title`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const result = await buildRefs({ context });
+    const varsEntries = Object.values(context.unresolvedRefVars);
+    // unresolvedRefVars should have the original _ref definition
+    expect(varsEntries[0].title).toEqual({ _ref: { path: 'config.yaml', key: 'title' } });
+    // The resolved output should have the actual value
+    expect(result.ref.field).toBe('Hello');
+  });
+
   test('buildRefs does not populate unresolvedRefVars for refs without vars', async () => {
     context.unresolvedRefVars = {};
     const files = [
