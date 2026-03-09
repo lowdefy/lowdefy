@@ -375,6 +375,9 @@ importers:
       '@lowdefy/helpers':
         specifier: 4.5.2
         version: link:../utils/helpers
+      yaml:
+        specifier: 2.3.4
+        version: 2.3.4
     devDependencies:
       '@jest/globals':
         specifier: 28.1.3
@@ -1720,6 +1723,9 @@ importers:
       '@lowdefy/connection-mongodb':
         specifier: 4.5.2
         version: link:../../plugins/connections/connection-mongodb
+      '@lowdefy/docs':
+        specifier: workspace:*
+        version: link:../../docs
       '@lowdefy/errors':
         specifier: 4.5.2
         version: link:../../utils/errors

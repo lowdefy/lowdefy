@@ -58,7 +58,7 @@ async function createCustomPluginTypesMap({ directories }) {
   for (const plugin of pluginDefinitions) {
     const types = require(`${plugin.name}/types`);
     createPluginTypesMap({
-      packageTypes: types,
+      packageTypes: types.default ?? types,
       typesMap: customTypesMap,
       packageName: plugin.name,
       version: plugin.version,
