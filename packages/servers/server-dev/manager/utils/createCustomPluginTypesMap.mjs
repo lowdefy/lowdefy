@@ -66,7 +66,7 @@ async function createCustomPluginTypesMap({ directories, logger }) {
       throw new Error(`Failed to import plugin "${plugin.name}".`);
     }
     createPluginTypesMap({
-      packageTypes: types,
+      packageTypes: types.default ?? types,
       typesMap: customTypesMap,
       packageName: plugin.name,
       version: plugin.version,

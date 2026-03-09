@@ -165,7 +165,7 @@ async function buildPageIfNeeded({ pageId, buildDirectory, configDirectory }) {
       { spin: 'succeed', color: 'white' },
       `Built page "${pageId}" in ${formatDuration(Date.now() - startTime)}.`
     );
-    return true;
+    return { built: true, warnings: result?._warnings };
   } finally {
     pageCache.releaseBuildLock(pageId);
   }

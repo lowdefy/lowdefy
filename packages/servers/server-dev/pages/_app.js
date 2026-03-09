@@ -14,14 +14,18 @@
   limitations under the License.
 */
 
-import React, { Suspense, useCallback, useRef } from 'react';
+import React, { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
+import useSWR from 'swr';
 
 import { ErrorBoundary } from '@lowdefy/block-utils';
 import { StyleProvider } from '@ant-design/cssinjs';
 import { ConfigProvider, theme as antdTheme } from 'antd';
 
 import Auth from '../lib/client/auth/Auth.js';
+import ErrorBar from '../lib/client/ErrorBar.js';
+import request from '../lib/client/utils/request.js';
 
 // Must be in _app due to next specifications.
 import '../build/globals.css';
@@ -49,7 +53,36 @@ function ThemeTokenResolver({ lowdefyRef, children }) {
 }
 
 function App({ Component }) {
+  const router = useRouter();
   const lowdefyRef = useRef({});
+  const [runtimeErrors, setRuntimeErrors] = useState([]);
+
+  // Subscribe to rootConfig SWR cache — deduplicates with inner App.js fetch.
+  // Without suspense so _app.js doesn't suspend — just re-renders when data arrives.
+  const { data: rootConfig } = useSWR(`${router.basePath}/api/root`, (url) => request({ url }));
+  if (rootConfig?.theme) {
+    lowdefyRef.current.theme = rootConfig.theme;
+  }
+
+  // Runtime error callback — pushes errors to state for ErrorBar display.
+  // Accepts Error objects (with .name) or plain objects (with .type) from build warnings.
+  lowdefyRef.current._runtimeErrorCallback = useCallback((error) => {
+    setRuntimeErrors((prev) => [
+      ...prev,
+      {
+        type: error.type ?? error.name,
+        message: error.message,
+        source: error.source,
+      },
+    ]);
+  }, []);
+
+  // Clear runtime errors on route change
+  useEffect(() => {
+    const clearErrors = () => setRuntimeErrors([]);
+    router.events.on('routeChangeStart', clearErrors);
+    return () => router.events.off('routeChangeStart', clearErrors);
+  }, [router.events]);
 
   const handleError = useCallback((error) => {
     if (lowdefyRef.current?._internal?.handleError) {
@@ -79,6 +112,7 @@ function App({ Component }) {
               </Auth>
             </Suspense>
           </ErrorBoundary>
+          <ErrorBar errors={runtimeErrors} />
         </ThemeTokenResolver>
       </ConfigProvider>
     </StyleProvider>
