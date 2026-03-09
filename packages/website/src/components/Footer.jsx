@@ -8,6 +8,7 @@ const footerLinks = {
     { name: 'Blocks', href: 'https://docs.lowdefy.com/blocks' },
   ],
   resources: [
+    { name: 'Articles', href: '/articles' },
     { name: 'GitHub', href: 'https://github.com/lowdefy/lowdefy' },
     { name: 'Discord', href: 'https://discord.gg/WmcJgXt' },
     { name: 'Changelog', href: 'https://github.com/lowdefy/lowdefy/releases' },
