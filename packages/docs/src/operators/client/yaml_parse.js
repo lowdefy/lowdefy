@@ -14,6 +14,18 @@
   limitations under the License.
 */
 
-export { default as _custom_filter_default_value } from './operators/client/filter_default_value.js';
-export { default as _custom_yaml_parse } from './operators/client/yaml_parse.js';
-export { default as _custom_yaml_stringify } from './operators/client/yaml_stringify.js';
+import YAML from 'yaml';
+
+function custom_yaml_parse({ params }) {
+  const input = Array.isArray(params) ? params[0] : params;
+  if (!input || typeof input !== 'string') return {};
+  try {
+    const result = YAML.parse(input);
+    if (result === null || typeof result !== 'object' || Array.isArray(result)) return {};
+    return result;
+  } catch {
+    return {};
+  }
+}
+
+export default custom_yaml_parse;
