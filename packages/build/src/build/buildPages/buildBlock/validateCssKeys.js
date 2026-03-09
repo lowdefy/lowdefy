@@ -14,7 +14,17 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
 import { ConfigWarning } from '@lowdefy/errors';
+
+function isOperator(value) {
+  if (!type.isObject(value)) return false;
+  const nonTildeKeys = Object.keys(value).filter((k) => !k.startsWith('~'));
+  if (nonTildeKeys.length !== 1) return false;
+  const [op] = nonTildeKeys[0].split('.');
+  const operator = op.replace(/^(_+)/gm, '_');
+  return operator.length > 1 && operator[0] === '_';
+}
 
 function validateCssKeys(block, pageContext) {
   const blockMeta = pageContext.context.blockMetas?.[block.type];
@@ -23,24 +33,30 @@ function validateCssKeys(block, pageContext) {
 
   const validKeys = new Set(['block', ...(blockMeta.cssKeys ?? ['element'])]);
 
-  for (const key of Object.keys(block.style ?? {})) {
-    if (!validKeys.has(key)) {
-      pageContext.context.handleWarning(
-        new ConfigWarning(
-          `Block "${block.blockId}" (${block.type}): Unknown CSS key "--${key}" in "style". Valid keys: ${[...validKeys].map((k) => `--${k}`).join(', ')}.`,
-          { configKey: block['~k'] }
-        )
-      );
+  if (type.isObject(block.style) && !isOperator(block.style)) {
+    for (const key of Object.keys(block.style)) {
+      if (key.startsWith('~')) continue;
+      if (!validKeys.has(key)) {
+        pageContext.context.handleWarning(
+          new ConfigWarning(
+            `Block "${block.blockId}" (${block.type}): Unknown CSS key "--${key}" in "style". Valid keys: ${[...validKeys].map((k) => `--${k}`).join(', ')}.`,
+            { configKey: block['~k'] }
+          )
+        );
+      }
     }
   }
-  for (const key of Object.keys(block.class ?? {})) {
-    if (!validKeys.has(key)) {
-      pageContext.context.handleWarning(
-        new ConfigWarning(
-          `Block "${block.blockId}" (${block.type}): Unknown CSS key "--${key}" in "class". Valid keys: ${[...validKeys].map((k) => `--${k}`).join(', ')}.`,
-          { configKey: block['~k'] }
-        )
-      );
+  if (type.isObject(block.class) && !isOperator(block.class)) {
+    for (const key of Object.keys(block.class)) {
+      if (key.startsWith('~')) continue;
+      if (!validKeys.has(key)) {
+        pageContext.context.handleWarning(
+          new ConfigWarning(
+            `Block "${block.blockId}" (${block.type}): Unknown CSS key "--${key}" in "class". Valid keys: ${[...validKeys].map((k) => `--${k}`).join(', ')}.`,
+            { configKey: block['~k'] }
+          )
+        );
+      }
     }
   }
 }

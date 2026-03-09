@@ -117,3 +117,37 @@ test('validateCssKeys warns on multiple unknown keys', () => {
   validateCssKeys(block, pageContext);
   expect(pageContext.context.handleWarning).toHaveBeenCalledTimes(3);
 });
+
+test('validateCssKeys skips validation when style is an operator expression', () => {
+  const pageContext = createPageContext({ Input: { cssKeys: ['element'] } });
+  const block = {
+    blockId: 'b1',
+    type: 'Input',
+    style: { _yaml_parse: ['color: red'] },
+  };
+  validateCssKeys(block, pageContext);
+  expect(pageContext.context.handleWarning).not.toHaveBeenCalled();
+});
+
+test('validateCssKeys skips validation when class is an operator expression', () => {
+  const pageContext = createPageContext({ Input: { cssKeys: ['element'] } });
+  const block = {
+    blockId: 'b1',
+    type: 'Input',
+    class: { _if_none: [{ _state: 'block.class' }, null] },
+  };
+  validateCssKeys(block, pageContext);
+  expect(pageContext.context.handleWarning).not.toHaveBeenCalled();
+});
+
+test('validateCssKeys ignores tilde metadata keys', () => {
+  const pageContext = createPageContext({ Input: { cssKeys: ['element'] } });
+  const block = {
+    blockId: 'b1',
+    type: 'Input',
+    style: { block: {}, '~k': 'some.path' },
+    class: { element: 'my-class', '~k': 'some.path' },
+  };
+  validateCssKeys(block, pageContext);
+  expect(pageContext.context.handleWarning).not.toHaveBeenCalled();
+});
