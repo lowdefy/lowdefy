@@ -1,5 +1,15 @@
 # Change Log
 
+## 4.6.0
+
+### Patch Changes
+
+- Updated dependencies [aa0d6d363e]
+- Updated dependencies [aebca6ab51]
+- Updated dependencies [ab19b1bb77]
+- Updated dependencies [8ec5f1be05]
+  - @lowdefy/helpers@4.6.0
+
 ## 4.5.2
 
 ### Patch Changes

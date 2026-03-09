@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/block-dev-e2e",
-  "version": "4.5.2",
+  "version": "4.6.0",
   "license": "Apache-2.0",
   "description": "Lowdefy Block E2E Testing Tools",
   "homepage": "https://lowdefy.com",
@@ -34,7 +34,7 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@lowdefy/e2e-utils": "4.5.2",
+    "@lowdefy/e2e-utils": "4.6.0",
     "@playwright/test": "1.50.1"
   },
   "devDependencies": {
