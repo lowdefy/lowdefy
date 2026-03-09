@@ -62,10 +62,7 @@ ${example.description || ''}
 `,
                 on: {
                   block: {
-                    '_yaml.stringify': [
-                      { '_json.parse': JSON.stringify(example.block) },
-                      { sortKeys: false },
-                    ], // copy this object, build must make a copy
+                    _custom_yaml_stringify: [example.block, { sortKeys: false }],
                   },
                 },
               },

@@ -19,11 +19,19 @@
 // array must specify default on array level
 function getDefaultValues(defaultValues, obj) {
   Object.keys(obj.properties || {}).forEach((key) => {
-    if (obj.properties[key].default != null) {
-      defaultValues[key] = obj.properties[key].default;
+    const property = obj.properties[key];
+    if (property.default != null) {
+      defaultValues[key] = property.default;
     }
-    if (typeof defaultValues[key] === 'undefined' || obj.properties[key].type === 'object') {
-      switch (obj.properties[key].type) {
+    // yaml displayType properties are edited as text, so default to empty string
+    if (property.docs && property.docs.displayType === 'yaml') {
+      if (typeof defaultValues[key] === 'undefined') {
+        defaultValues[key] = '';
+      }
+      return;
+    }
+    if (typeof defaultValues[key] === 'undefined' || property.type === 'object') {
+      switch (property.type) {
         case 'boolean':
           defaultValues[key] = false;
           break;
@@ -31,7 +39,7 @@ function getDefaultValues(defaultValues, obj) {
           defaultValues[key] = [];
           break;
         case 'object':
-          defaultValues[key] = getDefaultValues(defaultValues[key] || {}, obj.properties[key]);
+          defaultValues[key] = getDefaultValues(defaultValues[key] || {}, property);
           // unset empty objects for style inputs
           if (Object.keys(defaultValues[key]).length === 0) {
             delete defaultValues[key];

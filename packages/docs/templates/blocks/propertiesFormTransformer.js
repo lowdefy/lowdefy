@@ -145,7 +145,7 @@ const oneOf = ({ propertyName, propertyDescription, nameSpace }) => {
       headerStyle: { color: 'rgba(0, 0, 0, 0.45)', background: 'rgba(0, 0, 0, 0.06)' },
     },
   };
-  block.areas = {
+  block.slots = {
     extra: {
       blocks: [
         {
