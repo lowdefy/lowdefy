@@ -29,6 +29,7 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
     directories,
     errors: [],
     jsMap: {},
+    warnings: [],
     keyMap: {},
     logger,
     readConfigFile: createReadConfigFile({ directories }),
