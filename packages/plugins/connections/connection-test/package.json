@@ -4,6 +4,10 @@
   "license": "Apache-2.0",
   "description": "Lowdefy test connection for debugging requests and errors.",
   "homepage": "https://lowdefy.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lowdefy/lowdefy.git"
+  },
   "type": "module",
   "exports": {
     "./connections": "./src/connections.js",
