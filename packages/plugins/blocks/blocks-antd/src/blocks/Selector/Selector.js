@@ -45,11 +45,13 @@ const Selector = ({
   return (
     <Label
       blockId={blockId}
+      classNames={classNames}
       components={{ Icon, Link }}
       events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}
+      styles={styles}
       content={{
         content: () => (
           <div style={{ width: '100%' }}>
@@ -125,7 +127,8 @@ const Selector = ({
               {uniqueValueOptions.map((opt, i) =>
                 type.isPrimitive(opt) ? (
                   <Option
-                    style={properties.optionsStyle}
+                    style={styles.options}
+                    className={classNames.options}
                     id={`${blockId}_${i}`}
                     key={i}
                     value={`${i}`}
@@ -134,7 +137,8 @@ const Selector = ({
                   </Option>
                 ) : (
                   <Option
-                    style={{ ...properties.optionsStyle, ...opt.style }}
+                    style={{ ...styles.options, ...opt.style }}
+                    className={classNames.options}
                     disabled={opt.disabled}
                     filterstring={opt.filterString}
                     id={`${blockId}_${i}`}

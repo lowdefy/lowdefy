@@ -58,7 +58,7 @@ const PageSiderMenu = ({
       components={{ Icon, Link }}
       events={events}
       styles={{
-        element: mergeObjects([{ minHeight: '100vh' }, properties.style, styles.element]),
+        element: mergeObjects([{ minHeight: '100vh' }, styles.element]),
       }}
       content={{
         content: () => (
@@ -68,17 +68,7 @@ const PageSiderMenu = ({
               components={{ Icon, Link }}
               classNames={{ element: classNames.header }}
               events={events}
-              properties={mergeObjects([
-                {
-                  style: {
-                    display: 'flex',
-                    alignItems: 'center',
-                    padding: '0 46px',
-                    flexDirection: 'row-reverse',
-                  },
-                },
-                properties.header,
-              ])}
+              properties={properties.header ?? {}}
               styles={{
                 element: mergeObjects([
                   {
@@ -95,7 +85,10 @@ const PageSiderMenu = ({
                     <div className="flex flex-auto items-center justify-end">
                       {content.header &&
                         content.header(
-                          mergeObjects([{ width: 'auto' }, properties.header?.contentStyle])
+                          mergeObjects([
+                            { width: 'auto', alignItems: 'center', flexWrap: 'nowrap' },
+                            properties.header?.contentStyle,
+                          ])
                         )}
                       <div className="block lg:hidden pl-4">
                         <MobileMenu
@@ -162,6 +155,7 @@ const PageSiderMenu = ({
               components={{ Icon, Link }}
               events={events}
               properties={properties.layout}
+              styles={{ element: properties.layout?.style }}
               content={{
                 content: () => (
                   <>
@@ -285,14 +279,7 @@ const PageSiderMenu = ({
                       components={{ Icon, Link }}
                       classNames={{ element: classNames.content }}
                       events={events}
-                      properties={mergeObjects([
-                        {
-                          style: {
-                            padding: '0 40px 40px 40px',
-                          },
-                        },
-                        properties.content,
-                      ])}
+                      properties={properties.content ?? {}}
                       styles={{
                         element: mergeObjects([
                           {
@@ -312,11 +299,10 @@ const PageSiderMenu = ({
                                 classNames={{ element: classNames.breadcrumb }}
                                 events={events}
                                 methods={methods}
-                                properties={mergeObjects([
-                                  { style: { margin: '16px 0' } },
-                                  properties.breadcrumb,
-                                ])}
-                                styles={{ element: styles.breadcrumb }}
+                                properties={properties.breadcrumb}
+                                styles={{
+                                  element: mergeObjects([{ margin: '16px 0' }, styles.breadcrumb]),
+                                }}
                                 rename={{
                                   events: {
                                     onClick: 'onBreadcrumbClick',
@@ -334,7 +320,9 @@ const PageSiderMenu = ({
                                 classNames={{ element: classNames.footer }}
                                 events={events}
                                 properties={properties.footer}
-                                styles={{ element: styles.footer }}
+                                styles={{
+                                  element: mergeObjects([properties.footer?.style, styles.footer]),
+                                }}
                                 content={{
                                   content: () => content.footer(),
                                 }}

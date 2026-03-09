@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { ConfigProvider, Typography } from 'antd';
+import { Typography } from 'antd';
 import { renderHtml } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
@@ -109,20 +109,14 @@ const TitleBlock = ({
       italic={properties.italic}
       level={properties.level}
       mark={properties.mark}
-      style={styles.element}
+      style={{ ...styles.element, ...(properties.color && { color: properties.color }) }}
       type={properties.type}
       underline={properties.underline}
     >
       {renderHtml({ html: properties.content, methods })}
     </Title>
   );
-  return properties.color ? (
-    <ConfigProvider theme={{ components: { Typography: { colorText: properties.color } } }}>
-      {titleEl}
-    </ConfigProvider>
-  ) : (
-    titleEl
-  );
+  return titleEl;
 };
 
 TitleBlock.meta = {

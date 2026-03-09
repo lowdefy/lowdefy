@@ -33,7 +33,16 @@ const validationKeyMap = {
 
 let iconMap;
 
-const Label = ({ blockId, components: { Icon }, content, properties, required, validation }) => {
+const Label = ({
+  blockId,
+  classNames: blockClassNames = {},
+  components: { Icon },
+  content,
+  properties,
+  required,
+  styles = {},
+  validation,
+}) => {
   const {
     extraClassName,
     extraStyle,
@@ -51,7 +60,7 @@ const Label = ({ blockId, components: { Icon }, content, properties, required, v
     showExtra,
     showFeedback,
     wrapperCol,
-  } = labelLogic({ blockId, content, properties, required, validation });
+  } = labelLogic({ blockId, blockClassNames, content, properties, required, styles, validation });
   if (!iconMap) {
     iconMap = {
       error: () => <Icon properties="AiFillCloseCircle" />,

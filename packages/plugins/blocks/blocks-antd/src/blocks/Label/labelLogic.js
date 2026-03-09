@@ -21,9 +21,11 @@ import getLabelCol from './getLabelCol.js';
 
 const labelLogic = ({
   blockId,
+  blockClassNames = {},
   content,
   properties = {},
   required = false,
+  styles = {},
   validation = {
     messages: [],
     status: null, // enum: [null, 'success', 'warning', 'error', 'validating'
@@ -76,21 +78,28 @@ const labelLogic = ({
     ...properties.style,
   };
 
-  const extraClassName = 'ant-form-item-explain ant-form-item-extra';
+  const extraClassName = classNames(
+    'ant-form-item-explain',
+    'ant-form-item-extra',
+    blockClassNames.extra
+  );
   const extraStyle = {
     marginTop: properties.size === 'small' ? -4 : 0,
-    ...properties.extraStyle,
+    ...styles.extra,
   };
 
-  const feedbackClassName = classNames({
-    'ant-form-item-explain-success': validation.status === 'success',
-    'ant-form-item-explain-warning': validation.status === 'warning',
-    'ant-form-item-explain-error': validation.status === 'error',
-    'ant-form-item-explain-validating': validation.status === 'validating',
-  });
+  const feedbackClassName = classNames(
+    {
+      'ant-form-item-explain-success': validation.status === 'success',
+      'ant-form-item-explain-warning': validation.status === 'warning',
+      'ant-form-item-explain-error': validation.status === 'error',
+      'ant-form-item-explain-validating': validation.status === 'validating',
+    },
+    blockClassNames.feedback
+  );
   const feedbackStyle = {
     marginTop: properties.size === 'small' ? -4 : 0,
-    ...properties.feedbackStyle,
+    ...styles.feedback,
   };
 
   const iconClassName = classNames({

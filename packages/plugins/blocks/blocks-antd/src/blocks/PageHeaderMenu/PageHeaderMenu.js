@@ -44,7 +44,7 @@ const PageHeaderMenu = ({
       events={events}
       components={{ Icon, Link }}
       styles={{
-        element: mergeObjects([{ minHeight: '100vh' }, properties.style, styles.element]),
+        element: mergeObjects([{ minHeight: '100vh' }, styles.element]),
       }}
       content={{
         content: () => (
@@ -54,16 +54,7 @@ const PageHeaderMenu = ({
               events={events}
               components={{ Icon, Link }}
               classNames={{ element: classNames.header }}
-              properties={mergeObjects([
-                {
-                  style: {
-                    display: 'flex',
-                    alignItems: 'center',
-                    padding: '0 46px',
-                  },
-                },
-                properties.header,
-              ])}
+              properties={properties.header ?? {}}
               styles={{
                 element: mergeObjects([
                   {
@@ -128,7 +119,12 @@ const PageHeaderMenu = ({
                       {content.header &&
                         content.header(
                           mergeObjects([
-                            { width: 'auto', flex: '0 1 auto' },
+                            {
+                              width: 'auto',
+                              flex: '0 1 auto',
+                              alignItems: 'center',
+                              flexWrap: 'nowrap',
+                            },
                             properties.header?.contentStyle,
                           ])
                         )}
@@ -154,14 +150,7 @@ const PageHeaderMenu = ({
               components={{ Icon, Link }}
               classNames={{ element: classNames.content }}
               events={events}
-              properties={mergeObjects([
-                {
-                  style: {
-                    padding: '0 40px 40px 40px',
-                  },
-                },
-                properties.content,
-              ])}
+              properties={properties.content ?? {}}
               styles={{
                 element: mergeObjects([
                   {
@@ -181,11 +170,10 @@ const PageHeaderMenu = ({
                         classNames={{ element: classNames.breadcrumb }}
                         events={events}
                         methods={methods}
-                        properties={mergeObjects([
-                          { style: { margin: '16px 0' } },
-                          properties.breadcrumb,
-                        ])}
-                        styles={{ element: styles.breadcrumb }}
+                        properties={properties.breadcrumb}
+                        styles={{
+                          element: mergeObjects([{ margin: '16px 0' }, styles.breadcrumb]),
+                        }}
                         rename={{
                           events: {
                             onClick: 'onBreadcrumbClick',
@@ -207,7 +195,9 @@ const PageHeaderMenu = ({
                 classNames={{ element: classNames.footer }}
                 events={events}
                 properties={properties.footer}
-                styles={{ element: styles.footer }}
+                styles={{
+                  element: mergeObjects([properties.footer?.style, styles.footer]),
+                }}
                 content={{
                   content: () => content.footer(),
                 }}

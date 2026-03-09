@@ -131,11 +131,13 @@ const RatingSlider = ({
   return (
     <Label
       blockId={blockId}
+      classNames={classNames}
       components={{ Icon, Link }}
       events={events}
       methods={methods}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       required={required}
+      styles={styles}
       validation={validation}
       content={{
         content: () => (

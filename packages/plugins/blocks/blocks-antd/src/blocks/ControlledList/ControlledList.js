@@ -57,7 +57,7 @@ const ControlledListBlock = ({
               flexDirection: 'row',
               flexWrap: 'nowrap',
               justifyContent: 'space-between',
-              ...properties.headerStyle,
+              ...styles.header,
             }}
           >
             {properties.title ? (
@@ -92,7 +92,7 @@ const ControlledListBlock = ({
               flexDirection: 'row',
               flexWrap: 'nowrap',
               justifyContent: 'space-between',
-              ...properties.footerStyle,
+              ...styles.footer,
             }}
           >
             <br />
@@ -118,7 +118,7 @@ const ControlledListBlock = ({
       renderItem={(item, i) => (
         <List.Item
           key={`${blockId}_${i}`}
-          style={{ width: '100%', ...properties.itemStyle }}
+          style={{ width: '100%', ...styles.item }}
           extra={
             !properties.hideRemoveButton &&
             list.length > (properties.minItems ?? 0) && [
@@ -153,7 +153,7 @@ ControlledListBlock.meta = {
   valueType: 'array',
   category: 'list',
   icons: ['AiOutlinePlus', 'AiOutlineMinusCircle'],
-  cssKeys: ['element'],
+  cssKeys: ['element', 'header', 'footer', 'item'],
 };
 
 export default withTheme('List', ControlledListBlock);

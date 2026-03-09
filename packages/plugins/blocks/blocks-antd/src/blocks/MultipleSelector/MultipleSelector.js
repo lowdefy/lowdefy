@@ -34,11 +34,11 @@ const tagRender = (props, option, methods, components) => {
       components={components}
       methods={methods}
       onClose={onClose}
+      styles={{ element: { marginRight: 3, ...(option?.tag?.style ?? {}) } }}
       properties={{
         title: label ?? '',
         ...(option?.tag ?? {}),
         closable,
-        style: { marginRight: 3, ...(option?.tag?.style ?? {}) },
       }}
     />
   );
@@ -63,9 +63,11 @@ const MultipleSelector = ({
   return (
     <Label
       blockId={blockId}
+      classNames={classNames}
       components={{ Icon }}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       required={required}
+      styles={styles}
       validation={validation}
       content={{
         content: () => (
@@ -163,7 +165,8 @@ const MultipleSelector = ({
               {uniqueValueOptions.map((opt, i) =>
                 type.isPrimitive(opt) ? (
                   <Option
-                    style={properties.optionsStyle}
+                    style={styles.options}
+                    className={classNames.options}
                     id={`${blockId}_${i}`}
                     key={i}
                     value={`${i}`}
@@ -172,7 +175,8 @@ const MultipleSelector = ({
                   </Option>
                 ) : (
                   <Option
-                    style={{ ...properties.optionsStyle, ...opt.style }}
+                    style={{ ...styles.options, ...opt.style }}
+                    className={classNames.options}
                     disabled={opt.disabled}
                     filterstring={opt.filterString}
                     id={`${blockId}_${i}`}

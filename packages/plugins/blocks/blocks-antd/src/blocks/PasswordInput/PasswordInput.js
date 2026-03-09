@@ -36,10 +36,12 @@ const PasswordInput = ({
   return (
     <Label
       blockId={blockId}
+      classNames={classNames}
       components={components}
       events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       required={required}
+      styles={styles}
       validation={validation}
       content={{
         content: () => {

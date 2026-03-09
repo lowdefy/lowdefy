@@ -39,11 +39,13 @@ const AutoCompleteInput = ({
   return (
     <Label
       blockId={blockId}
+      classNames={classNames}
       components={components}
       events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}
+      styles={styles}
       content={{
         content: () => (
           <AutoComplete
@@ -81,7 +83,8 @@ const AutoCompleteInput = ({
           >
             {(properties.options || []).map((opt, i) => (
               <Option
-                style={properties.optionsStyle}
+                style={styles.options}
+                className={classNames.options}
                 id={`${blockId}_${i}`}
                 key={i}
                 value={`${opt}`}

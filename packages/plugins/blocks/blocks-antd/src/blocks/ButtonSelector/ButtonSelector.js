@@ -57,7 +57,12 @@ const ButtonSelector = ({
     >
       {uniqueValueOptions.map((opt, i) =>
         type.isPrimitive(opt) ? (
-          <Radio.Button id={`${blockId}_${i}`} key={i} value={`${i}`}>
+          <Radio.Button
+            id={`${blockId}_${i}`}
+            key={i}
+            value={`${i}`}
+            disabled={properties.disabled || loading}
+          >
             {renderHtml({ html: `${opt}`, methods })}
           </Radio.Button>
         ) : (
@@ -65,7 +70,7 @@ const ButtonSelector = ({
             id={`${blockId}_${i}`}
             key={i}
             value={`${i}`}
-            disabled={opt.disabled}
+            disabled={opt.disabled || properties.disabled || loading}
             style={opt.style}
           >
             {type.isNone(opt.label)
@@ -79,11 +84,13 @@ const ButtonSelector = ({
   return (
     <Label
       blockId={blockId}
+      classNames={classNames}
       components={components}
       events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}
+      styles={styles}
       content={{
         content: () =>
           properties.color ? (

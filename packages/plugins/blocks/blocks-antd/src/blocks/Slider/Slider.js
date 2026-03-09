@@ -36,10 +36,12 @@ const SliderBlock = ({
   return (
     <Label
       blockId={blockId}
+      classNames={classNames}
       components={{ Icon, Link }}
       events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       required={required}
+      styles={styles}
       validation={validation}
       content={{
         content: () => (
@@ -48,18 +50,15 @@ const SliderBlock = ({
             className={classNames.element}
             disabled={properties.disabled || loading}
             dots={properties.dots}
-            handleStyle={properties.handleStyle}
             included={properties.included}
             marks={properties.marks}
             max={properties.max}
             min={properties.min}
-            railStyle={properties.railStyle}
             range={properties.range}
             reverse={properties.reverse}
             step={properties.step}
             style={styles.element}
             tooltip={properties.tooltip}
-            trackStyle={properties.trackStyle}
             vertical={properties.vertical}
             onChange={(val) => {
               methods.setValue(val);

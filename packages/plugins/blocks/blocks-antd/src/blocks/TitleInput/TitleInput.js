@@ -15,7 +15,7 @@
 */
 
 import React, { useState } from 'react';
-import { ConfigProvider, Typography } from 'antd';
+import { Typography } from 'antd';
 import { type } from '@lowdefy/helpers';
 
 import withTheme from '../withTheme.js';
@@ -55,7 +55,7 @@ const TitleInput = ({
       italic={properties.italic}
       level={properties.level}
       mark={properties.mark}
-      style={styles.element}
+      style={{ ...styles.element, ...(properties.color && { color: properties.color }) }}
       type={properties.type}
       underline={properties.underline}
       copyable={
@@ -135,13 +135,7 @@ const TitleInput = ({
       {!type.isNone(value) ? value.toString() : ''}
     </Title>
   );
-  return properties.color ? (
-    <ConfigProvider theme={{ components: { Typography: { colorText: properties.color } } }}>
-      {titleEl}
-    </ConfigProvider>
-  ) : (
-    titleEl
-  );
+  return titleEl;
 };
 
 TitleInput.meta = {

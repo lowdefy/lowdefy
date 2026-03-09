@@ -43,11 +43,13 @@ const DateSelector = ({
   return (
     <Label
       blockId={blockId}
+      classNames={classNames}
       components={{ Icon }}
       events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}
+      styles={styles}
       content={{
         content: () => (
           <div style={{ width: '100%' }}>

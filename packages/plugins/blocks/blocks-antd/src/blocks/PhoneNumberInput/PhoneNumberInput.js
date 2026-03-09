@@ -49,10 +49,12 @@ function getDefaultRegion({ allowedRegions, defaultRegion, uniqueValueOptions })
 
 function AddOnSelect({
   blockId,
+  classNames = {},
   defaultValue,
   loading,
   methods,
   properties,
+  styles,
   uniqueValueOptions,
   value,
 }) {
@@ -60,7 +62,7 @@ function AddOnSelect({
     <Select
       id={`${blockId}_select_input`}
       variant={properties.bordered === false ? 'borderless' : properties.variant}
-      style={{ minWidth: 100, ...properties.selectStyle }}
+      style={{ minWidth: 100, ...styles.select }}
       defaultValue={defaultValue}
       disabled={properties.disabled || loading}
       dropdownMatchSelectWidth={false}
@@ -107,7 +109,8 @@ function AddOnSelect({
             : `${opt.value.flag} ${opt.value.name} ${opt.value.dial_code}`;
         return (
           <Option
-            style={properties.optionsStyle}
+            style={styles.options}
+            className={classNames.options}
             filterString={displayLabel}
             id={`${blockId}_${i}`}
             key={`${i}`}
@@ -167,10 +170,12 @@ const PhoneNumberInput = ({
   return (
     <Label
       blockId={blockId}
+      classNames={classNames}
       components={{ Icon, Link }}
       events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       required={required}
+      styles={styles}
       validation={validation}
       content={{
         content: () => {
@@ -180,10 +185,12 @@ const PhoneNumberInput = ({
               addonBefore={
                 <AddOnSelect
                   blockId={blockId}
+                  classNames={classNames}
                   defaultValue={defaultValue}
                   loading={loading}
                   methods={methods}
                   properties={properties}
+                  styles={styles}
                   uniqueValueOptions={uniqueValueOptions}
                   value={value}
                 />
@@ -272,7 +279,7 @@ PhoneNumberInput.meta = {
   valueType: 'object',
   category: 'input',
   icons: [...Label.meta.icons],
-  cssKeys: ['element'],
+  cssKeys: ['element', 'select', 'options'],
 };
 
 export default withTheme('Input', PhoneNumberInput);
