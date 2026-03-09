@@ -1,5 +1,228 @@
 # Change Log
 
+## 4.6.0
+
+### Minor Changes
+
+- 8ec5f1be05: Collect all build errors before stopping
+- aa0d6d363e: feat: Config-aware error tracing and Sentry integration
+
+  **Config-Aware Error Tracing (#1940)**
+
+  - Errors now trace back to exact YAML config locations with file:line
+  - Clickable VSCode links in terminal and browser
+  - Build-time validation catches typos with "Did you mean?" suggestions
+  - Service vs Config error classification
+
+  **Plugin Error Refactoring**
+
+  - Operators throw simple error messages without formatting
+  - Parsers (WebParser, ServerParser, BuildParser) format errors with received value and location
+  - Removed redundant "Operator Error:" prefix from error messages
+  - Consistent error format: "{message} Received: {params} at {location}."
+  - Actions and connections also simplified: removed inline `received` from error messages (interface layer adds it)
+  - Connection plugins (axios-http, knex, redis, sendgrid) no longer expose raw response data in errors
+
+  **Error Class Hierarchy**
+
+  - Unified error system in `@lowdefy/errors` with all error classes
+    - `@lowdefy/errors/build` - Build-time classes with sync location resolution
+  - Error classes: `LowdefyError`, `ConfigError`, `ConfigWarning`, `PluginError`, `ServiceError`
+  - `ConfigWarning` supports `prodError` flag to throw in production builds
+  - `ServiceError.isServiceError()` detects network/timeout/5xx errors
+  - `~ignoreBuildChecks` cascades through descendants to suppress warnings/errors
+
+  **Build Error Collection**
+
+  - Errors collected in `context.errors[]` instead of throwing immediately
+  - `tryBuildStep()` wrapper catches and collects errors from build steps
+  - All errors logged together before summary message for proper ordering
+
+  **Sentry Integration (#1945)**
+
+  - Zero-config Sentry support - just set SENTRY_DSN
+  - Client and server error capture with Lowdefy context (pageId, blockId, config location)
+  - Configurable sampling rates, session replay, user feedback
+  - Graceful no-op when DSN not set
+
+- af61715d5: feat: JIT page building for dev server
+
+  **Shallow Refs and JIT Build (`@lowdefy/build`)**
+
+  - Shallow `_ref` resolution stops at configured JSON paths, leaving `~shallow` markers for on-demand resolution
+  - `shallowBuild` produces a page registry with dependency tracking instead of fully built pages
+  - `buildPageJit` fully resolves a single page on demand using the shallow build output
+  - File dependency map tracks which config files affect which pages for targeted rebuilds
+  - Build package reorganized: `jit/` folder for dev-server-only files, `full/` folder for production-only files
+
+  **JIT Page Building (`@lowdefy/server-dev`)**
+
+  - Pages are built on-demand when requested instead of all at once during initial build
+  - Page cache with file-watcher invalidation for fast rebuilds
+  - `/api/page/[pageId]` endpoint triggers JIT build if page not cached
+  - `/api/js/[env]` endpoint serves operator JS maps
+  - Build error page component displays errors inline in the browser
+
+  **Operator JS Hash Check (`@lowdefy/operators-js`)**
+
+  - Added hash validation for jsMap to detect stale operator definitions
+
+- 43a5243da: feat(server-dev): Add mock user support for e2e testing
+
+  Set `LOWDEFY_DEV_USER` env var or `auth.dev.mockUser` in config to bypass login in dev server.
+
+- cacbb4d189: Add build-time validation for NEXTAUTH_SECRET environment variable when auth providers are configured
+- 338ea04b9f: feat(build): Add ~ignoreBuildChecks property to suppress build validation
+
+  **Build Validation Suppression (#1949, #1963)**
+
+  - New `~ignoreBuildChecks` property suppresses build-time validation errors and warnings
+  - Supports `true` (suppress all) or array of specific check slugs (e.g., `['state-refs', 'types']`)
+  - Cascades to all descendant config objects - set on a page to suppress for all child blocks
+  - Silent suppression - no log output when validation is skipped (visible with `--log-level debug`)
+
+  > **Renamed:** Previously `~ignoreBuildCheck` (singular) - using the old name throws a helpful migration error.
+
+  **Available Check Slugs:**
+
+  - `state-refs`, `payload-refs`, `step-refs` - Reference validation warnings
+  - `link-refs`, `request-refs`, `connection-refs` - Action reference validation
+  - `types` - All type validation (blocks, operators, actions, etc.)
+  - `schema` - JSON schema validation errors
+
+  **Use Cases:**
+
+  - Dynamic state references created at runtime by custom blocks
+  - Multi-app monorepos with conditional configurations
+  - Work-in-progress features during development
+  - Plugin development with custom types not yet registered
+
+  **Example:**
+
+  ```yaml
+  # Suppress all checks for this page and descendants
+  pages:
+    - id: dynamic-page
+      type: Box
+      ~ignoreBuildChecks: true
+      blocks:
+        - id: block1
+          type: TextInput
+          properties:
+            value:
+              _state: dynamicField # No warning
+
+  # Suppress only specific checks
+  blocks:
+    - id: custom_block
+      type: CustomBlock
+      ~ignoreBuildChecks:
+        - state-refs
+        - types
+      properties:
+        onClick:
+          _state: dynamicState # No warning (state-refs suppressed)
+  ```
+
+### Patch Changes
+
+- aeae7f0c83: fix(build): Eliminate false positive warnings for \_state references set by SetState actions
+
+  The validateStateReferences validator now recognizes state keys initialized by SetState actions in page or block events, eliminating false positive warnings when \_state references legitimate state that's set programmatically rather than from input blocks.
+
+- 7936ee3fd8: Improve build error handling and test infrastructure:
+  - Stop build after schema validation errors to prevent cascading failures
+  - Convert makeId to class with reset() method for reliable test isolation
+  - Add parseTestYaml helper for realistic YAML-based test fixtures
+  - Simplify buildConnections by removing duplicate validations handled by schema
+  - Fix addKeys to not store undefined values in keyMap
+  - Menu link to missing page is warning in dev, error in prod
+  - Handle areas with no blocks gracefully - render as empty page instead of crashing
+  - Filter out anyOf/oneOf cascade errors in schema validation - only show the specific error
+- aebca6ab51: refactor: Consolidate error classes into @lowdefy/errors package with environment-specific subpaths
+
+  **Error Package Restructure**
+
+  - New `@lowdefy/errors` package with all error classes (`ConfigError`, `PluginError`, `ServiceError`, `UserError`, `LowdefyInternalError`, `ConfigWarning`)
+    - `@lowdefy/errors/build` - Build-time errors with sync resolution via keyMap/refMap
+  - Moved ConfigMessage, resolveConfigLocation from node-utils to errors/build
+
+  **TC39 Standard Constructor Signatures**
+
+  - All error constructors standardized to `new MyError(message, { cause, ...options })`:
+    ```javascript
+    new ConfigError('Property must be a string.', { configKey });
+    new OperatorError(e.message, { cause: e, typeName: '_if', received: params });
+    new ServiceError(undefined, { cause: error, service: 'MongoDB', configKey });
+    ```
+  - Plugins throw simple errors without knowing about configKey
+  - Interface layer adds configKey before re-throwing
+
+  **configKey Added to ALL Errors**
+
+  - Interface layer now adds configKey to ALL error types (not just PluginError):
+    - ConfigError: adds configKey if not present, re-throws
+    - ServiceError: created via `new ServiceError(undefined, { cause: error, service, configKey })`
+    - Plain Error: wraps in PluginError with configKey
+  - Helps developers trace any error back to its config source, including service/network errors
+
+  **Cause Chain Support**
+
+  - All error classes use TC39 `error.cause` instead of custom stack copying
+  - CLI logger walks cause chain displaying `Caused by:` lines
+  - `extractErrorProps` recursively serializes Error causes for pino JSON logs
+  - ConfigError and PluginError extract `received` and `configKey` from `cause`:
+    ```javascript
+    new ConfigError(undefined, { cause: plainError }); // extracts cause.received and cause.configKey
+    new PluginError(undefined, { cause: plainError }); // same extraction
+    ```
+
+  **Error Display**
+
+  - `errorToDisplayString()` formats errors for display, appending `Received: <JSON>` when `error.received` is defined
+  - `rawMessage` stores the original unformatted message on PluginError
+
+- ab19b1bb77: fix(helpers): Preserve ~l line numbers on arrays in serializer.copy
+
+  Fixed an issue where line number metadata (`~l`) on arrays was lost during `serializer.copy()`, causing schema validation errors to show incorrect line numbers.
+
+  **Problem:**
+
+  - Schema errors for properties like `requests:` at line 7 were showing `:1` instead of `:7`
+  - The `~l` property on arrays was stripped during JSON round-trip in `evaluateBuildOperators`
+
+  **Solution:**
+
+  - Arrays with `~l` are now wrapped in a marker object `{ '~arr': [...], '~l': N }` during serialization
+  - The reviver restores the array with `~l` preserved as a non-enumerable property
+  - Custom revivers now receive the restored array instead of the wrapper object
+
+  **Result:**
+
+  ```
+  Before: lowdefy.yaml:1 at root
+  After:  lowdefy.yaml:7 at root
+  ```
+
+- 8ec5f1be05: fix: Correct file path tracing for multi-file \_ref imports
+- Updated dependencies [fb7910f62]
+- Updated dependencies [aa0d6d363e]
+- Updated dependencies [aebca6ab51]
+- Updated dependencies [ab19b1bb77]
+- Updated dependencies [bb3222a5a]
+- Updated dependencies [8ec5f1be05]
+- Updated dependencies [af61715d5]
+- Updated dependencies [f673e3ab3]
+  - @lowdefy/blocks-basic@4.6.0
+  - @lowdefy/errors@4.6.0
+  - @lowdefy/helpers@4.6.0
+  - @lowdefy/node-utils@4.6.0
+  - @lowdefy/operators@4.6.0
+  - @lowdefy/operators-js@4.6.0
+  - @lowdefy/blocks-loaders@4.6.0
+  - @lowdefy/nunjucks@4.6.0
+  - @lowdefy/ajv@4.6.0
+
 ## 4.5.2
 
 ### Patch Changes

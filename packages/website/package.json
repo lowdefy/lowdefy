@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/website",
-  "version": "4.5.2",
+  "version": "4.6.0",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -39,6 +39,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "4.8.0",
+    "@vercel/analytics": "^1.6.1",
     "framer-motion": "^11.0.0",
     "gray-matter": "4.0.3",
     "lucide-react": "^0.400.0",
@@ -50,6 +51,7 @@
     "react-syntax-highlighter": "15.5.0"
   },
   "devDependencies": {
+    "@playwright/test": "1.50.1",
     "autoprefixer": "^10.4.0",
     "eslint": "8.54.0",
     "eslint-config-next": "16.1.6",

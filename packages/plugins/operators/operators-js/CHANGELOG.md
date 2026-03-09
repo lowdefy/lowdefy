@@ -1,5 +1,81 @@
 # Change Log
 
+## 4.6.0
+
+### Minor Changes
+
+- aa0d6d363e: feat: Config-aware error tracing and Sentry integration
+
+  **Config-Aware Error Tracing (#1940)**
+
+  - Errors now trace back to exact YAML config locations with file:line
+  - Clickable VSCode links in terminal and browser
+  - Build-time validation catches typos with "Did you mean?" suggestions
+  - Service vs Config error classification
+
+  **Plugin Error Refactoring**
+
+  - Operators throw simple error messages without formatting
+  - Parsers (WebParser, ServerParser, BuildParser) format errors with received value and location
+  - Removed redundant "Operator Error:" prefix from error messages
+  - Consistent error format: "{message} Received: {params} at {location}."
+  - Actions and connections also simplified: removed inline `received` from error messages (interface layer adds it)
+  - Connection plugins (axios-http, knex, redis, sendgrid) no longer expose raw response data in errors
+
+  **Error Class Hierarchy**
+
+  - Unified error system in `@lowdefy/errors` with all error classes
+    - `@lowdefy/errors/build` - Build-time classes with sync location resolution
+  - Error classes: `LowdefyError`, `ConfigError`, `ConfigWarning`, `PluginError`, `ServiceError`
+  - `ConfigWarning` supports `prodError` flag to throw in production builds
+  - `ServiceError.isServiceError()` detects network/timeout/5xx errors
+  - `~ignoreBuildChecks` cascades through descendants to suppress warnings/errors
+
+  **Build Error Collection**
+
+  - Errors collected in `context.errors[]` instead of throwing immediately
+  - `tryBuildStep()` wrapper catches and collects errors from build steps
+  - All errors logged together before summary message for proper ordering
+
+  **Sentry Integration (#1945)**
+
+  - Zero-config Sentry support - just set SENTRY_DSN
+  - Client and server error capture with Lowdefy context (pageId, blockId, config location)
+  - Configurable sampling rates, session replay, user feedback
+  - Graceful no-op when DSN not set
+
+### Patch Changes
+
+- bb3222a5a: fix(errors): Preserve error cause chains in catch-and-rethrow blocks across plugins and CLI
+- af61715d5: feat: JIT page building for dev server
+
+  **Shallow Refs and JIT Build (`@lowdefy/build`)**
+
+  - Shallow `_ref` resolution stops at configured JSON paths, leaving `~shallow` markers for on-demand resolution
+  - `shallowBuild` produces a page registry with dependency tracking instead of fully built pages
+  - `buildPageJit` fully resolves a single page on demand using the shallow build output
+  - File dependency map tracks which config files affect which pages for targeted rebuilds
+  - Build package reorganized: `jit/` folder for dev-server-only files, `full/` folder for production-only files
+
+  **JIT Page Building (`@lowdefy/server-dev`)**
+
+  - Pages are built on-demand when requested instead of all at once during initial build
+  - Page cache with file-watcher invalidation for fast rebuilds
+  - `/api/page/[pageId]` endpoint triggers JIT build if page not cached
+  - `/api/js/[env]` endpoint serves operator JS maps
+  - Build error page component displays errors inline in the browser
+
+  **Operator JS Hash Check (`@lowdefy/operators-js`)**
+
+  - Added hash validation for jsMap to detect stale operator definitions
+
+- Updated dependencies [aa0d6d363e]
+- Updated dependencies [aebca6ab51]
+- Updated dependencies [ab19b1bb77]
+- Updated dependencies [8ec5f1be05]
+  - @lowdefy/helpers@4.6.0
+  - @lowdefy/operators@4.6.0
+
 ## 4.5.2
 
 ### Patch Changes
