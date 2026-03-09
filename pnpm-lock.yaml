@@ -1723,9 +1723,6 @@ importers:
       '@lowdefy/connection-mongodb':
         specifier: 4.5.2
         version: link:../../plugins/connections/connection-mongodb
-      '@lowdefy/docs':
-        specifier: workspace:*
-        version: link:../../docs
       '@lowdefy/errors':
         specifier: 4.5.2
         version: link:../../utils/errors
