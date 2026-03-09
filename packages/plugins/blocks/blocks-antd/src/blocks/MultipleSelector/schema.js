@@ -303,7 +303,7 @@ const schema = {
       },
     },
   },
-  cssKeys: ['element', 'extra', 'feedback', 'options'],
+  cssKeys: ['element', 'label', 'extra', 'feedback', 'options'],
 };
 
 export default schema;

@@ -62,10 +62,13 @@ const labelLogic = ({
     marginBottom: properties.size === 'small' ? 0 : 8,
   };
 
-  const labelClassName = classNames({
-    'ant-form-item-required': required,
-    'ant-form-item-no-colon': properties.colon === false,
-  });
+  const labelClassName = classNames(
+    {
+      'ant-form-item-required': required,
+      'ant-form-item-no-colon': properties.colon === false,
+    },
+    blockClassNames.label
+  );
   const labelStyle = {
     height: 'fit-content',
     minHeight: properties.inline
@@ -75,7 +78,7 @@ const labelLogic = ({
           ? 24
           : 32
       : undefined,
-    ...properties.style,
+    ...styles.label,
   };
 
   const extraClassName = classNames(

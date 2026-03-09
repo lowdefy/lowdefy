@@ -16,7 +16,7 @@
 
 export default {
   type: 'object',
-  cssKeys: ['element', 'extra', 'feedback'],
+  cssKeys: ['element', 'label', 'extra', 'feedback'],
   properties: {
     type: 'object',
     properties: {

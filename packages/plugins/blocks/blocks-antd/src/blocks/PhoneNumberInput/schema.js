@@ -208,7 +208,7 @@ const schema = {
       },
     },
   },
-  cssKeys: ['element', 'extra', 'feedback', 'options', 'select'],
+  cssKeys: ['element', 'label', 'extra', 'feedback', 'options', 'select'],
 };
 
 export default schema;
