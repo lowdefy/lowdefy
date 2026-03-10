@@ -223,3 +223,63 @@ pages: []
     roles: ['admin', 'editor', 'viewer'],
   });
 });
+
+test('buildModuleDefs does not error when non-modules keys contain _ref expressions', async () => {
+  const context = createTestContext();
+  const files = [
+    {
+      path: 'lowdefy.yaml',
+      content: `
+lowdefy: 4.0.0
+modules:
+  - id: my-mod
+    source: "file:../my-mod"
+menus:
+  - id: main-menu
+    links:
+      _ref: menus/main.yaml
+pages:
+  _ref: pages/all.yaml
+`,
+    },
+    {
+      path: '/my-mod/module.yaml',
+      content: 'pages: []',
+    },
+  ];
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+  mockFetchModules.mockResolvedValue({
+    'my-mod': { packageRoot: '/my-mod', moduleRoot: '/my-mod', isLocal: true },
+  });
+
+  await buildModuleDefs({ context });
+
+  expect(context.modules['my-mod']).toBeDefined();
+  expect(context.modules['my-mod'].id).toBe('my-mod');
+});
+
+test('buildModuleDefs preserves non-modules keys without resolving refs', async () => {
+  const context = createTestContext();
+  const files = [
+    {
+      path: 'lowdefy.yaml',
+      content: `
+lowdefy: 4.0.0
+modules: []
+menus:
+  - id: main-menu
+    links:
+      _ref: menus/main.yaml
+`,
+    },
+  ];
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+
+  await buildModuleDefs({ context });
+
+  // menus key should not have been resolved — the _ref should still be raw
+  // Since buildModuleDefs returns early for empty modules, and Phase 2 re-reads
+  // lowdefy.yaml, the non-modules content is never used in Phase 1.
+  // The key assertion is that no error was thrown despite the unresolvable _ref.
+  expect(context.modules).toEqual({});
+});

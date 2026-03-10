@@ -48,6 +48,10 @@ async function parseLowdefyYaml({ context }) {
     operators,
     env: process.env,
     dynamicIdentifiers,
+    shouldStop: (path) => {
+      if (path.startsWith('modules')) return false;
+      return 'preserve';
+    },
   });
 
   let config = await resolve(content, ctx);
