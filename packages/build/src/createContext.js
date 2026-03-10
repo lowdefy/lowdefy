@@ -31,6 +31,7 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
     jsMap: {},
     keyMap: {},
     logger,
+    modules: {},  // Map<entryId, ModuleEntry> — populated by buildModuleDefs (Phase 1)
     readConfigFile: createReadConfigFile({ directories }),
     refMap: {},
     refResolver,
