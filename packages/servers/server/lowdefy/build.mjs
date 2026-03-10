@@ -45,10 +45,6 @@ async function run() {
     name: 'lowdefy_build',
     level: process.env.LOWDEFY_LOG_LEVEL ?? 'info',
     base: { pid: undefined, hostname: undefined },
-    mixin: (context, level) => ({
-      ...context,
-      print: context.print ?? logger.levels.labels[level],
-    }),
   });
 
   await build({
