@@ -14,31 +14,26 @@
   limitations under the License.
 */
 
-import { BuildParser } from '@lowdefy/operators';
+import { evaluateOperators } from '@lowdefy/operators';
 import operators from '@lowdefy/operators-js/operators/build';
 import collectDynamicIdentifiers from '../collectDynamicIdentifiers.js';
 import collectTypeNames from '../collectTypeNames.js';
 import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
 import collectExceptions from '../../utils/collectExceptions.js';
 
-// Validate and collect dynamic identifiers once at module load
 validateOperatorsDynamic({ operators });
 const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
 
 function evaluateStaticOperators({ context, input, refDef }) {
-  // Collect type names from context.typesMap for type boundary detection
   const typeNames = collectTypeNames({ typesMap: context.typesMap });
 
-  const operatorsParser = new BuildParser({
-    env: process.env,
+  const { output, errors } = evaluateOperators({
+    input,
     operators,
+    operatorPrefix: '_',
+    env: process.env,
     dynamicIdentifiers,
     typeNames,
-  });
-
-  const { output, errors } = operatorsParser.parse({
-    input,
-    operatorPrefix: '_',
   });
 
   if (errors.length > 0) {

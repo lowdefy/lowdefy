@@ -27,6 +27,10 @@ class MakeId {
   reset() {
     this.counter = 0;
   }
+
+  setCounter(value) {
+    this.counter = value;
+  }
 }
 
 const makeId = new MakeId();

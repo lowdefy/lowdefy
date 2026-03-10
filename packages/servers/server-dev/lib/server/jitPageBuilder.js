@@ -17,7 +17,7 @@
 import fs from 'fs';
 import path from 'path';
 import { serializer } from '@lowdefy/helpers';
-import { buildPageJit, createContext } from '@lowdefy/build/dev';
+import { buildPageJit, createContext, makeId } from '@lowdefy/build/dev';
 
 import createLogger from './log/createLogger.js';
 import PageCache from './pageCache.mjs';
@@ -111,6 +111,12 @@ function getBuildContext(buildDirectory, configDirectory) {
   const installedPluginPackages =
     readJsonFile(path.join(buildDirectory, 'installedPluginPackages.json')) ?? [];
   cachedBuildContext.installedPluginPackages = new Set(installedPluginPackages);
+
+  // Advance makeId past all skeleton IDs to prevent collisions with JIT builds
+  const idCounter = readJsonFile(path.join(buildDirectory, 'idCounter.json'));
+  if (idCounter != null) {
+    makeId.setCounter(idCounter);
+  }
 
   return cachedBuildContext;
 }
