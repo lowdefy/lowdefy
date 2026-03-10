@@ -16,7 +16,7 @@
 
 import { get, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
-import { evaluateOperators, setDynamicMarker } from '@lowdefy/operators';
+import { evaluateOperators } from '@lowdefy/operators';
 import makeRefDefinition from './makeRefDefinition.js';
 import getRefContent from './getRefContent.js';
 import runTransformer from './runTransformer.js';
@@ -107,22 +107,6 @@ function isBuildOperator(node) {
   return nonTildeKeys.length === 1 && nonTildeKeys[0].startsWith('_build.');
 }
 
-// Check if a value has ~shallow nodes as direct children.
-// Used to skip _build.* evaluation when params are shallow-stopped refs
-// that will be discarded by stripPageContent anyway.
-function hasShallowChild(value) {
-  if (!type.isObject(value) && !type.isArray(value)) return false;
-  if (type.isObject(value) && value['~shallow'] === true) return true;
-  if (type.isArray(value)) {
-    return value.some(
-      (item) => type.isObject(item) && item['~shallow'] === true
-    );
-  }
-  return Object.values(value).some(
-    (item) => type.isObject(item) && item['~shallow'] === true
-  );
-}
-
 // Set ~r as non-enumerable if not already present
 function tagRef(node, refId) {
   if (type.isObject(node) || type.isArray(node)) {
@@ -205,24 +189,6 @@ function cloneDeepWithProvenance(node, sourceRefId) {
   return clone;
 }
 
-// Create a shallow marker for stopped refs (shallow builds)
-function createShallowMarker(refDef, ctx, lineNumber) {
-  ctx.refMap[refDef.id].path = refDef.path;
-  if (!refDef.path) {
-    ctx.refMap[refDef.id].original = refDef.original;
-  }
-  if (Object.keys(refDef.vars).length > 0) {
-    ctx.unresolvedRefVars[refDef.id] = refDef.vars;
-  }
-  const marker = {
-    '~shallow': true,
-    _ref: refDef.original,
-    _refId: refDef.id,
-  };
-  setDynamicMarker(marker);
-  return marker;
-}
-
 // Evaluate a _build.* operator using evaluateOperators
 function evaluateBuildOperator(node, ctx) {
   const { output, errors } = evaluateOperators({
@@ -276,29 +242,31 @@ async function resolveRef(node, ctx) {
   const lineNumber = node['~l'];
   const refDef = makeRefDefinition(node._ref, ctx.refId, ctx.refMap, lineNumber);
 
-  // 2. Resolve dynamic path/vars/key: clone before resolving to prevent mutation
+  // 2. Store unresolved vars before resolution mutates them, and clone so
+  //    resolution operates on a copy (preserving original.vars for resolver refs).
+  const varKeys = Object.keys(refDef.vars);
+  if (varKeys.length > 0) {
+    ctx.unresolvedRefVars[refDef.id] = refDef.vars;
+    refDef.vars = cloneForResolve(refDef.vars);
+  }
+
+  // 3. Resolve dynamic path/vars/key
   if (type.isObject(refDef.path)) {
     refDef.path = await resolve(cloneForResolve(refDef.path), ctx);
   }
-  const varKeys = Object.keys(refDef.vars);
   for (const varKey of varKeys) {
     if (type.isObject(refDef.vars[varKey]) || type.isArray(refDef.vars[varKey])) {
-      refDef.vars[varKey] = await resolve(cloneForResolve(refDef.vars[varKey]), ctx);
+      refDef.vars[varKey] = await resolve(refDef.vars[varKey], ctx);
     }
   }
   if (type.isObject(refDef.key)) {
     refDef.key = await resolve(cloneForResolve(refDef.key), ctx);
   }
 
-  // 3. Update refMap with resolved path; store original for resolver refs
+  // 4. Update refMap with resolved path; store original for resolver refs
   ctx.refMap[refDef.id].path = refDef.path;
   if (!refDef.path) {
     ctx.refMap[refDef.id].original = refDef.original;
-  }
-
-  // 4. Store unresolvedRefVars if vars non-empty
-  if (varKeys.length > 0) {
-    ctx.unresolvedRefVars[refDef.id] = refDef.vars;
   }
 
   // 5. Circular detection
@@ -363,17 +331,14 @@ async function resolve(node, ctx) {
 
   // 2. Object with _ref
   if (type.isObject(node) && !type.isUndefined(node._ref)) {
-    if (ctx.shouldStop && ctx.shouldStop(ctx.path)) {
-      const lineNumber = node['~l'];
-      const refDef = makeRefDefinition(node._ref, ctx.refId, ctx.refMap, lineNumber);
-      return createShallowMarker(refDef, ctx, lineNumber);
-    }
     return resolveRef(node, ctx);
   }
 
-  // 4. Object with _var
+  // 4. Object with _var — resolve, then re-walk the result so any
+  //    _ref or _build.* operators inside the default value get processed.
   if (type.isObject(node) && !type.isUndefined(node._var)) {
-    return resolveVar(node, ctx);
+    const varResult = resolveVar(node, ctx);
+    return resolve(varResult, ctx);
   }
 
   // 5. Array — walk children in-place
@@ -387,18 +352,18 @@ async function resolve(node, ctx) {
   // 6. Object — walk children in-place
   const keys = Object.keys(node);
   for (const key of keys) {
+    if (ctx.shouldStop) {
+      const childPath = ctx.path ? `${ctx.path}.${key}` : key;
+      if (ctx.shouldStop(childPath)) {
+        delete node[key];
+        continue;
+      }
+    }
     node[key] = await resolve(node[key], ctx.child(key));
   }
 
   // Check if this is a _build.* operator
   if (isBuildOperator(node)) {
-    const opKey = Object.keys(node).find((k) => !k.startsWith('~'));
-    // Skip evaluation when params contain shallow-stopped refs — the result
-    // will be discarded by stripPageContent, so evaluating would only produce
-    // spurious build errors.
-    if (hasShallowChild(node[opKey])) {
-      return node;
-    }
     const result = evaluateBuildOperator(node, ctx);
     tagRefDeep(result, ctx.refId);
     return result;

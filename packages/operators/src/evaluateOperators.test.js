@@ -74,17 +74,6 @@ test('nested operators — bottom-up evaluation', () => {
   expect(res.errors).toEqual([]);
 });
 
-test('~dyn propagation — ~shallow bubbles up, parent operators NOT evaluated', () => {
-  const input = {
-    result: {
-      _echo: { nested: { '~shallow': true, _ref: 'file.yaml' } },
-    },
-  };
-  const res = evaluateOperators({ input, operators: mockOperators });
-  expect(mockOperators._echo).not.toHaveBeenCalled();
-  expect(res.output.result['~dyn']).toBe(true);
-});
-
 test('dynamic identifier — operator is not evaluated, gets ~dyn', () => {
   const _state = jest.fn(() => 'state');
   const ops = { ...mockOperators, _state };

@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/blocks-color-selectors",
-  "version": "4.5.2",
+  "version": "4.6.0",
   "license": "Apache-2.0",
   "description": "A Lowdefy color selector blocks based on react-color.",
   "homepage": "https://lowdefy.com",
@@ -49,8 +49,8 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@lowdefy/block-utils": "4.5.2",
-    "@lowdefy/blocks-antd": "4.5.2",
+    "@lowdefy/block-utils": "4.6.0",
+    "@lowdefy/blocks-antd": "4.6.0",
     "classnames": "2.3.2",
     "react": "18.2.0",
     "react-colorful": "5.6.1",

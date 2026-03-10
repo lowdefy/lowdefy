@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/blocks-algolia",
-  "version": "4.5.2",
+  "version": "4.6.0",
   "license": "Apache-2.0",
   "description": "Algolia Lowdefy blocks.",
   "homepage": "https://lowdefy.com",
@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "@docsearch/react": "3.5.2",
-    "@lowdefy/block-utils": "4.5.2",
+    "@lowdefy/block-utils": "4.6.0",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },

@@ -36,6 +36,7 @@ import jsMapParser from '../buildJs/jsMapParser.js';
 import makeRefDefinition from '../buildRefs/makeRefDefinition.js';
 import { resolve, WalkContext, cloneForResolve, tagRefDeep } from '../buildRefs/walker.js';
 import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
+import writeMaps from '../writeMaps.js';
 import detectMissingPluginPackages from './detectMissingPluginPackages.js';
 import updateServerPackageJsonJit from './updateServerPackageJsonJit.js';
 import writeMaps from '../writeMaps.js';

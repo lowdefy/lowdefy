@@ -1,5 +1,17 @@
 # Change Log
 
+## 4.6.0
+
+### Patch Changes
+
+- c62468b98: Pass value of inputs to onChange event.
+- Updated dependencies [fb7910f62]
+- Updated dependencies [c62468b98]
+- Updated dependencies [5e03091ee]
+- Updated dependencies [aa0d6d363e]
+  - @lowdefy/blocks-antd@4.6.0
+  - @lowdefy/block-utils@4.6.0
+
 ## 4.5.2
 
 ### Patch Changes

@@ -47,17 +47,6 @@ function hasDynamicMarker(value) {
   return hasDynChild(value);
 }
 
-function hasShallowMarker(value) {
-  if (!type.isObject(value) && !type.isArray(value)) return false;
-  if (type.isObject(value) && value['~shallow'] === true) return true;
-  const items = type.isArray(value) ? value : Object.values(value);
-  return items.some(
-    (item) =>
-      (type.isObject(item) && item['~shallow'] === true) ||
-      (type.isArray(item) && hasShallowMarker(item))
-  );
-}
-
 function evaluateOperators({
   input,
   operators,
@@ -107,11 +96,6 @@ function evaluateOperators({
     }
 
     // Object handling
-
-    // ~shallow placeholders — mark as dynamic
-    if (node['~shallow'] === true) {
-      return setDynamicMarker(node);
-    }
 
     // Walk children in-place (bottom-up)
     const keys = Object.keys(node);
@@ -166,12 +150,6 @@ function evaluateOperators({
       }
     }
 
-    // Shallow marker check — _build.* operators can't process ~shallow placeholders.
-    // These are unresolved refs from shallow builds that will be discarded later.
-    if (isBuildOperator && hasShallowMarker(node[key])) {
-      return node;
-    }
-
     const configKey = node['~k'];
     const lineNumber = node['~l'];
     const refId = node['~r'];
@@ -221,4 +199,4 @@ function evaluateOperators({
 }
 
 export default evaluateOperators;
-export { setDynamicMarker, hasDynamicMarker, hasDynChild };
+export { hasDynamicMarker, hasDynChild };
