@@ -255,3 +255,42 @@ describe('_module.var propagation through WalkContext', () => {
     });
   });
 });
+
+describe('module path resolution stores absolute path in refMap', () => {
+  test('refMap stores absolute path for _ref inside a module with packageRoot', async () => {
+    const buildContext = createBuildContext();
+    buildContext.modules = {};
+    const moduleRoot = '/modules/dashboard';
+
+    mockReadConfigFile.mockImplementation((filePath) => {
+      if (filePath === '/modules/dashboard/pages/overview.yaml') {
+        return { id: 'overview', type: 'Box' };
+      }
+      return null;
+    });
+
+    const ctx = new WalkContext({
+      buildContext,
+      refId: 'test:module.yaml:0',
+      sourceRefId: null,
+      vars: {},
+      path: '',
+      currentFile: '/modules/dashboard/module.yaml',
+      packageRoot: moduleRoot,
+      refChain: new Set(['/modules/dashboard/module.yaml']),
+      operators,
+      env: process.env,
+      dynamicIdentifiers,
+      shouldStop: null,
+    });
+
+    const node = { _ref: 'pages/overview.yaml' };
+    await resolve(node, ctx);
+
+    // Find the refMap entry for the resolved _ref
+    const refEntry = Object.values(buildContext.refMap).find(
+      (entry) => entry.path === '/modules/dashboard/pages/overview.yaml'
+    );
+    expect(refEntry).toBeDefined();
+  });
+});

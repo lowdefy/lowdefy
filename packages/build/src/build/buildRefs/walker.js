@@ -307,15 +307,15 @@ async function resolveRef(node, ctx) {
     refDef.key = await resolve(cloneForResolve(refDef.key), ctx);
   }
 
-  // 4. Update refMap with resolved path; store original for resolver refs
+  // 4. Module path resolution: resolve relative paths from the referring file's directory
+  if (ctx.packageRoot && type.isString(refDef.path) && !path.isAbsolute(refDef.path)) {
+    refDef.path = path.resolve(path.dirname(ctx.currentFile), refDef.path);
+  }
+
+  // 5. Update refMap with resolved path; store original for resolver refs
   ctx.refMap[refDef.id].path = refDef.path;
   if (!refDef.path) {
     ctx.refMap[refDef.id].original = refDef.original;
-  }
-
-  // 5. Module path resolution: resolve relative paths from the referring file's directory
-  if (ctx.packageRoot && type.isString(refDef.path) && !path.isAbsolute(refDef.path)) {
-    refDef.path = path.resolve(path.dirname(ctx.currentFile), refDef.path);
   }
 
   // 5b. Path escape constraint: module refs cannot escape the package root
