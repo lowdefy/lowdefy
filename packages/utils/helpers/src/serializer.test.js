@@ -785,6 +785,19 @@ test('serializeToString wraps array with ~l in ~arr marker', () => {
   expect(res).toEqual('{"items":{"~arr":[1,2,3],"~l":10}}');
 });
 
+test('serializeToString with skipMarkers outputs plain array', () => {
+  const items = [1, 2, 3];
+  Object.defineProperty(items, '~l', {
+    value: 10,
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  const object = { items };
+  const res = serializer.serializeToString(object, { skipMarkers: true });
+  expect(res).toEqual('{"items":[1,2,3]}');
+});
+
 test('serialize and deserialize round-trip preserves ~l on nested arrays', () => {
   const inner = [{ id: 'a' }];
   Object.defineProperty(inner, '~l', {

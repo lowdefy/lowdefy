@@ -61,7 +61,7 @@ function propsToError(data) {
   return error;
 }
 
-const makeReplacer = (customReplacer, isoStringDates) => (key, value) => {
+const makeReplacer = (customReplacer, isoStringDates, skipMarkers) => (key, value) => {
   let dateReplacer = (date) => ({ '~d': date.valueOf() });
   if (isoStringDates) {
     dateReplacer = (date) => ({ '~d': date.toISOString() });
@@ -81,38 +81,40 @@ const makeReplacer = (customReplacer, isoStringDates) => (key, value) => {
         newValue[k] = dateReplacer(newValue[k]);
       }
     });
-    // Capture marker values before shallow copy (spread doesn't copy non-enumerable props)
-    const markerR = newValue['~r'];
-    const markerK = newValue['~k'];
-    const markerL = newValue['~l'];
-    if (markerR || markerK || markerL) {
-      // Shallow copy to avoid mutating the original object's property descriptors
-      if (newValue === value) {
-        newValue = { ...newValue };
-      }
-      if (markerR) {
-        Object.defineProperty(newValue, '~r', {
-          value: markerR,
-          enumerable: true,
-          writable: true,
-          configurable: true,
-        });
-      }
-      if (markerK) {
-        Object.defineProperty(newValue, '~k', {
-          value: markerK,
-          enumerable: true,
-          writable: true,
-          configurable: true,
-        });
-      }
-      if (markerL) {
-        Object.defineProperty(newValue, '~l', {
-          value: markerL,
-          enumerable: true,
-          writable: true,
-          configurable: true,
-        });
+    if (!skipMarkers) {
+      // Capture marker values before shallow copy (spread doesn't copy non-enumerable props)
+      const markerR = newValue['~r'];
+      const markerK = newValue['~k'];
+      const markerL = newValue['~l'];
+      if (markerR || markerK || markerL) {
+        // Shallow copy to avoid mutating the original object's property descriptors
+        if (newValue === value) {
+          newValue = { ...newValue };
+        }
+        if (markerR) {
+          Object.defineProperty(newValue, '~r', {
+            value: markerR,
+            enumerable: true,
+            writable: true,
+            configurable: true,
+          });
+        }
+        if (markerK) {
+          Object.defineProperty(newValue, '~k', {
+            value: markerK,
+            enumerable: true,
+            writable: true,
+            configurable: true,
+          });
+        }
+        if (markerL) {
+          Object.defineProperty(newValue, '~l', {
+            value: markerL,
+            enumerable: true,
+            writable: true,
+            configurable: true,
+          });
+        }
       }
     }
     return newValue;
@@ -126,9 +128,8 @@ const makeReplacer = (customReplacer, isoStringDates) => (key, value) => {
     });
     // Preserve ~l, ~k, ~r on arrays by wrapping in a marker object
     if (
-      newValue['~l'] !== undefined ||
-      newValue['~k'] !== undefined ||
-      newValue['~r'] !== undefined
+      !skipMarkers &&
+      (newValue['~l'] !== undefined || newValue['~k'] !== undefined || newValue['~r'] !== undefined)
     ) {
       const wrapper = { '~arr': mappedArray };
       if (newValue['~r'] !== undefined) wrapper['~r'] = newValue['~r'];
@@ -239,13 +240,13 @@ const serializeToString = (json, options = {}) => {
   }
   if (options.stable) {
     return stableStringify(json, {
-      replacer: makeReplacer(options.replacer),
+      replacer: makeReplacer(options.replacer, undefined, options.skipMarkers),
       space: options.space,
     });
   }
   return JSON.stringify(
     json,
-    makeReplacer(options.replacer, options.isoStringDates),
+    makeReplacer(options.replacer, options.isoStringDates, options.skipMarkers),
     options.space
   );
 };

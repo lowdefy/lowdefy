@@ -389,18 +389,21 @@ class Block {
   };
 
   evalToString = () => {
-    return serializer.serializeToString({
-      areasLayoutEval: this.areasLayoutEval,
-      layoutEval: this.layoutEval,
-      loadingEval: this.loadingEval,
-      propertiesEval: this.propertiesEval,
-      requiredEval: this.requiredEval,
-      skeletonEval: this.skeletonEval,
-      styleEval: this.styleEval,
-      validationEval: this.validationEval,
-      value: this.value,
-      visibleEval: this.visibleEval,
-    });
+    return serializer.serializeToString(
+      {
+        areasLayoutEval: this.areasLayoutEval,
+        layoutEval: this.layoutEval,
+        loadingEval: this.loadingEval,
+        propertiesEval: this.propertiesEval,
+        requiredEval: this.requiredEval,
+        skeletonEval: this.skeletonEval,
+        styleEval: this.styleEval,
+        validationEval: this.validationEval,
+        value: this.value,
+        visibleEval: this.visibleEval,
+      },
+      { skipMarkers: true }
+    );
   };
 
   updateState = (toSet) => {
