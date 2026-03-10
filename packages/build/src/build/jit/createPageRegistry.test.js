@@ -194,11 +194,11 @@ test('createPageRegistry uses collection file when page ref has vars', () => {
 });
 
 test('createPageRegistry falls back to first child of root when all refs have vars', () => {
-  // module.yaml (vars) → admin.yaml (vars) → layout.yaml.njk (vars)
-  // All have vars, so fall back to first child of root (module.yaml)
+  // module.lowdefy.yaml (vars) → admin.yaml (vars) → layout.yaml.njk (vars)
+  // All have vars, so fall back to first child of root (module.lowdefy.yaml)
   const refMap = buildRefMap({
     'ref-root': { parent: null, path: 'lowdefy.yaml' },
-    'ref-module': { parent: 'ref-root', path: 'module.yaml' },
+    'ref-module': { parent: 'ref-root', path: 'module.lowdefy.yaml' },
     'ref-admin': { parent: 'ref-module', path: 'admin.yaml' },
     'ref-layout': { parent: 'ref-admin', path: 'layout.yaml.njk' },
   });
@@ -216,7 +216,7 @@ test('createPageRegistry falls back to first child of root when all refs have va
     context: { keyMap, refMap, unresolvedRefVars },
   });
   const entry = registry.get('admin-home');
-  expect(entry.refPath).toBe('module.yaml');
+  expect(entry.refPath).toBe('module.lowdefy.yaml');
   expect(entry.unresolvedVars).toEqual({ section: 'admin' });
 });
 

@@ -465,7 +465,7 @@ test('buildModules throws ConfigError when _secret references undeclared secret 
   };
 
   expect(() => buildModules({ components, context })).toThrow(
-    'Module "team-users" references secret "DATABASE_URL" but does not declare it in module.yaml secrets.'
+    'Module "team-users" references secret "DATABASE_URL" but does not declare it in module.lowdefy.yaml secrets.'
   );
 });
 
@@ -488,7 +488,7 @@ test('buildModules throws ConfigError when _secret references undeclared secret 
   };
 
   expect(() => buildModules({ components, context })).toThrow(
-    'Module "team-users" references secret "MONGODB" but does not declare it in module.yaml secrets.'
+    'Module "team-users" references secret "MONGODB" but does not declare it in module.lowdefy.yaml secrets.'
   );
 });
 
@@ -511,7 +511,7 @@ test('buildModules throws ConfigError when _secret references undeclared secret 
   };
 
   expect(() => buildModules({ components, context })).toThrow(
-    'Module "notifications" references secret "SENDGRID_KEY" but does not declare it in module.yaml secrets.'
+    'Module "notifications" references secret "SENDGRID_KEY" but does not declare it in module.lowdefy.yaml secrets.'
   );
 });
 
@@ -559,7 +559,7 @@ test('buildModules rejects all _secret references when module has no secrets dec
   };
 
   expect(() => buildModules({ components, context })).toThrow(
-    'Module "team-users" references secret "ANY_SECRET" but does not declare it in module.yaml secrets.'
+    'Module "team-users" references secret "ANY_SECRET" but does not declare it in module.lowdefy.yaml secrets.'
   );
 });
 

@@ -349,7 +349,7 @@ async function resolveRef(node, ctx) {
     childCtx = ctx.forRef({
       refId: refDef.id,
       vars: refDef.vars,
-      filePath: deferredFrom ?? path.join(moduleEntry.moduleRoot, 'module.yaml'),
+      filePath: deferredFrom ?? path.join(moduleEntry.moduleRoot, 'module.lowdefy.yaml'),
       moduleVars: moduleEntry.vars,
       packageRoot: moduleEntry.packageRoot,
     });

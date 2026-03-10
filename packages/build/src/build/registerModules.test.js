@@ -48,7 +48,7 @@ test('registerModuleEntry registers a module with resolved manifest', async () =
   const context = createTestContext();
   const files = [
     {
-      path: '/modules/team-users/module.yaml',
+      path: '/modules/team-users/module.lowdefy.yaml',
       content: `
 pages:
   - id: users-page
@@ -134,7 +134,7 @@ test('registerModuleEntry throws for duplicate entry ids', async () => {
   ).rejects.toThrow('Duplicate module entry id "team-users"');
 });
 
-test('registerModuleEntry throws when module.yaml is not found', async () => {
+test('registerModuleEntry throws when module.lowdefy.yaml is not found', async () => {
   const context = createTestContext();
   mockReadConfigFile.mockImplementation(() => null);
 
@@ -151,7 +151,7 @@ test('registerModuleEntry throws when required var is missing', async () => {
   const context = createTestContext();
   const files = [
     {
-      path: '/modules/my-mod/module.yaml',
+      path: '/modules/my-mod/module.lowdefy.yaml',
       content: `
 vars:
   apiKey:
@@ -180,7 +180,7 @@ test('registerModuleEntry throws when var type does not match', async () => {
   const context = createTestContext();
   const files = [
     {
-      path: '/modules/my-mod/module.yaml',
+      path: '/modules/my-mod/module.lowdefy.yaml',
       content: `
 vars:
   count:
@@ -208,7 +208,7 @@ test('registerModuleEntry throws when required plugin is missing from app', asyn
   const context = createTestContext({ plugins: [] });
   const files = [
     {
-      path: '/modules/my-mod/module.yaml',
+      path: '/modules/my-mod/module.lowdefy.yaml',
       content: `
 plugins:
   - name: "@lowdefy/blocks-antd"
@@ -238,7 +238,7 @@ test('registerModuleEntry throws when plugin version does not satisfy range', as
   });
   const files = [
     {
-      path: '/modules/my-mod/module.yaml',
+      path: '/modules/my-mod/module.lowdefy.yaml',
       content: `
 plugins:
   - name: "@lowdefy/blocks-antd"
@@ -268,7 +268,7 @@ test('registerModuleEntry accepts plugin when version satisfies range', async ()
   });
   const files = [
     {
-      path: '/modules/my-mod/module.yaml',
+      path: '/modules/my-mod/module.lowdefy.yaml',
       content: `
 plugins:
   - name: "@lowdefy/blocks-antd"
@@ -298,7 +298,7 @@ test('registerModuleEntry stores connections from entry', async () => {
   const context = createTestContext();
   const files = [
     {
-      path: '/modules/my-mod/module.yaml',
+      path: '/modules/my-mod/module.lowdefy.yaml',
       content: `
 pages: []
 `,

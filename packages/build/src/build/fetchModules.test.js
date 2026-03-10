@@ -42,9 +42,9 @@ test('fetchModules returns empty object for empty moduleEntries', async () => {
   expect(result).toEqual({});
 });
 
-test('fetchModules resolves file source with existing module.yaml', async () => {
+test('fetchModules resolves file source with existing module.lowdefy.yaml', async () => {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-test-'));
-  fs.writeFileSync(path.join(tmpDir, 'module.yaml'), 'id: test');
+  fs.writeFileSync(path.join(tmpDir, 'module.lowdefy.yaml'), 'id: test');
 
   const result = await fetchModules({
     moduleEntries: [{ id: 'my-module', source: `file:${tmpDir}` }],
@@ -62,7 +62,7 @@ test('fetchModules resolves file source with existing module.yaml', async () => 
   fs.rmSync(tmpDir, { recursive: true });
 });
 
-test('fetchModules throws for file source when module.yaml does not exist', async () => {
+test('fetchModules throws for file source when module.lowdefy.yaml does not exist', async () => {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-test-'));
 
   await expect(
@@ -70,14 +70,14 @@ test('fetchModules throws for file source when module.yaml does not exist', asyn
       moduleEntries: [{ id: 'my-module', source: `file:${tmpDir}` }],
       context: { directories: { config: '/' } },
     })
-  ).rejects.toThrow(`Module "my-module": module.yaml not found at ${tmpDir}`);
+  ).rejects.toThrow(`Module "my-module": module.lowdefy.yaml not found at ${tmpDir}`);
 
   fs.rmSync(tmpDir, { recursive: true });
 });
 
 test('fetchModules resolves github source without path', async () => {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-test-'));
-  fs.writeFileSync(path.join(tmpDir, 'module.yaml'), 'id: test');
+  fs.writeFileSync(path.join(tmpDir, 'module.lowdefy.yaml'), 'id: test');
   fetchGitHubModule.mockResolvedValue({ packageRoot: tmpDir });
 
   const result = await fetchModules({
@@ -104,7 +104,7 @@ test('fetchModules resolves github source with subdirectory path', async () => {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-test-'));
   const moduleDir = path.join(tmpDir, 'user-admin');
   fs.mkdirSync(moduleDir, { recursive: true });
-  fs.writeFileSync(path.join(moduleDir, 'module.yaml'), 'id: test');
+  fs.writeFileSync(path.join(moduleDir, 'module.lowdefy.yaml'), 'id: test');
   fetchGitHubModule.mockResolvedValue({ packageRoot: tmpDir });
 
   const result = await fetchModules({
@@ -123,7 +123,7 @@ test('fetchModules resolves github source with subdirectory path', async () => {
   fs.rmSync(tmpDir, { recursive: true });
 });
 
-test('fetchModules throws for github source when module.yaml not found at path', async () => {
+test('fetchModules throws for github source when module.lowdefy.yaml not found at path', async () => {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-test-'));
   fetchGitHubModule.mockResolvedValue({ packageRoot: tmpDir });
 
@@ -133,7 +133,7 @@ test('fetchModules throws for github source when module.yaml not found at path',
       context: { directories: { config: '/app' } },
     })
   ).rejects.toThrow(
-    'Module "users": module.yaml not found at path "user-admin" in my-org/modules@v1.0.0'
+    'Module "users": module.lowdefy.yaml not found at path "user-admin" in my-org/modules@v1.0.0'
   );
 
   fs.rmSync(tmpDir, { recursive: true });
@@ -141,10 +141,10 @@ test('fetchModules throws for github source when module.yaml not found at path',
 
 test('fetchModules resolves multiple entries', async () => {
   const tmpDir1 = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-test-'));
-  fs.writeFileSync(path.join(tmpDir1, 'module.yaml'), 'id: local');
+  fs.writeFileSync(path.join(tmpDir1, 'module.lowdefy.yaml'), 'id: local');
 
   const tmpDir2 = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-test-'));
-  fs.writeFileSync(path.join(tmpDir2, 'module.yaml'), 'id: remote');
+  fs.writeFileSync(path.join(tmpDir2, 'module.lowdefy.yaml'), 'id: remote');
   fetchGitHubModule.mockResolvedValue({ packageRoot: tmpDir2 });
 
   const result = await fetchModules({

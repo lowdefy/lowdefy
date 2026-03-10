@@ -30,9 +30,9 @@ async function fetchModules({ moduleEntries, context }) {
 
     if (source.type === 'file') {
       const resolvedPath = path.resolve(context.directories.config, source.path);
-      if (!fs.existsSync(path.join(resolvedPath, 'module.yaml'))) {
+      if (!fs.existsSync(path.join(resolvedPath, 'module.lowdefy.yaml'))) {
         throw new ConfigError(
-          `Module "${entry.id}": module.yaml not found at ${resolvedPath}`
+          `Module "${entry.id}": module.lowdefy.yaml not found at ${resolvedPath}`
         );
       }
       resolved[entry.id] = {
@@ -46,9 +46,9 @@ async function fetchModules({ moduleEntries, context }) {
         ? path.join(cached.packageRoot, source.path)
         : cached.packageRoot;
 
-      if (!fs.existsSync(path.join(moduleRoot, 'module.yaml'))) {
+      if (!fs.existsSync(path.join(moduleRoot, 'module.lowdefy.yaml'))) {
         throw new ConfigError(
-          `Module "${entry.id}": module.yaml not found at path "${source.path || '/'}" in ${source.owner}/${source.repo}@${source.ref}`
+          `Module "${entry.id}": module.lowdefy.yaml not found at path "${source.path || '/'}" in ${source.owner}/${source.repo}@${source.ref}`
         );
       }
 

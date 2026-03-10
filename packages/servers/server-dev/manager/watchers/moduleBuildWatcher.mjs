@@ -39,14 +39,14 @@ function moduleBuildWatcher(context) {
   const callback = async (filePaths) => {
     const changedFiles = filePaths.flat();
 
-    // If module.yaml itself changed, do a full shallow rebuild (module exports may have changed)
+    // If module.lowdefy.yaml itself changed, do a full shallow rebuild (module exports may have changed)
     const moduleYamlChanged = changedFiles.some(
-      (filePath) => path.basename(filePath) === 'module.yaml'
+      (filePath) => path.basename(filePath) === 'module.lowdefy.yaml'
     );
 
     try {
       if (moduleYamlChanged) {
-        context.logger.info('module.yaml changed, running full shallow rebuild.');
+        context.logger.info('module.lowdefy.yaml changed, running full shallow rebuild.');
         await context.lowdefyBuild();
       } else {
         // Module page content changed — invalidate all pages so JIT rebuilds them

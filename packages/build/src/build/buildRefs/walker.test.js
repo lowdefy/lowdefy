@@ -271,13 +271,13 @@ describe('module path resolution stores absolute path in refMap', () => {
 
     const ctx = new WalkContext({
       buildContext,
-      refId: 'test:module.yaml:0',
+      refId: 'test:module.lowdefy.yaml:0',
       sourceRefId: null,
       vars: {},
       path: '',
-      currentFile: '/modules/dashboard/module.yaml',
+      currentFile: '/modules/dashboard/module.lowdefy.yaml',
       packageRoot: moduleRoot,
-      refChain: new Set(['/modules/dashboard/module.yaml']),
+      refChain: new Set(['/modules/dashboard/module.lowdefy.yaml']),
       operators,
       env: process.env,
       dynamicIdentifiers,

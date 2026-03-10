@@ -3,7 +3,7 @@
     {
       "mode": "prod",
       "expectThrow": true,
-      "errorContains": ["module.yaml not found", "empty"]
+      "errorContains": ["module.lowdefy.yaml not found", "empty"]
     }
   ]
 }

@@ -117,7 +117,7 @@ pages: []
 `,
     },
     {
-      path: '/modules/team-users/module.yaml',
+      path: '/modules/team-users/module.lowdefy.yaml',
       content: `
 pages:
   - id: users-page
@@ -163,11 +163,11 @@ pages: []
 `,
     },
     {
-      path: '/mod-a/module.yaml',
+      path: '/mod-a/module.lowdefy.yaml',
       content: 'pages: []',
     },
     {
-      path: '/mod-b/module.yaml',
+      path: '/mod-b/module.lowdefy.yaml',
       content: 'pages: []',
     },
   ];
@@ -208,7 +208,7 @@ pages: []
 `,
     },
     {
-      path: '/my-mod/module.yaml',
+      path: '/my-mod/module.lowdefy.yaml',
       content: 'pages: []',
     },
   ];
@@ -243,7 +243,7 @@ pages:
 `,
     },
     {
-      path: '/my-mod/module.yaml',
+      path: '/my-mod/module.lowdefy.yaml',
       content: 'pages: []',
     },
   ];

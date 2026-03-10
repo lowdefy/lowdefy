@@ -34,7 +34,7 @@ function validateModuleSecrets({ content, manifest, entryId }) {
         if (type.isString(secretName) && !declaredSecrets.has(secretName)) {
           throw new ConfigError(
             `Module "${entryId}" references secret "${secretName}" ` +
-              `but does not declare it in module.yaml secrets. ` +
+              `but does not declare it in module.lowdefy.yaml secrets. ` +
               `Add it to the module's secrets list or remove the reference.`
           );
         }

@@ -52,9 +52,9 @@ async function registerModuleEntry({ entry, resolvedPaths, context }) {
 
   const { packageRoot, moduleRoot, isLocal } = resolvedPaths;
 
-  const moduleYamlPath = path.join(moduleRoot, 'module.yaml');
+  const moduleYamlPath = path.join(moduleRoot, 'module.lowdefy.yaml');
 
-  // Use makeRefDefinition + getRefContent to read and parse module.yaml.
+  // Use makeRefDefinition + getRefContent to read and parse module.lowdefy.yaml.
   // The absolute path works because path.resolve(configDir, absolutePath) = absolutePath.
   const refDef = makeRefDefinition(moduleYamlPath, null, context.refMap);
   const content = await getRefContent({ context, refDef, referencedFrom: null });
