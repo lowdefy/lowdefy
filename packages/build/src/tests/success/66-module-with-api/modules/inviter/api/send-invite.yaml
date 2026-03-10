@@ -1,8 +1,6 @@
 id: send-invite
 type: Endpoint
-properties:
-  method: POST
-steps:
+routine:
   - id: send-email
     type: SendGridMailSend
     connectionId:

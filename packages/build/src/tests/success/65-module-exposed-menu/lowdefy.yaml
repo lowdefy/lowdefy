@@ -12,14 +12,15 @@ modules:
 menus:
   - id: main
     links:
-      - id: home
-        type: MenuLink
-        pageId: home
-        properties:
-          title: Home
-      - _ref:
-          module: admin
-          menu: default
+      _build.array.concat:
+        - - id: home
+            type: MenuLink
+            pageId: home
+            properties:
+              title: Home
+        - _ref:
+            module: admin
+            menu: default
 
 pages:
   - id: home
