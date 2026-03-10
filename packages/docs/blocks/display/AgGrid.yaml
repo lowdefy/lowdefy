@@ -347,6 +347,8 @@ _ref:
         block:
           id: my_table
           type: AgGridAlpine
+          ~ignoreBuildChecks:
+            - request-refs
           properties:
             rowData:
               ## We use dummy data for demo purposes. We would usually read the table data from the request

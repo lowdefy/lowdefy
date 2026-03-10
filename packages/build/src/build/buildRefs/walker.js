@@ -354,7 +354,7 @@ async function resolve(node, ctx) {
   for (const key of keys) {
     if (ctx.shouldStop) {
       const childPath = ctx.path ? `${ctx.path}.${key}` : key;
-      if (ctx.shouldStop(childPath)) {
+      if (ctx.shouldStop(childPath, ctx.refId)) {
         delete node[key];
         continue;
       }

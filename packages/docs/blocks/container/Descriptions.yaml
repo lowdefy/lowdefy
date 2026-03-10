@@ -14,6 +14,8 @@
 
 _ref:
   path: templates/blocks/template.yaml.njk
+  ~ignoreBuildChecks:
+    - state-refs
   vars:
     block_type: Descriptions
     category: container

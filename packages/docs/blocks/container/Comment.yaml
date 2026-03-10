@@ -14,6 +14,8 @@
 
 _ref:
   path: templates/blocks/template.yaml.njk
+  ~ignoreBuildChecks:
+    - types
   vars:
     block_type: Comment
     category: container
