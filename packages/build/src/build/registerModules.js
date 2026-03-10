@@ -125,6 +125,9 @@ async function registerModuleEntry({ entry, resolvedPaths, context }) {
           `      version: "${semver.minVersion(plugin.version)}"`
       );
     }
+    if (appVersion.startsWith('workspace:')) {
+      continue;
+    }
     if (!semver.satisfies(appVersion, plugin.version)) {
       throw new ConfigError(
         `Module "${entry.id}" requires plugin "${plugin.name}" version "${plugin.version}" ` +

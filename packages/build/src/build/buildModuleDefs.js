@@ -63,6 +63,7 @@ async function parseLowdefyYaml({ context }) {
 
 async function buildModuleDefs({ context }) {
   const lowdefyConfig = await parseLowdefyYaml({ context });
+  context.plugins = lowdefyConfig.plugins ?? [];
   const moduleEntries = lowdefyConfig.modules ?? [];
 
   if (moduleEntries.length === 0) {
