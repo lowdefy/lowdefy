@@ -1,5 +1,124 @@
 # Change Log
 
+## 4.6.0
+
+### Minor Changes
+
+- 5e03091ee: Add e2e testing package for Lowdefy apps
+
+  **@lowdefy/e2e-utils** (new package)
+
+  - Locator-first API via `ldf` Playwright fixture: `ldf.block('id').do.*`, `ldf.block('id').expect.*`
+  - Request mocking with static YAML files (`mocks.yaml`) and inline per-test overrides
+  - Request assertion API: `ldf.request('id').expect.toFinish()`, `.toHaveResponse()`, `.toHavePayload()`
+  - State and URL assertions: `ldf.state('key').expect.toBe()`, `ldf.url().expect.toBe()`
+  - Manifest generation from build artifacts for block type resolution and helper loading
+  - `createConfig()` and `createMultiAppConfig()` for Playwright config with automatic build/server management
+  - Scaffold command (`npx @lowdefy/e2e-utils`) for project setup with templates and dependency management
+  - Block helper factory with auto-provided expect methods (visible, hidden, disabled, validation)
+
+  **@lowdefy/cli**
+
+  - Add `--server` option to `lowdefy build` for server variant selection (e.g., `--server e2e`)
+
+  **@lowdefy/client**
+
+  - Expose `window.lowdefy` when `stage="e2e"` for e2e state/validation access
+
+  **@lowdefy/blocks-antd**
+
+  - Flatten e2e helper APIs for polymorphic proxy compatibility
+  - Add TextArea e2e helper
+
+  **@lowdefy/block-dev-e2e**
+
+  - Remove unused srcDir variable
+
+- aa0d6d363e: feat: Config-aware error tracing and Sentry integration
+
+  **Config-Aware Error Tracing (#1940)**
+
+  - Errors now trace back to exact YAML config locations with file:line
+  - Clickable VSCode links in terminal and browser
+  - Build-time validation catches typos with "Did you mean?" suggestions
+  - Service vs Config error classification
+
+  **Plugin Error Refactoring**
+
+  - Operators throw simple error messages without formatting
+  - Parsers (WebParser, ServerParser, BuildParser) format errors with received value and location
+  - Removed redundant "Operator Error:" prefix from error messages
+  - Consistent error format: "{message} Received: {params} at {location}."
+  - Actions and connections also simplified: removed inline `received` from error messages (interface layer adds it)
+  - Connection plugins (axios-http, knex, redis, sendgrid) no longer expose raw response data in errors
+
+  **Error Class Hierarchy**
+
+  - Unified error system in `@lowdefy/errors` with all error classes
+    - `@lowdefy/errors/build` - Build-time classes with sync location resolution
+  - Error classes: `LowdefyError`, `ConfigError`, `ConfigWarning`, `PluginError`, `ServiceError`
+  - `ConfigWarning` supports `prodError` flag to throw in production builds
+  - `ServiceError.isServiceError()` detects network/timeout/5xx errors
+  - `~ignoreBuildChecks` cascades through descendants to suppress warnings/errors
+
+  **Build Error Collection**
+
+  - Errors collected in `context.errors[]` instead of throwing immediately
+  - `tryBuildStep()` wrapper catches and collects errors from build steps
+  - All errors logged together before summary message for proper ordering
+
+  **Sentry Integration (#1945)**
+
+  - Zero-config Sentry support - just set SENTRY_DSN
+  - Client and server error capture with Lowdefy context (pageId, blockId, config location)
+  - Configurable sampling rates, session replay, user feedback
+  - Graceful no-op when DSN not set
+
+- f673e3ab3d: feat(logger): Add centralized @lowdefy/logger package and standardize logging
+
+  **New @lowdefy/logger Package**
+
+  - Centralized logging with environment-specific subpaths: `/node`, `/cli`, `/browser`
+  - `createNodeLogger` — pino factory with custom error serializer preserving Lowdefy error metadata (source, configKey, isServiceError)
+  - `createCliLogger` — wraps `createPrint` (ora spinners, colored output) with standard logger interface
+  - `createBrowserLogger` — maps to `console.*` with error formatting
+  - `wrapErrorLogger` — formats Lowdefy errors, emits source as separate `{ print: 'link' }` line for blue clickable links
+
+  **Standardized `.ui` Interface**
+
+  All logger variants expose `logger.ui` with consistent methods: `log`, `dim`, `info`, `warn`, `error`, `debug`, `link`, `spin`, `succeed`. This allows any component to emit structured output without knowing the runtime environment.
+
+  - `dim` renders as dimmed text in the CLI — useful for low-priority trace lines (e.g., request logs) that shouldn't compete visually with build output
+
+  **CLI Logger Migration**
+
+  - CLI now uses `createCliLogger` instead of raw `createPrint`
+  - `context.print` replaced with `context.logger` / `context.logger.ui`
+  - `createPrint` and `createStdOutLineHandler` moved from CLI to `@lowdefy/logger/cli`
+
+  **Server-Dev stdio:inherit**
+
+  - Server process spawned with `stdio: ['ignore', 'inherit', 'pipe']`
+  - Server pino JSON flows directly to manager stdout (inherited by CLI) — eliminates dev stdout line handler
+  - Only stderr piped for error formatting through manager logger
+  - Server `createLogger` includes `print` mixin so CLI can render each line correctly
+
+### Patch Changes
+
+- bb3222a5a: fix(errors): Preserve error cause chains in catch-and-rethrow blocks across plugins and CLI
+- 7e7343473: Fix env vars not being passed to Next.js build subprocess. The `env` object was passed as a separate parameter to `spawnProcess` instead of inside `processOptions`, so `NEXT_TELEMETRY_DISABLED` was silently ignored during `next build`.
+- Add port-in-use check with clear error message before starting server.
+- Updated dependencies [aa0d6d363e]
+- Updated dependencies [aebca6ab51]
+- Updated dependencies [ab19b1bb77]
+- Updated dependencies [8ec5f1be05]
+- Updated dependencies [f673e3ab3d]
+- Updated dependencies [f673e3ab3]
+  - @lowdefy/errors@4.6.0
+  - @lowdefy/helpers@4.6.0
+  - @lowdefy/node-utils@4.6.0
+  - @lowdefy/logger@4.6.0
+
 ## 4.5.2
 
 ### Patch Changes

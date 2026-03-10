@@ -1,5 +1,12 @@
 # Change Log
 
+## 4.6.0
+
+### Patch Changes
+
+- Updated dependencies [aa0d6d363e]
+  - @lowdefy/block-utils@4.6.0
+
 ## 4.5.2
 
 ### Patch Changes
