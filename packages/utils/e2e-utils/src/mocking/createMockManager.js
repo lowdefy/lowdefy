@@ -86,11 +86,16 @@ function createMockManager({ page }) {
     const key = `api:${apiId}`;
     const pattern = `**/api/endpoints/${apiId}`;
 
+    const captureKey = `api:${apiId}`;
     const handler = async (route) => {
       if (method && route.request().method() !== method.toUpperCase()) {
         await route.continue();
         return;
       }
+      capturedRequests.set(captureKey, {
+        payload: capturePayload(route),
+        timestamp: Date.now(),
+      });
       await fulfillRoute(route, { response, error });
     };
 
@@ -122,12 +127,17 @@ function createMockManager({ page }) {
     for (const config of api) {
       const pattern = `**/api/endpoints/${config.endpointId}`;
       const key = `static:api:${config.endpointId}`;
+      const captureKey = `api:${config.endpointId}`;
 
       const handler = async (route) => {
         if (config.method && route.request().method() !== config.method.toUpperCase()) {
           await route.continue();
           return;
         }
+        capturedRequests.set(captureKey, {
+          payload: capturePayload(route),
+          timestamp: Date.now(),
+        });
         await fulfillRoute(route, { response: config.response, error: config.error });
       };
 
@@ -147,6 +157,10 @@ function createMockManager({ page }) {
     return capturedRequests.get(captureKey) ?? null;
   }
 
+  function getCapturedApi(endpointId) {
+    return capturedRequests.get(`api:${endpointId}`) ?? null;
+  }
+
   function clearCapturedRequests() {
     capturedRequests.clear();
   }
@@ -157,6 +171,7 @@ function createMockManager({ page }) {
     applyStaticMocks,
     cleanup,
     getCapturedRequest,
+    getCapturedApi,
     clearCapturedRequests,
   };
 }
