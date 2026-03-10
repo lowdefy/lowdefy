@@ -17,7 +17,7 @@
 import { serializer } from '@lowdefy/helpers';
 
 async function getPageConfig({ authorize, readConfigFile }, { pageId }) {
-  const pageConfig = await readConfigFile(`pages/${pageId}/${pageId}.json`);
+  const pageConfig = await readConfigFile(`pages/${pageId}.json`);
   if (pageConfig && authorize(pageConfig)) {
     // eslint-disable-next-line no-unused-vars
     const { auth, ...rest } = pageConfig;

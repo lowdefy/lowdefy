@@ -31,16 +31,31 @@ function generateManifest({ buildDir = '.lowdefy' }) {
   const manifest = { pages: {} };
 
   if (fs.existsSync(pagesDir)) {
-    for (const pageId of fs.readdirSync(pagesDir)) {
-      const pageConfigPath = path.join(pagesDir, pageId, `${pageId}.json`);
-      if (fs.existsSync(pageConfigPath)) {
-        const pageConfig = JSON.parse(fs.readFileSync(pageConfigPath, 'utf-8'));
-        manifest.pages[pageId] = extractBlockMap({
-          pageConfig,
-          typesBlocks: types.blocks ?? {},
-        });
+    // Recursively find all .json page config files under pages/
+    // Page artifacts are written as pages/{pageId}.json where pageId may contain slashes.
+    // Skip files inside /requests/ subdirectories (those are request artifacts).
+    function findPageFiles(dir, prefix) {
+      for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+        if (entry.isDirectory()) {
+          if (entry.name === 'requests') continue;
+          findPageFiles(
+            path.join(dir, entry.name),
+            prefix ? `${prefix}/${entry.name}` : entry.name
+          );
+        } else if (entry.isFile() && entry.name.endsWith('.json')) {
+          const pageId = prefix
+            ? `${prefix}/${entry.name.replace(/\.json$/, '')}`
+            : entry.name.replace(/\.json$/, '');
+          const pageConfigPath = path.join(dir, entry.name);
+          const pageConfig = JSON.parse(fs.readFileSync(pageConfigPath, 'utf-8'));
+          manifest.pages[pageId] = extractBlockMap({
+            pageConfig,
+            typesBlocks: types.blocks ?? {},
+          });
+        }
       }
     }
+    findPageFiles(pagesDir, '');
   }
 
   const manifestPath = path.join(buildDir, 'e2e-manifest.json');

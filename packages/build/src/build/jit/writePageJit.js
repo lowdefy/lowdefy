@@ -21,7 +21,7 @@ import writeJs from '../buildJs/writeJs.js';
 async function writePageJit({ page, context }) {
   // Write page JSON
   await context.writeBuildArtifact(
-    `pages/${page.pageId}/${page.pageId}.json`,
+    `pages/${page.pageId}.json`,
     serializer.serializeToString(page ?? {})
   );
 
