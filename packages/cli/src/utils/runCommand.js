@@ -26,6 +26,7 @@ const runCommand = ({ cliVersion, handler }) => {
       return res;
     } catch (error) {
       await errorHandler({ context, error });
+      process.exit(1);
     }
   }
   return run;

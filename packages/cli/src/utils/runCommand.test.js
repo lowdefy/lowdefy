@@ -28,6 +28,12 @@ const options = { option: true };
 const command = { command: true, name: () => 'test' };
 const cliVersion = 'cliVersion';
 
+const mockExit = jest.spyOn(process, 'exit').mockImplementation(() => {});
+
+afterEach(() => {
+  mockExit.mockClear();
+});
+
 test('runCommand with synchronous function', async () => {
   const { default: runCommand } = await import('./runCommand.js');
 
@@ -106,6 +112,7 @@ test('Catch error synchronous function', async () => {
       ],
     ]
   `);
+  expect(mockExit).toHaveBeenCalledWith(1);
 });
 
 test('Catch error asynchronous function', async () => {
@@ -130,4 +137,5 @@ test('Catch error asynchronous function', async () => {
       ],
     ]
   `);
+  expect(mockExit).toHaveBeenCalledWith(1);
 });
