@@ -91,6 +91,8 @@ Header: "Commit"
 Options:
   - label: "Looks good"
     description: "fix(build): Handle dotted payload keys in validation. [auth.js, validate.js, +2 more]"
+  - label: "Skip"
+    description: "Don't commit right now"
 ```
 
 **Multiple commits:**
@@ -182,15 +184,11 @@ For splits, verify no files are left unstaged after the final commit.
 - Keep `{message}` under ~50 chars (type/scope don't count)
 - Drop trailing period if needed for space
 
-### 7. Confirm
+### 7. Post-commit
 
-```bash
-git log --oneline -{N}
-```
+If a changeset may be needed, remind: "Consider running `/l-changeset` if this needs a version bump."
 
-Show the result. If a changeset may be needed, remind: "Consider running `/l-changeset` if this needs a version bump."
-
-### 8. Push (if requested)
+**Push (if requested):**
 
 If `$ARGUMENTS` contains `-p`:
 
