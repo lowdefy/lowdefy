@@ -6,6 +6,11 @@ on:
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write
+
 jobs:
   release:
     name: Release
@@ -17,18 +22,14 @@ jobs:
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: pnpm
+          registry-url: 'https://registry.npmjs.org'
 
       - run: pnpm i --frozen-lockfile
       - run: pnpm build
-      - name: Creating .npmrc
-        run: |
-          cat << EOF > "$HOME/.npmrc"
-            //registry.npmjs.org/:_authToken=$NPM_TOKEN
-          EOF
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Upgrade npm for OIDC trusted publishing
+        run: npm install -g npm@latest
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets
@@ -41,13 +42,13 @@ jobs:
           title: 'Publish new release'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: 'true'
 
       - name: Package VS Code Extention
         run: pnpm --filter lowdefy-vscode package
 
       - name: Generate release notes
-        if: ${{ github.head_ref == 'changeset-release/main' }}
+        if: steps.changesets.outputs.published == 'true'
         id: release-notes
         run: |
           npm install -g @anthropic-ai/claude-code
@@ -65,7 +66,7 @@ jobs:
 
       - name: Create Github Release
         uses: softprops/action-gh-release@v2
-        if: ${{ github.head_ref == 'changeset-release/main' }}
+        if: steps.changesets.outputs.published == 'true'
         with:
           tag_name: ${{ steps.release-notes.outputs.version }}
           name: ${{ steps.release-notes.outputs.version }}
