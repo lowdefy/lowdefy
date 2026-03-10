@@ -540,6 +540,51 @@ test('serialize with ~k and ~r values', () => {
   });
 });
 
+test('serialize does not mutate original object marker enumerability', () => {
+  const object = { x: 1 };
+  Object.defineProperty(object, '~k', {
+    value: 'abc',
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  Object.defineProperty(object, '~r', {
+    value: 'ref1',
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  Object.defineProperty(object, '~l', {
+    value: 5,
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+
+  serializer.serialize(object);
+
+  // Original markers must remain non-enumerable
+  expect(Object.getOwnPropertyDescriptor(object, '~k').enumerable).toBe(false);
+  expect(Object.getOwnPropertyDescriptor(object, '~r').enumerable).toBe(false);
+  expect(Object.getOwnPropertyDescriptor(object, '~l').enumerable).toBe(false);
+  expect(Object.keys(object)).toEqual(['x']);
+});
+
+test('serializeToString does not mutate original object marker enumerability', () => {
+  const object = { x: 1 };
+  Object.defineProperty(object, '~k', {
+    value: 'abc',
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+
+  serializer.serializeToString(object);
+
+  expect(Object.getOwnPropertyDescriptor(object, '~k').enumerable).toBe(false);
+  expect(Object.keys(object)).toEqual(['x']);
+});
+
 test('deserialize with ~k and ~r value first', () => {
   let object = {
     y: { '~d': 0, '~k': 'b' },
