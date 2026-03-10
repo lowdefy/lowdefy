@@ -20,7 +20,7 @@ import apiWrapper from '../../../lib/server/apiWrapper.js';
 import buildPageIfNeeded from '../../../lib/server/jitPageBuilder.js';
 
 async function handler({ context, req, res }) {
-  const { pageId } = req.query;
+  const pageId = req.query.pageId.join('/');
 
   // Attempt JIT build if page not yet compiled
   let buildResult;

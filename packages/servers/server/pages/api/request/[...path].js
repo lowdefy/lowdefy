@@ -16,13 +16,19 @@
 
 import { callRequest } from '@lowdefy/api';
 
-import apiWrapper from '../../../../lib/server/apiWrapper.js';
+import apiWrapper from '../../../lib/server/apiWrapper.js';
 
 async function handler({ context, req, res }) {
   if (req.method !== 'POST') {
     throw new Error('Only POST requests are supported.');
   }
-  const { pageId, requestId } = req.query;
+  const segments = req.query.path;
+  if (!segments || segments.length < 2) {
+    res.status(400).json({ error: 'Invalid request path' });
+    return;
+  }
+  const requestId = segments[segments.length - 1];
+  const pageId = segments.slice(0, -1).join('/');
   const { actionId, blockId, payload } = req.body;
   context.logger.info({ event: 'call_request', pageId, requestId, blockId, actionId });
   const response = await callRequest(context, { blockId, pageId, payload, requestId });
