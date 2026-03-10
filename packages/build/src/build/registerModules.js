@@ -66,6 +66,7 @@ async function registerModuleEntry({ entry, resolvedPaths, context }) {
     sourceRefId: null,
     vars: {},
     moduleVars: entry.vars ?? {},
+    packageRoot,
     path: '',
     currentFile: moduleYamlPath,
     refChain: new Set(refDef.path ? [refDef.path] : []),
