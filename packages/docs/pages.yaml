@@ -76,7 +76,7 @@
 - _ref: blocks/input/PhoneNumberInput.yaml
 - _ref: blocks/input/RadioSelector.yaml
 - _ref: blocks/input/RatingSlider.yaml
-- _ref: blocks/input/Segmented.yaml
+- _ref: blocks/input/SegmentedSelector.yaml
 - _ref: blocks/input/S3UploadButton.yaml
 - _ref: blocks/input/S3UploadDragger.yaml
 - _ref: blocks/input/S3UploadPhoto.yaml

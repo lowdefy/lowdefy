@@ -15,12 +15,12 @@
 _ref:
   path: templates/blocks/template.yaml.njk
   vars:
-    block_type: Segmented
+    block_type: SegmentedSelector
     category: input
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Segmented/schema.js
-    filePath: blocks/input/Segmented.yaml
+    schema: ../plugins/blocks/blocks-antd/src/blocks/SegmentedSelector/schema.js
+    filePath: blocks/input/SegmentedSelector.yaml
     description_content: |
-      A segmented control input for selecting between a set of options. Similar to a radio group but with a pill/tab-style visual appearance.
+      A segmented control selector for choosing between a set of options. Works like other Selector blocks with support for primitive and label/value pair options.
     init_property_values:
       options:
         - Option A

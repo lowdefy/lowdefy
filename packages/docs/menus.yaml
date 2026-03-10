@@ -381,9 +381,9 @@
         - id: RatingSlider
           type: MenuLink
           pageId: RatingSlider
-        - id: Segmented
+        - id: SegmentedSelector
           type: MenuLink
-          pageId: Segmented
+          pageId: SegmentedSelector
         - id: S3UploadButton
           type: MenuLink
           pageId: S3UploadButton

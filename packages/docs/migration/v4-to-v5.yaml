@@ -532,7 +532,7 @@ _ref:
             | [Tour](/Tour) | display | Guided tour component |
             | [QRCode](/QRCode) | display | QR code generator |
             | [ColorPicker](/ColorPicker) | input | Color picker input |
-            | [Segmented](/Segmented) | input | Segmented control input |
+            | [SegmentedSelector](/SegmentedSelector) | input | Segmented control selector |
             | [Flex](/Flex) | container | Flexbox layout container |
             | [Splitter](/Splitter) | container | Resizable split-pane container |
             | [Masonry](/Masonry) | container | Masonry (Pinterest-style) layout |

@@ -16,12 +16,15 @@
 
 import React from 'react';
 import { Segmented } from 'antd';
+import { renderHtml } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
 import Label from '../Label/Label.js';
+import getValueIndex from '../../getValueIndex.js';
+import getUniqueValues from '../../getUniqueValues.js';
 import withTheme from '../withTheme.js';
 
-const SegmentedInput = ({
+const SegmentedSelector = ({
   blockId,
   classNames = {},
   components,
@@ -34,6 +37,7 @@ const SegmentedInput = ({
   validation,
   value,
 }) => {
+  const uniqueValueOptions = getUniqueValues(properties.options || []);
   return (
     <Label
       blockId={blockId}
@@ -50,14 +54,30 @@ const SegmentedInput = ({
             id={`${blockId}_input`}
             className={classNames.element}
             style={styles.element}
-            options={properties.options ?? []}
+            options={uniqueValueOptions.map((opt, i) =>
+              type.isPrimitive(opt)
+                ? {
+                    label: renderHtml({ html: `${opt}`, methods }),
+                    value: `${i}`,
+                  }
+                : {
+                    label: type.isNone(opt.label)
+                      ? renderHtml({ html: `${opt.value}`, methods })
+                      : renderHtml({ html: opt.label, methods }),
+                    value: `${i}`,
+                    disabled: opt.disabled || properties.disabled || loading,
+                  }
+            )}
             size={properties.size}
             block={properties.block}
             disabled={properties.disabled || loading}
-            value={type.isNone(value) ? undefined : value}
-            onChange={(newVal) => {
-              methods.setValue(newVal);
-              methods.triggerEvent({ name: 'onChange', event: { value: newVal } });
+            value={type.isNone(value) ? undefined : getValueIndex(value, properties.options || [])}
+            onChange={(index) => {
+              const val = type.isPrimitive(uniqueValueOptions[index])
+                ? uniqueValueOptions[index]
+                : uniqueValueOptions[index].value;
+              methods.setValue(val);
+              methods.triggerEvent({ name: 'onChange', event: { value: val } });
             }}
           />
         ),
@@ -66,11 +86,11 @@ const SegmentedInput = ({
   );
 };
 
-SegmentedInput.meta = {
-  valueType: 'string',
+SegmentedSelector.meta = {
+  valueType: 'any',
   category: 'input',
   icons: [...Label.meta.icons],
   cssKeys: ['element'],
 };
 
-export default withTheme('Segmented', SegmentedInput);
+export default withTheme('Segmented', SegmentedSelector);
