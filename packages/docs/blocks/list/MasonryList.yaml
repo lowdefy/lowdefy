@@ -13,106 +13,16 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: MasonryList
-    category: list
-    schema: ../plugins/blocks/blocks-antd/src/blocks/MasonryList/schema.js
+    pageId: MasonryList
+    pageTitle: MasonryList
+    section: List Blocks
     filePath: blocks/list/MasonryList.yaml
-    description_content: |
-      A data-driven masonry (Pinterest-style) layout that renders dynamic items from state. Items are arranged in columns, filling the shortest column first. Supports adding and removing items via `pushItem` and `removeItem` methods.
-
-      For a static masonry layout with fixed child blocks, use [Masonry](/Masonry) instead.
-    value_type: array
-    methods:
-      - name: pushItem
-        onClick:
-          - id: push
-            type: CallMethod
-            params:
-              blockId: block_id
-              method: pushItem
-      - name: removeItem
-        onClick:
-          - id: remove
-            type: CallMethod
-            params:
-              blockId: block_id
-              method: removeItem
-              args:
-                - 0
-      - name: unshiftItem
-        onClick:
-          - id: unshift
-            type: CallMethod
-            params:
-              blockId: block_id
-              method: unshiftItem
-      - name: moveItemUp
-        onClick:
-          - id: moveUp
-            type: CallMethod
-            params:
-              blockId: block_id
-              method: moveItemUp
-              args:
-                - 1
-      - name: moveItemDown
-        onClick:
-          - id: moveDown
-            type: CallMethod
-            params:
-              blockId: block_id
-              method: moveItemDown
-              args:
-                - 0
-    init_property_values:
-      columns: '3'
-      gutter: '16'
-    init_state_values:
-      block_id:
-        - title: Card 1
-          content: First card content.
-        - title: Card 2
-          content: >
-            Second card with more content to make it taller.
-            Lorem ipsum dolor sit amet.
-        - title: Card 3
-          content: Third card.
-    examples:
-      - title: Dynamic cards with add and remove
-        block:
-          id: masonry_list_example
-          type: MasonryList
-          properties:
-            columns: 3
-            gutter: 16
-          blocks:
-            - id: masonry_list_example.$.card
-              type: Card
-              properties:
-                title:
-                  _state: masonry_list_example.$.title
-              blocks:
-                - id: masonry_list_example.$.text
-                  type: Paragraph
-                  properties:
-                    content:
-                      _state: masonry_list_example.$.content
-                - id: masonry_list_example.$.remove
-                  type: Button
-                  properties:
-                    title: Remove
-                    icon: AiOutlineDelete
-                    color: danger
-                    variant: text
-                    size: small
-                  events:
-                    onClick:
-                      - id: remove_item
-                        type: CallMethod
-                        params:
-                          blockId: masonry_list_example
-                          method: removeItem
-                          args:
-                            - _index: 0
+    block_type: MasonryList
+    antd_component: List
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/MasonryList
+    schema: ../plugins/blocks/blocks-antd/src/blocks/MasonryList/schema.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/MasonryList/gallery.yaml
+    description: >
+      Masonry-style grid layout for list items.

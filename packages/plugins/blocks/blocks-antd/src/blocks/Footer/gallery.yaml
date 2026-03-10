@@ -1,0 +1,132 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic Footer
+  fullWidth: true
+  blocks:
+    - id: footer_basic
+      type: Layout
+      blocks:
+        - id: footer_basic_content
+          type: Content
+          style:
+            padding: 24px
+            background: '#fff'
+            minHeight: 120px
+          blocks:
+            - id: footer_basic_content_text
+              type: Paragraph
+              properties:
+                content: Page content above the footer.
+        - id: footer_basic_el
+          type: Footer
+          style:
+            textAlign: center
+          blocks:
+            - id: footer_basic_text
+              type: Paragraph
+              properties:
+                content: My Application - Copyright 2026
+
+- title: Footer with Links
+  fullWidth: true
+  blocks:
+    - id: footer_links
+      type: Layout
+      blocks:
+        - id: footer_links_content
+          type: Content
+          style:
+            padding: 24px
+            background: '#fff'
+            minHeight: 80px
+          blocks:
+            - id: footer_links_content_text
+              type: Paragraph
+              properties:
+                content: Page content.
+        - id: footer_links_el
+          type: Footer
+          style:
+            textAlign: center
+          blocks:
+            - id: footer_links_row
+              type: Box
+              layout:
+                gap: 16
+                justify: center
+              blocks:
+                - id: footer_link_privacy
+                  type: Button
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Privacy Policy
+                    color: default
+                    variant: link
+                - id: footer_link_terms
+                  type: Button
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Terms of Service
+                    color: default
+                    variant: link
+                - id: footer_link_contact
+                  type: Button
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Contact Us
+                    color: default
+                    variant: link
+            - id: footer_links_copyright
+              type: Paragraph
+              properties:
+                content: Made with Lowdefy
+                style:
+                  marginTop: 8px
+                  color: '#999'
+
+- title: Styled Footer
+  fullWidth: true
+  blocks:
+    - id: footer_styled
+      type: Layout
+      blocks:
+        - id: footer_styled_content
+          type: Content
+          style:
+            padding: 24px
+            background: '#fff'
+            minHeight: 80px
+          blocks:
+            - id: footer_styled_content_text
+              type: Paragraph
+              properties:
+                content: The Footer block renders at the bottom of a Layout. It hides on print (hide-on-print class) and auto-centers its content with margin auto.
+        - id: footer_styled_el
+          type: Footer
+          style:
+            background: '#001529'
+            textAlign: center
+            padding: 24px 50px
+          blocks:
+            - id: footer_styled_text
+              type: Paragraph
+              properties:
+                content: Dark styled footer with custom background
+                style:
+                  color: white
+                  margin: 0

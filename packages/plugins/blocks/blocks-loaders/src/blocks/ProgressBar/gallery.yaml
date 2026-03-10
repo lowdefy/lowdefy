@@ -1,0 +1,102 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Default
+  blocks:
+    - id: progress_bar_default
+      type: ProgressBar
+
+- title: Progress Values
+  blocks:
+    - id: progress_bar_0
+      type: ProgressBar
+      properties:
+        progress: 0
+    - id: progress_bar_25
+      type: ProgressBar
+      properties:
+        progress: 25
+    - id: progress_bar_50
+      type: ProgressBar
+      properties:
+        progress: 50
+    - id: progress_bar_75
+      type: ProgressBar
+      properties:
+        progress: 75
+    - id: progress_bar_100
+      type: ProgressBar
+      properties:
+        progress: 100
+
+- title: Custom Height
+  blocks:
+    - id: progress_bar_thin
+      type: ProgressBar
+      properties:
+        progress: 60
+        height: 2
+    - id: progress_bar_default_height
+      type: ProgressBar
+      properties:
+        progress: 60
+        height: 4
+    - id: progress_bar_thick
+      type: ProgressBar
+      properties:
+        progress: 60
+        height: 8
+    - id: progress_bar_extra_thick
+      type: ProgressBar
+      properties:
+        progress: 60
+        height: 12
+
+- title: Transition Speed
+  blocks:
+    - id: progress_bar_fast_transition
+      type: ProgressBar
+      properties:
+        progress: 80
+        transitionTime: 200
+    - id: progress_bar_default_transition
+      type: ProgressBar
+      properties:
+        progress: 80
+        transitionTime: 1000
+    - id: progress_bar_slow_transition
+      type: ProgressBar
+      properties:
+        progress: 80
+        transitionTime: 3000
+
+- title: Without Shadow
+  blocks:
+    - id: progress_bar_no_shadow
+      type: ProgressBar
+      properties:
+        progress: 65
+        shadow: false
+    - id: progress_bar_with_shadow
+      type: ProgressBar
+      properties:
+        progress: 65
+        shadow: true
+
+- title: Complete (Hidden)
+  blocks:
+    - id: progress_bar_complete
+      type: ProgressBar
+      properties:
+        progress: 100

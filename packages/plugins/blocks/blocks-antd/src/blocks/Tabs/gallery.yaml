@@ -1,0 +1,1310 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic Tabs (Line)
+  blocks:
+    - id: basic_tabs
+      type: Tabs
+      properties:
+        tabs:
+          - key: profile
+            title: Profile
+          - key: settings
+            title: Settings
+          - key: billing
+            title: Billing
+      slots:
+        profile:
+          blocks:
+            - id: basic_profile_title
+              type: Title
+              properties:
+                content: Personal Information
+                level: 4
+            - id: basic_profile_content
+              type: Paragraph
+              properties:
+                content: Manage your personal information, display name, and avatar. Changes are saved automatically across all your connected devices.
+        settings:
+          blocks:
+            - id: basic_settings_title
+              type: Title
+              properties:
+                content: Preferences
+                level: 4
+            - id: basic_settings_content
+              type: Paragraph
+              properties:
+                content: Configure application preferences, notification settings, and keyboard shortcuts. These settings apply to your current workspace.
+        billing:
+          blocks:
+            - id: basic_billing_title
+              type: Title
+              properties:
+                content: Billing Details
+                level: 4
+            - id: basic_billing_content
+              type: Paragraph
+              properties:
+                content: View your current plan, payment history, and update billing information. Your next invoice is scheduled for the first of next month.
+
+- title: Card Type
+  blocks:
+    - id: card_tabs
+      type: Tabs
+      properties:
+        tabType: card
+        tabs:
+          - key: overview
+            title: Overview
+          - key: analytics
+            title: Analytics
+          - key: reports
+            title: Reports
+          - key: exports
+            title: Exports
+      slots:
+        overview:
+          blocks:
+            - id: card_overview_row
+              type: Box
+              layout:
+                gap: 16
+              blocks:
+                - id: card_stat_users
+                  type: Statistic
+                  layout:
+                    flex: 1 1 0
+                  properties:
+                    title: Active Users
+                    value: 1284
+                - id: card_stat_sessions
+                  type: Statistic
+                  layout:
+                    flex: 1 1 0
+                  properties:
+                    title: Sessions Today
+                    value: 3567
+                - id: card_stat_revenue
+                  type: Statistic
+                  layout:
+                    flex: 1 1 0
+                  properties:
+                    title: Revenue
+                    value: 48250
+                    prefix: $
+            - id: card_overview_content
+              type: Paragraph
+              properties:
+                content: Dashboard overview showing key metrics and recent activity for your project.
+        analytics:
+          blocks:
+            - id: card_analytics_progress_label
+              type: Paragraph
+              properties:
+                content: Conversion funnel progress for the current quarter.
+            - id: card_analytics_progress
+              type: Progress
+              properties:
+                percent: 72
+                status: active
+        reports:
+          blocks:
+            - id: card_reports_content
+              type: Paragraph
+              properties:
+                content: Generate and download reports for weekly, monthly, and quarterly performance summaries. Select a date range to get started.
+        exports:
+          blocks:
+            - id: card_exports_content
+              type: Paragraph
+              properties:
+                content: Export your data in CSV, JSON, or PDF format. Scheduled exports run daily at midnight UTC.
+
+- title: Tab Positions
+  blocks:
+    - id: pos_top_label
+      type: Markdown
+      properties:
+        content: '**Top (default):**'
+    - id: pos_top_tabs
+      type: Tabs
+      properties:
+        tabPosition: top
+        tabs:
+          - key: pos_top_first
+            title: First
+          - key: pos_top_second
+            title: Second
+          - key: pos_top_third
+            title: Third
+      slots:
+        pos_top_first:
+          blocks:
+            - id: pos_top_first_content
+              type: Paragraph
+              properties:
+                content: Tabs positioned at the top are the most common layout, suitable for primary navigation within a section.
+        pos_top_second:
+          blocks:
+            - id: pos_top_second_content
+              type: Paragraph
+              properties:
+                content: This is the second tab in the top-positioned layout.
+        pos_top_third:
+          blocks:
+            - id: pos_top_third_content
+              type: Paragraph
+              properties:
+                content: This is the third tab in the top-positioned layout.
+    - id: pos_bottom_label
+      type: Markdown
+      properties:
+        content: '**Bottom:**'
+    - id: pos_bottom_tabs
+      type: Tabs
+      properties:
+        tabPosition: bottom
+        tabs:
+          - key: pos_bot_inbox
+            title: Inbox
+          - key: pos_bot_sent
+            title: Sent
+          - key: pos_bot_drafts
+            title: Drafts
+      slots:
+        pos_bot_inbox:
+          blocks:
+            - id: pos_bot_inbox_content
+              type: Paragraph
+              properties:
+                content: You have 12 unread messages. The most recent is from the engineering team regarding deployment schedules.
+        pos_bot_sent:
+          blocks:
+            - id: pos_bot_sent_content
+              type: Paragraph
+              properties:
+                content: Your last sent message was a project status update to the stakeholders group.
+        pos_bot_drafts:
+          blocks:
+            - id: pos_bot_drafts_content
+              type: Paragraph
+              properties:
+                content: You have 3 saved drafts including the quarterly review document and team feedback form.
+    - id: pos_left_label
+      type: Markdown
+      properties:
+        content: '**Left:**'
+    - id: pos_left_tabs
+      type: Tabs
+      properties:
+        tabPosition: left
+        tabs:
+          - key: pos_left_general
+            title: General
+          - key: pos_left_security
+            title: Security
+          - key: pos_left_integrations
+            title: Integrations
+          - key: pos_left_api
+            title: API Keys
+      slots:
+        pos_left_general:
+          blocks:
+            - id: pos_left_general_content
+              type: Paragraph
+              properties:
+                content: General application settings including workspace name, default language, and timezone configuration.
+        pos_left_security:
+          blocks:
+            - id: pos_left_security_content
+              type: Paragraph
+              properties:
+                content: Two-factor authentication, session management, and login history for your account.
+        pos_left_integrations:
+          blocks:
+            - id: pos_left_integrations_content
+              type: Paragraph
+              properties:
+                content: Connect with third-party services like Slack, GitHub, Jira, and Google Workspace.
+        pos_left_api:
+          blocks:
+            - id: pos_left_api_content
+              type: Paragraph
+              properties:
+                content: Manage API keys for programmatic access. Create, revoke, and monitor usage of your tokens.
+    - id: pos_right_label
+      type: Markdown
+      properties:
+        content: '**Right:**'
+    - id: pos_right_tabs
+      type: Tabs
+      properties:
+        tabPosition: right
+        tabs:
+          - key: pos_right_desc
+            title: Description
+          - key: pos_right_reviews
+            title: Reviews
+          - key: pos_right_shipping
+            title: Shipping
+      slots:
+        pos_right_desc:
+          blocks:
+            - id: pos_right_desc_content
+              type: Paragraph
+              properties:
+                content: Premium wireless headphones with active noise cancellation, 30-hour battery life, and comfortable over-ear design.
+        pos_right_reviews:
+          blocks:
+            - id: pos_right_reviews_content
+              type: Paragraph
+              properties:
+                content: 4.7 out of 5 stars based on 2,340 reviews. Customers praise the sound quality and battery life.
+        pos_right_shipping:
+          blocks:
+            - id: pos_right_shipping_content
+              type: Paragraph
+              properties:
+                content: Free standard shipping (3-5 business days). Express shipping available for $9.99 (1-2 business days).
+
+- title: Sizes
+  blocks:
+    - id: size_small_label
+      type: Markdown
+      properties:
+        content: '**Small:**'
+    - id: size_small_tabs
+      type: Tabs
+      properties:
+        size: small
+        tabs:
+          - key: sm_details
+            title: Details
+          - key: sm_specs
+            title: Specifications
+          - key: sm_notes
+            title: Notes
+      slots:
+        sm_details:
+          blocks:
+            - id: sm_details_content
+              type: Paragraph
+              properties:
+                content: Compact tabs for dense interfaces where screen space is at a premium. Ideal for side panels and secondary navigation.
+        sm_specs:
+          blocks:
+            - id: sm_specs_content
+              type: Paragraph
+              properties:
+                content: Technical specifications displayed in a compact view.
+        sm_notes:
+          blocks:
+            - id: sm_notes_content
+              type: Paragraph
+              properties:
+                content: Internal notes and comments in small tab format.
+    - id: size_default_label
+      type: Markdown
+      properties:
+        content: '**Default:**'
+    - id: size_default_tabs
+      type: Tabs
+      properties:
+        size: default
+        tabs:
+          - key: def_details
+            title: Details
+          - key: def_specs
+            title: Specifications
+          - key: def_notes
+            title: Notes
+      slots:
+        def_details:
+          blocks:
+            - id: def_details_content
+              type: Paragraph
+              properties:
+                content: Standard-sized tabs for most use cases. Provides a balanced reading experience and comfortable click targets.
+        def_specs:
+          blocks:
+            - id: def_specs_content
+              type: Paragraph
+              properties:
+                content: Technical specifications displayed in standard tab format.
+        def_notes:
+          blocks:
+            - id: def_notes_content
+              type: Paragraph
+              properties:
+                content: Internal notes and comments in default tab format.
+    - id: size_large_label
+      type: Markdown
+      properties:
+        content: '**Large:**'
+    - id: size_large_tabs
+      type: Tabs
+      properties:
+        size: large
+        tabs:
+          - key: lg_details
+            title: Details
+          - key: lg_specs
+            title: Specifications
+          - key: lg_notes
+            title: Notes
+      slots:
+        lg_details:
+          blocks:
+            - id: lg_details_content
+              type: Paragraph
+              properties:
+                content: Large tabs for prominent navigation areas and primary page sections. Gives a spacious, easy-to-read layout.
+        lg_specs:
+          blocks:
+            - id: lg_specs_content
+              type: Paragraph
+              properties:
+                content: Technical specifications displayed with large, prominent tab headers.
+        lg_notes:
+          blocks:
+            - id: lg_notes_content
+              type: Paragraph
+              properties:
+                content: Internal notes and comments with large tab format for emphasis.
+
+- title: Card Type with Sizes
+  blocks:
+    - id: card_sm_label
+      type: Markdown
+      properties:
+        content: '**Small card:**'
+    - id: card_small_tabs
+      type: Tabs
+      properties:
+        tabType: card
+        size: small
+        tabs:
+          - key: csm_tab1
+            title: Tab 1
+          - key: csm_tab2
+            title: Tab 2
+          - key: csm_tab3
+            title: Tab 3
+      slots:
+        csm_tab1:
+          blocks:
+            - id: csm_tab1_content
+              type: Paragraph
+              properties:
+                content: Small card tabs are compact and fit well in tight layouts or secondary navigation areas.
+        csm_tab2:
+          blocks:
+            - id: csm_tab2_content
+              type: Paragraph
+              properties:
+                content: Second tab of the small card variant.
+        csm_tab3:
+          blocks:
+            - id: csm_tab3_content
+              type: Paragraph
+              properties:
+                content: Third tab of the small card variant.
+    - id: card_def_label
+      type: Markdown
+      properties:
+        content: '**Default card:**'
+    - id: card_default_tabs
+      type: Tabs
+      properties:
+        tabType: card
+        size: default
+        tabs:
+          - key: cdf_tab1
+            title: Tab 1
+          - key: cdf_tab2
+            title: Tab 2
+          - key: cdf_tab3
+            title: Tab 3
+      slots:
+        cdf_tab1:
+          blocks:
+            - id: cdf_tab1_content
+              type: Paragraph
+              properties:
+                content: Default card tabs provide a standard raised panel appearance, commonly used for content organization.
+        cdf_tab2:
+          blocks:
+            - id: cdf_tab2_content
+              type: Paragraph
+              properties:
+                content: Second tab of the default card variant.
+        cdf_tab3:
+          blocks:
+            - id: cdf_tab3_content
+              type: Paragraph
+              properties:
+                content: Third tab of the default card variant.
+    - id: card_lg_label
+      type: Markdown
+      properties:
+        content: '**Large card:**'
+    - id: card_large_tabs
+      type: Tabs
+      properties:
+        tabType: card
+        size: large
+        tabs:
+          - key: clg_tab1
+            title: Tab 1
+          - key: clg_tab2
+            title: Tab 2
+          - key: clg_tab3
+            title: Tab 3
+      slots:
+        clg_tab1:
+          blocks:
+            - id: clg_tab1_content
+              type: Paragraph
+              properties:
+                content: Large card tabs have more padding and larger font, making them ideal for primary dashboard navigation.
+        clg_tab2:
+          blocks:
+            - id: clg_tab2_content
+              type: Paragraph
+              properties:
+                content: Second tab of the large card variant.
+        clg_tab3:
+          blocks:
+            - id: clg_tab3_content
+              type: Paragraph
+              properties:
+                content: Third tab of the large card variant.
+
+- title: With Icons
+  blocks:
+    - id: icon_tabs
+      type: Tabs
+      properties:
+        tabs:
+          - key: icon_home
+            title: Home
+            icon: AiOutlineHome
+          - key: icon_users
+            title: Users
+            icon: AiOutlineTeam
+          - key: icon_settings
+            title: Settings
+            icon: AiOutlineSetting
+          - key: icon_chart
+            title: Analytics
+            icon: AiOutlineBarChart
+      slots:
+        icon_home:
+          blocks:
+            - id: icon_home_content
+              type: Paragraph
+              properties:
+                content: Welcome to the dashboard. Here you can view recent activity, quick statistics, and announcements from your team.
+        icon_users:
+          blocks:
+            - id: icon_users_desc
+              type: Descriptions
+              properties:
+                bordered: true
+                size: small
+                items:
+                  - label: Total Members
+                    value: '24'
+                  - label: Active Now
+                    value: '8'
+                  - label: Pending Invites
+                    value: '3'
+        icon_settings:
+          blocks:
+            - id: icon_settings_content
+              type: Paragraph
+              properties:
+                content: Application configuration, theme settings, and advanced options. Changes take effect immediately.
+        icon_chart:
+          blocks:
+            - id: icon_chart_progress
+              type: Progress
+              properties:
+                percent: 85
+                status: active
+            - id: icon_chart_note
+              type: Paragraph
+              properties:
+                content: Monthly target progress at 85%. On track for completion by end of quarter.
+
+- title: Custom Icon Properties
+  blocks:
+    - id: custom_icon_tabs
+      type: Tabs
+      properties:
+        tabs:
+          - key: ci_success
+            title: Passed
+            icon:
+              name: AiOutlineCheckCircle
+              color: '#52c41a'
+          - key: ci_warning
+            title: Warnings
+            icon:
+              name: AiOutlineWarning
+              color: '#faad14'
+          - key: ci_error
+            title: Failed
+            icon:
+              name: AiOutlineCloseCircle
+              color: '#ff4d4f'
+      slots:
+        ci_success:
+          blocks:
+            - id: ci_success_result
+              type: Result
+              properties:
+                status: success
+                title: All Tests Passed
+                subTitle: 142 tests completed successfully in 4.2 seconds.
+        ci_warning:
+          blocks:
+            - id: ci_warning_alert
+              type: Alert
+              properties:
+                message: 3 Deprecation Warnings
+                description: Some test suites use deprecated assertion methods. Please update to the latest API.
+                type: warning
+                showIcon: true
+        ci_error:
+          blocks:
+            - id: ci_error_result
+              type: Result
+              properties:
+                status: error
+                title: 2 Tests Failed
+                subTitle: Check the error log below for details on the failing assertions.
+
+- title: Disabled Tab
+  blocks:
+    - id: disabled_tabs
+      type: Tabs
+      properties:
+        tabs:
+          - key: dis_active
+            title: Active
+          - key: dis_coming_soon
+            title: Coming Soon
+            disabled: true
+          - key: dis_beta
+            title: Beta
+          - key: dis_locked
+            title: Locked
+            disabled: true
+      slots:
+        dis_active:
+          blocks:
+            - id: dis_active_content
+              type: Paragraph
+              properties:
+                content: This tab is accessible and contains normal content. Users can freely navigate to this section.
+        dis_coming_soon:
+          blocks:
+            - id: dis_coming_soon_content
+              type: Paragraph
+              properties:
+                content: This content is not yet available. The tab is disabled to indicate an upcoming feature.
+        dis_beta:
+          blocks:
+            - id: dis_beta_alert
+              type: Alert
+              properties:
+                message: Beta Feature
+                description: This feature is currently in beta. Some functionality may be incomplete or change without notice.
+                type: info
+                showIcon: true
+        dis_locked:
+          blocks:
+            - id: dis_locked_content
+              type: Paragraph
+              properties:
+                content: This section requires an upgraded subscription plan to access.
+
+- title: Default Active Key
+  blocks:
+    - id: default_key_tabs
+      type: Tabs
+      properties:
+        defaultActiveKey: dk_second
+        tabs:
+          - key: dk_first
+            title: First
+          - key: dk_second
+            title: Second (Default)
+          - key: dk_third
+            title: Third
+      slots:
+        dk_first:
+          blocks:
+            - id: dk_first_content
+              type: Paragraph
+              properties:
+                content: This is the first tab. It is not active by default because defaultActiveKey is set to the second tab.
+        dk_second:
+          blocks:
+            - id: dk_second_content
+              type: Alert
+              properties:
+                message: This tab is active by default
+                description: The defaultActiveKey property is set to "dk_second", so this tab is shown when the component first renders.
+                type: success
+                showIcon: true
+        dk_third:
+          blocks:
+            - id: dk_third_content
+              type: Paragraph
+              properties:
+                content: This is the third tab with regular content.
+
+- title: Extra Content in Tab Bar
+  blocks:
+    - id: extra_tabs
+      type: Tabs
+      properties:
+        extraAreaKey: extra_area
+        tabs:
+          - key: extra_documents
+            title: Documents
+          - key: extra_images
+            title: Images
+          - key: extra_videos
+            title: Videos
+      slots:
+        extra_area:
+          blocks:
+            - id: extra_area_button
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Upload
+                icon: AiOutlineUpload
+                color: primary
+                variant: solid
+                size: small
+        extra_documents:
+          blocks:
+            - id: extra_documents_content
+              type: Paragraph
+              properties:
+                content: Browse your uploaded documents. Supported formats include PDF, DOCX, TXT, and Markdown files. Use the Upload button in the tab bar to add new files.
+        extra_images:
+          blocks:
+            - id: extra_images_content
+              type: Paragraph
+              properties:
+                content: View your image gallery. Supports JPEG, PNG, SVG, and WebP formats up to 10MB each.
+        extra_videos:
+          blocks:
+            - id: extra_videos_content
+              type: Paragraph
+              properties:
+                content: Your video library. Supports MP4, WebM, and MOV formats. Maximum file size is 500MB.
+
+- title: Rich Content in Tab Panes
+  blocks:
+    - id: rich_tabs
+      type: Tabs
+      properties:
+        tabs:
+          - key: rich_dashboard
+            title: Dashboard
+            icon: AiOutlineDashboard
+          - key: rich_team
+            title: Team
+            icon: AiOutlineTeam
+          - key: rich_activity
+            title: Activity
+            icon: AiOutlineHistory
+      slots:
+        rich_dashboard:
+          blocks:
+            - id: rich_dash_stats
+              type: Box
+              layout:
+                gap: 16
+              blocks:
+                - id: rich_stat_1
+                  type: Statistic
+                  layout:
+                    flex: 1 1 0
+                  properties:
+                    title: Total Revenue
+                    value: 126560
+                    prefix: $
+                    precision: 2
+                - id: rich_stat_2
+                  type: Statistic
+                  layout:
+                    flex: 1 1 0
+                  properties:
+                    title: Active Users
+                    value: 8846
+                - id: rich_stat_3
+                  type: Statistic
+                  layout:
+                    flex: 1 1 0
+                  properties:
+                    title: Completion Rate
+                    value: 93.2
+                    suffix: '%'
+            - id: rich_dash_divider
+              type: Divider
+            - id: rich_dash_progress_label
+              type: Paragraph
+              properties:
+                content: Quarterly target progress
+            - id: rich_dash_progress
+              type: Progress
+              properties:
+                percent: 78
+                status: active
+        rich_team:
+          blocks:
+            - id: rich_team_desc
+              type: Descriptions
+              properties:
+                bordered: true
+                column: 2
+                items:
+                  - label: Engineering
+                    value: '12 members'
+                  - label: Design
+                    value: '5 members'
+                  - label: Product
+                    value: '4 members'
+                  - label: QA
+                    value: '3 members'
+            - id: rich_team_divider
+              type: Divider
+            - id: rich_team_note
+              type: Alert
+              properties:
+                message: 2 open positions
+                description: Senior Backend Engineer and Product Designer roles are currently hiring.
+                type: info
+                showIcon: true
+        rich_activity:
+          blocks:
+            - id: rich_activity_title
+              type: Title
+              properties:
+                content: Recent Activity
+                level: 5
+            - id: rich_activity_item_1
+              type: Paragraph
+              properties:
+                content: '10:42 AM - Sarah merged pull request #247 into main branch.'
+            - id: rich_activity_divider_1
+              type: Divider
+              properties:
+                dashed: true
+            - id: rich_activity_item_2
+              type: Paragraph
+              properties:
+                content: '09:15 AM - James deployed v2.4.1 to production environment.'
+            - id: rich_activity_divider_2
+              type: Divider
+              properties:
+                dashed: true
+            - id: rich_activity_item_3
+              type: Paragraph
+              properties:
+                content: 'Yesterday - Alex created 3 new issues in the backlog tracker.'
+
+- title: Scrollable Tabs (Many Tabs)
+  blocks:
+    - id: scroll_tabs
+      type: Tabs
+      properties:
+        tabs:
+          - key: scroll_jan
+            title: January
+          - key: scroll_feb
+            title: February
+          - key: scroll_mar
+            title: March
+          - key: scroll_apr
+            title: April
+          - key: scroll_may
+            title: May
+          - key: scroll_jun
+            title: June
+          - key: scroll_jul
+            title: July
+          - key: scroll_aug
+            title: August
+          - key: scroll_sep
+            title: September
+          - key: scroll_oct
+            title: October
+          - key: scroll_nov
+            title: November
+          - key: scroll_dec
+            title: December
+      slots:
+        scroll_jan:
+          blocks:
+            - id: scroll_jan_content
+              type: Paragraph
+              properties:
+                content: January report - Q1 kickoff with team planning sessions and annual goal setting. Revenue target set at $1.2M.
+        scroll_feb:
+          blocks:
+            - id: scroll_feb_content
+              type: Paragraph
+              properties:
+                content: February report - Sprint planning completed. 3 new team members onboarded. Infrastructure migration started.
+        scroll_mar:
+          blocks:
+            - id: scroll_mar_content
+              type: Paragraph
+              properties:
+                content: March report - Q1 close. Revenue hit 108% of target. Product launch scheduled for April.
+        scroll_apr:
+          blocks:
+            - id: scroll_apr_content
+              type: Paragraph
+              properties:
+                content: April report - Product v2.0 launched successfully. 500 new signups in the first week.
+        scroll_may:
+          blocks:
+            - id: scroll_may_content
+              type: Paragraph
+              properties:
+                content: May report - Customer feedback collected and prioritized. Feature roadmap updated for Q3.
+        scroll_jun:
+          blocks:
+            - id: scroll_jun_content
+              type: Paragraph
+              properties:
+                content: June report - Q2 close. Revenue exceeded targets by 15%. Team offsite and retrospective completed.
+        scroll_jul:
+          blocks:
+            - id: scroll_jul_content
+              type: Paragraph
+              properties:
+                content: July report - H2 planning underway. Engineering team focused on performance optimizations.
+        scroll_aug:
+          blocks:
+            - id: scroll_aug_content
+              type: Paragraph
+              properties:
+                content: August report - Beta testing for v3.0 started with 50 partner organizations.
+        scroll_sep:
+          blocks:
+            - id: scroll_sep_content
+              type: Paragraph
+              properties:
+                content: September report - Q3 close. Beta feedback incorporated. Security audit completed with no critical findings.
+        scroll_oct:
+          blocks:
+            - id: scroll_oct_content
+              type: Paragraph
+              properties:
+                content: October report - v3.0 released to general availability. Conference presentation at TechSummit.
+        scroll_nov:
+          blocks:
+            - id: scroll_nov_content
+              type: Paragraph
+              properties:
+                content: November report - Black Friday promotion drove 200% increase in signups. Support team scaled up.
+        scroll_dec:
+          blocks:
+            - id: scroll_dec_content
+              type: Paragraph
+              properties:
+                content: December report - Year-end review. Annual revenue target exceeded by 22%. Holiday code freeze in effect.
+
+- title: Left Tabs with Card Type
+  blocks:
+    - id: left_card_tabs
+      type: Tabs
+      properties:
+        tabType: card
+        tabPosition: left
+        tabs:
+          - key: lc_account
+            title: Account
+          - key: lc_notifications
+            title: Notifications
+          - key: lc_appearance
+            title: Appearance
+          - key: lc_privacy
+            title: Privacy
+      slots:
+        lc_account:
+          blocks:
+            - id: lc_account_desc
+              type: Descriptions
+              properties:
+                bordered: true
+                column: 1
+                items:
+                  - label: Username
+                    value: johndoe
+                  - label: Email
+                    value: john@example.com
+                  - label: Role
+                    value: Administrator
+                  - label: Member Since
+                    value: March 2024
+        lc_notifications:
+          blocks:
+            - id: lc_notif_content
+              type: Paragraph
+              properties:
+                content: Configure which events trigger notifications. Choose between email, push, or in-app delivery for each category.
+        lc_appearance:
+          blocks:
+            - id: lc_appearance_content
+              type: Paragraph
+              properties:
+                content: Customize your visual preferences including theme mode, accent color, font size, and compact layout options.
+        lc_privacy:
+          blocks:
+            - id: lc_privacy_alert
+              type: Alert
+              properties:
+                message: Privacy Settings
+                description: Your profile is currently set to public. Other workspace members can see your name, avatar, and activity status.
+                type: warning
+                showIcon: true
+
+- title: Animation Disabled
+  blocks:
+    - id: no_anim_tabs
+      type: Tabs
+      properties:
+        animated: false
+        tabs:
+          - key: na_tab1
+            title: No Animation 1
+          - key: na_tab2
+            title: No Animation 2
+          - key: na_tab3
+            title: No Animation 3
+      slots:
+        na_tab1:
+          blocks:
+            - id: na_tab1_content
+              type: Paragraph
+              properties:
+                content: Tab content switches instantly without any transition animation. This can be useful for performance-sensitive interfaces or when animation feels distracting.
+        na_tab2:
+          blocks:
+            - id: na_tab2_content
+              type: Paragraph
+              properties:
+                content: The animated property is set to false, disabling both the ink bar animation and the content transition.
+        na_tab3:
+          blocks:
+            - id: na_tab3_content
+              type: Paragraph
+              properties:
+                content: Compare this with the other tab examples on this page to see the difference in transition behavior.
+
+- title: CSS Style Customization
+  blocks:
+    - id: css_tabs
+      type: Tabs
+      properties:
+        tabs:
+          - key: css_overview
+            title: Overview
+          - key: css_details
+            title: Details
+          - key: css_contact
+            title: Contact
+      style:
+        --element:
+          background: '#f6f8fa'
+          padding: 16px
+          borderRadius: 8px
+        --tabBar:
+          marginBottom: 24px
+        --tabPane:
+          padding: 12px
+      slots:
+        css_overview:
+          blocks:
+            - id: css_overview_content
+              type: Paragraph
+              properties:
+                content: This example demonstrates CSS customization using the style property. The element has a light gray background with rounded corners, and the tab bar has extra bottom margin.
+        css_details:
+          blocks:
+            - id: css_details_content
+              type: Paragraph
+              properties:
+                content: The tabBar, tabPane, and element CSS keys can be individually targeted. Each accepts standard CSS properties as an object.
+        css_contact:
+          blocks:
+            - id: css_contact_content
+              type: Paragraph
+              properties:
+                content: Use style.element to control the outer wrapper, style.tabBar for the navigation strip, and style.tabPane for each content panel.
+    - id: css_dark_tabs
+      type: Tabs
+      properties:
+        tabs:
+          - key: cssd_code
+            title: Code
+          - key: cssd_output
+            title: Output
+          - key: cssd_logs
+            title: Logs
+      style:
+        --element:
+          background: '#1e1e2e'
+          padding: 16px
+          borderRadius: 8px
+          color: '#cdd6f4'
+        --tabBar:
+          color: '#cdd6f4'
+      slots:
+        cssd_code:
+          blocks:
+            - id: cssd_code_content
+              type: Paragraph
+              properties:
+                content: Dark-themed tabs using CSS overrides. Suitable for code editors, terminal views, or developer tool interfaces.
+              style:
+                --element:
+                  color: '#cdd6f4'
+        cssd_output:
+          blocks:
+            - id: cssd_output_content
+              type: Paragraph
+              properties:
+                content: Output panel with matching dark theme. The element and tabBar CSS keys are styled together for a cohesive look.
+              style:
+                --element:
+                  color: '#cdd6f4'
+        cssd_logs:
+          blocks:
+            - id: cssd_logs_content
+              type: Paragraph
+              properties:
+                content: Log viewer panel. Monospaced fonts and dark backgrounds reduce eye strain during extended debugging sessions.
+              style:
+                --element:
+                  color: '#cdd6f4'
+                  fontFamily: monospace
+
+- title: Theme Token Overrides
+  blocks:
+    - id: theme_custom_colors
+      type: Markdown
+      properties:
+        content: '**Custom ink bar and text colors:**'
+    - id: theme_color_tabs
+      type: Tabs
+      properties:
+        theme:
+          inkBarColor: '#52c41a'
+          itemSelectedColor: '#52c41a'
+          itemHoverColor: '#73d13d'
+          itemActiveColor: '#389e0d'
+        tabs:
+          - key: tc_plants
+            title: Plants
+          - key: tc_garden
+            title: Garden
+          - key: tc_harvest
+            title: Harvest
+      slots:
+        tc_plants:
+          blocks:
+            - id: tc_plants_content
+              type: Paragraph
+              properties:
+                content: The ink bar and selected tab text are green, overriding the default blue. Use inkBarColor, itemSelectedColor, itemHoverColor, and itemActiveColor tokens.
+        tc_garden:
+          blocks:
+            - id: tc_garden_content
+              type: Paragraph
+              properties:
+                content: The garden planner helps you organize plant spacing, sunlight needs, and watering schedules throughout the growing season.
+        tc_harvest:
+          blocks:
+            - id: tc_harvest_content
+              type: Paragraph
+              properties:
+                content: Track your harvest yields by week and compare against previous seasons to optimize your gardening strategy.
+    - id: theme_card_label
+      type: Markdown
+      properties:
+        content: '**Custom card tab appearance:**'
+    - id: theme_card_tabs
+      type: Tabs
+      properties:
+        tabType: card
+        theme:
+          cardBg: '#fff7e6'
+          cardHeight: 48
+          cardPadding: '12px 24px'
+          cardGutter: 4
+          itemSelectedColor: '#d46b08'
+          itemColor: '#874d00'
+        tabs:
+          - key: tcd_recipes
+            title: Recipes
+          - key: tcd_favorites
+            title: Favorites
+          - key: tcd_recent
+            title: Recent
+      slots:
+        tcd_recipes:
+          blocks:
+            - id: tcd_recipes_content
+              type: Paragraph
+              properties:
+                content: Card tabs with a warm amber background and custom height. The cardBg, cardHeight, cardPadding, and cardGutter tokens control the card-type appearance.
+        tcd_favorites:
+          blocks:
+            - id: tcd_favorites_content
+              type: Paragraph
+              properties:
+                content: Your saved favorite recipes. Browse your curated collection of breakfast, lunch, and dinner ideas.
+        tcd_recent:
+          blocks:
+            - id: tcd_recent_content
+              type: Paragraph
+              properties:
+                content: Recently viewed recipes from the past 30 days. Quick access to dishes you have been exploring.
+    - id: theme_spacing_label
+      type: Markdown
+      properties:
+        content: '**Custom spacing and font size:**'
+    - id: theme_spacing_tabs
+      type: Tabs
+      properties:
+        theme:
+          horizontalItemGutter: 48
+          horizontalItemPadding: '16px 0'
+          titleFontSize: 16
+          inkBarColor: '#722ed1'
+          itemSelectedColor: '#722ed1'
+          itemHoverColor: '#9254de'
+        tabs:
+          - key: ts_intro
+            title: Introduction
+          - key: ts_chapters
+            title: Chapters
+          - key: ts_appendix
+            title: Appendix
+      slots:
+        ts_intro:
+          blocks:
+            - id: ts_intro_content
+              type: Paragraph
+              properties:
+                content: Wider spacing between tabs using horizontalItemGutter token set to 48px (default is 32px). The title font size is increased to 16px with a purple accent color.
+        ts_chapters:
+          blocks:
+            - id: ts_chapters_content
+              type: Paragraph
+              properties:
+                content: Chapter listing with spaced-out tab headers. The increased gutter gives each tab more visual breathing room.
+        ts_appendix:
+          blocks:
+            - id: ts_appendix_content
+              type: Paragraph
+              properties:
+                content: Supplementary materials and reference tables. The larger font size makes the tab labels easier to read at a glance.
+    - id: theme_vertical_label
+      type: Markdown
+      properties:
+        content: '**Custom vertical tab tokens:**'
+    - id: theme_vertical_tabs
+      type: Tabs
+      properties:
+        tabPosition: left
+        theme:
+          verticalItemPadding: '12px 32px'
+          verticalItemMargin: '8px 0 0 0'
+          inkBarColor: '#eb2f96'
+          itemSelectedColor: '#eb2f96'
+          itemHoverColor: '#f759ab'
+          titleFontSize: 15
+        tabs:
+          - key: tv_design
+            title: Design
+          - key: tv_develop
+            title: Develop
+          - key: tv_deploy
+            title: Deploy
+      slots:
+        tv_design:
+          blocks:
+            - id: tv_design_content
+              type: Paragraph
+              properties:
+                content: Vertical tabs with custom padding and pink accent. The verticalItemPadding and verticalItemMargin tokens control spacing in left/right tab layouts.
+        tv_develop:
+          blocks:
+            - id: tv_develop_content
+              type: Paragraph
+              properties:
+                content: Development phase with code reviews, testing, and continuous integration. The pink accent differentiates this tab set from others on the page.
+        tv_deploy:
+          blocks:
+            - id: tv_deploy_content
+              type: Paragraph
+              properties:
+                content: Deployment pipeline configuration. Preview environments, staging, and production release management.
+
+- title: HTML in Tab Titles
+  blocks:
+    - id: html_tabs
+      type: Tabs
+      properties:
+        tabs:
+          - key: html_bold
+            title: '<b>Important</b>'
+          - key: html_badge
+            title: 'Messages <sup style="color: #ff4d4f; font-size: 10px;">3</sup>'
+          - key: html_colored
+            title: '<span style="color: #52c41a;">Active</span>'
+      slots:
+        html_bold:
+          blocks:
+            - id: html_bold_content
+              type: Paragraph
+              properties:
+                content: Tab titles support HTML content. The first tab title uses bold text via the b tag. This is useful for emphasizing key tabs.
+        html_badge:
+          blocks:
+            - id: html_badge_content
+              type: Paragraph
+              properties:
+                content: The second tab simulates a notification badge using a superscript element with red color. A lightweight alternative to separate badge components.
+        html_colored:
+          blocks:
+            - id: html_colored_content
+              type: Paragraph
+              properties:
+                content: The third tab uses an inline span with green color to indicate active status directly in the tab title.

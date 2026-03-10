@@ -17,7 +17,7 @@
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
 import Block from './S3UploadButton.js';
-import examples from './examples.yaml';
+import examples from './tests.yaml';
 import schema from './schema.json';
 import validationsExamples from '../../validationExamples.js';
 

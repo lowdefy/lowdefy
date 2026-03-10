@@ -1,0 +1,223 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Note: GoogleMaps requires a valid Google Maps API key provided via
+# a parent GoogleMapsScript block. Without an API key, the map will not render.
+
+- title: Default Map
+  blocks:
+    - id: google_maps_default
+      type: GoogleMaps
+
+- title: Custom Center and Zoom
+  blocks:
+    - id: google_maps_new_york
+      type: GoogleMaps
+      properties:
+        map:
+          center:
+            lat: 40.7128
+            lng: -74.006
+          zoom: 12
+    - id: google_maps_london
+      type: GoogleMaps
+      properties:
+        map:
+          center:
+            lat: 51.5074
+            lng: -0.1278
+          zoom: 10
+    - id: google_maps_tokyo
+      type: GoogleMaps
+      properties:
+        map:
+          center:
+            lat: 35.6762
+            lng: 139.6503
+          zoom: 11
+
+- title: Map Types
+  blocks:
+    - id: google_maps_roadmap
+      type: GoogleMaps
+      properties:
+        map:
+          center:
+            lat: 37.7749
+            lng: -122.4194
+          zoom: 13
+          mapTypeId: roadmap
+    - id: google_maps_satellite
+      type: GoogleMaps
+      properties:
+        map:
+          center:
+            lat: 37.7749
+            lng: -122.4194
+          zoom: 13
+          mapTypeId: satellite
+    - id: google_maps_terrain
+      type: GoogleMaps
+      properties:
+        map:
+          center:
+            lat: 46.8182
+            lng: 8.2275
+          zoom: 8
+          mapTypeId: terrain
+    - id: google_maps_hybrid
+      type: GoogleMaps
+      properties:
+        map:
+          center:
+            lat: 37.7749
+            lng: -122.4194
+          zoom: 13
+          mapTypeId: hybrid
+
+- title: Single Marker
+  blocks:
+    - id: google_maps_single_marker
+      type: GoogleMaps
+      properties:
+        map:
+          center:
+            lat: 48.8566
+            lng: 2.3522
+          zoom: 14
+        markers:
+          - position:
+              lat: 48.8584
+              lng: 2.2945
+            label: Eiffel Tower
+
+- title: Multiple Markers
+  blocks:
+    - id: google_maps_multi_markers
+      type: GoogleMaps
+      properties:
+        markers:
+          - position:
+              lat: 40.6892
+              lng: -74.0445
+            label: A
+            title: Statue of Liberty
+          - position:
+              lat: 40.7484
+              lng: -73.9857
+            label: B
+            title: Empire State Building
+          - position:
+              lat: 40.7589
+              lng: -73.9851
+            label: C
+            title: Times Square
+          - position:
+              lat: 40.7527
+              lng: -73.9772
+            label: D
+            title: Grand Central Terminal
+
+- title: Marker Clusterers
+  blocks:
+    - id: google_maps_clusterer
+      type: GoogleMaps
+      properties:
+        markerClusterers:
+          - markers:
+              - position:
+                  lat: 51.5074
+                  lng: -0.1278
+              - position:
+                  lat: 51.5155
+                  lng: -0.1419
+              - position:
+                  lat: 51.5014
+                  lng: -0.1419
+              - position:
+                  lat: 51.5194
+                  lng: -0.1270
+              - position:
+                  lat: 51.5033
+                  lng: -0.1195
+
+- title: Info Window
+  blocks:
+    - id: google_maps_info_window
+      type: GoogleMaps
+      properties:
+        map:
+          center:
+            lat: -33.8688
+            lng: 151.2093
+          zoom: 14
+        markers:
+          - position:
+              lat: -33.8568
+              lng: 151.2153
+            title: Sydney Opera House
+        infoWindow:
+          visible: true
+          position:
+            lat: -33.8568
+            lng: 151.2153
+
+- title: Auto Bounds Disabled
+  blocks:
+    - id: google_maps_no_auto_bounds
+      type: GoogleMaps
+      properties:
+        autoBounds: false
+        map:
+          center:
+            lat: 0
+            lng: 0
+          zoom: 2
+        markers:
+          - position:
+              lat: 48.8566
+              lng: 2.3522
+          - position:
+              lat: 35.6762
+              lng: 139.6503
+
+- title: Custom Map Options
+  blocks:
+    - id: google_maps_no_controls
+      type: GoogleMaps
+      properties:
+        map:
+          center:
+            lat: 34.0522
+            lng: -118.2437
+          zoom: 10
+          disableDefaultUI: true
+    - id: google_maps_no_zoom_control
+      type: GoogleMaps
+      properties:
+        map:
+          center:
+            lat: 34.0522
+            lng: -118.2437
+          zoom: 10
+          zoomControl: false
+    - id: google_maps_no_street_view
+      type: GoogleMaps
+      properties:
+        map:
+          center:
+            lat: 34.0522
+            lng: -118.2437
+          zoom: 10
+          streetViewControl: false

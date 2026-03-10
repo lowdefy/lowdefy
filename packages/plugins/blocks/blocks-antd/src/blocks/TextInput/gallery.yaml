@@ -1,0 +1,1458 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic
+  blocks:
+    - id: basic_default
+      type: TextInput
+      properties:
+        title: Default TextInput
+        placeholder: Enter text here
+    - id: basic_with_value
+      type: TextInput
+      properties:
+        title: With Default Value
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              basic_with_value: Hello World
+- title: Sizes
+  blocks:
+    - id: size_small
+      type: TextInput
+      properties:
+        title: Small
+        size: small
+        placeholder: Small input
+    - id: size_middle
+      type: TextInput
+      properties:
+        title: Middle (Default)
+        size: middle
+        placeholder: Middle input
+    - id: size_large
+      type: TextInput
+      properties:
+        title: Large
+        size: large
+        placeholder: Large input
+- title: Sizes Without Label
+  blocks:
+    - id: size_nl_small
+      type: TextInput
+      properties:
+        size: small
+        placeholder: Small - no label
+        label:
+          disabled: true
+    - id: size_nl_middle
+      type: TextInput
+      properties:
+        size: middle
+        placeholder: Middle - no label
+        label:
+          disabled: true
+    - id: size_nl_large
+      type: TextInput
+      properties:
+        size: large
+        placeholder: Large - no label
+        label:
+          disabled: true
+- title: Variants
+  blocks:
+    - id: variant_outlined
+      type: TextInput
+      properties:
+        title: Outlined (Default)
+        placeholder: Outlined variant
+        label:
+          disabled: true
+    - id: variant_filled
+      type: TextInput
+      properties:
+        title: Filled
+        variant: filled
+        placeholder: Filled variant
+        label:
+          disabled: true
+    - id: variant_borderless
+      type: TextInput
+      properties:
+        title: Borderless
+        variant: borderless
+        placeholder: Borderless variant
+        label:
+          disabled: true
+- title: Variants with Bordered (Legacy)
+  blocks:
+    - id: variant_bordered_true
+      type: TextInput
+      properties:
+        title: Bordered (default)
+        bordered: true
+        placeholder:
+          bordered: true
+        label:
+          disabled: true
+    - id: variant_bordered_false
+      type: TextInput
+      properties:
+        title: Borderless via bordered
+        bordered: false
+        placeholder:
+          bordered: false
+        label:
+          disabled: true
+- title: Placeholder
+  blocks:
+    - id: placeholder_short
+      type: TextInput
+      properties:
+        title: Short Placeholder
+        placeholder: Name
+        label:
+          disabled: true
+    - id: placeholder_long
+      type: TextInput
+      properties:
+        title: Long Placeholder
+        placeholder: Enter your full name including middle names
+        label:
+          disabled: true
+    - id: placeholder_none
+      type: TextInput
+      properties:
+        title: No Placeholder
+        label:
+          disabled: true
+- title: Prefix Text
+  blocks:
+    - id: prefix_https
+      type: TextInput
+      properties:
+        title: URL Prefix
+        prefix: https://
+        placeholder: mysite.com
+        label:
+          disabled: true
+    - id: prefix_currency
+      type: TextInput
+      properties:
+        title: Currency Prefix
+        prefix: $
+        placeholder: '0.00'
+        label:
+          disabled: true
+    - id: prefix_at
+      type: TextInput
+      properties:
+        title: Username Prefix
+        prefix: '@'
+        placeholder: username
+        label:
+          disabled: true
+- title: Suffix Text
+  blocks:
+    - id: suffix_email
+      type: TextInput
+      properties:
+        title: Email Suffix
+        suffix: '@gmail.com'
+        placeholder: username
+        label:
+          disabled: true
+    - id: suffix_unit
+      type: TextInput
+      properties:
+        title: Unit Suffix
+        suffix: kg
+        placeholder: Weight
+        label:
+          disabled: true
+    - id: suffix_domain
+      type: TextInput
+      properties:
+        title: Domain Suffix
+        suffix: .com
+        placeholder: domain
+        label:
+          disabled: true
+- title: Prefix & Suffix Combined
+  blocks:
+    - id: combo_url
+      type: TextInput
+      properties:
+        title: Full URL
+        prefix: https://
+        suffix: .com
+        placeholder: example
+        label:
+          disabled: true
+    - id: combo_currency_unit
+      type: TextInput
+      properties:
+        title: Currency with Unit
+        prefix: $
+        suffix: USD
+        placeholder: Amount
+        label:
+          disabled: true
+- title: Prefix Icons
+  blocks:
+    - id: prefix_icon_user
+      type: TextInput
+      properties:
+        title: User Icon
+        prefixIcon: AiOutlineUser
+        placeholder: Enter username
+        label:
+          disabled: true
+    - id: prefix_icon_search
+      type: TextInput
+      properties:
+        title: Search Icon
+        prefixIcon: AiOutlineSearch
+        placeholder: Search...
+        label:
+          disabled: true
+    - id: prefix_icon_mail
+      type: TextInput
+      properties:
+        title: Mail Icon
+        prefixIcon: AiOutlineMail
+        placeholder: Enter email
+        label:
+          disabled: true
+    - id: prefix_icon_lock
+      type: TextInput
+      properties:
+        title: Lock Icon
+        prefixIcon: AiOutlineLock
+        placeholder: Enter password
+        label:
+          disabled: true
+- title: Suffix Icons
+  blocks:
+    - id: suffix_icon_info
+      type: TextInput
+      properties:
+        title: Info Icon
+        suffixIcon: AiOutlineInfoCircle
+        placeholder: Enter value
+        label:
+          disabled: true
+    - id: suffix_icon_calendar
+      type: TextInput
+      properties:
+        title: Calendar Icon
+        suffixIcon: AiOutlineCalendar
+        placeholder: Select date
+        label:
+          disabled: true
+    - id: suffix_icon_check
+      type: TextInput
+      properties:
+        title: Check Icon
+        suffixIcon: AiOutlineCheckCircle
+        placeholder: Verified
+        label:
+          disabled: true
+- title: Custom Icon Properties
+  blocks:
+    - id: prefix_icon_custom_color
+      type: TextInput
+      properties:
+        title: Custom Color Icon
+        prefixIcon:
+          name: AiOutlineUser
+          color: '#1677ff'
+        placeholder: Blue user icon
+        label:
+          disabled: true
+    - id: suffix_icon_custom_color
+      type: TextInput
+      properties:
+        title: Custom Color Suffix Icon
+        suffixIcon:
+          name: AiOutlineWarning
+          color: '#faad14'
+        placeholder: Warning icon
+        label:
+          disabled: true
+    - id: both_icons
+      type: TextInput
+      properties:
+        title: Both Icons
+        prefixIcon: AiOutlineLink
+        suffixIcon: AiOutlineArrowRight
+        placeholder: Enter link
+        label:
+          disabled: true
+- title: Prefix Icon + Suffix Text
+  blocks:
+    - id: icon_prefix_text_suffix
+      type: TextInput
+      properties:
+        title: Mixed Prefix Icon & Suffix Text
+        prefixIcon: AiOutlineGlobal
+        suffix: .com
+        placeholder: domain
+        label:
+          disabled: true
+    - id: text_prefix_icon_suffix
+      type: TextInput
+      properties:
+        title: Mixed Text Prefix & Suffix Icon
+        prefix: https://
+        suffixIcon: AiOutlineCopy
+        placeholder: URL
+        label:
+          disabled: true
+- title: Allow Clear
+  blocks:
+    - id: clear_basic
+      type: TextInput
+      properties:
+        title: Allow Clear
+        allowClear: true
+        label:
+          disabled: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              clear_basic: Clearable text
+    - id: clear_with_icon
+      type: TextInput
+      properties:
+        title: Allow Clear + Prefix Icon
+        allowClear: true
+        prefixIcon: AiOutlineUser
+        label:
+          disabled: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              clear_with_icon: Clear with icon
+    - id: clear_disabled
+      type: TextInput
+      properties:
+        title: Allow Clear (Not Set)
+        allowClear: false
+        placeholder: Cannot clear
+        label:
+          disabled: true
+- title: Character Count & Max Length
+  blocks:
+    - id: count_with_max
+      type: TextInput
+      properties:
+        title: Max 50 Characters
+        showCount: true
+        maxLength: 50
+        placeholder: Up to 50 characters
+    - id: count_with_max_short
+      type: TextInput
+      properties:
+        title: Max 10 Characters
+        showCount: true
+        maxLength: 10
+        placeholder: Short input
+    - id: count_no_max
+      type: TextInput
+      properties:
+        title: Count Without Limit
+        showCount: true
+        placeholder: Unlimited characters
+    - id: max_no_count
+      type: TextInput
+      properties:
+        title: Max Length Without Count
+        maxLength: 20
+        placeholder: Max 20 (no counter shown)
+- title: Input Types
+  blocks:
+    - id: type_text
+      type: TextInput
+      properties:
+        title: Text (Default)
+        type: text
+        placeholder: Regular text
+    - id: type_email
+      type: TextInput
+      properties:
+        title: Email
+        type: email
+        prefixIcon: AiOutlineMail
+        placeholder: user@example.com
+    - id: type_tel
+      type: TextInput
+      properties:
+        title: Telephone
+        type: tel
+        prefixIcon: AiOutlinePhone
+        placeholder: +1 (555) 123-4567
+    - id: type_url
+      type: TextInput
+      properties:
+        title: URL
+        type: url
+        prefixIcon: AiOutlineGlobal
+        placeholder: https://example.com
+    - id: type_number
+      type: TextInput
+      properties:
+        title: Number
+        type: number
+        placeholder: '12345'
+    - id: type_password
+      type: TextInput
+      properties:
+        title: Password
+        type: password
+        prefixIcon: AiOutlineLock
+        placeholder: Enter password
+- title: Disabled State
+  blocks:
+    - id: disabled_empty
+      type: TextInput
+      properties:
+        title: Disabled (Empty)
+        disabled: true
+        placeholder: Cannot edit
+    - id: disabled_with_value
+      type: TextInput
+      properties:
+        title: Disabled (With Value)
+        disabled: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              disabled_with_value: Existing value
+    - id: disabled_with_prefix
+      type: TextInput
+      properties:
+        title: Disabled (With Prefix)
+        disabled: true
+        prefixIcon: AiOutlineUser
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              disabled_with_prefix: john_doe
+    - id: disabled_with_suffix
+      type: TextInput
+      properties:
+        title: Disabled (With Suffix)
+        disabled: true
+        suffix: .com
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              disabled_with_suffix: example
+- title: Disabled Sizes
+  blocks:
+    - id: disabled_small
+      type: TextInput
+      properties:
+        title: Small Disabled
+        disabled: true
+        size: small
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              disabled_small: Small disabled
+    - id: disabled_middle
+      type: TextInput
+      properties:
+        title: Middle Disabled
+        disabled: true
+        size: middle
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              disabled_middle: Middle disabled
+    - id: disabled_large
+      type: TextInput
+      properties:
+        title: Large Disabled
+        disabled: true
+        size: large
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              disabled_large: Large disabled
+- title: Disabled Variants
+  blocks:
+    - id: disabled_outlined
+      type: TextInput
+      properties:
+        title: Disabled Outlined
+        disabled: true
+        placeholder: Outlined
+        label:
+          disabled: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              disabled_outlined: Outlined disabled
+    - id: disabled_filled
+      type: TextInput
+      properties:
+        title: Disabled Filled
+        disabled: true
+        variant: filled
+        label:
+          disabled: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              disabled_filled: Filled disabled
+    - id: disabled_borderless
+      type: TextInput
+      properties:
+        title: Disabled Borderless
+        disabled: true
+        variant: borderless
+        label:
+          disabled: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              disabled_borderless: Borderless disabled
+- title: Replace Input (Sanitization)
+  blocks:
+    - id: replace_numbers_only
+      type: TextInput
+      properties:
+        title: Numbers Only
+        placeholder: Only digits allowed
+        replaceInput:
+          pattern: '[^0-9]'
+          flags: g
+          replacement: ''
+    - id: replace_alpha_only
+      type: TextInput
+      properties:
+        title: Letters Only
+        placeholder: Only letters allowed
+        replaceInput:
+          pattern: '[^a-zA-Z]'
+          flags: g
+          replacement: ''
+    - id: replace_no_spaces
+      type: TextInput
+      properties:
+        title: No Spaces
+        placeholder: Spaces removed automatically
+        replaceInput:
+          pattern: \s
+          flags: g
+          replacement: ''
+    - id: replace_uppercase
+      type: TextInput
+      properties:
+        title: Alphanumeric Only
+        placeholder: Special characters stripped
+        replaceInput:
+          pattern: '[^a-zA-Z0-9]'
+          flags: g
+          replacement: ''
+- title: Label - Title
+  blocks:
+    - id: label_title_simple
+      type: TextInput
+      properties:
+        title: Simple Title
+        placeholder: With title
+    - id: label_title_html
+      type: TextInput
+      properties:
+        title: <b>Bold</b> Title
+        placeholder: HTML in title
+    - id: label_title_extra
+      type: TextInput
+      properties:
+        title: Title with Extra
+        placeholder: With extra text below
+        label:
+          extra: This is additional helper text below the input.
+- title: Label - Extra Text
+  blocks:
+    - id: label_extra_plain
+      type: TextInput
+      properties:
+        title: With Extra
+        placeholder: Enter value
+        label:
+          extra: Helper text provides guidance.
+    - id: label_extra_html
+      type: TextInput
+      properties:
+        title: HTML Extra
+        placeholder: Enter value
+        label:
+          extra: <em>Italicized</em> helper text with <a href="#">a link</a>.
+- title: Label - Colon
+  blocks:
+    - id: label_colon_true
+      type: TextInput
+      properties:
+        title: With Colon
+        placeholder: Colon shown (default)
+        label:
+          colon: true
+    - id: label_colon_false
+      type: TextInput
+      properties:
+        title: Without Colon
+        placeholder: No colon
+        label:
+          colon: false
+- title: Label - Disabled (Hidden)
+  blocks:
+    - id: label_visible
+      type: TextInput
+      properties:
+        title: Label Visible
+        placeholder: Label shown
+        label:
+          disabled: false
+    - id: label_hidden
+      type: TextInput
+      properties:
+        title: Label Hidden
+        placeholder: Label hidden (label.disabled true)
+        label:
+          disabled: true
+- title: Label - Inline
+  blocks:
+    - id: label_inline_left
+      type: TextInput
+      properties:
+        title: Inline Left
+        placeholder: Label inline, aligned left
+        label:
+          inline: true
+          align: left
+          span: 8
+    - id: label_inline_right
+      type: TextInput
+      properties:
+        title: Inline Right
+        placeholder: Label inline, aligned right
+        label:
+          inline: true
+          align: right
+          span: 8
+    - id: label_inline_span_4
+      type: TextInput
+      properties:
+        title: Narrow Label
+        placeholder: Label span 4
+        label:
+          inline: true
+          span: 4
+    - id: label_inline_span_12
+      type: TextInput
+      properties:
+        title: Wide Label
+        placeholder: Label span 12
+        label:
+          inline: true
+          span: 12
+- title: Label - Feedback
+  blocks:
+    - id: label_feedback_on
+      type: TextInput
+      properties:
+        title: Feedback Enabled (Default)
+        placeholder: Validation feedback shown
+        label:
+          hasFeedback: true
+    - id: label_feedback_off
+      type: TextInput
+      properties:
+        title: Feedback Disabled
+        placeholder: Validation feedback hidden
+        label:
+          hasFeedback: false
+- title: Small - All Variants
+  blocks:
+    - id: sv_small_outlined
+      type: TextInput
+      properties:
+        title: Small Outlined
+        size: small
+        placeholder: Small outlined
+        label:
+          disabled: true
+    - id: sv_small_filled
+      type: TextInput
+      properties:
+        title: Small Filled
+        size: small
+        variant: filled
+        placeholder: Small filled
+        label:
+          disabled: true
+    - id: sv_small_borderless
+      type: TextInput
+      properties:
+        title: Small Borderless
+        size: small
+        variant: borderless
+        placeholder: Small borderless
+        label:
+          disabled: true
+- title: Middle - All Variants
+  blocks:
+    - id: sv_middle_outlined
+      type: TextInput
+      properties:
+        title: Middle Outlined
+        size: middle
+        placeholder: Middle outlined
+        label:
+          disabled: true
+    - id: sv_middle_filled
+      type: TextInput
+      properties:
+        title: Middle Filled
+        size: middle
+        variant: filled
+        placeholder: Middle filled
+        label:
+          disabled: true
+    - id: sv_middle_borderless
+      type: TextInput
+      properties:
+        title: Middle Borderless
+        size: middle
+        variant: borderless
+        placeholder: Middle borderless
+        label:
+          disabled: true
+- title: Large - All Variants
+  blocks:
+    - id: sv_large_outlined
+      type: TextInput
+      properties:
+        title: Large Outlined
+        size: large
+        placeholder: Large outlined
+        label:
+          disabled: true
+    - id: sv_large_filled
+      type: TextInput
+      properties:
+        title: Large Filled
+        size: large
+        variant: filled
+        placeholder: Large filled
+        label:
+          disabled: true
+    - id: sv_large_borderless
+      type: TextInput
+      properties:
+        title: Large Borderless
+        size: large
+        variant: borderless
+        placeholder: Large borderless
+        label:
+          disabled: true
+- title: Sizes with Prefix Icon
+  blocks:
+    - id: sp_small_prefix
+      type: TextInput
+      properties:
+        title: Small + Icon
+        size: small
+        prefixIcon: AiOutlineUser
+        placeholder: Small with icon
+        label:
+          disabled: true
+    - id: sp_middle_prefix
+      type: TextInput
+      properties:
+        title: Middle + Icon
+        size: middle
+        prefixIcon: AiOutlineUser
+        placeholder: Middle with icon
+        label:
+          disabled: true
+    - id: sp_large_prefix
+      type: TextInput
+      properties:
+        title: Large + Icon
+        size: large
+        prefixIcon: AiOutlineUser
+        placeholder: Large with icon
+        label:
+          disabled: true
+- title: Sizes with Suffix Text
+  blocks:
+    - id: ss_small_suffix
+      type: TextInput
+      properties:
+        title: Small + Suffix
+        size: small
+        suffix: kg
+        placeholder: Small
+        label:
+          disabled: true
+    - id: ss_middle_suffix
+      type: TextInput
+      properties:
+        title: Middle + Suffix
+        size: middle
+        suffix: kg
+        placeholder: Middle
+        label:
+          disabled: true
+    - id: ss_large_suffix
+      type: TextInput
+      properties:
+        title: Large + Suffix
+        size: large
+        suffix: kg
+        placeholder: Large
+        label:
+          disabled: true
+- title: Feature Combinations
+  blocks:
+    - id: feat_search
+      type: TextInput
+      properties:
+        title: Search Input
+        prefixIcon: AiOutlineSearch
+        allowClear: true
+        placeholder: Search...
+        size: large
+        label:
+          disabled: true
+    - id: feat_email
+      type: TextInput
+      properties:
+        title: Email Field
+        type: email
+        prefixIcon: AiOutlineMail
+        suffix: '@company.com'
+        placeholder: username
+        label:
+          extra: Enter your company username.
+    - id: feat_url
+      type: TextInput
+      properties:
+        title: Website URL
+        prefix: https://
+        suffix: .com
+        prefixIcon: AiOutlineGlobal
+        allowClear: true
+        placeholder: example
+        label:
+          disabled: true
+    - id: feat_bio
+      type: TextInput
+      properties:
+        title: Short Bio
+        showCount: true
+        maxLength: 100
+        allowClear: true
+        placeholder: Tell us about yourself
+        label:
+          extra: Keep it brief.
+    - id: feat_phone
+      type: TextInput
+      properties:
+        title: Phone Number
+        type: tel
+        prefix: '+1'
+        prefixIcon: AiOutlinePhone
+        placeholder: (555) 123-4567
+        replaceInput:
+          pattern: '[^0-9()\-\s]'
+          flags: g
+          replacement: ''
+- title: Form-Like Layout (Stacked)
+  blocks:
+    - id: form_first_name
+      type: TextInput
+      properties:
+        title: First Name
+        placeholder: John
+        label:
+          colon: true
+    - id: form_last_name
+      type: TextInput
+      properties:
+        title: Last Name
+        placeholder: Doe
+        label:
+          colon: true
+    - id: form_email
+      type: TextInput
+      properties:
+        title: Email Address
+        type: email
+        prefixIcon: AiOutlineMail
+        placeholder: john@example.com
+        label:
+          colon: true
+          extra: We will never share your email.
+- title: Form-Like Layout (Inline)
+  blocks:
+    - id: form_inline_name
+      type: TextInput
+      properties:
+        title: Name
+        placeholder: Full Name
+        label:
+          inline: true
+          span: 6
+          align: right
+          colon: true
+    - id: form_inline_email
+      type: TextInput
+      properties:
+        title: Email
+        type: email
+        placeholder: user@example.com
+        label:
+          inline: true
+          span: 6
+          align: right
+          colon: true
+    - id: form_inline_phone
+      type: TextInput
+      properties:
+        title: Phone
+        type: tel
+        placeholder: (555) 123-4567
+        label:
+          inline: true
+          span: 6
+          align: right
+          colon: true
+- title: Style Overrides
+  blocks:
+    - id: style_custom_bg
+      type: TextInput
+      style:
+        --element:
+          backgroundColor: '#f0f5ff'
+          borderColor: '#adc6ff'
+      properties:
+        title: Custom Background
+        placeholder: Light blue background
+        label:
+          disabled: true
+    - id: style_custom_border
+      type: TextInput
+      style:
+        --element:
+          borderColor: '#52c41a'
+          borderWidth: 2
+          borderRadius: 8
+      properties:
+        title: Custom Border
+        placeholder: Green border, rounded
+        label:
+          disabled: true
+    - id: style_custom_text
+      type: TextInput
+      style:
+        --element:
+          color: '#722ed1'
+          fontSize: 16
+      properties:
+        title: Custom Text Color
+        label:
+          disabled: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              style_custom_text: Purple text
+    - id: style_full_custom
+      type: TextInput
+      style:
+        --element:
+          backgroundColor: '#fff7e6'
+          borderColor: '#ffa940'
+          borderRadius: 12
+          color: '#d46b08'
+          fontSize: 16
+      properties:
+        title: Fully Customized
+        placeholder: Orange theme
+        prefixIcon:
+          name: AiOutlineStar
+          color: '#fa8c16'
+        label:
+          disabled: true
+- title: CSS Class Overrides
+  blocks:
+    - id: class_rounded
+      type: TextInput
+      class: rounded-lg
+      properties:
+        title: Rounded Class
+        placeholder: Using class for rounded corners
+        label:
+          disabled: true
+    - id: class_shadow
+      type: TextInput
+      class: shadow-md
+      properties:
+        title: Shadow Class
+        placeholder: Using class for shadow
+        label:
+          disabled: true
+- title: Theme Token Overrides - Border Radius
+  blocks:
+    - id: theme_radius_none
+      type: TextInput
+      properties:
+        title: No Radius
+        placeholder: borderRadius 0
+        theme:
+          borderRadius: 0
+        label:
+          disabled: true
+    - id: theme_radius_default
+      type: TextInput
+      properties:
+        title: Default Radius
+        placeholder: borderRadius 6
+        theme:
+          borderRadius: 6
+        label:
+          disabled: true
+    - id: theme_radius_large
+      type: TextInput
+      properties:
+        title: Large Radius
+        placeholder: borderRadius 16
+        theme:
+          borderRadius: 16
+        label:
+          disabled: true
+    - id: theme_radius_pill
+      type: TextInput
+      properties:
+        title: Pill Shape
+        placeholder: borderRadius 40
+        theme:
+          borderRadius: 40
+        label:
+          disabled: true
+- title: Theme Token Overrides - Colors
+  blocks:
+    - id: theme_color_primary
+      type: TextInput
+      properties:
+        title: Custom Primary Color
+        placeholder: Green primary color
+        theme:
+          colorPrimary: '#52c41a'
+        label:
+          disabled: true
+    - id: theme_color_bg
+      type: TextInput
+      properties:
+        title: Custom Background
+        placeholder: Light purple background
+        theme:
+          colorBgContainer: '#f9f0ff'
+        label:
+          disabled: true
+    - id: theme_color_border
+      type: TextInput
+      properties:
+        title: Custom Border Color
+        placeholder: Purple border
+        theme:
+          colorBorder: '#b37feb'
+        label:
+          disabled: true
+    - id: theme_color_text
+      type: TextInput
+      properties:
+        title: Custom Text Color
+        theme:
+          colorText: '#531dab'
+        label:
+          disabled: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_color_text: Custom text color
+- title: Theme Token Overrides - Typography
+  blocks:
+    - id: theme_font_small
+      type: TextInput
+      properties:
+        title: Small Font
+        placeholder: fontSize 12
+        theme:
+          fontSize: 12
+        label:
+          disabled: true
+    - id: theme_font_default
+      type: TextInput
+      properties:
+        title: Default Font
+        placeholder: fontSize 14
+        theme:
+          fontSize: 14
+        label:
+          disabled: true
+    - id: theme_font_large
+      type: TextInput
+      properties:
+        title: Large Font
+        placeholder: fontSize 18
+        theme:
+          fontSize: 18
+        label:
+          disabled: true
+- title: Theme Token Overrides - Sizing
+  blocks:
+    - id: theme_height_compact
+      type: TextInput
+      properties:
+        title: Compact Height
+        placeholder: controlHeight 24
+        theme:
+          controlHeight: 24
+        label:
+          disabled: true
+    - id: theme_height_default
+      type: TextInput
+      properties:
+        title: Default Height
+        placeholder: controlHeight 32
+        theme:
+          controlHeight: 32
+        label:
+          disabled: true
+    - id: theme_height_tall
+      type: TextInput
+      properties:
+        title: Tall Height
+        placeholder: controlHeight 48
+        theme:
+          controlHeight: 48
+        label:
+          disabled: true
+- title: Theme Token Overrides - Padding
+  blocks:
+    - id: theme_padding_narrow
+      type: TextInput
+      properties:
+        title: Narrow Padding
+        placeholder: paddingInline 4
+        theme:
+          paddingInline: 4
+        label:
+          disabled: true
+    - id: theme_padding_default
+      type: TextInput
+      properties:
+        title: Default Padding
+        placeholder: paddingInline 11
+        theme:
+          paddingInline: 11
+        label:
+          disabled: true
+    - id: theme_padding_wide
+      type: TextInput
+      properties:
+        title: Wide Padding
+        placeholder: paddingInline 24
+        theme:
+          paddingInline: 24
+        label:
+          disabled: true
+- title: Theme Token Overrides - Shadows
+  blocks:
+    - id: theme_shadow_blue
+      type: TextInput
+      properties:
+        title: Blue Focus Shadow
+        placeholder: Click to see blue shadow
+        theme:
+          activeShadow: 0 0 0 3px rgba(22, 119, 255, 0.2)
+        label:
+          disabled: true
+    - id: theme_shadow_green
+      type: TextInput
+      properties:
+        title: Green Focus Shadow
+        placeholder: Click to see green shadow
+        theme:
+          activeShadow: 0 0 0 3px rgba(82, 196, 26, 0.2)
+        label:
+          disabled: true
+    - id: theme_shadow_none
+      type: TextInput
+      properties:
+        title: No Focus Shadow
+        placeholder: Click to see no shadow
+        theme:
+          activeShadow: 0 0 0 0 transparent
+        label:
+          disabled: true
+- title: Theme Token Overrides - Hover & Active Colors
+  blocks:
+    - id: theme_hover_green
+      type: TextInput
+      properties:
+        title: Green Hover Border
+        placeholder: Hover to see green
+        theme:
+          hoverBorderColor: '#52c41a'
+          activeBorderColor: '#389e0d'
+        label:
+          disabled: true
+    - id: theme_hover_orange
+      type: TextInput
+      properties:
+        title: Orange Hover Border
+        placeholder: Hover to see orange
+        theme:
+          hoverBorderColor: '#fa8c16'
+          activeBorderColor: '#d46b08'
+        label:
+          disabled: true
+    - id: theme_hover_purple
+      type: TextInput
+      properties:
+        title: Purple Hover Border
+        placeholder: Hover to see purple
+        theme:
+          hoverBorderColor: '#722ed1'
+          activeBorderColor: '#531dab'
+        label:
+          disabled: true
+- title: Theme - Combined Custom Theme
+  blocks:
+    - id: theme_combined_green
+      type: TextInput
+      properties:
+        title: Green Theme
+        placeholder: Fully themed green
+        prefixIcon: AiOutlineCheck
+        theme:
+          colorPrimary: '#52c41a'
+          colorBgContainer: '#f6ffed'
+          colorBorder: '#b7eb8f'
+          borderRadius: 8
+          hoverBorderColor: '#73d13d'
+          activeBorderColor: '#389e0d'
+          activeShadow: 0 0 0 2px rgba(82, 196, 26, 0.15)
+        label:
+          disabled: true
+    - id: theme_combined_red
+      type: TextInput
+      properties:
+        title: Red Theme
+        placeholder: Fully themed red
+        prefixIcon: AiOutlineWarning
+        theme:
+          colorPrimary: '#ff4d4f'
+          colorBgContainer: '#fff2f0'
+          colorBorder: '#ffa39e'
+          borderRadius: 8
+          hoverBorderColor: '#ff7875'
+          activeBorderColor: '#cf1322'
+          activeShadow: 0 0 0 2px rgba(255, 77, 79, 0.15)
+        label:
+          disabled: true
+    - id: theme_combined_purple
+      type: TextInput
+      properties:
+        title: Purple Theme
+        placeholder: Fully themed purple
+        prefixIcon: AiOutlineStar
+        theme:
+          colorPrimary: '#722ed1'
+          colorBgContainer: '#f9f0ff'
+          colorBorder: '#d3adf7'
+          borderRadius: 12
+          hoverBorderColor: '#b37feb'
+          activeBorderColor: '#531dab'
+          activeShadow: 0 0 0 2px rgba(114, 46, 209, 0.15)
+        label:
+          disabled: true
+    - id: theme_combined_dark
+      type: TextInput
+      properties:
+        title: Dark Theme
+        theme:
+          colorBgContainer: '#1f1f1f'
+          colorBorder: '#434343'
+          colorText: '#ffffff'
+          borderRadius: 4
+          hoverBorderColor: '#595959'
+          activeBorderColor: '#177ddc'
+          activeShadow: 0 0 0 2px rgba(23, 125, 220, 0.2)
+        label:
+          disabled: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_combined_dark: Dark styled input
+- title: Filled Variant with Themes
+  blocks:
+    - id: filled_theme_default
+      type: TextInput
+      properties:
+        title: Filled Default
+        variant: filled
+        placeholder: Default filled
+        label:
+          disabled: true
+    - id: filled_theme_custom
+      type: TextInput
+      properties:
+        title: Filled Custom BG
+        variant: filled
+        placeholder: Custom fill color
+        theme:
+          colorFillTertiary: '#e6f7ff'
+          hoverBorderColor: '#1677ff'
+        label:
+          disabled: true
+    - id: filled_theme_warm
+      type: TextInput
+      properties:
+        title: Filled Warm
+        variant: filled
+        placeholder: Warm fill color
+        theme:
+          colorFillTertiary: '#fff7e6'
+          hoverBorderColor: '#fa8c16'
+        label:
+          disabled: true
+- title: Real-World Examples
+  blocks:
+    - id: rw_login_username
+      type: TextInput
+      properties:
+        title: Username
+        prefixIcon: AiOutlineUser
+        allowClear: true
+        placeholder: Enter your username
+        size: large
+        label:
+          colon: false
+    - id: rw_login_password
+      type: TextInput
+      properties:
+        title: Password
+        type: password
+        prefixIcon: AiOutlineLock
+        placeholder: Enter your password
+        size: large
+        label:
+          colon: false
+    - id: rw_search_bar
+      type: TextInput
+      properties:
+        title: Search
+        prefixIcon: AiOutlineSearch
+        allowClear: true
+        placeholder: Search products, categories, or brands...
+        size: large
+        label:
+          disabled: true
+        theme:
+          borderRadius: 20
+    - id: rw_coupon_code
+      type: TextInput
+      properties:
+        title: Coupon Code
+        placeholder: Enter code
+        showCount: true
+        maxLength: 16
+        replaceInput:
+          pattern: '[^A-Z0-9]'
+          flags: g
+          replacement: ''
+        label:
+          extra: Enter your promotional code (letters and numbers only).
+- title: Real-World - Inline Form
+  blocks:
+    - id: rw_inline_company
+      type: TextInput
+      properties:
+        title: Company
+        placeholder: Acme Inc
+        prefixIcon: AiOutlineHome
+        label:
+          inline: true
+          span: 6
+          align: right
+          colon: true
+    - id: rw_inline_position
+      type: TextInput
+      properties:
+        title: Position
+        placeholder: Software Engineer
+        label:
+          inline: true
+          span: 6
+          align: right
+          colon: true
+    - id: rw_inline_website
+      type: TextInput
+      properties:
+        title: Website
+        prefix: https://
+        placeholder: example.com
+        label:
+          inline: true
+          span: 6
+          align: right
+          colon: true

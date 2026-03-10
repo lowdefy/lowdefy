@@ -110,6 +110,95 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/color-picker#design-token',
+        },
+        properties: {
+          colorPickerWidth: {
+            type: 'number',
+            default: 234,
+            description: 'Width of the color picker panel.',
+          },
+          colorPickerHandlerSize: {
+            type: 'number',
+            default: 16,
+            description: 'Size of the color picker handler (drag handle).',
+          },
+          colorPickerHandlerSizeSM: {
+            type: 'number',
+            default: 12,
+            description: 'Size of the color picker handler for small size.',
+          },
+          colorPickerSliderHeight: {
+            type: 'number',
+            default: 8,
+            description: 'Height of the color slider bar.',
+          },
+          colorPickerPreviewSize: {
+            type: 'number',
+            description:
+              'Size of the color preview circle. Defaults to a calculated value based on slider height.',
+          },
+          colorPickerAlphaInputWidth: {
+            type: 'number',
+            default: 44,
+            description: 'Width of the alpha input field.',
+          },
+          colorPickerInputNumberHandleWidth: {
+            type: 'number',
+            default: 16,
+            description: 'Width of the input number handle in the color picker.',
+          },
+          colorPickerPresetColorSize: {
+            type: 'number',
+            default: 24,
+            description: 'Size of preset color swatches.',
+          },
+          colorPickerInsetShadow: {
+            type: 'string',
+            description: 'Inset shadow style for the color picker.',
+          },
+          borderRadius: {
+            type: 'number',
+            default: 6,
+            description: 'Border radius of the color picker trigger.',
+          },
+          colorPrimary: {
+            type: 'string',
+            description: 'Primary color used in the color picker panel.',
+          },
+          colorText: {
+            type: 'string',
+            description: 'Text color in the color picker panel.',
+          },
+          colorBgElevated: {
+            type: 'string',
+            description: 'Background color for the elevated popup panel.',
+          },
+          fontSize: {
+            type: 'number',
+            default: 14,
+            description: 'Font size for text in the color picker.',
+          },
+          lineWidth: {
+            type: 'number',
+            default: 1,
+            description: 'Border width.',
+          },
+          controlHeight: {
+            type: 'number',
+            default: 32,
+            description: 'Height of the color picker trigger.',
+          },
+          controlHeightLG: {
+            type: 'number',
+            default: 40,
+            description: 'Height of the color picker trigger for large size.',
+          },
+          controlHeightSM: {
+            type: 'number',
+            default: 24,
+            description: 'Height of the color picker trigger for small size.',
+          },
         },
       },
     },
@@ -140,7 +229,7 @@ const schema = {
       },
     },
   },
-  cssKeys: ['element'],
+  cssKeys: ['element', 'label', 'extra', 'feedback'],
 };
 
 export default schema;

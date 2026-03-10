@@ -13,11 +13,16 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: Avatar
-    category: display
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Avatar/schema.js
+    pageId: Avatar
+    pageTitle: Avatar
+    section: Display Blocks
     filePath: blocks/display/Avatar.yaml
-    description_content: |
-      Avatars can be used to represent people or objects. It supports images, Icons, or letters.
+    block_type: Avatar
+    antd_component: Avatar
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/Avatar
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Avatar/schema.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/Avatar/gallery.yaml
+    description: >
+      Avatar with shapes, sizes, icons, images, and color options.

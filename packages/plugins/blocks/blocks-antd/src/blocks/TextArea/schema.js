@@ -151,6 +151,148 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/input#design-token',
+        },
+        properties: {
+          activeBorderColor: {
+            type: 'string',
+            description: 'Border color when the input is active/focused.',
+          },
+          hoverBorderColor: {
+            type: 'string',
+            description: 'Border color when the input is hovered.',
+          },
+          activeShadow: {
+            type: 'string',
+            description: 'Box shadow when the input is active/focused.',
+          },
+          errorActiveShadow: {
+            type: 'string',
+            description: 'Box shadow when the input is active in error status.',
+          },
+          warningActiveShadow: {
+            type: 'string',
+            description: 'Box shadow when the input is active in warning status.',
+          },
+          addonBg: {
+            type: 'string',
+            description: 'Background color of addon elements.',
+          },
+          hoverBg: {
+            type: 'string',
+            description: 'Background color on hover.',
+          },
+          activeBg: {
+            type: 'string',
+            description: 'Background color when active/focused.',
+          },
+          paddingBlock: {
+            type: 'number',
+            default: 4,
+            description: 'Vertical padding for the input.',
+          },
+          paddingBlockSM: {
+            type: 'number',
+            default: 0,
+            description: 'Vertical padding for the small input.',
+          },
+          paddingBlockLG: {
+            type: 'number',
+            default: 7,
+            description: 'Vertical padding for the large input.',
+          },
+          paddingInline: {
+            type: 'number',
+            default: 11,
+            description: 'Horizontal padding for the input.',
+          },
+          paddingInlineSM: {
+            type: 'number',
+            default: 7,
+            description: 'Horizontal padding for the small input.',
+          },
+          paddingInlineLG: {
+            type: 'number',
+            default: 11,
+            description: 'Horizontal padding for the large input.',
+          },
+          inputFontSize: {
+            type: 'number',
+            default: 14,
+            description: 'Font size for the input.',
+          },
+          inputFontSizeSM: {
+            type: 'number',
+            default: 14,
+            description: 'Font size for the small input.',
+          },
+          inputFontSizeLG: {
+            type: 'number',
+            default: 16,
+            description: 'Font size for the large input.',
+          },
+          borderRadius: {
+            type: 'number',
+            default: 6,
+            description: 'Border radius of the input.',
+          },
+          borderRadiusLG: {
+            type: 'number',
+            default: 8,
+            description: 'Border radius for the large input.',
+          },
+          borderRadiusSM: {
+            type: 'number',
+            default: 4,
+            description: 'Border radius for the small input.',
+          },
+          colorPrimary: {
+            type: 'string',
+            description: 'Primary color override, affects focus border color.',
+          },
+          colorPrimaryHover: {
+            type: 'string',
+            description: 'Primary hover color, affects hover border color.',
+          },
+          colorBgContainer: {
+            type: 'string',
+            description: 'Background color of the input container.',
+          },
+          colorText: {
+            type: 'string',
+            description: 'Text color of the input.',
+          },
+          colorBorder: {
+            type: 'string',
+            description: 'Border color of the input.',
+          },
+          colorTextPlaceholder: {
+            type: 'string',
+            description: 'Color of the placeholder text.',
+          },
+          colorTextDisabled: {
+            type: 'string',
+            description: 'Text color when the input is disabled.',
+          },
+          colorBgContainerDisabled: {
+            type: 'string',
+            description: 'Background color when the input is disabled.',
+          },
+          fontSize: {
+            type: 'number',
+            default: 14,
+            description: 'Base font size.',
+          },
+          fontSizeLG: {
+            type: 'number',
+            default: 16,
+            description: 'Font size for the large variant.',
+          },
+          lineWidth: {
+            type: 'number',
+            default: 1,
+            description: 'Border width.',
+          },
         },
       },
     },

@@ -79,6 +79,44 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/breadcrumb#design-token',
+        },
+        properties: {
+          itemColor: {
+            type: 'string',
+            default: 'rgba(0, 0, 0, 0.45)',
+            description: 'Text color of breadcrumb item.',
+          },
+          iconFontSize: {
+            type: 'number',
+            default: 14,
+            description: 'Icon size of breadcrumb item.',
+          },
+          linkColor: {
+            type: 'string',
+            default: 'rgba(0, 0, 0, 0.45)',
+            description: 'Text color of link.',
+          },
+          linkHoverColor: {
+            type: 'string',
+            default: 'rgba(0, 0, 0, 0.88)',
+            description: 'Color of hovered link.',
+          },
+          lastItemColor: {
+            type: 'string',
+            default: 'rgba(0, 0, 0, 0.88)',
+            description: 'Text color of the last item.',
+          },
+          separatorMargin: {
+            type: 'number',
+            default: 8,
+            description: 'Margin of separator.',
+          },
+          separatorColor: {
+            type: 'string',
+            default: 'rgba(0, 0, 0, 0.45)',
+            description: 'Color of separator.',
+          },
         },
       },
     },

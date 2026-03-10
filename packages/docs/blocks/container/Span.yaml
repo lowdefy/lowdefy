@@ -13,15 +13,15 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: Span
-    category: container
-    schema: ../plugins/blocks/blocks-basic/src/blocks/Span/schema.js
+    pageId: Span
+    pageTitle: Span
+    section: Container Blocks
     filePath: blocks/container/Span.yaml
-    description_content: |
-      A Span is a container that places sub-blocks into a html `<span>`.
-      The Span has a single slot, `content`.
-
-    slots:
-      - content
+    block_type: Span
+    github_path: packages/plugins/blocks/blocks-basic/src/blocks/Span
+    schema: ../plugins/blocks/blocks-basic/src/blocks/Span/schema.js
+    gallery: ../plugins/blocks/blocks-basic/src/blocks/Span/gallery.yaml
+    description: >
+      Inline container for wrapping content.

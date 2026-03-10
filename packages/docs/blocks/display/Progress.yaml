@@ -13,40 +13,16 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: Progress
-    category: display
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Progress/schema.js
+    pageId: Progress
+    pageTitle: Progress
+    section: Display Blocks
     filePath: blocks/display/Progress.yaml
-    init_property_values:
-      percent: 30
-    description_content: |
-      Display the current progress as a percentage of completion.
-
-    examples:
-      - title: Line progress
-        block:
-          id: line_example
-          type: Progress
-          properties:
-            type: line
-            percent: 60
-            strokeColor: '#fcb900'
-            status: active
-      - title: Circle progress
-        block:
-          id: circle_example
-          type: Progress
-          properties:
-            type: circle
-            percent: 60
-            strokeColor: '#52c41a'
-      - title: Dashboard progress
-        block:
-          id: dashboard_example
-          type: Progress
-          properties:
-            type: dashboard
-            percent: 60
-            strokeColor: '#1890ff'
+    block_type: Progress
+    antd_component: Progress
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/Progress
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Progress/schema.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/Progress/gallery.yaml
+    description: >
+      Progress indicator in line, circle, and dashboard styles.

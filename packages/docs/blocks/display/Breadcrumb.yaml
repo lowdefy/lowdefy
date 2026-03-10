@@ -13,16 +13,16 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: Breadcrumb
-    category: display
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Breadcrumb/schema.js
+    pageId: Breadcrumb
+    pageTitle: Breadcrumb
+    section: Display Blocks
     filePath: blocks/display/Breadcrumb.yaml
-    init_state_values:
-      __type_block.properties.list: string[]
-      __string_arr_block.properties.list:
-        - First
-        - Second
-    description_content: |
-      A breadcrumb displays the current location within a hierarchy. It allows going back to states higher up in the hierarchy with provided links.
+    block_type: Breadcrumb
+    antd_component: Breadcrumb
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/Breadcrumb
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Breadcrumb/schema.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/Breadcrumb/gallery.yaml
+    description: >
+      Navigation breadcrumb showing the current location in a hierarchy.

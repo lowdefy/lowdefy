@@ -13,20 +13,15 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: SkeletonAvatar
-    category: display
-    schema: ../plugins/blocks/blocks-loaders/src/blocks/SkeletonAvatar/schema.js
+    pageId: SkeletonAvatar
+    pageTitle: SkeletonAvatar
+    section: Display Blocks
     filePath: blocks/display/SkeletonAvatar.yaml
-    description_content: |
-      The `SkeletonAvatar` block can be used as a loading skeleton for an `Avatar` block.
-
-    examples:
-      - title: Basic skeleton avatar
-        block:
-          id: basic_skeleton_avatar_example
-          type: SkeletonAvatar
-          properties:
-            shape: square
-            size: large
+    block_type: SkeletonAvatar
+    github_path: packages/plugins/blocks/blocks-loaders/src/blocks/SkeletonAvatar
+    schema: ../plugins/blocks/blocks-loaders/src/blocks/SkeletonAvatar/schema.js
+    gallery: ../plugins/blocks/blocks-loaders/src/blocks/SkeletonAvatar/gallery.yaml
+    description: >
+      Avatar-shaped skeleton loading placeholder.

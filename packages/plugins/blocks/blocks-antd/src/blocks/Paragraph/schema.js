@@ -136,6 +136,56 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/typography#design-token',
+        },
+        properties: {
+          titleMarginBottom: {
+            type: 'string',
+            default: '0.5em',
+            description: 'Margin bottom of title.',
+          },
+          titleMarginTop: {
+            type: 'string',
+            default: '1.2em',
+            description: 'Margin top of title.',
+          },
+          fontWeightStrong: {
+            type: 'number',
+            default: 600,
+            description: 'Font weight for strong text.',
+          },
+          fontFamilyCode: {
+            type: 'string',
+            description: 'Font family for code style text.',
+          },
+          colorText: {
+            type: 'string',
+            description: 'Default text color.',
+          },
+          colorTextSecondary: {
+            type: 'string',
+            description: 'Secondary text color.',
+          },
+          colorSuccess: {
+            type: 'string',
+            description: 'Success text color.',
+          },
+          colorWarning: {
+            type: 'string',
+            description: 'Warning text color.',
+          },
+          colorError: {
+            type: 'string',
+            description: 'Danger/error text color.',
+          },
+          colorTextDisabled: {
+            type: 'string',
+            description: 'Disabled text color.',
+          },
+          colorLink: {
+            type: 'string',
+            description: 'Link color.',
+          },
         },
       },
     },

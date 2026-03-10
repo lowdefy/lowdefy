@@ -13,32 +13,16 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: PhoneNumberInput
-    value_type: object
-    category: input
-    schema: ../plugins/blocks/blocks-antd/src/blocks/PhoneNumberInput/schema.js
+    pageId: PhoneNumberInput
+    pageTitle: PhoneNumberInput
+    section: Input Blocks
     filePath: blocks/input/PhoneNumberInput.yaml
-    description_content: |
-      The `PhoneNumberInput` block is a region dial code selector with a single line text input.
-    examples:
-      - title: Simple phone number input
-        block:
-          id: default
-          type: PhoneNumberInput
-      - title: Phone number input with specified regions
-        block:
-          id: allowed_regions
-          type: PhoneNumberInput
-          properties:
-            allowedRegions:
-              - 'ZA'
-              - 'UA'
-      - title: Phone number input with default region and flags disabled
-        block:
-          id: default_region
-          type: PhoneNumberInput
-          properties:
-            defaultRegion: 'US'
-            showFlags: false
+    block_type: PhoneNumberInput
+    antd_component: Input
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/PhoneNumberInput
+    schema: ../plugins/blocks/blocks-antd/src/blocks/PhoneNumberInput/schema.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/PhoneNumberInput/gallery.yaml
+    description: >
+      Phone number input with international country code selector.

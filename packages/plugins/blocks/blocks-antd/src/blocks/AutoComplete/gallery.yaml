@@ -1,0 +1,594 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic
+  blocks:
+    - id: basic
+      type: AutoComplete
+      properties:
+        title: Fruit
+        placeholder: Type a fruit name
+        options:
+          - Apple
+          - Apricot
+          - Avocado
+          - Banana
+          - Blueberry
+          - Cherry
+          - Grape
+          - Mango
+          - Orange
+          - Peach
+    - id: basic_countries
+      type: AutoComplete
+      properties:
+        title: Country
+        placeholder: Search countries
+        options:
+          - Australia
+          - Austria
+          - Belgium
+          - Brazil
+          - Canada
+          - Denmark
+          - France
+          - Germany
+          - Japan
+          - United Kingdom
+          - United States
+
+- title: Sizes
+  blocks:
+    - id: size_small
+      type: AutoComplete
+      properties:
+        title: Small
+        size: small
+        placeholder: Type to search
+        options:
+          - Apple
+          - Banana
+          - Cherry
+    - id: size_default
+      type: AutoComplete
+      properties:
+        title: Default
+        placeholder: Type to search
+        options:
+          - Apple
+          - Banana
+          - Cherry
+    - id: size_large
+      type: AutoComplete
+      properties:
+        title: Large
+        size: large
+        placeholder: Type to search
+        options:
+          - Apple
+          - Banana
+          - Cherry
+
+- title: Allow Clear
+  blocks:
+    - id: allow_clear_true
+      type: AutoComplete
+      properties:
+        title: With Clear Button (default)
+        allowClear: true
+        placeholder: Select and clear
+        options:
+          - Option A
+          - Option B
+          - Option C
+    - id: allow_clear_false
+      type: AutoComplete
+      properties:
+        title: Without Clear Button
+        allowClear: false
+        placeholder: No clear button
+        options:
+          - Option A
+          - Option B
+          - Option C
+
+- title: Backfill Mode
+  blocks:
+    - id: backfill_enabled
+      type: AutoComplete
+      properties:
+        title: Backfill Enabled
+        backfill: true
+        placeholder: Use arrow keys to backfill
+        options:
+          - JavaScript
+          - TypeScript
+          - Python
+          - Ruby
+          - Go
+          - Rust
+    - id: backfill_disabled
+      type: AutoComplete
+      properties:
+        title: Backfill Disabled (default)
+        backfill: false
+        placeholder: Arrow keys highlight only
+        options:
+          - JavaScript
+          - TypeScript
+          - Python
+          - Ruby
+          - Go
+          - Rust
+
+- title: Default Open
+  blocks:
+    - id: default_open_true
+      type: AutoComplete
+      properties:
+        title: Dropdown Open on Render
+        defaultOpen: true
+        placeholder: Dropdown visible immediately
+        options:
+          - Red
+          - Green
+          - Blue
+          - Yellow
+          - Purple
+
+- title: Placeholder Variations
+  blocks:
+    - id: placeholder_custom
+      type: AutoComplete
+      properties:
+        title: Custom Placeholder
+        placeholder: Start typing to search languages...
+        options:
+          - JavaScript
+          - TypeScript
+          - Python
+          - Ruby
+          - Java
+          - C++
+    - id: placeholder_default
+      type: AutoComplete
+      properties:
+        title: Default Placeholder
+        options:
+          - Alpha
+          - Beta
+          - Gamma
+          - Delta
+
+- title: Borderless
+  blocks:
+    - id: bordered_true
+      type: AutoComplete
+      properties:
+        title: With Border (default)
+        bordered: true
+        placeholder: Standard border
+        options:
+          - Option A
+          - Option B
+          - Option C
+    - id: bordered_false
+      type: AutoComplete
+      properties:
+        title: Borderless
+        bordered: false
+        placeholder: No border style
+        options:
+          - Option A
+          - Option B
+          - Option C
+
+- title: Disabled
+  blocks:
+    - id: disabled_true
+      type: AutoComplete
+      properties:
+        title: Disabled
+        disabled: true
+        placeholder: Cannot interact
+        options:
+          - Option A
+          - Option B
+          - Option C
+    - id: disabled_false
+      type: AutoComplete
+      properties:
+        title: Enabled (default)
+        disabled: false
+        placeholder: Can interact
+        options:
+          - Option A
+          - Option B
+          - Option C
+
+- title: AutoFocus
+  blocks:
+    - id: autofocus_true
+      type: AutoComplete
+      properties:
+        title: AutoFocus Enabled
+        autoFocus: true
+        placeholder: Focused on page load
+        options:
+          - Mercury
+          - Venus
+          - Earth
+          - Mars
+          - Jupiter
+          - Saturn
+
+- title: Many Options
+  blocks:
+    - id: many_options
+      type: AutoComplete
+      properties:
+        title: Programming Languages
+        placeholder: Type to filter languages
+        options:
+          - Assembly
+          - Bash
+          - C
+          - C++
+          - C#
+          - Clojure
+          - COBOL
+          - Dart
+          - Elixir
+          - Erlang
+          - F#
+          - Fortran
+          - Go
+          - Groovy
+          - Haskell
+          - Java
+          - JavaScript
+          - Julia
+          - Kotlin
+          - Lisp
+          - Lua
+          - MATLAB
+          - Objective-C
+          - OCaml
+          - Pascal
+          - Perl
+          - PHP
+          - PowerShell
+          - Python
+          - R
+          - Ruby
+          - Rust
+          - Scala
+          - Shell
+          - SQL
+          - Swift
+          - TypeScript
+          - VBA
+          - Zig
+
+- title: Label Options
+  blocks:
+    - id: label_title
+      type: AutoComplete
+      properties:
+        title: Custom Label Title
+        label:
+          title: Choose a color
+        placeholder: Type a color
+        options:
+          - Red
+          - Green
+          - Blue
+          - Yellow
+    - id: label_extra
+      type: AutoComplete
+      properties:
+        title: Label with Extra
+        label:
+          title: City
+          extra: Select the city you live in
+        placeholder: Type a city name
+        options:
+          - New York
+          - London
+          - Tokyo
+          - Paris
+          - Berlin
+          - Sydney
+    - id: label_no_colon
+      type: AutoComplete
+      properties:
+        title: Label without Colon
+        label:
+          title: Animal
+          colon: false
+        placeholder: Type an animal
+        options:
+          - Cat
+          - Dog
+          - Elephant
+          - Giraffe
+          - Lion
+    - id: label_inline
+      type: AutoComplete
+      properties:
+        title: Inline Label
+        label:
+          title: Framework
+          inline: true
+          span: 8
+        placeholder: Type to search
+        options:
+          - React
+          - Vue
+          - Angular
+          - Svelte
+          - Solid
+    - id: label_inline_right
+      type: AutoComplete
+      properties:
+        title: Inline Label Right Aligned
+        label:
+          title: Database
+          inline: true
+          span: 8
+          align: right
+        placeholder: Type to search
+        options:
+          - PostgreSQL
+          - MySQL
+          - MongoDB
+          - Redis
+          - SQLite
+
+- title: Hidden Label
+  blocks:
+    - id: label_hidden
+      type: AutoComplete
+      properties:
+        label:
+          disabled: true
+        placeholder: No label displayed
+        options:
+          - Option A
+          - Option B
+          - Option C
+    - id: label_hidden_large
+      type: AutoComplete
+      properties:
+        label:
+          disabled: true
+        size: large
+        placeholder: Large with no label
+        options:
+          - First
+          - Second
+          - Third
+
+- title: Style Overrides
+  blocks:
+    - id: style_element
+      type: AutoComplete
+      style:
+        --element:
+          borderColor: '#722ed1'
+      properties:
+        title: Custom Border Color
+        placeholder: Purple border
+        options:
+          - Option A
+          - Option B
+          - Option C
+    - id: style_background
+      type: AutoComplete
+      style:
+        --element:
+          backgroundColor: '#f6ffed'
+      properties:
+        title: Custom Background
+        placeholder: Light green background
+        options:
+          - Option A
+          - Option B
+          - Option C
+    - id: style_label
+      type: AutoComplete
+      style:
+        --label:
+          fontWeight: bold
+          color: '#1677ff'
+      properties:
+        title: Styled Label
+        placeholder: Blue bold label
+        options:
+          - Option A
+          - Option B
+          - Option C
+
+- title: Class Overrides
+  blocks:
+    - id: class_element
+      type: AutoComplete
+      class:
+        element: rounded-lg shadow-sm
+      properties:
+        title: Custom Class
+        placeholder: Tailwind classes applied
+        options:
+          - JavaScript
+          - TypeScript
+          - Python
+
+- title: Theme Token Overrides
+  blocks:
+    - id: theme_border_radius
+      type: AutoComplete
+      properties:
+        title: Large Border Radius
+        placeholder: Rounded corners
+        options:
+          - Option A
+          - Option B
+          - Option C
+        theme:
+          borderRadius: 16
+    - id: theme_font_size
+      type: AutoComplete
+      properties:
+        title: Large Font Size
+        placeholder: Bigger text
+        options:
+          - Option A
+          - Option B
+          - Option C
+        theme:
+          fontSize: 18
+    - id: theme_custom_colors
+      type: AutoComplete
+      properties:
+        title: Custom Colors
+        placeholder: Styled with theme tokens
+        options:
+          - Red
+          - Green
+          - Blue
+        theme:
+          colorPrimary: '#722ed1'
+          colorPrimaryHover: '#9254de'
+    - id: theme_option_selected
+      type: AutoComplete
+      properties:
+        title: Custom Selected Option Style
+        placeholder: Custom option highlight
+        options:
+          - Apple
+          - Banana
+          - Cherry
+          - Dragonfruit
+        theme:
+          optionSelectedBg: '#f9f0ff'
+          optionSelectedColor: '#531dab'
+          optionSelectedFontWeight: 700
+    - id: theme_option_height
+      type: AutoComplete
+      properties:
+        title: Taller Options
+        placeholder: Taller dropdown items
+        options:
+          - First Item
+          - Second Item
+          - Third Item
+        theme:
+          optionHeight: 44
+          optionFontSize: 16
+    - id: theme_control_height
+      type: AutoComplete
+      properties:
+        title: Custom Control Height
+        placeholder: Taller input
+        options:
+          - Option A
+          - Option B
+          - Option C
+        theme:
+          controlHeight: 44
+          controlHeightLG: 52
+    - id: theme_combined
+      type: AutoComplete
+      properties:
+        title: Combined Token Overrides
+        placeholder: Multiple tokens combined
+        options:
+          - React
+          - Vue
+          - Angular
+          - Svelte
+        theme:
+          borderRadius: 12
+          colorPrimary: '#52c41a'
+          colorPrimaryHover: '#73d13d'
+          optionSelectedBg: '#f6ffed'
+          fontSize: 15
+          controlHeight: 40
+
+- title: Sizes with Disabled
+  blocks:
+    - id: disabled_small
+      type: AutoComplete
+      properties:
+        title: Disabled Small
+        size: small
+        disabled: true
+        placeholder: Disabled small
+        options:
+          - Alpha
+          - Beta
+    - id: disabled_default
+      type: AutoComplete
+      properties:
+        title: Disabled Default
+        disabled: true
+        placeholder: Disabled default
+        options:
+          - Alpha
+          - Beta
+    - id: disabled_large
+      type: AutoComplete
+      properties:
+        title: Disabled Large
+        size: large
+        disabled: true
+        placeholder: Disabled large
+        options:
+          - Alpha
+          - Beta
+
+- title: Sizes with Borderless
+  blocks:
+    - id: borderless_small
+      type: AutoComplete
+      properties:
+        title: Borderless Small
+        size: small
+        bordered: false
+        placeholder: Borderless small
+        options:
+          - One
+          - Two
+          - Three
+    - id: borderless_default
+      type: AutoComplete
+      properties:
+        title: Borderless Default
+        bordered: false
+        placeholder: Borderless default
+        options:
+          - One
+          - Two
+          - Three
+    - id: borderless_large
+      type: AutoComplete
+      properties:
+        title: Borderless Large
+        size: large
+        bordered: false
+        placeholder: Borderless large
+        options:
+          - One
+          - Two
+          - Three

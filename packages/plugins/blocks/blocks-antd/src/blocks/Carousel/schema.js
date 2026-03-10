@@ -178,6 +178,48 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/carousel#design-token',
+        },
+        properties: {
+          dotWidth: {
+            type: 'number',
+            default: 16,
+            description: 'Width of the indicator dot.',
+          },
+          dotHeight: {
+            type: 'number',
+            default: 3,
+            description: 'Height of the indicator dot.',
+          },
+          dotGap: {
+            type: 'number',
+            default: 4,
+            description: 'Gap between indicator dots.',
+          },
+          dotOffset: {
+            type: 'number',
+            default: 12,
+            description: 'Offset distance of dots from the carousel edge.',
+          },
+          dotActiveWidth: {
+            type: 'number',
+            default: 24,
+            description: 'Width of the active indicator dot.',
+          },
+          arrowSize: {
+            type: 'number',
+            default: 16,
+            description: 'Size of the navigation arrows.',
+          },
+          arrowOffset: {
+            type: 'number',
+            default: 8,
+            description: 'Offset distance of arrows from the carousel edge.',
+          },
+          colorBgContainer: {
+            type: 'string',
+            description: 'Background color used for indicator dots.',
+          },
         },
       },
     },

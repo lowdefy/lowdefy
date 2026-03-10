@@ -113,7 +113,7 @@ SwitchBlock.meta = {
   valueType: 'boolean',
   category: 'input',
   icons: [...Label.meta.icons, 'AiOutlineCheck', 'AiOutlineClose'],
-  cssKeys: ['element'],
+  cssKeys: ['element', 'label', 'extra', 'feedback'],
 };
 
 export default withTheme('Switch', SwitchBlock);

@@ -13,32 +13,16 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: Button
-    category: display
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Button/schema.js
+    pageId: Button
+    pageTitle: Button
+    section: Display Blocks
     filePath: blocks/display/Button.yaml
-    description_content: |
-      Button block. Use `color` and `variant` properties to control the button appearance (replaces `type` and `danger` from v4).
-
-    examples:
-      - title: Block and ghost button with icon
-        block:
-          id: ghost_example
-          type: Button
-          properties:
-            title: Get started
-            block: true
-            ghost: true
-            icon: AiOutlineRocket
-      - title: Round danger button
-        block:
-          id: danger_example
-          type: Button
-          properties:
-            title: Delete Forever
-            shape: round
-            color: danger
-            variant: solid
-            icon: AiOutlineWarning
+    block_type: Button
+    antd_component: Button
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/Button
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Button/schema.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/Button/gallery.yaml
+    description: >
+      Button with colors, variants, sizes, shapes, icons, ghost, and block modes.

@@ -1,0 +1,504 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Sizes
+  blocks:
+    - id: size_default_label
+      type: Markdown
+      properties:
+        content: '**Default size:**'
+    - id: size_default
+      type: Pagination
+      properties:
+        total: 100
+    - id: size_small_label
+      type: Markdown
+      properties:
+        content: '**Small size:**'
+    - id: size_small
+      type: Pagination
+      properties:
+        total: 100
+        size: small
+
+- title: Simple Mode
+  blocks:
+    - id: simple_default_label
+      type: Markdown
+      properties:
+        content: '**Simple (default size):**'
+    - id: simple_default
+      type: Pagination
+      properties:
+        total: 100
+        simple: true
+    - id: simple_small_label
+      type: Markdown
+      properties:
+        content: '**Simple (small size):**'
+    - id: simple_small
+      type: Pagination
+      properties:
+        total: 100
+        simple: true
+        size: small
+
+- title: Show Total
+  blocks:
+    - id: show_total_bool_label
+      type: Markdown
+      properties:
+        content: '**Boolean (default format):**'
+    - id: show_total_bool
+      type: Pagination
+      properties:
+        total: 85
+        showTotal: true
+    - id: show_total_string_label
+      type: Markdown
+      properties:
+        content: '**Custom string:**'
+    - id: show_total_string
+      type: Pagination
+      properties:
+        total: 85
+        showTotal: '85 results found'
+    - id: show_total_small_label
+      type: Markdown
+      properties:
+        content: '**Show total (small):**'
+    - id: show_total_small
+      type: Pagination
+      properties:
+        total: 200
+        showTotal: true
+        size: small
+
+- title: Size Changer
+  blocks:
+    - id: size_changer_label
+      type: Markdown
+      properties:
+        content: '**Default page size options:**'
+    - id: size_changer_default
+      type: Pagination
+      properties:
+        total: 200
+        showSizeChanger: true
+    - id: size_changer_custom_label
+      type: Markdown
+      properties:
+        content: '**Custom page size options:**'
+    - id: size_changer_custom
+      type: Pagination
+      properties:
+        total: 500
+        showSizeChanger: true
+        pageSizeOptions:
+          - 5
+          - 15
+          - 25
+          - 50
+          - 100
+    - id: size_changer_small_label
+      type: Markdown
+      properties:
+        content: '**Size changer (small):**'
+    - id: size_changer_small
+      type: Pagination
+      properties:
+        total: 200
+        showSizeChanger: true
+        size: small
+
+- title: Quick Jumper
+  blocks:
+    - id: quick_jumper_label
+      type: Markdown
+      properties:
+        content: '**Quick jumper enabled:**'
+    - id: quick_jumper
+      type: Pagination
+      properties:
+        total: 500
+        showQuickJumper: true
+    - id: quick_jumper_small_label
+      type: Markdown
+      properties:
+        content: '**Quick jumper (small):**'
+    - id: quick_jumper_small
+      type: Pagination
+      properties:
+        total: 500
+        showQuickJumper: true
+        size: small
+
+- title: Page Size Options
+  blocks:
+    - id: page_size_default_label
+      type: Markdown
+      properties:
+        content: '**Default options [10, 20, 30, 40]:**'
+    - id: page_size_default
+      type: Pagination
+      properties:
+        total: 300
+        showSizeChanger: true
+    - id: page_size_custom_label
+      type: Markdown
+      properties:
+        content: '**Custom options [5, 10, 50, 100]:**'
+    - id: page_size_custom
+      type: Pagination
+      properties:
+        total: 300
+        showSizeChanger: true
+        pageSizeOptions:
+          - 5
+          - 10
+          - 50
+          - 100
+    - id: page_size_large_label
+      type: Markdown
+      properties:
+        content: '**Large page sizes [25, 50, 100, 200]:**'
+    - id: page_size_large
+      type: Pagination
+      properties:
+        total: 1000
+        showSizeChanger: true
+        pageSizeOptions:
+          - 25
+          - 50
+          - 100
+          - 200
+
+- title: Hide On Single Page
+  blocks:
+    - id: hide_single_visible_label
+      type: Markdown
+      properties:
+        content: '**Multiple pages (visible):**'
+    - id: hide_single_visible
+      type: Pagination
+      properties:
+        total: 50
+        hideOnSinglePage: true
+    - id: hide_single_hidden_label
+      type: Markdown
+      properties:
+        content: '**Single page (hidden - nothing renders below):**'
+    - id: hide_single_hidden
+      type: Pagination
+      properties:
+        total: 5
+        hideOnSinglePage: true
+    - id: hide_single_no_hide_label
+      type: Markdown
+      properties:
+        content: '**Single page (hideOnSinglePage false):**'
+    - id: hide_single_no_hide
+      type: Pagination
+      properties:
+        total: 5
+        hideOnSinglePage: false
+
+- title: Total Variations
+  blocks:
+    - id: total_small_label
+      type: Markdown
+      properties:
+        content: '**Small total (30):**'
+    - id: total_small
+      type: Pagination
+      properties:
+        total: 30
+    - id: total_medium_label
+      type: Markdown
+      properties:
+        content: '**Medium total (100):**'
+    - id: total_medium
+      type: Pagination
+      properties:
+        total: 100
+    - id: total_large_label
+      type: Markdown
+      properties:
+        content: '**Large total (500):**'
+    - id: total_large
+      type: Pagination
+      properties:
+        total: 500
+    - id: total_very_large_label
+      type: Markdown
+      properties:
+        content: '**Very large total (10000):**'
+    - id: total_very_large
+      type: Pagination
+      properties:
+        total: 10000
+
+- title: Disabled
+  blocks:
+    - id: disabled_basic_label
+      type: Markdown
+      properties:
+        content: '**Basic disabled:**'
+    - id: disabled_basic
+      type: Pagination
+      properties:
+        total: 100
+        disabled: true
+    - id: disabled_small_label
+      type: Markdown
+      properties:
+        content: '**Disabled (small):**'
+    - id: disabled_small
+      type: Pagination
+      properties:
+        total: 100
+        disabled: true
+        size: small
+    - id: disabled_features_label
+      type: Markdown
+      properties:
+        content: '**Disabled with all features:**'
+    - id: disabled_features
+      type: Pagination
+      properties:
+        total: 200
+        disabled: true
+        showSizeChanger: true
+        showQuickJumper: true
+        showTotal: true
+    - id: disabled_simple_label
+      type: Markdown
+      properties:
+        content: '**Disabled simple mode:**'
+    - id: disabled_simple
+      type: Pagination
+      properties:
+        total: 100
+        disabled: true
+        simple: true
+
+- title: Combined Features
+  blocks:
+    - id: combined_all_label
+      type: Markdown
+      properties:
+        content: '**All features enabled:**'
+    - id: combined_all
+      type: Pagination
+      properties:
+        total: 500
+        showSizeChanger: true
+        showQuickJumper: true
+        showTotal: true
+    - id: combined_all_small_label
+      type: Markdown
+      properties:
+        content: '**All features (small):**'
+    - id: combined_all_small
+      type: Pagination
+      properties:
+        total: 500
+        showSizeChanger: true
+        showQuickJumper: true
+        showTotal: true
+        size: small
+    - id: combined_total_changer_label
+      type: Markdown
+      properties:
+        content: '**Total + size changer:**'
+    - id: combined_total_changer
+      type: Pagination
+      properties:
+        total: 300
+        showTotal: true
+        showSizeChanger: true
+    - id: combined_total_jumper_label
+      type: Markdown
+      properties:
+        content: '**Total + quick jumper:**'
+    - id: combined_total_jumper
+      type: Pagination
+      properties:
+        total: 300
+        showTotal: true
+        showQuickJumper: true
+    - id: combined_changer_jumper_label
+      type: Markdown
+      properties:
+        content: '**Size changer + quick jumper:**'
+    - id: combined_changer_jumper
+      type: Pagination
+      properties:
+        total: 300
+        showSizeChanger: true
+        showQuickJumper: true
+
+- title: With Label
+  blocks:
+    - id: with_label_default
+      type: Pagination
+      properties:
+        title: Page Navigation
+        total: 100
+    - id: with_label_inline
+      type: Pagination
+      properties:
+        title: Results
+        total: 200
+        showTotal: true
+        label:
+          inline: true
+          span: 6
+
+- title: With Style
+  blocks:
+    - id: style_background_label
+      type: Markdown
+      properties:
+        content: '**Custom background and padding:**'
+    - id: style_background
+      type: Pagination
+      style:
+        --element:
+          background: '#f5f5f5'
+          padding: 12
+          borderRadius: 8
+      properties:
+        total: 100
+    - id: style_centered_label
+      type: Markdown
+      properties:
+        content: '**Centered with border:**'
+    - id: style_centered
+      type: Pagination
+      style:
+        --element:
+          border: 1px solid #d9d9d9
+          borderRadius: 8
+          padding: 12
+          display: flex
+          justifyContent: center
+      properties:
+        total: 100
+    - id: style_right_label
+      type: Markdown
+      properties:
+        content: '**Right aligned:**'
+    - id: style_right
+      type: Pagination
+      style:
+        --element:
+          display: flex
+          justifyContent: flex-end
+      properties:
+        total: 100
+
+- title: With Class
+  blocks:
+    - id: class_bg_label
+      type: Markdown
+      properties:
+        content: '**Tailwind background and padding:**'
+    - id: class_bg
+      type: Pagination
+      class: bg-blue-50 p-3 rounded-lg
+      properties:
+        total: 100
+    - id: class_border_label
+      type: Markdown
+      properties:
+        content: '**Tailwind border and centered:**'
+    - id: class_border
+      type: Pagination
+      class: border border-gray-300 rounded-lg p-3 flex justify-center
+      properties:
+        total: 100
+    - id: class_shadow_label
+      type: Markdown
+      properties:
+        content: '**Tailwind shadow:**'
+    - id: class_shadow
+      type: Pagination
+      class: shadow-md rounded-lg p-3 bg-white
+      properties:
+        total: 100
+
+- title: Theme Token Overrides
+  blocks:
+    - id: theme_primary_label
+      type: Markdown
+      properties:
+        content: '**Custom primary color:**'
+    - id: theme_primary
+      type: Pagination
+      properties:
+        total: 100
+        theme:
+          colorPrimary: '#722ed1'
+    - id: theme_large_items_label
+      type: Markdown
+      properties:
+        content: '**Large pagination items:**'
+    - id: theme_large_items
+      type: Pagination
+      properties:
+        total: 100
+        theme:
+          itemSize: 40
+          fontSize: 16
+          borderRadius: 20
+    - id: theme_small_items_label
+      type: Markdown
+      properties:
+        content: '**Small rounded items:**'
+    - id: theme_small_items
+      type: Pagination
+      properties:
+        total: 100
+        theme:
+          itemSize: 24
+          borderRadius: 12
+          fontSize: 12
+    - id: theme_active_color_label
+      type: Markdown
+      properties:
+        content: '**Custom active colors:**'
+    - id: theme_active_color
+      type: Pagination
+      properties:
+        total: 100
+        theme:
+          itemActiveBg: '#e6f4ff'
+          colorPrimary: '#0958d9'
+    - id: theme_combined_label
+      type: Markdown
+      properties:
+        content: '**Combined token overrides:**'
+    - id: theme_combined
+      type: Pagination
+      properties:
+        total: 200
+        showSizeChanger: true
+        showQuickJumper: true
+        showTotal: true
+        theme:
+          colorPrimary: '#52c41a'
+          itemSize: 36
+          borderRadius: 8
+          fontSize: 14

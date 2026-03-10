@@ -1,0 +1,1083 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic Collapse
+  blocks:
+    - id: basic_collapse
+      type: Collapse
+      properties:
+        panels:
+          - key: overview
+            title: Project Overview
+          - key: requirements
+            title: System Requirements
+          - key: timeline
+            title: Project Timeline
+      slots:
+        overview:
+          blocks:
+            - id: basic_overview_text
+              type: Paragraph
+              properties:
+                content: A web application that enables team collaboration through shared workspaces, real-time messaging, and integrated task management across departments.
+            - id: basic_overview_detail
+              type: Paragraph
+              properties:
+                content: The platform supports up to 500 concurrent users with role-based access control and end-to-end encryption for all communications.
+        requirements:
+          blocks:
+            - id: basic_requirements_text
+              type: Paragraph
+              properties:
+                content: Node.js 18+, PostgreSQL 15, Redis 7 for caching, and a minimum of 4GB RAM for the development environment. Docker is recommended for local setup.
+        timeline:
+          blocks:
+            - id: basic_timeline_text
+              type: Paragraph
+              properties:
+                content: Phase 1 launches in Q2 2026 with core messaging and workspace features. Phase 2 adds analytics, reporting dashboards, and third-party integrations in Q3 2026.
+
+- title: Accordion Mode
+  blocks:
+    - id: accordion_collapse
+      type: Collapse
+      properties:
+        accordion: true
+        panels:
+          - key: acc_general
+            title: General Settings
+          - key: acc_notifications
+            title: Notification Preferences
+          - key: acc_privacy
+            title: Privacy & Security
+          - key: acc_appearance
+            title: Appearance
+      slots:
+        acc_general:
+          blocks:
+            - id: accordion_general_text
+              type: Paragraph
+              properties:
+                content: Configure your display name, preferred language, and timezone. These settings apply across all devices linked to your account.
+        acc_notifications:
+          blocks:
+            - id: accordion_notifications_text
+              type: Paragraph
+              properties:
+                content: Choose which notifications you receive via email, push, or in-app messages. Set quiet hours to pause non-critical alerts.
+        acc_privacy:
+          blocks:
+            - id: accordion_privacy_text
+              type: Paragraph
+              properties:
+                content: Manage profile visibility, activity status display, and data sharing preferences. Enable two-factor authentication for added security.
+        acc_appearance:
+          blocks:
+            - id: accordion_appearance_text
+              type: Paragraph
+              properties:
+                content: Switch between light and dark themes, adjust font size, and customize the sidebar layout to match your workflow.
+
+- title: Default Active Panel
+  blocks:
+    - id: default_active_collapse
+      type: Collapse
+      properties:
+        defaultActiveKey: da_started
+        panels:
+          - key: da_started
+            title: How do I get started?
+          - key: da_pricing
+            title: What are the pricing plans?
+          - key: da_trial
+            title: Is there a free trial?
+          - key: da_support
+            title: How do I contact support?
+      slots:
+        da_started:
+          blocks:
+            - id: default_active_started_text
+              type: Paragraph
+              properties:
+                content: Sign up for a free account, complete the onboarding wizard, and deploy your first application in under five minutes using one of our starter templates.
+        da_pricing:
+          blocks:
+            - id: default_active_pricing_text
+              type: Paragraph
+              properties:
+                content: We offer Free, Pro ($29/month), and Enterprise tiers. The Free plan includes unlimited development environments and up to 100 monthly active users.
+        da_trial:
+          blocks:
+            - id: default_active_trial_text
+              type: Paragraph
+              properties:
+                content: Yes, the Pro plan includes a 14-day free trial with full access to all features. No credit card required to start.
+        da_support:
+          blocks:
+            - id: default_active_support_text
+              type: Paragraph
+              properties:
+                content: Reach our support team via the in-app chat widget, email us at support@example.com, or visit the community forums for peer assistance.
+
+- title: Bordered vs Borderless
+  blocks:
+    - id: bordered_collapse
+      type: Collapse
+      properties:
+        bordered: true
+        panels:
+          - key: brd_about
+            title: About Us (Bordered)
+          - key: brd_mission
+            title: Our Mission
+      slots:
+        brd_about:
+          blocks:
+            - id: bordered_about_text
+              type: Paragraph
+              properties:
+                content: Founded in 2020, we build tools that make software development accessible to everyone regardless of technical background.
+        brd_mission:
+          blocks:
+            - id: bordered_mission_text
+              type: Paragraph
+              properties:
+                content: Our mission is to democratize application development through low-code and open-source technologies.
+    - id: borderless_collapse
+      type: Collapse
+      properties:
+        bordered: false
+        panels:
+          - key: bls_about
+            title: About Us (Borderless)
+          - key: bls_mission
+            title: Our Mission
+      slots:
+        bls_about:
+          blocks:
+            - id: borderless_about_text
+              type: Paragraph
+              properties:
+                content: Founded in 2020, we build tools that make software development accessible to everyone regardless of technical background.
+        bls_mission:
+          blocks:
+            - id: borderless_mission_text
+              type: Paragraph
+              properties:
+                content: Our mission is to democratize application development through low-code and open-source technologies.
+
+- title: Expand Icon Placement
+  blocks:
+    - id: icon_start_label
+      type: Markdown
+      properties:
+        content: '**Start (default):**'
+    - id: icon_start_collapse
+      type: Collapse
+      properties:
+        expandIconPlacement: start
+        panels:
+          - key: is_details
+            title: Product Details
+          - key: is_specs
+            title: Technical Specifications
+      slots:
+        is_details:
+          blocks:
+            - id: icon_start_details_text
+              type: Paragraph
+              properties:
+                content: Premium wireless headphones with active noise cancellation, 30-hour battery life, and multipoint connection.
+        is_specs:
+          blocks:
+            - id: icon_start_specs_text
+              type: Paragraph
+              properties:
+                content: Bluetooth 5.3, 40mm custom drivers, frequency response 20Hz-40kHz, weight 250g, USB-C fast charging.
+    - id: icon_end_label
+      type: Markdown
+      properties:
+        content: '**End:**'
+    - id: icon_end_collapse
+      type: Collapse
+      properties:
+        expandIconPlacement: end
+        panels:
+          - key: ie_details
+            title: Product Details
+          - key: ie_specs
+            title: Technical Specifications
+      slots:
+        ie_details:
+          blocks:
+            - id: icon_end_details_text
+              type: Paragraph
+              properties:
+                content: Premium wireless headphones with active noise cancellation, 30-hour battery life, and multipoint connection.
+        ie_specs:
+          blocks:
+            - id: icon_end_specs_text
+              type: Paragraph
+              properties:
+                content: Bluetooth 5.3, 40mm custom drivers, frequency response 20Hz-40kHz, weight 250g, USB-C fast charging.
+
+- title: Custom Expand Icon
+  blocks:
+    - id: custom_icon_collapse
+      type: Collapse
+      properties:
+        expandIcon: AiOutlinePlusCircle
+        panels:
+          - key: ci_features
+            title: Key Features
+          - key: ci_integrations
+            title: Integrations
+          - key: ci_pricing
+            title: Pricing
+      slots:
+        ci_features:
+          blocks:
+            - id: custom_icon_features_text
+              type: Paragraph
+              properties:
+                content: Real-time collaboration, version history, automated backups, and a powerful API for custom integrations.
+        ci_integrations:
+          blocks:
+            - id: custom_icon_integrations_text
+              type: Paragraph
+              properties:
+                content: Connect with Slack, GitHub, Jira, Google Workspace, Figma, and over 200 other services via our marketplace.
+        ci_pricing:
+          blocks:
+            - id: custom_icon_pricing_text
+              type: Paragraph
+              properties:
+                content: Flexible per-seat pricing starting at $10/month. Volume discounts available for teams larger than 50 members.
+    - id: custom_icon_obj_collapse
+      type: Collapse
+      properties:
+        expandIcon:
+          name: AiOutlineArrowRight
+          color: '#1677ff'
+        panels:
+          - key: cio_one
+            title: Colored Custom Icon
+          - key: cio_two
+            title: Another Panel
+      slots:
+        cio_one:
+          blocks:
+            - id: custom_icon_obj_one_text
+              type: Paragraph
+              properties:
+                content: The expand icon can be passed as an object with name and color properties for further customization.
+        cio_two:
+          blocks:
+            - id: custom_icon_obj_two_text
+              type: Paragraph
+              properties:
+                content: The icon rotates 90 degrees when the panel is expanded, providing a visual cue for the open/closed state.
+
+- title: Disabled Panels
+  blocks:
+    - id: disabled_collapse
+      type: Collapse
+      properties:
+        panels:
+          - key: dis_available
+            title: Available Section
+          - key: dis_locked
+            title: Locked Section (Upgrade Required)
+            disabled: true
+          - key: dis_premium
+            title: Premium Content
+            disabled: true
+          - key: dis_open
+            title: Another Available Section
+      slots:
+        dis_available:
+          blocks:
+            - id: disabled_available_text
+              type: Paragraph
+              properties:
+                content: This section is accessible to all users and contains general product documentation and getting-started guides.
+        dis_locked:
+          blocks:
+            - id: disabled_locked_text
+              type: Paragraph
+              properties:
+                content: This content requires a Pro subscription to access.
+        dis_premium:
+          blocks:
+            - id: disabled_premium_text
+              type: Paragraph
+              properties:
+                content: Enterprise-only analytics and reporting features.
+        dis_open:
+          blocks:
+            - id: disabled_open_text
+              type: Paragraph
+              properties:
+                content: Community resources, FAQ, and links to the public knowledge base are available here for everyone.
+
+- title: No Arrow
+  blocks:
+    - id: no_arrow_collapse
+      type: Collapse
+      properties:
+        showArrow: false
+        panels:
+          - key: na_step1
+            title: Step 1 - Create Account
+          - key: na_step2
+            title: Step 2 - Configure Workspace
+          - key: na_step3
+            title: Step 3 - Invite Team Members
+      slots:
+        na_step1:
+          blocks:
+            - id: no_arrow_step1_text
+              type: Paragraph
+              properties:
+                content: Visit the registration page and fill in your name, email, and a secure password. You will receive a verification email within minutes.
+        na_step2:
+          blocks:
+            - id: no_arrow_step2_text
+              type: Paragraph
+              properties:
+                content: Choose a workspace name, select your industry, and configure default permissions for new members joining the organization.
+        na_step3:
+          blocks:
+            - id: no_arrow_step3_text
+              type: Paragraph
+              properties:
+                content: Send invitation links via email or share a join code. Assign roles (Admin, Editor, Viewer) to control access levels.
+
+- title: Rich Content Panels
+  blocks:
+    - id: rich_collapse
+      type: Collapse
+      properties:
+        panels:
+          - key: rich_team
+            title: Development Team
+          - key: rich_stack
+            title: Technology Stack
+          - key: rich_milestones
+            title: Project Milestones
+      slots:
+        rich_team:
+          blocks:
+            - id: rich_team_intro
+              type: Paragraph
+              properties:
+                content: Our cross-functional engineering team brings together expertise in frontend, backend, and DevOps.
+            - id: rich_team_tags_row
+              type: Box
+              layout:
+                gap: 6
+              blocks:
+                - id: rich_team_tag_fe
+                  type: Tag
+                  properties:
+                    title: Frontend
+                    color: blue
+                - id: rich_team_tag_be
+                  type: Tag
+                  properties:
+                    title: Backend
+                    color: green
+                - id: rich_team_tag_devops
+                  type: Tag
+                  properties:
+                    title: DevOps
+                    color: orange
+                - id: rich_team_tag_qa
+                  type: Tag
+                  properties:
+                    title: QA
+                    color: purple
+            - id: rich_team_stat_row
+              type: Box
+              layout:
+                gap: 16
+              blocks:
+                - id: rich_team_stat_members
+                  type: Statistic
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Team Members
+                    value: 12
+                - id: rich_team_stat_sprints
+                  type: Statistic
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Sprints Completed
+                    value: 24
+        rich_stack:
+          blocks:
+            - id: rich_stack_desc
+              type: Paragraph
+              properties:
+                content: Built with modern frameworks and battle-tested infrastructure components.
+            - id: rich_stack_tags_row
+              type: Box
+              layout:
+                gap: 6
+              blocks:
+                - id: rich_stack_tag_react
+                  type: Tag
+                  properties:
+                    title: React 18
+                    color: cyan
+                - id: rich_stack_tag_next
+                  type: Tag
+                  properties:
+                    title: Next.js 14
+                    color: default
+                - id: rich_stack_tag_pg
+                  type: Tag
+                  properties:
+                    title: PostgreSQL
+                    color: blue
+                - id: rich_stack_tag_redis
+                  type: Tag
+                  properties:
+                    title: Redis
+                    color: red
+                - id: rich_stack_tag_docker
+                  type: Tag
+                  properties:
+                    title: Docker
+                    color: geekblue
+            - id: rich_stack_note
+              type: Alert
+              properties:
+                message: All dependencies are pinned and audited weekly for security vulnerabilities.
+                type: info
+                showIcon: true
+        rich_milestones:
+          blocks:
+            - id: rich_milestones_desc
+              type: Paragraph
+              properties:
+                content: Key delivery milestones for the current development cycle.
+            - id: rich_milestones_p1
+              type: Box
+              layout:
+                gap: 8
+              blocks:
+                - id: rich_milestone_alpha_tag
+                  type: Tag
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Alpha
+                    color: orange
+                - id: rich_milestone_alpha_text
+                  type: Paragraph
+                  properties:
+                    content: 'Internal testing release with core features — March 2026'
+            - id: rich_milestones_p2
+              type: Box
+              layout:
+                gap: 8
+              blocks:
+                - id: rich_milestone_beta_tag
+                  type: Tag
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Beta
+                    color: blue
+                - id: rich_milestone_beta_text
+                  type: Paragraph
+                  properties:
+                    content: 'Public beta with limited access and feedback collection — June 2026'
+            - id: rich_milestones_p3
+              type: Box
+              layout:
+                gap: 8
+              blocks:
+                - id: rich_milestone_ga_tag
+                  type: Tag
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: GA
+                    color: green
+                - id: rich_milestone_ga_text
+                  type: Paragraph
+                  properties:
+                    content: 'General availability with full feature set and SLA guarantees — September 2026'
+
+- title: Extra Header Content
+  blocks:
+    - id: extra_collapse
+      type: Collapse
+      properties:
+        panels:
+          - key: ex_users
+            title: User Management
+            extraKey: ex_users_extra
+          - key: ex_billing
+            title: Billing & Invoices
+            extraKey: ex_billing_extra
+          - key: ex_logs
+            title: Activity Logs
+            extraKey: ex_logs_extra
+      slots:
+        ex_users:
+          blocks:
+            - id: extra_users_text
+              type: Paragraph
+              properties:
+                content: Manage user accounts, assign roles, reset passwords, and review login activity across the organization.
+        ex_users_extra:
+          blocks:
+            - id: extra_users_badge
+              type: Tag
+              properties:
+                title: 48 users
+                color: blue
+        ex_billing:
+          blocks:
+            - id: extra_billing_text
+              type: Paragraph
+              properties:
+                content: View current subscription details, download invoices, update payment methods, and manage billing contacts.
+        ex_billing_extra:
+          blocks:
+            - id: extra_billing_badge
+              type: Tag
+              properties:
+                title: Pro Plan
+                color: gold
+        ex_logs:
+          blocks:
+            - id: extra_logs_text
+              type: Paragraph
+              properties:
+                content: Audit trail of all administrative actions including user changes, permission updates, and configuration modifications.
+        ex_logs_extra:
+          blocks:
+            - id: extra_logs_badge
+              type: Tag
+              properties:
+                title: 1,204 events
+                color: default
+
+- title: Nested Collapse
+  blocks:
+    - id: nested_outer
+      type: Collapse
+      properties:
+        panels:
+          - key: no_frontend
+            title: Frontend Architecture
+          - key: no_backend
+            title: Backend Architecture
+      slots:
+        no_frontend:
+          blocks:
+            - id: nested_fe_intro
+              type: Paragraph
+              properties:
+                content: The frontend is organized into feature modules, each with its own routing, state management, and component library.
+            - id: nested_fe_inner
+              type: Collapse
+              properties:
+                bordered: false
+                panels:
+                  - key: nfi_components
+                    title: Component Library
+                  - key: nfi_state
+                    title: State Management
+                  - key: nfi_routing
+                    title: Routing
+              slots:
+                nfi_components:
+                  blocks:
+                    - id: nested_fe_components_text
+                      type: Paragraph
+                      properties:
+                        content: Shared UI components built with Ant Design, organized by atomic design principles (atoms, molecules, organisms).
+                nfi_state:
+                  blocks:
+                    - id: nested_fe_state_text
+                      type: Paragraph
+                      properties:
+                        content: Global state managed via Redux Toolkit with RTK Query for server state synchronization and caching.
+                nfi_routing:
+                  blocks:
+                    - id: nested_fe_routing_text
+                      type: Paragraph
+                      properties:
+                        content: File-based routing with Next.js App Router, protected routes via middleware, and dynamic route segments.
+        no_backend:
+          blocks:
+            - id: nested_be_intro
+              type: Paragraph
+              properties:
+                content: The backend follows a microservices architecture with an API gateway handling authentication and rate limiting.
+            - id: nested_be_inner
+              type: Collapse
+              properties:
+                bordered: false
+                panels:
+                  - key: nbi_api
+                    title: API Layer
+                  - key: nbi_database
+                    title: Database Design
+                  - key: nbi_auth
+                    title: Authentication
+              slots:
+                nbi_api:
+                  blocks:
+                    - id: nested_be_api_text
+                      type: Paragraph
+                      properties:
+                        content: RESTful API with OpenAPI 3.1 documentation. GraphQL available for complex queries. Rate limited to 1000 req/min per tenant.
+                nbi_database:
+                  blocks:
+                    - id: nested_be_database_text
+                      type: Paragraph
+                      properties:
+                        content: PostgreSQL with read replicas for horizontal scaling. Schema migrations managed with Prisma. Automated daily backups with point-in-time recovery.
+                nbi_auth:
+                  blocks:
+                    - id: nested_be_auth_text
+                      type: Paragraph
+                      properties:
+                        content: OAuth 2.0 with PKCE flow, JWT access tokens (15 min TTL), and secure httpOnly refresh tokens. SAML SSO available for Enterprise.
+
+- title: Rich Panel with Actions
+  blocks:
+    - id: actions_collapse
+      type: Collapse
+      properties:
+        panels:
+          - key: act_server
+            title: Production Server
+            extraKey: act_server_extra
+          - key: act_staging
+            title: Staging Environment
+            extraKey: act_staging_extra
+          - key: act_dev
+            title: Development Environment
+            extraKey: act_dev_extra
+      slots:
+        act_server:
+          blocks:
+            - id: actions_server_stats
+              type: Box
+              layout:
+                gap: 16
+              blocks:
+                - id: act_server_uptime
+                  type: Statistic
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Uptime
+                    value: 99.97
+                    suffix: '%'
+                - id: act_server_latency
+                  type: Statistic
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Avg Latency
+                    value: 42
+                    suffix: ms
+                - id: act_server_rpm
+                  type: Statistic
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Requests/min
+                    value: 8420
+            - id: actions_server_desc
+              type: Paragraph
+              properties:
+                content: Deployed on 3 regions (us-east, eu-west, ap-southeast) with automatic failover and CDN edge caching.
+            - id: actions_server_btns
+              type: Box
+              layout:
+                gap: 8
+              blocks:
+                - id: act_server_btn_logs
+                  type: Button
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: View Logs
+                    icon: AiOutlineFileText
+                    color: primary
+                    variant: outlined
+                    size: small
+                - id: act_server_btn_metrics
+                  type: Button
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Metrics
+                    icon: AiOutlineBarChart
+                    color: primary
+                    variant: outlined
+                    size: small
+        act_server_extra:
+          blocks:
+            - id: act_server_status
+              type: Tag
+              properties:
+                title: Healthy
+                color: success
+        act_staging:
+          blocks:
+            - id: actions_staging_desc
+              type: Paragraph
+              properties:
+                content: Mirror of production with synthetic test data. Auto-deploys from the staging branch on every merge. Used for QA validation before production releases.
+            - id: actions_staging_alert
+              type: Alert
+              properties:
+                message: Last deployment was 2 hours ago. All 847 integration tests passed.
+                type: success
+                showIcon: true
+        act_staging_extra:
+          blocks:
+            - id: act_staging_status
+              type: Tag
+              properties:
+                title: Healthy
+                color: success
+        act_dev:
+          blocks:
+            - id: actions_dev_desc
+              type: Paragraph
+              properties:
+                content: Local development environment running via Docker Compose. Hot-reload enabled for frontend and backend services with seeded test database.
+            - id: actions_dev_alert
+              type: Alert
+              properties:
+                message: 3 pending database migrations need to be applied before starting the dev server.
+                type: warning
+                showIcon: true
+        act_dev_extra:
+          blocks:
+            - id: act_dev_status
+              type: Tag
+              properties:
+                title: Needs Attention
+                color: warning
+
+- title: CSS Styling with Tailwind Classes
+  blocks:
+    - id: css_styled_collapse
+      type: Collapse
+      style:
+        --element:
+          background: transparent
+          borderColor: '#d9d9d9'
+        --header:
+          fontWeight: 600
+        --content:
+          color: '#595959'
+      properties:
+        panels:
+          - key: css_design
+            title: Design Guidelines
+          - key: css_brand
+            title: Brand Colors
+          - key: css_typography
+            title: Typography
+      slots:
+        css_design:
+          blocks:
+            - id: css_design_text
+              type: Paragraph
+              properties:
+                content: Follow the 8px grid system for all spacing. Use consistent border radius (8px for containers, 4px for inputs). Maintain a minimum touch target of 44x44px for mobile.
+        css_brand:
+          blocks:
+            - id: css_brand_text
+              type: Paragraph
+              properties:
+                content: 'Primary: #1677ff, Success: #52c41a, Warning: #faad14, Error: #ff4d4f. Always use the design token system rather than hardcoding hex values.'
+            - id: css_brand_tags
+              type: Box
+              layout:
+                gap: 6
+              blocks:
+                - id: css_brand_tag_primary
+                  type: Tag
+                  properties:
+                    title: Primary
+                    color: '#1677ff'
+                - id: css_brand_tag_success
+                  type: Tag
+                  properties:
+                    title: Success
+                    color: '#52c41a'
+                - id: css_brand_tag_warning
+                  type: Tag
+                  properties:
+                    title: Warning
+                    color: '#faad14'
+                - id: css_brand_tag_error
+                  type: Tag
+                  properties:
+                    title: Error
+                    color: '#ff4d4f'
+        css_typography:
+          blocks:
+            - id: css_typography_text
+              type: Paragraph
+              properties:
+                content: 'Body: 14px/1.5715, Headings: 24px/1.3, Small: 12px/1.6667. Use the Inter font family for UI text and JetBrains Mono for code snippets.'
+
+- title: Theme Token Overrides
+  blocks:
+    - id: theme_blue_header
+      type: Collapse
+      properties:
+        theme:
+          headerBg: '#e6f4ff'
+          contentBg: '#f0f5ff'
+          headerPadding: '16px 20px'
+          contentPadding: '20px 20px'
+        panels:
+          - key: tb_overview
+            title: Blue Header Theme
+          - key: tb_details
+            title: Expanded Padding
+      slots:
+        tb_overview:
+          blocks:
+            - id: theme_blue_overview_text
+              type: Paragraph
+              properties:
+                content: This collapse uses a light blue header background and a slightly tinted content area, achieved by overriding the headerBg and contentBg design tokens.
+        tb_details:
+          blocks:
+            - id: theme_blue_details_text
+              type: Paragraph
+              properties:
+                content: The padding has been increased to 16px vertically and 20px horizontally for both header and content areas, giving a more spacious feel.
+    - id: theme_dark_collapse
+      type: Collapse
+      properties:
+        theme:
+          headerBg: '#1f1f1f'
+          contentBg: '#141414'
+          colorText: '#ffffffd9'
+          colorTextHeading: '#ffffffd9'
+          colorBorder: '#424242'
+        panels:
+          - key: td_about
+            title: Dark Theme
+          - key: td_settings
+            title: Configuration
+      slots:
+        td_about:
+          blocks:
+            - id: theme_dark_about_text
+              type: Paragraph
+              properties:
+                content: A dark-themed collapse achieved entirely through design token overrides. The header, content, and border colors are all customized.
+        td_settings:
+          blocks:
+            - id: theme_dark_settings_text
+              type: Paragraph
+              properties:
+                content: Token overrides cascade to all child elements, making it straightforward to create themed sections without global CSS changes.
+    - id: theme_rounded_collapse
+      type: Collapse
+      properties:
+        theme:
+          borderRadiusLG: 16
+          headerBg: '#f6ffed'
+          contentBg: '#ffffff'
+        panels:
+          - key: tr_one
+            title: Extra Rounded Corners
+          - key: tr_two
+            title: Green Tinted Headers
+      slots:
+        tr_one:
+          blocks:
+            - id: theme_rounded_one_text
+              type: Paragraph
+              properties:
+                content: The borderRadiusLG token controls the rounding of the collapse container corners. Set to 16px here for a softer appearance.
+        tr_two:
+          blocks:
+            - id: theme_rounded_two_text
+              type: Paragraph
+              properties:
+                content: Combining borderRadiusLG with a green-tinted headerBg creates a nature-inspired visual style suitable for eco-friendly or wellness applications.
+
+- title: Accordion with Rich Content
+  blocks:
+    - id: rich_accordion
+      type: Collapse
+      properties:
+        accordion: true
+        expandIconPlacement: end
+        panels:
+          - key: ra_plan_free
+            title: Free Plan
+            extraKey: ra_plan_free_extra
+          - key: ra_plan_pro
+            title: Pro Plan
+            extraKey: ra_plan_pro_extra
+          - key: ra_plan_enterprise
+            title: Enterprise Plan
+            extraKey: ra_plan_enterprise_extra
+      slots:
+        ra_plan_free:
+          blocks:
+            - id: ra_free_desc
+              type: Paragraph
+              properties:
+                content: Get started at no cost with essential features for individuals and small teams exploring the platform.
+            - id: ra_free_features
+              type: Box
+              layout:
+                gap: 6
+              blocks:
+                - id: ra_free_tag_users
+                  type: Tag
+                  properties:
+                    title: Up to 5 users
+                    color: default
+                - id: ra_free_tag_projects
+                  type: Tag
+                  properties:
+                    title: 3 projects
+                    color: default
+                - id: ra_free_tag_storage
+                  type: Tag
+                  properties:
+                    title: 1 GB storage
+                    color: default
+            - id: ra_free_alert
+              type: Alert
+              properties:
+                message: Community support via forums. No SLA guarantee.
+                type: info
+                showIcon: true
+        ra_plan_free_extra:
+          blocks:
+            - id: ra_free_price
+              type: Tag
+              properties:
+                title: $0/month
+                color: green
+        ra_plan_pro:
+          blocks:
+            - id: ra_pro_desc
+              type: Paragraph
+              properties:
+                content: Everything in Free, plus advanced collaboration tools, priority support, and higher resource limits for growing teams.
+            - id: ra_pro_features
+              type: Box
+              layout:
+                gap: 6
+              blocks:
+                - id: ra_pro_tag_users
+                  type: Tag
+                  properties:
+                    title: Up to 50 users
+                    color: blue
+                - id: ra_pro_tag_projects
+                  type: Tag
+                  properties:
+                    title: Unlimited projects
+                    color: blue
+                - id: ra_pro_tag_storage
+                  type: Tag
+                  properties:
+                    title: 100 GB storage
+                    color: blue
+                - id: ra_pro_tag_sso
+                  type: Tag
+                  properties:
+                    title: SSO included
+                    color: blue
+            - id: ra_pro_alert
+              type: Alert
+              properties:
+                message: Email and chat support with 24-hour response SLA.
+                type: success
+                showIcon: true
+        ra_plan_pro_extra:
+          blocks:
+            - id: ra_pro_price
+              type: Tag
+              properties:
+                title: $29/month
+                color: blue
+        ra_plan_enterprise:
+          blocks:
+            - id: ra_enterprise_desc
+              type: Paragraph
+              properties:
+                content: Full platform access with dedicated infrastructure, custom integrations, and white-glove onboarding for large organizations.
+            - id: ra_enterprise_features
+              type: Box
+              layout:
+                gap: 6
+              blocks:
+                - id: ra_ent_tag_users
+                  type: Tag
+                  properties:
+                    title: Unlimited users
+                    color: gold
+                - id: ra_ent_tag_projects
+                  type: Tag
+                  properties:
+                    title: Unlimited projects
+                    color: gold
+                - id: ra_ent_tag_storage
+                  type: Tag
+                  properties:
+                    title: Unlimited storage
+                    color: gold
+                - id: ra_ent_tag_sso
+                  type: Tag
+                  properties:
+                    title: SAML SSO
+                    color: gold
+                - id: ra_ent_tag_sla
+                  type: Tag
+                  properties:
+                    title: 99.99% SLA
+                    color: gold
+            - id: ra_enterprise_alert
+              type: Alert
+              properties:
+                message: Dedicated account manager, 1-hour response SLA, and custom SLA agreements.
+                type: warning
+                showIcon: true
+        ra_plan_enterprise_extra:
+          blocks:
+            - id: ra_enterprise_price
+              type: Tag
+              properties:
+                title: Custom
+                color: gold

@@ -1,0 +1,98 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic Content
+  fullWidth: true
+  blocks:
+    - id: content_basic
+      type: Layout
+      blocks:
+        - id: content_basic_area
+          type: Content
+          style:
+            padding: 24px
+            background: '#fff'
+            minHeight: 200px
+          blocks:
+            - id: content_basic_text
+              type: Paragraph
+              properties:
+                content: The Content block is the main content area within a Layout. It maps to Ant Design's Layout.Content component and is used to hold the primary page content.
+
+- title: Content with Custom Styling
+  fullWidth: true
+  blocks:
+    - id: content_styled
+      type: Layout
+      blocks:
+        - id: content_styled_area
+          type: Content
+          style:
+            padding: 32px 48px
+            margin: 16px
+            background: '#f5f5f5'
+            borderRadius: 8px
+            minHeight: 200px
+          blocks:
+            - id: content_styled_title
+              type: Title
+              properties:
+                content: Styled Content Area
+                level: 4
+            - id: content_styled_text
+              type: Paragraph
+              properties:
+                content: Content blocks accept custom styles for padding, margin, background, and other CSS properties to customize the content area appearance.
+
+- title: Content in Full Layout
+  fullWidth: true
+  blocks:
+    - id: content_full_layout
+      type: Layout
+      style:
+        minHeight: 300px
+      blocks:
+        - id: content_full_header
+          type: Header
+          style:
+            display: flex
+            alignItems: center
+            paddingInline: 24px
+          blocks:
+            - id: content_full_header_text
+              type: Paragraph
+              properties:
+                content: Application Header
+                style:
+                  color: white
+                  margin: 0
+        - id: content_full_area
+          type: Content
+          style:
+            padding: 24px 48px
+            background: '#fff'
+          blocks:
+            - id: content_full_area_text
+              type: Paragraph
+              properties:
+                content: Content works within a Layout alongside Header and Footer to form a complete page structure. The Content block automatically fills the available vertical space between other layout sections.
+        - id: content_full_footer
+          type: Footer
+          style:
+            textAlign: center
+          blocks:
+            - id: content_full_footer_text
+              type: Paragraph
+              properties:
+                content: Application Footer

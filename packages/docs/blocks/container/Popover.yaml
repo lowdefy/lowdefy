@@ -13,44 +13,16 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
+    pageId: Popover
+    pageTitle: Popover
+    section: Container Blocks
+    filePath: blocks/container/Popover.yaml
     block_type: Popover
-    category: container
+    antd_component: Popover
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/Popover
     schema: ../plugins/blocks/blocks-antd/src/blocks/Popover/schema.js
-    description_content: |
-      A popover container. Can be used to display extra information or options inside the popover.
-    init_state_values:
-      block.properties.title: Popover title
-    slots:
-      - content
-      - popover
-    examples:
-      - title: Popover menu
-        block:
-          id: button_ex
-          type: Popover
-          properties:
-            title: Explains what happens.
-          blocks:
-            - id: settings
-              type: Button
-              properties:
-                title: Settings
-                icon: AiOutlineSetting
-                block: true
-          slots:
-            popover:
-              blocks:
-                - id: profile
-                  type: Button
-                  properties:
-                    title: Profile
-                - id: admin
-                  type: Button
-                  properties:
-                    title: Admin
-                - id: logout
-                  type: Button
-                  properties:
-                    title: Logout
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/Popover/gallery.yaml
+    description: >
+      Popup card appearing when hovering or clicking a trigger element.

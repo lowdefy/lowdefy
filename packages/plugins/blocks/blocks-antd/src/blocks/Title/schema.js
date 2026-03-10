@@ -141,6 +141,106 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/typography#design-token',
+        },
+        properties: {
+          titleMarginBottom: {
+            type: 'string',
+            default: '0.5em',
+            description: 'Margin bottom of title.',
+          },
+          titleMarginTop: {
+            type: 'string',
+            default: '1.2em',
+            description: 'Margin top of title.',
+          },
+          fontSizeHeading1: {
+            type: 'number',
+            default: 38,
+            description: 'Font size of h1 heading.',
+          },
+          fontSizeHeading2: {
+            type: 'number',
+            default: 30,
+            description: 'Font size of h2 heading.',
+          },
+          fontSizeHeading3: {
+            type: 'number',
+            default: 24,
+            description: 'Font size of h3 heading.',
+          },
+          fontSizeHeading4: {
+            type: 'number',
+            default: 20,
+            description: 'Font size of h4 heading.',
+          },
+          fontSizeHeading5: {
+            type: 'number',
+            default: 16,
+            description: 'Font size of h5 heading.',
+          },
+          lineHeightHeading1: {
+            type: 'number',
+            default: 1.2105,
+            description: 'Line height of h1 heading.',
+          },
+          lineHeightHeading2: {
+            type: 'number',
+            default: 1.2667,
+            description: 'Line height of h2 heading.',
+          },
+          lineHeightHeading3: {
+            type: 'number',
+            default: 1.3333,
+            description: 'Line height of h3 heading.',
+          },
+          lineHeightHeading4: {
+            type: 'number',
+            default: 1.4,
+            description: 'Line height of h4 heading.',
+          },
+          lineHeightHeading5: {
+            type: 'number',
+            default: 1.5,
+            description: 'Line height of h5 heading.',
+          },
+          fontWeightStrong: {
+            type: 'number',
+            default: 600,
+            description: 'Font weight for strong text.',
+          },
+          fontFamilyCode: {
+            type: 'string',
+            description: 'Font family for code style text.',
+          },
+          colorText: {
+            type: 'string',
+            description: 'Default text color.',
+          },
+          colorTextSecondary: {
+            type: 'string',
+            description: 'Secondary text color.',
+          },
+          colorSuccess: {
+            type: 'string',
+            description: 'Success text color.',
+          },
+          colorWarning: {
+            type: 'string',
+            description: 'Warning text color.',
+          },
+          colorError: {
+            type: 'string',
+            description: 'Danger/error text color.',
+          },
+          colorTextDisabled: {
+            type: 'string',
+            description: 'Disabled text color.',
+          },
+          colorLink: {
+            type: 'string',
+            description: 'Link color.',
+          },
         },
       },
     },

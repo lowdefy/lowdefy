@@ -1,0 +1,580 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic Confirm Modal
+  blocks:
+    - id: confirm_basic_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open Confirm
+        color: primary
+        variant: solid
+      events:
+        onClick:
+          - id: confirm_basic_open
+            type: CallMethod
+            params:
+              blockId: confirm_basic
+              method: open
+    - id: confirm_basic
+      type: ConfirmModal
+      properties:
+        title: Are you sure?
+        content: This action cannot be undone.
+
+- title: Status Types
+  blocks:
+    - id: confirm_status_confirm_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Confirm
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_status_confirm_open
+            type: CallMethod
+            params:
+              blockId: confirm_status_confirm
+              method: open
+    - id: confirm_status_info_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Info
+        color: blue
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_status_info_open
+            type: CallMethod
+            params:
+              blockId: confirm_status_info
+              method: open
+    - id: confirm_status_success_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Success
+        color: green
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_status_success_open
+            type: CallMethod
+            params:
+              blockId: confirm_status_success
+              method: open
+    - id: confirm_status_warning_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Warning
+        color: orange
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_status_warning_open
+            type: CallMethod
+            params:
+              blockId: confirm_status_warning
+              method: open
+    - id: confirm_status_error_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Error
+        color: danger
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_status_error_open
+            type: CallMethod
+            params:
+              blockId: confirm_status_error
+              method: open
+    - id: confirm_status_confirm
+      type: ConfirmModal
+      properties:
+        title: Confirm Action
+        content: Do you want to proceed with this action?
+        status: confirm
+    - id: confirm_status_info
+      type: ConfirmModal
+      properties:
+        title: Information
+        content: Your account has been updated successfully.
+        status: info
+    - id: confirm_status_success
+      type: ConfirmModal
+      properties:
+        title: Success
+        content: The operation completed successfully.
+        status: success
+    - id: confirm_status_warning
+      type: ConfirmModal
+      properties:
+        title: Warning
+        content: This will overwrite existing data. Are you sure you want to continue?
+        status: warning
+    - id: confirm_status_error
+      type: ConfirmModal
+      properties:
+        title: Error
+        content: An error occurred while processing your request. Do you want to retry?
+        status: error
+
+- title: Override Status at Open Time
+  blocks:
+    - id: confirm_override_info_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open as Info
+        color: blue
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_override_info_open
+            type: CallMethod
+            params:
+              blockId: confirm_override
+              method: open
+              args:
+                status: info
+    - id: confirm_override_error_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open as Error
+        color: danger
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_override_error_open
+            type: CallMethod
+            params:
+              blockId: confirm_override
+              method: open
+              args:
+                status: error
+    - id: confirm_override_success_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open as Success
+        color: green
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_override_success_open
+            type: CallMethod
+            params:
+              blockId: confirm_override
+              method: open
+              args:
+                status: success
+    - id: confirm_override
+      type: ConfirmModal
+      properties:
+        title: Dynamic Status
+        content: The status of this modal was set at open time via the method args, overriding the default.
+        status: confirm
+
+- title: Custom Button Text
+  blocks:
+    - id: confirm_btn_text_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open Custom Buttons
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_btn_text_open
+            type: CallMethod
+            params:
+              blockId: confirm_btn_text
+              method: open
+    - id: confirm_btn_text
+      type: ConfirmModal
+      properties:
+        title: Save Changes?
+        content: You have unsaved changes. Do you want to save before leaving?
+        okText: Save
+        cancelText: Discard
+
+- title: Custom Icon
+  blocks:
+    - id: confirm_icon_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open with Custom Icon
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_icon_open
+            type: CallMethod
+            params:
+              blockId: confirm_icon
+              method: open
+    - id: confirm_icon_colored_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open with Colored Icon
+        color: danger
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_icon_colored_open
+            type: CallMethod
+            params:
+              blockId: confirm_icon_colored
+              method: open
+    - id: confirm_icon
+      type: ConfirmModal
+      properties:
+        title: Delete Item?
+        content: This item will be permanently removed from the system.
+        icon: AiOutlineDelete
+    - id: confirm_icon_colored
+      type: ConfirmModal
+      properties:
+        title: Danger Zone
+        content: Are you absolutely sure you want to delete this project and all its data?
+        icon:
+          name: AiOutlineWarning
+          color: '#ff4d4f'
+          size: 22
+
+- title: Closable Options
+  blocks:
+    - id: confirm_closable_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Closable
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_closable_open
+            type: CallMethod
+            params:
+              blockId: confirm_closable
+              method: open
+    - id: confirm_not_closable_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Not Closable (default)
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_not_closable_open
+            type: CallMethod
+            params:
+              blockId: confirm_not_closable
+              method: open
+    - id: confirm_closable
+      type: ConfirmModal
+      properties:
+        title: Closable Confirm
+        content: This confirm modal shows a close (x) button.
+        closable: true
+    - id: confirm_not_closable
+      type: ConfirmModal
+      properties:
+        title: Not Closable
+        content: This confirm modal does not show a close (x) button. Users must click Ok or Cancel. This is the default.
+        closable: false
+
+- title: Mask Options
+  blocks:
+    - id: confirm_mask_closable_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Mask Closable
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_mask_closable_open
+            type: CallMethod
+            params:
+              blockId: confirm_mask_closable
+              method: open
+    - id: confirm_no_mask_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: No Mask
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_no_mask_open
+            type: CallMethod
+            params:
+              blockId: confirm_no_mask
+              method: open
+    - id: confirm_mask_closable
+      type: ConfirmModal
+      properties:
+        title: Mask Closable
+        content: Click the mask area outside the modal to dismiss it.
+        maskClosable: true
+    - id: confirm_no_mask
+      type: ConfirmModal
+      properties:
+        title: No Mask
+        content: This confirm modal has no mask overlay behind it.
+        mask: false
+
+- title: Centered
+  blocks:
+    - id: confirm_centered_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open Centered Confirm
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_centered_open
+            type: CallMethod
+            params:
+              blockId: confirm_centered
+              method: open
+    - id: confirm_centered
+      type: ConfirmModal
+      properties:
+        title: Centered Confirm
+        content: This confirm modal is vertically centered in the viewport.
+        centered: true
+
+- title: Custom Width
+  blocks:
+    - id: confirm_narrow_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Narrow (300px)
+        color: primary
+        variant: outlined
+        size: small
+      events:
+        onClick:
+          - id: confirm_narrow_open
+            type: CallMethod
+            params:
+              blockId: confirm_narrow
+              method: open
+    - id: confirm_wide_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Wide (600px)
+        color: primary
+        variant: outlined
+        size: small
+      events:
+        onClick:
+          - id: confirm_wide_open
+            type: CallMethod
+            params:
+              blockId: confirm_wide
+              method: open
+    - id: confirm_narrow
+      type: ConfirmModal
+      properties:
+        title: Narrow Confirm
+        content: A compact 300px confirm modal.
+        width: 300
+    - id: confirm_wide
+      type: ConfirmModal
+      properties:
+        title: Wide Confirm
+        content: A wider 600px confirm modal with more room for content. Useful for complex messages or forms.
+        width: 600
+
+- title: Custom Z-Index
+  blocks:
+    - id: confirm_zindex_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open Confirm (z-index 2000)
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_zindex_open
+            type: CallMethod
+            params:
+              blockId: confirm_zindex
+              method: open
+    - id: confirm_zindex
+      type: ConfirmModal
+      properties:
+        title: High Z-Index Confirm
+        content: This confirm modal uses a custom z-index of 2000.
+        zIndex: 2000
+
+- title: Custom Button Properties
+  blocks:
+    - id: confirm_ok_btn_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open with Danger Ok
+        color: danger
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_ok_btn_open
+            type: CallMethod
+            params:
+              blockId: confirm_ok_btn
+              method: open
+    - id: confirm_icon_btns_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open with Icon Buttons
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_icon_btns_open
+            type: CallMethod
+            params:
+              blockId: confirm_icon_btns
+              method: open
+    - id: confirm_ok_btn
+      type: ConfirmModal
+      properties:
+        title: Delete Permanently?
+        content: This action will permanently delete the selected items and cannot be undone.
+        status: error
+        okText: Delete
+        okButton:
+          danger: true
+        cancelText: Keep Items
+    - id: confirm_icon_btns
+      type: ConfirmModal
+      properties:
+        title: Export Data?
+        content: Your data will be exported to a CSV file and downloaded.
+        status: confirm
+        okText: Export
+        okButton:
+          icon: AiOutlineDownload
+        cancelText: Cancel
+        cancelButton:
+          icon: AiOutlineClose
+
+- title: Content Slot
+  blocks:
+    - id: confirm_content_slot_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open with Rich Content
+        color: primary
+        variant: solid
+      events:
+        onClick:
+          - id: confirm_content_slot_open
+            type: CallMethod
+            params:
+              blockId: confirm_content_slot
+              method: open
+    - id: confirm_content_slot
+      type: ConfirmModal
+      properties:
+        title: Review Changes
+        status: confirm
+        width: 500
+      blocks:
+        - id: confirm_content_slot_desc
+          type: Descriptions
+          properties:
+            size: small
+            column: 1
+            items:
+              - label: File
+                value: report-2026-Q1.xlsx
+              - label: Size
+                value: 2.4 MB
+              - label: Modified
+                value: March 10, 2026
+              - label: Author
+                value: Jane Cooper
+
+- title: HTML Content
+  blocks:
+    - id: confirm_html_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open with HTML Content
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_html_open
+            type: CallMethod
+            params:
+              blockId: confirm_html
+              method: open
+    - id: confirm_html
+      type: ConfirmModal
+      properties:
+        title: '<b>Important</b> Notice'
+        content: 'Your subscription will expire on <b>March 31, 2026</b>. Please <em>renew</em> to avoid service interruption.'
+        status: warning

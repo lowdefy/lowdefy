@@ -13,18 +13,16 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: Paragraph
-    category: display
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Paragraph/schema.js
+    pageId: Paragraph
+    pageTitle: Paragraph
+    section: Display Blocks
     filePath: blocks/display/Paragraph.yaml
-    init_state_values:
-      __type_block.properties.copyable: boolean
-      __type_block.properties.ellipsis: boolean
-      __boolean_block.properties.copyable: false
-      __boolean_block.properties.ellipsis: false
-    init_property_values:
-      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
-    description_content: |
-      A paragraph text component.
+    block_type: Paragraph
+    antd_component: Typography
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/Paragraph
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Paragraph/schema.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/Paragraph/gallery.yaml
+    description: >
+      Text paragraph with copyable, ellipsis, and text style options.

@@ -95,6 +95,123 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/tabs#design-token',
+        },
+        properties: {
+          cardBg: {
+            type: 'string',
+            default: 'rgba(0, 0, 0, 0.02)',
+            description: 'Background color of card-type tab.',
+          },
+          cardGutter: {
+            type: 'number',
+            default: 2,
+            description: 'Gap between card-type tabs.',
+          },
+          cardHeight: {
+            type: 'number',
+            default: 40,
+            description: 'Height of card-type tab.',
+          },
+          cardPadding: {
+            type: 'string',
+            default: '8px 16px',
+            description: 'Padding of card-type tab.',
+          },
+          cardPaddingLG: {
+            type: 'string',
+            default: '11px 16px',
+            description: 'Padding of large card-type tab.',
+          },
+          cardPaddingSM: {
+            type: 'string',
+            default: '4px 8px',
+            description: 'Padding of small card-type tab.',
+          },
+          horizontalItemGutter: {
+            type: 'number',
+            default: 32,
+            description: 'Gap between horizontal tabs.',
+          },
+          horizontalItemMargin: {
+            type: 'string',
+            description: 'Horizontal margin of tab item.',
+          },
+          horizontalItemPadding: {
+            type: 'string',
+            default: '12px 0',
+            description: 'Padding of horizontal tab item.',
+          },
+          horizontalItemPaddingLG: {
+            type: 'string',
+            default: '16px 0',
+            description: 'Padding of large horizontal tab item.',
+          },
+          horizontalItemPaddingSM: {
+            type: 'string',
+            default: '8px 0',
+            description: 'Padding of small horizontal tab item.',
+          },
+          horizontalMargin: {
+            type: 'string',
+            default: '0 0 16px 0',
+            description: 'Margin of horizontal tab bar.',
+          },
+          inkBarColor: {
+            type: 'string',
+            default: '#1677ff',
+            description: 'Color of the active tab indicator bar.',
+          },
+          itemActiveColor: {
+            type: 'string',
+            default: '#0958d9',
+            description: 'Text color of active (mousedown) tab.',
+          },
+          itemColor: {
+            type: 'string',
+            default: 'rgba(0, 0, 0, 0.88)',
+            description: 'Text color of tab.',
+          },
+          itemHoverColor: {
+            type: 'string',
+            default: '#4096ff',
+            description: 'Text color of hovered tab.',
+          },
+          itemSelectedColor: {
+            type: 'string',
+            default: '#1677ff',
+            description: 'Text color of selected tab.',
+          },
+          titleFontSize: {
+            type: 'number',
+            default: 14,
+            description: 'Font size of tab title.',
+          },
+          titleFontSizeLG: {
+            type: 'number',
+            default: 16,
+            description: 'Font size of large tab title.',
+          },
+          titleFontSizeSM: {
+            type: 'number',
+            default: 14,
+            description: 'Font size of small tab title.',
+          },
+          verticalItemMargin: {
+            type: 'string',
+            default: '16px 0 0 0',
+            description: 'Margin of vertical tab item.',
+          },
+          verticalItemPadding: {
+            type: 'string',
+            default: '8px 24px',
+            description: 'Padding of vertical tab item.',
+          },
+          zIndexPopup: {
+            type: 'number',
+            default: 1050,
+            description: 'Z-index of tab dropdown popup.',
+          },
         },
       },
     },

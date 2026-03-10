@@ -13,41 +13,16 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: PageSiderMenu
-    category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/PageSiderMenu/schema.js
+    pageId: PageSiderMenu
+    pageTitle: PageSiderMenu
+    section: Container Blocks
     filePath: blocks/container/PageSiderMenu.yaml
-    description_content: |
-      The Page Sider Menu block provides a structured layout for a page with a header, sider including menu, content and footer slots.
-    init_state_values:
-      block.properties.menu.links:
-        - id: home
-          type: MenuLink
-          pageId: home
-          properties:
-            icon: AiOutlineHome
-            title: Home
-        - id: pages
-          type: MenuGroup
-          properties:
-            title: Pages
-            icon: AiOutlineLayout
-          links:
-            - id: page1
-              type: MenuLink
-              pageId: page1
-              properties:
-                title: Page 1
-            - id: more_pages
-              type: MenuGroup
-              links:
-                - id: page3
-                  type: MenuLink
-                  pageId: page3
-    slots:
-      - content
-      - footer
-      - header
-      - sider
+    block_type: PageSiderMenu
+    antd_component: Layout
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/PageSiderMenu
+    schema: ../plugins/blocks/blocks-antd/src/blocks/PageSiderMenu/schema.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/PageSiderMenu/gallery.yaml
+    description: >
+      Page layout with a sidebar navigation menu.

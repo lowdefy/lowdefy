@@ -1,0 +1,635 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic
+  blocks:
+    - id: tree_basic
+      type: TreeSelector
+      properties:
+        title: Department
+        label:
+          disabled: true
+        options:
+          - label: Engineering
+            value: engineering
+            children:
+              - label: Frontend
+                value: frontend
+              - label: Backend
+                value: backend
+          - label: Design
+            value: design
+            children:
+              - label: UI Design
+                value: ui_design
+              - label: UX Research
+                value: ux_research
+          - label: Marketing
+            value: marketing
+
+- title: Checkable
+  blocks:
+    - id: tree_checkable
+      type: TreeSelector
+      properties:
+        title: Select Teams
+        checkable: true
+        label:
+          disabled: true
+        options:
+          - label: Engineering
+            value: engineering
+            children:
+              - label: Frontend
+                value: frontend
+              - label: Backend
+                value: backend
+              - label: DevOps
+                value: devops
+          - label: Design
+            value: design
+            children:
+              - label: UI Design
+                value: ui_design
+              - label: UX Research
+                value: ux_research
+
+- title: Checkable with Disabled Checkboxes
+  blocks:
+    - id: tree_checkable_disabled_cb
+      type: TreeSelector
+      properties:
+        title: Assign Permissions
+        checkable: true
+        label:
+          disabled: true
+        options:
+          - label: Admin
+            value: admin
+            disableCheckbox: true
+            children:
+              - label: User Management
+                value: user_mgmt
+                disableCheckbox: true
+              - label: System Settings
+                value: sys_settings
+                disableCheckbox: true
+          - label: Editor
+            value: editor
+            children:
+              - label: Create Posts
+                value: create_posts
+              - label: Edit Posts
+                value: edit_posts
+              - label: Delete Posts
+                value: delete_posts
+                disableCheckbox: true
+          - label: Viewer
+            value: viewer
+            children:
+              - label: View Dashboard
+                value: view_dashboard
+              - label: View Reports
+                value: view_reports
+
+- title: Show Line
+  blocks:
+    - id: tree_showline
+      type: TreeSelector
+      properties:
+        title: File Browser
+        showLine: true
+        label:
+          disabled: true
+        options:
+          - label: Documents
+            value: documents
+            children:
+              - label: Reports
+                value: reports
+              - label: Invoices
+                value: invoices
+          - label: Images
+            value: images
+            children:
+              - label: Photos
+                value: photos
+              - label: Screenshots
+                value: screenshots
+          - label: Downloads
+            value: downloads
+
+- title: Show Line with Checkable
+  blocks:
+    - id: tree_showline_checkable
+      type: TreeSelector
+      properties:
+        title: Select Files
+        showLine: true
+        checkable: true
+        label:
+          disabled: true
+        options:
+          - label: src
+            value: src
+            children:
+              - label: components
+                value: components
+                children:
+                  - label: Header.js
+                    value: header_js
+                  - label: Footer.js
+                    value: footer_js
+                  - label: Sidebar.js
+                    value: sidebar_js
+              - label: utils
+                value: utils
+                children:
+                  - label: helpers.js
+                    value: helpers_js
+                  - label: constants.js
+                    value: constants_js
+          - label: tests
+            value: tests
+            children:
+              - label: unit
+                value: unit
+              - label: integration
+                value: integration
+
+- title: Selectable False (Expand Only)
+  blocks:
+    - id: tree_not_selectable
+      type: TreeSelector
+      properties:
+        title: Browse Categories
+        selectable: false
+        showLine: true
+        label:
+          disabled: true
+        options:
+          - label: Electronics
+            value: electronics
+            children:
+              - label: Phones
+                value: phones
+                children:
+                  - label: Smartphones
+                    value: smartphones
+                  - label: Feature Phones
+                    value: feature_phones
+              - label: Laptops
+                value: laptops
+                children:
+                  - label: Gaming
+                    value: gaming
+                  - label: Business
+                    value: business
+          - label: Clothing
+            value: clothing
+            children:
+              - label: Men
+                value: men
+              - label: Women
+                value: women
+
+- title: Disabled Nodes
+  blocks:
+    - id: tree_disabled_nodes
+      type: TreeSelector
+      properties:
+        title: Available Options
+        label:
+          disabled: true
+        options:
+          - label: Option A
+            value: option_a
+          - label: Option B (disabled)
+            value: option_b
+            disabled: true
+          - label: Option C
+            value: option_c
+            children:
+              - label: Sub-option 1
+                value: sub_1
+              - label: Sub-option 2 (disabled)
+                value: sub_2
+                disabled: true
+              - label: Sub-option 3
+                value: sub_3
+
+- title: Disabled Nodes with Checkable
+  blocks:
+    - id: tree_disabled_checkable
+      type: TreeSelector
+      properties:
+        title: Feature Flags
+        checkable: true
+        label:
+          disabled: true
+        options:
+          - label: Authentication
+            value: auth
+            children:
+              - label: OAuth Login
+                value: oauth
+              - label: SSO (Enterprise only)
+                value: sso
+                disabled: true
+              - label: Two-Factor Auth
+                value: twofa
+          - label: Notifications
+            value: notifications
+            children:
+              - label: Email
+                value: email
+              - label: SMS (Coming soon)
+                value: sms
+                disabled: true
+              - label: Push
+                value: push
+                disabled: true
+          - label: Analytics
+            value: analytics
+            disabled: true
+            children:
+              - label: Basic
+                value: basic_analytics
+              - label: Advanced
+                value: advanced_analytics
+
+- title: Entirely Disabled
+  blocks:
+    - id: tree_disabled
+      type: TreeSelector
+      properties:
+        title: Disabled Tree
+        disabled: true
+        label:
+          disabled: true
+        options:
+          - label: Item 1
+            value: item1
+            children:
+              - label: Sub-item 1A
+                value: item1a
+              - label: Sub-item 1B
+                value: item1b
+          - label: Item 2
+            value: item2
+          - label: Item 3
+            value: item3
+
+- title: Deeply Nested Tree
+  blocks:
+    - id: tree_deep_nesting
+      type: TreeSelector
+      properties:
+        title: Organization Structure
+        showLine: true
+        label:
+          disabled: true
+        options:
+          - label: CEO
+            value: ceo
+            children:
+              - label: CTO
+                value: cto
+                children:
+                  - label: VP Engineering
+                    value: vp_eng
+                    children:
+                      - label: Senior Dev
+                        value: senior_dev
+                      - label: Junior Dev
+                        value: junior_dev
+                  - label: VP Product
+                    value: vp_product
+              - label: CFO
+                value: cfo
+                children:
+                  - label: Finance Manager
+                    value: finance_mgr
+                    children:
+                      - label: Accountant
+                        value: accountant
+                      - label: Payroll
+                        value: payroll
+                  - label: Controller
+                    value: controller
+              - label: COO
+                value: coo
+                children:
+                  - label: HR Director
+                    value: hr_director
+                    children:
+                      - label: Recruiter
+                        value: recruiter
+                      - label: Training
+                        value: training
+                  - label: Operations Manager
+                    value: ops_mgr
+
+- title: Option Styles
+  blocks:
+    - id: tree_option_styles
+      type: TreeSelector
+      properties:
+        title: Status Indicators
+        label:
+          disabled: true
+        options:
+          - label: '<span style="color: green;">Active Services</span>'
+            value: active
+            style:
+              background: '#f6ffed'
+            children:
+              - label: '<span style="color: green;">Web Server</span>'
+                value: web_server
+                style:
+                  background: '#f6ffed'
+              - label: '<span style="color: green;">Database</span>'
+                value: database
+                style:
+                  background: '#f6ffed'
+          - label: '<span style="color: orange;">Warning</span>'
+            value: warning
+            style:
+              background: '#fff7e6'
+            children:
+              - label: '<span style="color: orange;">Cache Server</span>'
+                value: cache
+                style:
+                  background: '#fff7e6'
+              - label: '<span style="color: orange;">Queue Worker</span>'
+                value: queue
+                style:
+                  background: '#fff7e6'
+          - label: '<span style="color: red;">Down</span>'
+            value: down
+            style:
+              background: '#fff2f0'
+            children:
+              - label: '<span style="color: red;">Backup Service</span>'
+                value: backup
+                disabled: true
+                style:
+                  background: '#fff2f0'
+
+- title: Label with Title
+  blocks:
+    - id: tree_with_title
+      type: TreeSelector
+      properties:
+        title: Select Region
+        options:
+          - label: North America
+            value: na
+            children:
+              - label: United States
+                value: us
+              - label: Canada
+                value: ca
+              - label: Mexico
+                value: mx
+          - label: Europe
+            value: eu
+            children:
+              - label: United Kingdom
+                value: uk
+              - label: Germany
+                value: de
+              - label: France
+                value: fr
+          - label: Asia Pacific
+            value: apac
+            children:
+              - label: Japan
+                value: jp
+              - label: Australia
+                value: au
+              - label: Singapore
+                value: sg
+
+- title: Label Inline
+  blocks:
+    - id: tree_label_inline
+      type: TreeSelector
+      properties:
+        title: Category
+        label:
+          inline: true
+          span: 6
+        options:
+          - label: Fruits
+            value: fruits
+            children:
+              - label: Apple
+                value: apple
+              - label: Banana
+                value: banana
+          - label: Vegetables
+            value: vegetables
+            children:
+              - label: Carrot
+                value: carrot
+              - label: Broccoli
+                value: broccoli
+
+- title: Label Extra and Colon
+  blocks:
+    - id: tree_label_extra
+      type: TreeSelector
+      properties:
+        title: Project Assignment
+        label:
+          extra: Select the project and team you want to be assigned to.
+          colon: false
+        options:
+          - label: Project Alpha
+            value: alpha
+            children:
+              - label: Development
+                value: alpha_dev
+              - label: Testing
+                value: alpha_test
+          - label: Project Beta
+            value: beta
+            children:
+              - label: Development
+                value: beta_dev
+              - label: Testing
+                value: beta_test
+              - label: Documentation
+                value: beta_docs
+
+- title: Custom Style
+  blocks:
+    - id: tree_custom_style
+      type: TreeSelector
+      style:
+        --element:
+          background: '#f0f5ff'
+          border: '1px solid #adc6ff'
+          borderRadius: 8
+          padding: 12
+      properties:
+        title: Styled Tree
+        showLine: true
+        label:
+          disabled: true
+        options:
+          - label: Category A
+            value: cat_a
+            children:
+              - label: Item A1
+                value: a1
+              - label: Item A2
+                value: a2
+          - label: Category B
+            value: cat_b
+            children:
+              - label: Item B1
+                value: b1
+              - label: Item B2
+                value: b2
+
+- title: Custom Class
+  blocks:
+    - id: tree_custom_class
+      type: TreeSelector
+      class: border rounded-lg p-3 shadow-sm
+      properties:
+        title: With CSS Class
+        label:
+          disabled: true
+        options:
+          - label: Workspace
+            value: workspace
+            children:
+              - label: Personal
+                value: personal
+              - label: Shared
+                value: shared
+          - label: Archive
+            value: archive
+            children:
+              - label: 2024
+                value: archive_2024
+              - label: 2025
+                value: archive_2025
+
+- title: Large Flat Options
+  blocks:
+    - id: tree_flat
+      type: TreeSelector
+      properties:
+        title: Select Priority
+        label:
+          disabled: true
+        options:
+          - label: Critical
+            value: critical
+          - label: High
+            value: high
+          - label: Medium
+            value: medium
+          - label: Low
+            value: low
+          - label: None
+            value: none
+
+- title: Theme Token Overrides
+  blocks:
+    - id: tree_theme_selected_bg
+      type: TreeSelector
+      properties:
+        title: Custom Selection Color
+        label:
+          disabled: true
+        theme:
+          nodeSelectedBg: '#e6fffb'
+        options:
+          - label: Dashboard
+            value: dashboard
+            children:
+              - label: Overview
+                value: overview
+              - label: Analytics
+                value: analytics
+          - label: Settings
+            value: settings
+            children:
+              - label: Profile
+                value: profile
+              - label: Security
+                value: security
+    - id: tree_theme_hover
+      type: TreeSelector
+      properties:
+        title: Custom Hover Color
+        label:
+          disabled: true
+        theme:
+          nodeHoverBg: '#fff0f6'
+        options:
+          - label: Inbox
+            value: inbox
+            children:
+              - label: Primary
+                value: primary
+              - label: Social
+                value: social
+              - label: Promotions
+                value: promotions
+          - label: Sent
+            value: sent
+          - label: Drafts
+            value: drafts
+    - id: tree_theme_combined
+      type: TreeSelector
+      properties:
+        title: Combined Token Overrides
+        showLine: true
+        label:
+          disabled: true
+        theme:
+          nodeSelectedBg: '#f9f0ff'
+          nodeHoverBg: '#fff7e6'
+          titleHeight: 32
+        options:
+          - label: Modules
+            value: modules
+            children:
+              - label: Core
+                value: core
+                children:
+                  - label: Auth
+                    value: auth_module
+                  - label: Router
+                    value: router_module
+              - label: Plugins
+                value: plugins
+                children:
+                  - label: Analytics
+                    value: analytics_plugin
+                  - label: Notifications
+                    value: notifications_plugin
+          - label: Config
+            value: config
+            children:
+              - label: Development
+                value: dev_config
+              - label: Production
+                value: prod_config

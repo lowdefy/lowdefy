@@ -44,10 +44,15 @@ const schema = {
           displayType: 'color',
         },
       },
-      defaultVisible: {
+      defaultOpen: {
         type: 'boolean',
         default: false,
         description: 'Whether the floating tooltip card is visible by default.',
+      },
+      destroyTooltipOnHide: {
+        type: 'boolean',
+        default: false,
+        description: 'Whether to destroy the tooltip DOM when hidden.',
       },
       mouseEnterDelay: {
         type: 'number',
@@ -99,6 +104,54 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/tooltip#design-token',
+        },
+        properties: {
+          zIndexPopup: {
+            type: 'number',
+            default: 1070,
+            description: 'Z-index of the tooltip.',
+          },
+          maxWidth: {
+            type: 'number',
+            default: 250,
+            description: 'Maximum width of the tooltip.',
+          },
+          colorBgSpotlight: {
+            type: 'string',
+            default: 'rgba(0, 0, 0, 0.85)',
+            description: 'Background color of the tooltip.',
+          },
+          colorTextLightSolid: {
+            type: 'string',
+            default: '#fff',
+            description: 'Text color inside the tooltip.',
+          },
+          borderRadius: {
+            type: 'number',
+            default: 6,
+            description: 'Border radius of the tooltip.',
+          },
+          controlHeight: {
+            type: 'number',
+            default: 32,
+            description: 'Minimum height of the tooltip.',
+          },
+          fontSize: {
+            type: 'number',
+            default: 14,
+            description: 'Font size of tooltip text.',
+          },
+          lineHeight: {
+            type: 'number',
+            default: 1.5714,
+            description: 'Line height of tooltip text.',
+          },
+          paddingXS: {
+            type: 'number',
+            default: 8,
+            description: 'Horizontal padding inside the tooltip.',
+          },
         },
       },
     },
@@ -107,7 +160,7 @@ const schema = {
     type: 'object',
     additionalProperties: false,
     properties: {
-      onVisibleChange: {
+      onOpenChange: {
         type: 'array',
         description: 'Trigger action when visibility of the tooltip card is changed.',
       },

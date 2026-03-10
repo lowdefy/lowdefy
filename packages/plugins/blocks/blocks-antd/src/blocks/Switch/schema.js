@@ -126,6 +126,90 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/switch#design-token',
+        },
+        properties: {
+          trackHeight: {
+            type: 'number',
+            default: 22,
+            description: 'Height of the switch track.',
+          },
+          trackHeightSM: {
+            type: 'number',
+            default: 16,
+            description: 'Height of the switch track for small size.',
+          },
+          trackMinWidth: {
+            type: 'number',
+            default: 44,
+            description: 'Minimum width of the switch track.',
+          },
+          trackMinWidthSM: {
+            type: 'number',
+            default: 28,
+            description: 'Minimum width of the switch track for small size.',
+          },
+          trackPadding: {
+            type: 'number',
+            default: 2,
+            description: 'Internal padding of the switch track.',
+          },
+          handleBg: {
+            type: 'string',
+            default: '#fff',
+            description: 'Background color of the switch handle.',
+          },
+          handleSize: {
+            type: 'number',
+            default: 18,
+            description: 'Diameter of the switch handle.',
+          },
+          handleSizeSM: {
+            type: 'number',
+            default: 12,
+            description: 'Diameter of the switch handle for small size.',
+          },
+          handleShadow: {
+            type: 'string',
+            default: '0 2px 4px 0 rgba(0,35,11,0.2)',
+            description: 'Box shadow of the switch handle.',
+          },
+          innerMinMargin: {
+            type: 'number',
+            default: 9,
+            description: 'Minimum margin for inner content (text/icon) of the switch.',
+          },
+          innerMaxMargin: {
+            type: 'number',
+            default: 24,
+            description: 'Maximum margin for inner content (text/icon) of the switch.',
+          },
+          innerMinMarginSM: {
+            type: 'number',
+            default: 6,
+            description: 'Minimum margin for inner content for small size.',
+          },
+          innerMaxMarginSM: {
+            type: 'number',
+            default: 18,
+            description: 'Maximum margin for inner content for small size.',
+          },
+          colorPrimary: {
+            type: 'string',
+            description: 'Primary color when the switch is checked.',
+          },
+          colorPrimaryHover: {
+            type: 'string',
+            description: 'Primary color on hover when the switch is checked.',
+          },
+          colorTextQuaternary: {
+            type: 'string',
+            description: 'Background color when the switch is unchecked.',
+          },
+          colorTextTertiary: {
+            type: 'string',
+            description: 'Background color on hover when the switch is unchecked.',
+          },
         },
       },
     },

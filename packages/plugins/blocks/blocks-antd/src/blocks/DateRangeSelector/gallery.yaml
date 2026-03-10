@@ -1,0 +1,1006 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Sizes
+  blocks:
+    - id: drs_size_small
+      type: DateRangeSelector
+      properties:
+        title: Small
+        size: small
+        label:
+          disabled: true
+    - id: drs_size_default
+      type: DateRangeSelector
+      properties:
+        title: Default
+        label:
+          disabled: true
+    - id: drs_size_large
+      type: DateRangeSelector
+      properties:
+        title: Large
+        size: large
+        label:
+          disabled: true
+
+- title: Sizes with Labels
+  blocks:
+    - id: drs_size_label_small
+      type: DateRangeSelector
+      properties:
+        title: Small with Label
+        size: small
+    - id: drs_size_label_default
+      type: DateRangeSelector
+      properties:
+        title: Default with Label
+    - id: drs_size_label_large
+      type: DateRangeSelector
+      properties:
+        title: Large with Label
+        size: large
+
+- title: Variants
+  blocks:
+    - id: drs_variant_outlined
+      type: DateRangeSelector
+      properties:
+        title: Outlined (default)
+        variant: outlined
+        label:
+          disabled: true
+    - id: drs_variant_filled
+      type: DateRangeSelector
+      properties:
+        title: Filled
+        variant: filled
+        label:
+          disabled: true
+    - id: drs_variant_borderless
+      type: DateRangeSelector
+      properties:
+        title: Borderless
+        variant: borderless
+        label:
+          disabled: true
+
+- title: Variant + Size Matrix
+  blocks:
+    - id: drs_mx_outlined_label
+      type: Markdown
+      properties:
+        content: '**outlined**'
+    - id: drs_mx_outlined_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: drs_mx_outlined_sm
+          type: DateRangeSelector
+          properties:
+            title: Small
+            variant: outlined
+            size: small
+            label:
+              disabled: true
+        - id: drs_mx_outlined_md
+          type: DateRangeSelector
+          properties:
+            title: Default
+            variant: outlined
+            label:
+              disabled: true
+        - id: drs_mx_outlined_lg
+          type: DateRangeSelector
+          properties:
+            title: Large
+            variant: outlined
+            size: large
+            label:
+              disabled: true
+    - id: drs_mx_filled_label
+      type: Markdown
+      properties:
+        content: '**filled**'
+    - id: drs_mx_filled_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: drs_mx_filled_sm
+          type: DateRangeSelector
+          properties:
+            title: Small
+            variant: filled
+            size: small
+            label:
+              disabled: true
+        - id: drs_mx_filled_md
+          type: DateRangeSelector
+          properties:
+            title: Default
+            variant: filled
+            label:
+              disabled: true
+        - id: drs_mx_filled_lg
+          type: DateRangeSelector
+          properties:
+            title: Large
+            variant: filled
+            size: large
+            label:
+              disabled: true
+    - id: drs_mx_borderless_label
+      type: Markdown
+      properties:
+        content: '**borderless**'
+    - id: drs_mx_borderless_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: drs_mx_borderless_sm
+          type: DateRangeSelector
+          properties:
+            title: Small
+            variant: borderless
+            size: small
+            label:
+              disabled: true
+        - id: drs_mx_borderless_md
+          type: DateRangeSelector
+          properties:
+            title: Default
+            variant: borderless
+            label:
+              disabled: true
+        - id: drs_mx_borderless_lg
+          type: DateRangeSelector
+          properties:
+            title: Large
+            variant: borderless
+            size: large
+            label:
+              disabled: true
+
+- title: Format Variations
+  blocks:
+    - id: drs_format_iso
+      type: DateRangeSelector
+      properties:
+        title: YYYY-MM-DD (ISO)
+        format: YYYY-MM-DD
+        label:
+          disabled: true
+    - id: drs_format_slash
+      type: DateRangeSelector
+      properties:
+        title: DD/MM/YYYY
+        format: DD/MM/YYYY
+        label:
+          disabled: true
+    - id: drs_format_us
+      type: DateRangeSelector
+      properties:
+        title: MM/DD/YYYY (US)
+        format: MM/DD/YYYY
+        label:
+          disabled: true
+    - id: drs_format_long
+      type: DateRangeSelector
+      properties:
+        title: DD MMMM YYYY
+        format: DD MMMM YYYY
+        label:
+          disabled: true
+    - id: drs_format_short_month
+      type: DateRangeSelector
+      properties:
+        title: DD MMM YYYY
+        format: DD MMM YYYY
+        label:
+          disabled: true
+    - id: drs_format_dot
+      type: DateRangeSelector
+      properties:
+        title: DD.MM.YYYY
+        format: DD.MM.YYYY
+        label:
+          disabled: true
+
+- title: Placeholder Options
+  blocks:
+    - id: drs_ph_default
+      type: DateRangeSelector
+      properties:
+        title: Default Placeholders
+        label:
+          disabled: true
+    - id: drs_ph_custom
+      type: DateRangeSelector
+      properties:
+        title: Custom Placeholders
+        placeholder:
+          - From
+          - To
+        label:
+          disabled: true
+    - id: drs_ph_hotel
+      type: DateRangeSelector
+      properties:
+        title: Hotel Booking
+        placeholder:
+          - Check-in date
+          - Check-out date
+        label:
+          disabled: true
+    - id: drs_ph_project
+      type: DateRangeSelector
+      properties:
+        title: Project Timeline
+        placeholder:
+          - Start date
+          - End date
+        label:
+          disabled: true
+    - id: drs_ph_report
+      type: DateRangeSelector
+      properties:
+        title: Report Period
+        placeholder:
+          - Period start
+          - Period end
+        label:
+          disabled: true
+
+- title: Custom Separator
+  blocks:
+    - id: drs_sep_tilde
+      type: DateRangeSelector
+      properties:
+        title: Tilde (default)
+        separator: '~'
+        label:
+          disabled: true
+    - id: drs_sep_dash
+      type: DateRangeSelector
+      properties:
+        title: Dash
+        separator: '-'
+        label:
+          disabled: true
+    - id: drs_sep_to
+      type: DateRangeSelector
+      properties:
+        title: Text "to"
+        separator: to
+        label:
+          disabled: true
+    - id: drs_sep_arrow
+      type: DateRangeSelector
+      properties:
+        title: Arrow
+        separator: '→'
+        label:
+          disabled: true
+    - id: drs_sep_pipe
+      type: DateRangeSelector
+      properties:
+        title: Pipe
+        separator: '|'
+        label:
+          disabled: true
+    - id: drs_sep_dots
+      type: DateRangeSelector
+      properties:
+        title: Ellipsis
+        separator: '...'
+        label:
+          disabled: true
+
+- title: Allow Clear
+  blocks:
+    - id: drs_clear_enabled
+      type: DateRangeSelector
+      properties:
+        title: Allow Clear (default)
+        allowClear: true
+        label:
+          disabled: true
+    - id: drs_clear_disabled
+      type: DateRangeSelector
+      properties:
+        title: No Clear Button
+        allowClear: false
+        label:
+          disabled: true
+
+- title: Suffix Icon
+  blocks:
+    - id: drs_icon_default
+      type: DateRangeSelector
+      properties:
+        title: Default Calendar Icon
+        label:
+          disabled: true
+    - id: drs_icon_clock
+      type: DateRangeSelector
+      properties:
+        title: Clock Icon
+        suffixIcon: AiOutlineClockCircle
+        label:
+          disabled: true
+    - id: drs_icon_schedule
+      type: DateRangeSelector
+      properties:
+        title: Schedule Icon
+        suffixIcon: AiOutlineSchedule
+        label:
+          disabled: true
+    - id: drs_icon_custom_color
+      type: DateRangeSelector
+      properties:
+        title: Custom Color Icon
+        suffixIcon:
+          name: AiOutlineCalendar
+          color: '#1677ff'
+        label:
+          disabled: true
+    - id: drs_icon_heart
+      type: DateRangeSelector
+      properties:
+        title: Heart Icon
+        suffixIcon:
+          name: AiOutlineHeart
+          color: '#ff4d4f'
+        label:
+          disabled: true
+    - id: drs_icon_flag
+      type: DateRangeSelector
+      properties:
+        title: Flag Icon
+        suffixIcon:
+          name: AiOutlineFlag
+          color: '#fa8c16'
+        label:
+          disabled: true
+
+- title: Disabled State
+  blocks:
+    - id: drs_dis_default
+      type: DateRangeSelector
+      properties:
+        title: Disabled
+        disabled: true
+        label:
+          disabled: true
+    - id: drs_dis_outlined
+      type: DateRangeSelector
+      properties:
+        title: Disabled Outlined
+        disabled: true
+        variant: outlined
+        label:
+          disabled: true
+    - id: drs_dis_filled
+      type: DateRangeSelector
+      properties:
+        title: Disabled Filled
+        disabled: true
+        variant: filled
+        label:
+          disabled: true
+    - id: drs_dis_borderless
+      type: DateRangeSelector
+      properties:
+        title: Disabled Borderless
+        disabled: true
+        variant: borderless
+        label:
+          disabled: true
+
+- title: Disabled Dates - Min/Max
+  blocks:
+    - id: drs_dd_min
+      type: DateRangeSelector
+      properties:
+        title: Min Date (2024-01-01)
+        disabledDates:
+          min: '2024-01-01'
+        label:
+          disabled: true
+    - id: drs_dd_max
+      type: DateRangeSelector
+      properties:
+        title: Max Date (2025-12-31)
+        disabledDates:
+          max: '2025-12-31'
+        label:
+          disabled: true
+    - id: drs_dd_range
+      type: DateRangeSelector
+      properties:
+        title: Min & Max (2024 only)
+        disabledDates:
+          min: '2024-01-01'
+          max: '2024-12-31'
+        label:
+          disabled: true
+
+- title: Disabled Dates - Specific Dates
+  blocks:
+    - id: drs_dd_specific
+      type: DateRangeSelector
+      properties:
+        title: Specific Dates Disabled
+        disabledDates:
+          dates:
+            - '2026-03-15'
+            - '2026-03-20'
+            - '2026-03-25'
+        label:
+          disabled: true
+
+- title: Disabled Dates - Date Ranges
+  blocks:
+    - id: drs_dd_ranges
+      type: DateRangeSelector
+      properties:
+        title: Date Ranges Disabled
+        disabledDates:
+          ranges:
+            - ['2026-03-10', '2026-03-14']
+            - ['2026-03-20', '2026-03-24']
+        label:
+          disabled: true
+
+- title: Label Options
+  blocks:
+    - id: drs_label_default
+      type: DateRangeSelector
+      properties:
+        title: Default Label
+    - id: drs_label_colon_off
+      type: DateRangeSelector
+      properties:
+        title: No Colon
+        label:
+          colon: false
+    - id: drs_label_right
+      type: DateRangeSelector
+      properties:
+        title: Align Right
+        label:
+          align: right
+    - id: drs_label_inline
+      type: DateRangeSelector
+      properties:
+        title: Inline Label
+        label:
+          inline: true
+          span: 8
+
+- title: Label with Extra Text
+  blocks:
+    - id: drs_label_extra
+      type: DateRangeSelector
+      properties:
+        title: Travel Dates
+        label:
+          extra: Select your departure and return dates.
+        placeholder:
+          - Departure
+          - Return
+    - id: drs_label_extra_html
+      type: DateRangeSelector
+      properties:
+        title: Contract Period
+        label:
+          extra: 'Choose the <b>start</b> and <b>end</b> dates for the contract.'
+        placeholder:
+          - Contract start
+          - Contract end
+
+- title: Label Inline with Span
+  blocks:
+    - id: drs_label_inline_4
+      type: DateRangeSelector
+      properties:
+        title: Span 4
+        label:
+          inline: true
+          span: 4
+    - id: drs_label_inline_8
+      type: DateRangeSelector
+      properties:
+        title: Span 8
+        label:
+          inline: true
+          span: 8
+    - id: drs_label_inline_12
+      type: DateRangeSelector
+      properties:
+        title: Span 12
+        label:
+          inline: true
+          span: 12
+
+- title: Label Disabled (No Label)
+  blocks:
+    - id: drs_label_hidden
+      type: DateRangeSelector
+      properties:
+        title: Hidden Label
+        label:
+          disabled: true
+        placeholder:
+          - Start
+          - End
+    - id: drs_label_hidden_filled
+      type: DateRangeSelector
+      properties:
+        title: Hidden Label Filled
+        label:
+          disabled: true
+        variant: filled
+        placeholder:
+          - Start
+          - End
+
+- title: Auto Focus
+  blocks:
+    - id: drs_af_off
+      type: DateRangeSelector
+      properties:
+        title: No Auto Focus (default)
+        autoFocus: false
+        label:
+          disabled: true
+    - id: drs_af_on
+      type: DateRangeSelector
+      properties:
+        title: Auto Focus Enabled
+        autoFocus: true
+        label:
+          disabled: true
+
+- title: HTML Title
+  blocks:
+    - id: drs_html_bold
+      type: DateRangeSelector
+      properties:
+        title: '<b>Bold</b> date range selector'
+        label:
+          disabled: true
+    - id: drs_html_color
+      type: DateRangeSelector
+      properties:
+        title: '<span style="color: #1677ff">Blue</span> date range selector'
+        label:
+          disabled: true
+    - id: drs_html_italic
+      type: DateRangeSelector
+      properties:
+        title: '<i>Italic</i> date range selector'
+        label:
+          disabled: true
+
+- title: Custom Style
+  blocks:
+    - id: drs_style_width
+      type: DateRangeSelector
+      style:
+        width: 500
+      properties:
+        title: Fixed Width (500px)
+        label:
+          disabled: true
+    - id: drs_style_narrow
+      type: DateRangeSelector
+      style:
+        width: 350
+      properties:
+        title: Narrow Width (350px)
+        label:
+          disabled: true
+    - id: drs_style_element
+      type: DateRangeSelector
+      style:
+        --element:
+          background: '#f0f5ff'
+      properties:
+        title: Custom Background
+        label:
+          disabled: true
+    - id: drs_style_label
+      type: DateRangeSelector
+      style:
+        --label:
+          color: '#531dab'
+          fontWeight: bold
+      properties:
+        title: Styled Label
+
+- title: Custom CSS Class
+  blocks:
+    - id: drs_class_rounded
+      type: DateRangeSelector
+      class: rounded-lg shadow-sm
+      properties:
+        title: Rounded with Shadow
+        label:
+          disabled: true
+    - id: drs_class_border
+      type: DateRangeSelector
+      class: border-2 border-blue-200
+      properties:
+        title: Blue Border
+        label:
+          disabled: true
+    - id: drs_class_shadow
+      type: DateRangeSelector
+      class: shadow-md
+      properties:
+        title: Medium Shadow
+        label:
+          disabled: true
+
+- title: Theme Token Overrides
+  blocks:
+    - id: drs_theme_primary
+      type: DateRangeSelector
+      properties:
+        title: Custom Primary Color
+        label:
+          disabled: true
+        theme:
+          colorPrimary: '#722ed1'
+    - id: drs_theme_radius
+      type: DateRangeSelector
+      properties:
+        title: Large Border Radius
+        label:
+          disabled: true
+        theme:
+          borderRadius: 16
+    - id: drs_theme_bg
+      type: DateRangeSelector
+      properties:
+        title: Custom Background
+        variant: filled
+        label:
+          disabled: true
+        theme:
+          colorBgContainer: '#f9f0ff'
+    - id: drs_theme_font
+      type: DateRangeSelector
+      properties:
+        title: Large Font
+        label:
+          disabled: true
+        theme:
+          fontSize: 18
+    - id: drs_theme_border
+      type: DateRangeSelector
+      properties:
+        title: Thick Border
+        label:
+          disabled: true
+        theme:
+          lineWidth: 2
+          colorBorder: '#d3adf7'
+
+- title: Theme Token - Sizes
+  blocks:
+    - id: drs_theme_tall
+      type: DateRangeSelector
+      properties:
+        title: Tall Input
+        label:
+          disabled: true
+        theme:
+          controlHeight: 48
+          fontSize: 18
+          borderRadius: 12
+    - id: drs_theme_compact
+      type: DateRangeSelector
+      properties:
+        title: Compact Input
+        size: small
+        label:
+          disabled: true
+        theme:
+          controlHeightSM: 20
+          fontSizeSM: 12
+          borderRadiusSM: 2
+    - id: drs_theme_large_override
+      type: DateRangeSelector
+      properties:
+        title: Large Override
+        size: large
+        label:
+          disabled: true
+        theme:
+          controlHeightLG: 52
+          fontSizeLG: 20
+          borderRadiusLG: 16
+
+- title: Theme Token - Colors
+  blocks:
+    - id: drs_theme_green
+      type: DateRangeSelector
+      properties:
+        title: Green Theme
+        label:
+          disabled: true
+        theme:
+          colorPrimary: '#52c41a'
+    - id: drs_theme_orange
+      type: DateRangeSelector
+      properties:
+        title: Orange Theme
+        label:
+          disabled: true
+        theme:
+          colorPrimary: '#fa8c16'
+    - id: drs_theme_red
+      type: DateRangeSelector
+      properties:
+        title: Red Theme
+        label:
+          disabled: true
+        theme:
+          colorPrimary: '#ff4d4f'
+    - id: drs_theme_brand
+      type: DateRangeSelector
+      properties:
+        title: Brand Purple
+        label:
+          disabled: true
+        theme:
+          colorPrimary: '#722ed1'
+          colorBorder: '#d3adf7'
+          colorBgContainer: '#faf0ff'
+    - id: drs_theme_text_colors
+      type: DateRangeSelector
+      properties:
+        title: Custom Text Colors
+        label:
+          disabled: true
+        theme:
+          colorText: '#1d39c4'
+          colorTextPlaceholder: '#adc6ff'
+          colorBorder: '#adc6ff'
+
+- title: Theme Token - Padding
+  blocks:
+    - id: drs_theme_pad_wide
+      type: DateRangeSelector
+      properties:
+        title: Wide Padding
+        label:
+          disabled: true
+        theme:
+          paddingInline: 24
+          paddingBlock: 8
+    - id: drs_theme_pad_narrow
+      type: DateRangeSelector
+      properties:
+        title: Narrow Padding
+        label:
+          disabled: true
+        theme:
+          paddingInline: 4
+          paddingBlock: 2
+    - id: drs_theme_pad_large
+      type: DateRangeSelector
+      properties:
+        title: Large Wide Padding
+        size: large
+        label:
+          disabled: true
+        theme:
+          paddingInlineLG: 24
+          paddingBlockLG: 10
+
+- title: Theme Token - Popup
+  blocks:
+    - id: drs_theme_popup_radius
+      type: DateRangeSelector
+      properties:
+        title: Rounded Popup
+        label:
+          disabled: true
+        theme:
+          borderRadiusLG: 16
+          cellHoverBg: 'rgba(114, 46, 209, 0.1)'
+    - id: drs_theme_popup_range
+      type: DateRangeSelector
+      properties:
+        title: Custom Range Highlight
+        label:
+          disabled: true
+        theme:
+          cellActiveWithRangeBg: '#ffe7ba'
+          activeBorderColor: '#fa8c16'
+    - id: drs_theme_popup_hover
+      type: DateRangeSelector
+      properties:
+        title: Custom Hover Border
+        label:
+          disabled: true
+        theme:
+          hoverBorderColor: '#52c41a'
+          activeBorderColor: '#389e0d'
+    - id: drs_theme_popup_active_shadow
+      type: DateRangeSelector
+      properties:
+        title: Custom Active Shadow
+        label:
+          disabled: true
+        theme:
+          activeShadow: '0 0 0 3px rgba(114, 46, 209, 0.15)'
+          colorPrimary: '#722ed1'
+
+- title: Theme Token - Cell Styles
+  blocks:
+    - id: drs_theme_cell_hover
+      type: DateRangeSelector
+      properties:
+        title: Pink Cell Hover
+        label:
+          disabled: true
+        theme:
+          cellHoverBg: 'rgba(235, 47, 150, 0.1)'
+          colorPrimary: '#eb2f96'
+    - id: drs_theme_cell_range
+      type: DateRangeSelector
+      properties:
+        title: Green Range Background
+        label:
+          disabled: true
+        theme:
+          cellActiveWithRangeBg: '#d9f7be'
+          colorPrimary: '#52c41a'
+    - id: drs_theme_cell_range_hover
+      type: DateRangeSelector
+      properties:
+        title: Orange Range Hover
+        label:
+          disabled: true
+        theme:
+          cellHoverWithRangeBg: '#fff7e6'
+          cellActiveWithRangeBg: '#ffe7ba'
+          colorPrimary: '#fa8c16'
+    - id: drs_theme_cell_border
+      type: DateRangeSelector
+      properties:
+        title: Custom Range Border Color
+        label:
+          disabled: true
+        theme:
+          cellRangeBorderColor: '#ff4d4f'
+          colorPrimary: '#ff4d4f'
+
+- title: Combined Features
+  blocks:
+    - id: drs_combo_hotel
+      type: DateRangeSelector
+      properties:
+        title: Hotel Booking
+        placeholder:
+          - Check-in date
+          - Check-out date
+        format: DD MMMM YYYY
+        size: large
+        separator: '→'
+        suffixIcon: AiOutlineSchedule
+        allowClear: true
+        label:
+          extra: Select your check-in and check-out dates.
+          colon: false
+    - id: drs_combo_minimal
+      type: DateRangeSelector
+      properties:
+        title: Date Range
+        variant: borderless
+        size: small
+        allowClear: false
+        format: DD/MM/YYYY
+        separator: '-'
+        placeholder:
+          - From
+          - To
+        label:
+          disabled: true
+    - id: drs_combo_restricted
+      type: DateRangeSelector
+      properties:
+        title: Event Registration
+        placeholder:
+          - Event start
+          - Event end
+        format: DD MMM YYYY
+        suffixIcon:
+          name: AiOutlineCalendar
+          color: '#1677ff'
+        disabledDates:
+          min: '2026-01-01'
+          max: '2026-12-31'
+        label:
+          extra: Only dates in 2026 are available.
+    - id: drs_combo_themed
+      type: DateRangeSelector
+      properties:
+        title: Themed Picker
+        variant: filled
+        size: large
+        format: DD MMMM YYYY
+        separator: '→'
+        placeholder:
+          - Start date
+          - End date
+        suffixIcon:
+          name: AiOutlineHeart
+          color: '#eb2f96'
+        label:
+          disabled: true
+        theme:
+          colorPrimary: '#eb2f96'
+          borderRadius: 20
+          controlHeightLG: 48
+          fontSize: 16
+          cellActiveWithRangeBg: '#fff0f6'
+    - id: drs_combo_contract
+      type: DateRangeSelector
+      properties:
+        title: Contract Period
+        placeholder:
+          - Contract start
+          - Contract end
+        format: DD MMM YYYY
+        separator: to
+        variant: outlined
+        size: large
+        suffixIcon:
+          name: AiOutlineFlag
+          color: '#722ed1'
+        label:
+          extra: 'Specify the <b>full duration</b> of the contract.'
+          inline: true
+          span: 6
+        theme:
+          colorPrimary: '#722ed1'
+          borderRadius: 8
+          activeShadow: '0 0 0 3px rgba(114, 46, 209, 0.12)'
+    - id: drs_combo_report
+      type: DateRangeSelector
+      properties:
+        title: Reporting Period
+        placeholder:
+          - Period start
+          - Period end
+        format: YYYY-MM-DD
+        separator: '|'
+        variant: filled
+        allowClear: true
+        suffixIcon: AiOutlineBarChart
+        label:
+          extra: Choose the date range for the report.
+          colon: false
+        theme:
+          colorPrimary: '#1677ff'
+          colorBgContainer: '#f0f5ff'
+          cellActiveWithRangeBg: '#e6f4ff'

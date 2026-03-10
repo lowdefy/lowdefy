@@ -66,6 +66,99 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/card#design-token',
+        },
+        properties: {
+          headerBg: {
+            type: 'string',
+            default: 'transparent',
+            description: 'Background color of the card header.',
+          },
+          headerFontSize: {
+            type: 'number',
+            default: 16,
+            description: 'Font size of the card header title.',
+          },
+          headerFontSizeSM: {
+            type: 'number',
+            default: 14,
+            description: 'Font size of the card header title for small cards.',
+          },
+          headerHeight: {
+            type: 'number',
+            default: 56,
+            description: 'Height of the card header.',
+          },
+          headerHeightSM: {
+            type: 'number',
+            default: 38,
+            description: 'Height of the card header for small cards.',
+          },
+          actionsBg: {
+            type: 'string',
+            default: '#ffffff',
+            description: 'Background color of the card actions area.',
+          },
+          actionsLiMargin: {
+            type: 'string',
+            default: '12px 0',
+            description: 'Margin of each action item in the card actions area.',
+          },
+          tabsMarginBottom: {
+            type: 'number',
+            default: -17,
+            description: 'Bottom margin adjustment for tabs in the card.',
+          },
+          extraColor: {
+            type: 'string',
+            default: 'rgba(0,0,0,0.88)',
+            description: 'Text color for the extra content area in the header.',
+          },
+          bodyPadding: {
+            type: 'number',
+            default: 24,
+            description: 'Padding of the card body.',
+          },
+          bodyPaddingSM: {
+            type: 'number',
+            default: 12,
+            description: 'Padding of the card body for small cards.',
+          },
+          headerPadding: {
+            type: 'number',
+            default: 24,
+            description: 'Horizontal padding of the card header.',
+          },
+          headerPaddingSM: {
+            type: 'number',
+            default: 12,
+            description: 'Horizontal padding of the card header for small cards.',
+          },
+          borderRadiusLG: {
+            type: 'number',
+            default: 8,
+            description: 'Border radius of the card.',
+          },
+          colorBorderSecondary: {
+            type: 'string',
+            description: 'Border color of the card.',
+          },
+          colorBgContainer: {
+            type: 'string',
+            description: 'Background color of the card body.',
+          },
+          colorText: {
+            type: 'string',
+            description: 'Text color inside the card.',
+          },
+          colorTextHeading: {
+            type: 'string',
+            description: 'Color of the card header title text.',
+          },
+          boxShadowTertiary: {
+            type: 'string',
+            description: 'Shadow applied to the card on hover when hoverable is true.',
+          },
         },
       },
     },

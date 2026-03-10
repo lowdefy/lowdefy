@@ -34,6 +34,14 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/affix#design-token',
+        },
+        properties: {
+          zIndexPopup: {
+            type: 'number',
+            default: 10,
+            description: 'Z-index of the affix element when fixed.',
+          },
         },
       },
     },

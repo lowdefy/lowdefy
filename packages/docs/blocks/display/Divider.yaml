@@ -13,11 +13,16 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: Divider
-    category: display
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Divider/schema.js
+    pageId: Divider
+    pageTitle: Divider
+    section: Display Blocks
     filePath: blocks/display/Divider.yaml
-    description_content: |
-      A divider line. Use `orientation` to set horizontal or vertical (replaces `type` from v4), and `titlePlacement` to position inline text (replaces `orientation` from v4).
+    block_type: Divider
+    antd_component: Divider
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/Divider
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Divider/schema.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/Divider/gallery.yaml
+    description: >
+      Horizontal or vertical divider with optional text and orientation.

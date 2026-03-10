@@ -207,6 +207,59 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/descriptions#design-token',
+        },
+        properties: {
+          labelBg: {
+            type: 'string',
+            default: 'rgba(0, 0, 0, 0.02)',
+            description: 'Background color for labels in bordered mode.',
+          },
+          labelColor: {
+            type: 'string',
+            default: 'rgba(0, 0, 0, 0.45)',
+            description: 'Text color for labels.',
+          },
+          titleColor: {
+            type: 'string',
+            default: 'rgba(0, 0, 0, 0.88)',
+            description: 'Color for the component title.',
+          },
+          titleMarginBottom: {
+            type: 'number',
+            default: 20,
+            description: 'Bottom margin spacing for the title.',
+          },
+          itemPaddingBottom: {
+            type: 'number',
+            default: 16,
+            description: 'Bottom padding for description items.',
+          },
+          itemPaddingEnd: {
+            type: 'number',
+            default: 16,
+            description: 'End (right in LTR) padding for description items.',
+          },
+          colonMarginRight: {
+            type: 'number',
+            default: 8,
+            description: 'Right margin for colons after labels.',
+          },
+          colonMarginLeft: {
+            type: 'number',
+            default: 2,
+            description: 'Left margin for colons after labels.',
+          },
+          contentColor: {
+            type: 'string',
+            default: 'rgba(0, 0, 0, 0.88)',
+            description: 'Text color for content values.',
+          },
+          extraColor: {
+            type: 'string',
+            default: 'rgba(0, 0, 0, 0.88)',
+            description: 'Color for extra content in the header.',
+          },
         },
       },
     },

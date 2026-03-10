@@ -48,6 +48,63 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/result#design-token',
+        },
+        properties: {
+          titleFontSize: {
+            type: 'number',
+            default: 24,
+            description: 'Font size of the result title.',
+          },
+          subtitleFontSize: {
+            type: 'number',
+            default: 14,
+            description: 'Font size of the result subtitle.',
+          },
+          iconFontSize: {
+            type: 'number',
+            default: 72,
+            description: 'Font size of the result status icon.',
+          },
+          extraMargin: {
+            type: 'string',
+            default: '24px 0 0 0',
+            description: 'Margin applied to the extra content area.',
+          },
+          colorSuccess: {
+            type: 'string',
+            description: 'Color used for the success status icon.',
+          },
+          colorError: {
+            type: 'string',
+            description: 'Color used for the error status icon.',
+          },
+          colorInfo: {
+            type: 'string',
+            description: 'Color used for the info status icon.',
+          },
+          colorWarning: {
+            type: 'string',
+            description: 'Color used for the warning status icon.',
+          },
+          colorTextHeading: {
+            type: 'string',
+            description: 'Color of the result title text.',
+          },
+          colorTextDescription: {
+            type: 'string',
+            description: 'Color of the result subtitle text.',
+          },
+          paddingLG: {
+            type: 'number',
+            default: 24,
+            description: 'Large padding value applied to the result container.',
+          },
+          lineHeight: {
+            type: 'number',
+            default: 1.5714285714285714,
+            description: 'Line height used for result text content.',
+          },
         },
       },
     },

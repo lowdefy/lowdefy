@@ -13,20 +13,15 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: SkeletonButton
-    category: display
-    schema: ../plugins/blocks/blocks-loaders/src/blocks/SkeletonButton/schema.js
+    pageId: SkeletonButton
+    pageTitle: SkeletonButton
+    section: Display Blocks
     filePath: blocks/display/SkeletonButton.yaml
-    description_content: |
-      The `SkeletonButton` block can be used as a loading skeleton for a `Button` block.
-
-    examples:
-      - title: Basic skeleton button
-        block:
-          id: basic_skeleton_example
-          type: SkeletonButton
-          properties:
-            size: small
-            width: 100
+    block_type: SkeletonButton
+    github_path: packages/plugins/blocks/blocks-loaders/src/blocks/SkeletonButton
+    schema: ../plugins/blocks/blocks-loaders/src/blocks/SkeletonButton/schema.js
+    gallery: ../plugins/blocks/blocks-loaders/src/blocks/SkeletonButton/gallery.yaml
+    description: >
+      Button-shaped skeleton loading placeholder.

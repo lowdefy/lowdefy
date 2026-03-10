@@ -69,7 +69,10 @@ ${description}
 `,
                 on: {
                   block: {
-                    _custom_yaml_stringify: [block, { sortKeys: false }],
+                    _custom_yaml_stringify: [
+                      JSON.parse(JSON.stringify(block)),
+                      { sortKeys: false },
+                    ],
                   },
                 },
               },

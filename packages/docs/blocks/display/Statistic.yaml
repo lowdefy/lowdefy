@@ -13,23 +13,16 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: Statistic
-    category: display
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Statistic/schema.js
+    pageId: Statistic
+    pageTitle: Statistic
+    section: Display Blocks
     filePath: blocks/display/Statistic.yaml
-    init_state_values:
-      __type_block.properties.value: number
-      __number_block.properties.value: 33.3
-    description_content: |
-      A statistic block renders indicator numbers. Use `style: { --value }` and `style: { --prefix }` to customize styling (replaces `valueStyle` from v4).
-
-    examples:
-      - title: Basic statistic
-        block:
-          id: basic_example
-          type: Statistic
-          properties:
-            value: 99.5
-            prefixIcon: AiOutlineAlert
+    block_type: Statistic
+    antd_component: Statistic
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/Statistic
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Statistic/schema.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/Statistic/gallery.yaml
+    description: >
+      Statistic display with prefix, suffix, and formatting.

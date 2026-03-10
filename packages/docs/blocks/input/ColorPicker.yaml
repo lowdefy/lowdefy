@@ -13,14 +13,16 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: ColorPicker
-    value_type: string
-    category: input
-    schema: ../plugins/blocks/blocks-antd/src/blocks/ColorPicker/schema.js
+    pageId: ColorPicker
+    pageTitle: ColorPicker
+    section: Input Blocks
     filePath: blocks/input/ColorPicker.yaml
-    examples:
-      _ref: ../plugins/blocks/blocks-antd/src/blocks/ColorPicker/examples.yaml
-    description_content: |
-      The `ColorPicker` block allows users to select a color value. Supports RGB, HEX, and HSB formats with single or gradient modes. Features include preset palettes, alpha channel control, configurable popup placement, and clear option.
+    block_type: ColorPicker
+    antd_component: ColorPicker
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/ColorPicker
+    schema: ../plugins/blocks/blocks-antd/src/blocks/ColorPicker/schema.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/ColorPicker/gallery.yaml
+    description: >
+      Color picker with presets, format selection, and alpha channel.

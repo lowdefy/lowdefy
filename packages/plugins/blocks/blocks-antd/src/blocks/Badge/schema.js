@@ -90,6 +90,66 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/badge#design-token',
+        },
+        properties: {
+          indicatorHeight: {
+            type: 'number',
+            default: 20,
+            description: 'Height of the badge indicator.',
+          },
+          indicatorHeightSM: {
+            type: 'number',
+            default: 14,
+            description: 'Height of the badge indicator in small size.',
+          },
+          dotSize: {
+            type: 'number',
+            default: 6,
+            description: 'Size of the dot badge.',
+          },
+          textFontSize: {
+            type: 'number',
+            default: 12,
+            description: 'Font size for badge count text.',
+          },
+          textFontSizeSM: {
+            type: 'number',
+            default: 12,
+            description: 'Font size for badge count text in small size.',
+          },
+          textFontWeight: {
+            type: 'string',
+            default: 'normal',
+            description: 'Font weight for badge count text.',
+          },
+          textLineHeight: {
+            type: 'number',
+            description: 'Line height for badge count text.',
+          },
+          statusSize: {
+            type: 'number',
+            default: 6,
+            description: 'Size of the status dot.',
+          },
+          indicatorZIndex: {
+            type: ['number', 'string'],
+            default: 'auto',
+            description: 'Z-index of the badge indicator.',
+          },
+          colorBorderBg: {
+            type: 'string',
+            description:
+              'Background color of the badge border (gap between badge and wrapped element).',
+          },
+          colorError: {
+            type: 'string',
+            description: 'Color of the badge indicator (default red).',
+          },
+          colorErrorHover: {
+            type: 'string',
+            description: 'Hover color of the badge indicator.',
+          },
         },
       },
     },

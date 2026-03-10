@@ -1,0 +1,1869 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic Editable Paragraph
+  blocks:
+    - id: basic_default
+      type: ParagraphInput
+      properties:
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              basic_default: Click the edit icon to start editing this paragraph. Changes are saved when you press Enter or click away.
+    - id: basic_editable_object
+      type: ParagraphInput
+      properties:
+        editable: {}
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              basic_editable_object: This paragraph uses an editable object configuration with defaults.
+    - id: basic_not_editable
+      type: ParagraphInput
+      properties:
+        editable: false
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              basic_not_editable: This paragraph has editing explicitly disabled and cannot be modified.
+    - id: basic_empty
+      type: ParagraphInput
+      properties:
+        editable: true
+    - id: basic_long
+      type: ParagraphInput
+      properties:
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              basic_long: This is a longer paragraph to demonstrate how ParagraphInput handles multi-line content. When you click the edit icon, a text area appears allowing you to modify all of the text. The editable paragraph is useful for inline content editing scenarios where users should be able to quickly update descriptive text without navigating to a separate form.
+- title: Editable Options - Tooltip
+  blocks:
+    - id: tooltip_short
+      type: ParagraphInput
+      properties:
+        editable:
+          tooltip: Edit
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              tooltip_short: Hover over the edit icon to see a short tooltip.
+    - id: tooltip_descriptive
+      type: ParagraphInput
+      properties:
+        editable:
+          tooltip: Click to edit this paragraph content
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              tooltip_descriptive: Hover over the edit icon to see a descriptive tooltip.
+    - id: tooltip_instructional
+      type: ParagraphInput
+      properties:
+        editable:
+          tooltip: Double-click or press Enter to save changes
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              tooltip_instructional: Tooltip with editing instructions.
+- title: Editable Options - Custom Icon
+  blocks:
+    - id: icon_highlight
+      type: ParagraphInput
+      properties:
+        editable:
+          icon: AiOutlineHighlight
+          tooltip: Highlight to edit
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              icon_highlight: This paragraph uses a highlight icon instead of the default edit icon.
+    - id: icon_form
+      type: ParagraphInput
+      properties:
+        editable:
+          icon: AiOutlineForm
+          tooltip: Open editor
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              icon_form: Form edit icon on this paragraph.
+    - id: icon_edit
+      type: ParagraphInput
+      properties:
+        editable:
+          icon: AiOutlineEdit
+          tooltip: Edit paragraph
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              icon_edit: Explicit edit icon with tooltip.
+    - id: icon_custom_color
+      type: ParagraphInput
+      properties:
+        editable:
+          icon:
+            name: AiOutlineEdit
+            color: '#1677ff'
+          tooltip: Edit in blue
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              icon_custom_color: Custom colored edit icon.
+- title: Editable Options - Max Length
+  blocks:
+    - id: maxlen_20
+      type: ParagraphInput
+      properties:
+        editable:
+          maxLength: 20
+          tooltip: Limited to 20 characters
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              maxlen_20: Max 20 characters.
+    - id: maxlen_50
+      type: ParagraphInput
+      properties:
+        editable:
+          maxLength: 50
+          tooltip: Max 50 characters
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              maxlen_50: This input is limited to 50 characters when editing.
+    - id: maxlen_100
+      type: ParagraphInput
+      properties:
+        editable:
+          maxLength: 100
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              maxlen_100: Limited to 100 characters when editing.
+    - id: maxlen_200
+      type: ParagraphInput
+      properties:
+        editable:
+          maxLength: 200
+          tooltip: Limited to 200 characters
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              maxlen_200: This paragraph allows up to 200 characters. It provides ample space for short descriptions while still enforcing a reasonable limit.
+- title: Editable Options - AutoSize
+  blocks:
+    - id: autosize_true
+      type: ParagraphInput
+      properties:
+        editable:
+          autoSize: true
+          tooltip: Auto-sizing text area
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              autosize_true: This paragraph uses autoSize true so the text area automatically grows to fit the content when editing. Try clicking the edit icon to see the text area expand.
+    - id: autosize_min_max
+      type: ParagraphInput
+      properties:
+        editable:
+          autoSize:
+            minRows: 2
+            maxRows: 6
+          tooltip: 2-6 rows auto-size
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              autosize_min_max: AutoSize with minimum 2 rows and maximum 6 rows. The text area will start at 2 rows and grow up to 6 rows as you type more content.
+    - id: autosize_min_only
+      type: ParagraphInput
+      properties:
+        editable:
+          autoSize:
+            minRows: 3
+          tooltip: Minimum 3 rows
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              autosize_min_only: AutoSize with a minimum of 3 rows. The text area will always be at least 3 rows tall.
+    - id: autosize_max_only
+      type: ParagraphInput
+      properties:
+        editable:
+          autoSize:
+            maxRows: 4
+          tooltip: Maximum 4 rows
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              autosize_max_only: AutoSize with a maximum of 4 rows. Content beyond 4 rows will scroll.
+- title: Editable Options - Editing State
+  blocks:
+    - id: editing_true
+      type: ParagraphInput
+      properties:
+        editable:
+          editing: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              editing_true: This paragraph starts in editing mode immediately.
+    - id: editing_false
+      type: ParagraphInput
+      properties:
+        editable:
+          editing: false
+          tooltip: Click to start editing
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              editing_false: This paragraph starts in display mode. Click the icon to edit.
+- title: Editable Options - Combined
+  blocks:
+    - id: editable_full
+      type: ParagraphInput
+      properties:
+        editable:
+          icon: AiOutlineEdit
+          tooltip: Edit this paragraph
+          maxLength: 150
+          autoSize:
+            minRows: 2
+            maxRows: 8
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              editable_full: Fully configured editable paragraph with icon, tooltip, maxLength, and autoSize.
+    - id: editable_icon_tooltip_max
+      type: ParagraphInput
+      properties:
+        editable:
+          icon: AiOutlineHighlight
+          tooltip: Highlight to edit (max 100 chars)
+          maxLength: 100
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              editable_icon_tooltip_max: Custom icon with tooltip and character limit.
+    - id: editable_autosize_maxlen
+      type: ParagraphInput
+      properties:
+        editable:
+          autoSize: true
+          maxLength: 250
+          tooltip: Auto-sizing with 250 char limit
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              editable_autosize_maxlen: Auto-sizing text area with a 250 character limit. This is useful for description fields where you want the input to be comfortable but bounded.
+- title: Typography Types
+  blocks:
+    - id: type_default
+      type: ParagraphInput
+      properties:
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              type_default: Default type paragraph text. This is the standard appearance.
+    - id: type_secondary
+      type: ParagraphInput
+      properties:
+        type: secondary
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              type_secondary: Secondary type paragraph text. Used for less prominent content.
+    - id: type_success
+      type: ParagraphInput
+      properties:
+        type: success
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              type_success: Success type paragraph text. Indicates a positive outcome or valid state.
+    - id: type_warning
+      type: ParagraphInput
+      properties:
+        type: warning
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              type_warning: Warning type paragraph text. Draws attention to potential issues.
+    - id: type_danger
+      type: ParagraphInput
+      properties:
+        type: danger
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              type_danger: Danger type paragraph text. Highlights errors or destructive information.
+- title: Text Styles - Individual
+  blocks:
+    - id: style_strong
+      type: ParagraphInput
+      properties:
+        strong: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              style_strong: Strong (bold) paragraph text.
+    - id: style_italic
+      type: ParagraphInput
+      properties:
+        italic: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              style_italic: Italic paragraph text.
+    - id: style_underline
+      type: ParagraphInput
+      properties:
+        underline: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              style_underline: Underlined paragraph text.
+    - id: style_delete
+      type: ParagraphInput
+      properties:
+        delete: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              style_delete: Deleted (strikethrough) paragraph text.
+    - id: style_mark
+      type: ParagraphInput
+      properties:
+        mark: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              style_mark: Marked (highlighted) paragraph text.
+    - id: style_code
+      type: ParagraphInput
+      properties:
+        code: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              style_code: Code style paragraph text.
+- title: Text Styles - Combined
+  blocks:
+    - id: combo_strong_italic
+      type: ParagraphInput
+      properties:
+        strong: true
+        italic: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              combo_strong_italic: Strong and italic combined paragraph.
+    - id: combo_underline_mark
+      type: ParagraphInput
+      properties:
+        underline: true
+        mark: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              combo_underline_mark: Underline and mark combined paragraph.
+    - id: combo_strong_underline
+      type: ParagraphInput
+      properties:
+        strong: true
+        underline: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              combo_strong_underline: Strong and underline combined paragraph.
+    - id: combo_italic_delete
+      type: ParagraphInput
+      properties:
+        italic: true
+        delete: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              combo_italic_delete: Italic and delete combined paragraph.
+    - id: combo_strong_italic_underline
+      type: ParagraphInput
+      properties:
+        strong: true
+        italic: true
+        underline: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              combo_strong_italic_underline: Strong, italic, and underline combined paragraph.
+    - id: combo_mark_code
+      type: ParagraphInput
+      properties:
+        mark: true
+        code: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              combo_mark_code: Mark and code combined paragraph.
+    - id: combo_strong_code
+      type: ParagraphInput
+      properties:
+        strong: true
+        code: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              combo_strong_code: Strong and code combined paragraph.
+    - id: combo_all_styles
+      type: ParagraphInput
+      properties:
+        strong: true
+        italic: true
+        underline: true
+        mark: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              combo_all_styles: All text styles applied together.
+- title: Text Styles - With Types
+  blocks:
+    - id: type_success_strong
+      type: ParagraphInput
+      properties:
+        type: success
+        strong: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              type_success_strong: Success type with strong (bold) styling.
+    - id: type_warning_italic
+      type: ParagraphInput
+      properties:
+        type: warning
+        italic: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              type_warning_italic: Warning type with italic styling.
+    - id: type_danger_underline
+      type: ParagraphInput
+      properties:
+        type: danger
+        underline: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              type_danger_underline: Danger type with underline styling.
+    - id: type_secondary_mark
+      type: ParagraphInput
+      properties:
+        type: secondary
+        mark: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              type_secondary_mark: Secondary type with mark (highlight) styling.
+    - id: type_success_strong_italic
+      type: ParagraphInput
+      properties:
+        type: success
+        strong: true
+        italic: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              type_success_strong_italic: Success type with strong and italic styles combined.
+- title: Copyable - Boolean
+  blocks:
+    - id: copyable_true
+      type: ParagraphInput
+      properties:
+        copyable: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              copyable_true: Click the copy icon to copy this paragraph text to your clipboard.
+    - id: copyable_false
+      type: ParagraphInput
+      properties:
+        copyable: false
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              copyable_false: This paragraph does not have a copy button.
+- title: Copyable - Custom Text
+  blocks:
+    - id: copyable_text_different
+      type: ParagraphInput
+      properties:
+        copyable:
+          text: This is the custom copied text, not the displayed text.
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              copyable_text_different: Displayed text differs from copied text.
+    - id: copyable_text_url
+      type: ParagraphInput
+      properties:
+        copyable:
+          text: https://lowdefy.com
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              copyable_text_url: Click copy to get a URL instead of this visible text.
+    - id: copyable_text_code
+      type: ParagraphInput
+      properties:
+        copyable:
+          text: const greeting = "Hello, World!";
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              copyable_text_code: Copy this block to get a code snippet.
+- title: Copyable - Custom Tooltips
+  blocks:
+    - id: copyable_tooltips_array
+      type: ParagraphInput
+      properties:
+        copyable:
+          tooltips:
+            - Click to copy
+            - Copied!
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              copyable_tooltips_array: Custom tooltips before and after copying.
+    - id: copyable_tooltips_single
+      type: ParagraphInput
+      properties:
+        copyable:
+          tooltips: Copy this paragraph
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              copyable_tooltips_single: Single tooltip string for copy action.
+    - id: copyable_tooltips_descriptive
+      type: ParagraphInput
+      properties:
+        copyable:
+          tooltips:
+            - Copy paragraph to clipboard
+            - Successfully copied to clipboard!
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              copyable_tooltips_descriptive: Descriptive copy tooltips for user guidance.
+- title: Copyable - Custom Icon
+  blocks:
+    - id: copyable_icon_single
+      type: ParagraphInput
+      properties:
+        copyable:
+          icon: AiOutlineSnippets
+          tooltips:
+            - Copy snippet
+            - Snippet copied!
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              copyable_icon_single: Custom copy icon on this paragraph.
+    - id: copyable_icon_array
+      type: ParagraphInput
+      properties:
+        copyable:
+          icon:
+            - AiOutlineCopy
+            - AiOutlineCheck
+          tooltips:
+            - Copy text
+            - Text copied!
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              copyable_icon_array: Different icons before and after copying.
+    - id: copyable_icon_colored
+      type: ParagraphInput
+      properties:
+        copyable:
+          icon:
+            name: AiOutlineCopy
+            color: '#1677ff'
+          tooltips:
+            - Copy
+            - Done!
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              copyable_icon_colored: Colored copy icon.
+- title: Copyable - Combined with Text and Tooltips
+  blocks:
+    - id: copyable_full
+      type: ParagraphInput
+      properties:
+        copyable:
+          text: Custom text for clipboard
+          icon:
+            - AiOutlineCopy
+            - AiOutlineCheck
+          tooltips:
+            - Copy custom text
+            - Custom text copied!
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              copyable_full: Fully configured copyable paragraph.
+- title: Ellipsis - Boolean
+  blocks:
+    - id: ellipsis_true
+      type: ParagraphInput
+      properties:
+        ellipsis: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              ellipsis_true: This is a very long paragraph that should be truncated with an ellipsis when it overflows a single line. The text continues beyond the visible area and the ellipsis indicator will show that there is more content available. This demonstrates the basic boolean ellipsis behavior where the text is clipped at one line by default.
+    - id: ellipsis_false
+      type: ParagraphInput
+      properties:
+        ellipsis: false
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              ellipsis_false: This paragraph has ellipsis disabled and will display all text regardless of length. The content will wrap naturally across multiple lines without any truncation applied.
+- title: Ellipsis - With Rows
+  blocks:
+    - id: ellipsis_rows_1
+      type: ParagraphInput
+      properties:
+        ellipsis:
+          rows: 1
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              ellipsis_rows_1: This paragraph is limited to 1 row. Any text beyond the first line will be hidden and replaced with an ellipsis indicator. This demonstrates row-limited truncation for compact paragraph displays in space-constrained layouts.
+    - id: ellipsis_rows_2
+      type: ParagraphInput
+      properties:
+        ellipsis:
+          rows: 2
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              ellipsis_rows_2: This paragraph is limited to 2 rows. The text will display across two lines before being truncated with an ellipsis. This is useful for paragraph previews where you want to show a brief excerpt of longer content. Additional text beyond two lines is hidden from view.
+    - id: ellipsis_rows_3
+      type: ParagraphInput
+      properties:
+        ellipsis:
+          rows: 3
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              ellipsis_rows_3: This paragraph is limited to 3 rows. It allows more content to be visible compared to fewer rows, but still provides truncation for very long paragraphs. This setting is a good balance between showing enough content for context while keeping the layout compact. Any remaining text beyond three lines will be truncated with an ellipsis.
+    - id: ellipsis_rows_5
+      type: ParagraphInput
+      properties:
+        ellipsis:
+          rows: 5
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              ellipsis_rows_5: This paragraph is limited to 5 rows. It provides a generous preview of the content while still enforcing a maximum height. This is appropriate for longer descriptions, article excerpts, or detailed explanations where you want to show a substantial portion of the text before truncation kicks in. The ellipsis appears after the fifth line, indicating there is additional content that has been clipped. Users can see enough context to decide whether to expand or interact further with the content.
+- title: Ellipsis - Expandable
+  blocks:
+    - id: ellipsis_expandable_2
+      type: ParagraphInput
+      properties:
+        ellipsis:
+          rows: 2
+          expandable: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              ellipsis_expandable_2: This paragraph can be expanded. Click the expand link to reveal the full content. The expandable feature allows users to see a preview and then choose to read more. This is a common pattern for long content sections where space is limited but the full text should still be accessible to interested readers.
+    - id: ellipsis_expandable_3
+      type: ParagraphInput
+      properties:
+        ellipsis:
+          rows: 3
+          expandable: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              ellipsis_expandable_3: Expandable paragraph with 3 visible rows before truncation. Users can click to expand and see the full content. This is useful for displaying longer descriptions or articles where the initial preview should provide more context. The expand control provides a smooth reading experience for content that may be too long to display in full by default in a constrained layout.
+    - id: ellipsis_expandable_1
+      type: ParagraphInput
+      properties:
+        ellipsis:
+          rows: 1
+          expandable: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              ellipsis_expandable_1: Single row with expand. This is compact but still allows users to access the full content by clicking the expand link. Useful for tight layouts like cards or sidebars.
+- title: Ellipsis - With Suffix
+  blocks:
+    - id: ellipsis_suffix_author
+      type: ParagraphInput
+      properties:
+        ellipsis:
+          rows: 2
+          suffix: ' --Lowdefy Docs'
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              ellipsis_suffix_author: This paragraph has a custom suffix appended after the ellipsis. The suffix text is always visible even when the content is truncated. This can be used to show important information like a date or author that should remain visible.
+    - id: ellipsis_suffix_expandable
+      type: ParagraphInput
+      properties:
+        ellipsis:
+          rows: 2
+          expandable: true
+          suffix: ' [Read more]'
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              ellipsis_suffix_expandable: This paragraph has both expandable and suffix features combined. The suffix is always shown and the user can expand to read the full content. This provides a rich reading experience with metadata always visible at the end of the truncated preview text.
+    - id: ellipsis_suffix_date
+      type: ParagraphInput
+      properties:
+        ellipsis:
+          rows: 2
+          suffix: ' -- 2026-03-10'
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              ellipsis_suffix_date: A news article excerpt that shows a date suffix. The date remains visible regardless of how much content is truncated, ensuring the reader always knows when the content was published.
+- title: Disabled State
+  blocks:
+    - id: disabled_basic
+      type: ParagraphInput
+      properties:
+        disabled: true
+        editable: false
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              disabled_basic: This paragraph is disabled and cannot be edited.
+    - id: disabled_with_copyable
+      type: ParagraphInput
+      properties:
+        disabled: true
+        copyable: true
+        editable: false
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              disabled_with_copyable: Disabled paragraph that is still copyable.
+    - id: disabled_styled
+      type: ParagraphInput
+      properties:
+        disabled: true
+        strong: true
+        editable: false
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              disabled_styled: Disabled paragraph with strong style.
+    - id: disabled_with_type
+      type: ParagraphInput
+      properties:
+        disabled: true
+        type: secondary
+        editable: false
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              disabled_with_type: Disabled paragraph with secondary type.
+    - id: disabled_warning
+      type: ParagraphInput
+      properties:
+        disabled: true
+        type: warning
+        editable: false
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              disabled_warning: Disabled paragraph with warning type.
+    - id: disabled_danger_italic
+      type: ParagraphInput
+      properties:
+        disabled: true
+        type: danger
+        italic: true
+        editable: false
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              disabled_danger_italic: Disabled paragraph with danger type and italic style.
+- title: Default Values
+  blocks:
+    - id: default_short
+      type: ParagraphInput
+      properties:
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              default_short: Short default value.
+    - id: default_long
+      type: ParagraphInput
+      properties:
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              default_long: This is a longer default value that spans multiple words and demonstrates how ParagraphInput handles pre-populated content. Users can click the edit icon to modify this text. The paragraph displays the full content by default.
+    - id: default_with_styles
+      type: ParagraphInput
+      properties:
+        strong: true
+        italic: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              default_with_styles: Default value with strong and italic styles applied.
+    - id: default_with_type
+      type: ParagraphInput
+      properties:
+        type: success
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              default_with_type: Default value displayed as success type.
+    - id: default_empty
+      type: ParagraphInput
+      properties:
+        editable: true
+    - id: default_multiline
+      type: ParagraphInput
+      properties:
+        editable:
+          autoSize: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              default_multiline: First paragraph of content. Second paragraph of content. Third paragraph of content. This shows how ParagraphInput handles multi-line default values with natural line wrapping across the available width.
+- title: Style Overrides
+  blocks:
+    - id: style_custom_bg
+      type: ParagraphInput
+      style:
+        --element:
+          backgroundColor: '#f0f5ff'
+          padding: 12
+          borderRadius: 8
+      properties:
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              style_custom_bg: Custom background color via inline style.
+    - id: style_custom_border
+      type: ParagraphInput
+      style:
+        --element:
+          border: 1px solid
+          padding: 16
+          borderRadius: 8
+      properties:
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              style_custom_border: Custom border and padding via inline style.
+    - id: style_custom_text_color
+      type: ParagraphInput
+      style:
+        --element:
+          color: '#722ed1'
+          fontSize: 16
+      properties:
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              style_custom_text_color: Custom purple text color.
+    - id: style_full_custom
+      type: ParagraphInput
+      style:
+        --element:
+          backgroundColor: '#fff7e6'
+          border: 2px solid
+          borderRadius: 12
+          color: '#d46b08'
+          fontSize: 16
+          padding: 16
+      properties:
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              style_full_custom: Fully customized with background, border, padding, and text color.
+    - id: style_card_like
+      type: ParagraphInput
+      style:
+        --element:
+          backgroundColor: '#ffffff'
+          boxShadow: 0 2px 8px rgba(0, 0, 0, 0.1)
+          borderRadius: 8
+          padding: 20
+      properties:
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              style_card_like: This paragraph is styled like a card with shadow, padding, and rounded corners. It demonstrates how inline styles can transform the appearance significantly.
+- title: CSS Class Overrides
+  blocks:
+    - id: class_rounded
+      type: ParagraphInput
+      class: rounded-lg bg-blue-50 p-4
+      properties:
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              class_rounded: Tailwind classes for rounded corners, blue background, and padding.
+    - id: class_shadow
+      type: ParagraphInput
+      class: shadow-md p-4 rounded-lg
+      properties:
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              class_shadow: Tailwind shadow, padding, and rounded corners.
+    - id: class_border
+      type: ParagraphInput
+      class: border border-gray-300 rounded-lg p-4
+      properties:
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              class_border: Tailwind border with rounded corners.
+    - id: class_gradient_bg
+      type: ParagraphInput
+      class: bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-lg
+      properties:
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              class_gradient_bg: Tailwind gradient background with padding and rounded corners.
+- title: Theme Token Overrides - Text Colors
+  blocks:
+    - id: theme_color_text
+      type: ParagraphInput
+      properties:
+        editable: true
+        theme:
+          colorText: '#531dab'
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_color_text: Custom text color using colorText token.
+    - id: theme_color_link
+      type: ParagraphInput
+      properties:
+        editable: true
+        theme:
+          colorLink: '#eb2f96'
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_color_link: Custom link color using colorLink token.
+    - id: theme_color_success
+      type: ParagraphInput
+      properties:
+        type: success
+        editable: true
+        theme:
+          colorSuccess: '#389e0d'
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_color_success: Custom success color for success type.
+    - id: theme_color_warning
+      type: ParagraphInput
+      properties:
+        type: warning
+        editable: true
+        theme:
+          colorWarning: '#d48806'
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_color_warning: Custom warning color for warning type.
+    - id: theme_color_error
+      type: ParagraphInput
+      properties:
+        type: danger
+        editable: true
+        theme:
+          colorError: '#cf1322'
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_color_error: Custom error color for danger type.
+    - id: theme_color_text_secondary
+      type: ParagraphInput
+      properties:
+        type: secondary
+        editable: true
+        theme:
+          colorTextSecondary: '#8c8c8c'
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_color_text_secondary: Custom secondary text color.
+    - id: theme_color_text_disabled
+      type: ParagraphInput
+      properties:
+        disabled: true
+        editable: false
+        theme:
+          colorTextDisabled: '#bfbfbf'
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_color_text_disabled: Custom disabled text color.
+    - id: theme_color_text_description
+      type: ParagraphInput
+      properties:
+        editable: true
+        theme:
+          colorTextDescription: '#8c8c8c'
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_color_text_description: Custom description text color token.
+- title: Theme Token Overrides - Link Colors
+  blocks:
+    - id: theme_link_base
+      type: ParagraphInput
+      properties:
+        editable: true
+        theme:
+          colorLink: '#722ed1'
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_link_base: Custom link color applied via theme token.
+    - id: theme_link_hover
+      type: ParagraphInput
+      properties:
+        editable: true
+        theme:
+          colorLinkHover: '#9254de'
+          colorLinkActive: '#531dab'
+        ellipsis:
+          rows: 1
+          expandable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_link_hover: Custom link hover color. Hover over expand links to see.
+- title: Theme Token Overrides - Font Family
+  blocks:
+    - id: theme_font_serif
+      type: ParagraphInput
+      properties:
+        editable: true
+        theme:
+          fontFamily: '"Georgia", "Times New Roman", serif'
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_font_serif: Serif font family applied to this paragraph. Georgia and Times New Roman.
+    - id: theme_font_mono
+      type: ParagraphInput
+      properties:
+        editable: true
+        theme:
+          fontFamily: '"Courier New", "Consolas", monospace'
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_font_mono: Monospace font family applied to this paragraph. Courier New and Consolas.
+    - id: theme_font_sans
+      type: ParagraphInput
+      properties:
+        editable: true
+        theme:
+          fontFamily: '"Verdana", "Helvetica", sans-serif'
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_font_sans: Custom sans-serif font family. Verdana and Helvetica.
+- title: Theme Token Overrides - Font Size
+  blocks:
+    - id: theme_font_size_12
+      type: ParagraphInput
+      properties:
+        editable: true
+        theme:
+          fontSize: 12
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_font_size_12: Small font size (12px) paragraph.
+    - id: theme_font_size_14
+      type: ParagraphInput
+      properties:
+        editable: true
+        theme:
+          fontSize: 14
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_font_size_14: Default font size (14px) paragraph.
+    - id: theme_font_size_16
+      type: ParagraphInput
+      properties:
+        editable: true
+        theme:
+          fontSizeLG: 16
+          fontSize: 16
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_font_size_16: Large font size (16px) paragraph using fontSizeLG token.
+    - id: theme_font_size_18
+      type: ParagraphInput
+      properties:
+        editable: true
+        theme:
+          fontSize: 18
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_font_size_18: Large font size (18px) paragraph.
+    - id: theme_font_size_24
+      type: ParagraphInput
+      properties:
+        editable: true
+        theme:
+          fontSize: 24
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_font_size_24: Extra large font size (24px) paragraph.
+- title: Theme Token Overrides - Font Weight
+  blocks:
+    - id: theme_weight_300
+      type: ParagraphInput
+      properties:
+        strong: true
+        editable: true
+        theme:
+          fontWeightStrong: 300
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_weight_300: Light font weight (300) on strong paragraph.
+    - id: theme_weight_400
+      type: ParagraphInput
+      properties:
+        strong: true
+        editable: true
+        theme:
+          fontWeightStrong: 400
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_weight_400: Normal font weight (400) on strong paragraph.
+    - id: theme_weight_600
+      type: ParagraphInput
+      properties:
+        strong: true
+        editable: true
+        theme:
+          fontWeightStrong: 600
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_weight_600: Semi-bold font weight (600) on strong paragraph (default).
+    - id: theme_weight_900
+      type: ParagraphInput
+      properties:
+        strong: true
+        editable: true
+        theme:
+          fontWeightStrong: 900
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_weight_900: Heavy font weight (900) on strong paragraph.
+- title: Theme Token Overrides - Line Height
+  blocks:
+    - id: theme_lineheight_tight
+      type: ParagraphInput
+      properties:
+        editable: true
+        theme:
+          lineHeight: 1.2
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_lineheight_tight: Tight line height (1.2) makes lines closer together. This paragraph demonstrates compact vertical spacing between lines of text. Useful for dense content areas.
+    - id: theme_lineheight_default
+      type: ParagraphInput
+      properties:
+        editable: true
+        theme:
+          lineHeight: 1.5714
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_lineheight_default: Default line height (1.5714) provides standard spacing between lines. This is the Ant Design default and offers good readability for body text.
+    - id: theme_lineheight_relaxed
+      type: ParagraphInput
+      properties:
+        editable: true
+        theme:
+          lineHeight: 2
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_lineheight_relaxed: Relaxed line height (2.0) gives generous spacing between lines. This paragraph demonstrates loose vertical spacing that can improve readability for longer content.
+- title: Theme Token Overrides - Combined
+  blocks:
+    - id: theme_combined_purple
+      type: ParagraphInput
+      properties:
+        editable: true
+        theme:
+          colorText: '#722ed1'
+          fontFamily: '"Georgia", serif'
+          fontSize: 18
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_combined_purple: Purple theme with serif font and large size.
+    - id: theme_combined_green
+      type: ParagraphInput
+      properties:
+        type: success
+        editable: true
+        theme:
+          colorSuccess: '#237804'
+          fontFamily: '"Verdana", sans-serif'
+          fontSize: 16
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_combined_green: Green success theme with custom font.
+    - id: theme_combined_elegant
+      type: ParagraphInput
+      properties:
+        strong: true
+        editable: true
+        theme:
+          colorText: '#1d39c4'
+          fontFamily: '"Palatino Linotype", "Book Antiqua", serif'
+          fontSize: 16
+          fontWeightStrong: 700
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_combined_elegant: Elegant styling with custom colors and typography.
+    - id: theme_combined_mono_code
+      type: ParagraphInput
+      properties:
+        code: true
+        editable: true
+        theme:
+          fontFamily: '"JetBrains Mono", "Fira Code", monospace'
+          fontSize: 13
+          lineHeight: 1.6
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_combined_mono_code: Monospace code-like styling with small font size.
+    - id: theme_combined_warm
+      type: ParagraphInput
+      properties:
+        editable: true
+        theme:
+          colorText: '#d46b08'
+          fontFamily: '"Georgia", serif'
+          fontSize: 16
+          lineHeight: 1.8
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_combined_warm: Warm toned paragraph with orange text and serif font.
+- title: Combined Features - Editable + Copyable
+  blocks:
+    - id: feat_editable_copyable
+      type: ParagraphInput
+      properties:
+        editable: true
+        copyable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              feat_editable_copyable: This paragraph is both editable and copyable.
+    - id: feat_editable_copyable_configured
+      type: ParagraphInput
+      properties:
+        editable:
+          tooltip: Edit paragraph
+          maxLength: 200
+        copyable:
+          tooltips:
+            - Copy text
+            - Copied!
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              feat_editable_copyable_configured: Fully configured editable and copyable paragraph.
+- title: Combined Features - Copyable + Types
+  blocks:
+    - id: feat_copyable_success
+      type: ParagraphInput
+      properties:
+        type: success
+        copyable: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              feat_copyable_success: Copyable success paragraph.
+    - id: feat_copyable_warning
+      type: ParagraphInput
+      properties:
+        type: warning
+        copyable:
+          tooltips:
+            - Copy warning text
+            - Copied!
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              feat_copyable_warning: Copyable warning paragraph.
+    - id: feat_copyable_danger
+      type: ParagraphInput
+      properties:
+        type: danger
+        copyable: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              feat_copyable_danger: Copyable danger paragraph.
+- title: Combined Features - Ellipsis + Styles
+  blocks:
+    - id: feat_ellipsis_strong
+      type: ParagraphInput
+      properties:
+        strong: true
+        ellipsis:
+          rows: 2
+          expandable: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              feat_ellipsis_strong: Strong styled paragraph with ellipsis truncation. This demonstrates how text styles are preserved even when the content is truncated. The bold styling applies to both the visible and hidden portions of the text.
+    - id: feat_ellipsis_italic_mark
+      type: ParagraphInput
+      properties:
+        italic: true
+        mark: true
+        ellipsis:
+          rows: 2
+          expandable: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              feat_ellipsis_italic_mark: Italic and marked paragraph with ellipsis. This combination shows that multiple text decorations work together with the ellipsis feature. Users can expand to see the full styled content.
+    - id: feat_ellipsis_danger
+      type: ParagraphInput
+      properties:
+        type: danger
+        ellipsis:
+          rows: 2
+          expandable: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              feat_ellipsis_danger: Danger type paragraph with ellipsis. The red color is maintained on the truncated text and the expand link. This is useful for warning messages that may be long but should still show the danger styling prominently.
+- title: Combined Features - All Three Icons
+  blocks:
+    - id: feat_edit_copy_ellipsis
+      type: ParagraphInput
+      properties:
+        editable:
+          tooltip: Edit this text
+        copyable:
+          tooltips:
+            - Copy to clipboard
+            - Copied!
+        ellipsis:
+          rows: 2
+          expandable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              feat_edit_copy_ellipsis: This paragraph shows edit, copy, and ellipsis expand controls together. All three interaction modes are available simultaneously, giving the user full control over the paragraph content. They can edit inline, copy to clipboard, and expand to read the full text.
+- title: Full Featured Examples
+  blocks:
+    - id: full_success
+      type: ParagraphInput
+      properties:
+        type: success
+        strong: true
+        editable:
+          icon: AiOutlineEdit
+          tooltip: Edit this paragraph
+          maxLength: 300
+          autoSize: true
+        copyable:
+          tooltips:
+            - Copy paragraph
+            - Paragraph copied!
+        ellipsis:
+          rows: 2
+          expandable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              full_success: This is a fully featured paragraph with editable, copyable, strong styling, success type, and ellipsis truncation with expandable content. It demonstrates how all features of ParagraphInput work together seamlessly.
+    - id: full_warning
+      type: ParagraphInput
+      properties:
+        type: warning
+        italic: true
+        editable:
+          tooltip: Edit warning text
+          maxLength: 250
+          autoSize:
+            minRows: 2
+            maxRows: 6
+        copyable:
+          text: Custom copied warning text
+          tooltips:
+            - Copy warning
+            - Warning copied!
+        ellipsis:
+          rows: 2
+          expandable: true
+          suffix: ' [Warning]'
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              full_warning: A warning paragraph with italic styling, copy support with custom text, editable configuration, and ellipsis with a suffix. This shows a complex combination of all available ParagraphInput features working in harmony.
+    - id: full_themed
+      type: ParagraphInput
+      properties:
+        strong: true
+        editable:
+          tooltip: Edit themed paragraph
+          maxLength: 200
+          autoSize: true
+        copyable:
+          tooltips:
+            - Copy themed text
+            - Copied!
+        ellipsis:
+          rows: 2
+          expandable: true
+        theme:
+          colorText: '#722ed1'
+          fontFamily: '"Georgia", serif'
+          fontSize: 16
+          fontWeightStrong: 700
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              full_themed: Fully featured paragraph with custom theme token overrides. Purple text color, serif font, and heavy bold weight combined with editable, copyable, and ellipsis features for a complete demonstration.
+    - id: full_danger_card
+      type: ParagraphInput
+      class: border border-red-200 bg-red-50 p-4 rounded-lg
+      properties:
+        type: danger
+        strong: true
+        editable:
+          icon: AiOutlineEdit
+          tooltip: Edit error message
+          maxLength: 500
+          autoSize:
+            minRows: 2
+            maxRows: 10
+        copyable:
+          icon:
+            - AiOutlineCopy
+            - AiOutlineCheck
+          tooltips:
+            - Copy error details
+            - Error details copied!
+        ellipsis:
+          rows: 2
+          expandable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              full_danger_card: A danger-styled paragraph in a card-like layout. The combination of danger type, strong text, Tailwind CSS classes for the container, and full editable and copyable configuration creates a visually distinct error message that can be edited and copied.
+    - id: full_article_preview
+      type: ParagraphInput
+      class: shadow-sm p-4 rounded-lg
+      properties:
+        editable:
+          tooltip: Edit article preview
+          autoSize: true
+        copyable:
+          text: https://lowdefy.com/articles/example
+          tooltips:
+            - Copy article link
+            - Link copied!
+        ellipsis:
+          rows: 3
+          expandable: true
+          suffix: ' -- by Lowdefy Team'
+        theme:
+          fontFamily: '"Georgia", serif'
+          fontSize: 15
+          lineHeight: 1.8
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              full_article_preview: An article preview paragraph that demonstrates a real-world use case. The paragraph shows a truncated preview with an author suffix, expandable content, and the ability to edit inline. The serif font and relaxed line height create a pleasant reading experience typical of content management interfaces.

@@ -1,0 +1,153 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Dark Theme Header
+  fullWidth: true
+  blocks:
+    - id: header_dark
+      type: Layout
+      blocks:
+        - id: header_dark_el
+          type: Header
+          properties:
+            theme: dark
+          style:
+            display: flex
+            alignItems: center
+            paddingInline: 24px
+          blocks:
+            - id: header_dark_title
+              type: Paragraph
+              properties:
+                content: Dark Theme Header (default)
+                style:
+                  color: white
+                  margin: 0
+                  fontSize: 16px
+
+- title: Light Theme Header
+  fullWidth: true
+  blocks:
+    - id: header_light
+      type: Layout
+      blocks:
+        - id: header_light_el
+          type: Header
+          properties:
+            theme: light
+          style:
+            display: flex
+            alignItems: center
+            paddingInline: 24px
+            borderBottom: 1px solid #f0f0f0
+          blocks:
+            - id: header_light_title
+              type: Paragraph
+              properties:
+                content: Light Theme Header
+                style:
+                  margin: 0
+                  fontSize: 16px
+
+- title: Header with Navigation
+  fullWidth: true
+  blocks:
+    - id: header_nav
+      type: Layout
+      blocks:
+        - id: header_nav_el
+          type: Header
+          style:
+            display: flex
+            alignItems: center
+            paddingInline: 24px
+          blocks:
+            - id: header_nav_logo
+              type: Paragraph
+              properties:
+                content: '<b>MyApp</b>'
+                style:
+                  color: white
+                  margin: 0
+                  marginRight: 32px
+                  fontSize: 18px
+            - id: header_nav_menu
+              type: Menu
+              properties:
+                mode: horizontal
+                theme: dark
+                links:
+                  - id: header_nav_home
+                    type: MenuLink
+                    properties:
+                      title: Home
+                      icon: AiOutlineHome
+                  - id: header_nav_about
+                    type: MenuLink
+                    properties:
+                      title: About
+                  - id: header_nav_contact
+                    type: MenuLink
+                    properties:
+                      title: Contact
+
+- title: Header in Full Page Layout
+  fullWidth: true
+  blocks:
+    - id: header_full_layout
+      type: Layout
+      style:
+        minHeight: 250px
+      blocks:
+        - id: header_full_el
+          type: Header
+          style:
+            display: flex
+            alignItems: center
+            justifyContent: space-between
+            paddingInline: 24px
+          blocks:
+            - id: header_full_brand
+              type: Paragraph
+              properties:
+                content: '<b>Brand</b>'
+                style:
+                  color: white
+                  margin: 0
+                  fontSize: 18px
+            - id: header_full_actions
+              type: Box
+              layout:
+                gap: 8
+                flex: 0 0 auto
+              blocks:
+                - id: header_full_btn_login
+                  type: Button
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Sign In
+                    color: primary
+                    variant: outlined
+                    ghost: true
+        - id: header_full_content
+          type: Content
+          style:
+            padding: 24px
+            background: '#fff'
+          blocks:
+            - id: header_full_content_text
+              type: Paragraph
+              properties:
+                content: The Header block renders at the top of a Layout. It supports dark and light themes, and automatically hides when printing (hide-on-print class). Place navigation menus, logos, and action buttons inside the header.

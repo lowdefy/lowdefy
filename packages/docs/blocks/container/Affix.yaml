@@ -13,14 +13,16 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: Affix
-    category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Affix/schema.js
+    pageId: Affix
+    pageTitle: Affix
+    section: Container Blocks
     filePath: blocks/container/Affix.yaml
-    description_content: |
-      An Affix block makes it's content stick to the viewport.
-      The Affix has a single slot, `content`.
-    slots:
-      - content
+    block_type: Affix
+    antd_component: Affix
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/Affix
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Affix/schema.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/Affix/gallery.yaml
+    description: >
+      An Affix block makes its content stick to the viewport when scrolling.

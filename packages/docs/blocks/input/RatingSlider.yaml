@@ -13,12 +13,16 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: RatingSlider
-    value_type: number
-    category: input
-    schema: ../plugins/blocks/blocks-antd/src/blocks/RatingSlider/schema.js
+    pageId: RatingSlider
+    pageTitle: RatingSlider
+    section: Input Blocks
     filePath: blocks/input/RatingSlider.yaml
-    description_content: |
-      The `RatingSlider` block allows a user to choose a numerical value on a slider input. It is typically used for scores or ratings. It has the option to have a "Not Applicable" checkbox, which leaves the value as null.
+    block_type: RatingSlider
+    antd_component: Slider
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/RatingSlider
+    schema: ../plugins/blocks/blocks-antd/src/blocks/RatingSlider/schema.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/RatingSlider/gallery.yaml
+    description: >
+      Rating slider with customizable range, icons, and N/A option.

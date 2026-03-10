@@ -1,0 +1,434 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Status Types
+  blocks:
+    - id: msg_success
+      type: Message
+      properties:
+        status: success
+        content: Operation completed successfully
+    - id: msg_error
+      type: Message
+      properties:
+        status: error
+        content: Something went wrong
+    - id: msg_warning
+      type: Message
+      properties:
+        status: warning
+        content: Please check your input
+    - id: msg_info
+      type: Message
+      properties:
+        status: info
+        content: Here is some useful information
+    - id: msg_loading
+      type: Message
+      properties:
+        status: loading
+        content: Loading data...
+        duration: 3
+    - id: btn_msg_success
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Success
+        color: primary
+        variant: outlined
+        icon: AiOutlineCheckCircle
+      events:
+        onClick:
+          - id: open_msg_success
+            type: CallMethod
+            params:
+              blockId: msg_success
+              method: open
+    - id: btn_msg_error
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Error
+        color: danger
+        variant: outlined
+        icon: AiOutlineCloseCircle
+      events:
+        onClick:
+          - id: open_msg_error
+            type: CallMethod
+            params:
+              blockId: msg_error
+              method: open
+    - id: btn_msg_warning
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Warning
+        color: default
+        variant: outlined
+        icon: AiOutlineWarning
+      events:
+        onClick:
+          - id: open_msg_warning
+            type: CallMethod
+            params:
+              blockId: msg_warning
+              method: open
+    - id: btn_msg_info
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Info
+        color: primary
+        variant: text
+        icon: AiOutlineInfoCircle
+      events:
+        onClick:
+          - id: open_msg_info
+            type: CallMethod
+            params:
+              blockId: msg_info
+              method: open
+    - id: btn_msg_loading
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Loading
+        color: default
+        variant: outlined
+        icon: AiOutlineLoading
+      events:
+        onClick:
+          - id: open_msg_loading
+            type: CallMethod
+            params:
+              blockId: msg_loading
+              method: open
+
+- title: Duration
+  blocks:
+    - id: msg_dur_short
+      type: Message
+      properties:
+        status: info
+        content: Gone in 1 second
+        duration: 1
+    - id: msg_dur_default
+      type: Message
+      properties:
+        status: info
+        content: Default duration (4.5s)
+    - id: msg_dur_long
+      type: Message
+      properties:
+        status: info
+        content: Stays for 10 seconds
+        duration: 10
+    - id: msg_dur_sticky
+      type: Message
+      properties:
+        status: warning
+        content: Will not auto-close (duration 0)
+        duration: 0
+    - id: btn_dur_short
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: 1 second
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: open_dur_short
+            type: CallMethod
+            params:
+              blockId: msg_dur_short
+              method: open
+    - id: btn_dur_default
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Default (4.5s)
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: open_dur_default
+            type: CallMethod
+            params:
+              blockId: msg_dur_default
+              method: open
+    - id: btn_dur_long
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: 10 seconds
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: open_dur_long
+            type: CallMethod
+            params:
+              blockId: msg_dur_long
+              method: open
+    - id: btn_dur_sticky
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Sticky (duration 0)
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: open_dur_sticky
+            type: CallMethod
+            params:
+              blockId: msg_dur_sticky
+              method: open
+
+- title: Custom Icon
+  blocks:
+    - id: msg_icon_save
+      type: Message
+      properties:
+        status: success
+        content: File saved
+        icon: AiOutlineSave
+    - id: msg_icon_bell
+      type: Message
+      properties:
+        status: info
+        content: Notification sent
+        icon: AiOutlineBell
+    - id: msg_icon_cloud
+      type: Message
+      properties:
+        status: success
+        content: Uploaded to cloud
+        icon: AiOutlineCloudUpload
+    - id: msg_icon_star
+      type: Message
+      properties:
+        status: info
+        content: Custom colored star icon
+        icon:
+          name: AiOutlineStar
+          color: '#faad14'
+    - id: btn_icon_save
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Save Icon
+        color: primary
+        variant: outlined
+        icon: AiOutlineSave
+      events:
+        onClick:
+          - id: open_icon_save
+            type: CallMethod
+            params:
+              blockId: msg_icon_save
+              method: open
+    - id: btn_icon_bell
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Bell Icon
+        color: primary
+        variant: outlined
+        icon: AiOutlineBell
+      events:
+        onClick:
+          - id: open_icon_bell
+            type: CallMethod
+            params:
+              blockId: msg_icon_bell
+              method: open
+    - id: btn_icon_cloud
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Cloud Icon
+        color: primary
+        variant: outlined
+        icon: AiOutlineCloudUpload
+      events:
+        onClick:
+          - id: open_icon_cloud
+            type: CallMethod
+            params:
+              blockId: msg_icon_cloud
+              method: open
+    - id: btn_icon_star
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Star Icon (colored)
+        color: default
+        variant: outlined
+        icon: AiOutlineStar
+      events:
+        onClick:
+          - id: open_icon_star
+            type: CallMethod
+            params:
+              blockId: msg_icon_star
+              method: open
+
+- title: Override at Call Time
+  fullWidth: true
+  blocks:
+    - id: msg_override
+      type: Message
+      properties:
+        status: info
+        content: Default message
+    - id: btn_override_success
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open as Success
+        color: primary
+        variant: solid
+        icon: AiOutlineCheckCircle
+      events:
+        onClick:
+          - id: open_override_success
+            type: CallMethod
+            params:
+              blockId: msg_override
+              method: open
+              args:
+                - status: success
+                  content: Overridden to success at call time!
+                  duration: 3
+    - id: btn_override_error
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open as Error
+        color: danger
+        variant: solid
+        icon: AiOutlineCloseCircle
+      events:
+        onClick:
+          - id: open_override_error
+            type: CallMethod
+            params:
+              blockId: msg_override
+              method: open
+              args:
+                - status: error
+                  content: Overridden to error at call time!
+                  duration: 3
+    - id: btn_override_custom
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open with Custom Icon
+        color: default
+        variant: solid
+        icon: AiOutlineRocket
+      events:
+        onClick:
+          - id: open_override_custom
+            type: CallMethod
+            params:
+              blockId: msg_override
+              method: open
+              args:
+                - status: info
+                  content: Launched with a rocket icon!
+                  icon: AiOutlineRocket
+                  duration: 3
+
+- title: HTML Content
+  blocks:
+    - id: msg_html_bold
+      type: Message
+      properties:
+        status: success
+        content: '<b>Bold</b> content in message'
+    - id: msg_html_link
+      type: Message
+      properties:
+        status: info
+        content: 'Visit <a href="https://lowdefy.com">Lowdefy</a> for more info'
+    - id: msg_html_styled
+      type: Message
+      properties:
+        status: warning
+        content: '<span style="color: #fa8c16; font-weight: bold;">Important:</span> Please review'
+    - id: btn_html_bold
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Bold HTML
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: open_html_bold
+            type: CallMethod
+            params:
+              blockId: msg_html_bold
+              method: open
+    - id: btn_html_link
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: HTML Link
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: open_html_link
+            type: CallMethod
+            params:
+              blockId: msg_html_link
+              method: open
+    - id: btn_html_styled
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Styled HTML
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: open_html_styled
+            type: CallMethod
+            params:
+              blockId: msg_html_styled
+              method: open

@@ -1,0 +1,1187 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic Tour with Steps
+  fullWidth: true
+  blocks:
+    - id: basic_tour
+      type: Tour
+      properties:
+        open: false
+        steps:
+          - title: Welcome
+            description: This is the first step of the tour. It introduces the user to the application.
+          - title: Explore Features
+            description: Discover the key features available in the dashboard. Navigate through each section to learn more.
+          - title: Get Started
+            description: You are all set! Begin using the application to its full potential.
+
+- title: Tour Types
+  fullWidth: true
+  blocks:
+    - id: type_default_tour
+      type: Tour
+      properties:
+        open: false
+        type: default
+        steps:
+          - title: Default Type Tour
+            description: The default type has a light, clean appearance with a white background and dark text.
+          - title: Minimal Design
+            description: Default tours blend naturally with light-themed interfaces.
+          - title: Complete
+            description: Click Finish to dismiss this tour.
+    - id: type_primary_tour
+      type: Tour
+      properties:
+        open: false
+        type: primary
+        steps:
+          - title: Primary Type Tour
+            description: The primary type has a bold, colored background using the theme primary color.
+          - title: Eye-Catching
+            description: Primary tours draw more attention and are ideal for important onboarding flows.
+          - title: Done
+            description: The primary style makes navigation buttons stand out clearly.
+
+- title: Step-Level Type Override
+  fullWidth: true
+  blocks:
+    - id: step_type_row
+      type: Box
+      layout:
+        gap: 16
+      blocks:
+        - id: step_type_btn_1
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Introduction
+            color: default
+            variant: outlined
+            icon: AiOutlineInfoCircle
+        - id: step_type_btn_2
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Important Feature
+            color: primary
+            variant: solid
+            icon: AiOutlineStar
+        - id: step_type_btn_3
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Finish Setup
+            color: default
+            variant: outlined
+            icon: AiOutlineCheck
+    - id: step_type_tour
+      type: Tour
+      properties:
+        open: false
+        type: default
+        steps:
+          - title: Introduction
+            description: This step uses the default type style inherited from the tour.
+            target: step_type_btn_1
+            type: default
+          - title: Important Feature
+            description: This step overrides the tour type and uses the primary style to highlight importance.
+            target: step_type_btn_2
+            type: primary
+          - title: Finish Setup
+            description: Back to default type for the final step.
+            target: step_type_btn_3
+            type: default
+
+- title: Targeted Tour with Buttons
+  fullWidth: true
+  blocks:
+    - id: target_row
+      type: Box
+      layout:
+        gap: 16
+      blocks:
+        - id: target_upload_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Upload File
+            color: primary
+            variant: solid
+            icon: AiOutlineUpload
+        - id: target_save_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Save Draft
+            color: green
+            variant: outlined
+            icon: AiOutlineSave
+        - id: target_share_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Share
+            color: purple
+            variant: solid
+            icon: AiOutlineShareAlt
+    - id: target_tour
+      type: Tour
+      properties:
+        open: false
+        steps:
+          - title: Upload Your Files
+            description: Click here to upload documents, images, or other files to the workspace.
+            target: target_upload_btn
+          - title: Save Your Work
+            description: Save your current progress as a draft. You can continue editing later.
+            target: target_save_btn
+          - title: Share with Team
+            description: Share your work with team members via link or direct invitation.
+            target: target_share_btn
+
+- title: Targeted Tour with Mixed Block Types
+  fullWidth: true
+  blocks:
+    - id: mixed_target_row
+      type: Box
+      layout:
+        gap: 16
+        align: center
+      blocks:
+        - id: mixed_target_input
+          type: TextInput
+          layout:
+            flex: 0 0 240px
+          properties:
+            label:
+              disabled: true
+            placeholder: Search...
+        - id: mixed_target_switch
+          type: Switch
+          layout:
+            flex: 0 0 auto
+          properties:
+            label:
+              disabled: true
+        - id: mixed_target_selector
+          type: Selector
+          layout:
+            flex: 0 0 200px
+          properties:
+            label:
+              disabled: true
+            placeholder: Select an option
+            options:
+              - label: Option A
+                value: a
+              - label: Option B
+                value: b
+    - id: mixed_target_tour
+      type: Tour
+      properties:
+        open: false
+        steps:
+          - title: Search Bar
+            description: Use the search bar to quickly find items in the workspace.
+            target: mixed_target_input
+          - title: Toggle Setting
+            description: Toggle this switch to enable or disable notifications.
+            target: mixed_target_switch
+          - title: Filter Results
+            description: Select a filter option to narrow down the displayed results.
+            target: mixed_target_selector
+
+- title: Placement Options
+  fullWidth: true
+  blocks:
+    - id: placement_top
+      type: Tour
+      properties:
+        open: false
+        placement: top
+        steps:
+          - title: Top Placement
+            description: Guide card appears above the target element.
+          - title: Consistent Position
+            description: All steps inherit this placement unless overridden at the step level.
+    - id: placement_bottom
+      type: Tour
+      properties:
+        open: false
+        placement: bottom
+        steps:
+          - title: Bottom Placement
+            description: Guide card appears below the target element. This is the most common placement.
+          - title: Natural Flow
+            description: Bottom placement follows the natural reading direction of the page.
+    - id: placement_left
+      type: Tour
+      properties:
+        open: false
+        placement: left
+        steps:
+          - title: Left Placement
+            description: Guide card appears to the left of the target element.
+    - id: placement_right
+      type: Tour
+      properties:
+        open: false
+        placement: right
+        steps:
+          - title: Right Placement
+            description: Guide card appears to the right of the target element.
+
+- title: Per-Step Placement
+  fullWidth: true
+  blocks:
+    - id: perstep_placement_row
+      type: Box
+      layout:
+        gap: 16
+        justify: center
+      blocks:
+        - id: perstep_btn_top
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Top
+            color: primary
+            variant: outlined
+        - id: perstep_btn_right
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Right
+            color: green
+            variant: outlined
+        - id: perstep_btn_bottom
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Bottom
+            color: purple
+            variant: outlined
+        - id: perstep_btn_left
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Left
+            color: orange
+            variant: outlined
+    - id: perstep_placement_tour
+      type: Tour
+      properties:
+        open: false
+        steps:
+          - title: Top Placement
+            description: This step appears above the target.
+            target: perstep_btn_top
+            placement: top
+          - title: Right Placement
+            description: This step appears to the right of the target.
+            target: perstep_btn_right
+            placement: right
+          - title: Bottom Placement
+            description: This step appears below the target.
+            target: perstep_btn_bottom
+            placement: bottom
+          - title: Left Placement
+            description: This step appears to the left of the target.
+            target: perstep_btn_left
+            placement: left
+
+- title: Fine-Grained Placement
+  fullWidth: true
+  blocks:
+    - id: fine_placement_tour
+      type: Tour
+      properties:
+        open: false
+        steps:
+          - title: Top Left
+            description: Guide card aligned to the top-left corner of the target.
+            placement: topLeft
+          - title: Top Right
+            description: Guide card aligned to the top-right corner of the target.
+            placement: topRight
+          - title: Bottom Left
+            description: Guide card aligned to the bottom-left corner of the target.
+            placement: bottomLeft
+          - title: Bottom Right
+            description: Guide card aligned to the bottom-right corner of the target.
+            placement: bottomRight
+          - title: Left Top
+            description: Guide card on the left side, aligned to the top of the target.
+            placement: leftTop
+          - title: Left Bottom
+            description: Guide card on the left side, aligned to the bottom of the target.
+            placement: leftBottom
+          - title: Right Top
+            description: Guide card on the right side, aligned to the top of the target.
+            placement: rightTop
+          - title: Right Bottom
+            description: Guide card on the right side, aligned to the bottom of the target.
+            placement: rightBottom
+
+- title: Mask Configuration
+  fullWidth: true
+  blocks:
+    - id: mask_enabled_row
+      type: Box
+      layout:
+        gap: 16
+      blocks:
+        - id: mask_target_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Masked Target
+            color: primary
+            variant: solid
+            icon: AiOutlineEye
+    - id: mask_enabled_tour
+      type: Tour
+      properties:
+        open: false
+        mask: true
+        steps:
+          - title: With Mask
+            description: The background is dimmed with a mask overlay, drawing attention to the tour card.
+            target: mask_target_btn
+          - title: Focused View
+            description: The mask helps users focus on the highlighted area and tour content.
+    - id: mask_disabled_tour
+      type: Tour
+      properties:
+        open: false
+        mask: false
+        steps:
+          - title: Without Mask
+            description: No background mask is shown. The page remains fully visible and interactive.
+          - title: Transparent Overlay
+            description: Useful when you want a subtle guide without obscuring the interface.
+
+- title: Per-Step Mask Control
+  fullWidth: true
+  blocks:
+    - id: perstep_mask_row
+      type: Box
+      layout:
+        gap: 16
+      blocks:
+        - id: perstep_mask_btn_1
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Step 1 - Masked
+            color: primary
+            variant: solid
+        - id: perstep_mask_btn_2
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Step 2 - No Mask
+            color: default
+            variant: outlined
+        - id: perstep_mask_btn_3
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Step 3 - Masked
+            color: primary
+            variant: solid
+    - id: perstep_mask_tour
+      type: Tour
+      properties:
+        open: false
+        mask: true
+        steps:
+          - title: Masked Step
+            description: This step shows the mask overlay behind the tour.
+            target: perstep_mask_btn_1
+            mask: true
+          - title: Unmasked Step
+            description: This step hides the mask for a clear, unobstructed view.
+            target: perstep_mask_btn_2
+            mask: false
+          - title: Mask Restored
+            description: The mask returns for this final step.
+            target: perstep_mask_btn_3
+            mask: true
+
+- title: Custom Mask Style
+  fullWidth: true
+  blocks:
+    - id: custom_mask_row
+      type: Box
+      layout:
+        gap: 16
+      blocks:
+        - id: custom_mask_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Custom Mask Target
+            color: purple
+            variant: solid
+            icon: AiOutlineHighlight
+    - id: custom_mask_tour
+      type: Tour
+      properties:
+        open: false
+        mask:
+          style:
+            boxShadow: inset 0 0 15px #333
+          color: rgba(80, 0, 130, 0.5)
+        steps:
+          - title: Styled Mask
+            description: This tour uses a custom mask with a purple-tinted overlay and inner shadow.
+            target: custom_mask_btn
+          - title: Brand Overlay
+            description: Custom mask styles let you match the overlay to your brand colors.
+
+- title: Arrow Configuration
+  fullWidth: true
+  blocks:
+    - id: arrow_enabled_tour
+      type: Tour
+      properties:
+        open: false
+        arrow: true
+        steps:
+          - title: Arrow Visible
+            description: An arrow points from the guide card toward the target element, creating a visual connection.
+          - title: Visual Indicator
+            description: Arrows help users understand which element the step is referencing.
+    - id: arrow_disabled_tour
+      type: Tour
+      properties:
+        open: false
+        arrow: false
+        steps:
+          - title: No Arrow
+            description: This tour has no arrow pointing to the target element.
+          - title: Floating Panel
+            description: Without arrows, the guide card appears as a clean floating panel.
+    - id: arrow_centered_tour
+      type: Tour
+      properties:
+        open: false
+        arrow:
+          pointAtCenter: true
+        steps:
+          - title: Centered Arrow
+            description: The arrow points precisely at the center of the target element.
+          - title: Precise Targeting
+            description: Useful for wide target elements where the default arrow position may be off-center.
+
+- title: Per-Step Arrow Control
+  fullWidth: true
+  blocks:
+    - id: perstep_arrow_row
+      type: Box
+      layout:
+        gap: 16
+      blocks:
+        - id: perstep_arrow_btn_1
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: With Arrow
+            color: primary
+            variant: solid
+        - id: perstep_arrow_btn_2
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: No Arrow
+            color: default
+            variant: outlined
+        - id: perstep_arrow_btn_3
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Centered Arrow
+            color: green
+            variant: solid
+    - id: perstep_arrow_tour
+      type: Tour
+      properties:
+        open: false
+        steps:
+          - title: Arrow Visible
+            description: This step shows the default arrow pointing to the target.
+            target: perstep_arrow_btn_1
+            arrow: true
+          - title: Arrow Hidden
+            description: This step hides the arrow for a cleaner look.
+            target: perstep_arrow_btn_2
+            arrow: false
+          - title: Arrow at Center
+            description: This step shows an arrow pointing at the center of the target.
+            target: perstep_arrow_btn_3
+            arrow:
+              pointAtCenter: true
+
+- title: Cover Images
+  fullWidth: true
+  blocks:
+    - id: cover_tour
+      type: Tour
+      properties:
+        open: false
+        steps:
+          - title: Welcome to the Dashboard
+            description: Get familiar with the main interface and its key areas.
+            cover: https://gw.alipayobjects.com/zos/bmw-prod/e9a9b1e8-5e62-4e12-a3b7-e3695b0a5f3c.png
+          - title: Navigation Menu
+            description: Use the sidebar to navigate between different sections of the application.
+            cover: https://gw.alipayobjects.com/zos/bmw-prod/ed5cf3c4-5e34-43e5-9c39-fe131c7cf88e.png
+          - title: All Done
+            description: You are ready to start using the application. Explore at your own pace.
+
+- title: Cover Images with Targets
+  fullWidth: true
+  blocks:
+    - id: cover_target_row
+      type: Box
+      layout:
+        gap: 16
+      blocks:
+        - id: cover_target_btn_1
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Dashboard
+            color: primary
+            variant: solid
+            icon: AiOutlineDashboard
+        - id: cover_target_btn_2
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Settings
+            color: default
+            variant: outlined
+            icon: AiOutlineSetting
+    - id: cover_target_tour
+      type: Tour
+      properties:
+        open: false
+        steps:
+          - title: Dashboard Overview
+            description: The dashboard shows a summary of your workspace activity.
+            target: cover_target_btn_1
+            cover: https://gw.alipayobjects.com/zos/bmw-prod/e9a9b1e8-5e62-4e12-a3b7-e3695b0a5f3c.png
+          - title: Configure Settings
+            description: Adjust preferences, notifications, and integrations from the settings page.
+            target: cover_target_btn_2
+            cover: https://gw.alipayobjects.com/zos/bmw-prod/ed5cf3c4-5e34-43e5-9c39-fe131c7cf88e.png
+
+- title: Closable and Keyboard Navigation
+  fullWidth: true
+  blocks:
+    - id: closable_tour
+      type: Tour
+      properties:
+        open: false
+        closable: true
+        keyboard: true
+        steps:
+          - title: Closable Tour
+            description: The close button (X) is visible in the top-right corner. Press Escape to close.
+          - title: Keyboard Navigation
+            description: Use arrow keys to navigate between steps. Press Escape to dismiss.
+          - title: Final Step
+            description: Both the close button and keyboard shortcuts are available throughout.
+    - id: not_closable_tour
+      type: Tour
+      properties:
+        open: false
+        closable: false
+        keyboard: false
+        steps:
+          - title: Guided Tour
+            description: The close button and Escape key are disabled. Navigate using the buttons below.
+          - title: Must Complete
+            description: Users must step through the entire tour using Next and Previous buttons.
+          - title: Finish Required
+            description: Only the Finish button ends this tour, ensuring all steps are seen.
+
+- title: Per-Step Closable Control
+  fullWidth: true
+  blocks:
+    - id: perstep_closable_row
+      type: Box
+      layout:
+        gap: 16
+      blocks:
+        - id: perstep_closable_btn_1
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Step 1 - Closable
+            color: green
+            variant: outlined
+        - id: perstep_closable_btn_2
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Step 2 - Not Closable
+            color: orange
+            variant: outlined
+        - id: perstep_closable_btn_3
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Step 3 - Closable
+            color: green
+            variant: outlined
+    - id: perstep_closable_tour
+      type: Tour
+      properties:
+        open: false
+        closable: true
+        steps:
+          - title: Closable Step
+            description: This step has the close button visible. Click X to dismiss.
+            target: perstep_closable_btn_1
+            closable: true
+          - title: Not Closable Step
+            description: This step hides the close button. You must navigate forward.
+            target: perstep_closable_btn_2
+            closable: false
+          - title: Closable Again
+            description: The close button returns for the final step.
+            target: perstep_closable_btn_3
+            closable: true
+
+- title: Animation and Scroll
+  fullWidth: true
+  blocks:
+    - id: animated_tour
+      type: Tour
+      properties:
+        open: false
+        animated: true
+        scrollIntoViewOptions: true
+        steps:
+          - title: Animated Tour
+            description: Smooth transitions between steps with animation enabled.
+          - title: Auto Scroll
+            description: Target elements automatically scroll into view when a step becomes active.
+          - title: Polished Experience
+            description: Animations make the tour feel responsive and professional.
+    - id: no_animation_tour
+      type: Tour
+      properties:
+        open: false
+        animated: false
+        scrollIntoViewOptions: false
+        steps:
+          - title: No Animation
+            description: Instant transitions between steps without any animation effects.
+          - title: No Auto Scroll
+            description: The page will not scroll to target elements automatically.
+          - title: Minimal Motion
+            description: Useful for users who prefer reduced motion.
+
+- title: Disabled Interaction
+  fullWidth: true
+  blocks:
+    - id: disabled_interaction_row
+      type: Box
+      layout:
+        gap: 16
+      blocks:
+        - id: disabled_interaction_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Cannot Click During Tour
+            color: primary
+            variant: solid
+            icon: AiOutlineLock
+        - id: enabled_interaction_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Can Click During Tour
+            color: green
+            variant: solid
+            icon: AiOutlineUnlock
+    - id: disabled_interaction_tour
+      type: Tour
+      properties:
+        open: false
+        disabledInteraction: true
+        steps:
+          - title: Interaction Disabled
+            description: The highlighted target element cannot be clicked or interacted with during this tour.
+            target: disabled_interaction_btn
+          - title: Read-Only Tour
+            description: Users can only navigate the tour steps, not interact with highlighted elements.
+    - id: enabled_interaction_tour
+      type: Tour
+      properties:
+        open: false
+        disabledInteraction: false
+        steps:
+          - title: Interaction Enabled
+            description: Users can freely interact with highlighted elements while the tour is active.
+            target: enabled_interaction_btn
+          - title: Try It Out
+            description: Click on highlighted elements during the tour to test their behavior.
+
+- title: Gap Configuration
+  fullWidth: true
+  blocks:
+    - id: gap_row
+      type: Box
+      layout:
+        gap: 16
+      blocks:
+        - id: gap_default_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Default Gap
+            color: primary
+            variant: solid
+        - id: gap_large_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Large Gap
+            color: purple
+            variant: solid
+        - id: gap_tight_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: No Gap
+            color: orange
+            variant: solid
+    - id: gap_default_tour
+      type: Tour
+      properties:
+        open: false
+        steps:
+          - title: Default Gap
+            description: Standard spacing between the highlighted area and the target element.
+            target: gap_default_btn
+    - id: gap_large_tour
+      type: Tour
+      properties:
+        open: false
+        gap:
+          x: 20
+          y: 20
+        steps:
+          - title: Large Gap
+            description: Increased horizontal (20px) and vertical (20px) gap around the target element.
+            target: gap_large_btn
+          - title: Breathing Room
+            description: A larger gap draws more attention to the target by adding extra space.
+    - id: gap_tight_tour
+      type: Tour
+      properties:
+        open: false
+        gap:
+          x: 0
+          y: 0
+        steps:
+          - title: No Gap
+            description: The highlight fits tightly around the target element with zero spacing.
+            target: gap_tight_btn
+          - title: Tight Fit
+            description: Useful when you want the mask cutout to hug the target precisely.
+
+- title: Current Step Control
+  fullWidth: true
+  blocks:
+    - id: current_step_tour
+      type: Tour
+      properties:
+        open: false
+        current: 1
+        steps:
+          - title: Step One
+            description: This is the first step, but the tour does not start here.
+          - title: Step Two (Starting Point)
+            description: The tour opens at this step because current is set to 1 (zero-indexed).
+          - title: Step Three
+            description: This is the third and final step.
+    - id: current_step_last_tour
+      type: Tour
+      properties:
+        open: false
+        current: 2
+        steps:
+          - title: First Step
+            description: The first step in the sequence.
+          - title: Second Step
+            description: The second step in the sequence.
+          - title: Third Step (Starting Point)
+            description: The tour opens directly at the last step when current is set to 2.
+
+- title: Z-Index Control
+  fullWidth: true
+  blocks:
+    - id: zindex_default_tour
+      type: Tour
+      properties:
+        open: false
+        steps:
+          - title: Default Z-Index
+            description: Tour uses the default stacking order (1070). Appears above most content.
+    - id: zindex_high_tour
+      type: Tour
+      properties:
+        open: false
+        zIndex: 2000
+        steps:
+          - title: High Z-Index (2000)
+            description: Tour renders above other overlays such as modals and drawers.
+          - title: Above Everything
+            description: Use a high z-index when the tour must appear over other layered components.
+    - id: zindex_low_tour
+      type: Tour
+      properties:
+        open: false
+        zIndex: 900
+        steps:
+          - title: Low Z-Index (900)
+            description: Tour renders below some overlays. Content like fixed headers may appear above it.
+
+- title: Multi-Step with Mixed Configuration
+  fullWidth: true
+  blocks:
+    - id: mixed_config_row
+      type: Box
+      layout:
+        gap: 16
+      blocks:
+        - id: mixed_cfg_btn_1
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Welcome
+            color: primary
+            variant: solid
+            icon: AiOutlineHome
+        - id: mixed_cfg_btn_2
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Key Feature
+            color: green
+            variant: outlined
+            icon: AiOutlineBulb
+        - id: mixed_cfg_btn_3
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Important
+            color: orange
+            variant: solid
+            icon: AiOutlineWarning
+        - id: mixed_cfg_btn_4
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Complete
+            color: purple
+            variant: solid
+            icon: AiOutlineCheckCircle
+    - id: mixed_config_tour
+      type: Tour
+      properties:
+        open: false
+        type: default
+        mask: true
+        arrow: true
+        closable: true
+        steps:
+          - title: Introduction
+            description: Welcome to the application tour. This step uses all default settings.
+            target: mixed_cfg_btn_1
+          - title: Key Feature
+            description: This step changes placement and hides the mask for a clearer view.
+            target: mixed_cfg_btn_2
+            placement: bottom
+            mask: false
+            type: primary
+          - title: Important Area
+            description: This step disables the close button and uses right placement.
+            target: mixed_cfg_btn_3
+            closable: false
+            placement: right
+          - title: Completion
+            description: All settings restored. Click Finish to dismiss the tour.
+            target: mixed_cfg_btn_4
+            arrow:
+              pointAtCenter: true
+
+- title: Onboarding Flow Example
+  fullWidth: true
+  blocks:
+    - id: onboard_header
+      type: Box
+      layout:
+        gap: 16
+        align: center
+      blocks:
+        - id: onboard_logo
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            shape: square
+            size: 40
+            icon: AiOutlineAppstore
+        - id: onboard_title
+          type: Title
+          layout:
+            flex: 1 1 auto
+          properties:
+            content: My Application
+            level: 4
+        - id: onboard_profile_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Profile
+            color: default
+            variant: text
+            icon: AiOutlineUser
+        - id: onboard_settings_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Settings
+            color: default
+            variant: text
+            icon: AiOutlineSetting
+    - id: onboard_body
+      type: Box
+      layout:
+        gap: 16
+      blocks:
+        - id: onboard_search
+          type: TextInput
+          properties:
+            label:
+              disabled: true
+            placeholder: Search anything...
+        - id: onboard_create_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Create New
+            color: primary
+            variant: solid
+            icon: AiOutlinePlus
+    - id: onboard_tour
+      type: Tour
+      properties:
+        open: false
+        type: default
+        mask: true
+        animated: true
+        steps:
+          - title: Welcome to My Application
+            description: Let us take a quick tour to get you started with the key features.
+            cover: https://gw.alipayobjects.com/zos/bmw-prod/e9a9b1e8-5e62-4e12-a3b7-e3695b0a5f3c.png
+          - title: Search
+            description: Use the search bar to quickly find documents, users, or settings.
+            target: onboard_search
+            placement: bottom
+          - title: Create Content
+            description: Click here to create a new document, project, or workspace item.
+            target: onboard_create_btn
+            placement: bottom
+          - title: Your Profile
+            description: Access your profile to update personal information and preferences.
+            target: onboard_profile_btn
+            placement: bottomRight
+          - title: Settings
+            description: Configure application settings, integrations, and notifications.
+            target: onboard_settings_btn
+            placement: bottomRight
+          - title: You are All Set!
+            description: Explore the application at your own pace. You can replay this tour anytime from the help menu.
+            cover: https://gw.alipayobjects.com/zos/bmw-prod/ed5cf3c4-5e34-43e5-9c39-fe131c7cf88e.png
+
+- title: CSS Styling
+  fullWidth: true
+  blocks:
+    - id: css_styled_tour
+      type: Tour
+      properties:
+        open: false
+        steps:
+          - title: Styled Tour Card
+            description: This tour uses custom CSS to modify the element appearance.
+          - title: Consistent Styling
+            description: CSS keys allow you to override the default tour card styles.
+      style:
+        --element:
+          maxWidth: 360px
+
+- title: Theme Token Overrides
+  fullWidth: true
+  blocks:
+    - id: theme_purple_tour
+      type: Tour
+      properties:
+        open: false
+        type: primary
+        theme:
+          colorPrimary: '#722ed1'
+        steps:
+          - title: Purple Primary Tour
+            description: Primary tour with a custom purple color. The background and buttons match the brand.
+          - title: Branded Experience
+            description: Theme tokens let you align the tour appearance with your brand palette.
+    - id: theme_green_tour
+      type: Tour
+      properties:
+        open: false
+        type: primary
+        theme:
+          colorPrimary: '#52c41a'
+        steps:
+          - title: Green Primary Tour
+            description: A fresh green-themed tour for nature or success-oriented workflows.
+          - title: Custom Palette
+            description: Changing colorPrimary affects the background, buttons, and accent colors.
+    - id: theme_rounded_tour
+      type: Tour
+      properties:
+        open: false
+        theme:
+          borderRadiusLG: 20
+        steps:
+          - title: Rounded Tour Card
+            description: Tour card with increased border radius (20px) for a softer, modern look.
+          - title: Smooth Corners
+            description: The rounded style applies consistently across all steps.
+    - id: theme_large_font_tour
+      type: Tour
+      properties:
+        open: false
+        theme:
+          fontSize: 16
+          fontSizeLG: 20
+        steps:
+          - title: Large Text Tour
+            description: Increased font sizes for better readability and accessibility.
+          - title: Accessible Design
+            description: Larger text benefits users on high-resolution displays or those with visual impairments.
+    - id: theme_dark_tour
+      type: Tour
+      properties:
+        open: false
+        type: primary
+        theme:
+          colorPrimary: '#1f1f1f'
+          colorText: '#ffffff'
+        steps:
+          - title: Dark Themed Tour
+            description: A dark background with light text creates a high-contrast, modern look.
+          - title: Night Mode
+            description: Dark themed tours work well for applications with a dark color scheme.
+    - id: theme_custom_zindex_tour
+      type: Tour
+      properties:
+        open: false
+        theme:
+          zIndexPopup: 2000
+        steps:
+          - title: Z-Index via Theme
+            description: The z-index can be overridden using theme tokens as an alternative to the zIndex property.
+    - id: theme_warm_tour
+      type: Tour
+      properties:
+        open: false
+        type: primary
+        theme:
+          colorPrimary: '#fa541c'
+          borderRadiusLG: 12
+          fontSize: 15
+        steps:
+          - title: Warm Themed Tour
+            description: A warm orange theme with rounded corners and slightly larger text.
+          - title: Combined Tokens
+            description: Multiple theme tokens can be combined to create a cohesive custom appearance.
+          - title: Branding
+            description: Use theme tokens to match your tour to any brand guidelines.
+
+- title: Theme Token - Previous Button Background
+  fullWidth: true
+  blocks:
+    - id: theme_prev_btn_tour
+      type: Tour
+      properties:
+        open: false
+        type: primary
+        theme:
+          colorPrimary: '#1677ff'
+          primaryPrevBtnBg: rgba(255, 255, 255, 0.35)
+        steps:
+          - title: Step One
+            description: Navigate to the next step to see the styled Previous button.
+          - title: Custom Previous Button
+            description: The Previous button has a more visible background (35% white) compared to the default (15%).
+          - title: Final Step
+            description: The primaryPrevBtnBg token controls the Previous button opacity in primary tours.

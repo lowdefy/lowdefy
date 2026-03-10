@@ -1,0 +1,419 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic Content
+  blocks:
+    - id: basic_paragraph
+      type: Paragraph
+      properties:
+        content: Lowdefy is a config-driven web framework. Build internal tools, client portals, and web apps with YAML or JSON.
+    - id: basic_html
+      type: Paragraph
+      properties:
+        content: 'This paragraph supports <b>bold</b>, <i>italic</i>, and <a href="https://lowdefy.com">links</a> via HTML.'
+    - id: basic_long
+      type: Paragraph
+      properties:
+        content: A longer paragraph showing how body text renders at its default size. Lowdefy makes it easy to build internal tools, client portals, and web applications using YAML or JSON configuration files. No need to learn complex frontend frameworks or manage build tooling.
+
+- title: Types
+  blocks:
+    - id: type_default
+      type: Paragraph
+      properties:
+        content: Default paragraph text with the standard color.
+    - id: type_secondary
+      type: Paragraph
+      properties:
+        content: Secondary paragraph text with a muted appearance.
+        type: secondary
+    - id: type_success
+      type: Paragraph
+      properties:
+        content: Success paragraph indicating a positive outcome.
+        type: success
+    - id: type_warning
+      type: Paragraph
+      properties:
+        content: Warning paragraph to alert the user about something.
+        type: warning
+    - id: type_danger
+      type: Paragraph
+      properties:
+        content: Danger paragraph highlighting a critical issue.
+        type: danger
+
+- title: Strong (Bold)
+  blocks:
+    - id: strong_default
+      type: Paragraph
+      properties:
+        content: Strong (bold) paragraph text.
+        strong: true
+    - id: strong_success
+      type: Paragraph
+      properties:
+        content: Deployment completed successfully.
+        strong: true
+        type: success
+    - id: strong_danger
+      type: Paragraph
+      properties:
+        content: Critical error detected in production.
+        strong: true
+        type: danger
+
+- title: Italic
+  blocks:
+    - id: italic_default
+      type: Paragraph
+      properties:
+        content: Italic paragraph text for emphasis.
+        italic: true
+    - id: italic_secondary
+      type: Paragraph
+      properties:
+        content: This feature is in beta and may change without notice.
+        italic: true
+        type: secondary
+    - id: italic_warning
+      type: Paragraph
+      properties:
+        content: Please review the terms before proceeding.
+        italic: true
+        type: warning
+
+- title: Underline
+  blocks:
+    - id: underline_default
+      type: Paragraph
+      properties:
+        content: Underlined paragraph text.
+        underline: true
+    - id: underline_success
+      type: Paragraph
+      properties:
+        content: Task marked as complete.
+        underline: true
+        type: success
+    - id: underline_danger
+      type: Paragraph
+      properties:
+        content: This action cannot be undone.
+        underline: true
+        type: danger
+
+- title: Delete (Strikethrough)
+  blocks:
+    - id: delete_default
+      type: Paragraph
+      properties:
+        content: Deleted (strikethrough) paragraph text.
+        delete: true
+    - id: delete_secondary
+      type: Paragraph
+      properties:
+        content: This API endpoint has been removed.
+        delete: true
+        type: secondary
+    - id: delete_pricing
+      type: Paragraph
+      properties:
+        content: 'Original price: $99.99'
+        delete: true
+        type: danger
+
+- title: Mark (Highlight)
+  blocks:
+    - id: mark_default
+      type: Paragraph
+      properties:
+        content: Marked (highlighted) paragraph text.
+        mark: true
+    - id: mark_important
+      type: Paragraph
+      properties:
+        content: Key takeaway from the meeting notes.
+        mark: true
+    - id: mark_warning
+      type: Paragraph
+      properties:
+        content: Deadline approaching, please submit by Friday.
+        mark: true
+        type: warning
+
+- title: Disabled
+  blocks:
+    - id: disabled_default
+      type: Paragraph
+      properties:
+        content: Disabled paragraph text appears faded.
+        disabled: true
+    - id: disabled_long
+      type: Paragraph
+      properties:
+        content: This section is currently unavailable. The content will be accessible once the feature has been enabled by your administrator.
+        disabled: true
+
+- title: Code Style
+  blocks:
+    - id: code_inline
+      type: Paragraph
+      properties:
+        content: 'const app = lowdefy.init({ config })'
+        code: true
+    - id: code_command
+      type: Paragraph
+      properties:
+        content: npx lowdefy@latest dev
+        code: true
+    - id: code_json
+      type: Paragraph
+      properties:
+        content: '{ "type": "TextInput", "properties": { "label": "Name" } }'
+        code: true
+
+- title: Combined Decorations
+  blocks:
+    - id: combined_strong_italic
+      type: Paragraph
+      properties:
+        content: Bold and italic text for maximum emphasis.
+        strong: true
+        italic: true
+    - id: combined_strong_underline
+      type: Paragraph
+      properties:
+        content: Bold and underlined for clear importance.
+        strong: true
+        underline: true
+    - id: combined_italic_mark
+      type: Paragraph
+      properties:
+        content: Italic and highlighted to draw attention.
+        italic: true
+        mark: true
+    - id: combined_strong_delete
+      type: Paragraph
+      properties:
+        content: Bold text that has been struck through.
+        strong: true
+        delete: true
+    - id: combined_code_mark
+      type: Paragraph
+      properties:
+        content: console.log("highlighted code")
+        code: true
+        mark: true
+    - id: combined_success_bold
+      type: Paragraph
+      properties:
+        content: Successfully deployed to production.
+        type: success
+        strong: true
+    - id: combined_warning_italic_underline
+      type: Paragraph
+      properties:
+        content: This feature is deprecated and will be removed in a future version.
+        type: warning
+        italic: true
+        underline: true
+    - id: combined_danger_strong_underline
+      type: Paragraph
+      properties:
+        content: Critical security vulnerability detected.
+        type: danger
+        underline: true
+        strong: true
+
+- title: Copyable
+  blocks:
+    - id: copyable_simple
+      type: Paragraph
+      properties:
+        content: Click the copy icon to copy this text.
+        copyable: true
+    - id: copyable_custom_text
+      type: Paragraph
+      properties:
+        content: Copy this paragraph
+        copyable:
+          text: This is the custom text that gets copied to clipboard instead of the visible content.
+    - id: copyable_tooltips
+      type: Paragraph
+      properties:
+        content: Hover the copy icon to see custom tooltip
+        copyable:
+          tooltips:
+            - Click to copy text
+            - Text copied!
+    - id: copyable_icon
+      type: Paragraph
+      properties:
+        content: Custom copy icon
+        copyable:
+          icon: AiOutlineSnippets
+    - id: copyable_two_icons
+      type: Paragraph
+      properties:
+        content: Two-state copy icons
+        copyable:
+          icon:
+            - AiOutlineCopy
+            - AiOutlineCheck
+    - id: copyable_code
+      type: Paragraph
+      properties:
+        content: npm install lowdefy
+        code: true
+        copyable: true
+
+- title: Ellipsis (Single Line)
+  blocks:
+    - id: ellipsis_single
+      type: Paragraph
+      properties:
+        content: This is a very long paragraph that will be truncated when it exceeds the width of its container. The overflow text is replaced with an ellipsis to indicate there is more content available beyond what is currently visible.
+        ellipsis: true
+
+- title: Ellipsis (Multi-Row)
+  blocks:
+    - id: ellipsis_rows_2
+      type: Paragraph
+      properties:
+        content: This paragraph demonstrates multi-line ellipsis. It contains enough text to span several lines, and after reaching the specified row limit, the remaining content will be hidden behind an ellipsis. Users can click the expand button to reveal the full text. This is useful for previews of long-form content like descriptions, comments, and article summaries.
+        ellipsis:
+          rows: 2
+          expandable: true
+    - id: ellipsis_rows_3
+      type: Paragraph
+      properties:
+        content: Three-line ellipsis allows more content to show before truncation. Lowdefy makes it easy to build internal tools, client portals, and web applications using YAML or JSON configuration files. No need to learn complex frontend frameworks, manage build tooling, or write boilerplate code. Just define your UI in config and Lowdefy takes care of the rest. You can connect to databases, call APIs, handle user authentication, and much more.
+        ellipsis:
+          rows: 3
+          expandable: true
+
+- title: Ellipsis with Suffix
+  blocks:
+    - id: ellipsis_suffix
+      type: Paragraph
+      properties:
+        content: This paragraph has a custom suffix added after the ellipsis truncation point so readers know there is additional content to discover beyond what is visible.
+        ellipsis:
+          rows: 1
+          suffix: ' --Read More'
+    - id: ellipsis_suffix_dots
+      type: Paragraph
+      properties:
+        content: A paragraph with a custom suffix showing how to guide users to expand and read more content from the truncated text block.
+        ellipsis:
+          rows: 2
+          suffix: ' [...]'
+
+- title: Style Overrides
+  blocks:
+    - id: style_bg
+      type: Paragraph
+      properties:
+        content: Paragraph with a light blue background and padding.
+      style:
+        --element:
+          backgroundColor: '#e6f4ff'
+          padding: 12px 16px
+          borderRadius: 6px
+    - id: style_border_left
+      type: Paragraph
+      properties:
+        content: Paragraph styled as a blockquote with a left border accent.
+        type: secondary
+        italic: true
+      style:
+        --element:
+          borderLeft: 3px solid #1677ff
+          paddingLeft: 12px
+    - id: style_letter_spacing
+      type: Paragraph
+      properties:
+        content: PARAGRAPH WITH WIDE LETTER SPACING
+      style:
+        --element:
+          letterSpacing: 3px
+          textTransform: uppercase
+          fontSize: 12px
+    - id: style_line_height
+      type: Paragraph
+      properties:
+        content: This paragraph has increased line height for better readability. When you have dense text content, increasing the line height makes it easier for users to follow lines of text across the page.
+      style:
+        --element:
+          lineHeight: 2.0
+
+- title: Theme Token Overrides
+  blocks:
+    - id: theme_bold_weight
+      type: Paragraph
+      properties:
+        content: Custom heavy font weight for strong text.
+        strong: true
+        theme:
+          fontWeightStrong: 900
+    - id: theme_custom_success
+      type: Paragraph
+      properties:
+        content: Custom teal success color.
+        type: success
+        theme:
+          colorSuccess: '#13c2c2'
+    - id: theme_custom_warning
+      type: Paragraph
+      properties:
+        content: Custom orange warning color.
+        type: warning
+        theme:
+          colorWarning: '#fa541c'
+
+- title: Real-World Examples
+  blocks:
+    - id: example_description
+      type: Paragraph
+      properties:
+        content: Configure your Lowdefy application using YAML files. Define pages, blocks, connections, and actions to build complete web applications without writing frontend code.
+    - id: example_error_msg
+      type: Paragraph
+      properties:
+        content: Unable to connect to the database. Please check your connection string and ensure the database server is running.
+        type: danger
+        strong: true
+    - id: example_success_msg
+      type: Paragraph
+      properties:
+        content: Your changes have been saved successfully. The deployment will be live within 5 minutes.
+        type: success
+    - id: example_deprecation
+      type: Paragraph
+      properties:
+        content: 'Warning: The v3 API will be sunset on December 31, 2026. Please migrate to v4 before that date.'
+        type: warning
+        italic: true
+    - id: example_help
+      type: Paragraph
+      properties:
+        content: Enter your API key to authenticate requests. You can find your key in the settings panel.
+        type: secondary
+    - id: example_code_snippet
+      type: Paragraph
+      properties:
+        content: 'lowdefy: 4.0.0'
+        code: true
+        copyable: true

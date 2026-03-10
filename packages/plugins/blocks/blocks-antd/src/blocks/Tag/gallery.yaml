@@ -1,0 +1,690 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic
+  blocks:
+    - id: basic_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: basic_default
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Tag 1
+        - id: basic_tag2
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Tag 2
+        - id: basic_tag3
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Tag 3
+        - id: basic_html
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: '<b>Bold</b> Tag'
+
+- title: Preset Colors (Solid)
+  blocks:
+    - id: preset_status_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: pc_success
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: success
+            color: success
+        - id: pc_processing
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: processing
+            color: processing
+        - id: pc_error
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: error
+            color: error
+        - id: pc_warning
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: warning
+            color: warning
+        - id: pc_default
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: default
+            color: default
+    - id: preset_color_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: pc_blue
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: blue
+            color: blue
+        - id: pc_cyan
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: cyan
+            color: cyan
+        - id: pc_geekblue
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: geekblue
+            color: geekblue
+        - id: pc_gold
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: gold
+            color: gold
+        - id: pc_green
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: green
+            color: green
+        - id: pc_lime
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: lime
+            color: lime
+        - id: pc_magenta
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: magenta
+            color: magenta
+    - id: preset_color_row_2
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: pc_orange
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: orange
+            color: orange
+        - id: pc_purple
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: purple
+            color: purple
+        - id: pc_red
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: red
+            color: red
+        - id: pc_volcano
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: volcano
+            color: volcano
+
+- title: Bordered vs Borderless
+  blocks:
+    - id: bordered_label
+      type: Markdown
+      properties:
+        content: '**Bordered (default):**'
+    - id: bordered_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: bd_blue
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: blue
+            color: blue
+        - id: bd_green
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: green
+            color: green
+        - id: bd_red
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: red
+            color: red
+        - id: bd_gold
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: gold
+            color: gold
+        - id: bd_purple
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: purple
+            color: purple
+
+- title: With Icons
+  blocks:
+    - id: icon_row_status
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: icon_check
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Approved
+            icon: AiOutlineCheck
+            color: success
+        - id: icon_close
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Rejected
+            icon: AiOutlineClose
+            color: error
+        - id: icon_sync
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Processing
+            icon: AiOutlineSync
+            color: processing
+        - id: icon_warning
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Warning
+            icon: AiOutlineWarning
+            color: warning
+    - id: icon_row_misc
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: icon_star
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Featured
+            icon: AiOutlineStar
+            color: gold
+        - id: icon_heart
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Favorite
+            icon: AiOutlineHeart
+            color: magenta
+        - id: icon_thunder
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Fast
+            icon: AiOutlineThunderbolt
+            color: orange
+        - id: icon_lock
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Private
+            icon: AiOutlineLock
+            color: geekblue
+        - id: icon_tag
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Tagged
+            icon: AiOutlineTag
+            color: cyan
+    - id: icon_row_custom
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: icon_custom_color
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Custom Icon
+            icon:
+              name: AiOutlineCrown
+              color: '#faad14'
+            color: gold
+        - id: icon_custom_large
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Big Icon
+            icon:
+              name: AiOutlineRocket
+              style:
+                fontSize: 16
+            color: purple
+
+- title: Closable Tags
+  blocks:
+    - id: closable_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: closable_default
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Closable
+            closable: true
+        - id: closable_success
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Success
+            closable: true
+            color: success
+        - id: closable_error
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Error
+            closable: true
+            color: error
+        - id: closable_processing
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Processing
+            closable: true
+            color: processing
+        - id: closable_warning
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Warning
+            closable: true
+            color: warning
+    - id: closable_icon_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: closable_icon_check
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Done
+            closable: true
+            icon: AiOutlineCheck
+            color: success
+        - id: closable_icon_star
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Starred
+            closable: true
+            icon: AiOutlineStar
+            color: gold
+
+- title: Custom Hex Colors
+  blocks:
+    - id: hex_row_1
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: hex_coral
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Coral
+            color: '#ff6b6b'
+        - id: hex_teal
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Teal
+            color: '#20c997'
+        - id: hex_indigo
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Indigo
+            color: '#4c6ef5'
+        - id: hex_amber
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Amber
+            color: '#fab005'
+        - id: hex_pink
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Pink
+            color: '#e64980'
+    - id: hex_row_2
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: hex_slate
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Slate
+            color: '#495057'
+        - id: hex_forest
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Forest
+            color: '#2b8a3e'
+        - id: hex_navy
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Navy
+            color: '#1864ab'
+        - id: hex_wine
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Wine
+            color: '#a61e4d'
+        - id: hex_bronze
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Bronze
+            color: '#b8860b'
+
+- title: Style Overrides
+  blocks:
+    - id: style_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: style_rounded
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Rounded
+            color: blue
+          style:
+            --element:
+              borderRadius: 12px
+              padding: 0 12px
+        - id: style_bold
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Bold Text
+            color: green
+          style:
+            --element:
+              fontWeight: bold
+        - id: style_large
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Large Tag
+            color: purple
+          style:
+            --element:
+              fontSize: 16px
+              padding: 4px 12px
+              lineHeight: '24px'
+        - id: style_border
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Thick Border
+            color: volcano
+          style:
+            --element:
+              borderWidth: 2px
+        - id: style_shadow
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Shadow
+            color: gold
+          style:
+            --element:
+              boxShadow: 0 2px 4px rgba(0,0,0,0.15)
+
+- title: Theme Token Overrides
+  blocks:
+    - id: theme_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: theme_custom_bg
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Custom Background
+            theme:
+              defaultBg: '#e6f7ff'
+              defaultColor: '#1677ff'
+        - id: theme_custom_dark
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Dark Tag
+            theme:
+              defaultBg: '#141414'
+              defaultColor: '#ffffff'
+        - id: theme_custom_warm
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Warm Tag
+            theme:
+              defaultBg: '#fff7e6'
+              defaultColor: '#d46b08'
+
+- title: Combined Examples
+  blocks:
+    - id: combined_status_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: combined_active
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Active
+            icon: AiOutlineCheck
+            color: success
+          style:
+            --element:
+              fontWeight: bold
+        - id: combined_pending
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Pending Review
+            icon: AiOutlineClockCircle
+            color: warning
+            closable: true
+        - id: combined_draft
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Draft
+            icon: AiOutlineEdit
+            color: default
+            closable: true
+    - id: combined_badge_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: combined_pill
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: v2.0.0
+            color: blue
+          style:
+            --element:
+              borderRadius: 20px
+              padding: 0 10px
+        - id: combined_count
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: '99+'
+            color: red
+          style:
+            --element:
+              borderRadius: 20px
+              padding: 0 8px
+              fontWeight: bold
+        - id: combined_new
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: NEW
+            color: '#52c41a'
+          style:
+            --element:
+              fontWeight: bold
+              letterSpacing: 1px
+    - id: combined_labels_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: combined_priority_high
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: High Priority
+            icon: AiOutlineArrowUp
+            color: error
+          style:
+            --element:
+              fontWeight: bold
+        - id: combined_priority_medium
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Medium
+            icon: AiOutlineMinus
+            color: warning
+        - id: combined_priority_low
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Low
+            icon: AiOutlineArrowDown
+            color: blue

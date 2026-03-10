@@ -13,13 +13,16 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: Tour
-    category: display
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Tour/schema.js
+    pageId: Tour
+    pageTitle: Tour
+    section: Display Blocks
     filePath: blocks/display/Tour.yaml
-    examples:
-      _ref: ../plugins/blocks/blocks-antd/src/blocks/Tour/examples.yaml
-    description_content: |
-      The `Tour` block provides a guided tour that highlights elements on the page with step-by-step instructions. Configure steps with `target` (a block id), `title`, and `description`. Supports keyboard navigation, step cover images, configurable masks, animations, and primary/default styles.
+    block_type: Tour
+    antd_component: Tour
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/Tour
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Tour/schema.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/Tour/gallery.yaml
+    description: >
+      Guided tour with steps, masks, and keyboard navigation.

@@ -284,6 +284,7 @@ const PageSiderMenu = ({
                         element: mergeObjects([
                           {
                             padding: '0 40px 40px 40px',
+                            minWidth: 0,
                           },
                           styles.content,
                         ]),

@@ -1,0 +1,218 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Shapes
+  blocks:
+    - id: shape_round
+      type: SkeletonAvatar
+      layout:
+        flex: 0 0 auto
+      properties:
+        shape: round
+    - id: shape_square
+      type: SkeletonAvatar
+      layout:
+        flex: 0 0 auto
+      properties:
+        shape: square
+
+- title: Sizes (Round)
+  blocks:
+    - id: size_small_round
+      type: SkeletonAvatar
+      layout:
+        flex: 0 0 auto
+      properties:
+        size: small
+        shape: round
+    - id: size_medium_round
+      type: SkeletonAvatar
+      layout:
+        flex: 0 0 auto
+      properties:
+        size: medium
+        shape: round
+    - id: size_large_round
+      type: SkeletonAvatar
+      layout:
+        flex: 0 0 auto
+      properties:
+        size: large
+        shape: round
+
+- title: Sizes (Square)
+  blocks:
+    - id: size_small_square
+      type: SkeletonAvatar
+      layout:
+        flex: 0 0 auto
+      properties:
+        size: small
+        shape: square
+    - id: size_medium_square
+      type: SkeletonAvatar
+      layout:
+        flex: 0 0 auto
+      properties:
+        size: medium
+        shape: square
+    - id: size_large_square
+      type: SkeletonAvatar
+      layout:
+        flex: 0 0 auto
+      properties:
+        size: large
+        shape: square
+
+- title: Active (Animated)
+  blocks:
+    - id: active_round_small
+      type: SkeletonAvatar
+      layout:
+        flex: 0 0 auto
+      properties:
+        size: small
+        shape: round
+    - id: active_round_medium
+      type: SkeletonAvatar
+      layout:
+        flex: 0 0 auto
+      properties:
+        size: medium
+        shape: round
+    - id: active_round_large
+      type: SkeletonAvatar
+      layout:
+        flex: 0 0 auto
+      properties:
+        size: large
+        shape: round
+    - id: active_square_small
+      type: SkeletonAvatar
+      layout:
+        flex: 0 0 auto
+      properties:
+        size: small
+        shape: square
+    - id: active_square_medium
+      type: SkeletonAvatar
+      layout:
+        flex: 0 0 auto
+      properties:
+        size: medium
+        shape: square
+    - id: active_square_large
+      type: SkeletonAvatar
+      layout:
+        flex: 0 0 auto
+      properties:
+        size: large
+        shape: square
+
+- title: Custom Size via Style
+  blocks:
+    - id: custom_tiny
+      type: SkeletonAvatar
+      layout:
+        flex: 0 0 auto
+      properties:
+        size: small
+        shape: round
+      style:
+        --element:
+          width: 16
+          height: 16
+    - id: custom_xlarge
+      type: SkeletonAvatar
+      layout:
+        flex: 0 0 auto
+      properties:
+        size: large
+        shape: round
+      style:
+        --element:
+          width: 64
+          height: 64
+          borderRadius: 32
+    - id: custom_xxlarge
+      type: SkeletonAvatar
+      layout:
+        flex: 0 0 auto
+      properties:
+        size: large
+        shape: round
+      style:
+        --element:
+          width: 96
+          height: 96
+          borderRadius: 48
+
+- title: Avatar with Text Lines
+  blocks:
+    - id: avatar_text_row
+      type: Box
+      layout:
+        gap: 12
+        align: center
+      blocks:
+        - id: avatar_icon
+          type: SkeletonAvatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            size: large
+            shape: round
+        - id: avatar_text_col
+          type: Box
+          layout:
+            gap: 6
+          blocks:
+            - id: avatar_name_line
+              type: Skeleton
+              properties:
+                width: 160
+                height: 14
+            - id: avatar_desc_line
+              type: Skeleton
+              properties:
+                width: 100
+                height: 12
+    - id: avatar_square_row
+      type: Box
+      layout:
+        gap: 12
+        align: center
+      blocks:
+        - id: avatar_sq_icon
+          type: SkeletonAvatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            size: large
+            shape: square
+        - id: avatar_sq_col
+          type: Box
+          layout:
+            gap: 6
+          blocks:
+            - id: avatar_sq_line_1
+              type: Skeleton
+              properties:
+                width: 200
+                height: 14
+            - id: avatar_sq_line_2
+              type: Skeleton
+              properties:
+                width: 140
+                height: 14

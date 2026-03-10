@@ -93,6 +93,35 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/statistic#design-token',
+        },
+        properties: {
+          titleFontSize: {
+            type: 'number',
+            default: 14,
+            description: 'Font size of the statistic title.',
+          },
+          contentFontSize: {
+            type: 'number',
+            default: 24,
+            description: 'Font size of the statistic value.',
+          },
+          contentFontWeight: {
+            type: 'string',
+            description: 'Font weight of the statistic value.',
+          },
+          contentFontFamily: {
+            type: 'string',
+            description: 'Font family of the statistic value.',
+          },
+          colorText: {
+            type: 'string',
+            description: 'Default text color for the statistic value.',
+          },
+          colorTextDescription: {
+            type: 'string',
+            description: 'Color for the statistic title text.',
+          },
         },
       },
     },

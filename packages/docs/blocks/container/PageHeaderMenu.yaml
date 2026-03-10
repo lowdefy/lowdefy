@@ -13,40 +13,16 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: PageHeaderMenu
-    category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/PageHeaderMenu/schema.js
+    pageId: PageHeaderMenu
+    pageTitle: PageHeaderMenu
+    section: Container Blocks
     filePath: blocks/container/PageHeaderMenu.yaml
-    description_content: |
-      The Page Header Menu block provides a structured layout for a page with a header containing a menu, content and footer slots.
-    init_state_values:
-      block.properties.menu.links:
-        - id: home
-          type: MenuLink
-          pageId: home
-          properties:
-            icon: AiOutlineHome
-            title: Home
-        - id: pages
-          type: MenuGroup
-          properties:
-            title: Pages
-            icon: AiOutlineLayout
-          links:
-            - id: page1
-              type: MenuLink
-              pageId: page1
-              properties:
-                title: Page 1
-            - id: more_pages
-              type: MenuGroup
-              links:
-                - id: page3
-                  type: MenuLink
-                  pageId: page3
-    slots:
-      - content
-      - footer
-      - header
+    block_type: PageHeaderMenu
+    antd_component: Layout
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/PageHeaderMenu
+    schema: ../plugins/blocks/blocks-antd/src/blocks/PageHeaderMenu/schema.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/PageHeaderMenu/gallery.yaml
+    description: >
+      Page layout with a top header navigation menu.

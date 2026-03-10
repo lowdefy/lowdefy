@@ -13,22 +13,16 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: Message
-    category: display
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Message/schema.js
+    pageId: Message
+    pageTitle: Message
+    section: Display Blocks
     filePath: blocks/display/Message.yaml
-    description_content: |
-      Display a popup message on the page.
-
-      > To display a message, invoke the open method.
-
-    methods:
-      - name: open
-        onClick:
-          - id: open
-            type: CallMethod
-            params:
-              blockId: block_id
-              method: open
+    block_type: Message
+    antd_component: Message
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/Message
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Message/schema.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/Message/gallery.yaml
+    description: >
+      Global message notification displayed at the top of the page.

@@ -1,0 +1,295 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic
+  blocks:
+    - id: basic_strings
+      type: Breadcrumb
+      properties:
+        list:
+          - Home
+          - Application Center
+          - Application List
+          - An Application
+    - id: basic_objects
+      type: Breadcrumb
+      properties:
+        list:
+          - label: Home
+          - label: Products
+          - label: Electronics
+          - label: Headphones
+    - id: basic_two_items
+      type: Breadcrumb
+      properties:
+        list:
+          - Home
+          - Current Page
+
+- title: Separators
+  blocks:
+    - id: separator_default
+      type: Breadcrumb
+      properties:
+        list:
+          - Home
+          - Category
+          - Item
+    - id: separator_arrow
+      type: Breadcrumb
+      properties:
+        separator: '>'
+        list:
+          - Home
+          - Category
+          - Sub-Category
+          - Item
+    - id: separator_dash
+      type: Breadcrumb
+      properties:
+        separator: '-'
+        list:
+          - Home
+          - Settings
+          - Profile
+    - id: separator_pipe
+      type: Breadcrumb
+      properties:
+        separator: '|'
+        list:
+          - Documents
+          - Projects
+          - Reports
+    - id: separator_dot
+      type: Breadcrumb
+      properties:
+        separator: '·'
+        list:
+          - Overview
+          - Details
+          - Summary
+    - id: separator_tilde
+      type: Breadcrumb
+      properties:
+        separator: '~'
+        list:
+          - Section A
+          - Section B
+          - Section C
+
+- title: With Links
+  blocks:
+    - id: links_url
+      type: Breadcrumb
+      properties:
+        list:
+          - label: Home
+            url: https://lowdefy.com
+          - label: Docs
+            url: https://docs.lowdefy.com
+          - label: Current Page
+    - id: links_mixed
+      type: Breadcrumb
+      properties:
+        list:
+          - label: Dashboard
+            url: https://lowdefy.com
+          - label: Projects
+          - label: Settings
+            url: https://lowdefy.com
+          - label: General
+
+- title: With Icons
+  blocks:
+    - id: icons_home
+      type: Breadcrumb
+      properties:
+        list:
+          - label: Home
+            icon: AiOutlineHome
+          - label: Users
+            icon: AiOutlineUser
+          - label: Profile
+    - id: icons_dashboard
+      type: Breadcrumb
+      properties:
+        list:
+          - label: Dashboard
+            icon: AiOutlineDashboard
+          - label: Settings
+            icon: AiOutlineSetting
+          - label: Security
+            icon: AiOutlineLock
+    - id: icons_files
+      type: Breadcrumb
+      properties:
+        list:
+          - label: Files
+            icon: AiOutlineFolder
+          - label: Documents
+            icon: AiOutlineFile
+          - label: report.pdf
+    - id: icons_custom_object
+      type: Breadcrumb
+      properties:
+        list:
+          - label: Admin
+            icon:
+              name: AiOutlineCrown
+              color: '#faad14'
+          - label: Console
+            icon:
+              name: AiOutlineCode
+              color: '#1677ff'
+          - label: Logs
+
+- title: Styled Items
+  blocks:
+    - id: styled_bold_last
+      type: Breadcrumb
+      properties:
+        list:
+          - label: Dashboard
+            icon: AiOutlineDashboard
+          - label: Settings
+            icon: AiOutlineSetting
+          - label: Security
+            style:
+              fontWeight: bold
+    - id: styled_colored
+      type: Breadcrumb
+      properties:
+        list:
+          - label: Home
+            style:
+              color: '#1677ff'
+          - label: Active
+            style:
+              color: '#52c41a'
+              fontWeight: bold
+          - label: Page
+    - id: styled_size
+      type: Breadcrumb
+      properties:
+        list:
+          - label: Root
+            style:
+              fontSize: 16px
+          - label: Child
+            style:
+              fontSize: 14px
+          - label: Leaf
+            style:
+              fontSize: 12px
+
+- title: Style Overrides
+  blocks:
+    - id: style_padding
+      type: Breadcrumb
+      properties:
+        list:
+          - Home
+          - Category
+          - Item
+      style:
+        --element:
+          padding: 8px 16px
+          backgroundColor: '#f5f5f5'
+          borderRadius: 4px
+    - id: style_border
+      type: Breadcrumb
+      properties:
+        list:
+          - Dashboard
+          - Analytics
+          - Reports
+      style:
+        --element:
+          padding: 8px 16px
+          border: 1px solid #d9d9d9
+          borderRadius: 6px
+
+- title: Theme Token Overrides
+  blocks:
+    - id: theme_separator_color
+      type: Breadcrumb
+      properties:
+        list:
+          - Home
+          - Products
+          - Details
+        theme:
+          separatorColor: '#1677ff'
+          separatorMargin: 12
+    - id: theme_link_colors
+      type: Breadcrumb
+      properties:
+        list:
+          - label: Dashboard
+          - label: Settings
+          - label: Profile
+        theme:
+          itemColor: '#722ed1'
+          lastItemColor: '#f5222d'
+          linkColor: '#722ed1'
+    - id: theme_icon_size
+      type: Breadcrumb
+      properties:
+        list:
+          - label: Home
+            icon: AiOutlineHome
+          - label: Users
+            icon: AiOutlineTeam
+          - label: Profile
+        theme:
+          iconFontSize: 18
+
+- title: Combined Examples
+  blocks:
+    - id: combined_full
+      type: Breadcrumb
+      properties:
+        separator: '/'
+        list:
+          - label: Home
+            icon: AiOutlineHome
+            url: https://lowdefy.com
+          - label: Products
+            icon: AiOutlineAppstore
+          - label: Electronics
+          - label: Headphones
+            style:
+              fontWeight: bold
+              color: '#1677ff'
+    - id: combined_admin
+      type: Breadcrumb
+      properties:
+        separator: '>'
+        list:
+          - label: Admin
+            icon: AiOutlineCrown
+          - label: Users
+            icon: AiOutlineTeam
+          - label: Permissions
+            icon: AiOutlineLock
+            style:
+              color: '#f5222d'
+        theme:
+          separatorColor: '#d9d9d9'
+          separatorMargin: 16
+      style:
+        --element:
+          padding: 10px 20px
+          backgroundColor: '#fafafa'
+          borderRadius: 8px

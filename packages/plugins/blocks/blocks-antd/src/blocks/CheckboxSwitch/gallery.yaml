@@ -1,0 +1,983 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic Checkbox
+  blocks:
+    - id: basic_default
+      type: CheckboxSwitch
+      properties:
+        title: Accept Terms
+        label:
+          disabled: true
+    - id: basic_with_desc
+      type: CheckboxSwitch
+      properties:
+        title: Notifications
+        description: Enable email notifications
+        label:
+          disabled: true
+    - id: basic_no_desc
+      type: CheckboxSwitch
+      properties:
+        title: Dark Mode
+        label:
+          disabled: true
+    - id: basic_simple
+      type: CheckboxSwitch
+      properties:
+        title: Remember Me
+        description: Keep me signed in on this device
+        label:
+          disabled: true
+
+- title: With Description Text
+  blocks:
+    - id: desc_terms
+      type: CheckboxSwitch
+      properties:
+        title: Terms & Conditions
+        description: I agree to the Terms of Service and Privacy Policy
+        label:
+          disabled: true
+    - id: desc_marketing
+      type: CheckboxSwitch
+      properties:
+        title: Marketing
+        description: Send me promotional emails and newsletters
+        label:
+          disabled: true
+    - id: desc_remember
+      type: CheckboxSwitch
+      properties:
+        title: Remember Me
+        description: Keep me signed in on this device
+        label:
+          disabled: true
+    - id: desc_analytics
+      type: CheckboxSwitch
+      properties:
+        title: Analytics
+        description: Allow anonymous usage data collection to improve the product
+        label:
+          disabled: true
+    - id: desc_html
+      type: CheckboxSwitch
+      properties:
+        title: Agreement
+        description: 'I accept the <b>Terms</b> and <i>Privacy Policy</i>'
+        label:
+          disabled: true
+    - id: desc_html_link
+      type: CheckboxSwitch
+      properties:
+        title: Consent
+        description: 'I have read the <u>data processing agreement</u> and consent to the collection of my data'
+        label:
+          disabled: true
+
+- title: With Label and Title
+  blocks:
+    - id: label_default
+      type: CheckboxSwitch
+      properties:
+        title: Enable Notifications
+        description: Receive updates via email
+    - id: label_colon
+      type: CheckboxSwitch
+      properties:
+        title: Auto-save
+        description: Save changes automatically
+        label:
+          colon: true
+    - id: label_no_colon
+      type: CheckboxSwitch
+      properties:
+        title: Status
+        description: Set active status
+        label:
+          colon: false
+    - id: label_custom_title
+      type: CheckboxSwitch
+      properties:
+        title: Newsletter Subscription
+        description: Subscribe to our weekly newsletter
+        label:
+          colon: true
+
+- title: Label Inline
+  blocks:
+    - id: inline_basic
+      type: CheckboxSwitch
+      properties:
+        title: Dark mode
+        description: Enable dark theme
+        label:
+          inline: true
+          span: 8
+    - id: inline_right
+      type: CheckboxSwitch
+      properties:
+        title: Auto-save
+        description: Save changes automatically
+        label:
+          inline: true
+          span: 8
+          align: right
+    - id: inline_wide_span
+      type: CheckboxSwitch
+      properties:
+        title: Enable feature
+        description: Activate the new experimental feature
+        label:
+          inline: true
+          span: 12
+    - id: inline_narrow_span
+      type: CheckboxSwitch
+      properties:
+        title: Active
+        description: Set to active
+        label:
+          inline: true
+          span: 4
+    - id: inline_no_desc
+      type: CheckboxSwitch
+      properties:
+        title: Compact mode
+        label:
+          inline: true
+          span: 8
+
+- title: Label Extra
+  blocks:
+    - id: extra_basic
+      type: CheckboxSwitch
+      properties:
+        title: Notifications
+        description: Enable push notifications
+        label:
+          extra: Push notifications will be sent to your registered device.
+    - id: extra_html
+      type: CheckboxSwitch
+      properties:
+        title: Terms
+        description: I agree to the terms
+        label:
+          extra: 'Read the full <b>Terms of Service</b> before agreeing.'
+    - id: extra_long
+      type: CheckboxSwitch
+      properties:
+        title: Data Collection
+        description: Allow data collection
+        label:
+          extra: By enabling this option, anonymized usage data will be collected to improve the product. No personally identifiable information is stored.
+    - id: extra_inline
+      type: CheckboxSwitch
+      properties:
+        title: Marketing Emails
+        description: Receive promotional content
+        label:
+          inline: true
+          span: 10
+          extra: You can unsubscribe at any time from your account settings.
+
+- title: Label HasFeedback
+  blocks:
+    - id: feedback_on
+      type: CheckboxSwitch
+      properties:
+        title: With Feedback
+        description: This checkbox shows validation feedback
+        label:
+          hasFeedback: true
+    - id: feedback_off
+      type: CheckboxSwitch
+      properties:
+        title: Without Feedback
+        description: Validation feedback is hidden
+        label:
+          hasFeedback: false
+    - id: feedback_with_extra
+      type: CheckboxSwitch
+      properties:
+        title: Feedback and Extra
+        description: Combined feedback and extra text
+        label:
+          hasFeedback: true
+          extra: Additional context for this field.
+
+- title: Disabled State
+  blocks:
+    - id: disabled_unchecked
+      type: CheckboxSwitch
+      properties:
+        title: Disabled (Unchecked)
+        description: This checkbox is disabled
+        disabled: true
+        label:
+          disabled: true
+    - id: disabled_no_desc
+      type: CheckboxSwitch
+      properties:
+        title: Disabled Option
+        disabled: true
+        label:
+          disabled: true
+    - id: disabled_with_label
+      type: CheckboxSwitch
+      properties:
+        title: Disabled with Label
+        description: Cannot be toggled
+        disabled: true
+    - id: disabled_inline
+      type: CheckboxSwitch
+      properties:
+        title: Disabled Inline
+        description: This is disabled and inline
+        disabled: true
+        label:
+          inline: true
+          span: 8
+
+- title: Color Override
+  blocks:
+    - id: color_green
+      type: CheckboxSwitch
+      properties:
+        title: Green
+        description: Success color checkbox
+        color: '#52c41a'
+        label:
+          disabled: true
+    - id: color_orange
+      type: CheckboxSwitch
+      properties:
+        title: Orange
+        description: Warning color checkbox
+        color: '#fa8c16'
+        label:
+          disabled: true
+    - id: color_purple
+      type: CheckboxSwitch
+      properties:
+        title: Purple
+        description: Custom purple checkbox
+        color: '#722ed1'
+        label:
+          disabled: true
+    - id: color_red
+      type: CheckboxSwitch
+      properties:
+        title: Red
+        description: Danger color checkbox
+        color: '#f5222d'
+        label:
+          disabled: true
+    - id: color_cyan
+      type: CheckboxSwitch
+      properties:
+        title: Cyan
+        description: Info color checkbox
+        color: '#13c2c2'
+        label:
+          disabled: true
+    - id: color_pink
+      type: CheckboxSwitch
+      properties:
+        title: Pink
+        description: Custom pink checkbox
+        color: '#eb2f96'
+        label:
+          disabled: true
+    - id: color_gold
+      type: CheckboxSwitch
+      properties:
+        title: Gold
+        description: Custom gold checkbox
+        color: '#faad14'
+        label:
+          disabled: true
+    - id: color_geekblue
+      type: CheckboxSwitch
+      properties:
+        title: Geek Blue
+        description: Custom geek blue checkbox
+        color: '#2f54eb'
+        label:
+          disabled: true
+
+- title: Color with Labels
+  blocks:
+    - id: color_label_green
+      type: CheckboxSwitch
+      properties:
+        title: Active Status
+        description: Set account to active
+        color: '#52c41a'
+    - id: color_label_red
+      type: CheckboxSwitch
+      properties:
+        title: Delete Confirmation
+        description: I understand this action is permanent
+        color: '#f5222d'
+    - id: color_label_purple
+      type: CheckboxSwitch
+      properties:
+        title: Premium Feature
+        description: Enable premium content access
+        color: '#722ed1'
+    - id: color_label_inline
+      type: CheckboxSwitch
+      properties:
+        title: Approve
+        description: Approve this request
+        color: '#52c41a'
+        label:
+          inline: true
+          span: 8
+
+- title: Color + Disabled Combinations
+  blocks:
+    - id: combo_green_disabled
+      type: CheckboxSwitch
+      properties:
+        title: Green Disabled
+        description: Disabled with green color set
+        color: '#52c41a'
+        disabled: true
+        label:
+          disabled: true
+    - id: combo_purple_disabled
+      type: CheckboxSwitch
+      properties:
+        title: Purple Disabled
+        description: Disabled with purple color set
+        color: '#722ed1'
+        disabled: true
+        label:
+          disabled: true
+    - id: combo_orange_active
+      type: CheckboxSwitch
+      properties:
+        title: Orange Active
+        description: Active with orange color
+        color: '#fa8c16'
+        label:
+          disabled: true
+    - id: combo_red_active
+      type: CheckboxSwitch
+      properties:
+        title: Red Active
+        description: Active with red color
+        color: '#f5222d'
+        label:
+          disabled: true
+    - id: combo_cyan_disabled
+      type: CheckboxSwitch
+      properties:
+        title: Cyan Disabled
+        description: Disabled with cyan color set
+        color: '#13c2c2'
+        disabled: true
+        label:
+          disabled: true
+
+- title: No Label (Hidden)
+  blocks:
+    - id: no_label_desc
+      type: CheckboxSwitch
+      properties:
+        description: Accept cookies for a better browsing experience
+        label:
+          disabled: true
+    - id: no_label_guidelines
+      type: CheckboxSwitch
+      properties:
+        description: I have read and understood the guidelines
+        label:
+          disabled: true
+    - id: no_label_plain
+      type: CheckboxSwitch
+      properties:
+        label:
+          disabled: true
+    - id: no_label_html
+      type: CheckboxSwitch
+      properties:
+        description: 'I agree to the <b>Community Guidelines</b> and <i>Code of Conduct</i>'
+        label:
+          disabled: true
+
+- title: Custom Style
+  blocks:
+    - id: style_background
+      type: CheckboxSwitch
+      style:
+        --element:
+          padding: 12px
+          backgroundColor: '#f6ffed'
+          borderRadius: 8px
+          border: '1px solid #b7eb8f'
+      properties:
+        title: Styled Background
+        description: Checkbox with a custom background style
+        label:
+          disabled: true
+    - id: style_large_text
+      type: CheckboxSwitch
+      style:
+        --element:
+          fontSize: 16px
+      properties:
+        title: Large Description Text
+        description: This description uses a larger font size
+        label:
+          disabled: true
+    - id: style_warning_bg
+      type: CheckboxSwitch
+      style:
+        --element:
+          padding: 10px
+          backgroundColor: '#fff7e6'
+          borderRadius: 6px
+          border: '1px solid #ffd591'
+      properties:
+        title: Warning Style
+        description: Styled with a warning background
+        label:
+          disabled: true
+    - id: style_info_bg
+      type: CheckboxSwitch
+      style:
+        --element:
+          padding: 10px
+          backgroundColor: '#e6f4ff'
+          borderRadius: 6px
+          border: '1px solid #91caff'
+      properties:
+        title: Info Style
+        description: Styled with an info background
+        label:
+          disabled: true
+    - id: style_danger_bg
+      type: CheckboxSwitch
+      style:
+        --element:
+          padding: 10px
+          backgroundColor: '#fff2f0'
+          borderRadius: 6px
+          border: '1px solid #ffccc7'
+      properties:
+        title: Danger Style
+        description: Styled with a danger background
+        label:
+          disabled: true
+    - id: style_bold_label
+      type: CheckboxSwitch
+      style:
+        --label:
+          fontWeight: bold
+          color: '#1677ff'
+      properties:
+        title: Styled Label
+        description: Label text is bold and colored
+    - id: style_element_margin
+      type: CheckboxSwitch
+      style:
+        --element:
+          marginTop: 8
+          marginBottom: 8
+      properties:
+        title: Extra Spacing
+        description: Checkbox with added vertical margins
+        label:
+          disabled: true
+
+- title: Custom Class (Tailwind)
+  blocks:
+    - id: class_blue
+      type: CheckboxSwitch
+      class: p-2 rounded-lg border border-blue-200 bg-blue-50
+      properties:
+        title: Blue Card
+        description: Using Tailwind CSS classes for a blue card style
+        label:
+          disabled: true
+    - id: class_green
+      type: CheckboxSwitch
+      class: p-3 rounded-xl border border-green-300 bg-green-50
+      properties:
+        title: Green Card
+        description: Tailwind green card styling
+        label:
+          disabled: true
+    - id: class_amber
+      type: CheckboxSwitch
+      class: p-2 rounded-md border border-amber-200 bg-amber-50
+      properties:
+        title: Amber Card
+        description: Tailwind amber card styling
+        label:
+          disabled: true
+    - id: class_red
+      type: CheckboxSwitch
+      class: p-2 rounded-lg border border-red-200 bg-red-50
+      properties:
+        title: Red Card
+        description: Tailwind red card styling
+        label:
+          disabled: true
+    - id: class_shadow
+      type: CheckboxSwitch
+      class: p-3 rounded-lg shadow-md bg-white
+      properties:
+        title: Shadow Card
+        description: Elevated card with a box shadow
+        label:
+          disabled: true
+    - id: class_gradient_border
+      type: CheckboxSwitch
+      class: p-3 rounded-xl border-2 border-purple-300 bg-gradient-to-r from-purple-50 to-pink-50
+      properties:
+        title: Gradient Card
+        description: Gradient background with a purple border
+        label:
+          disabled: true
+
+- title: Theme Token Overrides
+  blocks:
+    - id: theme_large_checkbox
+      type: CheckboxSwitch
+      properties:
+        title: Large Checkbox
+        description: Checkbox with increased size via controlInteractiveSize
+        label:
+          disabled: true
+        theme:
+          controlInteractiveSize: 24
+    - id: theme_extra_large
+      type: CheckboxSwitch
+      properties:
+        title: Extra Large Checkbox
+        description: Even bigger checkbox for high-visibility use
+        label:
+          disabled: true
+        theme:
+          controlInteractiveSize: 30
+          borderRadiusSM: 8
+    - id: theme_custom_radius
+      type: CheckboxSwitch
+      properties:
+        title: Rounded Checkbox
+        description: Checkbox with larger border radius
+        label:
+          disabled: true
+        theme:
+          borderRadiusSM: 8
+    - id: theme_circle
+      type: CheckboxSwitch
+      properties:
+        title: Circular Checkbox
+        description: Fully rounded checkbox that appears circular
+        label:
+          disabled: true
+        theme:
+          controlInteractiveSize: 20
+          borderRadiusSM: 10
+    - id: theme_custom_colors
+      type: CheckboxSwitch
+      properties:
+        title: Custom Theme Colors
+        description: Primary and hover colors overridden via design tokens
+        label:
+          disabled: true
+        theme:
+          colorPrimary: '#531dab'
+          colorPrimaryHover: '#722ed1'
+    - id: theme_warm_colors
+      type: CheckboxSwitch
+      properties:
+        title: Warm Theme
+        description: Warm orange primary with golden hover
+        label:
+          disabled: true
+        theme:
+          colorPrimary: '#d46b08'
+          colorPrimaryHover: '#fa8c16'
+    - id: theme_cool_colors
+      type: CheckboxSwitch
+      properties:
+        title: Cool Theme
+        description: Cool teal primary with lighter hover
+        label:
+          disabled: true
+        theme:
+          colorPrimary: '#08979c'
+          colorPrimaryHover: '#13c2c2'
+    - id: theme_bold_border
+      type: CheckboxSwitch
+      properties:
+        title: Bold Border
+        description: Checkbox with a thicker border
+        label:
+          disabled: true
+        theme:
+          lineWidth: 2
+    - id: theme_extra_bold_border
+      type: CheckboxSwitch
+      properties:
+        title: Extra Bold Border
+        description: Checkbox with an extra thick border and checkmark stroke
+        label:
+          disabled: true
+        theme:
+          lineWidth: 3
+          lineWidthBold: 3
+    - id: theme_custom_border_color
+      type: CheckboxSwitch
+      properties:
+        title: Custom Border & Background
+        description: Checkbox with custom border and background colors
+        label:
+          disabled: true
+        theme:
+          colorBorder: '#d48806'
+          colorBgContainer: '#fffbe6'
+    - id: theme_pink_border
+      type: CheckboxSwitch
+      properties:
+        title: Pink Border
+        description: Checkbox with pink border and light pink background
+        label:
+          disabled: true
+        theme:
+          colorBorder: '#eb2f96'
+          colorBgContainer: '#fff0f6'
+    - id: theme_checkmark_color
+      type: CheckboxSwitch
+      properties:
+        title: Custom Checkmark
+        description: Checkbox with a different checkmark icon color
+        label:
+          disabled: true
+        theme:
+          colorWhite: '#ffd666'
+          colorPrimary: '#1d39c4'
+    - id: theme_wide_spacing
+      type: CheckboxSwitch
+      properties:
+        title: Wide Label Spacing
+        description: Increased padding between checkbox and label text
+        label:
+          disabled: true
+        theme:
+          paddingXS: 16
+    - id: theme_disabled_colors
+      type: CheckboxSwitch
+      properties:
+        title: Custom Disabled Colors
+        description: Customized colors for the disabled state
+        disabled: true
+        label:
+          disabled: true
+        theme:
+          colorBgContainerDisabled: '#f0f0f0'
+          colorTextDisabled: '#bfbfbf'
+    - id: theme_combined
+      type: CheckboxSwitch
+      properties:
+        title: Combined Tokens
+        description: Multiple theme tokens applied together for a unique look
+        label:
+          disabled: true
+        theme:
+          controlInteractiveSize: 22
+          borderRadiusSM: 6
+          colorPrimary: '#08979c'
+          colorPrimaryHover: '#13c2c2'
+          lineWidth: 2
+          colorBorder: '#87e8de'
+          colorBgContainer: '#e6fffb'
+
+- title: Composition - Notification Preferences
+  blocks:
+    - id: comp_prefs_card
+      type: Card
+      properties:
+        title: Notification Preferences
+        size: small
+      blocks:
+        - id: comp_email
+          type: CheckboxSwitch
+          properties:
+            title: Email Notifications
+            description: Receive updates via email
+            label:
+              disabled: true
+        - id: comp_sms
+          type: CheckboxSwitch
+          properties:
+            title: SMS Notifications
+            description: Receive updates via text message
+            label:
+              disabled: true
+        - id: comp_push
+          type: CheckboxSwitch
+          properties:
+            title: Push Notifications
+            description: Receive in-app push notifications
+            label:
+              disabled: true
+        - id: comp_weekly_digest
+          type: CheckboxSwitch
+          properties:
+            title: Weekly Digest
+            description: Get a weekly summary of activity
+            label:
+              disabled: true
+
+- title: Composition - Settings Panel
+  blocks:
+    - id: comp_settings_card
+      type: Card
+      properties:
+        title: Account Settings
+        size: small
+      blocks:
+        - id: comp_dark_mode
+          type: CheckboxSwitch
+          properties:
+            title: Dark Mode
+            description: Use dark theme
+            label:
+              inline: true
+              span: 16
+        - id: comp_auto_update
+          type: CheckboxSwitch
+          properties:
+            title: Auto-update
+            description: Install updates automatically
+            label:
+              inline: true
+              span: 16
+        - id: comp_telemetry
+          type: CheckboxSwitch
+          properties:
+            title: Telemetry
+            description: Share anonymous usage data
+            label:
+              inline: true
+              span: 16
+              extra: Helps us improve the product.
+        - id: comp_two_factor
+          type: CheckboxSwitch
+          properties:
+            title: Two-Factor Auth
+            description: Require 2FA on login
+            label:
+              inline: true
+              span: 16
+
+- title: Composition - Terms and Consent
+  blocks:
+    - id: comp_consent_card
+      type: Card
+      properties:
+        title: Before You Continue
+        size: small
+      blocks:
+        - id: comp_terms
+          type: CheckboxSwitch
+          properties:
+            description: 'I agree to the <b>Terms of Service</b>'
+            label:
+              disabled: true
+        - id: comp_privacy
+          type: CheckboxSwitch
+          properties:
+            description: 'I have read the <b>Privacy Policy</b>'
+            label:
+              disabled: true
+        - id: comp_age
+          type: CheckboxSwitch
+          properties:
+            description: I confirm that I am 18 years or older
+            label:
+              disabled: true
+        - id: comp_data
+          type: CheckboxSwitch
+          properties:
+            description: I consent to the processing of my personal data
+            label:
+              disabled: true
+
+- title: Composition - Feature Toggles
+  blocks:
+    - id: comp_features_card
+      type: Card
+      properties:
+        title: Feature Flags
+        size: small
+      blocks:
+        - id: comp_feature_beta
+          type: CheckboxSwitch
+          properties:
+            title: Beta Features
+            description: Enable experimental features
+            color: '#722ed1'
+            label:
+              inline: true
+              span: 16
+        - id: comp_feature_debug
+          type: CheckboxSwitch
+          properties:
+            title: Debug Mode
+            description: Show debug information
+            color: '#fa8c16'
+            label:
+              inline: true
+              span: 16
+        - id: comp_feature_cache
+          type: CheckboxSwitch
+          properties:
+            title: Caching
+            description: Enable response caching
+            color: '#52c41a'
+            label:
+              inline: true
+              span: 16
+        - id: comp_feature_logs
+          type: CheckboxSwitch
+          properties:
+            title: Verbose Logs
+            description: Write detailed log output
+            color: '#13c2c2'
+            label:
+              inline: true
+              span: 16
+
+- title: Composition - Multiple Checkboxes Row
+  blocks:
+    - id: comp_row_wrapper
+      type: Box
+      layout:
+        gap: 16
+      blocks:
+        - id: comp_row_opt1
+          type: CheckboxSwitch
+          layout:
+            flex: 0 0 auto
+          properties:
+            description: Option A
+            label:
+              disabled: true
+        - id: comp_row_opt2
+          type: CheckboxSwitch
+          layout:
+            flex: 0 0 auto
+          properties:
+            description: Option B
+            label:
+              disabled: true
+        - id: comp_row_opt3
+          type: CheckboxSwitch
+          layout:
+            flex: 0 0 auto
+          properties:
+            description: Option C
+            label:
+              disabled: true
+        - id: comp_row_opt4
+          type: CheckboxSwitch
+          layout:
+            flex: 0 0 auto
+          properties:
+            description: Option D
+            label:
+              disabled: true
+    - id: comp_row_colored
+      type: Box
+      layout:
+        gap: 16
+      blocks:
+        - id: comp_row_c1
+          type: CheckboxSwitch
+          layout:
+            flex: 0 0 auto
+          properties:
+            description: Read
+            color: '#52c41a'
+            label:
+              disabled: true
+        - id: comp_row_c2
+          type: CheckboxSwitch
+          layout:
+            flex: 0 0 auto
+          properties:
+            description: Write
+            color: '#1677ff'
+            label:
+              disabled: true
+        - id: comp_row_c3
+          type: CheckboxSwitch
+          layout:
+            flex: 0 0 auto
+          properties:
+            description: Execute
+            color: '#fa8c16'
+            label:
+              disabled: true
+        - id: comp_row_c4
+          type: CheckboxSwitch
+          layout:
+            flex: 0 0 auto
+          properties:
+            description: Admin
+            color: '#f5222d'
+            label:
+              disabled: true
+
+- title: Composition - Styled Groups
+  blocks:
+    - id: comp_styled_success
+      type: CheckboxSwitch
+      class: p-3 rounded-lg border border-green-200 bg-green-50 mb-2
+      properties:
+        description: All systems operational
+        color: '#52c41a'
+        label:
+          disabled: true
+    - id: comp_styled_warning
+      type: CheckboxSwitch
+      class: p-3 rounded-lg border border-amber-200 bg-amber-50 mb-2
+      properties:
+        description: Maintenance mode enabled
+        color: '#fa8c16'
+        label:
+          disabled: true
+    - id: comp_styled_danger
+      type: CheckboxSwitch
+      class: p-3 rounded-lg border border-red-200 bg-red-50 mb-2
+      properties:
+        description: Destructive operations allowed
+        color: '#f5222d'
+        label:
+          disabled: true
+    - id: comp_styled_info
+      type: CheckboxSwitch
+      class: p-3 rounded-lg border border-blue-200 bg-blue-50
+      properties:
+        description: Verbose logging active
+        color: '#1677ff'
+        label:
+          disabled: true

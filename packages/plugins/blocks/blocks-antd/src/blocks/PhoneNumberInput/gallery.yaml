@@ -1,0 +1,594 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# ──────────────────────────────────────────────
+# Basic
+# ──────────────────────────────────────────────
+
+- title: Basic
+  blocks:
+    - id: basic_default
+      type: PhoneNumberInput
+      properties:
+        title: Default PhoneNumberInput
+    - id: basic_with_placeholder
+      type: PhoneNumberInput
+      properties:
+        title: With Placeholder
+        placeholder: Enter phone number
+    - id: basic_with_title
+      type: PhoneNumberInput
+      properties:
+        title: Contact Number
+        placeholder: Enter your contact number
+
+# ──────────────────────────────────────────────
+# Default Region
+# ──────────────────────────────────────────────
+
+- title: Default Region
+  blocks:
+    - id: region_us
+      type: PhoneNumberInput
+      properties:
+        title: United States
+        defaultRegion: US
+        placeholder: (555) 123-4567
+    - id: region_gb
+      type: PhoneNumberInput
+      properties:
+        title: United Kingdom
+        defaultRegion: GB
+        placeholder: 20 7946 0958
+    - id: region_za
+      type: PhoneNumberInput
+      properties:
+        title: South Africa
+        defaultRegion: ZA
+        placeholder: 21 123 4567
+    - id: region_jp
+      type: PhoneNumberInput
+      properties:
+        title: Japan
+        defaultRegion: JP
+        placeholder: 3-1234-5678
+
+# ──────────────────────────────────────────────
+# Allowed Regions
+# ──────────────────────────────────────────────
+
+- title: Allowed Regions
+  blocks:
+    - id: regions_north_america
+      type: PhoneNumberInput
+      properties:
+        title: North America Only
+        allowedRegions:
+          - US
+          - CA
+          - MX
+        defaultRegion: US
+        placeholder: Enter number
+    - id: regions_europe
+      type: PhoneNumberInput
+      properties:
+        title: European Countries
+        allowedRegions:
+          - GB
+          - DE
+          - FR
+          - ES
+          - IT
+          - NL
+        defaultRegion: GB
+        placeholder: Enter number
+    - id: regions_asia_pacific
+      type: PhoneNumberInput
+      properties:
+        title: Asia Pacific
+        allowedRegions:
+          - JP
+          - CN
+          - KR
+          - AU
+          - IN
+        defaultRegion: JP
+        placeholder: Enter number
+    - id: regions_single
+      type: PhoneNumberInput
+      properties:
+        title: Single Country (ZA)
+        allowedRegions:
+          - ZA
+        defaultRegion: ZA
+        placeholder: Enter South African number
+
+# ──────────────────────────────────────────────
+# Sizes
+# ──────────────────────────────────────────────
+
+- title: Sizes
+  blocks:
+    - id: size_small
+      type: PhoneNumberInput
+      properties:
+        title: Small
+        size: small
+        placeholder: Small input
+    - id: size_middle
+      type: PhoneNumberInput
+      properties:
+        title: Middle (Default)
+        size: middle
+        placeholder: Middle input
+    - id: size_large
+      type: PhoneNumberInput
+      properties:
+        title: Large
+        size: large
+        placeholder: Large input
+
+# ──────────────────────────────────────────────
+# Disabled State
+# ──────────────────────────────────────────────
+
+- title: Disabled State
+  blocks:
+    - id: disabled_empty
+      type: PhoneNumberInput
+      properties:
+        title: Disabled (Empty)
+        disabled: true
+        placeholder: Cannot edit
+    - id: disabled_with_region
+      type: PhoneNumberInput
+      properties:
+        title: Disabled (With Region)
+        disabled: true
+        defaultRegion: US
+        placeholder: Cannot edit
+
+# ──────────────────────────────────────────────
+# Borderless
+# ──────────────────────────────────────────────
+
+- title: Borderless
+  blocks:
+    - id: borderless_default
+      type: PhoneNumberInput
+      properties:
+        title: Borderless
+        bordered: false
+        placeholder: No border style
+    - id: borderless_with_region
+      type: PhoneNumberInput
+      properties:
+        title: Borderless With Region
+        bordered: false
+        defaultRegion: GB
+        placeholder: No border
+
+# ──────────────────────────────────────────────
+# Allow Clear
+# ──────────────────────────────────────────────
+
+- title: Allow Clear
+  blocks:
+    - id: clear_enabled
+      type: PhoneNumberInput
+      properties:
+        title: Allow Clear
+        allowClear: true
+        placeholder: Type then clear
+    - id: clear_with_region
+      type: PhoneNumberInput
+      properties:
+        title: Allow Clear With Region
+        allowClear: true
+        defaultRegion: US
+        placeholder: Clearable input
+
+# ──────────────────────────────────────────────
+# Max Length
+# ──────────────────────────────────────────────
+
+- title: Max Length
+  blocks:
+    - id: maxlength_10
+      type: PhoneNumberInput
+      properties:
+        title: Max 10 Characters
+        maxLength: 10
+        placeholder: Up to 10 digits
+    - id: maxlength_15
+      type: PhoneNumberInput
+      properties:
+        title: Max 15 Characters
+        maxLength: 15
+        placeholder: Up to 15 characters
+    - id: maxlength_7
+      type: PhoneNumberInput
+      properties:
+        title: Max 7 Characters
+        maxLength: 7
+        placeholder: Short number
+
+# ──────────────────────────────────────────────
+# Icons
+# ──────────────────────────────────────────────
+
+- title: Icons
+  blocks:
+    - id: icon_prefix_phone
+      type: PhoneNumberInput
+      properties:
+        title: Prefix Phone Icon
+        prefixIcon: AiOutlinePhone
+        placeholder: Enter phone number
+    - id: icon_suffix_check
+      type: PhoneNumberInput
+      properties:
+        title: Suffix Check Icon
+        suffixIcon: AiOutlineCheckCircle
+        placeholder: Verified number
+    - id: icon_both
+      type: PhoneNumberInput
+      properties:
+        title: Both Icons
+        prefixIcon: AiOutlinePhone
+        suffixIcon: AiOutlineInfoCircle
+        placeholder: Enter number
+    - id: icon_custom_color
+      type: PhoneNumberInput
+      properties:
+        title: Custom Icon Color
+        prefixIcon:
+          name: AiOutlinePhone
+          color: '#1677ff'
+        placeholder: Blue phone icon
+
+# ──────────────────────────────────────────────
+# Label Options
+# ──────────────────────────────────────────────
+
+- title: Label Options
+  blocks:
+    - id: label_colon_true
+      type: PhoneNumberInput
+      properties:
+        title: With Colon
+        placeholder: Colon shown (default)
+        label:
+          colon: true
+    - id: label_colon_false
+      type: PhoneNumberInput
+      properties:
+        title: Without Colon
+        placeholder: No colon
+        label:
+          colon: false
+    - id: label_align_left
+      type: PhoneNumberInput
+      properties:
+        title: Left Aligned
+        placeholder: Label aligned left
+        label:
+          inline: true
+          align: left
+          span: 8
+    - id: label_align_right
+      type: PhoneNumberInput
+      properties:
+        title: Right Aligned
+        placeholder: Label aligned right
+        label:
+          inline: true
+          align: right
+          span: 8
+    - id: label_extra
+      type: PhoneNumberInput
+      properties:
+        title: With Extra Text
+        placeholder: Enter phone number
+        label:
+          extra: Include area code. We will not share your number.
+    - id: label_disabled
+      type: PhoneNumberInput
+      properties:
+        title: Label Hidden
+        placeholder: Label is hidden
+        label:
+          disabled: true
+    - id: label_feedback_off
+      type: PhoneNumberInput
+      properties:
+        title: No Feedback
+        placeholder: Feedback hidden
+        label:
+          hasFeedback: false
+
+# ──────────────────────────────────────────────
+# Label Inline
+# ──────────────────────────────────────────────
+
+- title: Label Inline
+  blocks:
+    - id: inline_span_4
+      type: PhoneNumberInput
+      properties:
+        title: Span 4
+        placeholder: Narrow label
+        label:
+          inline: true
+          span: 4
+    - id: inline_span_8
+      type: PhoneNumberInput
+      properties:
+        title: Span 8
+        placeholder: Medium label
+        label:
+          inline: true
+          span: 8
+    - id: inline_span_12
+      type: PhoneNumberInput
+      properties:
+        title: Span 12
+        placeholder: Wide label
+        label:
+          inline: true
+          span: 12
+
+# ──────────────────────────────────────────────
+# Replace Input
+# ──────────────────────────────────────────────
+
+- title: Replace Input
+  blocks:
+    - id: replace_digits_only
+      type: PhoneNumberInput
+      properties:
+        title: Digits Only
+        placeholder: Only digits allowed
+        replaceInput:
+          pattern: '[^0-9]'
+          flags: g
+          replacement: ''
+    - id: replace_digits_spaces_dashes
+      type: PhoneNumberInput
+      properties:
+        title: Digits, Spaces & Dashes
+        placeholder: Digits, spaces and dashes
+        replaceInput:
+          pattern: '[^0-9\s\-]'
+          flags: g
+          replacement: ''
+    - id: replace_digits_parens
+      type: PhoneNumberInput
+      properties:
+        title: US Format Characters
+        placeholder: '(555) 123-4567'
+        replaceInput:
+          pattern: '[^0-9()\-\s]'
+          flags: g
+          replacement: ''
+
+# ──────────────────────────────────────────────
+# Show Arrow
+# ──────────────────────────────────────────────
+
+- title: Show Arrow
+  blocks:
+    - id: arrow_visible
+      type: PhoneNumberInput
+      properties:
+        title: Arrow Visible (Default)
+        showArrow: true
+        placeholder: Selector has arrow
+    - id: arrow_hidden
+      type: PhoneNumberInput
+      properties:
+        title: Arrow Hidden
+        showArrow: false
+        placeholder: Selector without arrow
+
+# ──────────────────────────────────────────────
+# Theme Token Overrides
+# ──────────────────────────────────────────────
+
+- title: Theme Token Overrides
+  blocks:
+    - id: theme_active_border
+      type: PhoneNumberInput
+      properties:
+        title: Custom Active Border
+        placeholder: Focus to see green border
+        theme:
+          activeBorderColor: '#52c41a'
+          hoverBorderColor: '#73d13d'
+        label:
+          disabled: true
+    - id: theme_hover_border
+      type: PhoneNumberInput
+      properties:
+        title: Custom Hover Border
+        placeholder: Hover to see orange border
+        theme:
+          hoverBorderColor: '#fa8c16'
+        label:
+          disabled: true
+    - id: theme_addon_bg
+      type: PhoneNumberInput
+      properties:
+        title: Custom Addon Background
+        placeholder: Blue-tinted selector area
+        theme:
+          addonBg: '#e6f7ff'
+        label:
+          disabled: true
+    - id: theme_bg_container
+      type: PhoneNumberInput
+      properties:
+        title: Custom Background
+        placeholder: Light purple background
+        theme:
+          colorBgContainer: '#f9f0ff'
+        label:
+          disabled: true
+    - id: theme_placeholder_color
+      type: PhoneNumberInput
+      properties:
+        title: Custom Placeholder Color
+        placeholder: Orange placeholder text
+        theme:
+          colorTextPlaceholder: '#fa8c16'
+        label:
+          disabled: true
+
+- title: Theme - Combined Custom Theme
+  blocks:
+    - id: theme_combined_green
+      type: PhoneNumberInput
+      properties:
+        title: Green Theme
+        placeholder: Fully themed green
+        defaultRegion: US
+        theme:
+          colorPrimary: '#52c41a'
+          colorBgContainer: '#f6ffed'
+          colorBorder: '#b7eb8f'
+          hoverBorderColor: '#73d13d'
+          activeBorderColor: '#389e0d'
+          activeShadow: 0 0 0 2px rgba(82, 196, 26, 0.15)
+        label:
+          disabled: true
+    - id: theme_combined_purple
+      type: PhoneNumberInput
+      properties:
+        title: Purple Theme
+        placeholder: Fully themed purple
+        defaultRegion: GB
+        theme:
+          colorPrimary: '#722ed1'
+          colorBgContainer: '#f9f0ff'
+          colorBorder: '#d3adf7'
+          hoverBorderColor: '#b37feb'
+          activeBorderColor: '#531dab'
+          activeShadow: 0 0 0 2px rgba(114, 46, 209, 0.15)
+        label:
+          disabled: true
+    - id: theme_combined_dark
+      type: PhoneNumberInput
+      properties:
+        title: Dark Theme
+        defaultRegion: JP
+        theme:
+          colorBgContainer: '#1f1f1f'
+          colorBorder: '#434343'
+          colorText: '#ffffff'
+          hoverBorderColor: '#595959'
+          activeBorderColor: '#177ddc'
+          activeShadow: 0 0 0 2px rgba(23, 125, 220, 0.2)
+        label:
+          disabled: true
+
+# ──────────────────────────────────────────────
+# Combined Features
+# ──────────────────────────────────────────────
+
+- title: Combined Features
+  blocks:
+    - id: combined_full_us
+      type: PhoneNumberInput
+      properties:
+        title: US Phone Number
+        defaultRegion: US
+        allowedRegions:
+          - US
+          - CA
+        placeholder: (555) 123-4567
+        allowClear: true
+        size: large
+        prefixIcon: AiOutlinePhone
+        replaceInput:
+          pattern: '[^0-9()\-\s]'
+          flags: g
+          replacement: ''
+        label:
+          extra: Enter a US or Canadian phone number.
+          colon: false
+    - id: combined_international
+      type: PhoneNumberInput
+      properties:
+        title: International Number
+        defaultRegion: GB
+        placeholder: Enter international number
+        allowClear: true
+        maxLength: 15
+        suffixIcon: AiOutlineGlobal
+        label:
+          inline: true
+          span: 8
+          align: right
+          colon: true
+    - id: combined_compact
+      type: PhoneNumberInput
+      properties:
+        title: Compact Phone Input
+        defaultRegion: ZA
+        size: small
+        showArrow: false
+        placeholder: Number
+        label:
+          disabled: true
+    - id: combined_form_field
+      type: PhoneNumberInput
+      properties:
+        title: Mobile Number
+        defaultRegion: US
+        allowClear: true
+        maxLength: 10
+        placeholder: Enter mobile number
+        prefixIcon: AiOutlineMobile
+        replaceInput:
+          pattern: '[^0-9]'
+          flags: g
+          replacement: ''
+        label:
+          extra: 'Digits only. Maximum 10 characters.'
+          hasFeedback: true
+    - id: combined_themed_form
+      type: PhoneNumberInput
+      properties:
+        title: Themed Phone Field
+        defaultRegion: GB
+        allowedRegions:
+          - GB
+          - IE
+          - FR
+          - DE
+        placeholder: Enter number
+        allowClear: true
+        size: large
+        prefixIcon:
+          name: AiOutlinePhone
+          color: '#52c41a'
+        theme:
+          colorPrimary: '#52c41a'
+          colorBgContainer: '#f6ffed'
+          colorBorder: '#b7eb8f'
+          hoverBorderColor: '#73d13d'
+          activeBorderColor: '#389e0d'
+        label:
+          extra: Select your country and enter your phone number.
+          colon: false

@@ -66,6 +66,97 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/alert#design-token',
+        },
+        properties: {
+          defaultPadding: {
+            type: 'string',
+            default: '8px 12px',
+            description: 'Default padding for the alert without description.',
+          },
+          withDescriptionPadding: {
+            type: 'string',
+            default: '20px 24px',
+            description: 'Padding for the alert when a description is present.',
+          },
+          withDescriptionIconSize: {
+            type: 'number',
+            default: 24,
+            description: 'Icon size when the alert has a description.',
+          },
+          colorText: {
+            type: 'string',
+            description: 'Text color of the alert message.',
+          },
+          colorTextHeading: {
+            type: 'string',
+            description: 'Heading text color when the alert has a description.',
+          },
+          colorIcon: {
+            type: 'string',
+            description: 'Icon color override.',
+          },
+          colorIconHover: {
+            type: 'string',
+            description: 'Icon hover color for the close button.',
+          },
+          fontSize: {
+            type: 'number',
+            default: 14,
+            description: 'Font size of the alert text.',
+          },
+          fontSizeLG: {
+            type: 'number',
+            default: 16,
+            description: 'Font size of the alert message when a description is present.',
+          },
+          lineHeight: {
+            type: 'number',
+            default: 1.5714,
+            description: 'Line height of the alert text.',
+          },
+          borderRadius: {
+            type: 'number',
+            default: 8,
+            description: 'Border radius of the alert container.',
+          },
+          borderRadiusLG: {
+            type: 'number',
+            default: 8,
+            description: 'Border radius for large alerts.',
+          },
+          colorSuccessBg: {
+            type: 'string',
+            description: 'Background color for success alerts.',
+          },
+          colorSuccessBorder: {
+            type: 'string',
+            description: 'Border color for success alerts.',
+          },
+          colorInfoBg: {
+            type: 'string',
+            description: 'Background color for info alerts.',
+          },
+          colorInfoBorder: {
+            type: 'string',
+            description: 'Border color for info alerts.',
+          },
+          colorWarningBg: {
+            type: 'string',
+            description: 'Background color for warning alerts.',
+          },
+          colorWarningBorder: {
+            type: 'string',
+            description: 'Border color for warning alerts.',
+          },
+          colorErrorBg: {
+            type: 'string',
+            description: 'Background color for error alerts.',
+          },
+          colorErrorBorder: {
+            type: 'string',
+            description: 'Border color for error alerts.',
+          },
         },
       },
     },

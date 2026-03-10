@@ -13,20 +13,16 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: TitleInput
-    value_type: string
-    category: input
-    schema: ../plugins/blocks/blocks-antd/src/blocks/TitleInput/schema.js
+    pageId: TitleInput
+    pageTitle: TitleInput
+    section: Input Blocks
     filePath: blocks/input/TitleInput.yaml
-    init_state_values:
-      __type_block.properties.copyable: boolean
-      __type_block.properties.ellipsis: boolean
-      __type_block.properties.editable: boolean
-      __boolean_block.properties.copyable: false
-      __boolean_block.properties.ellipsis: false
-      __boolean_block.properties.editable: true
-      block_id: Click edit to change the title.
-    description_content: |
-      The `TitleInput` block can display a title, yet allow the user to click a edit icon and change the title. This is useful when the UI renders an existing document with a title, which a user must be able to edit.
+    block_type: TitleInput
+    antd_component: Typography
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/TitleInput
+    schema: ../plugins/blocks/blocks-antd/src/blocks/TitleInput/schema.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/TitleInput/gallery.yaml
+    description: >
+      Editable title heading with levels, copyable, and text styles.

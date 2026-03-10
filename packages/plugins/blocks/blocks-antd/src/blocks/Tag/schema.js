@@ -50,6 +50,24 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/tag#design-token',
+        },
+        properties: {
+          defaultBg: {
+            type: 'string',
+            default: '#fafafa',
+            description: 'Default background color of the tag.',
+          },
+          defaultColor: {
+            type: 'string',
+            default: 'rgba(0, 0, 0, 0.88)',
+            description: 'Default text color of the tag.',
+          },
+          solidTextColor: {
+            type: 'string',
+            default: '#fff',
+            description: 'Text color for solid (filled) tags, determined by background brightness.',
+          },
         },
       },
     },

@@ -128,7 +128,7 @@ const Label = ({
 Label.meta = {
   category: 'container',
   icons: ['AiFillCloseCircle', 'AiFillCheckCircle', 'AiOutlineLoading', 'AiFillExclamationCircle'],
-  cssKeys: ['element'],
+  cssKeys: ['element', 'label', 'extra', 'feedback'],
 };
 
 export default Label;

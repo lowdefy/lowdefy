@@ -159,6 +159,99 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/slider#design-token',
+        },
+        properties: {
+          controlSize: {
+            type: 'number',
+            default: 10,
+            description: 'Size of the slider control element.',
+          },
+          railSize: {
+            type: 'number',
+            default: 4,
+            description: 'Height (horizontal) or width (vertical) of the slider rail track.',
+          },
+          handleSize: {
+            type: 'number',
+            default: 10,
+            description: 'Size of the slider handle.',
+          },
+          handleSizeHover: {
+            type: 'number',
+            default: 12,
+            description: 'Size of the slider handle on hover.',
+          },
+          dotSize: {
+            type: 'number',
+            default: 8,
+            description: 'Size of the slider step dots.',
+          },
+          handleLineWidth: {
+            type: 'number',
+            default: 2,
+            description: 'Border line width of the handle.',
+          },
+          handleLineWidthHover: {
+            type: 'number',
+            default: 2.5,
+            description: 'Border line width of the handle on hover.',
+          },
+          railBg: {
+            type: 'string',
+            default: 'rgba(0,0,0,0.04)',
+            description: 'Background color of the slider rail.',
+          },
+          railHoverBg: {
+            type: 'string',
+            default: 'rgba(0,0,0,0.06)',
+            description: 'Background color of the slider rail on hover.',
+          },
+          trackBg: {
+            type: 'string',
+            default: '#91caff',
+            description: 'Background color of the active track.',
+          },
+          trackHoverBg: {
+            type: 'string',
+            default: '#69b1ff',
+            description: 'Background color of the active track on hover.',
+          },
+          handleColor: {
+            type: 'string',
+            default: '#91caff',
+            description: 'Color of the slider handle.',
+          },
+          handleActiveColor: {
+            type: 'string',
+            default: '#1677ff',
+            description: 'Color of the slider handle when active.',
+          },
+          handleActiveOutlineColor: {
+            type: 'string',
+            default: 'rgba(22,119,255,0.2)',
+            description: 'Color of the handle focus outline ring.',
+          },
+          handleColorDisabled: {
+            type: 'string',
+            default: '#bfbfbf',
+            description: 'Color of the slider handle when disabled.',
+          },
+          dotBorderColor: {
+            type: 'string',
+            default: '#f0f0f0',
+            description: 'Border color of the step dots.',
+          },
+          dotActiveBorderColor: {
+            type: 'string',
+            default: '#91caff',
+            description: 'Border color of the active step dots.',
+          },
+          trackBgDisabled: {
+            type: 'string',
+            default: 'rgba(0,0,0,0.04)',
+            description: 'Background color of the track when disabled.',
+          },
         },
       },
     },

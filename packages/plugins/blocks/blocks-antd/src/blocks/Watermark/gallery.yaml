@@ -1,0 +1,914 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic Text Watermark
+  blocks:
+    - id: basic_single
+      type: Watermark
+      properties:
+        text: Lowdefy
+      blocks:
+        - id: basic_single_child
+          type: Box
+          style:
+            height: 200px
+    - id: basic_custom_text
+      type: Watermark
+      properties:
+        text: Confidential
+      blocks:
+        - id: basic_custom_text_child
+          type: Box
+          style:
+            height: 200px
+    - id: basic_long_text
+      type: Watermark
+      properties:
+        text: Internal Use Only
+      blocks:
+        - id: basic_long_text_child
+          type: Box
+          style:
+            height: 200px
+
+- title: Multi-line Watermark
+  blocks:
+    - id: multi_two_lines
+      type: Watermark
+      properties:
+        text:
+          - Lowdefy
+          - Confidential
+      blocks:
+        - id: multi_two_lines_child
+          type: Box
+          style:
+            height: 220px
+    - id: multi_three_lines
+      type: Watermark
+      properties:
+        text:
+          - Acme Corp
+          - Internal Draft
+          - Do Not Distribute
+      blocks:
+        - id: multi_three_lines_child
+          type: Box
+          style:
+            height: 240px
+    - id: multi_date_stamp
+      type: Watermark
+      properties:
+        text:
+          - DRAFT
+          - 2026-03-10
+      blocks:
+        - id: multi_date_stamp_child
+          type: Box
+          style:
+            height: 220px
+
+- title: Image Watermark
+  blocks:
+    - id: img_logo
+      type: Watermark
+      properties:
+        image: https://lowdefy.com/favicon-32x32.png
+        width: 80
+        height: 80
+      blocks:
+        - id: img_logo_child
+          type: Box
+          style:
+            height: 240px
+    - id: img_small
+      type: Watermark
+      properties:
+        image: https://lowdefy.com/favicon-32x32.png
+        width: 40
+        height: 40
+      blocks:
+        - id: img_small_child
+          type: Box
+          style:
+            height: 200px
+    - id: img_large
+      type: Watermark
+      properties:
+        image: https://lowdefy.com/favicon-32x32.png
+        width: 120
+        height: 120
+      blocks:
+        - id: img_large_child
+          type: Box
+          style:
+            height: 280px
+
+- title: Font Color
+  blocks:
+    - id: font_red
+      type: Watermark
+      properties:
+        text: Rejected
+        font:
+          color: rgba(255, 0, 0, 0.15)
+      blocks:
+        - id: font_red_child
+          type: Box
+          style:
+            height: 180px
+    - id: font_blue
+      type: Watermark
+      properties:
+        text: Review
+        font:
+          color: rgba(22, 119, 255, 0.12)
+      blocks:
+        - id: font_blue_child
+          type: Box
+          style:
+            height: 180px
+    - id: font_green
+      type: Watermark
+      properties:
+        text: Approved
+        font:
+          color: rgba(82, 196, 26, 0.15)
+      blocks:
+        - id: font_green_child
+          type: Box
+          style:
+            height: 180px
+    - id: font_orange
+      type: Watermark
+      properties:
+        text: Pending
+        font:
+          color: rgba(250, 140, 22, 0.15)
+      blocks:
+        - id: font_orange_child
+          type: Box
+          style:
+            height: 180px
+    - id: font_dark
+      type: Watermark
+      properties:
+        text: Classified
+        font:
+          color: rgba(0, 0, 0, 0.2)
+      blocks:
+        - id: font_dark_child
+          type: Box
+          style:
+            height: 180px
+
+- title: Font Size and Weight
+  blocks:
+    - id: font_small_size
+      type: Watermark
+      properties:
+        text: Small Text
+        font:
+          fontSize: 12
+          color: rgba(0, 0, 0, 0.1)
+      blocks:
+        - id: font_small_size_child
+          type: Box
+          style:
+            height: 180px
+    - id: font_default_size
+      type: Watermark
+      properties:
+        text: Default Size (16px)
+        font:
+          color: rgba(0, 0, 0, 0.1)
+      blocks:
+        - id: font_default_size_child
+          type: Box
+          style:
+            height: 180px
+    - id: font_large_size
+      type: Watermark
+      properties:
+        text: Large Text
+        font:
+          fontSize: 24
+          color: rgba(0, 0, 0, 0.1)
+      blocks:
+        - id: font_large_size_child
+          type: Box
+          style:
+            height: 200px
+    - id: font_xl_size
+      type: Watermark
+      properties:
+        text: DRAFT
+        font:
+          fontSize: 36
+          fontWeight: bold
+          color: rgba(255, 0, 0, 0.08)
+      blocks:
+        - id: font_xl_size_child
+          type: Box
+          style:
+            height: 240px
+    - id: font_bold
+      type: Watermark
+      properties:
+        text: Bold Watermark
+        font:
+          fontWeight: bold
+          color: rgba(0, 0, 0, 0.12)
+      blocks:
+        - id: font_bold_child
+          type: Box
+          style:
+            height: 180px
+    - id: font_lighter
+      type: Watermark
+      properties:
+        text: Lighter Weight
+        font:
+          fontWeight: lighter
+          color: rgba(0, 0, 0, 0.08)
+      blocks:
+        - id: font_lighter_child
+          type: Box
+          style:
+            height: 180px
+    - id: font_numeric_weight
+      type: Watermark
+      properties:
+        text: Weight 900
+        font:
+          fontWeight: 900
+          color: rgba(0, 0, 0, 0.12)
+      blocks:
+        - id: font_numeric_weight_child
+          type: Box
+          style:
+            height: 180px
+
+- title: Font Family and Style
+  blocks:
+    - id: font_serif
+      type: Watermark
+      properties:
+        text: Serif Font
+        font:
+          fontFamily: Georgia, serif
+          fontSize: 18
+          color: rgba(0, 0, 0, 0.1)
+      blocks:
+        - id: font_serif_child
+          type: Box
+          style:
+            height: 200px
+    - id: font_mono
+      type: Watermark
+      properties:
+        text: Monospace
+        font:
+          fontFamily: 'Courier New, monospace'
+          fontSize: 16
+          color: rgba(0, 0, 0, 0.1)
+      blocks:
+        - id: font_mono_child
+          type: Box
+          style:
+            height: 200px
+    - id: font_italic
+      type: Watermark
+      properties:
+        text: Italic Style
+        font:
+          fontStyle: italic
+          fontSize: 18
+          color: rgba(0, 0, 0, 0.1)
+      blocks:
+        - id: font_italic_child
+          type: Box
+          style:
+            height: 200px
+    - id: font_italic_bold
+      type: Watermark
+      properties:
+        text: Bold Italic
+        font:
+          fontStyle: italic
+          fontWeight: bold
+          fontSize: 20
+          color: rgba(255, 0, 0, 0.1)
+      blocks:
+        - id: font_italic_bold_child
+          type: Box
+          style:
+            height: 200px
+
+- title: Text Alignment
+  blocks:
+    - id: align_left
+      type: Watermark
+      properties:
+        text:
+          - Left Aligned
+          - Second Line
+        font:
+          textAlign: left
+          color: rgba(0, 0, 0, 0.1)
+      blocks:
+        - id: align_left_child
+          type: Box
+          style:
+            height: 200px
+    - id: align_center
+      type: Watermark
+      properties:
+        text:
+          - Center Aligned
+          - Second Line
+        font:
+          textAlign: center
+          color: rgba(0, 0, 0, 0.1)
+      blocks:
+        - id: align_center_child
+          type: Box
+          style:
+            height: 200px
+    - id: align_right
+      type: Watermark
+      properties:
+        text:
+          - Right Aligned
+          - Second Line
+        font:
+          textAlign: right
+          color: rgba(0, 0, 0, 0.1)
+      blocks:
+        - id: align_right_child
+          type: Box
+          style:
+            height: 200px
+
+- title: Rotation Angles
+  blocks:
+    - id: rotate_default
+      type: Watermark
+      properties:
+        text: Default (-22 degrees)
+      blocks:
+        - id: rotate_default_child
+          type: Box
+          style:
+            height: 180px
+    - id: rotate_zero
+      type: Watermark
+      properties:
+        text: Horizontal (0 degrees)
+        rotate: 0
+      blocks:
+        - id: rotate_zero_child
+          type: Box
+          style:
+            height: 180px
+    - id: rotate_negative_10
+      type: Watermark
+      properties:
+        text: Gentle Tilt (-10 degrees)
+        rotate: -10
+      blocks:
+        - id: rotate_negative_10_child
+          type: Box
+          style:
+            height: 180px
+    - id: rotate_negative_45
+      type: Watermark
+      properties:
+        text: Steep (-45 degrees)
+        rotate: -45
+      blocks:
+        - id: rotate_negative_45_child
+          type: Box
+          style:
+            height: 200px
+    - id: rotate_positive
+      type: Watermark
+      properties:
+        text: Positive (22 degrees)
+        rotate: 22
+      blocks:
+        - id: rotate_positive_child
+          type: Box
+          style:
+            height: 180px
+    - id: rotate_vertical
+      type: Watermark
+      properties:
+        text: Vertical (-90 degrees)
+        rotate: -90
+      blocks:
+        - id: rotate_vertical_child
+          type: Box
+          style:
+            height: 200px
+
+- title: Gap Settings
+  blocks:
+    - id: gap_tight
+      type: Watermark
+      properties:
+        text: Tight Gap
+        gap:
+          - 50
+          - 50
+      blocks:
+        - id: gap_tight_child
+          type: Box
+          style:
+            height: 200px
+    - id: gap_default
+      type: Watermark
+      properties:
+        text: Default Gap (100, 100)
+      blocks:
+        - id: gap_default_child
+          type: Box
+          style:
+            height: 200px
+    - id: gap_wide
+      type: Watermark
+      properties:
+        text: Wide Gap
+        gap:
+          - 200
+          - 200
+      blocks:
+        - id: gap_wide_child
+          type: Box
+          style:
+            height: 200px
+    - id: gap_asymmetric
+      type: Watermark
+      properties:
+        text: Asymmetric Gap
+        gap:
+          - 50
+          - 150
+      blocks:
+        - id: gap_asymmetric_child
+          type: Box
+          style:
+            height: 200px
+    - id: gap_dense
+      type: Watermark
+      properties:
+        text: Very Dense
+        gap:
+          - 30
+          - 30
+        font:
+          fontSize: 12
+          color: rgba(0, 0, 0, 0.08)
+      blocks:
+        - id: gap_dense_child
+          type: Box
+          style:
+            height: 200px
+
+- title: Offset
+  blocks:
+    - id: offset_default
+      type: Watermark
+      properties:
+        text: No Offset (default)
+      blocks:
+        - id: offset_default_child
+          type: Box
+          style:
+            height: 200px
+    - id: offset_shifted
+      type: Watermark
+      properties:
+        text: Offset (30, 30)
+        offset:
+          - 30
+          - 30
+      blocks:
+        - id: offset_shifted_child
+          type: Box
+          style:
+            height: 200px
+    - id: offset_large
+      type: Watermark
+      properties:
+        text: Offset (80, 60)
+        offset:
+          - 80
+          - 60
+      blocks:
+        - id: offset_large_child
+          type: Box
+          style:
+            height: 200px
+
+- title: Z-Index Variations
+  blocks:
+    - id: zindex_default
+      type: Watermark
+      properties:
+        text: Default zIndex (9)
+      blocks:
+        - id: zindex_default_child
+          type: Box
+          style:
+            height: 180px
+    - id: zindex_low
+      type: Watermark
+      properties:
+        text: Low zIndex (1)
+        zIndex: 1
+      blocks:
+        - id: zindex_low_child
+          type: Box
+          style:
+            height: 180px
+    - id: zindex_high
+      type: Watermark
+      properties:
+        text: High zIndex (100)
+        zIndex: 100
+      blocks:
+        - id: zindex_high_child
+          type: Box
+          style:
+            height: 180px
+
+- title: Watermark Over Rich Content
+  blocks:
+    - id: over_paragraphs
+      type: Watermark
+      properties:
+        text: Lowdefy
+        font:
+          color: rgba(0, 0, 0, 0.08)
+      blocks:
+        - id: over_paragraphs_title
+          type: Title
+          properties:
+            content: Getting Started with Lowdefy
+            level: 4
+        - id: over_paragraphs_p1
+          type: Paragraph
+          properties:
+            content: >
+              Lowdefy is an open-source framework that lets you build web apps,
+              admin panels, BI dashboards, and CRUD apps with YAML or JSON configuration.
+        - id: over_paragraphs_p2
+          type: Paragraph
+          properties:
+            content: >
+              Connect to databases and APIs, define pages with blocks, and deploy
+              your app without writing frontend code.
+        - id: over_paragraphs_p3
+          type: Paragraph
+          properties:
+            content: >
+              The framework handles routing, state management, and server-side
+              rendering so you can focus on building your application logic.
+    - id: over_card
+      type: Watermark
+      properties:
+        text:
+          - Confidential
+          - Internal Only
+        font:
+          color: rgba(255, 0, 0, 0.08)
+          fontSize: 14
+      blocks:
+        - id: over_card_1
+          type: Card
+          layout:
+            flex: 1 1 0
+          properties:
+            title: Project Alpha
+          blocks:
+            - id: over_card_1_desc
+              type: Paragraph
+              properties:
+                content: A web application for managing team workflows and project timelines. Currently in active development with scheduled release next quarter.
+        - id: over_card_2
+          type: Card
+          layout:
+            flex: 1 1 0
+          properties:
+            title: Project Beta
+          blocks:
+            - id: over_card_2_desc
+              type: Paragraph
+              properties:
+                content: Mobile app for real-time inventory tracking across multiple warehouses. Integrates with existing ERP systems for seamless data sync.
+    - id: over_tags
+      type: Watermark
+      properties:
+        text: Sample Data
+        font:
+          color: rgba(0, 0, 0, 0.06)
+      blocks:
+        - id: over_tags_title
+          type: Title
+          properties:
+            content: Department Labels
+            level: 5
+        - id: over_tags_row
+          type: Box
+          layout:
+            gap: 8
+          blocks:
+            - id: over_tag_eng
+              type: Tag
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Engineering
+                color: blue
+            - id: over_tag_design
+              type: Tag
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Design
+                color: purple
+            - id: over_tag_marketing
+              type: Tag
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Marketing
+                color: green
+            - id: over_tag_sales
+              type: Tag
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Sales
+                color: orange
+            - id: over_tag_support
+              type: Tag
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Support
+                color: cyan
+
+- title: Document-Style Watermarks
+  blocks:
+    - id: doc_draft_bg
+      type: Box
+      class: bg-white rounded-lg shadow-sm
+      blocks:
+        - id: doc_draft
+          type: Watermark
+          properties:
+            text: DRAFT
+            font:
+              fontSize: 28
+              fontWeight: bold
+              color: rgba(255, 0, 0, 0.06)
+            gap:
+              - 150
+              - 150
+            rotate: -30
+          blocks:
+            - id: doc_draft_heading
+              type: Title
+              properties:
+                content: Quarterly Financial Report
+                level: 4
+            - id: doc_draft_subtitle
+              type: Paragraph
+              properties:
+                content: Prepared for the Board of Directors — Q1 2026
+            - id: doc_draft_divider
+              type: Divider
+            - id: doc_draft_body_1
+              type: Paragraph
+              properties:
+                content: >
+                  Revenue for the first quarter reached $12.4M, representing a 15% increase
+                  year-over-year. Operating margins improved to 23% driven by efficiency gains
+                  across all business units.
+            - id: doc_draft_body_2
+              type: Paragraph
+              properties:
+                content: >
+                  Customer acquisition costs decreased by 8% while customer lifetime value
+                  increased by 12%, indicating strong unit economics. The sales pipeline
+                  remains robust with $45M in qualified opportunities.
+    - id: doc_confidential_bg
+      type: Box
+      class: bg-white rounded-lg shadow-sm
+      blocks:
+        - id: doc_confidential
+          type: Watermark
+          properties:
+            text:
+              - CONFIDENTIAL
+              - Do Not Copy
+            font:
+              fontSize: 20
+              color: rgba(22, 119, 255, 0.06)
+              fontWeight: bold
+            gap:
+              - 120
+              - 120
+          blocks:
+            - id: doc_conf_heading
+              type: Title
+              properties:
+                content: Product Roadmap 2026
+                level: 4
+            - id: doc_conf_p1
+              type: Paragraph
+              properties:
+                content: >
+                  Phase 1 (Q1-Q2): Core platform enhancements including improved
+                  real-time collaboration features and expanded API coverage.
+            - id: doc_conf_p2
+              type: Paragraph
+              properties:
+                content: >
+                  Phase 2 (Q3-Q4): Launch of enterprise tier with advanced
+                  security controls, audit logging, and custom SSO integrations.
+
+- title: Styled Containers
+  blocks:
+    - id: styled_gradient
+      type: Watermark
+      class: bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg p-4
+      properties:
+        text: Preview
+        font:
+          color: rgba(79, 70, 229, 0.1)
+          fontSize: 18
+      blocks:
+        - id: styled_gradient_content
+          type: Paragraph
+          properties:
+            content: >
+              Watermark on a gradient background using Tailwind utility classes.
+              The rounded corners and padding create a contained preview area.
+        - id: styled_gradient_button
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Action Button
+            color: primary
+            variant: solid
+    - id: styled_dark
+      type: Watermark
+      class: bg-slate-800 rounded-lg p-4
+      properties:
+        text: Dark Theme
+        font:
+          color: rgba(255, 255, 255, 0.08)
+          fontSize: 16
+      blocks:
+        - id: styled_dark_title
+          type: Title
+          style:
+            color: white
+          properties:
+            content: Dark Background
+            level: 5
+        - id: styled_dark_content
+          type: Paragraph
+          style:
+            color: rgba(255, 255, 255, 0.7)
+          properties:
+            content: >
+              The watermark text color uses white with low opacity to remain subtle
+              on a dark surface. This is useful for dark-mode interfaces.
+    - id: styled_bordered
+      type: Watermark
+      class: border-2 border-dashed border-gray-300 rounded-xl p-6
+      properties:
+        text: Upload Area
+        font:
+          color: rgba(0, 0, 0, 0.06)
+          fontSize: 20
+        rotate: 0
+        gap:
+          - 120
+          - 80
+      blocks:
+        - id: styled_bordered_text
+          type: Paragraph
+          style:
+            textAlign: center
+            color: '#999'
+          properties:
+            content: Drag and drop files here or click to browse
+    - id: styled_shadow
+      type: Watermark
+      class: bg-white rounded-lg shadow-lg p-6
+      properties:
+        text: Protected
+        font:
+          color: rgba(0, 0, 0, 0.05)
+      blocks:
+        - id: styled_shadow_content
+          type: Paragraph
+          properties:
+            content: >
+              Elevated card-like container with a box shadow and the watermark
+              rendered over the content area for a polished document feel.
+
+- title: Combined Font Properties
+  blocks:
+    - id: combo_elegant
+      type: Watermark
+      properties:
+        text: Elegant
+        font:
+          fontFamily: Georgia, serif
+          fontSize: 22
+          fontStyle: italic
+          fontWeight: bold
+          color: rgba(139, 92, 246, 0.1)
+        rotate: -15
+        gap:
+          - 140
+          - 100
+      blocks:
+        - id: combo_elegant_child
+          type: Box
+          style:
+            height: 200px
+    - id: combo_stamp
+      type: Watermark
+      properties:
+        text:
+          - APPROVED
+          - 2026-03-10
+        font:
+          fontFamily: 'Impact, sans-serif'
+          fontSize: 20
+          fontWeight: bold
+          color: rgba(82, 196, 26, 0.12)
+        rotate: -30
+        gap:
+          - 180
+          - 150
+      blocks:
+        - id: combo_stamp_child
+          type: Box
+          style:
+            height: 220px
+    - id: combo_technical
+      type: Watermark
+      properties:
+        text:
+          - REV 3.2
+          - UNCONTROLLED COPY
+        font:
+          fontFamily: 'Courier New, monospace'
+          fontSize: 14
+          color: rgba(0, 0, 0, 0.1)
+        rotate: -22
+        gap:
+          - 100
+          - 80
+      blocks:
+        - id: combo_technical_child
+          type: Box
+          style:
+            height: 200px
+    - id: combo_subtle
+      type: Watermark
+      properties:
+        text: Background Texture
+        font:
+          fontSize: 12
+          fontWeight: lighter
+          color: rgba(0, 0, 0, 0.03)
+        gap:
+          - 60
+          - 40
+        rotate: -15
+      blocks:
+        - id: combo_subtle_child
+          type: Box
+          style:
+            height: 200px

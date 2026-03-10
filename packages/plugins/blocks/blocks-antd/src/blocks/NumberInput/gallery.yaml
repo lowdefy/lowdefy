@@ -1,0 +1,1052 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic
+  blocks:
+    - id: basic_default
+      type: NumberInput
+      properties:
+        title: Enter a Number
+        placeholder: Type a number
+    - id: basic_with_value
+      type: NumberInput
+      properties:
+        title: With Default Value
+        placeholder: Has initial value
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              basic_with_value: 42
+    - id: basic_no_label
+      type: NumberInput
+      properties:
+        label:
+          disabled: true
+        placeholder: No label shown
+- title: Sizes
+  blocks:
+    - id: size_small
+      type: NumberInput
+      properties:
+        title: Small
+        size: small
+        placeholder: Small
+    - id: size_default
+      type: NumberInput
+      properties:
+        title: Default
+        placeholder: Default
+    - id: size_large
+      type: NumberInput
+      properties:
+        title: Large
+        size: large
+        placeholder: Large
+- title: Min, Max & Step
+  blocks:
+    - id: min_max
+      type: NumberInput
+      properties:
+        title: Range 1-100
+        min: 1
+        max: 100
+        placeholder: 1 to 100
+    - id: min_only
+      type: NumberInput
+      properties:
+        title: Min 0 (No Negatives)
+        min: 0
+        placeholder: Zero or above
+    - id: max_only
+      type: NumberInput
+      properties:
+        title: Max 1000
+        max: 1000
+        placeholder: Up to 1000
+    - id: step_5
+      type: NumberInput
+      properties:
+        title: Step 5
+        min: 0
+        max: 100
+        step: 5
+        placeholder: Increments of 5
+    - id: step_10
+      type: NumberInput
+      properties:
+        title: Step 10
+        min: 0
+        max: 1000
+        step: 10
+        placeholder: Increments of 10
+    - id: step_decimal
+      type: NumberInput
+      properties:
+        title: Decimal Step 0.1
+        min: 0
+        max: 10
+        step: 0.1
+        precision: 1
+        placeholder: Step 0.1
+    - id: step_decimal_small
+      type: NumberInput
+      properties:
+        title: Decimal Step 0.01
+        min: 0
+        max: 1
+        step: 0.01
+        precision: 2
+        placeholder: Step 0.01
+    - id: step_negative
+      type: NumberInput
+      properties:
+        title: Negative Range
+        min: -100
+        max: 100
+        step: 5
+        placeholder: '-100 to 100'
+- title: Precision
+  blocks:
+    - id: precision_0
+      type: NumberInput
+      properties:
+        title: Integer Only (precision 0)
+        precision: 0
+        placeholder: No decimals
+    - id: precision_1
+      type: NumberInput
+      properties:
+        title: 1 Decimal Place
+        precision: 1
+        placeholder: e.g. 3.1
+    - id: precision_2
+      type: NumberInput
+      properties:
+        title: 2 Decimal Places
+        precision: 2
+        placeholder: e.g. 3.14
+    - id: precision_4
+      type: NumberInput
+      properties:
+        title: 4 Decimal Places
+        precision: 4
+        placeholder: e.g. 1.2345
+- title: Decimal Separator
+  blocks:
+    - id: separator_default
+      type: NumberInput
+      properties:
+        title: Default Separator (.)
+        precision: 2
+        placeholder: Uses period
+    - id: separator_comma
+      type: NumberInput
+      properties:
+        title: Comma Separator
+        decimalSeparator: ','
+        precision: 2
+        placeholder: Uses comma
+- title: Controls
+  blocks:
+    - id: controls_default
+      type: NumberInput
+      properties:
+        title: With Controls (Default)
+        controls: true
+        placeholder: Has +/- buttons
+    - id: controls_off
+      type: NumberInput
+      properties:
+        title: No Controls
+        controls: false
+        placeholder: No +/- buttons
+    - id: controls_with_step
+      type: NumberInput
+      properties:
+        title: Controls with Step 5
+        controls: true
+        step: 5
+        min: 0
+        max: 100
+        placeholder: Click +/- by 5
+- title: Keyboard Navigation
+  blocks:
+    - id: keyboard_enabled
+      type: NumberInput
+      properties:
+        title: Keyboard Enabled (Default)
+        keyboard: true
+        placeholder: Use arrow keys
+    - id: keyboard_disabled
+      type: NumberInput
+      properties:
+        title: Keyboard Disabled
+        keyboard: false
+        placeholder: Arrow keys do nothing
+- title: Disabled State
+  blocks:
+    - id: disabled_empty
+      type: NumberInput
+      properties:
+        title: Disabled (Empty)
+        disabled: true
+        placeholder: Cannot edit
+    - id: disabled_with_value
+      type: NumberInput
+      properties:
+        title: Disabled (With Value)
+        disabled: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              disabled_with_value: 50
+    - id: disabled_controls
+      type: NumberInput
+      properties:
+        title: Disabled With Controls
+        disabled: true
+        controls: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              disabled_controls: 25
+- title: Borderless
+  blocks:
+    - id: borderless_empty
+      type: NumberInput
+      properties:
+        title: Borderless
+        bordered: false
+        placeholder: No border style
+    - id: borderless_with_value
+      type: NumberInput
+      properties:
+        title: Borderless With Value
+        bordered: false
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              borderless_with_value: 99
+- title: Placeholder Variations
+  blocks:
+    - id: placeholder_default
+      type: NumberInput
+      properties:
+        title: Default Placeholder
+        placeholder: Enter a number...
+    - id: placeholder_quantity
+      type: NumberInput
+      properties:
+        title: Quantity
+        placeholder: How many?
+        min: 0
+    - id: placeholder_price
+      type: NumberInput
+      properties:
+        title: Price
+        placeholder: 0
+        precision: 2
+        min: 0
+    - id: placeholder_percentage
+      type: NumberInput
+      properties:
+        title: Percentage
+        placeholder: 0-100
+        min: 0
+        max: 100
+- title: Formatter & Parser
+  blocks:
+    - id: formatter_currency
+      type: NumberInput
+      properties:
+        title: Currency Formatter
+        placeholder: Enter amount
+        min: 0
+        precision: 2
+        formatter:
+          _function:
+            __format.intlNumberFormat:
+              'on':
+                __args: 0.value
+              params:
+                locale: en-US
+                options:
+                  style: currency
+                  currency: USD
+    - id: formatter_percent
+      type: NumberInput
+      properties:
+        title: Percentage Formatter
+        placeholder: Enter percentage
+        min: 0
+        max: 100
+        formatter:
+          _function:
+            __if:
+              test:
+                __ne:
+                  - __args: 0.value
+                  - null
+              then:
+                __string.concat:
+                  - __args: 0.value
+                  - '%'
+              else: ''
+- title: AutoFocus
+  blocks:
+    - id: autofocus_off
+      type: NumberInput
+      properties:
+        title: Normal (No AutoFocus)
+        autoFocus: false
+        placeholder: Click to focus
+    - id: autofocus_note
+      type: Markdown
+      properties:
+        content: '*Note: autoFocus is best demonstrated on page load. Set `autoFocus: true` to focus the input when the page renders.*'
+- title: Label Options
+  blocks:
+    - id: label_default
+      type: NumberInput
+      properties:
+        title: Default Label
+        placeholder: Standard label
+    - id: label_no_colon
+      type: NumberInput
+      properties:
+        title: No Colon
+        placeholder: Label without colon
+        label:
+          colon: false
+    - id: label_right_align
+      type: NumberInput
+      properties:
+        title: Right Aligned Label
+        placeholder: Inline right label
+        label:
+          inline: true
+          align: right
+          span: 8
+    - id: label_left_align
+      type: NumberInput
+      properties:
+        title: Left Aligned Label
+        placeholder: Inline left label
+        label:
+          inline: true
+          align: left
+          span: 8
+    - id: label_extra
+      type: NumberInput
+      properties:
+        title: With Extra Text
+        placeholder: Has helper text below
+        label:
+          extra: Enter a value between 1 and 100.
+    - id: label_extra_html
+      type: NumberInput
+      properties:
+        title: Extra with HTML
+        placeholder: HTML extra text
+        label:
+          extra: Supports <b>bold</b> and <em>italic</em> text.
+    - id: label_disabled
+      type: NumberInput
+      properties:
+        placeholder: Label hidden entirely
+        label:
+          disabled: true
+    - id: label_no_feedback
+      type: NumberInput
+      properties:
+        title: No Validation Feedback
+        placeholder: Feedback hidden
+        label:
+          hasFeedback: false
+- title: Label Inline Spans
+  blocks:
+    - id: label_span_4
+      type: NumberInput
+      properties:
+        title: Span 4
+        placeholder: Narrow label
+        label:
+          inline: true
+          span: 4
+    - id: label_span_8
+      type: NumberInput
+      properties:
+        title: Span 8
+        placeholder: Medium label
+        label:
+          inline: true
+          span: 8
+    - id: label_span_12
+      type: NumberInput
+      properties:
+        title: Span 12
+        placeholder: Wide label
+        label:
+          inline: true
+          span: 12
+- title: HTML in Title
+  blocks:
+    - id: title_bold
+      type: NumberInput
+      properties:
+        title: <b>Bold</b> Title
+        placeholder: HTML bold label
+    - id: title_colored
+      type: NumberInput
+      properties:
+        title: '<span style="color: #1677ff;">Blue</span> Title'
+        placeholder: HTML colored label
+    - id: title_icon_html
+      type: NumberInput
+      properties:
+        title: Quantity &#x1F4E6;
+        placeholder: HTML entity in label
+- title: Combined Features
+  blocks:
+    - id: combined_price
+      type: NumberInput
+      properties:
+        title: Product Price
+        min: 0
+        max: 99999
+        step: 0.01
+        precision: 2
+        placeholder: 0
+        label:
+          extra: Enter the product price in USD.
+    - id: combined_quantity
+      type: NumberInput
+      properties:
+        title: Quantity
+        min: 1
+        max: 999
+        step: 1
+        precision: 0
+        placeholder: Enter quantity
+        size: large
+    - id: combined_percentage
+      type: NumberInput
+      properties:
+        title: Discount (%)
+        min: 0
+        max: 100
+        step: 0.5
+        precision: 1
+        placeholder: 0
+        size: small
+        label:
+          extra: Percentage discount to apply.
+    - id: combined_temperature
+      type: NumberInput
+      properties:
+        title: Temperature
+        min: -50
+        max: 50
+        step: 0.1
+        precision: 1
+        decimalSeparator: .
+        placeholder: Celsius
+    - id: combined_borderless_disabled
+      type: NumberInput
+      properties:
+        title: Read-Only Value
+        disabled: true
+        bordered: false
+        precision: 5
+        controls: false
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              combined_borderless_disabled: 3.14159
+- title: Size + Controls Matrix
+  blocks:
+    - id: mx_size_label
+      type: Markdown
+      properties:
+        content: '**With Controls:**'
+    - id: mx_size_controls_row
+      type: Box
+      layout:
+        gap: 16
+      blocks:
+        - id: mx_small_controls
+          type: NumberInput
+          layout:
+            flex: 1 1 0
+          properties:
+            size: small
+            controls: true
+            placeholder: Small
+            label:
+              disabled: true
+        - id: mx_default_controls
+          type: NumberInput
+          layout:
+            flex: 1 1 0
+          properties:
+            controls: true
+            placeholder: Default
+            label:
+              disabled: true
+        - id: mx_large_controls
+          type: NumberInput
+          layout:
+            flex: 1 1 0
+          properties:
+            size: large
+            controls: true
+            placeholder: Large
+            label:
+              disabled: true
+    - id: mx_no_controls_label
+      type: Markdown
+      properties:
+        content: '**Without Controls:**'
+    - id: mx_size_no_controls_row
+      type: Box
+      layout:
+        gap: 16
+      blocks:
+        - id: mx_small_no_controls
+          type: NumberInput
+          layout:
+            flex: 1 1 0
+          properties:
+            size: small
+            controls: false
+            placeholder: Small
+            label:
+              disabled: true
+        - id: mx_default_no_controls
+          type: NumberInput
+          layout:
+            flex: 1 1 0
+          properties:
+            controls: false
+            placeholder: Default
+            label:
+              disabled: true
+        - id: mx_large_no_controls
+          type: NumberInput
+          layout:
+            flex: 1 1 0
+          properties:
+            size: large
+            controls: false
+            placeholder: Large
+            label:
+              disabled: true
+    - id: mx_borderless_label
+      type: Markdown
+      properties:
+        content: '**Borderless:**'
+    - id: mx_size_borderless_row
+      type: Box
+      layout:
+        gap: 16
+      blocks:
+        - id: mx_small_borderless
+          type: NumberInput
+          layout:
+            flex: 1 1 0
+          properties:
+            size: small
+            bordered: false
+            placeholder: Small
+            label:
+              disabled: true
+        - id: mx_default_borderless
+          type: NumberInput
+          layout:
+            flex: 1 1 0
+          properties:
+            bordered: false
+            placeholder: Default
+            label:
+              disabled: true
+        - id: mx_large_borderless
+          type: NumberInput
+          layout:
+            flex: 1 1 0
+          properties:
+            size: large
+            bordered: false
+            placeholder: Large
+            label:
+              disabled: true
+    - id: mx_disabled_label
+      type: Markdown
+      properties:
+        content: '**Disabled:**'
+    - id: mx_size_disabled_row
+      type: Box
+      layout:
+        gap: 16
+      blocks:
+        - id: mx_small_disabled
+          type: NumberInput
+          layout:
+            flex: 1 1 0
+          properties:
+            size: small
+            disabled: true
+            label:
+              disabled: true
+          events:
+            onMount:
+              - id: set_default
+                type: SetState
+                params:
+                  mx_small_disabled: 10
+        - id: mx_default_disabled
+          type: NumberInput
+          layout:
+            flex: 1 1 0
+          properties:
+            disabled: true
+            label:
+              disabled: true
+          events:
+            onMount:
+              - id: set_default
+                type: SetState
+                params:
+                  mx_default_disabled: 50
+        - id: mx_large_disabled
+          type: NumberInput
+          layout:
+            flex: 1 1 0
+          properties:
+            size: large
+            disabled: true
+            label:
+              disabled: true
+          events:
+            onMount:
+              - id: set_default
+                type: SetState
+                params:
+                  mx_large_disabled: 100
+- title: Step Variations
+  blocks:
+    - id: step_1
+      type: NumberInput
+      properties:
+        title: Step 1 (Default)
+        step: 1
+        placeholder: Whole numbers
+    - id: step_0_5
+      type: NumberInput
+      properties:
+        title: Step 0.5
+        step: 0.5
+        precision: 1
+        placeholder: Half increments
+    - id: step_0_25
+      type: NumberInput
+      properties:
+        title: Step 0.25
+        step: 0.25
+        precision: 2
+        placeholder: Quarter increments
+    - id: step_100
+      type: NumberInput
+      properties:
+        title: Step 100
+        step: 100
+        min: 0
+        max: 10000
+        placeholder: Hundreds
+    - id: step_0_001
+      type: NumberInput
+      properties:
+        title: Step 0.001
+        step: 0.001
+        precision: 3
+        placeholder: Thousandths
+- title: CSS Style Overrides
+  blocks:
+    - id: style_width
+      type: NumberInput
+      style:
+        --element:
+          width: 200px
+      properties:
+        title: Fixed Width (200px)
+        placeholder: 200px wide
+    - id: style_background
+      type: NumberInput
+      style:
+        --element:
+          backgroundColor: '#f0f5ff'
+      properties:
+        title: Custom Background
+        placeholder: Light blue background
+    - id: style_border
+      type: NumberInput
+      style:
+        --element:
+          borderColor: '#52c41a'
+          borderWidth: 2px
+      properties:
+        title: Custom Border
+        placeholder: Green border
+    - id: style_font
+      type: NumberInput
+      style:
+        --element:
+          fontSize: 18px
+          fontWeight: bold
+      properties:
+        title: Custom Font
+        placeholder: Large bold text
+    - id: style_label
+      type: NumberInput
+      style:
+        --label:
+          color: '#722ed1'
+          fontWeight: bold
+      properties:
+        title: Styled Label
+        placeholder: Purple bold label
+- title: CSS Class Overrides
+  blocks:
+    - id: class_element
+      type: NumberInput
+      class:
+        element: rounded-lg shadow-md
+      properties:
+        title: Rounded with Shadow
+        placeholder: Tailwind classes
+    - id: class_label
+      type: NumberInput
+      class:
+        label: text-blue-600 font-semibold
+      properties:
+        title: Blue Bold Label
+        placeholder: Label class override
+- title: Theme Token Overrides
+  blocks:
+    - id: theme_colors
+      type: NumberInput
+      properties:
+        title: Custom Colors
+        placeholder: Blue focus, green hover
+        theme:
+          activeBorderColor: '#1677ff'
+          hoverBorderColor: '#52c41a'
+    - id: theme_padding
+      type: NumberInput
+      properties:
+        title: Extra Padding
+        placeholder: More spacious
+        theme:
+          paddingBlock: 8
+          paddingInline: 16
+    - id: theme_large_handles
+      type: NumberInput
+      properties:
+        title: Large Handles
+        placeholder: Wider +/- area
+        theme:
+          handleWidth: 30
+          handleFontSize: 10
+    - id: theme_shadows
+      type: NumberInput
+      properties:
+        title: Custom Active Shadow
+        placeholder: Focus to see shadow
+        theme:
+          activeShadow: 0 0 0 3px rgba(22, 119, 255, 0.2)
+    - id: theme_handle_colors
+      type: NumberInput
+      properties:
+        title: Colored Handles
+        placeholder: Hover +/- to see color
+        theme:
+          handleHoverColor: '#eb2f96'
+          handleBorderColor: '#d9d9d9'
+          handleBg: '#fff0f6'
+    - id: theme_addon_bg
+      type: NumberInput
+      properties:
+        title: Custom Addon Background
+        placeholder: Themed addon area
+        theme:
+          addonBg: '#e6f7ff'
+    - id: theme_filled_handle
+      type: NumberInput
+      properties:
+        title: Custom Filled Handle
+        placeholder: Styled handle bg
+        theme:
+          filledHandleBg: '#bae7ff'
+          handleActiveBg: '#91d5ff'
+    - id: theme_font_sizes
+      type: NumberInput
+      properties:
+        title: Custom Font Sizes
+        placeholder: Larger text
+        size: large
+        theme:
+          inputFontSize: 16
+          inputFontSizeLG: 20
+          inputFontSizeSM: 12
+- title: Theme + Size Combinations
+  blocks:
+    - id: theme_small_pill
+      type: NumberInput
+      properties:
+        title: Small Rounded
+        size: small
+        placeholder: Pill style
+        theme:
+          borderRadius: 16
+    - id: theme_default_rounded
+      type: NumberInput
+      properties:
+        title: Default Rounded
+        placeholder: Rounded corners
+        theme:
+          borderRadius: 12
+    - id: theme_large_rounded
+      type: NumberInput
+      properties:
+        title: Large Rounded
+        size: large
+        placeholder: Very rounded
+        theme:
+          borderRadius: 20
+    - id: theme_compact
+      type: NumberInput
+      properties:
+        title: Compact Style
+        size: small
+        controls: false
+        placeholder: Minimal
+        theme:
+          paddingBlock: 0
+          paddingInline: 4
+          paddingBlockSM: 0
+          paddingInlineSM: 4
+    - id: theme_spacious
+      type: NumberInput
+      properties:
+        title: Spacious Style
+        size: large
+        placeholder: Extra room
+        theme:
+          paddingBlock: 12
+          paddingBlockLG: 12
+          paddingInlineLG: 20
+- title: Real-World Use Cases
+  blocks:
+    - id: use_age
+      type: NumberInput
+      properties:
+        title: Age
+        min: 0
+        max: 150
+        precision: 0
+        step: 1
+        placeholder: Enter age
+        label:
+          extra: Must be between 0 and 150.
+    - id: use_weight
+      type: NumberInput
+      properties:
+        title: Weight (kg)
+        min: 0
+        max: 500
+        precision: 1
+        step: 0.1
+        placeholder: e.g. 72.5
+    - id: use_rating
+      type: NumberInput
+      properties:
+        title: Rating
+        min: 1
+        max: 5
+        precision: 1
+        step: 0.5
+        placeholder: 1.0 - 5.0
+        label:
+          extra: Rate from 1 to 5 in half-star increments.
+    - id: use_latitude
+      type: NumberInput
+      properties:
+        title: Latitude
+        min: -90
+        max: 90
+        precision: 6
+        step: 0.000001
+        placeholder: e.g. 40.712776
+        controls: false
+    - id: use_longitude
+      type: NumberInput
+      properties:
+        title: Longitude
+        min: -180
+        max: 180
+        precision: 6
+        step: 0.000001
+        placeholder: e.g. -74.005974
+        controls: false
+    - id: use_order_quantity
+      type: NumberInput
+      properties:
+        title: Order Quantity
+        min: 1
+        max: 999
+        precision: 0
+        step: 1
+        size: large
+        placeholder: Qty
+        label:
+          inline: true
+          span: 8
+          align: right
+- title: Form Layout Patterns
+  blocks:
+    - id: form_row_label
+      type: Markdown
+      properties:
+        content: '**Inline Labels:**'
+    - id: form_inline_row
+      type: Box
+      layout:
+        gap: 16
+      blocks:
+        - id: form_width
+          type: NumberInput
+          layout:
+            flex: 1 1 0
+          properties:
+            title: Width
+            min: 0
+            precision: 0
+            placeholder: px
+            label:
+              inline: true
+              span: 10
+        - id: form_height
+          type: NumberInput
+          layout:
+            flex: 1 1 0
+          properties:
+            title: Height
+            min: 0
+            precision: 0
+            placeholder: px
+            label:
+              inline: true
+              span: 10
+    - id: form_stacked_label
+      type: Markdown
+      properties:
+        content: '**Stacked Labels:**'
+    - id: form_stacked_row
+      type: Box
+      layout:
+        gap: 16
+      blocks:
+        - id: form_min_price
+          type: NumberInput
+          layout:
+            flex: 1 1 0
+          properties:
+            title: Min Price
+            min: 0
+            precision: 2
+            placeholder: 0
+        - id: form_max_price
+          type: NumberInput
+          layout:
+            flex: 1 1 0
+          properties:
+            title: Max Price
+            min: 0
+            precision: 2
+            placeholder: 0
+    - id: form_no_label_label
+      type: Markdown
+      properties:
+        content: '**No Labels (Compact):**'
+    - id: form_no_label_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: form_x
+          type: NumberInput
+          layout:
+            flex: 1 1 0
+          properties:
+            placeholder: X
+            precision: 0
+            label:
+              disabled: true
+        - id: form_y
+          type: NumberInput
+          layout:
+            flex: 1 1 0
+          properties:
+            placeholder: 'Y'
+            precision: 0
+            label:
+              disabled: true
+        - id: form_z
+          type: NumberInput
+          layout:
+            flex: 1 1 0
+          properties:
+            placeholder: Z
+            precision: 0
+            label:
+              disabled: true
+- title: Warning & Error States
+  blocks:
+    - id: warning_note
+      type: Markdown
+      properties:
+        content: '*Validation status is controlled by the Lowdefy validation system. These examples show the visual appearance using theme tokens.*'
+    - id: theme_error_colors
+      type: NumberInput
+      properties:
+        title: Error Shadow Theme
+        placeholder: Custom error shadow
+        theme:
+          errorActiveShadow: 0 0 0 3px rgba(255, 77, 79, 0.3)
+    - id: theme_warning_colors
+      type: NumberInput
+      properties:
+        title: Warning Shadow Theme
+        placeholder: Custom warning shadow
+        theme:
+          warningActiveShadow: 0 0 0 3px rgba(250, 173, 20, 0.3)

@@ -1,0 +1,446 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic
+  blocks:
+    - id: basic_image
+      type: Img
+      layout:
+        flex: 0 0 auto
+      properties:
+        src: https://placehold.co/300x200
+        alt: Placeholder image
+
+- title: Sizes
+  blocks:
+    - id: size_tiny
+      type: Img
+      layout:
+        flex: 0 0 auto
+      properties:
+        src: https://placehold.co/60x60
+        alt: Tiny image
+        width: 60
+        height: 60
+    - id: size_small
+      type: Img
+      layout:
+        flex: 0 0 auto
+      properties:
+        src: https://placehold.co/100x100
+        alt: Small image
+        width: 100
+        height: 100
+    - id: size_medium
+      type: Img
+      layout:
+        flex: 0 0 auto
+      properties:
+        src: https://placehold.co/200x150
+        alt: Medium image
+        width: 200
+        height: 150
+    - id: size_large
+      type: Img
+      layout:
+        flex: 0 0 auto
+      properties:
+        src: https://placehold.co/400x200
+        alt: Large image
+        width: 400
+        height: 200
+    - id: size_wide
+      type: Img
+      layout:
+        flex: 0 0 auto
+      properties:
+        src: https://placehold.co/500x100
+        alt: Wide banner image
+        width: 500
+        height: 100
+    - id: size_tall
+      type: Img
+      layout:
+        flex: 0 0 auto
+      properties:
+        src: https://placehold.co/150x300
+        alt: Tall image
+        width: 150
+        height: 300
+
+- title: Alt Text
+  blocks:
+    - id: alt_product
+      type: Img
+      layout:
+        flex: 0 0 auto
+      properties:
+        src: https://placehold.co/250x150/0066cc/ffffff?text=Product
+        alt: Product showcase image
+        width: 250
+        height: 150
+    - id: alt_banner
+      type: Img
+      layout:
+        flex: 0 0 auto
+      properties:
+        src: https://placehold.co/250x150/52c41a/ffffff?text=Banner
+        alt: Promotional banner
+        width: 250
+        height: 150
+    - id: alt_logo
+      type: Img
+      layout:
+        flex: 0 0 auto
+      properties:
+        src: https://placehold.co/150x150/722ed1/ffffff?text=Logo
+        alt: Company logo
+        width: 150
+        height: 150
+
+- title: Loading Strategy
+  blocks:
+    - id: loading_eager_label
+      type: Markdown
+      properties:
+        content: '**Eager loading (default):**'
+    - id: loading_eager
+      type: Img
+      layout:
+        flex: 0 0 auto
+      properties:
+        src: https://placehold.co/250x150/1677ff/ffffff?text=Eager
+        alt: Eagerly loaded image
+        width: 250
+        height: 150
+        loading: eager
+    - id: loading_lazy_label
+      type: Markdown
+      properties:
+        content: '**Lazy loading:**'
+    - id: loading_lazy
+      type: Img
+      layout:
+        flex: 0 0 auto
+      properties:
+        src: https://placehold.co/250x150/fa8c16/ffffff?text=Lazy
+        alt: Lazily loaded image
+        width: 250
+        height: 150
+        loading: lazy
+
+- title: Decoding
+  blocks:
+    - id: decoding_sync_label
+      type: Markdown
+      properties:
+        content: '**Sync decoding:**'
+    - id: decoding_sync
+      type: Img
+      layout:
+        flex: 0 0 auto
+      properties:
+        src: https://placehold.co/200x150/1677ff/ffffff?text=Sync
+        alt: Sync decoded image
+        width: 200
+        height: 150
+        decoding: sync
+    - id: decoding_async_label
+      type: Markdown
+      properties:
+        content: '**Async decoding:**'
+    - id: decoding_async
+      type: Img
+      layout:
+        flex: 0 0 auto
+      properties:
+        src: https://placehold.co/200x150/52c41a/ffffff?text=Async
+        alt: Async decoded image
+        width: 200
+        height: 150
+        decoding: async
+    - id: decoding_auto_label
+      type: Markdown
+      properties:
+        content: '**Auto decoding:**'
+    - id: decoding_auto
+      type: Img
+      layout:
+        flex: 0 0 auto
+      properties:
+        src: https://placehold.co/200x150/722ed1/ffffff?text=Auto
+        alt: Auto decoded image
+        width: 200
+        height: 150
+        decoding: auto
+
+- title: Broken URL Fallback
+  blocks:
+    - id: fallback_broken
+      type: Img
+      layout:
+        flex: 0 0 auto
+      properties:
+        src: https://invalid-url.example/missing.png
+        alt: This alt text shows when the image fails to load
+        width: 200
+        height: 150
+
+- title: Object-Fit via Style
+  blocks:
+    - id: fit_cover_label
+      type: Markdown
+      properties:
+        content: '**object-fit: cover (crops to fill):**'
+    - id: fit_cover
+      type: Img
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          objectFit: cover
+      properties:
+        src: https://placehold.co/600x400
+        alt: Cover fit image
+        width: 200
+        height: 200
+    - id: fit_contain_label
+      type: Markdown
+      properties:
+        content: '**object-fit: contain (shows all):**'
+    - id: fit_contain
+      type: Img
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          objectFit: contain
+          background: '#f5f5f5'
+      properties:
+        src: https://placehold.co/600x400
+        alt: Contain fit image
+        width: 200
+        height: 200
+    - id: fit_fill_label
+      type: Markdown
+      properties:
+        content: '**object-fit: fill (stretches):**'
+    - id: fit_fill
+      type: Img
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          objectFit: fill
+      properties:
+        src: https://placehold.co/600x400
+        alt: Fill fit image
+        width: 200
+        height: 200
+
+- title: Rounded and Circular via Style
+  blocks:
+    - id: rounded_small
+      type: Img
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          borderRadius: 8
+      properties:
+        src: https://placehold.co/150x150/1677ff/ffffff?text=Rounded
+        alt: Rounded corners image
+        width: 150
+        height: 150
+    - id: rounded_large
+      type: Img
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          borderRadius: 20
+      properties:
+        src: https://placehold.co/150x150/52c41a/ffffff?text=More+Round
+        alt: Large rounded corners image
+        width: 150
+        height: 150
+    - id: circular
+      type: Img
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          borderRadius: 50%
+      properties:
+        src: https://placehold.co/150x150/722ed1/ffffff?text=Circle
+        alt: Circular image
+        width: 150
+        height: 150
+
+- title: Bordered via Style
+  blocks:
+    - id: border_thin
+      type: Img
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          border: 1px solid #d9d9d9
+      properties:
+        src: https://placehold.co/200x150
+        alt: Thin bordered image
+        width: 200
+        height: 150
+    - id: border_thick
+      type: Img
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          border: 3px solid #1677ff
+          borderRadius: 8
+      properties:
+        src: https://placehold.co/200x150
+        alt: Thick blue bordered image
+        width: 200
+        height: 150
+    - id: border_dashed
+      type: Img
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          border: 2px dashed #fa8c16
+          borderRadius: 8
+      properties:
+        src: https://placehold.co/200x150
+        alt: Dashed bordered image
+        width: 200
+        height: 150
+    - id: border_shadow
+      type: Img
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          borderRadius: 12
+          boxShadow: 0 4px 12px rgba(0, 0, 0, 0.15)
+      properties:
+        src: https://placehold.co/200x150
+        alt: Image with shadow
+        width: 200
+        height: 150
+
+- title: Responsive Width via Style
+  blocks:
+    - id: responsive_full_label
+      type: Markdown
+      properties:
+        content: '**Full width (100%):**'
+    - id: responsive_full
+      type: Img
+      style:
+        --element:
+          width: 100%
+          height: auto
+          borderRadius: 8
+      properties:
+        src: https://placehold.co/800x200
+        alt: Full width responsive image
+    - id: responsive_half_label
+      type: Markdown
+      properties:
+        content: '**Half width (50%):**'
+    - id: responsive_half
+      type: Img
+      style:
+        --element:
+          width: 50%
+          height: auto
+          borderRadius: 8
+      properties:
+        src: https://placehold.co/800x200
+        alt: Half width responsive image
+    - id: responsive_max_label
+      type: Markdown
+      properties:
+        content: '**Max width constrained (300px):**'
+    - id: responsive_max
+      type: Img
+      style:
+        --element:
+          maxWidth: 300
+          width: 100%
+          height: auto
+          borderRadius: 8
+      properties:
+        src: https://placehold.co/800x200
+        alt: Max width constrained image
+
+- title: Style Overrides
+  blocks:
+    - id: style_opacity
+      type: Img
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          opacity: 0.5
+      properties:
+        src: https://placehold.co/200x150/1677ff/ffffff?text=50%25+Opacity
+        alt: Semi-transparent image
+        width: 200
+        height: 150
+    - id: style_grayscale
+      type: Img
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          filter: grayscale(100%)
+      properties:
+        src: https://placehold.co/200x150/ff4d4f/ffffff?text=Grayscale
+        alt: Grayscale filtered image
+        width: 200
+        height: 150
+    - id: style_rotate
+      type: Img
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          transform: rotate(5deg)
+          borderRadius: 8
+          boxShadow: 0 4px 12px rgba(0, 0, 0, 0.15)
+      properties:
+        src: https://placehold.co/200x150
+        alt: Slightly rotated image
+        width: 200
+        height: 150
+    - id: style_padded_frame
+      type: Img
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          padding: 8
+          background: '#ffffff'
+          border: 1px solid #d9d9d9
+          borderRadius: 4
+          boxShadow: 0 2px 8px rgba(0, 0, 0, 0.1)
+      properties:
+        src: https://placehold.co/180x130
+        alt: Photo frame style image
+        width: 180
+        height: 130

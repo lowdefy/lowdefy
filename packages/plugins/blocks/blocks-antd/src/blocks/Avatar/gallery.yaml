@@ -1,0 +1,617 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Shapes
+  blocks:
+    - id: shapes_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: shape_circle
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: A
+            shape: circle
+            color: '#1677ff'
+        - id: shape_square
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: B
+            shape: square
+            color: '#1677ff'
+        - id: shape_circle_icon
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            icon: AiOutlineUser
+            shape: circle
+            color: '#52c41a'
+        - id: shape_square_icon
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            icon: AiOutlineUser
+            shape: square
+            color: '#52c41a'
+        - id: shape_circle_src
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            src: https://api.dicebear.com/7.x/miniavs/svg?seed=shape1
+            shape: circle
+        - id: shape_square_src
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            src: https://api.dicebear.com/7.x/miniavs/svg?seed=shape2
+            shape: square
+
+- title: Sizes
+  blocks:
+    - id: sizes_text_row
+      type: Box
+      layout:
+        gap: 8
+        align: center
+      blocks:
+        - id: size_small
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: S
+            size: small
+            color: '#722ed1'
+        - id: size_default
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: M
+            size: default
+            color: '#722ed1'
+        - id: size_large
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: L
+            size: large
+            color: '#722ed1'
+    - id: sizes_icon_row
+      type: Box
+      layout:
+        gap: 8
+        align: center
+      blocks:
+        - id: size_icon_small
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            icon: AiOutlineUser
+            size: small
+            color: '#13c2c2'
+        - id: size_icon_default
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            icon: AiOutlineUser
+            size: default
+            color: '#13c2c2'
+        - id: size_icon_large
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            icon: AiOutlineUser
+            size: large
+            color: '#13c2c2'
+    - id: sizes_numeric_row
+      type: Box
+      layout:
+        gap: 8
+        align: center
+      blocks:
+        - id: size_20
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: '20'
+            size: 20
+            color: '#eb2f96'
+        - id: size_48
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: '48'
+            size: 48
+            color: '#eb2f96'
+        - id: size_64
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: '64'
+            size: 64
+            color: '#eb2f96'
+
+- title: Icon Avatars
+  blocks:
+    - id: icons_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: icon_user
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            icon: AiOutlineUser
+            color: '#1677ff'
+        - id: icon_team
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            icon: AiOutlineTeam
+            color: '#722ed1'
+        - id: icon_star
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            icon: AiOutlineStar
+            color: '#faad14'
+        - id: icon_heart
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            icon: AiOutlineHeart
+            color: '#f5222d'
+        - id: icon_setting
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            icon: AiOutlineSetting
+            color: '#52c41a'
+        - id: icon_thunderbolt
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            icon: AiOutlineThunderbolt
+            color: '#fa8c16'
+    - id: icons_custom_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: icon_custom_color
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            icon:
+              name: AiOutlineThunderbolt
+              color: '#fff700'
+            color: '#000000'
+        - id: icon_custom_size
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            icon:
+              name: AiOutlineCrown
+              color: '#fff'
+            color: '#722ed1'
+            size: large
+
+- title: Text Content
+  blocks:
+    - id: text_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: text_single
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: U
+            color: '#1677ff'
+        - id: text_initials
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: JD
+            color: '#52c41a'
+        - id: text_long
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: Tom
+            color: '#fa8c16'
+            size: large
+        - id: text_number
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: '7'
+            color: '#f5222d'
+        - id: text_plus
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: '+5'
+            color: '#d9d9d9'
+
+- title: Gap Property
+  blocks:
+    - id: gap_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: gap_default
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: Gap4
+            color: '#1677ff'
+            gap: 4
+            size: large
+        - id: gap_2
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: Gap2
+            color: '#722ed1'
+            gap: 2
+            size: large
+        - id: gap_8
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: Gap8
+            color: '#13c2c2'
+            gap: 8
+            size: large
+
+- title: Image Source
+  blocks:
+    - id: src_row
+      type: Box
+      layout:
+        gap: 8
+        align: center
+      blocks:
+        - id: src_circle_lg
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            src: https://api.dicebear.com/7.x/miniavs/svg?seed=1
+            size: large
+        - id: src_circle_default
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            src: https://api.dicebear.com/7.x/miniavs/svg?seed=2
+        - id: src_circle_small
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            src: https://api.dicebear.com/7.x/miniavs/svg?seed=3
+            size: small
+        - id: src_square_lg
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            src: https://api.dicebear.com/7.x/miniavs/svg?seed=4
+            size: large
+            shape: square
+        - id: src_square_default
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            src: https://api.dicebear.com/7.x/miniavs/svg?seed=5
+            shape: square
+    - id: src_alt_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: src_with_alt
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            src: https://api.dicebear.com/7.x/miniavs/svg?seed=6
+            alt: User profile picture
+            size: large
+
+- title: Colors
+  blocks:
+    - id: colors_row_1
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: color_blue
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: A
+            color: '#1677ff'
+        - id: color_green
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: B
+            color: '#52c41a'
+        - id: color_red
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: C
+            color: '#f5222d'
+        - id: color_orange
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: D
+            color: '#fa8c16'
+        - id: color_purple
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: E
+            color: '#722ed1'
+        - id: color_cyan
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: F
+            color: '#13c2c2'
+        - id: color_magenta
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: G
+            color: '#eb2f96'
+        - id: color_gold
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: H
+            color: '#faad14'
+    - id: colors_row_2
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: color_volcano
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: I
+            color: '#fa541c'
+        - id: color_geekblue
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: J
+            color: '#2f54eb'
+        - id: color_lime
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: K
+            color: '#a0d911'
+        - id: color_teal
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: L
+            color: '#20c997'
+        - id: color_coral
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: M
+            color: '#ff6b6b'
+        - id: color_indigo
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: 'N'
+            color: '#4c6ef5'
+
+- title: Style Overrides
+  blocks:
+    - id: style_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: style_border
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: BD
+            color: '#1677ff'
+          style:
+            --element:
+              border: 2px solid #1677ff
+        - id: style_shadow
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: SH
+            color: '#722ed1'
+          style:
+            --element:
+              boxShadow: 0 2px 8px rgba(114, 46, 209, 0.4)
+        - id: style_gradient
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            icon: AiOutlineStar
+            size: large
+          style:
+            --element:
+              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)
+        - id: style_large_custom
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: XL
+            size: 56
+            color: '#fa541c'
+          style:
+            --element:
+              fontSize: 20px
+              fontWeight: bold
+
+- title: Theme Token Overrides
+  blocks:
+    - id: theme_row
+      type: Box
+      layout:
+        gap: 8
+        align: center
+      blocks:
+        - id: theme_large_container
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            icon: AiOutlineUser
+            size: large
+            color: '#1677ff'
+            theme:
+              containerSizeLG: 56
+              iconFontSizeLG: 32
+        - id: theme_text_size
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: Hi
+            size: large
+            color: '#52c41a'
+            theme:
+              containerSizeLG: 48
+              textFontSizeLG: 20
+
+- title: Combined Examples
+  blocks:
+    - id: combined_row
+      type: Box
+      layout:
+        gap: 8
+        align: center
+      blocks:
+        - id: combined_profile
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            src: https://api.dicebear.com/7.x/miniavs/svg?seed=profile
+            size: large
+            alt: User profile
+          style:
+            --element:
+              border: 2px solid #1677ff
+        - id: combined_badge_icon
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            icon: AiOutlineCrown
+            color: '#faad14'
+            shape: square
+            size: large
+          style:
+            --element:
+              borderRadius: 8px
+        - id: combined_dark
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: DK
+            color: '#141414'
+            size: large
+          style:
+            --element:
+              border: 1px solid #434343
+        - id: combined_outline_circle
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            icon: AiOutlinePlus
+            size: large
+          style:
+            --element:
+              backgroundColor: '#fff'
+              color: '#1677ff'
+              border: 2px dashed #1677ff

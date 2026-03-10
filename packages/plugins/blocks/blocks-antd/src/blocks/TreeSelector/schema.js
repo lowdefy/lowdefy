@@ -159,6 +159,116 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/tree-select#design-token',
+        },
+        properties: {
+          nodeSelectedBg: {
+            type: 'string',
+            description: 'Background color of selected tree node.',
+          },
+          nodeHoverBg: {
+            type: 'string',
+            description: 'Background color of hovered tree node.',
+          },
+          titleHeight: {
+            type: 'number',
+            default: 24,
+            description: 'Height of tree node title.',
+          },
+          directoryNodeSelectedBg: {
+            type: 'string',
+            description: 'Background color of selected directory node.',
+          },
+          directoryNodeSelectedColor: {
+            type: 'string',
+            description: 'Text color of selected directory node.',
+          },
+          clearBg: {
+            type: 'string',
+            description: 'Background color of clear button.',
+          },
+          selectorBg: {
+            type: 'string',
+            description: 'Background color of the selector.',
+          },
+          hoverBorderColor: {
+            type: 'string',
+            description: 'Border color when hovered.',
+          },
+          activeBorderColor: {
+            type: 'string',
+            description: 'Border color when active/focused.',
+          },
+          activeOutlineColor: {
+            type: 'string',
+            description: 'Outline color when active/focused.',
+          },
+          optionSelectedBg: {
+            type: 'string',
+            description: 'Background of selected option.',
+          },
+          optionSelectedColor: {
+            type: 'string',
+            description: 'Text color of selected option.',
+          },
+          optionSelectedFontWeight: {
+            type: 'string',
+            description: 'Font weight of selected option.',
+          },
+          optionActiveBg: {
+            type: 'string',
+            description: 'Background of active (hovered) option.',
+          },
+          optionFontSize: {
+            type: 'number',
+            default: 14,
+            description: 'Font size of options.',
+          },
+          optionHeight: {
+            type: 'number',
+            default: 32,
+            description: 'Height of each option.',
+          },
+          optionLineHeight: {
+            type: 'string',
+            description: 'Line height of options.',
+          },
+          optionPadding: {
+            type: 'string',
+            description: 'Padding of options.',
+          },
+          multipleSelectorBgDisabled: {
+            type: 'string',
+            description: 'Background when disabled in multiple mode.',
+          },
+          multipleItemBg: {
+            type: 'string',
+            description: 'Background of tag items in multiple mode.',
+          },
+          multipleItemBorderColor: {
+            type: 'string',
+            description: 'Border color of tag items.',
+          },
+          multipleItemHeight: {
+            type: 'number',
+            default: 24,
+            description: 'Height of tag items.',
+          },
+          multipleItemHeightSM: {
+            type: 'number',
+            default: 16,
+            description: 'Height of tag items (small).',
+          },
+          multipleItemHeightLG: {
+            type: 'number',
+            default: 32,
+            description: 'Height of tag items (large).',
+          },
+          zIndexPopup: {
+            type: 'number',
+            default: 1050,
+            description: 'z-index of the dropdown.',
+          },
         },
       },
     },

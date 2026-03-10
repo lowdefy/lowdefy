@@ -180,6 +180,146 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/radio#design-token',
+        },
+        properties: {
+          radioSize: {
+            type: 'number',
+            default: 16,
+            description: 'Size of the radio dot element.',
+          },
+          dotSize: {
+            type: 'number',
+            default: 8,
+            description: 'Size of the inner dot when checked.',
+          },
+          dotColorDisabled: {
+            type: 'string',
+            description: 'Color of the inner dot when disabled.',
+          },
+          buttonSolidCheckedColor: {
+            type: 'string',
+            description: 'Text color of checked button in solid style.',
+          },
+          buttonSolidCheckedBg: {
+            type: 'string',
+            description: 'Background color of checked button in solid style.',
+          },
+          buttonSolidCheckedHoverBg: {
+            type: 'string',
+            description: 'Background color of checked button on hover in solid style.',
+          },
+          buttonSolidCheckedActiveBg: {
+            type: 'string',
+            description: 'Background color of checked button on active in solid style.',
+          },
+          buttonBg: {
+            type: 'string',
+            description: 'Background color of unchecked radio buttons.',
+          },
+          buttonCheckedBg: {
+            type: 'string',
+            description: 'Background color of checked button in outline style.',
+          },
+          buttonColor: {
+            type: 'string',
+            description: 'Text color of radio buttons.',
+          },
+          buttonCheckedBgDisabled: {
+            type: 'string',
+            description: 'Background color of checked button when disabled.',
+          },
+          buttonCheckedColorDisabled: {
+            type: 'string',
+            description: 'Text color of checked button when disabled.',
+          },
+          buttonPaddingInline: {
+            type: 'number',
+            default: 15,
+            description: 'Horizontal padding inside radio buttons.',
+          },
+          wrapperMarginInlineEnd: {
+            type: 'number',
+            default: 8,
+            description: 'Margin at the inline end of each radio wrapper.',
+          },
+          radioColor: {
+            type: 'string',
+            description: 'Color of the radio dot when checked.',
+          },
+          radioBgColor: {
+            type: 'string',
+            description: 'Background color of the radio circle when checked.',
+          },
+          borderRadius: {
+            type: 'number',
+            default: 6,
+            description: 'Border radius for default-sized radio buttons.',
+          },
+          borderRadiusLG: {
+            type: 'number',
+            default: 8,
+            description: 'Border radius for large radio buttons.',
+          },
+          borderRadiusSM: {
+            type: 'number',
+            default: 4,
+            description: 'Border radius for small radio buttons.',
+          },
+          controlHeight: {
+            type: 'number',
+            default: 32,
+            description: 'Height of default-sized radio buttons.',
+          },
+          controlHeightLG: {
+            type: 'number',
+            default: 40,
+            description: 'Height of large radio buttons.',
+          },
+          controlHeightSM: {
+            type: 'number',
+            default: 24,
+            description: 'Height of small radio buttons.',
+          },
+          fontSize: {
+            type: 'number',
+            default: 14,
+            description: 'Font size for default-sized radio buttons.',
+          },
+          fontSizeLG: {
+            type: 'number',
+            default: 16,
+            description: 'Font size for large radio buttons.',
+          },
+          lineWidth: {
+            type: 'number',
+            default: 1,
+            description: 'Border width of radio buttons.',
+          },
+          colorPrimary: {
+            type: 'string',
+            description: 'Primary color used for checked state border and text.',
+          },
+          colorPrimaryHover: {
+            type: 'string',
+            description: 'Primary hover color for checked radio buttons.',
+          },
+          colorPrimaryActive: {
+            type: 'string',
+            description: 'Primary active color for checked radio buttons.',
+          },
+          colorBgContainer: {
+            type: 'string',
+            description: 'Background color for the radio button container.',
+          },
+          colorText: {
+            type: 'string',
+            description: 'Default text color for radio buttons.',
+          },
+          colorBorder: {
+            type: 'string',
+            description: 'Border color for radio buttons.',
+          },
         },
       },
     },

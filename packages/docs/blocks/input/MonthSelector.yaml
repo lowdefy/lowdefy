@@ -13,14 +13,16 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: MonthSelector
-    value_type: date
-    category: input
-    schema: ../plugins/blocks/blocks-antd/src/blocks/MonthSelector/schema.js
+    pageId: MonthSelector
+    pageTitle: MonthSelector
+    section: Input Blocks
     filePath: blocks/input/MonthSelector.yaml
-    description_content: |
-      The `MonthSelector` block allows a user to select a month. The value is a date object, with day and time values of midnight on the first day of the month GMT.
-
-      > Other date type blocks are `DateRangeSelector`, `DateSelector`, `DateTimeSelector` and `WeekSelector`.
+    block_type: MonthSelector
+    antd_component: DatePicker
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/MonthSelector
+    schema: ../plugins/blocks/blocks-antd/src/blocks/MonthSelector/schema.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/MonthSelector/gallery.yaml
+    description: >
+      Month picker for selecting year and month.

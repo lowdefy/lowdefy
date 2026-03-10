@@ -58,6 +58,7 @@
 - _ref: testing/e2e-auth.yaml
 - _ref: testing/e2e-configuration.yaml
 
+- _ref: blocks/input/InputGallery.yaml
 - _ref: blocks/input/AutoComplete.yaml
 - _ref: blocks/input/ButtonSelector.yaml
 - _ref: blocks/input/CheckboxSelector.yaml

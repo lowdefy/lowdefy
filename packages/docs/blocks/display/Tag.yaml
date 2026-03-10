@@ -13,45 +13,16 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: Tag
-    category: display
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Tag/schema.js
+    pageId: Tag
+    pageTitle: Tag
+    section: Display Blocks
     filePath: blocks/display/Tag.yaml
-    description_content: |
-      A block to render a Tag component.
-
-      Besides hex color values, the following color preset values are available:
-      - `success`
-      - `processing`
-      - `error`
-      - `warning`
-      - `default`
-      - `blue`
-      - `cyan`
-      - `geekblue`
-      - `gold`
-      - `green`
-      - `lime`
-      - `magenta`
-      - `orange`
-      - `purple`
-      - `red`
-      - `volcano`
-
-    examples:
-      - title: Basic Tag
-        block:
-          id: basic_example
-          type: Tag
-          properties:
-            title: A tag with title
-      - title: Preset color tags and icons
-        block:
-          id: error_tag
-          type: Tag
-          properties:
-            title: Error
-            color: error
-            icon: AiOutlineCloseCircle
+    block_type: Tag
+    antd_component: Tag
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/Tag
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Tag/schema.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/Tag/gallery.yaml
+    description: >
+      Tag with preset and custom colors, icons, and closable option.

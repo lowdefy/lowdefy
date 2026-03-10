@@ -100,6 +100,25 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/watermark#design-token',
+        },
+        properties: {
+          colorFill: {
+            type: 'string',
+            description:
+              'Default watermark text color when font.color is not set. Maps to the global colorFill token.',
+          },
+          fontSizeLG: {
+            type: 'number',
+            default: 16,
+            description:
+              'Default watermark font size when font.fontSize is not set. Maps to the global fontSizeLG token.',
+          },
+          fontFamily: {
+            type: 'string',
+            default: 'sans-serif',
+            description: 'Default font family used when font.fontFamily is not set.',
+          },
         },
       },
       width: {

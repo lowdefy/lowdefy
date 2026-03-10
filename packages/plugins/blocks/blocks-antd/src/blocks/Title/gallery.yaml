@@ -1,0 +1,579 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Heading Levels
+  blocks:
+    - id: level_h1
+      type: Title
+      properties:
+        content: h1. Heading Level 1
+        level: 1
+    - id: level_h2
+      type: Title
+      properties:
+        content: h2. Heading Level 2
+        level: 2
+    - id: level_h3
+      type: Title
+      properties:
+        content: h3. Heading Level 3
+        level: 3
+    - id: level_h4
+      type: Title
+      properties:
+        content: h4. Heading Level 4
+        level: 4
+    - id: level_h5
+      type: Title
+      properties:
+        content: h5. Heading Level 5
+        level: 5
+
+- title: Types
+  blocks:
+    - id: type_default
+      type: Title
+      properties:
+        content: Default Title
+        level: 4
+    - id: type_secondary
+      type: Title
+      properties:
+        content: Secondary Title
+        level: 4
+        type: secondary
+    - id: type_success
+      type: Title
+      properties:
+        content: Success Title
+        level: 4
+        type: success
+    - id: type_warning
+      type: Title
+      properties:
+        content: Warning Title
+        level: 4
+        type: warning
+    - id: type_danger
+      type: Title
+      properties:
+        content: Danger Title
+        level: 4
+        type: danger
+
+- title: Types at Different Levels
+  blocks:
+    - id: type_level_row_h2
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: type_h2_default
+          type: Title
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: Default
+            level: 2
+        - id: type_h2_secondary
+          type: Title
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: Secondary
+            level: 2
+            type: secondary
+        - id: type_h2_success
+          type: Title
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: Success
+            level: 2
+            type: success
+        - id: type_h2_warning
+          type: Title
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: Warning
+            level: 2
+            type: warning
+        - id: type_h2_danger
+          type: Title
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: Danger
+            level: 2
+            type: danger
+
+- title: Code Style
+  blocks:
+    - id: code_h3
+      type: Title
+      properties:
+        content: Code Heading Level 3
+        level: 3
+        code: true
+    - id: code_h4
+      type: Title
+      properties:
+        content: const config = lowdefy.init()
+        level: 4
+        code: true
+    - id: code_h5
+      type: Title
+      properties:
+        content: npm install lowdefy
+        level: 5
+        code: true
+
+- title: Mark (Highlight)
+  blocks:
+    - id: mark_default
+      type: Title
+      properties:
+        content: Highlighted Title
+        level: 4
+        mark: true
+    - id: mark_h3
+      type: Title
+      properties:
+        content: Important Notice
+        level: 3
+        mark: true
+    - id: mark_success
+      type: Title
+      properties:
+        content: Highlighted Success
+        level: 4
+        mark: true
+        type: success
+
+- title: Underline
+  blocks:
+    - id: underline_default
+      type: Title
+      properties:
+        content: Underlined Title
+        level: 4
+        underline: true
+    - id: underline_h3
+      type: Title
+      properties:
+        content: Underlined Heading
+        level: 3
+        underline: true
+    - id: underline_warning
+      type: Title
+      properties:
+        content: Underlined Warning
+        level: 4
+        underline: true
+        type: warning
+
+- title: Delete (Strikethrough)
+  blocks:
+    - id: delete_default
+      type: Title
+      properties:
+        content: Deleted Title
+        level: 4
+        delete: true
+    - id: delete_danger
+      type: Title
+      properties:
+        content: Removed Feature
+        level: 4
+        delete: true
+        type: danger
+    - id: delete_secondary
+      type: Title
+      properties:
+        content: Deprecated Heading
+        level: 5
+        delete: true
+        type: secondary
+
+- title: Italic
+  blocks:
+    - id: italic_default
+      type: Title
+      properties:
+        content: Italic Title
+        level: 4
+        italic: true
+    - id: italic_h3
+      type: Title
+      properties:
+        content: Emphasized Heading
+        level: 3
+        italic: true
+    - id: italic_secondary
+      type: Title
+      properties:
+        content: Subtle Italic
+        level: 5
+        italic: true
+        type: secondary
+
+- title: Disabled
+  blocks:
+    - id: disabled_default
+      type: Title
+      properties:
+        content: Disabled Title
+        level: 4
+        disabled: true
+    - id: disabled_h3
+      type: Title
+      properties:
+        content: Inactive Section Heading
+        level: 3
+        disabled: true
+    - id: disabled_h5
+      type: Title
+      properties:
+        content: Unavailable Feature
+        level: 5
+        disabled: true
+
+- title: Combined Decorations
+  blocks:
+    - id: combined_bold_underline
+      type: Title
+      properties:
+        content: Bold & Underlined
+        level: 4
+        underline: true
+    - id: combined_italic_mark
+      type: Title
+      properties:
+        content: Italic & Highlighted
+        level: 4
+        italic: true
+        mark: true
+    - id: combined_code_delete
+      type: Title
+      properties:
+        content: removedFunction()
+        level: 4
+        code: true
+        delete: true
+    - id: combined_italic_underline_success
+      type: Title
+      properties:
+        content: Feature Complete
+        level: 4
+        italic: true
+        underline: true
+        type: success
+    - id: combined_mark_danger
+      type: Title
+      properties:
+        content: Critical Security Alert
+        level: 3
+        mark: true
+        type: danger
+    - id: combined_code_mark
+      type: Title
+      properties:
+        content: highlighted_variable
+        level: 5
+        code: true
+        mark: true
+
+- title: HTML Content
+  blocks:
+    - id: html_bold_span
+      type: Title
+      properties:
+        content: 'Title with <b>bold</b> and <i>italic</i> words'
+        level: 4
+    - id: html_link
+      type: Title
+      properties:
+        content: 'Visit the <a href="https://lowdefy.com">Lowdefy website</a>'
+        level: 4
+    - id: html_colored
+      type: Title
+      properties:
+        content: 'Title with <span style="color: #1677ff">blue</span> and <span style="color: #52c41a">green</span> words'
+        level: 4
+
+- title: Copyable
+  blocks:
+    - id: copyable_simple
+      type: Title
+      properties:
+        content: Copy this title
+        level: 4
+        copyable: true
+    - id: copyable_custom_text
+      type: Title
+      properties:
+        content: Title with custom copy
+        level: 4
+        copyable:
+          text: Custom copied text instead of the title content.
+    - id: copyable_custom_tooltips
+      type: Title
+      properties:
+        content: Hover the copy icon
+        level: 4
+        copyable:
+          tooltips:
+            - Click to copy
+            - Copied!
+    - id: copyable_custom_icon
+      type: Title
+      properties:
+        content: Custom copy icon
+        level: 4
+        copyable:
+          icon: AiOutlineSnippets
+    - id: copyable_two_icons
+      type: Title
+      properties:
+        content: Two-state copy icons
+        level: 4
+        copyable:
+          icon:
+            - AiOutlineCopy
+            - AiOutlineCheck
+
+- title: Ellipsis (Single Line)
+  blocks:
+    - id: ellipsis_single
+      type: Title
+      properties:
+        content: This is a very long title that should be truncated with an ellipsis when it overflows the available space in a single line of the container.
+        level: 4
+        ellipsis: true
+    - id: ellipsis_single_h3
+      type: Title
+      properties:
+        content: Another long heading that demonstrates single-line ellipsis truncation for larger text at heading level three.
+        level: 3
+        ellipsis: true
+
+- title: Ellipsis (Multi-Row with Expand)
+  blocks:
+    - id: ellipsis_rows_2
+      type: Title
+      properties:
+        content: This is an extremely long title text that demonstrates multi-row ellipsis truncation. When the content exceeds the specified number of rows, it will be truncated and show an ellipsis indicator at the end of the visible text.
+        level: 5
+        ellipsis:
+          rows: 2
+          expandable: true
+    - id: ellipsis_rows_1_suffix
+      type: Title
+      properties:
+        content: This title has a custom suffix appended after the ellipsis truncation point so readers know more content is available.
+        level: 4
+        ellipsis:
+          rows: 1
+          suffix: ' --Read More'
+
+- title: Custom Colors
+  blocks:
+    - id: color_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: color_blue
+          type: Title
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: Blue
+            level: 4
+            color: '#1677ff'
+        - id: color_green
+          type: Title
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: Green
+            level: 4
+            color: '#52c41a'
+        - id: color_purple
+          type: Title
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: Purple
+            level: 4
+            color: '#722ed1'
+        - id: color_coral
+          type: Title
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: Coral
+            level: 4
+            color: '#ff6b6b'
+        - id: color_gold
+          type: Title
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: Gold
+            level: 4
+            color: '#faad14'
+        - id: color_teal
+          type: Title
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: Teal
+            level: 4
+            color: '#13c2c2'
+
+- title: Custom Colors with Decorations
+  blocks:
+    - id: color_underline
+      type: Title
+      properties:
+        content: Blue Underlined Title
+        level: 4
+        color: '#1677ff'
+        underline: true
+    - id: color_italic
+      type: Title
+      properties:
+        content: Purple Italic Title
+        level: 4
+        color: '#722ed1'
+        italic: true
+    - id: color_code
+      type: Title
+      properties:
+        content: Green Code Style
+        level: 4
+        color: '#52c41a'
+        code: true
+
+- title: Style Overrides
+  blocks:
+    - id: style_bg
+      type: Title
+      properties:
+        content: Title with Background
+        level: 4
+      style:
+        --element:
+          backgroundColor: '#f0f5ff'
+          padding: 8px 16px
+          borderRadius: 6px
+    - id: style_border
+      type: Title
+      properties:
+        content: Title with Border
+        level: 4
+      style:
+        --element:
+          borderBottom: 2px solid #1677ff
+          paddingBottom: 8px
+    - id: style_spacing
+      type: Title
+      properties:
+        content: Title with Letter Spacing
+        level: 3
+      style:
+        --element:
+          letterSpacing: 4px
+          textTransform: uppercase
+    - id: style_shadow
+      type: Title
+      properties:
+        content: Title with Text Shadow
+        level: 3
+        color: '#1677ff'
+      style:
+        --element:
+          textShadow: 2px 2px 4px rgba(22, 119, 255, 0.3)
+
+- title: Theme Token Overrides
+  blocks:
+    - id: theme_large_h4
+      type: Title
+      properties:
+        content: Large H4 Title
+        level: 4
+        theme:
+          fontSizeHeading4: 28
+    - id: theme_small_h1
+      type: Title
+      properties:
+        content: Small H1 Title
+        level: 1
+        theme:
+          fontSizeHeading1: 24
+    - id: theme_custom_weight
+      type: Title
+      properties:
+        content: Light Weight Title
+        level: 3
+        theme:
+          fontWeightStrong: 300
+    - id: theme_custom_colors
+      type: Title
+      properties:
+        content: Theme-Colored Title
+        level: 4
+        type: success
+        theme:
+          colorSuccess: '#13c2c2'
+
+- title: Real-World Examples
+  blocks:
+    - id: example_page_header
+      type: Title
+      properties:
+        content: Dashboard Overview
+        level: 2
+    - id: example_section
+      type: Title
+      properties:
+        content: Recent Activity
+        level: 3
+        type: secondary
+    - id: example_card_title
+      type: Title
+      properties:
+        content: User Profile Settings
+        level: 4
+    - id: example_deprecation
+      type: Title
+      properties:
+        content: Legacy API v1 (Deprecated)
+        level: 4
+        delete: true
+        type: warning
+    - id: example_status
+      type: Title
+      properties:
+        content: All Systems Operational
+        level: 4
+        type: success
+    - id: example_error
+      type: Title
+      properties:
+        content: Connection Failed
+        level: 4
+        type: danger

@@ -13,34 +13,16 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: Modal
-    category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Modal/schema.js
+    pageId: Modal
+    pageTitle: Modal
+    section: Container Blocks
     filePath: blocks/container/Modal.yaml
-    description_content: |
-      A popup container, presenting the user with a modal dialog.
-      The Modal has a `content` and a `footer` content slot. The default `footer` slot contains the `Ok` and `Cancel` buttons; defining a `footer` slot overwrites these buttons.
-
-      > To open the modal, invoke a modal method.
-    slots:
-      - content
-      - footer
-    methods:
-      - name: toggleOpen
-        onClick:
-          - id: toggleOpen
-            type: CallMethod
-            params:
-              blockId: block_id
-              method: toggleOpen
-      - name: setOpen
-        onClick:
-          - id: setOpen
-            type: CallMethod
-            params:
-              blockId: block_id
-              method: setOpen
-              args:
-                - open: true
+    block_type: Modal
+    antd_component: Modal
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/Modal
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Modal/schema.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/Modal/gallery.yaml
+    description: >
+      Modal dialog overlay for focused content.

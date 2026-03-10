@@ -87,12 +87,57 @@ const schema = {
         default: 'top',
         description: 'The gap position.',
       },
+      steps: {
+        type: 'number',
+        description: 'Number of steps for a segmented progress bar (line type only).',
+      },
       theme: {
         type: 'object',
         description:
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/progress#design-token',
+        },
+        properties: {
+          defaultColor: {
+            type: 'string',
+            default: '#1677ff',
+            description: 'Default color of the progress bar.',
+          },
+          remainingColor: {
+            type: 'string',
+            default: 'rgba(0,0,0,0.06)',
+            description: 'Color of the unfilled portion of the progress bar.',
+          },
+          circleTextColor: {
+            type: 'string',
+            default: 'rgba(0,0,0,0.88)',
+            description: 'Text color inside the circular progress.',
+          },
+          circleTextFontSize: {
+            type: 'string',
+            default: '1em',
+            description: 'Font size of text inside the circular progress.',
+          },
+          circleIconFontSize: {
+            type: 'string',
+            default: '1.167em',
+            description: 'Font size of icons inside the circular progress.',
+          },
+          lineBorderRadius: {
+            type: 'number',
+            default: 100,
+            description: 'Border radius of the linear progress bar.',
+          },
+          colorSuccess: {
+            type: 'string',
+            description: 'Color used for success status.',
+          },
+          colorError: {
+            type: 'string',
+            description: 'Color used for exception status.',
+          },
         },
       },
     },

@@ -93,6 +93,52 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/popover#design-token',
+        },
+        properties: {
+          titleMinWidth: {
+            type: ['number', 'string'],
+            default: 177,
+            description: 'Minimum width of the popover when it has a title.',
+          },
+          zIndexPopup: {
+            type: 'number',
+            default: 1030,
+            description: 'Z-index of the popover.',
+          },
+          innerPadding: {
+            type: ['number', 'string'],
+            default: 12,
+            description: 'Padding inside the popover content area.',
+          },
+          titlePadding: {
+            type: ['number', 'string'],
+            description: 'Padding of the title area.',
+          },
+          titleMarginBottom: {
+            type: 'number',
+            default: 8,
+            description: 'Margin bottom of the title.',
+          },
+          titleBorderBottom: {
+            type: 'string',
+            default: 'none',
+            description: 'Border bottom of the title area.',
+          },
+          innerContentPadding: {
+            type: ['number', 'string'],
+            default: 0,
+            description: 'Padding of the inner content area.',
+          },
+          colorBgElevated: {
+            type: 'string',
+            description: 'Background color of the popover.',
+          },
+          borderRadiusLG: {
+            type: 'number',
+            default: 8,
+            description: 'Border radius of the popover container.',
+          },
         },
       },
     },

@@ -1,0 +1,453 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: FloatButton Preview
+  fullWidth: true
+  blocks:
+    - id: float_preview
+      type: FloatButton
+      properties:
+        type:
+          _if_none:
+            - _state: float_type
+            - default
+        shape:
+          _if_none:
+            - _state: float_shape
+            - circle
+        icon:
+          _if_none:
+            - _state: float_icon
+            - AiOutlineQuestionCircle
+        tooltip:
+          _state: float_tooltip
+        description:
+          _state: float_description
+        badge:
+          _state: float_badge
+        theme:
+          _state: float_theme
+    - id: float_current_label
+      type: Paragraph
+      properties:
+        type: secondary
+        content:
+          _nunjucks:
+            template: >
+              Active example: **{{ label }}** — look at the floating button in the bottom-right corner.
+            on:
+              label:
+                _if_none:
+                  - _state: float_label
+                  - Basic (default)
+    - id: float_examples_grid
+      type: Box
+      layout:
+        gap: 8
+        wrap: wrap
+      blocks:
+        - id: btn_ex_basic
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Basic
+            color:
+              _if:
+                test:
+                  _eq:
+                    - _state: float_label
+                    - null
+                then: primary
+                else: default
+            variant:
+              _if:
+                test:
+                  _eq:
+                    - _state: float_label
+                    - null
+                then: solid
+                else: outlined
+          events:
+            onClick:
+              - id: set_basic
+                type: SetState
+                params:
+                  float_type: default
+                  float_shape: circle
+                  float_icon: AiOutlineQuestionCircle
+                  float_tooltip:
+                  float_description:
+                  float_badge:
+                  float_theme:
+                  float_label:
+        - id: btn_ex_primary
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Primary Type
+            color:
+              _if:
+                test:
+                  _eq:
+                    - _state: float_label
+                    - Primary Type
+                then: primary
+                else: default
+            variant:
+              _if:
+                test:
+                  _eq:
+                    - _state: float_label
+                    - Primary Type
+                then: solid
+                else: outlined
+          events:
+            onClick:
+              - id: set_primary
+                type: SetState
+                params:
+                  float_type: primary
+                  float_shape: circle
+                  float_icon: AiOutlineCustomerService
+                  float_tooltip:
+                  float_description:
+                  float_badge:
+                  float_theme:
+                  float_label: Primary Type
+        - id: btn_ex_square
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Square Shape
+            color:
+              _if:
+                test:
+                  _eq:
+                    - _state: float_label
+                    - Square Shape
+                then: primary
+                else: default
+            variant:
+              _if:
+                test:
+                  _eq:
+                    - _state: float_label
+                    - Square Shape
+                then: solid
+                else: outlined
+          events:
+            onClick:
+              - id: set_square
+                type: SetState
+                params:
+                  float_type: default
+                  float_shape: square
+                  float_icon: AiOutlineSetting
+                  float_tooltip:
+                  float_description:
+                  float_badge:
+                  float_theme:
+                  float_label: Square Shape
+        - id: btn_ex_tooltip
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: With Tooltip
+            color:
+              _if:
+                test:
+                  _eq:
+                    - _state: float_label
+                    - With Tooltip
+                then: primary
+                else: default
+            variant:
+              _if:
+                test:
+                  _eq:
+                    - _state: float_label
+                    - With Tooltip
+                then: solid
+                else: outlined
+          events:
+            onClick:
+              - id: set_tooltip
+                type: SetState
+                params:
+                  float_type: default
+                  float_shape: circle
+                  float_icon: AiOutlineComment
+                  float_tooltip: Chat with us
+                  float_description:
+                  float_badge:
+                  float_theme:
+                  float_label: With Tooltip
+        - id: btn_ex_description
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: With Description
+            color:
+              _if:
+                test:
+                  _eq:
+                    - _state: float_label
+                    - With Description
+                then: primary
+                else: default
+            variant:
+              _if:
+                test:
+                  _eq:
+                    - _state: float_label
+                    - With Description
+                then: solid
+                else: outlined
+          events:
+            onClick:
+              - id: set_description
+                type: SetState
+                params:
+                  float_type: primary
+                  float_shape: square
+                  float_icon: AiOutlineFileText
+                  float_tooltip:
+                  float_description: Docs
+                  float_badge:
+                  float_theme:
+                  float_label: With Description
+        - id: btn_ex_badge_count
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Badge Count
+            color:
+              _if:
+                test:
+                  _eq:
+                    - _state: float_label
+                    - Badge Count
+                then: primary
+                else: default
+            variant:
+              _if:
+                test:
+                  _eq:
+                    - _state: float_label
+                    - Badge Count
+                then: solid
+                else: outlined
+          events:
+            onClick:
+              - id: set_badge_count
+                type: SetState
+                params:
+                  float_type: default
+                  float_shape: circle
+                  float_icon: AiOutlineBell
+                  float_tooltip: Notifications
+                  float_description:
+                  float_badge:
+                    count: 5
+                  float_theme:
+                  float_label: Badge Count
+        - id: btn_ex_badge_dot
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Badge Dot
+            color:
+              _if:
+                test:
+                  _eq:
+                    - _state: float_label
+                    - Badge Dot
+                then: primary
+                else: default
+            variant:
+              _if:
+                test:
+                  _eq:
+                    - _state: float_label
+                    - Badge Dot
+                then: solid
+                else: outlined
+          events:
+            onClick:
+              - id: set_badge_dot
+                type: SetState
+                params:
+                  float_type: default
+                  float_shape: circle
+                  float_icon: AiOutlineMail
+                  float_tooltip: Messages
+                  float_description:
+                  float_badge:
+                    dot: true
+                  float_theme:
+                  float_label: Badge Dot
+        - id: btn_ex_rocket
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Custom Icon
+            color:
+              _if:
+                test:
+                  _eq:
+                    - _state: float_label
+                    - Custom Icon
+                then: primary
+                else: default
+            variant:
+              _if:
+                test:
+                  _eq:
+                    - _state: float_label
+                    - Custom Icon
+                then: solid
+                else: outlined
+          events:
+            onClick:
+              - id: set_rocket
+                type: SetState
+                params:
+                  float_type: primary
+                  float_shape: circle
+                  float_icon:
+                    name: AiOutlineRocket
+                  float_tooltip: Launch
+                  float_description:
+                  float_badge:
+                  float_theme:
+                  float_label: Custom Icon
+        - id: btn_ex_theme_green
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Green Theme
+            color:
+              _if:
+                test:
+                  _eq:
+                    - _state: float_label
+                    - Green Theme
+                then: primary
+                else: default
+            variant:
+              _if:
+                test:
+                  _eq:
+                    - _state: float_label
+                    - Green Theme
+                then: solid
+                else: outlined
+          events:
+            onClick:
+              - id: set_theme_green
+                type: SetState
+                params:
+                  float_type: primary
+                  float_shape: circle
+                  float_icon: AiOutlineCheck
+                  float_tooltip: Approved
+                  float_description:
+                  float_badge:
+                  float_theme:
+                    colorPrimary: '#52c41a'
+                    colorPrimaryHover: '#73d13d'
+                  float_label: Green Theme
+        - id: btn_ex_theme_dark
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Dark Theme
+            color:
+              _if:
+                test:
+                  _eq:
+                    - _state: float_label
+                    - Dark Theme
+                then: primary
+                else: default
+            variant:
+              _if:
+                test:
+                  _eq:
+                    - _state: float_label
+                    - Dark Theme
+                then: solid
+                else: outlined
+          events:
+            onClick:
+              - id: set_theme_dark
+                type: SetState
+                params:
+                  float_type: default
+                  float_shape: circle
+                  float_icon: AiOutlineSetting
+                  float_tooltip: Settings
+                  float_description:
+                  float_badge:
+                  float_theme:
+                    colorBgElevated: '#1f1f1f'
+                    colorText: '#ffffff'
+                  float_label: Dark Theme
+        - id: btn_ex_large
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Large Size
+            color:
+              _if:
+                test:
+                  _eq:
+                    - _state: float_label
+                    - Large Size
+                then: primary
+                else: default
+            variant:
+              _if:
+                test:
+                  _eq:
+                    - _state: float_label
+                    - Large Size
+                then: solid
+                else: outlined
+          events:
+            onClick:
+              - id: set_large
+                type: SetState
+                params:
+                  float_type: primary
+                  float_shape: circle
+                  float_icon: AiOutlinePlus
+                  float_tooltip: Create New
+                  float_description:
+                  float_badge:
+                  float_theme:
+                    controlHeightLG: 56
+                    fontSizeIcon: 24
+                  float_label: Large Size

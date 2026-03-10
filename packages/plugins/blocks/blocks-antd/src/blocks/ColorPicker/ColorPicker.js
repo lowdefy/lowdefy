@@ -96,7 +96,7 @@ ColorPickerInput.meta = {
   valueType: 'string',
   category: 'input',
   icons: [...Label.meta.icons],
-  cssKeys: ['element'],
+  cssKeys: ['element', 'label', 'extra', 'feedback'],
 };
 
 export default withTheme('ColorPicker', ColorPickerInput);

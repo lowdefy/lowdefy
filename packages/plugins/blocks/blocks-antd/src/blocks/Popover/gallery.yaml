@@ -1,0 +1,918 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic Popover
+  blocks:
+    - id: popover_basic
+      type: Popover
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Popover Title
+      slots:
+        popover:
+          blocks:
+            - id: popover_basic_content
+              type: Paragraph
+              properties:
+                content: This is the popover body content. You can place any blocks here.
+      blocks:
+        - id: popover_basic_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Hover me
+            color: primary
+            variant: solid
+
+    - id: popover_no_title
+      type: Popover
+      layout:
+        flex: 0 0 auto
+      slots:
+        popover:
+          blocks:
+            - id: popover_no_title_content
+              type: Paragraph
+              properties:
+                content: A popover without a title - just body content.
+      blocks:
+        - id: popover_no_title_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: No title
+            color: default
+            variant: outlined
+
+- title: Placements
+  blocks:
+    - id: popover_place_label_top
+      type: Markdown
+      properties:
+        content: '**Top placements:**'
+    - id: popover_place_top_row
+      type: Box
+      layout:
+        gap: 8
+        justify: center
+      blocks:
+        - id: popover_topLeft
+          type: Popover
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: topLeft
+            placement: topLeft
+          slots:
+            popover:
+              blocks:
+                - id: popover_topLeft_msg
+                  type: Paragraph
+                  properties:
+                    content: Popover placed at topLeft.
+          blocks:
+            - id: popover_topLeft_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: topLeft
+                color: default
+                variant: outlined
+                size: small
+        - id: popover_top
+          type: Popover
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: top
+            placement: top
+          slots:
+            popover:
+              blocks:
+                - id: popover_top_msg
+                  type: Paragraph
+                  properties:
+                    content: Popover placed at top.
+          blocks:
+            - id: popover_top_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: top
+                color: primary
+                variant: solid
+                size: small
+        - id: popover_topRight
+          type: Popover
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: topRight
+            placement: topRight
+          slots:
+            popover:
+              blocks:
+                - id: popover_topRight_msg
+                  type: Paragraph
+                  properties:
+                    content: Popover placed at topRight.
+          blocks:
+            - id: popover_topRight_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: topRight
+                color: default
+                variant: outlined
+                size: small
+
+    - id: popover_place_label_bottom
+      type: Markdown
+      properties:
+        content: '**Bottom placements:**'
+    - id: popover_place_bottom_row
+      type: Box
+      layout:
+        gap: 8
+        justify: center
+      blocks:
+        - id: popover_bottomLeft
+          type: Popover
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: bottomLeft
+            placement: bottomLeft
+          slots:
+            popover:
+              blocks:
+                - id: popover_bottomLeft_msg
+                  type: Paragraph
+                  properties:
+                    content: Popover placed at bottomLeft.
+          blocks:
+            - id: popover_bottomLeft_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: bottomLeft
+                color: default
+                variant: outlined
+                size: small
+        - id: popover_bottom
+          type: Popover
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: bottom
+            placement: bottom
+          slots:
+            popover:
+              blocks:
+                - id: popover_bottom_msg
+                  type: Paragraph
+                  properties:
+                    content: Popover placed at bottom.
+          blocks:
+            - id: popover_bottom_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: bottom
+                color: primary
+                variant: solid
+                size: small
+        - id: popover_bottomRight
+          type: Popover
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: bottomRight
+            placement: bottomRight
+          slots:
+            popover:
+              blocks:
+                - id: popover_bottomRight_msg
+                  type: Paragraph
+                  properties:
+                    content: Popover placed at bottomRight.
+          blocks:
+            - id: popover_bottomRight_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: bottomRight
+                color: default
+                variant: outlined
+                size: small
+
+    - id: popover_place_label_left
+      type: Markdown
+      properties:
+        content: '**Left placements:**'
+    - id: popover_place_left_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: popover_left
+          type: Popover
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: left
+            placement: left
+          slots:
+            popover:
+              blocks:
+                - id: popover_left_msg
+                  type: Paragraph
+                  properties:
+                    content: Popover placed at left.
+          blocks:
+            - id: popover_left_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: left
+                color: primary
+                variant: solid
+                size: small
+        - id: popover_leftTop
+          type: Popover
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: leftTop
+            placement: leftTop
+          slots:
+            popover:
+              blocks:
+                - id: popover_leftTop_msg
+                  type: Paragraph
+                  properties:
+                    content: Popover placed at leftTop.
+          blocks:
+            - id: popover_leftTop_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: leftTop
+                color: default
+                variant: outlined
+                size: small
+        - id: popover_leftBottom
+          type: Popover
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: leftBottom
+            placement: leftBottom
+          slots:
+            popover:
+              blocks:
+                - id: popover_leftBottom_msg
+                  type: Paragraph
+                  properties:
+                    content: Popover placed at leftBottom.
+          blocks:
+            - id: popover_leftBottom_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: leftBottom
+                color: default
+                variant: outlined
+                size: small
+
+    - id: popover_place_label_right
+      type: Markdown
+      properties:
+        content: '**Right placements:**'
+    - id: popover_place_right_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: popover_right
+          type: Popover
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: right
+            placement: right
+          slots:
+            popover:
+              blocks:
+                - id: popover_right_msg
+                  type: Paragraph
+                  properties:
+                    content: Popover placed at right.
+          blocks:
+            - id: popover_right_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: right
+                color: primary
+                variant: solid
+                size: small
+        - id: popover_rightTop
+          type: Popover
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: rightTop
+            placement: rightTop
+          slots:
+            popover:
+              blocks:
+                - id: popover_rightTop_msg
+                  type: Paragraph
+                  properties:
+                    content: Popover placed at rightTop.
+          blocks:
+            - id: popover_rightTop_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: rightTop
+                color: default
+                variant: outlined
+                size: small
+        - id: popover_rightBottom
+          type: Popover
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: rightBottom
+            placement: rightBottom
+          slots:
+            popover:
+              blocks:
+                - id: popover_rightBottom_msg
+                  type: Paragraph
+                  properties:
+                    content: Popover placed at rightBottom.
+          blocks:
+            - id: popover_rightBottom_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: rightBottom
+                color: default
+                variant: outlined
+                size: small
+
+- title: Trigger Modes
+  blocks:
+    - id: popover_trigger_hover
+      type: Popover
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Hover Popover
+        trigger: hover
+      slots:
+        popover:
+          blocks:
+            - id: popover_trigger_hover_msg
+              type: Paragraph
+              properties:
+                content: This popover appears on hover (default).
+      blocks:
+        - id: popover_trigger_hover_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Hover (default)
+            color: primary
+            variant: solid
+    - id: popover_trigger_click
+      type: Popover
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Click Popover
+        trigger: click
+      slots:
+        popover:
+          blocks:
+            - id: popover_trigger_click_msg
+              type: Paragraph
+              properties:
+                content: This popover appears on click.
+      blocks:
+        - id: popover_trigger_click_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Click
+            color: primary
+            variant: outlined
+    - id: popover_trigger_focus
+      type: Popover
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Focus Popover
+        trigger: focus
+      slots:
+        popover:
+          blocks:
+            - id: popover_trigger_focus_msg
+              type: Paragraph
+              properties:
+                content: This popover appears on focus.
+      blocks:
+        - id: popover_trigger_focus_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Focus (tab to me)
+            color: primary
+            variant: dashed
+
+- title: Background Color
+  blocks:
+    - id: popover_color_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: popover_color_default
+          type: Popover
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Default
+          slots:
+            popover:
+              blocks:
+                - id: popover_color_default_msg
+                  type: Paragraph
+                  properties:
+                    content: Default background color.
+          blocks:
+            - id: popover_color_default_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Default
+                color: default
+                variant: outlined
+                size: small
+        - id: popover_color_light
+          type: Popover
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Light Yellow
+            color: '#fffbe6'
+          slots:
+            popover:
+              blocks:
+                - id: popover_color_light_msg
+                  type: Paragraph
+                  properties:
+                    content: A warm light yellow background.
+          blocks:
+            - id: popover_color_light_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Light Yellow
+                color: gold
+                variant: outlined
+                size: small
+        - id: popover_color_blue
+          type: Popover
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Light Blue
+            color: '#e6f4ff'
+          slots:
+            popover:
+              blocks:
+                - id: popover_color_blue_msg
+                  type: Paragraph
+                  properties:
+                    content: A cool light blue background.
+          blocks:
+            - id: popover_color_blue_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Light Blue
+                color: blue
+                variant: outlined
+                size: small
+        - id: popover_color_green
+          type: Popover
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Light Green
+            color: '#f6ffed'
+          slots:
+            popover:
+              blocks:
+                - id: popover_color_green_msg
+                  type: Paragraph
+                  properties:
+                    content: A fresh light green background.
+          blocks:
+            - id: popover_color_green_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Light Green
+                color: green
+                variant: outlined
+                size: small
+
+- title: Default Open
+  blocks:
+    - id: popover_default_open
+      type: Popover
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open by Default
+        defaultOpen: true
+        placement: right
+      slots:
+        popover:
+          blocks:
+            - id: popover_default_open_msg
+              type: Paragraph
+              properties:
+                content: This popover is open by default when the page loads.
+      blocks:
+        - id: popover_default_open_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Open by default
+            color: green
+            variant: solid
+
+- title: Delay Settings
+  blocks:
+    - id: popover_delay_fast
+      type: Popover
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Instant
+        mouseEnterDelay: 0
+        mouseLeaveDelay: 0
+      slots:
+        popover:
+          blocks:
+            - id: popover_delay_fast_msg
+              type: Paragraph
+              properties:
+                content: No delay on enter or leave.
+      blocks:
+        - id: popover_delay_fast_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: No delay
+            color: primary
+            variant: solid
+    - id: popover_delay_slow
+      type: Popover
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Slow Enter
+        mouseEnterDelay: 1
+      slots:
+        popover:
+          blocks:
+            - id: popover_delay_slow_msg
+              type: Paragraph
+              properties:
+                content: 1 second delay before showing.
+      blocks:
+        - id: popover_delay_slow_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: 1s enter delay
+            color: primary
+            variant: outlined
+    - id: popover_delay_sticky
+      type: Popover
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Sticky
+        mouseLeaveDelay: 2
+      slots:
+        popover:
+          blocks:
+            - id: popover_delay_sticky_msg
+              type: Paragraph
+              properties:
+                content: Stays visible for 2 seconds after mouse leaves.
+      blocks:
+        - id: popover_delay_sticky_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: 2s leave delay
+            color: primary
+            variant: dashed
+
+- title: Rich Popover Content
+  blocks:
+    - id: popover_rich_card
+      type: Popover
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: User Profile
+        trigger: click
+      slots:
+        popover:
+          blocks:
+            - id: popover_rich_row
+              type: Box
+              layout:
+                gap: 8
+              blocks:
+                - id: popover_rich_avatar
+                  type: Avatar
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    content: JD
+                    color: blue
+                - id: popover_rich_info
+                  type: Box
+                  blocks:
+                    - id: popover_rich_name
+                      type: Title
+                      properties:
+                        content: Jane Doe
+                        level: 5
+                    - id: popover_rich_email
+                      type: Paragraph
+                      properties:
+                        content: jane.doe@example.com
+      blocks:
+        - id: popover_rich_card_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: View Profile
+            color: primary
+            variant: solid
+            icon: AiOutlineUser
+
+    - id: popover_rich_actions
+      type: Popover
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Actions
+        trigger: click
+      slots:
+        popover:
+          blocks:
+            - id: popover_rich_actions_col
+              type: Box
+              layout:
+                gap: 4
+                direction: column
+              blocks:
+                - id: popover_rich_act_edit
+                  type: Button
+                  properties:
+                    title: Edit
+                    icon: AiOutlineEdit
+                    color: primary
+                    variant: text
+                    block: true
+                - id: popover_rich_act_copy
+                  type: Button
+                  properties:
+                    title: Duplicate
+                    icon: AiOutlineCopy
+                    color: default
+                    variant: text
+                    block: true
+                - id: popover_rich_act_delete
+                  type: Button
+                  properties:
+                    title: Delete
+                    icon: AiOutlineDelete
+                    color: danger
+                    variant: text
+                    block: true
+      blocks:
+        - id: popover_rich_actions_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: More
+            icon: AiOutlineEllipsis
+            color: default
+            variant: outlined
+
+- title: Auto Adjust Overflow
+  blocks:
+    - id: popover_overflow_on
+      type: Popover
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Auto Adjust
+        autoAdjustOverflow: true
+        placement: top
+      slots:
+        popover:
+          blocks:
+            - id: popover_overflow_on_msg
+              type: Paragraph
+              properties:
+                content: Repositions automatically near viewport edges.
+      blocks:
+        - id: popover_overflow_on_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Auto adjust (default)
+            color: primary
+            variant: solid
+    - id: popover_overflow_off
+      type: Popover
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Fixed Position
+        autoAdjustOverflow: false
+        placement: top
+      slots:
+        popover:
+          blocks:
+            - id: popover_overflow_off_msg
+              type: Paragraph
+              properties:
+                content: Stays in the specified position.
+      blocks:
+        - id: popover_overflow_off_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: No auto adjust
+            color: default
+            variant: outlined
+
+- title: Style Overrides
+  blocks:
+    - id: popover_style_custom
+      type: Popover
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Styled Popover
+        overlayInnerStyle:
+          borderRadius: 16
+          boxShadow: '0 6px 16px rgba(0, 0, 0, 0.2)'
+      slots:
+        popover:
+          blocks:
+            - id: popover_style_custom_msg
+              type: Paragraph
+              properties:
+                content: Custom inner style with larger border radius and stronger shadow.
+      blocks:
+        - id: popover_style_custom_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Custom styled
+            color: primary
+            variant: solid
+
+- title: Theme Token Overrides
+  blocks:
+    - id: popover_theme_wide
+      type: Popover
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Wide Title
+        theme:
+          titleMinWidth: 300
+      slots:
+        popover:
+          blocks:
+            - id: popover_theme_wide_msg
+              type: Paragraph
+              properties:
+                content: This popover has a wider minimum title width of 300px.
+      blocks:
+        - id: popover_theme_wide_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Wide title (300px)
+            color: primary
+            variant: solid
+    - id: popover_theme_radius
+      type: Popover
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Large Radius
+        theme:
+          borderRadiusLG: 20
+      slots:
+        popover:
+          blocks:
+            - id: popover_theme_radius_msg
+              type: Paragraph
+              properties:
+                content: Custom border radius of 20px.
+      blocks:
+        - id: popover_theme_radius_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Large radius
+            color: primary
+            variant: outlined
+    - id: popover_theme_bg
+      type: Popover
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Custom Background
+        theme:
+          colorBgElevated: '#f0f5ff'
+      slots:
+        popover:
+          blocks:
+            - id: popover_theme_bg_msg
+              type: Paragraph
+              properties:
+                content: Custom elevated background color using theme token.
+      blocks:
+        - id: popover_theme_bg_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Custom background
+            color: primary
+            variant: dashed

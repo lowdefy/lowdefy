@@ -1,0 +1,987 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Variants
+  blocks:
+    - id: variant_solid
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: solid
+        color: primary
+        variant: solid
+    - id: variant_outlined
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: outlined
+        color: primary
+        variant: outlined
+    - id: variant_dashed
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: dashed
+        color: primary
+        variant: dashed
+    - id: variant_filled
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: filled
+        color: primary
+        variant: filled
+    - id: variant_text
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: text
+        color: primary
+        variant: text
+    - id: variant_link
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: link
+        color: primary
+        variant: link
+
+- title: Preset Colors
+  blocks:
+    - id: colors_solid_row
+      type: Box
+      layout:
+        gap: 6
+        justify: flex-start
+      blocks:
+        - id: color_default
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: default
+            color: default
+            variant: solid
+            size: small
+        - id: color_primary
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: primary
+            color: primary
+            variant: solid
+            size: small
+        - id: color_danger
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: danger
+            color: danger
+            variant: solid
+            size: small
+        - id: color_blue
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: blue
+            color: blue
+            variant: solid
+            size: small
+        - id: color_purple
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: purple
+            color: purple
+            variant: solid
+            size: small
+        - id: color_cyan
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: cyan
+            color: cyan
+            variant: solid
+            size: small
+        - id: color_green
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: green
+            color: green
+            variant: solid
+            size: small
+        - id: color_magenta
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: magenta
+            color: magenta
+            variant: solid
+            size: small
+        - id: color_red
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: red
+            color: red
+            variant: solid
+            size: small
+        - id: color_orange
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: orange
+            color: orange
+            variant: solid
+            size: small
+        - id: color_volcano
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: volcano
+            color: volcano
+            variant: solid
+            size: small
+        - id: color_geekblue
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: geekblue
+            color: geekblue
+            variant: solid
+            size: small
+        - id: color_lime
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: lime
+            color: lime
+            variant: solid
+            size: small
+        - id: color_gold
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: gold
+            color: gold
+            variant: solid
+            size: small
+    - id: colors_outlined_row
+      type: Box
+      layout:
+        gap: 6
+        justify: flex-start
+      blocks:
+        - id: co_primary
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: primary
+            color: primary
+            variant: outlined
+            size: small
+        - id: co_danger
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: danger
+            color: danger
+            variant: outlined
+            size: small
+        - id: co_blue
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: blue
+            color: blue
+            variant: outlined
+            size: small
+        - id: co_purple
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: purple
+            color: purple
+            variant: outlined
+            size: small
+        - id: co_green
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: green
+            color: green
+            variant: outlined
+            size: small
+        - id: co_red
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: red
+            color: red
+            variant: outlined
+            size: small
+        - id: co_orange
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: orange
+            color: orange
+            variant: outlined
+            size: small
+
+- title: Color + Variant Matrix
+  blocks:
+    - id: mx_primary_label
+      type: Markdown
+      properties:
+        content: '**primary**'
+    - id: mx_primary_row
+      type: Box
+      layout:
+        gap: 6
+      blocks:
+        - id: mx_ps
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: solid
+            color: primary
+            variant: solid
+            size: small
+        - id: mx_po
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: outlined
+            color: primary
+            variant: outlined
+            size: small
+        - id: mx_pd
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: dashed
+            color: primary
+            variant: dashed
+            size: small
+        - id: mx_pf
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: filled
+            color: primary
+            variant: filled
+            size: small
+        - id: mx_pt
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: text
+            color: primary
+            variant: text
+            size: small
+        - id: mx_pl
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: link
+            color: primary
+            variant: link
+            size: small
+    - id: mx_danger_label
+      type: Markdown
+      properties:
+        content: '**danger**'
+    - id: mx_danger_row
+      type: Box
+      layout:
+        gap: 6
+      blocks:
+        - id: mx_ds
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: solid
+            color: danger
+            variant: solid
+            size: small
+        - id: mx_do
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: outlined
+            color: danger
+            variant: outlined
+            size: small
+        - id: mx_dd
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: dashed
+            color: danger
+            variant: dashed
+            size: small
+        - id: mx_df
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: filled
+            color: danger
+            variant: filled
+            size: small
+        - id: mx_dxt
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: text
+            color: danger
+            variant: text
+            size: small
+        - id: mx_dl
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: link
+            color: danger
+            variant: link
+            size: small
+    - id: mx_default_label
+      type: Markdown
+      properties:
+        content: '**default**'
+    - id: mx_default_row
+      type: Box
+      layout:
+        gap: 6
+      blocks:
+        - id: mx_xs
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: solid
+            color: default
+            variant: solid
+            size: small
+        - id: mx_xo
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: outlined
+            color: default
+            variant: outlined
+            size: small
+        - id: mx_xd
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: dashed
+            color: default
+            variant: dashed
+            size: small
+        - id: mx_xf
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: filled
+            color: default
+            variant: filled
+            size: small
+        - id: mx_xt
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: text
+            color: default
+            variant: text
+            size: small
+        - id: mx_xl
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: link
+            color: default
+            variant: link
+            size: small
+
+- title: Sizes
+  blocks:
+    - id: size_small
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Small
+        size: small
+        color: primary
+        variant: solid
+    - id: size_default
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Default
+        color: primary
+        variant: solid
+    - id: size_large
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Large
+        size: large
+        color: primary
+        variant: solid
+
+- title: Shapes
+  blocks:
+    - id: shape_square
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Square
+        color: primary
+        variant: solid
+    - id: shape_round
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Round
+        shape: round
+        color: primary
+        variant: solid
+    - id: shape_circle
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        icon: AiOutlineSearch
+        shape: circle
+        color: primary
+        variant: solid
+        hideTitle: true
+    - id: shape_circle_outlined
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        icon: AiOutlinePlus
+        shape: circle
+        color: primary
+        variant: outlined
+        hideTitle: true
+    - id: shape_circle_danger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        icon: AiOutlineHeart
+        shape: circle
+        color: danger
+        variant: dashed
+        hideTitle: true
+
+- title: Icons
+  blocks:
+    - id: icon_download
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Download
+        icon: AiOutlineDownload
+        color: primary
+        variant: solid
+    - id: icon_search
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Search
+        icon: AiOutlineSearch
+        color: primary
+        variant: outlined
+    - id: icon_delete
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Delete
+        icon: AiOutlineDelete
+        color: danger
+        variant: solid
+    - id: icon_check
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Approve
+        icon: AiOutlineCheck
+        color: green
+        variant: solid
+    - id: icon_only
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        icon: AiOutlineStar
+        color: gold
+        variant: filled
+        hideTitle: true
+    - id: icon_custom
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Custom
+        icon:
+          name: AiOutlineThunderbolt
+          color: '#faad14'
+        color: primary
+        variant: outlined
+
+- title: Ghost Buttons
+  blocks:
+    - id: ghost_bg
+      type: Box
+      class: bg-gradient-to-br from-teal-300 to-purple-400 p-4 rounded-lg
+      layout:
+        gap: 8
+      blocks:
+        - id: ghost_primary
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Primary
+            ghost: true
+            color: primary
+            variant: solid
+        - id: ghost_default
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Default
+            ghost: true
+            color: default
+            variant: solid
+        - id: ghost_danger
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Danger
+            ghost: true
+            color: danger
+            variant: solid
+        - id: ghost_outlined
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Outlined
+            ghost: true
+            color: primary
+            variant: outlined
+
+- title: Full Width (Block)
+  blocks:
+    - id: block_primary
+      type: Button
+      properties:
+        title: Full Width Primary
+        block: true
+        color: primary
+        variant: solid
+        icon: AiOutlineArrowRight
+    - id: block_outlined
+      type: Button
+      properties:
+        title: Full Width Outlined
+        block: true
+        color: primary
+        variant: outlined
+    - id: block_danger
+      type: Button
+      properties:
+        title: Full Width Danger
+        block: true
+        color: danger
+        variant: solid
+        icon: AiOutlineWarning
+
+- title: Disabled State
+  blocks:
+    - id: dis_solid
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Solid
+        disabled: true
+        color: primary
+        variant: solid
+    - id: dis_outlined
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Outlined
+        disabled: true
+        color: primary
+        variant: outlined
+    - id: dis_dashed
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Dashed
+        disabled: true
+        color: primary
+        variant: dashed
+    - id: dis_text
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Text
+        disabled: true
+        color: primary
+        variant: text
+    - id: dis_link
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Link
+        disabled: true
+        color: primary
+        variant: link
+
+- title: Custom Hex Colors
+  blocks:
+    - id: hex_solid_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: hex_coral
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Coral
+            color: '#ff6b6b'
+            variant: solid
+        - id: hex_teal
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Teal
+            color: '#20c997'
+            variant: solid
+        - id: hex_indigo
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Indigo
+            color: '#4c6ef5'
+            variant: solid
+        - id: hex_amber
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Amber
+            color: '#fab005'
+            variant: solid
+        - id: hex_pink
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Pink
+            color: '#e64980'
+            variant: solid
+    - id: hex_outlined_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: hexo_coral
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Coral
+            color: '#ff6b6b'
+            variant: outlined
+        - id: hexo_teal
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Teal
+            color: '#20c997'
+            variant: outlined
+        - id: hexo_indigo
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Indigo
+            color: '#4c6ef5'
+            variant: outlined
+        - id: hexo_amber
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Amber
+            color: '#fab005'
+            variant: outlined
+        - id: hexo_pink
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Pink
+            color: '#e64980'
+            variant: outlined
+
+- title: Button Groups
+  blocks:
+    - id: comp_actions_label
+      type: Markdown
+      properties:
+        content: '**Primary + Secondary:**'
+    - id: comp_actions_row
+      type: Box
+      layout:
+        gap: 8
+        justify: flex-end
+      blocks:
+        - id: comp_cancel
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Cancel
+            color: default
+            variant: outlined
+        - id: comp_submit
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Submit
+            color: primary
+            variant: solid
+    - id: comp_toolbar_label
+      type: Markdown
+      properties:
+        content: '**Icon toolbar:**'
+    - id: comp_toolbar_row
+      type: Box
+      layout:
+        gap: 4
+      blocks:
+        - id: tb_bold
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            icon: AiOutlineBold
+            hideTitle: true
+            color: default
+            variant: text
+        - id: tb_italic
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            icon: AiOutlineItalic
+            hideTitle: true
+            color: default
+            variant: text
+        - id: tb_underline
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            icon: AiOutlineUnderline
+            hideTitle: true
+            color: default
+            variant: text
+        - id: tb_link
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            icon: AiOutlineLink
+            hideTitle: true
+            color: default
+            variant: text
+    - id: comp_danger_label
+      type: Markdown
+      properties:
+        content: '**Danger confirmation:**'
+    - id: comp_danger_row
+      type: Box
+      layout:
+        gap: 8
+        justify: flex-end
+      blocks:
+        - id: comp_keep
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Keep
+            color: default
+            variant: outlined
+        - id: comp_delete
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Delete permanently
+            color: danger
+            variant: solid
+            icon: AiOutlineDelete
+
+- title: Link Buttons
+  blocks:
+    - id: href_link
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Visit Lowdefy
+        href: https://lowdefy.com
+        color: primary
+        variant: link
+    - id: href_solid
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Go to Docs
+        href: https://docs.lowdefy.com
+        color: primary
+        variant: solid
+        icon: AiOutlineLink
+
+- title: HTML in Title
+  blocks:
+    - id: html_bold
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: '<b>Bold</b> text'
+        color: primary
+        variant: solid
+    - id: html_emoji
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: 'Launch &#x1F680;'
+        color: purple
+        variant: solid
+
+- title: Theme Token Overrides
+  blocks:
+    - id: theme_radius
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Large Radius
+        color: primary
+        variant: solid
+        theme:
+          borderRadius: 20
+    - id: theme_font
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Large Font
+        color: primary
+        variant: solid
+        theme:
+          fontSize: 18
+    - id: theme_pill
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Pill Button
+        color: green
+        variant: solid
+        size: large
+        theme:
+          borderRadius: 40
+          controlHeight: 48

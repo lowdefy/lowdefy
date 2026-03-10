@@ -13,15 +13,16 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: Badge
-    category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Badge/schema.js
+    pageId: Badge
+    pageTitle: Badge
+    section: Container Blocks
     filePath: blocks/container/Badge.yaml
-    description_content: |
-      Small numerical value or status descriptor for UI elements. Badge is used as a container block, describing its content block.
-    init_property_values:
-      count: 1
-    slots:
-      - content
+    block_type: Badge
+    antd_component: Badge
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/Badge
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Badge/schema.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/Badge/gallery.yaml
+    description: >
+      Badge with count, dot, status, color, and overflow.

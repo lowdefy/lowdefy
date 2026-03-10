@@ -13,14 +13,16 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: Footer
-    category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Footer/schema.js
+    pageId: Footer
+    pageTitle: Footer
+    section: Container Blocks
     filePath: blocks/container/Footer.yaml
-    description_content: |
-      The `Footer` block provides a page container for a [footer](https://4x.ant.design/components/layout/) area with content.
-
-    slots:
-      - content
+    block_type: Footer
+    antd_component: Footer
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/Footer
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Footer/schema.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/Footer/gallery.yaml
+    description: >
+      Page footer layout section.

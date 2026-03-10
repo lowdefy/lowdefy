@@ -1,0 +1,298 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic List
+  fullWidth: true
+  blocks:
+    - id: list_basic
+      type: List
+      blocks:
+        - id: list_basic_item
+          type: Html
+          properties:
+            html:
+              _state: item.text
+
+- title: Row Direction
+  fullWidth: true
+  blocks:
+    - id: list_row
+      type: List
+      properties:
+        direction: row
+      blocks:
+        - id: list_row_item
+          type: Box
+          layout:
+            flex: 0 0 auto
+          style:
+            --element:
+              background: '#1677ff'
+              color: '#ffffff'
+              padding: 8px 16px
+              borderRadius: 6
+          properties:
+            content:
+              _state: item.label
+
+- title: Column Direction
+  fullWidth: true
+  blocks:
+    - id: list_column
+      type: List
+      properties:
+        direction: column
+      blocks:
+        - id: list_column_item
+          type: Box
+          style:
+            --element:
+              background: '#f5f5f5'
+              padding: 12
+              borderRadius: 6
+              marginBottom: 4
+          blocks:
+            - id: list_column_item_text
+              type: Html
+              properties:
+                html:
+                  _state: item.name
+
+- title: Row Reverse Direction
+  fullWidth: true
+  blocks:
+    - id: list_row_rev
+      type: List
+      properties:
+        direction: row-reverse
+      blocks:
+        - id: list_row_rev_item
+          type: Box
+          layout:
+            flex: 0 0 auto
+          style:
+            --element:
+              background: '#722ed1'
+              color: '#ffffff'
+              padding: 8px 16px
+              borderRadius: 6
+          properties:
+            content:
+              _state: item.label
+
+- title: Column Reverse Direction
+  fullWidth: true
+  blocks:
+    - id: list_col_rev
+      type: List
+      properties:
+        direction: column-reverse
+      blocks:
+        - id: list_col_rev_item
+          type: Box
+          style:
+            --element:
+              background: '#f5f5f5'
+              padding: 12
+              borderRadius: 6
+              marginBottom: 4
+          blocks:
+            - id: list_col_rev_item_text
+              type: Html
+              properties:
+                html:
+                  _state: item.name
+
+- title: Wrap
+  fullWidth: true
+  blocks:
+    - id: list_wrap_label
+      type: Markdown
+      properties:
+        content: '**wrap: wrap (default when direction is set):**'
+    - id: list_wrap
+      type: List
+      properties:
+        direction: row
+        wrap: wrap
+      blocks:
+        - id: list_wrap_item
+          type: Box
+          layout:
+            flex: 0 0 150px
+          style:
+            --element:
+              background: '#52c41a'
+              color: '#ffffff'
+              padding: 8px 16px
+              borderRadius: 6
+              textAlign: center
+              margin: 4
+          properties:
+            content:
+              _state: item.label
+    - id: list_nowrap_label
+      type: Markdown
+      properties:
+        content: '**wrap: nowrap:**'
+    - id: list_nowrap
+      type: List
+      properties:
+        direction: row
+        wrap: nowrap
+      style:
+        --element:
+          overflow: auto
+      blocks:
+        - id: list_nowrap_item
+          type: Box
+          layout:
+            flex: 0 0 150px
+          style:
+            --element:
+              background: '#fa8c16'
+              color: '#ffffff'
+              padding: 8px 16px
+              borderRadius: 6
+              textAlign: center
+              margin: 4
+          properties:
+            content:
+              _state: item.label
+
+- title: Scroll
+  fullWidth: true
+  blocks:
+    - id: list_scroll_label
+      type: Markdown
+      properties:
+        content: '**scroll: true limits the list height and adds a scrollbar:**'
+    - id: list_scroll
+      type: List
+      properties:
+        direction: column
+        scroll: true
+      style:
+        --element:
+          maxHeight: 180
+          border: 1px solid #d9d9d9
+          borderRadius: 8
+          padding: 8
+      blocks:
+        - id: list_scroll_item
+          type: Box
+          style:
+            --element:
+              background: '#f5f5f5'
+              padding: 12
+              borderRadius: 6
+              marginBottom: 4
+          blocks:
+            - id: list_scroll_item_text
+              type: Html
+              properties:
+                html:
+                  _state: item.name
+
+- title: Styled List Items
+  fullWidth: true
+  blocks:
+    - id: list_styled
+      type: List
+      properties:
+        direction: column
+      blocks:
+        - id: list_styled_item
+          type: Box
+          layout:
+            gap: 12
+            align: center
+          style:
+            --element:
+              background: '#ffffff'
+              padding: 12px 16px
+              borderRadius: 8
+              border: 1px solid #f0f0f0
+              marginBottom: 8
+          blocks:
+            - id: list_styled_item_icon
+              type: Icon
+              layout:
+                flex: 0 0 auto
+              properties:
+                name: AiOutlineUser
+                size: 24
+                color: '#1677ff'
+            - id: list_styled_item_name
+              type: Html
+              layout:
+                flex: 1
+              properties:
+                html:
+                  _state: item.name
+
+- title: Card List
+  fullWidth: true
+  blocks:
+    - id: list_cards
+      type: List
+      properties:
+        direction: row
+        wrap: wrap
+      blocks:
+        - id: list_cards_item
+          type: Box
+          layout:
+            flex: 0 0 200px
+          style:
+            --element:
+              background: '#ffffff'
+              padding: 16
+              borderRadius: 8
+              boxShadow: 0 2px 8px rgba(0, 0, 0, 0.1)
+              margin: 4
+          blocks:
+            - id: list_cards_item_title
+              type: Html
+              properties:
+                html:
+                  _nunjucks:
+                    template: '<h4 style="margin: 0 0 8px 0;">{{ item.title }}</h4>'
+                    on:
+                      _state: true
+            - id: list_cards_item_desc
+              type: Html
+              properties:
+                html:
+                  _state: item.description
+
+- title: Style Overrides
+  fullWidth: true
+  blocks:
+    - id: list_styled_container
+      type: List
+      properties:
+        direction: column
+      style:
+        --element:
+          background: '#f0f5ff'
+          padding: 16
+          borderRadius: 8
+          border: 1px solid #91caff
+      blocks:
+        - id: list_styled_container_item
+          type: Html
+          properties:
+            html:
+              _state: item.text

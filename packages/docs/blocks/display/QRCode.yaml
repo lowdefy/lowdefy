@@ -13,15 +13,16 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: QRCode
-    category: display
-    schema: ../plugins/blocks/blocks-antd/src/blocks/QRCode/schema.js
+    pageId: QRCode
+    pageTitle: QRCode
+    section: Display Blocks
     filePath: blocks/display/QRCode.yaml
-    examples:
-      _ref: ../plugins/blocks/blocks-antd/src/blocks/QRCode/examples.yaml
-    description_content: |
-      The `QRCode` block renders a QR code from a text value. Supports customization of size, colors, error correction level, embedded icon, canvas or SVG rendering, and status indicators (active, expired, loading, scanned).
-    init_property_values:
-      value: https://lowdefy.com
+    block_type: QRCode
+    antd_component: QRCode
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/QRCode
+    schema: ../plugins/blocks/blocks-antd/src/blocks/QRCode/schema.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/QRCode/gallery.yaml
+    description: >
+      QR code generator with customizable size, color, and error level.

@@ -1,0 +1,1162 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic Horizontal Split
+  blocks:
+    - id: basic_h
+      type: Splitter
+      style:
+        height: 200px
+        border: 1px solid #e8e8e8
+        borderRadius: 8px
+      properties:
+        layout: horizontal
+        panels:
+          - key: left
+            defaultSize: 50
+          - key: right
+            defaultSize: 50
+      slots:
+        left:
+          blocks:
+            - id: basic_h_left
+              type: Box
+              class: bg-blue-50 h-full flex items-center justify-center
+              blocks:
+                - id: basic_h_left_text
+                  type: Paragraph
+                  properties:
+                    content: Left Panel
+        right:
+          blocks:
+            - id: basic_h_right
+              type: Box
+              class: bg-cyan-50 h-full flex items-center justify-center
+              blocks:
+                - id: basic_h_right_text
+                  type: Paragraph
+                  properties:
+                    content: Right Panel
+
+- title: Vertical Split
+  blocks:
+    - id: basic_v
+      type: Splitter
+      style:
+        height: 300px
+        border: 1px solid #e8e8e8
+        borderRadius: 8px
+      properties:
+        layout: vertical
+        panels:
+          - key: top
+            defaultSize: 50
+          - key: bottom
+            defaultSize: 50
+      slots:
+        top:
+          blocks:
+            - id: basic_v_top
+              type: Box
+              class: bg-green-50 h-full flex items-center justify-center
+              blocks:
+                - id: basic_v_top_text
+                  type: Paragraph
+                  properties:
+                    content: Top Panel
+        bottom:
+          blocks:
+            - id: basic_v_bottom
+              type: Box
+              class: bg-amber-50 h-full flex items-center justify-center
+              blocks:
+                - id: basic_v_bottom_text
+                  type: Paragraph
+                  properties:
+                    content: Bottom Panel
+
+- title: Three Panels
+  blocks:
+    - id: three_h
+      type: Splitter
+      style:
+        height: 200px
+        border: 1px solid #e8e8e8
+        borderRadius: 8px
+      properties:
+        layout: horizontal
+        panels:
+          - key: first
+            defaultSize: 25
+          - key: second
+            defaultSize: 50
+          - key: third
+            defaultSize: 25
+      slots:
+        first:
+          blocks:
+            - id: three_h_first
+              type: Box
+              class: bg-violet-50 h-full flex items-center justify-center
+              blocks:
+                - id: three_h_first_text
+                  type: Paragraph
+                  properties:
+                    content: Panel 1
+        second:
+          blocks:
+            - id: three_h_second
+              type: Box
+              class: bg-blue-50 h-full flex items-center justify-center
+              blocks:
+                - id: three_h_second_text
+                  type: Paragraph
+                  properties:
+                    content: Panel 2
+        third:
+          blocks:
+            - id: three_h_third
+              type: Box
+              class: bg-teal-50 h-full flex items-center justify-center
+              blocks:
+                - id: three_h_third_text
+                  type: Paragraph
+                  properties:
+                    content: Panel 3
+
+- title: Four Panels
+  blocks:
+    - id: four_h
+      type: Splitter
+      style:
+        height: 180px
+        border: 1px solid #e8e8e8
+        borderRadius: 8px
+      properties:
+        layout: horizontal
+        panels:
+          - key: p1
+            defaultSize: 25
+          - key: p2
+            defaultSize: 25
+          - key: p3
+            defaultSize: 25
+          - key: p4
+            defaultSize: 25
+      slots:
+        p1:
+          blocks:
+            - id: four_h_p1
+              type: Box
+              class: bg-red-50 h-full flex items-center justify-center
+              blocks:
+                - id: four_h_p1_text
+                  type: Paragraph
+                  properties:
+                    content: Panel 1
+        p2:
+          blocks:
+            - id: four_h_p2
+              type: Box
+              class: bg-orange-50 h-full flex items-center justify-center
+              blocks:
+                - id: four_h_p2_text
+                  type: Paragraph
+                  properties:
+                    content: Panel 2
+        p3:
+          blocks:
+            - id: four_h_p3
+              type: Box
+              class: bg-yellow-50 h-full flex items-center justify-center
+              blocks:
+                - id: four_h_p3_text
+                  type: Paragraph
+                  properties:
+                    content: Panel 3
+        p4:
+          blocks:
+            - id: four_h_p4
+              type: Box
+              class: bg-green-50 h-full flex items-center justify-center
+              blocks:
+                - id: four_h_p4_text
+                  type: Paragraph
+                  properties:
+                    content: Panel 4
+
+- title: Min and Max Size Constraints
+  blocks:
+    - id: constrained
+      type: Splitter
+      style:
+        height: 200px
+        border: 1px solid #e8e8e8
+        borderRadius: 8px
+      properties:
+        layout: horizontal
+        panels:
+          - key: nav
+            defaultSize: 30
+            min: 20
+            max: 40
+          - key: main
+            defaultSize: 70
+      slots:
+        nav:
+          blocks:
+            - id: constrained_nav
+              type: Box
+              class: bg-indigo-100 h-full p-4
+              blocks:
+                - id: constrained_nav_title
+                  type: Paragraph
+                  properties:
+                    content: '<b>Navigation</b>'
+                - id: constrained_nav_desc
+                  type: Paragraph
+                  properties:
+                    content: 'Min: 20% / Max: 40%'
+        main:
+          blocks:
+            - id: constrained_main
+              type: Box
+              class: bg-slate-50 h-full p-4
+              blocks:
+                - id: constrained_main_title
+                  type: Paragraph
+                  properties:
+                    content: '<b>Main Content</b>'
+                - id: constrained_main_desc
+                  type: Paragraph
+                  properties:
+                    content: This panel fills the remaining space. The left panel cannot be resized smaller than 20% or larger than 40%.
+    - id: constrained_both
+      type: Splitter
+      style:
+        height: 200px
+        border: 1px solid #e8e8e8
+        borderRadius: 8px
+      properties:
+        layout: horizontal
+        panels:
+          - key: c_left
+            defaultSize: 30
+            min: '100px'
+            max: '400px'
+          - key: c_center
+            defaultSize: 40
+          - key: c_right
+            defaultSize: 30
+            min: '100px'
+            max: '300px'
+      slots:
+        c_left:
+          blocks:
+            - id: constrained_both_left
+              type: Box
+              class: bg-purple-50 h-full p-4 flex items-center justify-center
+              blocks:
+                - id: constrained_both_left_text
+                  type: Paragraph
+                  properties:
+                    content: 'Min: 100px / Max: 400px'
+        c_center:
+          blocks:
+            - id: constrained_both_center
+              type: Box
+              class: bg-gray-50 h-full p-4 flex items-center justify-center
+              blocks:
+                - id: constrained_both_center_text
+                  type: Paragraph
+                  properties:
+                    content: Flexible Center
+        c_right:
+          blocks:
+            - id: constrained_both_right
+              type: Box
+              class: bg-rose-50 h-full p-4 flex items-center justify-center
+              blocks:
+                - id: constrained_both_right_text
+                  type: Paragraph
+                  properties:
+                    content: 'Min: 100px / Max: 300px'
+
+- title: Collapsible Panels
+  blocks:
+    - id: collapsible_left
+      type: Splitter
+      style:
+        height: 200px
+        border: 1px solid #e8e8e8
+        borderRadius: 8px
+      properties:
+        layout: horizontal
+        panels:
+          - key: col_sidebar
+            defaultSize: 30
+            collapsible: true
+          - key: col_body
+            defaultSize: 70
+      slots:
+        col_sidebar:
+          blocks:
+            - id: collapsible_left_sidebar
+              type: Box
+              class: bg-blue-100 h-full p-4
+              blocks:
+                - id: collapsible_left_sidebar_text
+                  type: Paragraph
+                  properties:
+                    content: '<b>Collapsible Sidebar</b>'
+                - id: collapsible_left_sidebar_desc
+                  type: Paragraph
+                  properties:
+                    content: Click the arrow on the divider to collapse this panel.
+        col_body:
+          blocks:
+            - id: collapsible_left_body
+              type: Box
+              class: bg-white h-full p-4
+              blocks:
+                - id: collapsible_left_body_text
+                  type: Paragraph
+                  properties:
+                    content: Main body content remains visible when the sidebar is collapsed.
+    - id: collapsible_both
+      type: Splitter
+      style:
+        height: 200px
+        border: 1px solid #e8e8e8
+        borderRadius: 8px
+      properties:
+        layout: horizontal
+        panels:
+          - key: cb_left
+            defaultSize: 25
+            collapsible: true
+          - key: cb_center
+            defaultSize: 50
+          - key: cb_right
+            defaultSize: 25
+            collapsible: true
+      slots:
+        cb_left:
+          blocks:
+            - id: collapsible_both_left
+              type: Box
+              class: bg-emerald-100 h-full p-3 flex items-center justify-center
+              blocks:
+                - id: collapsible_both_left_text
+                  type: Paragraph
+                  properties:
+                    content: Left (collapsible)
+        cb_center:
+          blocks:
+            - id: collapsible_both_center
+              type: Box
+              class: bg-slate-50 h-full p-3 flex items-center justify-center
+              blocks:
+                - id: collapsible_both_center_text
+                  type: Paragraph
+                  properties:
+                    content: Center (fixed)
+        cb_right:
+          blocks:
+            - id: collapsible_both_right
+              type: Box
+              class: bg-amber-100 h-full p-3 flex items-center justify-center
+              blocks:
+                - id: collapsible_both_right_text
+                  type: Paragraph
+                  properties:
+                    content: Right (collapsible)
+
+- title: Collapsible with Start and End
+  blocks:
+    - id: col_start_end
+      type: Splitter
+      style:
+        height: 200px
+        border: 1px solid #e8e8e8
+        borderRadius: 8px
+      properties:
+        layout: horizontal
+        panels:
+          - key: cse_left
+            defaultSize: 30
+            collapsible:
+              start: true
+              end: false
+          - key: cse_center
+            defaultSize: 40
+            collapsible:
+              start: true
+              end: true
+          - key: cse_right
+            defaultSize: 30
+            collapsible:
+              start: false
+              end: true
+      slots:
+        cse_left:
+          blocks:
+            - id: col_se_left
+              type: Box
+              class: bg-pink-50 h-full p-3 flex items-center justify-center
+              blocks:
+                - id: col_se_left_text
+                  type: Paragraph
+                  properties:
+                    content: Collapse left only
+        cse_center:
+          blocks:
+            - id: col_se_center
+              type: Box
+              class: bg-sky-50 h-full p-3 flex items-center justify-center
+              blocks:
+                - id: col_se_center_text
+                  type: Paragraph
+                  properties:
+                    content: Collapse both directions
+        cse_right:
+          blocks:
+            - id: col_se_right
+              type: Box
+              class: bg-lime-50 h-full p-3 flex items-center justify-center
+              blocks:
+                - id: col_se_right_text
+                  type: Paragraph
+                  properties:
+                    content: Collapse right only
+
+- title: Default Sizes
+  blocks:
+    - id: default_sizes_uneven
+      type: Splitter
+      style:
+        height: 180px
+        border: 1px solid #e8e8e8
+        borderRadius: 8px
+      properties:
+        layout: horizontal
+        panels:
+          - key: ds_narrow
+            defaultSize: 20
+          - key: ds_wide
+            defaultSize: 80
+      slots:
+        ds_narrow:
+          blocks:
+            - id: default_sizes_narrow
+              type: Box
+              class: bg-orange-100 h-full flex items-center justify-center
+              blocks:
+                - id: default_sizes_narrow_text
+                  type: Paragraph
+                  properties:
+                    content: '20%'
+        ds_wide:
+          blocks:
+            - id: default_sizes_wide
+              type: Box
+              class: bg-orange-50 h-full flex items-center justify-center
+              blocks:
+                - id: default_sizes_wide_text
+                  type: Paragraph
+                  properties:
+                    content: '80%'
+    - id: default_sizes_thirds
+      type: Splitter
+      style:
+        height: 180px
+        border: 1px solid #e8e8e8
+        borderRadius: 8px
+      properties:
+        layout: horizontal
+        panels:
+          - key: ds_t1
+            defaultSize: 33
+          - key: ds_t2
+            defaultSize: 34
+          - key: ds_t3
+            defaultSize: 33
+      slots:
+        ds_t1:
+          blocks:
+            - id: default_sizes_t1
+              type: Box
+              class: bg-violet-100 h-full flex items-center justify-center
+              blocks:
+                - id: default_sizes_t1_text
+                  type: Paragraph
+                  properties:
+                    content: '33%'
+        ds_t2:
+          blocks:
+            - id: default_sizes_t2
+              type: Box
+              class: bg-violet-50 h-full flex items-center justify-center
+              blocks:
+                - id: default_sizes_t2_text
+                  type: Paragraph
+                  properties:
+                    content: '34%'
+        ds_t3:
+          blocks:
+            - id: default_sizes_t3
+              type: Box
+              class: bg-violet-100 h-full flex items-center justify-center
+              blocks:
+                - id: default_sizes_t3_text
+                  type: Paragraph
+                  properties:
+                    content: '33%'
+    - id: default_sizes_pixel
+      type: Splitter
+      style:
+        height: 180px
+        border: 1px solid #e8e8e8
+        borderRadius: 8px
+      properties:
+        layout: horizontal
+        panels:
+          - key: ds_px_fixed
+            defaultSize: '200px'
+          - key: ds_px_flex
+      slots:
+        ds_px_fixed:
+          blocks:
+            - id: default_sizes_px_fixed
+              type: Box
+              class: bg-teal-100 h-full flex items-center justify-center
+              blocks:
+                - id: default_sizes_px_fixed_text
+                  type: Paragraph
+                  properties:
+                    content: Fixed 200px
+        ds_px_flex:
+          blocks:
+            - id: default_sizes_px_flex
+              type: Box
+              class: bg-teal-50 h-full flex items-center justify-center
+              blocks:
+                - id: default_sizes_px_flex_text
+                  type: Paragraph
+                  properties:
+                    content: Flexible remainder
+
+- title: Non-resizable Panel
+  blocks:
+    - id: nonresizable
+      type: Splitter
+      style:
+        height: 200px
+        border: 1px solid #e8e8e8
+        borderRadius: 8px
+      properties:
+        layout: horizontal
+        panels:
+          - key: nr_fixed
+            defaultSize: 30
+            resizable: false
+          - key: nr_flex_a
+            defaultSize: 40
+          - key: nr_flex_b
+            defaultSize: 30
+      slots:
+        nr_fixed:
+          blocks:
+            - id: nonresizable_fixed
+              type: Box
+              class: bg-red-100 h-full p-3 flex items-center justify-center
+              blocks:
+                - id: nonresizable_fixed_text
+                  type: Paragraph
+                  properties:
+                    content: 'Fixed (resizable: false)'
+        nr_flex_a:
+          blocks:
+            - id: nonresizable_flex_a
+              type: Box
+              class: bg-gray-50 h-full p-3 flex items-center justify-center
+              blocks:
+                - id: nonresizable_flex_a_text
+                  type: Paragraph
+                  properties:
+                    content: Resizable
+        nr_flex_b:
+          blocks:
+            - id: nonresizable_flex_b
+              type: Box
+              class: bg-gray-100 h-full p-3 flex items-center justify-center
+              blocks:
+                - id: nonresizable_flex_b_text
+                  type: Paragraph
+                  properties:
+                    content: Resizable
+
+- title: Nested Splitters
+  blocks:
+    - id: nested_outer
+      type: Splitter
+      style:
+        height: 400px
+        border: 1px solid #e8e8e8
+        borderRadius: 8px
+      properties:
+        layout: horizontal
+        panels:
+          - key: n_sidebar
+            defaultSize: 25
+            min: 15
+            collapsible: true
+          - key: n_main
+            defaultSize: 75
+      slots:
+        n_sidebar:
+          blocks:
+            - id: nested_sidebar
+              type: Box
+              class: bg-slate-100 h-full p-4
+              blocks:
+                - id: nested_sidebar_title
+                  type: Paragraph
+                  properties:
+                    content: '<b>Sidebar</b>'
+                - id: nested_sidebar_item_1
+                  type: Paragraph
+                  properties:
+                    content: Dashboard
+                - id: nested_sidebar_item_2
+                  type: Paragraph
+                  properties:
+                    content: Analytics
+                - id: nested_sidebar_item_3
+                  type: Paragraph
+                  properties:
+                    content: Settings
+                - id: nested_sidebar_item_4
+                  type: Paragraph
+                  properties:
+                    content: Reports
+        n_main:
+          blocks:
+            - id: nested_inner
+              type: Splitter
+              style:
+                height: 100%
+              properties:
+                layout: vertical
+                panels:
+                  - key: n_content
+                    defaultSize: 70
+                  - key: n_footer
+                    defaultSize: 30
+                    min: 15
+                    collapsible: true
+              slots:
+                n_content:
+                  blocks:
+                    - id: nested_content
+                      type: Box
+                      class: bg-white h-full p-4
+                      blocks:
+                        - id: nested_content_title
+                          type: Paragraph
+                          properties:
+                            content: '<b>Main Content Area</b>'
+                        - id: nested_content_desc
+                          type: Paragraph
+                          properties:
+                            content: This demonstrates a horizontal splitter with a nested vertical splitter. The sidebar splits horizontally, while the main area is split vertically into content and a bottom panel.
+                n_footer:
+                  blocks:
+                    - id: nested_footer
+                      type: Box
+                      class: bg-blue-50 h-full p-4
+                      blocks:
+                        - id: nested_footer_title
+                          type: Paragraph
+                          properties:
+                            content: '<b>Bottom Panel</b>'
+                        - id: nested_footer_desc
+                          type: Paragraph
+                          properties:
+                            content: Collapsible bottom panel inside the nested vertical splitter.
+
+- title: IDE-style Layout
+  blocks:
+    - id: ide_outer
+      type: Splitter
+      style:
+        height: 450px
+        border: 1px solid #d9d9d9
+        borderRadius: 8px
+      properties:
+        layout: horizontal
+        panels:
+          - key: ide_explorer
+            defaultSize: 20
+            min: 12
+            collapsible: true
+          - key: ide_right
+            defaultSize: 80
+      slots:
+        ide_explorer:
+          blocks:
+            - id: ide_explorer_box
+              type: Box
+              class: bg-slate-800 h-full p-3
+              blocks:
+                - id: ide_explorer_title
+                  type: Paragraph
+                  style:
+                    color: '#9ca3af'
+                    fontSize: 11px
+                    textTransform: uppercase
+                    letterSpacing: 1px
+                  properties:
+                    content: Explorer
+                - id: ide_explorer_f1
+                  type: Paragraph
+                  style:
+                    color: '#e2e8f0'
+                    fontSize: 13px
+                  properties:
+                    content: 'src/'
+                - id: ide_explorer_f2
+                  type: Paragraph
+                  style:
+                    color: '#94a3b8'
+                    fontSize: 13px
+                    paddingLeft: 12px
+                  properties:
+                    content: 'index.js'
+                - id: ide_explorer_f3
+                  type: Paragraph
+                  style:
+                    color: '#94a3b8'
+                    fontSize: 13px
+                    paddingLeft: 12px
+                  properties:
+                    content: 'App.js'
+                - id: ide_explorer_f4
+                  type: Paragraph
+                  style:
+                    color: '#94a3b8'
+                    fontSize: 13px
+                    paddingLeft: 12px
+                  properties:
+                    content: 'utils.js'
+                - id: ide_explorer_f5
+                  type: Paragraph
+                  style:
+                    color: '#e2e8f0'
+                    fontSize: 13px
+                  properties:
+                    content: 'package.json'
+        ide_right:
+          blocks:
+            - id: ide_inner
+              type: Splitter
+              style:
+                height: 100%
+              properties:
+                layout: vertical
+                panels:
+                  - key: ide_editor
+                    defaultSize: 65
+                  - key: ide_terminal
+                    defaultSize: 35
+                    min: 15
+                    collapsible: true
+              slots:
+                ide_editor:
+                  blocks:
+                    - id: ide_editor_box
+                      type: Box
+                      class: bg-slate-900 h-full p-4
+                      blocks:
+                        - id: ide_editor_tab
+                          type: Paragraph
+                          style:
+                            color: '#64748b'
+                            fontSize: 12px
+                            borderBottom: 1px solid #334155
+                            paddingBottom: 8px
+                          properties:
+                            content: 'App.js'
+                        - id: ide_editor_code
+                          type: Paragraph
+                          style:
+                            color: '#e2e8f0'
+                            fontFamily: monospace
+                            fontSize: 13px
+                            lineHeight: 1.6
+                          properties:
+                            content: '<span style="color:#c084fc">function</span> <span style="color:#67e8f9">App</span>() {<br>&nbsp;&nbsp;<span style="color:#c084fc">return</span> (<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#67e8f9">div</span>&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hello World<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span style="color:#67e8f9">div</span>&gt;<br>&nbsp;&nbsp;);<br>}'
+                ide_terminal:
+                  blocks:
+                    - id: ide_terminal_box
+                      type: Box
+                      class: bg-gray-950 h-full p-3
+                      blocks:
+                        - id: ide_terminal_title
+                          type: Paragraph
+                          style:
+                            color: '#64748b'
+                            fontSize: 11px
+                            textTransform: uppercase
+                            letterSpacing: 1px
+                            borderBottom: 1px solid #1e293b
+                            paddingBottom: 6px
+                          properties:
+                            content: Terminal
+                        - id: ide_terminal_line
+                          type: Paragraph
+                          style:
+                            color: '#22c55e'
+                            fontFamily: monospace
+                            fontSize: 13px
+                          properties:
+                            content: '$ npm start'
+                        - id: ide_terminal_output
+                          type: Paragraph
+                          style:
+                            color: '#94a3b8'
+                            fontFamily: monospace
+                            fontSize: 13px
+                          properties:
+                            content: 'Compiled successfully!'
+
+- title: Panels with Rich Content
+  blocks:
+    - id: rich_h
+      type: Splitter
+      style:
+        height: 280px
+        border: 1px solid #e8e8e8
+        borderRadius: 8px
+      properties:
+        layout: horizontal
+        panels:
+          - key: rich_left
+            defaultSize: 50
+          - key: rich_right
+            defaultSize: 50
+      slots:
+        rich_left:
+          blocks:
+            - id: rich_left_box
+              type: Box
+              class: h-full p-4
+              blocks:
+                - id: rich_left_card
+                  type: Card
+                  properties:
+                    title: Project Overview
+                    size: small
+                  blocks:
+                    - id: rich_left_card_p1
+                      type: Paragraph
+                      properties:
+                        content: This panel contains a Card block inside a Splitter panel, demonstrating that any block type can be placed within splitter panels.
+                    - id: rich_left_card_tag
+                      type: Tag
+                      properties:
+                        title: Active
+                        color: success
+        rich_right:
+          blocks:
+            - id: rich_right_box
+              type: Box
+              class: h-full p-4
+              blocks:
+                - id: rich_right_card
+                  type: Card
+                  properties:
+                    title: Statistics
+                    size: small
+                  blocks:
+                    - id: rich_right_stat
+                      type: Statistic
+                      properties:
+                        title: Total Users
+                        value: 1428
+                    - id: rich_right_progress
+                      type: Progress
+                      properties:
+                        percent: 72
+
+- title: Colored Background Panels
+  blocks:
+    - id: color_h
+      type: Splitter
+      style:
+        height: 200px
+        borderRadius: 8px
+        overflow: hidden
+      properties:
+        layout: horizontal
+        panels:
+          - key: c_red
+            defaultSize: 25
+          - key: c_blue
+            defaultSize: 25
+          - key: c_green
+            defaultSize: 25
+          - key: c_purple
+            defaultSize: 25
+      slots:
+        c_red:
+          blocks:
+            - id: color_red_panel
+              type: Box
+              class: h-full flex items-center justify-center
+              style:
+                background: 'linear-gradient(135deg, #fee2e2, #fecaca)'
+              blocks:
+                - id: color_red_text
+                  type: Paragraph
+                  style:
+                    color: '#991b1b'
+                    fontWeight: 600
+                  properties:
+                    content: Red
+        c_blue:
+          blocks:
+            - id: color_blue_panel
+              type: Box
+              class: h-full flex items-center justify-center
+              style:
+                background: 'linear-gradient(135deg, #dbeafe, #bfdbfe)'
+              blocks:
+                - id: color_blue_text
+                  type: Paragraph
+                  style:
+                    color: '#1e40af'
+                    fontWeight: 600
+                  properties:
+                    content: Blue
+        c_green:
+          blocks:
+            - id: color_green_panel
+              type: Box
+              class: h-full flex items-center justify-center
+              style:
+                background: 'linear-gradient(135deg, #dcfce7, #bbf7d0)'
+              blocks:
+                - id: color_green_text
+                  type: Paragraph
+                  style:
+                    color: '#166534'
+                    fontWeight: 600
+                  properties:
+                    content: Green
+        c_purple:
+          blocks:
+            - id: color_purple_panel
+              type: Box
+              class: h-full flex items-center justify-center
+              style:
+                background: 'linear-gradient(135deg, #f3e8ff, #e9d5ff)'
+              blocks:
+                - id: color_purple_text
+                  type: Paragraph
+                  style:
+                    color: '#6b21a8'
+                    fontWeight: 600
+                  properties:
+                    content: Purple
+    - id: color_v
+      type: Splitter
+      style:
+        height: 250px
+        borderRadius: 8px
+        overflow: hidden
+      properties:
+        layout: vertical
+        panels:
+          - key: cv_top
+            defaultSize: 33
+          - key: cv_mid
+            defaultSize: 34
+          - key: cv_bot
+            defaultSize: 33
+      slots:
+        cv_top:
+          blocks:
+            - id: color_v_top
+              type: Box
+              class: h-full flex items-center justify-center
+              style:
+                background: 'linear-gradient(90deg, #fef3c7, #fde68a)'
+              blocks:
+                - id: color_v_top_text
+                  type: Paragraph
+                  style:
+                    color: '#92400e'
+                    fontWeight: 600
+                  properties:
+                    content: Top Section
+        cv_mid:
+          blocks:
+            - id: color_v_mid
+              type: Box
+              class: h-full flex items-center justify-center
+              style:
+                background: 'linear-gradient(90deg, #e0f2fe, #bae6fd)'
+              blocks:
+                - id: color_v_mid_text
+                  type: Paragraph
+                  style:
+                    color: '#0c4a6e'
+                    fontWeight: 600
+                  properties:
+                    content: Middle Section
+        cv_bot:
+          blocks:
+            - id: color_v_bot
+              type: Box
+              class: h-full flex items-center justify-center
+              style:
+                background: 'linear-gradient(90deg, #fce7f3, #fbcfe8)'
+              blocks:
+                - id: color_v_bot_text
+                  type: Paragraph
+                  style:
+                    color: '#9d174d'
+                    fontWeight: 600
+                  properties:
+                    content: Bottom Section
+
+- title: Theme Token Overrides
+  blocks:
+    - id: theme_thick_bar
+      type: Splitter
+      style:
+        height: 200px
+        border: 1px solid #e8e8e8
+        borderRadius: 8px
+      properties:
+        layout: horizontal
+        panels:
+          - key: ttb_left
+            defaultSize: 50
+          - key: ttb_right
+            defaultSize: 50
+        theme:
+          splitBarSize: 4
+          splitTriggerSize: 24
+          colorFill: '#1677ff'
+      slots:
+        ttb_left:
+          blocks:
+            - id: theme_thick_left
+              type: Box
+              class: bg-blue-50 h-full p-4 flex items-center justify-center
+              blocks:
+                - id: theme_thick_left_text
+                  type: Paragraph
+                  properties:
+                    content: Thicker blue splitter bar
+        ttb_right:
+          blocks:
+            - id: theme_thick_right
+              type: Box
+              class: bg-blue-100 h-full p-4 flex items-center justify-center
+              blocks:
+                - id: theme_thick_right_text
+                  type: Paragraph
+                  properties:
+                    content: Larger trigger area (24px)
+    - id: theme_custom_colors
+      type: Splitter
+      style:
+        height: 200px
+        border: 1px solid #e8e8e8
+        borderRadius: 8px
+      properties:
+        layout: horizontal
+        panels:
+          - key: tcc_left
+            defaultSize: 50
+            collapsible: true
+          - key: tcc_right
+            defaultSize: 50
+        theme:
+          splitBarSize: 3
+          colorFill: '#52c41a'
+          colorPrimary: '#52c41a'
+          splitTriggerSize: 20
+      slots:
+        tcc_left:
+          blocks:
+            - id: theme_colors_left
+              type: Box
+              class: bg-green-50 h-full p-4 flex items-center justify-center
+              blocks:
+                - id: theme_colors_left_text
+                  type: Paragraph
+                  properties:
+                    content: Green themed divider
+        tcc_right:
+          blocks:
+            - id: theme_colors_right
+              type: Box
+              class: bg-green-100 h-full p-4 flex items-center justify-center
+              blocks:
+                - id: theme_colors_right_text
+                  type: Paragraph
+                  properties:
+                    content: Green collapse arrows
+    - id: theme_minimal
+      type: Splitter
+      style:
+        height: 200px
+        border: 1px solid #e8e8e8
+        borderRadius: 8px
+      properties:
+        layout: horizontal
+        panels:
+          - key: tm_left
+            defaultSize: 50
+          - key: tm_right
+            defaultSize: 50
+        theme:
+          splitBarSize: 1
+          splitTriggerSize: 0
+          resizeSpinnerSize: 0
+      slots:
+        tm_left:
+          blocks:
+            - id: theme_minimal_left
+              type: Box
+              class: bg-gray-50 h-full p-4 flex items-center justify-center
+              blocks:
+                - id: theme_minimal_left_text
+                  type: Paragraph
+                  properties:
+                    content: Minimal divider
+        tm_right:
+          blocks:
+            - id: theme_minimal_right
+              type: Box
+              class: bg-gray-100 h-full p-4 flex items-center justify-center
+              blocks:
+                - id: theme_minimal_right_text
+                  type: Paragraph
+                  properties:
+                    content: No visible trigger handle

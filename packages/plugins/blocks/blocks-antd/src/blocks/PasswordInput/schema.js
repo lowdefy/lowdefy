@@ -107,6 +107,134 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/input#design-token',
+        },
+        properties: {
+          activeBorderColor: {
+            type: 'string',
+            default: '#1677ff',
+            description: 'Border color when the input is active (focused).',
+          },
+          activeShadow: {
+            type: 'string',
+            default: '0 0 0 2px rgba(5, 145, 255, 0.1)',
+            description: 'Shadow effect when the input is active (focused).',
+          },
+          addonBg: {
+            type: 'string',
+            default: 'rgba(0, 0, 0, 0.02)',
+            description: 'Background color for input addon elements.',
+          },
+          borderRadius: {
+            type: 'number',
+            default: 6,
+            description: 'Border radius of the input.',
+          },
+          borderRadiusLG: {
+            type: 'number',
+            default: 8,
+            description: 'Border radius for large inputs.',
+          },
+          borderRadiusSM: {
+            type: 'number',
+            default: 4,
+            description: 'Border radius for small inputs.',
+          },
+          colorBgContainer: {
+            type: 'string',
+            default: '#ffffff',
+            description: 'Background color of the input.',
+          },
+          colorBorder: {
+            type: 'string',
+            description: 'Border color of the input.',
+          },
+          colorText: {
+            type: 'string',
+            description: 'Text color inside the input.',
+          },
+          colorTextPlaceholder: {
+            type: 'string',
+            description: 'Placeholder text color.',
+          },
+          colorTextDisabled: {
+            type: 'string',
+            description: 'Text color when the input is disabled.',
+          },
+          colorBgContainerDisabled: {
+            type: 'string',
+            description: 'Background color when the input is disabled.',
+          },
+          errorActiveShadow: {
+            type: 'string',
+            default: '0 0 0 2px rgba(255, 38, 5, 0.06)',
+            description: 'Shadow effect for error state when the input is active.',
+          },
+          fontSize: {
+            type: 'number',
+            default: 14,
+            description: 'Font size of the input text.',
+          },
+          fontSizeLG: {
+            type: 'number',
+            default: 16,
+            description: 'Font size for large inputs.',
+          },
+          fontSizeSM: {
+            type: 'number',
+            default: 14,
+            description: 'Font size for small inputs.',
+          },
+          hoverBorderColor: {
+            type: 'string',
+            default: '#4096ff',
+            description: 'Border color when hovering over the input.',
+          },
+          hoverBg: {
+            type: 'string',
+            default: '#ffffff',
+            description: 'Background color when hovering over the input.',
+          },
+          activeBg: {
+            type: 'string',
+            default: '#ffffff',
+            description: 'Background color when the input is active (focused).',
+          },
+          paddingBlock: {
+            type: 'number',
+            default: 4,
+            description: 'Vertical padding of the input.',
+          },
+          paddingBlockLG: {
+            type: 'number',
+            default: 7,
+            description: 'Vertical padding for large inputs.',
+          },
+          paddingBlockSM: {
+            type: 'number',
+            default: 0,
+            description: 'Vertical padding for small inputs.',
+          },
+          paddingInline: {
+            type: 'number',
+            default: 11,
+            description: 'Horizontal padding of the input.',
+          },
+          paddingInlineLG: {
+            type: 'number',
+            default: 11,
+            description: 'Horizontal padding for large inputs.',
+          },
+          paddingInlineSM: {
+            type: 'number',
+            default: 7,
+            description: 'Horizontal padding for small inputs.',
+          },
+          warningActiveShadow: {
+            type: 'string',
+            default: '0 0 0 2px rgba(255, 215, 5, 0.1)',
+            description: 'Shadow effect for warning state when the input is active.',
+          },
         },
       },
     },

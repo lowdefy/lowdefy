@@ -13,13 +13,16 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: FloatButton
-    category: display
-    schema: ../plugins/blocks/blocks-antd/src/blocks/FloatButton/schema.js
+    pageId: FloatButton
+    pageTitle: FloatButton
+    section: Display Blocks
     filePath: blocks/display/FloatButton.yaml
-    examples:
-      _ref: ../plugins/blocks/blocks-antd/src/blocks/FloatButton/examples.yaml
-    description_content: |
-      The `FloatButton` block renders a floating action button that hovers over the page content. Supports icons, tooltips, badges, and can function as a link. Useful for primary actions like "back to top", "help", or quick-access features.
+    block_type: FloatButton
+    antd_component: FloatButton
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/FloatButton
+    schema: ../plugins/blocks/blocks-antd/src/blocks/FloatButton/schema.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/FloatButton/gallery.yaml
+    description: >
+      Floating action button with tooltip, badge, and icon.

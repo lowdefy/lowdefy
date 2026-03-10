@@ -13,89 +13,16 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: Selector
-    value_type: any
-    category: input
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Selector/schema.js
+    pageId: Selector
+    pageTitle: Selector
+    section: Input Blocks
     filePath: blocks/input/Selector.yaml
-    init_state_values:
-      __type_block.properties.options: object[]
-      __object_arr_block.properties.options:
-        - label: First
-          value: '1'
-        - label: Second
-          value: '2'
-
-    description_content: |
-      The `Selector` block is a drop down selector that allows a user to select a single value from a set of options.
-
-      The options for the selector can be provides as either an array of primitive values (Strings, numbers, booleans or dates), or as an array of label-value pairs, where the label is a string, and the value can be of any type, including objects like dates and arrays.
-
-      > Other selector blocks are `ButtonSelector`, `CheckboxSelector`, `MultipleSelector` and `RadioSelector`.
-
-    examples:
-      - title: Listing options from database search
-        block:
-          id: example_selector
-          type: Selector
-          requests:
-            - id: example_search
-              type: MongoDBAggregation
-              connectionId: companies
-              payload:
-                search_input:
-                  _state: search_input
-              properties:
-                pipeline:
-                  - $search:
-                      compound:
-                        should:
-                          - wildcard:
-                              query:
-                                _string.concat:
-                                  - '*'
-                                  - payload: search_input
-                                  - '*'
-                              path: # field names to search in the companies collection
-                                - _id
-                                - company_name
-                              allowAnalyzedField: true
-                  - $addFields:
-                      score:
-                        $meta: searchScore
-                  - $sort:
-                      score: -1
-                  - $limit: 50
-                  - $project: # selector options value, label pairs
-                      _id: 0
-                      value: $_id
-                      label:
-                        $concat:
-                          - $_id
-                          - ' - '
-                          - $ifNull:
-                              - $company_name
-                              - ''
-          properties:
-            placeholder: Search
-            options:
-              _if_none: # search request results will be used as options
-                - _request: example_search
-                - []
-            label:
-              disabled: true
-          events:
-            onSearch: # selector onSearch actions
-              debounce:
-                ms: 500
-              try:
-                - id: set_state
-                  type: SetState
-                  params:
-                    search_input:
-                      _event: value
-                - id: perform_search
-                  type: Request
-                  params: example_search
+    block_type: Selector
+    antd_component: Select
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/Selector
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Selector/schema.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/Selector/gallery.yaml
+    description: >
+      Dropdown selector with search, clear, and custom icons.

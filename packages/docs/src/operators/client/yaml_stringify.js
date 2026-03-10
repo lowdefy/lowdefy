@@ -21,14 +21,23 @@ function isMarkerKey(key) {
 }
 
 function stripMarkers(value) {
+  if (typeof value === 'function' || typeof value === 'symbol') {
+    return undefined;
+  }
   if (Array.isArray(value)) {
     return value.map(stripMarkers);
   }
   if (value !== null && typeof value === 'object') {
+    if (value instanceof Date) {
+      return value.toISOString();
+    }
     const clean = {};
     for (const key of Object.keys(value)) {
       if (!isMarkerKey(key)) {
-        clean[key] = stripMarkers(value[key]);
+        const stripped = stripMarkers(value[key]);
+        if (stripped !== undefined) {
+          clean[key] = stripped;
+        }
       }
     }
     return clean;

@@ -38,7 +38,7 @@ const schema = {
         type: 'string',
         enum: ['small', 'default', 'large'],
         default: 'default',
-        description: 'When true, hide the add new item button.',
+        description: 'Size of the list.',
       },
       addItemButton: {
         type: 'object',
@@ -53,6 +53,11 @@ const schema = {
         docs: {
           displayType: 'icon',
         },
+      },
+      hideRemoveButton: {
+        type: 'boolean',
+        default: false,
+        description: 'When true, hide the remove item button on each list item.',
       },
       noDataTitle: {
         type: 'string',
@@ -69,6 +74,64 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/list#design-token',
+        },
+        properties: {
+          titleMarginBottom: {
+            type: 'number',
+            default: 12,
+            description: 'Margin bottom of list item title.',
+          },
+          contentWidth: {
+            type: 'number',
+            default: 220,
+            description: 'Width of the content area.',
+          },
+          itemPadding: {
+            type: 'string',
+            default: '12px 0',
+            description: 'Padding of list items.',
+          },
+          itemPaddingLG: {
+            type: 'string',
+            default: '16px 24px',
+            description: 'Padding of list items (large size).',
+          },
+          itemPaddingSM: {
+            type: 'string',
+            default: '8px 16px',
+            description: 'Padding of list items (small size).',
+          },
+          headerBg: {
+            type: 'string',
+            default: 'transparent',
+            description: 'Background color of the list header.',
+          },
+          footerBg: {
+            type: 'string',
+            default: 'transparent',
+            description: 'Background color of the list footer.',
+          },
+          emptyTextPadding: {
+            type: 'number',
+            default: 32,
+            description: 'Padding for the empty text area.',
+          },
+          metaMarginBottom: {
+            type: 'number',
+            default: 16,
+            description: 'Margin bottom of list item meta.',
+          },
+          avatarMarginRight: {
+            type: 'number',
+            default: 16,
+            description: 'Margin right of the avatar in list items.',
+          },
+          descriptionFontSize: {
+            type: 'number',
+            default: 14,
+            description: 'Font size of the description text.',
+          },
         },
       },
     },

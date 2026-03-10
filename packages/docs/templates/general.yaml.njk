@@ -86,7 +86,14 @@ blocks:
           - id: max_width
             type: Box
             layout:
+              {% if fullWidth %}
+              flex: 1 1 auto
+              {% else %}
               flex: 0 1 800px
+              {% endif %}
+            style:
+              minWidth: 0
+              overflow: hidden
             blocks:
               {% if pageTitle %}
               - id: page_title

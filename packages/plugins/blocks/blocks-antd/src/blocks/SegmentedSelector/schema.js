@@ -184,6 +184,76 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/segmented#design-token',
+        },
+        properties: {
+          trackBg: {
+            type: 'string',
+            description: 'Background color of the segmented track container.',
+          },
+          trackPadding: {
+            type: 'number',
+            description: 'Padding around the segmented track.',
+          },
+          itemColor: {
+            type: 'string',
+            description: 'Default text color for segmented items.',
+          },
+          itemHoverColor: {
+            type: 'string',
+            description: 'Text color when hovering over a segmented item.',
+          },
+          itemHoverBg: {
+            type: 'string',
+            description: 'Background color when hovering over a segmented item.',
+          },
+          itemActiveBg: {
+            type: 'string',
+            description: 'Background color when a segmented item is being pressed.',
+          },
+          itemSelectedBg: {
+            type: 'string',
+            description: 'Background color of the selected segmented item.',
+          },
+          itemSelectedColor: {
+            type: 'string',
+            description: 'Text color of the selected segmented item.',
+          },
+          borderRadius: {
+            type: 'number',
+            default: 6,
+            description: 'Border radius of the segmented control.',
+          },
+          borderRadiusLG: {
+            type: 'number',
+            default: 8,
+            description: 'Border radius for large segmented control.',
+          },
+          borderRadiusSM: {
+            type: 'number',
+            default: 4,
+            description: 'Border radius for small segmented control.',
+          },
+          controlHeight: {
+            type: 'number',
+            default: 32,
+            description: 'Height of the segmented control.',
+          },
+          controlHeightLG: {
+            type: 'number',
+            default: 40,
+            description: 'Height for large segmented control.',
+          },
+          controlHeightSM: {
+            type: 'number',
+            default: 24,
+            description: 'Height for small segmented control.',
+          },
+          fontSize: {
+            type: 'number',
+            default: 14,
+            description: 'Font size of segmented item text.',
+          },
         },
       },
     },

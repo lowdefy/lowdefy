@@ -13,13 +13,15 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: Spinner
-    category: container
-    schema: ../plugins/blocks/blocks-loaders/src/blocks/Spinner/schema.js
+    pageId: Spinner
+    pageTitle: Spinner
+    section: Container Blocks
     filePath: blocks/container/Spinner.yaml
-    description_content: |
-      A loading spinner. Can be used as a display block, or as container wrapping another block, with the `spinning` property set in `state`.
-    slots:
-      - content
+    block_type: Spinner
+    github_path: packages/plugins/blocks/blocks-loaders/src/blocks/Spinner
+    schema: ../plugins/blocks/blocks-loaders/src/blocks/Spinner/schema.js
+    gallery: ../plugins/blocks/blocks-loaders/src/blocks/Spinner/gallery.yaml
+    description: >
+      Loading spinner overlay for content areas.

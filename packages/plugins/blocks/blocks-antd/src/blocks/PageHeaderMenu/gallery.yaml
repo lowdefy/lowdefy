@@ -1,0 +1,327 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic PageHeaderMenu
+  fullWidth: true
+  blocks:
+    - id: phm_basic
+      type: PageHeaderMenu
+      properties:
+        header:
+          theme: dark
+        menu:
+          theme: dark
+          links:
+            - id: phm_basic_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+            - id: phm_basic_about
+              type: MenuLink
+              properties:
+                title: About
+            - id: phm_basic_contact
+              type: MenuLink
+              properties:
+                title: Contact
+      blocks:
+        - id: phm_basic_content
+          type: Paragraph
+          properties:
+            content: PageHeaderMenu provides a full page layout with a horizontal navigation menu in the header. The menu links are configured through the menu.links property. On mobile screens, the menu collapses into a mobile drawer.
+
+- title: Light Theme Header
+  fullWidth: true
+  blocks:
+    - id: phm_light
+      type: PageHeaderMenu
+      properties:
+        header:
+          theme: light
+        menu:
+          theme: light
+          links:
+            - id: phm_light_dash
+              type: MenuLink
+              properties:
+                title: Dashboard
+                icon: AiOutlineDashboard
+            - id: phm_light_users
+              type: MenuLink
+              properties:
+                title: Users
+                icon: AiOutlineUser
+            - id: phm_light_settings
+              type: MenuLink
+              properties:
+                title: Settings
+                icon: AiOutlineSetting
+      blocks:
+        - id: phm_light_content
+          type: Paragraph
+          properties:
+            content: Setting header.theme to light gives the header a white background. The menu theme should match the header theme for a consistent look.
+
+- title: Menu with Groups
+  fullWidth: true
+  blocks:
+    - id: phm_groups
+      type: PageHeaderMenu
+      properties:
+        header:
+          theme: dark
+        menu:
+          theme: dark
+          links:
+            - id: phm_grp_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+            - id: phm_grp_products
+              type: MenuGroup
+              properties:
+                title: Products
+                icon: AiOutlineAppstore
+              links:
+                - id: phm_grp_software
+                  type: MenuLink
+                  properties:
+                    title: Software
+                - id: phm_grp_hardware
+                  type: MenuLink
+                  properties:
+                    title: Hardware
+            - id: phm_grp_services
+              type: MenuGroup
+              properties:
+                title: Services
+                icon: AiOutlineTool
+              links:
+                - id: phm_grp_consulting
+                  type: MenuLink
+                  properties:
+                    title: Consulting
+                - id: phm_grp_training
+                  type: MenuLink
+                  properties:
+                    title: Training
+                - id: phm_grp_support
+                  type: MenuLink
+                  properties:
+                    title: Support
+      blocks:
+        - id: phm_groups_content
+          type: Paragraph
+          properties:
+            content: Menu items can be organized into groups using MenuGroup. Groups create dropdown submenus in the horizontal header navigation.
+
+- title: With Breadcrumb
+  fullWidth: true
+  blocks:
+    - id: phm_breadcrumb
+      type: PageHeaderMenu
+      properties:
+        header:
+          theme: dark
+        breadcrumb:
+          separator: /
+          list:
+            - Home
+            - Products
+            - Detail
+        menu:
+          theme: dark
+          links:
+            - id: phm_bc_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+            - id: phm_bc_products
+              type: MenuLink
+              properties:
+                title: Products
+      blocks:
+        - id: phm_breadcrumb_content
+          type: Paragraph
+          properties:
+            content: Breadcrumbs are enabled by setting the breadcrumb property with a list of path items and an optional custom separator. When breadcrumb is not set, a default vertical spacer is shown instead.
+
+- title: With Footer Slot
+  fullWidth: true
+  blocks:
+    - id: phm_footer
+      type: PageHeaderMenu
+      properties:
+        header:
+          theme: dark
+        menu:
+          theme: dark
+          links:
+            - id: phm_ft_home
+              type: MenuLink
+              properties:
+                title: Home
+            - id: phm_ft_about
+              type: MenuLink
+              properties:
+                title: About
+        footer:
+          style:
+            textAlign: center
+      blocks:
+        - id: phm_footer_main
+          type: Paragraph
+          properties:
+            content: The footer slot renders at the bottom of the page. Configure it using the slots.footer key. Footer properties like style can be set via properties.footer.
+      slots:
+        footer:
+          blocks:
+            - id: phm_footer_text
+              type: Paragraph
+              properties:
+                content: My Application - Footer Content
+                style:
+                  textAlign: center
+                  margin: 0
+
+- title: With Header Slot
+  fullWidth: true
+  blocks:
+    - id: phm_header_slot
+      type: PageHeaderMenu
+      properties:
+        header:
+          theme: dark
+          contentStyle:
+            alignItems: center
+        menu:
+          theme: dark
+          links:
+            - id: phm_hs_home
+              type: MenuLink
+              properties:
+                title: Home
+            - id: phm_hs_pages
+              type: MenuLink
+              properties:
+                title: Pages
+      slots:
+        header:
+          blocks:
+            - id: phm_header_slot_avatar
+              type: Avatar
+              layout:
+                flex: 0 0 auto
+              properties:
+                icon: AiOutlineUser
+                size: small
+      blocks:
+        - id: phm_header_slot_content
+          type: Paragraph
+          properties:
+            content: The header slot allows you to place custom blocks in the header area next to the menu, such as user avatars, notification badges, or action buttons. The header.contentStyle property controls the layout of these slot items.
+
+- title: Custom Logo Settings
+  fullWidth: true
+  blocks:
+    - id: phm_logo
+      type: PageHeaderMenu
+      properties:
+        logo:
+          alt: Custom App Logo
+          breakpoint: 577
+        header:
+          theme: dark
+        menu:
+          theme: dark
+          links:
+            - id: phm_logo_home
+              type: MenuLink
+              properties:
+                title: Home
+            - id: phm_logo_docs
+              type: MenuLink
+              properties:
+                title: Docs
+      blocks:
+        - id: phm_logo_content
+          type: Paragraph
+          properties:
+            content: The logo property configures the header logo with src, srcMobile, alt text, breakpoint for responsive switching, and custom styles. When not set, it defaults to Lowdefy branding.
+
+- title: Desktop and Mobile Menu Overrides
+  fullWidth: true
+  blocks:
+    - id: phm_menu_overrides
+      type: PageHeaderMenu
+      properties:
+        header:
+          theme: dark
+        menu:
+          theme: dark
+          links:
+            - id: phm_mo_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+            - id: phm_mo_features
+              type: MenuLink
+              properties:
+                title: Features
+                icon: AiOutlineAppstore
+            - id: phm_mo_pricing
+              type: MenuLink
+              properties:
+                title: Pricing
+                icon: AiOutlineDollar
+        menuLg:
+          theme: dark
+        menuMd:
+          theme: light
+      blocks:
+        - id: phm_menu_overrides_content
+          type: Paragraph
+          properties:
+            content: Use menuLg to override menu properties for desktop (large screen) display and menuMd to override menu properties for the mobile drawer. This allows different themes or configurations for each screen size.
+
+- title: Theme Token Overrides
+  fullWidth: true
+  blocks:
+    - id: phm_themed
+      type: PageHeaderMenu
+      properties:
+        header:
+          theme: dark
+        menu:
+          theme: dark
+          links:
+            - id: phm_th_home
+              type: MenuLink
+              properties:
+                title: Home
+            - id: phm_th_pages
+              type: MenuLink
+              properties:
+                title: Pages
+        theme:
+          colorPrimary: '#722ed1'
+      blocks:
+        - id: phm_themed_content
+          type: Paragraph
+          properties:
+            content: The theme property allows overriding Ant Design design tokens for the entire page. Here colorPrimary is set to purple.

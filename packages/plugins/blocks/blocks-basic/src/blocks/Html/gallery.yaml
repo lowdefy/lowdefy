@@ -1,0 +1,238 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic HTML
+  blocks:
+    - id: basic_paragraph
+      type: Html
+      properties:
+        html: '<p>This is a paragraph rendered safely with the Html block.</p>'
+    - id: basic_heading
+      type: Html
+      properties:
+        html: '<h3>Safe Heading</h3><p>The Html block sanitizes content to prevent XSS attacks.</p>'
+    - id: basic_headings_all
+      type: Html
+      properties:
+        html: '<h4>Heading 4</h4><h5>Heading 5</h5><h6>Heading 6</h6>'
+    - id: basic_line_break
+      type: Html
+      properties:
+        html: '<p>First line<br />Second line<br />Third line</p>'
+    - id: basic_hr
+      type: Html
+      properties:
+        html: '<p>Content above</p><hr /><p>Content below the horizontal rule</p>'
+
+- title: Text Formatting
+  blocks:
+    - id: text_bold
+      type: Html
+      properties:
+        html: '<p>Text with <strong>bold</strong> and <b>also bold</b> formatting.</p>'
+    - id: text_italic
+      type: Html
+      properties:
+        html: '<p>Text with <em>italic</em> and <i>also italic</i> formatting.</p>'
+    - id: text_underline
+      type: Html
+      properties:
+        html: '<p>Text with <u>underline</u> formatting.</p>'
+    - id: text_strikethrough
+      type: Html
+      properties:
+        html: '<p>Text with <s>strikethrough</s> and <del>deleted</del> formatting.</p>'
+    - id: text_combined
+      type: Html
+      properties:
+        html: '<p>Text with <strong><em>bold italic</em></strong>, <strong><u>bold underline</u></strong>, and <em><u>italic underline</u></em>.</p>'
+    - id: text_small
+      type: Html
+      properties:
+        html: '<p>Normal text and <small>small text</small> together.</p>'
+    - id: text_sub_sup
+      type: Html
+      properties:
+        html: '<p>H<sub>2</sub>O is water. E=mc<sup>2</sup> is relativity.</p>'
+    - id: text_mark
+      type: Html
+      properties:
+        html: '<p>This sentence has <mark>highlighted text</mark> using the mark tag.</p>'
+
+- title: Lists
+  blocks:
+    - id: list_unordered
+      type: Html
+      properties:
+        html: '<ul><li>First item</li><li>Second item</li><li>Third item</li></ul>'
+    - id: list_ordered
+      type: Html
+      properties:
+        html: '<ol><li>Step one</li><li>Step two</li><li>Step three</li></ol>'
+    - id: list_nested
+      type: Html
+      properties:
+        html: '<ul><li>Parent item<ul><li>Child item 1</li><li>Child item 2</li></ul></li><li>Another parent item<ul><li>Another child</li></ul></li></ul>'
+    - id: list_ordered_nested
+      type: Html
+      properties:
+        html: '<ol><li>First item<ol><li>Sub-item A</li><li>Sub-item B</li></ol></li><li>Second item</li><li>Third item</li></ol>'
+
+- title: Styled Inline Elements
+  blocks:
+    - id: styled_colored_text
+      type: Html
+      properties:
+        html: '<p><span style="color: #1890ff;">Blue text</span>, <span style="color: #52c41a;">green text</span>, <span style="color: #ff4d4f;">red text</span>, and <span style="color: #fa8c16;">orange text</span>.</p>'
+    - id: styled_background
+      type: Html
+      properties:
+        html: '<p><span style="background: #e6f4ff; padding: 2px 6px; border-radius: 3px;">Blue highlight</span> and <span style="background: #f6ffed; padding: 2px 6px; border-radius: 3px;">Green highlight</span>.</p>'
+    - id: styled_sizes
+      type: Html
+      properties:
+        html: '<p><span style="font-size: 12px;">Small text</span>, <span style="font-size: 16px;">Normal text</span>, <span style="font-size: 20px;">Large text</span>, <span style="font-size: 24px;">Extra large</span>.</p>'
+
+- title: Blockquotes
+  blocks:
+    - id: blockquote_simple
+      type: Html
+      properties:
+        html: '<blockquote>A simple blockquote with default styling.</blockquote>'
+    - id: blockquote_styled
+      type: Html
+      properties:
+        html: '<blockquote style="border-left: 4px solid #1890ff; padding-left: 16px; margin: 0; color: #595959;">This is a styled blockquote with a blue left border accent and subdued text color.</blockquote>'
+    - id: blockquote_attribution
+      type: Html
+      properties:
+        html: '<blockquote style="border-left: 4px solid #d9d9d9; padding-left: 16px; margin: 0;"><p style="margin: 0 0 4px 0; font-style: italic; color: #595959;">"The best way to predict the future is to invent it."</p><footer style="color: #8c8c8c; font-size: 13px;">-- Alan Kay</footer></blockquote>'
+
+- title: Code Blocks
+  blocks:
+    - id: code_inline
+      type: Html
+      properties:
+        html: '<p>Use the <code style="background: #f5f5f5; padding: 2px 6px; border-radius: 4px; font-family: monospace;">Html</code> block for safe HTML rendering.</p>'
+    - id: code_block
+      type: Html
+      properties:
+        html: |
+          <pre style="background: #282c34; color: #abb2bf; padding: 16px; border-radius: 6px; overflow-x: auto; font-family: monospace; font-size: 14px;"><code>function greet(name) {
+            return "Hello, " + name + "!";
+          }</code></pre>
+    - id: code_multi_inline
+      type: Html
+      properties:
+        html: '<p>Set <code style="background: #f5f5f5; padding: 2px 6px; border-radius: 4px; font-family: monospace;">type</code> to <code style="background: #f5f5f5; padding: 2px 6px; border-radius: 4px; font-family: monospace;">Html</code> and provide the <code style="background: #f5f5f5; padding: 2px 6px; border-radius: 4px; font-family: monospace;">html</code> property.</p>'
+
+- title: Links
+  blocks:
+    - id: link_basic
+      type: Html
+      properties:
+        html: '<p>Visit <a href="https://lowdefy.com">Lowdefy</a> for more information.</p>'
+    - id: link_styled
+      type: Html
+      properties:
+        html: '<p><a href="https://lowdefy.com" style="color: #722ed1; text-decoration: none; font-weight: bold;">Purple styled link</a> within a paragraph.</p>'
+    - id: link_multiple
+      type: Html
+      properties:
+        html: '<p>Resources: <a href="https://lowdefy.com">Home</a> | <a href="https://docs.lowdefy.com">Docs</a> | <a href="https://github.com/lowdefy/lowdefy">GitHub</a></p>'
+
+- title: Nested Elements
+  blocks:
+    - id: nested_section
+      type: Html
+      properties:
+        html: '<div><h4>Section Title</h4><p>A paragraph with a <a href="https://lowdefy.com">safe link</a> inside it.</p><hr /><p>Content below the horizontal rule.</p></div>'
+    - id: nested_formatted_list
+      type: Html
+      properties:
+        html: '<div><h4>Features</h4><ul><li><strong>Fast:</strong> Optimized rendering</li><li><strong>Safe:</strong> XSS protection built-in</li><li><strong>Flexible:</strong> Supports many HTML tags</li></ul></div>'
+    - id: nested_mixed
+      type: Html
+      properties:
+        html: '<div><p>This block mixes <strong>bold</strong>, <em>italic</em>, and <code style="background: #f5f5f5; padding: 2px 4px; border-radius: 3px;">code</code> formatting.</p><blockquote style="border-left: 3px solid #d9d9d9; padding-left: 12px; margin: 12px 0; color: #595959;">It also includes a blockquote with <strong>bold text</strong>.</blockquote><ol><li>And a numbered list</li><li>With multiple items</li></ol></div>'
+
+- title: Tables
+  blocks:
+    - id: table_simple
+      type: Html
+      properties:
+        html: '<table style="width: 100%; border-collapse: collapse;"><thead><tr><th style="border: 1px solid #d9d9d9; padding: 8px; background: #fafafa; text-align: left;">Feature</th><th style="border: 1px solid #d9d9d9; padding: 8px; background: #fafafa; text-align: left;">Status</th></tr></thead><tbody><tr><td style="border: 1px solid #d9d9d9; padding: 8px;">Html block</td><td style="border: 1px solid #d9d9d9; padding: 8px;">Safe</td></tr><tr><td style="border: 1px solid #d9d9d9; padding: 8px;">DangerousHtml</td><td style="border: 1px solid #d9d9d9; padding: 8px;">Powerful</td></tr></tbody></table>'
+
+- title: Style Overrides
+  blocks:
+    - id: style_padded
+      type: Html
+      style:
+        --element:
+          padding: 20
+          background: '#f0f5ff'
+          borderRadius: 8
+      properties:
+        html: '<p style="margin: 0;">Content inside a styled Html container with blue background.</p>'
+    - id: style_bordered
+      type: Html
+      style:
+        --element:
+          border: 2px solid #1677ff
+          padding: 16
+          borderRadius: 8
+      properties:
+        html: '<p style="margin: 0;">Content with a blue border applied via style override.</p>'
+    - id: style_shadow
+      type: Html
+      style:
+        --element:
+          padding: 20
+          borderRadius: 12
+          boxShadow: 0 4px 12px rgba(0, 0, 0, 0.1)
+          background: '#ffffff'
+      properties:
+        html: '<h4 style="margin: 0 0 8px 0;">Elevated Html Block</h4><p style="margin: 0; color: #595959;">An Html block styled with box-shadow for an elevated card look.</p>'
+    - id: style_max_width
+      type: Html
+      style:
+        --element:
+          maxWidth: 350
+          margin: 0 auto
+          textAlign: center
+          padding: 16
+          background: '#f6ffed'
+          borderRadius: 8
+      properties:
+        html: '<p style="margin: 0; color: #52c41a; font-weight: bold;">Centered and constrained width.</p>'
+    - id: style_left_accent
+      type: Html
+      style:
+        --element:
+          borderLeft: 4px solid #fa8c16
+          paddingLeft: 16
+          paddingTop: 8
+          paddingBottom: 8
+      properties:
+        html: '<p style="margin: 0; color: #fa8c16; font-weight: 500;">Orange accent border on the left side.</p>'
+    - id: style_dark
+      type: Html
+      style:
+        --element:
+          background: '#1a1a2e'
+          color: '#e0e0e0'
+          padding: 20
+          borderRadius: 8
+      properties:
+        html: '<h4 style="margin: 0 0 8px 0; color: #ffffff;">Dark Themed Block</h4><p style="margin: 0;">Light text on a dark background for contrast.</p>'

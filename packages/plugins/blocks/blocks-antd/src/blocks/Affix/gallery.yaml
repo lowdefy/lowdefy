@@ -1,0 +1,273 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic Affix (Top)
+  blocks:
+    - id: affix_basic_top
+      type: Affix
+      properties:
+        offsetTop: 10
+      blocks:
+        - id: affix_basic_top_btn
+          type: Button
+          properties:
+            title: Affix Top (10px)
+            color: primary
+            variant: solid
+
+- title: Offset Top Variants
+  blocks:
+    - id: affix_top_0
+      type: Affix
+      layout:
+        flex: 0 0 auto
+      properties:
+        offsetTop: 0
+      blocks:
+        - id: affix_top_0_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Offset 0px
+            color: primary
+            variant: solid
+            size: small
+    - id: affix_top_20
+      type: Affix
+      layout:
+        flex: 0 0 auto
+      properties:
+        offsetTop: 20
+      blocks:
+        - id: affix_top_20_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Offset 20px
+            color: primary
+            variant: outlined
+            size: small
+    - id: affix_top_50
+      type: Affix
+      layout:
+        flex: 0 0 auto
+      properties:
+        offsetTop: 50
+      blocks:
+        - id: affix_top_50_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Offset 50px
+            color: primary
+            variant: dashed
+            size: small
+    - id: affix_top_100
+      type: Affix
+      layout:
+        flex: 0 0 auto
+      properties:
+        offsetTop: 100
+      blocks:
+        - id: affix_top_100_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Offset 100px
+            color: default
+            variant: outlined
+            size: small
+
+- title: Offset Bottom
+  blocks:
+    - id: affix_bottom_0
+      type: Affix
+      layout:
+        flex: 0 0 auto
+      properties:
+        offsetBottom: 0
+      blocks:
+        - id: affix_bottom_0_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Bottom 0px
+            color: primary
+            variant: solid
+            size: small
+    - id: affix_bottom_20
+      type: Affix
+      layout:
+        flex: 0 0 auto
+      properties:
+        offsetBottom: 20
+      blocks:
+        - id: affix_bottom_20_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Bottom 20px
+            color: primary
+            variant: outlined
+            size: small
+    - id: affix_bottom_50
+      type: Affix
+      layout:
+        flex: 0 0 auto
+      properties:
+        offsetBottom: 50
+      blocks:
+        - id: affix_bottom_50_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Bottom 50px
+            color: primary
+            variant: dashed
+            size: small
+
+- title: Affix with Rich Content
+  blocks:
+    - id: affix_rich_card
+      type: Affix
+      properties:
+        offsetTop: 10
+      blocks:
+        - id: affix_rich_card_inner
+          type: Card
+          properties:
+            title: Sticky Card
+            size: small
+          blocks:
+            - id: affix_rich_card_msg
+              type: Paragraph
+              properties:
+                content: This card becomes fixed when scrolled past its original position.
+            - id: affix_rich_card_row
+              type: Box
+              layout:
+                gap: 8
+                justify: flex-end
+              blocks:
+                - id: affix_rich_card_cancel
+                  type: Button
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Cancel
+                    color: default
+                    variant: outlined
+                    size: small
+                - id: affix_rich_card_save
+                  type: Button
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Save
+                    color: primary
+                    variant: solid
+                    size: small
+
+- title: Affix Toolbar
+  blocks:
+    - id: affix_toolbar
+      type: Affix
+      properties:
+        offsetTop: 10
+      blocks:
+        - id: affix_toolbar_row
+          type: Box
+          layout:
+            gap: 4
+          blocks:
+            - id: affix_tb_back
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                icon: AiOutlineArrowLeft
+                hideTitle: true
+                color: default
+                variant: outlined
+                size: small
+            - id: affix_tb_save
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Save
+                icon: AiOutlineSave
+                color: primary
+                variant: solid
+                size: small
+            - id: affix_tb_undo
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                icon: AiOutlineUndo
+                hideTitle: true
+                color: default
+                variant: text
+                size: small
+            - id: affix_tb_redo
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                icon: AiOutlineRedo
+                hideTitle: true
+                color: default
+                variant: text
+                size: small
+
+- title: Style Overrides
+  blocks:
+    - id: affix_style
+      type: Affix
+      properties:
+        offsetTop: 10
+      style:
+        --element:
+          zIndex: 100
+      blocks:
+        - id: affix_style_btn
+          type: Button
+          properties:
+            title: Custom z-index (100)
+            color: primary
+            variant: solid
+
+- title: Theme Token Overrides
+  blocks:
+    - id: affix_theme_zindex
+      type: Affix
+      properties:
+        offsetTop: 10
+        theme:
+          zIndexPopup: 50
+      blocks:
+        - id: affix_theme_zindex_btn
+          type: Button
+          properties:
+            title: Custom zIndexPopup (50)
+            color: primary
+            variant: outlined

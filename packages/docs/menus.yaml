@@ -327,6 +327,11 @@
         title: Input Blocks
         icon: AiOutlineForm
       links:
+        - id: InputGallery
+          type: MenuLink
+          pageId: InputGallery
+          properties:
+            title: Input Gallery
         - id: AutoComplete
           type: MenuLink
           pageId: AutoComplete
@@ -423,9 +428,6 @@
         - id: AgGrid
           type: MenuLink
           pageId: AgGrid
-        - id: Alert
-          type: MenuLink
-          pageId: Alert
         - id: Anchor
           type: MenuLink
           pageId: Anchor
@@ -444,9 +446,6 @@
         - id: DangerousMarkdown
           type: MenuLink
           pageId: DangerousMarkdown
-        - id: Descriptions
-          type: MenuLink
-          pageId: Descriptions
         - id: Divider
           type: MenuLink
           pageId: Divider
@@ -535,6 +534,9 @@
         - id: Affix
           type: MenuLink
           pageId: Affix
+        - id: Alert
+          type: MenuLink
+          pageId: Alert
         - id: Badge
           type: MenuLink
           pageId: Badge
@@ -559,6 +561,9 @@
         - id: Content
           type: MenuLink
           pageId: Content
+        - id: Descriptions
+          type: MenuLink
+          pageId: Descriptions
         - id: Drawer
           type: MenuLink
           pageId: Drawer

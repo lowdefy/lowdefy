@@ -13,24 +13,16 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: CheckboxSelector
-    value_type: any[]
-    category: input
-    schema: ../plugins/blocks/blocks-antd/src/blocks/CheckboxSelector/schema.js
+    pageId: CheckboxSelector
+    pageTitle: CheckboxSelector
+    section: Input Blocks
     filePath: blocks/input/CheckboxSelector.yaml
-    init_state_values:
-      __type_block.properties.options: object[]
-      __object_arr_block.properties.options:
-        - label: First
-          value: '1'
-        - label: Second
-          value: '2'
-
-    description_content: |
-      The `CheckboxSelector` block allows a user to select multiple values from a set of options.
-
-      The options for the selector can be provides as either an array of primitive values (strings, numbers, booleans, or dates), or as an array of label-value pairs, where the label is a string, and the value can be of any type, including objects like dates and arrays.
-
-      > Other selector blocks are `ButtonSelector`, `MultipleSelector`, `RadioSelector` and `Selector`.
+    block_type: CheckboxSelector
+    antd_component: Checkbox
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/CheckboxSelector
+    schema: ../plugins/blocks/blocks-antd/src/blocks/CheckboxSelector/schema.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/CheckboxSelector/gallery.yaml
+    description: >
+      Checkbox group for selecting multiple options.

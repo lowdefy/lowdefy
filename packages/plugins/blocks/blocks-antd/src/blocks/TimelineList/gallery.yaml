@@ -1,0 +1,266 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic Timeline
+  fullWidth: true
+  blocks:
+    - id: tl_basic
+      type: TimelineList
+      properties:
+        data:
+          - title: Application submitted
+          - title: Initial screening
+          - title: Technical interview
+          - title: Offer extended
+      blocks:
+        - id: tl_basic_content
+          type: Paragraph
+          properties:
+            content:
+              _state: item.title
+
+- title: Mode Left
+  fullWidth: true
+  blocks:
+    - id: tl_mode_left
+      type: TimelineList
+      properties:
+        mode: left
+        data:
+          - title: Step 1 - Created account
+          - title: Step 2 - Verified email
+          - title: Step 3 - Completed profile
+      blocks:
+        - id: tl_mode_left_content
+          type: Paragraph
+          properties:
+            content:
+              _state: item.title
+
+- title: Mode Right
+  fullWidth: true
+  blocks:
+    - id: tl_mode_right
+      type: TimelineList
+      properties:
+        mode: right
+        data:
+          - title: Morning standup
+          - title: Design review
+          - title: Sprint retrospective
+      blocks:
+        - id: tl_mode_right_content
+          type: Paragraph
+          properties:
+            content:
+              _state: item.title
+
+- title: Mode Alternate
+  fullWidth: true
+  blocks:
+    - id: tl_alternate
+      type: TimelineList
+      properties:
+        mode: alternate
+        data:
+          - title: 2020 - Company founded
+          - title: 2021 - First product launch
+          - title: 2022 - Series A funding
+          - title: 2023 - 100k users milestone
+          - title: 2024 - International expansion
+      blocks:
+        - id: tl_alternate_content
+          type: Paragraph
+          properties:
+            content:
+              _state: item.title
+
+- title: Colored Items
+  fullWidth: true
+  blocks:
+    - id: tl_colors
+      type: TimelineList
+      properties:
+        data:
+          - title: Feature deployed successfully
+            color: green
+          - title: Bug fix in progress
+            color: blue
+          - title: Build failed - investigating
+            color: red
+          - title: Code review pending
+            color: gray
+      blocks:
+        - id: tl_colors_content
+          type: Paragraph
+          properties:
+            content:
+              _state: item.title
+
+- title: Custom Icons
+  fullWidth: true
+  blocks:
+    - id: tl_icons
+      type: TimelineList
+      properties:
+        data:
+          - title: Order placed
+            icon: AiOutlineShoppingCart
+            color: blue
+          - title: Payment confirmed
+            icon: AiOutlineDollarCircle
+            color: green
+          - title: Shipped
+            icon: AiOutlineCar
+            color: orange
+          - title: Delivered
+            icon: AiOutlineCheckCircle
+            color: green
+      blocks:
+        - id: tl_icons_content
+          type: Paragraph
+          properties:
+            content:
+              _state: item.title
+
+- title: Pending State
+  fullWidth: true
+  blocks:
+    - id: tl_pending
+      type: TimelineList
+      properties:
+        pending: true
+        data:
+          - title: Requirements gathered
+          - title: Design complete
+          - title: Development in progress
+      blocks:
+        - id: tl_pending_content
+          type: Paragraph
+          properties:
+            content:
+              _state: item.title
+
+- title: Pending with Custom Dot Icon
+  fullWidth: true
+  blocks:
+    - id: tl_pending_dot
+      type: TimelineList
+      properties:
+        pending: true
+        pendingDotIcon:
+          name: AiOutlineClockCircle
+          color: '#1677ff'
+        data:
+          - title: Task A completed
+          - title: Task B completed
+          - title: Task C in progress
+      blocks:
+        - id: tl_pending_dot_content
+          type: Paragraph
+          properties:
+            content:
+              _state: item.title
+
+- title: Reversed Order
+  fullWidth: true
+  blocks:
+    - id: tl_reversed
+      type: TimelineList
+      properties:
+        reverse: true
+        data:
+          - title: Oldest entry
+          - title: Middle entry
+          - title: Newest entry
+      blocks:
+        - id: tl_reversed_content
+          type: Paragraph
+          properties:
+            content:
+              _state: item.title
+
+- title: Labels (Alternate Mode)
+  fullWidth: true
+  blocks:
+    - id: tl_labels
+      type: TimelineList
+      properties:
+        mode: alternate
+        data:
+          - title: Project kickoff meeting
+            label: '2024-01-15 09:00'
+          - title: Design mockups delivered
+            label: '2024-02-01 14:30'
+          - title: Development sprint 1 complete
+            label: '2024-03-15 17:00'
+          - title: QA testing started
+            label: '2024-04-01 10:00'
+      blocks:
+        - id: tl_labels_content
+          type: Paragraph
+          properties:
+            content:
+              _state: item.title
+
+- title: Custom Field Mapping
+  fullWidth: true
+  blocks:
+    - id: tl_custom_fields
+      type: TimelineList
+      properties:
+        colorField: status_color
+        iconField: status_icon
+        labelField: timestamp
+        data:
+          - description: Server deployed
+            status_color: green
+            status_icon: AiOutlineCloudServer
+            timestamp: '10:30 AM'
+          - description: Database migrated
+            status_color: blue
+            status_icon: AiOutlineDatabase
+            timestamp: '11:15 AM'
+          - description: Cache cleared
+            status_color: orange
+            status_icon: AiOutlineSync
+            timestamp: '11:45 AM'
+      blocks:
+        - id: tl_custom_fields_content
+          type: Paragraph
+          properties:
+            content:
+              _state: item.description
+
+- title: Theme Token Overrides
+  fullWidth: true
+  blocks:
+    - id: tl_theme
+      type: TimelineList
+      properties:
+        data:
+          - title: Styled timeline entry one
+          - title: Styled timeline entry two
+          - title: Styled timeline entry three
+        theme:
+          tailColor: '#1677ff'
+          tailWidth: 3
+          dotBorderWidth: 3
+          itemPaddingBottom: 32
+      blocks:
+        - id: tl_theme_content
+          type: Paragraph
+          properties:
+            content:
+              _state: item.title

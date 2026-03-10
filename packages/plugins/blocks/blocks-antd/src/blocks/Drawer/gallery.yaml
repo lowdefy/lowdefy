@@ -1,0 +1,787 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic Drawer
+  blocks:
+    - id: drawer_basic_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open Drawer
+        color: primary
+        variant: solid
+      events:
+        onClick:
+          - id: drawer_basic_open
+            type: CallMethod
+            params:
+              blockId: drawer_basic
+              method: setOpen
+              args:
+                open: true
+    - id: drawer_basic
+      type: Drawer
+      properties:
+        title: Basic Drawer
+      blocks:
+        - id: drawer_basic_p1
+          type: Paragraph
+          properties:
+            content: This is a basic drawer with a title and default settings. It opens from the right side with a width of 256px.
+        - id: drawer_basic_p2
+          type: Paragraph
+          properties:
+            content: Click the X button or the mask area to close it.
+
+- title: Placements
+  blocks:
+    - id: drawer_place_right_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Right (default)
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: drawer_place_right_open
+            type: CallMethod
+            params:
+              blockId: drawer_place_right
+              method: setOpen
+              args:
+                open: true
+    - id: drawer_place_left_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Left
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: drawer_place_left_open
+            type: CallMethod
+            params:
+              blockId: drawer_place_left
+              method: setOpen
+              args:
+                open: true
+    - id: drawer_place_top_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Top
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: drawer_place_top_open
+            type: CallMethod
+            params:
+              blockId: drawer_place_top
+              method: setOpen
+              args:
+                open: true
+    - id: drawer_place_bottom_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Bottom
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: drawer_place_bottom_open
+            type: CallMethod
+            params:
+              blockId: drawer_place_bottom
+              method: setOpen
+              args:
+                open: true
+    - id: drawer_place_right
+      type: Drawer
+      properties:
+        title: Right Placement
+        placement: right
+      blocks:
+        - id: drawer_place_right_content
+          type: Paragraph
+          properties:
+            content: This drawer slides in from the right side, which is the default placement.
+    - id: drawer_place_left
+      type: Drawer
+      properties:
+        title: Left Placement
+        placement: left
+      blocks:
+        - id: drawer_place_left_content
+          type: Paragraph
+          properties:
+            content: This drawer slides in from the left side. Useful for navigation panels.
+    - id: drawer_place_top
+      type: Drawer
+      properties:
+        title: Top Placement
+        placement: top
+        height: 300
+      blocks:
+        - id: drawer_place_top_content
+          type: Paragraph
+          properties:
+            content: This drawer slides in from the top. Use the height property instead of width for top and bottom placements.
+    - id: drawer_place_bottom
+      type: Drawer
+      properties:
+        title: Bottom Placement
+        placement: bottom
+        height: 300
+      blocks:
+        - id: drawer_place_bottom_content
+          type: Paragraph
+          properties:
+            content: This drawer slides in from the bottom. Commonly used for mobile action sheets or bottom panels.
+
+- title: Custom Sizes
+  blocks:
+    - id: drawer_narrow_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Narrow (200px)
+        color: primary
+        variant: outlined
+        size: small
+      events:
+        onClick:
+          - id: drawer_narrow_open
+            type: CallMethod
+            params:
+              blockId: drawer_narrow
+              method: setOpen
+              args:
+                open: true
+    - id: drawer_default_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Default (256px)
+        color: primary
+        variant: outlined
+        size: small
+      events:
+        onClick:
+          - id: drawer_default_size_open
+            type: CallMethod
+            params:
+              blockId: drawer_default_size
+              method: setOpen
+              args:
+                open: true
+    - id: drawer_wide_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Wide (500px)
+        color: primary
+        variant: outlined
+        size: small
+      events:
+        onClick:
+          - id: drawer_wide_open
+            type: CallMethod
+            params:
+              blockId: drawer_wide
+              method: setOpen
+              args:
+                open: true
+    - id: drawer_pct_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Percentage (60%)
+        color: primary
+        variant: outlined
+        size: small
+      events:
+        onClick:
+          - id: drawer_pct_open
+            type: CallMethod
+            params:
+              blockId: drawer_pct
+              method: setOpen
+              args:
+                open: true
+    - id: drawer_narrow
+      type: Drawer
+      properties:
+        title: Narrow Drawer
+        width: 200
+      blocks:
+        - id: drawer_narrow_content
+          type: Paragraph
+          properties:
+            content: A narrow 200px drawer, suitable for simple menus or quick settings.
+    - id: drawer_default_size
+      type: Drawer
+      properties:
+        title: Default Width
+      blocks:
+        - id: drawer_default_size_content
+          type: Paragraph
+          properties:
+            content: Default drawer width of 256px.
+    - id: drawer_wide
+      type: Drawer
+      properties:
+        title: Wide Drawer
+        width: 500
+      blocks:
+        - id: drawer_wide_content
+          type: Paragraph
+          properties:
+            content: A 500px wide drawer with more room for complex content like forms, tables, or detail views.
+    - id: drawer_pct
+      type: Drawer
+      properties:
+        title: 60% Width Drawer
+        width: '60%'
+      blocks:
+        - id: drawer_pct_content
+          type: Paragraph
+          properties:
+            content: Using a percentage width makes the drawer responsive. This drawer takes up 60% of the viewport width.
+
+- title: Closable Options
+  blocks:
+    - id: drawer_closable_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Closable (default)
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: drawer_closable_open
+            type: CallMethod
+            params:
+              blockId: drawer_closable
+              method: setOpen
+              args:
+                open: true
+    - id: drawer_not_closable_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: No Close Button
+        color: danger
+        variant: outlined
+      events:
+        onClick:
+          - id: drawer_not_closable_open
+            type: CallMethod
+            params:
+              blockId: drawer_not_closable
+              method: setOpen
+              args:
+                open: true
+    - id: drawer_closable
+      type: Drawer
+      properties:
+        title: Closable Drawer
+        closable: true
+      blocks:
+        - id: drawer_closable_content
+          type: Paragraph
+          properties:
+            content: The close button is visible in the top right corner. This is the default behavior.
+    - id: drawer_not_closable
+      type: Drawer
+      properties:
+        title: No Close Button
+        closable: false
+      blocks:
+        - id: drawer_not_closable_content
+          type: Paragraph
+          properties:
+            content: The close (x) button is hidden. Users can still close by clicking the mask or pressing Escape.
+        - id: drawer_not_closable_close_btn
+          type: Button
+          properties:
+            title: Close Drawer
+            color: primary
+            variant: solid
+          events:
+            onClick:
+              - id: drawer_not_closable_close
+                type: CallMethod
+                params:
+                  blockId: drawer_not_closable
+                  method: setOpen
+                  args:
+                    open: false
+
+- title: Mask Options
+  blocks:
+    - id: drawer_mask_default_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: With Mask (default)
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: drawer_mask_default_open
+            type: CallMethod
+            params:
+              blockId: drawer_mask_default
+              method: setOpen
+              args:
+                open: true
+    - id: drawer_no_mask_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: No Mask
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: drawer_no_mask_open
+            type: CallMethod
+            params:
+              blockId: drawer_no_mask
+              method: setOpen
+              args:
+                open: true
+    - id: drawer_mask_no_close_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Mask Not Closable
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: drawer_mask_no_close_open
+            type: CallMethod
+            params:
+              blockId: drawer_mask_no_close
+              method: setOpen
+              args:
+                open: true
+    - id: drawer_mask_default
+      type: Drawer
+      properties:
+        title: Default Mask
+        mask: true
+        maskClosable: true
+      blocks:
+        - id: drawer_mask_default_content
+          type: Paragraph
+          properties:
+            content: The mask is shown and clicking it closes the drawer. This is the default behavior.
+    - id: drawer_no_mask
+      type: Drawer
+      properties:
+        title: No Mask
+        mask: false
+      blocks:
+        - id: drawer_no_mask_content
+          type: Paragraph
+          properties:
+            content: No mask overlay is shown behind the drawer. The page content remains fully visible and interactive.
+    - id: drawer_mask_no_close
+      type: Drawer
+      properties:
+        title: Mask Not Closable
+        mask: true
+        maskClosable: false
+      blocks:
+        - id: drawer_mask_no_close_content
+          type: Paragraph
+          properties:
+            content: The mask is visible but clicking it does not close the drawer. Users must use the close button or Escape key.
+
+- title: Extra Slot
+  blocks:
+    - id: drawer_extra_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open Drawer with Extra
+        color: primary
+        variant: solid
+      events:
+        onClick:
+          - id: drawer_extra_open
+            type: CallMethod
+            params:
+              blockId: drawer_extra
+              method: setOpen
+              args:
+                open: true
+    - id: drawer_extra
+      type: Drawer
+      properties:
+        title: Drawer with Extra
+      slots:
+        extra:
+          blocks:
+            - id: drawer_extra_actions_row
+              type: Box
+              layout:
+                gap: 8
+              blocks:
+                - id: drawer_extra_cancel_btn
+                  type: Button
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Cancel
+                    color: default
+                    variant: outlined
+                    size: small
+                  events:
+                    onClick:
+                      - id: drawer_extra_cancel
+                        type: CallMethod
+                        params:
+                          blockId: drawer_extra
+                          method: setOpen
+                          args:
+                            open: false
+                - id: drawer_extra_submit_btn
+                  type: Button
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Submit
+                    color: primary
+                    variant: solid
+                    size: small
+      blocks:
+        - id: drawer_extra_content
+          type: Paragraph
+          properties:
+            content: The extra slot renders content in the header area opposite the title. Commonly used for action buttons like Save or Cancel.
+
+- title: Toggle Method
+  blocks:
+    - id: drawer_toggle_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Toggle Drawer
+        color: primary
+        variant: solid
+        icon: AiOutlineMenu
+      events:
+        onClick:
+          - id: drawer_toggle_call
+            type: CallMethod
+            params:
+              blockId: drawer_toggle
+              method: toggleOpen
+    - id: drawer_toggle
+      type: Drawer
+      properties:
+        title: Toggle Drawer
+      blocks:
+        - id: drawer_toggle_content
+          type: Paragraph
+          properties:
+            content: This drawer uses the toggleOpen method. Each click of the button alternates between open and closed states.
+
+- title: Keyboard Close
+  blocks:
+    - id: drawer_keyboard_on_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Keyboard Enabled (default)
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: drawer_keyboard_on_open
+            type: CallMethod
+            params:
+              blockId: drawer_keyboard_on
+              method: setOpen
+              args:
+                open: true
+    - id: drawer_keyboard_off_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Keyboard Disabled
+        color: danger
+        variant: outlined
+      events:
+        onClick:
+          - id: drawer_keyboard_off_open
+            type: CallMethod
+            params:
+              blockId: drawer_keyboard_off
+              method: setOpen
+              args:
+                open: true
+    - id: drawer_keyboard_on
+      type: Drawer
+      properties:
+        title: Press Escape to Close
+        keyboard: true
+      blocks:
+        - id: drawer_keyboard_on_content
+          type: Paragraph
+          properties:
+            content: Pressing the Escape key closes this drawer. This is the default behavior.
+    - id: drawer_keyboard_off
+      type: Drawer
+      properties:
+        title: Escape Disabled
+        keyboard: false
+      blocks:
+        - id: drawer_keyboard_off_content
+          type: Paragraph
+          properties:
+            content: Pressing Escape does not close this drawer. The user must click the close button or mask to dismiss.
+
+- title: Custom Z-Index
+  blocks:
+    - id: drawer_zindex_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open Drawer (z-index 2000)
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: drawer_zindex_open
+            type: CallMethod
+            params:
+              blockId: drawer_zindex
+              method: setOpen
+              args:
+                open: true
+    - id: drawer_zindex
+      type: Drawer
+      properties:
+        title: High Z-Index Drawer
+        zIndex: 2000
+      blocks:
+        - id: drawer_zindex_content
+          type: Paragraph
+          properties:
+            content: This drawer uses a custom z-index of 2000 to ensure it appears above other overlays. The default is 1000.
+
+- title: Rich Content Drawer
+  blocks:
+    - id: drawer_rich_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: User Details
+        color: primary
+        variant: solid
+        icon: AiOutlineUser
+      events:
+        onClick:
+          - id: drawer_rich_open
+            type: CallMethod
+            params:
+              blockId: drawer_rich
+              method: setOpen
+              args:
+                open: true
+    - id: drawer_rich
+      type: Drawer
+      properties:
+        title: User Profile
+        width: 400
+      blocks:
+        - id: drawer_rich_avatar_row
+          type: Box
+          layout:
+            gap: 16
+            align: center
+          blocks:
+            - id: drawer_rich_avatar
+              type: Avatar
+              layout:
+                flex: 0 0 auto
+              properties:
+                icon: AiOutlineUser
+                size: 64
+                color: '#fff'
+                backgroundColor: '#1677ff'
+            - id: drawer_rich_info
+              type: Box
+              layout:
+                flex: 1 1 0
+                direction: column
+                gap: 4
+              blocks:
+                - id: drawer_rich_name
+                  type: Title
+                  properties:
+                    content: Jane Cooper
+                    level: 4
+                - id: drawer_rich_role
+                  type: Paragraph
+                  properties:
+                    content: Senior Product Designer
+        - id: drawer_rich_divider
+          type: Divider
+        - id: drawer_rich_details
+          type: Descriptions
+          properties:
+            size: small
+            column: 1
+            items:
+              - label: Email
+                value: jane.cooper@example.com
+              - label: Phone
+                value: +1 (555) 123-4567
+              - label: Location
+                value: San Francisco, CA
+              - label: Department
+                value: Design
+              - label: Start Date
+                value: January 15, 2023
+
+- title: Styled Drawer
+  blocks:
+    - id: drawer_styled_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open Styled Drawer
+        color: primary
+        variant: solid
+      events:
+        onClick:
+          - id: drawer_styled_open
+            type: CallMethod
+            params:
+              blockId: drawer_styled
+              method: setOpen
+              args:
+                open: true
+    - id: drawer_styled
+      type: Drawer
+      properties:
+        title: Styled Drawer
+      style:
+        --header:
+          backgroundColor: '#e6f4ff'
+          borderBottom: 1px solid #91caff
+        --body:
+          backgroundColor: '#f0f5ff'
+      blocks:
+        - id: drawer_styled_content
+          type: Paragraph
+          properties:
+            content: This drawer uses style.header and style.body to apply custom background colors to the header and body areas.
+
+- title: Theme Token Overrides
+  blocks:
+    - id: drawer_theme_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open Themed Drawer
+        color: primary
+        variant: solid
+      events:
+        onClick:
+          - id: drawer_theme_open
+            type: CallMethod
+            params:
+              blockId: drawer_theme
+              method: setOpen
+              args:
+                open: true
+    - id: drawer_theme
+      type: Drawer
+      properties:
+        title: Custom Theme Drawer
+        theme:
+          colorBgElevated: '#f6ffed'
+          colorBgMask: 'rgba(0, 100, 0, 0.15)'
+      blocks:
+        - id: drawer_theme_content
+          type: Paragraph
+          properties:
+            content: This drawer overrides design tokens via the theme property. The background uses a green tint and the mask has a subtle green overlay.
+    - id: drawer_theme_dark_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open Dark Themed Drawer
+        color: default
+        variant: solid
+      events:
+        onClick:
+          - id: drawer_theme_dark_open
+            type: CallMethod
+            params:
+              blockId: drawer_theme_dark
+              method: setOpen
+              args:
+                open: true
+    - id: drawer_theme_dark
+      type: Drawer
+      properties:
+        title: Dark Theme Drawer
+        theme:
+          colorBgElevated: '#1f1f1f'
+          colorBgMask: 'rgba(0, 0, 0, 0.7)'
+          colorText: '#ffffff'
+          colorTextHeading: '#ffffff'
+          colorIcon: '#ffffff'
+          colorIconHover: '#1677ff'
+      blocks:
+        - id: drawer_theme_dark_content
+          type: Paragraph
+          class: text-gray-300
+          properties:
+            content: A dark-themed drawer using design token overrides for background, text, and icon colors.

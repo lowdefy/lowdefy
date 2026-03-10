@@ -52,6 +52,25 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/divider#design-token',
+        },
+        properties: {
+          textPaddingInline: {
+            type: 'string',
+            default: '1em',
+            description: 'Horizontal padding of text content in the divider.',
+          },
+          orientationMargin: {
+            type: 'number',
+            default: 0.05,
+            description:
+              'Distance between text and edge when orientation is left or right. Value between 0 and 1 representing a percentage.',
+          },
+          verticalMarginInline: {
+            type: 'number',
+            default: 8,
+            description: 'Horizontal margin for vertical dividers.',
+          },
         },
       },
     },

@@ -1,0 +1,1099 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic Box
+  blocks:
+    - id: box_basic
+      type: Box
+      blocks:
+        - id: box_basic_text
+          type: Html
+          properties:
+            html: '<p style="margin: 0;">A basic Box renders a div and contains child blocks.</p>'
+
+- title: Content Property
+  blocks:
+    - id: box_content_string
+      type: Box
+      properties:
+        content: A Box can render a simple string using the content property.
+    - id: box_content_html
+      type: Box
+      properties:
+        content: '<b>Bold</b> and <i>italic</i> text via the content property.'
+
+- title: Layout Gap
+  fullWidth: true
+  blocks:
+    - id: box_gap_8
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: box_gap_8_a
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Gap 8
+            color: primary
+            variant: solid
+        - id: box_gap_8_b
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Gap 8
+            color: primary
+            variant: solid
+        - id: box_gap_8_c
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Gap 8
+            color: primary
+            variant: solid
+    - id: box_gap_16
+      type: Box
+      layout:
+        gap: 16
+      blocks:
+        - id: box_gap_16_a
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Gap 16
+            color: primary
+            variant: outlined
+        - id: box_gap_16_b
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Gap 16
+            color: primary
+            variant: outlined
+        - id: box_gap_16_c
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Gap 16
+            color: primary
+            variant: outlined
+    - id: box_gap_32
+      type: Box
+      layout:
+        gap: 32
+      blocks:
+        - id: box_gap_32_a
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Gap 32
+            color: green
+            variant: solid
+        - id: box_gap_32_b
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Gap 32
+            color: green
+            variant: solid
+        - id: box_gap_32_c
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Gap 32
+            color: green
+            variant: solid
+
+- title: Justify Content
+  fullWidth: true
+  blocks:
+    - id: box_justify_start_label
+      type: Markdown
+      properties:
+        content: '**justify: flex-start**'
+    - id: box_justify_start
+      type: Box
+      layout:
+        gap: 8
+        justify: flex-start
+      style:
+        --element:
+          background: '#f5f5f5'
+          padding: 12
+          borderRadius: 8
+      blocks:
+        - id: box_js_a
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: A
+            color: primary
+            variant: solid
+        - id: box_js_b
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: B
+            color: primary
+            variant: solid
+        - id: box_js_c
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: C
+            color: primary
+            variant: solid
+    - id: box_justify_center_label
+      type: Markdown
+      properties:
+        content: '**justify: center**'
+    - id: box_justify_center
+      type: Box
+      layout:
+        gap: 8
+        justify: center
+      style:
+        --element:
+          background: '#f5f5f5'
+          padding: 12
+          borderRadius: 8
+      blocks:
+        - id: box_jc_a
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: A
+            color: green
+            variant: solid
+        - id: box_jc_b
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: B
+            color: green
+            variant: solid
+        - id: box_jc_c
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: C
+            color: green
+            variant: solid
+    - id: box_justify_end_label
+      type: Markdown
+      properties:
+        content: '**justify: flex-end**'
+    - id: box_justify_end
+      type: Box
+      layout:
+        gap: 8
+        justify: flex-end
+      style:
+        --element:
+          background: '#f5f5f5'
+          padding: 12
+          borderRadius: 8
+      blocks:
+        - id: box_je_a
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: A
+            color: danger
+            variant: solid
+        - id: box_je_b
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: B
+            color: danger
+            variant: solid
+        - id: box_je_c
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: C
+            color: danger
+            variant: solid
+    - id: box_justify_between_label
+      type: Markdown
+      properties:
+        content: '**justify: space-between**'
+    - id: box_justify_between
+      type: Box
+      layout:
+        gap: 8
+        justify: space-between
+      style:
+        --element:
+          background: '#f5f5f5'
+          padding: 12
+          borderRadius: 8
+      blocks:
+        - id: box_jb_a
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: A
+            color: purple
+            variant: solid
+        - id: box_jb_b
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: B
+            color: purple
+            variant: solid
+        - id: box_jb_c
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: C
+            color: purple
+            variant: solid
+    - id: box_justify_around_label
+      type: Markdown
+      properties:
+        content: '**justify: space-around**'
+    - id: box_justify_around
+      type: Box
+      layout:
+        gap: 8
+        justify: space-around
+      style:
+        --element:
+          background: '#f5f5f5'
+          padding: 12
+          borderRadius: 8
+      blocks:
+        - id: box_ja_a
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: A
+            color: cyan
+            variant: solid
+        - id: box_ja_b
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: B
+            color: cyan
+            variant: solid
+        - id: box_ja_c
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: C
+            color: cyan
+            variant: solid
+
+- title: Align Items
+  fullWidth: true
+  blocks:
+    - id: box_align_start_label
+      type: Markdown
+      properties:
+        content: '**align: flex-start**'
+    - id: box_align_start
+      type: Box
+      layout:
+        gap: 8
+        align: flex-start
+      style:
+        --element:
+          background: '#f5f5f5'
+          padding: 12
+          borderRadius: 8
+          minHeight: 100
+      blocks:
+        - id: box_as_tall
+          type: Box
+          layout:
+            flex: 0 0 auto
+          style:
+            --element:
+              background: '#1677ff'
+              color: '#ffffff'
+              padding: 8px 16px
+              borderRadius: 6
+              height: 80
+              display: flex
+              alignItems: center
+          properties:
+            content: Tall
+        - id: box_as_short
+          type: Box
+          layout:
+            flex: 0 0 auto
+          style:
+            --element:
+              background: '#1677ff'
+              color: '#ffffff'
+              padding: 8px 16px
+              borderRadius: 6
+          properties:
+            content: Short
+    - id: box_align_center_label
+      type: Markdown
+      properties:
+        content: '**align: center**'
+    - id: box_align_center
+      type: Box
+      layout:
+        gap: 8
+        align: center
+      style:
+        --element:
+          background: '#f5f5f5'
+          padding: 12
+          borderRadius: 8
+          minHeight: 100
+      blocks:
+        - id: box_ac_tall
+          type: Box
+          layout:
+            flex: 0 0 auto
+          style:
+            --element:
+              background: '#52c41a'
+              color: '#ffffff'
+              padding: 8px 16px
+              borderRadius: 6
+              height: 80
+              display: flex
+              alignItems: center
+          properties:
+            content: Tall
+        - id: box_ac_short
+          type: Box
+          layout:
+            flex: 0 0 auto
+          style:
+            --element:
+              background: '#52c41a'
+              color: '#ffffff'
+              padding: 8px 16px
+              borderRadius: 6
+          properties:
+            content: Short
+    - id: box_align_end_label
+      type: Markdown
+      properties:
+        content: '**align: flex-end**'
+    - id: box_align_end
+      type: Box
+      layout:
+        gap: 8
+        align: flex-end
+      style:
+        --element:
+          background: '#f5f5f5'
+          padding: 12
+          borderRadius: 8
+          minHeight: 100
+      blocks:
+        - id: box_ae_tall
+          type: Box
+          layout:
+            flex: 0 0 auto
+          style:
+            --element:
+              background: '#ff4d4f'
+              color: '#ffffff'
+              padding: 8px 16px
+              borderRadius: 6
+              height: 80
+              display: flex
+              alignItems: center
+          properties:
+            content: Tall
+        - id: box_ae_short
+          type: Box
+          layout:
+            flex: 0 0 auto
+          style:
+            --element:
+              background: '#ff4d4f'
+              color: '#ffffff'
+              padding: 8px 16px
+              borderRadius: 6
+          properties:
+            content: Short
+
+- title: Direction (Row vs Column)
+  fullWidth: true
+  blocks:
+    - id: box_dir_row_label
+      type: Markdown
+      properties:
+        content: '**Row direction (default):**'
+    - id: box_dir_row
+      type: Box
+      layout:
+        gap: 8
+      style:
+        --element:
+          background: '#f0f5ff'
+          padding: 12
+          borderRadius: 8
+      blocks:
+        - id: box_dr_a
+          type: Box
+          layout:
+            flex: 0 0 auto
+          style:
+            --element:
+              background: '#1677ff'
+              color: '#ffffff'
+              padding: 8px 16px
+              borderRadius: 6
+          properties:
+            content: Item 1
+        - id: box_dr_b
+          type: Box
+          layout:
+            flex: 0 0 auto
+          style:
+            --element:
+              background: '#1677ff'
+              color: '#ffffff'
+              padding: 8px 16px
+              borderRadius: 6
+          properties:
+            content: Item 2
+        - id: box_dr_c
+          type: Box
+          layout:
+            flex: 0 0 auto
+          style:
+            --element:
+              background: '#1677ff'
+              color: '#ffffff'
+              padding: 8px 16px
+              borderRadius: 6
+          properties:
+            content: Item 3
+    - id: box_dir_column_label
+      type: Markdown
+      properties:
+        content: '**Column direction (via style):**'
+    - id: box_dir_column
+      type: Box
+      layout:
+        gap: 8
+      style:
+        --element:
+          background: '#f6ffed'
+          padding: 12
+          borderRadius: 8
+          display: flex
+          flexDirection: column
+      blocks:
+        - id: box_dc_a
+          type: Box
+          style:
+            --element:
+              background: '#52c41a'
+              color: '#ffffff'
+              padding: 8px 16px
+              borderRadius: 6
+          properties:
+            content: Item 1
+        - id: box_dc_b
+          type: Box
+          style:
+            --element:
+              background: '#52c41a'
+              color: '#ffffff'
+              padding: 8px 16px
+              borderRadius: 6
+          properties:
+            content: Item 2
+        - id: box_dc_c
+          type: Box
+          style:
+            --element:
+              background: '#52c41a'
+              color: '#ffffff'
+              padding: 8px 16px
+              borderRadius: 6
+          properties:
+            content: Item 3
+
+- title: Wrap
+  fullWidth: true
+  blocks:
+    - id: box_wrap_label
+      type: Markdown
+      properties:
+        content: '**Boxes wrap to the next line when they overflow:**'
+    - id: box_wrap
+      type: Box
+      layout:
+        gap: 8
+        wrap: wrap
+      style:
+        --element:
+          background: '#f5f5f5'
+          padding: 12
+          borderRadius: 8
+      blocks:
+        - id: box_w_a
+          type: Box
+          layout:
+            flex: 0 0 150px
+          style:
+            --element:
+              background: '#722ed1'
+              color: '#ffffff'
+              padding: 8px 16px
+              borderRadius: 6
+              textAlign: center
+          properties:
+            content: Item 1
+        - id: box_w_b
+          type: Box
+          layout:
+            flex: 0 0 150px
+          style:
+            --element:
+              background: '#722ed1'
+              color: '#ffffff'
+              padding: 8px 16px
+              borderRadius: 6
+              textAlign: center
+          properties:
+            content: Item 2
+        - id: box_w_c
+          type: Box
+          layout:
+            flex: 0 0 150px
+          style:
+            --element:
+              background: '#722ed1'
+              color: '#ffffff'
+              padding: 8px 16px
+              borderRadius: 6
+              textAlign: center
+          properties:
+            content: Item 3
+        - id: box_w_d
+          type: Box
+          layout:
+            flex: 0 0 150px
+          style:
+            --element:
+              background: '#722ed1'
+              color: '#ffffff'
+              padding: 8px 16px
+              borderRadius: 6
+              textAlign: center
+          properties:
+            content: Item 4
+        - id: box_w_e
+          type: Box
+          layout:
+            flex: 0 0 150px
+          style:
+            --element:
+              background: '#722ed1'
+              color: '#ffffff'
+              padding: 8px 16px
+              borderRadius: 6
+              textAlign: center
+          properties:
+            content: Item 5
+        - id: box_w_f
+          type: Box
+          layout:
+            flex: 0 0 150px
+          style:
+            --element:
+              background: '#722ed1'
+              color: '#ffffff'
+              padding: 8px 16px
+              borderRadius: 6
+              textAlign: center
+          properties:
+            content: Item 6
+
+- title: Flex Grow
+  fullWidth: true
+  blocks:
+    - id: box_flex_label
+      type: Markdown
+      properties:
+        content: '**Children with flex: 1 grow to fill available space:**'
+    - id: box_flex_grow
+      type: Box
+      layout:
+        gap: 8
+      style:
+        --element:
+          background: '#f5f5f5'
+          padding: 12
+          borderRadius: 8
+      blocks:
+        - id: box_fg_fixed
+          type: Box
+          layout:
+            flex: 0 0 100px
+          style:
+            --element:
+              background: '#fa8c16'
+              color: '#ffffff'
+              padding: 8px 16px
+              borderRadius: 6
+              textAlign: center
+          properties:
+            content: Fixed 100px
+        - id: box_fg_grow
+          type: Box
+          layout:
+            flex: 1
+          style:
+            --element:
+              background: '#1677ff'
+              color: '#ffffff'
+              padding: 8px 16px
+              borderRadius: 6
+              textAlign: center
+          properties:
+            content: Grows to fill
+        - id: box_fg_fixed2
+          type: Box
+          layout:
+            flex: 0 0 100px
+          style:
+            --element:
+              background: '#fa8c16'
+              color: '#ffffff'
+              padding: 8px 16px
+              borderRadius: 6
+              textAlign: center
+          properties:
+            content: Fixed 100px
+
+- title: Nested Boxes
+  fullWidth: true
+  blocks:
+    - id: box_nested_outer
+      type: Box
+      layout:
+        gap: 12
+      style:
+        --element:
+          background: '#f0f5ff'
+          padding: 16
+          borderRadius: 8
+      blocks:
+        - id: box_nested_left
+          type: Box
+          layout:
+            flex: 1
+          style:
+            --element:
+              background: '#ffffff'
+              padding: 16
+              borderRadius: 6
+              border: 1px solid #d9d9d9
+          blocks:
+            - id: box_nested_left_title
+              type: Html
+              properties:
+                html: '<h4 style="margin: 0 0 8px 0;">Left Panel</h4>'
+            - id: box_nested_left_text
+              type: Html
+              properties:
+                html: '<p style="margin: 0; color: #595959;">This box is nested inside the outer box with flex: 1.</p>'
+        - id: box_nested_right
+          type: Box
+          layout:
+            flex: 1
+          style:
+            --element:
+              background: '#ffffff'
+              padding: 16
+              borderRadius: 6
+              border: 1px solid #d9d9d9
+          blocks:
+            - id: box_nested_right_title
+              type: Html
+              properties:
+                html: '<h4 style="margin: 0 0 8px 0;">Right Panel</h4>'
+            - id: box_nested_right_text
+              type: Html
+              properties:
+                html: '<p style="margin: 0; color: #595959;">Both panels share equal space via flex: 1.</p>'
+
+- title: Card-Like Boxes
+  fullWidth: true
+  blocks:
+    - id: box_card_row
+      type: Box
+      layout:
+        gap: 16
+      blocks:
+        - id: box_card_a
+          type: Box
+          layout:
+            flex: 1
+          style:
+            --element:
+              background: '#ffffff'
+              padding: 20
+              borderRadius: 8
+              boxShadow: 0 2px 8px rgba(0, 0, 0, 0.1)
+          blocks:
+            - id: box_card_a_icon
+              type: Icon
+              layout:
+                flex: 0 0 auto
+              properties:
+                name: AiOutlineRocket
+                size: 32
+                color: '#1677ff'
+            - id: box_card_a_title
+              type: Html
+              properties:
+                html: '<h4 style="margin: 4px 0;">Fast</h4>'
+            - id: box_card_a_desc
+              type: Html
+              properties:
+                html: '<p style="margin: 0; color: #595959;">Optimized for performance.</p>'
+        - id: box_card_b
+          type: Box
+          layout:
+            flex: 1
+          style:
+            --element:
+              background: '#ffffff'
+              padding: 20
+              borderRadius: 8
+              boxShadow: 0 2px 8px rgba(0, 0, 0, 0.1)
+          blocks:
+            - id: box_card_b_icon
+              type: Icon
+              layout:
+                flex: 0 0 auto
+              properties:
+                name: AiOutlineSafety
+                size: 32
+                color: '#52c41a'
+            - id: box_card_b_title
+              type: Html
+              properties:
+                html: '<h4 style="margin: 4px 0;">Secure</h4>'
+            - id: box_card_b_desc
+              type: Html
+              properties:
+                html: '<p style="margin: 0; color: #595959;">Built-in security features.</p>'
+        - id: box_card_c
+          type: Box
+          layout:
+            flex: 1
+          style:
+            --element:
+              background: '#ffffff'
+              padding: 20
+              borderRadius: 8
+              boxShadow: 0 2px 8px rgba(0, 0, 0, 0.1)
+          blocks:
+            - id: box_card_c_icon
+              type: Icon
+              layout:
+                flex: 0 0 auto
+              properties:
+                name: AiOutlineApi
+                size: 32
+                color: '#722ed1'
+            - id: box_card_c_title
+              type: Html
+              properties:
+                html: '<h4 style="margin: 4px 0;">Extensible</h4>'
+            - id: box_card_c_desc
+              type: Html
+              properties:
+                html: '<p style="margin: 0; color: #595959;">Plug in your own components.</p>'
+
+- title: Header and Footer Pattern
+  fullWidth: true
+  blocks:
+    - id: box_layout_page
+      type: Box
+      style:
+        --element:
+          display: flex
+          flexDirection: column
+          minHeight: 300
+          borderRadius: 8
+          overflow: hidden
+          border: 1px solid #d9d9d9
+      blocks:
+        - id: box_layout_header
+          type: Box
+          layout:
+            justify: space-between
+            align: center
+          style:
+            --element:
+              background: '#001529'
+              padding: 12px 20px
+          blocks:
+            - id: box_layout_logo
+              type: Html
+              layout:
+                flex: 0 0 auto
+              properties:
+                html: '<span style="color: #ffffff; font-weight: bold; font-size: 16px;">My App</span>'
+            - id: box_layout_nav
+              type: Box
+              layout:
+                flex: 0 0 auto
+                gap: 16
+              blocks:
+                - id: box_layout_nav_a
+                  type: Html
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    html: '<span style="color: rgba(255,255,255,0.65);">Home</span>'
+                - id: box_layout_nav_b
+                  type: Html
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    html: '<span style="color: rgba(255,255,255,0.65);">About</span>'
+                - id: box_layout_nav_c
+                  type: Html
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    html: '<span style="color: rgba(255,255,255,0.65);">Contact</span>'
+        - id: box_layout_body
+          type: Box
+          layout:
+            flex: 1
+          style:
+            --element:
+              padding: 24
+              background: '#ffffff'
+          blocks:
+            - id: box_layout_body_text
+              type: Html
+              properties:
+                html: '<p style="margin: 0; color: #595959;">Main content area grows to fill available space using flex: 1.</p>'
+        - id: box_layout_footer
+          type: Box
+          layout:
+            justify: center
+          style:
+            --element:
+              background: '#f5f5f5'
+              padding: 12px 20px
+              borderTop: 1px solid #d9d9d9
+          blocks:
+            - id: box_layout_footer_text
+              type: Html
+              layout:
+                flex: 0 0 auto
+              properties:
+                html: '<span style="color: #8c8c8c; font-size: 13px;">Footer content centered with justify: center</span>'
+
+- title: Colored Backgrounds
+  blocks:
+    - id: box_bg_blue
+      type: Box
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          background: '#e6f4ff'
+          border: 1px solid #91caff
+          padding: 16
+          borderRadius: 8
+      blocks:
+        - id: box_bg_blue_text
+          type: Html
+          properties:
+            html: '<p style="margin: 0; color: #1677ff;">Blue info box</p>'
+    - id: box_bg_green
+      type: Box
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          background: '#f6ffed'
+          border: 1px solid #b7eb8f
+          padding: 16
+          borderRadius: 8
+      blocks:
+        - id: box_bg_green_text
+          type: Html
+          properties:
+            html: '<p style="margin: 0; color: #52c41a;">Green success box</p>'
+    - id: box_bg_red
+      type: Box
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          background: '#fff2f0'
+          border: 1px solid #ffccc7
+          padding: 16
+          borderRadius: 8
+      blocks:
+        - id: box_bg_red_text
+          type: Html
+          properties:
+            html: '<p style="margin: 0; color: #ff4d4f;">Red error box</p>'
+    - id: box_bg_yellow
+      type: Box
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          background: '#fffbe6'
+          border: 1px solid #ffe58f
+          padding: 16
+          borderRadius: 8
+      blocks:
+        - id: box_bg_yellow_text
+          type: Html
+          properties:
+            html: '<p style="margin: 0; color: #faad14;">Yellow warning box</p>'
+
+- title: Dark Theme Boxes
+  blocks:
+    - id: box_dark
+      type: Box
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          background: '#1a1a2e'
+          color: '#e0e0e0'
+          padding: 20
+          borderRadius: 8
+      blocks:
+        - id: box_dark_title
+          type: Html
+          properties:
+            html: '<h4 style="margin: 0 0 8px 0; color: #ffffff;">Dark Box</h4>'
+        - id: box_dark_text
+          type: Html
+          properties:
+            html: '<p style="margin: 0; color: #a0a0a0;">Light text on a dark background for contrast.</p>'
+    - id: box_gradient
+      type: Box
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)
+          color: '#ffffff'
+          padding: 20
+          borderRadius: 8
+      blocks:
+        - id: box_gradient_text
+          type: Html
+          properties:
+            html: '<h4 style="margin: 0 0 8px 0; color: #ffffff;">Gradient Box</h4><p style="margin: 0; color: rgba(255,255,255,0.85);">A box with a gradient background.</p>'
+
+- title: Style Overrides
+  blocks:
+    - id: box_style_shadow
+      type: Box
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          padding: 20
+          borderRadius: 12
+          boxShadow: 0 4px 12px rgba(0, 0, 0, 0.1)
+          background: '#ffffff'
+      blocks:
+        - id: box_style_shadow_text
+          type: Html
+          properties:
+            html: '<p style="margin: 0;">Elevated box with box-shadow.</p>'
+    - id: box_style_border
+      type: Box
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          border: 2px dashed #1677ff
+          padding: 16
+          borderRadius: 8
+      blocks:
+        - id: box_style_border_text
+          type: Html
+          properties:
+            html: '<p style="margin: 0; color: #1677ff;">Dashed blue border.</p>'
+    - id: box_style_accent
+      type: Box
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          borderLeft: 4px solid #fa8c16
+          paddingLeft: 16
+          paddingTop: 8
+          paddingBottom: 8
+      blocks:
+        - id: box_style_accent_text
+          type: Html
+          properties:
+            html: '<p style="margin: 0; color: #fa8c16; font-weight: 500;">Left accent border.</p>'
+    - id: box_style_centered
+      type: Box
+      style:
+        --element:
+          maxWidth: 350
+          margin: 0 auto
+          textAlign: center
+          padding: 16
+          background: '#f0f5ff'
+          borderRadius: 8
+      blocks:
+        - id: box_style_centered_text
+          type: Html
+          properties:
+            html: '<p style="margin: 0; color: #1677ff; font-weight: bold;">Centered and constrained width.</p>'

@@ -13,24 +13,16 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: SegmentedSelector
-    value_type: any
-    category: input
-    schema: ../plugins/blocks/blocks-antd/src/blocks/SegmentedSelector/schema.js
+    pageId: SegmentedSelector
+    pageTitle: SegmentedSelector
+    section: Input Blocks
     filePath: blocks/input/SegmentedSelector.yaml
-    init_state_values:
-      __type_block.properties.options: string[]
-      __string_arr_block.properties.options:
-        - Option A
-        - Option B
-        - Option C
-    examples:
-      _ref: ../plugins/blocks/blocks-antd/src/blocks/SegmentedSelector/examples.yaml
-    description_content: |
-      The `SegmentedSelector` block allows a user to select a single value from a set of segmented options. It supports primitive values (strings, numbers, booleans) or label-value pairs with optional icons.
-
-      Options can include icons from React-Icons and support html in labels. The control can be displayed horizontally or vertically, and supports round or default shapes.
-
-      > Other selector blocks are `ButtonSelector`, `CheckboxSelector`, `MultipleSelector`, `RadioSelector` and `Selector`.
+    block_type: SegmentedSelector
+    antd_component: Segmented
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/SegmentedSelector
+    schema: ../plugins/blocks/blocks-antd/src/blocks/SegmentedSelector/schema.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/SegmentedSelector/gallery.yaml
+    description: >
+      Segmented control for switching between options.

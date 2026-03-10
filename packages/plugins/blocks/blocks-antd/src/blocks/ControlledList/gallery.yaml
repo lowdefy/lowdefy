@@ -1,0 +1,262 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic ControlledList
+  fullWidth: true
+  blocks:
+    - id: cl_basic
+      type: ControlledList
+      blocks:
+        - id: cl_basic_input
+          type: TextInput
+          properties:
+            label:
+              disabled: true
+            placeholder: Enter a value
+
+- title: With Title
+  fullWidth: true
+  blocks:
+    - id: cl_titled
+      type: ControlledList
+      properties:
+        title: Team Members
+      blocks:
+        - id: cl_titled_name
+          type: TextInput
+          layout:
+            flex: 1 1 0
+          properties:
+            label:
+              disabled: true
+            placeholder: Full name
+        - id: cl_titled_email
+          type: TextInput
+          layout:
+            flex: 1 1 0
+          properties:
+            label:
+              disabled: true
+            placeholder: Email address
+
+- title: Add to Front
+  fullWidth: true
+  blocks:
+    - id: cl_add_front
+      type: ControlledList
+      properties:
+        title: Recent Notes
+        addToFront: true
+      blocks:
+        - id: cl_add_front_input
+          type: TextArea
+          properties:
+            label:
+              disabled: true
+            placeholder: Write a note...
+            rows: 2
+
+- title: Custom Add Button
+  fullWidth: true
+  blocks:
+    - id: cl_custom_add
+      type: ControlledList
+      properties:
+        title: Shopping List
+        addItemButton:
+          title: Add Product
+          icon: AiOutlinePlus
+          color: primary
+          variant: outlined
+      blocks:
+        - id: cl_custom_add_product
+          type: TextInput
+          layout:
+            flex: 2 1 0
+          properties:
+            label:
+              disabled: true
+            placeholder: Product name
+        - id: cl_custom_add_qty
+          type: NumberInput
+          layout:
+            flex: 1 1 0
+          properties:
+            label:
+              disabled: true
+            placeholder: Qty
+
+- title: Hidden Add Button
+  fullWidth: true
+  blocks:
+    - id: cl_no_add
+      type: ControlledList
+      properties:
+        title: Fixed Items
+        hideAddButton: true
+      blocks:
+        - id: cl_no_add_input
+          type: TextInput
+          properties:
+            label:
+              disabled: true
+            placeholder: Item value
+
+- title: Hidden Remove Button
+  fullWidth: true
+  blocks:
+    - id: cl_no_remove
+      type: ControlledList
+      properties:
+        title: Protected List
+        hideRemoveButton: true
+      blocks:
+        - id: cl_no_remove_input
+          type: TextInput
+          properties:
+            label:
+              disabled: true
+            placeholder: This item cannot be removed
+
+- title: Minimum Items
+  fullWidth: true
+  blocks:
+    - id: cl_min_items
+      type: ControlledList
+      properties:
+        title: At Least 2 Entries Required
+        minItems: 2
+      blocks:
+        - id: cl_min_items_input
+          type: TextInput
+          properties:
+            label:
+              disabled: true
+            placeholder: Required entry
+
+- title: Sizes
+  fullWidth: true
+  blocks:
+    - id: cl_size_small
+      type: ControlledList
+      properties:
+        title: Small
+        size: small
+      blocks:
+        - id: cl_size_small_input
+          type: TextInput
+          properties:
+            label:
+              disabled: true
+            placeholder: Small list item
+            size: small
+
+    - id: cl_size_default
+      type: ControlledList
+      properties:
+        title: Default
+      blocks:
+        - id: cl_size_default_input
+          type: TextInput
+          properties:
+            label:
+              disabled: true
+            placeholder: Default list item
+
+    - id: cl_size_large
+      type: ControlledList
+      properties:
+        title: Large
+        size: large
+      blocks:
+        - id: cl_size_large_input
+          type: TextInput
+          properties:
+            label:
+              disabled: true
+            placeholder: Large list item
+            size: large
+
+- title: Custom Empty Text
+  fullWidth: true
+  blocks:
+    - id: cl_empty
+      type: ControlledList
+      properties:
+        title: Tasks
+        noDataTitle: No tasks yet. Click the button below to add one.
+      blocks:
+        - id: cl_empty_input
+          type: TextInput
+          properties:
+            label:
+              disabled: true
+            placeholder: Task description
+
+- title: Multi-Field Form Row
+  fullWidth: true
+  blocks:
+    - id: cl_multi_field
+      type: ControlledList
+      properties:
+        title: Address Book
+        addItemButton:
+          title: Add Contact
+          icon: AiOutlineUserAdd
+          color: green
+          variant: solid
+      blocks:
+        - id: cl_mf_name
+          type: TextInput
+          layout:
+            flex: 2 1 0
+          properties:
+            label:
+              disabled: true
+            placeholder: Name
+        - id: cl_mf_phone
+          type: TextInput
+          layout:
+            flex: 1 1 0
+          properties:
+            label:
+              disabled: true
+            placeholder: Phone
+        - id: cl_mf_city
+          type: TextInput
+          layout:
+            flex: 1 1 0
+          properties:
+            label:
+              disabled: true
+            placeholder: City
+
+- title: Theme Token Overrides
+  fullWidth: true
+  blocks:
+    - id: cl_theme_padding
+      type: ControlledList
+      properties:
+        title: Custom Padding
+        theme:
+          itemPadding: '16px 24px'
+          headerBg: '#e6f4ff'
+          footerBg: '#f0f5ff'
+      blocks:
+        - id: cl_theme_padding_input
+          type: TextInput
+          properties:
+            label:
+              disabled: true
+            placeholder: Themed list item

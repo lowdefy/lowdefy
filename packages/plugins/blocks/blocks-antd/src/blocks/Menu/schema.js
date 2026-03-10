@@ -53,6 +53,16 @@ const schema = {
           description: "A menu item 'id' which should be open by default.",
         },
       },
+      collapsed: {
+        type: 'boolean',
+        default: false,
+        description: 'Collapse the inline menu.',
+      },
+      inlineIndent: {
+        type: 'number',
+        default: 24,
+        description: 'Indent width for each sub menu level in pixels (inline mode only).',
+      },
       forceSubMenuRender: {
         type: 'boolean',
         description: 'Render submenu into DOM before it becomes visible.',
@@ -67,10 +77,243 @@ const schema = {
         description: 'Delay time to show submenu when mouse enters (in seconds).',
       },
       theme: {
-        type: 'string',
-        enum: ['dark', 'light'],
-        default: 'dark',
-        description: 'Color theme of menu.',
+        type: 'object',
+        description:
+          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+        docs: {
+          displayType: 'yaml',
+          link: 'https://ant.design/components/menu#design-token',
+        },
+        properties: {
+          dropdownWidth: {
+            type: 'number',
+            default: 160,
+            description: 'Width of dropdown submenus.',
+          },
+          zIndexPopup: {
+            type: 'number',
+            default: 1050,
+            description: 'Z-index for popup submenus.',
+          },
+          itemBorderRadius: {
+            type: 'number',
+            default: 8,
+            description: 'Border radius for menu items.',
+          },
+          subMenuItemBorderRadius: {
+            type: 'number',
+            default: 4,
+            description: 'Border radius for submenu items.',
+          },
+          itemColor: {
+            type: 'string',
+            description: 'Text color of menu items.',
+          },
+          itemHoverColor: {
+            type: 'string',
+            description: 'Text color when hovering menu items.',
+          },
+          horizontalItemHoverColor: {
+            type: 'string',
+            description: 'Text color when hovering horizontal menu items.',
+          },
+          itemSelectedColor: {
+            type: 'string',
+            description: 'Text color of selected menu items.',
+          },
+          horizontalItemSelectedColor: {
+            type: 'string',
+            description: 'Text color of selected horizontal menu items.',
+          },
+          itemDisabledColor: {
+            type: 'string',
+            description: 'Text color of disabled menu items.',
+          },
+          dangerItemColor: {
+            type: 'string',
+            description: 'Text color of danger menu items.',
+          },
+          dangerItemHoverColor: {
+            type: 'string',
+            description: 'Text color when hovering danger items.',
+          },
+          dangerItemSelectedColor: {
+            type: 'string',
+            description: 'Text color of selected danger items.',
+          },
+          dangerItemSelectedBg: {
+            type: 'string',
+            description: 'Background color of selected danger items.',
+          },
+          dangerItemActiveBg: {
+            type: 'string',
+            description: 'Background color of active danger items.',
+          },
+          itemBg: {
+            type: 'string',
+            description: 'Background color of menu items.',
+          },
+          itemHoverBg: {
+            type: 'string',
+            description: 'Background color when hovering menu items.',
+          },
+          subMenuItemBg: {
+            type: 'string',
+            description: 'Background color of submenu items.',
+          },
+          itemActiveBg: {
+            type: 'string',
+            description: 'Background color of active menu items.',
+          },
+          itemSelectedBg: {
+            type: 'string',
+            description: 'Background color of selected menu items.',
+          },
+          horizontalItemSelectedBg: {
+            type: 'string',
+            description: 'Background color of selected horizontal items.',
+          },
+          horizontalItemHoverBg: {
+            type: 'string',
+            description: 'Background color of hovered horizontal items.',
+          },
+          horizontalItemBorderRadius: {
+            type: 'number',
+            default: 0,
+            description: 'Border radius for horizontal menu items.',
+          },
+          activeBarWidth: {
+            type: 'number',
+            default: 0,
+            description: 'Width of active indicator bar.',
+          },
+          activeBarHeight: {
+            type: 'number',
+            default: 2,
+            description: 'Height of active indicator bar.',
+          },
+          activeBarBorderWidth: {
+            type: 'number',
+            default: 1,
+            description: 'Border width of active indicator bar.',
+          },
+          itemHeight: {
+            type: 'number',
+            default: 40,
+            description: 'Height of menu items.',
+          },
+          itemMarginInline: {
+            type: 'number',
+            default: 4,
+            description: 'Horizontal margin between items.',
+          },
+          itemMarginBlock: {
+            type: 'number',
+            default: 4,
+            description: 'Vertical margin between items.',
+          },
+          itemPaddingInline: {
+            type: 'number',
+            default: 16,
+            description: 'Horizontal padding of menu items.',
+          },
+          collapsedWidth: {
+            type: 'number',
+            default: 80,
+            description: 'Width of collapsed inline menu.',
+          },
+          popupBg: {
+            type: 'string',
+            description: 'Background color of popup submenus.',
+          },
+          groupTitleColor: {
+            type: 'string',
+            description: 'Text color of group titles.',
+          },
+          groupTitleFontSize: {
+            type: 'number',
+            default: 14,
+            description: 'Font size of group titles.',
+          },
+          iconSize: {
+            type: 'number',
+            default: 14,
+            description: 'Icon size in menu items.',
+          },
+          iconMarginInlineEnd: {
+            type: 'number',
+            default: 10,
+            description: 'Margin after icon in menu items.',
+          },
+          collapsedIconSize: {
+            type: 'number',
+            default: 16,
+            description: 'Icon size in collapsed menu.',
+          },
+          darkItemColor: {
+            type: 'string',
+            description: 'Text color in dark theme.',
+          },
+          darkItemBg: {
+            type: 'string',
+            default: '#001529',
+            description: 'Background color in dark theme.',
+          },
+          darkSubMenuItemBg: {
+            type: 'string',
+            default: '#000c17',
+            description: 'Submenu background in dark theme.',
+          },
+          darkItemSelectedColor: {
+            type: 'string',
+            description: 'Selected item text color in dark theme.',
+          },
+          darkItemSelectedBg: {
+            type: 'string',
+            description: 'Selected item background in dark theme.',
+          },
+          darkItemHoverBg: {
+            type: 'string',
+            description: 'Hover background in dark theme.',
+          },
+          darkItemHoverColor: {
+            type: 'string',
+            description: 'Hover text color in dark theme.',
+          },
+          darkGroupTitleColor: {
+            type: 'string',
+            description: 'Group title color in dark theme.',
+          },
+          darkItemDisabledColor: {
+            type: 'string',
+            description: 'Disabled item color in dark theme.',
+          },
+          darkPopupBg: {
+            type: 'string',
+            default: '#001529',
+            description: 'Popup background in dark theme.',
+          },
+          darkDangerItemColor: {
+            type: 'string',
+            description: 'Danger item color in dark theme.',
+          },
+          darkDangerItemSelectedBg: {
+            type: 'string',
+            description: 'Selected danger item background in dark theme.',
+          },
+          darkDangerItemHoverColor: {
+            type: 'string',
+            description: 'Hover danger item color in dark theme.',
+          },
+          darkDangerItemSelectedColor: {
+            type: 'string',
+            description: 'Selected danger item text color in dark theme.',
+          },
+          darkDangerItemActiveBg: {
+            type: 'string',
+            description: 'Active danger item background in dark theme.',
+          },
+        },
       },
       links: {
         type: 'array',

@@ -94,6 +94,24 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/notification#design-token',
+        },
+        properties: {
+          zIndexPopup: {
+            type: 'number',
+            default: 1100,
+            description: 'Z-index of the notification popup.',
+          },
+          width: {
+            type: 'number',
+            default: 384,
+            description: 'Width of the notification box.',
+          },
+          progressBg: {
+            type: 'string',
+            description:
+              'Background gradient for the auto-close progress bar. Defaults to a gradient from colorPrimaryBorderHover to colorPrimary.',
+          },
         },
       },
     },

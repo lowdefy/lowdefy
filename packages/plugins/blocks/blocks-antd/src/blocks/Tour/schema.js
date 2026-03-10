@@ -90,6 +90,10 @@ const schema = {
         items: {
           type: 'object',
           properties: {
+            arrow: {
+              type: ['boolean', 'object'],
+              description: 'Whether to show the arrow for this step, or object with pointAtCenter.',
+            },
             closable: {
               type: 'boolean',
               description: 'Whether the close button is visible for this step.',
@@ -103,8 +107,9 @@ const schema = {
               description: 'Description of the step.',
             },
             mask: {
-              type: 'boolean',
-              description: 'Whether to enable mask for this step.',
+              type: ['boolean', 'object'],
+              description:
+                'Whether to enable mask for this step, or object with style and color properties.',
             },
             placement: {
               type: 'string',
@@ -118,6 +123,11 @@ const schema = {
               type: 'string',
               description: 'Title of the step.',
             },
+            type: {
+              type: 'string',
+              enum: ['default', 'primary'],
+              description: 'Type style for this step, overrides tour-level type.',
+            },
           },
         },
       },
@@ -127,6 +137,74 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/tour#design-token',
+        },
+        properties: {
+          zIndexPopup: {
+            type: 'number',
+            default: 1070,
+            description: 'Z-index of the tour popup.',
+          },
+          closeBtnSize: {
+            type: 'number',
+            description: 'Size of the close button. Calculated from fontSize and lineHeight.',
+          },
+          primaryPrevBtnBg: {
+            type: 'string',
+            default: 'rgba(255, 255, 255, 0.15)',
+            description: 'Background color of the previous button in primary type tour.',
+          },
+          primaryNextBtnHoverBg: {
+            type: 'string',
+            description:
+              'Hover background color of the next button in primary type tour. Derived from colorBgTextHover.',
+          },
+          arrowOffsetHorizontal: {
+            type: 'number',
+            default: 12,
+            description: 'Horizontal offset of the arrow.',
+          },
+          arrowOffsetVertical: {
+            type: 'number',
+            default: 8,
+            description: 'Vertical offset of the arrow.',
+          },
+          colorPrimary: {
+            type: 'string',
+            description: 'Primary color override for the tour.',
+          },
+          colorBgContainer: {
+            type: 'string',
+            description: 'Background color of the tour card.',
+          },
+          colorText: {
+            type: 'string',
+            description: 'Text color in the tour card.',
+          },
+          colorTextDescription: {
+            type: 'string',
+            description: 'Description text color in the tour card.',
+          },
+          borderRadiusLG: {
+            type: 'number',
+            default: 8,
+            description: 'Border radius of the tour card.',
+          },
+          fontSize: {
+            type: 'number',
+            default: 14,
+            description: 'Font size for tour content.',
+          },
+          fontSizeLG: {
+            type: 'number',
+            default: 16,
+            description: 'Font size for tour title.',
+          },
+          padding: {
+            type: 'number',
+            default: 16,
+            description: 'Padding of the tour card content.',
+          },
         },
       },
       type: {

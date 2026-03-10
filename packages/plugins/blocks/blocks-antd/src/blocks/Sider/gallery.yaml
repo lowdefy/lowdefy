@@ -1,0 +1,295 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic Sider
+  fullWidth: true
+  blocks:
+    - id: sider_basic_layout
+      type: Layout
+      style:
+        minHeight: 300px
+      blocks:
+        - id: sider_basic
+          type: Sider
+          properties:
+            theme: light
+            width: 200
+            initialCollapsed: false
+            collapsible: false
+          blocks:
+            - id: sider_basic_menu
+              type: Menu
+              properties:
+                mode: inline
+                theme: light
+                links:
+                  - id: sider_basic_home
+                    type: MenuLink
+                    properties:
+                      title: Home
+                      icon: AiOutlineHome
+                  - id: sider_basic_users
+                    type: MenuLink
+                    properties:
+                      title: Users
+                      icon: AiOutlineUser
+                  - id: sider_basic_settings
+                    type: MenuLink
+                    properties:
+                      title: Settings
+                      icon: AiOutlineSetting
+        - id: sider_basic_content
+          type: Content
+          style:
+            padding: 24px
+            background: '#fff'
+          blocks:
+            - id: sider_basic_content_text
+              type: Paragraph
+              properties:
+                content: The Sider block provides a sidebar within a Layout. It supports collapsing, themes, breakpoints, and custom widths. Place navigation menus or supplementary content inside the sider.
+
+- title: Dark Theme Sider
+  fullWidth: true
+  blocks:
+    - id: sider_dark_layout
+      type: Layout
+      style:
+        minHeight: 300px
+      blocks:
+        - id: sider_dark
+          type: Sider
+          properties:
+            theme: dark
+            width: 200
+            initialCollapsed: false
+            collapsible: false
+          blocks:
+            - id: sider_dark_menu
+              type: Menu
+              properties:
+                mode: inline
+                theme: dark
+                links:
+                  - id: sider_dark_dashboard
+                    type: MenuLink
+                    properties:
+                      title: Dashboard
+                      icon: AiOutlineDashboard
+                  - id: sider_dark_analytics
+                    type: MenuLink
+                    properties:
+                      title: Analytics
+                      icon: AiOutlineBarChart
+                  - id: sider_dark_files
+                    type: MenuLink
+                    properties:
+                      title: Files
+                      icon: AiOutlineFile
+        - id: sider_dark_content
+          type: Content
+          style:
+            padding: 24px
+            background: '#fff'
+          blocks:
+            - id: sider_dark_content_text
+              type: Paragraph
+              properties:
+                content: Dark theme sider with matching dark-themed menu for a professional look.
+
+- title: Collapsible Sider
+  fullWidth: true
+  blocks:
+    - id: sider_collapsible_layout
+      type: Layout
+      style:
+        minHeight: 300px
+      blocks:
+        - id: sider_collapsible
+          type: Sider
+          properties:
+            theme: light
+            width: 220
+            collapsible: true
+            initialCollapsed: false
+          blocks:
+            - id: sider_collapsible_menu
+              type: Menu
+              properties:
+                mode: inline
+                theme: light
+                links:
+                  - id: sider_col_inbox
+                    type: MenuLink
+                    properties:
+                      title: Inbox
+                      icon: AiOutlineInbox
+                  - id: sider_col_starred
+                    type: MenuLink
+                    properties:
+                      title: Starred
+                      icon: AiOutlineStar
+                  - id: sider_col_sent
+                    type: MenuLink
+                    properties:
+                      title: Sent
+                      icon: AiOutlineSend
+        - id: sider_collapsible_content
+          type: Content
+          style:
+            padding: 24px
+            background: '#fff'
+          blocks:
+            - id: sider_collapsible_content_text
+              type: Paragraph
+              properties:
+                content: This sider has collapsible set to true. Use the collapse trigger at the bottom to toggle the sidebar between expanded and collapsed states. The menu icons remain visible when collapsed.
+
+- title: Initially Collapsed Sider
+  fullWidth: true
+  blocks:
+    - id: sider_collapsed_layout
+      type: Layout
+      style:
+        minHeight: 300px
+      blocks:
+        - id: sider_collapsed
+          type: Sider
+          properties:
+            theme: light
+            width: 200
+            collapsible: true
+            initialCollapsed: true
+          blocks:
+            - id: sider_collapsed_menu
+              type: Menu
+              properties:
+                mode: inline
+                theme: light
+                links:
+                  - id: sider_ic_overview
+                    type: MenuLink
+                    properties:
+                      title: Overview
+                      icon: AiOutlineAppstore
+                  - id: sider_ic_reports
+                    type: MenuLink
+                    properties:
+                      title: Reports
+                      icon: AiOutlineFileText
+                  - id: sider_ic_config
+                    type: MenuLink
+                    properties:
+                      title: Configuration
+                      icon: AiOutlineTool
+        - id: sider_collapsed_content
+          type: Content
+          style:
+            padding: 24px
+            background: '#fff'
+          blocks:
+            - id: sider_collapsed_content_text
+              type: Paragraph
+              properties:
+                content: This sider starts in a collapsed state with initialCollapsed set to true. Click the collapse trigger to expand it.
+
+- title: Sider with Custom Collapsed Width
+  fullWidth: true
+  blocks:
+    - id: sider_custom_width_layout
+      type: Layout
+      style:
+        minHeight: 300px
+      blocks:
+        - id: sider_custom_width
+          type: Sider
+          properties:
+            theme: dark
+            width: 240
+            collapsedWidth: 0
+            collapsible: true
+            initialCollapsed: true
+          blocks:
+            - id: sider_custom_width_menu
+              type: Menu
+              properties:
+                mode: inline
+                theme: dark
+                links:
+                  - id: sider_cw_projects
+                    type: MenuLink
+                    properties:
+                      title: Projects
+                      icon: AiOutlineProject
+                  - id: sider_cw_tasks
+                    type: MenuLink
+                    properties:
+                      title: Tasks
+                      icon: AiOutlineCheckSquare
+        - id: sider_custom_width_content
+          type: Content
+          style:
+            padding: 24px
+            background: '#fff'
+          blocks:
+            - id: sider_custom_width_content_text
+              type: Paragraph
+              properties:
+                content: Setting collapsedWidth to 0 completely hides the sider when collapsed and shows a special floating trigger. This is useful for mobile-friendly layouts where sidebar space needs to be fully reclaimed.
+
+- title: Sider with Reverse Arrow
+  fullWidth: true
+  blocks:
+    - id: sider_reverse_layout
+      type: Layout
+      style:
+        minHeight: 300px
+      blocks:
+        - id: sider_reverse_content
+          type: Content
+          style:
+            padding: 24px
+            background: '#fff'
+          blocks:
+            - id: sider_reverse_content_text
+              type: Paragraph
+              properties:
+                content: The Sider is on the right side of the layout with reverseArrow set to true. This flips the collapse arrow direction to match the right-side placement.
+        - id: sider_reverse
+          type: Sider
+          properties:
+            theme: light
+            width: 200
+            collapsible: true
+            initialCollapsed: false
+            reverseArrow: true
+          style:
+            borderLeft: 1px solid #f0f0f0
+          blocks:
+            - id: sider_reverse_menu
+              type: Menu
+              properties:
+                mode: inline
+                theme: light
+                links:
+                  - id: sider_rev_details
+                    type: MenuLink
+                    properties:
+                      title: Details
+                      icon: AiOutlineInfoCircle
+                  - id: sider_rev_history
+                    type: MenuLink
+                    properties:
+                      title: History
+                      icon: AiOutlineHistory

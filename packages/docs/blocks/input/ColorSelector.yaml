@@ -13,12 +13,15 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: ColorSelector
-    value_type: string
-    category: input
-    schema: ../plugins/blocks/blocks-color-selectors/src/blocks/ColorSelector/schema.js
+    pageId: ColorSelector
+    pageTitle: ColorSelector
+    section: Input Blocks
     filePath: blocks/input/ColorSelector.yaml
-    description_content: |
-      A color selector component.
+    block_type: ColorSelector
+    github_path: packages/plugins/blocks/blocks-color-selectors/src/blocks/ColorSelector
+    schema: ../plugins/blocks/blocks-color-selectors/src/blocks/ColorSelector/schema.js
+    gallery: ../plugins/blocks/blocks-color-selectors/src/blocks/ColorSelector/gallery.yaml
+    description: >
+      Color picker with preset swatches and custom color input.

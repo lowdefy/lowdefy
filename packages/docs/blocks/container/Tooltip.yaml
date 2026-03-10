@@ -13,26 +13,16 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
+    pageId: Tooltip
+    pageTitle: Tooltip
+    section: Container Blocks
+    filePath: blocks/container/Tooltip.yaml
     block_type: Tooltip
-    category: container
+    antd_component: Tooltip
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/Tooltip
     schema: ../plugins/blocks/blocks-antd/src/blocks/Tooltip/schema.js
-    description_content: |
-      A simple text popup tip. Can be used to display extra information about its children blocks.
-    init_state_values:
-      block.properties.title: Tooltip title
-    slots:
-      - content
-    examples:
-      - title: Button tooltip
-        block:
-          id: button_ex
-          type: Tooltip
-          properties:
-            title: Explains what happens when this button is clicked.
-          blocks:
-            - id: btn
-              type: Button
-              properties:
-                title: Button
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/Tooltip/gallery.yaml
+    description: >
+      Tooltip popup appearing on hover or focus.

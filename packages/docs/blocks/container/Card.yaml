@@ -13,19 +13,16 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: Card
-    category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Card/schema.js
+    pageId: Card
+    pageTitle: Card
+    section: Container Blocks
     filePath: blocks/container/Card.yaml
-    description_content: |
-      A Card container places blocks on a white background with a card border.
-      The Card has `content`, `title` and `extra` slots. The `title` slot replaces `properties.title` if defined.
-      Use `style: { --header }`, `style: { --body }`, and `style: { --actions }` to customize card sections (replaces `headStyle` and `bodyStyle` from v4).
-
-    slots:
-      - content
-      - cover
-      - extra
-      - title
+    block_type: Card
+    antd_component: Card
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/Card
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Card/schema.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/Card/gallery.yaml
+    description: >
+      Card container with title, extra, cover, and actions.

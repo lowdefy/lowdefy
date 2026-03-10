@@ -99,6 +99,103 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/button#design-token',
+        },
+        properties: {
+          borderRadius: {
+            type: 'number',
+            default: 6,
+            description: 'Border radius of the button.',
+          },
+          borderRadiusLG: {
+            type: 'number',
+            default: 8,
+            description: 'Border radius for large buttons.',
+          },
+          borderRadiusSM: {
+            type: 'number',
+            default: 4,
+            description: 'Border radius for small buttons.',
+          },
+          controlHeight: {
+            type: 'number',
+            default: 32,
+            description: 'Height of the button.',
+          },
+          controlHeightLG: {
+            type: 'number',
+            default: 40,
+            description: 'Height for large buttons.',
+          },
+          controlHeightSM: {
+            type: 'number',
+            default: 24,
+            description: 'Height for small buttons.',
+          },
+          fontSize: {
+            type: 'number',
+            default: 14,
+            description: 'Font size.',
+          },
+          fontSizeLG: {
+            type: 'number',
+            default: 16,
+            description: 'Font size for large buttons.',
+          },
+          fontSizeSM: {
+            type: 'number',
+            default: 14,
+            description: 'Font size for small buttons.',
+          },
+          lineWidth: {
+            type: 'number',
+            default: 1,
+            description: 'Border width.',
+          },
+          paddingInline: {
+            type: 'number',
+            default: 15,
+            description: 'Horizontal padding.',
+          },
+          paddingInlineLG: {
+            type: 'number',
+            default: 15,
+            description: 'Horizontal padding for large buttons.',
+          },
+          paddingInlineSM: {
+            type: 'number',
+            default: 7,
+            description: 'Horizontal padding for small buttons.',
+          },
+          paddingBlock: {
+            type: 'number',
+            default: 0,
+            description: 'Vertical padding.',
+          },
+          colorPrimary: {
+            type: 'string',
+            description: 'Primary color override.',
+          },
+          colorPrimaryHover: {
+            type: 'string',
+            description: 'Primary hover color.',
+          },
+          colorPrimaryActive: {
+            type: 'string',
+            description: 'Primary active color.',
+          },
+          colorBgContainer: {
+            type: 'string',
+            description: 'Background color for default buttons.',
+          },
+          colorText: {
+            type: 'string',
+            description: 'Text color for default buttons.',
+          },
+          colorBorder: {
+            type: 'string',
+            description: 'Border color for outlined and dashed buttons.',
+          },
         },
       },
     },

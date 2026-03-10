@@ -217,6 +217,155 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/date-picker#design-token',
+        },
+        properties: {
+          cellHeight: {
+            type: 'number',
+            default: 24,
+            description: 'Height of a calendar cell.',
+          },
+          cellWidth: {
+            type: 'number',
+            default: 36,
+            description: 'Width of a calendar cell.',
+          },
+          cellHoverBg: {
+            type: 'string',
+            description: 'Background color of a calendar cell on hover.',
+          },
+          cellActiveWithRangeBg: {
+            type: 'string',
+            description: 'Background color of cells within the selected range.',
+          },
+          cellHoverWithRangeBg: {
+            type: 'string',
+            description: 'Background color of cells within range on hover.',
+          },
+          cellBgDisabled: {
+            type: 'string',
+            description: 'Background color of disabled cells.',
+          },
+          cellRangeBorderColor: {
+            type: 'string',
+            description: 'Border color of range selection cells.',
+          },
+          timeColumnWidth: {
+            type: 'number',
+            default: 56,
+            description: 'Width of the time panel column.',
+          },
+          timeColumnHeight: {
+            type: 'number',
+            default: 224,
+            description: 'Height of the time panel column.',
+          },
+          timeCellHeight: {
+            type: 'number',
+            default: 28,
+            description: 'Height of a time cell in the time panel.',
+          },
+          addonBg: {
+            type: 'string',
+            description: 'Background color for the addon area.',
+          },
+          hoverBorderColor: {
+            type: 'string',
+            description: 'Border color on hover.',
+          },
+          activeBorderColor: {
+            type: 'string',
+            description: 'Border color when active.',
+          },
+          activeShadow: {
+            type: 'string',
+            description: 'Shadow effect when active.',
+          },
+          paddingBlock: {
+            type: 'number',
+            default: 4,
+            description: 'Vertical padding of the input.',
+          },
+          paddingBlockSM: {
+            type: 'number',
+            default: 0,
+            description: 'Vertical padding for small size.',
+          },
+          paddingBlockLG: {
+            type: 'number',
+            default: 7,
+            description: 'Vertical padding for large size.',
+          },
+          paddingInline: {
+            type: 'number',
+            default: 11,
+            description: 'Horizontal padding of the input.',
+          },
+          paddingInlineSM: {
+            type: 'number',
+            default: 7,
+            description: 'Horizontal padding for small size.',
+          },
+          paddingInlineLG: {
+            type: 'number',
+            default: 11,
+            description: 'Horizontal padding for large size.',
+          },
+          zIndexPopup: {
+            type: 'number',
+            default: 1050,
+            description: 'Z-index of the picker popup.',
+          },
+          borderRadius: {
+            type: 'number',
+            default: 6,
+            description: 'Border radius of the input.',
+          },
+          controlHeight: {
+            type: 'number',
+            default: 32,
+            description: 'Height of the input.',
+          },
+          controlHeightLG: {
+            type: 'number',
+            default: 40,
+            description: 'Height for large size.',
+          },
+          controlHeightSM: {
+            type: 'number',
+            default: 24,
+            description: 'Height for small size.',
+          },
+          fontSize: {
+            type: 'number',
+            default: 14,
+            description: 'Font size.',
+          },
+          lineWidth: {
+            type: 'number',
+            default: 1,
+            description: 'Border width.',
+          },
+          colorPrimary: {
+            type: 'string',
+            description: 'Primary color override.',
+          },
+          colorBgContainer: {
+            type: 'string',
+            description: 'Background color of the input.',
+          },
+          colorText: {
+            type: 'string',
+            description: 'Text color.',
+          },
+          colorBorder: {
+            type: 'string',
+            description: 'Border color.',
+          },
+          colorTextPlaceholder: {
+            type: 'string',
+            description: 'Placeholder text color.',
+          },
         },
       },
     },

@@ -85,6 +85,58 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/splitter#design-token',
+        },
+        properties: {
+          splitBarSize: {
+            type: 'number',
+            default: 1,
+            description: 'Thickness of the divider bar between panels in pixels.',
+          },
+          splitTriggerSize: {
+            type: 'number',
+            default: 6,
+            description: 'Size of the interactive trigger area for resizing in pixels.',
+          },
+          splitBarDraggableSize: {
+            type: 'number',
+            default: 20,
+            description: 'Size of the draggable handle area in pixels.',
+          },
+          resizeSpinnerSize: {
+            type: 'number',
+            default: 20,
+            description: 'Size of the resize indicator dots in pixels.',
+          },
+          colorFill: {
+            type: 'string',
+            description: 'Color of the splitter bar.',
+          },
+          colorFillTertiary: {
+            type: 'string',
+            description: 'Background color of the drag trigger area.',
+          },
+          colorFillSecondary: {
+            type: 'string',
+            description: 'Background color of the drag trigger area on hover.',
+          },
+          colorPrimary: {
+            type: 'string',
+            description: 'Color used for the collapse arrows.',
+          },
+          colorText: {
+            type: 'string',
+            description: 'Color of the resize dots indicator.',
+          },
+          colorBgElevated: {
+            type: 'string',
+            description: 'Background color of the drag trigger handle.',
+          },
+          borderRadius: {
+            type: 'number',
+            default: 6,
+            description: 'Border radius of the drag trigger handle.',
+          },
         },
       },
     },

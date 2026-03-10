@@ -113,6 +113,38 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/drawer#design-token',
+        },
+        properties: {
+          footerPaddingBlock: {
+            type: 'number',
+            default: 8,
+            description: 'Vertical padding of the footer.',
+          },
+          footerPaddingInline: {
+            type: 'number',
+            default: 16,
+            description: 'Horizontal padding of the footer.',
+          },
+          zIndexPopup: {
+            type: 'number',
+            default: 1000,
+            description: 'Z-index of the drawer.',
+          },
+          draggerSize: {
+            type: 'number',
+            default: 4,
+            description: 'Size of the resize handle.',
+          },
+          colorBgElevated: {
+            type: 'string',
+            description: 'Background color of the drawer.',
+          },
+          colorBgMask: {
+            type: 'string',
+            default: 'rgba(0, 0, 0, 0.45)',
+            description: 'Background color of the drawer mask.',
+          },
         },
       },
     },

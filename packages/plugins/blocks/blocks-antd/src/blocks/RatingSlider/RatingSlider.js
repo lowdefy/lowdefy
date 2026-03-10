@@ -222,7 +222,7 @@ RatingSlider.meta = {
   valueType: 'any',
   category: 'input',
   icons: [...Label.meta.icons, 'AiOutlineFrown', 'AiOutlineSmile'],
-  cssKeys: ['element'],
+  cssKeys: ['element', 'label', 'extra', 'feedback'],
 };
 
 export default withTheme('Slider', RatingSlider);

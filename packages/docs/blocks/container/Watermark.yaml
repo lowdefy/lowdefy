@@ -13,17 +13,16 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: Watermark
-    category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Watermark/schema.js
+    pageId: Watermark
+    pageTitle: Watermark
+    section: Container Blocks
     filePath: blocks/container/Watermark.yaml
-    examples:
-      _ref: ../plugins/blocks/blocks-antd/src/blocks/Watermark/examples.yaml
-    description_content: |
-      The `Watermark` block overlays a watermark on its child content. Supports text or image watermarks with configurable font, rotation, gap, and z-index. Useful for marking content as draft, confidential, or with brand text.
-    slots:
-      - content
-    init_property_values:
-      text: Lowdefy
+    block_type: Watermark
+    antd_component: Watermark
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/Watermark
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Watermark/schema.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/Watermark/gallery.yaml
+    description: >
+      Watermark overlay with text, image, and font customization.

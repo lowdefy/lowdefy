@@ -56,6 +56,23 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/message#design-token',
+        },
+        properties: {
+          zIndexPopup: {
+            type: 'number',
+            default: 1080,
+            description: 'Z-index of the message popup.',
+          },
+          contentBg: {
+            type: 'string',
+            description: 'Background color of the message content.',
+          },
+          contentPadding: {
+            type: 'string',
+            description:
+              'Padding of the message content. Calculated from controlHeightLG, fontSize, lineHeight, and paddingSM.',
+          },
         },
       },
     },

@@ -111,7 +111,7 @@ DateRangeSelector.meta = {
   valueType: 'array',
   category: 'input',
   icons: [...Label.meta.icons, 'AiOutlineCalendar'],
-  cssKeys: ['element', 'popup'],
+  cssKeys: ['element', 'label', 'extra', 'feedback', 'popup'],
 };
 
 export default withTheme('DatePicker', DateRangeSelector);

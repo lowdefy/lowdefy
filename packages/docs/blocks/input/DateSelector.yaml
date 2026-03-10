@@ -13,14 +13,16 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: DateSelector
-    value_type: date
-    category: input
-    schema: ../plugins/blocks/blocks-antd/src/blocks/DateSelector/schema.js
+    pageId: DateSelector
+    pageTitle: DateSelector
+    section: Input Blocks
     filePath: blocks/input/DateSelector.yaml
-    description_content: |
-      The `DateSelector` block allows a user to select a date from a calender.
-
-      > Other date type blocks are `DateRangeSelector`, `DateTimeSelector`, `MonthSelector` and `WeekSelector`.
+    block_type: DateSelector
+    antd_component: DatePicker
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/DateSelector
+    schema: ../plugins/blocks/blocks-antd/src/blocks/DateSelector/schema.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/DateSelector/gallery.yaml
+    description: >
+      Date picker with configurable format and disabled dates.

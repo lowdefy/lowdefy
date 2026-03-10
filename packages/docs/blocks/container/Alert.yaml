@@ -13,15 +13,16 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: Alert
-    category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Alert/schema.js
+    pageId: Alert
+    pageTitle: Alert
+    section: Container Blocks
     filePath: blocks/container/Alert.yaml
-    init_property_values:
-      message: Alerts help to highlight important information.
-    description_content: |
-      Alert is used to render user feedback messages in a Alert styled frame.
-    slots:
-      - action
+    block_type: Alert
+    antd_component: Alert
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/Alert
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Alert/schema.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/Alert/gallery.yaml
+    description: >
+      Alert banner with type, description, icon, and closable options.

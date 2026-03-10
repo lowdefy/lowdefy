@@ -89,7 +89,56 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/qr-code#design-token',
         },
+        properties: {
+          QRCodeTextColor: {
+            type: 'string',
+            description: 'Text color displayed on the QR code overlay.',
+          },
+          QRCodeCoverBackgroundColor: {
+            type: 'string',
+            description:
+              'Background color of the cover overlay shown when expired, loading, or scanned.',
+          },
+          borderRadiusLG: {
+            type: 'number',
+            default: 8,
+            description: 'Border radius of the QR code container.',
+          },
+          colorText: {
+            type: 'string',
+            description: 'Text color.',
+          },
+          colorBgContainer: {
+            type: 'string',
+            description: 'Background color of the QR code container.',
+          },
+          colorSplit: {
+            type: 'string',
+            description: 'Border color when bordered is true.',
+          },
+          lineWidth: {
+            type: 'number',
+            default: 1,
+            description: 'Border width.',
+          },
+          padding: {
+            type: 'number',
+            default: 12,
+            description: 'Padding inside the QR code container.',
+          },
+        },
+      },
+    },
+  },
+  events: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      onRefresh: {
+        type: 'array',
+        description: 'Trigger action when expired QR code refresh button is clicked.',
       },
     },
   },

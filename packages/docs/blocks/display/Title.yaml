@@ -13,20 +13,16 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: Title
-    category: display
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Title/schema.js
+    pageId: Title
+    pageTitle: Title
+    section: Display Blocks
     filePath: blocks/display/Title.yaml
-    init_state_values:
-      __type_block.properties.copyable: boolean
-      __type_block.properties.ellipsis: boolean
-      __boolean_block.properties.copyable: false
-      __boolean_block.properties.ellipsis: false
-      __type_block.properties.value: number
-      __number_block.properties.value: 33.3
-    init_property_values:
-      content: A title block.
-    description_content: |
-      A title component. Corresponds to html h1, h2, h3 and h4 elements.
+    block_type: Title
+    antd_component: Typography
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/Title
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Title/schema.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/Title/gallery.yaml
+    description: >
+      Heading title with levels, copyable, ellipsis, and text styles.

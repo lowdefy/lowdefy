@@ -173,6 +173,128 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/typography#design-token',
+        },
+        properties: {
+          titleMarginBottom: {
+            type: 'string',
+            default: '0.5em',
+            description: 'Margin bottom for title elements.',
+          },
+          titleMarginTop: {
+            type: 'string',
+            default: '1.2em',
+            description: 'Margin top for title elements.',
+          },
+          colorText: {
+            type: 'string',
+            description: 'Default text color.',
+          },
+          colorTextSecondary: {
+            type: 'string',
+            description: 'Text color for secondary type.',
+          },
+          colorSuccess: {
+            type: 'string',
+            description: 'Text color for success type.',
+          },
+          colorWarning: {
+            type: 'string',
+            description: 'Text color for warning type.',
+          },
+          colorError: {
+            type: 'string',
+            description: 'Text color for danger type.',
+          },
+          colorLink: {
+            type: 'string',
+            description: 'Color for links within typography.',
+          },
+          colorLinkHover: {
+            type: 'string',
+            description: 'Color for links on hover.',
+          },
+          colorLinkActive: {
+            type: 'string',
+            description: 'Color for links when active.',
+          },
+          colorTextDescription: {
+            type: 'string',
+            description: 'Color for description text.',
+          },
+          colorTextDisabled: {
+            type: 'string',
+            description: 'Color for disabled text.',
+          },
+          fontFamily: {
+            type: 'string',
+            description: 'Font family for typography text.',
+          },
+          fontSize: {
+            type: 'number',
+            default: 14,
+            description: 'Base font size.',
+          },
+          fontSizeHeading1: {
+            type: 'number',
+            default: 38,
+            description: 'Font size for h1 level.',
+          },
+          fontSizeHeading2: {
+            type: 'number',
+            default: 30,
+            description: 'Font size for h2 level.',
+          },
+          fontSizeHeading3: {
+            type: 'number',
+            default: 24,
+            description: 'Font size for h3 level.',
+          },
+          fontSizeHeading4: {
+            type: 'number',
+            default: 20,
+            description: 'Font size for h4 level.',
+          },
+          fontSizeHeading5: {
+            type: 'number',
+            default: 16,
+            description: 'Font size for h5 level.',
+          },
+          fontWeightStrong: {
+            type: 'number',
+            default: 600,
+            description: 'Font weight for strong/bold text.',
+          },
+          lineHeight: {
+            type: 'number',
+            default: 1.5714,
+            description: 'Base line height.',
+          },
+          lineHeightHeading1: {
+            type: 'number',
+            default: 1.2105,
+            description: 'Line height for h1.',
+          },
+          lineHeightHeading2: {
+            type: 'number',
+            default: 1.2667,
+            description: 'Line height for h2.',
+          },
+          lineHeightHeading3: {
+            type: 'number',
+            default: 1.3333,
+            description: 'Line height for h3.',
+          },
+          lineHeightHeading4: {
+            type: 'number',
+            default: 1.4,
+            description: 'Line height for h4.',
+          },
+          lineHeightHeading5: {
+            type: 'number',
+            default: 1.5,
+            description: 'Line height for h5.',
+          },
         },
       },
     },

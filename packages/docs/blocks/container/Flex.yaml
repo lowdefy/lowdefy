@@ -13,15 +13,16 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: Flex
-    category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Flex/schema.js
+    pageId: Flex
+    pageTitle: Flex
+    section: Container Blocks
     filePath: blocks/container/Flex.yaml
-    examples:
-      _ref: ../plugins/blocks/blocks-antd/src/blocks/Flex/examples.yaml
-    description_content: |
-      The `Flex` block is a flexbox layout container. Use to arrange child blocks in a row or column with configurable alignment, justification, wrapping, and gap. Supports responsive gap sizes and custom HTML elements.
-    slots:
-      - content
+    block_type: Flex
+    antd_component: Flex
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/Flex
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Flex/schema.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/Flex/gallery.yaml
+    description: >
+      Flexible box layout container for arranging child blocks.

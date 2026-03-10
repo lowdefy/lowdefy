@@ -1,0 +1,177 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Note: GoogleMapsHeatmap requires a valid Google Maps API key provided via
+# a parent GoogleMapsScript block with libraries: ['visualization'].
+# Without an API key, the map will not render.
+
+- title: Default Heatmap
+  blocks:
+    - id: google_maps_heatmap_default
+      type: GoogleMapsHeatmap
+      properties:
+        map:
+          center:
+            lat: 37.775
+            lng: -122.434
+          zoom: 13
+        heatmap:
+          data:
+            - lat: 37.782
+              lng: -122.447
+            - lat: 37.782
+              lng: -122.445
+            - lat: 37.782
+              lng: -122.443
+            - lat: 37.784
+              lng: -122.441
+            - lat: 37.786
+              lng: -122.439
+            - lat: 37.786
+              lng: -122.435
+            - lat: 37.770
+              lng: -122.432
+            - lat: 37.768
+              lng: -122.430
+
+- title: Weighted Heatmap Data
+  blocks:
+    - id: google_maps_heatmap_weighted
+      type: GoogleMapsHeatmap
+      properties:
+        map:
+          center:
+            lat: 51.509
+            lng: -0.118
+          zoom: 13
+        heatmap:
+          data:
+            - location:
+                lat: 51.512
+                lng: -0.091
+              weight: 10
+            - location:
+                lat: 51.507
+                lng: -0.076
+              weight: 5
+            - location:
+                lat: 51.503
+                lng: -0.119
+              weight: 8
+            - location:
+                lat: 51.515
+                lng: -0.142
+              weight: 3
+            - location:
+                lat: 51.520
+                lng: -0.105
+              weight: 7
+
+- title: Heatmap Options
+  blocks:
+    - id: google_maps_heatmap_radius
+      type: GoogleMapsHeatmap
+      properties:
+        map:
+          center:
+            lat: 40.7128
+            lng: -74.006
+          zoom: 12
+        heatmap:
+          radius: 30
+          data:
+            - lat: 40.7128
+              lng: -74.006
+            - lat: 40.7200
+              lng: -73.998
+            - lat: 40.7060
+              lng: -74.010
+            - lat: 40.7180
+              lng: -73.990
+            - lat: 40.7100
+              lng: -74.015
+    - id: google_maps_heatmap_opacity
+      type: GoogleMapsHeatmap
+      properties:
+        map:
+          center:
+            lat: 40.7128
+            lng: -74.006
+          zoom: 12
+        heatmap:
+          opacity: 0.5
+          data:
+            - lat: 40.7128
+              lng: -74.006
+            - lat: 40.7200
+              lng: -73.998
+            - lat: 40.7060
+              lng: -74.010
+            - lat: 40.7180
+              lng: -73.990
+
+- title: Auto Bounds Disabled
+  blocks:
+    - id: google_maps_heatmap_no_auto_bounds
+      type: GoogleMapsHeatmap
+      properties:
+        autoBounds: false
+        map:
+          center:
+            lat: 35.6762
+            lng: 139.6503
+          zoom: 11
+        heatmap:
+          data:
+            - lat: 35.6812
+              lng: 139.7671
+            - lat: 35.6595
+              lng: 139.7005
+            - lat: 35.6938
+              lng: 139.7034
+            - lat: 35.6586
+              lng: 139.7454
+
+- title: Heatmap with Markers
+  blocks:
+    - id: google_maps_heatmap_with_markers
+      type: GoogleMapsHeatmap
+      properties:
+        map:
+          center:
+            lat: 48.8566
+            lng: 2.3522
+          zoom: 13
+        markers:
+          - position:
+              lat: 48.8584
+              lng: 2.2945
+            title: Eiffel Tower
+          - position:
+              lat: 48.8606
+              lng: 2.3376
+            title: Louvre Museum
+        heatmap:
+          radius: 25
+          data:
+            - lat: 48.8584
+              lng: 2.2945
+            - lat: 48.8606
+              lng: 2.3376
+            - lat: 48.8530
+              lng: 2.3499
+            - lat: 48.8620
+              lng: 2.3320
+            - lat: 48.8566
+              lng: 2.3522

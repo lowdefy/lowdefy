@@ -115,6 +115,96 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/modal#design-token',
+        },
+        properties: {
+          headerBg: {
+            type: 'string',
+            description: 'Background color of the modal header.',
+          },
+          titleLineHeight: {
+            type: 'number',
+            default: 1.5,
+            description: 'Line height of the modal title.',
+          },
+          titleFontSize: {
+            type: 'number',
+            default: 16,
+            description: 'Font size of the modal title.',
+          },
+          titleColor: {
+            type: 'string',
+            description: 'Color of the modal title text.',
+          },
+          contentBg: {
+            type: 'string',
+            description: 'Background color of the modal content.',
+          },
+          footerBg: {
+            type: 'string',
+            default: 'transparent',
+            description: 'Background color of the modal footer.',
+          },
+          contentPadding: {
+            type: ['number', 'string'],
+            description: 'Padding of the content area.',
+          },
+          headerPadding: {
+            type: ['number', 'string'],
+            description: 'Padding of the header area.',
+          },
+          headerBorderBottom: {
+            type: 'string',
+            description: 'Border bottom of the header.',
+          },
+          headerMarginBottom: {
+            type: 'number',
+            default: 8,
+            description: 'Margin bottom of the header.',
+          },
+          bodyPadding: {
+            type: 'number',
+            description: 'Padding of the body area.',
+          },
+          footerPadding: {
+            type: ['number', 'string'],
+            description: 'Padding of the footer area.',
+          },
+          footerBorderTop: {
+            type: 'string',
+            description: 'Border top of the footer.',
+          },
+          footerBorderRadius: {
+            type: ['number', 'string'],
+            description: 'Border radius of the footer.',
+          },
+          footerMarginTop: {
+            type: ['number', 'string'],
+            default: 8,
+            description: 'Margin top of the footer.',
+          },
+          confirmBodyPadding: {
+            type: ['number', 'string'],
+            description: 'Padding of the confirm modal body.',
+          },
+          confirmIconMarginInlineEnd: {
+            type: ['number', 'string'],
+            description: 'Inline end margin of the confirm modal icon.',
+          },
+          confirmBtnsMarginTop: {
+            type: ['number', 'string'],
+            description: 'Margin top of the confirm modal buttons.',
+          },
+          borderRadiusLG: {
+            type: 'number',
+            default: 8,
+            description: 'Border radius of the modal.',
+          },
+          colorBgMask: {
+            type: 'string',
+            default: 'rgba(0, 0, 0, 0.45)',
+            description: 'Background color of the modal mask.',
+          },
         },
       },
     },

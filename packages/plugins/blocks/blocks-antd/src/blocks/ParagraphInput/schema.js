@@ -101,6 +101,29 @@ const schema = {
                 type: 'number',
                 description: 'Max length of text area input.',
               },
+              autoSize: {
+                default: false,
+                oneOf: [
+                  {
+                    type: 'boolean',
+                    description: 'Auto size the text area height when editing.',
+                  },
+                  {
+                    type: 'object',
+                    additionalProperties: false,
+                    properties: {
+                      minRows: {
+                        type: 'number',
+                        description: 'Minimum number of rows for the text area.',
+                      },
+                      maxRows: {
+                        type: 'number',
+                        description: 'Maximum number of rows for the text area.',
+                      },
+                    },
+                  },
+                ],
+              },
             },
           },
         ],
@@ -164,6 +187,88 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/typography#design-token',
+        },
+        properties: {
+          titleMarginBottom: {
+            type: 'string',
+            default: '0.5em',
+            description: 'Margin bottom for title elements.',
+          },
+          titleMarginTop: {
+            type: 'string',
+            default: '1.2em',
+            description: 'Margin top for title elements.',
+          },
+          colorText: {
+            type: 'string',
+            description: 'Default text color.',
+          },
+          colorTextSecondary: {
+            type: 'string',
+            description: 'Text color for secondary type.',
+          },
+          colorSuccess: {
+            type: 'string',
+            description: 'Text color for success type.',
+          },
+          colorWarning: {
+            type: 'string',
+            description: 'Text color for warning type.',
+          },
+          colorError: {
+            type: 'string',
+            description: 'Text color for danger type.',
+          },
+          colorLink: {
+            type: 'string',
+            description: 'Color for links within typography.',
+          },
+          colorLinkHover: {
+            type: 'string',
+            description: 'Color for links on hover.',
+          },
+          colorLinkActive: {
+            type: 'string',
+            description: 'Color for links when active.',
+          },
+          colorTextDescription: {
+            type: 'string',
+            description: 'Color for description text.',
+          },
+          colorTextDisabled: {
+            type: 'string',
+            description: 'Color for disabled text.',
+          },
+          fontFamily: {
+            type: 'string',
+            description: 'Font family for typography text.',
+          },
+          fontSize: {
+            type: 'number',
+            default: 14,
+            description: 'Base font size.',
+          },
+          fontSizeLG: {
+            type: 'number',
+            default: 16,
+            description: 'Large font size.',
+          },
+          fontSizeSM: {
+            type: 'number',
+            default: 14,
+            description: 'Small font size.',
+          },
+          fontWeightStrong: {
+            type: 'number',
+            default: 600,
+            description: 'Font weight for strong text.',
+          },
+          lineHeight: {
+            type: 'number',
+            default: 1.5714,
+            description: 'Base line height.',
+          },
         },
       },
     },

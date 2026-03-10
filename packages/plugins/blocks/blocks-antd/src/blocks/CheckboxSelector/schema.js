@@ -185,6 +185,68 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/checkbox#design-token',
+        },
+        properties: {
+          colorPrimary: {
+            type: 'string',
+            description: 'Primary color for checked checkboxes.',
+          },
+          colorPrimaryHover: {
+            type: 'string',
+            description: 'Hover color for checked checkboxes.',
+          },
+          colorBgContainer: {
+            type: 'string',
+            description: 'Background color for unchecked checkboxes.',
+          },
+          colorBgContainerDisabled: {
+            type: 'string',
+            description: 'Background color for disabled checkboxes.',
+          },
+          colorBorder: {
+            type: 'string',
+            description: 'Border color for unchecked checkboxes.',
+          },
+          colorTextDisabled: {
+            type: 'string',
+            description: 'Text and checkmark color for disabled checkboxes.',
+          },
+          controlInteractiveSize: {
+            type: 'number',
+            default: 16,
+            description: 'Size of the checkbox (width and height in pixels).',
+          },
+          borderRadiusSM: {
+            type: 'number',
+            default: 4,
+            description: 'Border radius of the checkbox.',
+          },
+          lineWidth: {
+            type: 'number',
+            default: 1,
+            description: 'Border width of the checkbox.',
+          },
+          lineType: {
+            type: 'string',
+            default: 'solid',
+            description: 'Border style of the checkbox.',
+          },
+          fontSize: {
+            type: 'number',
+            default: 14,
+            description: 'Font size for checkbox labels.',
+          },
+          marginXS: {
+            type: 'number',
+            default: 8,
+            description: 'Horizontal gap between checkboxes in a group.',
+          },
+          paddingXS: {
+            type: 'number',
+            default: 8,
+            description: 'Inline padding between the checkbox and its label text.',
+          },
         },
       },
     },

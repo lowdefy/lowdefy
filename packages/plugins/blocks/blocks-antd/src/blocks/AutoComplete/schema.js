@@ -125,6 +125,169 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/select#design-token',
+        },
+        properties: {
+          borderRadius: {
+            type: 'number',
+            default: 6,
+            description: 'Border radius of the input.',
+          },
+          borderRadiusLG: {
+            type: 'number',
+            default: 8,
+            description: 'Border radius for large size.',
+          },
+          borderRadiusSM: {
+            type: 'number',
+            default: 4,
+            description: 'Border radius for small size.',
+          },
+          controlHeight: {
+            type: 'number',
+            default: 32,
+            description: 'Height of the input.',
+          },
+          controlHeightLG: {
+            type: 'number',
+            default: 40,
+            description: 'Height for large size.',
+          },
+          controlHeightSM: {
+            type: 'number',
+            default: 24,
+            description: 'Height for small size.',
+          },
+          fontSize: {
+            type: 'number',
+            default: 14,
+            description: 'Font size of the input text.',
+          },
+          fontSizeLG: {
+            type: 'number',
+            default: 16,
+            description: 'Font size for large size.',
+          },
+          fontSizeSM: {
+            type: 'number',
+            default: 14,
+            description: 'Font size for small size.',
+          },
+          colorPrimary: {
+            type: 'string',
+            description: 'Primary color, used for focus border and active state.',
+          },
+          colorPrimaryHover: {
+            type: 'string',
+            description: 'Primary hover color, used for hover border state.',
+          },
+          colorBgContainer: {
+            type: 'string',
+            default: '#ffffff',
+            description: 'Background color of the selector.',
+          },
+          colorBgElevated: {
+            type: 'string',
+            default: '#ffffff',
+            description: 'Background color of the dropdown.',
+          },
+          colorText: {
+            type: 'string',
+            description: 'Text color of the input.',
+          },
+          colorTextPlaceholder: {
+            type: 'string',
+            description: 'Placeholder text color.',
+          },
+          colorTextDisabled: {
+            type: 'string',
+            description: 'Text color when disabled.',
+          },
+          colorBorder: {
+            type: 'string',
+            description: 'Border color of the input.',
+          },
+          hoverBorderColor: {
+            type: 'string',
+            description: 'Border color when hovered.',
+          },
+          activeBorderColor: {
+            type: 'string',
+            description: 'Border color when focused/active.',
+          },
+          activeOutlineColor: {
+            type: 'string',
+            description: 'Outline color when focused.',
+          },
+          clearBg: {
+            type: 'string',
+            default: '#ffffff',
+            description: 'Background color of the clear button.',
+          },
+          optionSelectedBg: {
+            type: 'string',
+            default: '#e6f4ff',
+            description: 'Background color of the selected option.',
+          },
+          optionSelectedColor: {
+            type: 'string',
+            default: 'rgba(0, 0, 0, 0.88)',
+            description: 'Text color of the selected option.',
+          },
+          optionSelectedFontWeight: {
+            type: 'number',
+            default: 600,
+            description: 'Font weight of the selected option.',
+          },
+          optionActiveBg: {
+            type: 'string',
+            default: 'rgba(0, 0, 0, 0.04)',
+            description: 'Background color of the active (hovered) option.',
+          },
+          optionFontSize: {
+            type: 'number',
+            default: 14,
+            description: 'Font size of dropdown option text.',
+          },
+          optionHeight: {
+            type: 'number',
+            default: 32,
+            description: 'Height of each dropdown option.',
+          },
+          optionLineHeight: {
+            type: 'number',
+            description: 'Line height of dropdown option text.',
+          },
+          optionPadding: {
+            type: ['string', 'number'],
+            default: '5px 12px',
+            description: 'Padding of each dropdown option.',
+          },
+          selectorBg: {
+            type: 'string',
+            default: '#ffffff',
+            description: 'Background color of the selector input.',
+          },
+          zIndexPopup: {
+            type: 'number',
+            default: 1050,
+            description: 'Z-index of the dropdown popup.',
+          },
+          showArrowPaddingInlineEnd: {
+            type: 'number',
+            default: 18,
+            description: 'Right padding when the arrow icon is shown.',
+          },
+          lineWidth: {
+            type: 'number',
+            default: 1,
+            description: 'Border width of the input.',
+          },
+          paddingInline: {
+            type: 'number',
+            default: 11,
+            description: 'Horizontal padding of the input.',
+          },
         },
       },
     },

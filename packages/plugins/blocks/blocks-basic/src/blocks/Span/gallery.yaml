@@ -1,0 +1,384 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic Span
+  blocks:
+    - id: span_basic
+      type: Span
+      blocks:
+        - id: span_basic_text
+          type: Html
+          properties:
+            html: This is text inside a Span block.
+
+- title: Content Property
+  blocks:
+    - id: span_content_string
+      type: Span
+      properties:
+        content: A Span can render a simple string using the content property.
+    - id: span_content_html
+      type: Span
+      properties:
+        content: '<b>Bold</b> and <i>italic</i> via content property.'
+
+- title: Inline with Text
+  blocks:
+    - id: span_inline_container
+      type: Html
+      properties:
+        html: '<p style="margin: 0;">This paragraph has an </p>'
+    - id: span_inline
+      type: Span
+      style:
+        --element:
+          color: '#1677ff'
+          fontWeight: bold
+      properties:
+        content: inline Span
+    - id: span_inline_after
+      type: Html
+      properties:
+        html: '<p style="margin: 0;"> mixed with regular text.</p>'
+
+- title: Inline Icon and Text
+  blocks:
+    - id: span_icon_text
+      type: Span
+      style:
+        --element:
+          display: inline-flex
+          alignItems: center
+          gap: 6
+      blocks:
+        - id: span_icon_text_icon
+          type: Icon
+          layout:
+            flex: 0 0 auto
+          properties:
+            name: AiOutlineSmile
+            size: 16
+            color: '#faad14'
+        - id: span_icon_text_label
+          type: Html
+          layout:
+            flex: 0 0 auto
+          properties:
+            html: Happy face
+    - id: span_icon_text_check
+      type: Span
+      style:
+        --element:
+          display: inline-flex
+          alignItems: center
+          gap: 6
+      blocks:
+        - id: span_icon_text_check_icon
+          type: Icon
+          layout:
+            flex: 0 0 auto
+          properties:
+            name: AiOutlineCheckCircle
+            size: 16
+            color: '#52c41a'
+        - id: span_icon_text_check_label
+          type: Html
+          layout:
+            flex: 0 0 auto
+          properties:
+            html: Approved
+    - id: span_icon_text_warning
+      type: Span
+      style:
+        --element:
+          display: inline-flex
+          alignItems: center
+          gap: 6
+      blocks:
+        - id: span_icon_text_warning_icon
+          type: Icon
+          layout:
+            flex: 0 0 auto
+          properties:
+            name: AiOutlineWarning
+            size: 16
+            color: '#ff4d4f'
+        - id: span_icon_text_warning_label
+          type: Html
+          layout:
+            flex: 0 0 auto
+          properties:
+            html: Warning
+
+- title: Colored Tags
+  blocks:
+    - id: span_tag_blue
+      type: Span
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          background: '#e6f4ff'
+          color: '#1677ff'
+          padding: 2px 8px
+          borderRadius: 4
+          fontSize: 12
+          border: 1px solid #91caff
+      properties:
+        content: Info
+    - id: span_tag_green
+      type: Span
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          background: '#f6ffed'
+          color: '#52c41a'
+          padding: 2px 8px
+          borderRadius: 4
+          fontSize: 12
+          border: 1px solid #b7eb8f
+      properties:
+        content: Success
+    - id: span_tag_red
+      type: Span
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          background: '#fff2f0'
+          color: '#ff4d4f'
+          padding: 2px 8px
+          borderRadius: 4
+          fontSize: 12
+          border: 1px solid #ffccc7
+      properties:
+        content: Error
+    - id: span_tag_orange
+      type: Span
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          background: '#fffbe6'
+          color: '#faad14'
+          padding: 2px 8px
+          borderRadius: 4
+          fontSize: 12
+          border: 1px solid #ffe58f
+      properties:
+        content: Warning
+    - id: span_tag_purple
+      type: Span
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          background: '#f9f0ff'
+          color: '#722ed1'
+          padding: 2px 8px
+          borderRadius: 4
+          fontSize: 12
+          border: 1px solid #d3adf7
+      properties:
+        content: Custom
+
+- title: Badge-Style Spans
+  blocks:
+    - id: span_badge_primary
+      type: Span
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          background: '#1677ff'
+          color: '#ffffff'
+          padding: 2px 10px
+          borderRadius: 12
+          fontSize: 12
+          fontWeight: bold
+      properties:
+        content: NEW
+    - id: span_badge_danger
+      type: Span
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          background: '#ff4d4f'
+          color: '#ffffff'
+          padding: 2px 10px
+          borderRadius: 12
+          fontSize: 12
+          fontWeight: bold
+      properties:
+        content: '3'
+    - id: span_badge_success
+      type: Span
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          background: '#52c41a'
+          color: '#ffffff'
+          padding: 2px 10px
+          borderRadius: 12
+          fontSize: 12
+          fontWeight: bold
+      properties:
+        content: LIVE
+    - id: span_badge_gold
+      type: Span
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          background: '#faad14'
+          color: '#ffffff'
+          padding: 2px 10px
+          borderRadius: 12
+          fontSize: 12
+          fontWeight: bold
+      properties:
+        content: PRO
+
+- title: Multiple Inline Spans
+  blocks:
+    - id: span_inline_wrapper
+      type: Box
+      blocks:
+        - id: span_inline_hello
+          type: Span
+          layout:
+            flex: 0 0 auto
+          style:
+            --element:
+              fontWeight: bold
+          properties:
+            content: 'Hello, '
+        - id: span_inline_world
+          type: Span
+          layout:
+            flex: 0 0 auto
+          style:
+            --element:
+              color: '#1677ff'
+          properties:
+            content: 'world'
+        - id: span_inline_excl
+          type: Span
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: '!'
+
+- title: Nested Spans
+  blocks:
+    - id: span_nested_outer
+      type: Span
+      style:
+        --element:
+          padding: 8px 12px
+          background: '#f5f5f5'
+          borderRadius: 6
+          display: inline-flex
+          alignItems: center
+          gap: 8
+      blocks:
+        - id: span_nested_label
+          type: Span
+          layout:
+            flex: 0 0 auto
+          style:
+            --element:
+              fontWeight: bold
+              color: '#262626'
+          properties:
+            content: 'Status:'
+        - id: span_nested_value
+          type: Span
+          layout:
+            flex: 0 0 auto
+          style:
+            --element:
+              color: '#52c41a'
+          blocks:
+            - id: span_nested_value_icon
+              type: Icon
+              layout:
+                flex: 0 0 auto
+              properties:
+                name: AiOutlineCheckCircle
+                size: 14
+                color: '#52c41a'
+            - id: span_nested_value_text
+              type: Html
+              layout:
+                flex: 0 0 auto
+              properties:
+                html: Active
+
+- title: Style Overrides
+  blocks:
+    - id: span_style_underline
+      type: Span
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          textDecoration: underline
+          textDecorationColor: '#1677ff'
+          textUnderlineOffset: 4px
+      properties:
+        content: Underlined span
+    - id: span_style_uppercase
+      type: Span
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          textTransform: uppercase
+          letterSpacing: 2
+          fontSize: 12
+          fontWeight: bold
+          color: '#8c8c8c'
+      properties:
+        content: uppercase span
+    - id: span_style_mono
+      type: Span
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          fontFamily: monospace
+          background: '#f5f5f5'
+          padding: 2px 6px
+          borderRadius: 4
+          fontSize: 13
+          color: '#cf1322'
+      properties:
+        content: monospace code style
+    - id: span_style_gradient
+      type: Span
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          background: linear-gradient(90deg, #1677ff, #722ed1)
+          color: '#ffffff'
+          padding: 4px 12px
+          borderRadius: 6
+          fontWeight: bold
+      properties:
+        content: Gradient span

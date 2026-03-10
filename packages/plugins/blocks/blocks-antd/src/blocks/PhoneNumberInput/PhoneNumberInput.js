@@ -279,7 +279,7 @@ PhoneNumberInput.meta = {
   valueType: 'object',
   category: 'input',
   icons: [...Label.meta.icons],
-  cssKeys: ['element', 'select', 'options'],
+  cssKeys: ['element', 'label', 'extra', 'feedback', 'options', 'select'],
 };
 
 export default withTheme('Input', PhoneNumberInput);

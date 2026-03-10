@@ -13,40 +13,16 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
+    pageId: Tabs
+    pageTitle: Tabs
+    section: Container Blocks
+    filePath: blocks/container/Tabs.yaml
     block_type: Tabs
-    category: container
+    antd_component: Tabs
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/Tabs
     schema: ../plugins/blocks/blocks-antd/src/blocks/Tabs/schema.js
-    description_content: |
-      Tabs to easily switch between different views.
-      The key of each tab is the slot keys of the container and there is an `extra` content slot.
-      Use `tabPlacement` to position tabs (replaces `tabPosition` from v4).
-    init_state_values:
-      block.properties.extraAreaKey: extra
-      block.properties.tabs:
-        - key: tab1
-          title: Tab 1
-          icon: AiOutlineMenu
-        - key: tab2
-          title: Tab 2
-        - key: tab3
-          disabled: true
-          title: Tab 3
-    user_defined_slots: true
-    slots:
-      - tab1
-      - tab2
-      - tab3
-      - panel3
-      - extra
-    methods:
-      - name: setActiveKey
-        onClick:
-          - id: setActiveKey
-            type: CallMethod
-            params:
-              blockId: block_id
-              method: setActiveKey
-              args:
-                - activeKey: tab3
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/Tabs/gallery.yaml
+    description: >
+      Tab panels with card, editable, and positioned variants.

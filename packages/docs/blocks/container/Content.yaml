@@ -13,14 +13,16 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: Content
-    category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Content/schema.js
+    pageId: Content
+    pageTitle: Content
+    section: Container Blocks
     filePath: blocks/container/Content.yaml
-    description_content: |
-      The `Content` block provides a page container for a [content](https://4x.ant.design/components/layout/) area.
-
-    slots:
-      - content
+    block_type: Content
+    antd_component: Content
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/Content
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Content/schema.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/Content/gallery.yaml
+    description: >
+      Main content layout section.

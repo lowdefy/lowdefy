@@ -13,14 +13,16 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: DateRangeSelector
-    value_type: date[]
-    category: input
-    schema: ../plugins/blocks/blocks-antd/src/blocks/DateRangeSelector/schema.js
+    pageId: DateRangeSelector
+    pageTitle: DateRangeSelector
+    section: Input Blocks
     filePath: blocks/input/DateRangeSelector.yaml
-    description_content: |
-      The `DateRangeSelector` block allows the user to choose a start date and an end date for a date range. The selected range is saved as an array with two date elements, the start and end dates.
-
-      > Other date type blocks are `DateSelector`, `DateTimeSelector`, `MonthSelector` and `WeekSelector`.
+    block_type: DateRangeSelector
+    antd_component: DatePicker
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/DateRangeSelector
+    schema: ../plugins/blocks/blocks-antd/src/blocks/DateRangeSelector/schema.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/DateRangeSelector/gallery.yaml
+    description: >
+      Date range picker for selecting start and end dates.

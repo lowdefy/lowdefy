@@ -272,6 +272,128 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/select#design-token',
+        },
+        properties: {
+          clearBg: {
+            type: 'string',
+            default: '#ffffff',
+            description: 'Background color of the clear button.',
+          },
+          hoverBorderColor: {
+            type: 'string',
+            default: '#4096ff',
+            description: 'Border color when the selector is hovered.',
+          },
+          activeBorderColor: {
+            type: 'string',
+            default: '#1677ff',
+            description: 'Border color when the selector is focused/active.',
+          },
+          activeOutlineColor: {
+            type: 'string',
+            default: 'rgba(5, 145, 255, 0.1)',
+            description: 'Outline color when the selector is focused/active.',
+          },
+          selectorBg: {
+            type: 'string',
+            default: '#ffffff',
+            description: 'Background color of the selector.',
+          },
+          multipleItemBg: {
+            type: 'string',
+            default: 'rgba(0, 0, 0, 0.06)',
+            description: 'Background color for selected items in multiple mode.',
+          },
+          multipleItemBorderColor: {
+            type: 'string',
+            default: 'transparent',
+            description: 'Border color for selected items in multiple mode.',
+          },
+          multipleItemHeight: {
+            type: 'number',
+            default: 24,
+            description: 'Height of selected items in multiple mode.',
+          },
+          multipleItemHeightSM: {
+            type: 'number',
+            default: 16,
+            description: 'Height of selected items in small multiple mode.',
+          },
+          multipleItemHeightLG: {
+            type: 'number',
+            default: 32,
+            description: 'Height of selected items in large multiple mode.',
+          },
+          multipleSelectorBgDisabled: {
+            type: 'string',
+            default: 'rgba(0, 0, 0, 0.04)',
+            description: 'Background color of the selector when disabled in multiple mode.',
+          },
+          multipleItemColorDisabled: {
+            type: 'string',
+            default: 'rgba(0, 0, 0, 0.25)',
+            description: 'Text color of selected items when disabled in multiple mode.',
+          },
+          multipleItemBorderColorDisabled: {
+            type: 'string',
+            default: 'transparent',
+            description: 'Border color of selected items when disabled in multiple mode.',
+          },
+          optionSelectedBg: {
+            type: 'string',
+            default: '#e6f4ff',
+            description: 'Background color of the selected option in the dropdown.',
+          },
+          optionSelectedColor: {
+            type: 'string',
+            default: 'rgba(0, 0, 0, 0.88)',
+            description: 'Text color of the selected option in the dropdown.',
+          },
+          optionSelectedFontWeight: {
+            type: 'number',
+            default: 600,
+            description: 'Font weight of the selected option in the dropdown.',
+          },
+          optionActiveBg: {
+            type: 'string',
+            default: 'rgba(0, 0, 0, 0.04)',
+            description: 'Background color of the active/hovered option in the dropdown.',
+          },
+          optionFontSize: {
+            type: 'number',
+            default: 14,
+            description: 'Font size of options in the dropdown.',
+          },
+          optionHeight: {
+            type: 'number',
+            default: 32,
+            description: 'Height of each option in the dropdown.',
+          },
+          optionLineHeight: {
+            type: 'number',
+            description: 'Line height of options in the dropdown.',
+          },
+          optionPadding: {
+            type: 'string',
+            default: '5px 12px',
+            description: 'Padding inside each dropdown option.',
+          },
+          singleItemHeightLG: {
+            type: 'number',
+            default: 40,
+            description: 'Height of the selector in large single mode.',
+          },
+          zIndexPopup: {
+            type: 'number',
+            default: 1050,
+            description: 'Z-index of the dropdown popup.',
+          },
+          showArrowPaddingInlineEnd: {
+            type: 'number',
+            default: 18,
+            description: 'Padding at the inline end when the arrow is shown.',
+          },
         },
       },
     },

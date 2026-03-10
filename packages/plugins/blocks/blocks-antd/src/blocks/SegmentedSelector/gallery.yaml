@@ -1,0 +1,983 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic String Options
+  blocks:
+    - id: basic_strings
+      type: SegmentedSelector
+      properties:
+        title: View
+        options:
+          - Daily
+          - Weekly
+          - Monthly
+    - id: basic_numbers
+      type: SegmentedSelector
+      properties:
+        title: Rating
+        options:
+          - '1'
+          - '2'
+          - '3'
+          - '4'
+          - '5'
+    - id: basic_two
+      type: SegmentedSelector
+      properties:
+        title: Toggle
+        options:
+          - 'Yes'
+          - 'No'
+
+- title: Label-Value Options
+  blocks:
+    - id: label_value_basic
+      type: SegmentedSelector
+      properties:
+        title: Status Filter
+        options:
+          - label: All
+            value: all
+          - label: Active
+            value: active
+          - label: Inactive
+            value: inactive
+          - label: Archived
+            value: archived
+    - id: label_value_roles
+      type: SegmentedSelector
+      properties:
+        title: User Role
+        options:
+          - label: Admin
+            value: admin
+          - label: Editor
+            value: editor
+          - label: Viewer
+            value: viewer
+    - id: label_value_many
+      type: SegmentedSelector
+      properties:
+        title: Time Range
+        options:
+          - label: 1H
+            value: 1h
+          - label: 6H
+            value: 6h
+          - label: 1D
+            value: 1d
+          - label: 1W
+            value: 1w
+          - label: 1M
+            value: 1m
+          - label: 1Y
+            value: 1y
+
+- title: Sizes
+  blocks:
+    - id: size_small
+      type: SegmentedSelector
+      properties:
+        title: Small
+        size: small
+        options:
+          - S
+          - M
+          - L
+          - XL
+    - id: size_default
+      type: SegmentedSelector
+      properties:
+        title: Default
+        options:
+          - S
+          - M
+          - L
+          - XL
+    - id: size_large
+      type: SegmentedSelector
+      properties:
+        title: Large
+        size: large
+        options:
+          - S
+          - M
+          - L
+          - XL
+
+- title: Size Comparison with Label-Value
+  blocks:
+    - id: size_small_lv
+      type: SegmentedSelector
+      properties:
+        title: Small Priority
+        size: small
+        options:
+          - label: Low
+            value: low
+          - label: Medium
+            value: medium
+          - label: High
+            value: high
+          - label: Critical
+            value: critical
+    - id: size_default_lv
+      type: SegmentedSelector
+      properties:
+        title: Default Priority
+        options:
+          - label: Low
+            value: low
+          - label: Medium
+            value: medium
+          - label: High
+            value: high
+          - label: Critical
+            value: critical
+    - id: size_large_lv
+      type: SegmentedSelector
+      properties:
+        title: Large Priority
+        size: large
+        options:
+          - label: Low
+            value: low
+          - label: Medium
+            value: medium
+          - label: High
+            value: high
+          - label: Critical
+            value: critical
+
+- title: Shapes
+  blocks:
+    - id: shape_default
+      type: SegmentedSelector
+      properties:
+        title: Default Shape
+        shape: default
+        options:
+          - label: List
+            value: list
+          - label: Grid
+            value: grid
+          - label: Board
+            value: board
+    - id: shape_round
+      type: SegmentedSelector
+      properties:
+        title: Round Shape
+        shape: round
+        options:
+          - label: List
+            value: list
+          - label: Grid
+            value: grid
+          - label: Board
+            value: board
+
+- title: Round Shape Sizes
+  blocks:
+    - id: round_small
+      type: SegmentedSelector
+      properties:
+        title: Small Round
+        shape: round
+        size: small
+        options:
+          - On
+          - Off
+    - id: round_default
+      type: SegmentedSelector
+      properties:
+        title: Default Round
+        shape: round
+        options:
+          - On
+          - Off
+    - id: round_large
+      type: SegmentedSelector
+      properties:
+        title: Large Round
+        shape: round
+        size: large
+        options:
+          - On
+          - Off
+
+- title: Block Mode
+  blocks:
+    - id: block_segmented
+      type: SegmentedSelector
+      properties:
+        title: Full Width
+        block: true
+        options:
+          - label: List
+            value: list
+          - label: Grid
+            value: grid
+          - label: Board
+            value: board
+    - id: block_large
+      type: SegmentedSelector
+      properties:
+        title: Full Width Large
+        block: true
+        size: large
+        options:
+          - label: Overview
+            value: overview
+          - label: Analytics
+            value: analytics
+          - label: Reports
+            value: reports
+          - label: Settings
+            value: settings
+    - id: block_small
+      type: SegmentedSelector
+      properties:
+        title: Full Width Small
+        block: true
+        size: small
+        options:
+          - label: Day
+            value: day
+          - label: Week
+            value: week
+          - label: Month
+            value: month
+
+- title: Block Mode with Round Shape
+  blocks:
+    - id: block_round
+      type: SegmentedSelector
+      properties:
+        title: Full Width Round
+        block: true
+        shape: round
+        options:
+          - label: Newest
+            value: newest
+          - label: Popular
+            value: popular
+          - label: Trending
+            value: trending
+    - id: block_round_large
+      type: SegmentedSelector
+      properties:
+        title: Full Width Round Large
+        block: true
+        shape: round
+        size: large
+        options:
+          - label: All
+            value: all
+          - label: Images
+            value: images
+          - label: Videos
+            value: videos
+          - label: Documents
+            value: documents
+
+- title: With Icons
+  blocks:
+    - id: icon_view_mode
+      type: SegmentedSelector
+      properties:
+        title: View Mode
+        options:
+          - label: List
+            value: list
+            icon: AiOutlineUnorderedList
+          - label: Grid
+            value: grid
+            icon: AiOutlineAppstore
+          - label: Calendar
+            value: calendar
+            icon: AiOutlineCalendar
+    - id: icon_file_type
+      type: SegmentedSelector
+      properties:
+        title: File Type
+        options:
+          - label: Images
+            value: images
+            icon: AiOutlinePicture
+          - label: Videos
+            value: videos
+            icon: AiOutlinePlayCircle
+          - label: Audio
+            value: audio
+            icon: AiOutlineSound
+          - label: Docs
+            value: docs
+            icon: AiOutlineFile
+
+- title: Icons with Sizes
+  blocks:
+    - id: icon_small
+      type: SegmentedSelector
+      properties:
+        title: Small Icons
+        size: small
+        options:
+          - label: Map
+            value: map
+            icon: AiOutlineEnvironment
+          - label: Satellite
+            value: satellite
+            icon: AiOutlineGlobal
+          - label: Terrain
+            value: terrain
+            icon: AiOutlineBlock
+    - id: icon_large
+      type: SegmentedSelector
+      properties:
+        title: Large Icons
+        size: large
+        options:
+          - label: Map
+            value: map
+            icon: AiOutlineEnvironment
+          - label: Satellite
+            value: satellite
+            icon: AiOutlineGlobal
+          - label: Terrain
+            value: terrain
+            icon: AiOutlineBlock
+
+- title: Icons with Block Mode
+  blocks:
+    - id: icon_block
+      type: SegmentedSelector
+      properties:
+        title: Full Width with Icons
+        block: true
+        options:
+          - label: Home
+            value: home
+            icon: AiOutlineHome
+          - label: Search
+            value: search
+            icon: AiOutlineSearch
+          - label: Favorites
+            value: favorites
+            icon: AiOutlineHeart
+          - label: Profile
+            value: profile
+            icon: AiOutlineUser
+
+- title: Icons with Round Shape
+  blocks:
+    - id: icon_round
+      type: SegmentedSelector
+      properties:
+        title: Round with Icons
+        shape: round
+        options:
+          - label: Code
+            value: code
+            icon: AiOutlineCode
+          - label: Preview
+            value: preview
+            icon: AiOutlineEye
+          - label: Split
+            value: split
+            icon: AiOutlineColumnWidth
+
+- title: Vertical Layout
+  blocks:
+    - id: vertical_basic
+      type: SegmentedSelector
+      properties:
+        title: Vertical
+        vertical: true
+        options:
+          - label: Overview
+            value: overview
+          - label: Details
+            value: details
+          - label: History
+            value: history
+    - id: vertical_icons
+      type: SegmentedSelector
+      properties:
+        title: Vertical with Icons
+        vertical: true
+        options:
+          - label: Dashboard
+            value: dashboard
+            icon: AiOutlineDashboard
+          - label: Analytics
+            value: analytics
+            icon: AiOutlineBarChart
+          - label: Reports
+            value: reports
+            icon: AiOutlineFileText
+          - label: Settings
+            value: settings
+            icon: AiOutlineSetting
+
+- title: Vertical Sizes
+  blocks:
+    - id: vertical_small
+      type: SegmentedSelector
+      properties:
+        title: Small Vertical
+        vertical: true
+        size: small
+        options:
+          - Tab 1
+          - Tab 2
+          - Tab 3
+    - id: vertical_large
+      type: SegmentedSelector
+      properties:
+        title: Large Vertical
+        vertical: true
+        size: large
+        options:
+          - Tab 1
+          - Tab 2
+          - Tab 3
+
+- title: Disabled
+  blocks:
+    - id: disabled_all
+      type: SegmentedSelector
+      properties:
+        title: Fully Disabled
+        disabled: true
+        options:
+          - Option A
+          - Option B
+          - Option C
+    - id: disabled_single
+      type: SegmentedSelector
+      properties:
+        title: Single Disabled Option
+        options:
+          - label: Available
+            value: available
+          - label: Unavailable
+            value: unavailable
+            disabled: true
+          - label: In Stock
+            value: in_stock
+    - id: disabled_multiple
+      type: SegmentedSelector
+      properties:
+        title: Multiple Disabled Options
+        options:
+          - label: Free
+            value: free
+          - label: Basic
+            value: basic
+          - label: Pro (Coming Soon)
+            value: pro
+            disabled: true
+          - label: Enterprise (Coming Soon)
+            value: enterprise
+            disabled: true
+
+- title: Disabled with Icons
+  blocks:
+    - id: disabled_icons
+      type: SegmentedSelector
+      properties:
+        title: Disabled with Icons
+        disabled: true
+        options:
+          - label: Edit
+            value: edit
+            icon: AiOutlineEdit
+          - label: View
+            value: view
+            icon: AiOutlineEye
+          - label: Delete
+            value: delete
+            icon: AiOutlineDelete
+
+- title: Label Configuration
+  blocks:
+    - id: label_default
+      type: SegmentedSelector
+      properties:
+        title: Default Label
+        options:
+          - Alpha
+          - Beta
+          - Gamma
+    - id: label_colon_false
+      type: SegmentedSelector
+      properties:
+        title: No Colon
+        label:
+          colon: false
+        options:
+          - Alpha
+          - Beta
+          - Gamma
+    - id: label_extra
+      type: SegmentedSelector
+      properties:
+        title: With Extra Text
+        label:
+          extra: Select the deployment environment
+        options:
+          - label: Dev
+            value: dev
+          - label: Staging
+            value: staging
+          - label: Prod
+            value: prod
+
+- title: Label Inline
+  blocks:
+    - id: label_inline
+      type: SegmentedSelector
+      properties:
+        title: Inline Label
+        label:
+          inline: true
+          span: 6
+        options:
+          - label: Light
+            value: light
+          - label: Dark
+            value: dark
+          - label: Auto
+            value: auto
+    - id: label_inline_right
+      type: SegmentedSelector
+      properties:
+        title: Inline Right
+        label:
+          inline: true
+          span: 6
+          align: right
+        options:
+          - label: Light
+            value: light
+          - label: Dark
+            value: dark
+          - label: Auto
+            value: auto
+
+- title: No Label
+  blocks:
+    - id: no_label_segmented
+      type: SegmentedSelector
+      properties:
+        label:
+          disabled: true
+        options:
+          - label: Day
+            value: day
+          - label: Week
+            value: week
+          - label: Month
+            value: month
+          - label: Year
+            value: year
+    - id: no_label_icons
+      type: SegmentedSelector
+      properties:
+        label:
+          disabled: true
+        options:
+          - label: Table
+            value: table
+            icon: AiOutlineTable
+          - label: Chart
+            value: chart
+            icon: AiOutlinePieChart
+          - label: Map
+            value: map
+            icon: AiOutlineEnvironment
+
+- title: Style Overrides
+  blocks:
+    - id: style_background
+      type: SegmentedSelector
+      properties:
+        title: Custom Background
+        options:
+          - label: Tab A
+            value: a
+          - label: Tab B
+            value: b
+          - label: Tab C
+            value: c
+      style:
+        --element:
+          background: '#e6f7ff'
+          borderRadius: 12
+    - id: style_border
+      type: SegmentedSelector
+      properties:
+        title: Custom Border
+        options:
+          - label: Left
+            value: left
+          - label: Center
+            value: center
+          - label: Right
+            value: right
+      style:
+        --element:
+          border: '2px solid #91caff'
+          borderRadius: 8
+
+- title: Class Overrides
+  blocks:
+    - id: class_shadow
+      type: SegmentedSelector
+      class: shadow-md
+      properties:
+        title: With Shadow
+        options:
+          - label: Recent
+            value: recent
+          - label: Popular
+            value: popular
+          - label: Featured
+            value: featured
+    - id: class_rounded
+      type: SegmentedSelector
+      class: rounded-xl
+      properties:
+        title: Extra Rounded
+        options:
+          - label: Posts
+            value: posts
+          - label: Comments
+            value: comments
+          - label: Likes
+            value: likes
+
+- title: Theme Token Overrides - Track
+  blocks:
+    - id: theme_dark_track
+      type: SegmentedSelector
+      properties:
+        title: Dark Track
+        options:
+          - label: Overview
+            value: overview
+          - label: Details
+            value: details
+          - label: Logs
+            value: logs
+        theme:
+          trackBg: '#1f1f1f'
+          itemColor: '#ffffffa6'
+          itemSelectedBg: '#177ddc'
+          itemSelectedColor: '#ffffff'
+          itemHoverColor: '#ffffffd9'
+          itemHoverBg: '#ffffff1a'
+    - id: theme_light_track
+      type: SegmentedSelector
+      properties:
+        title: Light Blue Track
+        options:
+          - label: All
+            value: all
+          - label: Active
+            value: active
+          - label: Closed
+            value: closed
+        theme:
+          trackBg: '#e6f4ff'
+          itemSelectedBg: '#1677ff'
+          itemSelectedColor: '#ffffff'
+          trackPadding: 4
+
+- title: Theme Token Overrides - Colors
+  blocks:
+    - id: theme_green
+      type: SegmentedSelector
+      properties:
+        title: Green Theme
+        options:
+          - label: Approved
+            value: approved
+          - label: Pending
+            value: pending
+          - label: Rejected
+            value: rejected
+        theme:
+          trackBg: '#f6ffed'
+          itemSelectedBg: '#52c41a'
+          itemSelectedColor: '#ffffff'
+          itemHoverBg: '#b7eb8f80'
+    - id: theme_purple
+      type: SegmentedSelector
+      properties:
+        title: Purple Theme
+        options:
+          - label: Basic
+            value: basic
+          - label: Premium
+            value: premium
+          - label: Enterprise
+            value: enterprise
+        theme:
+          trackBg: '#f9f0ff'
+          itemSelectedBg: '#722ed1'
+          itemSelectedColor: '#ffffff'
+          itemHoverBg: '#d3adf780'
+    - id: theme_orange
+      type: SegmentedSelector
+      properties:
+        title: Orange Theme
+        options:
+          - label: Draft
+            value: draft
+          - label: Review
+            value: review
+          - label: Published
+            value: published
+        theme:
+          trackBg: '#fff7e6'
+          itemSelectedBg: '#fa8c16'
+          itemSelectedColor: '#ffffff'
+          itemHoverBg: '#ffd59180'
+
+- title: Theme Token Overrides - Sizes
+  blocks:
+    - id: theme_large_radius
+      type: SegmentedSelector
+      properties:
+        title: Large Border Radius
+        options:
+          - label: Left
+            value: left
+          - label: Center
+            value: center
+          - label: Right
+            value: right
+        theme:
+          borderRadius: 20
+          borderRadiusLG: 20
+          borderRadiusSM: 20
+    - id: theme_custom_height
+      type: SegmentedSelector
+      properties:
+        title: Custom Height
+        size: large
+        options:
+          - label: Compact
+            value: compact
+          - label: Normal
+            value: normal
+          - label: Spacious
+            value: spacious
+        theme:
+          controlHeight: 48
+          controlHeightLG: 56
+    - id: theme_custom_font
+      type: SegmentedSelector
+      properties:
+        title: Large Font
+        options:
+          - label: Small
+            value: small
+          - label: Medium
+            value: medium
+          - label: Large
+            value: large
+        theme:
+          fontSize: 16
+
+- title: Theme Token Overrides - Active State
+  blocks:
+    - id: theme_active_red
+      type: SegmentedSelector
+      properties:
+        title: Red Active State
+        options:
+          - label: Info
+            value: info
+          - label: Warning
+            value: warning
+          - label: Error
+            value: error
+        theme:
+          itemActiveBg: '#fff1f0'
+          itemHoverBg: '#fff1f0'
+          itemSelectedBg: '#ff4d4f'
+          itemSelectedColor: '#ffffff'
+          trackBg: '#fff7f7'
+    - id: theme_active_cyan
+      type: SegmentedSelector
+      properties:
+        title: Cyan Active State
+        options:
+          - label: Inbox
+            value: inbox
+          - label: Sent
+            value: sent
+          - label: Drafts
+            value: drafts
+        theme:
+          itemActiveBg: '#e6fffb'
+          itemHoverBg: '#e6fffb'
+          itemSelectedBg: '#13c2c2'
+          itemSelectedColor: '#ffffff'
+          trackBg: '#f0fffe'
+
+- title: Theme with Round Shape
+  blocks:
+    - id: theme_round_blue
+      type: SegmentedSelector
+      properties:
+        title: Round Blue Pill
+        shape: round
+        options:
+          - label: All
+            value: all
+          - label: Mine
+            value: mine
+          - label: Shared
+            value: shared
+        theme:
+          trackBg: '#e6f4ff'
+          itemSelectedBg: '#1677ff'
+          itemSelectedColor: '#ffffff'
+          borderRadius: 40
+          borderRadiusLG: 40
+          borderRadiusSM: 40
+    - id: theme_round_dark
+      type: SegmentedSelector
+      properties:
+        title: Round Dark Pill
+        shape: round
+        size: large
+        options:
+          - label: Light
+            value: light
+          - label: Dark
+            value: dark
+          - label: System
+            value: system
+        theme:
+          trackBg: '#262626'
+          itemColor: '#ffffffa6'
+          itemSelectedBg: '#434343'
+          itemSelectedColor: '#ffffff'
+          itemHoverColor: '#ffffffd9'
+          itemHoverBg: '#ffffff14'
+          borderRadius: 40
+          borderRadiusLG: 40
+
+- title: Theme with Block Mode
+  blocks:
+    - id: theme_block_gradient
+      type: SegmentedSelector
+      properties:
+        title: Full Width Themed
+        block: true
+        options:
+          - label: Dashboard
+            value: dashboard
+          - label: Projects
+            value: projects
+          - label: Tasks
+            value: tasks
+          - label: Calendar
+            value: calendar
+        theme:
+          trackBg: '#f0f5ff'
+          itemSelectedBg: '#2f54eb'
+          itemSelectedColor: '#ffffff'
+          itemHoverBg: '#adc6ff80'
+          trackPadding: 4
+
+- title: Theme with Vertical Layout
+  blocks:
+    - id: theme_vertical_teal
+      type: SegmentedSelector
+      properties:
+        title: Vertical Teal
+        vertical: true
+        options:
+          - label: Step 1
+            value: step1
+          - label: Step 2
+            value: step2
+          - label: Step 3
+            value: step3
+        theme:
+          trackBg: '#e6fffb'
+          itemSelectedBg: '#13c2c2'
+          itemSelectedColor: '#ffffff'
+          itemHoverBg: '#87e8de80'
+
+- title: Theme with Icons
+  blocks:
+    - id: theme_icons_gold
+      type: SegmentedSelector
+      properties:
+        title: Gold Icons
+        options:
+          - label: Photos
+            value: photos
+            icon: AiOutlineCamera
+          - label: Videos
+            value: videos
+            icon: AiOutlineVideoCamera
+          - label: Music
+            value: music
+            icon: AiOutlineCustomerService
+        theme:
+          trackBg: '#fffbe6'
+          itemSelectedBg: '#faad14'
+          itemSelectedColor: '#ffffff'
+          itemHoverBg: '#ffe58f80'
+
+- title: Combination - Block + Round + Large + Icons + Theme
+  blocks:
+    - id: combo_full
+      type: SegmentedSelector
+      properties:
+        title: Full Featured
+        block: true
+        shape: round
+        size: large
+        options:
+          - label: Home
+            value: home
+            icon: AiOutlineHome
+          - label: Explore
+            value: explore
+            icon: AiOutlineCompass
+          - label: Create
+            value: create
+            icon: AiOutlinePlus
+          - label: Messages
+            value: messages
+            icon: AiOutlineMail
+          - label: Profile
+            value: profile
+            icon: AiOutlineUser
+        theme:
+          trackBg: '#f5f5f5'
+          itemSelectedBg: '#1677ff'
+          itemSelectedColor: '#ffffff'
+          trackPadding: 4
+          borderRadius: 40
+          borderRadiusLG: 40
+          controlHeightLG: 52

@@ -1,0 +1,851 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic Week Picker
+  blocks:
+    - id: ws_basic_default
+      type: WeekSelector
+      properties:
+        title: Select a Week
+        label:
+          disabled: true
+    - id: ws_basic_with_label
+      type: WeekSelector
+      properties:
+        title: Select a Week
+
+- title: Sizes
+  blocks:
+    - id: ws_size_small
+      type: WeekSelector
+      properties:
+        title: Small
+        size: small
+        label:
+          disabled: true
+    - id: ws_size_default
+      type: WeekSelector
+      properties:
+        title: Default
+        label:
+          disabled: true
+    - id: ws_size_large
+      type: WeekSelector
+      properties:
+        title: Large
+        size: large
+        label:
+          disabled: true
+
+- title: Sizes with Labels
+  blocks:
+    - id: ws_size_label_small
+      type: WeekSelector
+      properties:
+        title: Small with Label
+        size: small
+    - id: ws_size_label_default
+      type: WeekSelector
+      properties:
+        title: Default with Label
+    - id: ws_size_label_large
+      type: WeekSelector
+      properties:
+        title: Large with Label
+        size: large
+
+- title: Variants
+  blocks:
+    - id: ws_variant_outlined
+      type: WeekSelector
+      properties:
+        title: Outlined (default)
+        variant: outlined
+        label:
+          disabled: true
+    - id: ws_variant_filled
+      type: WeekSelector
+      properties:
+        title: Filled
+        variant: filled
+        label:
+          disabled: true
+    - id: ws_variant_borderless
+      type: WeekSelector
+      properties:
+        title: Borderless
+        variant: borderless
+        label:
+          disabled: true
+
+- title: Variant + Size Matrix
+  blocks:
+    - id: ws_mx_outlined_label
+      type: Markdown
+      properties:
+        content: '**outlined**'
+    - id: ws_mx_outlined_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: ws_mx_outlined_sm
+          type: WeekSelector
+          properties:
+            title: Small
+            variant: outlined
+            size: small
+            label:
+              disabled: true
+        - id: ws_mx_outlined_md
+          type: WeekSelector
+          properties:
+            title: Default
+            variant: outlined
+            label:
+              disabled: true
+        - id: ws_mx_outlined_lg
+          type: WeekSelector
+          properties:
+            title: Large
+            variant: outlined
+            size: large
+            label:
+              disabled: true
+    - id: ws_mx_filled_label
+      type: Markdown
+      properties:
+        content: '**filled**'
+    - id: ws_mx_filled_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: ws_mx_filled_sm
+          type: WeekSelector
+          properties:
+            title: Small
+            variant: filled
+            size: small
+            label:
+              disabled: true
+        - id: ws_mx_filled_md
+          type: WeekSelector
+          properties:
+            title: Default
+            variant: filled
+            label:
+              disabled: true
+        - id: ws_mx_filled_lg
+          type: WeekSelector
+          properties:
+            title: Large
+            variant: filled
+            size: large
+            label:
+              disabled: true
+    - id: ws_mx_borderless_label
+      type: Markdown
+      properties:
+        content: '**borderless**'
+    - id: ws_mx_borderless_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: ws_mx_borderless_sm
+          type: WeekSelector
+          properties:
+            title: Small
+            variant: borderless
+            size: small
+            label:
+              disabled: true
+        - id: ws_mx_borderless_md
+          type: WeekSelector
+          properties:
+            title: Default
+            variant: borderless
+            label:
+              disabled: true
+        - id: ws_mx_borderless_lg
+          type: WeekSelector
+          properties:
+            title: Large
+            variant: borderless
+            size: large
+            label:
+              disabled: true
+
+- title: Format Variations
+  blocks:
+    - id: ws_fmt_default
+      type: WeekSelector
+      properties:
+        title: YYYY-wo (default)
+        format: YYYY-wo
+        label:
+          disabled: true
+    - id: ws_fmt_reversed
+      type: WeekSelector
+      properties:
+        title: wo-YYYY
+        format: wo-YYYY
+        label:
+          disabled: true
+    - id: ws_fmt_ww
+      type: WeekSelector
+      properties:
+        title: YYYY-ww
+        format: YYYY-ww
+        label:
+          disabled: true
+    - id: ws_fmt_week_only
+      type: WeekSelector
+      properties:
+        title: wo (week only)
+        format: wo
+        label:
+          disabled: true
+    - id: ws_fmt_week_prefix
+      type: WeekSelector
+      properties:
+        title: YYYY [Week] wo
+        format: YYYY [Week] wo
+        label:
+          disabled: true
+    - id: ws_fmt_w_prefix
+      type: WeekSelector
+      properties:
+        title: YYYY [W]ww
+        format: YYYY [W]ww
+        label:
+          disabled: true
+
+- title: Placeholder
+  blocks:
+    - id: ws_ph_default
+      type: WeekSelector
+      properties:
+        title: Default Placeholder
+        label:
+          disabled: true
+    - id: ws_ph_custom
+      type: WeekSelector
+      properties:
+        title: Custom Placeholder
+        placeholder: Pick a week...
+        label:
+          disabled: true
+    - id: ws_ph_descriptive
+      type: WeekSelector
+      properties:
+        title: Descriptive Placeholder
+        placeholder: Which week does the report cover?
+        label:
+          disabled: true
+
+- title: Allow Clear
+  blocks:
+    - id: ws_clear_enabled
+      type: WeekSelector
+      properties:
+        title: Allow Clear (default)
+        allowClear: true
+        label:
+          disabled: true
+    - id: ws_clear_disabled
+      type: WeekSelector
+      properties:
+        title: No Clear Button
+        allowClear: false
+        label:
+          disabled: true
+
+- title: Show Today Button
+  blocks:
+    - id: ws_today_enabled
+      type: WeekSelector
+      properties:
+        title: Show Today (default)
+        showToday: true
+        label:
+          disabled: true
+    - id: ws_today_disabled
+      type: WeekSelector
+      properties:
+        title: No Today Button
+        showToday: false
+        label:
+          disabled: true
+
+- title: Suffix Icon
+  blocks:
+    - id: ws_icon_default
+      type: WeekSelector
+      properties:
+        title: Default Calendar Icon
+        label:
+          disabled: true
+    - id: ws_icon_clock
+      type: WeekSelector
+      properties:
+        title: Clock Icon
+        suffixIcon: AiOutlineClockCircle
+        label:
+          disabled: true
+    - id: ws_icon_schedule
+      type: WeekSelector
+      properties:
+        title: Schedule Icon
+        suffixIcon: AiOutlineSchedule
+        label:
+          disabled: true
+    - id: ws_icon_custom_color
+      type: WeekSelector
+      properties:
+        title: Custom Color Icon
+        suffixIcon:
+          name: AiOutlineCalendar
+          color: '#1677ff'
+        label:
+          disabled: true
+    - id: ws_icon_heart
+      type: WeekSelector
+      properties:
+        title: Heart Icon
+        suffixIcon:
+          name: AiOutlineHeart
+          color: '#ff4d4f'
+        label:
+          disabled: true
+    - id: ws_icon_field_time
+      type: WeekSelector
+      properties:
+        title: Field Time Icon
+        suffixIcon:
+          name: AiOutlineFieldTime
+          color: '#52c41a'
+        label:
+          disabled: true
+
+- title: Disabled State
+  blocks:
+    - id: ws_dis_default
+      type: WeekSelector
+      properties:
+        title: Disabled
+        disabled: true
+        label:
+          disabled: true
+    - id: ws_dis_outlined
+      type: WeekSelector
+      properties:
+        title: Disabled Outlined
+        disabled: true
+        variant: outlined
+        label:
+          disabled: true
+    - id: ws_dis_filled
+      type: WeekSelector
+      properties:
+        title: Disabled Filled
+        disabled: true
+        variant: filled
+        label:
+          disabled: true
+    - id: ws_dis_borderless
+      type: WeekSelector
+      properties:
+        title: Disabled Borderless
+        disabled: true
+        variant: borderless
+        label:
+          disabled: true
+
+- title: Disabled Dates - Min/Max
+  blocks:
+    - id: ws_dd_min
+      type: WeekSelector
+      properties:
+        title: Min Date (2024-01-01)
+        disabledDates:
+          min: '2024-01-01'
+        label:
+          disabled: true
+    - id: ws_dd_max
+      type: WeekSelector
+      properties:
+        title: Max Date (2025-12-31)
+        disabledDates:
+          max: '2025-12-31'
+        label:
+          disabled: true
+    - id: ws_dd_range
+      type: WeekSelector
+      properties:
+        title: Min & Max (2026 only)
+        disabledDates:
+          min: '2026-01-01'
+          max: '2026-12-31'
+        label:
+          disabled: true
+
+- title: Disabled Dates - Specific Dates
+  blocks:
+    - id: ws_dd_specific
+      type: WeekSelector
+      properties:
+        title: Specific Dates Disabled
+        disabledDates:
+          dates:
+            - '2026-03-15'
+            - '2026-03-20'
+            - '2026-03-25'
+        label:
+          disabled: true
+
+- title: Disabled Dates - Date Ranges
+  blocks:
+    - id: ws_dd_date_ranges
+      type: WeekSelector
+      properties:
+        title: Date Ranges Disabled
+        disabledDates:
+          ranges:
+            - ['2026-03-10', '2026-03-14']
+            - ['2026-03-20', '2026-03-24']
+        label:
+          disabled: true
+
+- title: Label Options
+  blocks:
+    - id: ws_lbl_default
+      type: WeekSelector
+      properties:
+        title: Default Label
+    - id: ws_lbl_colon_off
+      type: WeekSelector
+      properties:
+        title: No Colon
+        label:
+          colon: false
+    - id: ws_lbl_right
+      type: WeekSelector
+      properties:
+        title: Align Right
+        label:
+          align: right
+    - id: ws_lbl_inline
+      type: WeekSelector
+      properties:
+        title: Inline Label
+        label:
+          inline: true
+          span: 8
+
+- title: Label with Extra Text
+  blocks:
+    - id: ws_lbl_extra
+      type: WeekSelector
+      properties:
+        title: Reporting Week
+        label:
+          extra: Select the week for the weekly report.
+        placeholder: Select reporting week
+    - id: ws_lbl_extra_html
+      type: WeekSelector
+      properties:
+        title: Sprint Week
+        label:
+          extra: 'Choose the <b>sprint week</b> for your team.'
+        placeholder: Select sprint week
+
+- title: Label Inline with Span
+  blocks:
+    - id: ws_lbl_inline_4
+      type: WeekSelector
+      properties:
+        title: Span 4
+        label:
+          inline: true
+          span: 4
+    - id: ws_lbl_inline_8
+      type: WeekSelector
+      properties:
+        title: Span 8
+        label:
+          inline: true
+          span: 8
+    - id: ws_lbl_inline_12
+      type: WeekSelector
+      properties:
+        title: Span 12
+        label:
+          inline: true
+          span: 12
+
+- title: Label Disabled (No Label)
+  blocks:
+    - id: ws_lbl_hidden
+      type: WeekSelector
+      properties:
+        title: Hidden Label
+        label:
+          disabled: true
+        placeholder: No label shown
+    - id: ws_lbl_hidden_filled
+      type: WeekSelector
+      properties:
+        title: Hidden Label Filled
+        label:
+          disabled: true
+        variant: filled
+        placeholder: No label, filled variant
+
+- title: Auto Focus
+  blocks:
+    - id: ws_af_off
+      type: WeekSelector
+      properties:
+        title: No Auto Focus (default)
+        autoFocus: false
+        label:
+          disabled: true
+    - id: ws_af_on
+      type: WeekSelector
+      properties:
+        title: Auto Focus Enabled
+        autoFocus: true
+        label:
+          disabled: true
+
+- title: HTML Title
+  blocks:
+    - id: ws_html_bold
+      type: WeekSelector
+      properties:
+        title: '<b>Bold</b> week selector'
+        label:
+          disabled: true
+    - id: ws_html_color
+      type: WeekSelector
+      properties:
+        title: '<span style="color: #1677ff">Blue</span> week selector'
+        label:
+          disabled: true
+    - id: ws_html_italic
+      type: WeekSelector
+      properties:
+        title: '<i>Italic</i> week selector'
+        label:
+          disabled: true
+
+- title: Custom Style
+  blocks:
+    - id: ws_style_width
+      type: WeekSelector
+      style:
+        width: 300
+      properties:
+        title: Fixed Width (300px)
+        label:
+          disabled: true
+    - id: ws_style_element_bg
+      type: WeekSelector
+      style:
+        --element:
+          background: '#f0f5ff'
+      properties:
+        title: Custom Background
+        label:
+          disabled: true
+    - id: ws_style_label
+      type: WeekSelector
+      style:
+        --label:
+          color: '#531dab'
+          fontWeight: bold
+      properties:
+        title: Styled Label
+
+- title: Custom CSS Class
+  blocks:
+    - id: ws_class_rounded
+      type: WeekSelector
+      class: rounded-lg shadow-sm
+      properties:
+        title: Rounded with Shadow
+        label:
+          disabled: true
+    - id: ws_class_border
+      type: WeekSelector
+      class: border-2 border-blue-200
+      properties:
+        title: Blue Border
+        label:
+          disabled: true
+    - id: ws_class_shadow_lg
+      type: WeekSelector
+      class: shadow-lg rounded-xl
+      properties:
+        title: Large Shadow
+        label:
+          disabled: true
+
+- title: Theme Token Overrides
+  blocks:
+    - id: ws_theme_primary_color
+      type: WeekSelector
+      properties:
+        title: Custom Primary Color
+        label:
+          disabled: true
+        theme:
+          colorPrimary: '#722ed1'
+    - id: ws_theme_large_radius
+      type: WeekSelector
+      properties:
+        title: Large Border Radius
+        label:
+          disabled: true
+        theme:
+          borderRadius: 16
+    - id: ws_theme_custom_bg
+      type: WeekSelector
+      properties:
+        title: Custom Background
+        variant: filled
+        label:
+          disabled: true
+        theme:
+          colorBgContainer: '#f9f0ff'
+    - id: ws_theme_custom_font
+      type: WeekSelector
+      properties:
+        title: Large Font
+        label:
+          disabled: true
+        theme:
+          fontSize: 18
+    - id: ws_theme_thick_border
+      type: WeekSelector
+      properties:
+        title: Thick Border
+        label:
+          disabled: true
+        theme:
+          lineWidth: 2
+          colorBorder: '#d3adf7'
+
+- title: Theme Token - Sizes
+  blocks:
+    - id: ws_theme_tall
+      type: WeekSelector
+      properties:
+        title: Tall Input
+        label:
+          disabled: true
+        theme:
+          controlHeight: 48
+          fontSize: 18
+          borderRadius: 12
+    - id: ws_theme_compact
+      type: WeekSelector
+      properties:
+        title: Compact Input
+        size: small
+        label:
+          disabled: true
+        theme:
+          controlHeightSM: 20
+          fontSizeSM: 12
+          borderRadiusSM: 2
+    - id: ws_theme_large_override
+      type: WeekSelector
+      properties:
+        title: Large Override
+        size: large
+        label:
+          disabled: true
+        theme:
+          controlHeightLG: 52
+          fontSizeLG: 20
+          borderRadiusLG: 16
+
+- title: Theme Token - Colors
+  blocks:
+    - id: ws_theme_success_color
+      type: WeekSelector
+      properties:
+        title: Green Theme
+        label:
+          disabled: true
+        theme:
+          colorPrimary: '#52c41a'
+    - id: ws_theme_warning_color
+      type: WeekSelector
+      properties:
+        title: Orange Theme
+        label:
+          disabled: true
+        theme:
+          colorPrimary: '#fa8c16'
+    - id: ws_theme_danger_color
+      type: WeekSelector
+      properties:
+        title: Red Theme
+        label:
+          disabled: true
+        theme:
+          colorPrimary: '#ff4d4f'
+    - id: ws_theme_brand_color
+      type: WeekSelector
+      properties:
+        title: Brand Purple
+        label:
+          disabled: true
+        theme:
+          colorPrimary: '#722ed1'
+          colorBorder: '#d3adf7'
+          colorBgContainer: '#faf0ff'
+
+- title: Theme Token - Padding
+  blocks:
+    - id: ws_theme_padding_wide
+      type: WeekSelector
+      properties:
+        title: Wide Padding
+        label:
+          disabled: true
+        theme:
+          paddingInline: 24
+          paddingBlock: 8
+    - id: ws_theme_padding_narrow
+      type: WeekSelector
+      properties:
+        title: Narrow Padding
+        label:
+          disabled: true
+        theme:
+          paddingInline: 4
+          paddingBlock: 2
+    - id: ws_theme_padding_large
+      type: WeekSelector
+      properties:
+        title: Large Wide Padding
+        size: large
+        label:
+          disabled: true
+        theme:
+          paddingInlineLG: 24
+          paddingBlockLG: 10
+
+- title: Theme Token - Popup
+  blocks:
+    - id: ws_theme_popup_radius
+      type: WeekSelector
+      properties:
+        title: Rounded Popup
+        label:
+          disabled: true
+        theme:
+          borderRadiusLG: 16
+          cellHoverBg: 'rgba(114, 46, 209, 0.1)'
+    - id: ws_theme_popup_highlight
+      type: WeekSelector
+      properties:
+        title: Custom Cell Highlight
+        label:
+          disabled: true
+        theme:
+          cellActiveWithRangeBg: '#ffe7ba'
+          activeBorderColor: '#fa8c16'
+
+- title: Combined Features
+  blocks:
+    - id: ws_combined_full
+      type: WeekSelector
+      properties:
+        title: Sprint Planning Week
+        placeholder: Select sprint week
+        format: YYYY [Week] wo
+        size: large
+        suffixIcon: AiOutlineSchedule
+        showToday: true
+        allowClear: true
+        label:
+          extra: Choose the week for sprint planning.
+          colon: false
+    - id: ws_combined_minimal
+      type: WeekSelector
+      properties:
+        title: Week
+        variant: borderless
+        size: small
+        allowClear: false
+        showToday: false
+        format: YYYY-ww
+        placeholder: wk
+        label:
+          disabled: true
+    - id: ws_combined_restricted
+      type: WeekSelector
+      properties:
+        title: Fiscal Week
+        placeholder: Select fiscal week
+        format: YYYY [W]ww
+        suffixIcon:
+          name: AiOutlineCalendar
+          color: '#1677ff'
+        disabledDates:
+          min: '2026-01-01'
+          max: '2026-12-31'
+        label:
+          extra: Only weeks in fiscal year 2026 are available.
+    - id: ws_combined_themed
+      type: WeekSelector
+      properties:
+        title: Themed Picker
+        variant: filled
+        size: large
+        format: YYYY [Week] wo
+        placeholder: Choose a week...
+        suffixIcon:
+          name: AiOutlineHeart
+          color: '#eb2f96'
+        label:
+          disabled: true
+        theme:
+          colorPrimary: '#eb2f96'
+          borderRadius: 20
+          controlHeightLG: 48
+          fontSize: 16
+    - id: ws_combined_inline_labeled
+      type: WeekSelector
+      properties:
+        title: Report Week
+        placeholder: Select week
+        format: YYYY-wo
+        size: large
+        suffixIcon:
+          name: AiOutlineSchedule
+          color: '#722ed1'
+        label:
+          inline: true
+          span: 6
+          extra: Required for weekly report submission.
+        theme:
+          colorPrimary: '#722ed1'
+          borderRadius: 10

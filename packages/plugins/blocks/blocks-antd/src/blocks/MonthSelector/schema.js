@@ -183,6 +183,163 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/date-picker#design-token',
+        },
+        properties: {
+          activeBorderColor: {
+            type: 'string',
+            description: 'Border color when the picker is active/focused.',
+          },
+          activeShadow: {
+            type: 'string',
+            description: 'Shadow effect when the picker is active/focused.',
+          },
+          hoverBorderColor: {
+            type: 'string',
+            description: 'Border color when hovering over the picker.',
+          },
+          cellHeight: {
+            type: 'number',
+            default: 24,
+            description: 'Height of a calendar cell.',
+          },
+          cellWidth: {
+            type: 'number',
+            default: 36,
+            description: 'Width of a calendar cell.',
+          },
+          cellHoverBg: {
+            type: 'string',
+            default: 'rgba(0, 0, 0, 0.04)',
+            description: 'Background color of a calendar cell on hover.',
+          },
+          cellActiveWithRangeBg: {
+            type: 'string',
+            default: '#e6f4ff',
+            description: 'Background color of active cell within a range selection.',
+          },
+          cellHoverWithRangeBg: {
+            type: 'string',
+            description: 'Background color of cells within range on hover.',
+          },
+          cellBgDisabled: {
+            type: 'string',
+            description: 'Background color of disabled cells.',
+          },
+          cellRangeBorderColor: {
+            type: 'string',
+            description: 'Border color of range selection cells.',
+          },
+          addonBg: {
+            type: 'string',
+            default: 'rgba(0, 0, 0, 0.02)',
+            description: 'Background color of the footer addon area.',
+          },
+          zIndexPopup: {
+            type: 'number',
+            default: 1050,
+            description: 'Z-index of the picker popup layer.',
+          },
+          paddingBlock: {
+            type: 'number',
+            default: 4,
+            description: 'Vertical padding for the default size picker.',
+          },
+          paddingBlockSM: {
+            type: 'number',
+            default: 0,
+            description: 'Vertical padding for the small size picker.',
+          },
+          paddingBlockLG: {
+            type: 'number',
+            default: 7,
+            description: 'Vertical padding for the large size picker.',
+          },
+          paddingInline: {
+            type: 'number',
+            default: 11,
+            description: 'Horizontal padding for the default size picker.',
+          },
+          paddingInlineSM: {
+            type: 'number',
+            default: 7,
+            description: 'Horizontal padding for the small size picker.',
+          },
+          paddingInlineLG: {
+            type: 'number',
+            default: 11,
+            description: 'Horizontal padding for the large size picker.',
+          },
+          borderRadius: {
+            type: 'number',
+            default: 6,
+            description: 'Border radius of the picker input.',
+          },
+          borderRadiusSM: {
+            type: 'number',
+            default: 4,
+            description: 'Border radius for the small picker.',
+          },
+          borderRadiusLG: {
+            type: 'number',
+            default: 8,
+            description: 'Border radius for the large picker and popup panel.',
+          },
+          controlHeight: {
+            type: 'number',
+            default: 32,
+            description: 'Height of the picker input.',
+          },
+          controlHeightSM: {
+            type: 'number',
+            default: 24,
+            description: 'Height of the small picker input.',
+          },
+          controlHeightLG: {
+            type: 'number',
+            default: 40,
+            description: 'Height of the large picker input.',
+          },
+          fontSize: {
+            type: 'number',
+            default: 14,
+            description: 'Font size of the picker input.',
+          },
+          fontSizeSM: {
+            type: 'number',
+            default: 14,
+            description: 'Font size for the small picker.',
+          },
+          fontSizeLG: {
+            type: 'number',
+            default: 16,
+            description: 'Font size for the large picker.',
+          },
+          lineWidth: {
+            type: 'number',
+            default: 1,
+            description: 'Border width of the picker input.',
+          },
+          colorPrimary: {
+            type: 'string',
+            description: 'Primary color used for selected month and active states.',
+          },
+          colorBgContainer: {
+            type: 'string',
+            description: 'Background color of the picker input.',
+          },
+          colorText: {
+            type: 'string',
+            description: 'Text color of the picker input and calendar cells.',
+          },
+          colorBorder: {
+            type: 'string',
+            description: 'Border color of the picker input.',
+          },
+          colorTextPlaceholder: {
+            type: 'string',
+            description: 'Color of the placeholder text.',
+          },
         },
       },
     },

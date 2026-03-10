@@ -1,0 +1,1168 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic
+  blocks:
+    - id: basic_selector
+      type: Selector
+      properties:
+        title: Favorite Fruit
+        options:
+          - label: Apple
+            value: apple
+          - label: Banana
+            value: banana
+          - label: Cherry
+            value: cherry
+          - label: Dragonfruit
+            value: dragonfruit
+          - label: Elderberry
+            value: elderberry
+    - id: basic_placeholder
+      type: Selector
+      properties:
+        title: Country
+        placeholder: Choose a country...
+        options:
+          - label: United States
+            value: us
+          - label: United Kingdom
+            value: uk
+          - label: Canada
+            value: ca
+          - label: Australia
+            value: au
+          - label: Germany
+            value: de
+- title: String Options
+  blocks:
+    - id: string_options
+      type: Selector
+      properties:
+        title: Simple Strings
+        placeholder: Pick a color...
+        options:
+          - Red
+          - Orange
+          - Yellow
+          - Green
+          - Blue
+          - Indigo
+          - Violet
+    - id: string_options_no_clear
+      type: Selector
+      properties:
+        title: Strings (No Clear)
+        allowClear: false
+        options:
+          - Monday
+          - Tuesday
+          - Wednesday
+          - Thursday
+          - Friday
+- title: Number Options
+  blocks:
+    - id: number_options
+      type: Selector
+      properties:
+        title: Select a Number
+        placeholder: Pick a number...
+        options:
+          - 10
+          - 20
+          - 30
+          - 40
+          - 50
+    - id: number_options_mixed
+      type: Selector
+      properties:
+        title: Quantities
+        placeholder: Choose quantity...
+        options:
+          - label: One item
+            value: 1
+          - label: Five items
+            value: 5
+          - label: Ten items
+            value: 10
+          - label: Twenty-five items
+            value: 25
+          - label: One hundred items
+            value: 100
+- title: Object Options with Label and Value
+  blocks:
+    - id: object_options
+      type: Selector
+      properties:
+        title: Programming Language
+        placeholder: Select a language...
+        options:
+          - label: JavaScript
+            value: js
+          - label: Python
+            value: py
+          - label: TypeScript
+            value: ts
+          - label: Ruby
+            value: rb
+          - label: Go
+            value: go
+          - label: Rust
+            value: rust
+          - label: Java
+            value: java
+          - label: C++
+            value: cpp
+    - id: object_value_types
+      type: Selector
+      properties:
+        title: Complex Values
+        placeholder: Select an option...
+        options:
+          - label: String value
+            value: hello
+          - label: Number value
+            value: 42
+          - label: Boolean value
+            value: true
+- title: HTML Labels
+  blocks:
+    - id: html_labels
+      type: Selector
+      properties:
+        title: Styled Labels
+        placeholder: Select a priority...
+        options:
+          - label: '<span style="color: #f5222d; font-weight: bold;">Critical</span>'
+            value: critical
+          - label: '<span style="color: #fa8c16; font-weight: bold;">High</span>'
+            value: high
+          - label: '<span style="color: #fadb14; font-weight: bold;">Medium</span>'
+            value: medium
+          - label: '<span style="color: #52c41a; font-weight: bold;">Low</span>'
+            value: low
+          - label: '<span style="color: #8c8c8c;">None</span>'
+            value: none
+    - id: html_labels_rich
+      type: Selector
+      properties:
+        title: Rich Labels
+        placeholder: Choose a plan...
+        options:
+          - label: '<b>Free</b> - <small style="color: #8c8c8c;">$0/month</small>'
+            value: free
+          - label: '<b>Starter</b> - <small style="color: #1677ff;">$9/month</small>'
+            value: starter
+          - label: '<b>Pro</b> - <small style="color: #722ed1;">$29/month</small>'
+            value: pro
+          - label: '<b>Enterprise</b> - <small style="color: #fa8c16;">Contact us</small>'
+            value: enterprise
+- title: Styled Options
+  blocks:
+    - id: styled_options
+      type: Selector
+      properties:
+        title: Color Swatches
+        placeholder: Pick a theme color...
+        options:
+          - label: Ocean Blue
+            value: ocean
+            style:
+              color: '#1677ff'
+              fontWeight: bold
+          - label: Forest Green
+            value: forest
+            style:
+              color: '#52c41a'
+              fontWeight: bold
+          - label: Sunset Orange
+            value: sunset
+            style:
+              color: '#fa8c16'
+              fontWeight: bold
+          - label: Berry Purple
+            value: berry
+            style:
+              color: '#722ed1'
+              fontWeight: bold
+          - label: Coral Red
+            value: coral
+            style:
+              color: '#f5222d'
+              fontWeight: bold
+    - id: styled_options_bg
+      type: Selector
+      properties:
+        title: Styled Backgrounds
+        placeholder: Select a status...
+        options:
+          - label: Active
+            value: active
+            style:
+              backgroundColor: '#f6ffed'
+              borderRadius: 4
+              padding: 2px 8px
+          - label: Pending
+            value: pending
+            style:
+              backgroundColor: '#fffbe6'
+              borderRadius: 4
+              padding: 2px 8px
+          - label: Inactive
+            value: inactive
+            style:
+              backgroundColor: '#fff2f0'
+              borderRadius: 4
+              padding: 2px 8px
+- title: Filter Strings
+  blocks:
+    - id: filter_string
+      type: Selector
+      properties:
+        title: Country (Search by Name or Code)
+        showSearch: true
+        placeholder: Type name or country code...
+        options:
+          - label: United States
+            value: us
+            filterString: United States US USA America
+          - label: United Kingdom
+            value: uk
+            filterString: United Kingdom UK GB Britain England
+          - label: Canada
+            value: ca
+            filterString: Canada CA
+          - label: Australia
+            value: au
+            filterString: Australia AU Aussie
+          - label: Germany
+            value: de
+            filterString: Germany DE Deutschland
+          - label: France
+            value: fr
+            filterString: France FR
+          - label: Japan
+            value: jp
+            filterString: Japan JP Nippon
+          - label: Brazil
+            value: br
+            filterString: Brazil BR Brasil
+    - id: filter_string_html
+      type: Selector
+      properties:
+        title: Employee (Search by Name or Department)
+        showSearch: true
+        placeholder: Search employees...
+        options:
+          - label: <b>Alice Johnson</b> - <small>Engineering</small>
+            value: alice
+            filterString: Alice Johnson Engineering Frontend
+          - label: <b>Bob Smith</b> - <small>Design</small>
+            value: bob
+            filterString: Bob Smith Design UI UX
+          - label: <b>Carol Williams</b> - <small>Marketing</small>
+            value: carol
+            filterString: Carol Williams Marketing Content
+          - label: <b>Dave Brown</b> - <small>Sales</small>
+            value: dave
+            filterString: Dave Brown Sales Account
+- title: Disabled Options
+  blocks:
+    - id: disabled_options
+      type: Selector
+      properties:
+        title: Product Availability
+        placeholder: Select a product...
+        options:
+          - label: Widget A - In Stock
+            value: widget_a
+          - label: Widget B - Sold Out
+            value: widget_b
+            disabled: true
+          - label: Widget C - In Stock
+            value: widget_c
+          - label: Widget D - Coming Soon
+            value: widget_d
+            disabled: true
+          - label: Widget E - In Stock
+            value: widget_e
+          - label: Widget F - Discontinued
+            value: widget_f
+            disabled: true
+    - id: disabled_options_styled
+      type: Selector
+      properties:
+        title: Subscription Tiers
+        placeholder: Choose your plan...
+        options:
+          - label: '<span style="color: #52c41a;">Basic - Available</span>'
+            value: basic
+          - label: '<span style="color: #52c41a;">Standard - Available</span>'
+            value: standard
+          - label: '<span style="color: #faad14;">Premium - Waitlist</span>'
+            value: premium
+            disabled: true
+          - label: '<span style="color: #f5222d;">Enterprise - Invite Only</span>'
+            value: enterprise
+            disabled: true
+- title: Sizes
+  blocks:
+    - id: size_small
+      type: Selector
+      properties:
+        title: Small
+        size: small
+        placeholder: Small selector...
+        options:
+          - Apple
+          - Banana
+          - Cherry
+          - Date
+          - Elderberry
+    - id: size_default
+      type: Selector
+      properties:
+        title: Default
+        placeholder: Default selector...
+        options:
+          - Apple
+          - Banana
+          - Cherry
+          - Date
+          - Elderberry
+    - id: size_large
+      type: Selector
+      properties:
+        title: Large
+        size: large
+        placeholder: Large selector...
+        options:
+          - Apple
+          - Banana
+          - Cherry
+          - Date
+          - Elderberry
+- title: Search
+  blocks:
+    - id: search_enabled
+      type: Selector
+      properties:
+        title: Searchable (Default)
+        showSearch: true
+        placeholder: Type to search...
+        options:
+          - label: JavaScript
+            value: js
+          - label: Python
+            value: py
+          - label: TypeScript
+            value: ts
+          - label: Ruby
+            value: rb
+          - label: Go
+            value: go
+          - label: Rust
+            value: rust
+          - label: Java
+            value: java
+          - label: C#
+            value: csharp
+          - label: PHP
+            value: php
+          - label: Swift
+            value: swift
+          - label: Kotlin
+            value: kotlin
+          - label: Scala
+            value: scala
+    - id: search_disabled
+      type: Selector
+      properties:
+        title: Non-Searchable
+        showSearch: false
+        placeholder: Select without search...
+        options:
+          - label: Option A
+            value: a
+          - label: Option B
+            value: b
+          - label: Option C
+            value: c
+- title: Allow Clear
+  blocks:
+    - id: allow_clear_true
+      type: Selector
+      properties:
+        title: Clearable (Default)
+        allowClear: true
+        placeholder: Select and then clear...
+        options:
+          - label: Red
+            value: red
+          - label: Green
+            value: green
+          - label: Blue
+            value: blue
+    - id: allow_clear_false
+      type: Selector
+      properties:
+        title: Not Clearable
+        allowClear: false
+        placeholder: Cannot be cleared once set...
+        options:
+          - label: Red
+            value: red
+          - label: Green
+            value: green
+          - label: Blue
+            value: blue
+- title: Bordered / Borderless
+  blocks:
+    - id: bordered_true
+      type: Selector
+      properties:
+        title: Bordered (Default)
+        bordered: true
+        options:
+          - label: Option A
+            value: a
+          - label: Option B
+            value: b
+          - label: Option C
+            value: c
+    - id: bordered_false
+      type: Selector
+      properties:
+        title: Borderless
+        bordered: false
+        options:
+          - label: Option A
+            value: a
+          - label: Option B
+            value: b
+          - label: Option C
+            value: c
+- title: Show / Hide Arrow
+  blocks:
+    - id: arrow_visible
+      type: Selector
+      properties:
+        title: Arrow Visible (Default)
+        showArrow: true
+        options:
+          - label: Alpha
+            value: alpha
+          - label: Beta
+            value: beta
+          - label: Gamma
+            value: gamma
+    - id: arrow_hidden
+      type: Selector
+      properties:
+        title: Arrow Hidden
+        showArrow: false
+        options:
+          - label: Alpha
+            value: alpha
+          - label: Beta
+            value: beta
+          - label: Gamma
+            value: gamma
+- title: Custom Icons
+  blocks:
+    - id: custom_suffix_icon
+      type: Selector
+      properties:
+        title: Custom Suffix Icon
+        suffixIcon: AiOutlineSearch
+        placeholder: Search items...
+        options:
+          - label: Database
+            value: database
+          - label: Server
+            value: server
+          - label: Cloud
+            value: cloud
+    - id: custom_suffix_icon_object
+      type: Selector
+      properties:
+        title: Styled Suffix Icon
+        suffixIcon:
+          name: AiOutlineFilter
+          color: '#722ed1'
+        placeholder: Filter options...
+        options:
+          - label: All Items
+            value: all
+          - label: Active Only
+            value: active
+          - label: Archived
+            value: archived
+    - id: custom_clear_icon
+      type: Selector
+      properties:
+        title: Custom Clear Icon
+        clearIcon: AiOutlineDelete
+        placeholder: Select to see custom clear icon...
+        options:
+          - label: Item One
+            value: one
+          - label: Item Two
+            value: two
+          - label: Item Three
+            value: three
+    - id: custom_clear_icon_object
+      type: Selector
+      properties:
+        title: Styled Clear Icon
+        clearIcon:
+          name: AiOutlineCloseCircle
+          color: '#f5222d'
+        placeholder: Select then hover to clear...
+        options:
+          - label: First
+            value: first
+          - label: Second
+            value: second
+          - label: Third
+            value: third
+- title: Placeholders
+  blocks:
+    - id: placeholder_default
+      type: Selector
+      properties:
+        title: Default Placeholder
+        options:
+          - Apple
+          - Banana
+          - Cherry
+    - id: placeholder_custom
+      type: Selector
+      properties:
+        title: Custom Placeholder
+        placeholder: Please choose a fruit...
+        options:
+          - Apple
+          - Banana
+          - Cherry
+    - id: loading_placeholder
+      type: Selector
+      properties:
+        title: Loading Placeholder
+        loadingPlaceholder: Fetching results...
+        placeholder: Search with onSearch event...
+        showSearch: true
+        options:
+          - label: Result A
+            value: a
+          - label: Result B
+            value: b
+    - id: not_found_content
+      type: Selector
+      properties:
+        title: Custom Not Found
+        notFoundContent: No matching items found
+        showSearch: true
+        placeholder: Type something that does not match...
+        options:
+          - label: Alpha
+            value: alpha
+          - label: Beta
+            value: beta
+- title: Disabled
+  blocks:
+    - id: disabled_selector
+      type: Selector
+      properties:
+        title: Fully Disabled
+        disabled: true
+        placeholder: This selector is disabled
+        options:
+          - label: Option A
+            value: a
+          - label: Option B
+            value: b
+          - label: Option C
+            value: c
+    - id: disabled_with_value
+      type: Selector
+      properties:
+        title: Disabled with Value
+        disabled: true
+        options:
+          - label: Locked Selection
+            value: locked
+          - label: Other Option
+            value: other
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              disabled_with_value: locked
+- title: Label Configuration
+  blocks:
+    - id: label_default
+      type: Selector
+      properties:
+        title: Default Label
+        options:
+          - Apple
+          - Banana
+          - Cherry
+    - id: label_no_colon
+      type: Selector
+      properties:
+        title: No Colon
+        label:
+          colon: false
+        options:
+          - Apple
+          - Banana
+          - Cherry
+    - id: label_inline
+      type: Selector
+      properties:
+        title: Inline Label
+        label:
+          inline: true
+          span: 8
+        options:
+          - Apple
+          - Banana
+          - Cherry
+    - id: label_inline_right
+      type: Selector
+      properties:
+        title: Inline Right
+        label:
+          inline: true
+          span: 8
+          align: right
+        options:
+          - Apple
+          - Banana
+          - Cherry
+    - id: label_extra
+      type: Selector
+      properties:
+        title: With Extra Text
+        label:
+          extra: Select your preferred fruit from the list.
+        options:
+          - Apple
+          - Banana
+          - Cherry
+    - id: label_extra_html
+      type: Selector
+      properties:
+        title: HTML Extra
+        label:
+          extra: Visit <a href="https://lowdefy.com" target="_blank">Lowdefy</a> for more info.
+        options:
+          - Apple
+          - Banana
+          - Cherry
+- title: No Label
+  blocks:
+    - id: no_label_selector
+      type: Selector
+      properties:
+        label:
+          disabled: true
+        placeholder: Select a color...
+        options:
+          - label: Red
+            value: red
+          - label: Orange
+            value: orange
+          - label: Yellow
+            value: yellow
+          - label: Green
+            value: green
+          - label: Blue
+            value: blue
+    - id: no_label_large
+      type: Selector
+      properties:
+        label:
+          disabled: true
+        size: large
+        placeholder: Large without label...
+        options:
+          - label: Alpha
+            value: alpha
+          - label: Beta
+            value: beta
+          - label: Gamma
+            value: gamma
+- title: CSS Keys
+  blocks:
+    - id: css_element
+      type: Selector
+      properties:
+        title: Styled Element
+        placeholder: Custom styled selector...
+        options:
+          - label: Apple
+            value: apple
+          - label: Banana
+            value: banana
+          - label: Cherry
+            value: cherry
+      style:
+        --element:
+          backgroundColor: '#f0f5ff'
+          borderColor: '#4096ff'
+          borderRadius: 8
+    - id: css_label
+      type: Selector
+      properties:
+        title: Styled Label
+        options:
+          - label: Alpha
+            value: alpha
+          - label: Beta
+            value: beta
+      style:
+        --label:
+          color: '#722ed1'
+          fontWeight: bold
+          fontSize: 16
+    - id: css_extra
+      type: Selector
+      properties:
+        title: Styled Extra
+        label:
+          extra: This extra text has custom styling.
+        options:
+          - Red
+          - Green
+          - Blue
+      style:
+        --extra:
+          color: '#8c8c8c'
+          fontStyle: italic
+    - id: css_options
+      type: Selector
+      properties:
+        title: Styled Options
+        placeholder: Options have custom padding...
+        options:
+          - label: Styled Option A
+            value: a
+          - label: Styled Option B
+            value: b
+          - label: Styled Option C
+            value: c
+      style:
+        --options:
+          padding: 8px 16px
+          fontSize: 15
+- title: Class Names
+  blocks:
+    - id: class_element
+      type: Selector
+      properties:
+        title: Tailwind Classes
+        placeholder: Select with classes...
+        options:
+          - label: One
+            value: 1
+          - label: Two
+            value: 2
+          - label: Three
+            value: 3
+      class:
+        element: rounded-lg shadow-sm
+    - id: class_label
+      type: Selector
+      properties:
+        title: Styled Label Class
+        options:
+          - label: Alpha
+            value: alpha
+          - label: Beta
+            value: beta
+      class:
+        label: text-blue-600 font-semibold
+- title: Many Options (Scrollable)
+  blocks:
+    - id: many_options
+      type: Selector
+      properties:
+        title: Long List
+        showSearch: true
+        placeholder: Scroll or search through many options...
+        options:
+          - label: Afghanistan
+            value: AF
+          - label: Albania
+            value: AL
+          - label: Algeria
+            value: DZ
+          - label: Argentina
+            value: AR
+          - label: Australia
+            value: AU
+          - label: Austria
+            value: AT
+          - label: Belgium
+            value: BE
+          - label: Brazil
+            value: BR
+          - label: Canada
+            value: CA
+          - label: Chile
+            value: CL
+          - label: China
+            value: CN
+          - label: Colombia
+            value: CO
+          - label: Czech Republic
+            value: CZ
+          - label: Denmark
+            value: DK
+          - label: Egypt
+            value: EG
+          - label: Finland
+            value: FI
+          - label: France
+            value: FR
+          - label: Germany
+            value: DE
+          - label: Greece
+            value: GR
+          - label: India
+            value: IN
+          - label: Indonesia
+            value: ID
+          - label: Ireland
+            value: IE
+          - label: Italy
+            value: IT
+          - label: Japan
+            value: JP
+          - label: Mexico
+            value: MX
+          - label: Netherlands
+            value: NL
+          - label: New Zealand
+            value: NZ
+          - label: Norway
+            value: 'NO'
+          - label: Poland
+            value: PL
+          - label: Portugal
+            value: PT
+          - label: Russia
+            value: RU
+          - label: South Africa
+            value: ZA
+          - label: South Korea
+            value: KR
+          - label: Spain
+            value: ES
+          - label: Sweden
+            value: SE
+          - label: Switzerland
+            value: CH
+          - label: Thailand
+            value: TH
+          - label: Turkey
+            value: TR
+          - label: United Kingdom
+            value: GB
+          - label: United States
+            value: US
+          - label: Vietnam
+            value: VN
+- title: Theme Token Overrides
+  blocks:
+    - id: theme_custom_colors
+      type: Selector
+      properties:
+        title: Custom Selection Colors
+        placeholder: Select to see custom highlight...
+        options:
+          - label: Apple
+            value: apple
+          - label: Banana
+            value: banana
+          - label: Cherry
+            value: cherry
+          - label: Date
+            value: date
+          - label: Elderberry
+            value: elderberry
+        theme:
+          optionSelectedBg: '#f9f0ff'
+          optionSelectedColor: '#722ed1'
+          optionSelectedFontWeight: 700
+    - id: theme_active_bg
+      type: Selector
+      properties:
+        title: Custom Hover Color
+        placeholder: Hover over options...
+        options:
+          - label: Option A
+            value: a
+          - label: Option B
+            value: b
+          - label: Option C
+            value: c
+        theme:
+          optionActiveBg: '#fff7e6'
+    - id: theme_border_colors
+      type: Selector
+      properties:
+        title: Custom Border Colors
+        placeholder: Focus to see border color...
+        options:
+          - label: Red
+            value: red
+          - label: Green
+            value: green
+          - label: Blue
+            value: blue
+        theme:
+          hoverBorderColor: '#52c41a'
+          activeBorderColor: '#389e0d'
+          activeOutlineColor: rgba(82, 196, 26, 0.1)
+    - id: theme_option_size
+      type: Selector
+      properties:
+        title: Large Options
+        placeholder: Options have increased height...
+        options:
+          - label: Spacious Option A
+            value: a
+          - label: Spacious Option B
+            value: b
+          - label: Spacious Option C
+            value: c
+        theme:
+          optionHeight: 44
+          optionFontSize: 16
+          optionLineHeight: 1.8
+          optionPadding: 8px 16px
+    - id: theme_selector_bg
+      type: Selector
+      properties:
+        title: Custom Background
+        placeholder: Selector with tinted background...
+        options:
+          - label: First
+            value: first
+          - label: Second
+            value: second
+          - label: Third
+            value: third
+        theme:
+          selectorBg: '#f0f5ff'
+          clearBg: '#f0f5ff'
+    - id: theme_radius
+      type: Selector
+      properties:
+        title: Round Corners
+        placeholder: Extra round selector...
+        options:
+          - label: Circle
+            value: circle
+          - label: Square
+            value: square
+          - label: Triangle
+            value: triangle
+        theme:
+          borderRadius: 16
+    - id: theme_font_size
+      type: Selector
+      properties:
+        title: Large Font
+        placeholder: Bigger text...
+        options:
+          - label: Large text option A
+            value: a
+          - label: Large text option B
+            value: b
+          - label: Large text option C
+            value: c
+        theme:
+          fontSize: 18
+    - id: theme_combined
+      type: Selector
+      properties:
+        title: Fully Customized
+        placeholder: Purple themed selector...
+        options:
+          - label: Dashboard
+            value: dashboard
+          - label: Analytics
+            value: analytics
+          - label: Reports
+            value: reports
+          - label: Settings
+            value: settings
+        theme:
+          colorPrimary: '#722ed1'
+          borderRadius: 12
+          fontSize: 15
+          optionSelectedBg: '#f9f0ff'
+          optionSelectedColor: '#531dab'
+          optionActiveBg: '#efdbff'
+          hoverBorderColor: '#b37feb'
+          activeBorderColor: '#722ed1'
+          activeOutlineColor: rgba(114, 46, 209, 0.1)
+          optionHeight: 40
+          selectorBg: '#fafafa'
+- title: Sizes with Theme Overrides
+  blocks:
+    - id: theme_size_sm
+      type: Selector
+      properties:
+        title: Custom Small
+        size: small
+        placeholder: Custom small selector...
+        options:
+          - Alpha
+          - Beta
+          - Gamma
+        theme:
+          controlHeightSM: 20
+          borderRadiusSM: 2
+          fontSizeSM: 12
+    - id: theme_size_default
+      type: Selector
+      properties:
+        title: Custom Default
+        placeholder: Custom default selector...
+        options:
+          - Alpha
+          - Beta
+          - Gamma
+        theme:
+          controlHeight: 40
+          borderRadius: 10
+          fontSize: 15
+    - id: theme_size_lg
+      type: Selector
+      properties:
+        title: Custom Large
+        size: large
+        placeholder: Custom large selector...
+        options:
+          - Alpha
+          - Beta
+          - Gamma
+        theme:
+          controlHeightLG: 52
+          borderRadiusLG: 16
+          fontSizeLG: 18
+          singleItemHeightLG: 52
+- title: Combined Features
+  blocks:
+    - id: combined_search_styled
+      type: Selector
+      properties:
+        title: Searchable Styled Options
+        showSearch: true
+        placeholder: Search and select a status...
+        suffixIcon: AiOutlineSearch
+        options:
+          - label: '<span style="color: #52c41a;">Active</span>'
+            value: active
+            filterString: Active Running Live
+          - label: '<span style="color: #faad14;">Pending</span>'
+            value: pending
+            filterString: Pending Waiting Queue
+          - label: '<span style="color: #f5222d;">Error</span>'
+            value: error
+            filterString: Error Failed Broken
+          - label: '<span style="color: #8c8c8c;">Archived</span>'
+            value: archived
+            filterString: Archived Old Removed
+            disabled: true
+    - id: combined_large_custom
+      type: Selector
+      properties:
+        title: Large Custom Selector
+        size: large
+        showSearch: true
+        placeholder: Choose a department...
+        suffixIcon:
+          name: AiOutlineTeam
+          color: '#1677ff'
+        clearIcon:
+          name: AiOutlineClose
+          color: '#ff4d4f'
+        options:
+          - label: <b>Engineering</b>
+            value: engineering
+            filterString: Engineering Dev Software
+          - label: <b>Design</b>
+            value: design
+            filterString: Design UI UX Creative
+          - label: <b>Marketing</b>
+            value: marketing
+            filterString: Marketing Growth Brand
+          - label: <b>Sales</b>
+            value: sales
+            filterString: Sales Revenue Business
+          - label: <b>Support</b>
+            value: support
+            filterString: Support Help Customer Service
+        theme:
+          borderRadius: 12
+          optionSelectedBg: '#e6f7ff'
+          optionHeight: 40
+    - id: combined_borderless_small
+      type: Selector
+      properties:
+        title: Compact Borderless
+        size: small
+        bordered: false
+        showSearch: false
+        showArrow: true
+        placeholder: Quick pick...
+        options:
+          - label: Today
+            value: today
+          - label: This Week
+            value: week
+          - label: This Month
+            value: month
+          - label: This Year
+            value: year
+    - id: combined_inline_themed
+      type: Selector
+      properties:
+        title: Inline Themed
+        label:
+          inline: true
+          span: 6
+          colon: false
+        placeholder: Select role...
+        options:
+          - label: Admin
+            value: admin
+          - label: Editor
+            value: editor
+          - label: Viewer
+            value: viewer
+        theme:
+          colorPrimary: '#13c2c2'
+          borderRadius: 8
+          optionSelectedBg: '#e6fffb'
+          hoverBorderColor: '#13c2c2'
+          activeBorderColor: '#08979c'

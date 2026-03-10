@@ -1,0 +1,348 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic
+  blocks:
+    - id: basic_mobile_menu
+      type: MobileMenu
+      layout:
+        flex: 0 0 auto
+      properties:
+        theme: light
+        links:
+          - id: bm_home
+            type: MenuLink
+            properties:
+              title: Home
+          - id: bm_about
+            type: MenuLink
+            properties:
+              title: About
+          - id: bm_contact
+            type: MenuLink
+            properties:
+              title: Contact
+
+- title: With Icons
+  blocks:
+    - id: icons_mobile_menu
+      type: MobileMenu
+      layout:
+        flex: 0 0 auto
+      properties:
+        theme: light
+        links:
+          - id: im_dashboard
+            type: MenuLink
+            properties:
+              title: Dashboard
+              icon: AiOutlineHome
+          - id: im_users
+            type: MenuLink
+            properties:
+              title: Users
+              icon: AiOutlineUser
+          - id: im_settings
+            type: MenuLink
+            properties:
+              title: Settings
+              icon: AiOutlineSetting
+          - id: im_notifications
+            type: MenuLink
+            properties:
+              title: Notifications
+              icon: AiOutlineBell
+
+- title: With Groups
+  blocks:
+    - id: groups_mobile_menu
+      type: MobileMenu
+      layout:
+        flex: 0 0 auto
+      properties:
+        theme: light
+        links:
+          - id: gm_overview
+            type: MenuLink
+            properties:
+              title: Overview
+              icon: AiOutlineDashboard
+          - id: gm_management
+            type: MenuGroup
+            properties:
+              title: Management
+              icon: AiOutlineAppstore
+            links:
+              - id: gm_projects
+                type: MenuLink
+                properties:
+                  title: Projects
+              - id: gm_tasks
+                type: MenuLink
+                properties:
+                  title: Tasks
+              - id: gm_reports
+                type: MenuLink
+                properties:
+                  title: Reports
+          - id: gm_settings
+            type: MenuGroup
+            properties:
+              title: Settings
+              icon: AiOutlineSetting
+            links:
+              - id: gm_profile
+                type: MenuLink
+                properties:
+                  title: Profile
+              - id: gm_security
+                type: MenuLink
+                properties:
+                  title: Security
+
+- title: With Dividers and Danger Items
+  blocks:
+    - id: divider_mobile_menu
+      type: MobileMenu
+      layout:
+        flex: 0 0 auto
+      properties:
+        theme: light
+        links:
+          - id: dm_dashboard
+            type: MenuLink
+            properties:
+              title: Dashboard
+              icon: AiOutlineHome
+          - id: dm_users
+            type: MenuLink
+            properties:
+              title: Users
+              icon: AiOutlineUser
+          - id: dm_divider
+            type: MenuDivider
+          - id: dm_settings
+            type: MenuGroup
+            properties:
+              title: Settings
+              icon: AiOutlineSetting
+            links:
+              - id: dm_profile
+                type: MenuLink
+                properties:
+                  title: Profile
+              - id: dm_security
+                type: MenuLink
+                properties:
+                  title: Security
+          - id: dm_divider2
+            type: MenuDivider
+          - id: dm_logout
+            type: MenuLink
+            properties:
+              title: Logout
+              icon: AiOutlineLogout
+              danger: true
+
+- title: With Links (pageId)
+  blocks:
+    - id: links_mobile_menu
+      type: MobileMenu
+      layout:
+        flex: 0 0 auto
+      properties:
+        theme: light
+        links:
+          - id: lm_docs
+            type: MenuLink
+            pageId: docs
+            properties:
+              title: Documentation
+              icon: AiOutlineFileText
+          - id: lm_api
+            type: MenuLink
+            pageId: api
+            properties:
+              title: API Reference
+              icon: AiOutlineApi
+          - id: lm_resources
+            type: MenuGroup
+            properties:
+              title: Resources
+              icon: AiOutlineAppstore
+            links:
+              - id: lm_tutorials
+                type: MenuLink
+                properties:
+                  title: Tutorials
+              - id: lm_examples
+                type: MenuLink
+                properties:
+                  title: Examples
+
+- title: Custom Toggle Button
+  blocks:
+    - id: custom_toggle_menu
+      type: MobileMenu
+      layout:
+        flex: 0 0 auto
+      properties:
+        theme: light
+        toggleMenuButton:
+          type: default
+          icon: AiOutlineMenu
+        links:
+          - id: ct_home
+            type: MenuLink
+            properties:
+              title: Home
+              icon: AiOutlineHome
+          - id: ct_about
+            type: MenuLink
+            properties:
+              title: About
+              icon: AiOutlineInfoCircle
+          - id: ct_contact
+            type: MenuLink
+            properties:
+              title: Contact
+              icon: AiOutlineMail
+
+- title: Custom Drawer Properties
+  blocks:
+    - id: drawer_mobile_menu
+      type: MobileMenu
+      layout:
+        flex: 0 0 auto
+      properties:
+        theme: light
+        drawer:
+          title: Navigation
+          width: 300
+          placement: left
+        links:
+          - id: drm_home
+            type: MenuLink
+            properties:
+              title: Home
+              icon: AiOutlineHome
+          - id: drm_products
+            type: MenuGroup
+            properties:
+              title: Products
+              icon: AiOutlineShop
+            links:
+              - id: drm_catalog
+                type: MenuLink
+                properties:
+                  title: Catalog
+              - id: drm_orders
+                type: MenuLink
+                properties:
+                  title: Orders
+
+- title: Style Overrides
+  blocks:
+    - id: styled_mobile_menu
+      type: MobileMenu
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          padding: 4px
+          background: '#f5f5f5'
+          borderRadius: 8
+      properties:
+        theme: light
+        toggleMenuButton:
+          type: primary
+          icon: AiOutlineMenuFold
+        links:
+          - id: sm_home
+            type: MenuLink
+            properties:
+              title: Home
+              icon: AiOutlineHome
+          - id: sm_about
+            type: MenuLink
+            properties:
+              title: About
+
+- title: Full Navigation Example
+  blocks:
+    - id: full_mobile_menu
+      type: MobileMenu
+      layout:
+        flex: 0 0 auto
+      properties:
+        theme: light
+        toggleMenuButton:
+          type: primary
+          icon: AiOutlineMenu
+        drawer:
+          title: App Navigation
+          width: 280
+        links:
+          - id: fm_dashboard
+            type: MenuLink
+            properties:
+              title: Dashboard
+              icon: AiOutlineDashboard
+          - id: fm_content
+            type: MenuGroup
+            properties:
+              title: Content
+              icon: AiOutlineFileText
+            links:
+              - id: fm_posts
+                type: MenuLink
+                properties:
+                  title: Posts
+              - id: fm_pages
+                type: MenuLink
+                properties:
+                  title: Pages
+              - id: fm_media
+                type: MenuLink
+                properties:
+                  title: Media Library
+          - id: fm_users
+            type: MenuGroup
+            properties:
+              title: Users
+              icon: AiOutlineTeam
+            links:
+              - id: fm_all_users
+                type: MenuLink
+                properties:
+                  title: All Users
+              - id: fm_roles
+                type: MenuLink
+                properties:
+                  title: Roles & Permissions
+          - id: fm_divider
+            type: MenuDivider
+          - id: fm_settings
+            type: MenuLink
+            properties:
+              title: Settings
+              icon: AiOutlineSetting
+          - id: fm_divider2
+            type: MenuDivider
+          - id: fm_logout
+            type: MenuLink
+            properties:
+              title: Sign Out
+              icon: AiOutlineLogout
+              danger: true

@@ -110,7 +110,7 @@ RadioSelector.meta = {
   valueType: 'any',
   category: 'input',
   icons: [...Label.meta.icons],
-  cssKeys: ['element'],
+  cssKeys: ['element', 'label', 'extra', 'feedback'],
 };
 
 export default withTheme('Radio', RadioSelector);

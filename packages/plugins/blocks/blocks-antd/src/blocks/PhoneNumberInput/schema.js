@@ -174,6 +174,98 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/input#design-token',
+        },
+        properties: {
+          activeBorderColor: {
+            type: 'string',
+            description: 'Border color when the input is focused.',
+          },
+          activeShadow: {
+            type: 'string',
+            description: 'Box shadow when the input is focused.',
+          },
+          addonBg: {
+            type: 'string',
+            default: 'rgba(0, 0, 0, 0.02)',
+            description: 'Background color of addon elements.',
+          },
+          colorBgContainer: {
+            type: 'string',
+            description: 'Background color of the input.',
+          },
+          colorBorder: {
+            type: 'string',
+            description: 'Border color of the input.',
+          },
+          colorError: {
+            type: 'string',
+            description: 'Color used for error status.',
+          },
+          colorPrimary: {
+            type: 'string',
+            description: 'Primary color override.',
+          },
+          colorText: {
+            type: 'string',
+            description: 'Text color of the input value.',
+          },
+          colorTextDisabled: {
+            type: 'string',
+            description: 'Text color when input is disabled.',
+          },
+          colorTextPlaceholder: {
+            type: 'string',
+            description: 'Color of the placeholder text.',
+          },
+          colorWarning: {
+            type: 'string',
+            description: 'Color used for warning status.',
+          },
+          controlHeight: {
+            type: 'number',
+            default: 32,
+            description: 'Height of the input.',
+          },
+          controlHeightLG: {
+            type: 'number',
+            default: 40,
+            description: 'Height for large inputs.',
+          },
+          controlHeightSM: {
+            type: 'number',
+            default: 24,
+            description: 'Height for small inputs.',
+          },
+          errorActiveShadow: {
+            type: 'string',
+            default: '0 0 0 2px rgba(255, 38, 5, 0.06)',
+            description: 'Box shadow when the input has error status and is focused.',
+          },
+          fontSize: {
+            type: 'number',
+            default: 14,
+            description: 'Font size of the input.',
+          },
+          hoverBorderColor: {
+            type: 'string',
+            description: 'Border color when the input is hovered.',
+          },
+          paddingBlock: {
+            type: 'number',
+            default: 4,
+            description: 'Vertical padding.',
+          },
+          paddingInline: {
+            type: 'number',
+            default: 11,
+            description: 'Horizontal padding.',
+          },
+          warningActiveShadow: {
+            type: 'string',
+            default: '0 0 0 2px rgba(255, 215, 5, 0.1)',
+            description: 'Box shadow when the input has warning status and is focused.',
+          },
         },
       },
     },

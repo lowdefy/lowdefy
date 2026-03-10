@@ -74,7 +74,73 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/float-button#design-token',
         },
+        properties: {
+          dotSize: {
+            type: 'number',
+            default: 8,
+            description: 'Badge dot size.',
+          },
+          badgeColor: {
+            type: 'string',
+            description: 'Badge color.',
+          },
+          borderRadiusLG: {
+            type: 'number',
+            default: 8,
+            description: 'Border radius for square shape.',
+          },
+          colorPrimary: {
+            type: 'string',
+            description: 'Primary color for primary type button.',
+          },
+          colorPrimaryHover: {
+            type: 'string',
+            description: 'Hover color for primary type button.',
+          },
+          colorBgElevated: {
+            type: 'string',
+            description: 'Background color for default type button.',
+          },
+          colorText: {
+            type: 'string',
+            description: 'Text and icon color.',
+          },
+          colorTextLightSolid: {
+            type: 'string',
+            description: 'Text color on primary background.',
+          },
+          boxShadowSecondary: {
+            type: 'string',
+            description: 'Shadow for the float button.',
+          },
+          fontSize: {
+            type: 'number',
+            default: 14,
+            description: 'Font size.',
+          },
+          fontSizeIcon: {
+            type: 'number',
+            default: 18,
+            description: 'Icon font size.',
+          },
+          controlHeightLG: {
+            type: 'number',
+            default: 40,
+            description: 'Controls the float button size.',
+          },
+        },
+      },
+    },
+  },
+  events: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      onClick: {
+        type: 'array',
+        description: 'Trigger action when button is clicked.',
       },
     },
   },

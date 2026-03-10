@@ -93,6 +93,72 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/checkbox#design-token',
+        },
+        properties: {
+          colorPrimary: {
+            type: 'string',
+            description: 'Primary color used for the checked state background and border.',
+          },
+          colorPrimaryHover: {
+            type: 'string',
+            description: 'Primary color used when hovering over a checked checkbox.',
+          },
+          colorBgContainer: {
+            type: 'string',
+            description: 'Background color of the unchecked checkbox.',
+          },
+          colorBgContainerDisabled: {
+            type: 'string',
+            description: 'Background color of the checkbox when disabled.',
+          },
+          colorBorder: {
+            type: 'string',
+            description: 'Border color of the unchecked checkbox.',
+          },
+          colorTextDisabled: {
+            type: 'string',
+            description: 'Color of the checkmark and label text when disabled.',
+          },
+          colorWhite: {
+            type: 'string',
+            description: 'Color of the checkmark icon inside the checked checkbox.',
+          },
+          controlInteractiveSize: {
+            type: 'number',
+            default: 16,
+            description: 'Size (width and height) of the checkbox.',
+          },
+          borderRadiusSM: {
+            type: 'number',
+            default: 4,
+            description: 'Border radius of the checkbox.',
+          },
+          lineWidth: {
+            type: 'number',
+            default: 1,
+            description: 'Border width of the checkbox.',
+          },
+          lineWidthBold: {
+            type: 'number',
+            default: 2,
+            description: 'Width of the checkmark stroke inside the checkbox.',
+          },
+          fontSizeLG: {
+            type: 'number',
+            default: 16,
+            description: 'Large font size token, used to derive the indeterminate indicator size.',
+          },
+          paddingXS: {
+            type: 'number',
+            default: 8,
+            description: 'Inline padding between the checkbox and its label text.',
+          },
+          marginXS: {
+            type: 'number',
+            default: 8,
+            description: 'Column gap between checkboxes in a Checkbox.Group.',
+          },
         },
       },
     },

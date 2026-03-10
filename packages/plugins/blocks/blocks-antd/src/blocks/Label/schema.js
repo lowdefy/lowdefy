@@ -65,6 +65,62 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/form#design-token',
+        },
+        properties: {
+          labelFontSize: {
+            type: 'number',
+            default: 14,
+            description: 'Font size of the label text.',
+          },
+          labelColor: {
+            type: 'string',
+            default: 'rgba(0,0,0,0.88)',
+            description: 'Text color of the label.',
+          },
+          labelRequiredMarkColor: {
+            type: 'string',
+            default: '#ff4d4f',
+            description: 'Color of the required asterisk mark.',
+          },
+          labelColonMarginInlineStart: {
+            type: 'number',
+            default: 2,
+            description: 'Inline start margin of the colon after the label.',
+          },
+          labelColonMarginInlineEnd: {
+            type: 'number',
+            default: 8,
+            description: 'Inline end margin of the colon after the label.',
+          },
+          colorError: {
+            type: 'string',
+            default: '#ff4d4f',
+            description: 'Color used for error validation feedback.',
+          },
+          colorWarning: {
+            type: 'string',
+            default: '#faad14',
+            description: 'Color used for warning validation feedback.',
+          },
+          colorSuccess: {
+            type: 'string',
+            default: '#52c41a',
+            description: 'Color used for success validation feedback.',
+          },
+          colorText: {
+            type: 'string',
+            description: 'Text color for the extra and feedback text.',
+          },
+          colorTextDescription: {
+            type: 'string',
+            description: 'Color for the extra description text.',
+          },
+          fontSize: {
+            type: 'number',
+            default: 14,
+            description: 'Base font size.',
+          },
         },
       },
     },

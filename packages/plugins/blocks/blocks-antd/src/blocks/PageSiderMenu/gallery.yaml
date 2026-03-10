@@ -1,0 +1,469 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic PageSiderMenu
+  fullWidth: true
+  blocks:
+    - id: psm_basic
+      type: PageSiderMenu
+      properties:
+        header:
+          theme: dark
+        sider:
+          theme: light
+          initialCollapsed: false
+          collapsible: true
+          width: 220
+        menu:
+          theme: light
+          links:
+            - id: psm_basic_dash
+              type: MenuLink
+              properties:
+                title: Dashboard
+                icon: AiOutlineDashboard
+            - id: psm_basic_users
+              type: MenuLink
+              properties:
+                title: Users
+                icon: AiOutlineUser
+            - id: psm_basic_settings
+              type: MenuLink
+              properties:
+                title: Settings
+                icon: AiOutlineSetting
+      blocks:
+        - id: psm_basic_content
+          type: Paragraph
+          properties:
+            content: PageSiderMenu provides a full page layout with a collapsible sidebar navigation. The sider contains an inline menu that automatically collapses on small screens. A mobile drawer menu is shown on smaller viewports.
+
+- title: Dark Theme Sider
+  fullWidth: true
+  blocks:
+    - id: psm_dark
+      type: PageSiderMenu
+      properties:
+        header:
+          theme: dark
+        sider:
+          theme: dark
+          initialCollapsed: false
+          collapsible: true
+          width: 200
+        menu:
+          theme: dark
+          links:
+            - id: psm_dark_overview
+              type: MenuLink
+              properties:
+                title: Overview
+                icon: AiOutlineAppstore
+            - id: psm_dark_analytics
+              type: MenuLink
+              properties:
+                title: Analytics
+                icon: AiOutlineBarChart
+            - id: psm_dark_reports
+              type: MenuLink
+              properties:
+                title: Reports
+                icon: AiOutlineFileText
+      blocks:
+        - id: psm_dark_content
+          type: Paragraph
+          properties:
+            content: Dark theme sidebar with matching dark menu. The sider.theme property controls the sidebar background color and the menu.theme should match for a consistent appearance.
+
+- title: Menu with Groups and Nested Items
+  fullWidth: true
+  blocks:
+    - id: psm_groups
+      type: PageSiderMenu
+      properties:
+        header:
+          theme: dark
+        sider:
+          theme: light
+          initialCollapsed: false
+          collapsible: true
+          width: 240
+        menu:
+          theme: light
+          links:
+            - id: psm_grp_dash
+              type: MenuLink
+              properties:
+                title: Dashboard
+                icon: AiOutlineDashboard
+            - id: psm_grp_management
+              type: MenuGroup
+              properties:
+                title: Management
+                icon: AiOutlineTeam
+              links:
+                - id: psm_grp_users
+                  type: MenuLink
+                  properties:
+                    title: Users
+                - id: psm_grp_roles
+                  type: MenuLink
+                  properties:
+                    title: Roles
+                - id: psm_grp_permissions
+                  type: MenuLink
+                  properties:
+                    title: Permissions
+            - id: psm_grp_content
+              type: MenuGroup
+              properties:
+                title: Content
+                icon: AiOutlineEdit
+              links:
+                - id: psm_grp_pages
+                  type: MenuLink
+                  properties:
+                    title: Pages
+                - id: psm_grp_posts
+                  type: MenuLink
+                  properties:
+                    title: Posts
+                - id: psm_grp_media
+                  type: MenuLink
+                  properties:
+                    title: Media
+            - id: psm_grp_settings
+              type: MenuLink
+              properties:
+                title: Settings
+                icon: AiOutlineSetting
+      blocks:
+        - id: psm_groups_content
+          type: Paragraph
+          properties:
+            content: The inline sidebar menu supports nested groups using MenuGroup. Groups expand and collapse to reveal sub-items, making it ideal for applications with deep navigation hierarchies.
+
+- title: Initially Collapsed Sider
+  fullWidth: true
+  blocks:
+    - id: psm_collapsed
+      type: PageSiderMenu
+      properties:
+        header:
+          theme: dark
+        sider:
+          theme: light
+          initialCollapsed: true
+          collapsible: true
+          width: 220
+        menu:
+          theme: light
+          links:
+            - id: psm_col_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+            - id: psm_col_inbox
+              type: MenuLink
+              properties:
+                title: Inbox
+                icon: AiOutlineInbox
+            - id: psm_col_starred
+              type: MenuLink
+              properties:
+                title: Starred
+                icon: AiOutlineStar
+      blocks:
+        - id: psm_collapsed_content
+          type: Paragraph
+          properties:
+            content: The sider starts collapsed when sider.initialCollapsed is set to true. Only menu icons are visible in the collapsed state. The toggle button at the bottom allows expanding and collapsing the sidebar.
+
+- title: With Breadcrumb
+  fullWidth: true
+  blocks:
+    - id: psm_breadcrumb
+      type: PageSiderMenu
+      properties:
+        header:
+          theme: dark
+        sider:
+          theme: light
+          initialCollapsed: false
+          collapsible: true
+        breadcrumb:
+          separator: /
+          list:
+            - Home
+            - Dashboard
+            - Analytics
+        menu:
+          theme: light
+          links:
+            - id: psm_bc_dash
+              type: MenuLink
+              properties:
+                title: Dashboard
+                icon: AiOutlineDashboard
+            - id: psm_bc_analytics
+              type: MenuLink
+              properties:
+                title: Analytics
+                icon: AiOutlineBarChart
+      blocks:
+        - id: psm_breadcrumb_content
+          type: Paragraph
+          properties:
+            content: Breadcrumbs provide navigation context above the main content. Set the breadcrumb property with a list of path items and an optional separator character.
+
+- title: With Footer Slot
+  fullWidth: true
+  blocks:
+    - id: psm_footer
+      type: PageSiderMenu
+      properties:
+        header:
+          theme: dark
+        sider:
+          theme: light
+          initialCollapsed: false
+          collapsible: true
+        footer:
+          style:
+            textAlign: center
+        menu:
+          theme: light
+          links:
+            - id: psm_ft_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+            - id: psm_ft_about
+              type: MenuLink
+              properties:
+                title: About
+                icon: AiOutlineInfoCircle
+      blocks:
+        - id: psm_footer_main
+          type: Paragraph
+          properties:
+            content: The footer slot appears below the main content area. Use slots.footer to add footer blocks and properties.footer.style to customize the footer appearance.
+      slots:
+        footer:
+          blocks:
+            - id: psm_footer_text
+              type: Paragraph
+              properties:
+                content: Application Footer - Built with Lowdefy
+                style:
+                  textAlign: center
+                  margin: 0
+
+- title: With Header Slot
+  fullWidth: true
+  blocks:
+    - id: psm_header_slot
+      type: PageSiderMenu
+      properties:
+        header:
+          theme: dark
+          contentStyle:
+            alignItems: center
+        sider:
+          theme: light
+          initialCollapsed: false
+          collapsible: true
+        menu:
+          theme: light
+          links:
+            - id: psm_hs_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+            - id: psm_hs_tasks
+              type: MenuLink
+              properties:
+                title: Tasks
+                icon: AiOutlineCheckSquare
+      slots:
+        header:
+          blocks:
+            - id: psm_header_slot_avatar
+              type: Avatar
+              layout:
+                flex: 0 0 auto
+              properties:
+                icon: AiOutlineUser
+                size: small
+      blocks:
+        - id: psm_header_slot_content
+          type: Paragraph
+          properties:
+            content: The header slot places custom blocks in the header area. This is typically used for user profile elements, notification indicators, or quick action buttons. The header.contentStyle property controls the flex layout of these items.
+
+- title: With Sider Slot
+  fullWidth: true
+  blocks:
+    - id: psm_sider_slot
+      type: PageSiderMenu
+      properties:
+        header:
+          theme: dark
+        sider:
+          theme: light
+          initialCollapsed: false
+          collapsible: true
+          width: 220
+        menu:
+          theme: light
+          links:
+            - id: psm_ss_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+            - id: psm_ss_pages
+              type: MenuLink
+              properties:
+                title: Pages
+                icon: AiOutlineFile
+      slots:
+        sider:
+          blocks:
+            - id: psm_sider_slot_help
+              type: Alert
+              style:
+                margin: 12px
+              properties:
+                message: Need Help?
+                description: Visit our documentation for guides and tutorials.
+                type: info
+                showIcon: true
+      blocks:
+        - id: psm_sider_slot_content
+          type: Paragraph
+          properties:
+            content: The sider slot renders custom content below the menu inside the sidebar. This is useful for help links, version info, or supplementary navigation elements.
+
+- title: Hidden Toggle Button
+  fullWidth: true
+  blocks:
+    - id: psm_no_toggle
+      type: PageSiderMenu
+      properties:
+        header:
+          theme: dark
+        sider:
+          theme: light
+          initialCollapsed: false
+          collapsible: false
+          hideToggleButton: true
+          width: 200
+        menu:
+          theme: light
+          links:
+            - id: psm_nt_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+            - id: psm_nt_projects
+              type: MenuLink
+              properties:
+                title: Projects
+                icon: AiOutlineProject
+            - id: psm_nt_settings
+              type: MenuLink
+              properties:
+                title: Settings
+                icon: AiOutlineSetting
+      blocks:
+        - id: psm_no_toggle_content
+          type: Paragraph
+          properties:
+            content: Setting sider.hideToggleButton to true removes the toggle button at the bottom of the sidebar. This creates a fixed sidebar that can only be controlled programmatically via the toggleSiderOpen and setSiderOpen methods.
+
+- title: Custom Sider Width
+  fullWidth: true
+  blocks:
+    - id: psm_width
+      type: PageSiderMenu
+      properties:
+        header:
+          theme: dark
+        sider:
+          theme: light
+          initialCollapsed: false
+          collapsible: true
+          width: 300
+          collapsedWidth: 60
+        menu:
+          theme: light
+          links:
+            - id: psm_w_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+            - id: psm_w_explore
+              type: MenuLink
+              properties:
+                title: Explore
+                icon: AiOutlineSearch
+            - id: psm_w_library
+              type: MenuLink
+              properties:
+                title: Library
+                icon: AiOutlineBook
+      blocks:
+        - id: psm_width_content
+          type: Paragraph
+          properties:
+            content: The sider.width property controls the expanded width (300px here) and sider.collapsedWidth controls the collapsed width (60px). Setting collapsedWidth to 0 completely hides the sidebar when collapsed.
+
+- title: Theme Token Overrides
+  fullWidth: true
+  blocks:
+    - id: psm_themed
+      type: PageSiderMenu
+      properties:
+        header:
+          theme: dark
+        sider:
+          theme: light
+          initialCollapsed: false
+          collapsible: true
+        menu:
+          theme: light
+          links:
+            - id: psm_th_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+            - id: psm_th_pages
+              type: MenuLink
+              properties:
+                title: Pages
+                icon: AiOutlineFile
+        theme:
+          colorPrimary: '#52c41a'
+      blocks:
+        - id: psm_themed_content
+          type: Paragraph
+          properties:
+            content: The theme property allows overriding Ant Design design tokens for the entire page. Here the primary color is set to green.

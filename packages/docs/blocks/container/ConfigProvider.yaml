@@ -13,18 +13,16 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: ConfigProvider
-    category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/ConfigProvider/schema.js
+    pageId: ConfigProvider
+    pageTitle: ConfigProvider
+    section: Container Blocks
     filePath: blocks/container/ConfigProvider.yaml
-    examples:
-      _ref: ../plugins/blocks/blocks-antd/src/blocks/ConfigProvider/examples.yaml
-    description_content: |
-      The `ConfigProvider` block is a scoped theme and config provider. All child blocks inherit the specified theme tokens, algorithm, component size, direction, and variant. Use to apply different themes (e.g., dark mode, custom colors, compact layout) or global settings to sections of your page.
-    slots:
-      - content
-    init_state_values:
-      block.properties.token: |
-        colorPrimary: '#6366f1'
+    block_type: ConfigProvider
+    antd_component: ConfigProvider
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/ConfigProvider
+    schema: ../plugins/blocks/blocks-antd/src/blocks/ConfigProvider/schema.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/ConfigProvider/gallery.yaml
+    description: >
+      Global configuration provider for antd theme and locale settings.

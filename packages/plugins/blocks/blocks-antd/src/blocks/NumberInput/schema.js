@@ -148,6 +148,139 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/input-number#design-token',
+        },
+        properties: {
+          activeBorderColor: {
+            type: 'string',
+            description: 'Border color when the input is active (focused).',
+          },
+          activeShadow: {
+            type: 'string',
+            description: 'Box shadow when the input is active.',
+          },
+          addonBg: {
+            type: 'string',
+            default: 'rgba(0,0,0,0.02)',
+            description: 'Background color for addon areas.',
+          },
+          activeBg: {
+            type: 'string',
+            default: '#ffffff',
+            description: 'Background color when the input is active.',
+          },
+          controlWidth: {
+            type: 'number',
+            default: 90,
+            description: 'Default width of the InputNumber control.',
+          },
+          errorActiveShadow: {
+            type: 'string',
+            description: 'Box shadow when the input is active in error status.',
+          },
+          filledHandleBg: {
+            type: 'string',
+            default: '#f0f0f0',
+            description: 'Handle background color in filled variant.',
+          },
+          handleActiveBg: {
+            type: 'string',
+            default: 'rgba(0,0,0,0.02)',
+            description: 'Handle background color when active (pressed).',
+          },
+          handleBg: {
+            type: 'string',
+            default: '#ffffff',
+            description: 'Default handle background color.',
+          },
+          handleBorderColor: {
+            type: 'string',
+            default: '#d9d9d9',
+            description: 'Handle border color.',
+          },
+          handleFontSize: {
+            type: 'number',
+            default: 7,
+            description: 'Font size of the handle icons (+/-).',
+          },
+          handleHoverColor: {
+            type: 'string',
+            default: '#1677ff',
+            description: 'Handle icon color on hover.',
+          },
+          handleOpacity: {
+            type: 'number',
+            default: 0,
+            description: 'Default opacity of the handles (0 means hidden until hover).',
+          },
+          handleVisible: {
+            type: 'string',
+            default: 'auto',
+            description: 'Handle visibility mode.',
+          },
+          handleWidth: {
+            type: 'number',
+            default: 22,
+            description: 'Width of the spinner handles.',
+          },
+          hoverBg: {
+            type: 'string',
+            default: '#ffffff',
+            description: 'Background color on hover.',
+          },
+          hoverBorderColor: {
+            type: 'string',
+            description: 'Border color on hover.',
+          },
+          inputFontSize: {
+            type: 'number',
+            default: 14,
+            description: 'Font size for the default size input.',
+          },
+          inputFontSizeLG: {
+            type: 'number',
+            default: 16,
+            description: 'Font size for the large size input.',
+          },
+          inputFontSizeSM: {
+            type: 'number',
+            default: 14,
+            description: 'Font size for the small size input.',
+          },
+          paddingBlock: {
+            type: 'number',
+            default: 4,
+            description: 'Vertical padding for the default size.',
+          },
+          paddingBlockLG: {
+            type: 'number',
+            default: 7,
+            description: 'Vertical padding for the large size.',
+          },
+          paddingBlockSM: {
+            type: 'number',
+            default: 0,
+            description: 'Vertical padding for the small size.',
+          },
+          paddingInline: {
+            type: 'number',
+            default: 11,
+            description: 'Horizontal padding for the default size.',
+          },
+          paddingInlineLG: {
+            type: 'number',
+            default: 11,
+            description: 'Horizontal padding for the large size.',
+          },
+          paddingInlineSM: {
+            type: 'number',
+            default: 7,
+            description: 'Horizontal padding for the small size.',
+          },
+          warningActiveShadow: {
+            type: 'string',
+            description: 'Box shadow when the input is active in warning status.',
+          },
         },
       },
     },

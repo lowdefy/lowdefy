@@ -1,0 +1,1816 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic Carousel
+  blocks:
+    - id: basic_carousel
+      type: Carousel
+      blocks:
+        - id: basic_s1
+          type: Box
+          style:
+            height: 160
+            background: '#364d79'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: basic_s1_text
+              type: Title
+              properties:
+                content: Slide 1
+                level: 3
+              style:
+                color: white
+        - id: basic_s2
+          type: Box
+          style:
+            height: 160
+            background: '#263c5a'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: basic_s2_text
+              type: Title
+              properties:
+                content: Slide 2
+                level: 3
+              style:
+                color: white
+        - id: basic_s3
+          type: Box
+          style:
+            height: 160
+            background: '#1a2d45'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: basic_s3_text
+              type: Title
+              properties:
+                content: Slide 3
+                level: 3
+              style:
+                color: white
+        - id: basic_s4
+          type: Box
+          style:
+            height: 160
+            background: '#0d1e30'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: basic_s4_text
+              type: Title
+              properties:
+                content: Slide 4
+                level: 3
+              style:
+                color: white
+
+- title: Colorful Slides
+  blocks:
+    - id: color_carousel
+      type: Carousel
+      blocks:
+        - id: color_s1
+          type: Box
+          style:
+            height: 180
+            background: '#1677ff'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: color_s1_text
+              type: Title
+              properties:
+                content: Blue
+                level: 3
+              style:
+                color: white
+        - id: color_s2
+          type: Box
+          style:
+            height: 180
+            background: '#52c41a'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: color_s2_text
+              type: Title
+              properties:
+                content: Green
+                level: 3
+              style:
+                color: white
+        - id: color_s3
+          type: Box
+          style:
+            height: 180
+            background: '#722ed1'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: color_s3_text
+              type: Title
+              properties:
+                content: Purple
+                level: 3
+              style:
+                color: white
+        - id: color_s4
+          type: Box
+          style:
+            height: 180
+            background: '#fa541c'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: color_s4_text
+              type: Title
+              properties:
+                content: Volcano
+                level: 3
+              style:
+                color: white
+        - id: color_s5
+          type: Box
+          style:
+            height: 180
+            background: '#eb2f96'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: color_s5_text
+              type: Title
+              properties:
+                content: Magenta
+                level: 3
+              style:
+                color: white
+
+- title: Autoplay
+  blocks:
+    - id: auto_carousel
+      type: Carousel
+      properties:
+        autoplay: true
+        autoplaySpeed: 2000
+      blocks:
+        - id: auto_s1
+          type: Box
+          style:
+            height: 160
+            background: '#13c2c2'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: auto_s1_text
+              type: Title
+              properties:
+                content: Auto Slide 1
+                level: 3
+              style:
+                color: white
+        - id: auto_s2
+          type: Box
+          style:
+            height: 160
+            background: '#1677ff'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: auto_s2_text
+              type: Title
+              properties:
+                content: Auto Slide 2
+                level: 3
+              style:
+                color: white
+        - id: auto_s3
+          type: Box
+          style:
+            height: 160
+            background: '#722ed1'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: auto_s3_text
+              type: Title
+              properties:
+                content: Auto Slide 3
+                level: 3
+              style:
+                color: white
+        - id: auto_s4
+          type: Box
+          style:
+            height: 160
+            background: '#eb2f96'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: auto_s4_text
+              type: Title
+              properties:
+                content: Auto Slide 4
+                level: 3
+              style:
+                color: white
+
+- title: Autoplay with Pause on Hover
+  blocks:
+    - id: pause_carousel
+      type: Carousel
+      properties:
+        autoplay: true
+        autoplaySpeed: 1500
+        pauseOnHover: true
+        pauseOnFocus: true
+      blocks:
+        - id: pause_s1
+          type: Box
+          style:
+            height: 160
+            background: '#389e0d'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: pause_s1_text
+              type: Title
+              properties:
+                content: Hover to Pause
+                level: 3
+              style:
+                color: white
+        - id: pause_s2
+          type: Box
+          style:
+            height: 160
+            background: '#08979c'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: pause_s2_text
+              type: Title
+              properties:
+                content: Autoplay Resumes
+                level: 3
+              style:
+                color: white
+        - id: pause_s3
+          type: Box
+          style:
+            height: 160
+            background: '#531dab'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: pause_s3_text
+              type: Title
+              properties:
+                content: On Mouse Leave
+                level: 3
+              style:
+                color: white
+
+- title: Dot Position - Top
+  blocks:
+    - id: dot_top_carousel
+      type: Carousel
+      properties:
+        dotPosition: top
+      blocks:
+        - id: dot_top_s1
+          type: Box
+          style:
+            height: 160
+            background: '#fa8c16'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: dot_top_s1_text
+              type: Title
+              properties:
+                content: Dots on Top
+                level: 3
+              style:
+                color: white
+        - id: dot_top_s2
+          type: Box
+          style:
+            height: 160
+            background: '#d46b08'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: dot_top_s2_text
+              type: Title
+              properties:
+                content: Navigation Above
+                level: 3
+              style:
+                color: white
+        - id: dot_top_s3
+          type: Box
+          style:
+            height: 160
+            background: '#ad4e00'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: dot_top_s3_text
+              type: Title
+              properties:
+                content: Slide Content
+                level: 3
+              style:
+                color: white
+
+- title: Dot Position - Left
+  blocks:
+    - id: dot_left_carousel
+      type: Carousel
+      properties:
+        dotPosition: left
+      blocks:
+        - id: dot_left_s1
+          type: Box
+          style:
+            height: 200
+            background: '#13c2c2'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: dot_left_s1_text
+              type: Title
+              properties:
+                content: Dots on Left
+                level: 3
+              style:
+                color: white
+        - id: dot_left_s2
+          type: Box
+          style:
+            height: 200
+            background: '#006d75'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: dot_left_s2_text
+              type: Title
+              properties:
+                content: Vertical Dots
+                level: 3
+              style:
+                color: white
+        - id: dot_left_s3
+          type: Box
+          style:
+            height: 200
+            background: '#00474f'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: dot_left_s3_text
+              type: Title
+              properties:
+                content: Side Navigation
+                level: 3
+              style:
+                color: white
+
+- title: Dot Position - Right
+  blocks:
+    - id: dot_right_carousel
+      type: Carousel
+      properties:
+        dotPosition: right
+      blocks:
+        - id: dot_right_s1
+          type: Box
+          style:
+            height: 200
+            background: '#eb2f96'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: dot_right_s1_text
+              type: Title
+              properties:
+                content: Dots on Right
+                level: 3
+              style:
+                color: white
+        - id: dot_right_s2
+          type: Box
+          style:
+            height: 200
+            background: '#c41d7f'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: dot_right_s2_text
+              type: Title
+              properties:
+                content: Right Aligned
+                level: 3
+              style:
+                color: white
+        - id: dot_right_s3
+          type: Box
+          style:
+            height: 200
+            background: '#9e1068'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: dot_right_s3_text
+              type: Title
+              properties:
+                content: Navigation
+                level: 3
+              style:
+                color: white
+
+- title: Fade Effect
+  blocks:
+    - id: fade_carousel
+      type: Carousel
+      properties:
+        effect: fade
+      blocks:
+        - id: fade_s1
+          type: Box
+          style:
+            height: 180
+            background: '#531dab'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: fade_s1_text
+              type: Title
+              properties:
+                content: Fade Transition
+                level: 3
+              style:
+                color: white
+        - id: fade_s2
+          type: Box
+          style:
+            height: 180
+            background: '#08979c'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: fade_s2_text
+              type: Title
+              properties:
+                content: Smooth Crossfade
+                level: 3
+              style:
+                color: white
+        - id: fade_s3
+          type: Box
+          style:
+            height: 180
+            background: '#d4380d'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: fade_s3_text
+              type: Title
+              properties:
+                content: Between Slides
+                level: 3
+              style:
+                color: white
+
+- title: Fade with Autoplay
+  blocks:
+    - id: fade_auto_carousel
+      type: Carousel
+      properties:
+        effect: fade
+        autoplay: true
+        autoplaySpeed: 2500
+      blocks:
+        - id: fade_auto_s1
+          type: Box
+          style:
+            height: 180
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: fade_auto_s1_text
+              type: Title
+              properties:
+                content: Gradient Violet
+                level: 3
+              style:
+                color: white
+        - id: fade_auto_s2
+          type: Box
+          style:
+            height: 180
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%)
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: fade_auto_s2_text
+              type: Title
+              properties:
+                content: Gradient Pink
+                level: 3
+              style:
+                color: white
+        - id: fade_auto_s3
+          type: Box
+          style:
+            height: 180
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: fade_auto_s3_text
+              type: Title
+              properties:
+                content: Gradient Cyan
+                level: 3
+              style:
+                color: white
+        - id: fade_auto_s4
+          type: Box
+          style:
+            height: 180
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: fade_auto_s4_text
+              type: Title
+              properties:
+                content: Gradient Mint
+                level: 3
+              style:
+                color: white
+
+- title: With Arrows
+  blocks:
+    - id: arrows_carousel
+      type: Carousel
+      properties:
+        arrows: true
+      blocks:
+        - id: arrows_s1
+          type: Box
+          style:
+            height: 180
+            background: '#389e0d'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: arrows_s1_text
+              type: Title
+              properties:
+                content: Navigate with Arrows
+                level: 3
+              style:
+                color: white
+        - id: arrows_s2
+          type: Box
+          style:
+            height: 180
+            background: '#1d39c4'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: arrows_s2_text
+              type: Title
+              properties:
+                content: Click Left or Right
+                level: 3
+              style:
+                color: white
+        - id: arrows_s3
+          type: Box
+          style:
+            height: 180
+            background: '#c41d7f'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: arrows_s3_text
+              type: Title
+              properties:
+                content: To Change Slides
+                level: 3
+              style:
+                color: white
+        - id: arrows_s4
+          type: Box
+          style:
+            height: 180
+            background: '#d4380d'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: arrows_s4_text
+              type: Title
+              properties:
+                content: Arrow Navigation
+                level: 3
+              style:
+                color: white
+
+- title: Arrows without Dots
+  blocks:
+    - id: arrows_nodots_carousel
+      type: Carousel
+      properties:
+        arrows: true
+        dots: false
+      blocks:
+        - id: arrows_nodots_s1
+          type: Box
+          style:
+            height: 160
+            background: '#faad14'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: arrows_nodots_s1_text
+              type: Title
+              properties:
+                content: Arrows Only
+                level: 3
+              style:
+                color: white
+        - id: arrows_nodots_s2
+          type: Box
+          style:
+            height: 160
+            background: '#d48806'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: arrows_nodots_s2_text
+              type: Title
+              properties:
+                content: No Dot Indicators
+                level: 3
+              style:
+                color: white
+        - id: arrows_nodots_s3
+          type: Box
+          style:
+            height: 160
+            background: '#ad6800'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: arrows_nodots_s3_text
+              type: Title
+              properties:
+                content: Clean Navigation
+                level: 3
+              style:
+                color: white
+
+- title: Multiple Slides per View
+  blocks:
+    - id: multi_carousel
+      type: Carousel
+      properties:
+        slidesToShow: 3
+        slidesToScroll: 1
+      blocks:
+        - id: multi_s1
+          type: Box
+          style:
+            height: 140
+            background: '#1677ff'
+            display: flex
+            alignItems: center
+            justifyContent: center
+            margin: 0 8px
+          blocks:
+            - id: multi_s1_text
+              type: Title
+              properties:
+                content: '1'
+                level: 3
+              style:
+                color: white
+        - id: multi_s2
+          type: Box
+          style:
+            height: 140
+            background: '#4096ff'
+            display: flex
+            alignItems: center
+            justifyContent: center
+            margin: 0 8px
+          blocks:
+            - id: multi_s2_text
+              type: Title
+              properties:
+                content: '2'
+                level: 3
+              style:
+                color: white
+        - id: multi_s3
+          type: Box
+          style:
+            height: 140
+            background: '#69b1ff'
+            display: flex
+            alignItems: center
+            justifyContent: center
+            margin: 0 8px
+          blocks:
+            - id: multi_s3_text
+              type: Title
+              properties:
+                content: '3'
+                level: 3
+              style:
+                color: white
+        - id: multi_s4
+          type: Box
+          style:
+            height: 140
+            background: '#91caff'
+            display: flex
+            alignItems: center
+            justifyContent: center
+            margin: 0 8px
+          blocks:
+            - id: multi_s4_text
+              type: Title
+              properties:
+                content: '4'
+                level: 3
+              style:
+                color: white
+        - id: multi_s5
+          type: Box
+          style:
+            height: 140
+            background: '#bae0ff'
+            display: flex
+            alignItems: center
+            justifyContent: center
+            margin: 0 8px
+          blocks:
+            - id: multi_s5_text
+              type: Title
+              properties:
+                content: '5'
+                level: 3
+              style:
+                color: '#1677ff'
+        - id: multi_s6
+          type: Box
+          style:
+            height: 140
+            background: '#e6f4ff'
+            display: flex
+            alignItems: center
+            justifyContent: center
+            margin: 0 8px
+          blocks:
+            - id: multi_s6_text
+              type: Title
+              properties:
+                content: '6'
+                level: 3
+              style:
+                color: '#1677ff'
+
+- title: Infinite Loop Disabled
+  blocks:
+    - id: finite_carousel
+      type: Carousel
+      properties:
+        infinite: false
+        arrows: true
+      blocks:
+        - id: finite_s1
+          type: Box
+          style:
+            height: 160
+            background: '#cf1322'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: finite_s1_text
+              type: Title
+              properties:
+                content: First Slide
+                level: 3
+              style:
+                color: white
+        - id: finite_s2
+          type: Box
+          style:
+            height: 160
+            background: '#a8071a'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: finite_s2_text
+              type: Title
+              properties:
+                content: Middle Slide
+                level: 3
+              style:
+                color: white
+        - id: finite_s3
+          type: Box
+          style:
+            height: 160
+            background: '#820014'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: finite_s3_text
+              type: Title
+              properties:
+                content: Last Slide (Stops Here)
+                level: 3
+              style:
+                color: white
+
+- title: Slides with Rich Content
+  blocks:
+    - id: rich_carousel
+      type: Carousel
+      properties:
+        autoplay: true
+        autoplaySpeed: 4000
+      blocks:
+        - id: rich_s1
+          type: Box
+          style:
+            height: 220
+            background: linear-gradient(135deg, #1677ff 0%, #0958d9 100%)
+            display: flex
+            flexDirection: column
+            alignItems: center
+            justifyContent: center
+            padding: 24px
+          blocks:
+            - id: rich_s1_icon
+              type: Icon
+              properties:
+                name: AiOutlineRocket
+                size: 40
+                color: white
+            - id: rich_s1_title
+              type: Title
+              properties:
+                content: Launch Fast
+                level: 3
+              style:
+                color: white
+                marginTop: 12
+                marginBottom: 0
+            - id: rich_s1_desc
+              type: Paragraph
+              properties:
+                content: Build and deploy web apps in record time with config-driven development.
+              style:
+                color: rgba(255, 255, 255, 0.85)
+                textAlign: center
+                maxWidth: 400
+        - id: rich_s2
+          type: Box
+          style:
+            height: 220
+            background: linear-gradient(135deg, #52c41a 0%, #389e0d 100%)
+            display: flex
+            flexDirection: column
+            alignItems: center
+            justifyContent: center
+            padding: 24px
+          blocks:
+            - id: rich_s2_icon
+              type: Icon
+              properties:
+                name: AiOutlineCheckCircle
+                size: 40
+                color: white
+            - id: rich_s2_title
+              type: Title
+              properties:
+                content: Production Ready
+                level: 3
+              style:
+                color: white
+                marginTop: 12
+                marginBottom: 0
+            - id: rich_s2_desc
+              type: Paragraph
+              properties:
+                content: Enterprise-grade applications with built-in auth, roles, and security.
+              style:
+                color: rgba(255, 255, 255, 0.85)
+                textAlign: center
+                maxWidth: 400
+        - id: rich_s3
+          type: Box
+          style:
+            height: 220
+            background: linear-gradient(135deg, #722ed1 0%, #531dab 100%)
+            display: flex
+            flexDirection: column
+            alignItems: center
+            justifyContent: center
+            padding: 24px
+          blocks:
+            - id: rich_s3_icon
+              type: Icon
+              properties:
+                name: AiOutlineApi
+                size: 40
+                color: white
+            - id: rich_s3_title
+              type: Title
+              properties:
+                content: Connect Anything
+                level: 3
+              style:
+                color: white
+                marginTop: 12
+                marginBottom: 0
+            - id: rich_s3_desc
+              type: Paragraph
+              properties:
+                content: Integrate with databases, REST APIs, and GraphQL endpoints effortlessly.
+              style:
+                color: rgba(255, 255, 255, 0.85)
+                textAlign: center
+                maxWidth: 400
+
+- title: Slides with Cards
+  blocks:
+    - id: card_carousel
+      type: Carousel
+      properties:
+        slidesToShow: 2
+        slidesToScroll: 1
+        arrows: true
+      blocks:
+        - id: card_s1
+          type: Box
+          style:
+            padding: 12px
+          blocks:
+            - id: card_s1_card
+              type: Card
+              properties:
+                title: Dashboard
+                bordered: true
+              blocks:
+                - id: card_s1_card_desc
+                  type: Paragraph
+                  properties:
+                    content: Monitor your app metrics and KPIs at a glance with customizable widgets and real-time data.
+                - id: card_s1_card_tag
+                  type: Tag
+                  properties:
+                    title: Analytics
+                    color: blue
+        - id: card_s2
+          type: Box
+          style:
+            padding: 12px
+          blocks:
+            - id: card_s2_card
+              type: Card
+              properties:
+                title: User Management
+                bordered: true
+              blocks:
+                - id: card_s2_card_desc
+                  type: Paragraph
+                  properties:
+                    content: Handle roles, permissions, and team invitations with a built-in authentication layer.
+                - id: card_s2_card_tag
+                  type: Tag
+                  properties:
+                    title: Security
+                    color: green
+        - id: card_s3
+          type: Box
+          style:
+            padding: 12px
+          blocks:
+            - id: card_s3_card
+              type: Card
+              properties:
+                title: Form Builder
+                bordered: true
+              blocks:
+                - id: card_s3_card_desc
+                  type: Paragraph
+                  properties:
+                    content: Create complex multi-step forms with validation, conditional logic, and file uploads.
+                - id: card_s3_card_tag
+                  type: Tag
+                  properties:
+                    title: Input
+                    color: purple
+        - id: card_s4
+          type: Box
+          style:
+            padding: 12px
+          blocks:
+            - id: card_s4_card
+              type: Card
+              properties:
+                title: Workflow Engine
+                bordered: true
+              blocks:
+                - id: card_s4_card_desc
+                  type: Paragraph
+                  properties:
+                    content: Automate business processes with triggers, conditions, and multi-step action sequences.
+                - id: card_s4_card_tag
+                  type: Tag
+                  properties:
+                    title: Automation
+                    color: orange
+
+- title: Gradient Background Slides
+  blocks:
+    - id: gradient_carousel
+      type: Carousel
+      properties:
+        effect: fade
+        autoplay: true
+        autoplaySpeed: 3000
+      blocks:
+        - id: grad_s1
+          type: Box
+          style:
+            height: 200
+            background: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%)
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: grad_s1_text
+              type: Title
+              properties:
+                content: Soft Blue
+                level: 2
+              style:
+                color: '#1d39c4'
+        - id: grad_s2
+          type: Box
+          style:
+            height: 200
+            background: linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%)
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: grad_s2_text
+              type: Title
+              properties:
+                content: Fresh Lime
+                level: 2
+              style:
+                color: '#135200'
+        - id: grad_s3
+          type: Box
+          style:
+            height: 200
+            background: linear-gradient(120deg, #fccb90 0%, #d57eeb 100%)
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: grad_s3_text
+              type: Title
+              properties:
+                content: Warm Sunset
+                level: 2
+              style:
+                color: '#610b00'
+        - id: grad_s4
+          type: Box
+          style:
+            height: 200
+            background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: grad_s4_text
+              type: Title
+              properties:
+                content: Lavender Mist
+                level: 2
+              style:
+                color: '#391085'
+        - id: grad_s5
+          type: Box
+          style:
+            height: 200
+            background: linear-gradient(120deg, #f5576c 0%, #ff6a88 50%, #ffd194 100%)
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: grad_s5_text
+              type: Title
+              properties:
+                content: Coral Sunrise
+                level: 2
+              style:
+                color: white
+
+- title: Draggable
+  blocks:
+    - id: drag_carousel
+      type: Carousel
+      properties:
+        draggable: true
+        swipeToSlide: true
+      blocks:
+        - id: drag_s1
+          type: Box
+          style:
+            height: 160
+            background: '#2f54eb'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: drag_s1_text
+              type: Title
+              properties:
+                content: Drag to Navigate
+                level: 3
+              style:
+                color: white
+        - id: drag_s2
+          type: Box
+          style:
+            height: 160
+            background: '#597ef7'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: drag_s2_text
+              type: Title
+              properties:
+                content: Click and Drag
+                level: 3
+              style:
+                color: white
+        - id: drag_s3
+          type: Box
+          style:
+            height: 160
+            background: '#85a5ff'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: drag_s3_text
+              type: Title
+              properties:
+                content: On Desktop
+                level: 3
+              style:
+                color: white
+        - id: drag_s4
+          type: Box
+          style:
+            height: 160
+            background: '#adc6ff'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: drag_s4_text
+              type: Title
+              properties:
+                content: Swipe on Mobile
+                level: 3
+              style:
+                color: '#2f54eb'
+
+- title: Center Mode
+  blocks:
+    - id: center_carousel
+      type: Carousel
+      properties:
+        centerMode: true
+        centerPadding: 60px
+        slidesToShow: 1
+      blocks:
+        - id: center_s1
+          type: Box
+          style:
+            height: 160
+            background: '#faad14'
+            display: flex
+            alignItems: center
+            justifyContent: center
+            margin: 0 8px
+            borderRadius: 8
+          blocks:
+            - id: center_s1_text
+              type: Title
+              properties:
+                content: Center Mode
+                level: 3
+              style:
+                color: white
+        - id: center_s2
+          type: Box
+          style:
+            height: 160
+            background: '#d48806'
+            display: flex
+            alignItems: center
+            justifyContent: center
+            margin: 0 8px
+            borderRadius: 8
+          blocks:
+            - id: center_s2_text
+              type: Title
+              properties:
+                content: Peek at Adjacent
+                level: 3
+              style:
+                color: white
+        - id: center_s3
+          type: Box
+          style:
+            height: 160
+            background: '#ad6800'
+            display: flex
+            alignItems: center
+            justifyContent: center
+            margin: 0 8px
+            borderRadius: 8
+          blocks:
+            - id: center_s3_text
+              type: Title
+              properties:
+                content: Slide Previews
+                level: 3
+              style:
+                color: white
+        - id: center_s4
+          type: Box
+          style:
+            height: 160
+            background: '#874d00'
+            display: flex
+            alignItems: center
+            justifyContent: center
+            margin: 0 8px
+            borderRadius: 8
+          blocks:
+            - id: center_s4_text
+              type: Title
+              properties:
+                content: With Padding
+                level: 3
+              style:
+                color: white
+
+- title: Styled Slides with CSS
+  blocks:
+    - id: css_carousel
+      type: Carousel
+      blocks:
+        - id: css_s1
+          type: Box
+          class: bg-gradient-to-br from-blue-500 to-indigo-600
+          style:
+            height: 200
+            display: flex
+            flexDirection: column
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: css_s1_title
+              type: Title
+              properties:
+                content: Tailwind Gradients
+                level: 2
+              style:
+                color: white
+                marginBottom: 0
+            - id: css_s1_sub
+              type: Paragraph
+              properties:
+                content: Use Tailwind utility classes on slides
+              style:
+                color: rgba(255, 255, 255, 0.8)
+        - id: css_s2
+          type: Box
+          class: bg-gradient-to-br from-emerald-400 to-cyan-500
+          style:
+            height: 200
+            display: flex
+            flexDirection: column
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: css_s2_title
+              type: Title
+              properties:
+                content: Green to Cyan
+                level: 2
+              style:
+                color: white
+                marginBottom: 0
+            - id: css_s2_sub
+              type: Paragraph
+              properties:
+                content: Combine class and style for full control
+              style:
+                color: rgba(255, 255, 255, 0.8)
+        - id: css_s3
+          type: Box
+          class: bg-gradient-to-br from-rose-400 to-orange-400
+          style:
+            height: 200
+            display: flex
+            flexDirection: column
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: css_s3_title
+              type: Title
+              properties:
+                content: Rose to Orange
+                level: 2
+              style:
+                color: white
+                marginBottom: 0
+            - id: css_s3_sub
+              type: Paragraph
+              properties:
+                content: Beautiful color transitions
+              style:
+                color: rgba(255, 255, 255, 0.8)
+        - id: css_s4
+          type: Box
+          class: bg-gradient-to-br from-violet-500 to-fuchsia-500
+          style:
+            height: 200
+            display: flex
+            flexDirection: column
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: css_s4_title
+              type: Title
+              properties:
+                content: Violet to Fuchsia
+                level: 2
+              style:
+                color: white
+                marginBottom: 0
+            - id: css_s4_sub
+              type: Paragraph
+              properties:
+                content: Rich purple gradients
+              style:
+                color: rgba(255, 255, 255, 0.8)
+
+- title: Custom Transition Speed
+  blocks:
+    - id: speed_label
+      type: Markdown
+      properties:
+        content: '**Slow transition (1500ms):**'
+    - id: slow_carousel
+      type: Carousel
+      properties:
+        speed: 1500
+        easing: ease-in-out
+      blocks:
+        - id: slow_s1
+          type: Box
+          style:
+            height: 140
+            background: '#595959'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: slow_s1_text
+              type: Title
+              properties:
+                content: Slow and Smooth
+                level: 3
+              style:
+                color: white
+        - id: slow_s2
+          type: Box
+          style:
+            height: 140
+            background: '#434343'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: slow_s2_text
+              type: Title
+              properties:
+                content: Ease In Out
+                level: 3
+              style:
+                color: white
+        - id: slow_s3
+          type: Box
+          style:
+            height: 140
+            background: '#262626'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: slow_s3_text
+              type: Title
+              properties:
+                content: 1.5 Second Slide
+                level: 3
+              style:
+                color: white
+    - id: fast_label
+      type: Markdown
+      properties:
+        content: '**Fast transition (200ms):**'
+    - id: fast_carousel
+      type: Carousel
+      properties:
+        speed: 200
+      blocks:
+        - id: fast_s1
+          type: Box
+          style:
+            height: 140
+            background: '#ff4d4f'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: fast_s1_text
+              type: Title
+              properties:
+                content: Quick Snap
+                level: 3
+              style:
+                color: white
+        - id: fast_s2
+          type: Box
+          style:
+            height: 140
+            background: '#ff7875'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: fast_s2_text
+              type: Title
+              properties:
+                content: 200ms Transition
+                level: 3
+              style:
+                color: white
+        - id: fast_s3
+          type: Box
+          style:
+            height: 140
+            background: '#ffa39e'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: fast_s3_text
+              type: Title
+              properties:
+                content: Instant Feel
+                level: 3
+              style:
+                color: '#cf1322'
+
+- title: Theme Token Overrides - Large Dots
+  blocks:
+    - id: theme_large_dots_carousel
+      type: Carousel
+      properties:
+        theme:
+          dotWidth: 24
+          dotHeight: 6
+          dotActiveWidth: 40
+      blocks:
+        - id: theme_ld_s1
+          type: Box
+          style:
+            height: 160
+            background: '#1677ff'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: theme_ld_s1_text
+              type: Title
+              properties:
+                content: Large Dots
+                level: 3
+              style:
+                color: white
+        - id: theme_ld_s2
+          type: Box
+          style:
+            height: 160
+            background: '#4096ff'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: theme_ld_s2_text
+              type: Title
+              properties:
+                content: Custom Indicators
+                level: 3
+              style:
+                color: white
+        - id: theme_ld_s3
+          type: Box
+          style:
+            height: 160
+            background: '#69b1ff'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: theme_ld_s3_text
+              type: Title
+              properties:
+                content: More Visible
+                level: 3
+              style:
+                color: white
+
+- title: Theme Token Overrides - Round Dots
+  blocks:
+    - id: theme_round_dots_carousel
+      type: Carousel
+      properties:
+        theme:
+          dotWidth: 12
+          dotHeight: 12
+          dotActiveWidth: 12
+      blocks:
+        - id: theme_rd_s1
+          type: Box
+          style:
+            height: 160
+            background: '#52c41a'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: theme_rd_s1_text
+              type: Title
+              properties:
+                content: Round Dots
+                level: 3
+              style:
+                color: white
+        - id: theme_rd_s2
+          type: Box
+          style:
+            height: 160
+            background: '#73d13d'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: theme_rd_s2_text
+              type: Title
+              properties:
+                content: Circular Indicators
+                level: 3
+              style:
+                color: white
+        - id: theme_rd_s3
+          type: Box
+          style:
+            height: 160
+            background: '#95de64'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: theme_rd_s3_text
+              type: Title
+              properties:
+                content: Same Width Active
+                level: 3
+              style:
+                color: '#135200'
+
+- title: Theme Token Overrides - Large Arrows
+  blocks:
+    - id: theme_large_arrows_carousel
+      type: Carousel
+      properties:
+        arrows: true
+        theme:
+          arrowSize: 24
+          arrowOffset: 16
+      blocks:
+        - id: theme_la_s1
+          type: Box
+          style:
+            height: 180
+            background: '#722ed1'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: theme_la_s1_text
+              type: Title
+              properties:
+                content: Larger Arrows
+                level: 3
+              style:
+                color: white
+        - id: theme_la_s2
+          type: Box
+          style:
+            height: 180
+            background: '#9254de'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: theme_la_s2_text
+              type: Title
+              properties:
+                content: More Prominent
+                level: 3
+              style:
+                color: white
+        - id: theme_la_s3
+          type: Box
+          style:
+            height: 180
+            background: '#b37feb'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: theme_la_s3_text
+              type: Title
+              properties:
+                content: Navigation Controls
+                level: 3
+              style:
+                color: white
+
+- title: Theme Token Overrides - Spaced Dots
+  blocks:
+    - id: theme_spaced_dots_carousel
+      type: Carousel
+      properties:
+        theme:
+          dotGap: 12
+          dotOffset: 20
+          dotWidth: 20
+          dotHeight: 4
+          dotActiveWidth: 36
+      blocks:
+        - id: theme_sd_s1
+          type: Box
+          style:
+            height: 160
+            background: '#eb2f96'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: theme_sd_s1_text
+              type: Title
+              properties:
+                content: Spaced Dots
+                level: 3
+              style:
+                color: white
+        - id: theme_sd_s2
+          type: Box
+          style:
+            height: 160
+            background: '#f759ab'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: theme_sd_s2_text
+              type: Title
+              properties:
+                content: Wide Gap
+                level: 3
+              style:
+                color: white
+        - id: theme_sd_s3
+          type: Box
+          style:
+            height: 160
+            background: '#ff85c0'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: theme_sd_s3_text
+              type: Title
+              properties:
+                content: More Offset
+                level: 3
+              style:
+                color: white
+        - id: theme_sd_s4
+          type: Box
+          style:
+            height: 160
+            background: '#ffadd2'
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: theme_sd_s4_text
+              type: Title
+              properties:
+                content: Custom Spacing
+                level: 3
+              style:
+                color: '#c41d7f'

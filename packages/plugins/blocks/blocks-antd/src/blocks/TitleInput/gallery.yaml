@@ -1,0 +1,1288 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Heading Levels
+  blocks:
+    - id: heading_level_1
+      type: TitleInput
+      properties:
+        level: 1
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              heading_level_1: h1. Editable Heading Level 1
+    - id: heading_level_2
+      type: TitleInput
+      properties:
+        level: 2
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              heading_level_2: h2. Editable Heading Level 2
+    - id: heading_level_3
+      type: TitleInput
+      properties:
+        level: 3
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              heading_level_3: h3. Editable Heading Level 3
+    - id: heading_level_4
+      type: TitleInput
+      properties:
+        level: 4
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              heading_level_4: h4. Editable Heading Level 4
+    - id: heading_level_5
+      type: TitleInput
+      properties:
+        level: 5
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              heading_level_5: h5. Editable Heading Level 5
+- title: Typography Types
+  blocks:
+    - id: type_default
+      type: TitleInput
+      properties:
+        level: 3
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              type_default: Default Type Title
+    - id: type_secondary
+      type: TitleInput
+      properties:
+        level: 3
+        type: secondary
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              type_secondary: Secondary Type Title
+    - id: type_success
+      type: TitleInput
+      properties:
+        level: 3
+        type: success
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              type_success: Success Type Title
+    - id: type_warning
+      type: TitleInput
+      properties:
+        level: 3
+        type: warning
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              type_warning: Warning Type Title
+    - id: type_danger
+      type: TitleInput
+      properties:
+        level: 3
+        type: danger
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              type_danger: Danger Type Title
+- title: Text Styles
+  blocks:
+    - id: style_italic
+      type: TitleInput
+      properties:
+        level: 3
+        italic: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              style_italic: Italic Title
+    - id: style_underline
+      type: TitleInput
+      properties:
+        level: 3
+        underline: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              style_underline: Underlined Title
+    - id: style_delete
+      type: TitleInput
+      properties:
+        level: 3
+        delete: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              style_delete: Strikethrough Title
+    - id: style_mark
+      type: TitleInput
+      properties:
+        level: 3
+        mark: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              style_mark: Marked (Highlighted) Title
+    - id: style_code
+      type: TitleInput
+      properties:
+        level: 3
+        code: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              style_code: Code Style Title
+- title: Combined Styles
+  blocks:
+    - id: combined_italic_underline
+      type: TitleInput
+      properties:
+        level: 3
+        italic: true
+        underline: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              combined_italic_underline: Italic and Underlined
+    - id: combined_mark_code
+      type: TitleInput
+      properties:
+        level: 3
+        mark: true
+        code: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              combined_mark_code: Marked and Code
+    - id: combined_italic_delete
+      type: TitleInput
+      properties:
+        level: 3
+        italic: true
+        delete: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              combined_italic_delete: Italic and Strikethrough
+    - id: combined_underline_mark
+      type: TitleInput
+      properties:
+        level: 3
+        underline: true
+        mark: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              combined_underline_mark: Underlined and Marked
+    - id: combined_italic_underline_mark
+      type: TitleInput
+      properties:
+        level: 3
+        italic: true
+        underline: true
+        mark: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              combined_italic_underline_mark: Italic, Underlined, and Marked
+    - id: combined_code_delete
+      type: TitleInput
+      properties:
+        level: 3
+        code: true
+        delete: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              combined_code_delete: Code and Strikethrough
+    - id: combined_all_styles
+      type: TitleInput
+      properties:
+        level: 3
+        italic: true
+        underline: true
+        mark: true
+        code: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              combined_all_styles: All Styles Applied
+- title: Color
+  blocks:
+    - id: color_blue
+      type: TitleInput
+      properties:
+        level: 3
+        color: '#1677ff'
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              color_blue: Blue Title
+    - id: color_green
+      type: TitleInput
+      properties:
+        level: 3
+        color: '#52c41a'
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              color_green: Green Title
+    - id: color_purple
+      type: TitleInput
+      properties:
+        level: 3
+        color: '#722ed1'
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              color_purple: Purple Title
+    - id: color_coral
+      type: TitleInput
+      properties:
+        level: 3
+        color: '#ff6b6b'
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              color_coral: Coral Title
+    - id: color_orange
+      type: TitleInput
+      properties:
+        level: 3
+        color: '#fa8c16'
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              color_orange: Orange Title
+    - id: color_teal
+      type: TitleInput
+      properties:
+        level: 3
+        color: '#13c2c2'
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              color_teal: Teal Title
+- title: Copyable
+  blocks:
+    - id: copyable_boolean
+      type: TitleInput
+      properties:
+        level: 3
+        copyable: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              copyable_boolean: Click the copy icon to copy this title
+    - id: copyable_custom_text
+      type: TitleInput
+      properties:
+        level: 3
+        copyable:
+          text: This custom text is copied instead of the visible title.
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              copyable_custom_text: Title with custom copy text
+    - id: copyable_custom_tooltips
+      type: TitleInput
+      properties:
+        level: 3
+        copyable:
+          tooltips:
+            - Click to copy
+            - Copied!
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              copyable_custom_tooltips: Hover the copy icon for custom tooltips
+    - id: copyable_custom_text_and_tooltips
+      type: TitleInput
+      properties:
+        level: 3
+        copyable:
+          text: Custom copied content for this title.
+          tooltips:
+            - Copy custom text
+            - Text copied successfully!
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              copyable_custom_text_and_tooltips: Custom text and tooltips together
+- title: Editable Options
+  blocks:
+    - id: editable_boolean_true
+      type: TitleInput
+      properties:
+        level: 3
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              editable_boolean_true: Editable with boolean true
+    - id: editable_boolean_false
+      type: TitleInput
+      properties:
+        level: 3
+        editable: false
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              editable_boolean_false: Not editable (editable false)
+    - id: editable_custom_tooltip
+      type: TitleInput
+      properties:
+        level: 3
+        editable:
+          tooltip: Click here to edit this title
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              editable_custom_tooltip: Click the pencil to edit
+    - id: editable_max_length
+      type: TitleInput
+      properties:
+        level: 3
+        editable:
+          maxLength: 50
+          tooltip: Limited to 50 characters
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              editable_max_length: Max 50 characters allowed
+    - id: editable_editing_state
+      type: TitleInput
+      properties:
+        level: 3
+        editable:
+          editing: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              editable_editing_state: Starts in editing mode
+    - id: editable_max_length_short
+      type: TitleInput
+      properties:
+        level: 3
+        editable:
+          maxLength: 20
+          tooltip: Only 20 characters
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              editable_max_length_short: Short limit (20 chars)
+- title: Ellipsis
+  blocks:
+    - id: ellipsis_boolean
+      type: TitleInput
+      properties:
+        level: 3
+        ellipsis: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              ellipsis_boolean: This is a very long editable title that should be truncated with an ellipsis when it overflows the available space in a single line of text content.
+    - id: ellipsis_two_rows
+      type: TitleInput
+      properties:
+        level: 4
+        ellipsis:
+          rows: 2
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              ellipsis_two_rows: This is an extremely long title text that demonstrates multi-row ellipsis truncation. When the content exceeds the specified number of rows it will be truncated and show an ellipsis indicator at the end of the visible text area.
+    - id: ellipsis_three_rows_expandable
+      type: TitleInput
+      properties:
+        level: 4
+        ellipsis:
+          rows: 3
+          expandable: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              ellipsis_three_rows_expandable: This is a very long title that will be truncated after three rows. It demonstrates the expandable ellipsis feature which allows users to click to expand and see the full content of the title. This is useful for long headings that need to be visible on demand without taking up too much vertical space in the layout.
+    - id: ellipsis_with_suffix
+      type: TitleInput
+      properties:
+        level: 4
+        ellipsis:
+          rows: 1
+          suffix: ' [more]'
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              ellipsis_with_suffix: This long title demonstrates the suffix feature of the ellipsis configuration where a custom suffix string appears at the truncation point instead of the default behavior.
+    - id: ellipsis_expandable_with_suffix
+      type: TitleInput
+      properties:
+        level: 4
+        ellipsis:
+          rows: 2
+          expandable: true
+          suffix: ' ...(click to expand)'
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              ellipsis_expandable_with_suffix: This title combines expandable and suffix options. Click to expand and see the full content. The suffix text appears at the end of the truncated text to provide a visual cue to the user.
+- title: Disabled State
+  blocks:
+    - id: disabled_level_1
+      type: TitleInput
+      properties:
+        level: 1
+        disabled: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              disabled_level_1: Disabled Level 1 Title
+    - id: disabled_level_3
+      type: TitleInput
+      properties:
+        level: 3
+        disabled: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              disabled_level_3: Disabled Level 3 Title
+    - id: disabled_with_styles
+      type: TitleInput
+      properties:
+        level: 3
+        disabled: true
+        italic: true
+        underline: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              disabled_with_styles: Disabled with Italic and Underline
+    - id: disabled_secondary
+      type: TitleInput
+      properties:
+        level: 3
+        disabled: true
+        type: secondary
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              disabled_secondary: Disabled Secondary Type
+- title: Default Values
+  blocks:
+    - id: default_value_simple
+      type: TitleInput
+      properties:
+        level: 3
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              default_value_simple: This is the default value
+    - id: default_value_long
+      type: TitleInput
+      properties:
+        level: 4
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              default_value_long: A longer default value that demonstrates how TitleInput handles pre-populated content for editing
+    - id: default_value_with_type
+      type: TitleInput
+      properties:
+        level: 3
+        type: success
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              default_value_with_type: Default value with success type
+    - id: default_value_with_styles
+      type: TitleInput
+      properties:
+        level: 3
+        italic: true
+        mark: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              default_value_with_styles: Default value with italic and mark
+    - id: no_default_value
+      type: TitleInput
+      properties:
+        level: 3
+        editable: true
+- title: Levels with Types
+  blocks:
+    - id: level_1_secondary
+      type: TitleInput
+      properties:
+        level: 1
+        type: secondary
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              level_1_secondary: Level 1 Secondary
+    - id: level_1_success
+      type: TitleInput
+      properties:
+        level: 1
+        type: success
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              level_1_success: Level 1 Success
+    - id: level_1_warning
+      type: TitleInput
+      properties:
+        level: 1
+        type: warning
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              level_1_warning: Level 1 Warning
+    - id: level_1_danger
+      type: TitleInput
+      properties:
+        level: 1
+        type: danger
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              level_1_danger: Level 1 Danger
+    - id: level_2_secondary
+      type: TitleInput
+      properties:
+        level: 2
+        type: secondary
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              level_2_secondary: Level 2 Secondary
+    - id: level_2_success
+      type: TitleInput
+      properties:
+        level: 2
+        type: success
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              level_2_success: Level 2 Success
+    - id: level_2_warning
+      type: TitleInput
+      properties:
+        level: 2
+        type: warning
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              level_2_warning: Level 2 Warning
+    - id: level_2_danger
+      type: TitleInput
+      properties:
+        level: 2
+        type: danger
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              level_2_danger: Level 2 Danger
+    - id: level_3_secondary
+      type: TitleInput
+      properties:
+        level: 3
+        type: secondary
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              level_3_secondary: Level 3 Secondary
+    - id: level_3_success
+      type: TitleInput
+      properties:
+        level: 3
+        type: success
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              level_3_success: Level 3 Success
+    - id: level_3_warning
+      type: TitleInput
+      properties:
+        level: 3
+        type: warning
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              level_3_warning: Level 3 Warning
+    - id: level_3_danger
+      type: TitleInput
+      properties:
+        level: 3
+        type: danger
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              level_3_danger: Level 3 Danger
+    - id: level_4_secondary
+      type: TitleInput
+      properties:
+        level: 4
+        type: secondary
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              level_4_secondary: Level 4 Secondary
+    - id: level_4_success
+      type: TitleInput
+      properties:
+        level: 4
+        type: success
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              level_4_success: Level 4 Success
+    - id: level_4_warning
+      type: TitleInput
+      properties:
+        level: 4
+        type: warning
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              level_4_warning: Level 4 Warning
+    - id: level_4_danger
+      type: TitleInput
+      properties:
+        level: 4
+        type: danger
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              level_4_danger: Level 4 Danger
+    - id: level_5_secondary
+      type: TitleInput
+      properties:
+        level: 5
+        type: secondary
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              level_5_secondary: Level 5 Secondary
+    - id: level_5_success
+      type: TitleInput
+      properties:
+        level: 5
+        type: success
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              level_5_success: Level 5 Success
+    - id: level_5_warning
+      type: TitleInput
+      properties:
+        level: 5
+        type: warning
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              level_5_warning: Level 5 Warning
+    - id: level_5_danger
+      type: TitleInput
+      properties:
+        level: 5
+        type: danger
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              level_5_danger: Level 5 Danger
+- title: Theme Token Overrides
+  blocks:
+    - id: theme_color_text
+      type: TitleInput
+      properties:
+        level: 3
+        editable: true
+        theme:
+          colorText: '#531dab'
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_color_text: Custom Text Color
+    - id: theme_font_family
+      type: TitleInput
+      properties:
+        level: 3
+        editable: true
+        theme:
+          fontFamily: Georgia, serif
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_font_family: Custom Font Family
+    - id: theme_font_weight_strong
+      type: TitleInput
+      properties:
+        level: 3
+        editable: true
+        theme:
+          fontWeightStrong: 900
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_font_weight_strong: Custom Font Weight
+    - id: theme_color_success
+      type: TitleInput
+      properties:
+        level: 3
+        type: success
+        editable: true
+        theme:
+          colorSuccess: '#389e0d'
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_color_success: Custom Success Color
+    - id: theme_color_warning
+      type: TitleInput
+      properties:
+        level: 3
+        type: warning
+        editable: true
+        theme:
+          colorWarning: '#d48806'
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_color_warning: Custom Warning Color
+    - id: theme_color_error
+      type: TitleInput
+      properties:
+        level: 3
+        type: danger
+        editable: true
+        theme:
+          colorError: '#cf1322'
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_color_error: Custom Danger/Error Color
+    - id: theme_font_size_heading3
+      type: TitleInput
+      properties:
+        level: 3
+        editable: true
+        theme:
+          fontSizeHeading3: 32
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_font_size_heading3: Large Font Size for h3
+    - id: theme_font_size_heading4
+      type: TitleInput
+      properties:
+        level: 4
+        editable: true
+        theme:
+          fontSizeHeading4: 28
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_font_size_heading4: Large Font Size for h4
+    - id: theme_line_height
+      type: TitleInput
+      properties:
+        level: 3
+        editable: true
+        theme:
+          lineHeightHeading3: 1.8
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_line_height: Custom Line Height
+    - id: theme_title_margin_top
+      type: TitleInput
+      properties:
+        level: 3
+        editable: true
+        theme:
+          titleMarginTop: 2em
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_title_margin_top: Custom Title Margin Top
+    - id: theme_title_margin_bottom
+      type: TitleInput
+      properties:
+        level: 3
+        editable: true
+        theme:
+          titleMarginBottom: 1em
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_title_margin_bottom: Custom Title Margin Bottom
+    - id: theme_font_size_small
+      type: TitleInput
+      properties:
+        level: 5
+        editable: true
+        theme:
+          fontSizeHeading5: 12
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_font_size_small: Smaller Font Size for h5
+    - id: theme_font_size_large
+      type: TitleInput
+      properties:
+        level: 1
+        editable: true
+        theme:
+          fontSizeHeading1: 48
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_font_size_large: Larger Font Size for h1
+    - id: theme_multiple_tokens
+      type: TitleInput
+      properties:
+        level: 3
+        editable: true
+        theme:
+          colorText: '#1d39c4'
+          fontFamily: Courier New, monospace
+          fontWeightStrong: 700
+          fontSizeHeading3: 28
+          lineHeightHeading3: 1.6
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              theme_multiple_tokens: Multiple Token Overrides
+- title: Combined Features
+  blocks:
+    - id: combined_copyable_editable
+      type: TitleInput
+      properties:
+        level: 3
+        copyable: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              combined_copyable_editable: Copyable and Editable Title
+    - id: combined_type_styles_copyable
+      type: TitleInput
+      properties:
+        level: 3
+        type: success
+        italic: true
+        copyable: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              combined_type_styles_copyable: Success Type with Italic and Copyable
+    - id: combined_warning_underline_mark
+      type: TitleInput
+      properties:
+        level: 3
+        type: warning
+        underline: true
+        mark: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              combined_warning_underline_mark: Warning with Underline and Mark
+    - id: combined_color_styles_editable
+      type: TitleInput
+      properties:
+        level: 3
+        color: '#722ed1'
+        code: true
+        editable:
+          tooltip: Edit this purple code title
+          maxLength: 100
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              combined_color_styles_editable: Custom Color with Code Style
+    - id: combined_ellipsis_copyable_editable
+      type: TitleInput
+      properties:
+        level: 4
+        ellipsis:
+          rows: 2
+          expandable: true
+        copyable:
+          tooltips:
+            - Copy this long title
+            - Copied!
+        editable:
+          tooltip: Edit this long title
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              combined_ellipsis_copyable_editable: This is a very long title that combines ellipsis truncation with both copyable and editable features to demonstrate how multiple features work together in a single component.
+    - id: combined_danger_italic_underline_copyable
+      type: TitleInput
+      properties:
+        level: 2
+        type: danger
+        italic: true
+        underline: true
+        copyable:
+          text: Copied danger title text
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              combined_danger_italic_underline_copyable: Danger Italic Underline Copyable
+    - id: combined_secondary_code_mark
+      type: TitleInput
+      properties:
+        level: 4
+        type: secondary
+        code: true
+        mark: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              combined_secondary_code_mark: Secondary Code and Mark
+    - id: combined_theme_styles_editable
+      type: TitleInput
+      properties:
+        level: 3
+        italic: true
+        underline: true
+        editable:
+          tooltip: Edit this themed title
+          maxLength: 80
+        theme:
+          colorText: '#08979c'
+          fontFamily: Georgia, serif
+          fontWeightStrong: 800
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              combined_theme_styles_editable: Themed Title with Styles
+    - id: combined_full_featured
+      type: TitleInput
+      properties:
+        level: 3
+        type: success
+        italic: true
+        copyable:
+          text: Full-featured title content
+          tooltips:
+            - Copy title
+            - Title copied!
+        editable:
+          tooltip: Click to edit
+          maxLength: 120
+        theme:
+          fontWeightStrong: 700
+          fontSizeHeading3: 26
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              combined_full_featured: Full-Featured Title Input
+    - id: combined_level_5_all_decorations
+      type: TitleInput
+      properties:
+        level: 5
+        italic: true
+        underline: true
+        mark: true
+        code: true
+        copyable: true
+        editable: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              combined_level_5_all_decorations: Level 5 with All Decorations
+    - id: combined_level_1_themed_editable
+      type: TitleInput
+      properties:
+        level: 1
+        color: '#1d39c4'
+        editable:
+          tooltip: Edit this grand heading
+          maxLength: 60
+        copyable:
+          tooltips:
+            - Copy heading
+            - Heading copied!
+        theme:
+          fontSizeHeading1: 44
+          fontWeightStrong: 900
+          lineHeightHeading1: 1.3
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              combined_level_1_themed_editable: Grand Themed Heading

@@ -66,6 +66,21 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/flex#design-token',
+        },
+        properties: {
+          padding: {
+            type: 'number',
+            description: 'Base padding value.',
+          },
+          margin: {
+            type: 'number',
+            description: 'Base margin value.',
+          },
+          colorBgContainer: {
+            type: 'string',
+            description: 'Background color when used with a custom component wrapper.',
+          },
         },
       },
     },

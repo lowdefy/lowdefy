@@ -51,11 +51,11 @@ const schema = {
           displayType: 'icon',
         },
       },
-      expandIconPosition: {
+      expandIconPlacement: {
         type: 'string',
-        enum: ['left', 'right'],
-        default: 'left',
-        description: 'Set position of expand icon.',
+        enum: ['start', 'end'],
+        default: 'start',
+        description: 'Set placement of the expand icon.',
       },
       forceRender: {
         type: 'boolean',
@@ -98,6 +98,61 @@ const schema = {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/collapse#design-token',
+        },
+        properties: {
+          headerPadding: {
+            type: 'string',
+            default: '12px 16px',
+            description: 'Padding of the collapse header.',
+          },
+          headerBg: {
+            type: 'string',
+            default: 'rgba(0, 0, 0, 0.02)',
+            description: 'Background color of the collapse header.',
+          },
+          contentPadding: {
+            type: 'string',
+            default: '16px 16px',
+            description: 'Padding of the collapse content area.',
+          },
+          contentBg: {
+            type: 'string',
+            default: '#ffffff',
+            description: 'Background color of the collapse content area.',
+          },
+          borderlessContentPadding: {
+            type: 'string',
+            default: '4px 16px 16px',
+            description: 'Padding of the content area in borderless (ghost) style.',
+          },
+          borderlessContentBg: {
+            type: 'string',
+            default: 'transparent',
+            description: 'Background color of the content area in borderless (ghost) style.',
+          },
+          colorBorder: {
+            type: 'string',
+            description: 'Border color of the collapse component.',
+          },
+          borderRadiusLG: {
+            type: 'number',
+            default: 8,
+            description: 'Border radius of the collapse container.',
+          },
+          colorText: {
+            type: 'string',
+            description: 'Text color for the collapse content.',
+          },
+          colorTextHeading: {
+            type: 'string',
+            description: 'Text color for the collapse header.',
+          },
+          fontSize: {
+            type: 'number',
+            default: 14,
+            description: 'Font size of the collapse content.',
+          },
         },
       },
     },

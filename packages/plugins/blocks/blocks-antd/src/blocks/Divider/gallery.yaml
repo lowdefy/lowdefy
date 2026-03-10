@@ -1,0 +1,286 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Horizontal Dividers
+  fullWidth: true
+  blocks:
+    - id: hz_before
+      type: Paragraph
+      properties:
+        content: Content above the divider.
+    - id: hz_default
+      type: Divider
+    - id: hz_after
+      type: Paragraph
+      properties:
+        content: Content below the divider.
+    - id: hz_another
+      type: Divider
+    - id: hz_more
+      type: Paragraph
+      properties:
+        content: More content below the second divider.
+
+- title: Vertical Dividers
+  blocks:
+    - id: vertical_row
+      type: Box
+      layout:
+        gap: 0
+      blocks:
+        - id: vt_text_1
+          type: Paragraph
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: Text
+        - id: vt_divider_1
+          type: Divider
+          layout:
+            flex: 0 0 auto
+          properties:
+            type: vertical
+        - id: vt_text_2
+          type: Paragraph
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: Link
+        - id: vt_divider_2
+          type: Divider
+          layout:
+            flex: 0 0 auto
+          properties:
+            type: vertical
+        - id: vt_text_3
+          type: Paragraph
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: Link
+
+- title: With Title
+  fullWidth: true
+  blocks:
+    - id: title_default
+      type: Divider
+      properties:
+        title: Section Title
+    - id: title_html
+      type: Divider
+      properties:
+        title: '<b>Bold Title</b>'
+    - id: title_html_colored
+      type: Divider
+      properties:
+        title: '<span style="color: #1677ff">Blue Title</span>'
+    - id: title_html_icon
+      type: Divider
+      properties:
+        title: '<b>Important Section</b>'
+
+- title: Title Orientation
+  fullWidth: true
+  blocks:
+    - id: orientation_left
+      type: Divider
+      properties:
+        title: Left
+        orientation: left
+    - id: orientation_center
+      type: Divider
+      properties:
+        title: Center
+        orientation: center
+    - id: orientation_right
+      type: Divider
+      properties:
+        title: Right
+        orientation: right
+
+- title: Dashed
+  fullWidth: true
+  blocks:
+    - id: dashed_simple
+      type: Divider
+      properties:
+        dashed: true
+    - id: dashed_with_title
+      type: Divider
+      properties:
+        dashed: true
+        title: Dashed with Title
+    - id: dashed_left
+      type: Divider
+      properties:
+        dashed: true
+        title: Dashed Left
+        orientation: left
+    - id: dashed_right
+      type: Divider
+      properties:
+        dashed: true
+        title: Dashed Right
+        orientation: right
+
+- title: Plain Style
+  fullWidth: true
+  blocks:
+    - id: plain_center
+      type: Divider
+      properties:
+        title: Plain Center
+        plain: true
+    - id: plain_left
+      type: Divider
+      properties:
+        title: Plain Left
+        plain: true
+        orientation: left
+    - id: plain_right
+      type: Divider
+      properties:
+        title: Plain Right
+        plain: true
+        orientation: right
+    - id: plain_dashed
+      type: Divider
+      properties:
+        title: Plain Dashed
+        plain: true
+        dashed: true
+
+- title: Dashed + Plain + Orientation Combinations
+  fullWidth: true
+  blocks:
+    - id: combo_solid_left
+      type: Divider
+      properties:
+        title: Solid Left
+        orientation: left
+    - id: combo_solid_right
+      type: Divider
+      properties:
+        title: Solid Right
+        orientation: right
+    - id: combo_dashed_center
+      type: Divider
+      properties:
+        title: Dashed Center
+        dashed: true
+    - id: combo_plain_dashed_left
+      type: Divider
+      properties:
+        title: Plain Dashed Left
+        plain: true
+        dashed: true
+        orientation: left
+    - id: combo_plain_dashed_right
+      type: Divider
+      properties:
+        title: Plain Dashed Right
+        plain: true
+        dashed: true
+        orientation: right
+
+- title: Style Overrides
+  fullWidth: true
+  blocks:
+    - id: style_colored
+      type: Divider
+      style:
+        --element:
+          borderColor: '#1677ff'
+    - id: style_thick
+      type: Divider
+      style:
+        --element:
+          borderWidth: 2px
+    - id: style_red_dashed
+      type: Divider
+      properties:
+        dashed: true
+      style:
+        --element:
+          borderColor: '#f5222d'
+    - id: style_title_colored
+      type: Divider
+      properties:
+        title: Styled Title
+      style:
+        --element:
+          color: '#722ed1'
+          borderColor: '#722ed1'
+    - id: style_margin
+      type: Divider
+      properties:
+        title: Extra Spacing
+      style:
+        --element:
+          margin: 32px 0
+
+- title: Theme Token Overrides
+  fullWidth: true
+  blocks:
+    - id: theme_text_padding
+      type: Divider
+      properties:
+        title: Wide Text Padding
+        theme:
+          textPaddingInline: '2em'
+    - id: theme_orientation_margin
+      type: Divider
+      properties:
+        title: Tight Left Title
+        orientation: left
+        theme:
+          orientationMargin: 0
+    - id: theme_orientation_margin_wide
+      type: Divider
+      properties:
+        title: Wide Left Title
+        orientation: left
+        theme:
+          orientationMargin: 0.25
+
+- title: Combined Examples
+  fullWidth: true
+  blocks:
+    - id: combined_section_header
+      type: Divider
+      properties:
+        title: '<b>Account Settings</b>'
+        orientation: left
+        plain: true
+      style:
+        --element:
+          color: '#1677ff'
+          borderColor: '#1677ff'
+    - id: combined_dashed_themed
+      type: Divider
+      properties:
+        title: End of Section
+        dashed: true
+        plain: true
+        orientation: right
+        theme:
+          textPaddingInline: '2em'
+    - id: combined_separator
+      type: Divider
+      properties:
+        dashed: true
+      style:
+        --element:
+          borderColor: '#d9d9d9'
+          margin: 8px 0

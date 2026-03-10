@@ -17,11 +17,7 @@
   properties:
     option:
       {
-        xAxis:
-          {
-            type: 'category',
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-          },
+        xAxis: { type: 'category', data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] },
         yAxis: { type: 'value' },
         series: [{ data: [150, 230, 224, 218, 135, 147, 260], type: 'line' }],
       }
@@ -88,11 +84,7 @@
           ],
         'backgroundColor': 'rgba(51,51,51,1)',
         'textStyle': {},
-        'title':
-          {
-            'textStyle': { 'color': '#eeeeee' },
-            'subtextStyle': { 'color': '#aaaaaa' },
-          },
+        'title': { 'textStyle': { 'color': '#eeeeee' }, 'subtextStyle': { 'color': '#aaaaaa' } },
         'line':
           {
             'itemStyle': { 'borderWidth': 1 },
@@ -109,13 +101,11 @@
             'symbol': 'circle',
             'smooth': false,
           },
-        'bar':
-          { 'itemStyle': { 'barBorderWidth': 0, 'barBorderColor': '#ccc' } },
+        'bar': { 'itemStyle': { 'barBorderWidth': 0, 'barBorderColor': '#ccc' } },
         'pie': { 'itemStyle': { 'borderWidth': 0, 'borderColor': '#ccc' } },
         'scatter': { 'itemStyle': { 'borderWidth': 0, 'borderColor': '#ccc' } },
         'boxplot': { 'itemStyle': { 'borderWidth': 0, 'borderColor': '#ccc' } },
-        'parallel':
-          { 'itemStyle': { 'borderWidth': 0, 'borderColor': '#ccc' } },
+        'parallel': { 'itemStyle': { 'borderWidth': 0, 'borderColor': '#ccc' } },
         'sankey': { 'itemStyle': { 'borderWidth': 0, 'borderColor': '#ccc' } },
         'funnel': { 'itemStyle': { 'borderWidth': 0, 'borderColor': '#ccc' } },
         'gauge': { 'itemStyle': { 'borderWidth': 0, 'borderColor': '#ccc' } },
@@ -157,18 +147,9 @@
           {
             'itemStyle':
               {
-                'normal':
-                  {
-                    'areaColor': '#eee',
-                    'borderColor': '#444',
-                    'borderWidth': 0.5,
-                  },
+                'normal': { 'areaColor': '#eee', 'borderColor': '#444', 'borderWidth': 0.5 },
                 'emphasis':
-                  {
-                    'areaColor': 'rgba(255,215,0,0.8)',
-                    'borderColor': '#444',
-                    'borderWidth': 1,
-                  },
+                  { 'areaColor': 'rgba(255,215,0,0.8)', 'borderColor': '#444', 'borderWidth': 1 },
               },
             'label':
               {
@@ -180,18 +161,9 @@
           {
             'itemStyle':
               {
-                'normal':
-                  {
-                    'areaColor': '#eee',
-                    'borderColor': '#444',
-                    'borderWidth': 0.5,
-                  },
+                'normal': { 'areaColor': '#eee', 'borderColor': '#444', 'borderWidth': 0.5 },
                 'emphasis':
-                  {
-                    'areaColor': 'rgba(255,215,0,0.8)',
-                    'borderColor': '#444',
-                    'borderWidth': 1,
-                  },
+                  { 'areaColor': 'rgba(255,215,0,0.8)', 'borderColor': '#444', 'borderWidth': 1 },
               },
             'label':
               {
@@ -204,48 +176,37 @@
             'axisLine': { 'show': true, 'lineStyle': { 'color': '#eeeeee' } },
             'axisTick': { 'show': true, 'lineStyle': { 'color': '#eeeeee' } },
             'axisLabel': { 'show': true, 'textStyle': { 'color': '#eeeeee' } },
-            'splitLine':
-              { 'show': true, 'lineStyle': { 'color': ['#aaaaaa'] } },
-            'splitArea':
-              { 'show': false, 'areaStyle': { 'color': ['#eeeeee'] } },
+            'splitLine': { 'show': true, 'lineStyle': { 'color': ['#aaaaaa'] } },
+            'splitArea': { 'show': false, 'areaStyle': { 'color': ['#eeeeee'] } },
           },
         'valueAxis':
           {
             'axisLine': { 'show': true, 'lineStyle': { 'color': '#eeeeee' } },
             'axisTick': { 'show': true, 'lineStyle': { 'color': '#eeeeee' } },
             'axisLabel': { 'show': true, 'textStyle': { 'color': '#eeeeee' } },
-            'splitLine':
-              { 'show': true, 'lineStyle': { 'color': ['#aaaaaa'] } },
-            'splitArea':
-              { 'show': false, 'areaStyle': { 'color': ['#eeeeee'] } },
+            'splitLine': { 'show': true, 'lineStyle': { 'color': ['#aaaaaa'] } },
+            'splitArea': { 'show': false, 'areaStyle': { 'color': ['#eeeeee'] } },
           },
         'logAxis':
           {
             'axisLine': { 'show': true, 'lineStyle': { 'color': '#eeeeee' } },
             'axisTick': { 'show': true, 'lineStyle': { 'color': '#eeeeee' } },
             'axisLabel': { 'show': true, 'textStyle': { 'color': '#eeeeee' } },
-            'splitLine':
-              { 'show': true, 'lineStyle': { 'color': ['#aaaaaa'] } },
-            'splitArea':
-              { 'show': false, 'areaStyle': { 'color': ['#eeeeee'] } },
+            'splitLine': { 'show': true, 'lineStyle': { 'color': ['#aaaaaa'] } },
+            'splitArea': { 'show': false, 'areaStyle': { 'color': ['#eeeeee'] } },
           },
         'timeAxis':
           {
             'axisLine': { 'show': true, 'lineStyle': { 'color': '#eeeeee' } },
             'axisTick': { 'show': true, 'lineStyle': { 'color': '#eeeeee' } },
             'axisLabel': { 'show': true, 'textStyle': { 'color': '#eeeeee' } },
-            'splitLine':
-              { 'show': true, 'lineStyle': { 'color': ['#aaaaaa'] } },
-            'splitArea':
-              { 'show': false, 'areaStyle': { 'color': ['#eeeeee'] } },
+            'splitLine': { 'show': true, 'lineStyle': { 'color': ['#aaaaaa'] } },
+            'splitArea': { 'show': false, 'areaStyle': { 'color': ['#eeeeee'] } },
           },
         'toolbox':
           {
             'iconStyle':
-              {
-                'normal': { 'borderColor': '#999' },
-                'emphasis': { 'borderColor': '#666' },
-              },
+              { 'normal': { 'borderColor': '#999' }, 'emphasis': { 'borderColor': '#666' } },
           },
         'legend': { 'textStyle': { 'color': '#eeeeee' } },
         'tooltip':
@@ -266,18 +227,8 @@
               },
             'controlStyle':
               {
-                'normal':
-                  {
-                    'color': '#eeeeee',
-                    'borderColor': '#eeeeee',
-                    'borderWidth': 0.5,
-                  },
-                'emphasis':
-                  {
-                    'color': '#eeeeee',
-                    'borderColor': '#eeeeee',
-                    'borderWidth': 0.5,
-                  },
+                'normal': { 'color': '#eeeeee', 'borderColor': '#eeeeee', 'borderWidth': 0.5 },
+                'emphasis': { 'color': '#eeeeee', 'borderColor': '#eeeeee', 'borderWidth': 0.5 },
               },
             'checkpointStyle': { 'color': '#e43c59', 'borderColor': '#c23531' },
             'label':
@@ -296,11 +247,7 @@
             'handleSize': '100%',
             'textStyle': { 'color': '#eeeeee' },
           },
-        'markPoint':
-          {
-            'label': { 'color': '#eee' },
-            'emphasis': { 'label': { 'color': '#eee' } },
-          },
+        'markPoint': { 'label': { 'color': '#eee' }, 'emphasis': { 'label': { 'color': '#eee' } } },
       }
 
     init:
@@ -311,13 +258,9 @@
         tooltip:
           {
             trigger: 'axis',
-            axisPointer:
-              { type: 'cross', label: { backgroundColor: '#6a7985' } },
+            axisPointer: { type: 'cross', label: { backgroundColor: '#6a7985' } },
           },
-        legend:
-          {
-            data: ['邮件营销', '联盟广告', '视频广告', '直接访问', '搜索引擎'],
-          },
+        legend: { data: ['邮件营销', '联盟广告', '视频广告', '直接访问', '搜索引擎'] },
         toolbox: { feature: { saveAsImage: {} } },
         grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
         xAxis:
