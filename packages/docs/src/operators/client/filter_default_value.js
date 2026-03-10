@@ -43,6 +43,9 @@ function custom_filter_default_value({ params }) {
       if (obj[key] === dv) {
         delete obj[key];
       }
+      if (obj[key] === null || obj[key] === undefined) {
+        delete obj[key];
+      }
       if (isEmptyObject(obj[key])) {
         delete obj[key];
       }

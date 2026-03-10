@@ -37,7 +37,16 @@ function stripMarkers(value) {
 }
 
 function custom_yaml_stringify({ params }) {
-  const [input, options] = Array.isArray(params) ? params : [params];
+  let input;
+  let options;
+  if (Array.isArray(params)) {
+    [input, options] = params;
+  } else if (params !== null && typeof params === 'object' && 'on' in params) {
+    input = params.on;
+    options = params.options;
+  } else {
+    input = params;
+  }
   if (input === undefined || input === null) return '';
   return YAML.stringify(stripMarkers(input), options);
 }

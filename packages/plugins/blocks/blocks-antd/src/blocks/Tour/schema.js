@@ -20,39 +20,106 @@ const schema = {
     type: 'object',
     additionalProperties: false,
     properties: {
-      open: {
+      animated: {
         type: 'boolean',
-        default: false,
-        description: 'Whether to show the tour.',
+        default: true,
+        description: 'Whether to enable animation.',
       },
-      steps: {
-        type: 'array',
-        description:
-          'Tour steps. Each step has title, description, target (blockId string), placement, etc.',
+      arrow: {
+        type: ['boolean', 'object'],
+        default: true,
+        description: 'Whether to show the arrow.',
+      },
+      closable: {
+        type: 'boolean',
+        default: true,
+        description: 'Whether the close button is visible.',
       },
       current: {
         type: 'integer',
         description: 'Current step index.',
       },
-      type: {
-        type: 'string',
-        enum: ['default', 'primary'],
-        default: 'default',
-        description: 'Type of the tour.',
+      disabledInteraction: {
+        type: 'boolean',
+        default: false,
+        description: 'Whether to disable interaction with the page while the tour is active.',
       },
-      placement: {
-        type: 'string',
-        description: 'Position of the guide card relative to the target element.',
+      gap: {
+        type: 'object',
+        description: 'Gap offset between highlighted area and target element.',
+        additionalProperties: false,
+        properties: {
+          x: {
+            type: 'number',
+            description: 'Horizontal gap offset.',
+          },
+          y: {
+            type: 'number',
+            description: 'Vertical gap offset.',
+          },
+        },
+      },
+      keyboard: {
+        type: 'boolean',
+        default: true,
+        description: 'Whether to enable keyboard navigation.',
       },
       mask: {
         type: ['boolean', 'object'],
         default: true,
         description: 'Whether to enable mask.',
       },
-      arrow: {
-        type: ['boolean', 'object'],
+      open: {
+        type: 'boolean',
+        default: false,
+        description: 'Whether to show the tour.',
+      },
+      placement: {
+        type: 'string',
+        description: 'Position of the guide card relative to the target element.',
+      },
+      scrollIntoViewOptions: {
+        type: 'boolean',
         default: true,
-        description: 'Whether to show the arrow.',
+        description: 'Whether to scroll the step target element into view.',
+      },
+      steps: {
+        type: 'array',
+        description:
+          'Tour steps. Each step has title, description, target (blockId string), placement, etc.',
+        items: {
+          type: 'object',
+          properties: {
+            closable: {
+              type: 'boolean',
+              description: 'Whether the close button is visible for this step.',
+            },
+            cover: {
+              type: 'string',
+              description: 'Cover image URL for the step.',
+            },
+            description: {
+              type: 'string',
+              description: 'Description of the step.',
+            },
+            mask: {
+              type: 'boolean',
+              description: 'Whether to enable mask for this step.',
+            },
+            placement: {
+              type: 'string',
+              description: 'Position of the guide card relative to the target element.',
+            },
+            target: {
+              type: 'string',
+              description: 'The blockId of the target element for this step.',
+            },
+            title: {
+              type: 'string',
+              description: 'Title of the step.',
+            },
+          },
+        },
       },
       theme: {
         type: 'object',
@@ -62,6 +129,27 @@ const schema = {
           displayType: 'yaml',
         },
       },
+      type: {
+        type: 'string',
+        enum: ['default', 'primary'],
+        default: 'default',
+        description: 'Type of the tour.',
+      },
+      zIndex: {
+        type: 'integer',
+        description: 'Z-index of the tour.',
+      },
+    },
+  },
+  events: {
+    onChange: {
+      description: 'Triggered when the current step changes.',
+    },
+    onClose: {
+      description: 'Triggered when the tour is closed.',
+    },
+    onFinish: {
+      description: 'Triggered when the tour finishes (all steps completed).',
     },
   },
   cssKeys: ['element'],
