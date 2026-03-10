@@ -1,0 +1,19 @@
+id: invite
+type: Box
+blocks:
+  - id: message
+    type: Paragraph
+    properties:
+      content:
+        _module.var: invite_message
+  - id: send-btn
+    type: Button
+    properties:
+      title: Send Invite
+    events:
+      onClick:
+        - id: call-api
+          type: Request
+          params:
+            endpointId:
+              _module.endpointId: send-invite

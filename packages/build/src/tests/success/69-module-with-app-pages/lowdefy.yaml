@@ -1,0 +1,36 @@
+# 69: Module alongside app pages — tests that app pages and module pages coexist
+# Also tests _module.id operator and app-level cross-referencing of module page IDs.
+lowdefy: local
+name: Mixed App and Module Pages
+
+modules:
+  - id: alerts
+    source: 'file:modules/alerts'
+    vars:
+      alert_type: warning
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: welcome
+        type: Title
+        properties:
+          content: Home Page
+      - id: alerts-link
+        type: Button
+        properties:
+          title: View Alerts
+        events:
+          onClick:
+            - id: go-alerts
+              type: Link
+              params:
+                pageId: alerts/alert-list
+  - id: about
+    type: Box
+    blocks:
+      - id: about-title
+        type: Title
+        properties:
+          content: About Page

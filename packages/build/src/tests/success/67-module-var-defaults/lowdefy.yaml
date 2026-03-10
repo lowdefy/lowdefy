@@ -1,0 +1,11 @@
+# 67: Module with var defaults and _module.var object form
+# Tests that default var values are used when vars are not provided, and nested key access works.
+lowdefy: local
+name: Var Defaults Test
+
+modules:
+  - id: settings
+    source: 'file:modules/settings'
+    vars:
+      theme:
+        primary_color: blue

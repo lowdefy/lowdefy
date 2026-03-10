@@ -1,0 +1,7 @@
+name: Widget Module
+
+connections:
+  - _ref: connections/db.yaml
+
+pages:
+  - _ref: pages/main.yaml

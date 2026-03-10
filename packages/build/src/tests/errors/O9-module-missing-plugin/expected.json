@@ -1,0 +1,9 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "expectThrow": true,
+      "errorContains": ["requires plugin \"@lowdefy/blocks-aggrid\"", "widget"]
+    }
+  ]
+}

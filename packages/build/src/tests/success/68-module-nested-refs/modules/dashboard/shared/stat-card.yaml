@@ -1,0 +1,17 @@
+id:
+  _var: stat_label
+type: Box
+properties:
+  style:
+    padding: 16
+blocks:
+  - id: label
+    type: Paragraph
+    properties:
+      content:
+        _var: stat_label
+  - id: value
+    type: Title
+    properties:
+      content:
+        _var: stat_value

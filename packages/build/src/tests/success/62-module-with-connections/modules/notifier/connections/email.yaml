@@ -1,0 +1,7 @@
+id: email
+type: SendGridMail
+properties:
+  apiKey:
+    _secret: SENDGRID_KEY
+  from:
+    _module.var: sender_email

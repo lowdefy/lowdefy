@@ -1,0 +1,11 @@
+name: Alerts Module
+description: Alert management
+
+vars:
+  alert_type:
+    type: string
+    default: info
+
+pages:
+  - _ref: pages/alert-list.yaml
+  - _ref: pages/alert-detail.yaml

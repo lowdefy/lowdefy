@@ -1,0 +1,11 @@
+name: Widget Module
+
+secrets:
+  - name: MONGODB
+    description: MongoDB URI
+
+connections:
+  - _ref: connections/db.yaml
+
+pages:
+  - _ref: pages/main.yaml

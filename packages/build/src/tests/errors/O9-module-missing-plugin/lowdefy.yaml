@@ -1,0 +1,12 @@
+# O9: Module requires a plugin not installed in the app
+# Tests that the build throws when a module declares a plugin dependency the app doesn't have.
+lowdefy: local
+
+modules:
+  - id: widget
+    source: 'file:modules/widget'
+    vars: {}
+
+pages:
+  - id: home
+    type: Box

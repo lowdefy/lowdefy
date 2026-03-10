@@ -1,0 +1,8 @@
+name: Widget Module
+
+plugins:
+  - name: '@lowdefy/blocks-aggrid'
+    version: '^4'
+
+pages:
+  - _ref: pages/main.yaml

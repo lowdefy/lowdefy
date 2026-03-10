@@ -1,0 +1,18 @@
+# 60: Single basic module with file: source
+lowdefy: local
+name: Module Test App
+
+modules:
+  - id: greet
+    source: 'file:modules/greeter'
+    vars:
+      greeting: Hello World
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Home Page

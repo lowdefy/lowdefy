@@ -1,0 +1,15 @@
+# O5: Duplicate module entry IDs
+# Tests that the build throws when two module entries have the same ID.
+lowdefy: local
+
+modules:
+  - id: widget
+    source: 'file:modules/widget'
+    vars: {}
+  - id: widget
+    source: 'file:modules/widget'
+    vars: {}
+
+pages:
+  - id: home
+    type: Box

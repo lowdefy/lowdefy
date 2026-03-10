@@ -1,0 +1,14 @@
+name: Settings Module
+description: Settings with var defaults
+
+vars:
+  theme:
+    type: object
+    description: Theme configuration
+  page_size:
+    type: number
+    default: 25
+    description: Items per page
+
+pages:
+  - _ref: pages/settings.yaml

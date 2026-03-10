@@ -1,0 +1,12 @@
+id: main
+type: Box
+blocks:
+  - id: data
+    type: Box
+    requests:
+      - id: get-data
+        type: MongoDBFind
+        connectionId:
+          _module.connectionId: nonexistent-db
+        properties:
+          query: {}

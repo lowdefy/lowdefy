@@ -1,0 +1,15 @@
+id: send-invite
+type: Endpoint
+properties:
+  method: POST
+steps:
+  - id: send-email
+    type: SendGridMailSend
+    connectionId:
+      _module.connectionId: email-conn
+    properties:
+      to:
+        _payload: email
+      subject: Invitation
+      text:
+        _module.var: invite_message

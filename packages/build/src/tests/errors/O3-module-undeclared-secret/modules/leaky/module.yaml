@@ -1,0 +1,11 @@
+name: Leaky Module
+
+secrets:
+  - name: ALLOWED_SECRET
+    description: This secret is declared
+
+connections:
+  - _ref: connections/db.yaml
+
+pages:
+  - _ref: pages/main.yaml

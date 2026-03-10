@@ -1,0 +1,11 @@
+# O1: Module with missing required var
+# Tests that the build throws when a required module var is not provided.
+lowdefy: local
+
+modules:
+  - id: widget
+    source: 'file:modules/widget'
+
+pages:
+  - id: home
+    type: Box
