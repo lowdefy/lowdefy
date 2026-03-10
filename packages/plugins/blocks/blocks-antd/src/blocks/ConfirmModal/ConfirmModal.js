@@ -16,14 +16,14 @@
 
 import React, { useEffect } from 'react';
 import { Modal } from 'antd';
-import { renderHtml } from '@lowdefy/block-utils';
+import { ErrorBoundary, renderHtml } from '@lowdefy/block-utils';
 
 const ConfirmModal = ({
   blockId,
   classNames = {},
   events,
   content,
-  components: { Icon },
+  components: { Icon, handleError },
   methods,
   properties,
   styles = {},
@@ -33,7 +33,9 @@ const ConfirmModal = ({
       const additionalProps = {};
       if (properties.icon) {
         additionalProps.icon = (
-          <Icon blockId={`${blockId}_icon`} events={events} properties={properties.icon} />
+          <ErrorBoundary onError={handleError}>
+            <Icon blockId={`${blockId}_icon`} events={events} properties={properties.icon} />
+          </ErrorBoundary>
         );
       }
       methods.triggerEvent({ name: 'onOpen' });
@@ -52,11 +54,13 @@ const ConfirmModal = ({
           ? {
               ...properties.okButton,
               icon: properties.okButton.icon && (
-                <Icon
-                  blockId={`${blockId}_ok_icon`}
-                  events={events}
-                  properties={properties.okButton.icon}
-                />
+                <ErrorBoundary onError={handleError}>
+                  <Icon
+                    blockId={`${blockId}_ok_icon`}
+                    events={events}
+                    properties={properties.okButton.icon}
+                  />
+                </ErrorBoundary>
               ),
             }
           : properties.okButton,
@@ -64,11 +68,13 @@ const ConfirmModal = ({
           ? {
               ...properties.cancelButton,
               icon: properties.cancelButton.icon && (
-                <Icon
-                  blockId={`${blockId}_ok_icon`}
-                  events={events}
-                  properties={properties.cancelButton.icon}
-                />
+                <ErrorBoundary onError={handleError}>
+                  <Icon
+                    blockId={`${blockId}_cancel_icon`}
+                    events={events}
+                    properties={properties.cancelButton.icon}
+                  />
+                </ErrorBoundary>
               ),
             }
           : properties.cancelButton,

@@ -15,7 +15,7 @@
 */
 
 import React, { useEffect } from 'react';
-import { renderHtml } from '@lowdefy/block-utils';
+import { ErrorBoundary, renderHtml } from '@lowdefy/block-utils';
 import { notification } from 'antd';
 import { type } from '@lowdefy/helpers';
 
@@ -24,7 +24,7 @@ import Button from '../Button/Button.js';
 const NotificationBlock = ({
   blockId,
   classNames = {},
-  components: { Icon },
+  components: { Icon, handleError },
   events,
   methods,
   properties,
@@ -45,22 +45,29 @@ const NotificationBlock = ({
         placement: properties.placement,
         top: properties.top,
         icon: properties.icon && (
-          <Icon blockId={`${blockId}_icon`} events={events} properties={properties.icon} />
+          <ErrorBoundary onError={handleError}>
+            <Icon blockId={`${blockId}_icon`} events={events} properties={properties.icon} />
+          </ErrorBoundary>
         ),
         btn: properties.button && (
-          <Button
-            blockId={`${blockId}_button`}
-            events={events}
-            properties={properties.button}
-            onClick={() => methods.triggerEvent({ name: 'onClose' })}
-          />
+          <ErrorBoundary onError={handleError}>
+            <Button
+              blockId={`${blockId}_button`}
+              components={{ Icon }}
+              events={events}
+              properties={properties.button}
+              onClick={() => methods.triggerEvent({ name: 'onClose' })}
+            />
+          </ErrorBoundary>
         ),
         closeIcon: properties.closeIcon && (
-          <Icon
-            blockId={`${blockId}_closeIcon`}
-            events={events}
-            properties={properties.closeIcon}
-          />
+          <ErrorBoundary onError={handleError}>
+            <Icon
+              blockId={`${blockId}_closeIcon`}
+              events={events}
+              properties={properties.closeIcon}
+            />
+          </ErrorBoundary>
         ),
       });
     });

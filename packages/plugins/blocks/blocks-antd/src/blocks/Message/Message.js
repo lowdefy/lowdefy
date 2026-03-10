@@ -17,12 +17,12 @@
 import React, { useEffect } from 'react';
 import { message } from 'antd';
 import { type } from '@lowdefy/helpers';
-import { renderHtml } from '@lowdefy/block-utils';
+import { ErrorBoundary, renderHtml } from '@lowdefy/block-utils';
 
 const MessageBlock = ({
   blockId,
   classNames = {},
-  components: { Icon } = {},
+  components: { Icon, handleError } = {},
   events,
   methods,
   properties,
@@ -36,11 +36,13 @@ const MessageBlock = ({
         duration: type.isNone(args.duration) ? properties.duration : args.duration,
         onClose: () => methods.triggerEvent({ name: 'onClose' }),
         icon: (args.icon ?? properties.icon) && (
-          <Icon
-            blockId={`${blockId}_icon`}
-            events={events}
-            properties={args.icon ?? properties.icon}
-          />
+          <ErrorBoundary onError={handleError}>
+            <Icon
+              blockId={`${blockId}_icon`}
+              events={events}
+              properties={args.icon ?? properties.icon}
+            />
+          </ErrorBoundary>
         ),
         className: classNames.element,
         style: styles.element,
