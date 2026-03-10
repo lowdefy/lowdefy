@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/e2e-utils",
-  "version": "4.5.2",
+  "version": "4.6.0",
   "license": "Apache-2.0",
   "description": "Lowdefy E2E Testing Utilities for Playwright",
   "homepage": "https://lowdefy.com",
@@ -42,7 +42,7 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.5.2",
+    "@lowdefy/helpers": "4.6.0",
     "js-yaml": "4.1.0",
     "prompts": "2.4.2"
   },

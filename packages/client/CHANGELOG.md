@@ -1,5 +1,138 @@
 # Change Log
 
+## 4.6.0
+
+### Minor Changes
+
+- 5e03091ee: Add e2e testing package for Lowdefy apps
+
+  **@lowdefy/e2e-utils** (new package)
+
+  - Locator-first API via `ldf` Playwright fixture: `ldf.block('id').do.*`, `ldf.block('id').expect.*`
+  - Request mocking with static YAML files (`mocks.yaml`) and inline per-test overrides
+  - Request assertion API: `ldf.request('id').expect.toFinish()`, `.toHaveResponse()`, `.toHavePayload()`
+  - State and URL assertions: `ldf.state('key').expect.toBe()`, `ldf.url().expect.toBe()`
+  - Manifest generation from build artifacts for block type resolution and helper loading
+  - `createConfig()` and `createMultiAppConfig()` for Playwright config with automatic build/server management
+  - Scaffold command (`npx @lowdefy/e2e-utils`) for project setup with templates and dependency management
+  - Block helper factory with auto-provided expect methods (visible, hidden, disabled, validation)
+
+  **@lowdefy/cli**
+
+  - Add `--server` option to `lowdefy build` for server variant selection (e.g., `--server e2e`)
+
+  **@lowdefy/client**
+
+  - Expose `window.lowdefy` when `stage="e2e"` for e2e state/validation access
+
+  **@lowdefy/blocks-antd**
+
+  - Flatten e2e helper APIs for polymorphic proxy compatibility
+  - Add TextArea e2e helper
+
+  **@lowdefy/block-dev-e2e**
+
+  - Remove unused srcDir variable
+
+- aa0d6d363e: feat: Config-aware error tracing and Sentry integration
+
+  **Config-Aware Error Tracing (#1940)**
+
+  - Errors now trace back to exact YAML config locations with file:line
+  - Clickable VSCode links in terminal and browser
+  - Build-time validation catches typos with "Did you mean?" suggestions
+  - Service vs Config error classification
+
+  **Plugin Error Refactoring**
+
+  - Operators throw simple error messages without formatting
+  - Parsers (WebParser, ServerParser, BuildParser) format errors with received value and location
+  - Removed redundant "Operator Error:" prefix from error messages
+  - Consistent error format: "{message} Received: {params} at {location}."
+  - Actions and connections also simplified: removed inline `received` from error messages (interface layer adds it)
+  - Connection plugins (axios-http, knex, redis, sendgrid) no longer expose raw response data in errors
+
+  **Error Class Hierarchy**
+
+  - Unified error system in `@lowdefy/errors` with all error classes
+    - `@lowdefy/errors/build` - Build-time classes with sync location resolution
+  - Error classes: `LowdefyError`, `ConfigError`, `ConfigWarning`, `PluginError`, `ServiceError`
+  - `ConfigWarning` supports `prodError` flag to throw in production builds
+  - `ServiceError.isServiceError()` detects network/timeout/5xx errors
+  - `~ignoreBuildChecks` cascades through descendants to suppress warnings/errors
+
+  **Build Error Collection**
+
+  - Errors collected in `context.errors[]` instead of throwing immediately
+  - `tryBuildStep()` wrapper catches and collects errors from build steps
+  - All errors logged together before summary message for proper ordering
+
+  **Sentry Integration (#1945)**
+
+  - Zero-config Sentry support - just set SENTRY_DSN
+  - Client and server error capture with Lowdefy context (pageId, blockId, config location)
+  - Configurable sampling rates, session replay, user feedback
+  - Graceful no-op when DSN not set
+
+### Patch Changes
+
+- aebca6ab51: refactor: Consolidate error classes into @lowdefy/errors package with environment-specific subpaths
+
+  **Error Package Restructure**
+
+  - New `@lowdefy/errors` package with all error classes (`ConfigError`, `PluginError`, `ServiceError`, `UserError`, `LowdefyInternalError`, `ConfigWarning`)
+    - `@lowdefy/errors/build` - Build-time errors with sync resolution via keyMap/refMap
+  - Moved ConfigMessage, resolveConfigLocation from node-utils to errors/build
+
+  **TC39 Standard Constructor Signatures**
+
+  - All error constructors standardized to `new MyError(message, { cause, ...options })`:
+    ```javascript
+    new ConfigError('Property must be a string.', { configKey });
+    new OperatorError(e.message, { cause: e, typeName: '_if', received: params });
+    new ServiceError(undefined, { cause: error, service: 'MongoDB', configKey });
+    ```
+  - Plugins throw simple errors without knowing about configKey
+  - Interface layer adds configKey before re-throwing
+
+  **configKey Added to ALL Errors**
+
+  - Interface layer now adds configKey to ALL error types (not just PluginError):
+    - ConfigError: adds configKey if not present, re-throws
+    - ServiceError: created via `new ServiceError(undefined, { cause: error, service, configKey })`
+    - Plain Error: wraps in PluginError with configKey
+  - Helps developers trace any error back to its config source, including service/network errors
+
+  **Cause Chain Support**
+
+  - All error classes use TC39 `error.cause` instead of custom stack copying
+  - CLI logger walks cause chain displaying `Caused by:` lines
+  - `extractErrorProps` recursively serializes Error causes for pino JSON logs
+  - ConfigError and PluginError extract `received` and `configKey` from `cause`:
+    ```javascript
+    new ConfigError(undefined, { cause: plainError }); // extracts cause.received and cause.configKey
+    new PluginError(undefined, { cause: plainError }); // same extraction
+    ```
+
+  **Error Display**
+
+  - `errorToDisplayString()` formats errors for display, appending `Received: <JSON>` when `error.received` is defined
+  - `rawMessage` stores the original unformatted message on PluginError
+
+- Updated dependencies [7936ee3fd8]
+- Updated dependencies [aa0d6d363e]
+- Updated dependencies [aebca6ab51]
+- Updated dependencies [ab19b1bb77]
+- Updated dependencies [8ec5f1be05]
+- Updated dependencies [f673e3ab3d]
+- Updated dependencies [f673e3ab3]
+  - @lowdefy/engine@4.6.0
+  - @lowdefy/errors@4.6.0
+  - @lowdefy/helpers@4.6.0
+  - @lowdefy/block-utils@4.6.0
+  - @lowdefy/logger@4.6.0
+  - @lowdefy/layout@4.6.0
+
 ## 4.5.2
 
 ### Patch Changes
