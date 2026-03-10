@@ -112,6 +112,12 @@ function getBuildContext(buildDirectory, configDirectory) {
     readJsonFile(path.join(buildDirectory, 'installedPluginPackages.json')) ?? [];
   cachedBuildContext.installedPluginPackages = new Set(installedPluginPackages);
 
+  // Restore module entries from skeleton build for JIT module page builds
+  const modules = readJsonFile(path.join(buildDirectory, 'modules.json'));
+  if (modules) {
+    Object.assign(cachedBuildContext.modules, modules);
+  }
+
   // Advance makeId past all skeleton IDs to prevent collisions with JIT builds
   const idCounter = readJsonFile(path.join(buildDirectory, 'idCounter.json'));
   if (idCounter != null) {

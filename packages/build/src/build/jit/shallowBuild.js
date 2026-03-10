@@ -16,6 +16,7 @@
   limitations under the License.
 */
 
+import { serializer } from '@lowdefy/helpers';
 import { BuildError, LowdefyInternalError } from '@lowdefy/errors';
 
 import createContext from '../../createContext.js';
@@ -32,6 +33,8 @@ import buildApi from '../buildApi/buildApi.js';
 import buildLogger from '../buildLogger.js';
 import buildImports from '../buildImports/buildImports.js';
 import buildMenu from '../buildMenu.js';
+import buildModuleDefs from '../buildModuleDefs.js';
+import buildModules from '../buildModules.js';
 import buildRefs from '../buildRefs/buildRefs.js';
 import buildTypes from '../buildTypes.js';
 import cleanBuildDirectory from '../cleanBuildDirectory.js';
@@ -64,8 +67,12 @@ async function shallowBuild(options) {
   try {
     context = createContext(options);
 
+    // Phase 1: Build module definitions
+    await buildModuleDefs({ context });
+
     let components;
     try {
+      // Phase 2: Ref resolution (with shallow options)
       components = await buildRefs({
         context,
         shallowOptions: true,
@@ -77,6 +84,9 @@ async function shallowBuild(options) {
       }
       throw err;
     }
+
+    // Phase 3: Process modules — scopes IDs, merges into components
+    buildModules({ components, context });
 
     // addKeys + testSchema first for error location info
     tryBuildStep(addKeys, 'addKeys', { components, context });
@@ -142,6 +152,10 @@ async function shallowBuild(options) {
     await context.writeBuildArtifact(
       'installedPluginPackages.json',
       JSON.stringify([...(context.installedPackages ?? [])])
+    );
+    await context.writeBuildArtifact(
+      'modules.json',
+      serializer.serializeToString(context.modules ?? {})
     );
     await writePluginImports({ components, context });
     await writePageRegistry({ pageRegistry, context });
