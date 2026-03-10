@@ -2263,17 +2263,17 @@
     "3": {
       "parent": "2",
       "lineNumber": 14,
-      "path": "connections/email.yaml"
+      "path": "<CONFIG_DIR>/modules/inviter/connections/email.yaml"
     },
     "4": {
       "parent": "2",
       "lineNumber": 17,
-      "path": "pages/invite.yaml"
+      "path": "<CONFIG_DIR>/modules/inviter/pages/invite.yaml"
     },
     "5": {
       "parent": "2",
       "lineNumber": 20,
-      "path": "api/send-invite.yaml"
+      "path": "<CONFIG_DIR>/modules/inviter/api/send-invite.yaml"
     },
     "6": {
       "parent": null

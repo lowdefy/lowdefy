@@ -2077,17 +2077,17 @@
     "3": {
       "parent": "2",
       "lineNumber": 10,
-      "path": "menus/default.yaml"
+      "path": "<CONFIG_DIR>/modules/admin/menus/default.yaml"
     },
     "4": {
       "parent": "2",
       "lineNumber": 13,
-      "path": "pages/settings.yaml"
+      "path": "<CONFIG_DIR>/modules/admin/pages/settings.yaml"
     },
     "5": {
       "parent": "2",
       "lineNumber": 14,
-      "path": "pages/users.yaml"
+      "path": "<CONFIG_DIR>/modules/admin/pages/users.yaml"
     },
     "6": {
       "parent": null

@@ -2143,17 +2143,17 @@
     "3": {
       "parent": "2",
       "lineNumber": 10,
-      "path": "pages/overview.yaml"
+      "path": "<CONFIG_DIR>/modules/dashboard/pages/overview.yaml"
     },
     "4": {
       "parent": "3",
       "lineNumber": 9,
-      "path": "../shared/stat-card.yaml"
+      "path": "<CONFIG_DIR>/modules/dashboard/shared/stat-card.yaml"
     },
     "5": {
       "parent": "3",
       "lineNumber": 14,
-      "path": "../shared/stat-card.yaml"
+      "path": "<CONFIG_DIR>/modules/dashboard/shared/stat-card.yaml"
     },
     "6": {
       "parent": null

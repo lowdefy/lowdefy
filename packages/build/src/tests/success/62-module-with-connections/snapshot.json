@@ -2079,12 +2079,12 @@
     "3": {
       "parent": "2",
       "lineNumber": 14,
-      "path": "connections/email.yaml"
+      "path": "<CONFIG_DIR>/modules/notifier/connections/email.yaml"
     },
     "4": {
       "parent": "2",
       "lineNumber": 17,
-      "path": "pages/inbox.yaml"
+      "path": "<CONFIG_DIR>/modules/notifier/pages/inbox.yaml"
     },
     "5": {
       "parent": null

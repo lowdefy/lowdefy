@@ -2951,17 +2951,17 @@
     "3": {
       "parent": "2",
       "lineNumber": 19,
-      "path": "connections/users-db.yaml"
+      "path": "<CONFIG_DIR>/modules/user-admin/connections/users-db.yaml"
     },
     "4": {
       "parent": "2",
       "lineNumber": 22,
-      "path": "pages/users-list.yaml"
+      "path": "<CONFIG_DIR>/modules/user-admin/pages/users-list.yaml"
     },
     "5": {
       "parent": "2",
       "lineNumber": 23,
-      "path": "pages/user-edit.yaml"
+      "path": "<CONFIG_DIR>/modules/user-admin/pages/user-edit.yaml"
     },
     "6": {
       "parent": null
@@ -2969,17 +2969,17 @@
     "7": {
       "parent": "6",
       "lineNumber": 19,
-      "path": "connections/users-db.yaml"
+      "path": "<CONFIG_DIR>/modules/user-admin/connections/users-db.yaml"
     },
     "8": {
       "parent": "6",
       "lineNumber": 22,
-      "path": "pages/users-list.yaml"
+      "path": "<CONFIG_DIR>/modules/user-admin/pages/users-list.yaml"
     },
     "9": {
       "parent": "6",
       "lineNumber": 23,
-      "path": "pages/user-edit.yaml"
+      "path": "<CONFIG_DIR>/modules/user-admin/pages/user-edit.yaml"
     },
     "a": {
       "parent": null

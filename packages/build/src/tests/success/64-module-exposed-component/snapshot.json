@@ -2018,7 +2018,7 @@
     "5": {
       "parent": "4",
       "lineNumber": 13,
-      "path": "components/status-badge.yaml"
+      "path": "<CONFIG_DIR>/modules/widgets/components/status-badge.yaml"
     }
   },
   "types.json": {

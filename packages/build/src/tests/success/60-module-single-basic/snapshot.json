@@ -1979,7 +1979,7 @@
     "3": {
       "parent": "2",
       "lineNumber": 11,
-      "path": "pages/welcome.yaml"
+      "path": "<CONFIG_DIR>/modules/greeter/pages/welcome.yaml"
     },
     "4": {
       "parent": null

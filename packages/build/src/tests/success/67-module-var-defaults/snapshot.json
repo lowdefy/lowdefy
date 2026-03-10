@@ -1927,7 +1927,7 @@
     "3": {
       "parent": "2",
       "lineNumber": 14,
-      "path": "pages/settings.yaml"
+      "path": "<CONFIG_DIR>/modules/settings/pages/settings.yaml"
     },
     "4": {
       "parent": null

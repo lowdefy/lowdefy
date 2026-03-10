@@ -2446,12 +2446,12 @@
     "3": {
       "parent": "2",
       "lineNumber": 10,
-      "path": "pages/alert-list.yaml"
+      "path": "<CONFIG_DIR>/modules/alerts/pages/alert-list.yaml"
     },
     "4": {
       "parent": "2",
       "lineNumber": 11,
-      "path": "pages/alert-detail.yaml"
+      "path": "<CONFIG_DIR>/modules/alerts/pages/alert-detail.yaml"
     },
     "5": {
       "parent": null
