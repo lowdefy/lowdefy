@@ -17,11 +17,6 @@
 import { spawnProcess } from '@lowdefy/node-utils';
 
 async function installServer({ context, directory }) {
-  // Skip dependency installation for local development (monorepo already has deps installed)
-  if (context.lowdefyVersion === 'local') {
-    context.logger.info('Skipping dependency installation for local development.');
-    return;
-  }
   context.logger.info({ spin: 'start' }, 'Installing dependencies.');
   try {
     await spawnProcess({
