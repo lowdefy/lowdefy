@@ -20,39 +20,79 @@ const schema = {
     type: 'object',
     additionalProperties: false,
     properties: {
-      text: {
-        type: ['string', 'array'],
-        description: 'Watermark text content. Maps to antd "content" prop.',
-      },
       font: {
         type: 'object',
         description:
-          'Font style configuration with color, fontSize, fontWeight, fontFamily, fontStyle.',
+          'Font style configuration with color, fontSize, fontWeight, fontFamily, fontStyle, textAlign.',
+        properties: {
+          color: {
+            type: 'string',
+            description: 'Font color of the watermark.',
+          },
+          fontFamily: {
+            type: 'string',
+            description: 'Font family of the watermark.',
+          },
+          fontSize: {
+            type: 'number',
+            description: 'Font size of the watermark.',
+          },
+          fontStyle: {
+            type: 'string',
+            description: 'Font style of the watermark.',
+          },
+          fontWeight: {
+            type: ['string', 'number'],
+            description: 'Font weight of the watermark.',
+            docs: {
+              displayType: 'yaml',
+            },
+          },
+          textAlign: {
+            type: 'string',
+            enum: ['start', 'end', 'left', 'right', 'center'],
+            description: 'Text alignment of the watermark.',
+          },
+        },
       },
       gap: {
         type: 'array',
         description: 'Gap between watermarks as [horizontal, vertical].',
+        docs: {
+          displayType: 'yaml',
+        },
+      },
+      height: {
+        type: 'number',
+        description: 'Height of the watermark.',
+      },
+      image: {
+        type: 'string',
+        description: 'Image URL to use as watermark. If set, text content is ignored.',
+      },
+      inherit: {
+        type: 'boolean',
+        default: true,
+        description: 'Inherit watermark config from parent Watermark block.',
       },
       offset: {
         type: 'array',
         description: 'Offset of the watermark from the top-left as [x, y].',
+        docs: {
+          displayType: 'yaml',
+        },
       },
       rotate: {
         type: 'number',
         default: -22,
         description: 'Rotation angle of watermark in degrees.',
       },
-      zIndex: {
-        type: 'integer',
-        description: 'Z-index of the watermark.',
-      },
-      width: {
-        type: 'number',
-        description: 'Width of the watermark.',
-      },
-      height: {
-        type: 'number',
-        description: 'Height of the watermark.',
+      text: {
+        type: ['string', 'array'],
+        description: 'Watermark text content. Maps to antd "content" prop.',
+        docs: {
+          displayType: 'yaml',
+        },
       },
       theme: {
         type: 'object',
@@ -61,6 +101,14 @@ const schema = {
         docs: {
           displayType: 'yaml',
         },
+      },
+      width: {
+        type: 'number',
+        description: 'Width of the watermark.',
+      },
+      zIndex: {
+        type: 'integer',
+        description: 'Z-index of the watermark.',
       },
     },
   },

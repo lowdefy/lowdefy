@@ -362,94 +362,97 @@
       type: Box
       layout:
         span: 12
-        align: middle
-      blocks:
-        - id: footer_cta
-          type: Title
-          visible:
-            _not:
-              _global: newsletter_subscribed
-          style:
-            textAlign: center
-            marginTop: 0
-          properties:
-            content: Subscribe to our newsletter
-            level: 3
-            color: '#1990FF'
-        - id: footer_cta_paragraph
-          type: Paragraph
-          visible:
-            _not:
-              _global: newsletter_subscribed
-          style:
-            textAlign: center
-            marginBottom: 0
-          properties:
-            content: Receive the latest Lowdefy updates in your inbox.
-        - id: footer_cta_box
-          type: Box
-          layout:
-            gap: [12, 0]
-            justify: center
+        gap: 0
+      slots:
+        content:
+          align: top
           blocks:
-            - id: email
-              type: TextInput
+            - id: footer_cta
+              type: Title
               visible:
                 _not:
                   _global: newsletter_subscribed
-              layout:
-                flex: 0 1 250px
-              validate:
-                _ref: templates/validate_email.yaml
+              style:
+                textAlign: center
+                marginTop: 0
               properties:
-                size: large
-                placeholder: Enter your email
-                label:
-                  disabled: true
-            - id: footer_cta_button
-              type: Button
+                content: Subscribe to our newsletter
+                level: 3
+                color: '#1990FF'
+            - id: footer_cta_paragraph
+              type: Paragraph
               visible:
                 _not:
                   _global: newsletter_subscribed
-              requests:
-                - _ref: requests/insert_newsletter.yaml
-                - _ref:
-                    path: requests/discord_message.yaml.njk
-                    vars:
-                      key: newsletter
-                      message: 'New newsletter subscription from docs'
-              layout:
-                flex: 0 1 auto
+              style:
+                textAlign: center
+                marginBottom: 0
               properties:
-                title: Subscribe
-                size: large
-              events:
-                onClick:
-                  - id: validate
-                    type: Validate
-                    params: email
-                  - id: post_data
-                    type: Request
-                    params:
-                      - insert_newsletter
-                      - discord_message_newsletter
-                    messages:
-                      success: Thanks for subscribing!
-                  - id: set_subscribed
-                    type: SetGlobal
-                    params:
-                      newsletter_subscribed: true
-            - id: subscribed_thank_you
-              type: Alert
+                content: Receive the latest Lowdefy updates in your inbox.
+            - id: footer_cta_box
+              type: Box
               layout:
-                flex: 0 1 350px
-              visible:
-                _not:
-                  _not:
-                    _global: newsletter_subscribed
-              properties:
-                message: Thanks! 👏  We'll keep you updated with the latest Lowdefy news.
-                type: success
+                gap: [12, 0]
+                justify: center
+              blocks:
+                - id: email
+                  type: TextInput
+                  visible:
+                    _not:
+                      _global: newsletter_subscribed
+                  layout:
+                    flex: 0 1 250px
+                  validate:
+                    _ref: templates/validate_email.yaml
+                  properties:
+                    size: large
+                    placeholder: Enter your email
+                    label:
+                      disabled: true
+                - id: footer_cta_button
+                  type: Button
+                  visible:
+                    _not:
+                      _global: newsletter_subscribed
+                  requests:
+                    - _ref: requests/insert_newsletter.yaml
+                    - _ref:
+                        path: requests/discord_message.yaml.njk
+                        vars:
+                          key: newsletter
+                          message: 'New newsletter subscription from docs'
+                  layout:
+                    flex: 0 1 auto
+                  properties:
+                    title: Subscribe
+                    size: large
+                  events:
+                    onClick:
+                      - id: validate
+                        type: Validate
+                        params: email
+                      - id: post_data
+                        type: Request
+                        params:
+                          - insert_newsletter
+                          - discord_message_newsletter
+                        messages:
+                          success: Thanks for subscribing!
+                      - id: set_subscribed
+                        type: SetGlobal
+                        params:
+                          newsletter_subscribed: true
+                - id: subscribed_thank_you
+                  type: Alert
+                  layout:
+                    flex: 0 1 350px
+                  visible:
+                    _not:
+                      _not:
+                        _global: newsletter_subscribed
+                  properties:
+                    message: Thanks! 👏  We'll keep you updated with the latest Lowdefy news.
+                    type: success
     - id: footer_links
       type: Box
       layout:

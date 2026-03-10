@@ -54,6 +54,18 @@ const schema = {
         default: 40,
         description: 'Icon size in pixels.',
       },
+      marginSize: {
+        type: 'number',
+        default: 0,
+        description: 'Margin size of the QR code in modules.',
+      },
+      minVersion: {
+        type: 'integer',
+        minimum: 1,
+        maximum: 40,
+        default: 1,
+        description: 'Minimum QR code version (1-40). Higher versions support more data.',
+      },
       type: {
         type: 'string',
         enum: ['canvas', 'svg'],

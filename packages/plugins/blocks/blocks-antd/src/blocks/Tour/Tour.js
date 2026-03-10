@@ -25,6 +25,7 @@ const TourBlock = ({ blockId, classNames = {}, methods, properties, styles = {} 
       (properties.steps ?? []).map((step) => ({
         ...step,
         target: step.target ? () => document.getElementById(step.target) : undefined,
+        cover: step.cover ? <img src={step.cover} alt="" /> : undefined,
       })),
     [properties.steps]
   );
@@ -41,11 +42,21 @@ const TourBlock = ({ blockId, classNames = {}, methods, properties, styles = {} 
       placement={properties.placement}
       mask={properties.mask}
       arrow={properties.arrow}
+      closable={properties.closable}
+      keyboard={properties.keyboard}
+      animated={properties.animated}
+      zIndex={properties.zIndex}
+      gap={properties.gap}
+      scrollIntoViewOptions={properties.scrollIntoViewOptions}
+      disabledInteraction={properties.disabledInteraction}
       onClose={(current) => {
         methods.triggerEvent({ name: 'onClose', event: { current } });
       }}
       onChange={(current) => {
         methods.triggerEvent({ name: 'onChange', event: { current } });
+      }}
+      onFinish={() => {
+        methods.triggerEvent({ name: 'onFinish' });
       }}
     />
   );

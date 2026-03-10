@@ -27,7 +27,7 @@ import withTheme from '../withTheme.js';
 const SegmentedSelector = ({
   blockId,
   classNames = {},
-  components,
+  components: { Icon },
   events,
   loading,
   methods,
@@ -42,7 +42,7 @@ const SegmentedSelector = ({
     <Label
       blockId={blockId}
       classNames={classNames}
-      components={components}
+      components={{ Icon }}
       events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
@@ -66,11 +66,20 @@ const SegmentedSelector = ({
                       : renderHtml({ html: opt.label, methods }),
                     value: `${i}`,
                     disabled: opt.disabled || properties.disabled || loading,
+                    icon: opt.icon ? (
+                      <Icon
+                        blockId={`${blockId}_${i}_icon`}
+                        events={events}
+                        properties={opt.icon}
+                      />
+                    ) : undefined,
                   }
             )}
             size={properties.size}
             block={properties.block}
             disabled={properties.disabled || loading}
+            vertical={properties.vertical}
+            shape={properties.shape}
             value={type.isNone(value) ? undefined : getValueIndex(value, properties.options || [])}
             onChange={(index) => {
               const val = type.isPrimitive(uniqueValueOptions[index])

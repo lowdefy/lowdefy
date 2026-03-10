@@ -28,6 +28,9 @@ const schema = {
       wrap: {
         type: ['boolean', 'string'],
         description: 'Set whether the element is displayed in a single line or in multiple lines.',
+        docs: {
+          displayType: 'yaml',
+        },
       },
       justify: {
         type: 'string',
@@ -42,10 +45,16 @@ const schema = {
       gap: {
         type: ['string', 'number'],
         description: 'Set the gap between items. Can be "small", "middle", "large", or a number.',
+        docs: {
+          displayType: 'yaml',
+        },
       },
       flex: {
         type: ['string', 'number'],
         description: 'Flex CSS shorthand property.',
+        docs: {
+          displayType: 'yaml',
+        },
       },
       component: {
         type: 'string',

@@ -23,10 +23,21 @@ const schema = {
       columns: {
         type: ['integer', 'object'],
         description: 'Number of columns, or responsive breakpoint object.',
+        docs: {
+          displayType: 'yaml',
+        },
+      },
+      fresh: {
+        type: 'boolean',
+        default: false,
+        description: 'Force refresh the masonry layout.',
       },
       gutter: {
         type: ['number', 'array'],
         description: 'Gap between items. Number or [horizontal, vertical] array.',
+        docs: {
+          displayType: 'yaml',
+        },
       },
       sequential: {
         type: 'boolean',

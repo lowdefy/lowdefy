@@ -20,20 +20,50 @@ const schema = {
     type: 'object',
     additionalProperties: false,
     properties: {
-      token: {
-        type: 'object',
-        description:
-          'Theme token configuration. Customize design tokens like colorPrimary, fontSize, etc.',
-      },
       algorithm: {
         type: ['string', 'array'],
         description:
           'Theme algorithm. Can be "default", "dark", "compact", or an array of these values.',
+        docs: {
+          displayType: 'yaml',
+        },
+      },
+      componentDisabled: {
+        type: 'boolean',
+        default: false,
+        description: 'Set disabled state for all child components.',
+      },
+      componentSize: {
+        type: 'string',
+        enum: ['small', 'middle', 'large'],
+        description: 'Set size for all child components.',
       },
       components: {
         type: 'object',
         description:
           'Component-level token overrides. Keys are component names, values are token objects.',
+        docs: {
+          displayType: 'yaml',
+        },
+      },
+      direction: {
+        type: 'string',
+        enum: ['ltr', 'rtl'],
+        default: 'ltr',
+        description: 'Direction of layout.',
+      },
+      token: {
+        type: 'object',
+        description:
+          'Theme token configuration. Customize design tokens like colorPrimary, fontSize, etc.',
+        docs: {
+          displayType: 'yaml',
+        },
+      },
+      variant: {
+        type: 'string',
+        enum: ['outlined', 'filled', 'borderless', 'underlined'],
+        description: 'Global input variant style for all child components.',
       },
       theme: {
         type: 'object',

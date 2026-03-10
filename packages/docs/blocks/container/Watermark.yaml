@@ -19,8 +19,10 @@ _ref:
     category: container
     schema: ../plugins/blocks/blocks-antd/src/blocks/Watermark/schema.js
     filePath: blocks/container/Watermark.yaml
+    examples:
+      _ref: ../plugins/blocks/blocks-antd/src/blocks/Watermark/examples.yaml
     description_content: |
-      A container that overlays a watermark on its child content. Useful for marking content as draft, confidential, or with brand text.
+      The `Watermark` block overlays a watermark on its child content. Supports text or image watermarks with configurable font, rotation, gap, and z-index. Useful for marking content as draft, confidential, or with brand text.
     slots:
       - content
     init_property_values:

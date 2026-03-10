@@ -57,12 +57,30 @@ const ColorPickerInput = ({
             size={properties.size}
             disabled={properties.disabled || loading}
             allowClear={properties.allowClear}
+            arrow={properties.arrow}
+            disabledAlpha={properties.disabledAlpha}
+            disabledFormat={properties.disabledFormat}
+            mode={properties.mode}
+            open={properties.open}
+            placement={properties.placement}
             presets={properties.presets}
             trigger={properties.trigger}
             onChange={(color) => {
               const hexValue = color.toHexString();
               methods.setValue(hexValue);
               methods.triggerEvent({ name: 'onChange', event: { value: hexValue } });
+            }}
+            onChangeComplete={(color) => {
+              methods.triggerEvent({
+                name: 'onChangeComplete',
+                event: { value: color.toHexString() },
+              });
+            }}
+            onClear={() => {
+              methods.triggerEvent({ name: 'onClear' });
+            }}
+            onFormatChange={(format) => {
+              methods.triggerEvent({ name: 'onFormatChange', event: { format } });
             }}
             onOpenChange={(open) => {
               methods.triggerEvent({ name: 'onOpenChange', event: { open } });

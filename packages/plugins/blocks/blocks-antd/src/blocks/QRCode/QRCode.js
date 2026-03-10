@@ -31,6 +31,8 @@ const QRCodeBlock = ({ blockId, classNames = {}, methods, properties, styles = {
     errorLevel={properties.errorLevel}
     icon={properties.icon}
     iconSize={properties.iconSize}
+    marginSize={properties.marginSize}
+    minVersion={properties.minVersion}
     type={properties.type}
     bordered={properties.bordered}
     status={properties.status}

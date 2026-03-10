@@ -19,7 +19,9 @@ _ref:
     category: display
     schema: ../plugins/blocks/blocks-antd/src/blocks/QRCode/schema.js
     filePath: blocks/display/QRCode.yaml
+    examples:
+      _ref: ../plugins/blocks/blocks-antd/src/blocks/QRCode/examples.yaml
     description_content: |
-      Renders a QR code from a text value. Supports customization of size, color, error correction level, and an optional centered icon.
+      The `QRCode` block renders a QR code from a text value. Supports customization of size, colors, error correction level, embedded icon, canvas or SVG rendering, and status indicators (active, expired, loading, scanned).
     init_property_values:
       value: https://lowdefy.com

@@ -1,0 +1,68 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- id: default
+  type: Slider
+- id: 'properties.disabled: true'
+  type: Slider
+  properties:
+    disabled: true
+- id: 'properties.dots: true'
+  type: Slider
+  properties:
+    dots: true
+    min: 0
+    max: 100
+    step: 10
+- id: 'properties.included: false'
+  type: Slider
+  properties:
+    included: false
+- id: properties.marks
+  type: Slider
+  properties:
+    marks:
+      0: '0°C'
+      26: '26°C'
+      37: '37°C'
+      100: '100°C'
+- id: 'properties.max: 50'
+  type: Slider
+  properties:
+    max: 50
+- id: 'properties.min: 10'
+  type: Slider
+  properties:
+    min: 10
+- id: 'properties.range: true'
+  type: Slider
+  properties:
+    range: true
+- id: 'properties.reverse: true'
+  type: Slider
+  properties:
+    reverse: true
+- id: 'properties.step: 10'
+  type: Slider
+  properties:
+    step: 10
+- id: 'properties.vertical: true'
+  type: Slider
+  properties:
+    vertical: true
+- id: properties.tooltip
+  type: Slider
+  properties:
+    tooltip:
+      open: true

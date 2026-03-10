@@ -158,6 +158,7 @@
 
 - _ref: blocks/list/ControlledList.yaml
 - _ref: blocks/list/List.yaml
+- _ref: blocks/list/MasonryList.yaml
 # - _ref: blocks/list/TimelineList.yaml # TODO:
 
 - _ref: connections/AmazonRedshift.yaml

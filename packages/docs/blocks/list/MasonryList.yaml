@@ -67,8 +67,8 @@ _ref:
               args:
                 - 0
     init_property_values:
-      columns: 3
-      gutter: 16
+      columns: '3'
+      gutter: '16'
     init_state_values:
       block_id:
         - title: Card 1

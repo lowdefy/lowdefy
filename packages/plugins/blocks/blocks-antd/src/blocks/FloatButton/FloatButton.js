@@ -41,6 +41,7 @@ const FloatButtonBlock = ({
         <Icon blockId={`${blockId}_icon`} events={events} properties={properties.icon} />
       )
     }
+    htmlType={properties.htmlType}
     href={properties.href}
     target={properties.target}
     badge={properties.badge}

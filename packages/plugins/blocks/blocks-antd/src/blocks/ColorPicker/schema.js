@@ -48,6 +48,49 @@ const schema = {
         default: false,
         description: 'Allow clearing the color.',
       },
+      arrow: {
+        type: 'boolean',
+        default: true,
+        description: 'Show arrow on the color picker popup.',
+      },
+      disabledAlpha: {
+        type: 'boolean',
+        default: false,
+        description: 'Disable the alpha channel slider.',
+      },
+      disabledFormat: {
+        type: 'boolean',
+        default: false,
+        description: 'Disable the format selector.',
+      },
+      mode: {
+        type: 'string',
+        enum: ['single', 'gradient'],
+        default: 'single',
+        description: 'Color picker mode.',
+      },
+      open: {
+        type: 'boolean',
+        description: 'Controlled open state of the color picker popup.',
+      },
+      placement: {
+        type: 'string',
+        enum: [
+          'top',
+          'topLeft',
+          'topRight',
+          'bottom',
+          'bottomLeft',
+          'bottomRight',
+          'left',
+          'leftTop',
+          'leftBottom',
+          'right',
+          'rightTop',
+          'rightBottom',
+        ],
+        description: 'Placement of the color picker popup.',
+      },
       presets: {
         type: 'array',
         description: 'Preset color palettes.',
@@ -68,6 +111,32 @@ const schema = {
         docs: {
           displayType: 'yaml',
         },
+      },
+    },
+  },
+  events: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      onChange: {
+        type: 'array',
+        description: 'Trigger actions when the color is changed.',
+      },
+      onChangeComplete: {
+        type: 'array',
+        description: 'Trigger actions when the color change is complete.',
+      },
+      onClear: {
+        type: 'array',
+        description: 'Trigger actions when the color is cleared.',
+      },
+      onFormatChange: {
+        type: 'array',
+        description: 'Trigger actions when the color format is changed.',
+      },
+      onOpenChange: {
+        type: 'array',
+        description: 'Trigger actions when the color picker popup open state changes.',
       },
     },
   },

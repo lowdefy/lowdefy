@@ -638,6 +638,9 @@
         - id: List
           type: MenuLink
           pageId: List
+        - id: MasonryList
+          type: MenuLink
+          pageId: MasonryList
         # - id: TimelineList
         #   type: MenuLink
         #   pageId: TimelineList

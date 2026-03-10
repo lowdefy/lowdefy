@@ -44,7 +44,13 @@ const ConfigProviderBlock = ({ blockId, content, properties }) => {
   }
 
   return (
-    <AntdConfigProvider theme={Object.keys(themeConfig).length > 0 ? themeConfig : undefined}>
+    <AntdConfigProvider
+      componentDisabled={properties.componentDisabled}
+      componentSize={properties.componentSize}
+      direction={properties.direction}
+      variant={properties.variant}
+      theme={Object.keys(themeConfig).length > 0 ? themeConfig : undefined}
+    >
       <div id={blockId}>{content.content && content.content()}</div>
     </AntdConfigProvider>
   );

@@ -20,16 +20,30 @@ const schema = {
     type: 'object',
     additionalProperties: false,
     properties: {
+      lazy: {
+        type: 'boolean',
+        default: false,
+        description: 'Lazy render panel content.',
+      },
       layout: {
         type: 'string',
         enum: ['horizontal', 'vertical'],
         default: 'horizontal',
         description: 'Layout direction of the splitter.',
       },
+      orientation: {
+        type: 'string',
+        enum: ['horizontal', 'vertical'],
+        description:
+          'Layout direction of the splitter. Alias for layout, takes precedence if both are set.',
+      },
       panels: {
         type: 'array',
         description:
           'Panel configuration array. Each panel has key, size, min, max, defaultSize, collapsible, resizable.',
+        docs: {
+          displayType: 'yaml',
+        },
         items: {
           type: 'object',
           properties: {
@@ -72,6 +86,27 @@ const schema = {
         docs: {
           displayType: 'yaml',
         },
+      },
+    },
+  },
+  events: {
+    type: 'object',
+    properties: {
+      onCollapse: {
+        type: 'array',
+        description: 'Trigger action when a panel is collapsed or expanded.',
+      },
+      onResize: {
+        type: 'array',
+        description: 'Trigger action when panel sizes change during resize.',
+      },
+      onResizeEnd: {
+        type: 'array',
+        description: 'Trigger action when resize ends.',
+      },
+      onResizeStart: {
+        type: 'array',
+        description: 'Trigger action when resize starts.',
       },
     },
   },

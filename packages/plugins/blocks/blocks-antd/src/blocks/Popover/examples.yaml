@@ -1,0 +1,105 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- id: default
+  type: Popover
+- id: properties.title
+  type: Popover
+  properties:
+    title: Popover Title
+- id: properties.color
+  type: Popover
+  properties:
+    title: Popover
+    color: '#f0f0f0'
+- id: 'properties.defaultOpen: true'
+  type: Popover
+  properties:
+    title: Popover
+    defaultOpen: true
+- id: 'properties.autoAdjustOverflow: false'
+  type: Popover
+  properties:
+    title: Popover
+    autoAdjustOverflow: false
+- id: 'properties.placement: top'
+  type: Popover
+  properties:
+    title: Popover
+    placement: top
+- id: 'properties.placement: topLeft'
+  type: Popover
+  properties:
+    title: Popover
+    placement: topLeft
+- id: 'properties.placement: topRight'
+  type: Popover
+  properties:
+    title: Popover
+    placement: topRight
+- id: 'properties.placement: left'
+  type: Popover
+  properties:
+    title: Popover
+    placement: left
+- id: 'properties.placement: right'
+  type: Popover
+  properties:
+    title: Popover
+    placement: right
+- id: 'properties.placement: bottom'
+  type: Popover
+  properties:
+    title: Popover
+    placement: bottom
+- id: 'properties.placement: bottomLeft'
+  type: Popover
+  properties:
+    title: Popover
+    placement: bottomLeft
+- id: 'properties.placement: bottomRight'
+  type: Popover
+  properties:
+    title: Popover
+    placement: bottomRight
+- id: 'properties.trigger: hover'
+  type: Popover
+  properties:
+    title: Popover
+    trigger: hover
+- id: 'properties.trigger: click'
+  type: Popover
+  properties:
+    title: Popover
+    trigger: click
+- id: 'properties.trigger: focus'
+  type: Popover
+  properties:
+    title: Popover
+    trigger: focus
+- id: 'properties.zIndex: 1000'
+  type: Popover
+  properties:
+    title: Popover
+    zIndex: 1000
+- id: 'properties.mouseEnterDelay: 0.5'
+  type: Popover
+  properties:
+    title: Popover
+    mouseEnterDelay: 0.5
+- id: 'properties.mouseLeaveDelay: 0.5'
+  type: Popover
+  properties:
+    title: Popover
+    mouseLeaveDelay: 0.5

@@ -43,10 +43,19 @@ const schema = {
       icon: {
         type: ['string', 'object'],
         description: 'Icon for the button.',
+        docs: {
+          displayType: 'icon',
+        },
       },
       href: {
         type: 'string',
         description: 'The target of hyperlink.',
+      },
+      htmlType: {
+        type: 'string',
+        enum: ['button', 'submit', 'reset'],
+        default: 'button',
+        description: 'HTML button type.',
       },
       target: {
         type: 'string',
@@ -55,6 +64,9 @@ const schema = {
       badge: {
         type: 'object',
         description: 'Badge configuration for the button.',
+        docs: {
+          displayType: 'yaml',
+        },
       },
       theme: {
         type: 'object',

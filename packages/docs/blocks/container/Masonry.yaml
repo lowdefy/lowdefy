@@ -26,8 +26,8 @@ _ref:
     slots:
       - content
     init_property_values:
-      columns: 3
-      gutter: 16
+      columns: '3'
+      gutter: '16'
     examples:
       - title: Three-column card layout
         block:

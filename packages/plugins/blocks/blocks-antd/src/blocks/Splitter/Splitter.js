@@ -26,12 +26,19 @@ const SplitterBlock = ({ blockId, classNames = {}, content, methods, properties,
       id={blockId}
       className={classNames.element}
       style={styles.element}
-      layout={properties.layout}
+      layout={properties.orientation ?? properties.layout}
+      lazy={properties.lazy}
       onResize={(sizes) => {
         methods.triggerEvent({ name: 'onResize', event: { sizes } });
       }}
       onResizeEnd={(sizes) => {
         methods.triggerEvent({ name: 'onResizeEnd', event: { sizes } });
+      }}
+      onResizeStart={(sizes) => {
+        methods.triggerEvent({ name: 'onResizeStart', event: { sizes } });
+      }}
+      onCollapse={(collapsed, sizes) => {
+        methods.triggerEvent({ name: 'onCollapse', event: { collapsed, sizes } });
       }}
     >
       {panels.map((panel) => (

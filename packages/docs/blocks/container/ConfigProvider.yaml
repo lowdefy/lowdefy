@@ -19,10 +19,12 @@ _ref:
     category: container
     schema: ../plugins/blocks/blocks-antd/src/blocks/ConfigProvider/schema.js
     filePath: blocks/container/ConfigProvider.yaml
+    examples:
+      _ref: ../plugins/blocks/blocks-antd/src/blocks/ConfigProvider/examples.yaml
     description_content: |
-      A scoped theme provider container. All child blocks inherit the specified theme tokens and algorithm. Use to apply different themes (e.g., dark mode, custom colors) to sections of your page. See [Theming](/theming) for details.
+      The `ConfigProvider` block is a scoped theme and config provider. All child blocks inherit the specified theme tokens, algorithm, component size, direction, and variant. Use to apply different themes (e.g., dark mode, custom colors, compact layout) or global settings to sections of your page.
     slots:
       - content
-    init_property_values:
-      token:
+    init_state_values:
+      block.properties.token: |
         colorPrimary: '#6366f1'

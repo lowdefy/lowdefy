@@ -51,6 +51,16 @@
         value: weekly
       - label: Monthly
         value: monthly
+- id: properties.options-object-with-icon
+  type: SegmentedSelector
+  properties:
+    options:
+      - label: List
+        value: list
+        icon: AiOutlineUnorderedList
+      - label: Grid
+        value: grid
+        icon: AiOutlineAppstore
 - id: 'properties.size: small'
   type: SegmentedSelector
   properties:
@@ -80,6 +90,22 @@
       - Option A
       - Option B
     disabled: true
+- id: 'properties.shape: round'
+  type: SegmentedSelector
+  properties:
+    options:
+      - Option A
+      - Option B
+      - Option C
+    shape: round
+- id: 'properties.vertical: true'
+  type: SegmentedSelector
+  properties:
+    options:
+      - Option A
+      - Option B
+      - Option C
+    vertical: true
 - id: 'properties.options: html'
   type: SegmentedSelector
   properties:

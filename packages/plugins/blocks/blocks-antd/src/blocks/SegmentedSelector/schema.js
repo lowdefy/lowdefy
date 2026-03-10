@@ -97,16 +97,35 @@ const schema = {
                   default: false,
                   description: 'Disable the option if true.',
                 },
+                icon: {
+                  type: 'string',
+                  description:
+                    'Name of a React-Icon (See <a href="https://react-icons.github.io/react-icons/">all icons</a>) to display in the segment option.',
+                  docs: {
+                    displayType: 'icon',
+                  },
+                },
               },
             },
           },
         ],
+      },
+      shape: {
+        type: 'string',
+        enum: ['default', 'round'],
+        default: 'default',
+        description: 'Shape of the segmented control.',
       },
       size: {
         type: 'string',
         enum: ['small', 'default', 'large'],
         default: 'default',
         description: 'Size of the block.',
+      },
+      vertical: {
+        type: 'boolean',
+        default: false,
+        description: 'Display the segmented control vertically.',
       },
       label: {
         type: 'object',

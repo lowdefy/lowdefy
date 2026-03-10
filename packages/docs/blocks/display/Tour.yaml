@@ -19,5 +19,7 @@ _ref:
     category: display
     schema: ../plugins/blocks/blocks-antd/src/blocks/Tour/schema.js
     filePath: blocks/display/Tour.yaml
+    examples:
+      _ref: ../plugins/blocks/blocks-antd/src/blocks/Tour/examples.yaml
     description_content: |
-      A guided tour component that highlights elements on the page with step-by-step instructions. Configure steps with `target` (a block id), `title`, and `description`.
+      The `Tour` block provides a guided tour that highlights elements on the page with step-by-step instructions. Configure steps with `target` (a block id), `title`, and `description`. Supports keyboard navigation, step cover images, configurable masks, animations, and primary/default styles.
