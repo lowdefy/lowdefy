@@ -16,4 +16,15 @@ lowdefy: local
 name: blocks-aggrid E2E Tests
 
 pages:
+  # Display variants
   - _ref: ../../src/blocks/AgGridAlpine/tests/AgGridAlpine.e2e.yaml
+  - _ref: ../../src/blocks/AgGridAlpineDark/tests/AgGridAlpineDark.e2e.yaml
+  - _ref: ../../src/blocks/AgGridBalham/tests/AgGridBalham.e2e.yaml
+  - _ref: ../../src/blocks/AgGridBalhamDark/tests/AgGridBalhamDark.e2e.yaml
+  - _ref: ../../src/blocks/AgGridMaterial/tests/AgGridMaterial.e2e.yaml
+  # Input variants
+  - _ref: ../../src/blocks/AgGridInputAlpine/tests/AgGridInputAlpine.e2e.yaml
+  - _ref: ../../src/blocks/AgGridInputAlpineDark/tests/AgGridInputAlpineDark.e2e.yaml
+  - _ref: ../../src/blocks/AgGridInputBalham/tests/AgGridInputBalham.e2e.yaml
+  - _ref: ../../src/blocks/AgGridInputBalhamDark/tests/AgGridInputBalhamDark.e2e.yaml
+  - _ref: ../../src/blocks/AgGridInputMaterial/tests/AgGridInputMaterial.e2e.yaml
