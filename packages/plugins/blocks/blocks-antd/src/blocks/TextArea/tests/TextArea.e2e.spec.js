@@ -16,9 +16,10 @@
 
 import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { escapeId } from '@lowdefy/e2e-utils';
 
 // Helper to get the textarea element (textarea has id={blockId}_input)
-const getTextArea = (page, blockId) => page.locator(`#${blockId}_input`);
+const getTextArea = (page, blockId) => page.locator(`#${escapeId(blockId)}_input`);
 
 test.describe('TextArea Block', () => {
   test.beforeEach(async ({ page }) => {

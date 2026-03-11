@@ -15,6 +15,7 @@
 */
 
 // Core helpers
+import { escapeId } from './core/escapeId.js';
 import { getBlock } from './core/locators.js';
 import { goto, waitForReady, expectNavigation, waitForPage } from './core/navigation.js';
 import { getRequestState, getRequestResponse, expectRequest } from './core/requests.js';
@@ -28,6 +29,7 @@ import {
 } from './core/validation.js';
 import { expectUrl, expectUrlQuery, setUrlQuery } from './core/url.js';
 
+export { escapeId };
 export { getBlock };
 export { goto, waitForReady, expectNavigation, waitForPage };
 export { getRequestState, getRequestResponse, expectRequest };
