@@ -1,0 +1,269 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: aggridmaterial
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: aggridmaterial_basic
+    type: AgGridMaterial
+    properties:
+      columnDefs:
+        - headerName: Name
+          field: name
+        - headerName: Age
+          field: age
+      rowData:
+        - name: Alice
+          age: 25
+        - name: Bob
+          age: 30
+        - name: Charlie
+          age: 35
+
+  # ============================================
+  # PROPERTY TESTS
+  # ============================================
+
+  - id: aggridmaterial_height
+    type: AgGridMaterial
+    properties:
+      height: 300
+      columnDefs:
+        - headerName: Name
+          field: name
+      rowData:
+        - name: Alice
+        - name: Bob
+
+  - id: aggridmaterial_default_col_def
+    type: AgGridMaterial
+    properties:
+      defaultColDef:
+        sortable: true
+        resizable: true
+        filter: true
+      columnDefs:
+        - headerName: Name
+          field: name
+        - headerName: Age
+          field: age
+      rowData:
+        - name: Alice
+          age: 25
+        - name: Bob
+          age: 30
+
+  - id: aggridmaterial_empty
+    type: AgGridMaterial
+    properties:
+      columnDefs:
+        - headerName: Name
+          field: name
+        - headerName: Age
+          field: age
+      rowData: []
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  - id: aggridmaterial_onrowclick
+    type: AgGridMaterial
+    properties:
+      columnDefs:
+        - headerName: Name
+          field: name
+        - headerName: Age
+          field: age
+      rowData:
+        - name: Alice
+          age: 25
+        - name: Bob
+          age: 30
+    events:
+      onRowClick:
+        - id: set_row_click
+          type: SetState
+          params:
+            aggridmaterial_row_clicked:
+              _event: row.name
+
+  - id: row_click_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: aggridmaterial_row_clicked
+              - null
+          then:
+            _string.concat:
+              - 'Row: '
+              - _state: aggridmaterial_row_clicked
+          else: ''
+
+  - id: aggridmaterial_oncellclick
+    type: AgGridMaterial
+    properties:
+      columnDefs:
+        - headerName: Name
+          field: name
+        - headerName: Age
+          field: age
+      rowData:
+        - name: Alice
+          age: 25
+        - name: Bob
+          age: 30
+    events:
+      onCellClick:
+        - id: set_cell_click
+          type: SetState
+          params:
+            aggridmaterial_cell_clicked:
+              _event: cell.value
+
+  - id: cell_click_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: aggridmaterial_cell_clicked
+              - null
+          then:
+            _string.concat:
+              - 'Cell: '
+              - _state: aggridmaterial_cell_clicked
+          else: ''
+
+  - id: aggridmaterial_onrowselected
+    type: AgGridMaterial
+    properties:
+      rowSelection: single
+      columnDefs:
+        - headerName: Name
+          field: name
+        - headerName: Age
+          field: age
+      rowData:
+        - name: Alice
+          age: 25
+        - name: Bob
+          age: 30
+    events:
+      onRowSelected:
+        - id: set_row_selected
+          type: SetState
+          params:
+            aggridmaterial_row_selected:
+              _event: row.name
+
+  - id: row_selected_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: aggridmaterial_row_selected
+              - null
+          then:
+            _string.concat:
+              - 'Selected: '
+              - _state: aggridmaterial_row_selected
+          else: ''
+
+  # ============================================
+  # SORTING & FILTERING
+  # ============================================
+
+  - id: aggridmaterial_sortable
+    type: AgGridMaterial
+    properties:
+      columnDefs:
+        - headerName: Name
+          field: name
+          sortable: true
+        - headerName: Age
+          field: age
+          sortable: true
+      rowData:
+        - name: Charlie
+          age: 35
+        - name: Alice
+          age: 25
+        - name: Bob
+          age: 30
+    events:
+      onSortChanged:
+        - id: set_sort_changed
+          type: SetState
+          params:
+            aggridmaterial_sort_changed: true
+
+  - id: sort_changed_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: aggridmaterial_sort_changed
+              - true
+          then: Sort changed
+          else: ''
+
+  - id: aggridmaterial_filterable
+    type: AgGridMaterial
+    properties:
+      columnDefs:
+        - headerName: Name
+          field: name
+          filter: true
+        - headerName: Age
+          field: age
+          filter: true
+      rowData:
+        - name: Alice
+          age: 25
+        - name: Bob
+          age: 30
+        - name: Charlie
+          age: 35
+    events:
+      onFilterChanged:
+        - id: set_filter_changed
+          type: SetState
+          params:
+            aggridmaterial_filter_changed: true
+
+  - id: filter_changed_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: aggridmaterial_filter_changed
+              - true
+          then: Filter changed
+          else: ''

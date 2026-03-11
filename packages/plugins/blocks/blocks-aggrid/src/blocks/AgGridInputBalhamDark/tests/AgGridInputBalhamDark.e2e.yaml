@@ -1,0 +1,347 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: aggridinputbalhamdark
+type: Box
+
+events:
+  onInit:
+    - id: set_defaults
+      type: SetState
+      params:
+        aggridinputbalhamdark_basic:
+          - name: Alice
+            age: 25
+          - name: Bob
+            age: 30
+          - name: Charlie
+            age: 35
+        aggridinputbalhamdark_height:
+          - name: Alice
+          - name: Bob
+        aggridinputbalhamdark_default_col_def:
+          - name: Alice
+            age: 25
+          - name: Bob
+            age: 30
+        aggridinputbalhamdark_onrowclick:
+          - name: Alice
+            age: 25
+          - name: Bob
+            age: 30
+        aggridinputbalhamdark_oncellclick:
+          - name: Alice
+            age: 25
+          - name: Bob
+            age: 30
+        aggridinputbalhamdark_onrowselected:
+          - name: Alice
+            age: 25
+          - name: Bob
+            age: 30
+        aggridinputbalhamdark_sortable:
+          - name: Charlie
+            age: 35
+          - name: Alice
+            age: 25
+          - name: Bob
+            age: 30
+        aggridinputbalhamdark_filterable:
+          - name: Alice
+            age: 25
+          - name: Bob
+            age: 30
+          - name: Charlie
+            age: 35
+        aggridinputbalhamdark_editable:
+          - name: Alice
+            age: 25
+          - name: Bob
+            age: 30
+        aggridinputbalhamdark_rowdrag:
+          - name: Alice
+            age: 25
+          - name: Bob
+            age: 30
+          - name: Charlie
+            age: 35
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: aggridinputbalhamdark_basic
+    type: AgGridInputBalhamDark
+    properties:
+      columnDefs:
+        - headerName: Name
+          field: name
+        - headerName: Age
+          field: age
+
+  # ============================================
+  # PROPERTY TESTS
+  # ============================================
+
+  - id: aggridinputbalhamdark_height
+    type: AgGridInputBalhamDark
+    properties:
+      height: 300
+      columnDefs:
+        - headerName: Name
+          field: name
+
+  - id: aggridinputbalhamdark_default_col_def
+    type: AgGridInputBalhamDark
+    properties:
+      defaultColDef:
+        sortable: true
+        resizable: true
+        filter: true
+      columnDefs:
+        - headerName: Name
+          field: name
+        - headerName: Age
+          field: age
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  - id: aggridinputbalhamdark_onrowclick
+    type: AgGridInputBalhamDark
+    properties:
+      columnDefs:
+        - headerName: Name
+          field: name
+        - headerName: Age
+          field: age
+    events:
+      onRowClick:
+        - id: set_row_click
+          type: SetState
+          params:
+            aggridinputbalhamdark_row_clicked:
+              _event: row.name
+
+  - id: row_click_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: aggridinputbalhamdark_row_clicked
+              - null
+          then:
+            _string.concat:
+              - 'Row: '
+              - _state: aggridinputbalhamdark_row_clicked
+          else: ''
+
+  - id: aggridinputbalhamdark_oncellclick
+    type: AgGridInputBalhamDark
+    properties:
+      columnDefs:
+        - headerName: Name
+          field: name
+        - headerName: Age
+          field: age
+    events:
+      onCellClick:
+        - id: set_cell_click
+          type: SetState
+          params:
+            aggridinputbalhamdark_cell_clicked:
+              _event: cell.value
+
+  - id: cell_click_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: aggridinputbalhamdark_cell_clicked
+              - null
+          then:
+            _string.concat:
+              - 'Cell: '
+              - _state: aggridinputbalhamdark_cell_clicked
+          else: ''
+
+  - id: aggridinputbalhamdark_onrowselected
+    type: AgGridInputBalhamDark
+    properties:
+      rowSelection: single
+      columnDefs:
+        - headerName: Name
+          field: name
+        - headerName: Age
+          field: age
+    events:
+      onRowSelected:
+        - id: set_row_selected
+          type: SetState
+          params:
+            aggridinputbalhamdark_row_selected:
+              _event: row.name
+
+  - id: row_selected_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: aggridinputbalhamdark_row_selected
+              - null
+          then:
+            _string.concat:
+              - 'Selected: '
+              - _state: aggridinputbalhamdark_row_selected
+          else: ''
+
+  # ============================================
+  # SORTING & FILTERING
+  # ============================================
+
+  - id: aggridinputbalhamdark_sortable
+    type: AgGridInputBalhamDark
+    properties:
+      columnDefs:
+        - headerName: Name
+          field: name
+          sortable: true
+        - headerName: Age
+          field: age
+          sortable: true
+    events:
+      onSortChanged:
+        - id: set_sort_changed
+          type: SetState
+          params:
+            aggridinputbalhamdark_sort_changed: true
+
+  - id: sort_changed_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: aggridinputbalhamdark_sort_changed
+              - true
+          then: Sort changed
+          else: ''
+
+  - id: aggridinputbalhamdark_filterable
+    type: AgGridInputBalhamDark
+    properties:
+      columnDefs:
+        - headerName: Name
+          field: name
+          filter: true
+        - headerName: Age
+          field: age
+          filter: true
+    events:
+      onFilterChanged:
+        - id: set_filter_changed
+          type: SetState
+          params:
+            aggridinputbalhamdark_filter_changed: true
+
+  - id: filter_changed_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: aggridinputbalhamdark_filter_changed
+              - true
+          then: Filter changed
+          else: ''
+
+  # ============================================
+  # INPUT-SPECIFIC: EDITABLE CELLS
+  # ============================================
+
+  - id: aggridinputbalhamdark_editable
+    type: AgGridInputBalhamDark
+    properties:
+      columnDefs:
+        - headerName: Name
+          field: name
+          editable: true
+        - headerName: Age
+          field: age
+    events:
+      onCellValueChanged:
+        - id: set_cell_value_changed
+          type: SetState
+          params:
+            aggridinputbalhamdark_cell_new_value:
+              _event: newValue
+            aggridinputbalhamdark_cell_old_value:
+              _event: oldValue
+
+  - id: cell_value_changed_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: aggridinputbalhamdark_cell_new_value
+              - null
+          then:
+            _string.concat:
+              - 'New: '
+              - _state: aggridinputbalhamdark_cell_new_value
+          else: ''
+
+  # ============================================
+  # INPUT-SPECIFIC: ROW DRAGGING
+  # ============================================
+
+  - id: aggridinputbalhamdark_rowdrag
+    type: AgGridInputBalhamDark
+    properties:
+      columnDefs:
+        - headerName: Name
+          field: name
+          rowDrag: true
+        - headerName: Age
+          field: age
+    events:
+      onRowDragEnd:
+        - id: set_row_drag_end
+          type: SetState
+          params:
+            aggridinputbalhamdark_drag_ended: true
+
+  - id: row_drag_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: aggridinputbalhamdark_drag_ended
+              - true
+          then: Drag ended
+          else: ''
