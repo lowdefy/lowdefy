@@ -13,28 +13,30 @@ Operators are the expression system in Lowdefy that:
 
 ## Parser Types
 
-### BuildParser
+### evaluateOperators (Build-Time)
 
-**File:** `packages/operators/src/buildParser.js`
+**File:** `packages/operators/src/evaluateOperators.js`
 
-**Context:** Build-time operator evaluation
+**Context:** Build-time operator evaluation (replaces old `BuildParser` class)
 **Runtime:** Node.js
 
 ```javascript
-new BuildParser({
-  env, // process.env
-  payload, // Build payload
-  secrets, // Application secrets
-  user, // Build-time user
-  operators, // Operator registry
+const { output, errors } = evaluateOperators({
+  input, // data to walk
+  operators, // operator implementations
+  operatorPrefix: '_build.', // or '_' for static operators
+  env: process.env,
+  dynamicIdentifiers, // Set of operators requiring runtime evaluation
+  typeNames, // Set of registered type names (for ~dyn type boundaries)
+  args, // optional arguments (for _function callbacks)
 });
 ```
 
 **Available Data:**
 
 - `env` - Environment variables
-- `payload` - Build payload
-- `secrets` - Application secrets
+- `operators` - Operator implementations
+- `args` - Function arguments (for `_function` callbacks)
 
 ### WebParser
 
@@ -93,30 +95,55 @@ new ServerParser({
 
 ## Parsing Mechanism
 
-All parsers use the same JSON reviver pattern:
+### Build-Time: In-Place Tree Walker
+
+`evaluateOperators` walks the tree in-place with a recursive function (no `serializer.copy` JSON round-trips):
+
+```javascript
+function walk(node) {
+  // Walk children first (bottom-up)
+  for (const key of Object.keys(node)) {
+    node[key] = walk(node[key]);
+  }
+
+  // Bubble up ~dyn from children (skip for _build.* operators)
+  if (hasDynChild(node)) setDynamicMarker(node);
+
+  // Type boundary: reset ~dyn at registered types
+  if (typeNames?.has(node.type)) delete node['~dyn'];
+
+  // Detect operator: single non-tilde key starting with operatorPrefix
+  const keys = Object.keys(node).filter(k => !k.startsWith('~'));
+  if (keys.length !== 1 || !keys[0].startsWith(operatorPrefix)) return node;
+
+  // Dynamic check (skip for _build.* — always evaluate)
+  if (operatorPrefix !== '_build.' && hasDynamicMarker(params)) {
+    return setDynamicMarker(node);
+  }
+
+  return operators[op]({ args, env, methodName, params, parser, ... });
+}
+```
+
+The `parser` interface passed to operators recurses into `evaluateOperators` itself, enabling `_function`/`_build.array.map` callbacks.
+
+### Runtime: JSON Reviver Pattern
+
+`WebParser` and `ServerParser` use `serializer.copy` with JSON revivers for runtime evaluation:
 
 ```javascript
 parse({ args, input, location, operatorPrefix = '_' }) {
-  // Serialize with custom reviver
   const result = serializer.copy(input, {
     reviver: (key, value) => {
-      // Identify operator objects (single key starting with prefix)
       if (isOperator(value)) {
         const [op, method] = splitOperator(key);
-
-        // Execute operator function
         return this.operators[op]({
-          args,
-          location,
-          methodName: method,
-          params: value[key],
-          // ... context data
+          args, location, methodName: method, params: value[key],
         });
       }
       return value;
     }
   });
-
   return { output: result, errors: this.errors };
 }
 ```
@@ -125,7 +152,7 @@ parse({ args, input, location, operatorPrefix = '_' }) {
 
 ### \_ref Operator
 
-**Files:** `packages/build/src/build/buildRefs/`
+**Files:** `packages/build/src/build/buildRefs/walker.js`
 
 Loads and merges external configuration files:
 
@@ -145,20 +172,22 @@ blocks:
     transformer: "./transform"
 ```
 
-**Processing:**
+**Processing (via walker's `resolveRef`):**
 
-1. `makeRefDefinition()` - Create ref definition
-2. `getRefContent()` - Load file content
-3. `parseRefContent()` - Parse YAML/JSON/Nunjucks
-4. `getRefsFromFile()` - Find nested refs
-5. `recursiveBuild()` - Process depth-first (max 10,000)
-6. `populateRefs()` - Replace placeholders
-7. `runTransformer()` - Apply transformers
-8. `evaluateBuildOperators()` - Evaluate `_build.*`
+1. `makeRefDefinition()` - Create ref definition, register in `refMap`
+2. Store unresolved vars before resolution mutates them
+3. Resolve dynamic path/vars/key via recursive `resolve()` in parent context
+4. Circular reference detection via `ctx.refChain`
+5. `getRefContent()` → `parseRefContent()` - Load and parse file
+6. Create child `WalkContext` via `forRef()` (new vars, refChain copy)
+7. `resolve(content, childCtx)` - Walk file content recursively
+8. `runTransformer()` - Apply transformer (optional)
+9. Extract key (`_ref.key`)
+10. `tagRefDeep()` - Tag all result nodes with `~r` provenance
 
 ### \_var Operator
 
-**File:** `packages/build/src/build/buildRefs/populateRefs.js`
+**File:** `packages/build/src/build/buildRefs/walker.js` (`resolveVar` function)
 
 Template variable substitution:
 
@@ -182,7 +211,7 @@ label:
 
 ### \_build.\* Operators
 
-**File:** `packages/build/src/build/buildRefs/evaluateBuildOperators.js`
+**Evaluated inline by walker** (`packages/build/src/build/buildRefs/walker.js`) via `evaluateOperators` with `operatorPrefix: '_build.'`.
 
 Build-time operators with `_build.` prefix:
 
@@ -500,10 +529,11 @@ parse({ input, location }) {
 
 ## Metadata Handling
 
-### Build Parser
+### Build-Time (evaluateOperators)
 
-- Preserves `~r` (reference ID) to track source files
-- Used for error reporting with file locations
+- Preserves `~r` (reference ID) to track source files — used for error attribution
+- Skips objects/arrays with `~r` marker during operator detection (already resolved refs)
+- Sets `~dyn` as non-enumerable property for dynamic content tracking
 
 ### Web/Server Parser
 
@@ -644,12 +674,13 @@ _type.isUndefined: value
 
 | Component          | File                                             |
 | ------------------ | ------------------------------------------------ |
-| BuildParser        | `packages/operators/src/buildParser.js`          |
+| evaluateOperators  | `packages/operators/src/evaluateOperators.js`    |
 | WebParser          | `packages/operators/src/webParser.js`            |
 | ServerParser       | `packages/operators/src/serverParser.js`         |
 | getFromObject      | `packages/operators/src/getFromObject.js`        |
 | runInstance        | `packages/operators/src/runInstance.js`          |
 | runClass           | `packages/operators/src/runClass.js`             |
+| Walker             | `packages/build/src/build/buildRefs/walker.js`   |
 | Build Operators    | `packages/build/src/build/buildRefs/`            |
 | JS Operators       | `packages/plugins/operators/operators-js/`       |
 | MQL Operators      | `packages/plugins/operators/operators-mql/`      |
@@ -657,11 +688,13 @@ _type.isUndefined: value
 
 ## Architectural Patterns
 
-1. **Context-Specific Parsers**: Different parsers for build/client/server
-2. **JSON Reviver Pattern**: Recursive operator detection and evaluation
-3. **Location Tracking**: Full path for error reporting
-4. **Error Collection**: Non-throwing, accumulates errors
-5. **Array Index Support**: Dynamic path resolution in lists
-6. **Method Chaining**: `_array.filter`, `_string.concat` syntax
-7. **Default Values**: Fallback support via object params
-8. **Type Validation**: Meta definitions validate input types
+1. **Context-Specific Evaluation**: `evaluateOperators` for build-time, `WebParser`/`ServerParser` for runtime
+2. **In-Place Walk (Build)**: `evaluateOperators` walks the tree recursively without JSON round-trips
+3. **JSON Reviver Pattern (Runtime)**: `WebParser`/`ServerParser` use `serializer.copy` with revivers
+4. **~dyn Marker Propagation**: Bubbles up from children to prevent evaluating operators with runtime-dependent params
+5. **Type Boundaries**: Objects with registered `type` field reset `~dyn` propagation
+6. **\_build.\* Exemption**: Build operators always evaluate regardless of `~dyn` — they work on YAML structure
+7. **Error Collection**: Non-throwing, accumulates errors with `~r`/`~l` for file/line attribution
+8. **Method Chaining**: `_array.filter`, `_string.concat` syntax
+9. **Default Values**: Fallback support via object params
+10. **Type Validation**: Meta definitions validate input types

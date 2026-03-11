@@ -6,7 +6,7 @@ Framework for parsing and evaluating Lowdefy operators. Provides parsers for bui
 
 This package provides:
 
-- `BuildParser` - Evaluates operators at build time
+- `evaluateOperators` - Evaluates operators at build time (in-place tree walker)
 - `ServerParser` - Evaluates operators on the server (requests)
 - `WebParser` - Evaluates operators in the browser (UI reactivity)
 - Helper functions for operator implementation
@@ -15,7 +15,7 @@ This package provides:
 
 ```javascript
 import {
-  BuildParser,
+  evaluateOperators,
   ServerParser,
   WebParser,
   getFromArray,
@@ -46,32 +46,37 @@ title:
 
 ## Parser Types
 
-### BuildParser
+### evaluateOperators (Build-Time)
 
-Used by `@lowdefy/build` for build-time evaluation:
+**File:** `packages/operators/src/evaluateOperators.js`
+
+Replaces the old `BuildParser` class. Used by the walker (inline `_build.*` evaluation) and `evaluateStaticOperators` (post-walk `_` pass). Walks in-place with a recursive function instead of JSON `serializer.copy` round-trips.
 
 ```javascript
-const parser = new BuildParser({
-  operators: buildOperators,
-  payload: {
-    env, // Environment variables
-    variables, // Build-time variables from _var
-    refDef, // Current _ref definition being processed
-    path, // Current file path
-  },
-  jsMap, // Map of JavaScript functions
-});
-
-const result = parser.parse({
+const { output, errors } = evaluateOperators({
   input: configObject,
-  location: 'lowdefy.yaml',
+  operators: buildOperators,
+  operatorPrefix: '_build.', // or '_' for static operators
+  env: process.env,
+  dynamicIdentifiers, // Set of operators requiring runtime evaluation
+  typeNames, // Set of registered type names (for type boundaries)
+  args, // optional arguments (for _function callbacks)
 });
 ```
 
+**Key behaviors:**
+
+- Bottom-up evaluation: children resolve before parents
+- `~dyn` marker propagation: bubbles up from children to indicate runtime-dependent content
+- Type boundaries: objects with a `type` field matching `typeNames` reset `~dyn` propagation
+- `_build.*` operators always evaluate regardless of `~dyn` (they work on YAML structure, not runtime values)
+- Unknown operators are marked as dynamic (deferred to runtime)
+- `parser.parse()` callback for recursive evaluation (used by `_function`/`_build.array.map`)
+
 **Build-time operators:**
 
-- `_ref` - Include other files
-- `_var` - Build variables
+- `_ref` - Include other files (handled by walker, not evaluateOperators)
+- `_var` - Build variables (handled by walker, not evaluateOperators)
 - `_build.env` - Environment at build time
 - `_dump_yaml` / `_dump_json` - Serialize to string
 
@@ -339,7 +344,7 @@ The `_js` operator (from `@lowdefy/operators-js`) is the controlled escape hatch
 
 ## Integration Points
 
-- **@lowdefy/build**: Uses BuildParser
+- **@lowdefy/build**: Uses `evaluateOperators` (via walker for `_build.*`, via `evaluateStaticOperators` for `_` prefix)
 - **@lowdefy/api**: Uses ServerParser
 - **@lowdefy/engine**: Uses WebParser
 - **Operator plugins**: Provide operator implementations
@@ -357,7 +362,7 @@ throw new Error('_sum requires array of numbers.');
 // "_sum requires array of numbers. Received: {...} at block:total."
 ```
 
-The parsers (WebParser, ServerParser, BuildParser) catch operator errors and format them with:
+The parsers (`evaluateOperators`, `WebParser`, `ServerParser`) catch operator errors and format them with:
 
 - Received value as JSON
 - Location in config

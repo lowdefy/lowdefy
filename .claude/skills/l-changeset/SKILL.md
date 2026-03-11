@@ -40,6 +40,8 @@ From the changed source files, extract unique package names:
 - `packages/helpers/src/...` → `@lowdefy/helpers`
 - `packages/plugins/blocks/blocks-antd/src/...` → `@lowdefy/blocks-antd`
 
+**IMPORTANT: The CLI package name is `lowdefy`, NOT `@lowdefy/cli`.** Using `@lowdefy/cli` will cause changeset processing to fail.
+
 If no source files changed (only tests, docs, config), say: "No source changes found. Changesets are only needed for functional changes to package source code." and stop.
 
 ### 3. Check Existing Changesets

@@ -104,7 +104,8 @@ function parseRefContent({ content, refDef }) {
   const { path, vars } = refDef;
   if (type.isString(path)) {
     let ext = getFileExtension(path);
-    if (ext === 'njk') {
+    const isNjk = ext === 'njk';
+    if (isNjk) {
       try {
         content = parseNunjucks(content, vars);
       } catch (error) {
@@ -120,6 +121,15 @@ function parseRefContent({ content, refDef }) {
       try {
         content = parseYamlWithLineNumbers(content);
       } catch (error) {
+        if (isNjk) {
+          throw new ConfigError(
+            `Nunjucks template "${path}" produced invalid YAML.`,
+            {
+              cause: error,
+              filePath: path,
+            }
+          );
+        }
         const lineMatch = error.message.match(/at line (\d+)/);
         throw new ConfigError(`YAML parse error in "${path}".`, {
           cause: error,

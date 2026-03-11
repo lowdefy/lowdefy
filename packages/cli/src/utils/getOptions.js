@@ -17,6 +17,7 @@
 function getOptions({ commandLineOptions, cliConfig }) {
   // commandLineOptions take precedence over config in lowdefy.yaml
   const options = {
+    port: 3000,
     ...cliConfig,
     ...commandLineOptions,
   };
