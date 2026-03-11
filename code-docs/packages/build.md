@@ -116,6 +116,22 @@ blocks:
 - JSON5 refs: `_ref: config.json5` - supports JSON5 format
 - Nunjucks refs: `_ref: template.njk` - template with variables
 
+#### Walker Architecture (`walker.js`)
+
+Ref resolution uses a single-pass async tree walker that handles `_ref`, `_var`, and `_build.*` operators in one traversal, eliminating the JSON round-trips from the old `serializer.copy`-based pipeline.
+
+**Key components:**
+- `resolve(node, ctx)` — core recursive walk function
+- `resolveRef(refNode, parentCtx)` — full 12-step ref handling (load, walk content, transform, tag `~r`)
+- `resolveVar(node, ctx)` — variable substitution with `~r` provenance
+- `cloneVarValue(value, sourceRefId)` — deep clone for var values (needed because same var may appear at multiple `_var` sites)
+- `tagRefDeep(node, refId)` — in-place `~r` tagging (replaces old `createRefReviver` + `serializer.copy`)
+- `WalkContext` — immutable context with `child(segment)` for path tracking and `forRef()` for entering ref files
+
+**Traversal order:** Top-down for `_ref`/`_var` detection, bottom-up for `_build.*` evaluation. Children always resolve before their parent.
+
+**`evaluateStaticOperators`** uses `evaluateOperators` from `@lowdefy/operators` (in-place walk, no `serializer.copy`).
+
 ### Schema Validation (`testSchema.js`)
 
 Validates config against the Lowdefy JSON schema:
@@ -355,28 +371,33 @@ await buildPageJit({
 
 | Module | File | Purpose |
 |--------|------|---------|
-| `shallowBuild` | `build/shallowBuild.js` | Skeleton build with `_shallow` markers at page content |
-| `buildPageJit` | `build/buildPageJit.js` | Resolve `_shallow` markers, run page build steps, write artifacts |
-| `createPageRegistry` | `build/createPageRegistry.js` | Extract page metadata + raw content from shallow-built components |
-| `createFileDependencyMap` | `build/createFileDependencyMap.js` | Map config files → page IDs for targeted invalidation |
-| `writePageRegistry` | `build/writePageRegistry.js` | Serialize page registry to JSON |
-| `writePageJit` | `build/writePageJit.js` | Write page/request JSONs + updated maps + JS files |
-| `pathMatcher` | `utils/pathMatcher.js` | Match dot-notation paths against `SHALLOW_STOP_PATHS` |
-| `getRefPositions` | `buildRefs/getRefPositions.js` | Find ref positions in content tree |
+| `shallowBuild` | `jit/shallowBuild.js` | Skeleton build with `~shallow` markers at page content |
+| `buildPageJit` | `jit/buildPageJit.js` | Resolve page content via walker, run page build steps, write artifacts |
+| `createPageRegistry` | `jit/createPageRegistry.js` | Extract page metadata + raw content from shallow-built components |
+| `createFileDependencyMap` | `jit/createFileDependencyMap.js` | Map config files → page IDs for targeted invalidation |
+| `writePageRegistry` | `jit/writePageRegistry.js` | Serialize page registry to JSON |
+| `writePageJit` | `jit/writePageJit.js` | Write page/request JSONs + updated maps + JS files |
+| `isPageContentPath` | `jit/isPageContentPath.js` | Semantic segment matching for shallow build stop paths |
+| `pageContentKeys` | `jit/pageContentKeys.js` | List of page content keys used by `isPageContentPath` |
 
 ### Shallow Build Stop Paths
 
-The `_ref` resolution stops at these paths, leaving `_shallow` markers:
+The walker's `shouldStop` callback uses `isPageContentPath()` for semantic path matching. Any path under `pages.` containing a page content key segment is stopped:
 
 ```javascript
-const SHALLOW_STOP_PATHS = [
-  'pages.*.blocks',
-  'pages.*.areas',
-  'pages.*.events',
-  'pages.*.requests',
-  'pages.*.layout',
-];
+const PAGE_CONTENT_KEYS = ['blocks', 'areas', 'events', 'requests', 'layout'];
+
+function isPageContentPath(jsonPath) {
+  if (!jsonPath.startsWith('pages.')) return false;
+  const segments = jsonPath.split('.');
+  for (let i = 1; i < segments.length; i++) {
+    if (PAGE_CONTENT_KEYS.includes(segments[i])) return true;
+  }
+  return false;
+}
 ```
+
+This replaces the old regex-based `pathMatcher` and correctly handles `_build.array` intermediate paths (e.g., `pages._build.array.concat.0.blocks`).
 
 ### Page Registry Structure
 

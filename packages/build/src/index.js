@@ -16,7 +16,7 @@
   limitations under the License.
 */
 
-import { BuildError, LowdefyInternalError } from '@lowdefy/errors';
+import { BuildError, ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 
 import createContext from './createContext.js';
 import createPluginTypesMap from './utils/createPluginTypesMap.js';
@@ -69,13 +69,15 @@ async function build(options) {
     try {
       components = await buildRefs({ context });
     } catch (err) {
-      // Handle ConfigError from buildRefs (e.g., missing _ref files)
-      if (err.isLowdefyError) {
-        context.handleError(err);
-        throw new BuildError('Build failed with 1 error(s). See above for details.');
+      // Root lowdefy.yaml failure still throws from buildRefs — collect it
+      if (err instanceof ConfigError) {
+        context.errors.push(err);
+      } else {
+        throw err;
       }
-      throw err;
     }
+    // Stop if buildRefs collected any errors (YAML parse, missing files, etc.)
+    logCollectedErrors(context);
 
     // Build steps - collect all errors before stopping
     // addKeys runs first so testSchema has ~k markers for error location info

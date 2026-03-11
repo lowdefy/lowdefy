@@ -1,23 +1,15 @@
 ---
 name: Bug report
-about: Something is not working right. Or error messages are unclear.
+about: Something is not working right.
 title: ''
-labels: Bug
+labels: type:bug
 assignees: ''
 ---
 
-#### Describe the bug
+### Bug
 
-A clear and concise description of what the bug is.
+A clear description of what's happening and why it's wrong.
 
-#### To Reproduce
+### Expected Behavior
 
-Example configuration reproducing the issue, or steps to reproduce the behavior.
-
-#### Screenshots
-
-If applicable, add screenshots to help explain your problem.
-
-#### Lowdefy Version
-
-Version (or version range) on which you experienced this issue.
+What should happen instead.
