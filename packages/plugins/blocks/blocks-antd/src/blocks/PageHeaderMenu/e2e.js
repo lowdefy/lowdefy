@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { createBlockHelper } from '@lowdefy/e2e-utils';
+import { createBlockHelper, escapeId } from '@lowdefy/e2e-utils';
 import { expect } from '@playwright/test';
 
-const locator = (page, blockId) => page.locator(`#bl-${blockId}`);
+const locator = (page, blockId) => page.locator(`#bl-${escapeId(blockId)}`);
 
 export default createBlockHelper({
   locator,
@@ -25,7 +25,11 @@ export default createBlockHelper({
     clickMenuItem: (page, blockId, menuItemText) =>
       locator(page, blockId).locator('.ant-menu-item').filter({ hasText: menuItemText }).click(),
     clickLogo: (page, blockId) =>
-      locator(page, blockId).locator(`#${blockId}_header`).locator('a').first().click(),
+      locator(page, blockId)
+        .locator(`#${escapeId(blockId)}_header`)
+        .locator('a')
+        .first()
+        .click(),
   },
   expect: {
     menuItemActive: (page, blockId, menuItemText) =>

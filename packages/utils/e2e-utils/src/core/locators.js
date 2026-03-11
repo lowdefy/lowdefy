@@ -14,8 +14,10 @@
   limitations under the License.
 */
 
+import { escapeId } from './escapeId.js';
+
 function getBlock(page, blockId) {
-  return page.locator(`#bl-${blockId}`);
+  return page.locator(`#bl-${escapeId(blockId)}`);
 }
 
 export { getBlock };

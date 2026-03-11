@@ -16,10 +16,11 @@
 
 import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { escapeId } from '@lowdefy/e2e-utils';
 
 // Img renders an img element with id={blockId}
 // Structure: #bl-{blockId} (wrapper) > #{blockId} (img element with attributes)
-const getImgElement = (page, blockId) => page.locator(`#${blockId}`);
+const getImgElement = (page, blockId) => page.locator(`#${escapeId(blockId)}`);
 
 test.describe('Img Block', () => {
   test.beforeEach(async ({ page }) => {

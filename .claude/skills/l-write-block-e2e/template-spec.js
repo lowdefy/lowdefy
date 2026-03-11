@@ -16,6 +16,7 @@
 
 import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { escapeId } from '@lowdefy/e2e-utils';
 
 // ===========================================
 // CHOOSE THE APPROPRIATE HELPER FOR YOUR BLOCK TYPE:
@@ -27,12 +28,12 @@ import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
 const getButton = (page, blockId) => getBlock(page, blockId).locator('.ant-btn');
 
 // For Input Blocks (TextInput, NumberInput, etc.):
-// Input element has a specific ID pattern
-// const getInput = (page, blockId) => page.locator(`#${blockId}_input`);
+// Input element has a specific ID pattern - always use escapeId()
+// const getInput = (page, blockId) => page.locator(`#${escapeId(blockId)}_input`);
 
 // For Selector Blocks (Selector, MultipleSelector, etc.):
-// const getSelector = (page, blockId) => page.locator(`.ant-select:has(#${blockId}_input)`);
-// const getOption = (page, blockId, index) => page.locator(`#${blockId}_${index}`);
+// const getSelector = (page, blockId) => page.locator(`.ant-select:has(#${escapeId(blockId)}_input)`);
+// const getOption = (page, blockId, index) => page.locator(`#${escapeId(blockId)}_${index}`);
 
 test.describe('BlockName Block', () => {
   test.beforeEach(async ({ page }) => {

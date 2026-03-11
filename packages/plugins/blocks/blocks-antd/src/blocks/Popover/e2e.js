@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { createBlockHelper } from '@lowdefy/e2e-utils';
+import { createBlockHelper, escapeId } from '@lowdefy/e2e-utils';
 import { expect } from '@playwright/test';
 
 // Locator targets the trigger wrapper. The overlay is a portal (.ant-popover).
-const locator = (page, blockId) => page.locator(`#bl-${blockId}`);
+const locator = (page, blockId) => page.locator(`#bl-${escapeId(blockId)}`);
 
 export default createBlockHelper({
   locator,

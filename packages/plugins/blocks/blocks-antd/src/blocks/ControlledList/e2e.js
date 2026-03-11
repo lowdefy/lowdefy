@@ -14,16 +14,17 @@
   limitations under the License.
 */
 
-import { createBlockHelper } from '@lowdefy/e2e-utils';
+import { createBlockHelper, escapeId } from '@lowdefy/e2e-utils';
 import { expect } from '@playwright/test';
 
-const locator = (page, blockId) => page.locator(`#${blockId}`);
+const locator = (page, blockId) => page.locator(`#${escapeId(blockId)}`);
 
 export default createBlockHelper({
   locator,
   do: {
-    add: (page, blockId) => page.locator(`#${blockId}_add_button`).click(),
-    remove: (page, blockId, index) => page.locator(`#${blockId}_${index}_remove_icon`).click(),
+    add: (page, blockId) => page.locator(`#${escapeId(blockId)}_add_button`).click(),
+    remove: (page, blockId, index) =>
+      page.locator(`#${escapeId(blockId)}_${index}_remove_icon`).click(),
   },
   expect: {
     itemCount: (page, blockId, count) =>

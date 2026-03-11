@@ -5,9 +5,31 @@ End-to-end tests for your Lowdefy app using Playwright.
 ## Running Tests
 
 ```bash
-pnpm e2e        # Run all tests
-pnpm e2e:ui     # Run in UI mode (interactive)
+pnpm e2e            # Run all tests
+pnpm e2e:headed     # Run with visible browser (slow motion)
+pnpm e2e:ui         # Playwright UI mode (interactive)
+pnpm e2e:server     # Start server for reuse (skip rebuilds)
 ```
+
+## Faster Test Runs
+
+By default, `pnpm e2e` does a full build before running tests. To skip the build during development:
+
+1. **Start the server once** in a separate terminal:
+
+   ```bash
+   pnpm e2e:server
+   ```
+
+2. **Run tests** in another terminal — the config has `reuseExistingServer: true`, so Playwright detects the running server and skips the build:
+
+   ```bash
+   pnpm e2e
+   ```
+
+This saves 60-90 seconds per run. Keep the server running while iterating on tests.
+
+> **Tip:** If port 3000 is already in use, change the port in both the `e2e:server` script in `package.json` and the `port` option in `playwright.config.js`.
 
 ## File Structure
 
@@ -136,6 +158,28 @@ await ldf.mock.request('fetch_user', {
 });
 ```
 
+## Common Patterns
+
+### Testing Page Navigation
+
+When a form submit navigates away from the page (e.g., `Link: back`, redirects), use `Promise.all` with `page.waitForURL()` and the click action:
+
+```javascript
+test('submits form and navigates back', async ({ ldf, page }) => {
+  await ldf.goto('/my-form');
+
+  await ldf.block('name_input').do.fill('Test');
+
+  // Wait for navigation and click simultaneously
+  await Promise.all([
+    page.waitForURL((url) => !url.pathname.includes('/my-form'), { timeout: 30000 }),
+    ldf.block('submit_btn').do.click(),
+  ]);
+});
+```
+
+**Why not `ldf.request().expect.toFinish()`?** When the page navigates away, the page context is destroyed. Any pending request assertions will fail because the Lowdefy runtime that tracks requests no longer exists. Use `page.waitForURL()` instead to assert that the navigation happened.
+
 ## Playwright Configuration
 
 Edit `playwright.config.js` to customize test behavior.
@@ -144,7 +188,7 @@ Edit `playwright.config.js` to customize test behavior.
 
 | Option | Default | Description |
 |--------|---------|-------------|
-| `appDir` | `'../'` | Path to your Lowdefy app root (relative to config file) |
+| `appDir` | `'./'` | Path to your Lowdefy app root (relative to cwd) |
 | `buildDir` | `'.lowdefy/server/build'` | Build output directory (relative to appDir) |
 | `mocksFile` | `'e2e/mocks.yaml'` | Static mocks file path (relative to appDir) |
 | `port` | `3000` | Port for the test server |
@@ -160,7 +204,7 @@ Edit `playwright.config.js` to customize test behavior.
 import { createConfig } from '@lowdefy/e2e-utils/config';
 
 export default createConfig({
-  appDir: '../',
+  appDir: './',
   port: 3001,                    // Use different port
   timeout: 300000,               // 5 min timeout for slow builds
   screenshot: 'on',              // Always capture screenshots
@@ -177,8 +221,8 @@ import { createMultiAppConfig } from '@lowdefy/e2e-utils/config';
 
 export default createMultiAppConfig({
   apps: [
-    { name: 'admin', appDir: '../apps/admin', port: 3001 },
-    { name: 'customer', appDir: '../apps/customer', port: 3002 },
+    { name: 'admin', appDir: './apps/admin', port: 3001 },
+    { name: 'customer', appDir: './apps/customer', port: 3002 },
   ],
   testDir: '.',
   timeout: 180000,

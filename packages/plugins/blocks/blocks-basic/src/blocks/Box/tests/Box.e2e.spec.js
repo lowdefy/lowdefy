@@ -16,10 +16,11 @@
 
 import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { escapeId } from '@lowdefy/e2e-utils';
 
 // Box renders a div with id={blockId}
 // Structure: #bl-{blockId} (wrapper) > #{blockId} (div with styles)
-const getBoxElement = (page, blockId) => page.locator(`#${blockId}`);
+const getBoxElement = (page, blockId) => page.locator(`#${escapeId(blockId)}`);
 
 test.describe('Box Block', () => {
   test.beforeEach(async ({ page }) => {
@@ -49,6 +50,13 @@ test.describe('Box Block', () => {
     await expect(parent).toBeVisible();
     await expect(child).toBeVisible();
     await expect(child).toHaveText('Child content');
+  });
+
+  test('renders Box with dotted block ID (CSS selector escaping regression)', async ({ page }) => {
+    const wrapper = getBlock(page, 'form.field.name');
+    await expect(wrapper).toBeAttached();
+    const box = getBoxElement(page, 'form.field.name');
+    await expect(box).toHaveText('Dotted ID Box');
   });
 
   test('onClick event fires and updates state', async ({ page }) => {

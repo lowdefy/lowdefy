@@ -4,7 +4,7 @@ Use this checklist when writing e2e tests for a Lowdefy block.
 
 ## Pre-Flight Checks
 
-- [ ] Block has `id={blockId}` on root element (or `id={\`${blockId}_input\`}` for input blocks)
+- [ ] Block has `id={blockId}` on root element (or `id={\`${blockId}\_input\`}` for input blocks)
 - [ ] Package has e2e infrastructure (playwright.config.js, e2e/app/lowdefy.yaml)
 - [ ] Package has @lowdefy/block-dev-e2e as devDependency
 
@@ -13,11 +13,13 @@ Use this checklist when writing e2e tests for a Lowdefy block.
 Review `schema.json` and ensure tests for:
 
 ### Properties
+
 - [ ] Every property in schema.json has at least one test
 - [ ] Default values work correctly
 - [ ] Property combinations that matter
 
 ### Events
+
 - [ ] Every event handler has at least one test
 - [ ] Events update state correctly (verifiable in UI)
 - [ ] Loading states during async actions (if applicable)
@@ -25,30 +27,36 @@ Review `schema.json` and ensure tests for:
 ## Test Categories
 
 ### Rendering Tests
+
 - [ ] Basic render with minimal props
 - [ ] Block is visible and has correct id
 - [ ] Text content displays correctly
 
 ### Property Tests
+
 - [ ] Boolean properties (disabled, ghost, block, etc.)
 - [ ] Enum properties (type, size, shape, etc.)
 - [ ] String properties (title, placeholder, href, etc.)
 - [ ] Style/color properties
 
 ### Attribute Tests
+
 - [ ] HTML attributes (href, target, disabled)
 - [ ] ARIA attributes (if applicable)
 
 ### Class/Style Tests
+
 - [ ] CSS classes for variants (Ant Design classes like ant-btn-primary)
 - [ ] Custom style application
 - [ ] Disabled styling (cursor: not-allowed)
 
 ### Child Element Tests
+
 - [ ] Icons render correctly (look for svg)
 - [ ] Nested content renders
 
 ### Event Tests
+
 - [ ] Click events fire
 - [ ] State updates after events
 - [ ] Loading spinner shows during async
@@ -56,11 +64,13 @@ Review `schema.json` and ensure tests for:
 ## Naming Conventions
 
 Block IDs in YAML:
+
 - `{blockname}_basic` - Basic rendering
 - `{blockname}_{property}` - Property-specific (e.g., button_primary, button_disabled)
 - `{blockname}_{event}` - Event tests (e.g., button_clickable)
 
 Test descriptions:
+
 - "renders basic {block} with title"
 - "renders {property} {value} {block}"
 - "applies {property} styling"
@@ -70,7 +80,7 @@ Test descriptions:
 
 - [ ] Use role-based selectors for buttons: `block.getByRole('button', { name: 'Copy' })`
 - [ ] Use `.first()` when Ant Design has nested button elements: `block.getByRole('button', { name: 'Edit' }).first()`
-- [ ] Use ID selectors for inputs: `#${blockId}_input`
+- [ ] Use ID selectors for inputs: `#${escapeId(blockId)}_input`
 - [ ] Use class selectors only for style assertions or when no better option exists
 - [ ] Avoid fragile selectors like `div:nth-child(2)` or long CSS chains
 

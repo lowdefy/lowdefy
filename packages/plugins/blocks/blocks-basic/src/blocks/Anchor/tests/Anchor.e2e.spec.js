@@ -16,10 +16,11 @@
 
 import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { escapeId } from '@lowdefy/e2e-utils';
 
 // Anchor renders a Link component with id={blockId}
 // Structure: #bl-{blockId} (wrapper) > #{blockId} (Link/anchor element)
-const getAnchor = (page, blockId) => page.locator(`#${blockId}`);
+const getAnchor = (page, blockId) => page.locator(`#${escapeId(blockId)}`);
 
 test.describe('Anchor Block', () => {
   test.beforeEach(async ({ page }) => {
