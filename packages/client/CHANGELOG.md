@@ -1,5 +1,18 @@
 # Change Log
 
+## 4.7.0
+
+### Patch Changes
+
+- Updated dependencies [4543688f7]
+- Updated dependencies [dea6651a1]
+  - @lowdefy/helpers@4.7.0
+  - @lowdefy/engine@4.7.0
+  - @lowdefy/layout@4.7.0
+  - @lowdefy/block-utils@4.7.0
+  - @lowdefy/logger@4.7.0
+  - @lowdefy/errors@4.7.0
+
 ## 4.6.0
 
 ### Minor Changes

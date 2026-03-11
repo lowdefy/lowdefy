@@ -1,5 +1,28 @@
 # Change Log
 
+## 4.7.0
+
+### Patch Changes
+
+- cbd74a72b: fix(cli): Exit process and stop spinner on build errors.
+
+  The CLI error handler logged errors but never called `process.exit(1)`, so the process continued running with a spinning indicator after a build failure. Added `process.exit(1)` to `runCommand` after error handling, and added `{ spin: 'fail' }` to stop the spinner in `runLowdefyBuild`, `runNextBuild`, and `installServer` catch blocks.
+
+- 5716be2c8: fix(cli): Remove install skip for local builds
+
+  Removed the early return in `installServer.js` when `lowdefyVersion === 'local'`. The build pipeline adds custom plugins to server's `package.json` via `addCustomPluginsAsDeps`, then runs `pnpm install` to link them. Skipping install for local versions meant plugins were never linked, breaking deploys (e.g. Vercel docs deploy failing with `ERR_MODULE_NOT_FOUND`).
+
+- e2666d58c: fix(cli): Fix port availability check for start command
+
+  The CLI's `checkPortAvailable` was called with `undefined` port when no `--port` flag was passed, causing `net.listen(undefined)` to bind a random port instead of checking port 3000. Added default `port: 3000` in `getOptions`. Removed redundant `checkPortAvailable` from server-dev manager since the CLI now catches port conflicts before the server starts.
+
+- Updated dependencies [4543688f7]
+- Updated dependencies [dea6651a1]
+  - @lowdefy/helpers@4.7.0
+  - @lowdefy/logger@4.7.0
+  - @lowdefy/node-utils@4.7.0
+  - @lowdefy/errors@4.7.0
+
 ## 4.6.0
 
 ### Minor Changes
