@@ -83,7 +83,7 @@ Runs inside the build process. GitHub modules are cached in `.lowdefy/modules/`.
 
 ```javascript
 buildModuleDefs()   // Parse module.lowdefy.yaml, resolve _ref + _module.var,
-                    // validate plugin deps and secret whitelists
+                    // validate plugin deps and secret allowlists
 ```
 
 Walks each `module.lowdefy.yaml` with the entry's vars available as `moduleVars` on the `WalkContext`. After this phase, `context.modules` contains fully resolved manifests. ID operators (`_module.pageId`, etc.) remain unresolved until Phase 3.
@@ -349,7 +349,7 @@ fetchModules() → buildModuleDefs()
   ├─ Fetch GitHub tarballs / resolve local paths
   ├─ Parse each module.lowdefy.yaml
   ├─ Resolve _ref + _module.var in module manifests
-  └─ Validate plugin deps + secret whitelists
+  └─ Validate plugin deps + secret allowlists
      ↓
 createContext() → buildRefs()
   ├─ Start with lowdefy.yaml

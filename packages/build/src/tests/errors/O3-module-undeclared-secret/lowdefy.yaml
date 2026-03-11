@@ -1,4 +1,4 @@
-# O3: Module references a secret not in its whitelist
+# O3: Module references a secret not in its allowlist
 # Tests that the build throws when a module uses _secret for an undeclared secret name.
 lowdefy: local
 

@@ -50,7 +50,7 @@ modules:
 - `components: object[]` — Named reusable config fragments
 - `menus: object[]` — Menu definitions
 - `plugins: object[]` — Required plugin dependencies with semver ranges
-- `secrets: object[]` — Secret whitelist declarations
+- `secrets: object[]` — Secret allowlist declarations
 
 ## Var Resolution Flow
 
@@ -102,7 +102,7 @@ When the module entry specifies `connections: { users-db: my-app-mongodb }`:
 
 This is handled entirely by the `_module.connectionId` operator — no separate rewriting step.
 
-## Secret Whitelist Validation
+## Secret Allowlist Validation
 
 Modules declare accessible secrets in `module.lowdefy.yaml`. During Phase 1, the build validates:
 

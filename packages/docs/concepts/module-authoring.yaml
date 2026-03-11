@@ -246,7 +246,7 @@ _ref:
 
             ## Declaring Secrets
 
-            The `secrets` array is a whitelist. The module can only access secrets it explicitly declares:
+            The `secrets` array is an allowlist. The module can only access secrets it explicitly declares:
 
             ```yaml
             secrets:

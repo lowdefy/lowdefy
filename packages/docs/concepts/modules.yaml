@@ -117,7 +117,7 @@ _ref:
             - `components: object[]` — Named reusable config fragments exposed to the app.
             - `menus: object[]` — Menu definitions.
             - `plugins: object[]` — Required plugin dependencies with semver version constraints.
-            - `secrets: object[]` — Whitelist of secrets the module may access.
+            - `secrets: object[]` — Allowlist of secrets the module may access.
 
             ## Using Module Exports
 
@@ -249,7 +249,7 @@ _ref:
 
             If validation fails, the build error includes remediation instructions.
 
-            ## Secret Whitelist
+            ## Secret Allowlist
 
             Modules declare which secrets they access. The build validates that all `_secret` references in module config match declared secrets. Undeclared `_secret` references cause build errors.
 

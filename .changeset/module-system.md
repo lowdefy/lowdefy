@@ -17,9 +17,9 @@ feat: First-class module system for reusable config packages
 - Connection remapping lets apps redirect module connections to existing app connections
 - Exposed components and menus via `_ref: { module, component }` and `_ref: { module, menu }` syntax
 - Module plugin declarations validated against app's installed plugins with semver compatibility checks
-- Module secret whitelisting — modules declare accessible secrets; undeclared `_secret` references are build errors
+- Module secret allowlisting — modules declare accessible secrets; undeclared `_secret` references are build errors
 - Picomatch glob patterns in auth page rules (e.g., `team-users/*`) for wildcard module page matching
-- `module.lowdefy.yaml` manifest with var schemas, plugin declarations, secret whitelists, and config entry points
+- `module.lowdefy.yaml` manifest with var schemas, plugin declarations, secret allowlists, and config entry points
 
 **Slashed Page IDs (`@lowdefy/server`, `@lowdefy/server-dev`)**
 
