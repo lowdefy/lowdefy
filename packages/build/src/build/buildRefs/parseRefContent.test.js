@@ -127,4 +127,45 @@ type: Box`;
     expect(Object.keys(result)).toEqual(['id', 'type']);
     expect(Object.keys(result)).not.toContain('~l');
   });
+
+  test('YAML parse error in .yaml file includes lineNumber', () => {
+    const content = `id: home
+type: Box
+properties:
+  title: [unclosed bracket`;
+    expect(() => {
+      parseRefContent({ content, refDef: { path: 'test.yaml' } });
+    }).toThrow('YAML parse error in "test.yaml".');
+    try {
+      parseRefContent({ content, refDef: { path: 'test.yaml' } });
+    } catch (error) {
+      expect(error.lineNumber).not.toBeNull();
+      expect(error.filePath).toBe('test.yaml');
+    }
+  });
+
+  test('YAML parse error in .yaml.njk file does not include lineNumber', () => {
+    // Nunjucks vars: {{ title }} renders to the value of title.
+    // The generated YAML has an unclosed bracket causing a parse error.
+    const content = `id: home
+type: Box
+properties:
+  title: {{ title }}`;
+    expect(() => {
+      parseRefContent({
+        content,
+        refDef: { path: 'page.yaml.njk', vars: { title: '[unclosed bracket' } },
+      });
+    }).toThrow('Nunjucks template "page.yaml.njk" produced invalid YAML.');
+    try {
+      parseRefContent({
+        content,
+        refDef: { path: 'page.yaml.njk', vars: { title: '[unclosed bracket' } },
+      });
+    } catch (error) {
+      expect(error.lineNumber).toBeNull();
+      expect(error.filePath).toBe('page.yaml.njk');
+      expect(error.cause).toBeDefined();
+    }
+  });
 });
