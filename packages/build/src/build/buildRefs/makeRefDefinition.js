@@ -36,6 +36,12 @@ function makeRefDefinition(refDefinition, parent, refMap, lineNumber) {
     resolver: get(refDefinition, 'resolver'),
     transformer: get(refDefinition, 'transformer'),
     vars: get(refDefinition, 'vars', { default: {} }),
+    module: get(refDefinition, 'module'),
+    component: get(refDefinition, 'component'),
+    menu: get(refDefinition, 'menu'),
+    page: get(refDefinition, 'page'),
+    connection: get(refDefinition, 'connection'),
+    api: get(refDefinition, 'api'),
     ...(ignoreBuildChecks !== undefined && { ignoreBuildChecks }),
   };
 }

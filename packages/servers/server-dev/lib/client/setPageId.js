@@ -18,13 +18,14 @@ function setPageId(router, rootConfig) {
   if (router.pathname === `/404`) {
     return { redirect: false, pageId: '404' };
   }
-  if (!router.query.pageId) {
+  const segments = router.query.pageId;
+  if (!segments || segments.length === 0) {
     if (rootConfig.home.configured === false) {
       return { redirect: true, pageId: rootConfig.home.pageId };
     }
     return { redirect: false, pageId: rootConfig.home.pageId };
   }
-  return { redirect: false, pageId: router.query.pageId };
+  return { redirect: false, pageId: segments.join('/') };
 }
 
 export default setPageId;

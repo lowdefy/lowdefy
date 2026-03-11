@@ -1,0 +1,5 @@
+id: email-conn
+type: SendGridMail
+properties:
+  apiKey:
+    _secret: SENDGRID_KEY

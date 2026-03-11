@@ -49,6 +49,7 @@ _ref:
             - `global: object`: A data object that can be accessed anywhere in the app using the [`_global`](/_global) operator.
             - `connections: object[]`: An array of [`connection`](/connections-and-requests) objects.
             - `plugins: object[]`: An array of `plugin` objects to customize and add block types.
+            - `modules: object[]`: An array of module entries. Each module references a reusable configuration package distributed via GitHub or local file paths. See [Modules](/modules) for details.
             - `menus: object[]`: An array of menu objects.
             - `pages: object[]`: An array of page objects.
 
@@ -150,7 +151,7 @@ _ref:
 
             Pages in a Lowdefy app are actually just blocks, the building blocks of a Lowdefy app, with a few extra restrictions and features.
 
-            Each page should have an `id` that is unique among all pages in the app. Each page is served with the `pageId` as the url route. That is, if a page is created with id `page1`, it will be served at `domain.com/page1`.
+            Each page should have an `id` that is unique among all pages in the app. Each page is served with the `pageId` as the url route. That is, if a page is created with id `page1`, it will be served at `domain.com/page1`. Module pages use the path `/{entryId}/{pageId}` — for example, a page `users-list` in a module entry `team-users` is served at `domain.com/team-users/users-list`.
 
             If `properties.title` is set on a page block, the title will be set as the page title (This is the title displayed on the tabs in your browser).
       - id: pages_example_collapse

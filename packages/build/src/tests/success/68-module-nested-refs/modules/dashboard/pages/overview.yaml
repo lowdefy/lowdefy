@@ -1,0 +1,18 @@
+id: overview
+type: Box
+blocks:
+  - id: page-title
+    type: Title
+    properties:
+      content:
+        _module.var: title
+  - _ref:
+      path: ../shared/stat-card.yaml
+      vars:
+        stat_label: Total Users
+        stat_value: '1,234'
+  - _ref:
+      path: ../shared/stat-card.yaml
+      vars:
+        stat_label: Active Today
+        stat_value: '56'

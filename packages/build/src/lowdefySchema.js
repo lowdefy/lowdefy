@@ -1349,6 +1349,52 @@ export default {
         type: 'App "pages" should be an array.',
       },
     },
+    modules: {
+      type: 'array',
+      items: {
+        type: 'object',
+        required: ['id', 'source'],
+        properties: {
+          '~r': {},
+          '~l': {},
+          id: {
+            type: 'string',
+            errorMessage: {
+              type: 'Module "id" should be a string.',
+            },
+          },
+          source: {
+            type: 'string',
+            errorMessage: {
+              type: 'Module "source" should be a string.',
+            },
+          },
+          vars: {
+            type: 'object',
+            errorMessage: {
+              type: 'Module "vars" should be an object.',
+            },
+          },
+          connections: {
+            type: 'object',
+            errorMessage: {
+              type: 'Module "connections" should be an object.',
+            },
+          },
+        },
+        additionalProperties: false,
+        errorMessage: {
+          type: 'Module should be an object.',
+          required: {
+            id: 'Module should have required property "id".',
+            source: 'Module should have required property "source".',
+          },
+        },
+      },
+      errorMessage: {
+        type: 'App "modules" should be an array.',
+      },
+    },
     logger: {
       type: 'object',
       additionalProperties: false,

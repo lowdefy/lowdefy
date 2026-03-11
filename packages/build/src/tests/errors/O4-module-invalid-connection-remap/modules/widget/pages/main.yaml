@@ -1,0 +1,5 @@
+id: main
+type: Box
+blocks:
+  - id: content
+    type: Paragraph

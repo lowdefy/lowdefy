@@ -1,0 +1,14 @@
+name: Admin Module
+description: Admin pages with menu
+
+vars:
+  section_title:
+    type: string
+    default: Admin
+
+menus:
+  - _ref: menus/default.yaml
+
+pages:
+  - _ref: pages/settings.yaml
+  - _ref: pages/users.yaml

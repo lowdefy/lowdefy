@@ -3,1195 +3,1195 @@
     "html": {
       "appendBody": "",
       "appendHead": "",
-      "~k": "2d"
+      "~k": "2e"
     },
     "git_sha": "test-git-sha-for-snapshots",
-    "~k": "2c"
+    "~k": "2d"
   },
   "auth.json": {
     "api": {
       "roles": {
-        "~k": "32"
+        "~k": "33"
       },
-      "~k": "31"
+      "~k": "32"
     },
     "authPages": {
-      "~k": "33"
+      "~k": "34"
     },
     "pages": {
       "roles": {
-        "~k": "35"
+        "~k": "36"
       },
-      "~k": "34"
+      "~k": "35"
     },
     "callbacks": {
       "~arr": [],
-      "~k": "36"
+      "~k": "37"
     },
     "events": {
       "~arr": [],
-      "~k": "37"
+      "~k": "38"
     },
     "providers": {
       "~arr": [],
-      "~k": "38"
-    },
-    "session": {
       "~k": "39"
     },
-    "theme": {
+    "session": {
       "~k": "3a"
     },
+    "theme": {
+      "~k": "3b"
+    },
     "configured": false,
-    "~k": "30"
+    "~k": "31"
   },
   "config.json": {
-    "~k": "2f"
+    "~k": "2g"
   },
   "global.json": {},
   "keyMap.json": {
-    "3": {
+    "4": {
       "key": "root",
-      "~k_parent": "2",
+      "~k_parent": "3",
       "~l": 2
     },
-    "4": {
+    "5": {
       "key": "root.pages",
-      "~k_parent": "3",
+      "~k_parent": "4",
       "~l": 4
     },
-    "5": {
+    "6": {
       "key": "root.pages[0:home:Box]",
-      "~k_parent": "4",
+      "~k_parent": "5",
       "~l": 5
     },
-    "6": {
+    "7": {
       "key": "root.pages[0:home:Box].properties",
-      "~k_parent": "5",
+      "~k_parent": "6",
       "~l": 7
     },
-    "7": {
+    "8": {
       "key": "root.pages[0:home:Box].blocks",
-      "~k_parent": "5",
+      "~k_parent": "6",
       "~l": 9
     },
-    "8": {
+    "9": {
       "key": "root.pages[0:home:Box].blocks[0:title:Title]",
-      "~k_parent": "7",
+      "~k_parent": "8",
       "~l": 10
     },
-    "9": {
-      "key": "root.pages[0:home:Box].blocks[0:title:Title].properties",
-      "~k_parent": "8",
-      "~l": 12
-    },
     "10": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.details.blocks[1:detailsForm:Card].blocks",
-      "~k_parent": "y",
-      "~l": 65
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.details.blocks[1:detailsForm:Card].properties",
+      "~k_parent": "z",
+      "~l": 63
     },
     "11": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.details.blocks[1:detailsForm:Card].blocks[0:detailName:TextInput]",
-      "~k_parent": "10",
-      "~l": 66
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.details.blocks[1:detailsForm:Card].blocks",
+      "~k_parent": "z",
+      "~l": 65
     },
     "12": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.details.blocks[1:detailsForm:Card].blocks[0:detailName:TextInput].properties",
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.details.blocks[1:detailsForm:Card].blocks[0:detailName:TextInput]",
       "~k_parent": "11",
-      "~l": 68
+      "~l": 66
     },
     "13": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.details.blocks[1:detailsForm:Card].blocks[1:detailDesc:TextArea]",
-      "~k_parent": "10",
-      "~l": 70
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.details.blocks[1:detailsForm:Card].blocks[0:detailName:TextInput].properties",
+      "~k_parent": "12",
+      "~l": 68
     },
     "14": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.details.blocks[1:detailsForm:Card].blocks[1:detailDesc:TextArea].properties",
-      "~k_parent": "13",
-      "~l": 72
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.details.blocks[1:detailsForm:Card].blocks[1:detailDesc:TextArea]",
+      "~k_parent": "11",
+      "~l": 70
     },
     "15": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.settings",
-      "~k_parent": "c",
-      "~l": 74
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.details.blocks[1:detailsForm:Card].blocks[1:detailDesc:TextArea].properties",
+      "~k_parent": "14",
+      "~l": 72
     },
     "16": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.settings.blocks",
-      "~k_parent": "15",
-      "~l": 75
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.settings",
+      "~k_parent": "d",
+      "~l": 74
     },
     "17": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.settings.blocks[0:settingsTitle:Title]",
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.settings.blocks",
       "~k_parent": "16",
-      "~l": 76
+      "~l": 75
     },
     "18": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.settings.blocks[0:settingsTitle:Title].properties",
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.settings.blocks[0:settingsTitle:Title]",
       "~k_parent": "17",
-      "~l": 78
+      "~l": 76
     },
     "19": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.settings.blocks[1:settingsList:Card]",
-      "~k_parent": "16",
-      "~l": 81
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.settings.blocks[0:settingsTitle:Title].properties",
+      "~k_parent": "18",
+      "~l": 78
     },
     "20": {
-      "key": "root.pages[1:404:Result]",
-      "~k_parent": "1z"
+      "key": "root.pages",
+      "~k_parent": "4"
     },
     "21": {
-      "key": "root.pages[1:404:Result].style",
+      "key": "root.pages[1:404:Result]",
       "~k_parent": "20"
     },
     "22": {
-      "key": "root.pages[1:404:Result].properties",
-      "~k_parent": "20"
+      "key": "root.pages[1:404:Result].style",
+      "~k_parent": "21"
     },
     "23": {
-      "key": "root.pages[1:404:Result].areas",
-      "~k_parent": "20"
+      "key": "root.pages[1:404:Result].properties",
+      "~k_parent": "21"
     },
     "24": {
-      "key": "root.pages[1:404:Result].areas.extra",
-      "~k_parent": "23"
+      "key": "root.pages[1:404:Result].areas",
+      "~k_parent": "21"
     },
     "25": {
-      "key": "root.pages[1:404:Result].areas.extra.blocks",
+      "key": "root.pages[1:404:Result].areas.extra",
       "~k_parent": "24"
     },
     "26": {
-      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button]",
+      "key": "root.pages[1:404:Result].areas.extra.blocks",
       "~k_parent": "25"
     },
     "27": {
-      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].properties",
+      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button]",
       "~k_parent": "26"
     },
     "28": {
-      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].events",
-      "~k_parent": "26"
+      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].properties",
+      "~k_parent": "27"
     },
     "29": {
-      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].events.onClick",
-      "~k_parent": "28"
+      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].events",
+      "~k_parent": "27"
     },
     "30": {
-      "key": "root.auth",
-      "~k_parent": "3"
+      "key": "root.pages[1:404:Result].requests",
+      "~k_parent": "2w"
     },
     "31": {
-      "key": "root.auth.api",
-      "~k_parent": "30"
+      "key": "root.auth",
+      "~k_parent": "4"
     },
     "32": {
-      "key": "root.auth.api.roles",
+      "key": "root.auth.api",
       "~k_parent": "31"
     },
     "33": {
-      "key": "root.auth.authPages",
-      "~k_parent": "30"
+      "key": "root.auth.api.roles",
+      "~k_parent": "32"
     },
     "34": {
-      "key": "root.auth.pages",
-      "~k_parent": "30"
+      "key": "root.auth.authPages",
+      "~k_parent": "31"
     },
     "35": {
-      "key": "root.auth.pages.roles",
-      "~k_parent": "34"
+      "key": "root.auth.pages",
+      "~k_parent": "31"
     },
     "36": {
-      "key": "root.auth.callbacks",
-      "~k_parent": "30"
+      "key": "root.auth.pages.roles",
+      "~k_parent": "35"
     },
     "37": {
-      "key": "root.auth.events",
-      "~k_parent": "30"
+      "key": "root.auth.callbacks",
+      "~k_parent": "31"
     },
     "38": {
-      "key": "root.auth.providers",
-      "~k_parent": "30"
+      "key": "root.auth.events",
+      "~k_parent": "31"
     },
     "39": {
-      "key": "root.auth.session",
-      "~k_parent": "30"
+      "key": "root.auth.providers",
+      "~k_parent": "31"
     },
     "40": {
-      "key": "root.types.blocks.Result",
-      "~k_parent": "3o"
+      "key": "root.types.blocks.Selector",
+      "~k_parent": "3p"
     },
     "41": {
-      "key": "root.types.blocks.Button",
-      "~k_parent": "3o"
+      "key": "root.types.blocks.Result",
+      "~k_parent": "3p"
     },
     "42": {
-      "key": "root.types.blocks.Anchor",
-      "~k_parent": "3o"
+      "key": "root.types.blocks.Button",
+      "~k_parent": "3p"
     },
     "43": {
-      "key": "root.types.blocks.DangerousHtml",
-      "~k_parent": "3o"
+      "key": "root.types.blocks.Anchor",
+      "~k_parent": "3p"
     },
     "44": {
-      "key": "root.types.blocks.Html",
-      "~k_parent": "3o"
+      "key": "root.types.blocks.DangerousHtml",
+      "~k_parent": "3p"
     },
     "45": {
-      "key": "root.types.blocks.Icon",
-      "~k_parent": "3o"
+      "key": "root.types.blocks.Html",
+      "~k_parent": "3p"
     },
     "46": {
-      "key": "root.types.blocks.Img",
-      "~k_parent": "3o"
+      "key": "root.types.blocks.Icon",
+      "~k_parent": "3p"
     },
     "47": {
-      "key": "root.types.blocks.List",
-      "~k_parent": "3o"
+      "key": "root.types.blocks.Img",
+      "~k_parent": "3p"
     },
     "48": {
-      "key": "root.types.blocks.Span",
-      "~k_parent": "3o"
+      "key": "root.types.blocks.List",
+      "~k_parent": "3p"
     },
     "49": {
-      "key": "root.types.blocks.Throw",
-      "~k_parent": "3o"
+      "key": "root.types.blocks.Span",
+      "~k_parent": "3p"
     },
     "50": {
-      "key": "root.imports.blocks[1]",
-      "~k_parent": "4y"
+      "key": "root.imports.blocks[0]",
+      "~k_parent": "4z"
     },
     "51": {
-      "key": "root.imports.blocks[2]",
-      "~k_parent": "4y"
+      "key": "root.imports.blocks[1]",
+      "~k_parent": "4z"
     },
     "52": {
-      "key": "root.imports.blocks[3]",
-      "~k_parent": "4y"
+      "key": "root.imports.blocks[2]",
+      "~k_parent": "4z"
     },
     "53": {
-      "key": "root.imports.blocks[4]",
-      "~k_parent": "4y"
+      "key": "root.imports.blocks[3]",
+      "~k_parent": "4z"
     },
     "54": {
-      "key": "root.imports.blocks[5]",
-      "~k_parent": "4y"
+      "key": "root.imports.blocks[4]",
+      "~k_parent": "4z"
     },
     "55": {
-      "key": "root.imports.blocks[6]",
-      "~k_parent": "4y"
+      "key": "root.imports.blocks[5]",
+      "~k_parent": "4z"
     },
     "56": {
-      "key": "root.imports.blocks[7]",
-      "~k_parent": "4y"
+      "key": "root.imports.blocks[6]",
+      "~k_parent": "4z"
     },
     "57": {
-      "key": "root.imports.blocks[8]",
-      "~k_parent": "4y"
+      "key": "root.imports.blocks[7]",
+      "~k_parent": "4z"
     },
     "58": {
-      "key": "root.imports.blocks[9]",
-      "~k_parent": "4y"
+      "key": "root.imports.blocks[8]",
+      "~k_parent": "4z"
     },
     "59": {
-      "key": "root.imports.blocks[10]",
-      "~k_parent": "4y"
+      "key": "root.imports.blocks[9]",
+      "~k_parent": "4z"
     },
     "60": {
-      "key": "root.imports.icons[3]",
-      "~k_parent": "5t"
+      "key": "root.imports.icons[2].icons",
+      "~k_parent": "5z"
     },
     "61": {
-      "key": "root.imports.icons[3].icons",
-      "~k_parent": "60"
+      "key": "root.imports.icons[3]",
+      "~k_parent": "5u"
     },
     "62": {
-      "key": "root.imports.icons[4]",
-      "~k_parent": "5t"
+      "key": "root.imports.icons[3].icons",
+      "~k_parent": "61"
     },
     "63": {
-      "key": "root.imports.icons[4].icons",
-      "~k_parent": "62"
+      "key": "root.imports.icons[4]",
+      "~k_parent": "5u"
     },
     "64": {
-      "key": "root.imports.icons[5]",
-      "~k_parent": "5t"
+      "key": "root.imports.icons[4].icons",
+      "~k_parent": "63"
     },
     "65": {
-      "key": "root.imports.icons[5].icons",
-      "~k_parent": "64"
+      "key": "root.imports.icons[5]",
+      "~k_parent": "5u"
     },
     "66": {
-      "key": "root.imports.icons[6]",
-      "~k_parent": "5t"
+      "key": "root.imports.icons[5].icons",
+      "~k_parent": "65"
     },
     "67": {
-      "key": "root.imports.icons[6].icons",
-      "~k_parent": "66"
+      "key": "root.imports.icons[6]",
+      "~k_parent": "5u"
     },
     "68": {
-      "key": "root.imports.icons[7]",
-      "~k_parent": "5t"
+      "key": "root.imports.icons[6].icons",
+      "~k_parent": "67"
     },
     "69": {
-      "key": "root.imports.icons[7].icons",
-      "~k_parent": "68"
+      "key": "root.imports.icons[7]",
+      "~k_parent": "5u"
     },
     "70": {
-      "key": "root.imports.icons[21]",
-      "~k_parent": "5t"
+      "key": "root.imports.icons[20].icons",
+      "~k_parent": "6z"
     },
     "71": {
-      "key": "root.imports.icons[21].icons",
-      "~k_parent": "70"
+      "key": "root.imports.icons[21]",
+      "~k_parent": "5u"
     },
     "72": {
-      "key": "root.imports.icons[22]",
-      "~k_parent": "5t"
+      "key": "root.imports.icons[21].icons",
+      "~k_parent": "71"
     },
     "73": {
-      "key": "root.imports.icons[22].icons",
-      "~k_parent": "72"
+      "key": "root.imports.icons[22]",
+      "~k_parent": "5u"
     },
     "74": {
-      "key": "root.imports.icons[23]",
-      "~k_parent": "5t"
+      "key": "root.imports.icons[22].icons",
+      "~k_parent": "73"
     },
     "75": {
-      "key": "root.imports.icons[23].icons",
-      "~k_parent": "74"
+      "key": "root.imports.icons[23]",
+      "~k_parent": "5u"
     },
     "76": {
-      "key": "root.imports.icons[24]",
-      "~k_parent": "5t"
+      "key": "root.imports.icons[23].icons",
+      "~k_parent": "75"
     },
     "77": {
-      "key": "root.imports.icons[24].icons",
-      "~k_parent": "76"
+      "key": "root.imports.icons[24]",
+      "~k_parent": "5u"
     },
     "78": {
-      "key": "root.imports.icons[25]",
-      "~k_parent": "5t"
+      "key": "root.imports.icons[24].icons",
+      "~k_parent": "77"
     },
     "79": {
-      "key": "root.imports.icons[25].icons",
-      "~k_parent": "78"
+      "key": "root.imports.icons[25]",
+      "~k_parent": "5u"
     },
     "a": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs]",
-      "~k_parent": "7",
-      "~l": 14
+      "key": "root.pages[0:home:Box].blocks[0:title:Title].properties",
+      "~k_parent": "9",
+      "~l": 12
     },
     "b": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].properties",
-      "~k_parent": "a",
-      "~l": 16
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs]",
+      "~k_parent": "8",
+      "~l": 14
     },
     "c": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas",
-      "~k_parent": "a",
-      "~l": 18
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].properties",
+      "~k_parent": "b",
+      "~l": 16
     },
     "d": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.overview",
-      "~k_parent": "c",
-      "~l": 19
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas",
+      "~k_parent": "b",
+      "~l": 18
     },
     "e": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.overview.blocks",
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.overview",
       "~k_parent": "d",
-      "~l": 20
+      "~l": 19
     },
     "f": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.overview.blocks[0:overviewTitle:Title]",
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.overview.blocks",
       "~k_parent": "e",
-      "~l": 21
+      "~l": 20
     },
     "g": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.overview.blocks[0:overviewTitle:Title].properties",
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.overview.blocks[0:overviewTitle:Title]",
       "~k_parent": "f",
-      "~l": 23
+      "~l": 21
     },
     "h": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.overview.blocks[1:overviewContent:Paragraph]",
-      "~k_parent": "e",
-      "~l": 26
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.overview.blocks[0:overviewTitle:Title].properties",
+      "~k_parent": "g",
+      "~l": 23
     },
     "i": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.overview.blocks[1:overviewContent:Paragraph].properties",
-      "~k_parent": "h",
-      "~l": 28
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.overview.blocks[1:overviewContent:Paragraph]",
+      "~k_parent": "f",
+      "~l": 26
     },
     "j": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.overview.blocks[2:overviewStats:Box]",
-      "~k_parent": "e",
-      "~l": 30
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.overview.blocks[1:overviewContent:Paragraph].properties",
+      "~k_parent": "i",
+      "~l": 28
     },
     "k": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.overview.blocks[2:overviewStats:Box].blocks",
-      "~k_parent": "j",
-      "~l": 32
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.overview.blocks[2:overviewStats:Box]",
+      "~k_parent": "f",
+      "~l": 30
     },
     "l": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.overview.blocks[2:overviewStats:Box].blocks[0:stat1:Statistic]",
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.overview.blocks[2:overviewStats:Box].blocks",
       "~k_parent": "k",
-      "~l": 33
+      "~l": 32
     },
     "m": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.overview.blocks[2:overviewStats:Box].blocks[0:stat1:Statistic].layout",
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.overview.blocks[2:overviewStats:Box].blocks[0:stat1:Statistic]",
       "~k_parent": "l",
-      "~l": 35
+      "~l": 33
     },
     "n": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.overview.blocks[2:overviewStats:Box].blocks[0:stat1:Statistic].properties",
-      "~k_parent": "l",
-      "~l": 37
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.overview.blocks[2:overviewStats:Box].blocks[0:stat1:Statistic].layout",
+      "~k_parent": "m",
+      "~l": 35
     },
     "o": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.overview.blocks[2:overviewStats:Box].blocks[1:stat2:Statistic]",
-      "~k_parent": "k",
-      "~l": 40
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.overview.blocks[2:overviewStats:Box].blocks[0:stat1:Statistic].properties",
+      "~k_parent": "m",
+      "~l": 37
     },
     "p": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.overview.blocks[2:overviewStats:Box].blocks[1:stat2:Statistic].layout",
-      "~k_parent": "o",
-      "~l": 42
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.overview.blocks[2:overviewStats:Box].blocks[1:stat2:Statistic]",
+      "~k_parent": "l",
+      "~l": 40
     },
     "q": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.overview.blocks[2:overviewStats:Box].blocks[1:stat2:Statistic].properties",
-      "~k_parent": "o",
-      "~l": 44
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.overview.blocks[2:overviewStats:Box].blocks[1:stat2:Statistic].layout",
+      "~k_parent": "p",
+      "~l": 42
     },
     "r": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.overview.blocks[2:overviewStats:Box].blocks[2:stat3:Statistic]",
-      "~k_parent": "k",
-      "~l": 47
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.overview.blocks[2:overviewStats:Box].blocks[1:stat2:Statistic].properties",
+      "~k_parent": "p",
+      "~l": 44
     },
     "s": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.overview.blocks[2:overviewStats:Box].blocks[2:stat3:Statistic].layout",
-      "~k_parent": "r",
-      "~l": 49
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.overview.blocks[2:overviewStats:Box].blocks[2:stat3:Statistic]",
+      "~k_parent": "l",
+      "~l": 47
     },
     "t": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.overview.blocks[2:overviewStats:Box].blocks[2:stat3:Statistic].properties",
-      "~k_parent": "r",
-      "~l": 51
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.overview.blocks[2:overviewStats:Box].blocks[2:stat3:Statistic].layout",
+      "~k_parent": "s",
+      "~l": 49
     },
     "u": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.details",
-      "~k_parent": "c",
-      "~l": 54
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.overview.blocks[2:overviewStats:Box].blocks[2:stat3:Statistic].properties",
+      "~k_parent": "s",
+      "~l": 51
     },
     "v": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.details.blocks",
-      "~k_parent": "u",
-      "~l": 55
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.details",
+      "~k_parent": "d",
+      "~l": 54
     },
     "w": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.details.blocks[0:detailsTitle:Title]",
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.details.blocks",
       "~k_parent": "v",
-      "~l": 56
+      "~l": 55
     },
     "x": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.details.blocks[0:detailsTitle:Title].properties",
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.details.blocks[0:detailsTitle:Title]",
       "~k_parent": "w",
-      "~l": 58
+      "~l": 56
     },
     "y": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.details.blocks[1:detailsForm:Card]",
-      "~k_parent": "v",
-      "~l": 61
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.details.blocks[0:detailsTitle:Title].properties",
+      "~k_parent": "x",
+      "~l": 58
     },
     "z": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.details.blocks[1:detailsForm:Card].properties",
-      "~k_parent": "y",
-      "~l": 63
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.details.blocks[1:detailsForm:Card]",
+      "~k_parent": "w",
+      "~l": 61
     },
     "1a": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.settings.blocks[1:settingsList:Card].blocks",
-      "~k_parent": "19",
-      "~l": 83
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.settings.blocks[1:settingsList:Card]",
+      "~k_parent": "17",
+      "~l": 81
     },
     "1b": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.settings.blocks[1:settingsList:Card].blocks[0:enableFeature:Switch]",
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.settings.blocks[1:settingsList:Card].blocks",
       "~k_parent": "1a",
-      "~l": 84
+      "~l": 83
     },
     "1c": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.settings.blocks[1:settingsList:Card].blocks[0:enableFeature:Switch].properties",
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.settings.blocks[1:settingsList:Card].blocks[0:enableFeature:Switch]",
       "~k_parent": "1b",
-      "~l": 86
+      "~l": 84
     },
     "1d": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.settings.blocks[1:settingsList:Card].blocks[1:maxItems:NumberInput]",
-      "~k_parent": "1a",
-      "~l": 88
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.settings.blocks[1:settingsList:Card].blocks[0:enableFeature:Switch].properties",
+      "~k_parent": "1c",
+      "~l": 86
     },
     "1e": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.settings.blocks[1:settingsList:Card].blocks[1:maxItems:NumberInput].properties",
-      "~k_parent": "1d",
-      "~l": 90
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.settings.blocks[1:settingsList:Card].blocks[1:maxItems:NumberInput]",
+      "~k_parent": "1b",
+      "~l": 88
     },
     "1f": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.settings.blocks[1:settingsList:Card].blocks[2:theme:Selector]",
-      "~k_parent": "1a",
-      "~l": 94
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.settings.blocks[1:settingsList:Card].blocks[1:maxItems:NumberInput].properties",
+      "~k_parent": "1e",
+      "~l": 90
     },
     "1g": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.settings.blocks[1:settingsList:Card].blocks[2:theme:Selector].properties",
-      "~k_parent": "1f",
-      "~l": 96
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.settings.blocks[1:settingsList:Card].blocks[2:theme:Selector]",
+      "~k_parent": "1b",
+      "~l": 94
     },
     "1h": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.settings.blocks[1:settingsList:Card].blocks[2:theme:Selector].properties.options",
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.settings.blocks[1:settingsList:Card].blocks[2:theme:Selector].properties",
       "~k_parent": "1g",
-      "~l": 98
+      "~l": 96
     },
     "1i": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.settings.blocks[1:settingsList:Card].blocks[2:theme:Selector].properties.options[0]",
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.settings.blocks[1:settingsList:Card].blocks[2:theme:Selector].properties.options",
       "~k_parent": "1h",
-      "~l": 99
+      "~l": 98
     },
     "1j": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.settings.blocks[1:settingsList:Card].blocks[2:theme:Selector].properties.options[1]",
-      "~k_parent": "1h",
-      "~l": 101
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.settings.blocks[1:settingsList:Card].blocks[2:theme:Selector].properties.options[0]",
+      "~k_parent": "1i",
+      "~l": 99
     },
     "1k": {
-      "key": "root.pages[0:home:Box].blocks[2:nestedTabs:Card]",
-      "~k_parent": "7",
-      "~l": 103
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.settings.blocks[1:settingsList:Card].blocks[2:theme:Selector].properties.options[1]",
+      "~k_parent": "1i",
+      "~l": 101
     },
     "1l": {
-      "key": "root.pages[0:home:Box].blocks[2:nestedTabs:Card].properties",
-      "~k_parent": "1k",
-      "~l": 105
+      "key": "root.pages[0:home:Box].blocks[2:nestedTabs:Card]",
+      "~k_parent": "8",
+      "~l": 103
     },
     "1m": {
-      "key": "root.pages[0:home:Box].blocks[2:nestedTabs:Card].blocks",
-      "~k_parent": "1k",
-      "~l": 107
+      "key": "root.pages[0:home:Box].blocks[2:nestedTabs:Card].properties",
+      "~k_parent": "1l",
+      "~l": 105
     },
     "1n": {
-      "key": "root.pages[0:home:Box].blocks[2:nestedTabs:Card].blocks[0:innerTabs:Tabs]",
-      "~k_parent": "1m",
-      "~l": 108
+      "key": "root.pages[0:home:Box].blocks[2:nestedTabs:Card].blocks",
+      "~k_parent": "1l",
+      "~l": 107
     },
     "1o": {
-      "key": "root.pages[0:home:Box].blocks[2:nestedTabs:Card].blocks[0:innerTabs:Tabs].properties",
+      "key": "root.pages[0:home:Box].blocks[2:nestedTabs:Card].blocks[0:innerTabs:Tabs]",
       "~k_parent": "1n",
-      "~l": 110
+      "~l": 108
     },
     "1p": {
-      "key": "root.pages[0:home:Box].blocks[2:nestedTabs:Card].blocks[0:innerTabs:Tabs].areas",
-      "~k_parent": "1n",
-      "~l": 112
+      "key": "root.pages[0:home:Box].blocks[2:nestedTabs:Card].blocks[0:innerTabs:Tabs].properties",
+      "~k_parent": "1o",
+      "~l": 110
     },
     "1q": {
-      "key": "root.pages[0:home:Box].blocks[2:nestedTabs:Card].blocks[0:innerTabs:Tabs].areas.tab1",
-      "~k_parent": "1p",
-      "~l": 113
+      "key": "root.pages[0:home:Box].blocks[2:nestedTabs:Card].blocks[0:innerTabs:Tabs].areas",
+      "~k_parent": "1o",
+      "~l": 112
     },
     "1r": {
-      "key": "root.pages[0:home:Box].blocks[2:nestedTabs:Card].blocks[0:innerTabs:Tabs].areas.tab1.blocks",
+      "key": "root.pages[0:home:Box].blocks[2:nestedTabs:Card].blocks[0:innerTabs:Tabs].areas.tab1",
       "~k_parent": "1q",
-      "~l": 114
+      "~l": 113
     },
     "1s": {
-      "key": "root.pages[0:home:Box].blocks[2:nestedTabs:Card].blocks[0:innerTabs:Tabs].areas.tab1.blocks[0:inner1:Paragraph]",
+      "key": "root.pages[0:home:Box].blocks[2:nestedTabs:Card].blocks[0:innerTabs:Tabs].areas.tab1.blocks",
       "~k_parent": "1r",
-      "~l": 115
+      "~l": 114
     },
     "1t": {
-      "key": "root.pages[0:home:Box].blocks[2:nestedTabs:Card].blocks[0:innerTabs:Tabs].areas.tab1.blocks[0:inner1:Paragraph].properties",
+      "key": "root.pages[0:home:Box].blocks[2:nestedTabs:Card].blocks[0:innerTabs:Tabs].areas.tab1.blocks[0:inner1:Paragraph]",
       "~k_parent": "1s",
-      "~l": 117
+      "~l": 115
     },
     "1u": {
-      "key": "root.pages[0:home:Box].blocks[2:nestedTabs:Card].blocks[0:innerTabs:Tabs].areas.tab2",
-      "~k_parent": "1p",
-      "~l": 119
+      "key": "root.pages[0:home:Box].blocks[2:nestedTabs:Card].blocks[0:innerTabs:Tabs].areas.tab1.blocks[0:inner1:Paragraph].properties",
+      "~k_parent": "1t",
+      "~l": 117
     },
     "1v": {
-      "key": "root.pages[0:home:Box].blocks[2:nestedTabs:Card].blocks[0:innerTabs:Tabs].areas.tab2.blocks",
-      "~k_parent": "1u",
-      "~l": 120
+      "key": "root.pages[0:home:Box].blocks[2:nestedTabs:Card].blocks[0:innerTabs:Tabs].areas.tab2",
+      "~k_parent": "1q",
+      "~l": 119
     },
     "1w": {
-      "key": "root.pages[0:home:Box].blocks[2:nestedTabs:Card].blocks[0:innerTabs:Tabs].areas.tab2.blocks[0:inner2:Paragraph]",
+      "key": "root.pages[0:home:Box].blocks[2:nestedTabs:Card].blocks[0:innerTabs:Tabs].areas.tab2.blocks",
       "~k_parent": "1v",
-      "~l": 121
+      "~l": 120
     },
     "1x": {
-      "key": "root.pages[0:home:Box].blocks[2:nestedTabs:Card].blocks[0:innerTabs:Tabs].areas.tab2.blocks[0:inner2:Paragraph].properties",
+      "key": "root.pages[0:home:Box].blocks[2:nestedTabs:Card].blocks[0:innerTabs:Tabs].areas.tab2.blocks[0:inner2:Paragraph]",
       "~k_parent": "1w",
+      "~l": 121
+    },
+    "1y": {
+      "key": "root.pages[0:home:Box].blocks[2:nestedTabs:Card].blocks[0:innerTabs:Tabs].areas.tab2.blocks[0:inner2:Paragraph].properties",
+      "~k_parent": "1x",
       "~l": 123
     },
-    "1z": {
-      "key": "root.pages",
-      "~k_parent": "3"
-    },
     "2a": {
-      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].events.onClick[0:home:Link]",
+      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].events.onClick",
       "~k_parent": "29"
     },
     "2b": {
-      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].events.onClick[0:home:Link].params",
+      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].events.onClick[0:home:Link]",
       "~k_parent": "2a"
     },
     "2c": {
-      "key": "root.app",
-      "~k_parent": "3"
+      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].events.onClick[0:home:Link].params",
+      "~k_parent": "2b"
     },
     "2d": {
-      "key": "root.app.html",
-      "~k_parent": "2c"
+      "key": "root.app",
+      "~k_parent": "4"
     },
     "2e": {
-      "key": "root.logger",
-      "~k_parent": "3"
+      "key": "root.app.html",
+      "~k_parent": "2d"
     },
     "2f": {
-      "key": "root.config",
-      "~k_parent": "3"
+      "key": "root.logger",
+      "~k_parent": "4"
     },
-    "2h": {
-      "key": "root.pages",
-      "~k_parent": "3"
+    "2g": {
+      "key": "root.config",
+      "~k_parent": "4"
     },
     "2i": {
-      "key": "root.pages[0:home:Box]",
-      "~k_parent": "2h"
+      "key": "root.pages",
+      "~k_parent": "4"
     },
     "2j": {
-      "key": "root.pages[0:home:Box].auth",
+      "key": "root.pages[0:home:Box]",
       "~k_parent": "2i"
     },
     "2k": {
-      "key": "root.pages[0:home:Box].areas",
-      "~k_parent": "2i"
+      "key": "root.pages[0:home:Box].auth",
+      "~k_parent": "2j"
     },
     "2l": {
-      "key": "root.pages[0:home:Box].areas.content",
-      "~k_parent": "2k"
+      "key": "root.pages[0:home:Box].areas",
+      "~k_parent": "2j"
     },
     "2m": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.overview.blocks[2:overviewStats:Box].areas",
-      "~k_parent": "j"
+      "key": "root.pages[0:home:Box].areas.content",
+      "~k_parent": "2l"
     },
     "2n": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.overview.blocks[2:overviewStats:Box].areas.content",
-      "~k_parent": "2m"
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.overview.blocks[2:overviewStats:Box].areas",
+      "~k_parent": "k"
     },
     "2o": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.details.blocks[1:detailsForm:Card].areas",
-      "~k_parent": "y"
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.overview.blocks[2:overviewStats:Box].areas.content",
+      "~k_parent": "2n"
     },
     "2p": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.details.blocks[1:detailsForm:Card].areas.content",
-      "~k_parent": "2o"
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.details.blocks[1:detailsForm:Card].areas",
+      "~k_parent": "z"
     },
     "2q": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.settings.blocks[1:settingsList:Card].areas",
-      "~k_parent": "19"
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.details.blocks[1:detailsForm:Card].areas.content",
+      "~k_parent": "2p"
     },
     "2r": {
-      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.settings.blocks[1:settingsList:Card].areas.content",
-      "~k_parent": "2q"
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.settings.blocks[1:settingsList:Card].areas",
+      "~k_parent": "1a"
     },
     "2s": {
-      "key": "root.pages[0:home:Box].blocks[2:nestedTabs:Card].areas",
-      "~k_parent": "1k"
+      "key": "root.pages[0:home:Box].blocks[1:mainTabs:Tabs].areas.settings.blocks[1:settingsList:Card].areas.content",
+      "~k_parent": "2r"
     },
     "2t": {
-      "key": "root.pages[0:home:Box].blocks[2:nestedTabs:Card].areas.content",
-      "~k_parent": "2s"
+      "key": "root.pages[0:home:Box].blocks[2:nestedTabs:Card].areas",
+      "~k_parent": "1l"
     },
     "2u": {
-      "key": "root.pages[0:home:Box].requests",
-      "~k_parent": "2i"
+      "key": "root.pages[0:home:Box].blocks[2:nestedTabs:Card].areas.content",
+      "~k_parent": "2t"
     },
     "2v": {
-      "key": "root.pages[1:404:Result]",
-      "~k_parent": "2h"
+      "key": "root.pages[0:home:Box].requests",
+      "~k_parent": "2j"
     },
     "2w": {
-      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].events.onClick",
-      "~k_parent": "28"
+      "key": "root.pages[1:404:Result]",
+      "~k_parent": "2i"
     },
     "2x": {
-      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].events.onClick.catch",
-      "~k_parent": "2w"
+      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].events.onClick",
+      "~k_parent": "29"
     },
     "2y": {
-      "key": "root.pages[1:404:Result].auth",
-      "~k_parent": "2v"
+      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].events.onClick.catch",
+      "~k_parent": "2x"
     },
     "2z": {
-      "key": "root.pages[1:404:Result].requests",
-      "~k_parent": "2v"
+      "key": "root.pages[1:404:Result].auth",
+      "~k_parent": "2w"
     },
     "3a": {
-      "key": "root.auth.theme",
-      "~k_parent": "30"
+      "key": "root.auth.session",
+      "~k_parent": "31"
     },
     "3b": {
-      "key": "root.menus",
-      "~k_parent": "3"
+      "key": "root.auth.theme",
+      "~k_parent": "31"
     },
     "3c": {
-      "key": "root.menus[0:default]",
-      "~k_parent": "3b"
+      "key": "root.menus",
+      "~k_parent": "4"
     },
     "3d": {
-      "key": "root.menus[0:default].links",
+      "key": "root.menus[0:default]",
       "~k_parent": "3c"
     },
     "3e": {
-      "key": "root.menus[0:default].links[0:0:MenuLink]",
+      "key": "root.menus[0:default].links",
       "~k_parent": "3d"
     },
     "3f": {
-      "key": "root.menus[0:default].links[0:0:MenuLink].auth",
+      "key": "root.menus[0:default].links[0:0:MenuLink]",
       "~k_parent": "3e"
     },
     "3g": {
-      "key": "root.types",
-      "~k_parent": "3"
+      "key": "root.menus[0:default].links[0:0:MenuLink].auth",
+      "~k_parent": "3f"
     },
     "3h": {
-      "key": "root.types.actions",
-      "~k_parent": "3g"
+      "key": "root.types",
+      "~k_parent": "4"
     },
     "3i": {
-      "key": "root.types.actions.Link",
+      "key": "root.types.actions",
       "~k_parent": "3h"
     },
     "3j": {
-      "key": "root.types.auth",
-      "~k_parent": "3g"
+      "key": "root.types.actions.Link",
+      "~k_parent": "3i"
     },
     "3k": {
-      "key": "root.types.auth.adapters",
-      "~k_parent": "3j"
+      "key": "root.types.auth",
+      "~k_parent": "3h"
     },
     "3l": {
-      "key": "root.types.auth.callbacks",
-      "~k_parent": "3j"
+      "key": "root.types.auth.adapters",
+      "~k_parent": "3k"
     },
     "3m": {
-      "key": "root.types.auth.events",
-      "~k_parent": "3j"
+      "key": "root.types.auth.callbacks",
+      "~k_parent": "3k"
     },
     "3n": {
-      "key": "root.types.auth.providers",
-      "~k_parent": "3j"
+      "key": "root.types.auth.events",
+      "~k_parent": "3k"
     },
     "3o": {
-      "key": "root.types.blocks",
-      "~k_parent": "3g"
+      "key": "root.types.auth.providers",
+      "~k_parent": "3k"
     },
     "3p": {
-      "key": "root.types.blocks.Box",
-      "~k_parent": "3o"
+      "key": "root.types.blocks",
+      "~k_parent": "3h"
     },
     "3q": {
-      "key": "root.types.blocks.Title",
-      "~k_parent": "3o"
+      "key": "root.types.blocks.Box",
+      "~k_parent": "3p"
     },
     "3r": {
-      "key": "root.types.blocks.Tabs",
-      "~k_parent": "3o"
+      "key": "root.types.blocks.Title",
+      "~k_parent": "3p"
     },
     "3s": {
-      "key": "root.types.blocks.Paragraph",
-      "~k_parent": "3o"
+      "key": "root.types.blocks.Tabs",
+      "~k_parent": "3p"
     },
     "3t": {
-      "key": "root.types.blocks.Statistic",
-      "~k_parent": "3o"
+      "key": "root.types.blocks.Paragraph",
+      "~k_parent": "3p"
     },
     "3u": {
-      "key": "root.types.blocks.Card",
-      "~k_parent": "3o"
+      "key": "root.types.blocks.Statistic",
+      "~k_parent": "3p"
     },
     "3v": {
-      "key": "root.types.blocks.TextInput",
-      "~k_parent": "3o"
+      "key": "root.types.blocks.Card",
+      "~k_parent": "3p"
     },
     "3w": {
-      "key": "root.types.blocks.TextArea",
-      "~k_parent": "3o"
+      "key": "root.types.blocks.TextInput",
+      "~k_parent": "3p"
     },
     "3x": {
-      "key": "root.types.blocks.Switch",
-      "~k_parent": "3o"
+      "key": "root.types.blocks.TextArea",
+      "~k_parent": "3p"
     },
     "3y": {
-      "key": "root.types.blocks.NumberInput",
-      "~k_parent": "3o"
+      "key": "root.types.blocks.Switch",
+      "~k_parent": "3p"
     },
     "3z": {
-      "key": "root.types.blocks.Selector",
-      "~k_parent": "3o"
+      "key": "root.types.blocks.NumberInput",
+      "~k_parent": "3p"
     },
     "4a": {
-      "key": "root.types.blocks.ProgressBar",
-      "~k_parent": "3o"
+      "key": "root.types.blocks.Throw",
+      "~k_parent": "3p"
     },
     "4b": {
-      "key": "root.types.blocks.Skeleton",
-      "~k_parent": "3o"
+      "key": "root.types.blocks.ProgressBar",
+      "~k_parent": "3p"
     },
     "4c": {
-      "key": "root.types.blocks.SkeletonAvatar",
-      "~k_parent": "3o"
+      "key": "root.types.blocks.Skeleton",
+      "~k_parent": "3p"
     },
     "4d": {
-      "key": "root.types.blocks.SkeletonButton",
-      "~k_parent": "3o"
+      "key": "root.types.blocks.SkeletonAvatar",
+      "~k_parent": "3p"
     },
     "4e": {
-      "key": "root.types.blocks.SkeletonInput",
-      "~k_parent": "3o"
+      "key": "root.types.blocks.SkeletonButton",
+      "~k_parent": "3p"
     },
     "4f": {
-      "key": "root.types.blocks.SkeletonParagraph",
-      "~k_parent": "3o"
+      "key": "root.types.blocks.SkeletonInput",
+      "~k_parent": "3p"
     },
     "4g": {
-      "key": "root.types.blocks.Spinner",
-      "~k_parent": "3o"
+      "key": "root.types.blocks.SkeletonParagraph",
+      "~k_parent": "3p"
     },
     "4h": {
-      "key": "root.types.blocks.Message",
-      "~k_parent": "3o"
+      "key": "root.types.blocks.Spinner",
+      "~k_parent": "3p"
     },
     "4i": {
-      "key": "root.types.connections",
-      "~k_parent": "3g"
+      "key": "root.types.blocks.Message",
+      "~k_parent": "3p"
     },
     "4j": {
-      "key": "root.types.requests",
-      "~k_parent": "3g"
+      "key": "root.types.connections",
+      "~k_parent": "3h"
     },
     "4k": {
-      "key": "root.types.api",
-      "~k_parent": "3g"
+      "key": "root.types.requests",
+      "~k_parent": "3h"
     },
     "4l": {
-      "key": "root.types.operators",
-      "~k_parent": "3g"
+      "key": "root.types.api",
+      "~k_parent": "3h"
     },
     "4m": {
-      "key": "root.types.operators.client",
-      "~k_parent": "4l"
+      "key": "root.types.operators",
+      "~k_parent": "3h"
     },
     "4n": {
-      "key": "root.types.operators.client._not",
+      "key": "root.types.operators.client",
       "~k_parent": "4m"
     },
     "4o": {
-      "key": "root.types.operators.client._type",
-      "~k_parent": "4m"
+      "key": "root.types.operators.client._not",
+      "~k_parent": "4n"
     },
     "4p": {
-      "key": "root.types.operators.server",
-      "~k_parent": "4l"
+      "key": "root.types.operators.client._type",
+      "~k_parent": "4n"
     },
     "4q": {
-      "key": "root.imports",
-      "~k_parent": "3"
+      "key": "root.types.operators.server",
+      "~k_parent": "4m"
     },
     "4r": {
-      "key": "root.imports.actions",
-      "~k_parent": "4q"
+      "key": "root.imports",
+      "~k_parent": "4"
     },
     "4s": {
-      "key": "root.imports.actions[0]",
+      "key": "root.imports.actions",
       "~k_parent": "4r"
     },
     "4t": {
-      "key": "root.imports.auth",
-      "~k_parent": "4q"
+      "key": "root.imports.actions[0]",
+      "~k_parent": "4s"
     },
     "4u": {
-      "key": "root.imports.auth.adapters",
-      "~k_parent": "4t"
+      "key": "root.imports.auth",
+      "~k_parent": "4r"
     },
     "4v": {
-      "key": "root.imports.auth.callbacks",
-      "~k_parent": "4t"
+      "key": "root.imports.auth.adapters",
+      "~k_parent": "4u"
     },
     "4w": {
-      "key": "root.imports.auth.events",
-      "~k_parent": "4t"
+      "key": "root.imports.auth.callbacks",
+      "~k_parent": "4u"
     },
     "4x": {
-      "key": "root.imports.auth.providers",
-      "~k_parent": "4t"
+      "key": "root.imports.auth.events",
+      "~k_parent": "4u"
     },
     "4y": {
-      "key": "root.imports.blocks",
-      "~k_parent": "4q"
+      "key": "root.imports.auth.providers",
+      "~k_parent": "4u"
     },
     "4z": {
-      "key": "root.imports.blocks[0]",
-      "~k_parent": "4y"
+      "key": "root.imports.blocks",
+      "~k_parent": "4r"
     },
     "5a": {
-      "key": "root.imports.blocks[11]",
-      "~k_parent": "4y"
+      "key": "root.imports.blocks[10]",
+      "~k_parent": "4z"
     },
     "5b": {
-      "key": "root.imports.blocks[12]",
-      "~k_parent": "4y"
+      "key": "root.imports.blocks[11]",
+      "~k_parent": "4z"
     },
     "5c": {
-      "key": "root.imports.blocks[13]",
-      "~k_parent": "4y"
+      "key": "root.imports.blocks[12]",
+      "~k_parent": "4z"
     },
     "5d": {
-      "key": "root.imports.blocks[14]",
-      "~k_parent": "4y"
+      "key": "root.imports.blocks[13]",
+      "~k_parent": "4z"
     },
     "5e": {
-      "key": "root.imports.blocks[15]",
-      "~k_parent": "4y"
+      "key": "root.imports.blocks[14]",
+      "~k_parent": "4z"
     },
     "5f": {
-      "key": "root.imports.blocks[16]",
-      "~k_parent": "4y"
+      "key": "root.imports.blocks[15]",
+      "~k_parent": "4z"
     },
     "5g": {
-      "key": "root.imports.blocks[17]",
-      "~k_parent": "4y"
+      "key": "root.imports.blocks[16]",
+      "~k_parent": "4z"
     },
     "5h": {
-      "key": "root.imports.blocks[18]",
-      "~k_parent": "4y"
+      "key": "root.imports.blocks[17]",
+      "~k_parent": "4z"
     },
     "5i": {
-      "key": "root.imports.blocks[19]",
-      "~k_parent": "4y"
+      "key": "root.imports.blocks[18]",
+      "~k_parent": "4z"
     },
     "5j": {
-      "key": "root.imports.blocks[20]",
-      "~k_parent": "4y"
+      "key": "root.imports.blocks[19]",
+      "~k_parent": "4z"
     },
     "5k": {
-      "key": "root.imports.blocks[21]",
-      "~k_parent": "4y"
+      "key": "root.imports.blocks[20]",
+      "~k_parent": "4z"
     },
     "5l": {
-      "key": "root.imports.blocks[22]",
-      "~k_parent": "4y"
+      "key": "root.imports.blocks[21]",
+      "~k_parent": "4z"
     },
     "5m": {
-      "key": "root.imports.blocks[23]",
-      "~k_parent": "4y"
+      "key": "root.imports.blocks[22]",
+      "~k_parent": "4z"
     },
     "5n": {
-      "key": "root.imports.blocks[24]",
-      "~k_parent": "4y"
+      "key": "root.imports.blocks[23]",
+      "~k_parent": "4z"
     },
     "5o": {
-      "key": "root.imports.blocks[25]",
-      "~k_parent": "4y"
+      "key": "root.imports.blocks[24]",
+      "~k_parent": "4z"
     },
     "5p": {
-      "key": "root.imports.blocks[26]",
-      "~k_parent": "4y"
+      "key": "root.imports.blocks[25]",
+      "~k_parent": "4z"
     },
     "5q": {
-      "key": "root.imports.blocks[27]",
-      "~k_parent": "4y"
+      "key": "root.imports.blocks[26]",
+      "~k_parent": "4z"
     },
     "5r": {
-      "key": "root.imports.blocks[28]",
-      "~k_parent": "4y"
+      "key": "root.imports.blocks[27]",
+      "~k_parent": "4z"
     },
     "5s": {
-      "key": "root.imports.connections",
-      "~k_parent": "4q"
+      "key": "root.imports.blocks[28]",
+      "~k_parent": "4z"
     },
     "5t": {
-      "key": "root.imports.icons",
-      "~k_parent": "4q"
+      "key": "root.imports.connections",
+      "~k_parent": "4r"
     },
     "5u": {
-      "key": "root.imports.icons[0]",
-      "~k_parent": "5t"
+      "key": "root.imports.icons",
+      "~k_parent": "4r"
     },
     "5v": {
-      "key": "root.imports.icons[0].icons",
+      "key": "root.imports.icons[0]",
       "~k_parent": "5u"
     },
     "5w": {
-      "key": "root.imports.icons[1]",
-      "~k_parent": "5t"
+      "key": "root.imports.icons[0].icons",
+      "~k_parent": "5v"
     },
     "5x": {
-      "key": "root.imports.icons[1].icons",
-      "~k_parent": "5w"
+      "key": "root.imports.icons[1]",
+      "~k_parent": "5u"
     },
     "5y": {
-      "key": "root.imports.icons[2]",
-      "~k_parent": "5t"
+      "key": "root.imports.icons[1].icons",
+      "~k_parent": "5x"
     },
     "5z": {
-      "key": "root.imports.icons[2].icons",
-      "~k_parent": "5y"
+      "key": "root.imports.icons[2]",
+      "~k_parent": "5u"
     },
     "6a": {
-      "key": "root.imports.icons[8]",
-      "~k_parent": "5t"
+      "key": "root.imports.icons[7].icons",
+      "~k_parent": "69"
     },
     "6b": {
-      "key": "root.imports.icons[8].icons",
-      "~k_parent": "6a"
+      "key": "root.imports.icons[8]",
+      "~k_parent": "5u"
     },
     "6c": {
-      "key": "root.imports.icons[9]",
-      "~k_parent": "5t"
+      "key": "root.imports.icons[8].icons",
+      "~k_parent": "6b"
     },
     "6d": {
-      "key": "root.imports.icons[9].icons",
-      "~k_parent": "6c"
+      "key": "root.imports.icons[9]",
+      "~k_parent": "5u"
     },
     "6e": {
-      "key": "root.imports.icons[10]",
-      "~k_parent": "5t"
+      "key": "root.imports.icons[9].icons",
+      "~k_parent": "6d"
     },
     "6f": {
-      "key": "root.imports.icons[10].icons",
-      "~k_parent": "6e"
+      "key": "root.imports.icons[10]",
+      "~k_parent": "5u"
     },
     "6g": {
-      "key": "root.imports.icons[11]",
-      "~k_parent": "5t"
+      "key": "root.imports.icons[10].icons",
+      "~k_parent": "6f"
     },
     "6h": {
-      "key": "root.imports.icons[11].icons",
-      "~k_parent": "6g"
+      "key": "root.imports.icons[11]",
+      "~k_parent": "5u"
     },
     "6i": {
-      "key": "root.imports.icons[12]",
-      "~k_parent": "5t"
+      "key": "root.imports.icons[11].icons",
+      "~k_parent": "6h"
     },
     "6j": {
-      "key": "root.imports.icons[12].icons",
-      "~k_parent": "6i"
+      "key": "root.imports.icons[12]",
+      "~k_parent": "5u"
     },
     "6k": {
-      "key": "root.imports.icons[13]",
-      "~k_parent": "5t"
+      "key": "root.imports.icons[12].icons",
+      "~k_parent": "6j"
     },
     "6l": {
-      "key": "root.imports.icons[13].icons",
-      "~k_parent": "6k"
+      "key": "root.imports.icons[13]",
+      "~k_parent": "5u"
     },
     "6m": {
-      "key": "root.imports.icons[14]",
-      "~k_parent": "5t"
+      "key": "root.imports.icons[13].icons",
+      "~k_parent": "6l"
     },
     "6n": {
-      "key": "root.imports.icons[14].icons",
-      "~k_parent": "6m"
+      "key": "root.imports.icons[14]",
+      "~k_parent": "5u"
     },
     "6o": {
-      "key": "root.imports.icons[15]",
-      "~k_parent": "5t"
+      "key": "root.imports.icons[14].icons",
+      "~k_parent": "6n"
     },
     "6p": {
-      "key": "root.imports.icons[15].icons",
-      "~k_parent": "6o"
+      "key": "root.imports.icons[15]",
+      "~k_parent": "5u"
     },
     "6q": {
-      "key": "root.imports.icons[16]",
-      "~k_parent": "5t"
+      "key": "root.imports.icons[15].icons",
+      "~k_parent": "6p"
     },
     "6r": {
-      "key": "root.imports.icons[16].icons",
-      "~k_parent": "6q"
+      "key": "root.imports.icons[16]",
+      "~k_parent": "5u"
     },
     "6s": {
-      "key": "root.imports.icons[17]",
-      "~k_parent": "5t"
+      "key": "root.imports.icons[16].icons",
+      "~k_parent": "6r"
     },
     "6t": {
-      "key": "root.imports.icons[17].icons",
-      "~k_parent": "6s"
+      "key": "root.imports.icons[17]",
+      "~k_parent": "5u"
     },
     "6u": {
-      "key": "root.imports.icons[18]",
-      "~k_parent": "5t"
+      "key": "root.imports.icons[17].icons",
+      "~k_parent": "6t"
     },
     "6v": {
-      "key": "root.imports.icons[18].icons",
-      "~k_parent": "6u"
+      "key": "root.imports.icons[18]",
+      "~k_parent": "5u"
     },
     "6w": {
-      "key": "root.imports.icons[19]",
-      "~k_parent": "5t"
+      "key": "root.imports.icons[18].icons",
+      "~k_parent": "6v"
     },
     "6x": {
-      "key": "root.imports.icons[19].icons",
-      "~k_parent": "6w"
+      "key": "root.imports.icons[19]",
+      "~k_parent": "5u"
     },
     "6y": {
-      "key": "root.imports.icons[20]",
-      "~k_parent": "5t"
+      "key": "root.imports.icons[19].icons",
+      "~k_parent": "6x"
     },
     "6z": {
-      "key": "root.imports.icons[20].icons",
-      "~k_parent": "6y"
+      "key": "root.imports.icons[20]",
+      "~k_parent": "5u"
     },
     "7a": {
-      "key": "root.imports.icons[26]",
-      "~k_parent": "5t"
+      "key": "root.imports.icons[25].icons",
+      "~k_parent": "79"
     },
     "7b": {
-      "key": "root.imports.icons[26].icons",
-      "~k_parent": "7a"
+      "key": "root.imports.icons[26]",
+      "~k_parent": "5u"
     },
     "7c": {
-      "key": "root.imports.icons[27]",
-      "~k_parent": "5t"
+      "key": "root.imports.icons[26].icons",
+      "~k_parent": "7b"
     },
     "7d": {
-      "key": "root.imports.icons[27].icons",
-      "~k_parent": "7c"
+      "key": "root.imports.icons[27]",
+      "~k_parent": "5u"
     },
     "7e": {
-      "key": "root.imports.requests",
-      "~k_parent": "4q"
+      "key": "root.imports.icons[27].icons",
+      "~k_parent": "7d"
     },
     "7f": {
-      "key": "root.imports.operators",
-      "~k_parent": "4q"
+      "key": "root.imports.requests",
+      "~k_parent": "4r"
     },
     "7g": {
-      "key": "root.imports.operators.client",
-      "~k_parent": "7f"
+      "key": "root.imports.operators",
+      "~k_parent": "4r"
     },
     "7h": {
-      "key": "root.imports.operators.client[0]",
+      "key": "root.imports.operators.client",
       "~k_parent": "7g"
     },
     "7i": {
-      "key": "root.imports.operators.client[1]",
-      "~k_parent": "7g"
+      "key": "root.imports.operators.client[0]",
+      "~k_parent": "7h"
     },
     "7j": {
-      "key": "root.imports.operators.server",
-      "~k_parent": "7f"
+      "key": "root.imports.operators.client[1]",
+      "~k_parent": "7h"
     },
     "7k": {
+      "key": "root.imports.operators.server",
+      "~k_parent": "7g"
+    },
+    "7l": {
       "key": "root.imports.styles",
-      "~k_parent": "4q"
+      "~k_parent": "4r"
     }
   },
   "logger.json": {
-    "~k": "2e"
+    "~k": "2f"
   },
   "menus.json": {
     "~arr": [
@@ -1205,32 +1205,32 @@
               "pageId": "home",
               "auth": {
                 "public": true,
-                "~k": "3f"
+                "~k": "3g"
               },
               "menuItemId": "0",
-              "~k": "3e"
+              "~k": "3f"
             }
           ],
-          "~k": "3d"
+          "~k": "3e"
         },
         "menuId": "default",
-        "~k": "3c"
+        "~k": "3d"
       }
     ],
-    "~k": "3b"
+    "~k": "3c"
   },
-  "pages/404/404.json": {
+  "pages/404.json": {
     "id": "page:404",
     "type": "Result",
     "style": {
       "minHeight": "100vh",
-      "~k": "21"
+      "~k": "22"
     },
     "properties": {
       "status": "info",
       "title": "404",
       "subTitle": "Sorry, the page you are visiting does not exist.",
-      "~k": "22"
+      "~k": "23"
     },
     "areas": {
       "extra": {
@@ -1241,7 +1241,7 @@
               "type": "Button",
               "properties": {
                 "title": "Go to home page",
-                "~k": "27"
+                "~k": "28"
               },
               "events": {
                 "onClick": {
@@ -1252,53 +1252,53 @@
                         "type": "Link",
                         "params": {
                           "home": true,
-                          "~k": "2b"
+                          "~k": "2c"
                         },
-                        "~k": "2a"
+                        "~k": "2b"
                       }
                     ],
-                    "~k": "29"
+                    "~k": "2a"
                   },
                   "catch": {
                     "~arr": [],
-                    "~k": "2x"
+                    "~k": "2y"
                   },
-                  "~k": "2w"
+                  "~k": "2x"
                 },
-                "~k": "28"
+                "~k": "29"
               },
-              "~k": "26",
+              "~k": "27",
               "blockId": "home"
             }
           ],
-          "~k": "25"
+          "~k": "26"
         },
-        "~k": "24"
+        "~k": "25"
       },
-      "~k": "23"
+      "~k": "24"
     },
     "auth": {
       "public": true,
-      "~k": "2y"
+      "~k": "2z"
     },
     "pageId": "404",
     "blockId": "404",
     "requests": {
       "~arr": [],
-      "~k": "2z"
+      "~k": "30"
     },
-    "~k": "2v"
+    "~k": "2w"
   },
-  "pages/home/home.json": {
+  "pages/home.json": {
     "id": "page:home",
     "type": "Box",
     "properties": {
       "title": "Tabs Demo",
-      "~k": "6"
+      "~k": "7"
     },
     "auth": {
       "public": true,
-      "~k": "2j"
+      "~k": "2k"
     },
     "pageId": "home",
     "blockId": "home",
@@ -1311,9 +1311,9 @@
               "type": "Title",
               "properties": {
                 "content": "Tabs Layout Demo",
-                "~k": "9"
+                "~k": "a"
               },
-              "~k": "8",
+              "~k": "9",
               "blockId": "title"
             },
             {
@@ -1321,7 +1321,7 @@
               "type": "Tabs",
               "properties": {
                 "defaultActiveKey": "overview",
-                "~k": "b"
+                "~k": "c"
               },
               "areas": {
                 "overview": {
@@ -1333,9 +1333,9 @@
                         "properties": {
                           "level": 3,
                           "content": "Overview Tab",
-                          "~k": "g"
+                          "~k": "h"
                         },
-                        "~k": "f",
+                        "~k": "g",
                         "blockId": "overviewTitle"
                       },
                       {
@@ -1343,15 +1343,15 @@
                         "type": "Paragraph",
                         "properties": {
                           "content": "This is the overview section with general information.",
-                          "~k": "i"
+                          "~k": "j"
                         },
-                        "~k": "h",
+                        "~k": "i",
                         "blockId": "overviewContent"
                       },
                       {
                         "id": "block:home:overviewStats:0",
                         "type": "Box",
-                        "~k": "j",
+                        "~k": "k",
                         "blockId": "overviewStats",
                         "areas": {
                           "content": {
@@ -1362,14 +1362,14 @@
                                   "type": "Statistic",
                                   "layout": {
                                     "span": 8,
-                                    "~k": "m"
+                                    "~k": "n"
                                   },
                                   "properties": {
                                     "title": "Total",
                                     "value": 1234,
-                                    "~k": "n"
+                                    "~k": "o"
                                   },
-                                  "~k": "l",
+                                  "~k": "m",
                                   "blockId": "stat1"
                                 },
                                 {
@@ -1377,14 +1377,14 @@
                                   "type": "Statistic",
                                   "layout": {
                                     "span": 8,
-                                    "~k": "p"
+                                    "~k": "q"
                                   },
                                   "properties": {
                                     "title": "Active",
                                     "value": 890,
-                                    "~k": "q"
+                                    "~k": "r"
                                   },
-                                  "~k": "o",
+                                  "~k": "p",
                                   "blockId": "stat2"
                                 },
                                 {
@@ -1392,28 +1392,28 @@
                                   "type": "Statistic",
                                   "layout": {
                                     "span": 8,
-                                    "~k": "s"
+                                    "~k": "t"
                                   },
                                   "properties": {
                                     "title": "Pending",
                                     "value": 344,
-                                    "~k": "t"
+                                    "~k": "u"
                                   },
-                                  "~k": "r",
+                                  "~k": "s",
                                   "blockId": "stat3"
                                 }
                               ],
-                              "~k": "k"
+                              "~k": "l"
                             },
-                            "~k": "2n"
+                            "~k": "2o"
                           },
-                          "~k": "2m"
+                          "~k": "2n"
                         }
                       }
                     ],
-                    "~k": "e"
+                    "~k": "f"
                   },
-                  "~k": "d"
+                  "~k": "e"
                 },
                 "details": {
                   "blocks": {
@@ -1424,9 +1424,9 @@
                         "properties": {
                           "level": 3,
                           "content": "Details Tab",
-                          "~k": "x"
+                          "~k": "y"
                         },
-                        "~k": "w",
+                        "~k": "x",
                         "blockId": "detailsTitle"
                       },
                       {
@@ -1434,9 +1434,9 @@
                         "type": "Card",
                         "properties": {
                           "title": "Edit Details",
-                          "~k": "z"
+                          "~k": "10"
                         },
-                        "~k": "y",
+                        "~k": "z",
                         "blockId": "detailsForm",
                         "areas": {
                           "content": {
@@ -1447,9 +1447,9 @@
                                   "type": "TextInput",
                                   "properties": {
                                     "title": "Name",
-                                    "~k": "12"
+                                    "~k": "13"
                                   },
-                                  "~k": "11",
+                                  "~k": "12",
                                   "blockId": "detailName"
                                 },
                                 {
@@ -1457,23 +1457,23 @@
                                   "type": "TextArea",
                                   "properties": {
                                     "title": "Description",
-                                    "~k": "14"
+                                    "~k": "15"
                                   },
-                                  "~k": "13",
+                                  "~k": "14",
                                   "blockId": "detailDesc"
                                 }
                               ],
-                              "~k": "10"
+                              "~k": "11"
                             },
-                            "~k": "2p"
+                            "~k": "2q"
                           },
-                          "~k": "2o"
+                          "~k": "2p"
                         }
                       }
                     ],
-                    "~k": "v"
+                    "~k": "w"
                   },
-                  "~k": "u"
+                  "~k": "v"
                 },
                 "settings": {
                   "blocks": {
@@ -1484,15 +1484,15 @@
                         "properties": {
                           "level": 3,
                           "content": "Settings Tab",
-                          "~k": "18"
+                          "~k": "19"
                         },
-                        "~k": "17",
+                        "~k": "18",
                         "blockId": "settingsTitle"
                       },
                       {
                         "id": "block:home:settingsList:0",
                         "type": "Card",
-                        "~k": "19",
+                        "~k": "1a",
                         "blockId": "settingsList",
                         "areas": {
                           "content": {
@@ -1503,9 +1503,9 @@
                                   "type": "Switch",
                                   "properties": {
                                     "title": "Enable Feature",
-                                    "~k": "1c"
+                                    "~k": "1d"
                                   },
-                                  "~k": "1b",
+                                  "~k": "1c",
                                   "blockId": "enableFeature"
                                 },
                                 {
@@ -1515,9 +1515,9 @@
                                     "title": "Max Items",
                                     "min": 1,
                                     "max": 100,
-                                    "~k": "1e"
+                                    "~k": "1f"
                                   },
-                                  "~k": "1d",
+                                  "~k": "1e",
                                   "blockId": "maxItems"
                                 },
                                 {
@@ -1530,37 +1530,37 @@
                                         {
                                           "value": "light",
                                           "label": "Light",
-                                          "~k": "1i"
+                                          "~k": "1j"
                                         },
                                         {
                                           "value": "dark",
                                           "label": "Dark",
-                                          "~k": "1j"
+                                          "~k": "1k"
                                         }
                                       ],
-                                      "~k": "1h"
+                                      "~k": "1i"
                                     },
-                                    "~k": "1g"
+                                    "~k": "1h"
                                   },
-                                  "~k": "1f",
+                                  "~k": "1g",
                                   "blockId": "theme"
                                 }
                               ],
-                              "~k": "1a"
+                              "~k": "1b"
                             },
-                            "~k": "2r"
+                            "~k": "2s"
                           },
-                          "~k": "2q"
+                          "~k": "2r"
                         }
                       }
                     ],
-                    "~k": "16"
+                    "~k": "17"
                   },
-                  "~k": "15"
+                  "~k": "16"
                 },
-                "~k": "c"
+                "~k": "d"
               },
-              "~k": "a",
+              "~k": "b",
               "blockId": "mainTabs"
             },
             {
@@ -1568,9 +1568,9 @@
               "type": "Card",
               "properties": {
                 "title": "Nested Tabs Example",
-                "~k": "1l"
+                "~k": "1m"
               },
-              "~k": "1k",
+              "~k": "1l",
               "blockId": "nestedTabs",
               "areas": {
                 "content": {
@@ -1581,7 +1581,7 @@
                         "type": "Tabs",
                         "properties": {
                           "type": "card",
-                          "~k": "1o"
+                          "~k": "1p"
                         },
                         "areas": {
                           "tab1": {
@@ -1592,15 +1592,15 @@
                                   "type": "Paragraph",
                                   "properties": {
                                     "content": "Inner Tab 1 Content",
-                                    "~k": "1t"
+                                    "~k": "1u"
                                   },
-                                  "~k": "1s",
+                                  "~k": "1t",
                                   "blockId": "inner1"
                                 }
                               ],
-                              "~k": "1r"
+                              "~k": "1s"
                             },
-                            "~k": "1q"
+                            "~k": "1r"
                           },
                           "tab2": {
                             "blocks": {
@@ -1610,41 +1610,41 @@
                                   "type": "Paragraph",
                                   "properties": {
                                     "content": "Inner Tab 2 Content",
-                                    "~k": "1x"
+                                    "~k": "1y"
                                   },
-                                  "~k": "1w",
+                                  "~k": "1x",
                                   "blockId": "inner2"
                                 }
                               ],
-                              "~k": "1v"
+                              "~k": "1w"
                             },
-                            "~k": "1u"
+                            "~k": "1v"
                           },
-                          "~k": "1p"
+                          "~k": "1q"
                         },
-                        "~k": "1n",
+                        "~k": "1o",
                         "blockId": "innerTabs"
                       }
                     ],
-                    "~k": "1m"
+                    "~k": "1n"
                   },
-                  "~k": "2t"
+                  "~k": "2u"
                 },
-                "~k": "2s"
+                "~k": "2t"
               }
             }
           ],
-          "~k": "7"
+          "~k": "8"
         },
-        "~k": "2l"
+        "~k": "2m"
       },
-      "~k": "2k"
+      "~k": "2l"
     },
     "requests": {
       "~arr": [],
-      "~k": "2u"
+      "~k": "2v"
     },
-    "~k": "2i"
+    "~k": "2j"
   },
   "plugins/actionSchemas.json": {
     "Link": {
@@ -3845,6 +3845,9 @@
   "refMap.json": {
     "1": {
       "parent": null
+    },
+    "2": {
+      "parent": null
     }
   },
   "types.json": {
@@ -3853,210 +3856,210 @@
         "originalTypeName": "Link",
         "package": "@lowdefy/actions-core",
         "count": 1,
-        "~k": "3i"
+        "~k": "3j"
       },
-      "~k": "3h"
+      "~k": "3i"
     },
     "auth": {
       "adapters": {
-        "~k": "3k"
-      },
-      "callbacks": {
         "~k": "3l"
       },
-      "events": {
+      "callbacks": {
         "~k": "3m"
       },
-      "providers": {
+      "events": {
         "~k": "3n"
       },
-      "~k": "3j"
+      "providers": {
+        "~k": "3o"
+      },
+      "~k": "3k"
     },
     "blocks": {
       "Box": {
         "originalTypeName": "Box",
         "package": "@lowdefy/blocks-basic",
         "count": 3,
-        "~k": "3p"
+        "~k": "3q"
       },
       "Title": {
         "originalTypeName": "Title",
         "package": "@lowdefy/blocks-basic",
         "count": 4,
-        "~k": "3q"
+        "~k": "3r"
       },
       "Tabs": {
         "originalTypeName": "Tabs",
         "package": "@lowdefy/blocks-antd",
         "count": 2,
-        "~k": "3r"
+        "~k": "3s"
       },
       "Paragraph": {
         "originalTypeName": "Paragraph",
         "package": "@lowdefy/blocks-basic",
         "count": 3,
-        "~k": "3s"
+        "~k": "3t"
       },
       "Statistic": {
         "originalTypeName": "Statistic",
         "package": "@lowdefy/blocks-antd",
         "count": 3,
-        "~k": "3t"
+        "~k": "3u"
       },
       "Card": {
         "originalTypeName": "Card",
         "package": "@lowdefy/blocks-antd",
         "count": 3,
-        "~k": "3u"
+        "~k": "3v"
       },
       "TextInput": {
         "originalTypeName": "TextInput",
         "package": "@lowdefy/blocks-antd",
         "count": 1,
-        "~k": "3v"
+        "~k": "3w"
       },
       "TextArea": {
         "originalTypeName": "TextArea",
         "package": "@lowdefy/blocks-antd",
         "count": 1,
-        "~k": "3w"
+        "~k": "3x"
       },
       "Switch": {
         "originalTypeName": "Switch",
         "package": "@lowdefy/blocks-antd",
         "count": 1,
-        "~k": "3x"
+        "~k": "3y"
       },
       "NumberInput": {
         "originalTypeName": "NumberInput",
         "package": "@lowdefy/blocks-antd",
         "count": 1,
-        "~k": "3y"
+        "~k": "3z"
       },
       "Selector": {
         "originalTypeName": "Selector",
         "package": "@lowdefy/blocks-antd",
         "count": 1,
-        "~k": "3z"
+        "~k": "40"
       },
       "Result": {
         "originalTypeName": "Result",
         "package": "@lowdefy/blocks-antd",
         "count": 1,
-        "~k": "40"
+        "~k": "41"
       },
       "Button": {
         "originalTypeName": "Button",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "41"
+        "~k": "42"
       },
       "Anchor": {
         "originalTypeName": "Anchor",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "42"
+        "~k": "43"
       },
       "DangerousHtml": {
         "originalTypeName": "DangerousHtml",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "43"
+        "~k": "44"
       },
       "Html": {
         "originalTypeName": "Html",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "44"
+        "~k": "45"
       },
       "Icon": {
         "originalTypeName": "Icon",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "45"
+        "~k": "46"
       },
       "Img": {
         "originalTypeName": "Img",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "46"
+        "~k": "47"
       },
       "List": {
         "originalTypeName": "List",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "47"
+        "~k": "48"
       },
       "Span": {
         "originalTypeName": "Span",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "48"
+        "~k": "49"
       },
       "Throw": {
         "originalTypeName": "Throw",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "49"
+        "~k": "4a"
       },
       "ProgressBar": {
         "originalTypeName": "ProgressBar",
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
-        "~k": "4a"
+        "~k": "4b"
       },
       "Skeleton": {
         "originalTypeName": "Skeleton",
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
-        "~k": "4b"
+        "~k": "4c"
       },
       "SkeletonAvatar": {
         "originalTypeName": "SkeletonAvatar",
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
-        "~k": "4c"
+        "~k": "4d"
       },
       "SkeletonButton": {
         "originalTypeName": "SkeletonButton",
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
-        "~k": "4d"
+        "~k": "4e"
       },
       "SkeletonInput": {
         "originalTypeName": "SkeletonInput",
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
-        "~k": "4e"
+        "~k": "4f"
       },
       "SkeletonParagraph": {
         "originalTypeName": "SkeletonParagraph",
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
-        "~k": "4f"
+        "~k": "4g"
       },
       "Spinner": {
         "originalTypeName": "Spinner",
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
-        "~k": "4g"
+        "~k": "4h"
       },
       "Message": {
         "originalTypeName": "Message",
         "package": "@lowdefy/blocks-antd",
         "count": 1,
-        "~k": "4h"
+        "~k": "4i"
       },
-      "~k": "3o"
+      "~k": "3p"
     },
     "connections": {
-      "~k": "4i"
-    },
-    "requests": {
       "~k": "4j"
     },
-    "api": {
+    "requests": {
       "~k": "4k"
+    },
+    "api": {
+      "~k": "4l"
     },
     "operators": {
       "client": {
@@ -4064,21 +4067,21 @@
           "originalTypeName": "_not",
           "package": "@lowdefy/operators-js",
           "count": 1,
-          "~k": "4n"
+          "~k": "4o"
         },
         "_type": {
           "originalTypeName": "_type",
           "package": "@lowdefy/operators-js",
           "count": 1,
-          "~k": "4o"
+          "~k": "4p"
         },
-        "~k": "4m"
+        "~k": "4n"
       },
       "server": {
-        "~k": "4p"
+        "~k": "4q"
       },
-      "~k": "4l"
+      "~k": "4m"
     },
-    "~k": "3g"
+    "~k": "3h"
   }
 }

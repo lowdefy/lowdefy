@@ -1,0 +1,7 @@
+id: main
+type: Box
+blocks:
+  - id: content
+    type: Paragraph
+    properties:
+      content: Main page

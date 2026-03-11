@@ -1,0 +1,8 @@
+id: welcome
+type: Box
+blocks:
+  - id: greeting-text
+    type: Title
+    properties:
+      content:
+        _module.var: greeting

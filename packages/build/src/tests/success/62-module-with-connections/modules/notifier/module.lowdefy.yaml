@@ -1,0 +1,17 @@
+name: Notifier
+description: Notification module
+
+vars:
+  sender_email:
+    type: string
+    required: true
+
+secrets:
+  - name: SENDGRID_KEY
+    description: SendGrid API key
+
+connections:
+  - _ref: connections/email.yaml
+
+pages:
+  - _ref: pages/inbox.yaml

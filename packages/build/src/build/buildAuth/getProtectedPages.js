@@ -15,17 +15,22 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { isInPatternList } from './matchPattern.js';
 
 function getProtectedPages({ components }) {
   const pageIds = (components.pages || []).map((page) => page.id);
   let protectedPages = [];
 
   if (type.isArray(components.auth.pages.public)) {
-    protectedPages = pageIds.filter((pageId) => !components.auth.pages.public.includes(pageId));
+    protectedPages = pageIds.filter(
+      (pageId) => !isInPatternList(pageId, components.auth.pages.public)
+    );
   } else if (components.auth.pages.protected === true) {
     protectedPages = pageIds;
   } else if (type.isArray(components.auth.pages.protected)) {
-    protectedPages = components.auth.pages.protected;
+    protectedPages = pageIds.filter((pageId) =>
+      isInPatternList(pageId, components.auth.pages.protected)
+    );
   }
   return protectedPages;
 }

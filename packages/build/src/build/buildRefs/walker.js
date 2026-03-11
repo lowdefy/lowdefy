@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import path from 'path';
+
 import { get, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 import { evaluateOperators } from '@lowdefy/operators';
@@ -21,6 +23,9 @@ import makeRefDefinition from './makeRefDefinition.js';
 import getRefContent from './getRefContent.js';
 import runTransformer from './runTransformer.js';
 import getKey from './getKey.js';
+import resolveModuleOperators, {
+  scopeMenuItemIds,
+} from '../resolveModuleOperators.js';
 import setNonEnumerableProperty from '../../utils/setNonEnumerableProperty.js';
 import collectExceptions from '../../utils/collectExceptions.js';
 
@@ -30,6 +35,8 @@ class WalkContext {
     refId,
     sourceRefId,
     vars,
+    moduleVars,
+    packageRoot,
     path,
     currentFile,
     refChain,
@@ -42,6 +49,8 @@ class WalkContext {
     this.refId = refId;
     this.sourceRefId = sourceRefId;
     this.vars = vars;
+    this.moduleVars = moduleVars;
+    this.packageRoot = packageRoot;
     this.path = path;
     this.currentFile = currentFile;
     this.refChain = refChain;
@@ -57,6 +66,8 @@ class WalkContext {
       refId: this.refId,
       sourceRefId: this.sourceRefId,
       vars: this.vars,
+      moduleVars: this.moduleVars,
+      packageRoot: this.packageRoot,
       path: this.path ? `${this.path}.${segment}` : segment,
       currentFile: this.currentFile,
       refChain: this.refChain,
@@ -67,7 +78,7 @@ class WalkContext {
     });
   }
 
-  forRef({ refId, vars, filePath }) {
+  forRef({ refId, vars, filePath, moduleVars, packageRoot }) {
     const newChain = new Set(this.refChain);
     if (filePath) {
       newChain.add(filePath);
@@ -77,6 +88,8 @@ class WalkContext {
       refId,
       sourceRefId: this.refId,
       vars: vars ?? {},
+      moduleVars: moduleVars ?? this.moduleVars,
+      packageRoot: packageRoot ?? this.packageRoot,
       path: this.path,
       currentFile: filePath ?? this.currentFile,
       refChain: newChain,
@@ -236,6 +249,37 @@ function resolveVar(node, ctx) {
   });
 }
 
+// Resolve a _module.var node
+function resolveModuleVar(node, ctx) {
+  if (!ctx.moduleVars) {
+    // Not in a module context — pass through unchanged
+    return node;
+  }
+
+  const varDef = node['_module.var'];
+
+  // String form: { "_module.var": "key" }
+  if (type.isString(varDef)) {
+    const value = get(ctx.moduleVars, varDef, { default: null });
+    return cloneVarValue(value, ctx.sourceRefId);
+  }
+
+  // Object form: { "_module.var": { key, default } }
+  if (type.isObject(varDef) && type.isString(varDef.key)) {
+    const varFromModule = get(ctx.moduleVars, varDef.key);
+    if (!type.isUndefined(varFromModule)) {
+      return cloneVarValue(varFromModule, ctx.sourceRefId);
+    }
+    const defaultValue = type.isNone(varDef.default) ? null : varDef.default;
+    return cloneVarValue(defaultValue, null);
+  }
+
+  throw new ConfigError(
+    '_module.var operator takes a string or object with "key" field as arguments.',
+    { filePath: ctx.currentFile },
+  );
+}
+
 // Resolve a _ref node (12-step ref handling)
 async function resolveRef(node, ctx) {
   // 1. Create ref definition
@@ -263,13 +307,25 @@ async function resolveRef(node, ctx) {
     refDef.key = await resolve(cloneForResolve(refDef.key), ctx);
   }
 
-  // 4. Update refMap with resolved path; store original for resolver refs
+  // 4. Module path resolution: resolve relative paths from the referring file's directory
+  if (ctx.packageRoot && type.isString(refDef.path) && !path.isAbsolute(refDef.path)) {
+    refDef.path = path.resolve(path.dirname(ctx.currentFile), refDef.path);
+  }
+
+  // 5. Update refMap with resolved path; store original for resolver refs
   ctx.refMap[refDef.id].path = refDef.path;
   if (!refDef.path) {
     ctx.refMap[refDef.id].original = refDef.original;
   }
 
-  // 5. Circular detection
+  // 5b. Path escape constraint: module refs cannot escape the package root
+  if (ctx.packageRoot && refDef.path) {
+    if (!refDef.path.startsWith(ctx.packageRoot + '/') && refDef.path !== ctx.packageRoot) {
+      throw new ConfigError(`Module ref path "${refDef.path}" escapes the package root.`);
+    }
+  }
+
+  // 6. Circular detection
   if (refDef.path && ctx.refChain.has(refDef.path)) {
     const chainDisplay = [...ctx.refChain, refDef.path].join('\n  -> ');
     throw new ConfigError(
@@ -278,41 +334,67 @@ async function resolveRef(node, ctx) {
     );
   }
 
-  // Steps 6-12: File operations that can fail independently per ref.
+  // Steps 7-14: File operations that can fail independently per ref.
   // Errors are collected so the walker can continue processing sibling refs,
   // allowing multiple errors to be reported at once.
   try {
-    // 6. Load content
+    // 7. Load content
     let content = await getRefContent({
       context: ctx.buildContext,
       refDef,
       referencedFrom: ctx.currentFile,
     });
 
-    // 7. Create child context for the ref file
-    const childCtx = ctx.forRef({
-      refId: refDef.id,
-      vars: refDef.vars,
-      filePath: refDef.path,
-    });
+    // 8. Create child context for the ref
+    let childCtx;
+    if (refDef.module && refDef.component) {
+      const moduleEntry = ctx.buildContext.modules[refDef.module];
+      const deferredFrom = content['~deferredFrom'];
+      childCtx = ctx.forRef({
+        refId: refDef.id,
+        vars: refDef.vars,
+        filePath: deferredFrom ?? path.join(moduleEntry.moduleRoot, 'module.lowdefy.yaml'),
+        moduleVars: moduleEntry.vars,
+        packageRoot: moduleEntry.packageRoot,
+      });
+    } else {
+      childCtx = ctx.forRef({
+        refId: refDef.id,
+        vars: refDef.vars,
+        filePath: refDef.path,
+      });
+    }
 
-    // 8. Walk the content
+    // 9. Walk the content
     content = await resolve(content, childCtx);
 
-    // 9. Run transformer
+    // 10. Module ref post-processing — resolve ID operators and scope menu IDs
+    if (refDef.module) {
+      const moduleEntry = ctx.buildContext.modules[refDef.module];
+      content = resolveModuleOperators({
+        input: content,
+        moduleEntry,
+      });
+
+      if (refDef.menu) {
+        scopeMenuItemIds(content, moduleEntry.id);
+      }
+    }
+
+    // 11. Run transformer
     content = await runTransformer({
       context: ctx.buildContext,
       input: content,
       refDef,
     });
 
-    // 10. Extract key
+    // 12. Extract key
     content = getKey({ input: content, refDef });
 
-    // 11. Tag all nodes with ~r for provenance
+    // 13. Tag all nodes with ~r for provenance
     tagRefDeep(content, refDef.id);
 
-    // 12. Propagate ~ignoreBuildChecks
+    // 14. Propagate ~ignoreBuildChecks
     if (refDef.ignoreBuildChecks !== undefined) {
       if (type.isObject(content)) {
         content['~ignoreBuildChecks'] = refDef.ignoreBuildChecks;
@@ -352,6 +434,16 @@ async function resolve(node, ctx) {
     return resolve(varResult, ctx);
   }
 
+  // 4b. Object with _module.var — resolve, then re-walk the result
+  if (type.isObject(node) && !type.isUndefined(node['_module.var'])) {
+    if (!ctx.moduleVars) {
+      // Not in a module context — pass through unchanged, don't re-walk
+      return node;
+    }
+    const moduleVarResult = resolveModuleVar(node, ctx);
+    return resolve(moduleVarResult, ctx);
+  }
+
   // 5. Array — walk children in-place
   if (type.isArray(node)) {
     for (let i = 0; i < node.length; i++) {
@@ -365,8 +457,15 @@ async function resolve(node, ctx) {
   for (const key of keys) {
     if (ctx.shouldStop) {
       const childPath = ctx.path ? `${ctx.path}.${key}` : key;
-      if (ctx.shouldStop(childPath, ctx.refId)) {
+      const stopMode = ctx.shouldStop(childPath, ctx.refId);
+      if (stopMode === 'delete' || stopMode === true) {
         delete node[key];
+        continue;
+      }
+      if (stopMode === 'preserve') {
+        if (type.isObject(node[key]) || type.isArray(node[key])) {
+          setNonEnumerableProperty(node[key], '~deferredFrom', ctx.currentFile);
+        }
         continue;
       }
     }

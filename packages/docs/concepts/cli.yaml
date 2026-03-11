@@ -129,6 +129,20 @@ _ref:
 
 
 
+            # Module Fetching
+
+            When your app uses [modules](/modules), the build automatically fetches module sources during the build phase. GitHub modules are downloaded as tarballs and cached in `.lowdefy/modules/`. Local `file:` sources are read directly from disk.
+
+            For private GitHub repositories, set the `GITHUB_TOKEN` environment variable:
+
+            ```
+            GITHUB_TOKEN=ghp_your_token_here
+            ```
+
+            The CLI also checks for `gh` CLI credentials and git credential helpers as fallbacks.
+
+            In development mode (`lowdefy dev`), local module sources (`file:` paths) are watched for changes and trigger rebuilds automatically.
+
             # Configuration
 
             All the CLI options can either be set as command line options, or the `cli` config object in your `lowdefy.yaml` file. Options set as command line options take precedence over options set in the `lowdefy.yaml` file. The config in the `lowdefy.yaml` cannot be referenced using the `_ref` operator, but need to be set in the file itself.

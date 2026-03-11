@@ -1,0 +1,171 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/operators.yaml.njk
+  transformer: templates/operatorsMethodTransformer.js
+  vars:
+    pageId: _module
+    pageTitle: _module
+    filePath: operators/_module.yaml
+    env: Build Only
+    types: |
+      ```
+      _module.var: (key: string): any
+      _module.var: (arguments: { key: string, default?: any }): any
+      _module.pageId: (pageId: string): string
+      _module.connectionId: (connectionId: string): string
+      _module.endpointId: (endpointId: string): string
+      _module.id: (true): string
+      ```
+    description: |
+      The `_module` operator family provides access to module-scoped values during the build. These operators are only available inside module config files — they have no effect in app-level config.
+
+      `_module.var` resolves during the ref-walking phase (same phase as `_var`). The ID operators (`_module.pageId`, `_module.connectionId`, `_module.endpointId`) resolve during module processing, after the walker completes.
+
+      > The `_module` operators are build-time operators: they are evaluated when the app configuration is being built. They can be used anywhere in module configuration files.
+
+      See [Modules](/modules) for an overview of the module system.
+
+    methods:
+      - name: var
+        types: |
+          ```
+          (key: string): any
+          (arguments: {
+            key: string,
+            default?: any,
+          }): any
+          ```
+        description: |
+          The `_module.var` operator gets a value from the module entry's `vars` object — the values passed by the app developer in `lowdefy.yaml`.
+
+          Unlike `_var`, which requires threading variables through each `_ref`, `_module.var` works at any depth within module files. It accesses the same vars regardless of `_ref` nesting.
+
+        arguments: |
+          ###### string
+          The key in the module entry's `vars` object. Dot notation is supported.
+
+          ###### object
+            - `key: string`: The key in the module entry's `vars` object. Dot notation is supported.
+            - `default: any`: A value to return if the key is not found. By default, `null` is returned.
+
+        examples: |
+          ###### Simple string access:
+          ```yaml
+          collection:
+            _module.var: collection
+          ```
+          If the app provides `vars: { collection: "team_users" }`, returns `"team_users"`.
+
+          ###### Nested path with default:
+          ```yaml
+          columnDefs:
+            _module.var:
+              key: components.table_columns
+              default:
+                - field: name
+                - field: email
+          ```
+          If `components.table_columns` is not provided, returns the default array.
+
+      - name: pageId
+        types: |
+          ```
+          (pageId: string): string
+          ```
+        description: |
+          Resolves a module-local page ID to its fully scoped ID. Use this in Link actions and anywhere a page reference is needed.
+
+        arguments: |
+          ###### string
+          The module-local page ID (as declared in the module's page definition).
+
+        examples: |
+          ###### Link to a sibling page:
+          ```yaml
+          - id: view_details
+            type: Link
+            params:
+              pageId:
+                _module.pageId: user-edit
+          ```
+          In a module entry with `id: team-users`, resolves to `team-users/user-edit`.
+
+      - name: connectionId
+        types: |
+          ```
+          (connectionId: string): string
+          ```
+        description: |
+          Resolves a module-local connection ID to its scoped or remapped ID. If the connection is remapped in the module entry config, returns the remapped app connection ID instead.
+
+        arguments: |
+          ###### string
+          The module-local connection ID (as declared in the module's connection definition).
+
+        examples: |
+          ###### Reference a module connection:
+          ```yaml
+          connectionId:
+            _module.connectionId: users-db
+          ```
+          In a module entry with `id: team-users`, resolves to `team-users/users-db`.
+
+          If the app remaps the connection (`connections: { users-db: my-app-mongodb }`), resolves to `my-app-mongodb` instead.
+
+      - name: endpointId
+        types: |
+          ```
+          (endpointId: string): string
+          ```
+        description: |
+          Resolves a module-local API endpoint ID to its fully scoped ID.
+
+        arguments: |
+          ###### string
+          The module-local endpoint ID (as declared in the module's API definition).
+
+        examples: |
+          ###### Call a module API endpoint:
+          ```yaml
+          - id: call_invite
+            type: CallAPI
+            params:
+              endpointId:
+                _module.endpointId: invite-user
+          ```
+          In a module entry with `id: team-users`, resolves to `team-users/invite-user`.
+
+      - name: id
+        types: |
+          ```
+          (true): string
+          ```
+        description: |
+          Returns the raw module entry ID. Useful for labels, conditional logic, or constructing dynamic strings.
+
+        arguments: |
+          ###### boolean
+          Pass `true` to return the module entry ID.
+
+        examples: |
+          ###### Use in a label:
+          ```yaml
+          label:
+            _string.concat:
+              - _module.id: true
+              - " - User Admin"
+          ```
+          In a module entry with `id: team-users`, returns `"team-users - User Admin"`.

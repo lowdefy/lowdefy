@@ -1,0 +1,7 @@
+id: users
+type: Box
+blocks:
+  - id: title
+    type: Title
+    properties:
+      content: User Management

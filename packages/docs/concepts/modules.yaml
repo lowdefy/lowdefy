@@ -1,0 +1,274 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: modules
+    pageTitle: Modules
+    section: Concepts
+    filePath: concepts/modules.yaml
+    content:
+      - id: md1
+        type: MarkdownWithCode
+        properties:
+          content: |
+            Modules are reusable configuration packages that bundle pages, connections, API endpoints, components, and menus into a single distributable unit. Instead of copying config between projects, you install a module and configure it with variables.
+
+            A module is hosted in a GitHub repository or local directory. Each usage of a module in your app is called a **module entry** — identified by a user-chosen `id` that controls namespacing.
+
+            ## Using Modules
+
+            Add modules to the `modules` array in your `lowdefy.yaml`:
+
+            ```yaml
+            lowdefy: LOWDEFY_VERSION
+
+            modules:
+              - id: notifications
+                source: "github:lowdefy/notifications@v1.0.0"
+                vars:
+                  sender_email: support@myapp.com
+                  badge_position: top-right
+
+              - id: team-users
+                source: "github:my-org/user-admin@v1.0.0"
+                vars:
+                  roles:
+                    _ref: config/team-roles.yaml
+                  collection: team_users
+                  components:
+                    table_columns:
+                      _ref: config/team-users/table-columns.yaml
+            ```
+
+            Each module entry has:
+            - `id: string` — **Required.** A unique identifier for this entry. Must not contain `/`. Controls the namespace for scoped IDs and page paths.
+            - `source: string` — **Required.** Where to fetch the module. Supports GitHub repos and local paths.
+            - `vars: object` — Values passed to the module, accessible via [`_module.var`](/_module).
+            - `connections: object` — Connection remapping. Maps module connection names to app connection IDs.
+
+            ## Module Manifest
+
+            Each module has a `module.lowdefy.yaml` manifest that declares its contents and interface:
+
+            ```yaml
+            name: User Admin
+            description: User administration — list, edit, invite users
+
+            vars:
+              roles:
+                type: array
+                required: true
+                description: List of available user roles
+              collection:
+                type: string
+                default: users
+                description: MongoDB collection name
+
+            connections:
+              - _ref: connections/users-db.yaml
+
+            pages:
+              - _ref: pages/users-list.yaml
+              - _ref: pages/user-edit.yaml
+
+            api:
+              - _ref: api/invite-user.yaml
+
+            components:
+              - id: user-avatar
+                type: Component
+                component:
+                  _ref: components/user-avatar.yaml
+
+            menus:
+              - _ref: menus.yaml
+
+            plugins:
+              - name: "@lowdefy/blocks-antd"
+                version: "^4"
+              - name: "@lowdefy/connection-mongodb"
+                version: "^4"
+
+            secrets:
+              - name: MONGODB
+                description: MongoDB connection URI
+            ```
+
+            The manifest schema:
+            - `name: string` — Human-readable module name.
+            - `description: string` — Module description.
+            - `vars: object` — Variable declarations with `type`, `required`, `default`, and `description`.
+            - `connections: object[]` — Connection definitions used by the module.
+            - `pages: object[]` — Page definitions.
+            - `api: object[]` — API endpoint definitions.
+            - `components: object[]` — Named reusable config fragments exposed to the app.
+            - `menus: object[]` — Menu definitions.
+            - `plugins: object[]` — Required plugin dependencies with semver version constraints.
+            - `secrets: object[]` — Allowlist of secrets the module may access.
+
+            ## Using Module Exports
+
+            **Pages and APIs** are auto-included and auto-scoped — they appear in the app with the entry ID prefix.
+
+            **Components** are reusable config fragments included via [`_ref`](/_ref) with the `module` and `component` arguments:
+
+            ```yaml
+            blocks:
+              - _ref:
+                  module: notifications
+                  component: notification-badge
+                  vars:
+                    position: top-right
+            ```
+
+            Components support both `_module.var` (module-level configuration) and `_var` (per-ref variables passed at the point of inclusion).
+
+            **Menus** are included via `_ref` with the `module` and `menu` arguments. Use [`_build.array.concat`](/_build) to splice module menu items into your app menu:
+
+            ```yaml
+            menus:
+              - id: main
+                links:
+                  _build.array.concat:
+                    - - id: home
+                        type: MenuLink
+                        pageId: home
+
+                    - _ref:
+                        module: team-users
+                        menu: default
+
+                    - - id: settings
+                        type: MenuLink
+                        pageId: settings
+            ```
+
+            ## ID Scoping
+
+            The build automatically scopes certain IDs using the module entry's `id`. Module authors write IDs without any prefix — the build adds it.
+
+            | ID type         | Auto-scoped? | Module author writes | Becomes (in `team-users` entry) |
+            | --------------- | ------------ | -------------------- | ------------------------------- |
+            | Page ID         | Yes          | `users-list`         | `team-users/users-list`         |
+            | Connection ID   | Yes          | `users-db`           | `team-users/users-db`           |
+            | API endpoint ID | Yes          | `invite-user`        | `team-users/invite-user`        |
+            | Menu item ID    | Yes          | `users`              | `team-users/users`              |
+            | Block ID        | No           | `my-block`           | `my-block`                      |
+
+            Block IDs and request IDs are not scoped — they inherit scope from their parent page.
+
+            ## Page Paths
+
+            Module pages are served at `/{entryId}/{pageId}`:
+
+            | Module Entry ID | Page ID      | URL Path                   |
+            | --------------- | ------------ | -------------------------- |
+            | `notifications` | `inbox`      | `/notifications/inbox`     |
+            | `team-users`    | `users-list` | `/team-users/users-list`   |
+            | `client-users`  | `users-list` | `/client-users/users-list` |
+
+            From outside a module (app pages or other modules), reference scoped page IDs directly using the full path: `pageId: team-users/users-list`.
+
+            ## Connection Remapping
+
+            Modules declare their own connections. By default, each entry gets namespaced connections (e.g., `team-users/users-db`). You can remap a module connection to use an existing app connection instead:
+
+            ```yaml
+            modules:
+              - id: team-users
+                source: "github:lowdefy/user-admin@v1.0.0"
+                vars:
+                  collection: team_users
+                connections:
+                  users-db: my-app-mongodb
+            ```
+
+            When remapped, the module's connection definition is skipped. References via `_module.connectionId: users-db` resolve to `my-app-mongodb` instead of `team-users/users-db`.
+
+            ## Multi-Instance Support
+
+            Use the same module multiple times with different entry IDs:
+
+            ```yaml
+            modules:
+              - id: team-users
+                source: "github:lowdefy/user-admin@v1.0.0"
+                vars:
+                  collection: team_users
+
+              - id: client-users
+                source: "github:lowdefy/user-admin@v1.0.0"
+                vars:
+                  collection: client_users
+            ```
+
+            Each entry has its own namespace — pages, connections, and API endpoints do not collide.
+
+            ## Module Sources
+
+            **GitHub:** `github:owner/repo@ref` or `github:owner/repo/path@ref`
+
+            The `ref` can be a tag, branch, or commit SHA. For monorepos, the path after `owner/repo` specifies the subdirectory containing `module.lowdefy.yaml`.
+
+            ```yaml
+            # Single-module repo
+            source: "github:lowdefy/notifications@v1.0.0"
+
+            # Monorepo — module in subdirectory
+            source: "github:my-org/modules/user-admin@v1.0.0"
+            ```
+
+            **Local:** `file:./relative/path`
+
+            Local paths resolve relative to the project root. Useful for development and testing.
+
+            ```yaml
+            source: "file:../my-module"
+            ```
+
+            For private GitHub repositories, set the `GITHUB_TOKEN` environment variable. The CLI also checks `gh` CLI credentials and git credential helpers.
+
+            ## Plugin Dependency Validation
+
+            Modules declare required plugins with semver version constraints. The build validates that:
+            1. Every declared plugin exists in the app's `plugins` array.
+            2. The app's installed plugin version satisfies the module's declared semver range.
+
+            If validation fails, the build error includes remediation instructions.
+
+            ## Secret Allowlist
+
+            Modules declare which secrets they access. The build validates that all `_secret` references in module config match declared secrets. Undeclared `_secret` references cause build errors.
+
+            When a connection is remapped, the module's secret references for that connection are skipped — the app connection handles its own secrets. See [Secrets](/secrets) for more on secret management.
+
+            ## Troubleshooting
+
+            **"Module 'X' requires plugin 'Y' version 'Z'"** — Add the required plugin to your app's `plugins` array in `lowdefy.yaml`, or update the version if already installed.
+
+            **"Module 'X' references undeclared secret 'Y'"** — The module author needs to declare this secret in `module.lowdefy.yaml`. If you're the module author, add it to the `secrets` array.
+
+            **"Duplicate page ID 'X'"** — Two module entries produce the same scoped page ID. Use different entry IDs for each module instance.
+
+            **Page not found at expected URL** — Module pages are served at `/{entryId}/{pageId}`, not `/{pageId}`. Check the entry ID in your `modules` config.
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: References and Templates
+            previous_page_id: references-and-templates
+            next_page_title: Writing Modules
+            next_page_id: module-authoring

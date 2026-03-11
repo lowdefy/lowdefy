@@ -16,6 +16,7 @@
 
 import envWatcher from '../watchers/envWatcher.mjs';
 import lowdefyBuildWatcher from '../watchers/lowdefyBuildWatcher.mjs';
+import moduleBuildWatcher from '../watchers/moduleBuildWatcher.mjs';
 import nextBuildWatcher from '../watchers/nextBuildWatcher.mjs';
 
 function startWatchers(context) {
@@ -23,6 +24,7 @@ function startWatchers(context) {
     await Promise.all([
       envWatcher(context),
       lowdefyBuildWatcher(context),
+      moduleBuildWatcher(context),
       nextBuildWatcher(context),
     ]);
   };

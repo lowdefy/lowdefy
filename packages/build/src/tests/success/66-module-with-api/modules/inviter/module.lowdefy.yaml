@@ -1,0 +1,20 @@
+name: Inviter
+description: Invitation module with API endpoints
+
+vars:
+  invite_message:
+    type: string
+    default: Welcome!
+
+secrets:
+  - name: SENDGRID_KEY
+    description: API key for email sending
+
+connections:
+  - _ref: connections/email.yaml
+
+pages:
+  - _ref: pages/invite.yaml
+
+api:
+  - _ref: api/send-invite.yaml

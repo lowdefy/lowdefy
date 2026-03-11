@@ -1,0 +1,12 @@
+# OA: Module source directory has no module.lowdefy.yaml
+# Tests that the build throws when the file: source points to a directory without module.lowdefy.yaml.
+lowdefy: local
+
+modules:
+  - id: empty
+    source: 'file:modules/empty'
+    vars: {}
+
+pages:
+  - id: home
+    type: Box

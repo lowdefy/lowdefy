@@ -60,6 +60,15 @@ function findPageSourceRef(refId, refMap, unresolvedRefVars) {
   return firstChildOfRoot;
 }
 
+function getModuleEntryId(pageId, context) {
+  for (const entryId of Object.keys(context.modules ?? {})) {
+    if (pageId.startsWith(`${entryId}/`)) {
+      return entryId;
+    }
+  }
+  return null;
+}
+
 function createPageRegistry({ components, context }) {
   const registry = new Map();
   const unresolvedRefVars = context.unresolvedRefVars ?? {};
@@ -89,6 +98,7 @@ function createPageRegistry({ components, context }) {
       refPath: sourceRef?.path ?? null,
       unresolvedVars: sourceRef?.unresolvedVars ?? null,
       resolverOriginal: sourceRef?.original ?? null,
+      moduleEntryId: getModuleEntryId(page.id, context),
     });
   });
 

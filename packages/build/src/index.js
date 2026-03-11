@@ -34,6 +34,8 @@ import buildImports from './build/buildImports/buildImports.js';
 import buildJs from './build/full/buildJs.js';
 import buildLogger from './build/buildLogger.js';
 import buildMenu from './build/buildMenu.js';
+import buildModuleDefs from './build/buildModuleDefs.js';
+import buildModules from './build/buildModules.js';
 import buildPages from './build/full/buildPages.js';
 import buildRefs from './build/buildRefs/buildRefs.js';
 import buildTypes from './build/buildTypes.js';
@@ -65,8 +67,13 @@ async function build(options) {
   try {
     context = createContext(options);
 
+    // Phase 1: Build module definitions
+    // Parses lowdefy.yaml, resolves module refs, populates context.modules
+    await buildModuleDefs({ context });
+
     let components;
     try {
+      // Phase 2: Ref resolution (handles _ref: { module, component/menu })
       components = await buildRefs({ context });
     } catch (err) {
       // Root lowdefy.yaml failure still throws from buildRefs — collect it
@@ -78,6 +85,9 @@ async function build(options) {
     }
     // Stop if buildRefs collected any errors (YAML parse, missing files, etc.)
     logCollectedErrors(context);
+
+    // Phase 3: Process modules — scopes IDs, merges into components
+    buildModules({ components, context });
 
     // Build steps - collect all errors before stopping
     // addKeys runs first so testSchema has ~k markers for error location info

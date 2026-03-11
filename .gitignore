@@ -35,6 +35,7 @@ packages/utils/node-utils/test/copyDirectory/**
 packages/utils/node-utils/test/copyFile/**
 
 app/**
+modules/**
 
 packages/docs/public/sitemap.xml
 packages/website/public/sitemap.xml

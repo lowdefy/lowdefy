@@ -1,0 +1,14 @@
+# 68: Module with nested _ref chains within the module
+# Tests that _ref paths resolve relative to the module root, and _module.var propagates through nested refs.
+lowdefy: local
+name: Nested Refs Test
+
+modules:
+  - id: dash
+    source: 'file:modules/dashboard'
+    vars:
+      title: My Dashboard
+
+pages:
+  - id: home
+    type: Box

@@ -1,0 +1,17 @@
+id: users-list
+type: Box
+blocks:
+  - id: heading
+    type: Title
+    properties:
+      content:
+        _module.var: label
+  - id: users-table
+    type: Box
+    requests:
+      - id: get-users
+        type: MongoDBFind
+        connectionId:
+          _module.connectionId: users-db
+        properties:
+          query: {}

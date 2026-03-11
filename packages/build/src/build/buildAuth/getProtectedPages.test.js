@@ -199,3 +199,70 @@ test('Protected array, public true', () => {
   const res = getProtectedPages({ components });
   expect(res).toEqual(['a']);
 });
+
+test('Protected wildcard pattern expands to matching page IDs', () => {
+  const components = {
+    auth: {
+      pages: {
+        protected: ['team-users/*'],
+      },
+    },
+    pages: [
+      { id: 'team-users/users-list', type: 'Context' },
+      { id: 'team-users/user-edit', type: 'Context' },
+      { id: 'home', type: 'Context' },
+    ],
+  };
+  const res = getProtectedPages({ components });
+  expect(res).toEqual(['team-users/users-list', 'team-users/user-edit']);
+});
+
+test('Public wildcard pattern excludes matching pages from protected', () => {
+  const components = {
+    auth: {
+      pages: {
+        public: ['team-users/*'],
+      },
+    },
+    pages: [
+      { id: 'team-users/users-list', type: 'Context' },
+      { id: 'team-users/user-edit', type: 'Context' },
+      { id: 'home', type: 'Context' },
+    ],
+  };
+  const res = getProtectedPages({ components });
+  expect(res).toEqual(['home']);
+});
+
+test('Wildcard * does not match compound ids', () => {
+  const components = {
+    auth: {
+      pages: {
+        protected: ['*'],
+      },
+    },
+    pages: [
+      { id: 'home', type: 'Context' },
+      { id: 'team-users/users-list', type: 'Context' },
+    ],
+  };
+  const res = getProtectedPages({ components });
+  expect(res).toEqual(['home']);
+});
+
+test('Mixed exact and wildcard in protected array', () => {
+  const components = {
+    auth: {
+      pages: {
+        protected: ['home', 'team-users/*'],
+      },
+    },
+    pages: [
+      { id: 'home', type: 'Context' },
+      { id: 'team-users/users-list', type: 'Context' },
+      { id: 'login', type: 'Context' },
+    ],
+  };
+  const res = getProtectedPages({ components });
+  expect(res).toEqual(['home', 'team-users/users-list']);
+});

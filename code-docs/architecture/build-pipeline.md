@@ -4,13 +4,15 @@ How Lowdefy transforms YAML configuration into a running Next.js application.
 
 ## Overview
 
-The build pipeline is a multi-stage process that:
-1. Loads and resolves all `_ref` operators recursively
-2. Validates configuration against schemas
-3. Processes pages, blocks, connections, and auth
-4. Extracts and hashes JavaScript code
-5. Generates type manifests and import files
-6. Outputs JSON artifacts for the Next.js server
+The build pipeline is an 8-phase process (Phases 0–7) that:
+1. Fetches module sources (GitHub tarballs, local paths)
+2. Parses module manifests and resolves module-level operators
+3. Loads and resolves all `_ref` operators recursively (including module refs)
+4. Scopes module IDs and merges modules into app components
+5. Validates configuration against schemas
+6. Processes pages, blocks, connections, and auth
+7. Extracts and hashes JavaScript code, generates type manifests
+8. Outputs JSON artifacts for the Next.js server
 
 ## Entry Points
 
@@ -69,33 +71,63 @@ Uses `@lowdefy/server-dev` instead of `@lowdefy/server`, outputs to `directories
 
 **File:** `packages/build/src/index.js`
 
-### Phase 1: Initialization & Ref Resolution
+### Phase 0: Fetch Modules
+
+```javascript
+fetchModules()      // Download GitHub tarballs, resolve local file: paths
+```
+
+Runs inside the build process. GitHub modules are cached in `.lowdefy/modules/`. Local `file:` sources resolve to disk paths. See [module-fetching.md](module-fetching.md).
+
+### Phase 1: Build Module Definitions
+
+```javascript
+buildModuleDefs()   // Parse module.lowdefy.yaml, resolve _ref + _module.var,
+                    // validate plugin deps and secret allowlists
+```
+
+Walks each `module.lowdefy.yaml` with the entry's vars available as `moduleVars` on the `WalkContext`. After this phase, `context.modules` contains fully resolved manifests. ID operators (`_module.pageId`, etc.) remain unresolved until Phase 3.
+
+### Phase 2: Ref Resolution
 
 ```javascript
 createContext()     // Initialize build context
 buildRefs()         // Load and resolve all _ref operators
-testSchema()        // Validate against schema
+                    // EXTENDED: handles _ref { module, component/menu }
 ```
 
-### Phase 2: Configuration Building
+When the walker encounters `_ref: { module, component }`, it calls `getModuleRefContent` to look up the export in the already-resolved manifest from Phase 1.
+
+### Phase 3: Build Modules
+
+```javascript
+buildModules()      // Scope IDs, resolve _module ID operators, merge into components
+```
+
+For each module entry: resolves `_module.pageId`, `_module.connectionId`, `_module.endpointId`, `_module.id` operators; prefixes page/connection/API/menu IDs with `{entryId}/`; appends to app's `components`. See [module-system.md](module-system.md).
+
+### Phase 4: Schema Validation
+
+```javascript
+testSchema()        // Validate against schema (unchanged)
+```
+
+### Phase 5: Domain Building
 
 ```javascript
 buildApp()          // Process app.html, app.git_sha
 validateConfig()    // Validate basePath and config
 addDefaultPages()   // Generate 404 if missing
-buildAuth()         // Process authentication
+buildAuth()         // Process authentication (MODIFIED: wildcard auth matching)
 buildConnections()  // Process data connections
 buildApi()          // Process API endpoints
-```
-
-### Phase 3: Page & Menu Building
-
-```javascript
 buildPages()        // Process pages, blocks, requests
 buildMenu()         // Build navigation structure
 ```
 
-### Phase 4: Code & Type Processing
+Auth matching now supports wildcard glob patterns (`team-users/*`) for module page access rules.
+
+### Phase 6: Finalization
 
 ```javascript
 buildJs()           // Extract and hash JS functions
@@ -104,7 +136,7 @@ buildTypes()        // Create types manifest
 buildImports()      // Generate import statements
 ```
 
-### Phase 5: File Writing
+### Phase 7: File Writing
 
 ```javascript
 cleanBuildDirectory()
@@ -127,18 +159,20 @@ The `_ref` operator system resolves all configuration file references in a singl
 
 **File:** `packages/build/src/build/buildRefs/walker.js`
 
-The walker replaces the old multi-pass `recursiveBuild` pipeline (which used 5+ `serializer.copy` JSON round-trips per ref) with a single `resolve()` function that handles `_ref`, `_var`, and `_build.*` operators in one traversal.
+The walker replaces the old multi-pass `recursiveBuild` pipeline (which used 5+ `serializer.copy` JSON round-trips per ref) with a single `resolve()` function that handles `_ref`, `_var`, `_module.var`, and `_build.*` operators in one traversal.
 
 **Traversal order:**
-- **Top-down:** `_ref` and `_var` are detected _before_ descending into children
+- **Top-down:** `_ref`, `_var`, and `_module.var` are detected _before_ descending into children
 - **Bottom-up:** `_build.*` operators evaluate _after_ all children have resolved
 
 **Core `resolve(node, ctx)` flow:**
 
 1. Primitives pass through unchanged
 2. `_ref` objects → `resolveRef()` (or create `~shallow` marker if `ctx.shouldStop` matches)
+   - For `_ref: { module, component/menu }` → `getModuleRefContent()` looks up the export in the resolved manifest
 3. `_var` objects → `resolveVar()`, then re-walk result for nested operators
-4. Arrays/objects → walk children in-place, then check for `_build.*` operator evaluation
+4. `_module.var` objects → `resolveModuleVar()`, then re-walk result (reads from `ctx.moduleVars`)
+5. Arrays/objects → walk children in-place, then check for `_build.*` operator evaluation
 
 **`resolveRef()` steps:**
 
@@ -158,6 +192,7 @@ The walker replaces the old multi-pass `recursiveBuild` pipeline (which used 5+ 
 **`WalkContext`** carries immutable context through the walk:
 - `child(segment)` — appends to JSON path for stop-path matching
 - `forRef()` — creates child context for entering a new file (new vars, fresh refChain Set copy)
+- `moduleVars` — module entry vars, propagated through both `child()` and `forRef()` (constant across all nesting depths within a module)
 - Path tracks through ref boundaries, enabling `shouldStop` to match `pages.*.blocks` paths
 
 **`evaluateStaticOperators`** runs once at the end (not per-file) using `evaluateOperators` from `@lowdefy/operators`.
@@ -310,13 +345,24 @@ installServer() → runLowdefyBuild()
      ↓
 [packages/build/src/index.js] build()
      ↓
+fetchModules() → buildModuleDefs()
+  ├─ Fetch GitHub tarballs / resolve local paths
+  ├─ Parse each module.lowdefy.yaml
+  ├─ Resolve _ref + _module.var in module manifests
+  └─ Validate plugin deps + secret allowlists
+     ↓
 createContext() → buildRefs()
   ├─ Start with lowdefy.yaml
-  ├─ Recursively scan for _ref
+  ├─ Recursively scan for _ref (incl. _ref { module, component/menu })
   ├─ Load/parse files
   ├─ Process _var templates
   ├─ Apply transformers
   └─ Evaluate _build.* operators
+     ↓
+buildModules()
+  ├─ Resolve _module ID operators
+  ├─ Scope IDs (pages, connections, APIs, menus)
+  └─ Merge into app components
      ↓
 testSchema() → buildApp() → buildAuth() → buildConnections()
      ↓
@@ -385,9 +431,14 @@ pages:
 | File | Purpose |
 |------|---------|
 | `packages/cli/src/commands/build/build.js` | CLI orchestration |
-| `packages/build/src/index.js` | Main pipeline (30+ steps) |
+| `packages/build/src/index.js` | Main pipeline |
+| `packages/build/src/build/fetchModules.js` | Module source fetching (GitHub tarballs, local paths) |
+| `packages/build/src/build/buildModuleDefs.js` | Module manifest parsing, var resolution, validation |
+| `packages/build/src/build/buildModules.js` | ID scoping, operator resolution, merging |
+| `packages/build/src/build/resolveModuleOperators.js` | `_module.*` ID operator resolution |
 | `packages/build/src/build/buildRefs/buildRefs.js` | _ref resolution entry point |
-| `packages/build/src/build/buildRefs/walker.js` | Single-pass async tree walker (`resolve`, `resolveRef`, `resolveVar`, `WalkContext`) |
+| `packages/build/src/build/buildRefs/walker.js` | Single-pass async tree walker (`resolve`, `resolveRef`, `resolveVar`, `resolveModuleVar`, `WalkContext`) |
+| `packages/build/src/build/buildRefs/getModuleRefContent.js` | Resolve `_ref: { module, component/menu }` |
 | `packages/operators/src/evaluateOperators.js` | In-place operator evaluator (replaces `BuildParser`) |
 | `packages/build/src/build/buildRefs/evaluateStaticOperators.js` | Post-walk static operator pass |
 | `packages/build/src/createContext.js` | Context initialization |

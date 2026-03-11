@@ -1,0 +1,159 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: v4-to-v5
+    pageTitle: Version 4 to Version 5
+    section: Migration
+    filePath: migration/v4-to-v5.yaml
+    content:
+      - id: md1
+        type: MarkdownWithCode
+        style:
+          maxWidth: 800
+        properties:
+          content:
+            _nunjucks:
+              on:
+                version:
+                  _ref: version.yaml
+              template: |
+                Version 5 introduces the **module system** — first-class support for reusable configuration packages. For most existing apps, upgrading is non-breaking. The module system is additive; existing pages, connections, and menus work unchanged.
+
+                ## Module System
+
+                The new [`modules`](/modules) array in `lowdefy.yaml` lets you install reusable config packages distributed via GitHub repos or local paths:
+
+                ```yaml
+                lowdefy: {{ version }}
+
+                modules:
+                  - id: team-users
+                    source: "github:org/user-admin@v1.0.0"
+                    vars:
+                      collection: team_users
+                    connections:
+                      users-db: my-app-mongodb
+                ```
+
+                Modules bundle pages, connections, API endpoints, components, and menus. IDs are automatically scoped — module pages appear at `/{entryId}/{pageId}`. See the [Modules](/modules) concept page for full details.
+
+                ## New _module Operator Family
+
+                The [`_module`](/_module) operator family provides module-scoped values during the build:
+                - `_module.var` — Access module entry variables
+                - `_module.pageId` — Resolve scoped page IDs
+                - `_module.connectionId` — Resolve scoped or remapped connection IDs
+                - `_module.endpointId` — Resolve scoped API endpoint IDs
+                - `_module.id` — Get the raw module entry ID
+
+                These operators are only available inside module config files.
+
+                ## Auth Wildcard Patterns
+
+                Page and API access rules now support wildcard glob patterns, useful for granting access to all pages in a module:
+
+                ```yaml
+                auth:
+                  pages:
+                    protected: true
+                    public:
+                      - home
+                      - login
+                    roles:
+                      admin:
+                        - team-users/*
+                      user:
+                        - notifications/*
+                ```
+
+                See [Protected Pages and APIs](/protected-pages-apis) for details.
+
+                ## Adopting a Module
+
+                If you have pages and connections that you previously copied between projects, you can replace them with a module.
+
+                ###### Before — copy-paste config:
+                ```yaml
+                lowdefy: {{ version }}
+
+                connections:
+                  - id: users-db
+                    type: MongoDBCollection
+                    properties:
+                      databaseUri:
+                        _secret: MONGODB
+
+                pages:
+                  - _ref: pages/users-list.yaml
+                  - _ref: pages/user-edit.yaml
+                ```
+
+                ###### After — module entry:
+                ```yaml
+                lowdefy: {{ version }}
+
+                modules:
+                  - id: team-users
+                    source: "github:org/user-admin@v1.0.0"
+                    vars:
+                      collection: team_users
+                    connections:
+                      users-db: my-app-mongodb
+
+                connections:
+                  - id: my-app-mongodb
+                    type: MongoDBCollection
+                    properties:
+                      databaseUri:
+                        _secret: MONGODB
+                ```
+
+                The module's pages appear at `/team-users/users-list` and `/team-users/user-edit`. Connection remapping lets the module use your existing app connection.
+
+                ## Menu Splicing
+
+                To include module menus alongside app menus, use `_build.array.concat`:
+
+                ```yaml
+                menus:
+                  - id: main
+                    links:
+                      _build.array.concat:
+                        - - id: home
+                            type: MenuLink
+                            pageId: home
+
+                        - _ref:
+                            module: team-users
+                            menu: default
+
+                        - - id: settings
+                            type: MenuLink
+                            pageId: settings
+                ```
+
+                ## Breaking Changes
+
+                **Build artifact paths** — Page artifacts changed from `pages/{pageId}/{pageId}.json` to `pages/{pageId}.json`. Tools that read build artifacts directly must update paths.
+
+                **Auth page rules** — Exact matching is unchanged, but wildcard patterns are now available for module pages. Existing rules continue to work.
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: V3 to V4
+            previous_page_id: v3-to-v4

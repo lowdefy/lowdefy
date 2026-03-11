@@ -1,0 +1,7 @@
+name: Widget Module
+
+vars:
+  color:
+    type: string
+    required: true
+    description: Widget color theme

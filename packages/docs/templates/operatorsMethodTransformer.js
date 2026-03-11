@@ -15,7 +15,7 @@
 */
 
 function transformer(obj) {
-  if (!obj.methods) {
+  if (!obj.methods || !obj.page.blocks) {
     return obj.page;
   }
   const contentArray = obj.page.blocks[0].areas.content.blocks[0].blocks[1].blocks;

@@ -15,6 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { isInPatternList } from './matchPattern.js';
 
 function getProtectedApi({ components }) {
   const endpointIds = (components.api || []).map((endpoint) => endpoint.id);
@@ -22,12 +23,14 @@ function getProtectedApi({ components }) {
 
   if (type.isArray(components.auth.api.public)) {
     protectedApi = endpointIds.filter(
-      (endpointId) => !components.auth.api.public.includes(endpointId)
+      (endpointId) => !isInPatternList(endpointId, components.auth.api.public)
     );
   } else if (components.auth.api.protected === true) {
     protectedApi = endpointIds;
   } else if (type.isArray(components.auth.api.protected)) {
-    protectedApi = components.auth.api.protected;
+    protectedApi = endpointIds.filter((endpointId) =>
+      isInPatternList(endpointId, components.auth.api.protected)
+    );
   }
   return protectedApi;
 }

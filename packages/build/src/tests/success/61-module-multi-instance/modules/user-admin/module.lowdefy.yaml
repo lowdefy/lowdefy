@@ -1,0 +1,23 @@
+name: User Admin
+description: User administration module
+
+vars:
+  collection:
+    type: string
+    required: true
+    description: MongoDB collection name
+  label:
+    type: string
+    required: true
+    description: Display label for the module
+
+secrets:
+  - name: MONGODB
+    description: MongoDB connection URI
+
+connections:
+  - _ref: connections/users-db.yaml
+
+pages:
+  - _ref: pages/users-list.yaml
+  - _ref: pages/user-edit.yaml

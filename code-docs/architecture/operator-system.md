@@ -209,6 +209,42 @@ label:
     default: "Click"
 ```
 
+### \_module.var Operator
+
+**File:** `packages/build/src/build/buildRefs/walker.js` (`resolveModuleVar` function)
+
+Module variable substitution, resolved during the walker pass alongside `_var`:
+
+```yaml
+# Simple key access
+collection:
+  _module.var: collection
+
+# With default value
+columnDefs:
+  _module.var:
+    key: components.table_columns
+    default:
+      - field: name
+```
+
+`_module.var` reads from `ctx.moduleVars` on the `WalkContext`. Module vars propagate through both `child()` and `forRef()`, staying constant across all `_ref` nesting depths within a module. Outside module context (`moduleVars` is `undefined`), the operator passes through unchanged.
+
+### \_module.\* ID Operators
+
+**File:** `packages/build/src/build/resolveModuleOperators.js`
+
+The ID operators (`_module.pageId`, `_module.connectionId`, `_module.endpointId`, `_module.id`) resolve **after** the walker completes, during Phase 3 (`buildModules`). They are not standard build operators — they need access to the module entry's ID and connection remapping, which aren't available in the standard build operator context.
+
+Resolution uses a `serializer.copy` reviver pass:
+
+- `_module.pageId: users-list` → `team-users/users-list`
+- `_module.connectionId: users-db` → `team-users/users-db` (or remapped app connection ID)
+- `_module.endpointId: invite-user` → `team-users/invite-user`
+- `_module.id: true` → `team-users`
+
+This two-phase resolution (walker for `_module.var`, post-walker for ID operators) allows `_module.var` to be used in `_ref` paths and structural positions, while ID operators can validate against the fully resolved manifest.
+
 ### \_build.\* Operators
 
 **Evaluated inline by walker** (`packages/build/src/build/buildRefs/walker.js`) via `evaluateOperators` with `operatorPrefix: '_build.'`.
