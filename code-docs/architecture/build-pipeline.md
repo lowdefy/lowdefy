@@ -121,22 +121,46 @@ writeMaps(), writeTypes(), writePluginImports()
 
 **File:** `packages/build/src/build/buildRefs/buildRefs.js`
 
-The `_ref` operator system recursively loads and merges configuration files.
+The `_ref` operator system resolves all configuration file references in a single async tree walk.
 
-### How It Works
+### How It Works: Single-Pass Walker
 
-1. **Make Reference Definition** (`makeRefDefinition.js`)
-   - Creates ref definition with: id, parent, path, resolver, transformer, vars, key
+**File:** `packages/build/src/build/buildRefs/walker.js`
 
-2. **Recursive Build** (`recursiveBuild.js`, max depth: 10,000)
-   - `getRefContent()` - Load file content
-   - `parseRefContent()` - Parse YAML/JSON/Nunjucks
-   - `getRefsFromFile()` - Scan for nested `_ref` operators
-   - Process deepest-first, populate refs, run transformers
+The walker replaces the old multi-pass `recursiveBuild` pipeline (which used 5+ `serializer.copy` JSON round-trips per ref) with a single `resolve()` function that handles `_ref`, `_var`, and `_build.*` operators in one traversal.
 
-3. **Evaluate Build Operators** (`evaluateBuildOperators.js`)
-   - Uses BuildParser with `_build.` prefix
-   - Available: `_build.env`, `_build.vars`, etc.
+**Traversal order:**
+- **Top-down:** `_ref` and `_var` are detected _before_ descending into children
+- **Bottom-up:** `_build.*` operators evaluate _after_ all children have resolved
+
+**Core `resolve(node, ctx)` flow:**
+
+1. Primitives pass through unchanged
+2. `_ref` objects → `resolveRef()` (or create `~shallow` marker if `ctx.shouldStop` matches)
+3. `_var` objects → `resolveVar()`, then re-walk result for nested operators
+4. Arrays/objects → walk children in-place, then check for `_build.*` operator evaluation
+
+**`resolveRef()` steps:**
+
+1. Create ref definition and register in `refMap`
+2. Store unresolved vars (before mutation) for JIT rebuild
+3. Resolve dynamic path/vars/key via recursive `resolve()` in parent context
+4. Update `refMap` with resolved path
+5. Circular reference detection via `ctx.refChain`
+6. Load content via `getRefContent()`
+7. Create child context with `forRef()` (new vars, refChain copy)
+8. Walk content recursively
+9. Run transformer (optional)
+10. Extract key (`_ref.key`)
+11. Tag all result nodes with `~r` provenance via `tagRefDeep()`
+12. Propagate `~ignoreBuildChecks` marker
+
+**`WalkContext`** carries immutable context through the walk:
+- `child(segment)` — appends to JSON path for stop-path matching
+- `forRef()` — creates child context for entering a new file (new vars, fresh refChain Set copy)
+- Path tracks through ref boundaries, enabling `shouldStop` to match `pages.*.blocks` paths
+
+**`evaluateStaticOperators`** runs once at the end (not per-file) using `evaluateOperators` from `@lowdefy/operators`.
 
 ### _ref Object Structure
 
@@ -362,8 +386,10 @@ pages:
 |------|---------|
 | `packages/cli/src/commands/build/build.js` | CLI orchestration |
 | `packages/build/src/index.js` | Main pipeline (30+ steps) |
-| `packages/build/src/build/buildRefs/buildRefs.js` | _ref resolution |
-| `packages/build/src/build/buildRefs/recursiveBuild.js` | Recursive loading |
+| `packages/build/src/build/buildRefs/buildRefs.js` | _ref resolution entry point |
+| `packages/build/src/build/buildRefs/walker.js` | Single-pass async tree walker (`resolve`, `resolveRef`, `resolveVar`, `WalkContext`) |
+| `packages/operators/src/evaluateOperators.js` | In-place operator evaluator (replaces `BuildParser`) |
+| `packages/build/src/build/buildRefs/evaluateStaticOperators.js` | Post-walk static operator pass |
 | `packages/build/src/createContext.js` | Context initialization |
 | `packages/build/src/build/buildPages/buildPages.js` | Page processing |
 | `packages/build/src/build/buildMenu.js` | Menu building |
@@ -380,67 +406,73 @@ In development, the build uses a two-phase strategy for faster rebuilds.
 
 ### Phase 1: Shallow Build (`shallowBuild`)
 
-**File:** `packages/build/src/build/shallowBuild.js`
+**File:** `packages/build/src/build/jit/shallowBuild.js`
 
-Runs the full build pipeline but stops `_ref` resolution at page content boundaries:
+Runs the full build pipeline but stops `_ref` resolution at page content boundaries. The walker's `shouldStop` callback uses semantic path matching:
 
-```javascript
-const SHALLOW_STOP_PATHS = [
-  'pages.*.blocks',
-  'pages.*.areas',
-  'pages.*.events',
-  'pages.*.requests',
-  'pages.*.layout',
-];
-```
-
-When `buildRefs` encounters a `_ref` at one of these paths, it replaces it with a `_shallow` marker:
+**File:** `packages/build/src/build/jit/isPageContentPath.js`
 
 ```javascript
-// Instead of resolving the ref, buildRefs leaves:
-{ _shallow: true, _ref: { path: 'components/header.yaml', id: 'ref123' } }
+const PAGE_CONTENT_KEYS = ['blocks', 'areas', 'events', 'requests', 'layout'];
+
+function isPageContentPath(jsonPath) {
+  if (!jsonPath.startsWith('pages.')) return false;
+  const segments = jsonPath.split('.');
+  for (let i = 1; i < segments.length; i++) {
+    if (PAGE_CONTENT_KEYS.includes(segments[i])) return true;
+  }
+  return false;
+}
 ```
+
+When the walker encounters a `_ref` at a matching path, it creates a `~shallow` marker instead of resolving:
+
+```javascript
+{ '~shallow': true, _ref: { path: 'components/header.yaml' }, _refId: 'ref123' }
+```
+
+The walker also deletes page content keys (`blocks`, `areas`, `events`, `requests`, `layout`) from page objects during traversal, preventing unnecessary `_build.*` evaluation on content that will be resolved later by JIT.
 
 The shallow build then:
-1. Strips `_shallow` markers before schema validation (restores after)
-2. Runs skeleton build steps (buildApp, buildAuth, buildConnections, buildApi, buildMenu)
-3. Creates a **page registry** with raw (unresolved) page content
-4. Creates a **file dependency map** for targeted invalidation
-5. Adds all types from installed packages (since page-level types aren't counted)
-6. Writes skeleton artifacts + `pageRegistry.json` + `jsMap.json`
+1. Runs skeleton build steps (buildApp, buildAuth, buildConnections, buildApi, buildMenu)
+2. Creates a **page registry** with raw (unresolved) page content
+3. Creates a **file dependency map** for targeted invalidation
+4. Adds all types from installed packages (since page-level types aren't counted)
+5. Writes skeleton artifacts + `pageRegistry.json` + `jsMap.json`
 
 **Output:** `{ components, pageRegistry, fileDependencyMap, context }`
 
 ### Phase 2: JIT Page Build (`buildPageJit`)
 
-**File:** `packages/build/src/build/buildPageJit.js`
+**File:** `packages/build/src/build/jit/buildPageJit.js`
 
-When a page is requested, resolves `_shallow` markers and runs page-specific build steps:
+When a page is requested, uses the walker to resolve page content:
 
 ```
 1. Look up page in pageRegistry
-2. resolveShallowRefs() — recursively resolve _shallow markers via recursiveBuild
-3. evaluateBuildOperators() + evaluateStaticOperators()
-4. addKeys() — add ~k tracking metadata
-5. buildPage() — validate blocks, process events, extract requests
-6. validatePageTypes() — check block/action/operator types exist
-7. validateLinkReferences(), validateStateReferences(), etc.
-8. jsMapParser() — extract _js functions (client + server)
-9. writePageJit() — write page JSON, request JSONs, updated keyMap/refMap/jsMap
+2. Resolve unresolved vars (if any) via walker's resolve() with fresh WalkContext
+3. Load page file content via getRefContent/makeRefDefinition
+4. Walk content with resolve() (shouldStop: null — JIT resolves everything)
+5. evaluateStaticOperators()
+6. tagRefDeep() on result
+7. addKeys() — add ~k tracking metadata
+8. buildPage() — validate blocks, process events, extract requests
+9. validatePageTypes() — check block/action/operator types exist
+10. validateLinkReferences(), validateStateReferences(), etc.
+11. jsMapParser() — extract _js functions (client + server)
+12. writePageJit() — write page JSON, request JSONs, updated keyMap/refMap/jsMap
 ```
-
-`resolveShallowRefs` also sets `~r` (reference tracking) on resolved objects so that `addKeys` can trace them to the correct source file for error messages.
 
 ### Supporting Modules
 
 | Module | File | Purpose |
 |--------|------|---------|
-| `createPageRegistry` | `build/createPageRegistry.js` | Extracts page metadata + raw content from shallow-built components |
-| `createFileDependencyMap` | `build/createFileDependencyMap.js` | Maps config files → page IDs for targeted invalidation |
-| `writePageRegistry` | `build/writePageRegistry.js` | Serializes page registry to `pageRegistry.json` |
-| `writePageJit` | `build/writePageJit.js` | Writes page/request JSONs + updated maps + JS files |
-| `pathMatcher` | `utils/pathMatcher.js` | Matches dot-notation paths against `SHALLOW_STOP_PATHS` patterns |
-| `getRefPositions` | `buildRefs/getRefPositions.js` | Finds ref positions in content tree for shallow ref tracking |
+| `createPageRegistry` | `jit/createPageRegistry.js` | Extracts page metadata + raw content from shallow-built components |
+| `createFileDependencyMap` | `jit/createFileDependencyMap.js` | Maps config files → page IDs for targeted invalidation |
+| `writePageRegistry` | `jit/writePageRegistry.js` | Serializes page registry to `pageRegistry.json` |
+| `writePageJit` | `jit/writePageJit.js` | Writes page/request JSONs + updated maps + JS files |
+| `isPageContentPath` | `jit/isPageContentPath.js` | Semantic segment matching for stop paths |
+| `pageContentKeys` | `jit/pageContentKeys.js` | List of page content keys (`blocks`, `areas`, etc.) |
 
 ### Dev Entry Point
 
