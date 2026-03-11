@@ -160,8 +160,10 @@ async function init() {
     const app = selectedApps[0];
     console.log(`Run tests from ${app.path}:`);
     console.log(`  cd ${app.path}`);
-    console.log('  pnpm e2e');
-    console.log('  pnpm e2e:ui  # for UI mode');
+    console.log('  pnpm e2e            # Run all tests');
+    console.log('  pnpm e2e:headed     # Run with visible browser');
+    console.log('  pnpm e2e:ui         # Playwright UI mode');
+    console.log('  pnpm e2e:server     # Start server for reuse');
   } else {
     console.log('Run tests from each app directory:');
     for (const app of selectedApps) {
