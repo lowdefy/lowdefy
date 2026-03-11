@@ -34,7 +34,7 @@ test.describe('MarkdownWithCode Block', () => {
 
   test('renders code block with syntax highlighting', async ({ page }) => {
     const body = getMarkdownBody(page, 'markdownwithcode_codeblock');
-    const pre = body.locator('pre');
+    const pre = body.locator('pre').first();
     await expect(pre).toBeVisible();
     await expect(pre).toContainText('const');
   });

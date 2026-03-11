@@ -25,8 +25,9 @@ test.describe('QRScanner Block', () => {
   test('renders scanner container', async ({ page }) => {
     const block = getBlock(page, 'qrscanner_basic');
     await expect(block).toBeVisible();
+    // The inner div has no dimensions without a camera, so check it's attached rather than visible
     const scanner = block.locator('#qrscanner_basic');
-    await expect(scanner).toBeVisible();
+    await expect(scanner).toBeAttached();
   });
 
   test('renders with custom style', async ({ page }) => {

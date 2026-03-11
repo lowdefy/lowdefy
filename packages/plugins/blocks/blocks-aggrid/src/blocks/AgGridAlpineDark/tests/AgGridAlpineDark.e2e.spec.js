@@ -42,7 +42,7 @@ test.describe('AgGridAlpineDark Block', () => {
 
   test('renders with ag-theme-alpine-dark class', async ({ page }) => {
     const block = getBlock(page, 'aggridalpinedark_basic');
-    await expect(block).toHaveClass(/ag-theme-alpine-dark/);
+    await expect(block.locator('[class*="ag-theme-alpine-dark"]')).toBeVisible();
   });
 
   test('renders column headers', async ({ page }) => {
@@ -145,11 +145,11 @@ test.describe('AgGridAlpineDark Block', () => {
     await menuButton.click();
 
     // Wait for filter popup
-    const filterPopup = page.locator('.ag-popup');
+    const filterPopup = page.locator('.ag-popup .ag-filter');
     await expect(filterPopup).toBeVisible();
 
     // Type a filter value
-    const filterInput = filterPopup.locator('.ag-filter-filter input').first();
+    const filterInput = filterPopup.locator('input').first();
     await filterInput.fill('Alice');
 
     // Verify filter changed event fired
