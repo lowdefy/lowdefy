@@ -16,10 +16,11 @@
 
 import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { escapeId } from '@lowdefy/e2e-utils';
 
 // Span renders a span element with id={blockId}
 // Structure: #bl-{blockId} (wrapper) > #{blockId} (span element with styles)
-const getSpanElement = (page, blockId) => page.locator(`#${blockId}`);
+const getSpanElement = (page, blockId) => page.locator(`#${escapeId(blockId)}`);
 
 test.describe('Span Block', () => {
   test.beforeEach(async ({ page }) => {

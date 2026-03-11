@@ -43,7 +43,13 @@ async function buildRefs({ context, shallowOptions }) {
     operators,
     env: process.env,
     dynamicIdentifiers,
-    shouldStop: shallowOptions ? (path) => isPageContentPath(path) : null,
+    shouldStop: shallowOptions
+      ? // Strip page content (blocks, events, etc.) from ref-backed pages so
+        // JIT can re-resolve them from source files. Inline pages (defined
+        // directly in lowdefy.yaml) live in the root ref and have no separate
+        // source file — their content must be preserved for buildShallowPages.
+        (path, refId) => isPageContentPath(path) && refId !== refDef.id
+      : null,
   });
 
   const content = await getRefContent({

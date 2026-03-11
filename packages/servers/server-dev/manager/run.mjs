@@ -19,7 +19,6 @@ import { wait } from '@lowdefy/helpers';
 import opener from 'opener';
 import getContext from './getContext.mjs';
 import startServer from './processes/startServer.mjs';
-import checkPortAvailable from './utils/checkPortAvailable.mjs';
 
 /*
 The run script does the following:
@@ -86,7 +85,6 @@ try {
   // because chokidar sometimes doesn't fire this event, and it seems like there isn't an issue with not waiting.
   context.startWatchers();
 
-  await checkPortAvailable(context.options.port);
   startServer(context);
   await wait(800);
   if (process.env.LOWDEFY_SERVER_DEV_OPEN_BROWSER === 'true') {

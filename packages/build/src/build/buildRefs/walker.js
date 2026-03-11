@@ -278,50 +278,61 @@ async function resolveRef(node, ctx) {
     );
   }
 
-  // 6. Load content
-  let content = await getRefContent({
-    context: ctx.buildContext,
-    refDef,
-    referencedFrom: ctx.currentFile,
-  });
+  // Steps 6-12: File operations that can fail independently per ref.
+  // Errors are collected so the walker can continue processing sibling refs,
+  // allowing multiple errors to be reported at once.
+  try {
+    // 6. Load content
+    let content = await getRefContent({
+      context: ctx.buildContext,
+      refDef,
+      referencedFrom: ctx.currentFile,
+    });
 
-  // 7. Create child context for the ref file
-  const childCtx = ctx.forRef({
-    refId: refDef.id,
-    vars: refDef.vars,
-    filePath: refDef.path,
-  });
+    // 7. Create child context for the ref file
+    const childCtx = ctx.forRef({
+      refId: refDef.id,
+      vars: refDef.vars,
+      filePath: refDef.path,
+    });
 
-  // 8. Walk the content
-  content = await resolve(content, childCtx);
+    // 8. Walk the content
+    content = await resolve(content, childCtx);
 
-  // 9. Run transformer
-  content = await runTransformer({
-    context: ctx.buildContext,
-    input: content,
-    refDef,
-  });
+    // 9. Run transformer
+    content = await runTransformer({
+      context: ctx.buildContext,
+      input: content,
+      refDef,
+    });
 
-  // 10. Extract key
-  content = getKey({ input: content, refDef });
+    // 10. Extract key
+    content = getKey({ input: content, refDef });
 
-  // 11. Tag all nodes with ~r for provenance
-  tagRefDeep(content, refDef.id);
+    // 11. Tag all nodes with ~r for provenance
+    tagRefDeep(content, refDef.id);
 
-  // 12. Propagate ~ignoreBuildChecks
-  if (refDef.ignoreBuildChecks !== undefined) {
-    if (type.isObject(content)) {
-      content['~ignoreBuildChecks'] = refDef.ignoreBuildChecks;
-    } else if (type.isArray(content)) {
-      content.forEach((item) => {
-        if (type.isObject(item)) {
-          item['~ignoreBuildChecks'] = refDef.ignoreBuildChecks;
-        }
-      });
+    // 12. Propagate ~ignoreBuildChecks
+    if (refDef.ignoreBuildChecks !== undefined) {
+      if (type.isObject(content)) {
+        content['~ignoreBuildChecks'] = refDef.ignoreBuildChecks;
+      } else if (type.isArray(content)) {
+        content.forEach((item) => {
+          if (type.isObject(item)) {
+            item['~ignoreBuildChecks'] = refDef.ignoreBuildChecks;
+          }
+        });
+      }
     }
-  }
 
-  return content;
+    return content;
+  } catch (error) {
+    if (error instanceof ConfigError) {
+      ctx.collectError(error);
+      return null;
+    }
+    throw error;
+  }
 }
 
 // Core walk function — single-pass async tree walker
@@ -354,7 +365,7 @@ async function resolve(node, ctx) {
   for (const key of keys) {
     if (ctx.shouldStop) {
       const childPath = ctx.path ? `${ctx.path}.${key}` : key;
-      if (ctx.shouldStop(childPath)) {
+      if (ctx.shouldStop(childPath, ctx.refId)) {
         delete node[key];
         continue;
       }

@@ -16,16 +16,17 @@
 
 import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { escapeId } from '@lowdefy/e2e-utils';
 
 // Helper to get the slider element
-const getSlider = (page, blockId) => page.locator(`#bl-${blockId} .ant-slider`);
+const getSlider = (page, blockId) => page.locator(`#bl-${escapeId(blockId)} .ant-slider`);
 
 // Helper to get the slider handle
-const getHandle = (page, blockId) => page.locator(`#bl-${blockId} .ant-slider-handle`);
+const getHandle = (page, blockId) => page.locator(`#bl-${escapeId(blockId)} .ant-slider-handle`);
 
 // Helper to get the N/A checkbox
 const getNACheckbox = (page, blockId) =>
-  page.locator(`#bl-${blockId} .ant-checkbox-wrapper`).first();
+  page.locator(`#bl-${escapeId(blockId)} .ant-checkbox-wrapper`).first();
 
 test.describe('RatingSlider Block', () => {
   test.beforeEach(async ({ page }) => {

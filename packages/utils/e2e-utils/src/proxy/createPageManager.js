@@ -18,6 +18,7 @@ import { getBlock } from '../core/locators.js';
 import { waitForReady, waitForPage } from '../core/navigation.js';
 import { getState, getBlockState, setState, expectState } from '../core/state.js';
 import { getRequestState, getRequestResponse, expectRequest } from '../core/requests.js';
+import { getApiState, getApiResponse, expectApi } from '../core/api.js';
 import { getValidation } from '../core/validation.js';
 import { expectUrl, expectUrlQuery, setUrlQuery } from '../core/url.js';
 import { setUserCookie, clearUserCookie } from '../core/userCookie.js';
@@ -112,6 +113,19 @@ function createPageManager({ page, manifest, helperRegistry, mockManager }) {
       };
     },
 
+    // API endpoint locator - ldf.api('id').expect.*/response()/state()
+    api(endpointId) {
+      return {
+        expect: {
+          toFinish: (opts) => expectApi(page, { endpointId, loading: false, ...opts }),
+          toHaveResponse: (response, opts) => expectApi(page, { endpointId, response, ...opts }),
+          toHavePayload: (payload, opts) => expectApi(page, { endpointId, payload, ...opts }),
+        },
+        response: () => getApiResponse(page, { endpointId }),
+        state: () => getApiState(page, endpointId),
+      };
+    },
+
     // State locator - ldf.state('key').do.*/expect.*/value() or ldf.state().value()
     state(key) {
       if (type.isNone(key)) {
@@ -163,6 +177,7 @@ function createPageManager({ page, manifest, helperRegistry, mockManager }) {
       },
       api: (apiId, options) => mockManager?.mockApi(apiId, options),
       getCapturedRequest: (requestId, opts) => mockManager?.getCapturedRequest(requestId, opts),
+      getCapturedApi: (endpointId) => mockManager?.getCapturedApi(endpointId),
       clearCapturedRequests: () => mockManager?.clearCapturedRequests(),
     },
   };

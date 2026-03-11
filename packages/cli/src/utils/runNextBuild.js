@@ -46,6 +46,7 @@ async function runNextBuild({ context, directory }) {
       },
     });
   } catch (error) {
+    context.logger.info({ spin: 'fail' }, 'Running Next build.');
     throw new Error('Next build failed.');
   }
   context.logger.info('Next build successful.');

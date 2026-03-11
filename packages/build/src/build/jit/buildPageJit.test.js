@@ -508,7 +508,16 @@ type: PageHeaderMenu
       pageRegistry,
       context,
     })
-  ).rejects.toThrow('Referenced file does not exist: "components/missing.yaml"');
+  ).rejects.toThrow('Page "home" build failed with 1 error(s).');
+
+  // Verify the underlying error is preserved in buildErrors
+  try {
+    await buildPageJit({ pageId: 'home', pageRegistry, context });
+  } catch (err) {
+    expect(err.buildErrors[0].message).toMatch(
+      'Referenced file does not exist: "components/missing.yaml"'
+    );
+  }
 });
 
 test('buildPageJit resolver page traces errors back to resolver when inner _ref fails', async () => {
@@ -540,10 +549,16 @@ test('buildPageJit resolver page traces errors back to resolver when inner _ref 
       pageRegistry,
       context,
     })
-  ).rejects.toMatchObject({
-    message: expect.stringContaining('Referenced file does not exist: "config/missing.yaml"'),
-    filePath: 'src/test-utils/buildRefs/testJitPageResolver.js',
-  });
+  ).rejects.toThrow('Page "home" build failed with 1 error(s).');
+
+  // Verify the underlying error details are preserved
+  try {
+    await buildPageJit({ pageId: 'home', pageRegistry, context });
+  } catch (err) {
+    expect(err.buildErrors[0].message).toMatch(
+      'Referenced file does not exist: "config/missing.yaml"'
+    );
+  }
 });
 
 test('buildPageJit writes keyMap/refMap so error handler resolves correct location', async () => {

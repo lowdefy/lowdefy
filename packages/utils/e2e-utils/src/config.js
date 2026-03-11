@@ -58,6 +58,9 @@ function createConfig({
       baseURL: `http://localhost:${port}`,
       trace: 'on-first-retry',
       screenshot,
+      ...(process.env.SLOW_MO && {
+        launchOptions: { slowMo: Number(process.env.SLOW_MO) },
+      }),
     },
     projects: [
       {
@@ -129,6 +132,9 @@ function createMultiAppConfig({
     use: {
       trace: 'on-first-retry',
       screenshot,
+      ...(process.env.SLOW_MO && {
+        launchOptions: { slowMo: Number(process.env.SLOW_MO) },
+      }),
     },
     projects,
     webServer,

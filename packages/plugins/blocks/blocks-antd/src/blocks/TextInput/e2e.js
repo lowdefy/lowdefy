@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { createBlockHelper } from '@lowdefy/e2e-utils';
+import { createBlockHelper, escapeId } from '@lowdefy/e2e-utils';
 import { expect } from '@playwright/test';
 
-const locator = (page, blockId) => page.locator(`#${blockId}_input`);
+const locator = (page, blockId) => page.locator(`#${escapeId(blockId)}_input`);
 
 export default createBlockHelper({
   locator,

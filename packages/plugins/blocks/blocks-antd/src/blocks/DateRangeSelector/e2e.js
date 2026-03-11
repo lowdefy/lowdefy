@@ -14,9 +14,10 @@
   limitations under the License.
 */
 
-import { createBlockHelper } from '@lowdefy/e2e-utils';
+import { createBlockHelper, escapeId } from '@lowdefy/e2e-utils';
 
-const locator = (page, blockId) => page.locator(`.ant-picker-range:has(#${blockId}_input)`);
+const locator = (page, blockId) =>
+  page.locator(`.ant-picker-range:has(#${escapeId(blockId)}_input)`);
 
 export default createBlockHelper({
   locator,

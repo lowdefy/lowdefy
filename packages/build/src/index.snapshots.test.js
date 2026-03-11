@@ -73,7 +73,11 @@ const { default: makeId } = await import('./utils/makeId.js');
 function discoverFixtures() {
   const entries = fs.readdirSync(fixturesDir, { withFileTypes: true });
   return entries
-    .filter((entry) => entry.isDirectory())
+    .filter(
+      (entry) =>
+        entry.isDirectory() &&
+        fs.existsSync(path.join(fixturesDir, entry.name, 'lowdefy.yaml'))
+    )
     .map((entry) => entry.name)
     .sort();
 }

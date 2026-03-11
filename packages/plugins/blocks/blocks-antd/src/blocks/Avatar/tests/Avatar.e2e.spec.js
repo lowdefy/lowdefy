@@ -16,9 +16,10 @@
 
 import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { escapeId } from '@lowdefy/e2e-utils';
 
 // Avatar uses id={blockId} directly
-const getAvatar = (page, blockId) => page.locator(`#${blockId}`);
+const getAvatar = (page, blockId) => page.locator(`#${escapeId(blockId)}`);
 
 test.describe('Avatar Block', () => {
   test.beforeEach(async ({ page }) => {

@@ -16,9 +16,10 @@
 
 import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { escapeId } from '@lowdefy/e2e-utils';
 
 // Tag uses id={blockId} directly on the tag element
-const getTag = (page, blockId) => page.locator(`#${blockId}`);
+const getTag = (page, blockId) => page.locator(`#${escapeId(blockId)}`);
 
 test.describe('Tag Block', () => {
   test.beforeEach(async ({ page }) => {

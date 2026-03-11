@@ -39,7 +39,8 @@
     "build": "swc src --out-dir dist --config-file ../../../.swcrc --cli-config-file ../../../.swc-cli.json && pnpm copyfiles",
     "clean": "rm -rf dist",
     "copyfiles": "copyfiles -u 1 \"./src/init/templates/*\" dist",
-    "prepublishOnly": "pnpm build"
+    "prepublishOnly": "pnpm build",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
     "@lowdefy/helpers": "4.6.0",

@@ -16,15 +16,17 @@
 
 import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { escapeId } from '@lowdefy/e2e-utils';
 
 // Helper to get the autocomplete input
-const getInput = (page, blockId) => page.locator(`#${blockId}_input`);
+const getInput = (page, blockId) => page.locator(`#${escapeId(blockId)}_input`);
 
 // Helper to get the autocomplete wrapper
-const getAutoComplete = (page, blockId) => page.locator(`.ant-select:has(#${blockId}_input)`);
+const getAutoComplete = (page, blockId) =>
+  page.locator(`.ant-select:has(#${escapeId(blockId)}_input)`);
 
 // Helper to get an option by index
-const getOption = (page, blockId, index) => page.locator(`#${blockId}_${index}`);
+const getOption = (page, blockId, index) => page.locator(`#${escapeId(blockId)}_${index}`);
 
 test.describe('AutoComplete Block', () => {
   test.beforeEach(async ({ page }) => {
