@@ -41,7 +41,7 @@ test.describe('AgGridInputBalhamDark Block', () => {
 
   test('renders with ag-theme-balham-dark class', async ({ page }) => {
     const block = getBlock(page, 'aggridinputbalhamdark_basic');
-    await expect(block).toHaveClass(/ag-theme-balham-dark/);
+    await expect(block.locator('[class*="ag-theme-balham-dark"]')).toBeVisible();
   });
 
   test('renders column headers', async ({ page }) => {
@@ -132,10 +132,10 @@ test.describe('AgGridInputBalhamDark Block', () => {
     const menuButton = nameHeader.locator('.ag-header-cell-menu-button');
     await menuButton.click();
 
-    const filterPopup = page.locator('.ag-popup');
+    const filterPopup = page.locator('.ag-popup .ag-filter');
     await expect(filterPopup).toBeVisible();
 
-    const filterInput = filterPopup.locator('.ag-filter-filter input').first();
+    const filterInput = filterPopup.locator('input').first();
     await filterInput.fill('Alice');
 
     const display = getBlock(page, 'filter_changed_display');

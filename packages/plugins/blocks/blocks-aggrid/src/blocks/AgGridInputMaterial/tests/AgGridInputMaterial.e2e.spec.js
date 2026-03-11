@@ -41,7 +41,7 @@ test.describe('AgGridInputMaterial Block', () => {
 
   test('renders with ag-theme-material class', async ({ page }) => {
     const block = getBlock(page, 'aggridinputmaterial_basic');
-    await expect(block).toHaveClass(/ag-theme-material/);
+    await expect(block.locator('[class*="ag-theme-material"]')).toBeVisible();
   });
 
   test('renders column headers', async ({ page }) => {
@@ -132,10 +132,10 @@ test.describe('AgGridInputMaterial Block', () => {
     const menuButton = nameHeader.locator('.ag-header-cell-menu-button');
     await menuButton.click();
 
-    const filterPopup = page.locator('.ag-popup');
+    const filterPopup = page.locator('.ag-popup .ag-filter');
     await expect(filterPopup).toBeVisible();
 
-    const filterInput = filterPopup.locator('.ag-filter-filter input').first();
+    const filterInput = filterPopup.locator('input').first();
     await filterInput.fill('Alice');
 
     const display = getBlock(page, 'filter_changed_display');

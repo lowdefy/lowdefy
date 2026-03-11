@@ -42,7 +42,7 @@ test.describe('AgGridBalham Block', () => {
 
   test('renders with ag-theme-balham class', async ({ page }) => {
     const block = getBlock(page, 'aggridbalham_basic');
-    await expect(block).toHaveClass(/ag-theme-balham/);
+    await expect(block.locator('[class*="ag-theme-balham"]')).toBeVisible();
   });
 
   test('renders column headers', async ({ page }) => {
@@ -145,11 +145,11 @@ test.describe('AgGridBalham Block', () => {
     await menuButton.click();
 
     // Wait for filter popup
-    const filterPopup = page.locator('.ag-popup');
+    const filterPopup = page.locator('.ag-popup .ag-filter');
     await expect(filterPopup).toBeVisible();
 
     // Type a filter value
-    const filterInput = filterPopup.locator('.ag-filter-filter input').first();
+    const filterInput = filterPopup.locator('input').first();
     await filterInput.fill('Alice');
 
     // Verify filter changed event fired
