@@ -43,7 +43,8 @@
     "release:version": "pnpm changeset version && pnpm install --no-frozen-lockfile",
     "release:publish": "changeset publish",
     "release:version-experimental": "pnpm changeset version --snapshot experimental && pnpm install --no-frozen-lockfile && pnpm build",
-    "release:publish-experimental": "pnpm -r --filter=!lowdefy-vscode publish --tag experimental --no-git-checks"
+    "release:publish-experimental": "pnpm -r --filter=!lowdefy-vscode publish --tag experimental --no-git-checks",
+    "release:experimental": "npm login && pnpm release:version-experimental && pnpm release:publish-experimental && git checkout -- ."
   },
   "devDependencies": {
     "@changesets/cli": "2.26.2",
