@@ -1,5 +1,5 @@
 ---
-'@lowdefy/cli': patch
+'lowdefy': patch
 ---
 
 fix(cli): Remove install skip for local builds
