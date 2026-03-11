@@ -1,10 +1,8 @@
 import { test, expect } from '@lowdefy/e2e-utils/fixtures';
 
-test('homepage loads', async ({ ldf }) => {
-  await ldf.goto('/');
-
-  // Replace with your own assertions
-  await expect(ldf.page).toHaveTitle(/./);
+test('app is running', async ({ ldf }) => {
+  const response = await ldf.page.goto('/api/auth/session');
+  expect(response.status()).toBe(200);
 });
 
 // Example: Testing a form

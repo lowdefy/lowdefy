@@ -144,7 +144,7 @@ Edit `playwright.config.js` to customize test behavior.
 
 | Option | Default | Description |
 |--------|---------|-------------|
-| `appDir` | `'../'` | Path to your Lowdefy app root (relative to config file) |
+| `appDir` | `'./'` | Path to your Lowdefy app root (relative to cwd) |
 | `buildDir` | `'.lowdefy/server/build'` | Build output directory (relative to appDir) |
 | `mocksFile` | `'e2e/mocks.yaml'` | Static mocks file path (relative to appDir) |
 | `port` | `3000` | Port for the test server |
@@ -160,7 +160,7 @@ Edit `playwright.config.js` to customize test behavior.
 import { createConfig } from '@lowdefy/e2e-utils/config';
 
 export default createConfig({
-  appDir: '../',
+  appDir: './',
   port: 3001,                    // Use different port
   timeout: 300000,               // 5 min timeout for slow builds
   screenshot: 'on',              // Always capture screenshots
@@ -177,8 +177,8 @@ import { createMultiAppConfig } from '@lowdefy/e2e-utils/config';
 
 export default createMultiAppConfig({
   apps: [
-    { name: 'admin', appDir: '../apps/admin', port: 3001 },
-    { name: 'customer', appDir: '../apps/customer', port: 3002 },
+    { name: 'admin', appDir: './apps/admin', port: 3001 },
+    { name: 'customer', appDir: './apps/customer', port: 3002 },
   ],
   testDir: '.',
   timeout: 180000,
