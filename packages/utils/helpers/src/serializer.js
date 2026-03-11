@@ -82,29 +82,39 @@ const makeReplacer = (customReplacer, isoStringDates, skipMarkers) => (key, valu
       }
     });
     if (!skipMarkers) {
-      if (newValue['~r']) {
-        Object.defineProperty(newValue, '~r', {
-          value: newValue['~r'],
-          enumerable: true,
-          writable: true,
-          configurable: true,
-        });
-      }
-      if (newValue['~k']) {
-        Object.defineProperty(newValue, '~k', {
-          value: newValue['~k'],
-          enumerable: true,
-          writable: true,
-          configurable: true,
-        });
-      }
-      if (newValue['~l']) {
-        Object.defineProperty(newValue, '~l', {
-          value: newValue['~l'],
-          enumerable: true,
-          writable: true,
-          configurable: true,
-        });
+      // Capture marker values before shallow copy (spread doesn't copy non-enumerable props)
+      const markerR = newValue['~r'];
+      const markerK = newValue['~k'];
+      const markerL = newValue['~l'];
+      if (markerR || markerK || markerL) {
+        // Shallow copy to avoid mutating the original object's property descriptors
+        if (newValue === value) {
+          newValue = { ...newValue };
+        }
+        if (markerR) {
+          Object.defineProperty(newValue, '~r', {
+            value: markerR,
+            enumerable: true,
+            writable: true,
+            configurable: true,
+          });
+        }
+        if (markerK) {
+          Object.defineProperty(newValue, '~k', {
+            value: markerK,
+            enumerable: true,
+            writable: true,
+            configurable: true,
+          });
+        }
+        if (markerL) {
+          Object.defineProperty(newValue, '~l', {
+            value: markerL,
+            enumerable: true,
+            writable: true,
+            configurable: true,
+          });
+        }
       }
     }
     return newValue;
@@ -119,9 +129,7 @@ const makeReplacer = (customReplacer, isoStringDates, skipMarkers) => (key, valu
     // Preserve ~l, ~k, ~r on arrays by wrapping in a marker object
     if (
       !skipMarkers &&
-      (newValue['~l'] !== undefined ||
-        newValue['~k'] !== undefined ||
-        newValue['~r'] !== undefined)
+      (newValue['~l'] !== undefined || newValue['~k'] !== undefined || newValue['~r'] !== undefined)
     ) {
       const wrapper = { '~arr': mappedArray };
       if (newValue['~r'] !== undefined) wrapper['~r'] = newValue['~r'];
