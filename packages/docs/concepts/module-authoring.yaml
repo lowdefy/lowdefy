@@ -1,0 +1,316 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: module-authoring
+    pageTitle: Writing Modules
+    section: Concepts
+    filePath: concepts/module-authoring.yaml
+    content:
+      - id: md1
+        type: MarkdownWithCode
+        properties:
+          content: |
+            This guide covers how to create, test, and publish Lowdefy modules.
+
+            ## Module Project Structure
+
+            A module is a directory containing a `module.lowdefy.yaml` manifest and supporting config files:
+
+            ```
+            my-module/
+            ├── module.lowdefy.yaml       # Module manifest (entry point)
+            ├── pages/
+            │   ├── users-list.yaml
+            │   ├── user-edit.yaml
+            │   └── user-invite.yaml
+            ├── connections/
+            │   └── users-db.yaml
+            ├── api/
+            │   └── invite-user.yaml
+            ├── components/
+            │   ├── user-avatar.yaml
+            │   └── user-search.yaml
+            └── menus.yaml
+            ```
+
+            For monorepos with multiple modules:
+
+            ```
+            my-modules/
+            ├── user-admin/
+            │   ├── module.lowdefy.yaml
+            │   ├── pages/
+            │   └── connections/
+            ├── notifications/
+            │   ├── module.lowdefy.yaml
+            │   ├── pages/
+            │   └── components/
+            └── shared/                   # Shared files (not a module)
+                ├── page-layout.yaml
+                └── validate-email.yaml
+            ```
+
+            Modules in a monorepo can reference shared files using relative paths (`_ref: ../shared/page-layout.yaml`).
+
+            ## Writing module.lowdefy.yaml
+
+            The manifest declares the module's interface and contents:
+
+            ```yaml
+            name: User Admin
+            description: User administration — list, edit, invite users
+
+            vars:
+              roles:
+                type: array
+                required: true
+                description: List of available user roles
+              collection:
+                type: string
+                default: users
+                description: MongoDB collection name
+              components:
+                type: object
+                description: Component overrides (table_columns, form_fields)
+              request_stages:
+                type: object
+                description: Request pipeline stage overrides
+
+            connections:
+              - _ref: connections/users-db.yaml
+
+            pages:
+              - _ref: pages/users-list.yaml
+              - _ref: pages/user-edit.yaml
+              - _ref: pages/user-invite.yaml
+
+            api:
+              - _ref: api/invite-user.yaml
+
+            components:
+              - id: user-avatar
+                type: Component
+                component:
+                  _ref: components/user-avatar.yaml
+              - id: user-search
+                type: Component
+                component:
+                  _ref: components/user-search.yaml
+
+            menus:
+              - _ref: menus.yaml
+
+            plugins:
+              - name: "@lowdefy/blocks-antd"
+                version: "^4"
+              - name: "@lowdefy/connection-mongodb"
+                version: "^4"
+
+            secrets:
+              - name: MONGODB
+                description: MongoDB connection URI
+              - name: SENDGRID_API_KEY
+                description: SendGrid API key for sending invitations
+                required: false
+            ```
+
+            ## Declaring Vars
+
+            The `vars` section declares what configuration the module accepts. Each variable can specify:
+            - `type` — Expected type (`string`, `number`, `boolean`, `array`, `object`).
+            - `required` — Whether the consuming app must provide this variable. Defaults to `false`.
+            - `default` — Default value used when the app does not provide one.
+            - `description` — Documentation for the variable's purpose.
+
+            The build validates that required vars are provided and that types match.
+
+            ## Using _module.var
+
+            The [`_module.var`](/_module) operator accesses module entry variables — the values passed by the app developer. It works at any depth within module files, without threading vars through nested `_ref`s:
+
+            ```yaml
+            # Any file in the module, at any nesting depth
+            collection:
+              _module.var: collection
+
+            # With nested key path and default
+            columnDefs:
+              _module.var:
+                key: components.table_columns
+                default:
+                  - field: name
+                  - field: email
+            ```
+
+            `_var` continues to work for normal `_ref`-level vars (local composition between files within the module). `_module.var` is specifically for the vars passed by the app developer.
+
+            ## Using ID Operators
+
+            Module authors use [`_module.pageId`](/_module), [`_module.connectionId`](/_module), and [`_module.endpointId`](/_module) to reference sibling resources. These resolve to the fully scoped ID at build time:
+
+            ```yaml
+            # Link to a sibling page
+            - id: link_to_edit
+              type: Link
+              params:
+                pageId:
+                  _module.pageId: user-edit
+
+            # Reference a module connection
+            connectionId:
+              _module.connectionId: users-db
+
+            # Call a module API endpoint
+            - id: call_invite
+              type: CallAPI
+              params:
+                endpointId:
+                  _module.endpointId: invite-user
+            ```
+
+            Use [`_module.id`](/_module) for the raw module entry ID:
+
+            ```yaml
+            label:
+              _string.concat:
+                - _module.id: true
+                - " - User Admin"
+            ```
+
+            ## Exposing Components
+
+            Components are reusable config fragments that consuming apps can `_ref` into any page. Declare them in the manifest:
+
+            ```yaml
+            components:
+              - id: user-avatar
+                type: Component
+                component:
+                  _ref: components/user-avatar.yaml
+            ```
+
+            Components can use both `_module.var` (module-level config) and `_var` (per-ref vars passed at the point of inclusion):
+
+            ```yaml
+            # components/contact-selector.yaml
+            id:
+              _var:
+                key: field_id
+                default: contact
+            type: Selector
+            properties:
+              label:
+                _module.var: contact_label
+              options:
+                _request: get-contacts.contacts
+            ```
+
+            The consuming app includes it:
+
+            ```yaml
+            blocks:
+              - _ref:
+                  module: crm
+                  component: contact-selector
+                  vars:
+                    field_id: primary_contact
+            ```
+
+            ## Declaring Plugin Dependencies
+
+            Modules declare required plugins with semver version constraints. The build validates these against the app's `plugins` array:
+
+            ```yaml
+            plugins:
+              - name: "@lowdefy/blocks-aggrid"
+                version: "^4"
+              - name: "@lowdefy/connection-mongodb"
+                version: "^4"
+            ```
+
+            Use `^major` for major version pinning — the standard convention.
+
+            ## Declaring Secrets
+
+            The `secrets` array is a whitelist. The module can only access secrets it explicitly declares:
+
+            ```yaml
+            secrets:
+              - name: MONGODB
+                description: MongoDB connection URI
+              - name: SENDGRID_API_KEY
+                description: SendGrid API key
+                required: false
+            ```
+
+            The build validates that all `_secret` references in module config match declared secrets.
+
+            ## Testing Locally
+
+            Create a test app that imports the module via local path:
+
+            ```yaml
+            # test-app/lowdefy.yaml
+            lowdefy: LOWDEFY_VERSION
+
+            modules:
+              - id: user-admin
+                source: "file:.."
+                vars:
+                  roles:
+                    _ref: config/test-roles.yaml
+                  collection: test_users
+            ```
+
+            Run `lowdefy dev` in the test-app directory. The `file:..` path reads from disk and picks up module changes on rebuild. Include the module multiple times with different vars to test multi-instance behaviour.
+
+            ## Publishing to GitHub
+
+            Publish your module by pushing to a GitHub repository and creating tagged releases:
+
+            ```bash
+            git tag v1.0.0
+            git push origin v1.0.0
+            ```
+
+            Consumers reference the tag:
+
+            ```yaml
+            source: "github:my-org/user-admin@v1.0.0"
+            ```
+
+            For monorepos, the path specifies the subdirectory:
+
+            ```yaml
+            source: "github:my-org/modules/user-admin@v1.0.0"
+            ```
+
+            ## Versioning Strategy
+
+            - **Tags** (e.g., `v1.0.0`) — Recommended for production. Immutable and cacheable.
+            - **Branches** (e.g., `main`) — Useful during development. Re-fetched on each build.
+            - **Commit SHAs** — Most precise. Immutable.
+
+            Follow [semantic versioning](https://semver.org/): increment the major version for breaking changes to the vars interface, minor for new features, patch for fixes.
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Modules
+            previous_page_id: modules
+            next_page_title: Menus
+            next_page_id: menus

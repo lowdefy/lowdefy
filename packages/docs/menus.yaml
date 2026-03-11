@@ -108,6 +108,16 @@
           pageId: references-and-templates
           properties:
             title: References and Templates
+        - id: modules
+          type: MenuLink
+          pageId: modules
+          properties:
+            title: Modules
+        - id: module-authoring
+          type: MenuLink
+          pageId: module-authoring
+          properties:
+            title: Writing Modules
         - id: menus
           type: MenuLink
           pageId: menus
@@ -854,6 +864,9 @@
         - id: _menu
           type: MenuLink
           pageId: _menu
+        - id: _module
+          type: MenuLink
+          pageId: _module
         - id: _moment
           type: MenuLink
           pageId: _moment
@@ -994,6 +1007,11 @@
           pageId: v3-to-v4
           properties:
             title: V3 to V4
+        - id: v4-to-v5
+          type: MenuLink
+          pageId: v4-to-v5
+          properties:
+            title: V4 to V5
     - id: versions
       type: MenuGroup
       properties:

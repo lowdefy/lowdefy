@@ -90,6 +90,8 @@ _ref:
           - [_type](/_type)
           - [_uri](/_uri)
 
+          `_build.array.concat` is particularly useful for splicing [module](/modules) menus into app menus. See below for an example.
+
         examples: |
           ###### Check environment variables to determine which url to link to:
           Use the `Link` action to link to a production url if the build is a production build in Vercel (the `VERCEL_ENV` variable will be set to "production"), otherwise link to a preview url.
@@ -163,4 +165,26 @@ _ref:
             total_sales: 67
           - name: Oranges
             total_sales: 104
+          ```
+
+          ###### Splice module menus into app menu:
+          Use `_build.array.concat` to combine app-defined menu links with [module](/modules) menu items:
+
+          ```yaml
+          menus:
+            - id: main
+              links:
+                _build.array.concat:
+                  - - id: home
+                      type: MenuLink
+                      pageId: home
+                    - id: about
+                      type: MenuLink
+                      pageId: about
+                  - _ref:
+                      module: team-users
+                      menu: default
+                  - _ref:
+                      module: notifications
+                      menu: default
           ```

@@ -31,29 +31,36 @@ The build function orchestrates 31 steps in sequence:
 async function build(options) {
   const context = createContext(options);
 
-  // 1. Parse and compose configuration
-  const components = await buildRefs({ context });      // Resolve _ref imports
+  // Phase 0-1: Module processing
+  await fetchModules({ context });                       // Fetch GitHub tarballs, resolve local paths
+  await buildModuleDefs({ components, context });        // Parse manifests, resolve _module.var
 
-  // 2. Validate and transform
+  // Phase 2: Parse and compose configuration
+  const components = await buildRefs({ context });       // Resolve _ref imports (incl. module refs)
+
+  // Phase 3: Module integration
+  buildModules({ components, context });                 // Scope IDs, resolve _module operators, merge
+
+  // Phase 4: Validate
   testSchema({ components, context });                   // Validate against schema
+
+  // Phase 5: Build specific domains
   buildApp({ components, context });                     // Process app config
   validateConfig({ components, context });               // Business rule validation
   addDefaultPages({ components, context });              // Add 404, etc.
-
-  // 3. Build specific domains
-  buildAuth({ components, context });                    // Auth providers/adapters
+  buildAuth({ components, context });                    // Auth providers/adapters (wildcard matching)
   buildConnections({ components, context });             // Connection configs
   buildApi({ components, context });                     // API endpoints
   buildPages({ components, context });                   // Page definitions
   buildMenu({ components, context });                    // Navigation menus
   buildJs({ components, context });                      // Custom JS functions
 
-  // 4. Finalize
+  // Phase 6: Finalize
   addKeys({ components, context });                      // Add unique keys
   buildTypes({ components, context });                   // Resolve block/operator types
   buildImports({ components, context });                 // Track plugin imports
 
-  // 5. Write output files
+  // Phase 7: Write output files
   await cleanBuildDirectory({ context });
   await writeApp({ components, context });
   await writeAuth({ components, context });
@@ -79,9 +86,14 @@ async function build(options) {
 
 | Module | Purpose |
 |--------|---------|
+| `fetchModules.js` | Fetch module sources (GitHub tarballs, local paths) |
+| `buildModuleDefs.js` | Parse module manifests, resolve `_module.var`, validate plugins/secrets |
+| `buildModules.js` | Scope module IDs, resolve `_module.*` operators, merge into components |
+| `resolveModuleOperators.js` | Resolve `_module.pageId`, `_module.connectionId`, `_module.endpointId`, `_module.id` |
 | `buildRefs/` | Resolve `_ref` operators to compose config from multiple files |
+| `buildRefs/getModuleRefContent.js` | Resolve `_ref: { module, component/menu }` from resolved manifests |
 | `buildPages/` | Process page definitions, blocks, and areas |
-| `buildAuth/` | Process authentication providers and adapters |
+| `buildAuth/` | Process authentication providers and adapters (wildcard matching) |
 | `buildConnections.js` | Validate and process connection definitions |
 | `buildApi/` | Process API endpoint definitions |
 | `buildMenu.js` | Generate navigation menus from page structure |
@@ -118,17 +130,19 @@ blocks:
 
 #### Walker Architecture (`walker.js`)
 
-Ref resolution uses a single-pass async tree walker that handles `_ref`, `_var`, and `_build.*` operators in one traversal, eliminating the JSON round-trips from the old `serializer.copy`-based pipeline.
+Ref resolution uses a single-pass async tree walker that handles `_ref`, `_var`, `_module.var`, and `_build.*` operators in one traversal, eliminating the JSON round-trips from the old `serializer.copy`-based pipeline.
 
 **Key components:**
 - `resolve(node, ctx)` — core recursive walk function
 - `resolveRef(refNode, parentCtx)` — full 12-step ref handling (load, walk content, transform, tag `~r`)
+  - For `_ref: { module, component/menu }` — calls `getModuleRefContent()` to look up exports in resolved manifests
 - `resolveVar(node, ctx)` — variable substitution with `~r` provenance
+- `resolveModuleVar(node, ctx)` — module variable substitution from `ctx.moduleVars`
 - `cloneVarValue(value, sourceRefId)` — deep clone for var values (needed because same var may appear at multiple `_var` sites)
 - `tagRefDeep(node, refId)` — in-place `~r` tagging (replaces old `createRefReviver` + `serializer.copy`)
-- `WalkContext` — immutable context with `child(segment)` for path tracking and `forRef()` for entering ref files
+- `WalkContext` — immutable context with `child(segment)` for path tracking, `forRef()` for entering ref files, and `moduleVars` for module-level vars
 
-**Traversal order:** Top-down for `_ref`/`_var` detection, bottom-up for `_build.*` evaluation. Children always resolve before their parent.
+**Traversal order:** Top-down for `_ref`/`_var`/`_module.var` detection, bottom-up for `_build.*` evaluation. Children always resolve before their parent.
 
 **`evaluateStaticOperators`** uses `evaluateOperators` from `@lowdefy/operators` (in-place walk, no `serializer.copy`).
 

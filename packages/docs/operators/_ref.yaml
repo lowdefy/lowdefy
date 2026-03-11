@@ -30,6 +30,15 @@ _ref:
         transformer?: string,
         vars?: object,
       }): any
+      (arguments: {
+        module: string,
+        component: string,
+        vars?: object,
+      }): any
+      (arguments: {
+        module: string,
+        menu: string,
+      }): object[]
       ```
     description: |
       The `_ref` operator can be used to reference a configuration file, in order to split the Lowdefy configuration into multiple files. More information on references and the Lowdefy configuration schema can be found [here](/lowdefy-schema).
@@ -78,6 +87,11 @@ _ref:
         - `resolver: string`: The file path to a JavaScript file, from the root of the project directory, that exports a resolver function.
         - `transformer: string`: The file path to a JavaScript file, from the root of the project directory, that exports a transformer function.
         - `vars: object`: An object to be used as variables for the `_var` operator in the referenced file, and as template variables in Nunjucks template files.
+        - `module: string`: The module entry ID (as defined in `lowdefy.yaml` `modules` array). When `module` is specified, `path` is not used — the reference resolves from the module's exported components or menus. See [Modules](/modules).
+        - `component: string`: The component name exported by the module (defined in `module.lowdefy.yaml` `components` array). Used with `module`.
+        - `menu: string`: The menu ID exported by the module (defined in `module.lowdefy.yaml` `menus` array). Used with `module`. Returns the menu's `links` array.
+
+      > When referencing a module component, `vars` are accessed via `_var` inside the component (same as standard `_ref`). Module-level configuration is accessed via [`_module.var`](/_module). Both are available simultaneously.
 
     examples:
       _nunjucks:
@@ -266,6 +280,33 @@ _ref:
                 path: pages/page1.yaml
                 transformer: transformers/addFooter.js
           ```
+          ###### Reference a module component:
+          ```yaml
+          blocks:
+            - _ref:
+                module: notifications
+                component: notification-badge
+                vars:
+                  position: top-right
+          ```
+
+          ###### Reference a module menu and splice into app menu:
+          ```yaml
+          menus:
+            - id: main
+              links:
+                _build.array.concat:
+                  - - id: home
+                      type: MenuLink
+                      pageId: home
+                  - _ref:
+                      module: team-users
+                      menu: default
+                  - - id: settings
+                      type: MenuLink
+                      pageId: settings
+          ```
+
           ###### Using ES Modules with `.mjs` file extension:
 
           ```js
