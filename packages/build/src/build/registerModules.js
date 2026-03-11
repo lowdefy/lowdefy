@@ -81,6 +81,15 @@ async function registerModuleEntry({ entry, resolvedPaths, context }) {
 
   let manifest = await resolve(content, ctx);
 
+  // Filter null entries produced by _ref resolution failures (walker returns null
+  // for ConfigErrors and collects them). Without this, null entries cause crashes
+  // downstream when accessing .id on processed items.
+  for (const key of ['pages', 'connections', 'api']) {
+    if (type.isArray(manifest[key])) {
+      manifest[key] = manifest[key].filter((item) => !type.isNone(item));
+    }
+  }
+
   manifest = evaluateStaticOperators({ context, input: manifest, refDef });
 
   // Validate module vars against manifest var definitions

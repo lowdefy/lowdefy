@@ -22,6 +22,18 @@ import { ConfigError } from '@lowdefy/errors';
 import fetchGitHubModule from './fetchGitHubModule.js';
 import parseModuleSource from './parseModuleSource.js';
 
+function findGitRoot(startPath) {
+  let dir = startPath;
+  while (true) {
+    if (fs.existsSync(path.join(dir, '.git'))) {
+      return dir;
+    }
+    const parent = path.dirname(dir);
+    if (parent === dir) return null;
+    dir = parent;
+  }
+}
+
 async function fetchModules({ moduleEntries, context }) {
   const resolved = {};
 
@@ -36,7 +48,7 @@ async function fetchModules({ moduleEntries, context }) {
         );
       }
       resolved[entry.id] = {
-        packageRoot: resolvedPath,
+        packageRoot: findGitRoot(resolvedPath) ?? resolvedPath,
         moduleRoot: resolvedPath,
         isLocal: true,
       };

@@ -139,6 +139,50 @@ test('fetchModules throws for github source when module.lowdefy.yaml not found a
   fs.rmSync(tmpDir, { recursive: true });
 });
 
+test('fetchModules sets packageRoot to git root for file source inside a git repo', async () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-test-'));
+  const gitDir = path.join(tmpDir, '.git');
+  const moduleDir = path.join(tmpDir, 'modules', 'user-admin');
+  fs.mkdirSync(gitDir);
+  fs.mkdirSync(moduleDir, { recursive: true });
+  fs.writeFileSync(path.join(moduleDir, 'module.lowdefy.yaml'), 'id: test');
+
+  const result = await fetchModules({
+    moduleEntries: [{ id: 'users', source: `file:${moduleDir}` }],
+    context: { directories: { config: '/' } },
+  });
+
+  expect(result).toEqual({
+    users: {
+      packageRoot: tmpDir,
+      moduleRoot: moduleDir,
+      isLocal: true,
+    },
+  });
+
+  fs.rmSync(tmpDir, { recursive: true });
+});
+
+test('fetchModules falls back to module dir as packageRoot when not in a git repo', async () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-test-'));
+  fs.writeFileSync(path.join(tmpDir, 'module.lowdefy.yaml'), 'id: test');
+
+  const result = await fetchModules({
+    moduleEntries: [{ id: 'my-module', source: `file:${tmpDir}` }],
+    context: { directories: { config: '/' } },
+  });
+
+  expect(result).toEqual({
+    'my-module': {
+      packageRoot: tmpDir,
+      moduleRoot: tmpDir,
+      isLocal: true,
+    },
+  });
+
+  fs.rmSync(tmpDir, { recursive: true });
+});
+
 test('fetchModules resolves multiple entries', async () => {
   const tmpDir1 = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-test-'));
   fs.writeFileSync(path.join(tmpDir1, 'module.lowdefy.yaml'), 'id: local');
