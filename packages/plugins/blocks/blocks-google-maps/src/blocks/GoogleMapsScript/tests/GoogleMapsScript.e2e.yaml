@@ -1,0 +1,58 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# NOTE: Google Maps requires a valid API key. Tests verify rendering
+# and block structure that work without valid credentials.
+
+id: googlemapsscript
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: gmscript_basic
+    type: GoogleMapsScript
+    properties:
+      apiKey: test-api-key
+    blocks:
+      - id: gm_basic
+        type: GoogleMaps
+        properties:
+          map:
+            center:
+              lat: 0
+              lng: 0
+            zoom: 3
+
+      - id: gm_with_style
+        type: GoogleMaps
+        properties:
+          map:
+            center:
+              lat: 0
+              lng: 0
+            zoom: 3
+          style:
+            height: 200
+
+      - id: gmheatmap_basic
+        type: GoogleMapsHeatmap
+        properties:
+          map:
+            center:
+              lat: 0
+              lng: 0
+            zoom: 3

@@ -1,0 +1,149 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: echart
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: echart_basic
+    type: EChart
+    properties:
+      option:
+        xAxis:
+          type: category
+          data:
+            - Mon
+            - Tue
+            - Wed
+            - Thu
+            - Fri
+        yAxis:
+          type: value
+        series:
+          - data:
+              - 120
+              - 200
+              - 150
+              - 80
+              - 70
+            type: bar
+
+  # ============================================
+  # PROPERTY TESTS
+  # ============================================
+
+  - id: echart_height
+    type: EChart
+    properties:
+      height: 200
+      option:
+        xAxis:
+          type: category
+          data:
+            - A
+            - B
+        yAxis:
+          type: value
+        series:
+          - data:
+              - 10
+              - 20
+            type: bar
+
+  - id: echart_width
+    type: EChart
+    properties:
+      width: 400
+      option:
+        xAxis:
+          type: category
+          data:
+            - A
+            - B
+        yAxis:
+          type: value
+        series:
+          - data:
+              - 10
+              - 20
+            type: bar
+
+  - id: echart_svg_renderer
+    type: EChart
+    properties:
+      init:
+        renderer: svg
+      option:
+        xAxis:
+          type: category
+          data:
+            - A
+            - B
+        yAxis:
+          type: value
+        series:
+          - data:
+              - 10
+              - 20
+            type: line
+
+  - id: echart_pie
+    type: EChart
+    properties:
+      option:
+        series:
+          - type: pie
+            data:
+              - value: 335
+                name: Direct
+              - value: 310
+                name: Email
+              - value: 234
+                name: Search
+
+  - id: echart_with_title
+    type: EChart
+    properties:
+      option:
+        title:
+          text: Sales Chart
+        xAxis:
+          type: category
+          data:
+            - Q1
+            - Q2
+        yAxis:
+          type: value
+        series:
+          - data:
+              - 100
+              - 200
+            type: bar
+
+  - id: echart_empty_dataset
+    type: EChart
+    properties:
+      option:
+        dataset:
+          source: null
+        xAxis:
+          type: category
+        yAxis:
+          type: value
+        series:
+          - type: bar

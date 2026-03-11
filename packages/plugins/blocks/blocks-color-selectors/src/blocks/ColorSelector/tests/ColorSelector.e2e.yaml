@@ -1,0 +1,105 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: colorselector
+type: Box
+
+events:
+  onInit:
+    - id: set_defaults
+      type: SetState
+      params:
+        colorselector_with_value: '#ff0000'
+        colorselector_onchange: '#00ff00'
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: colorselector_basic
+    type: ColorSelector
+    properties:
+      title: Basic Color
+
+  - id: colorselector_with_value
+    type: ColorSelector
+    properties:
+      title: With Value
+
+  # ============================================
+  # PROPERTY TESTS
+  # ============================================
+
+  - id: colorselector_disabled
+    type: ColorSelector
+    properties:
+      title: Disabled
+      disabled: true
+
+  - id: colorselector_small
+    type: ColorSelector
+    properties:
+      title: Small
+      size: small
+
+  - id: colorselector_large
+    type: ColorSelector
+    properties:
+      title: Large
+      size: large
+
+  - id: colorselector_hide_input
+    type: ColorSelector
+    properties:
+      title: Hidden Input
+      hideInput: true
+
+  - id: colorselector_label_inline
+    type: ColorSelector
+    properties:
+      title: Inline Label
+      label:
+        inline: true
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  - id: colorselector_onchange
+    type: ColorSelector
+    properties:
+      title: onChange Test
+    events:
+      onChange:
+        - id: set_onchange
+          type: SetState
+          params:
+            colorselector_onchange_value:
+              _event: value
+
+  - id: onchange_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: colorselector_onchange_value
+              - null
+          then:
+            _string.concat:
+              - 'Value: '
+              - _state: colorselector_onchange_value
+          else: ''
