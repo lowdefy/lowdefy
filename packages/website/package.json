@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/website",
-  "version": "4.5.2",
+  "version": "4.6.0",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -39,6 +39,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "4.8.0",
+    "@vercel/analytics": "^1.6.1",
     "framer-motion": "^11.0.0",
     "lucide-react": "^0.400.0",
     "next": "^14.2.0",

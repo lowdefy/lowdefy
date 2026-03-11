@@ -141,6 +141,6 @@ _ref:
           path: templates/navigation_buttons.yaml
           vars:
             previous_page_title: Requests
-            previous_page_id: tutorial-requests
+            previous_page_id: tutorial-requests-sql
             next_page_title: Next steps
             next_page_id: next-steps

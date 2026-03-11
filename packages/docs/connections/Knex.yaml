@@ -24,7 +24,7 @@ _ref:
         type: MarkdownWithCode
         properties:
           content: |
-            [`Knex.js`](http://knexjs.org) is a SQL query builder that can be used to connect to [PostgreSQL](/PostgreSQL), [MS SQL Server](/MSSQL), [MySQL](/MySQL), [MariaDB](/MariaDB), [SQLite](/SQLite), [Oracle](/Oracle), and [Amazon Redshift](/AmazonRedshift) databases.
+            [`Knex.js`](http://knexjs.org) is a SQL query builder that can be used to connect to [PostgreSQL](/PostgreSQL), [MS SQL Server](/MSSQL), [MySQL](/MySQL), [MariaDB](/MariaDB), [SQLite](/SQLite), Oracle, and [Amazon Redshift](/AmazonRedshift) databases.
 
             The Knex connection can be used to execute raw SQL queries using the `KnexRaw` requests, or the Knex query builder can be used with the `KnexBuilder` request.
 
@@ -73,17 +73,6 @@ _ref:
               type: Link
               params:
                 pageId: MySQL
-      - id: oracle_link
-        type: Anchor
-        properties:
-          title: Oracle Database
-          icon: AiOutlineLink
-        events:
-          onClick:
-            - id: link,
-              type: Link
-              params:
-                pageId: OracleDB
       - id: postgresql_link
         type: Anchor
         properties:

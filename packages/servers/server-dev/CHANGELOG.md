@@ -1,5 +1,156 @@
 # Change Log
 
+## 4.6.0
+
+### Minor Changes
+
+- aa0d6d363e: feat: Config-aware error tracing and Sentry integration
+
+  **Config-Aware Error Tracing (#1940)**
+
+  - Errors now trace back to exact YAML config locations with file:line
+  - Clickable VSCode links in terminal and browser
+  - Build-time validation catches typos with "Did you mean?" suggestions
+  - Service vs Config error classification
+
+  **Plugin Error Refactoring**
+
+  - Operators throw simple error messages without formatting
+  - Parsers (WebParser, ServerParser, BuildParser) format errors with received value and location
+  - Removed redundant "Operator Error:" prefix from error messages
+  - Consistent error format: "{message} Received: {params} at {location}."
+  - Actions and connections also simplified: removed inline `received` from error messages (interface layer adds it)
+  - Connection plugins (axios-http, knex, redis, sendgrid) no longer expose raw response data in errors
+
+  **Error Class Hierarchy**
+
+  - Unified error system in `@lowdefy/errors` with all error classes
+    - `@lowdefy/errors/build` - Build-time classes with sync location resolution
+  - Error classes: `LowdefyError`, `ConfigError`, `ConfigWarning`, `PluginError`, `ServiceError`
+  - `ConfigWarning` supports `prodError` flag to throw in production builds
+  - `ServiceError.isServiceError()` detects network/timeout/5xx errors
+  - `~ignoreBuildChecks` cascades through descendants to suppress warnings/errors
+
+  **Build Error Collection**
+
+  - Errors collected in `context.errors[]` instead of throwing immediately
+  - `tryBuildStep()` wrapper catches and collects errors from build steps
+  - All errors logged together before summary message for proper ordering
+
+  **Sentry Integration (#1945)**
+
+  - Zero-config Sentry support - just set SENTRY_DSN
+  - Client and server error capture with Lowdefy context (pageId, blockId, config location)
+  - Configurable sampling rates, session replay, user feedback
+  - Graceful no-op when DSN not set
+
+- af61715d5: feat: JIT page building for dev server
+
+  **Shallow Refs and JIT Build (`@lowdefy/build`)**
+
+  - Shallow `_ref` resolution stops at configured JSON paths, leaving `~shallow` markers for on-demand resolution
+  - `shallowBuild` produces a page registry with dependency tracking instead of fully built pages
+  - `buildPageJit` fully resolves a single page on demand using the shallow build output
+  - File dependency map tracks which config files affect which pages for targeted rebuilds
+  - Build package reorganized: `jit/` folder for dev-server-only files, `full/` folder for production-only files
+
+  **JIT Page Building (`@lowdefy/server-dev`)**
+
+  - Pages are built on-demand when requested instead of all at once during initial build
+  - Page cache with file-watcher invalidation for fast rebuilds
+  - `/api/page/[pageId]` endpoint triggers JIT build if page not cached
+  - `/api/js/[env]` endpoint serves operator JS maps
+  - Build error page component displays errors inline in the browser
+
+  **Operator JS Hash Check (`@lowdefy/operators-js`)**
+
+  - Added hash validation for jsMap to detect stale operator definitions
+
+- f673e3ab3d: feat(logger): Add centralized @lowdefy/logger package and standardize logging
+
+  **New @lowdefy/logger Package**
+
+  - Centralized logging with environment-specific subpaths: `/node`, `/cli`, `/browser`
+  - `createNodeLogger` — pino factory with custom error serializer preserving Lowdefy error metadata (source, configKey, isServiceError)
+  - `createCliLogger` — wraps `createPrint` (ora spinners, colored output) with standard logger interface
+  - `createBrowserLogger` — maps to `console.*` with error formatting
+  - `wrapErrorLogger` — formats Lowdefy errors, emits source as separate `{ print: 'link' }` line for blue clickable links
+
+  **Standardized `.ui` Interface**
+
+  All logger variants expose `logger.ui` with consistent methods: `log`, `dim`, `info`, `warn`, `error`, `debug`, `link`, `spin`, `succeed`. This allows any component to emit structured output without knowing the runtime environment.
+
+  - `dim` renders as dimmed text in the CLI — useful for low-priority trace lines (e.g., request logs) that shouldn't compete visually with build output
+
+  **CLI Logger Migration**
+
+  - CLI now uses `createCliLogger` instead of raw `createPrint`
+  - `context.print` replaced with `context.logger` / `context.logger.ui`
+  - `createPrint` and `createStdOutLineHandler` moved from CLI to `@lowdefy/logger/cli`
+
+  **Server-Dev stdio:inherit**
+
+  - Server process spawned with `stdio: ['ignore', 'inherit', 'pipe']`
+  - Server pino JSON flows directly to manager stdout (inherited by CLI) — eliminates dev stdout line handler
+  - Only stderr piped for error formatting through manager logger
+  - Server `createLogger` includes `print` mixin so CLI can render each line correctly
+
+- 43a5243da: feat(server-dev): Add mock user support for e2e testing
+
+  Set `LOWDEFY_DEV_USER` env var or `auth.dev.mockUser` in config to bypass login in dev server.
+
+### Patch Changes
+
+- 8250d8d3e: fix(errors): Remove redundant try/catch in operator runners, add cause chains to remaining throws
+- aa0d6d363e: fix: Add missing uuid dependency to servers
+- Add port-in-use check with clear error message before starting server.
+- Updated dependencies [fb7910f62]
+- Updated dependencies [aeae7f0c83]
+- Updated dependencies [c62468b98]
+- Updated dependencies [7936ee3fd8]
+- Updated dependencies [5e03091ee]
+- Updated dependencies [8ec5f1be05]
+- Updated dependencies [aa0d6d363e]
+- Updated dependencies [aebca6ab51]
+- Updated dependencies [ab19b1bb77]
+- Updated dependencies [8250d8d3e]
+- Updated dependencies [bb3222a5a]
+- Updated dependencies [8ec5f1be05]
+- Updated dependencies [af61715d5]
+- Updated dependencies [f673e3ab3d]
+- Updated dependencies [43a5243da]
+- Updated dependencies [cacbb4d189]
+- Updated dependencies [338ea04b9f]
+- Updated dependencies [f673e3ab3]
+  - @lowdefy/blocks-antd@4.6.0
+  - @lowdefy/blocks-basic@4.6.0
+  - @lowdefy/build@4.6.0
+  - @lowdefy/blocks-color-selectors@4.6.0
+  - @lowdefy/engine@4.6.0
+  - @lowdefy/client@4.6.0
+  - @lowdefy/api@4.6.0
+  - @lowdefy/errors@4.6.0
+  - @lowdefy/helpers@4.6.0
+  - @lowdefy/node-utils@4.6.0
+  - @lowdefy/block-utils@4.6.0
+  - @lowdefy/operators-js@4.6.0
+  - @lowdefy/operators-change-case@4.6.0
+  - @lowdefy/operators-diff@4.6.0
+  - @lowdefy/operators-moment@4.6.0
+  - @lowdefy/operators-mql@4.6.0
+  - @lowdefy/operators-nunjucks@4.6.0
+  - @lowdefy/operators-uuid@4.6.0
+  - @lowdefy/operators-yaml@4.6.0
+  - @lowdefy/actions-core@4.6.0
+  - @lowdefy/logger@4.6.0
+  - @lowdefy/layout@4.6.0
+  - @lowdefy/blocks-aggrid@4.6.0
+  - @lowdefy/blocks-loaders@4.6.0
+  - @lowdefy/blocks-echarts@4.6.0
+  - @lowdefy/blocks-markdown@4.6.0
+  - @lowdefy/blocks-qr@4.6.0
+  - @lowdefy/plugin-next-auth@4.6.0
+
 ## 4.5.2
 
 ### Patch Changes
