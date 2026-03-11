@@ -57,61 +57,61 @@
     "10": {
       "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[1:{{ id }}_metric:Card].layout",
       "~k_parent": "z",
-      "~r": "6",
+      "~r": "5",
       "~l": 3
     },
     "11": {
       "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[1:{{ id }}_metric:Card].properties",
       "~k_parent": "z",
-      "~r": "6",
+      "~r": "5",
       "~l": 5
     },
     "12": {
       "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[1:{{ id }}_metric:Card].blocks",
       "~k_parent": "z",
-      "~r": "6",
+      "~r": "5",
       "~l": 7
     },
     "13": {
       "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[1:{{ id }}_metric:Card].blocks[0:{{ id }}_value:Statistic]",
       "~k_parent": "12",
-      "~r": "6",
+      "~r": "5",
       "~l": 8
     },
     "14": {
       "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[1:{{ id }}_metric:Card].blocks[0:{{ id }}_value:Statistic].properties",
       "~k_parent": "13",
-      "~r": "6",
+      "~r": "5",
       "~l": 10
     },
     "15": {
       "key": "root.pages[0:dashboard:Box].blocks[2:pageFooter:Box]",
       "~k_parent": "j",
-      "~r": "7",
+      "~r": "6",
       "~l": 1
     },
     "16": {
       "key": "root.pages[0:dashboard:Box].blocks[2:pageFooter:Box].style",
       "~k_parent": "15",
-      "~r": "7",
+      "~r": "6",
       "~l": 3
     },
     "17": {
       "key": "root.pages[0:dashboard:Box].blocks[2:pageFooter:Box].blocks",
       "~k_parent": "15",
-      "~r": "7",
+      "~r": "6",
       "~l": 7
     },
     "18": {
       "key": "root.pages[0:dashboard:Box].blocks[2:pageFooter:Box].blocks[0:footerText:Paragraph]",
       "~k_parent": "17",
-      "~r": "7",
+      "~r": "6",
       "~l": 8
     },
     "19": {
       "key": "root.pages[0:dashboard:Box].blocks[2:pageFooter:Box].blocks[0:footerText:Paragraph].properties",
       "~k_parent": "18",
-      "~r": "7",
+      "~r": "6",
       "~l": 10
     },
     "20": {
@@ -395,43 +395,43 @@
     "k": {
       "key": "root.pages[0:dashboard:Box].blocks[0:pageHeader:Box]",
       "~k_parent": "j",
-      "~r": "4",
+      "~r": "3",
       "~l": 1
     },
     "l": {
       "key": "root.pages[0:dashboard:Box].blocks[0:pageHeader:Box].style",
       "~k_parent": "k",
-      "~r": "4",
+      "~r": "3",
       "~l": 3
     },
     "m": {
       "key": "root.pages[0:dashboard:Box].blocks[0:pageHeader:Box].blocks",
       "~k_parent": "k",
-      "~r": "4",
+      "~r": "3",
       "~l": 5
     },
     "n": {
       "key": "root.pages[0:dashboard:Box].blocks[0:pageHeader:Box].blocks[0:breadcrumb:Breadcrumb]",
       "~k_parent": "m",
-      "~r": "4",
+      "~r": "3",
       "~l": 6
     },
     "o": {
       "key": "root.pages[0:dashboard:Box].blocks[0:pageHeader:Box].blocks[1:pageTitle:Title]",
       "~k_parent": "m",
-      "~r": "4",
+      "~r": "3",
       "~l": 8
     },
     "p": {
       "key": "root.pages[0:dashboard:Box].blocks[0:pageHeader:Box].blocks[1:pageTitle:Title].properties",
       "~k_parent": "o",
-      "~r": "4",
+      "~r": "3",
       "~l": 10
     },
     "q": {
       "key": "root.pages[0:dashboard:Box].blocks[0:pageHeader:Box].blocks[1:pageTitle:Title].properties.content",
       "~k_parent": "p",
-      "~r": "4",
+      "~r": "3",
       "~l": 12
     },
     "r": {
@@ -449,61 +449,61 @@
     "t": {
       "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[0:{{ id }}_metric:Card]",
       "~k_parent": "s",
-      "~r": "5",
+      "~r": "4",
       "~l": 1
     },
     "u": {
       "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[0:{{ id }}_metric:Card].layout",
       "~k_parent": "t",
-      "~r": "5",
+      "~r": "4",
       "~l": 3
     },
     "v": {
       "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[0:{{ id }}_metric:Card].properties",
       "~k_parent": "t",
-      "~r": "5",
+      "~r": "4",
       "~l": 5
     },
     "w": {
       "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[0:{{ id }}_metric:Card].blocks",
       "~k_parent": "t",
-      "~r": "5",
+      "~r": "4",
       "~l": 7
     },
     "x": {
       "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[0:{{ id }}_metric:Card].blocks[0:{{ id }}_value:Statistic]",
       "~k_parent": "w",
-      "~r": "5",
+      "~r": "4",
       "~l": 8
     },
     "y": {
       "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[0:{{ id }}_metric:Card].blocks[0:{{ id }}_value:Statistic].properties",
       "~k_parent": "x",
-      "~r": "5",
+      "~r": "4",
       "~l": 10
     },
     "z": {
       "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[1:{{ id }}_metric:Card]",
       "~k_parent": "s",
-      "~r": "6",
+      "~r": "5",
       "~l": 1
     },
     "1a": {
       "key": "root.pages[1:settings:Box]",
       "~k_parent": "g",
-      "~r": "3",
+      "~r": "7",
       "~l": 1
     },
     "1b": {
       "key": "root.pages[1:settings:Box].properties",
       "~k_parent": "1a",
-      "~r": "3",
+      "~r": "7",
       "~l": 3
     },
     "1c": {
       "key": "root.pages[1:settings:Box].blocks",
       "~k_parent": "1a",
-      "~r": "3",
+      "~r": "7",
       "~l": 5
     },
     "1d": {
@@ -551,19 +551,19 @@
     "1k": {
       "key": "root.pages[1:settings:Box].blocks[1:settingsForm:Card]",
       "~k_parent": "1c",
-      "~r": "3",
+      "~r": "7",
       "~l": 7
     },
     "1l": {
       "key": "root.pages[1:settings:Box].blocks[1:settingsForm:Card].properties",
       "~k_parent": "1k",
-      "~r": "3",
+      "~r": "7",
       "~l": 9
     },
     "1m": {
       "key": "root.pages[1:settings:Box].blocks[1:settingsForm:Card].blocks",
       "~k_parent": "1k",
-      "~r": "3",
+      "~r": "7",
       "~l": 11
     },
     "1n": {
@@ -3105,47 +3105,47 @@
       "path": "pages/dashboard.yaml"
     },
     "3": {
-      "parent": "1",
-      "lineNumber": 13,
-      "path": "pages/settings.yaml"
-    },
-    "4": {
       "parent": "2",
       "lineNumber": 6,
       "path": "blocks/page-header.yaml"
     },
-    "5": {
+    "4": {
       "parent": "2",
       "lineNumber": 10,
       "path": "components/metric-card.yaml"
     },
-    "6": {
+    "5": {
       "parent": "2",
       "lineNumber": 15,
       "path": "components/metric-card.yaml"
     },
-    "7": {
+    "6": {
       "parent": "2",
       "lineNumber": 20,
       "path": "blocks/page-footer.yaml"
     },
+    "7": {
+      "parent": "1",
+      "lineNumber": 13,
+      "path": "pages/settings.yaml"
+    },
     "8": {
-      "parent": "3",
+      "parent": "7",
       "lineNumber": 6,
       "path": "blocks/page-header.yaml"
     },
     "9": {
-      "parent": "3",
+      "parent": "7",
       "lineNumber": 12,
       "path": "components/form-field.yaml"
     },
     "a": {
-      "parent": "3",
+      "parent": "7",
       "lineNumber": 17,
       "path": "components/form-field.yaml"
     },
     "b": {
-      "parent": "3",
+      "parent": "7",
       "lineNumber": 22,
       "path": "blocks/page-footer.yaml"
     }

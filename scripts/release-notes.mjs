@@ -282,16 +282,118 @@ function generateNotes(technicalNotes) {
 }
 
 // ---------------------------------------------------------------------------
-// 7. Build markdown for a version
+// 7. Parse individual changeset entries from changelog content
+// ---------------------------------------------------------------------------
+
+/**
+ * Parses changelog content into individual changeset entries.
+ * Each entry starts with `- {hash}: ` and continues until the next entry or heading.
+ * Returns array of { hash, firstLine, body, section } objects.
+ */
+function parseChangesetEntries(content) {
+  const entries = [];
+  let currentSection = null;
+  let currentEntry = null;
+
+  for (const line of content.split('\n')) {
+    // Track section headings (### Minor Changes, ### Patch Changes)
+    const sectionMatch = line.match(/^### (Minor Changes|Patch Changes|Major Changes)/);
+    if (sectionMatch) {
+      if (currentEntry) entries.push(currentEntry);
+      currentEntry = null;
+      currentSection = sectionMatch[1];
+      continue;
+    }
+
+    // Skip dependency update lines
+    if (line.match(/^- Updated dependencies/)) {
+      if (currentEntry) entries.push(currentEntry);
+      currentEntry = null;
+      continue;
+    }
+    // Skip package@version lines (dependency list items)
+    if (line.match(/^\s+- @?[\w/-]+@\d+\.\d+\.\d+$/)) continue;
+
+    // New changeset entry: `- {hash}: {description}`
+    const entryMatch = line.match(/^- ([a-f0-9]{8,}): (.+)/);
+    if (entryMatch) {
+      if (currentEntry) entries.push(currentEntry);
+      currentEntry = {
+        hash: entryMatch[1],
+        firstLine: entryMatch[2],
+        bodyLines: [],
+        section: currentSection,
+      };
+      continue;
+    }
+
+    // Continuation of current entry (indented or blank lines within an entry)
+    if (currentEntry) {
+      currentEntry.bodyLines.push(line);
+    }
+  }
+  if (currentEntry) entries.push(currentEntry);
+
+  // Trim trailing blank lines from each entry body
+  for (const entry of entries) {
+    while (entry.bodyLines.length > 0 && entry.bodyLines[entry.bodyLines.length - 1].trim() === '') {
+      entry.bodyLines.pop();
+    }
+    entry.body = entry.bodyLines.join('\n');
+    delete entry.bodyLines;
+  }
+
+  return entries;
+}
+
+// ---------------------------------------------------------------------------
+// 8. Build markdown for a version (deduplicated by changeset hash)
 // ---------------------------------------------------------------------------
 
 function buildVersionMarkdown(entry) {
   const lines = [];
 
-  // Collect technical content for Claude
-  const technicalContent = entry.packages
-    .map((p) => `### ${p.name}\n${p.content}`)
-    .join('\n\n');
+  // Collect all changeset entries across packages, deduplicated by hash
+  const changesetMap = new Map(); // hash -> { firstLine, body, section, packages[] }
+  // Track entries without hashes (plain text changes)
+  const plainEntries = []; // { text, packageName }
+
+  for (const pkg of entry.packages) {
+    const entries = parseChangesetEntries(pkg.content);
+
+    if (entries.length === 0) {
+      // Package has content but no parseable entries — include as plain text
+      const stripped = stripDependencyLines(pkg.content);
+      if (stripped.trim()) {
+        plainEntries.push({ text: stripped, packageName: pkg.name });
+      }
+      continue;
+    }
+
+    for (const e of entries) {
+      if (changesetMap.has(e.hash)) {
+        changesetMap.get(e.hash).packages.push(pkg.name);
+      } else {
+        changesetMap.set(e.hash, {
+          firstLine: e.firstLine,
+          body: e.body,
+          section: e.section,
+          packages: [pkg.name],
+        });
+      }
+    }
+  }
+
+  // Build deduplicated technical content for Claude
+  const technicalParts = [];
+  for (const [hash, cs] of changesetMap) {
+    const pkgList = cs.packages.join(', ');
+    technicalParts.push(`- ${hash}: ${cs.firstLine}\n  Packages: ${pkgList}\n${cs.body}`);
+  }
+  for (const pe of plainEntries) {
+    technicalParts.push(`- ${pe.packageName}: ${pe.text}`);
+  }
+  const technicalContent = technicalParts.join('\n\n');
 
   // AI-generated highlights
   const highlights = generateNotes(technicalContent);
@@ -302,51 +404,69 @@ function buildVersionMarkdown(entry) {
     lines.push('');
   }
 
-  // Technical changes grouped by category
-  const categories = categorizePackages(entry.packages);
+  // Group changesets by section type
+  const minorChanges = [];
+  const patchChanges = [];
 
-  for (const [category, packages] of Object.entries(categories)) {
-    if (packages.length === 0) continue;
-    lines.push(`## ${category}`);
+  for (const [, cs] of changesetMap) {
+    const target = cs.section === 'Minor Changes' || cs.section === 'Major Changes'
+      ? minorChanges
+      : patchChanges;
+    target.push(cs);
+  }
+
+  if (minorChanges.length > 0) {
+    lines.push('## What\'s New');
     lines.push('');
-    for (const pkg of packages) {
-      lines.push(`### ${pkg.name}`);
+    for (const cs of minorChanges) {
+      const pkgList = cs.packages.map((p) => `\`${p}\``).join(', ');
+      lines.push(`### ${cs.firstLine}`);
       lines.push('');
-      lines.push(pkg.content);
+      lines.push(`Packages: ${pkgList}`);
       lines.push('');
+      if (cs.body.trim()) {
+        lines.push(cs.body);
+        lines.push('');
+      }
     }
+  }
+
+  if (patchChanges.length > 0) {
+    lines.push('## Fixes & Improvements');
+    lines.push('');
+    for (const cs of patchChanges) {
+      const pkgList = cs.packages.map((p) => `\`${p}\``).join(', ');
+      lines.push(`- **${cs.firstLine}** (${pkgList})`);
+      if (cs.body.trim()) {
+        lines.push('');
+        lines.push(cs.body);
+        lines.push('');
+      }
+    }
+  }
+
+  if (plainEntries.length > 0) {
+    for (const pe of plainEntries) {
+      lines.push(`- **${pe.packageName}**: ${pe.text}`);
+    }
+    lines.push('');
   }
 
   return lines.join('\n').trimEnd();
 }
 
-function categorizePackages(packages) {
-  const categories = {
-    Core: [],
-    Plugins: [],
-    Servers: [],
-    Utilities: [],
-  };
-
-  for (const pkg of packages) {
-    const name = pkg.name;
-    if (
-      name === 'lowdefy' ||
-      name.match(/@lowdefy\/(api|build|cli|client|engine|operators|layout)/)
-    ) {
-      categories['Core'].push(pkg);
-    } else if (
-      name.match(/@lowdefy\/(actions-|blocks-|connection-|operators-)/)
-    ) {
-      categories['Plugins'].push(pkg);
-    } else if (name.match(/@lowdefy\/server/)) {
-      categories['Servers'].push(pkg);
-    } else {
-      categories['Utilities'].push(pkg);
-    }
-  }
-
-  return categories;
+/**
+ * Strips "Updated dependencies" blocks and package@version lines from content.
+ */
+function stripDependencyLines(content) {
+  return content
+    .split('\n')
+    .filter((line) => {
+      if (line.match(/^- Updated dependencies/)) return false;
+      if (line.match(/^\s+- @?[\w/-]+@\d+\.\d+\.\d+$/)) return false;
+      return true;
+    })
+    .join('\n');
 }
 
 // ---------------------------------------------------------------------------

@@ -536,7 +536,6 @@ export default {
         },
         '~r': {},
         '~l': {},
-        '~shallow': {},
         id: {
           type: 'string',
           errorMessage: {

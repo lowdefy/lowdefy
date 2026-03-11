@@ -540,6 +540,51 @@ test('serialize with ~k and ~r values', () => {
   });
 });
 
+test('serialize does not mutate original object marker enumerability', () => {
+  const object = { x: 1 };
+  Object.defineProperty(object, '~k', {
+    value: 'abc',
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  Object.defineProperty(object, '~r', {
+    value: 'ref1',
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  Object.defineProperty(object, '~l', {
+    value: 5,
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+
+  serializer.serialize(object);
+
+  // Original markers must remain non-enumerable
+  expect(Object.getOwnPropertyDescriptor(object, '~k').enumerable).toBe(false);
+  expect(Object.getOwnPropertyDescriptor(object, '~r').enumerable).toBe(false);
+  expect(Object.getOwnPropertyDescriptor(object, '~l').enumerable).toBe(false);
+  expect(Object.keys(object)).toEqual(['x']);
+});
+
+test('serializeToString does not mutate original object marker enumerability', () => {
+  const object = { x: 1 };
+  Object.defineProperty(object, '~k', {
+    value: 'abc',
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+
+  serializer.serializeToString(object);
+
+  expect(Object.getOwnPropertyDescriptor(object, '~k').enumerable).toBe(false);
+  expect(Object.keys(object)).toEqual(['x']);
+});
+
 test('deserialize with ~k and ~r value first', () => {
   let object = {
     y: { '~d': 0, '~k': 'b' },
@@ -738,6 +783,19 @@ test('serializeToString wraps array with ~l in ~arr marker', () => {
   const object = { items };
   const res = serializer.serializeToString(object);
   expect(res).toEqual('{"items":{"~arr":[1,2,3],"~l":10}}');
+});
+
+test('serializeToString with skipMarkers outputs plain array', () => {
+  const items = [1, 2, 3];
+  Object.defineProperty(items, '~l', {
+    value: 10,
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  const object = { items };
+  const res = serializer.serializeToString(object, { skipMarkers: true });
+  expect(res).toEqual('{"items":[1,2,3]}');
 });
 
 test('serialize and deserialize round-trip preserves ~l on nested arrays', () => {
