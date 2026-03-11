@@ -334,76 +334,87 @@ async function resolveRef(node, ctx) {
     );
   }
 
-  // 7. Load content
-  let content = await getRefContent({
-    context: ctx.buildContext,
-    refDef,
-    referencedFrom: ctx.currentFile,
-  });
-
-  // 8. Create child context for the ref
-  let childCtx;
-  if (refDef.module && refDef.component) {
-    const moduleEntry = ctx.buildContext.modules[refDef.module];
-    const deferredFrom = content['~deferredFrom'];
-    childCtx = ctx.forRef({
-      refId: refDef.id,
-      vars: refDef.vars,
-      filePath: deferredFrom ?? path.join(moduleEntry.moduleRoot, 'module.lowdefy.yaml'),
-      moduleVars: moduleEntry.vars,
-      packageRoot: moduleEntry.packageRoot,
-    });
-  } else {
-    childCtx = ctx.forRef({
-      refId: refDef.id,
-      vars: refDef.vars,
-      filePath: refDef.path,
-    });
-  }
-
-  // 9. Walk the content
-  content = await resolve(content, childCtx);
-
-  // 10. Module ref post-processing — resolve ID operators and scope menu IDs
-  if (refDef.module) {
-    const moduleEntry = ctx.buildContext.modules[refDef.module];
-    content = resolveModuleOperators({
-      input: content,
-      moduleEntry,
+  // Steps 7-14: File operations that can fail independently per ref.
+  // Errors are collected so the walker can continue processing sibling refs,
+  // allowing multiple errors to be reported at once.
+  try {
+    // 7. Load content
+    let content = await getRefContent({
+      context: ctx.buildContext,
+      refDef,
+      referencedFrom: ctx.currentFile,
     });
 
-    if (refDef.menu) {
-      scopeMenuItemIds(content, moduleEntry.id);
-    }
-  }
-
-  // 11. Run transformer
-  content = await runTransformer({
-    context: ctx.buildContext,
-    input: content,
-    refDef,
-  });
-
-  // 12. Extract key
-  content = getKey({ input: content, refDef });
-
-  // 13. Tag all nodes with ~r for provenance
-  tagRefDeep(content, refDef.id);
-
-  // 14. Propagate ~ignoreBuildChecks
-  if (refDef.ignoreBuildChecks !== undefined) {
-    if (type.isObject(content)) {
-      content['~ignoreBuildChecks'] = refDef.ignoreBuildChecks;
-    } else if (type.isArray(content)) {
-      content.forEach((item) => {
-        if (type.isObject(item)) {
-          item['~ignoreBuildChecks'] = refDef.ignoreBuildChecks;
-        }
+    // 8. Create child context for the ref
+    let childCtx;
+    if (refDef.module && refDef.component) {
+      const moduleEntry = ctx.buildContext.modules[refDef.module];
+      const deferredFrom = content['~deferredFrom'];
+      childCtx = ctx.forRef({
+        refId: refDef.id,
+        vars: refDef.vars,
+        filePath: deferredFrom ?? path.join(moduleEntry.moduleRoot, 'module.lowdefy.yaml'),
+        moduleVars: moduleEntry.vars,
+        packageRoot: moduleEntry.packageRoot,
+      });
+    } else {
+      childCtx = ctx.forRef({
+        refId: refDef.id,
+        vars: refDef.vars,
+        filePath: refDef.path,
       });
     }
-  }
 
-  return content;
+    // 9. Walk the content
+    content = await resolve(content, childCtx);
+
+    // 10. Module ref post-processing — resolve ID operators and scope menu IDs
+    if (refDef.module) {
+      const moduleEntry = ctx.buildContext.modules[refDef.module];
+      content = resolveModuleOperators({
+        input: content,
+        moduleEntry,
+      });
+
+      if (refDef.menu) {
+        scopeMenuItemIds(content, moduleEntry.id);
+      }
+    }
+
+    // 11. Run transformer
+    content = await runTransformer({
+      context: ctx.buildContext,
+      input: content,
+      refDef,
+    });
+
+    // 12. Extract key
+    content = getKey({ input: content, refDef });
+
+    // 13. Tag all nodes with ~r for provenance
+    tagRefDeep(content, refDef.id);
+
+    // 14. Propagate ~ignoreBuildChecks
+    if (refDef.ignoreBuildChecks !== undefined) {
+      if (type.isObject(content)) {
+        content['~ignoreBuildChecks'] = refDef.ignoreBuildChecks;
+      } else if (type.isArray(content)) {
+        content.forEach((item) => {
+          if (type.isObject(item)) {
+            item['~ignoreBuildChecks'] = refDef.ignoreBuildChecks;
+          }
+        });
+      }
+    }
+
+    return content;
+  } catch (error) {
+    if (error instanceof ConfigError) {
+      ctx.collectError(error);
+      return null;
+    }
+    throw error;
+  }
 }
 
 // Core walk function — single-pass async tree walker
@@ -446,7 +457,7 @@ async function resolve(node, ctx) {
   for (const key of keys) {
     if (ctx.shouldStop) {
       const childPath = ctx.path ? `${ctx.path}.${key}` : key;
-      const stopMode = ctx.shouldStop(childPath);
+      const stopMode = ctx.shouldStop(childPath, ctx.refId);
       if (stopMode === 'delete' || stopMode === true) {
         delete node[key];
         continue;

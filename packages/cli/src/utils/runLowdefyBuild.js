@@ -37,6 +37,7 @@ async function runLowdefyBuild({ context, directory }) {
       },
     });
   } catch (error) {
+    context.logger.info({ spin: 'fail' }, 'Running Lowdefy build.');
     throw new Error('Lowdefy build failed.');
   }
   context.logger.info('Lowdefy build successful.');

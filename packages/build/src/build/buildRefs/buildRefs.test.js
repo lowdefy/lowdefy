@@ -121,9 +121,10 @@ doesNotExist:
     },
   ];
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
-  await expect(buildRefs({ context })).rejects.toThrow(
-    'Referenced file does not exist: "doesNotExist"'
-  );
+  const res = await buildRefs({ context });
+  expect(res).toEqual({ doesNotExist: null });
+  expect(context.errors).toHaveLength(1);
+  expect(context.errors[0].message).toMatch('Referenced file does not exist: "doesNotExist"');
 });
 
 test('buildRefs circular reference detection', async () => {
@@ -143,9 +144,11 @@ _ref: maxRecursion1.json`,
     },
   ];
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
-  await expect(buildRefs({ context })).rejects.toThrow('Circular reference detected');
-  await expect(buildRefs({ context })).rejects.toThrow('maxRecursion1.json');
-  await expect(buildRefs({ context })).rejects.toThrow('maxRecursion2.json');
+  await buildRefs({ context });
+  expect(context.errors).toHaveLength(1);
+  expect(context.errors[0].message).toMatch('Circular reference detected');
+  expect(context.errors[0].message).toMatch('maxRecursion1.json');
+  expect(context.errors[0].message).toMatch('maxRecursion2.json');
 });
 
 test('buildRefs circular reference self-referencing file', async () => {
@@ -162,8 +165,10 @@ _ref: selfRef.yaml`,
     },
   ];
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
-  await expect(buildRefs({ context })).rejects.toThrow('Circular reference detected');
-  await expect(buildRefs({ context })).rejects.toThrow('selfRef.yaml');
+  await buildRefs({ context });
+  expect(context.errors).toHaveLength(1);
+  expect(context.errors[0].message).toMatch('Circular reference detected');
+  expect(context.errors[0].message).toMatch('selfRef.yaml');
 });
 
 test('buildRefs circular reference with longer chain', async () => {
@@ -186,10 +191,12 @@ test('buildRefs circular reference with longer chain', async () => {
     },
   ];
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
-  await expect(buildRefs({ context })).rejects.toThrow('Circular reference detected');
-  await expect(buildRefs({ context })).rejects.toThrow('a.yaml');
-  await expect(buildRefs({ context })).rejects.toThrow('b.yaml');
-  await expect(buildRefs({ context })).rejects.toThrow('c.yaml');
+  await buildRefs({ context });
+  expect(context.errors).toHaveLength(1);
+  expect(context.errors[0].message).toMatch('Circular reference detected');
+  expect(context.errors[0].message).toMatch('a.yaml');
+  expect(context.errors[0].message).toMatch('b.yaml');
+  expect(context.errors[0].message).toMatch('c.yaml');
 });
 
 test('load refs to text files', async () => {
@@ -249,7 +256,10 @@ invalid:
     },
   ];
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
-  await expect(buildRefs({ context })).rejects.toThrow('Invalid _ref definition');
+  const res = await buildRefs({ context });
+  expect(res).toEqual({ invalid: null });
+  expect(context.errors).toHaveLength(1);
+  expect(context.errors[0].message).toMatch('Invalid _ref definition');
 });
 
 test('buildRefs invalid ref definition', async () => {
@@ -262,7 +272,10 @@ invalid:
     },
   ];
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
-  await expect(buildRefs({ context })).rejects.toThrow('Invalid _ref definition');
+  const res = await buildRefs({ context });
+  expect(res).toEqual({ invalid: null });
+  expect(context.errors).toHaveLength(1);
+  expect(context.errors[0].message).toMatch('Invalid _ref definition');
 });
 
 test('buildRefs invalid ref definition 2', async () => {
@@ -276,7 +289,10 @@ invalid:
     },
   ];
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
-  await expect(buildRefs({ context })).rejects.toThrow('Invalid _ref definition');
+  const res = await buildRefs({ context });
+  expect(res).toEqual({ invalid: null });
+  expect(context.errors).toHaveLength(1);
+  expect(context.errors[0].message).toMatch('Invalid _ref definition');
 });
 
 test('buildRefs for file not found', async () => {
@@ -289,9 +305,10 @@ invalid:
     },
   ];
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
-  await expect(buildRefs({ context })).rejects.toThrow(
-    'Referenced file does not exist: "no_file.yaml"'
-  );
+  const res = await buildRefs({ context });
+  expect(res).toEqual({ invalid: null });
+  expect(context.errors).toHaveLength(1);
+  expect(context.errors[0].message).toMatch('Referenced file does not exist: "no_file.yaml"');
 });
 
 describe('Parse ref content', () => {
@@ -558,7 +575,10 @@ describe('vars', () => {
       },
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
-    await expect(buildRefs({ context })).rejects.toThrow(
+    const res = await buildRefs({ context });
+    expect(res).toEqual({ ref: null });
+    expect(context.errors).toHaveLength(1);
+    expect(context.errors[0].message).toMatch(
       '_var operator takes a string or object with "key" field as arguments.'
     );
   });
@@ -1290,7 +1310,10 @@ _ref:
       },
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
-    await expect(buildRefs({ context })).rejects.toThrow(
+    const res = await buildRefs({ context });
+    expect(res).toEqual({});
+    expect(context.errors).toHaveLength(1);
+    expect(context.errors[0].message).toMatch(
       'Error calling resolver "src/test-utils/buildRefs/testBuildRefsErrorResolver.js".'
     );
   });
@@ -1306,7 +1329,10 @@ _ref:
       },
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
-    await expect(buildRefs({ context })).rejects.toThrow(
+    const res = await buildRefs({ context });
+    expect(res).toEqual({});
+    expect(context.errors).toHaveLength(1);
+    expect(context.errors[0].message).toMatch(
       'Resolver "src/test-utils/buildRefs/testBuildRefsNullResolver.js" returned "null".'
     );
   });
@@ -1321,7 +1347,10 @@ _ref:
       },
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
-    await expect(buildRefs({ context })).rejects.toThrow(
+    const res = await buildRefs({ context });
+    expect(res).toEqual({});
+    expect(context.errors).toHaveLength(1);
+    expect(context.errors[0].message).toMatch(
       'Resolver "src/test-utils/buildRefs/testBuildRefsNullResolver.js" returned "undefined".'
     );
   });
@@ -1681,5 +1710,137 @@ ref:
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     await buildRefs({ context });
     expect(Object.keys(context.unresolvedRefVars)).toHaveLength(0);
+  });
+});
+
+describe('Error collection', () => {
+  test('collects multiple missing file errors', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+a:
+  _ref: missing1.yaml
+b:
+  _ref: missing2.yaml
+c:
+  _ref: missing3.yaml`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(res).toEqual({ a: null, b: null, c: null });
+    expect(context.errors).toHaveLength(3);
+    expect(context.errors[0].message).toMatch('missing1.yaml');
+    expect(context.errors[1].message).toMatch('missing2.yaml');
+    expect(context.errors[2].message).toMatch('missing3.yaml');
+  });
+
+  test('collects multiple YAML parse errors', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+a:
+  _ref: bad1.yaml
+b:
+  _ref: bad2.yaml`,
+      },
+      { path: 'bad1.yaml', content: `key: [unclosed` },
+      { path: 'bad2.yaml', content: `key: {also: bad` },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(res).toEqual({ a: null, b: null });
+    expect(context.errors).toHaveLength(2);
+    expect(context.errors[0].message).toMatch('YAML parse error in "bad1.yaml"');
+    expect(context.errors[1].message).toMatch('YAML parse error in "bad2.yaml"');
+  });
+
+  test('collects mixed error types', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+missing:
+  _ref: nothere.yaml
+badYaml:
+  _ref: bad.yaml
+valid:
+  _ref: good.yaml`,
+      },
+      { path: 'bad.yaml', content: `key: [unclosed` },
+      { path: 'good.yaml', content: `key: value` },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(res.missing).toBeNull();
+    expect(res.badYaml).toBeNull();
+    expect(res.valid).toEqual({ key: 'value' });
+    expect(context.errors).toHaveLength(2);
+  });
+
+  test('resolves valid refs alongside failed refs', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+good1:
+  _ref: good1.yaml
+bad:
+  _ref: missing.yaml
+good2:
+  _ref: good2.json`,
+      },
+      { path: 'good1.yaml', content: `title: Hello` },
+      { path: 'good2.json', content: `{"count": 42}` },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(res.good1).toEqual({ title: 'Hello' });
+    expect(res.good2).toEqual({ count: 42 });
+    expect(res.bad).toBeNull();
+    expect(context.errors).toHaveLength(1);
+    expect(context.errors[0].message).toMatch('missing.yaml');
+  });
+
+  test('collects errors from nested refs', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+outer:
+  _ref: outer.yaml`,
+      },
+      {
+        path: 'outer.yaml',
+        content: `
+a:
+  _ref: missing_nested.yaml
+b: works`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(res.outer.a).toBeNull();
+    expect(res.outer.b).toBe('works');
+    expect(context.errors).toHaveLength(1);
+    expect(context.errors[0].message).toMatch('missing_nested.yaml');
+  });
+
+  test('non-ConfigError still throws immediately', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+a:
+  _ref: a.yaml`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(() => {
+      throw new TypeError('Unexpected programming error');
+    });
+    await expect(buildRefs({ context })).rejects.toThrow('Unexpected programming error');
+    expect(context.errors).toHaveLength(0);
   });
 });

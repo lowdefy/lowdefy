@@ -81,10 +81,20 @@ function createPageRegistry({ components, context }) {
       ? findPageSourceRef(refId, context.refMap, unresolvedRefVars)
       : null;
 
+    // Inline pages (defined directly in lowdefy.yaml) have a refId pointing to
+    // the root ref but findPageSourceRef returns null because there is no
+    // separate source file. Set refId to null so buildPageJit serves them from
+    // the pre-built artifact written by buildShallowPages.
+    const isInline =
+      !type.isNone(refId) &&
+      sourceRef === null &&
+      !type.isNone(context.refMap[refId]) &&
+      type.isNone(context.refMap[refId].parent);
+
     registry.set(page.id, {
       pageId: page.id,
       auth: page.auth,
-      refId,
+      refId: isInline ? null : refId,
       refPath: sourceRef?.path ?? null,
       unresolvedVars: sourceRef?.unresolvedVars ?? null,
       resolverOriginal: sourceRef?.original ?? null,
