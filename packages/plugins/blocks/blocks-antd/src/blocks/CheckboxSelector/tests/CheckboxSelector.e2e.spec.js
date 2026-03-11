@@ -16,12 +16,13 @@
 
 import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { escapeId } from '@lowdefy/e2e-utils';
 
 // Helper to get a checkbox option by index (options have id={blockId}_{index})
-const getCheckbox = (page, blockId, index) => page.locator(`#${blockId}_${index}`);
+const getCheckbox = (page, blockId, index) => page.locator(`#${escapeId(blockId)}_${index}`);
 
 // Helper to get the checkbox group
-const getCheckboxGroup = (page, blockId) => page.locator(`#${blockId}_input`);
+const getCheckboxGroup = (page, blockId) => page.locator(`#${escapeId(blockId)}_input`);
 
 test.describe('CheckboxSelector Block', () => {
   test.beforeEach(async ({ page }) => {

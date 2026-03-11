@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { createBlockHelper } from '@lowdefy/e2e-utils';
+import { createBlockHelper, escapeId } from '@lowdefy/e2e-utils';
 import { expect } from '@playwright/test';
 
-const locator = (page, blockId) => page.locator(`#bl-${blockId}`);
+const locator = (page, blockId) => page.locator(`#bl-${escapeId(blockId)}`);
 const resultLocator = (page, blockId) => locator(page, blockId).locator('.ant-result');
 
 export default createBlockHelper({
@@ -31,10 +31,8 @@ export default createBlockHelper({
       expect(resultLocator(page, blockId)).toHaveClass(new RegExp(`ant-result-${status}`)),
     success: (page, blockId) =>
       expect(resultLocator(page, blockId)).toHaveClass(/ant-result-success/),
-    error: (page, blockId) =>
-      expect(resultLocator(page, blockId)).toHaveClass(/ant-result-error/),
-    info: (page, blockId) =>
-      expect(resultLocator(page, blockId)).toHaveClass(/ant-result-info/),
+    error: (page, blockId) => expect(resultLocator(page, blockId)).toHaveClass(/ant-result-error/),
+    info: (page, blockId) => expect(resultLocator(page, blockId)).toHaveClass(/ant-result-info/),
     warning: (page, blockId) =>
       expect(resultLocator(page, blockId)).toHaveClass(/ant-result-warning/),
   },

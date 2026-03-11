@@ -16,16 +16,20 @@
 
 import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { escapeId } from '@lowdefy/e2e-utils';
 
 // Helper to get the range picker wrapper (use framework wrapper ID bl-{blockId})
-const getPicker = (page, blockId) => page.locator(`#bl-${blockId} .ant-picker`);
+const getPicker = (page, blockId) => page.locator(`#bl-${escapeId(blockId)} .ant-picker`);
 
 // Helper to get the start input (has the block id)
-const getStartInput = (page, blockId) => page.locator(`#${blockId}_input`);
+const getStartInput = (page, blockId) => page.locator(`#${escapeId(blockId)}_input`);
 
 // Helper to get the end input (second input in the picker)
 const getEndInput = (page, blockId) =>
-  page.locator(`#bl-${blockId} .ant-picker-input`).last().locator('input');
+  page
+    .locator(`#bl-${escapeId(blockId)} .ant-picker-input`)
+    .last()
+    .locator('input');
 
 test.describe('DateRangeSelector Block', () => {
   test.beforeEach(async ({ page }) => {

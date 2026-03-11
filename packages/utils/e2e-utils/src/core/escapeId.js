@@ -14,15 +14,8 @@
   limitations under the License.
 */
 
-import { createBlockHelper, escapeId } from '@lowdefy/e2e-utils';
-import { expect } from '@playwright/test';
+function escapeId(id) {
+  return id.replace(/([^\w-])/g, '\\$1');
+}
 
-const locator = (page, blockId) => page.locator(`#${escapeId(blockId)}`);
-
-export default createBlockHelper({
-  locator,
-  expect: {
-    itemCount: (page, blockId, count) =>
-      expect(locator(page, blockId).locator('.ant-timeline-item')).toHaveCount(count),
-  },
-});
+export { escapeId };

@@ -16,9 +16,10 @@
 
 import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { escapeId } from '@lowdefy/e2e-utils';
 
 // Title uses id={blockId} directly on the h1/h2/etc element
-const getTitle = (page, blockId) => page.locator(`#${blockId}`);
+const getTitle = (page, blockId) => page.locator(`#${escapeId(blockId)}`);
 
 test.describe('Title Block', () => {
   test.beforeEach(async ({ page }) => {
