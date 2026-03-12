@@ -22,7 +22,7 @@ _ref:
     block_type: PageHeaderMenu
     antd_component: Layout
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/PageHeaderMenu
-    schema: ../plugins/blocks/blocks-antd/src/blocks/PageHeaderMenu/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/PageHeaderMenu/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/PageHeaderMenu/gallery.yaml
     description: >
       Page layout with a top header navigation menu.

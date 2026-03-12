@@ -21,7 +21,7 @@ _ref:
     filePath: blocks/display/MarkdownWithCode.yaml
     block_type: MarkdownWithCode
     github_path: packages/plugins/blocks/blocks-markdown/src/blocks/MarkdownWithCode
-    schema: ../plugins/blocks/blocks-markdown/src/blocks/MarkdownWithCode/schema.js
+    schema: ../plugins/blocks/blocks-markdown/src/blocks/MarkdownWithCode/meta.js
     gallery: ../plugins/blocks/blocks-markdown/src/blocks/MarkdownWithCode/gallery.yaml
     description: >
       Render Markdown with syntax-highlighted code blocks.

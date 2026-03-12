@@ -22,7 +22,7 @@ _ref:
     block_type: PhoneNumberInput
     antd_component: Input
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/PhoneNumberInput
-    schema: ../plugins/blocks/blocks-antd/src/blocks/PhoneNumberInput/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/PhoneNumberInput/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/PhoneNumberInput/gallery.yaml
     description: >
       Phone number input with international country code selector.

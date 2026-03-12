@@ -22,7 +22,7 @@ _ref:
     block_type: QRCode
     antd_component: QRCode
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/QRCode
-    schema: ../plugins/blocks/blocks-antd/src/blocks/QRCode/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/QRCode/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/QRCode/gallery.yaml
     description: >
       QR code generator with customizable size, color, and error level.

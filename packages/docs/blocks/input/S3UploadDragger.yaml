@@ -18,7 +18,7 @@ _ref:
     block_type: S3UploadDragger
     value_type: object
     category: input
-    schema: ../plugins/plugins/plugin-aws/src/blocks/S3UploadDragger/schema.js
+    schema: ../plugins/plugins/plugin-aws/src/blocks/S3UploadDragger/meta.js
     filePath: blocks/input/S3UploadDragger.yaml
     description_content: |
       The `S3UploadDragger` block allows a user to to upload a file to AWS S3.

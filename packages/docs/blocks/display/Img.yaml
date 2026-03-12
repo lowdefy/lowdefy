@@ -21,7 +21,7 @@ _ref:
     filePath: blocks/display/Img.yaml
     block_type: Img
     github_path: packages/plugins/blocks/blocks-basic/src/blocks/Img
-    schema: ../plugins/blocks/blocks-basic/src/blocks/Img/schema.js
+    schema: ../plugins/blocks/blocks-basic/src/blocks/Img/meta.js
     gallery: ../plugins/blocks/blocks-basic/src/blocks/Img/gallery.yaml
     description: >
       Display an image with optional fallback.

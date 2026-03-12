@@ -22,7 +22,7 @@ _ref:
     block_type: CheckboxSwitch
     antd_component: Checkbox
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/CheckboxSwitch
-    schema: ../plugins/blocks/blocks-antd/src/blocks/CheckboxSwitch/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/CheckboxSwitch/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/CheckboxSwitch/gallery.yaml
     description: >
       Single checkbox for boolean input.

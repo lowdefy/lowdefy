@@ -22,7 +22,7 @@ _ref:
     block_type: Splitter
     antd_component: Splitter
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Splitter
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Splitter/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Splitter/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Splitter/gallery.yaml
     description: >
       Resizable split panels with configurable sizes and collapsible.

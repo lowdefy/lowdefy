@@ -22,7 +22,7 @@ _ref:
     block_type: DateSelector
     antd_component: DatePicker
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/DateSelector
-    schema: ../plugins/blocks/blocks-antd/src/blocks/DateSelector/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/DateSelector/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/DateSelector/gallery.yaml
     description: >
       Date picker with configurable format and disabled dates.

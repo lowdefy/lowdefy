@@ -21,7 +21,7 @@ _ref:
     filePath: blocks/display/DangerousMarkdown.yaml
     block_type: DangerousMarkdown
     github_path: packages/plugins/blocks/blocks-markdown/src/blocks/DangerousMarkdown
-    schema: ../plugins/blocks/blocks-markdown/src/blocks/DangerousMarkdown/schema.js
+    schema: ../plugins/blocks/blocks-markdown/src/blocks/DangerousMarkdown/meta.js
     gallery: ../plugins/blocks/blocks-markdown/src/blocks/DangerousMarkdown/gallery.yaml
     description: >
       Render Markdown content without sanitization.

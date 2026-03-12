@@ -22,7 +22,7 @@ _ref:
     block_type: Button
     antd_component: Button
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Button
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Button/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Button/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Button/gallery.yaml
     description: >
       Button with colors, variants, sizes, shapes, icons, ghost, and block modes.

@@ -22,7 +22,7 @@ _ref:
     block_type: Avatar
     antd_component: Avatar
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Avatar
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Avatar/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Avatar/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Avatar/gallery.yaml
     description: >
       Avatar with shapes, sizes, icons, images, and color options.

@@ -22,7 +22,7 @@ _ref:
     block_type: Title
     antd_component: Typography
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Title
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Title/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Title/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Title/gallery.yaml
     description: >
       Heading title with levels, copyable, ellipsis, and text styles.

@@ -22,7 +22,7 @@ _ref:
     block_type: Descriptions
     antd_component: Descriptions
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Descriptions
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Descriptions/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Descriptions/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Descriptions/gallery.yaml
     description: >
       Description list with configurable layout and columns.

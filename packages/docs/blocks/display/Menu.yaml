@@ -22,7 +22,7 @@ _ref:
     block_type: Menu
     antd_component: Menu
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Menu
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Menu/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Menu/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Menu/gallery.yaml
     description: >
       Horizontal or vertical navigation menu with nested items.

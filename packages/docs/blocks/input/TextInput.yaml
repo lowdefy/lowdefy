@@ -22,7 +22,7 @@ _ref:
     block_type: TextInput
     antd_component: Input
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/TextInput
-    schema: ../plugins/blocks/blocks-antd/src/blocks/TextInput/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/TextInput/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/TextInput/gallery.yaml
     description: >
       Single-line text input with sizes, prefix/suffix icons, character count, and clear button.

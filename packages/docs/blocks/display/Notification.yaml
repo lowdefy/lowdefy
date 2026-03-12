@@ -22,7 +22,7 @@ _ref:
     block_type: Notification
     antd_component: Notification
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Notification
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Notification/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Notification/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Notification/gallery.yaml
     description: >
       Notification message displayed in the corner of the page.

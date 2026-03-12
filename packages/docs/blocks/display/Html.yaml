@@ -21,7 +21,7 @@ _ref:
     filePath: blocks/display/Html.yaml
     block_type: Html
     github_path: packages/plugins/blocks/blocks-basic/src/blocks/Html
-    schema: ../plugins/blocks/blocks-basic/src/blocks/Html/schema.js
+    schema: ../plugins/blocks/blocks-basic/src/blocks/Html/meta.js
     gallery: ../plugins/blocks/blocks-basic/src/blocks/Html/gallery.yaml
     description: >
       Render raw HTML content safely.

@@ -22,7 +22,7 @@ _ref:
     block_type: Header
     antd_component: Header
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Header
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Header/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Header/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Header/gallery.yaml
     description: >
       Page header layout section.

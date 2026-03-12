@@ -22,7 +22,7 @@ _ref:
     block_type: Label
     antd_component: Label
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Label
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Label/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Label/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Label/gallery.yaml
     description: >
       Form label wrapper with title, description, and validation feedback.

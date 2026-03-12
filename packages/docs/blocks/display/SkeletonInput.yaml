@@ -21,7 +21,7 @@ _ref:
     filePath: blocks/display/SkeletonInput.yaml
     block_type: SkeletonInput
     github_path: packages/plugins/blocks/blocks-loaders/src/blocks/SkeletonInput
-    schema: ../plugins/blocks/blocks-loaders/src/blocks/SkeletonInput/schema.js
+    schema: ../plugins/blocks/blocks-loaders/src/blocks/SkeletonInput/meta.js
     gallery: ../plugins/blocks/blocks-loaders/src/blocks/SkeletonInput/gallery.yaml
     description: >
       Input-shaped skeleton loading placeholder.

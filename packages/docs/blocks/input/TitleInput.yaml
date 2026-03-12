@@ -22,7 +22,7 @@ _ref:
     block_type: TitleInput
     antd_component: Typography
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/TitleInput
-    schema: ../plugins/blocks/blocks-antd/src/blocks/TitleInput/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/TitleInput/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/TitleInput/gallery.yaml
     description: >
       Editable title heading with levels, copyable, and text styles.

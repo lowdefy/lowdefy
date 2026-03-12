@@ -22,7 +22,7 @@ _ref:
     block_type: ConfigProvider
     antd_component: ConfigProvider
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/ConfigProvider
-    schema: ../plugins/blocks/blocks-antd/src/blocks/ConfigProvider/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/ConfigProvider/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/ConfigProvider/gallery.yaml
     description: >
       Global configuration provider for antd theme and locale settings.

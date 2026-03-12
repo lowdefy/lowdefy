@@ -21,7 +21,7 @@ _ref:
     filePath: blocks/display/EChart.yaml
     block_type: EChart
     github_path: packages/plugins/blocks/blocks-echarts/src/blocks/EChart
-    schema: ../plugins/blocks/blocks-echarts/src/blocks/EChart/schema.js
+    schema: ../plugins/blocks/blocks-echarts/src/blocks/EChart/meta.js
     gallery: ../plugins/blocks/blocks-echarts/src/blocks/EChart/gallery.yaml
     description: >
       Apache ECharts visualization with full chart configuration support.

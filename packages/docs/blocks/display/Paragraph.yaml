@@ -22,7 +22,7 @@ _ref:
     block_type: Paragraph
     antd_component: Typography
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Paragraph
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Paragraph/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Paragraph/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Paragraph/gallery.yaml
     description: >
       Text paragraph with copyable, ellipsis, and text style options.

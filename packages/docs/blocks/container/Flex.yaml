@@ -22,7 +22,7 @@ _ref:
     block_type: Flex
     antd_component: Flex
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Flex
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Flex/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Flex/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Flex/gallery.yaml
     description: >
       Flexible box layout container for arranging child blocks.

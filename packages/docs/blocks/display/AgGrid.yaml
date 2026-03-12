@@ -21,7 +21,7 @@ _ref:
     filePath: blocks/display/AgGrid.yaml
     block_type: AgGrid
     github_path: packages/plugins/blocks/blocks-aggrid/src/blocks/AgGridAlpine
-    schema: ../plugins/blocks/blocks-aggrid/src/blocks/AgGridAlpine/schema.js
+    schema: ../plugins/blocks/blocks-aggrid/src/blocks/AgGridAlpine/meta.js
     gallery: ../plugins/blocks/blocks-aggrid/src/blocks/AgGridAlpine/gallery.yaml
     description: >
       Ag-Grid data table with sorting, filtering, and row selection. Available themes: AgGridAlpine, AgGridAlpineDark, AgGridBalham, AgGridBalhamDark, AgGridMaterial.

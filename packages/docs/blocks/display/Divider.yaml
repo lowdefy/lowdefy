@@ -22,7 +22,7 @@ _ref:
     block_type: Divider
     antd_component: Divider
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Divider
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Divider/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Divider/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Divider/gallery.yaml
     description: >
       Horizontal or vertical divider with optional text and orientation.

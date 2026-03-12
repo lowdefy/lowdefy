@@ -22,7 +22,7 @@ _ref:
     block_type: RadioSelector
     antd_component: Radio
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/RadioSelector
-    schema: ../plugins/blocks/blocks-antd/src/blocks/RadioSelector/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/RadioSelector/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/RadioSelector/gallery.yaml
     description: >
       Radio group for selecting a single option.

@@ -22,7 +22,7 @@ _ref:
     block_type: TimelineList
     antd_component: Timeline
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/TimelineList
-    schema: ../plugins/blocks/blocks-antd/src/blocks/TimelineList/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/TimelineList/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/TimelineList/gallery.yaml
     description: >
       Vertical timeline displaying a sequence of events.

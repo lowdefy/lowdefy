@@ -22,7 +22,7 @@ _ref:
     block_type: Tooltip
     antd_component: Tooltip
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Tooltip
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Tooltip/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Tooltip/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Tooltip/gallery.yaml
     description: >
       Tooltip popup appearing on hover or focus.

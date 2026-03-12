@@ -31,19 +31,30 @@ function buildPropertiesTable(properties) {
 }
 
 function buildEventsTable(events) {
-  if (!events || !events.properties) return 'No events defined.';
-  const rows = Object.entries(events.properties).map(([name, def]) => {
-    const desc = (def.description ?? '').replace(/\|/g, '\\|');
-    return `| \`${name}\` | ${desc} |`;
+  if (!events) return 'No events defined.';
+  // meta.js format: { onClick: 'description' }
+  // old schema.js format: { properties: { onClick: { description: '...' } } }
+  const entries = events.properties
+    ? Object.entries(events.properties).map(([name, def]) => [name, def.description ?? ''])
+    : Object.entries(events);
+  if (entries.length === 0) return 'No events defined.';
+  const rows = entries.map(([name, desc]) => {
+    return `| \`${name}\` | ${(desc ?? '').replace(/\|/g, '\\|')} |`;
   });
   return `| Event | Description |\n| --- | --- |\n${rows.join('\n')}`;
 }
 
 function buildCssKeysTable(cssKeys) {
-  if (!cssKeys || cssKeys.length === 0) return 'No CSS keys defined.';
+  if (!cssKeys) return 'No CSS keys defined.';
+  // meta.js format: { element: 'description', icon: 'description' }
+  // old schema.js format: ['element', 'icon']
+  const entries = Array.isArray(cssKeys)
+    ? cssKeys.map((key) => [key, `Target via \`style.--${key}\` or \`class.--${key}\`.`])
+    : Object.entries(cssKeys);
+  if (entries.length === 0) return 'No CSS keys defined.';
   const rows = ['| `block` | Outer block wrapper (always available). |'];
-  cssKeys.forEach((key) => {
-    rows.push(`| \`${key}\` | Target via \`style.--${key}\` or \`class.--${key}\`. |`);
+  entries.forEach(([key, desc]) => {
+    rows.push(`| \`${key}\` | ${(desc ?? '').replace(/\|/g, '\\|')} |`);
   });
   return `| Key | Target |\n| --- | --- |\n${rows.join('\n')}`;
 }

@@ -22,7 +22,7 @@ _ref:
     block_type: ConfirmModal
     antd_component: Modal
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/ConfirmModal
-    schema: ../plugins/blocks/blocks-antd/src/blocks/ConfirmModal/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/ConfirmModal/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/ConfirmModal/gallery.yaml
     description: >
       Modal dialog requiring user confirmation before proceeding.

@@ -22,7 +22,7 @@ _ref:
     block_type: MonthSelector
     antd_component: DatePicker
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/MonthSelector
-    schema: ../plugins/blocks/blocks-antd/src/blocks/MonthSelector/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/MonthSelector/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/MonthSelector/gallery.yaml
     description: >
       Month picker for selecting year and month.

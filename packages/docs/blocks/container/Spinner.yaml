@@ -21,7 +21,7 @@ _ref:
     filePath: blocks/container/Spinner.yaml
     block_type: Spinner
     github_path: packages/plugins/blocks/blocks-loaders/src/blocks/Spinner
-    schema: ../plugins/blocks/blocks-loaders/src/blocks/Spinner/schema.js
+    schema: ../plugins/blocks/blocks-loaders/src/blocks/Spinner/meta.js
     gallery: ../plugins/blocks/blocks-loaders/src/blocks/Spinner/gallery.yaml
     description: >
       Loading spinner overlay for content areas.

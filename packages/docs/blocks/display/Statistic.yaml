@@ -22,7 +22,7 @@ _ref:
     block_type: Statistic
     antd_component: Statistic
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Statistic
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Statistic/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Statistic/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Statistic/gallery.yaml
     description: >
       Statistic display with prefix, suffix, and formatting.

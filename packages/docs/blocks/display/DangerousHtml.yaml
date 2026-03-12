@@ -21,7 +21,7 @@ _ref:
     filePath: blocks/display/DangerousHtml.yaml
     block_type: DangerousHtml
     github_path: packages/plugins/blocks/blocks-basic/src/blocks/DangerousHtml
-    schema: ../plugins/blocks/blocks-basic/src/blocks/DangerousHtml/schema.js
+    schema: ../plugins/blocks/blocks-basic/src/blocks/DangerousHtml/meta.js
     gallery: ../plugins/blocks/blocks-basic/src/blocks/DangerousHtml/gallery.yaml
     description: >
       Render raw HTML content without sanitization.

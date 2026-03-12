@@ -21,7 +21,7 @@ _ref:
     filePath: blocks/display/SkeletonButton.yaml
     block_type: SkeletonButton
     github_path: packages/plugins/blocks/blocks-loaders/src/blocks/SkeletonButton
-    schema: ../plugins/blocks/blocks-loaders/src/blocks/SkeletonButton/schema.js
+    schema: ../plugins/blocks/blocks-loaders/src/blocks/SkeletonButton/meta.js
     gallery: ../plugins/blocks/blocks-loaders/src/blocks/SkeletonButton/gallery.yaml
     description: >
       Button-shaped skeleton loading placeholder.

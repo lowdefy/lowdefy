@@ -22,7 +22,7 @@ _ref:
     block_type: Affix
     antd_component: Affix
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Affix
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Affix/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Affix/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Affix/gallery.yaml
     description: >
       An Affix block makes its content stick to the viewport when scrolling.

@@ -22,7 +22,7 @@ _ref:
     block_type: Result
     antd_component: Result
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Result
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Result/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Result/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Result/gallery.yaml
     description: >
       Result page with status icon, title, and extra actions.

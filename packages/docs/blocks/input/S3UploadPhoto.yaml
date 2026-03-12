@@ -18,7 +18,7 @@ _ref:
     block_type: S3UploadPhoto
     value_type: object
     category: input
-    schema: ../plugins/plugins/plugin-aws/src/blocks/S3UploadPhoto/schema.js
+    schema: ../plugins/plugins/plugin-aws/src/blocks/S3UploadPhoto/meta.js
     filePath: blocks/input/S3UploadPhoto.yaml
     description_content: |
       The `S3UploadPhoto` block allows a user to to upload a photo to AWS S3.

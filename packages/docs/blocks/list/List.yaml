@@ -21,7 +21,7 @@ _ref:
     filePath: blocks/list/List.yaml
     block_type: List
     github_path: packages/plugins/blocks/blocks-basic/src/blocks/List
-    schema: ../plugins/blocks/blocks-basic/src/blocks/List/schema.js
+    schema: ../plugins/blocks/blocks-basic/src/blocks/List/meta.js
     gallery: ../plugins/blocks/blocks-basic/src/blocks/List/gallery.yaml
     description: >
       Basic list layout container for rendering repeated blocks.

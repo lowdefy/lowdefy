@@ -22,7 +22,7 @@ _ref:
     block_type: MultipleSelector
     antd_component: Select
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/MultipleSelector
-    schema: ../plugins/blocks/blocks-antd/src/blocks/MultipleSelector/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/MultipleSelector/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/MultipleSelector/gallery.yaml
     description: >
       Multi-select dropdown with tags, search, and custom rendering.

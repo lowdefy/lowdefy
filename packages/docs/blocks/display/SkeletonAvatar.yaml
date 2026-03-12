@@ -21,7 +21,7 @@ _ref:
     filePath: blocks/display/SkeletonAvatar.yaml
     block_type: SkeletonAvatar
     github_path: packages/plugins/blocks/blocks-loaders/src/blocks/SkeletonAvatar
-    schema: ../plugins/blocks/blocks-loaders/src/blocks/SkeletonAvatar/schema.js
+    schema: ../plugins/blocks/blocks-loaders/src/blocks/SkeletonAvatar/meta.js
     gallery: ../plugins/blocks/blocks-loaders/src/blocks/SkeletonAvatar/gallery.yaml
     description: >
       Avatar-shaped skeleton loading placeholder.

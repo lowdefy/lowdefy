@@ -21,7 +21,7 @@ _ref:
     filePath: blocks/display/Anchor.yaml
     block_type: Anchor
     github_path: packages/plugins/blocks/blocks-basic/src/blocks/Anchor
-    schema: ../plugins/blocks/blocks-basic/src/blocks/Anchor/schema.js
+    schema: ../plugins/blocks/blocks-basic/src/blocks/Anchor/meta.js
     gallery: ../plugins/blocks/blocks-basic/src/blocks/Anchor/gallery.yaml
     description: >
       Hyperlink anchor for navigation.

@@ -22,7 +22,7 @@ _ref:
     block_type: AutoComplete
     antd_component: AutoComplete
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/AutoComplete
-    schema: ../plugins/blocks/blocks-antd/src/blocks/AutoComplete/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/AutoComplete/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/AutoComplete/gallery.yaml
     description: >
       Text input with auto-complete suggestions from a list of options.

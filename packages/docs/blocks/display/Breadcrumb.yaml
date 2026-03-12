@@ -22,7 +22,7 @@ _ref:
     block_type: Breadcrumb
     antd_component: Breadcrumb
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Breadcrumb
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Breadcrumb/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Breadcrumb/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Breadcrumb/gallery.yaml
     description: >
       Navigation breadcrumb showing the current location in a hierarchy.

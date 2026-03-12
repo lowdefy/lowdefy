@@ -22,7 +22,7 @@ _ref:
     block_type: ColorSelector
     antd_component: ColorPicker
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/ColorSelector
-    schema: ../plugins/blocks/blocks-antd/src/blocks/ColorSelector/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/ColorSelector/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/ColorSelector/gallery.yaml
     description: >
       Color picker with presets, format selection, and alpha channel.

@@ -21,7 +21,7 @@ _ref:
     filePath: blocks/container/Box.yaml
     block_type: Box
     github_path: packages/plugins/blocks/blocks-basic/src/blocks/Box
-    schema: ../plugins/blocks/blocks-basic/src/blocks/Box/schema.js
+    schema: ../plugins/blocks/blocks-basic/src/blocks/Box/meta.js
     gallery: ../plugins/blocks/blocks-basic/src/blocks/Box/gallery.yaml
     description: >
       Basic block-level container for layout.

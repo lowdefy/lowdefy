@@ -22,7 +22,7 @@ _ref:
     block_type: Masonry
     antd_component: Masonry
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Masonry
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Masonry/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Masonry/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Masonry/gallery.yaml
     description: >
       Masonry-style grid layout container.

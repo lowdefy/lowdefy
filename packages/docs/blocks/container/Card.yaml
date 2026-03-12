@@ -22,7 +22,7 @@ _ref:
     block_type: Card
     antd_component: Card
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Card
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Card/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Card/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Card/gallery.yaml
     description: >
       Card container with title, extra, cover, and actions.

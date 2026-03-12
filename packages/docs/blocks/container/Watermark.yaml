@@ -22,7 +22,7 @@ _ref:
     block_type: Watermark
     antd_component: Watermark
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Watermark
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Watermark/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Watermark/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Watermark/gallery.yaml
     description: >
       Watermark overlay with text, image, and font customization.

@@ -22,7 +22,7 @@ _ref:
     block_type: ButtonSelector
     antd_component: Radio
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/ButtonSelector
-    schema: ../plugins/blocks/blocks-antd/src/blocks/ButtonSelector/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/ButtonSelector/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/ButtonSelector/gallery.yaml
     description: >
       Radio group styled as toggle buttons.

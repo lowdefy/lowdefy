@@ -22,7 +22,7 @@ _ref:
     block_type: Alert
     antd_component: Alert
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Alert
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Alert/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Alert/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Alert/gallery.yaml
     description: >
       Alert banner with type, description, icon, and closable options.

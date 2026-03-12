@@ -22,7 +22,7 @@ _ref:
     block_type: Badge
     antd_component: Badge
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Badge
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Badge/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Badge/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Badge/gallery.yaml
     description: >
       Badge with count, dot, status, color, and overflow.

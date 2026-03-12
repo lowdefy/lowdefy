@@ -21,7 +21,7 @@ _ref:
     filePath: blocks/container/Span.yaml
     block_type: Span
     github_path: packages/plugins/blocks/blocks-basic/src/blocks/Span
-    schema: ../plugins/blocks/blocks-basic/src/blocks/Span/schema.js
+    schema: ../plugins/blocks/blocks-basic/src/blocks/Span/meta.js
     gallery: ../plugins/blocks/blocks-basic/src/blocks/Span/gallery.yaml
     description: >
       Inline container for wrapping content.

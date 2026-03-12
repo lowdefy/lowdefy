@@ -22,7 +22,7 @@ _ref:
     block_type: ControlledList
     antd_component: List
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/ControlledList
-    schema: ../plugins/blocks/blocks-antd/src/blocks/ControlledList/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/ControlledList/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/ControlledList/gallery.yaml
     description: >
       Dynamic list with add and remove item controls.

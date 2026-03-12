@@ -22,7 +22,7 @@ _ref:
     block_type: Layout
     antd_component: Layout
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Layout
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Layout/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Layout/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Layout/gallery.yaml
     description: >
       Ant Design layout container for structuring page sections.

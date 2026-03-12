@@ -22,7 +22,7 @@ _ref:
     block_type: Tag
     antd_component: Tag
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Tag
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Tag/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Tag/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Tag/gallery.yaml
     description: >
       Tag with preset and custom colors, icons, and closable option.

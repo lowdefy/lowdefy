@@ -22,7 +22,7 @@ _ref:
     block_type: RatingSlider
     antd_component: Slider
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/RatingSlider
-    schema: ../plugins/blocks/blocks-antd/src/blocks/RatingSlider/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/RatingSlider/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/RatingSlider/gallery.yaml
     description: >
       Rating slider with customizable range, icons, and N/A option.

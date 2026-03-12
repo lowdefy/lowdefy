@@ -21,7 +21,7 @@ _ref:
     filePath: blocks/display/S3Download.yaml
     block_type: S3Download
     github_path: packages/plugins/plugins/plugin-aws/src/blocks/S3Download
-    schema: ../plugins/plugins/plugin-aws/src/blocks/S3Download/schema.js
+    schema: ../plugins/plugins/plugin-aws/src/blocks/S3Download/meta.js
     gallery: ../plugins/plugins/plugin-aws/src/blocks/S3Download/gallery.yaml
     description: >
       Download files from AWS S3. Requires an AwsS3Bucket connection and an

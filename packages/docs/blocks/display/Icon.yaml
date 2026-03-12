@@ -21,7 +21,7 @@ _ref:
     filePath: blocks/display/Icon.yaml
     block_type: Icon
     github_path: packages/plugins/blocks/blocks-basic/src/blocks/Icon
-    schema: ../plugins/blocks/blocks-basic/src/blocks/Icon/schema.js
+    schema: ../plugins/blocks/blocks-basic/src/blocks/Icon/meta.js
     gallery: ../plugins/blocks/blocks-basic/src/blocks/Icon/gallery.yaml
     description: >
       Display icons from the React Icons library.

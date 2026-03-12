@@ -22,7 +22,7 @@ _ref:
     block_type: Selector
     antd_component: Select
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Selector
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Selector/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Selector/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Selector/gallery.yaml
     description: >
       Dropdown selector with search, clear, and custom icons.

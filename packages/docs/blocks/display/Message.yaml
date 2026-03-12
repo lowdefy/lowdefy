@@ -22,7 +22,7 @@ _ref:
     block_type: Message
     antd_component: Message
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Message
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Message/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Message/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Message/gallery.yaml
     description: >
       Global message notification displayed at the top of the page.

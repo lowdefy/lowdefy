@@ -22,7 +22,7 @@ _ref:
     block_type: Modal
     antd_component: Modal
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Modal
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Modal/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Modal/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Modal/gallery.yaml
     description: >
       Modal dialog overlay for focused content.

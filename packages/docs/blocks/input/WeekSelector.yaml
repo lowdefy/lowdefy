@@ -22,7 +22,7 @@ _ref:
     block_type: WeekSelector
     antd_component: DatePicker
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/WeekSelector
-    schema: ../plugins/blocks/blocks-antd/src/blocks/WeekSelector/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/WeekSelector/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/WeekSelector/gallery.yaml
     description: >
       Week picker for selecting a week of the year.

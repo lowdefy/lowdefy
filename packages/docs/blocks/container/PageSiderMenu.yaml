@@ -22,7 +22,7 @@ _ref:
     block_type: PageSiderMenu
     antd_component: Layout
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/PageSiderMenu
-    schema: ../plugins/blocks/blocks-antd/src/blocks/PageSiderMenu/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/PageSiderMenu/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/PageSiderMenu/gallery.yaml
     description: >
       Page layout with a sidebar navigation menu.

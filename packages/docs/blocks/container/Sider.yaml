@@ -22,7 +22,7 @@ _ref:
     block_type: Sider
     antd_component: Sider
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Sider
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Sider/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Sider/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Sider/gallery.yaml
     description: >
       Sidebar layout container for page navigation.

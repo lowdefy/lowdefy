@@ -22,7 +22,7 @@ _ref:
     block_type: Tour
     antd_component: Tour
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Tour
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Tour/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Tour/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Tour/gallery.yaml
     description: >
       Guided tour with steps, masks, and keyboard navigation.

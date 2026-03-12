@@ -22,7 +22,7 @@ _ref:
     block_type: Footer
     antd_component: Footer
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Footer
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Footer/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Footer/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Footer/gallery.yaml
     description: >
       Page footer layout section.

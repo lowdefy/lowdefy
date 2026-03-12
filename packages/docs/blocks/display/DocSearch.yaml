@@ -21,7 +21,7 @@ _ref:
     filePath: blocks/display/DocSearch.yaml
     block_type: DocSearch
     github_path: packages/plugins/blocks/blocks-algolia/src/blocks/DocSearch
-    schema: ../plugins/blocks/blocks-algolia/src/blocks/DocSearch/schema.js
+    schema: ../plugins/blocks/blocks-algolia/src/blocks/DocSearch/meta.js
     gallery: ../plugins/blocks/blocks-algolia/src/blocks/DocSearch/gallery.yaml
     description: >
       Algolia DocSearch integration for documentation search.

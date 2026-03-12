@@ -22,7 +22,7 @@ _ref:
     block_type: DateRangeSelector
     antd_component: DatePicker
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/DateRangeSelector
-    schema: ../plugins/blocks/blocks-antd/src/blocks/DateRangeSelector/schema.js
+    schema: ../plugins/blocks/blocks-antd/src/blocks/DateRangeSelector/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/DateRangeSelector/gallery.yaml
     description: >
       Date range picker for selecting start and end dates.
