@@ -487,6 +487,146 @@
               containerSize: 44
               iconFontSize: 24
 
+- title: Group
+  blocks:
+    - id: group_row
+      type: Box
+      layout:
+        gap: 24
+        align: center
+      blocks:
+        - id: group_basic
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            group:
+              avatars:
+                - src: https://api.dicebear.com/7.x/miniavs/svg?seed=1
+                - content: BK
+                  color: '#1677ff'
+                - icon: AiOutlineUser
+                  color: '#87d068'
+                - content: ZW
+                  color: '#722ed1'
+        - id: group_max_count
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            group:
+              maxCount: 3
+              avatars:
+                - src: https://api.dicebear.com/7.x/miniavs/svg?seed=2
+                - content: AL
+                  color: '#f56a00'
+                - icon: AiOutlineUser
+                  color: '#1677ff'
+                - content: KJ
+                  color: '#722ed1'
+                - content: RW
+                  color: '#52c41a'
+        - id: group_square
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            shape: square
+            group:
+              avatars:
+                - content: A
+                  color: '#1677ff'
+                - content: B
+                  color: '#52c41a'
+                - content: C
+                  color: '#f5222d'
+        - id: group_large
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            group:
+              size: large
+              avatars:
+                - src: https://api.dicebear.com/7.x/miniavs/svg?seed=3
+                - content: LG
+                  color: '#eb2f96'
+                - icon: AiOutlineStar
+                  color: '#faad14'
+
+- title: Group Max Style
+  blocks:
+    - id: group_style_row
+      type: Box
+      layout:
+        gap: 24
+        align: center
+      blocks:
+        - id: group_orange_overflow
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            group:
+              maxCount: 2
+              avatars:
+                - content: K
+                  color: '#1677ff'
+                - content: L
+                  color: '#52c41a'
+                - content: M
+                  color: '#722ed1'
+                - content: N
+                  color: '#eb2f96'
+          style:
+            --max:
+              color: '#f56a00'
+              backgroundColor: '#fde3cf'
+        - id: group_dark_overflow
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            group:
+              maxCount: 3
+              avatars:
+                - src: https://api.dicebear.com/7.x/miniavs/svg?seed=5
+                - content: AB
+                  color: '#52c41a'
+                - icon: AiOutlineUser
+                  color: '#722ed1'
+                - content: CD
+                  color: '#f5222d'
+                - content: EF
+                  color: '#fa8c16'
+          style:
+            --max:
+              color: '#fff'
+              backgroundColor: '#1677ff'
+        - id: group_red_overflow
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            group:
+              maxCount: 2
+              avatars:
+                - content: P
+                  color: '#1677ff'
+                - content: Q
+                  color: '#52c41a'
+                - content: R
+                  color: '#722ed1'
+                - content: S
+                  color: '#faad14'
+                - content: T
+                  color: '#eb2f96'
+          style:
+            --max:
+              color: '#fff'
+              backgroundColor: '#f5222d'
+              fontWeight: bold
+
 - title: Avatar in User Profile
   blocks:
     - id: profile_card
@@ -522,7 +662,7 @@
             - id: profile_info
               type: Box
               layout:
-                contentGutter: 0
+                gap: 0
               blocks:
                 - id: profile_name
                   type: Markdown
@@ -573,6 +713,59 @@
                       content: Message sent to Sarah Chen
                       status: success
 
+- title: Avatar Group in Team Card
+  blocks:
+    - id: team_card
+      type: Card
+      properties:
+        title: Project Team
+        size: small
+      blocks:
+        - id: team_row
+          type: Box
+          layout:
+            gap: 16
+            align: center
+          blocks:
+            - id: team_avatars
+              type: Avatar
+              layout:
+                flex: 0 0 auto
+              properties:
+                group:
+                  maxCount: 4
+                  size: large
+                  avatars:
+                    - src: https://api.dicebear.com/7.x/miniavs/svg?seed=sarah
+                      alt: Sarah Chen
+                    - content: MR
+                      color: '#1677ff'
+                    - src: https://api.dicebear.com/7.x/miniavs/svg?seed=elena
+                      alt: Elena Torres
+                    - content: JD
+                      color: '#52c41a'
+                    - icon: AiOutlineUser
+                      color: '#722ed1'
+                    - content: KP
+                      color: '#fa8c16'
+              style:
+                --max:
+                  color: '#f56a00'
+                  backgroundColor: '#fde3cf'
+            - id: team_info
+              type: Box
+              layout:
+                gap: 0
+              blocks:
+                - id: team_title
+                  type: Markdown
+                  properties:
+                    content: '**6 team members**'
+                - id: team_subtitle
+                  type: Markdown
+                  properties:
+                    content: 'Dashboard redesign project'
+
 - title: Avatar in Comment Thread
   blocks:
     - id: comment_card
@@ -604,7 +797,7 @@
             - id: comment_1_body
               type: Box
               layout:
-                contentGutter: 0
+                gap: 0
               blocks:
                 - id: comment_1_text
                   type: Markdown
@@ -636,7 +829,7 @@
             - id: comment_2_body
               type: Box
               layout:
-                contentGutter: 0
+                gap: 0
               blocks:
                 - id: comment_2_text
                   type: Markdown

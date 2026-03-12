@@ -67,6 +67,94 @@ const schema = {
         type: 'string',
         description: 'The address of the image for an image avatar.',
       },
+      group: {
+        type: 'object',
+        description:
+          'Render as an avatar group with multiple avatars. When set, the block renders Avatar.Group wrapping data-driven avatars.',
+        docs: {
+          displayType: 'yaml',
+        },
+        properties: {
+          maxCount: {
+            type: 'number',
+            description: 'Max avatars to show. Excess shows as "+N".',
+          },
+          maxPopoverPlacement: {
+            type: 'string',
+            enum: ['top', 'bottom'],
+            default: 'top',
+            description: 'Placement of the overflow popover.',
+          },
+          maxPopoverTrigger: {
+            type: 'string',
+            enum: ['hover', 'click'],
+            default: 'hover',
+            description: 'Trigger mode for the overflow popover.',
+          },
+          shape: {
+            type: 'string',
+            enum: ['circle', 'square'],
+            description: 'Default shape for all avatars in the group.',
+          },
+          size: {
+            type: ['string', 'number'],
+            enum: ['default', 'small', 'large'],
+            description: 'Default size for all avatars in the group.',
+          },
+          avatars: {
+            type: 'array',
+            description: 'Array of avatar configurations.',
+            items: {
+              type: 'object',
+              properties: {
+                alt: {
+                  type: 'string',
+                  description: 'Alt text for image avatar.',
+                },
+                color: {
+                  type: 'string',
+                  description: 'Background color.',
+                  docs: {
+                    displayType: 'color',
+                  },
+                },
+                content: {
+                  type: 'string',
+                  description: 'Text content inside the avatar.',
+                },
+                gap: {
+                  type: 'number',
+                  description: 'Letter type unit distance between left and right sides.',
+                },
+                icon: {
+                  type: ['string', 'object'],
+                  description: 'Icon name or properties.',
+                  docs: {
+                    displayType: 'icon',
+                  },
+                },
+                shape: {
+                  type: 'string',
+                  enum: ['circle', 'square'],
+                  description: 'Override shape for this avatar.',
+                },
+                size: {
+                  type: ['string', 'number'],
+                  enum: ['default', 'small', 'large'],
+                  description: 'Override size for this avatar.',
+                  docs: {
+                    displayType: 'string',
+                  },
+                },
+                src: {
+                  type: 'string',
+                  description: 'Image URL.',
+                },
+              },
+            },
+          },
+        },
+      },
       theme: {
         type: 'object',
         description:
@@ -150,7 +238,7 @@ const schema = {
       },
     },
   },
-  cssKeys: ['element'],
+  cssKeys: ['element', 'max'],
 };
 
 export default schema;
