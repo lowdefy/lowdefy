@@ -100,6 +100,7 @@ export default {
       },
     },
   },
+  cssKeys: ['element'],
   events: {
     type: 'object',
     additionalProperties: false,
