@@ -56,9 +56,22 @@ const schema = {
         },
       },
       success: {
-        type: 'number',
-        default: 0,
-        description: 'Segmented success percent.',
+        type: 'object',
+        description: 'Segmented success percent configuration.',
+        properties: {
+          percent: {
+            type: 'number',
+            default: 0,
+            description: 'Segmented success percent.',
+          },
+          strokeColor: {
+            type: 'string',
+            description: 'Color of the success segment.',
+            docs: {
+              displayType: 'color',
+            },
+          },
+        },
       },
       trailColor: {
         type: 'string',

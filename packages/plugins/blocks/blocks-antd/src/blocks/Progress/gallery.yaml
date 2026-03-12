@@ -221,12 +221,14 @@
       type: Progress
       properties:
         percent: 80
-        success: 30
+        success:
+          percent: 30
     - id: success_line_high
       type: Progress
       properties:
         percent: 100
-        success: 60
+        success:
+          percent: 60
     - id: success_circle
       type: Progress
       layout:
@@ -234,7 +236,8 @@
       properties:
         type: circle
         percent: 90
-        success: 50
+        success:
+          percent: 50
 
 - title: Steps (Line Type)
   blocks:
@@ -369,7 +372,7 @@
     - id: css_inline_max_width
       type: Progress
       style:
-        element:
+        --element:
           maxWidth: 300
       properties:
         percent: 55
@@ -378,7 +381,7 @@
       layout:
         flex: 0 0 auto
       style:
-        element:
+        --element:
           filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15))
       properties:
         type: circle
