@@ -1659,6 +1659,9 @@ importers:
       '@lowdefy/connection-mongodb':
         specifier: 4.7.0
         version: link:../../plugins/connections/connection-mongodb
+      '@lowdefy/docs':
+        specifier: workspace:*
+        version: link:../../docs
       '@lowdefy/errors':
         specifier: 4.7.0
         version: link:../../utils/errors
@@ -12062,7 +12065,7 @@ snapshots:
       '@smithy/util-defaults-mode-node': 2.0.15
       '@smithy/util-retry': 2.0.3
       '@smithy/util-utf8': 2.0.0
-      tslib: 2.6.2
+      tslib: 2.8.1
     transitivePeerDependencies:
       - aws-crt
     optional: true
@@ -12102,7 +12105,7 @@ snapshots:
       '@smithy/util-defaults-mode-node': 2.0.15
       '@smithy/util-retry': 2.0.3
       '@smithy/util-utf8': 2.0.0
-      tslib: 2.6.2
+      tslib: 2.8.1
     transitivePeerDependencies:
       - aws-crt
     optional: true
@@ -12146,7 +12149,7 @@ snapshots:
       '@smithy/util-retry': 2.0.3
       '@smithy/util-utf8': 2.0.0
       fast-xml-parser: 4.2.5
-      tslib: 2.6.2
+      tslib: 2.8.1
     transitivePeerDependencies:
       - aws-crt
     optional: true
@@ -12157,7 +12160,7 @@ snapshots:
       '@aws-sdk/types': 3.425.0
       '@smithy/property-provider': 2.0.11
       '@smithy/types': 2.3.4
-      tslib: 2.6.2
+      tslib: 2.8.1
     transitivePeerDependencies:
       - aws-crt
     optional: true
@@ -12167,7 +12170,7 @@ snapshots:
       '@aws-sdk/types': 3.425.0
       '@smithy/property-provider': 2.0.11
       '@smithy/types': 2.3.4
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@aws-sdk/credential-provider-http@3.425.0':
@@ -12178,7 +12181,7 @@ snapshots:
       '@smithy/property-provider': 2.0.11
       '@smithy/protocol-http': 3.0.6
       '@smithy/types': 2.3.4
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@aws-sdk/credential-provider-ini@3.425.0':
@@ -12192,7 +12195,7 @@ snapshots:
       '@smithy/property-provider': 2.0.11
       '@smithy/shared-ini-file-loader': 2.0.12
       '@smithy/types': 2.3.4
-      tslib: 2.6.2
+      tslib: 2.8.1
     transitivePeerDependencies:
       - aws-crt
     optional: true
@@ -12209,7 +12212,7 @@ snapshots:
       '@smithy/property-provider': 2.0.11
       '@smithy/shared-ini-file-loader': 2.0.12
       '@smithy/types': 2.3.4
-      tslib: 2.6.2
+      tslib: 2.8.1
     transitivePeerDependencies:
       - aws-crt
     optional: true
@@ -12220,7 +12223,7 @@ snapshots:
       '@smithy/property-provider': 2.0.11
       '@smithy/shared-ini-file-loader': 2.0.12
       '@smithy/types': 2.3.4
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@aws-sdk/credential-provider-sso@3.425.0':
@@ -12231,7 +12234,7 @@ snapshots:
       '@smithy/property-provider': 2.0.11
       '@smithy/shared-ini-file-loader': 2.0.12
       '@smithy/types': 2.3.4
-      tslib: 2.6.2
+      tslib: 2.8.1
     transitivePeerDependencies:
       - aws-crt
     optional: true
@@ -12241,7 +12244,7 @@ snapshots:
       '@aws-sdk/types': 3.425.0
       '@smithy/property-provider': 2.0.11
       '@smithy/types': 2.3.4
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@aws-sdk/credential-providers@3.425.0':
@@ -12261,7 +12264,7 @@ snapshots:
       '@smithy/credential-provider-imds': 2.0.13
       '@smithy/property-provider': 2.0.11
       '@smithy/types': 2.3.4
-      tslib: 2.6.2
+      tslib: 2.8.1
     transitivePeerDependencies:
       - aws-crt
     optional: true
@@ -12271,14 +12274,14 @@ snapshots:
       '@aws-sdk/types': 3.425.0
       '@smithy/protocol-http': 3.0.6
       '@smithy/types': 2.3.4
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@aws-sdk/middleware-logger@3.425.0':
     dependencies:
       '@aws-sdk/types': 3.425.0
       '@smithy/types': 2.3.4
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@aws-sdk/middleware-recursion-detection@3.425.0':
@@ -12286,7 +12289,7 @@ snapshots:
       '@aws-sdk/types': 3.425.0
       '@smithy/protocol-http': 3.0.6
       '@smithy/types': 2.3.4
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@aws-sdk/middleware-sdk-sts@3.425.0':
@@ -12294,7 +12297,7 @@ snapshots:
       '@aws-sdk/middleware-signing': 3.425.0
       '@aws-sdk/types': 3.425.0
       '@smithy/types': 2.3.4
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@aws-sdk/middleware-signing@3.425.0':
@@ -12305,7 +12308,7 @@ snapshots:
       '@smithy/signature-v4': 2.0.10
       '@smithy/types': 2.3.4
       '@smithy/util-middleware': 2.0.3
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@aws-sdk/middleware-user-agent@3.425.0':
@@ -12314,7 +12317,7 @@ snapshots:
       '@aws-sdk/util-endpoints': 3.425.0
       '@smithy/protocol-http': 3.0.6
       '@smithy/types': 2.3.4
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@aws-sdk/region-config-resolver@3.425.0':
@@ -12323,7 +12326,7 @@ snapshots:
       '@smithy/types': 2.3.4
       '@smithy/util-config-provider': 2.0.0
       '@smithy/util-middleware': 2.0.3
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@aws-sdk/token-providers@3.425.0':
@@ -12362,7 +12365,7 @@ snapshots:
       '@smithy/util-defaults-mode-node': 2.0.15
       '@smithy/util-retry': 2.0.3
       '@smithy/util-utf8': 2.0.0
-      tslib: 2.6.2
+      tslib: 2.8.1
     transitivePeerDependencies:
       - aws-crt
     optional: true
@@ -12370,18 +12373,18 @@ snapshots:
   '@aws-sdk/types@3.425.0':
     dependencies:
       '@smithy/types': 2.3.4
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@aws-sdk/util-endpoints@3.425.0':
     dependencies:
       '@aws-sdk/types': 3.425.0
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@aws-sdk/util-locate-window@3.310.0':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@aws-sdk/util-user-agent-browser@3.425.0':
@@ -12389,7 +12392,7 @@ snapshots:
       '@aws-sdk/types': 3.425.0
       '@smithy/types': 2.3.4
       bowser: 2.11.0
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@aws-sdk/util-user-agent-node@3.425.0':
@@ -12397,12 +12400,12 @@ snapshots:
       '@aws-sdk/types': 3.425.0
       '@smithy/node-config-provider': 2.0.13
       '@smithy/types': 2.3.4
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@aws-sdk/util-utf8-browser@3.259.0':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@azure/abort-controller@1.1.0':
@@ -14902,7 +14905,7 @@ snapshots:
   '@smithy/abort-controller@2.0.10':
     dependencies:
       '@smithy/types': 2.3.4
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@smithy/config-resolver@2.0.11':
@@ -14911,7 +14914,7 @@ snapshots:
       '@smithy/types': 2.3.4
       '@smithy/util-config-provider': 2.0.0
       '@smithy/util-middleware': 2.0.3
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@smithy/credential-provider-imds@2.0.13':
@@ -14920,7 +14923,7 @@ snapshots:
       '@smithy/property-provider': 2.0.11
       '@smithy/types': 2.3.4
       '@smithy/url-parser': 2.0.10
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@smithy/eventstream-codec@2.0.10':
@@ -14928,7 +14931,7 @@ snapshots:
       '@aws-crypto/crc32': 3.0.0
       '@smithy/types': 2.3.4
       '@smithy/util-hex-encoding': 2.0.0
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@smithy/fetch-http-handler@2.2.1':
@@ -14937,7 +14940,7 @@ snapshots:
       '@smithy/querystring-builder': 2.0.10
       '@smithy/types': 2.3.4
       '@smithy/util-base64': 2.0.0
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@smithy/hash-node@2.0.10':
@@ -14945,25 +14948,25 @@ snapshots:
       '@smithy/types': 2.3.4
       '@smithy/util-buffer-from': 2.0.0
       '@smithy/util-utf8': 2.0.0
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@smithy/invalid-dependency@2.0.10':
     dependencies:
       '@smithy/types': 2.3.4
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@smithy/is-array-buffer@2.0.0':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@smithy/middleware-content-length@2.0.12':
     dependencies:
       '@smithy/protocol-http': 3.0.6
       '@smithy/types': 2.3.4
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@smithy/middleware-endpoint@2.0.10':
@@ -14972,7 +14975,7 @@ snapshots:
       '@smithy/types': 2.3.4
       '@smithy/url-parser': 2.0.10
       '@smithy/util-middleware': 2.0.3
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@smithy/middleware-retry@2.0.13':
@@ -14983,20 +14986,20 @@ snapshots:
       '@smithy/types': 2.3.4
       '@smithy/util-middleware': 2.0.3
       '@smithy/util-retry': 2.0.3
-      tslib: 2.6.2
+      tslib: 2.8.1
       uuid: 8.3.2
     optional: true
 
   '@smithy/middleware-serde@2.0.10':
     dependencies:
       '@smithy/types': 2.3.4
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@smithy/middleware-stack@2.0.4':
     dependencies:
       '@smithy/types': 2.3.4
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@smithy/node-config-provider@2.0.13':
@@ -15004,7 +15007,7 @@ snapshots:
       '@smithy/property-provider': 2.0.11
       '@smithy/shared-ini-file-loader': 2.0.12
       '@smithy/types': 2.3.4
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@smithy/node-http-handler@2.1.6':
@@ -15013,32 +15016,32 @@ snapshots:
       '@smithy/protocol-http': 3.0.6
       '@smithy/querystring-builder': 2.0.10
       '@smithy/types': 2.3.4
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@smithy/property-provider@2.0.11':
     dependencies:
       '@smithy/types': 2.3.4
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@smithy/protocol-http@3.0.6':
     dependencies:
       '@smithy/types': 2.3.4
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@smithy/querystring-builder@2.0.10':
     dependencies:
       '@smithy/types': 2.3.4
       '@smithy/util-uri-escape': 2.0.0
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@smithy/querystring-parser@2.0.10':
     dependencies:
       '@smithy/types': 2.3.4
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@smithy/service-error-classification@2.0.3':
@@ -15049,7 +15052,7 @@ snapshots:
   '@smithy/shared-ini-file-loader@2.0.12':
     dependencies:
       '@smithy/types': 2.3.4
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@smithy/signature-v4@2.0.10':
@@ -15061,7 +15064,7 @@ snapshots:
       '@smithy/util-middleware': 2.0.3
       '@smithy/util-uri-escape': 2.0.0
       '@smithy/util-utf8': 2.0.0
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@smithy/smithy-client@2.1.9':
@@ -15069,46 +15072,46 @@ snapshots:
       '@smithy/middleware-stack': 2.0.4
       '@smithy/types': 2.3.4
       '@smithy/util-stream': 2.0.14
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@smithy/types@2.3.4':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@smithy/url-parser@2.0.10':
     dependencies:
       '@smithy/querystring-parser': 2.0.10
       '@smithy/types': 2.3.4
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@smithy/util-base64@2.0.0':
     dependencies:
       '@smithy/util-buffer-from': 2.0.0
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@smithy/util-body-length-browser@2.0.0':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@smithy/util-body-length-node@2.1.0':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@smithy/util-buffer-from@2.0.0':
     dependencies:
       '@smithy/is-array-buffer': 2.0.0
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@smithy/util-config-provider@2.0.0':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@smithy/util-defaults-mode-browser@2.0.13':
@@ -15117,7 +15120,7 @@ snapshots:
       '@smithy/smithy-client': 2.1.9
       '@smithy/types': 2.3.4
       bowser: 2.11.0
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@smithy/util-defaults-mode-node@2.0.15':
@@ -15128,25 +15131,25 @@ snapshots:
       '@smithy/property-provider': 2.0.11
       '@smithy/smithy-client': 2.1.9
       '@smithy/types': 2.3.4
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@smithy/util-hex-encoding@2.0.0':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@smithy/util-middleware@2.0.3':
     dependencies:
       '@smithy/types': 2.3.4
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@smithy/util-retry@2.0.3':
     dependencies:
       '@smithy/service-error-classification': 2.0.3
       '@smithy/types': 2.3.4
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@smithy/util-stream@2.0.14':
@@ -15158,18 +15161,18 @@ snapshots:
       '@smithy/util-buffer-from': 2.0.0
       '@smithy/util-hex-encoding': 2.0.0
       '@smithy/util-utf8': 2.0.0
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@smithy/util-uri-escape@2.0.0':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@smithy/util-utf8@2.0.0':
     dependencies:
       '@smithy/util-buffer-from': 2.0.0
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@swc/cli@0.8.0(@swc/core@1.15.18)':
