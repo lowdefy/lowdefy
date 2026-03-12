@@ -35,13 +35,13 @@
     "./*": "./dist/*",
     "./blocks": "./dist/blocks.js",
     "./metas": "./dist/metas.js",
-    "./types": "./dist/types.json"
+    "./types": "./dist/types.js"
   },
   "files": [
     "dist/*"
   ],
   "scripts": {
-    "build": "swc src --out-dir dist --config-file ../../../../.swcrc --cli-config-file ../../../../.swc-cli.json && pnpm copyfiles && extract-plugin-types",
+    "build": "swc src --out-dir dist --config-file ../../../../.swcrc --cli-config-file ../../../../.swc-cli.json && pnpm copyfiles",
     "clean": "rm -rf dist",
     "copyfiles": "copyfiles -u 1 \"./src/**/*\" dist -e \"./src/**/*.js\" -e \"./src/**/*.yaml\" -e \"./src/**/*.snap\"",
     "prepublishOnly": "pnpm build"

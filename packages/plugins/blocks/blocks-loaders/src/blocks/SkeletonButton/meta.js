@@ -18,6 +18,9 @@ export default {
   category: 'display',
   icons: [],
   valueType: null,
+  cssKeys: {
+    element: 'The SkeletonButton element.',
+  },
   properties: {
     type: 'object',
     additionalProperties: false,

@@ -18,6 +18,9 @@ export default {
   category: 'container',
   icons: [],
   valueType: null,
+  cssKeys: {
+    element: 'The Span element.',
+  },
   events: {
     onClick: 'Trigger actions when the Span is clicked.',
   },

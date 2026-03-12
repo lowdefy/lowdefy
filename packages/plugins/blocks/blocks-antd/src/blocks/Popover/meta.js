@@ -18,6 +18,7 @@ export default {
   category: 'container',
   icons: [],
   valueType: null,
+  slots: ['content', 'popover'],
   cssKeys: {
     element: 'The Popover element.',
     inner: 'The Popover inner.',

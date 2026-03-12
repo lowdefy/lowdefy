@@ -20,6 +20,7 @@ export default {
   category: 'container',
   icons: [...MobileMenuMeta.icons],
   valueType: null,
+  slots: ['content', 'footer', 'header'],
   cssKeys: {
     element: 'The PageHeaderMenu element.',
     header: 'The PageHeaderMenu header.',

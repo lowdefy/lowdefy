@@ -18,6 +18,9 @@ export default {
   category: 'list',
   icons: [],
   valueType: 'array',
+  cssKeys: {
+    element: 'The List element.',
+  },
   events: {
     onClick: 'Trigger actions when the List is clicked.',
   },

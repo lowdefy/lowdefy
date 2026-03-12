@@ -18,6 +18,9 @@ export default {
   category: 'input',
   icons: [],
   valueType: 'array',
+  cssKeys: {
+    element: 'The AgGridInputBalham element.',
+  },
   events: {
     onCellClick: 'Trigger event when a cell is clicked.',
     onFilterChanged: 'Trigger event when the filter changes.',

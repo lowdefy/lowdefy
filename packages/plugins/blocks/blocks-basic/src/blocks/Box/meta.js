@@ -18,6 +18,9 @@ export default {
   category: 'container',
   icons: [],
   valueType: null,
+  cssKeys: {
+    element: 'The Box element.',
+  },
   events: {
     onClick: 'Trigger actions when the Box is clicked.',
     onPaste: 'Trigger actions when the element is focused and a paste event is triggered.',

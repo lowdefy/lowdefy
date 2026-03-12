@@ -20,6 +20,7 @@ import buildBlockSchema from './buildBlockSchema.js';
 import cn from './cn.js';
 import ErrorBoundary from './ErrorBoundary.js';
 import ErrorPage from './ErrorPage.js';
+import extractBlockTypes from './extractBlockTypes.js';
 import HtmlComponent from './HtmlComponent.js';
 import makeCssClass from './makeCssClass.js';
 import mediaToCssObject from './mediaToCssObject.js';
@@ -33,6 +34,7 @@ export {
   cn,
   ErrorBoundary,
   ErrorPage,
+  extractBlockTypes,
   HtmlComponent,
   makeCssClass,
   mediaToCssObject,

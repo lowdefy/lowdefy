@@ -26,9 +26,6 @@
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
   "type": "module",
-  "bin": {
-    "extract-plugin-types": "./dist/scripts/extract-plugin-types.js"
-  },
   "exports": {
     ".": "./dist/index.js",
     "./*": "./dist/*"

@@ -18,6 +18,7 @@ export default {
   category: 'container',
   icons: [],
   valueType: null,
+  slots: ['content', 'extra'],
   cssKeys: {
     element: 'The Result element.',
   },

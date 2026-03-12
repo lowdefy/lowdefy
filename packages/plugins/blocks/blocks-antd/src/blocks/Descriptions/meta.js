@@ -18,6 +18,7 @@ export default {
   category: 'container',
   icons: [],
   valueType: null,
+  slots: ['extra'],
   cssKeys: {
     element: 'The Descriptions element.',
     content: 'The Descriptions content.',

@@ -18,6 +18,7 @@ export default {
   category: 'input',
   icons: [],
   valueType: 'array',
+  slots: ['options'],
   cssKeys: {
     element: 'The TreeSelector element.',
   },

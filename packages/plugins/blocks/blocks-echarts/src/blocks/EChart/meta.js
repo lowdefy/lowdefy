@@ -18,6 +18,9 @@ export default {
   category: 'display',
   icons: [],
   valueType: null,
+  cssKeys: {
+    element: 'The EChart element.',
+  },
   events: {
     click: 'Trigger actions when the element is clicked.',
   },

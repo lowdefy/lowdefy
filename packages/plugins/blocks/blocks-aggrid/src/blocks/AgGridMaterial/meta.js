@@ -18,6 +18,9 @@ export default {
   category: 'display',
   icons: [],
   valueType: null,
+  cssKeys: {
+    element: 'The AgGridMaterial element.',
+  },
   events: {
     onCellClick: 'Trigger event when a cell is clicked.',
     onFilterChanged: 'Trigger event when the filter changes.',

@@ -18,6 +18,9 @@ export default {
   category: 'display',
   icons: [],
   valueType: null,
+  cssKeys: {
+    element: 'The AgGridBalhamDark element.',
+  },
   events: {
     onCellClick: 'Trigger event when a cell is clicked.',
     onFilterChanged: 'Trigger event when the filter changes.',

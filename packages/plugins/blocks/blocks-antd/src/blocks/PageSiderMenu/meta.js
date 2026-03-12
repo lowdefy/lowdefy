@@ -20,6 +20,7 @@ export default {
   category: 'container',
   icons: ['AiOutlineMenuFold', 'AiOutlineMenuUnfold', ...MobileMenuMeta.icons],
   valueType: null,
+  slots: ['content', 'footer', 'header', 'sider'],
   cssKeys: {
     element: 'The PageSiderMenu element.',
     header: 'The PageSiderMenu header.',

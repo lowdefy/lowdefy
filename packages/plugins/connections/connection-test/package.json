@@ -11,14 +11,14 @@
   "type": "module",
   "exports": {
     "./connections": "./src/connections.js",
-    "./types": "./dist/types.json"
+    "./types": "./src/types.js"
   },
   "files": [
     "src/*",
     "dist/*"
   ],
   "scripts": {
-    "build": "extract-plugin-types"
+    "build": "echo 'No compilation needed — exports directly from src.'"
   },
   "dependencies": {
     "@lowdefy/errors": "4.7.0"

@@ -37,13 +37,13 @@
     "./operators/client": "./dist/operatorsClient.js",
     "./operators/server": "./dist/operatorsServer.js",
     "./schemas": "./dist/schemas.js",
-    "./types": "./dist/types.json"
+    "./types": "./dist/types.js"
   },
   "files": [
     "dist/*"
   ],
   "scripts": {
-    "build": "swc src --out-dir dist --config-file ../../../../.swcrc --cli-config-file ../../../../.swc-cli.json --copy-files && extract-plugin-types",
+    "build": "swc src --out-dir dist --config-file ../../../../.swcrc --cli-config-file ../../../../.swc-cli.json --copy-files",
     "clean": "rm -rf dist",
     "prepublishOnly": "pnpm build",
     "test": "TZ=UTC node --experimental-vm-modules node_modules/jest/bin/jest.js"

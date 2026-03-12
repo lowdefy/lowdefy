@@ -18,6 +18,7 @@ export default {
   category: 'container',
   icons: [],
   valueType: null,
+  slots: ['action'],
   cssKeys: {
     element: 'The Alert element.',
     icon: 'The icon in the Alert.',

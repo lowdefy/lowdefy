@@ -18,6 +18,9 @@ export default {
   category: 'container',
   icons: [],
   valueType: null,
+  cssKeys: {
+    element: 'The MarkdownWithCode element.',
+  },
   properties: {
     type: 'object',
     additionalProperties: false,

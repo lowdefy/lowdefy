@@ -18,6 +18,7 @@ export default {
   category: 'container',
   icons: [],
   valueType: null,
+  slots: ['content', 'footer'],
   cssKeys: {
     element: 'The Modal element.',
     header: 'The Modal header.',

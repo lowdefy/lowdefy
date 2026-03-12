@@ -18,6 +18,9 @@ export default {
   category: 'display',
   icons: [],
   valueType: null,
+  cssKeys: {
+    element: 'The Html element.',
+  },
   events: {
     onTextSelection:
       'Trigger action when text is selected and pass selected text to the event object.',

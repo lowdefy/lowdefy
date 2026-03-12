@@ -18,6 +18,9 @@ export default {
   category: 'display',
   icons: [],
   valueType: null,
+  cssKeys: {
+    element: 'The SkeletonParagraph element.',
+  },
   properties: {
     type: 'object',
     additionalProperties: false,

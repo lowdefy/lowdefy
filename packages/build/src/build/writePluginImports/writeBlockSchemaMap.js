@@ -55,12 +55,23 @@ async function writeBlockSchemaMap({ components, context }) {
   }
 
   const blockMetas = {};
-  for (const [typeName, meta] of Object.entries(allMetas)) {
-    blockMetas[typeName] = {
-      category: meta.category,
-      ...(meta.valueType != null && { valueType: meta.valueType }),
-      ...(meta.initValue !== undefined && { initValue: meta.initValue }),
-    };
+  const typesMapBlockMetas = context.typesMap.blockMetas ?? {};
+  for (const block of components.imports.blocks) {
+    const typesMapMeta = typesMapBlockMetas[block.typeName];
+    const meta = allMetas[block.typeName];
+    if (typesMapMeta) {
+      blockMetas[block.typeName] = {
+        category: typesMapMeta.category,
+        ...(typesMapMeta.valueType != null && { valueType: typesMapMeta.valueType }),
+        ...(typesMapMeta.initValue !== undefined && { initValue: typesMapMeta.initValue }),
+      };
+    } else if (meta) {
+      blockMetas[block.typeName] = {
+        category: meta.category,
+        ...(meta.valueType != null && { valueType: meta.valueType }),
+        ...(meta.initValue !== undefined && { initValue: meta.initValue }),
+      };
+    }
   }
 
   await context.writeBuildArtifact('plugins/blockSchemas.json', JSON.stringify(schemas));

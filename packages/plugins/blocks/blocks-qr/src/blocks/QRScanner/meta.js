@@ -18,6 +18,9 @@ export default {
   category: 'input',
   icons: [],
   valueType: 'object',
+  cssKeys: {
+    element: 'The QRScanner element.',
+  },
   events: {
     onScan: 'Trigger actions when code is scanned.',
   },
