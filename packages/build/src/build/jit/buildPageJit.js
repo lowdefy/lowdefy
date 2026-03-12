@@ -39,7 +39,6 @@ import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
 import writeMaps from '../writeMaps.js';
 import detectMissingPluginPackages from './detectMissingPluginPackages.js';
 import updateServerPackageJsonJit from './updateServerPackageJsonJit.js';
-import writeMaps from '../writeMaps.js';
 import validatePageTypes from './validatePageTypes.js';
 import writePageJit from './writePageJit.js';
 
