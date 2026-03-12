@@ -63,6 +63,7 @@ const TextAreaBlock = ({
               placeholder={properties.placeholder}
               showCount={properties.showCount}
               size={properties.size}
+              status={validation.status}
               value={value}
               autoSize={
                 properties.rows

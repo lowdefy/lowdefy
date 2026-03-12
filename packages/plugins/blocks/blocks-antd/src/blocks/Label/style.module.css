@@ -143,3 +143,43 @@
     margin-inline-start: var(--ant-margin-xxs, 4px);
   }
 }
+
+/*
+  Error/warning state for group components (Radio, Checkbox, ButtonSelector,
+  Segmented) that don't support antd's native `status` prop.
+
+  These rules must live OUTSIDE @layer antd so they beat antd's unlayered
+  CSS-in-JS output in the cascade.
+*/
+:global(.ant-form-item-has-error .ant-radio-inner) {
+  border-color: var(--ant-color-error) !important;
+}
+
+:global(.ant-form-item-has-error .ant-checkbox-inner) {
+  border-color: var(--ant-color-error) !important;
+}
+
+:global(.ant-form-item-has-error .ant-radio-button-wrapper) {
+  border-color: var(--ant-color-error) !important;
+}
+
+:global(.ant-form-item-has-error .ant-segmented) {
+  border-color: var(--ant-color-error);
+}
+
+/* Warning state */
+:global(.ant-form-item-has-warning .ant-radio-inner) {
+  border-color: var(--ant-color-warning) !important;
+}
+
+:global(.ant-form-item-has-warning .ant-checkbox-inner) {
+  border-color: var(--ant-color-warning) !important;
+}
+
+:global(.ant-form-item-has-warning .ant-radio-button-wrapper) {
+  border-color: var(--ant-color-warning) !important;
+}
+
+:global(.ant-form-item-has-warning .ant-segmented) {
+  border-color: var(--ant-color-warning);
+}

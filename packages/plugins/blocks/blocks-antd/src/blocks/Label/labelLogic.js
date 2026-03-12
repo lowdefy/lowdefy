@@ -46,7 +46,10 @@ const labelLogic = ({
     label = label.replace(/[:|：]\s*$/u, '');
   }
 
-  const rowClassName = 'ant-form-item';
+  const rowClassName = classNames('ant-form-item', {
+    'ant-form-item-has-error': validation.status === 'error',
+    'ant-form-item-has-warning': validation.status === 'warning',
+  });
   const rowStyle = {
     flexWrap: properties.inline ? 'inherit' : undefined,
     marginBottom: 0,

@@ -60,6 +60,7 @@ const AutoCompleteInput = ({
             placeholder={properties.placeholder ?? 'Type or select item'}
             allowClear={properties.allowClear !== false}
             size={properties.size}
+            status={validation.status}
             filterOption={(input, option) =>
               `${option.value}`.toLowerCase().indexOf(input.toLowerCase()) >= 0
             }
