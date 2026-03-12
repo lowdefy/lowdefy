@@ -285,11 +285,13 @@ During `writePluginImports`, schema maps are generated for runtime validation:
 
 Each function:
 1. Groups used plugin types by package
-2. Imports the `schemas` export from each package (e.g., `@lowdefy/actions-core/schemas`)
+2. Imports metadata/schemas from each package
 3. Prioritizes custom schemas from `context.typesMap.schemas` over package schemas
 4. Writes a JSON map: `{ "TypeName": { type, properties/params, ... } }`
 
-**Schema export convention:** Plugin packages export schemas via a `/schemas` entry point:
+**Block schemas** are generated from `meta.js` files: `writeBlockSchemaMap` imports the `metas` export from each block package (e.g., `@lowdefy/blocks-antd/metas`), then calls `buildBlockSchema(meta)` from `@lowdefy/block-utils` to generate full JSON Schemas. It falls back to importing from `/schemas` for backward compatibility with older plugin packages. In addition to `plugins/blockSchemas.json`, it also writes `plugins/blockMetas.json` with runtime metadata (category, valueType, initValue) from `context.typesMap.blockMetas` or the meta objects.
+
+**Action and operator schemas** are imported from a `/schemas` entry point:
 
 ```json
 // package.json exports

@@ -39,44 +39,89 @@ Blocks are:
 
 Each block package has:
 
-- `src/blocks/{BlockName}/{BlockName}.js` — React component with `.meta` static property
-- `src/blocks/{BlockName}/schema.js` — Property validation schema (JS module)
+- `src/blocks/{BlockName}/{BlockName}.js` — React component
+- `src/blocks/{BlockName}/meta.js` — Block metadata (category, icons, valueType, cssKeys, events, properties schema)
 - `src/blocks.js` — Named exports of all block components
+- `src/metas.js` — Named exports of all block `meta.js` files
+- `src/types.js` — Type declarations derived from metas via `extractBlockTypes`
 
-### Type Extraction (`types.json`)
+### Block Metadata (`meta.js`)
 
-Plugin packages no longer ship hand-written `types.js` files. Instead, a shared extraction script (`extract-plugin-types` from `@lowdefy/node-utils`) runs as part of each plugin's build command:
+Each block has a `meta.js` file that is the single source of truth for all metadata:
 
-```json
-{
-  "build": "swc src --out-dir dist ... && extract-plugin-types"
-}
+```javascript
+// src/blocks/Anchor/meta.js
+export default {
+  category: 'display',
+  icons: ['AiOutlineLoading3Quarters'],
+  valueType: null,
+  cssKeys: {
+    element: 'The anchor element.',
+  },
+  events: {
+    onClick: 'Called when Anchor is clicked.',
+  },
+  properties: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      title: { type: 'string', description: 'Text to display in the anchor.' },
+      disabled: { type: 'boolean', default: false, description: 'Disable the anchor if true.' },
+      // ...
+    },
+  },
+};
 ```
 
-The script:
+| Field        | Type         | Description                                                             |
+| ------------ | ------------ | ----------------------------------------------------------------------- |
+| `category`   | string       | Block category (`container`, `input`, `display`, `list`, `context`)     |
+| `icons`      | string[]     | React-Icon names used by the block                                      |
+| `valueType`  | string\|null | Value type for input blocks (e.g., `'string'`, `'number'`)              |
+| `cssKeys`    | object       | Map of CSS key names to descriptions (e.g., `{ element: '...' }`)       |
+| `events`     | object       | Map of event names to descriptions (e.g., `{ onClick: '...' }`)         |
+| `properties` | object       | JSON Schema for the block's properties                                  |
+| `slots`      | string[]     | Named slot names for containers (e.g., `['content', 'title', 'extra']`) |
 
-1. Imports the compiled module files (`blocks.js`, `connections.js`, `actions.js`, etc.) from `dist/`
-2. Extracts type names, icons, and block metadata (slots, cssKeys)
-3. Auto-detects slots from `content.XXX` usage and cssKeys from `styles.XXX`/`classNames.XXX` usage in block source
-4. Writes `dist/types.json` with the extracted metadata
+### Metas Barrel (`metas.js`)
 
-Example `types.json` for a block package:
+Named exports of all block metadata for the package:
+
+```javascript
+// src/metas.js
+export { default as Anchor } from './blocks/Anchor/meta.js';
+export { default as Box } from './blocks/Box/meta.js';
+export { default as Icon } from './blocks/Icon/meta.js';
+// ...
+```
+
+### Types (`types.js`)
+
+Each block package has a `types.js` that derives type information from the metas barrel using `extractBlockTypes` from `@lowdefy/block-utils`:
+
+```javascript
+// src/types.js
+import { extractBlockTypes } from '@lowdefy/block-utils';
+import * as metas from './metas.js';
+
+export default extractBlockTypes(metas);
+```
+
+This produces a types object with `{ blocks, icons, blockMetas }` — see [@lowdefy/block-utils](../../utils/block-utils.md#extractblocktypesmetas) for details. The build pipeline reads `types.js` to resolve plugin types without loading full block component trees (which would pull in CSS, browser APIs, and heavy libraries).
+
+### Package Exports
+
+Block packages expose three entry points:
 
 ```json
 {
-  "blocks": ["Button", "Card", "TextInput"],
-  "icons": {
-    "Button": ["AiOutlineLoading3Quarters"],
-    "Card": []
-  },
-  "blockMetas": {
-    "Card": { "slots": ["title", "extra", "cover"], "cssKeys": ["header", "body"] },
-    "TextInput": { "cssKeys": ["element"] }
+  "exports": {
+    "./blocks": "./dist/blocks.js",
+    "./metas": "./dist/metas.js",
+    "./types": "./dist/types.js"
   }
 }
 ```
-
-The build pipeline reads `types.json` to resolve plugin types without loading full module trees (which would pull in CSS files, browser APIs, and heavy libraries).
 
 ## Block Configuration
 
@@ -135,7 +180,7 @@ Each block has:
 
 ## Runtime Schema Validation
 
-Each block can export a `schema.js` file describing its expected `properties` shape. These schemas are collected at build time into `plugins/blockSchemas.json`.
+Each block's `meta.js` file includes a `properties` JSON Schema. At build time, `writeBlockSchemaMap` imports the `metas` barrel from each package, calls `buildBlockSchema(meta)` to generate a full block schema (including `class`, `style`, `events`, and container `blocks`/`areas`), and writes `plugins/blockSchemas.json`. It also writes `plugins/blockMetas.json` with runtime metadata (category, valueType, initValue).
 
 When a `BlockError` occurs at runtime, the server validates the `received` properties against the block's schema and produces a diagnostic `ConfigError` with a human-readable message:
 
@@ -171,3 +216,11 @@ Blocks declare their category for:
 - IDE tooling support
 
 Categories: `container`, `input`, `display`, `list`, `context`
+
+### Why `meta.js` Instead of Separate Files?
+
+Previously, block metadata was split between a `.meta` static property on the component and a separate `schema.js` file. The `meta.js` file consolidates everything into a single source of truth that:
+
+- Can be imported without loading React or heavy component dependencies
+- Enables the metas barrel (`metas.js`) for lightweight type extraction
+- Contains both validation schemas and runtime metadata in one place

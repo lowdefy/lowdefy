@@ -109,6 +109,56 @@ Uses DOMPurify for sanitization, removing:
 - `javascript:` URLs
 - Other XSS vectors
 
+## Build Utilities
+
+### extractBlockTypes(metas)
+
+Derives plugin type information from a metas barrel export. Used by each block package's `types.js` to produce the types object that the build pipeline reads.
+
+```javascript
+import { extractBlockTypes } from '@lowdefy/block-utils';
+import * as metas from './metas.js';
+
+export default extractBlockTypes(metas);
+// Returns:
+// {
+//   blocks: ['Anchor', 'Box', 'Icon'],
+//   icons: { Anchor: ['AiOutlineLoading3Quarters'], Box: [], Icon: [] },
+//   blockMetas: {
+//     Anchor: { category: 'display', cssKeys: ['element'] },
+//     Box: { category: 'container', slots: ['content'] },
+//     Icon: { category: 'display' },
+//   }
+// }
+```
+
+**Input:** `metas` — object with block names as keys and meta objects as values (typically a namespace import of `metas.js`).
+
+**Output:** `{ blocks, icons, blockMetas }` where:
+- `blocks` — array of block type names
+- `icons` — map of block name → icon name arrays
+- `blockMetas` — map of block name → `{ category, valueType?, initValue?, slots?, cssKeys? }` (cssKeys are reduced to an array of key names)
+
+### buildBlockSchema(meta)
+
+Generates a full JSON Schema for a block from its `meta.js` object. Used by `writeBlockSchemaMap` at build time.
+
+```javascript
+import { buildBlockSchema } from '@lowdefy/block-utils';
+
+const schema = buildBlockSchema(meta);
+// Generates schema with: id, type, layout, visible, required, properties,
+// class (with --block + --{cssKey} entries), style, events
+// Containers also get: blocks, areas
+```
+
+The generated schema includes:
+- **`class`** — validates `--block` and `--{cssKey}` entries from `meta.cssKeys`
+- **`style`** — validates `--block` and `--{cssKey}` entries for inline styles
+- **`events`** — validates event names from `meta.events`
+- **`properties`** — uses `meta.properties` directly
+- **Container blocks** (`meta.category === 'container'`) also get `blocks` and `areas` properties
+
 ## Constants
 
 ### blockSchema
@@ -192,9 +242,12 @@ const RichText = ({ properties }) => {
 
 | File                      | Purpose                    |
 | ------------------------- | -------------------------- |
-| `src/makeCssClass.js`     | CSS class generation       |
-| `src/mediaToCssObject.js` | Media query transformation |
-| `src/renderHtml.js`       | HTML sanitization          |
-| `src/ErrorBoundary.js`    | Error boundary component   |
-| `src/HtmlComponent.js`    | Safe HTML component        |
-| `src/blockSchema.js`      | Default block schema       |
+| `src/extractBlockTypes.js` | Derive types from metas barrel |
+| `src/buildBlockSchema.js`  | Generate JSON Schema from meta |
+| `src/makeCssClass.js`      | CSS class generation           |
+| `src/mediaToCssObject.js`  | Media query transformation     |
+| `src/renderHtml.js`        | HTML sanitization              |
+| `src/ErrorBoundary.js`     | Error boundary component       |
+| `src/HtmlComponent.js`     | Safe HTML component            |
+| `src/blockSchema.js`       | Default block schema           |
+| `src/withBlockDefaults.js` | Block default props wrapper    |

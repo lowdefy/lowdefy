@@ -58,6 +58,7 @@ Uses `@lowdefy/server-dev` instead of `@lowdefy/server`, outputs to `directories
 │       └── plugins/
 │           ├── actionSchemas.json     # Action param schemas (for runtime validation)
 │           ├── blockSchemas.json      # Block property schemas (for runtime validation)
+│           ├── blockMetas.json        # Block runtime metadata (category, valueType, initValue)
 │           ├── operatorSchemas.json   # Operator param schemas (for runtime validation)
 │           └── operators/
 │               ├── clientJsMap.js
