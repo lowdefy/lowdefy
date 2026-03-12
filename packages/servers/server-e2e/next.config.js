@@ -3,12 +3,7 @@ const lowdefyConfig = require('./build/config.json');
 const nextConfig = {
   basePath: lowdefyConfig.basePath,
   reactStrictMode: true,
-  transpilePackages: [
-    '@lowdefy/client',
-    '@lowdefy/blocks-loaders',
-    '@lowdefy/blocks-color-selectors',
-    '@lowdefy/blocks-markdown',
-  ],
+  transpilePackages: ['@lowdefy/client', '@lowdefy/blocks-loaders', '@lowdefy/blocks-markdown'],
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {

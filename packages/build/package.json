@@ -73,7 +73,6 @@
     "@lowdefy/blocks-aggrid": "4.6.0",
     "@lowdefy/blocks-algolia": "4.6.0",
     "@lowdefy/blocks-antd": "4.6.0",
-    "@lowdefy/blocks-color-selectors": "4.6.0",
     "@lowdefy/blocks-echarts": "4.6.0",
     "@lowdefy/blocks-google-maps": "4.6.0",
     "@lowdefy/blocks-markdown": "4.6.0",

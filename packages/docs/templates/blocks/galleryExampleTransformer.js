@@ -21,9 +21,107 @@ function slugify(title) {
     .replace(/^_|_$/g, '');
 }
 
-function transformer(sections) {
-  return sections.map((section, i) => {
+function buildStatePanel({ slug, blocks }) {
+  const stateObj = {};
+  blocks.forEach((block) => {
+    stateObj[block.id] = { _state: block.id };
+  });
+  return {
+    blocks: [
+      {
+        id: `gallery_state_wrap_${slug}`,
+        type: 'Box',
+        style: {
+          maxHeight: 400,
+          overflow: 'auto',
+        },
+        blocks: [
+          {
+            id: `gallery_state_${slug}`,
+            type: 'MarkdownWithCode',
+            style: {
+              whiteSpace: 'pre',
+            },
+            properties: {
+              content: {
+                _nunjucks: {
+                  template: '```yaml\n{{ state | safe }}```\n',
+                  on: {
+                    state: {
+                      _custom_yaml_stringify: [stateObj, { sortKeys: false }],
+                    },
+                  },
+                },
+              },
+            },
+          },
+        ],
+      },
+    ],
+  };
+}
+
+function transformer(sections, vars) {
+  const showState = vars && vars.showState;
+
+  return sections.map((section) => {
     const slug = slugify(section.title);
+    const panels = [];
+    if (showState) {
+      panels.push({
+        key: 'state',
+        title: 'State',
+        icon: 'AiOutlineDatabase',
+      });
+    }
+    panels.push({
+      key: 'config',
+      title: 'Config',
+      icon: 'AiOutlineCode',
+    });
+    const slots = {
+      config: {
+        blocks: [
+          {
+            id: `gallery_code_wrap_${slug}`,
+            type: 'Box',
+            style: {
+              maxHeight: 400,
+              overflow: 'auto',
+            },
+            blocks: [
+              {
+                id: `gallery_code_${slug}`,
+                type: 'MarkdownWithCode',
+                style: {
+                  whiteSpace: 'pre',
+                },
+                properties: {
+                  content: {
+                    _nunjucks: {
+                      template: '```yaml\n{{ blocks | safe }}```\n',
+                      on: {
+                        blocks: {
+                          _custom_yaml_stringify: [
+                            JSON.parse(JSON.stringify(section.blocks)),
+                            { sortKeys: false },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    };
+
+    if (showState) {
+      slots.state = buildStatePanel({ slug, blocks: section.blocks });
+    }
+
     return {
       id: `gallery_card_${slug}`,
       type: 'Card',
@@ -38,7 +136,6 @@ function transformer(sections) {
         title: section.title,
       },
       blocks: [
-        // Render the example blocks in a wrapper Box
         {
           id: `gallery_examples_${slug}`,
           type: 'Box',
@@ -47,58 +144,14 @@ function transformer(sections) {
           },
           blocks: section.blocks,
         },
-        // Collapsed config panel showing the YAML
         {
           id: `gallery_collapse_${slug}`,
           type: 'Collapse',
           properties: {
-            defaultActiveKey: [],
-            panels: [
-              {
-                key: 'config',
-                title: 'Config',
-                icon: 'AiOutlineCode',
-              },
-            ],
+            defaultActiveKey: showState ? ['state'] : [],
+            panels,
           },
-          slots: {
-            config: {
-              blocks: [
-                {
-                  id: `gallery_code_wrap_${slug}`,
-                  type: 'Box',
-                  style: {
-                    maxHeight: 400,
-                    overflow: 'auto',
-                  },
-                  blocks: [
-                    {
-                      id: `gallery_code_${slug}`,
-                      type: 'MarkdownWithCode',
-                      style: {
-                        whiteSpace: 'pre',
-                      },
-                      properties: {
-                        content: {
-                          _nunjucks: {
-                            template: '```yaml\n{{ blocks | safe }}```\n',
-                            on: {
-                              blocks: {
-                                _custom_yaml_stringify: [
-                                  JSON.parse(JSON.stringify(section.blocks)),
-                                  { sortKeys: false },
-                                ],
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  ],
-                },
-              ],
-            },
-          },
+          slots,
         },
       ],
     };

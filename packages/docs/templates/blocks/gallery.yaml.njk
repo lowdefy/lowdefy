@@ -73,11 +73,20 @@ _ref:
         layout:
           wrap: wrap
           gap: 16
+{% if onInit %}
+        events:
+          onMount:
+            _var: onInit
+{% endif %}
         blocks:
           _ref:
             path:
               _var: gallery
             transformer: templates/blocks/galleryExampleTransformer.js
+{% if section == 'Input Blocks' %}
+            vars:
+              showState: true
+{% endif %}
 
       - id: gallery_ref_divider
         type: Divider

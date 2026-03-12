@@ -30,7 +30,6 @@ const defaultPackages = [
   '@lowdefy/blocks-algolia',
   '@lowdefy/blocks-antd',
   '@lowdefy/blocks-basic',
-  '@lowdefy/blocks-color-selectors',
   '@lowdefy/blocks-echarts',
   '@lowdefy/blocks-google-maps',
   '@lowdefy/blocks-loaders',

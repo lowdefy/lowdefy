@@ -36,7 +36,6 @@ Beyond production server:
 Additional block packages:
 
 - `@lowdefy/blocks-aggrid`
-- `@lowdefy/blocks-color-selectors`
 - `@lowdefy/blocks-echarts`
 - `@lowdefy/blocks-markdown`
 - `@lowdefy/blocks-qr`

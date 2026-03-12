@@ -242,7 +242,7 @@ function makeBlockDefinition({
         return block;
       case 'color':
         block.type = 'ColorSelector';
-        block.properties.showValue = true;
+        block.properties.showText = true;
         block.properties.size = 'small';
         return block;
       case 'date':
