@@ -902,6 +902,27 @@ test('create unique block ids', () => {
   });
 });
 
+test('block with same id as page throws', () => {
+  const components = {
+    pages: [
+      {
+        id: 'box',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'box',
+            type: 'Display',
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context })).toThrow(
+    'Block id "box" on page "box" collides with the page id. A block cannot have the same id as its page.'
+  );
+});
+
 test('different blockId counter for each page', () => {
   const components = {
     pages: [
