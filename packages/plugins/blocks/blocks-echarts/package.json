@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/blocks-echarts",
-  "version": "4.6.0",
+  "version": "4.7.0",
   "license": "Apache-2.0",
   "description": "ECharts Blocks for Lowdefy.",
   "homepage": "https://lowdefy.com",
@@ -49,7 +49,7 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@lowdefy/block-utils": "4.6.0",
+    "@lowdefy/block-utils": "4.7.0",
     "echarts": "5.5.1",
     "echarts-for-react": "3.0.2",
     "react": "18.2.0",

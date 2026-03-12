@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/operators-dayjs",
-  "version": "4.6.0",
+  "version": "4.7.0",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -47,11 +47,11 @@
     "test": "TZ=UTC node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@lowdefy/operators": "4.6.0",
+    "@lowdefy/operators": "4.7.0",
     "dayjs": "1.11.19"
   },
   "devDependencies": {
-    "@lowdefy/node-utils": "4.6.0",
+    "@lowdefy/node-utils": "4.7.0",
     "@swc/cli": "0.8.0",
     "@swc/core": "1.15.18",
     "@swc/jest": "0.2.39",

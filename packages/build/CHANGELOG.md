@@ -1,5 +1,55 @@
 # Change Log
 
+## 4.7.0
+
+### Minor Changes
+
+- 4543688f7: feat: Single-pass async walker for ref resolution
+
+  **Single-Pass Walker (`@lowdefy/build`)**
+
+  - New `walker` module replaces the multi-pass JSON round-trip architecture in `buildRefs` with a single async tree walk
+  - Resolves `_ref` markers, evaluates `_build.*` operators, and tags `~r` provenance in one pass instead of 5+ `serializer.copy` calls per ref
+  - Wired into both `buildRefs` (production) and `buildPageJit` (dev server)
+  - Added `isPageContentPath` for semantic shallow build matching, replacing brittle path-index checks
+  - Deleted redundant code replaced by walker: `getRefsFromFile`, `populateRefs`, `createRefReviver`, and the `evaluateStaticOperators` wrapper
+
+  **In-Place Operator Evaluation (`@lowdefy/operators`)**
+
+  - New `evaluateOperators` function walks a tree in-place and evaluates operator nodes, avoiding JSON serialization round-trips
+  - Used by the walker module to evaluate `_build.*` operators inline during ref resolution
+
+  **Serializer Fix (`@lowdefy/helpers`)**
+
+  - Added `skipMarkers` option to `serializer.serializeToString` to exclude internal markers (`~k`, `~r`, `~l`, `~arr`) from serialized output
+
+### Patch Changes
+
+- e1274566b: fix(build): Report all ref errors at once instead of stopping on the first one.
+
+  When multiple referenced files have errors (missing files, YAML parse errors, invalid refs), the build now collects and reports all errors at once instead of stopping on the first failure. This reduces the fix-rebuild-fix cycle when multiple config files have issues.
+
+- 5716be2c8: fix(build): Preserve inline page content in JIT builds
+
+  Pages declared inline in `lowdefy.yaml` (not via `_ref`) had their content stripped during shallow builds with no way to recover at JIT time, resulting in empty page shells. Detect inline pages by checking refId matches root ref with no sourceRef, and skip stripping. Set refId to null for inline pages in `createPageRegistry` so `buildPageJit` reads the pre-built artifact instead of attempting JIT resolution.
+
+- 5a556b918: fix(build): Improve error message for YAML errors in njk templates
+
+  When a .yaml.njk nunjucks template produces invalid YAML, the error now says "Nunjucks template produced invalid YAML" instead of showing a misleading line number from the generated output.
+
+- Updated dependencies [4543688f7]
+- Updated dependencies [811f80760]
+- Updated dependencies [dea6651a1]
+  - @lowdefy/operators@4.7.0
+  - @lowdefy/helpers@4.7.0
+  - @lowdefy/blocks-basic@4.7.0
+  - @lowdefy/operators-js@4.7.0
+  - @lowdefy/blocks-loaders@4.7.0
+  - @lowdefy/node-utils@4.7.0
+  - @lowdefy/nunjucks@4.7.0
+  - @lowdefy/ajv@4.7.0
+  - @lowdefy/errors@4.7.0
+
 ## 4.6.0
 
 ### Minor Changes

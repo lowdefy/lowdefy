@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/connection-test",
-  "version": "4.6.0",
+  "version": "4.7.0",
   "license": "Apache-2.0",
   "description": "Lowdefy test connection for debugging requests and errors.",
   "homepage": "https://lowdefy.com",
@@ -21,7 +21,7 @@
     "build": "extract-plugin-types"
   },
   "dependencies": {
-    "@lowdefy/errors": "4.6.0"
+    "@lowdefy/errors": "4.7.0"
   },
   "devDependencies": {
     "@lowdefy/node-utils": "4.5.2"

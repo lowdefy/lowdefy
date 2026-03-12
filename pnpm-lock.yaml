@@ -48,25 +48,25 @@ importers:
   packages/api:
     dependencies:
       '@lowdefy/ajv':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../utils/ajv
       '@lowdefy/errors':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../utils/errors
       '@lowdefy/helpers':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../utils/helpers
       '@lowdefy/node-utils':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../utils/node-utils
       '@lowdefy/nunjucks':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../utils/nunjucks
       '@lowdefy/operators':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../operators
       '@lowdefy/operators-js':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../plugins/operators/operators-js
     devDependencies:
       '@jest/globals':
@@ -83,36 +83,36 @@ importers:
         version: 0.2.39(@swc/core@1.15.18)
       jest:
         specifier: 28.1.3
-        version: 28.1.3(@types/node@20.6.2)
+        version: 28.1.3(@types/node@16.18.101)
 
   packages/build:
     dependencies:
       '@lowdefy/ajv':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../utils/ajv
       '@lowdefy/blocks-basic':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../plugins/blocks/blocks-basic
       '@lowdefy/blocks-loaders':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../plugins/blocks/blocks-loaders
       '@lowdefy/errors':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../utils/errors
       '@lowdefy/helpers':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../utils/helpers
       '@lowdefy/node-utils':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../utils/node-utils
       '@lowdefy/nunjucks':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../utils/nunjucks
       '@lowdefy/operators':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../operators
       '@lowdefy/operators-js':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../plugins/operators/operators-js
       ajv:
         specifier: 8.12.0
@@ -131,97 +131,97 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/actions-core':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../plugins/actions/actions-core
       '@lowdefy/actions-pdf-make':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../plugins/actions/actions-pdf-make
       '@lowdefy/blocks-aggrid':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../plugins/blocks/blocks-aggrid
       '@lowdefy/blocks-algolia':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../plugins/blocks/blocks-algolia
       '@lowdefy/blocks-antd':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../plugins/blocks/blocks-antd
       '@lowdefy/blocks-echarts':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../plugins/blocks/blocks-echarts
       '@lowdefy/blocks-google-maps':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../plugins/blocks/blocks-google-maps
       '@lowdefy/blocks-markdown':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../plugins/blocks/blocks-markdown
       '@lowdefy/blocks-qr':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../plugins/blocks/blocks-qr
       '@lowdefy/connection-axios-http':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../plugins/connections/connection-axios-http
       '@lowdefy/connection-elasticsearch':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../plugins/connections/connection-elasticsearch
       '@lowdefy/connection-google-sheets':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../plugins/connections/connection-google-sheets
       '@lowdefy/connection-knex':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../plugins/connections/connection-knex
       '@lowdefy/connection-mongodb':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../plugins/connections/connection-mongodb
       '@lowdefy/connection-redis':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../plugins/connections/connection-redis
       '@lowdefy/connection-sendgrid':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../plugins/connections/connection-sendgrid
       '@lowdefy/connection-stripe':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../plugins/connections/connection-stripe
       '@lowdefy/connection-test':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../plugins/connections/connection-test
       '@lowdefy/logger':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../utils/logger
       '@lowdefy/operators-change-case':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../plugins/operators/operators-change-case
       '@lowdefy/operators-dayjs':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../plugins/operators/operators-dayjs
       '@lowdefy/operators-diff':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../plugins/operators/operators-diff
       '@lowdefy/operators-jsonata':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../plugins/operators/operators-jsonata
       '@lowdefy/operators-mql':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../plugins/operators/operators-mql
       '@lowdefy/operators-nunjucks':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../plugins/operators/operators-nunjucks
       '@lowdefy/operators-uuid':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../plugins/operators/operators-uuid
       '@lowdefy/operators-yaml':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../plugins/operators/operators-yaml
       '@lowdefy/plugin-auth0':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../plugins/plugins/plugin-auth0
       '@lowdefy/plugin-aws':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../plugins/plugins/plugin-aws
       '@lowdefy/plugin-csv':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../plugins/plugins/plugin-csv
       '@lowdefy/plugin-next-auth':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../plugins/plugins/plugin-next-auth
       '@swc/cli':
         specifier: 0.8.0
@@ -242,16 +242,16 @@ importers:
   packages/cli:
     dependencies:
       '@lowdefy/errors':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../utils/errors
       '@lowdefy/helpers':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../utils/helpers
       '@lowdefy/logger':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../utils/logger
       '@lowdefy/node-utils':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../utils/node-utils
       axios:
         specifier: 1.8.2
@@ -300,22 +300,22 @@ importers:
         specifier: 6.1.0
         version: 6.1.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@lowdefy/block-utils':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../utils/block-utils
       '@lowdefy/engine':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../engine
       '@lowdefy/errors':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../utils/errors
       '@lowdefy/helpers':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../utils/helpers
       '@lowdefy/layout':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../layout
       '@lowdefy/logger':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../utils/logger
       classnames:
         specifier: 2.3.2
@@ -334,7 +334,7 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/jest-yaml-transform':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../utils/jest-yaml-transform
       '@swc/cli':
         specifier: 0.8.0
@@ -370,7 +370,7 @@ importers:
   packages/docs:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../utils/helpers
       yaml:
         specifier: 2.3.4
@@ -395,29 +395,29 @@ importers:
   packages/engine:
     dependencies:
       '@lowdefy/errors':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../utils/errors
       '@lowdefy/helpers':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../utils/helpers
       '@lowdefy/operators':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../operators
     devDependencies:
       '@jest/globals':
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/actions-core':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../plugins/actions/actions-core
       '@lowdefy/build':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../build
       '@lowdefy/operators-js':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../plugins/operators/operators-js
       '@lowdefy/operators-mql':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../plugins/operators/operators-mql
       '@swc/cli':
         specifier: 0.8.0
@@ -490,10 +490,10 @@ importers:
   packages/layout:
     dependencies:
       '@lowdefy/block-utils':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../utils/block-utils
       '@lowdefy/helpers':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../utils/helpers
       react:
         specifier: 18.2.0
@@ -506,10 +506,10 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/block-dev':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../utils/block-dev
       '@lowdefy/jest-yaml-transform':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../utils/jest-yaml-transform
       '@swc/cli':
         specifier: 0.8.0
@@ -545,10 +545,10 @@ importers:
   packages/operators:
     dependencies:
       '@lowdefy/errors':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../utils/errors
       '@lowdefy/helpers':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../utils/helpers
     devDependencies:
       '@jest/globals':
@@ -573,10 +573,10 @@ importers:
   packages/plugins/actions/actions-core:
     dependencies:
       '@lowdefy/errors':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/errors
       '@lowdefy/helpers':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/helpers
     devDependencies:
       '@jest/globals':
@@ -647,10 +647,10 @@ importers:
         specifier: 30.2.0
         version: 30.2.0
       '@lowdefy/block-utils':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/block-utils
       '@lowdefy/helpers':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/helpers
       react:
         specifier: 18.2.0
@@ -675,7 +675,7 @@ importers:
         specifier: 3.5.2
         version: 3.5.2(@algolia/client-search@4.20.0)(@types/react@18.2.38)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(search-insights@2.8.3)
       '@lowdefy/block-utils':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/block-utils
       react:
         specifier: 18.2.0
@@ -700,10 +700,10 @@ importers:
         specifier: 6.1.0
         version: 6.1.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@lowdefy/block-utils':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/block-utils
       '@lowdefy/helpers':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/helpers
       '@rc-component/motion':
         specifier: 1.3.1
@@ -725,13 +725,13 @@ importers:
         version: 18.2.0(react@18.2.0)
     devDependencies:
       '@lowdefy/block-dev-e2e':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/block-dev-e2e
       '@lowdefy/e2e-utils':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/e2e-utils
       '@lowdefy/node-utils':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/node-utils
       '@playwright/test':
         specifier: 1.50.1
@@ -749,10 +749,10 @@ importers:
   packages/plugins/blocks/blocks-basic:
     dependencies:
       '@lowdefy/block-utils':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/block-utils
       '@lowdefy/helpers':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/helpers
       dompurify:
         specifier: 3.2.4
@@ -765,10 +765,10 @@ importers:
         version: 18.2.0(react@18.2.0)
     devDependencies:
       '@lowdefy/block-dev-e2e':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/block-dev-e2e
       '@lowdefy/e2e-utils':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/e2e-utils
       '@playwright/test':
         specifier: 1.50.1
@@ -786,7 +786,7 @@ importers:
   packages/plugins/blocks/blocks-echarts:
     dependencies:
       '@lowdefy/block-utils':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/block-utils
       echarts:
         specifier: 5.5.1
@@ -814,7 +814,7 @@ importers:
   packages/plugins/blocks/blocks-google-maps:
     dependencies:
       '@lowdefy/block-utils':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/block-utils
       '@react-google-maps/api':
         specifier: 2.19.2
@@ -839,10 +839,10 @@ importers:
   packages/plugins/blocks/blocks-loaders:
     dependencies:
       '@lowdefy/block-utils':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/block-utils
       '@lowdefy/helpers':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/helpers
       react:
         specifier: 18.2.0
@@ -864,7 +864,7 @@ importers:
   packages/plugins/blocks/blocks-markdown:
     dependencies:
       '@lowdefy/block-utils':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/block-utils
       dompurify:
         specifier: 3.2.4
@@ -901,7 +901,7 @@ importers:
   packages/plugins/blocks/blocks-qr:
     dependencies:
       '@lowdefy/block-utils':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/block-utils
       html5-qrcode:
         specifier: 2.3.8
@@ -926,14 +926,14 @@ importers:
   packages/plugins/connections/connection-axios-http:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/helpers
       axios:
         specifier: 1.8.2
         version: 1.8.2
     devDependencies:
       '@lowdefy/ajv':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.0
@@ -954,14 +954,14 @@ importers:
         specifier: 7.17.12
         version: 7.17.12
       '@lowdefy/helpers':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/helpers
     devDependencies:
       '@jest/globals':
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/ajv':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.0
@@ -979,7 +979,7 @@ importers:
   packages/plugins/connections/connection-google-sheets:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/helpers
       dayjs:
         specifier: 1.11.19
@@ -995,7 +995,7 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/ajv':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.0
@@ -1013,7 +1013,7 @@ importers:
   packages/plugins/connections/connection-knex:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/helpers
       knex:
         specifier: 2.5.1
@@ -1035,7 +1035,7 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/ajv':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.0
@@ -1053,7 +1053,7 @@ importers:
   packages/plugins/connections/connection-mongodb:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/helpers
       '@next-auth/mongodb-adapter':
         specifier: 1.1.3
@@ -1066,7 +1066,7 @@ importers:
         version: 1.0.3
     devDependencies:
       '@lowdefy/ajv':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/ajv
       '@shelf/jest-mongodb':
         specifier: 4.3.2
@@ -1102,7 +1102,7 @@ importers:
   packages/plugins/connections/connection-redis:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/helpers
       redis:
         specifier: 4.6.11
@@ -1112,7 +1112,7 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/ajv':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.0
@@ -1130,7 +1130,7 @@ importers:
   packages/plugins/connections/connection-sendgrid:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/helpers
       '@sendgrid/mail':
         specifier: 7.7.0
@@ -1140,7 +1140,7 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/ajv':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.0
@@ -1158,7 +1158,7 @@ importers:
   packages/plugins/connections/connection-stripe:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/helpers
       stripe:
         specifier: 14.5.0
@@ -1168,7 +1168,7 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/ajv':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.0
@@ -1186,7 +1186,7 @@ importers:
   packages/plugins/connections/connection-test:
     dependencies:
       '@lowdefy/errors':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/errors
     devDependencies:
       '@lowdefy/node-utils':
@@ -1196,10 +1196,10 @@ importers:
   packages/plugins/operators/operators-change-case:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/helpers
       '@lowdefy/operators':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../operators
       change-case:
         specifier: 5.4.0
@@ -1227,14 +1227,14 @@ importers:
   packages/plugins/operators/operators-dayjs:
     dependencies:
       '@lowdefy/operators':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../operators
       dayjs:
         specifier: 1.11.19
         version: 1.11.19
     devDependencies:
       '@lowdefy/node-utils':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.0
@@ -1255,10 +1255,10 @@ importers:
   packages/plugins/operators/operators-diff:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/helpers
       '@lowdefy/operators':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../operators
       deep-diff:
         specifier: 1.0.2
@@ -1286,10 +1286,10 @@ importers:
   packages/plugins/operators/operators-js:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/helpers
       '@lowdefy/operators':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../operators
     devDependencies:
       '@jest/globals':
@@ -1317,10 +1317,10 @@ importers:
   packages/plugins/operators/operators-jsonata:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/helpers
       '@lowdefy/operators':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../operators
       jsonata:
         specifier: 1.8.7
@@ -1351,10 +1351,10 @@ importers:
   packages/plugins/operators/operators-mql:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/helpers
       '@lowdefy/operators':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../operators
       mingo:
         specifier: 6.4.9
@@ -1382,13 +1382,13 @@ importers:
   packages/plugins/operators/operators-nunjucks:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/helpers
       '@lowdefy/nunjucks':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/nunjucks
       '@lowdefy/operators':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../operators
     devDependencies:
       '@lowdefy/node-utils':
@@ -1413,10 +1413,10 @@ importers:
   packages/plugins/operators/operators-uuid:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/helpers
       '@lowdefy/operators':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../operators
       uuid:
         specifier: 13.0.0
@@ -1447,10 +1447,10 @@ importers:
   packages/plugins/operators/operators-yaml:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/helpers
       '@lowdefy/operators':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../operators
       yaml:
         specifier: 2.3.4
@@ -1499,13 +1499,13 @@ importers:
   packages/plugins/plugins/plugin-aws:
     dependencies:
       '@lowdefy/block-utils':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/block-utils
       '@lowdefy/blocks-antd':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../blocks/blocks-antd
       '@lowdefy/helpers':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/helpers
       antd:
         specifier: 6.3.1
@@ -1524,13 +1524,13 @@ importers:
         specifier: 11.10.5
         version: 11.10.5
       '@lowdefy/ajv':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/ajv
       '@lowdefy/block-dev':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/block-dev
       '@lowdefy/jest-yaml-transform':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../../utils/jest-yaml-transform
       '@swc/cli':
         specifier: 0.8.0
@@ -1624,70 +1624,70 @@ importers:
         specifier: 2.1.2
         version: 2.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@lowdefy/actions-core':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/actions/actions-core
       '@lowdefy/api':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../api
       '@lowdefy/block-utils':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../utils/block-utils
       '@lowdefy/blocks-aggrid':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/blocks/blocks-aggrid
       '@lowdefy/blocks-antd':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/blocks/blocks-antd
       '@lowdefy/blocks-basic':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/blocks/blocks-basic
       '@lowdefy/blocks-echarts':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/blocks/blocks-echarts
       '@lowdefy/blocks-loaders':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/blocks/blocks-loaders
       '@lowdefy/blocks-markdown':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/blocks/blocks-markdown
       '@lowdefy/client':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../client
       '@lowdefy/connection-axios-http':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/connections/connection-axios-http
       '@lowdefy/connection-mongodb':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/connections/connection-mongodb
       '@lowdefy/errors':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../utils/errors
       '@lowdefy/helpers':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../utils/helpers
       '@lowdefy/layout':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../layout
       '@lowdefy/logger':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../utils/logger
       '@lowdefy/node-utils':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../utils/node-utils
       '@lowdefy/operators-dayjs':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/operators/operators-dayjs
       '@lowdefy/operators-js':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/operators/operators-js
       '@lowdefy/operators-nunjucks':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/operators/operators-nunjucks
       '@lowdefy/operators-uuid':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/operators/operators-uuid
       '@lowdefy/plugin-next-auth':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/plugins/plugin-next-auth
       '@sentry/nextjs':
         specifier: 8.53.0
@@ -1721,7 +1721,7 @@ importers:
         version: 13.0.0
     devDependencies:
       '@lowdefy/build':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../build
       '@next/eslint-plugin-next':
         specifier: 16.1.6
@@ -1748,103 +1748,103 @@ importers:
         specifier: 2.1.2
         version: 2.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@lowdefy/actions-core':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/actions/actions-core
       '@lowdefy/api':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../api
       '@lowdefy/block-utils':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../utils/block-utils
       '@lowdefy/blocks-aggrid':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/blocks/blocks-aggrid
       '@lowdefy/blocks-algolia':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/blocks/blocks-algolia
       '@lowdefy/blocks-antd':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/blocks/blocks-antd
       '@lowdefy/blocks-basic':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/blocks/blocks-basic
       '@lowdefy/blocks-echarts':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/blocks/blocks-echarts
       '@lowdefy/blocks-loaders':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/blocks/blocks-loaders
       '@lowdefy/blocks-markdown':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/blocks/blocks-markdown
       '@lowdefy/blocks-qr':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/blocks/blocks-qr
       '@lowdefy/build':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../build
       '@lowdefy/client':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../client
       '@lowdefy/connection-axios-http':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/connections/connection-axios-http
       '@lowdefy/connection-mongodb':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/connections/connection-mongodb
       '@lowdefy/connection-test':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/connections/connection-test
       '@lowdefy/docs':
         specifier: workspace:*
         version: link:../../docs
       '@lowdefy/engine':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../engine
       '@lowdefy/errors':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../utils/errors
       '@lowdefy/helpers':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../utils/helpers
       '@lowdefy/layout':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../layout
       '@lowdefy/logger':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../utils/logger
       '@lowdefy/node-utils':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../utils/node-utils
       '@lowdefy/operators-change-case':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/operators/operators-change-case
       '@lowdefy/operators-dayjs':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/operators/operators-dayjs
       '@lowdefy/operators-diff':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/operators/operators-diff
       '@lowdefy/operators-js':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/operators/operators-js
       '@lowdefy/operators-mql':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/operators/operators-mql
       '@lowdefy/operators-nunjucks':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/operators/operators-nunjucks
       '@lowdefy/operators-uuid':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/operators/operators-uuid
       '@lowdefy/operators-yaml':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/operators/operators-yaml
       '@lowdefy/plugin-aws':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/plugins/plugin-aws
       '@lowdefy/plugin-next-auth':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/plugins/plugin-next-auth
       antd:
         specifier: 6.3.1
@@ -1914,58 +1914,58 @@ importers:
         specifier: 2.1.2
         version: 2.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@lowdefy/actions-core':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/actions/actions-core
       '@lowdefy/api':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../api
       '@lowdefy/block-utils':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../utils/block-utils
       '@lowdefy/blocks-antd':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/blocks/blocks-antd
       '@lowdefy/blocks-basic':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/blocks/blocks-basic
       '@lowdefy/blocks-loaders':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/blocks/blocks-loaders
       '@lowdefy/blocks-markdown':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/blocks/blocks-markdown
       '@lowdefy/client':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../client
       '@lowdefy/connection-axios-http':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/connections/connection-axios-http
       '@lowdefy/connection-mongodb':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/connections/connection-mongodb
       '@lowdefy/errors':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../utils/errors
       '@lowdefy/helpers':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../utils/helpers
       '@lowdefy/layout':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../layout
       '@lowdefy/logger':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../utils/logger
       '@lowdefy/node-utils':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../utils/node-utils
       '@lowdefy/operators-js':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/operators/operators-js
       '@lowdefy/operators-nunjucks':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/operators/operators-nunjucks
       '@lowdefy/operators-uuid':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../plugins/operators/operators-uuid
       antd:
         specifier: 6.3.1
@@ -1993,7 +1993,7 @@ importers:
         version: 13.0.0
     devDependencies:
       '@lowdefy/build':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../../build
       '@next/eslint-plugin-next':
         specifier: 16.1.6
@@ -2017,7 +2017,7 @@ importers:
   packages/utils/ajv:
     dependencies:
       '@lowdefy/nunjucks':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../nunjucks
       ajv:
         specifier: 8.12.0
@@ -2045,10 +2045,10 @@ importers:
         specifier: 11.10.5
         version: 11.10.5
       '@lowdefy/block-utils':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../block-utils
       '@lowdefy/helpers':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../helpers
       '@testing-library/dom':
         specifier: 8.19.1
@@ -2091,7 +2091,7 @@ importers:
   packages/utils/block-dev-e2e:
     dependencies:
       '@lowdefy/e2e-utils':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../e2e-utils
       '@playwright/test':
         specifier: 1.50.1
@@ -2110,10 +2110,10 @@ importers:
         specifier: 11.11.2
         version: 11.11.2
       '@lowdefy/errors':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../errors
       '@lowdefy/helpers':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../helpers
       clsx:
         specifier: 2.1.1
@@ -2171,7 +2171,7 @@ importers:
   packages/utils/e2e-utils:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../helpers
       '@playwright/test':
         specifier: 1.50.1
@@ -2214,7 +2214,7 @@ importers:
   packages/utils/helpers:
     dependencies:
       '@lowdefy/errors':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../errors
       lodash.merge:
         specifier: 4.6.2
@@ -2260,10 +2260,10 @@ importers:
   packages/utils/logger:
     dependencies:
       '@lowdefy/errors':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../errors
       '@lowdefy/helpers':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../helpers
       ora:
         specifier: 7.0.1
@@ -2291,10 +2291,10 @@ importers:
   packages/utils/node-utils:
     dependencies:
       '@lowdefy/errors':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../errors
       '@lowdefy/helpers':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../helpers
       fs-extra:
         specifier: 11.1.1
@@ -2319,7 +2319,7 @@ importers:
   packages/utils/nunjucks:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 4.6.0
+        specifier: 4.7.0
         version: link:../helpers
       dayjs:
         specifier: 1.11.19
@@ -2364,6 +2364,9 @@ importers:
       framer-motion:
         specifier: ^11.0.0
         version: 11.18.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      gray-matter:
+        specifier: 4.0.3
+        version: 4.0.3
       lucide-react:
         specifier: ^0.400.0
         version: 0.400.0(react@18.2.0)
@@ -2379,6 +2382,12 @@ importers:
       react-dom:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
+      react-markdown:
+        specifier: 8.0.7
+        version: 8.0.7(@types/react@18.2.38)(react@18.2.0)
+      react-syntax-highlighter:
+        specifier: 15.5.0
+        version: 15.5.0(react@18.2.0)
     devDependencies:
       '@playwright/test':
         specifier: 1.50.1
@@ -2724,10 +2733,6 @@ packages:
     resolution: {integrity: sha512-XktuhWlJ5g+3TJXc5upd9Ks1HutSArik6jf2eAjYFyIOf4ej3RN+184cZbzDvbPnuTJIUhPKKJE3cIsYTiAT3w==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/code-frame@7.22.5':
-    resolution: {integrity: sha512-Xmwn266vad+6DAqEB2A6V/CcZVp62BbwVmcOJc2RPuwih1kw02TjQvWVWlcKGbBPd+8/0V5DEkOcizRGYsspYQ==}
-    engines: {node: '>=6.9.0'}
-
   '@babel/code-frame@7.23.5':
     resolution: {integrity: sha512-CgH3s1a96LipHCmSUmYFPwY7MNx8C3avkq7i4Wl3cfa662ldtUe4VM1TPXX70pfmrlWTb6jLqTYrZyT2ZTJBgA==}
     engines: {node: '>=6.9.0'}
@@ -2750,14 +2755,6 @@ packages:
 
   '@babel/core@7.29.0':
     resolution: {integrity: sha512-CGOfOJqWjg2qW/Mb6zNsDm+u5vFQ8DxXfbM09z69p5Z6+mE1ikP2jUXw+j42Pf1XTYED2Rni5f95npYeuwMDQA==}
-    engines: {node: '>=6.9.0'}
-
-  '@babel/generator@7.20.7':
-    resolution: {integrity: sha512-7wqMOJq8doJMZmP4ApXTzLxSr7+oO2jroJURrVEp6XShrQUObV8Tq/D0NCcoYg2uHqUrjzO0zwBjoYzelxK+sw==}
-    engines: {node: '>=6.9.0'}
-
-  '@babel/generator@7.23.0':
-    resolution: {integrity: sha512-lN85QRR+5IbYrMWM6Y4pE/noaQtg4pNiqeNGX60eqOfo6gtEj6uw/JagelB8vVztSd7R6M5n1+PQkDbHbBRU4g==}
     engines: {node: '>=6.9.0'}
 
   '@babel/generator@7.23.5':
@@ -2844,10 +2841,6 @@ packages:
     resolution: {integrity: sha512-Y4OZ+ytlatR8AI+8KZfKuL5urKp7qey08ha31L8b3BwewJAoJamTzyvxPR/5D+KkdJCGPq/+8TukHBlY10FX9A==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/helper-validator-identifier@7.22.5':
-    resolution: {integrity: sha512-aJXu+6lErq8ltp+JhkJUfk1MTGyuA4v7f3pA+BJ5HLfNC6nAQ0Cpi9uOquUj8Hehg0aUiHzWQbOVJGao6ztBAQ==}
-    engines: {node: '>=6.9.0'}
-
   '@babel/helper-validator-identifier@7.28.5':
     resolution: {integrity: sha512-qSs4ifwzKJSV39ucNjsvc6WVHs6b7S03sOh2OcHF9UHfVPqWWALUsNUVzhSBiItjRZoLHx7nIarVjqKVusUZ1Q==}
     engines: {node: '>=6.9.0'}
@@ -2872,23 +2865,9 @@ packages:
     resolution: {integrity: sha512-C/BaXcnnvBCmHTpz/VGZ8jgtE2aYlW4hxDhseJAWZb7gqGM/qtCK6iZUb0TyKFf7BOUsBH7Q7fkRsDRhg1XklQ==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/highlight@7.22.5':
-    resolution: {integrity: sha512-BSKlD1hgnedS5XRnGOljZawtag7H1yPfQp0tdNJCHoH6AZ+Pcm9VvkrK59/Yy593Ypg0zMxH2BxD1VPYUQ7UIw==}
-    engines: {node: '>=6.9.0'}
-
   '@babel/highlight@7.23.4':
     resolution: {integrity: sha512-acGdbYSfp2WheJoJm/EBBBLh/ID8KDc64ISZ9DYtBmC8/Q204PZJLHyzeB5qMzJ5trcOkybd78M4x2KWsUq++A==}
     engines: {node: '>=6.9.0'}
-
-  '@babel/parser@7.22.7':
-    resolution: {integrity: sha512-7NF8pOkHP5o2vpmGgNGcfAeCvOYhGLyA3Z4eBQkT1RJlWu47n63bCs93QfJ2hIAFCil7L5P2IWhs1oToVgrL0Q==}
-    engines: {node: '>=6.0.0'}
-    hasBin: true
-
-  '@babel/parser@7.23.0':
-    resolution: {integrity: sha512-vvPKKdMemU85V9WE/l5wZEmImpCtLqbnTvqDS2U1fJ96KrxoW7KrXhNsNCblQlg8Ck4b85yxdTyelsMUgFUXiw==}
-    engines: {node: '>=6.0.0'}
-    hasBin: true
 
   '@babel/parser@7.23.5':
     resolution: {integrity: sha512-hOOqoiNXrmGdFbhgCzu6GiURxUgM27Xwd/aPuu8RfHEZPBzL1Z54okAHAQjXfcQNwvrlkAmAp4SlRTZ45vlthQ==}
@@ -2967,10 +2946,6 @@ packages:
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
-  '@babel/runtime@7.20.7':
-    resolution: {integrity: sha512-UF0tvkUtxwAgZ5W/KrkHf0Rn0fdnLDU9ScxBrEVNUprE/MzirjK4MJUX1/BVDv00Sv8cljtukVK1aky++X1SjQ==}
-    engines: {node: '>=6.9.0'}
-
   '@babel/runtime@7.22.15':
     resolution: {integrity: sha512-T0O+aa+4w0u06iNmapipJXMV4HoUir03hpx3/YqXXhu9xim3w+dVphjFWl1OH8NbZHw5Lbm9k45drDkgq2VNNA==}
     engines: {node: '>=6.9.0'}
@@ -2995,10 +2970,6 @@ packages:
     resolution: {integrity: sha512-YA6Ma2KsCdGb+WC6UpBVFJGXL58MDA6oyONbjyF/+5sBgxY/dwkhLogbMT2GXXyU84/IhRw/2D1Os1B/giz+BQ==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/traverse@7.20.10':
-    resolution: {integrity: sha512-oSf1juCgymrSez8NI4A2sr4+uB/mFd9MXplYGPEBnfAuWmmyeVcHa6xLPiaRBcXkcb/28bgxmQLTVwFKE1yfsg==}
-    engines: {node: '>=6.9.0'}
-
   '@babel/traverse@7.23.5':
     resolution: {integrity: sha512-czx7Xy5a6sapWWRx61m1Ke1Ra4vczu1mCTtJam5zRTBOonfdJ+S/B6HYmGYu3fJtr8GGET3si6IhgWVBhJ/m8w==}
     engines: {node: '>=6.9.0'}
@@ -3007,16 +2978,8 @@ packages:
     resolution: {integrity: sha512-4HPiQr0X7+waHfyXPZpWPfWL/J7dcN1mx9gL6WdQVMbPnF3+ZhSMs8tCxN7oHddJE9fhNE7+lxdnlyemKfJRuA==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/types@7.20.7':
-    resolution: {integrity: sha512-69OnhBxSSgK0OzTJai4kyPDiKTIe3j+ctaHdIGVbRahTLAT7L3R9oeXHC2aVSuGYt3cVnoAMDmOCgJ2yaiLMvg==}
-    engines: {node: '>=6.9.0'}
-
   '@babel/types@7.22.19':
     resolution: {integrity: sha512-P7LAw/LbojPzkgp5oznjE6tQEIWbp4PkkfrZDINTro9zgBRtI324/EYsiSI7lhPbpIQ+DCeR2NNmMWANGGfZsg==}
-    engines: {node: '>=6.9.0'}
-
-  '@babel/types@7.23.0':
-    resolution: {integrity: sha512-0oIyUfKoI3mSqMvsxBdclDwxXKXAUA8v/apZbc+iSyARYou1o8ZGDxbUYyLFoW2arqS2jDGqJuZvv1d/io1axg==}
     engines: {node: '>=6.9.0'}
 
   '@babel/types@7.23.5':
@@ -3030,8 +2993,8 @@ packages:
   '@bcoe/v8-coverage@0.2.3':
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
 
-  '@borewit/text-codec@0.2.1':
-    resolution: {integrity: sha512-k7vvKPbf7J2fZ5klGRD9AeKfUvojuZIQ3BT5u7Jfv+puwXkUBUT5PVyMDfJZpy30CBDXGMgw7fguK/lpOMBvgw==}
+  '@borewit/text-codec@0.2.2':
+    resolution: {integrity: sha512-DDaRehssg1aNrH4+2hnj1B7vnUGEjU6OIlyRdkMd0aUdIUvKXrJfXsy8LVtXAy7DRvYVluWbMspsRhz2lcW0mQ==}
 
   '@changesets/apply-release-plan@6.1.4':
     resolution: {integrity: sha512-FMpKF1fRlJyCZVYHr3CbinpZZ+6MwvOtWUuO8uo+svcATEoc1zRDcj23pAurJ2TZ/uVz1wFHH6K3NlACy0PLew==}
@@ -3552,8 +3515,8 @@ packages:
       node-notifier:
         optional: true
 
-  '@jest/create-cache-key-function@30.2.0':
-    resolution: {integrity: sha512-44F4l4Enf+MirJN8X/NhdGkl71k5rBYiwdVlo4HxOwbu0sHV8QKrGEedb1VUU4K3W7fBKE0HGfbn7eZm0Ti3zg==}
+  '@jest/create-cache-key-function@30.3.0':
+    resolution: {integrity: sha512-hTupmOWylzeyqbMNeSNi7ZDprpjrcroAOOG+qCEW66st3+Z5RnYHVYkUt+zjIcLmrTUi2lPY79hJz8mB3L2oXQ==}
     engines: {node: ^18.14.0 || ^20.0.0 || ^22.0.0 || >=24.0.0}
 
   '@jest/environment@28.1.3':
@@ -3617,8 +3580,8 @@ packages:
     resolution: {integrity: sha512-RyjiyMUZrKz/c+zlMFO1pm70DcIlST8AeWTkoUdZevew44wcNZQHsEVOiCVtgVnlFFD82FPaXycys58cf2muVQ==}
     engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
 
-  '@jest/types@30.2.0':
-    resolution: {integrity: sha512-H9xg1/sfVvyfU7o3zMfBEjQ1gcsdeTMgqHoYdN79tuLqfTtuu7WckRA1R5whDwOzxaZAeMKTYWqP+WCAi0CHsg==}
+  '@jest/types@30.3.0':
+    resolution: {integrity: sha512-JHm87k7bA33hpBngtU8h6UBub/fqqA9uXfw+21j5Hmk7ooPHlboRNxHq0JcMtC+n8VJGP1mcfnD3Mk+XKe1oSw==}
     engines: {node: ^18.14.0 || ^20.0.0 || ^22.0.0 || >=24.0.0}
 
   '@jridgewell/gen-mapping@0.3.13':
@@ -4463,8 +4426,8 @@ packages:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
 
-  '@rc-component/picker@1.9.0':
-    resolution: {integrity: sha512-OLisdk8AWVCG9goBU1dWzuH5QlBQk8jktmQ6p0/IyBFwdKGwyIZOSjnBYo8hooHiTdl0lU+wGf/OfMtVBw02KQ==}
+  '@rc-component/picker@1.9.1':
+    resolution: {integrity: sha512-9FBYYsvH3HMLICaPDA/1Th5FLaDkFa7qAtangIdlhKb3ZALaR745e9PsOhheJb6asS4QXc12ffiAcjdkZ4C5/g==}
     engines: {node: '>=12.x'}
     peerDependencies:
       date-fns: '>= 2.x'
@@ -4588,8 +4551,8 @@ packages:
       react: '*'
       react-dom: '*'
 
-  '@rc-component/tree@1.2.3':
-    resolution: {integrity: sha512-mG8hF2ogQcKaEpfyxzPvMWqqkptofd7Sf+YiXOpPzuXLTLwNKfLDJtysc1/oybopbnzxNqWh2Vgwi+GYwNIb7w==}
+  '@rc-component/tree@1.2.4':
+    resolution: {integrity: sha512-5Gli43+m4R7NhpYYz3Z61I6LOw9yI6CNChxgVtvrO6xB1qML7iE6QMLVMB3+FTjo2yF6uFdAHtqWPECz/zbX5w==}
     engines: {node: '>=10.x'}
     peerDependencies:
       react: '*'
@@ -5343,9 +5306,6 @@ packages:
 
   '@types/prettier@2.7.2':
     resolution: {integrity: sha512-KufADq8uQqo1pYKVIYzfKbJfBAc0sOeXqGbFaSpv8MRmC/zXgowNZmFcbngndGk922QDmOASEXUZCaY48gs4cg==}
-
-  '@types/prop-types@15.7.5':
-    resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
 
   '@types/prop-types@15.7.8':
     resolution: {integrity: sha512-kMpQpfZKSCBqltAJwskgePRaYRFukDkm1oItcAbC3gNELR20XIBcN9VRgg4+m8DKsTfkWeA4m4Imp4DDuWy7FQ==}
@@ -6450,10 +6410,6 @@ packages:
     resolution: {integrity: sha512-p3KULyQg4S7NIHixdwbGX+nFHkoBiA4YQmyWtjb8XngSKV124nJmRysgAeujbUVb15vh+RvFUfCPqU7rXk+hZg==}
     engines: {node: '>=6.0'}
 
-  ci-info@3.7.1:
-    resolution: {integrity: sha512-4jYS4MOAaCIStSRwiuxc4B8MYhIe676yO1sYGzARnjXkWpmzZMMYxY6zu8WYWDhSuth5zhrQ1rhNSibyyvv4/w==}
-    engines: {node: '>=8'}
-
   ci-info@3.8.0:
     resolution: {integrity: sha512-eXTggHWSooYhq49F2opQhuHWgzucfF2YgODK4e1566GQs5BIfP30B0oenwBJHfWxAs2fyPB1s7Mg949zLf61Yw==}
     engines: {node: '>=8'}
@@ -6514,9 +6470,6 @@ packages:
   co@4.6.0:
     resolution: {integrity: sha512-QVb0dM5HvG+uaxitm8wONl7jltx8dqhfU33DcqtOZcLSVIKSDDLDi7+0LbAKiyI8hD9u42m2YxXSkMGWThaecQ==}
     engines: {iojs: '>= 1.0.0', node: '>= 0.12.0'}
-
-  collect-v8-coverage@1.0.1:
-    resolution: {integrity: sha512-iBPtljfCNcTKNAto0KEtDfZ3qzjJvqE3aTGZsbhjSBlorqpXJlaWWtPO35D+ZImoC3KWejX64o+yPGxhWSTzfg==}
 
   collect-v8-coverage@1.0.2:
     resolution: {integrity: sha512-lHl4d5/ONEbLlJvaJNtsF/Lz+WvB07u2ycqTYbdrq7UypDXailES4valYb2eWiJFxZlVmpGekfqoxQhzyFdT4Q==}
@@ -7448,6 +7401,10 @@ packages:
   ext@1.7.0:
     resolution: {integrity: sha512-6hxeJYaL110a9b5TEJSj0gojyHQAmA2ch5Os+ySCiA1QGdS697XWY1pzsrSjqA9LDEEgdB/KypIlR59RcLuHYw==}
 
+  extend-shallow@2.0.1:
+    resolution: {integrity: sha512-zCnTtlxNoAiDc3gqY2aYAWFx7XWWiasuF2K8Me5WbN8otHKTUKBwjPtNpRs/rbUZm7KxWAaNj7P1a/p52GbVug==}
+    engines: {node: '>=0.10.0'}
+
   extend@3.0.2:
     resolution: {integrity: sha512-fjquC59cD7CyW6urNXK0FBufkZcoiGG80wTuPujX590cB5Ttln20E2UB4S/WARVqhXffZl2LNgS+gQdPIIim/g==}
 
@@ -7868,6 +7825,10 @@ packages:
   graphemer@1.4.0:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
 
+  gray-matter@4.0.3:
+    resolution: {integrity: sha512-5v6yZd4JK3eMI3FqqCouswVqwugaA9r4dNZB1wwcmrD02QkV5H0y7XBQW8QwQqEaZY1pM9aqORSORhJRdNK44Q==}
+    engines: {node: '>=6.0'}
+
   gtoken@5.3.2:
     resolution: {integrity: sha512-gkvEKREW7dXWF8NV8pVrKfW7WqReAmjjkMBh6lNCCGOM4ucS0r0YyXXl0r/9Yj8wcW/32ISkfc8h5mPTDbtifQ==}
     engines: {node: '>=10'}
@@ -8219,6 +8180,10 @@ packages:
     resolution: {integrity: sha512-eljcgEDlEns/7AXFosB5K/2nCM4P7FQPkGc/DWLy5rmFEWvZayGrik1d9/QIY5nJ4f9YsVvBkA6kJpHn9rISdQ==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     hasBin: true
+
+  is-extendable@0.1.1:
+    resolution: {integrity: sha512-5BMULNob1vgFX6EjQw5izWDxrecWK9AM72rugNr0TFldMOi0fj6Jk+zeKIt0xGj4cEfQIJth4w3OKWOJ4f+AFw==}
+    engines: {node: '>=0.10.0'}
 
   is-extglob@2.1.1:
     resolution: {integrity: sha512-SbKbANkN603Vi4jEZv49LeVJMn4yGwsbzZworEoyEiutsN3nJYdbO36zfhGJ6QEDpOZIFkDtnq5JRxmvl3jsoQ==}
@@ -10315,9 +10280,6 @@ packages:
   refractor@3.6.0:
     resolution: {integrity: sha512-MY9W41IOWxxk31o+YvFCNyNzdkc9M20NoZK5vq6jkv4I/uh2zkWcfudj0Q1fovjUQJrNewS9NMzeTtqPf+n5EA==}
 
-  regenerator-runtime@0.13.11:
-    resolution: {integrity: sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==}
-
   regenerator-runtime@0.14.0:
     resolution: {integrity: sha512-srw17NI0TUWHuGa5CFGGmhfNIeja30WMBfbslPNhf6JrqQlLN5gcrvig1oqPxiVaXb0oW0XRKtH6Nngs5lKCIA==}
 
@@ -10531,6 +10493,10 @@ packages:
 
   search-insights@2.8.3:
     resolution: {integrity: sha512-W9rZfQ9XEfF0O6ntgQOTI7Txc8nkZrO4eJ/pTHK0Br6wWND2sPGPoWg+yGhdIW7wMbLqk8dc23IyEtLlNGpeNw==}
+
+  section-matter@1.0.0:
+    resolution: {integrity: sha512-vfD3pmTzGpufjScBh50YHKzEu2lxBWhVEHsNGoEXmCmn2hKGfeNLYMzCJpe8cD7gqX7TJluOVpBkAequ6dgMmA==}
+    engines: {node: '>=4'}
 
   secure-json-parse@2.6.0:
     resolution: {integrity: sha512-B9osKohb6L+EZ6Kve3wHKfsAClzOC/iISA2vSuCe5Jx5NAKiwitfxx8ZKYapHXr0sYRj7UZInT7pLb3rp2Yx6A==}
@@ -10903,6 +10869,10 @@ packages:
   strip-ansi@7.1.0:
     resolution: {integrity: sha512-iq6eVVI64nQQTRYq2KtEg2d2uU7LElhTJwsH4YzIHZshxlgZms/wIc4VoDQTlG/IvVIrBKG06CrZnp0qv7hkcQ==}
     engines: {node: '>=12'}
+
+  strip-bom-string@1.0.0:
+    resolution: {integrity: sha512-uCC2VHvQRYu+lMh4My/sFNmF2klFymLX1wHJeXnbEJERpV/ZsVuonzerjfrGpIGF7LBVa1O7i9kjiWvJiFck8g==}
+    engines: {node: '>=0.10.0'}
 
   strip-bom@3.0.0:
     resolution: {integrity: sha512-vavAMRXOgBVNF6nyEEmL3DBK19iRpDcoIwW+swQ+CbGiu7lju6t+JklA1MHweoWtadgt4ISVUsXLyDq34ddcwA==}
@@ -12092,7 +12062,7 @@ snapshots:
       '@smithy/util-defaults-mode-node': 2.0.15
       '@smithy/util-retry': 2.0.3
       '@smithy/util-utf8': 2.0.0
-      tslib: 2.8.1
+      tslib: 2.6.2
     transitivePeerDependencies:
       - aws-crt
     optional: true
@@ -12132,7 +12102,7 @@ snapshots:
       '@smithy/util-defaults-mode-node': 2.0.15
       '@smithy/util-retry': 2.0.3
       '@smithy/util-utf8': 2.0.0
-      tslib: 2.8.1
+      tslib: 2.6.2
     transitivePeerDependencies:
       - aws-crt
     optional: true
@@ -12176,7 +12146,7 @@ snapshots:
       '@smithy/util-retry': 2.0.3
       '@smithy/util-utf8': 2.0.0
       fast-xml-parser: 4.2.5
-      tslib: 2.8.1
+      tslib: 2.6.2
     transitivePeerDependencies:
       - aws-crt
     optional: true
@@ -12187,7 +12157,7 @@ snapshots:
       '@aws-sdk/types': 3.425.0
       '@smithy/property-provider': 2.0.11
       '@smithy/types': 2.3.4
-      tslib: 2.8.1
+      tslib: 2.6.2
     transitivePeerDependencies:
       - aws-crt
     optional: true
@@ -12197,7 +12167,7 @@ snapshots:
       '@aws-sdk/types': 3.425.0
       '@smithy/property-provider': 2.0.11
       '@smithy/types': 2.3.4
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@aws-sdk/credential-provider-http@3.425.0':
@@ -12208,7 +12178,7 @@ snapshots:
       '@smithy/property-provider': 2.0.11
       '@smithy/protocol-http': 3.0.6
       '@smithy/types': 2.3.4
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@aws-sdk/credential-provider-ini@3.425.0':
@@ -12222,7 +12192,7 @@ snapshots:
       '@smithy/property-provider': 2.0.11
       '@smithy/shared-ini-file-loader': 2.0.12
       '@smithy/types': 2.3.4
-      tslib: 2.8.1
+      tslib: 2.6.2
     transitivePeerDependencies:
       - aws-crt
     optional: true
@@ -12239,7 +12209,7 @@ snapshots:
       '@smithy/property-provider': 2.0.11
       '@smithy/shared-ini-file-loader': 2.0.12
       '@smithy/types': 2.3.4
-      tslib: 2.8.1
+      tslib: 2.6.2
     transitivePeerDependencies:
       - aws-crt
     optional: true
@@ -12250,7 +12220,7 @@ snapshots:
       '@smithy/property-provider': 2.0.11
       '@smithy/shared-ini-file-loader': 2.0.12
       '@smithy/types': 2.3.4
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@aws-sdk/credential-provider-sso@3.425.0':
@@ -12261,7 +12231,7 @@ snapshots:
       '@smithy/property-provider': 2.0.11
       '@smithy/shared-ini-file-loader': 2.0.12
       '@smithy/types': 2.3.4
-      tslib: 2.8.1
+      tslib: 2.6.2
     transitivePeerDependencies:
       - aws-crt
     optional: true
@@ -12271,7 +12241,7 @@ snapshots:
       '@aws-sdk/types': 3.425.0
       '@smithy/property-provider': 2.0.11
       '@smithy/types': 2.3.4
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@aws-sdk/credential-providers@3.425.0':
@@ -12291,7 +12261,7 @@ snapshots:
       '@smithy/credential-provider-imds': 2.0.13
       '@smithy/property-provider': 2.0.11
       '@smithy/types': 2.3.4
-      tslib: 2.8.1
+      tslib: 2.6.2
     transitivePeerDependencies:
       - aws-crt
     optional: true
@@ -12301,14 +12271,14 @@ snapshots:
       '@aws-sdk/types': 3.425.0
       '@smithy/protocol-http': 3.0.6
       '@smithy/types': 2.3.4
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@aws-sdk/middleware-logger@3.425.0':
     dependencies:
       '@aws-sdk/types': 3.425.0
       '@smithy/types': 2.3.4
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@aws-sdk/middleware-recursion-detection@3.425.0':
@@ -12316,7 +12286,7 @@ snapshots:
       '@aws-sdk/types': 3.425.0
       '@smithy/protocol-http': 3.0.6
       '@smithy/types': 2.3.4
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@aws-sdk/middleware-sdk-sts@3.425.0':
@@ -12324,7 +12294,7 @@ snapshots:
       '@aws-sdk/middleware-signing': 3.425.0
       '@aws-sdk/types': 3.425.0
       '@smithy/types': 2.3.4
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@aws-sdk/middleware-signing@3.425.0':
@@ -12335,7 +12305,7 @@ snapshots:
       '@smithy/signature-v4': 2.0.10
       '@smithy/types': 2.3.4
       '@smithy/util-middleware': 2.0.3
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@aws-sdk/middleware-user-agent@3.425.0':
@@ -12344,7 +12314,7 @@ snapshots:
       '@aws-sdk/util-endpoints': 3.425.0
       '@smithy/protocol-http': 3.0.6
       '@smithy/types': 2.3.4
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@aws-sdk/region-config-resolver@3.425.0':
@@ -12353,7 +12323,7 @@ snapshots:
       '@smithy/types': 2.3.4
       '@smithy/util-config-provider': 2.0.0
       '@smithy/util-middleware': 2.0.3
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@aws-sdk/token-providers@3.425.0':
@@ -12392,7 +12362,7 @@ snapshots:
       '@smithy/util-defaults-mode-node': 2.0.15
       '@smithy/util-retry': 2.0.3
       '@smithy/util-utf8': 2.0.0
-      tslib: 2.8.1
+      tslib: 2.6.2
     transitivePeerDependencies:
       - aws-crt
     optional: true
@@ -12400,18 +12370,18 @@ snapshots:
   '@aws-sdk/types@3.425.0':
     dependencies:
       '@smithy/types': 2.3.4
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@aws-sdk/util-endpoints@3.425.0':
     dependencies:
       '@aws-sdk/types': 3.425.0
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@aws-sdk/util-locate-window@3.310.0':
     dependencies:
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@aws-sdk/util-user-agent-browser@3.425.0':
@@ -12419,7 +12389,7 @@ snapshots:
       '@aws-sdk/types': 3.425.0
       '@smithy/types': 2.3.4
       bowser: 2.11.0
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@aws-sdk/util-user-agent-node@3.425.0':
@@ -12427,12 +12397,12 @@ snapshots:
       '@aws-sdk/types': 3.425.0
       '@smithy/node-config-provider': 2.0.13
       '@smithy/types': 2.3.4
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@aws-sdk/util-utf8-browser@3.259.0':
     dependencies:
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@azure/abort-controller@1.1.0':
@@ -12559,10 +12529,6 @@ snapshots:
       '@babel/highlight': 7.22.13
       chalk: 2.4.2
 
-  '@babel/code-frame@7.22.5':
-    dependencies:
-      '@babel/highlight': 7.22.5
-
   '@babel/code-frame@7.23.5':
     dependencies:
       '@babel/highlight': 7.23.4
@@ -12617,19 +12583,6 @@ snapshots:
       semver: 6.3.1
     transitivePeerDependencies:
       - supports-color
-
-  '@babel/generator@7.20.7':
-    dependencies:
-      '@babel/types': 7.23.0
-      '@jridgewell/gen-mapping': 0.3.3
-      jsesc: 2.5.2
-
-  '@babel/generator@7.23.0':
-    dependencies:
-      '@babel/types': 7.23.0
-      '@jridgewell/gen-mapping': 0.3.3
-      '@jridgewell/trace-mapping': 0.3.30
-      jsesc: 2.5.2
 
   '@babel/generator@7.23.5':
     dependencies:
@@ -12724,8 +12677,6 @@ snapshots:
 
   '@babel/helper-validator-identifier@7.22.20': {}
 
-  '@babel/helper-validator-identifier@7.22.5': {}
-
   '@babel/helper-validator-identifier@7.28.5': {}
 
   '@babel/helper-validator-option@7.22.15': {}
@@ -12751,25 +12702,11 @@ snapshots:
       chalk: 2.4.2
       js-tokens: 4.0.0
 
-  '@babel/highlight@7.22.5':
-    dependencies:
-      '@babel/helper-validator-identifier': 7.22.5
-      chalk: 2.4.2
-      js-tokens: 4.0.0
-
   '@babel/highlight@7.23.4':
     dependencies:
       '@babel/helper-validator-identifier': 7.22.20
       chalk: 2.4.2
       js-tokens: 4.0.0
-
-  '@babel/parser@7.22.7':
-    dependencies:
-      '@babel/types': 7.23.0
-
-  '@babel/parser@7.23.0':
-    dependencies:
-      '@babel/types': 7.23.0
 
   '@babel/parser@7.23.5':
     dependencies:
@@ -12844,10 +12781,6 @@ snapshots:
       '@babel/core': 7.23.3
       '@babel/helper-plugin-utils': 7.20.2
 
-  '@babel/runtime@7.20.7':
-    dependencies:
-      regenerator-runtime: 0.13.11
-
   '@babel/runtime@7.22.15':
     dependencies:
       regenerator-runtime: 0.14.0
@@ -12873,21 +12806,6 @@ snapshots:
       '@babel/code-frame': 7.29.0
       '@babel/parser': 7.29.0
       '@babel/types': 7.29.0
-
-  '@babel/traverse@7.20.10':
-    dependencies:
-      '@babel/code-frame': 7.22.13
-      '@babel/generator': 7.23.0
-      '@babel/helper-environment-visitor': 7.22.20
-      '@babel/helper-function-name': 7.23.0
-      '@babel/helper-hoist-variables': 7.22.5
-      '@babel/helper-split-export-declaration': 7.22.6
-      '@babel/parser': 7.23.0
-      '@babel/types': 7.23.0
-      debug: 4.3.4(supports-color@5.5.0)
-      globals: 11.12.0
-    transitivePeerDependencies:
-      - supports-color
 
   '@babel/traverse@7.23.5':
     dependencies:
@@ -12916,22 +12834,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@babel/types@7.20.7':
-    dependencies:
-      '@babel/helper-string-parser': 7.22.5
-      '@babel/helper-validator-identifier': 7.22.20
-      to-fast-properties: 2.0.0
-
   '@babel/types@7.22.19':
     dependencies:
       '@babel/helper-string-parser': 7.22.5
       '@babel/helper-validator-identifier': 7.22.19
-      to-fast-properties: 2.0.0
-
-  '@babel/types@7.23.0':
-    dependencies:
-      '@babel/helper-string-parser': 7.22.5
-      '@babel/helper-validator-identifier': 7.22.20
       to-fast-properties: 2.0.0
 
   '@babel/types@7.23.5':
@@ -12947,7 +12853,7 @@ snapshots:
 
   '@bcoe/v8-coverage@0.2.3': {}
 
-  '@borewit/text-codec@0.2.1': {}
+  '@borewit/text-codec@0.2.2': {}
 
   '@changesets/apply-release-plan@6.1.4':
     dependencies:
@@ -13477,7 +13383,7 @@ snapshots:
   '@jest/console@28.1.3':
     dependencies:
       '@jest/types': 28.1.3
-      '@types/node': 20.6.2
+      '@types/node': 16.18.101
       chalk: 4.1.2
       jest-message-util: 28.1.3
       jest-util: 28.1.3
@@ -13490,14 +13396,14 @@ snapshots:
       '@jest/test-result': 28.1.3
       '@jest/transform': 28.1.3
       '@jest/types': 28.1.3
-      '@types/node': 20.6.2
+      '@types/node': 16.18.101
       ansi-escapes: 4.3.2
       chalk: 4.1.2
-      ci-info: 3.7.1
+      ci-info: 3.8.0
       exit: 0.1.2
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
       jest-changed-files: 28.1.3
-      jest-config: 28.1.3(@types/node@20.6.2)
+      jest-config: 28.1.3(@types/node@16.18.101)
       jest-haste-map: 28.1.3
       jest-message-util: 28.1.3
       jest-regex-util: 28.0.2
@@ -13509,7 +13415,7 @@ snapshots:
       jest-util: 28.1.3
       jest-validate: 28.1.3
       jest-watcher: 28.1.3
-      micromatch: 4.0.5
+      micromatch: 4.0.8
       pretty-format: 28.1.3
       rimraf: 3.0.2
       slash: 3.0.0
@@ -13518,9 +13424,9 @@ snapshots:
       - supports-color
       - ts-node
 
-  '@jest/create-cache-key-function@30.2.0':
+  '@jest/create-cache-key-function@30.3.0':
     dependencies:
-      '@jest/types': 30.2.0
+      '@jest/types': 30.3.0
 
   '@jest/environment@28.1.3':
     dependencies:
@@ -13570,9 +13476,9 @@ snapshots:
       '@jest/transform': 28.1.3
       '@jest/types': 28.1.3
       '@jridgewell/trace-mapping': 0.3.30
-      '@types/node': 20.6.2
+      '@types/node': 16.18.101
       chalk: 4.1.2
-      collect-v8-coverage: 1.0.1
+      collect-v8-coverage: 1.0.2
       exit: 0.1.2
       glob: 7.2.3
       graceful-fs: 4.2.11
@@ -13611,7 +13517,7 @@ snapshots:
       '@jest/console': 28.1.3
       '@jest/types': 28.1.3
       '@types/istanbul-lib-coverage': 2.0.4
-      collect-v8-coverage: 1.0.1
+      collect-v8-coverage: 1.0.2
 
   '@jest/test-sequencer@28.1.3':
     dependencies:
@@ -13633,7 +13539,7 @@ snapshots:
       jest-haste-map: 28.1.3
       jest-regex-util: 28.0.2
       jest-util: 28.1.3
-      micromatch: 4.0.5
+      micromatch: 4.0.8
       pirates: 4.0.5
       slash: 3.0.0
       write-file-atomic: 4.0.2
@@ -13645,11 +13551,11 @@ snapshots:
       '@jest/schemas': 28.1.3
       '@types/istanbul-lib-coverage': 2.0.4
       '@types/istanbul-reports': 3.0.1
-      '@types/node': 20.6.2
+      '@types/node': 16.18.101
       '@types/yargs': 17.0.24
       chalk: 4.1.2
 
-  '@jest/types@30.2.0':
+  '@jest/types@30.3.0':
     dependencies:
       '@jest/pattern': 30.0.1
       '@jest/schemas': 30.0.5
@@ -14353,7 +14259,7 @@ snapshots:
   '@rc-component/cascader@1.14.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@rc-component/select': 1.6.14(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/tree': 1.2.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/tree': 1.2.4(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@rc-component/util': 1.9.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       clsx: 2.1.1
       react: 18.2.0
@@ -14509,7 +14415,7 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
-  '@rc-component/picker@1.9.0(date-fns@2.29.3)(dayjs@1.11.19)(moment@2.29.4)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/picker@1.9.1(date-fns@2.29.3)(dayjs@1.11.19)(moment@2.29.4)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@rc-component/overflow': 1.0.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@rc-component/resize-observer': 1.1.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -14646,13 +14552,13 @@ snapshots:
   '@rc-component/tree-select@1.8.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@rc-component/select': 1.6.14(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/tree': 1.2.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/tree': 1.2.4(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@rc-component/util': 1.9.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       clsx: 2.1.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
-  '@rc-component/tree@1.2.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@rc-component/tree@1.2.4(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@rc-component/motion': 1.3.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@rc-component/util': 1.9.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -14996,7 +14902,7 @@ snapshots:
   '@smithy/abort-controller@2.0.10':
     dependencies:
       '@smithy/types': 2.3.4
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@smithy/config-resolver@2.0.11':
@@ -15005,7 +14911,7 @@ snapshots:
       '@smithy/types': 2.3.4
       '@smithy/util-config-provider': 2.0.0
       '@smithy/util-middleware': 2.0.3
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@smithy/credential-provider-imds@2.0.13':
@@ -15014,7 +14920,7 @@ snapshots:
       '@smithy/property-provider': 2.0.11
       '@smithy/types': 2.3.4
       '@smithy/url-parser': 2.0.10
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@smithy/eventstream-codec@2.0.10':
@@ -15022,7 +14928,7 @@ snapshots:
       '@aws-crypto/crc32': 3.0.0
       '@smithy/types': 2.3.4
       '@smithy/util-hex-encoding': 2.0.0
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@smithy/fetch-http-handler@2.2.1':
@@ -15031,7 +14937,7 @@ snapshots:
       '@smithy/querystring-builder': 2.0.10
       '@smithy/types': 2.3.4
       '@smithy/util-base64': 2.0.0
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@smithy/hash-node@2.0.10':
@@ -15039,25 +14945,25 @@ snapshots:
       '@smithy/types': 2.3.4
       '@smithy/util-buffer-from': 2.0.0
       '@smithy/util-utf8': 2.0.0
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@smithy/invalid-dependency@2.0.10':
     dependencies:
       '@smithy/types': 2.3.4
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@smithy/is-array-buffer@2.0.0':
     dependencies:
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@smithy/middleware-content-length@2.0.12':
     dependencies:
       '@smithy/protocol-http': 3.0.6
       '@smithy/types': 2.3.4
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@smithy/middleware-endpoint@2.0.10':
@@ -15066,7 +14972,7 @@ snapshots:
       '@smithy/types': 2.3.4
       '@smithy/url-parser': 2.0.10
       '@smithy/util-middleware': 2.0.3
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@smithy/middleware-retry@2.0.13':
@@ -15077,20 +14983,20 @@ snapshots:
       '@smithy/types': 2.3.4
       '@smithy/util-middleware': 2.0.3
       '@smithy/util-retry': 2.0.3
-      tslib: 2.8.1
+      tslib: 2.6.2
       uuid: 8.3.2
     optional: true
 
   '@smithy/middleware-serde@2.0.10':
     dependencies:
       '@smithy/types': 2.3.4
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@smithy/middleware-stack@2.0.4':
     dependencies:
       '@smithy/types': 2.3.4
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@smithy/node-config-provider@2.0.13':
@@ -15098,7 +15004,7 @@ snapshots:
       '@smithy/property-provider': 2.0.11
       '@smithy/shared-ini-file-loader': 2.0.12
       '@smithy/types': 2.3.4
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@smithy/node-http-handler@2.1.6':
@@ -15107,32 +15013,32 @@ snapshots:
       '@smithy/protocol-http': 3.0.6
       '@smithy/querystring-builder': 2.0.10
       '@smithy/types': 2.3.4
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@smithy/property-provider@2.0.11':
     dependencies:
       '@smithy/types': 2.3.4
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@smithy/protocol-http@3.0.6':
     dependencies:
       '@smithy/types': 2.3.4
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@smithy/querystring-builder@2.0.10':
     dependencies:
       '@smithy/types': 2.3.4
       '@smithy/util-uri-escape': 2.0.0
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@smithy/querystring-parser@2.0.10':
     dependencies:
       '@smithy/types': 2.3.4
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@smithy/service-error-classification@2.0.3':
@@ -15143,7 +15049,7 @@ snapshots:
   '@smithy/shared-ini-file-loader@2.0.12':
     dependencies:
       '@smithy/types': 2.3.4
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@smithy/signature-v4@2.0.10':
@@ -15155,7 +15061,7 @@ snapshots:
       '@smithy/util-middleware': 2.0.3
       '@smithy/util-uri-escape': 2.0.0
       '@smithy/util-utf8': 2.0.0
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@smithy/smithy-client@2.1.9':
@@ -15163,46 +15069,46 @@ snapshots:
       '@smithy/middleware-stack': 2.0.4
       '@smithy/types': 2.3.4
       '@smithy/util-stream': 2.0.14
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@smithy/types@2.3.4':
     dependencies:
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@smithy/url-parser@2.0.10':
     dependencies:
       '@smithy/querystring-parser': 2.0.10
       '@smithy/types': 2.3.4
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@smithy/util-base64@2.0.0':
     dependencies:
       '@smithy/util-buffer-from': 2.0.0
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@smithy/util-body-length-browser@2.0.0':
     dependencies:
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@smithy/util-body-length-node@2.1.0':
     dependencies:
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@smithy/util-buffer-from@2.0.0':
     dependencies:
       '@smithy/is-array-buffer': 2.0.0
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@smithy/util-config-provider@2.0.0':
     dependencies:
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@smithy/util-defaults-mode-browser@2.0.13':
@@ -15211,7 +15117,7 @@ snapshots:
       '@smithy/smithy-client': 2.1.9
       '@smithy/types': 2.3.4
       bowser: 2.11.0
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@smithy/util-defaults-mode-node@2.0.15':
@@ -15222,25 +15128,25 @@ snapshots:
       '@smithy/property-provider': 2.0.11
       '@smithy/smithy-client': 2.1.9
       '@smithy/types': 2.3.4
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@smithy/util-hex-encoding@2.0.0':
     dependencies:
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@smithy/util-middleware@2.0.3':
     dependencies:
       '@smithy/types': 2.3.4
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@smithy/util-retry@2.0.3':
     dependencies:
       '@smithy/service-error-classification': 2.0.3
       '@smithy/types': 2.3.4
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@smithy/util-stream@2.0.14':
@@ -15252,18 +15158,18 @@ snapshots:
       '@smithy/util-buffer-from': 2.0.0
       '@smithy/util-hex-encoding': 2.0.0
       '@smithy/util-utf8': 2.0.0
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@smithy/util-uri-escape@2.0.0':
     dependencies:
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@smithy/util-utf8@2.0.0':
     dependencies:
       '@smithy/util-buffer-from': 2.0.0
-      tslib: 2.8.1
+      tslib: 2.6.2
     optional: true
 
   '@swc/cli@0.8.0(@swc/core@1.15.18)':
@@ -15344,7 +15250,7 @@ snapshots:
 
   '@swc/jest@0.2.39(@swc/core@1.15.18)':
     dependencies:
-      '@jest/create-cache-key-function': 30.2.0
+      '@jest/create-cache-key-function': 30.3.0
       '@swc/core': 1.15.18
       '@swc/counter': 0.1.3
       jsonc-parser: 3.2.0
@@ -15474,24 +15380,24 @@ snapshots:
 
   '@types/babel__core@7.1.20':
     dependencies:
-      '@babel/parser': 7.23.5
-      '@babel/types': 7.23.5
+      '@babel/parser': 7.29.0
+      '@babel/types': 7.29.0
       '@types/babel__generator': 7.6.4
       '@types/babel__template': 7.4.1
       '@types/babel__traverse': 7.18.3
 
   '@types/babel__generator@7.6.4':
     dependencies:
-      '@babel/types': 7.23.5
+      '@babel/types': 7.29.0
 
   '@types/babel__template@7.4.1':
     dependencies:
-      '@babel/parser': 7.23.5
-      '@babel/types': 7.23.5
+      '@babel/parser': 7.29.0
+      '@babel/types': 7.29.0
 
   '@types/babel__traverse@7.18.3':
     dependencies:
-      '@babel/types': 7.23.0
+      '@babel/types': 7.29.0
 
   '@types/connect@3.4.36':
     dependencies:
@@ -15512,7 +15418,7 @@ snapshots:
   '@types/glob@7.2.0':
     dependencies:
       '@types/minimatch': 5.1.2
-      '@types/node': 20.6.2
+      '@types/node': 16.18.101
 
   '@types/glob@8.0.0':
     dependencies:
@@ -15523,7 +15429,7 @@ snapshots:
 
   '@types/graceful-fs@4.1.6':
     dependencies:
-      '@types/node': 20.6.2
+      '@types/node': 16.18.101
 
   '@types/hast@2.3.4':
     dependencies:
@@ -15610,8 +15516,6 @@ snapshots:
 
   '@types/prettier@2.7.2': {}
 
-  '@types/prop-types@15.7.5': {}
-
   '@types/prop-types@15.7.8': {}
 
   '@types/react-dom@18.2.7':
@@ -15655,7 +15559,7 @@ snapshots:
 
   '@types/whatwg-url@8.2.2':
     dependencies:
-      '@types/node': 20.6.2
+      '@types/node': 16.18.101
       '@types/webidl-conversions': 7.0.0
 
   '@types/yargs-parser@21.0.0': {}
@@ -16252,7 +16156,7 @@ snapshots:
       '@rc-component/mutate-observer': 2.0.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@rc-component/notification': 1.2.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@rc-component/pagination': 1.2.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/picker': 1.9.0(date-fns@2.29.3)(dayjs@1.11.19)(moment@2.29.4)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/picker': 1.9.1(date-fns@2.29.3)(dayjs@1.11.19)(moment@2.29.4)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@rc-component/progress': 1.0.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@rc-component/qrcode': 1.1.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@rc-component/rate': 1.0.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -16267,7 +16171,7 @@ snapshots:
       '@rc-component/textarea': 1.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@rc-component/tooltip': 1.4.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@rc-component/tour': 2.3.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@rc-component/tree': 1.2.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@rc-component/tree': 1.2.4(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@rc-component/tree-select': 1.8.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@rc-component/trigger': 3.9.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@rc-component/upload': 1.1.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -16571,8 +16475,8 @@ snapshots:
 
   babel-plugin-jest-hoist@28.1.3:
     dependencies:
-      '@babel/template': 7.22.15
-      '@babel/types': 7.23.5
+      '@babel/template': 7.28.6
+      '@babel/types': 7.29.0
       '@types/babel__core': 7.1.20
       '@types/babel__traverse': 7.18.3
 
@@ -16960,8 +16864,6 @@ snapshots:
 
   chrome-trace-event@1.0.3: {}
 
-  ci-info@3.7.1: {}
-
   ci-info@3.8.0: {}
 
   cjs-module-lexer@1.2.3: {}
@@ -17015,8 +16917,6 @@ snapshots:
   cluster-key-slot@1.1.2: {}
 
   co@4.6.0: {}
-
-  collect-v8-coverage@1.0.1: {}
 
   collect-v8-coverage@1.0.2: {}
 
@@ -18244,6 +18144,10 @@ snapshots:
     dependencies:
       type: 2.7.2
 
+  extend-shallow@2.0.1:
+    dependencies:
+      is-extendable: 0.1.1
+
   extend@3.0.2: {}
 
   extendable-error@0.1.7: {}
@@ -18730,6 +18634,13 @@ snapshots:
 
   graphemer@1.4.0: {}
 
+  gray-matter@4.0.3:
+    dependencies:
+      js-yaml: 3.14.1
+      kind-of: 6.0.3
+      section-matter: 1.0.0
+      strip-bom-string: 1.0.0
+
   gtoken@5.3.2(encoding@0.1.13):
     dependencies:
       gaxios: 4.3.3(encoding@0.1.13)
@@ -19120,6 +19031,8 @@ snapshots:
 
   is-docker@3.0.0: {}
 
+  is-extendable@0.1.1: {}
+
   is-extglob@2.1.1: {}
 
   is-finalizationregistry@1.0.2:
@@ -19312,7 +19225,7 @@ snapshots:
   istanbul-lib-instrument@5.2.1:
     dependencies:
       '@babel/core': 7.23.3
-      '@babel/parser': 7.22.7
+      '@babel/parser': 7.29.0
       '@istanbuljs/schema': 0.1.3
       istanbul-lib-coverage: 3.2.0
       semver: 6.3.1
@@ -19374,7 +19287,7 @@ snapshots:
       '@jest/expect': 28.1.3
       '@jest/test-result': 28.1.3
       '@jest/types': 28.1.3
-      '@types/node': 20.6.2
+      '@types/node': 16.18.101
       chalk: 4.1.2
       co: 4.6.0
       dedent: 0.7.0
@@ -19391,6 +19304,25 @@ snapshots:
       stack-utils: 2.0.6
     transitivePeerDependencies:
       - supports-color
+
+  jest-cli@28.1.3(@types/node@16.18.101):
+    dependencies:
+      '@jest/core': 28.1.3
+      '@jest/test-result': 28.1.3
+      '@jest/types': 28.1.3
+      chalk: 4.1.2
+      exit: 0.1.2
+      graceful-fs: 4.2.11
+      import-local: 3.1.0
+      jest-config: 28.1.3(@types/node@16.18.101)
+      jest-util: 28.1.3
+      jest-validate: 28.1.3
+      prompts: 2.4.2
+      yargs: 17.7.2
+    transitivePeerDependencies:
+      - '@types/node'
+      - supports-color
+      - ts-node
 
   jest-cli@28.1.3(@types/node@20.6.2):
     dependencies:
@@ -19411,6 +19343,35 @@ snapshots:
       - supports-color
       - ts-node
 
+  jest-config@28.1.3(@types/node@16.18.101):
+    dependencies:
+      '@babel/core': 7.23.3
+      '@jest/test-sequencer': 28.1.3
+      '@jest/types': 28.1.3
+      babel-jest: 28.1.3(@babel/core@7.23.3)
+      chalk: 4.1.2
+      ci-info: 3.8.0
+      deepmerge: 4.2.2
+      glob: 7.2.3
+      graceful-fs: 4.2.11
+      jest-circus: 28.1.3
+      jest-environment-node: 28.1.3
+      jest-get-type: 28.0.2
+      jest-regex-util: 28.0.2
+      jest-resolve: 28.1.3
+      jest-runner: 28.1.3
+      jest-util: 28.1.3
+      jest-validate: 28.1.3
+      micromatch: 4.0.8
+      parse-json: 5.2.0
+      pretty-format: 28.1.3
+      slash: 3.0.0
+      strip-json-comments: 3.1.1
+    optionalDependencies:
+      '@types/node': 16.18.101
+    transitivePeerDependencies:
+      - supports-color
+
   jest-config@28.1.3(@types/node@20.6.2):
     dependencies:
       '@babel/core': 7.23.3
@@ -19430,7 +19391,7 @@ snapshots:
       jest-runner: 28.1.3
       jest-util: 28.1.3
       jest-validate: 28.1.3
-      micromatch: 4.0.5
+      micromatch: 4.0.8
       parse-json: 5.2.0
       pretty-format: 28.1.3
       slash: 3.0.0
@@ -19490,14 +19451,14 @@ snapshots:
     dependencies:
       '@jest/types': 28.1.3
       '@types/graceful-fs': 4.1.6
-      '@types/node': 20.6.2
+      '@types/node': 16.18.101
       anymatch: 3.1.3
       fb-watchman: 2.0.2
       graceful-fs: 4.2.11
       jest-regex-util: 28.0.2
       jest-util: 28.1.3
       jest-worker: 28.1.3
-      micromatch: 4.0.5
+      micromatch: 4.0.8
       walker: 1.0.8
     optionalDependencies:
       fsevents: 2.3.3
@@ -19516,12 +19477,12 @@ snapshots:
 
   jest-message-util@28.1.3:
     dependencies:
-      '@babel/code-frame': 7.22.5
+      '@babel/code-frame': 7.29.0
       '@jest/types': 28.1.3
       '@types/stack-utils': 2.0.1
       chalk: 4.1.2
       graceful-fs: 4.2.11
-      micromatch: 4.0.5
+      micromatch: 4.0.8
       pretty-format: 28.1.3
       slash: 3.0.0
       stack-utils: 2.0.6
@@ -19554,7 +19515,7 @@ snapshots:
       jest-pnp-resolver: 1.2.3(jest-resolve@28.1.3)
       jest-util: 28.1.3
       jest-validate: 28.1.3
-      resolve: 1.22.1
+      resolve: 1.22.11
       resolve.exports: 1.1.0
       slash: 3.0.0
 
@@ -19565,7 +19526,7 @@ snapshots:
       '@jest/test-result': 28.1.3
       '@jest/transform': 28.1.3
       '@jest/types': 28.1.3
-      '@types/node': 20.6.2
+      '@types/node': 16.18.101
       chalk: 4.1.2
       emittery: 0.10.2
       graceful-fs: 4.2.11
@@ -19618,10 +19579,10 @@ snapshots:
   jest-snapshot@28.1.3:
     dependencies:
       '@babel/core': 7.23.3
-      '@babel/generator': 7.20.7
+      '@babel/generator': 7.29.1
       '@babel/plugin-syntax-typescript': 7.20.0(@babel/core@7.23.3)
-      '@babel/traverse': 7.20.10
-      '@babel/types': 7.20.7
+      '@babel/traverse': 7.29.0
+      '@babel/types': 7.29.0
       '@jest/expect-utils': 28.1.3
       '@jest/transform': 28.1.3
       '@jest/types': 28.1.3
@@ -19665,7 +19626,7 @@ snapshots:
     dependencies:
       '@jest/test-result': 28.1.3
       '@jest/types': 28.1.3
-      '@types/node': 20.6.2
+      '@types/node': 16.18.101
       ansi-escapes: 4.3.2
       chalk: 4.1.2
       emittery: 0.10.2
@@ -19674,15 +19635,26 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 20.6.2
+      '@types/node': 16.18.101
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
   jest-worker@28.1.3:
     dependencies:
-      '@types/node': 20.6.2
+      '@types/node': 16.18.101
       merge-stream: 2.0.0
       supports-color: 8.1.1
+
+  jest@28.1.3(@types/node@16.18.101):
+    dependencies:
+      '@jest/core': 28.1.3
+      '@jest/types': 28.1.3
+      import-local: 3.1.0
+      jest-cli: 28.1.3(@types/node@16.18.101)
+    transitivePeerDependencies:
+      - '@types/node'
+      - supports-color
+      - ts-node
 
   jest@28.1.3(@types/node@20.6.2):
     dependencies:
@@ -21473,7 +21445,7 @@ snapshots:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
-      '@types/node': 20.6.2
+      '@types/node': 16.18.101
       long: 5.3.2
 
   proxy-from-env@1.1.0: {}
@@ -21549,7 +21521,7 @@ snapshots:
   react-markdown@8.0.7(@types/react@18.2.38)(react@18.2.0):
     dependencies:
       '@types/hast': 2.3.4
-      '@types/prop-types': 15.7.5
+      '@types/prop-types': 15.7.8
       '@types/react': 18.2.38
       '@types/unist': 2.0.6
       comma-separated-tokens: 2.0.3
@@ -21570,7 +21542,7 @@ snapshots:
 
   react-syntax-highlighter@15.5.0(react@18.2.0):
     dependencies:
-      '@babel/runtime': 7.20.7
+      '@babel/runtime': 7.23.5
       highlight.js: 10.7.3
       lowlight: 1.20.0
       prismjs: 1.29.0
@@ -21689,8 +21661,6 @@ snapshots:
       hastscript: 6.0.0
       parse-entities: 2.0.0
       prismjs: 1.27.0
-
-  regenerator-runtime@0.13.11: {}
 
   regenerator-runtime@0.14.0: {}
 
@@ -21945,6 +21915,11 @@ snapshots:
       compute-scroll-into-view: 3.1.1
 
   search-insights@2.8.3: {}
+
+  section-matter@1.0.0:
+    dependencies:
+      extend-shallow: 2.0.1
+      kind-of: 6.0.3
 
   secure-json-parse@2.6.0: {}
 
@@ -22422,6 +22397,8 @@ snapshots:
     dependencies:
       ansi-regex: 6.0.1
 
+  strip-bom-string@1.0.0: {}
+
   strip-bom@3.0.0: {}
 
   strip-bom@4.0.0: {}
@@ -22725,7 +22702,7 @@ snapshots:
 
   token-types@6.1.2:
     dependencies:
-      '@borewit/text-codec': 0.2.1
+      '@borewit/text-codec': 0.2.2
       '@tokenizer/token': 0.3.0
       ieee754: 1.2.1
 

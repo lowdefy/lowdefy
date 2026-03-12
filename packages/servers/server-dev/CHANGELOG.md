@@ -1,5 +1,48 @@
 # Change Log
 
+## 4.7.0
+
+### Patch Changes
+
+- e2666d58c: fix(cli): Fix port availability check for start command
+
+  The CLI's `checkPortAvailable` was called with `undefined` port when no `--port` flag was passed, causing `net.listen(undefined)` to bind a random port instead of checking port 3000. Added default `port: 3000` in `getOptions`. Removed redundant `checkPortAvailable` from server-dev manager since the CLI now catches port conflicts before the server starts.
+
+- Updated dependencies [4543688f7]
+- Updated dependencies [e1274566b]
+- Updated dependencies [5716be2c8]
+- Updated dependencies [5a556b918]
+- Updated dependencies [811f80760]
+- Updated dependencies [dea6651a1]
+  - @lowdefy/build@4.7.0
+  - @lowdefy/helpers@4.7.0
+  - @lowdefy/blocks-antd@4.7.0
+  - @lowdefy/blocks-basic@4.7.0
+  - @lowdefy/engine@4.7.0
+  - @lowdefy/api@4.7.0
+  - @lowdefy/operators-change-case@4.7.0
+  - @lowdefy/operators-diff@4.7.0
+  - @lowdefy/operators-js@4.7.0
+  - @lowdefy/operators-moment@4.7.0
+  - @lowdefy/operators-mql@4.7.0
+  - @lowdefy/operators-nunjucks@4.7.0
+  - @lowdefy/operators-uuid@4.7.0
+  - @lowdefy/operators-yaml@4.7.0
+  - @lowdefy/client@4.7.0
+  - @lowdefy/layout@4.7.0
+  - @lowdefy/actions-core@4.7.0
+  - @lowdefy/blocks-aggrid@4.7.0
+  - @lowdefy/blocks-loaders@4.7.0
+  - @lowdefy/block-utils@4.7.0
+  - @lowdefy/logger@4.7.0
+  - @lowdefy/node-utils@4.7.0
+  - @lowdefy/blocks-color-selectors@4.7.0
+  - @lowdefy/blocks-echarts@4.7.0
+  - @lowdefy/blocks-markdown@4.7.0
+  - @lowdefy/blocks-qr@4.7.0
+  - @lowdefy/plugin-next-auth@4.7.0
+  - @lowdefy/errors@4.7.0
+
 ## 4.6.0
 
 ### Minor Changes
