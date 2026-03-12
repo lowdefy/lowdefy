@@ -35,20 +35,48 @@ Blocks are:
 | [@lowdefy/blocks-loaders](./loaders.md)         | Loading spinners            | 1           |
 | [@lowdefy/blocks-qr](./qr.md)                   | QR code generation          | 1           |
 
-## Block Structure
+## Block Package Structure
 
-Each block package exports:
+Each block package has:
 
-```javascript
-export default {
-  // Block type definitions
-  types: {
-    Button: { meta: { category: 'input', ... } },
-    Card: { meta: { category: 'container', ... } },
-    // ...
-  }
-};
+- `src/blocks/{BlockName}/{BlockName}.js` — React component with `.meta` static property
+- `src/blocks/{BlockName}/schema.js` — Property validation schema (JS module)
+- `src/blocks.js` — Named exports of all block components
+
+### Type Extraction (`types.json`)
+
+Plugin packages no longer ship hand-written `types.js` files. Instead, a shared extraction script (`extract-plugin-types` from `@lowdefy/node-utils`) runs as part of each plugin's build command:
+
+```json
+{
+  "build": "swc src --out-dir dist ... && extract-plugin-types"
+}
 ```
+
+The script:
+
+1. Imports the compiled module files (`blocks.js`, `connections.js`, `actions.js`, etc.) from `dist/`
+2. Extracts type names, icons, and block metadata (slots, cssKeys)
+3. Auto-detects slots from `content.XXX` usage and cssKeys from `styles.XXX`/`classNames.XXX` usage in block source
+4. Writes `dist/types.json` with the extracted metadata
+
+Example `types.json` for a block package:
+
+```json
+{
+  "blocks": ["Button", "Card", "TextInput"],
+  "icons": {
+    "Button": ["AiOutlineLoading3Quarters"],
+    "Card": []
+  },
+  "blockMetas": {
+    "Card": { "slots": ["title", "extra", "cover"], "cssKeys": ["header", "body"] },
+    "TextInput": { "cssKeys": ["element"] }
+  }
+}
+```
+
+The build pipeline reads `types.json` to resolve plugin types without loading full module trees (which would pull in CSS files, browser APIs, and heavy libraries).
 
 ## Block Configuration
 
@@ -78,7 +106,7 @@ Each block has:
 - **type** - Block type name
 - **properties** - Configuration (title, style, etc.)
 - **events** - Event handlers (onClick, onChange)
-- **areas** - Child block containers
+- **slots** - Child block containers (use `blocks:` shorthand for the default `content` slot)
 - **layout** - Grid positioning
 - **visible** - Conditional visibility
 - **loading** - Loading skeleton
@@ -91,7 +119,7 @@ Each block has:
 
 2. Page load
    └── Block component loaded (code split)
-   └── Block registered in Areas
+   └── Block registered in Slots
 
 3. Render
    └── Properties evaluated (operators resolved)
