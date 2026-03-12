@@ -40,7 +40,6 @@ const trackedFiles = [
   'build/plugins/operators/serverJsMap.js',
   'build/plugins/styles.css',
   'build/globals.css',
-  'build/tailwind-classes.js',
   'public/styles.css',
   'package.json',
 ];

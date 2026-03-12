@@ -162,3 +162,32 @@ test('collectPageContent skips blocks without properties', () => {
   ]);
   expect(result).toBe('Has props');
 });
+
+test('collectPageContent collects string class value', () => {
+  const result = collectPageContent([
+    { id: 'p1', type: 'Box', class: 'text-red-500 p-4' },
+  ]);
+  expect(result).toContain('text-red-500 p-4');
+});
+
+test('collectPageContent collects array class value', () => {
+  const result = collectPageContent([
+    { id: 'p1', type: 'Box', class: ['p-4', 'mt-2'] },
+  ]);
+  expect(result).toContain('p-4');
+  expect(result).toContain('mt-2');
+});
+
+test('collectPageContent collects class from nested operator object', () => {
+  const result = collectPageContent([
+    {
+      id: 'p1',
+      type: 'Box',
+      class: {
+        _if: { test: { _state: 'dark' }, then: 'bg-gray-900', else: 'bg-white' },
+      },
+    },
+  ]);
+  expect(result).toContain('bg-gray-900');
+  expect(result).toContain('bg-white');
+});

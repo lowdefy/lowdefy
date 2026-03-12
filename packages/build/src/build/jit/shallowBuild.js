@@ -57,7 +57,6 @@ import addInstalledTypes from './addInstalledTypes.js';
 import buildJsShallow from './buildJsShallow.js';
 import buildShallowPages from './buildShallowPages.js';
 import collectPageContent from '../collectPageContent.js';
-import collectTailwindClasses from '../collectTailwindClasses.js';
 import stripPageContent from './stripPageContent.js';
 import writeSourcelessPages from './writeSourcelessPages.js';
 
@@ -84,12 +83,11 @@ async function shallowBuild(options) {
 
     // addKeys + testSchema first for error location info
     tryBuildStep(addKeys, 'addKeys', { components, context });
-    context.tailwindClasses = collectTailwindClasses({ components });
     context.tailwindContentMap = new Map();
     for (const page of components.pages ?? []) {
       const content = collectPageContent([page]);
       if (content) {
-        context.tailwindContentMap.set(page.pageId, content);
+        context.tailwindContentMap.set(page.id, content);
       }
     }
     stripPageContent({ components, context });

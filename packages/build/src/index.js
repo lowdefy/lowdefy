@@ -36,6 +36,7 @@ import buildLogger from './build/buildLogger.js';
 import buildMenu from './build/buildMenu.js';
 import buildPages from './build/full/buildPages.js';
 import buildRefs from './build/buildRefs/buildRefs.js';
+import collectPageContent from './build/collectPageContent.js';
 import buildTypes from './build/buildTypes.js';
 import cleanBuildDirectory from './build/cleanBuildDirectory.js';
 import copyPublicFolder from './build/copyPublicFolder.js';
@@ -104,6 +105,15 @@ async function build(options) {
     tryBuildStep(buildImports, 'buildImports', { components, context });
     // Final addKeys pass to ensure all objects (including those created by build steps) have ~k
     tryBuildStep(addKeys, 'addKeys', { components, context });
+    // Collect page content strings for Tailwind to scan
+    context.tailwindContentMap = new Map();
+    for (const page of components.pages ?? []) {
+      const content = collectPageContent([page]);
+      if (content) {
+        context.tailwindContentMap.set(page.pageId, content);
+      }
+    }
+
     // Check if there are any collected errors before writing
     logCollectedErrors(context);
 
