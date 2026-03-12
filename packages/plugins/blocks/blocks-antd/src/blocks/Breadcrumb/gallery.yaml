@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- title: Basic
+- title: Basic List
   blocks:
     - id: basic_strings
       type: Breadcrumb
@@ -37,7 +37,7 @@
           - Home
           - Current Page
 
-- title: Separators
+- title: Separator
   blocks:
     - id: separator_default
       type: Breadcrumb
@@ -79,16 +79,8 @@
           - Overview
           - Details
           - Summary
-    - id: separator_tilde
-      type: Breadcrumb
-      properties:
-        separator: '~'
-        list:
-          - Section A
-          - Section B
-          - Section C
 
-- title: With Links
+- title: Links
   blocks:
     - id: links_url
       type: Breadcrumb
@@ -99,6 +91,15 @@
           - label: Docs
             url: https://docs.lowdefy.com
           - label: Current Page
+    - id: links_page_id
+      type: Breadcrumb
+      properties:
+        list:
+          - label: Home
+            pageId: introduction
+          - label: Settings
+            pageId: introduction
+          - label: Profile
     - id: links_mixed
       type: Breadcrumb
       properties:
@@ -107,12 +108,12 @@
             url: https://lowdefy.com
           - label: Projects
           - label: Settings
-            url: https://lowdefy.com
+            pageId: introduction
           - label: General
 
-- title: With Icons
+- title: Icons
   blocks:
-    - id: icons_home
+    - id: icons_string
       type: Breadcrumb
       properties:
         list:
@@ -121,7 +122,7 @@
           - label: Users
             icon: AiOutlineUser
           - label: Profile
-    - id: icons_dashboard
+    - id: icons_multiple
       type: Breadcrumb
       properties:
         list:
@@ -154,16 +155,14 @@
               color: '#1677ff'
           - label: Logs
 
-- title: Styled Items
+- title: Item Style
   blocks:
     - id: styled_bold_last
       type: Breadcrumb
       properties:
         list:
           - label: Dashboard
-            icon: AiOutlineDashboard
           - label: Settings
-            icon: AiOutlineSetting
           - label: Security
             style:
               fontWeight: bold
@@ -185,29 +184,84 @@
         list:
           - label: Root
             style:
-              fontSize: 16px
+              fontSize: 16
           - label: Child
             style:
-              fontSize: 14px
+              fontSize: 14
           - label: Leaf
             style:
-              fontSize: 12px
+              fontSize: 12
 
-- title: Style Overrides
+- title: onClick Event
   blocks:
-    - id: style_padding
+    - id: on_click_basic
       type: Breadcrumb
+      properties:
+        list:
+          - Home
+          - Products
+          - Details
+      events:
+        onClick:
+          - id: on_click_basic_msg
+            type: DisplayMessage
+            params:
+              content:
+                _string.concat:
+                  - 'Clicked: '
+                  - _event: link
+              status: info
+    - id: on_click_objects
+      type: Breadcrumb
+      properties:
+        list:
+          - label: Dashboard
+          - label: Reports
+          - label: Monthly
+      events:
+        onClick:
+          - id: on_click_objects_msg
+            type: DisplayMessage
+            params:
+              content:
+                _string.concat:
+                  - 'Navigating to item '
+                  - _event: index
+              status: info
+    - id: on_click_set_state
+      type: Breadcrumb
+      properties:
+        list:
+          - label: Home
+          - label: Settings
+          - label: Profile
+      events:
+        onClick:
+          - id: on_click_set_state_action
+            type: SetState
+            params:
+              last_breadcrumb_click:
+                _event: link
+
+- title: Style and CSS
+  blocks:
+    - id: css_tailwind_bg
+      type: Breadcrumb
+      class: bg-gray-100 p-3 rounded-lg
       properties:
         list:
           - Home
           - Category
           - Item
-      style:
-        --element:
-          padding: 8px 16px
-          backgroundColor: '#f5f5f5'
-          borderRadius: 4px
-    - id: style_border
+    - id: css_tailwind_shadow
+      type: Breadcrumb
+      class: shadow-md p-3 rounded-md
+      properties:
+        list:
+          - Dashboard
+          - Analytics
+          - Reports
+    - id: css_inline_border
       type: Breadcrumb
       properties:
         list:
@@ -218,11 +272,23 @@
         --element:
           padding: 8px 16px
           border: 1px solid #d9d9d9
-          borderRadius: 6px
+          borderRadius: 6
+    - id: css_inline_background
+      type: Breadcrumb
+      properties:
+        list:
+          - Home
+          - Products
+          - Checkout
+      style:
+        --element:
+          padding: 10px 20px
+          backgroundColor: '#f0f5ff'
+          borderRadius: 8
 
 - title: Theme Token Overrides
   blocks:
-    - id: theme_separator_color
+    - id: theme_separator_style
       type: Breadcrumb
       properties:
         list:
@@ -243,6 +309,7 @@
           itemColor: '#722ed1'
           lastItemColor: '#f5222d'
           linkColor: '#722ed1'
+          linkHoverColor: '#eb2f96'
     - id: theme_icon_size
       type: Breadcrumb
       properties:
@@ -253,43 +320,166 @@
             icon: AiOutlineTeam
           - label: Profile
         theme:
-          iconFontSize: 18
-
-- title: Combined Examples
-  blocks:
-    - id: combined_full
-      type: Breadcrumb
-      properties:
-        separator: '/'
-        list:
-          - label: Home
-            icon: AiOutlineHome
-            url: https://lowdefy.com
-          - label: Products
-            icon: AiOutlineAppstore
-          - label: Electronics
-          - label: Headphones
-            style:
-              fontWeight: bold
-              color: '#1677ff'
-    - id: combined_admin
+          iconFontSize: 20
+    - id: theme_combined
       type: Breadcrumb
       properties:
         separator: '>'
         list:
-          - label: Admin
-            icon: AiOutlineCrown
-          - label: Users
-            icon: AiOutlineTeam
-          - label: Permissions
-            icon: AiOutlineLock
-            style:
-              color: '#f5222d'
+          - label: Home
+            icon: AiOutlineHome
+          - label: Projects
+          - label: Current
         theme:
-          separatorColor: '#d9d9d9'
+          itemColor: '#8c8c8c'
+          lastItemColor: '#1677ff'
+          separatorColor: '#bfbfbf'
           separatorMargin: 16
-      style:
-        --element:
-          padding: 10px 20px
-          backgroundColor: '#fafafa'
-          borderRadius: 8px
+          iconFontSize: 16
+
+- title: Breadcrumb in Settings Page
+  blocks:
+    - id: settings_card
+      type: Card
+      properties:
+        title: Account Settings
+        size: small
+      blocks:
+        - id: settings_breadcrumb
+          type: Breadcrumb
+          properties:
+            separator: '>'
+            list:
+              - label: Home
+                icon: AiOutlineHome
+                pageId: introduction
+              - label: Settings
+                icon: AiOutlineSetting
+              - label: Security
+                icon: AiOutlineLock
+          events:
+            onClick:
+              - id: settings_click_msg
+                type: DisplayMessage
+                params:
+                  content:
+                    _string.concat:
+                      - 'Navigating to: '
+                      - _event: link.label
+                  status: info
+        - id: settings_divider
+          type: Divider
+        - id: settings_description
+          type: Markdown
+          properties:
+            content: |
+              **Two-Factor Authentication**
+
+              Add an extra layer of security to your account by enabling two-factor authentication.
+        - id: settings_actions
+          type: Box
+          layout:
+            gap: 8
+            justify: flex-end
+          blocks:
+            - id: settings_cancel_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Cancel
+                color: default
+                variant: outlined
+              events:
+                onClick:
+                  - id: settings_cancel_msg
+                    type: DisplayMessage
+                    params:
+                      content: Changes discarded
+                      status: info
+            - id: settings_save_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Save Changes
+                color: primary
+                variant: solid
+                icon: AiOutlineSave
+              events:
+                onClick:
+                  - id: settings_save_msg
+                    type: DisplayMessage
+                    params:
+                      content: Settings saved successfully!
+                      status: success
+
+- title: Breadcrumb in E-Commerce Product Page
+  blocks:
+    - id: ecommerce_breadcrumb
+      type: Breadcrumb
+      class: bg-gray-50 px-4 py-2 rounded-md
+      properties:
+        list:
+          - label: Shop
+            icon: AiOutlineHome
+            url: https://lowdefy.com
+          - label: Electronics
+          - label: Audio
+          - label: Wireless Headphones
+            style:
+              fontWeight: bold
+        theme:
+          lastItemColor: '#1677ff'
+          separatorMargin: 10
+    - id: ecommerce_card
+      type: Card
+      properties:
+        title: Wireless Noise-Cancelling Headphones
+        size: small
+      blocks:
+        - id: ecommerce_description
+          type: Markdown
+          properties:
+            content: |
+              **$249.99** ~~$329.99~~
+
+              Premium over-ear headphones with active noise cancellation, 30-hour battery life, and hi-res audio support. Available in Midnight Black and Pearl White.
+        - id: ecommerce_actions
+          type: Box
+          layout:
+            gap: 8
+            justify: flex-start
+          blocks:
+            - id: ecommerce_cart_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Add to Cart
+                color: primary
+                variant: solid
+                icon: AiOutlineShoppingCart
+              events:
+                onClick:
+                  - id: ecommerce_cart_msg
+                    type: DisplayMessage
+                    params:
+                      content: Added to cart!
+                      status: success
+            - id: ecommerce_wishlist_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Wishlist
+                color: default
+                variant: outlined
+                icon: AiOutlineHeart
+              events:
+                onClick:
+                  - id: ecommerce_wishlist_msg
+                    type: DisplayMessage
+                    params:
+                      content: Added to wishlist
+                      status: info

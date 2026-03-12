@@ -12,301 +12,229 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- title: Horizontal Mode
+- title: Mode
   blocks:
-    - id: horizontal_menu
+    - id: mode_horizontal
       type: Menu
       properties:
         mode: horizontal
-        theme: light
         links:
-          - id: h_home
+          - id: mh_home
             type: MenuLink
             properties:
               title: Home
               icon: AiOutlineHome
-          - id: h_about
+          - id: mh_about
             type: MenuLink
             properties:
               title: About
-          - id: h_services
+          - id: mh_services
             type: MenuGroup
             properties:
               title: Services
             links:
-              - id: h_consulting
+              - id: mh_consulting
                 type: MenuLink
                 properties:
                   title: Consulting
-              - id: h_development
+              - id: mh_development
                 type: MenuLink
                 properties:
                   title: Development
-          - id: h_contact
+          - id: mh_contact
             type: MenuLink
             properties:
               title: Contact
-
-- title: Vertical Mode
-  blocks:
-    - id: vertical_menu
+    - id: mode_vertical
       type: Menu
       style:
         width: 256
       properties:
         mode: vertical
-        theme: light
         links:
-          - id: v_dashboard
+          - id: mv_dashboard
             type: MenuLink
             properties:
               title: Dashboard
               icon: AiOutlineHome
-          - id: v_users
+          - id: mv_users
             type: MenuLink
             properties:
               title: Users
               icon: AiOutlineUser
-          - id: v_settings
+          - id: mv_settings
             type: MenuGroup
             properties:
               title: Settings
               icon: AiOutlineSetting
             links:
-              - id: v_profile
+              - id: mv_profile
                 type: MenuLink
                 properties:
                   title: Profile
-              - id: v_security
+              - id: mv_security
                 type: MenuLink
                 properties:
                   title: Security
-
-- title: Inline Mode
-  blocks:
-    - id: inline_menu
+    - id: mode_inline
       type: Menu
       style:
         width: 256
       properties:
         mode: inline
-        theme: light
         defaultOpenKeys:
-          - i_navigation
+          - mi_navigation
         links:
-          - id: i_navigation
+          - id: mi_navigation
             type: MenuGroup
             properties:
               title: Navigation
               icon: AiOutlineAppstore
             links:
-              - id: i_option1
+              - id: mi_option1
                 type: MenuLink
                 properties:
                   title: Option 1
-              - id: i_option2
+              - id: mi_option2
                 type: MenuLink
                 properties:
                   title: Option 2
-          - id: i_tools
+          - id: mi_tools
             type: MenuGroup
             properties:
               title: Tools
               icon: AiOutlineTool
             links:
-              - id: i_option3
+              - id: mi_option3
                 type: MenuLink
                 properties:
                   title: Option 3
-              - id: i_option4
+              - id: mi_option4
                 type: MenuLink
                 properties:
                   title: Option 4
 
-- title: With Icons
+- title: Link Types and Nesting
   blocks:
-    - id: icons_menu
+    - id: lt_icons_menu
       type: Menu
+      style:
+        width: 256
       properties:
-        mode: horizontal
-        theme: light
+        mode: vertical
         links:
-          - id: ic_mail
+          - id: lt_mail
             type: MenuLink
             properties:
               title: Mail
               icon: AiOutlineMail
-          - id: ic_calendar
+          - id: lt_calendar
             type: MenuLink
             properties:
               title: Calendar
               icon: AiOutlineCalendar
-          - id: ic_settings
+          - id: lt_settings
             type: MenuLink
             properties:
               title: Settings
               icon: AiOutlineSetting
-
-- title: Menu Groups (Nested)
-  blocks:
-    - id: groups_menu
+    - id: lt_dividers_menu
+      type: Menu
+      style:
+        width: 256
+      properties:
+        mode: vertical
+        links:
+          - id: lt_general
+            type: MenuLink
+            properties:
+              title: General
+              icon: AiOutlineSetting
+          - id: lt_profile
+            type: MenuLink
+            properties:
+              title: Profile
+              icon: AiOutlineUser
+          - id: lt_solid_divider
+            type: MenuDivider
+          - id: lt_files
+            type: MenuLink
+            properties:
+              title: Files
+              icon: AiOutlineFile
+          - id: lt_dashed_divider
+            type: MenuDivider
+            properties:
+              dashed: true
+          - id: lt_logout
+            type: MenuLink
+            properties:
+              title: Logout
+              icon: AiOutlineLogout
+    - id: lt_nested_menu
       type: Menu
       style:
         width: 256
       properties:
         mode: inline
-        theme: light
         defaultOpenKeys:
-          - g_parent
+          - lt_parent
         links:
-          - id: g_parent
+          - id: lt_parent
             type: MenuGroup
             properties:
               title: Navigation
               icon: AiOutlineAppstore
             links:
-              - id: g_child_group
+              - id: lt_child_group
                 type: MenuGroup
                 properties:
                   title: Sub Group
                 links:
-                  - id: g_sub1
+                  - id: lt_sub1
                     type: MenuLink
                     properties:
                       title: Sub Item 1
-                  - id: g_sub2
+                  - id: lt_sub2
                     type: MenuLink
                     properties:
                       title: Sub Item 2
-              - id: g_direct
+              - id: lt_direct
                 type: MenuLink
                 properties:
                   title: Direct Item
-
-- title: Dividers
-  blocks:
-    - id: divider_menu
+    - id: lt_danger_menu
       type: Menu
       style:
         width: 256
       properties:
         mode: vertical
-        theme: light
         links:
-          - id: dv_item1
-            type: MenuLink
-            properties:
-              title: General
-              icon: AiOutlineSetting
-          - id: dv_item2
-            type: MenuLink
-            properties:
-              title: Profile
-              icon: AiOutlineUser
-          - id: dv_divider
-            type: MenuDivider
-          - id: dv_item3
-            type: MenuLink
-            properties:
-              title: Logout
-              icon: AiOutlineLogout
-
-- title: Dashed Divider
-  blocks:
-    - id: dashed_divider_menu
-      type: Menu
-      style:
-        width: 256
-      properties:
-        mode: vertical
-        theme: light
-        links:
-          - id: dd_item1
-            type: MenuLink
-            properties:
-              title: Files
-              icon: AiOutlineFile
-          - id: dd_divider
-            type: MenuDivider
-            properties:
-              dashed: true
-          - id: dd_item2
-            type: MenuLink
-            properties:
-              title: Trash
-              icon: AiOutlineDelete
-
-- title: Danger Items
-  blocks:
-    - id: danger_menu
-      type: Menu
-      style:
-        width: 256
-      properties:
-        mode: vertical
-        theme: light
-        links:
-          - id: dg_edit
+          - id: lt_edit
             type: MenuLink
             properties:
               title: Edit
               icon: AiOutlineEdit
-          - id: dg_copy
+          - id: lt_copy
             type: MenuLink
             properties:
               title: Copy
               icon: AiOutlineCopy
-          - id: dg_divider
+          - id: lt_danger_divider
             type: MenuDivider
-          - id: dg_delete
+          - id: lt_delete
             type: MenuLink
             properties:
               title: Delete
               icon: AiOutlineDelete
               danger: true
-          - id: dg_destroy
-            type: MenuLink
-            properties:
-              title: Destroy All
-              icon: AiOutlineWarning
-              danger: true
 
-- title: Disabled Items
+- title: Selected Keys and Default Open Keys
   blocks:
-    - id: disabled_menu
-      type: Menu
-      style:
-        width: 256
-      properties:
-        mode: vertical
-        theme: light
-        links:
-          - id: di_active
-            type: MenuLink
-            properties:
-              title: Active Item
-              icon: AiOutlineCheck
-          - id: di_disabled
-            type: MenuLink
-            style:
-              pointerEvents: none
-              opacity: 0.5
-            properties:
-              title: Disabled Item
-              icon: AiOutlineStop
-          - id: di_another
-            type: MenuLink
-            properties:
-              title: Another Item
-              icon: AiOutlineMore
-
-- title: Selected Keys
-  blocks:
-    - id: selected_menu
+    - id: sk_menu
       type: Menu
       properties:
         mode: horizontal
-        theme: light
         selectedKeys:
           - sk_active
         links:
@@ -322,171 +250,308 @@
             type: MenuLink
             properties:
               title: Other
-
-- title: Default Open Keys
-  blocks:
-    - id: open_keys_menu
+    - id: dok_menu
       type: Menu
       style:
         width: 256
       properties:
         mode: inline
-        theme: light
         defaultOpenKeys:
-          - ok_group1
-          - ok_group2
+          - dok_group1
+          - dok_group2
         links:
-          - id: ok_group1
+          - id: dok_group1
             type: MenuGroup
             properties:
               title: Group 1
               icon: AiOutlineFolder
             links:
-              - id: ok_item1
+              - id: dok_item1
                 type: MenuLink
                 properties:
                   title: Item 1
-              - id: ok_item2
+              - id: dok_item2
                 type: MenuLink
                 properties:
                   title: Item 2
-          - id: ok_group2
+          - id: dok_group2
             type: MenuGroup
             properties:
               title: Group 2
               icon: AiOutlineFolderOpen
             links:
-              - id: ok_item3
+              - id: dok_item3
                 type: MenuLink
                 properties:
                   title: Item 3
-
-- title: Light Theme
-  blocks:
-    - id: theme_light
-      type: Menu
-      properties:
-        mode: horizontal
-        theme: light
-        links:
-          - id: tl_home
-            type: MenuLink
-            properties:
-              title: Home
-              icon: AiOutlineHome
-          - id: tl_about
-            type: MenuLink
-            properties:
-              title: About
-          - id: tl_contact
-            type: MenuLink
-            properties:
-              title: Contact
-
-- title: Dark Theme
-  blocks:
-    - id: theme_dark
-      type: Menu
-      properties:
-        mode: horizontal
-        theme: dark
-        links:
-          - id: td_home
-            type: MenuLink
-            properties:
-              title: Home
-              icon: AiOutlineHome
-          - id: td_about
-            type: MenuLink
-            properties:
-              title: About
-          - id: td_contact
-            type: MenuLink
-            properties:
-              title: Contact
-
-- title: Dark Theme Vertical
-  blocks:
-    - id: dark_vertical_menu
+    - id: sk_multiple_menu
       type: Menu
       style:
         width: 256
       properties:
         mode: vertical
-        theme: dark
+        selectedKeys:
+          - sk_multi_b
         links:
-          - id: dkv_home
+          - id: sk_multi_a
             type: MenuLink
             properties:
               title: Dashboard
               icon: AiOutlineHome
-          - id: dkv_chart
+          - id: sk_multi_b
             type: MenuLink
             properties:
-              title: Analytics
-              icon: AiOutlineLineChart
-          - id: dkv_divider
-            type: MenuDivider
-          - id: dkv_settings
+              title: Reports
+              icon: AiOutlineBarChart
+          - id: sk_multi_c
+            type: MenuLink
+            properties:
+              title: Settings
+              icon: AiOutlineSetting
+
+- title: Inline Options
+  blocks:
+    - id: io_collapsed_menu
+      type: Menu
+      style:
+        width: 80
+      properties:
+        mode: inline
+        collapsed: true
+        links:
+          - id: io_home
+            type: MenuLink
+            properties:
+              title: Home
+              icon: AiOutlineHome
+          - id: io_users
+            type: MenuLink
+            properties:
+              title: Users
+              icon: AiOutlineUser
+          - id: io_settings
+            type: MenuLink
+            properties:
+              title: Settings
+              icon: AiOutlineSetting
+    - id: io_indent_menu
+      type: Menu
+      style:
+        width: 280
+      properties:
+        mode: inline
+        inlineIndent: 40
+        defaultOpenKeys:
+          - io_ind_group
+        links:
+          - id: io_ind_group
             type: MenuGroup
             properties:
-              title: Administration
-              icon: AiOutlineSetting
+              title: Deep Indent
+              icon: AiOutlineMenuFold
             links:
-              - id: dkv_users
+              - id: io_ind_a
                 type: MenuLink
                 properties:
-                  title: Users
-              - id: dkv_roles
+                  title: Indented Item A
+              - id: io_ind_b
                 type: MenuLink
                 properties:
-                  title: Roles
-
-- title: Dark Theme Inline
-  blocks:
-    - id: dark_inline_menu
+                  title: Indented Item B
+    - id: io_expand_icon_menu
       type: Menu
       style:
         width: 256
       properties:
         mode: inline
-        theme: dark
+        expandIcon: AiOutlineRight
         defaultOpenKeys:
-          - dki_main
+          - io_exp_group
         links:
-          - id: dki_main
+          - id: io_exp_group
             type: MenuGroup
             properties:
-              title: Main Menu
-              icon: AiOutlineMenu
+              title: Custom Expand Icon
+              icon: AiOutlineAppstore
             links:
-              - id: dki_page1
+              - id: io_exp_a
                 type: MenuLink
                 properties:
-                  title: Page One
-              - id: dki_page2
+                  title: Sub Item A
+              - id: io_exp_b
                 type: MenuLink
                 properties:
-                  title: Page Two
-          - id: dki_extra
-            type: MenuGroup
-            properties:
-              title: Extra
-              icon: AiOutlineMore
-            links:
-              - id: dki_help
-                type: MenuLink
-                properties:
-                  title: Help
-              - id: dki_logout
-                type: MenuLink
-                properties:
-                  title: Logout
-                  danger: true
+                  title: Sub Item B
 
-- title: Theme Token Overrides (Custom Colors)
+- title: Submenu Delays
   blocks:
-    - id: theme_custom_menu
+    - id: sd_fast_menu
+      type: Menu
+      style:
+        width: 256
+      properties:
+        mode: vertical
+        subMenuOpenDelay: 0
+        subMenuCloseDelay: 0
+        links:
+          - id: sd_fast_group
+            type: MenuGroup
+            properties:
+              title: Instant Open
+              icon: AiOutlineThunderbolt
+            links:
+              - id: sd_fast_a
+                type: MenuLink
+                properties:
+                  title: No Delay Open
+              - id: sd_fast_b
+                type: MenuLink
+                properties:
+                  title: No Delay Close
+    - id: sd_slow_menu
+      type: Menu
+      style:
+        width: 256
+      properties:
+        mode: vertical
+        subMenuOpenDelay: 0.5
+        subMenuCloseDelay: 1
+        links:
+          - id: sd_slow_group
+            type: MenuGroup
+            properties:
+              title: Slow Submenu
+              icon: AiOutlineClockCircle
+            links:
+              - id: sd_slow_a
+                type: MenuLink
+                properties:
+                  title: 0.5s Open Delay
+              - id: sd_slow_b
+                type: MenuLink
+                properties:
+                  title: 1s Close Delay
+    - id: sd_force_render_menu
+      type: Menu
+      style:
+        width: 256
+      properties:
+        mode: vertical
+        forceSubMenuRender: true
+        links:
+          - id: sd_force_group
+            type: MenuGroup
+            properties:
+              title: Pre-rendered Submenu
+              icon: AiOutlineSync
+            links:
+              - id: sd_force_a
+                type: MenuLink
+                properties:
+                  title: Already in DOM
+              - id: sd_force_b
+                type: MenuLink
+                properties:
+                  title: Before Visible
+
+- title: Style and CSS
+  blocks:
+    - id: css_tailwind_menu
+      type: Menu
+      class: shadow-md rounded-lg
+      style:
+        width: 256
+      properties:
+        mode: vertical
+        links:
+          - id: css_tw_home
+            type: MenuLink
+            properties:
+              title: Home
+              icon: AiOutlineHome
+          - id: css_tw_reports
+            type: MenuLink
+            properties:
+              title: Reports
+              icon: AiOutlineBarChart
+          - id: css_tw_settings
+            type: MenuLink
+            properties:
+              title: Settings
+              icon: AiOutlineSetting
+    - id: css_inline_menu
+      type: Menu
+      style:
+        width: 256
+        border: 1px solid #d9d9d9
+        borderRadius: 8
+        padding: 4
+      properties:
+        mode: vertical
+        links:
+          - id: css_in_dashboard
+            type: MenuLink
+            properties:
+              title: Dashboard
+              icon: AiOutlineDashboard
+          - id: css_in_analytics
+            type: MenuLink
+            properties:
+              title: Analytics
+              icon: AiOutlineLineChart
+    - id: css_dark_bg
+      type: Box
+      class: bg-gradient-to-b from-slate-900 to-slate-800 p-4 rounded-lg
+      blocks:
+        - id: css_dark_menu
+          type: Menu
+          properties:
+            mode: horizontal
+            theme: dark
+            links:
+              - id: css_dk_home
+                type: MenuLink
+                properties:
+                  title: Home
+                  icon: AiOutlineHome
+              - id: css_dk_explore
+                type: MenuLink
+                properties:
+                  title: Explore
+                  icon: AiOutlineCompass
+              - id: css_dk_profile
+                type: MenuLink
+                properties:
+                  title: Profile
+                  icon: AiOutlineUser
+    - id: css_link_style_menu
+      type: Menu
+      style:
+        width: 256
+      properties:
+        mode: vertical
+        links:
+          - id: css_ls_normal
+            type: MenuLink
+            properties:
+              title: Normal Item
+          - id: css_ls_styled
+            type: MenuLink
+            style:
+              fontWeight: bold
+              fontStyle: italic
+            properties:
+              title: Bold Italic Item
+          - id: css_ls_colored
+            type: MenuLink
+            style:
+              color: '#1677ff'
+            properties:
+              title: Blue Text Item
+
+- title: Theme Token Overrides
+  blocks:
+    - id: tt_colors_menu
       type: Menu
       properties:
         mode: horizontal
@@ -497,27 +562,24 @@
           itemHoverColor: '#9254de'
           horizontalItemHoverColor: '#9254de'
         selectedKeys:
-          - tc_active
+          - tt_active
         links:
-          - id: tc_home
+          - id: tt_home
             type: MenuLink
             properties:
               title: Home
               icon: AiOutlineHome
-          - id: tc_active
+          - id: tt_active
             type: MenuLink
             properties:
               title: Active
               icon: AiOutlineStar
-          - id: tc_settings
+          - id: tt_settings
             type: MenuLink
             properties:
               title: Settings
               icon: AiOutlineSetting
-
-- title: Theme Token Overrides (Item Size)
-  blocks:
-    - id: theme_size_menu
+    - id: tt_sizing_menu
       type: Menu
       style:
         width: 280
@@ -530,25 +592,22 @@
           itemPaddingInline: 24
           fontSize: 16
         links:
-          - id: ts_home
+          - id: tt_sz_home
             type: MenuLink
             properties:
               title: Dashboard
               icon: AiOutlineHome
-          - id: ts_reports
+          - id: tt_sz_reports
             type: MenuLink
             properties:
               title: Reports
               icon: AiOutlineBarChart
-          - id: ts_settings
+          - id: tt_sz_settings
             type: MenuLink
             properties:
               title: Settings
               icon: AiOutlineSetting
-
-- title: Theme Token Overrides (Dark Custom)
-  blocks:
-    - id: theme_dark_custom
+    - id: tt_dark_custom_menu
       type: Menu
       style:
         width: 256
@@ -562,128 +621,229 @@
           itemSelectedBg: '#0f3460'
           itemSelectedColor: '#00d4ff'
         selectedKeys:
-          - tdc_active
+          - tt_dc_analytics
         links:
-          - id: tdc_home
+          - id: tt_dc_home
             type: MenuLink
             properties:
               title: Home
               icon: AiOutlineHome
-          - id: tdc_active
+          - id: tt_dc_analytics
             type: MenuLink
             properties:
               title: Analytics
               icon: AiOutlineLineChart
-          - id: tdc_team
+          - id: tt_dc_team
             type: MenuLink
             properties:
               title: Team
               icon: AiOutlineTeam
-
-- title: Full-Width Horizontal with Icons
-  blocks:
-    - id: full_width_menu
-      type: Menu
-      properties:
-        mode: horizontal
-        theme: light
-        selectedKeys:
-          - fw_dashboard
-        links:
-          - id: fw_dashboard
-            type: MenuLink
-            properties:
-              title: Dashboard
-              icon: AiOutlineHome
-          - id: fw_projects
-            type: MenuLink
-            properties:
-              title: Projects
-              icon: AiOutlineProject
-          - id: fw_tasks
-            type: MenuLink
-            properties:
-              title: Tasks
-              icon: AiOutlineCheckSquare
-          - id: fw_reports
-            type: MenuGroup
-            properties:
-              title: Reports
-            links:
-              - id: fw_weekly
-                type: MenuLink
-                properties:
-                  title: Weekly
-              - id: fw_monthly
-                type: MenuLink
-                properties:
-                  title: Monthly
-              - id: fw_annual
-                type: MenuLink
-                properties:
-                  title: Annual
-          - id: fw_settings
-            type: MenuLink
-            properties:
-              title: Settings
-              icon: AiOutlineSetting
-
-- title: Admin Sidebar Example
-  blocks:
-    - id: admin_sidebar_menu
+    - id: tt_danger_menu
       type: Menu
       style:
         width: 256
       properties:
-        mode: inline
-        theme: light
-        defaultOpenKeys:
-          - as_content
-        selectedKeys:
-          - as_posts
+        mode: vertical
+        theme:
+          dangerItemColor: '#cf1322'
+          dangerItemHoverColor: '#ff4d4f'
+          dangerItemSelectedColor: '#fff'
+          dangerItemSelectedBg: '#ff4d4f'
         links:
-          - id: as_overview
+          - id: tt_dg_files
             type: MenuLink
             properties:
-              title: Overview
-              icon: AiOutlineDashboard
-          - id: as_content
-            type: MenuGroup
-            properties:
-              title: Content
-              icon: AiOutlineFileText
-            links:
-              - id: as_posts
-                type: MenuLink
-                properties:
-                  title: Posts
-              - id: as_pages
-                type: MenuLink
-                properties:
-                  title: Pages
-              - id: as_media
-                type: MenuLink
-                properties:
-                  title: Media
-          - id: as_users
-            type: MenuGroup
-            properties:
-              title: Users
-              icon: AiOutlineTeam
-            links:
-              - id: as_all_users
-                type: MenuLink
-                properties:
-                  title: All Users
-              - id: as_roles
-                type: MenuLink
-                properties:
-                  title: Roles
-          - id: as_divider
+              title: My Files
+              icon: AiOutlineFile
+          - id: tt_dg_divider
             type: MenuDivider
-          - id: as_danger_zone
+          - id: tt_dg_delete
             type: MenuLink
             properties:
-              title: Danger Zone
-              icon: AiOutlineWarning
+              title: Delete Account
+              icon: AiOutlineDelete
               danger: true
+
+- title: Menu in Admin Dashboard
+  blocks:
+    - id: admin_layout
+      type: Box
+      layout:
+        direction: row
+        gap: 0
+      blocks:
+        - id: admin_sidebar
+          type: Box
+          layout:
+            flex: 0 0 256px
+          blocks:
+            - id: admin_logo
+              type: Markdown
+              class: px-4 py-3 font-bold text-lg border-b border-gray-200
+              properties:
+                content: Admin Panel
+            - id: admin_menu
+              type: Menu
+              style:
+                width: 256
+              properties:
+                mode: inline
+                defaultOpenKeys:
+                  - adm_content
+                selectedKeys:
+                  - adm_posts
+                links:
+                  - id: adm_overview
+                    type: MenuLink
+                    properties:
+                      title: Overview
+                      icon: AiOutlineDashboard
+                  - id: adm_content
+                    type: MenuGroup
+                    properties:
+                      title: Content
+                      icon: AiOutlineFileText
+                    links:
+                      - id: adm_posts
+                        type: MenuLink
+                        properties:
+                          title: Posts
+                      - id: adm_pages
+                        type: MenuLink
+                        properties:
+                          title: Pages
+                      - id: adm_media
+                        type: MenuLink
+                        properties:
+                          title: Media
+                  - id: adm_users
+                    type: MenuGroup
+                    properties:
+                      title: Users
+                      icon: AiOutlineTeam
+                    links:
+                      - id: adm_all_users
+                        type: MenuLink
+                        properties:
+                          title: All Users
+                      - id: adm_roles
+                        type: MenuLink
+                        properties:
+                          title: Roles
+                  - id: adm_divider
+                    type: MenuDivider
+                  - id: adm_danger_zone
+                    type: MenuLink
+                    properties:
+                      title: Danger Zone
+                      icon: AiOutlineWarning
+                      danger: true
+              events:
+                onSelect:
+                  - id: adm_select_msg
+                    type: DisplayMessage
+                    params:
+                      content:
+                        _string.concat:
+                          - 'Navigated to: '
+                          - _event: key
+                      status: info
+        - id: admin_main
+          type: Card
+          layout:
+            flex: 1 1 auto
+          properties:
+            title: Posts
+            size: small
+          blocks:
+            - id: admin_welcome
+              type: Markdown
+              properties:
+                content: |
+                  Manage your blog posts here. Use the sidebar to navigate between sections.
+
+                  **Recent Activity:**
+                  - 3 new posts published this week
+                  - 12 comments pending review
+                  - 2 pages updated
+
+- title: Menu in Documentation Site
+  blocks:
+    - id: docs_header_box
+      type: Box
+      class: border-b border-gray-200
+      blocks:
+        - id: docs_nav_menu
+          type: Menu
+          properties:
+            mode: horizontal
+            selectedKeys:
+              - docs_guides
+            theme:
+              horizontalItemSelectedColor: '#1677ff'
+              horizontalItemHoverColor: '#4096ff'
+              activeBarHeight: 3
+            links:
+              - id: docs_getting_started
+                type: MenuLink
+                properties:
+                  title: Getting Started
+                  icon: AiOutlineRocket
+              - id: docs_guides
+                type: MenuLink
+                properties:
+                  title: Guides
+                  icon: AiOutlineBook
+              - id: docs_api_ref
+                type: MenuGroup
+                properties:
+                  title: API Reference
+                links:
+                  - id: docs_rest
+                    type: MenuLink
+                    properties:
+                      title: REST API
+                  - id: docs_graphql
+                    type: MenuLink
+                    properties:
+                      title: GraphQL
+                  - id: docs_api_divider
+                    type: MenuDivider
+                  - id: docs_changelog
+                    type: MenuLink
+                    properties:
+                      title: Changelog
+              - id: docs_examples
+                type: MenuLink
+                properties:
+                  title: Examples
+                  icon: AiOutlineCode
+          events:
+            onClick:
+              - id: docs_click_msg
+                type: DisplayMessage
+                params:
+                  content:
+                    _string.concat:
+                      - 'Opening: '
+                      - _event: key
+                  status: success
+    - id: docs_content_card
+      type: Card
+      properties:
+        title: Guides
+        size: small
+      blocks:
+        - id: docs_content
+          type: Markdown
+          properties:
+            content: |
+              ## Configuration Guide
+
+              Learn how to configure your Lowdefy application with YAML configuration files.
+
+              **Topics covered:**
+              - App configuration
+              - Page definitions
+              - Block properties
+              - Event handling

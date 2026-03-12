@@ -14,33 +14,33 @@
 
 - title: Status Types
   blocks:
-    - id: msg_success
+    - id: status_success_msg
       type: Message
       properties:
         status: success
         content: Operation completed successfully
-    - id: msg_error
+    - id: status_error_msg
       type: Message
       properties:
         status: error
         content: Something went wrong
-    - id: msg_warning
+    - id: status_warning_msg
       type: Message
       properties:
         status: warning
         content: Please check your input
-    - id: msg_info
+    - id: status_info_msg
       type: Message
       properties:
         status: info
         content: Here is some useful information
-    - id: msg_loading
+    - id: status_loading_msg
       type: Message
       properties:
         status: loading
         content: Loading data...
         duration: 3
-    - id: btn_msg_success
+    - id: btn_status_success
       type: Button
       layout:
         flex: 0 0 auto
@@ -51,12 +51,12 @@
         icon: AiOutlineCheckCircle
       events:
         onClick:
-          - id: open_msg_success
+          - id: call_status_success
             type: CallMethod
             params:
-              blockId: msg_success
+              blockId: status_success_msg
               method: open
-    - id: btn_msg_error
+    - id: btn_status_error
       type: Button
       layout:
         flex: 0 0 auto
@@ -67,12 +67,12 @@
         icon: AiOutlineCloseCircle
       events:
         onClick:
-          - id: open_msg_error
+          - id: call_status_error
             type: CallMethod
             params:
-              blockId: msg_error
+              blockId: status_error_msg
               method: open
-    - id: btn_msg_warning
+    - id: btn_status_warning
       type: Button
       layout:
         flex: 0 0 auto
@@ -83,12 +83,12 @@
         icon: AiOutlineWarning
       events:
         onClick:
-          - id: open_msg_warning
+          - id: call_status_warning
             type: CallMethod
             params:
-              blockId: msg_warning
+              blockId: status_warning_msg
               method: open
-    - id: btn_msg_info
+    - id: btn_status_info
       type: Button
       layout:
         flex: 0 0 auto
@@ -99,12 +99,12 @@
         icon: AiOutlineInfoCircle
       events:
         onClick:
-          - id: open_msg_info
+          - id: call_status_info
             type: CallMethod
             params:
-              blockId: msg_info
+              blockId: status_info_msg
               method: open
-    - id: btn_msg_loading
+    - id: btn_status_loading
       type: Button
       layout:
         flex: 0 0 auto
@@ -115,32 +115,32 @@
         icon: AiOutlineLoading
       events:
         onClick:
-          - id: open_msg_loading
+          - id: call_status_loading
             type: CallMethod
             params:
-              blockId: msg_loading
+              blockId: status_loading_msg
               method: open
 
 - title: Duration
   blocks:
-    - id: msg_dur_short
+    - id: dur_short_msg
       type: Message
       properties:
         status: info
         content: Gone in 1 second
         duration: 1
-    - id: msg_dur_default
+    - id: dur_default_msg
       type: Message
       properties:
         status: info
         content: Default duration (4.5s)
-    - id: msg_dur_long
+    - id: dur_long_msg
       type: Message
       properties:
         status: info
         content: Stays for 10 seconds
         duration: 10
-    - id: msg_dur_sticky
+    - id: dur_sticky_msg
       type: Message
       properties:
         status: warning
@@ -156,10 +156,10 @@
         variant: outlined
       events:
         onClick:
-          - id: open_dur_short
+          - id: call_dur_short
             type: CallMethod
             params:
-              blockId: msg_dur_short
+              blockId: dur_short_msg
               method: open
     - id: btn_dur_default
       type: Button
@@ -171,10 +171,10 @@
         variant: outlined
       events:
         onClick:
-          - id: open_dur_default
+          - id: call_dur_default
             type: CallMethod
             params:
-              blockId: msg_dur_default
+              blockId: dur_default_msg
               method: open
     - id: btn_dur_long
       type: Button
@@ -186,10 +186,10 @@
         variant: outlined
       events:
         onClick:
-          - id: open_dur_long
+          - id: call_dur_long
             type: CallMethod
             params:
-              blockId: msg_dur_long
+              blockId: dur_long_msg
               method: open
     - id: btn_dur_sticky
       type: Button
@@ -201,33 +201,27 @@
         variant: outlined
       events:
         onClick:
-          - id: open_dur_sticky
+          - id: call_dur_sticky
             type: CallMethod
             params:
-              blockId: msg_dur_sticky
+              blockId: dur_sticky_msg
               method: open
 
 - title: Custom Icon
   blocks:
-    - id: msg_icon_save
+    - id: icon_save_msg
       type: Message
       properties:
         status: success
         content: File saved
         icon: AiOutlineSave
-    - id: msg_icon_bell
+    - id: icon_bell_msg
       type: Message
       properties:
         status: info
         content: Notification sent
         icon: AiOutlineBell
-    - id: msg_icon_cloud
-      type: Message
-      properties:
-        status: success
-        content: Uploaded to cloud
-        icon: AiOutlineCloudUpload
-    - id: msg_icon_star
+    - id: icon_star_msg
       type: Message
       properties:
         status: info
@@ -246,10 +240,10 @@
         icon: AiOutlineSave
       events:
         onClick:
-          - id: open_icon_save
+          - id: call_icon_save
             type: CallMethod
             params:
-              blockId: msg_icon_save
+              blockId: icon_save_msg
               method: open
     - id: btn_icon_bell
       type: Button
@@ -262,26 +256,10 @@
         icon: AiOutlineBell
       events:
         onClick:
-          - id: open_icon_bell
+          - id: call_icon_bell
             type: CallMethod
             params:
-              blockId: msg_icon_bell
-              method: open
-    - id: btn_icon_cloud
-      type: Button
-      layout:
-        flex: 0 0 auto
-      properties:
-        title: Cloud Icon
-        color: primary
-        variant: outlined
-        icon: AiOutlineCloudUpload
-      events:
-        onClick:
-          - id: open_icon_cloud
-            type: CallMethod
-            params:
-              blockId: msg_icon_cloud
+              blockId: icon_bell_msg
               method: open
     - id: btn_icon_star
       type: Button
@@ -294,16 +272,150 @@
         icon: AiOutlineStar
       events:
         onClick:
-          - id: open_icon_star
+          - id: call_icon_star
             type: CallMethod
             params:
-              blockId: msg_icon_star
+              blockId: icon_star_msg
+              method: open
+
+- title: HTML Content
+  blocks:
+    - id: html_bold_msg
+      type: Message
+      properties:
+        status: success
+        content: '<b>Bold</b> content in message'
+    - id: html_link_msg
+      type: Message
+      properties:
+        status: info
+        content: 'Visit <a href="https://lowdefy.com">Lowdefy</a> for more info'
+    - id: html_styled_msg
+      type: Message
+      properties:
+        status: warning
+        content: '<span style="color: #fa8c16; font-weight: bold;">Important:</span> Please review'
+    - id: btn_html_bold
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Bold HTML
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: call_html_bold
+            type: CallMethod
+            params:
+              blockId: html_bold_msg
+              method: open
+    - id: btn_html_link
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: HTML Link
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: call_html_link
+            type: CallMethod
+            params:
+              blockId: html_link_msg
+              method: open
+    - id: btn_html_styled
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Styled HTML
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: call_html_styled
+            type: CallMethod
+            params:
+              blockId: html_styled_msg
+              method: open
+
+- title: Message Style
+  blocks:
+    - id: mstyle_bg_msg
+      type: Message
+      properties:
+        status: success
+        content: Custom background color
+        messageStyle:
+          backgroundColor: '#f6ffed'
+          border: '1px solid #b7eb8f'
+    - id: mstyle_font_msg
+      type: Message
+      properties:
+        status: info
+        content: Larger font with custom padding
+        messageStyle:
+          fontSize: 16
+          padding: '12px 24px'
+    - id: mstyle_shadow_msg
+      type: Message
+      properties:
+        status: warning
+        content: Shadow and rounded corners
+        messageStyle:
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
+          borderRadius: 12
+    - id: btn_mstyle_bg
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Custom Background
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: call_mstyle_bg
+            type: CallMethod
+            params:
+              blockId: mstyle_bg_msg
+              method: open
+    - id: btn_mstyle_font
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Large Font
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: call_mstyle_font
+            type: CallMethod
+            params:
+              blockId: mstyle_font_msg
+              method: open
+    - id: btn_mstyle_shadow
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Shadow + Rounded
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: call_mstyle_shadow
+            type: CallMethod
+            params:
+              blockId: mstyle_shadow_msg
               method: open
 
 - title: Override at Call Time
-  fullWidth: true
   blocks:
-    - id: msg_override
+    - id: override_msg
       type: Message
       properties:
         status: info
@@ -319,10 +431,10 @@
         icon: AiOutlineCheckCircle
       events:
         onClick:
-          - id: open_override_success
+          - id: call_override_success
             type: CallMethod
             params:
-              blockId: msg_override
+              blockId: override_msg
               method: open
               args:
                 - status: success
@@ -339,16 +451,16 @@
         icon: AiOutlineCloseCircle
       events:
         onClick:
-          - id: open_override_error
+          - id: call_override_error
             type: CallMethod
             params:
-              blockId: msg_override
+              blockId: override_msg
               method: open
               args:
                 - status: error
                   content: Overridden to error at call time!
                   duration: 3
-    - id: btn_override_custom
+    - id: btn_override_icon
       type: Button
       layout:
         flex: 0 0 auto
@@ -359,10 +471,10 @@
         icon: AiOutlineRocket
       events:
         onClick:
-          - id: open_override_custom
+          - id: call_override_icon
             type: CallMethod
             params:
-              blockId: msg_override
+              blockId: override_msg
               method: open
               args:
                 - status: info
@@ -370,65 +482,377 @@
                   icon: AiOutlineRocket
                   duration: 3
 
-- title: HTML Content
+- title: onClose Event
   blocks:
-    - id: msg_html_bold
-      type: Message
-      properties:
-        status: success
-        content: '<b>Bold</b> content in message'
-    - id: msg_html_link
+    - id: onclose_msg
       type: Message
       properties:
         status: info
-        content: 'Visit <a href="https://lowdefy.com">Lowdefy</a> for more info'
-    - id: msg_html_styled
+        content: Close me to trigger the onClose event
+        duration: 3
+      events:
+        onClose:
+          - id: onclose_set_state
+            type: SetState
+            params:
+              messageClosed: true
+          - id: onclose_display
+            type: DisplayMessage
+            params:
+              content: onClose event fired!
+              status: success
+    - id: btn_onclose
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open Message with onClose
+        color: primary
+        variant: outlined
+        icon: AiOutlineNotification
+      events:
+        onClick:
+          - id: call_onclose
+            type: CallMethod
+            params:
+              blockId: onclose_msg
+              method: open
+
+- title: Style and CSS
+  blocks:
+    - id: css_shadow_msg
+      type: Message
+      class:
+        element: shadow-lg
+      properties:
+        status: success
+        content: Message with shadow via Tailwind class
+    - id: css_rounded_msg
+      type: Message
+      class:
+        element: rounded-full
+      properties:
+        status: info
+        content: Message with rounded corners via Tailwind class
+    - id: css_custom_msg
+      type: Message
+      style:
+        element:
+          border: '2px solid #1677ff'
+          borderRadius: 8
+      properties:
+        status: info
+        content: Message with inline border style
+    - id: btn_css_shadow
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Shadow Class
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: call_css_shadow
+            type: CallMethod
+            params:
+              blockId: css_shadow_msg
+              method: open
+    - id: btn_css_rounded
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Rounded Class
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: call_css_rounded
+            type: CallMethod
+            params:
+              blockId: css_rounded_msg
+              method: open
+    - id: btn_css_custom
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Inline Border Style
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: call_css_custom
+            type: CallMethod
+            params:
+              blockId: css_custom_msg
+              method: open
+
+- title: Theme Token Overrides
+  blocks:
+    - id: theme_bg_msg
+      type: Message
+      properties:
+        status: success
+        content: Custom background via theme token
+        theme:
+          contentBg: '#e6f4ff'
+    - id: theme_padding_msg
+      type: Message
+      properties:
+        status: info
+        content: Extra padding via theme token
+        theme:
+          contentPadding: '14px 20px'
+    - id: theme_zindex_msg
       type: Message
       properties:
         status: warning
-        content: '<span style="color: #fa8c16; font-weight: bold;">Important:</span> Please review'
-    - id: btn_html_bold
+        content: Custom z-index via theme token
+        theme:
+          zIndexPopup: 2000
+    - id: theme_combined_msg
+      type: Message
+      properties:
+        status: info
+        content: Combined theme overrides
+        theme:
+          contentBg: '#fff7e6'
+          contentPadding: '16px 24px'
+    - id: btn_theme_bg
       type: Button
       layout:
         flex: 0 0 auto
       properties:
-        title: Bold HTML
-        color: default
+        title: Custom Background
+        color: primary
         variant: outlined
       events:
         onClick:
-          - id: open_html_bold
+          - id: call_theme_bg
             type: CallMethod
             params:
-              blockId: msg_html_bold
+              blockId: theme_bg_msg
               method: open
-    - id: btn_html_link
+    - id: btn_theme_padding
       type: Button
       layout:
         flex: 0 0 auto
       properties:
-        title: HTML Link
-        color: default
+        title: Extra Padding
+        color: primary
         variant: outlined
       events:
         onClick:
-          - id: open_html_link
+          - id: call_theme_padding
             type: CallMethod
             params:
-              blockId: msg_html_link
+              blockId: theme_padding_msg
               method: open
-    - id: btn_html_styled
+    - id: btn_theme_zindex
       type: Button
       layout:
         flex: 0 0 auto
       properties:
-        title: Styled HTML
-        color: default
+        title: Custom Z-Index
+        color: primary
         variant: outlined
       events:
         onClick:
-          - id: open_html_styled
+          - id: call_theme_zindex
             type: CallMethod
             params:
-              blockId: msg_html_styled
+              blockId: theme_zindex_msg
               method: open
+    - id: btn_theme_combined
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Combined Tokens
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: call_theme_combined
+            type: CallMethod
+            params:
+              blockId: theme_combined_msg
+              method: open
+
+- title: Message in Form Submission
+  blocks:
+    - id: form_card
+      type: Card
+      properties:
+        title: Submit Feedback
+        size: small
+      blocks:
+        - id: form_name
+          type: TextInput
+          required: true
+          properties:
+            label:
+              title: Name
+            placeholder: Your name
+        - id: form_rating
+          type: RatingSlider
+          required: true
+          properties:
+            label:
+              title: Rating
+        - id: form_comments
+          type: TextArea
+          properties:
+            label:
+              title: Comments
+            placeholder: Tell us what you think
+            rows: 3
+        - id: form_submit_msg
+          type: Message
+          properties:
+            status: success
+            content: Thank you for your feedback!
+            duration: 3
+          events:
+            onClose:
+              - id: form_close_set
+                type: SetState
+                params:
+                  feedbackSubmitted: true
+        - id: form_error_msg
+          type: Message
+          properties:
+            status: error
+            content: Please fill in all required fields.
+            duration: 4
+        - id: form_actions
+          type: Box
+          layout:
+            gap: 8
+            justify: flex-end
+          blocks:
+            - id: form_cancel
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Cancel
+                color: default
+                variant: outlined
+              events:
+                onClick:
+                  - id: form_cancel_reset
+                    type: ResetValidation
+                  - id: form_cancel_msg
+                    type: DisplayMessage
+                    params:
+                      content: Form cleared
+                      status: info
+            - id: form_submit
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Submit Feedback
+                color: primary
+                variant: solid
+                icon: AiOutlineSend
+              events:
+                onClick:
+                  - id: form_validate
+                    type: Validate
+                  - id: form_open_success
+                    type: CallMethod
+                    params:
+                      blockId: form_submit_msg
+                      method: open
+
+- title: Message in File Upload
+  blocks:
+    - id: upload_card
+      type: Card
+      properties:
+        title: Upload Documents
+        size: small
+      blocks:
+        - id: upload_description
+          type: Markdown
+          properties:
+            content: |
+              Upload your project files below. Supported formats: PDF, DOCX, XLSX.
+              Maximum file size: 10 MB.
+        - id: upload_progress_msg
+          type: Message
+          properties:
+            status: loading
+            content: Uploading file...
+            duration: 0
+        - id: upload_success_msg
+          type: Message
+          properties:
+            status: success
+            content: File uploaded successfully!
+            icon: AiOutlineCloudUpload
+            duration: 3
+        - id: upload_fail_msg
+          type: Message
+          properties:
+            status: error
+            content: Upload failed. Please try again.
+            duration: 5
+        - id: upload_actions
+          type: Box
+          layout:
+            gap: 8
+            justify: flex-start
+          blocks:
+            - id: upload_start
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Start Upload
+                color: primary
+                variant: solid
+                icon: AiOutlineUpload
+              events:
+                onClick:
+                  - id: upload_show_progress
+                    type: CallMethod
+                    params:
+                      blockId: upload_progress_msg
+                      method: open
+            - id: upload_complete
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Simulate Success
+                color: green
+                variant: outlined
+                icon: AiOutlineCheckCircle
+              events:
+                onClick:
+                  - id: upload_show_success
+                    type: CallMethod
+                    params:
+                      blockId: upload_success_msg
+                      method: open
+            - id: upload_fail
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Simulate Failure
+                color: danger
+                variant: outlined
+                icon: AiOutlineCloseCircle
+              events:
+                onClick:
+                  - id: upload_show_fail
+                    type: CallMethod
+                    params:
+                      blockId: upload_fail_msg
+                      method: open

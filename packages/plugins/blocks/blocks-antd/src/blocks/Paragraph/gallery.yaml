@@ -14,7 +14,7 @@
 
 - title: Basic Content
   blocks:
-    - id: basic_paragraph
+    - id: basic_plain
       type: Paragraph
       properties:
         content: Lowdefy is a config-driven web framework. Build internal tools, client portals, and web apps with YAML or JSON.
@@ -54,104 +54,61 @@
         content: Danger paragraph highlighting a critical issue.
         type: danger
 
-- title: Strong (Bold)
+- title: Text Decorations
   blocks:
-    - id: strong_default
+    - id: deco_strong
       type: Paragraph
       properties:
-        content: Strong (bold) paragraph text.
+        content: Strong (bold) paragraph text for emphasis.
         strong: true
-    - id: strong_success
+    - id: deco_italic
       type: Paragraph
       properties:
-        content: Deployment completed successfully.
-        strong: true
-        type: success
-    - id: strong_danger
+        content: Italic paragraph text often used for citations or side notes.
+        italic: true
+    - id: deco_underline
       type: Paragraph
       properties:
-        content: Critical error detected in production.
-        strong: true
-        type: danger
+        content: Underlined paragraph text to draw attention.
+        underline: true
+    - id: deco_delete
+      type: Paragraph
+      properties:
+        content: Deleted (strikethrough) text indicating removed content.
+        delete: true
+    - id: deco_mark
+      type: Paragraph
+      properties:
+        content: Marked (highlighted) text to call out key information.
+        mark: true
 
-- title: Italic
+- title: Combined Decorations
   blocks:
-    - id: italic_default
+    - id: combined_strong_italic
       type: Paragraph
       properties:
-        content: Italic paragraph text for emphasis.
+        content: Bold and italic text for maximum emphasis.
+        strong: true
         italic: true
-    - id: italic_secondary
+    - id: combined_underline_mark
       type: Paragraph
       properties:
-        content: This feature is in beta and may change without notice.
-        italic: true
-        type: secondary
-    - id: italic_warning
+        content: Underlined and highlighted to draw strong attention.
+        underline: true
+        mark: true
+    - id: combined_warning_italic
       type: Paragraph
       properties:
-        content: Please review the terms before proceeding.
-        italic: true
+        content: This feature is deprecated and will be removed in a future version.
         type: warning
-
-- title: Underline
-  blocks:
-    - id: underline_default
+        italic: true
+        underline: true
+    - id: combined_danger_strong
       type: Paragraph
       properties:
-        content: Underlined paragraph text.
-        underline: true
-    - id: underline_success
-      type: Paragraph
-      properties:
-        content: Task marked as complete.
-        underline: true
-        type: success
-    - id: underline_danger
-      type: Paragraph
-      properties:
-        content: This action cannot be undone.
-        underline: true
+        content: Critical security vulnerability detected.
         type: danger
-
-- title: Delete (Strikethrough)
-  blocks:
-    - id: delete_default
-      type: Paragraph
-      properties:
-        content: Deleted (strikethrough) paragraph text.
-        delete: true
-    - id: delete_secondary
-      type: Paragraph
-      properties:
-        content: This API endpoint has been removed.
-        delete: true
-        type: secondary
-    - id: delete_pricing
-      type: Paragraph
-      properties:
-        content: 'Original price: $99.99'
-        delete: true
-        type: danger
-
-- title: Mark (Highlight)
-  blocks:
-    - id: mark_default
-      type: Paragraph
-      properties:
-        content: Marked (highlighted) paragraph text.
-        mark: true
-    - id: mark_important
-      type: Paragraph
-      properties:
-        content: Key takeaway from the meeting notes.
-        mark: true
-    - id: mark_warning
-      type: Paragraph
-      properties:
-        content: Deadline approaching, please submit by Friday.
-        mark: true
-        type: warning
+        strong: true
 
 - title: Disabled
   blocks:
@@ -165,6 +122,12 @@
       properties:
         content: This section is currently unavailable. The content will be accessible once the feature has been enabled by your administrator.
         disabled: true
+    - id: disabled_strong
+      type: Paragraph
+      properties:
+        content: Disabled bold text still shows the faded style.
+        disabled: true
+        strong: true
 
 - title: Code Style
   blocks:
@@ -184,59 +147,6 @@
         content: '{ "type": "TextInput", "properties": { "label": "Name" } }'
         code: true
 
-- title: Combined Decorations
-  blocks:
-    - id: combined_strong_italic
-      type: Paragraph
-      properties:
-        content: Bold and italic text for maximum emphasis.
-        strong: true
-        italic: true
-    - id: combined_strong_underline
-      type: Paragraph
-      properties:
-        content: Bold and underlined for clear importance.
-        strong: true
-        underline: true
-    - id: combined_italic_mark
-      type: Paragraph
-      properties:
-        content: Italic and highlighted to draw attention.
-        italic: true
-        mark: true
-    - id: combined_strong_delete
-      type: Paragraph
-      properties:
-        content: Bold text that has been struck through.
-        strong: true
-        delete: true
-    - id: combined_code_mark
-      type: Paragraph
-      properties:
-        content: console.log("highlighted code")
-        code: true
-        mark: true
-    - id: combined_success_bold
-      type: Paragraph
-      properties:
-        content: Successfully deployed to production.
-        type: success
-        strong: true
-    - id: combined_warning_italic_underline
-      type: Paragraph
-      properties:
-        content: This feature is deprecated and will be removed in a future version.
-        type: warning
-        italic: true
-        underline: true
-    - id: combined_danger_strong_underline
-      type: Paragraph
-      properties:
-        content: Critical security vulnerability detected.
-        type: danger
-        underline: true
-        strong: true
-
 - title: Copyable
   blocks:
     - id: copyable_simple
@@ -247,27 +157,21 @@
     - id: copyable_custom_text
       type: Paragraph
       properties:
-        content: Copy this paragraph
+        content: Copy this paragraph (custom text is copied instead)
         copyable:
           text: This is the custom text that gets copied to clipboard instead of the visible content.
     - id: copyable_tooltips
       type: Paragraph
       properties:
-        content: Hover the copy icon to see custom tooltip
+        content: Hover the copy icon to see custom tooltips
         copyable:
           tooltips:
             - Click to copy text
             - Text copied!
-    - id: copyable_icon
+    - id: copyable_icons
       type: Paragraph
       properties:
-        content: Custom copy icon
-        copyable:
-          icon: AiOutlineSnippets
-    - id: copyable_two_icons
-      type: Paragraph
-      properties:
-        content: Two-state copy icons
+        content: Two-state copy icons that change after clicking
         copyable:
           icon:
             - AiOutlineCopy
@@ -279,70 +183,136 @@
         code: true
         copyable: true
 
-- title: Ellipsis (Single Line)
+- title: Copyable with onCopy Event
+  blocks:
+    - id: copyable_event
+      type: Paragraph
+      properties:
+        content: Copy this text and a message will appear.
+        copyable: true
+      events:
+        onCopy:
+          - id: copyable_event_msg
+            type: DisplayMessage
+            params:
+              content: Text copied to clipboard!
+              status: success
+    - id: copyable_event_custom
+      type: Paragraph
+      properties:
+        content: API Key shown here (actual key copied)
+        copyable:
+          text: sk-abc123def456
+          tooltips:
+            - Copy API key
+            - API key copied!
+      events:
+        onCopy:
+          - id: copyable_event_custom_msg
+            type: DisplayMessage
+            params:
+              content: API key copied to clipboard.
+              status: info
+    - id: copyable_event_set_state
+      type: Paragraph
+      properties:
+        content: Copy this and state will track it.
+        copyable: true
+      events:
+        onCopy:
+          - id: copyable_event_set
+            type: SetState
+            params:
+              lastCopied: Copied text tracked via onCopy event.
+
+- title: Ellipsis
   blocks:
     - id: ellipsis_single
       type: Paragraph
       properties:
         content: This is a very long paragraph that will be truncated when it exceeds the width of its container. The overflow text is replaced with an ellipsis to indicate there is more content available beyond what is currently visible.
         ellipsis: true
-
-- title: Ellipsis (Multi-Row)
-  blocks:
     - id: ellipsis_rows_2
       type: Paragraph
       properties:
-        content: This paragraph demonstrates multi-line ellipsis. It contains enough text to span several lines, and after reaching the specified row limit, the remaining content will be hidden behind an ellipsis. Users can click the expand button to reveal the full text. This is useful for previews of long-form content like descriptions, comments, and article summaries.
+        content: This paragraph demonstrates multi-line ellipsis with two rows. It contains enough text to span several lines, and after reaching the specified row limit, the remaining content will be hidden behind an ellipsis. Users can click the expand button to reveal the full text. This is useful for previews of long-form content.
         ellipsis:
           rows: 2
           expandable: true
-    - id: ellipsis_rows_3
+    - id: ellipsis_rows_3_suffix
       type: Paragraph
       properties:
-        content: Three-line ellipsis allows more content to show before truncation. Lowdefy makes it easy to build internal tools, client portals, and web applications using YAML or JSON configuration files. No need to learn complex frontend frameworks, manage build tooling, or write boilerplate code. Just define your UI in config and Lowdefy takes care of the rest. You can connect to databases, call APIs, handle user authentication, and much more.
+        content: Three-line ellipsis with a custom suffix. Lowdefy makes it easy to build internal tools, client portals, and web applications using YAML or JSON configuration files. No need to learn complex frontend frameworks, manage build tooling, or write boilerplate code. Just define your UI in config and Lowdefy takes care of the rest.
         ellipsis:
           rows: 3
           expandable: true
-
-- title: Ellipsis with Suffix
-  blocks:
-    - id: ellipsis_suffix
-      type: Paragraph
-      properties:
-        content: This paragraph has a custom suffix added after the ellipsis truncation point so readers know there is additional content to discover beyond what is visible.
-        ellipsis:
-          rows: 1
           suffix: ' --Read More'
-    - id: ellipsis_suffix_dots
+
+- title: Ellipsis with onExpand Event
+  blocks:
+    - id: ellipsis_event
       type: Paragraph
       properties:
-        content: A paragraph with a custom suffix showing how to guide users to expand and read more content from the truncated text block.
+        content: Click expand to trigger an event. Lowdefy makes it easy to build internal tools, client portals, and web applications using YAML or JSON configuration files. No need to learn complex frontend frameworks, manage build tooling, or write boilerplate code.
         ellipsis:
           rows: 2
+          expandable: true
+      events:
+        onExpand:
+          - id: ellipsis_event_msg
+            type: DisplayMessage
+            params:
+              content: Content expanded!
+              status: info
+    - id: ellipsis_event_set_state
+      type: Paragraph
+      properties:
+        content: Expanding this paragraph will update state. This is useful for tracking which sections the user has read or interacted with. You can use the ellipsis state to drive conditional logic elsewhere in the app.
+        ellipsis:
+          rows: 2
+          expandable: true
+      events:
+        onExpand:
+          - id: ellipsis_event_set
+            type: SetState
+            params:
+              sectionExpanded: true
+          - id: ellipsis_event_set_msg
+            type: DisplayMessage
+            params:
+              content: State updated - sectionExpanded is now true.
+              status: success
+    - id: ellipsis_event_suffix
+      type: Paragraph
+      properties:
+        content: Expandable paragraph with a suffix and event. Lowdefy apps are defined in YAML with blocks, operators, actions, and connections. The framework handles rendering, state management, and server-side logic so you can focus on building features.
+        ellipsis:
+          rows: 1
+          expandable: true
           suffix: ' [...]'
+      events:
+        onExpand:
+          - id: ellipsis_event_suffix_msg
+            type: DisplayMessage
+            params:
+              content: Full text revealed.
+              status: info
 
-- title: Style Overrides
+- title: Style and CSS
   blocks:
-    - id: style_bg
+    - id: css_tailwind_bg
       type: Paragraph
+      class: bg-blue-50 p-3 rounded-lg
       properties:
-        content: Paragraph with a light blue background and padding.
-      style:
-        --element:
-          backgroundColor: '#e6f4ff'
-          padding: 12px 16px
-          borderRadius: 6px
-    - id: style_border_left
+        content: Paragraph styled with Tailwind classes for background, padding, and border radius.
+    - id: css_tailwind_border
       type: Paragraph
+      class: border-l-4 border-blue-500 pl-3
       properties:
-        content: Paragraph styled as a blockquote with a left border accent.
+        content: Paragraph with a left border accent using Tailwind utility classes.
         type: secondary
         italic: true
-      style:
-        --element:
-          borderLeft: 3px solid #1677ff
-          paddingLeft: 12px
-    - id: style_letter_spacing
+    - id: css_inline_spacing
       type: Paragraph
       properties:
         content: PARAGRAPH WITH WIDE LETTER SPACING
@@ -351,69 +321,138 @@
           letterSpacing: 3px
           textTransform: uppercase
           fontSize: 12px
-    - id: style_line_height
+    - id: css_inline_line_height
       type: Paragraph
       properties:
         content: This paragraph has increased line height for better readability. When you have dense text content, increasing the line height makes it easier for users to follow lines of text across the page.
       style:
         --element:
           lineHeight: 2.0
+    - id: css_inline_blockquote
+      type: Paragraph
+      properties:
+        content: A blockquote-style paragraph using inline styles with a left border and padding.
+        italic: true
+      style:
+        --element:
+          borderLeft: 3px solid #1677ff
+          paddingLeft: 12px
 
 - title: Theme Token Overrides
   blocks:
     - id: theme_bold_weight
       type: Paragraph
       properties:
-        content: Custom heavy font weight for strong text.
+        content: Custom heavy font weight for strong text (fontWeightStrong 900).
         strong: true
         theme:
           fontWeightStrong: 900
-    - id: theme_custom_success
+    - id: theme_custom_colors
       type: Paragraph
       properties:
-        content: Custom teal success color.
+        content: Custom teal success color applied via theme tokens.
         type: success
         theme:
           colorSuccess: '#13c2c2'
-    - id: theme_custom_warning
+    - id: theme_warning_color
       type: Paragraph
       properties:
-        content: Custom orange warning color.
+        content: Custom orange warning color via theme override.
         type: warning
         theme:
           colorWarning: '#fa541c'
-
-- title: Real-World Examples
-  blocks:
-    - id: example_description
+    - id: theme_code_font
       type: Paragraph
       properties:
-        content: Configure your Lowdefy application using YAML files. Define pages, blocks, connections, and actions to build complete web applications without writing frontend code.
-    - id: example_error_msg
-      type: Paragraph
-      properties:
-        content: Unable to connect to the database. Please check your connection string and ensure the database server is running.
-        type: danger
-        strong: true
-    - id: example_success_msg
-      type: Paragraph
-      properties:
-        content: Your changes have been saved successfully. The deployment will be live within 5 minutes.
-        type: success
-    - id: example_deprecation
-      type: Paragraph
-      properties:
-        content: 'Warning: The v3 API will be sunset on December 31, 2026. Please migrate to v4 before that date.'
-        type: warning
-        italic: true
-    - id: example_help
-      type: Paragraph
-      properties:
-        content: Enter your API key to authenticate requests. You can find your key in the settings panel.
-        type: secondary
-    - id: example_code_snippet
-      type: Paragraph
-      properties:
-        content: 'lowdefy: 4.0.0'
+        content: 'console.log("custom monospace font")'
         code: true
-        copyable: true
+        theme:
+          fontFamilyCode: '"JetBrains Mono", "Fira Code", monospace'
+
+- title: Paragraph in Article Page
+  blocks:
+    - id: article_card
+      type: Card
+      properties:
+        title: Getting Started with Lowdefy
+        size: small
+      blocks:
+        - id: article_intro
+          type: Paragraph
+          properties:
+            content: Lowdefy is a config-driven web framework that lets you build internal tools, client portals, and web apps using YAML. No frontend expertise required.
+        - id: article_highlight
+          type: Paragraph
+          properties:
+            content: Over 50 pre-built blocks are available out of the box, including form inputs, charts, tables, and layout components.
+            mark: true
+            strong: true
+        - id: article_code_label
+          type: Paragraph
+          properties:
+            content: Install the CLI to get started.
+            type: secondary
+        - id: article_code_snippet
+          type: Paragraph
+          properties:
+            content: npx lowdefy@latest dev
+            code: true
+            copyable: true
+          events:
+            onCopy:
+              - id: article_copy_msg
+                type: DisplayMessage
+                params:
+                  content: Command copied! Paste it into your terminal.
+                  status: success
+        - id: article_note
+          type: Paragraph
+          properties:
+            content: 'Note: Lowdefy requires Node.js 18 or later. Check your version with node --version.'
+            type: warning
+            italic: true
+
+- title: Paragraph in Status Dashboard
+  blocks:
+    - id: status_card
+      type: Card
+      properties:
+        title: System Status
+        size: small
+      blocks:
+        - id: status_ok
+          type: Paragraph
+          properties:
+            content: All services are operational. Last checked 2 minutes ago.
+            type: success
+            strong: true
+        - id: status_degraded
+          type: Paragraph
+          properties:
+            content: API response times are elevated. The team is investigating the root cause.
+            type: warning
+        - id: status_outage
+          type: Paragraph
+          properties:
+            content: Database cluster is unreachable. Automatic failover has been triggered.
+            type: danger
+            strong: true
+        - id: status_detail
+          type: Paragraph
+          properties:
+            content: For real-time updates, subscribe to the status page or contact support. Incident reports are published within 30 minutes of detection. Historical uptime data is available in the admin dashboard.
+            ellipsis:
+              rows: 2
+              expandable: true
+          events:
+            onExpand:
+              - id: status_expand_msg
+                type: DisplayMessage
+                params:
+                  content: Showing full status details.
+                  status: info
+        - id: status_disabled
+          type: Paragraph
+          properties:
+            content: Maintenance window scheduled for Sunday 02:00-04:00 UTC.
+            disabled: true

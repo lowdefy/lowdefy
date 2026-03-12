@@ -14,13 +14,13 @@
 
 - title: Status Types
   blocks:
-    - id: notif_success
+    - id: notif_status_success
       type: Notification
       properties:
         status: success
-        title: Success
+        title: Changes Saved
         description: Your changes have been saved successfully.
-    - id: btn_notif_success
+    - id: btn_status_success
       type: Button
       layout:
         flex: 0 0 auto
@@ -31,18 +31,18 @@
         icon: AiOutlineCheckCircle
       events:
         onClick:
-          - id: open_notif_success
+          - id: open_status_success
             type: CallMethod
             params:
-              blockId: notif_success
+              blockId: notif_status_success
               method: open
-    - id: notif_error
+    - id: notif_status_error
       type: Notification
       properties:
         status: error
-        title: Error
+        title: Save Failed
         description: Failed to save your changes. Please try again.
-    - id: btn_notif_error
+    - id: btn_status_error
       type: Button
       layout:
         flex: 0 0 auto
@@ -53,18 +53,18 @@
         icon: AiOutlineCloseCircle
       events:
         onClick:
-          - id: open_notif_error
+          - id: open_status_error
             type: CallMethod
             params:
-              blockId: notif_error
+              blockId: notif_status_error
               method: open
-    - id: notif_warning
+    - id: notif_status_warning
       type: Notification
       properties:
         status: warning
-        title: Warning
-        description: Disk space is running low on the server.
-    - id: btn_notif_warning
+        title: Disk Space Low
+        description: Server storage is running below 10% capacity.
+    - id: btn_status_warning
       type: Button
       layout:
         flex: 0 0 auto
@@ -75,18 +75,18 @@
         icon: AiOutlineWarning
       events:
         onClick:
-          - id: open_notif_warning
+          - id: open_status_warning
             type: CallMethod
             params:
-              blockId: notif_warning
+              blockId: notif_status_warning
               method: open
-    - id: notif_info
+    - id: notif_status_info
       type: Notification
       properties:
         status: info
-        title: Information
+        title: Update Available
         description: A new version of the application is available.
-    - id: btn_notif_info
+    - id: btn_status_info
       type: Button
       layout:
         flex: 0 0 auto
@@ -97,22 +97,22 @@
         icon: AiOutlineInfoCircle
       events:
         onClick:
-          - id: open_notif_info
+          - id: open_status_info
             type: CallMethod
             params:
-              blockId: notif_info
+              blockId: notif_status_info
               method: open
 
 - title: Placement
   blocks:
-    - id: notif_top_right
+    - id: notif_place_top_right
       type: Notification
       properties:
         status: info
         title: Top Right
         description: Default placement position.
         placement: topRight
-    - id: btn_notif_top_right
+    - id: btn_place_top_right
       type: Button
       layout:
         flex: 0 0 auto
@@ -122,19 +122,19 @@
         variant: outlined
       events:
         onClick:
-          - id: open_notif_top_right
+          - id: open_place_top_right
             type: CallMethod
             params:
-              blockId: notif_top_right
+              blockId: notif_place_top_right
               method: open
-    - id: notif_top_left
+    - id: notif_place_top_left
       type: Notification
       properties:
         status: info
         title: Top Left
         description: Appears at the top left corner.
         placement: topLeft
-    - id: btn_notif_top_left
+    - id: btn_place_top_left
       type: Button
       layout:
         flex: 0 0 auto
@@ -144,19 +144,19 @@
         variant: outlined
       events:
         onClick:
-          - id: open_notif_top_left
+          - id: open_place_top_left
             type: CallMethod
             params:
-              blockId: notif_top_left
+              blockId: notif_place_top_left
               method: open
-    - id: notif_bottom_right
+    - id: notif_place_bottom_right
       type: Notification
       properties:
         status: info
         title: Bottom Right
         description: Appears at the bottom right corner.
         placement: bottomRight
-    - id: btn_notif_bottom_right
+    - id: btn_place_bottom_right
       type: Button
       layout:
         flex: 0 0 auto
@@ -166,19 +166,19 @@
         variant: outlined
       events:
         onClick:
-          - id: open_notif_bottom_right
+          - id: open_place_bottom_right
             type: CallMethod
             params:
-              blockId: notif_bottom_right
+              blockId: notif_place_bottom_right
               method: open
-    - id: notif_bottom_left
+    - id: notif_place_bottom_left
       type: Notification
       properties:
         status: info
         title: Bottom Left
         description: Appears at the bottom left corner.
         placement: bottomLeft
-    - id: btn_notif_bottom_left
+    - id: btn_place_bottom_left
       type: Button
       layout:
         flex: 0 0 auto
@@ -188,10 +188,10 @@
         variant: outlined
       events:
         onClick:
-          - id: open_notif_bottom_left
+          - id: open_place_bottom_left
             type: CallMethod
             params:
-              blockId: notif_bottom_left
+              blockId: notif_place_bottom_left
               method: open
 
 - title: Duration
@@ -203,7 +203,7 @@
         title: Quick Notice
         description: Disappears in 2 seconds.
         duration: 2
-    - id: btn_notif_dur_short
+    - id: btn_dur_short
       type: Button
       layout:
         flex: 0 0 auto
@@ -224,7 +224,7 @@
         status: info
         title: Default Duration
         description: Auto-closes after 4.5 seconds (default).
-    - id: btn_notif_dur_default
+    - id: btn_dur_default
       type: Button
       layout:
         flex: 0 0 auto
@@ -239,6 +239,28 @@
             params:
               blockId: notif_dur_default
               method: open
+    - id: notif_dur_long
+      type: Notification
+      properties:
+        status: info
+        title: Extended Duration
+        description: Stays visible for 10 seconds.
+        duration: 10
+    - id: btn_dur_long
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: 10 seconds
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: open_dur_long
+            type: CallMethod
+            params:
+              blockId: notif_dur_long
+              method: open
     - id: notif_dur_sticky
       type: Notification
       properties:
@@ -246,7 +268,7 @@
         title: Persistent
         description: Will not auto-close (duration 0). Must be dismissed manually.
         duration: 0
-    - id: btn_notif_dur_sticky
+    - id: btn_dur_sticky
       type: Button
       layout:
         flex: 0 0 auto
@@ -264,30 +286,30 @@
 
 - title: Custom Icon
   blocks:
-    - id: notif_icon_download
+    - id: notif_icon_string
       type: Notification
       properties:
         status: success
         title: Download Complete
         description: Your file has been downloaded successfully.
         icon: AiOutlineDownload
-    - id: btn_notif_icon_download
+    - id: btn_icon_string
       type: Button
       layout:
         flex: 0 0 auto
       properties:
-        title: Download Icon
+        title: String Icon
         color: primary
         variant: outlined
         icon: AiOutlineDownload
       events:
         onClick:
-          - id: open_icon_download
+          - id: open_icon_string
             type: CallMethod
             params:
-              blockId: notif_icon_download
+              blockId: notif_icon_string
               method: open
-    - id: notif_icon_star
+    - id: notif_icon_colored
       type: Notification
       properties:
         status: info
@@ -296,23 +318,23 @@
         icon:
           name: AiOutlineStar
           color: '#faad14'
-    - id: btn_notif_icon_star
+    - id: btn_icon_colored
       type: Button
       layout:
         flex: 0 0 auto
       properties:
-        title: Star Icon
+        title: Colored Icon
         color: default
         variant: outlined
         icon: AiOutlineStar
       events:
         onClick:
-          - id: open_icon_star
+          - id: open_icon_colored
             type: CallMethod
             params:
-              blockId: notif_icon_star
+              blockId: notif_icon_colored
               method: open
-    - id: notif_icon_lock
+    - id: notif_icon_sized
       type: Notification
       properties:
         status: warning
@@ -320,45 +342,121 @@
         description: Your session will expire in 5 minutes.
         icon:
           name: AiOutlineLock
-          color: '#faad14'
-          size: 24
-    - id: btn_notif_icon_lock
+          color: '#fa8c16'
+          size: 28
+    - id: btn_icon_sized
       type: Button
       layout:
         flex: 0 0 auto
       properties:
-        title: Lock Icon
+        title: Sized Icon
         color: default
         variant: outlined
         icon: AiOutlineLock
       events:
         onClick:
-          - id: open_icon_lock
+          - id: open_icon_sized
             type: CallMethod
             params:
-              blockId: notif_icon_lock
+              blockId: notif_icon_sized
               method: open
 
-- title: With Action Button
+- title: Close Icon
   blocks:
-    - id: notif_button_confirm
+    - id: notif_close_icon_string
+      type: Notification
+      properties:
+        status: info
+        title: Custom Close
+        description: This notification has a custom close icon.
+        closeIcon: AiOutlineCloseSquare
+        duration: 0
+    - id: btn_close_icon_string
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Square Close
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: open_close_icon_string
+            type: CallMethod
+            params:
+              blockId: notif_close_icon_string
+              method: open
+    - id: notif_close_icon_styled
+      type: Notification
+      properties:
+        status: warning
+        title: Styled Close
+        description: Close icon with custom color and size.
+        closeIcon:
+          name: AiOutlineCloseCircle
+          color: '#ff4d4f'
+          size: 18
+        duration: 0
+    - id: btn_close_icon_styled
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Styled Close
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: open_close_icon_styled
+            type: CallMethod
+            params:
+              blockId: notif_close_icon_styled
+              method: open
+    - id: notif_close_icon_arrow
+      type: Notification
+      properties:
+        status: success
+        title: Arrow Close
+        description: Uses an arrow icon instead of the default close.
+        closeIcon: AiOutlineArrowRight
+        duration: 0
+    - id: btn_close_icon_arrow
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Arrow Close
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: open_close_icon_arrow
+            type: CallMethod
+            params:
+              blockId: notif_close_icon_arrow
+              method: open
+
+- title: Action Button
+  blocks:
+    - id: notif_btn_confirm
       type: Notification
       properties:
         status: info
         title: Action Required
         description: Please review and confirm the pending changes.
+        duration: 0
         button:
           title: Confirm
           icon: AiOutlineCheck
           color: primary
           variant: solid
           size: small
-    - id: btn_notif_button_confirm
+    - id: btn_trigger_confirm
       type: Button
       layout:
         flex: 0 0 auto
       properties:
-        title: With Confirm Button
+        title: With Confirm
         color: primary
         variant: outlined
       events:
@@ -366,26 +464,27 @@
           - id: open_btn_confirm
             type: CallMethod
             params:
-              blockId: notif_button_confirm
+              blockId: notif_btn_confirm
               method: open
-    - id: notif_button_retry
+    - id: notif_btn_retry
       type: Notification
       properties:
         status: error
         title: Upload Failed
         description: The file could not be uploaded. Please try again.
+        duration: 0
         button:
           title: Retry
           icon: AiOutlineReload
           color: danger
           variant: solid
           size: small
-    - id: btn_notif_button_retry
+    - id: btn_trigger_retry
       type: Button
       layout:
         flex: 0 0 auto
       properties:
-        title: With Retry Button
+        title: With Retry
         color: danger
         variant: outlined
       events:
@@ -393,81 +492,129 @@
           - id: open_btn_retry
             type: CallMethod
             params:
-              blockId: notif_button_retry
+              blockId: notif_btn_retry
               method: open
-
-- title: Override at Call Time
-  fullWidth: true
-  blocks:
-    - id: notif_override
-      type: Notification
-      properties:
-        status: info
-        title: Default
-        description: Default notification.
-    - id: btn_notif_override_success
-      type: Button
-      layout:
-        flex: 0 0 auto
-      properties:
-        title: Open as Success
-        color: primary
-        variant: solid
-        icon: AiOutlineCheckCircle
-      events:
-        onClick:
-          - id: open_override_success
-            type: CallMethod
-            params:
-              blockId: notif_override
-              method: open
-              args:
-                - status: success
-                  title: Overridden Title
-                  description: Status, title and description all overridden at call time.
-    - id: btn_notif_override_error
-      type: Button
-      layout:
-        flex: 0 0 auto
-      properties:
-        title: Open as Error
-        color: danger
-        variant: solid
-        icon: AiOutlineCloseCircle
-      events:
-        onClick:
-          - id: open_override_error
-            type: CallMethod
-            params:
-              blockId: notif_override
-              method: open
-              args:
-                - status: error
-                  title: Error Override
-                  description: This error notification was created by overriding args at call time.
-
-- title: HTML Content
-  blocks:
-    - id: notif_html_desc
+    - id: notif_btn_undo
       type: Notification
       properties:
         status: success
-        title: Deployment Complete
-        description: 'Deployed to <b>production</b>. Visit <a href="https://lowdefy.com">the site</a> to verify.'
-    - id: btn_notif_html
+        title: Item Deleted
+        description: The record has been removed from the database.
+        duration: 0
+        button:
+          title: Undo
+          color: default
+          variant: outlined
+          size: small
+    - id: btn_trigger_undo
       type: Button
       layout:
         flex: 0 0 auto
       properties:
-        title: HTML Description
+        title: With Undo
         color: default
         variant: outlined
       events:
         onClick:
-          - id: open_html
+          - id: open_btn_undo
             type: CallMethod
             params:
-              blockId: notif_html_desc
+              blockId: notif_btn_undo
+              method: open
+
+- title: Top and Bottom Offset
+  blocks:
+    - id: notif_top_offset
+      type: Notification
+      properties:
+        status: info
+        title: Top Offset
+        description: Positioned 80px from the top of the viewport.
+        placement: topRight
+        top: 80
+    - id: btn_top_offset
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Top 80px
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: open_top_offset
+            type: CallMethod
+            params:
+              blockId: notif_top_offset
+              method: open
+    - id: notif_bottom_offset
+      type: Notification
+      properties:
+        status: info
+        title: Bottom Offset
+        description: Positioned 80px from the bottom of the viewport.
+        placement: bottomRight
+        bottom: 80
+    - id: btn_bottom_offset
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Bottom 80px
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: open_bottom_offset
+            type: CallMethod
+            params:
+              blockId: notif_bottom_offset
+              method: open
+    - id: notif_default_offset
+      type: Notification
+      properties:
+        status: info
+        title: Default Offset
+        description: Uses the default 24px offset.
+        placement: topRight
+    - id: btn_default_offset
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Default (24px)
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: open_default_offset
+            type: CallMethod
+            params:
+              blockId: notif_default_offset
+              method: open
+
+- title: HTML Content
+  blocks:
+    - id: notif_html_bold
+      type: Notification
+      properties:
+        status: success
+        title: '<b>Deployment</b> Complete'
+        description: 'Deployed to <b>production</b>. Visit <a href="https://lowdefy.com">the site</a> to verify.'
+    - id: btn_html_bold
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Bold and Link
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: open_html_bold
+            type: CallMethod
+            params:
+              blockId: notif_html_bold
               method: open
     - id: notif_html_styled
       type: Notification
@@ -475,7 +622,7 @@
         status: warning
         title: Maintenance Scheduled
         description: '<span style="color: #fa8c16; font-weight: bold;">Downtime:</span> Saturday 2:00 AM - 6:00 AM UTC.'
-    - id: btn_notif_html_styled
+    - id: btn_html_styled
       type: Button
       layout:
         flex: 0 0 auto
@@ -490,3 +637,645 @@
             params:
               blockId: notif_html_styled
               method: open
+    - id: notif_html_list
+      type: Notification
+      properties:
+        status: info
+        title: Release Notes
+        description: '<ul><li>Fixed login timeout issue</li><li>Added dark mode support</li><li>Improved dashboard performance</li></ul>'
+        duration: 0
+    - id: btn_html_list
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: HTML List
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: open_html_list
+            type: CallMethod
+            params:
+              blockId: notif_html_list
+              method: open
+
+- title: Notification Style
+  blocks:
+    - id: notif_style_border
+      type: Notification
+      properties:
+        status: success
+        title: Custom Border
+        description: This notification has a left green border.
+        notificationStyle:
+          borderLeft: 4px solid #52c41a
+    - id: btn_style_border
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Left Border
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: open_style_border
+            type: CallMethod
+            params:
+              blockId: notif_style_border
+              method: open
+    - id: notif_style_bg
+      type: Notification
+      properties:
+        status: warning
+        title: Custom Background
+        description: This notification has a custom background color.
+        notificationStyle:
+          background: '#fffbe6'
+    - id: btn_style_bg
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Custom Background
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: open_style_bg
+            type: CallMethod
+            params:
+              blockId: notif_style_bg
+              method: open
+    - id: notif_style_shadow
+      type: Notification
+      properties:
+        status: info
+        title: Heavy Shadow
+        description: This notification has an elevated shadow.
+        notificationStyle:
+          boxShadow: 0 6px 24px rgba(0, 0, 0, 0.2)
+    - id: btn_style_shadow
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Heavy Shadow
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: open_style_shadow
+            type: CallMethod
+            params:
+              blockId: notif_style_shadow
+              method: open
+
+- title: Override at Call Time
+  blocks:
+    - id: notif_override_base
+      type: Notification
+      properties:
+        status: info
+        title: Default Title
+        description: Default notification description.
+    - id: btn_override_success
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Override as Success
+        color: primary
+        variant: solid
+        icon: AiOutlineCheckCircle
+      events:
+        onClick:
+          - id: open_override_success
+            type: CallMethod
+            params:
+              blockId: notif_override_base
+              method: open
+              args:
+                - status: success
+                  title: Overridden Title
+                  description: Status, title, and description overridden at call time.
+    - id: btn_override_error
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Override as Error
+        color: danger
+        variant: solid
+        icon: AiOutlineCloseCircle
+      events:
+        onClick:
+          - id: open_override_error
+            type: CallMethod
+            params:
+              blockId: notif_override_base
+              method: open
+              args:
+                - status: error
+                  title: Error Override
+                  description: This error notification was overridden at call time.
+    - id: btn_override_duration
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Override Duration
+        color: default
+        variant: outlined
+        icon: AiOutlineClockCircle
+      events:
+        onClick:
+          - id: open_override_duration
+            type: CallMethod
+            params:
+              blockId: notif_override_base
+              method: open
+              args:
+                - duration: 1
+                  title: Quick Flash
+                  description: This closes after just 1 second.
+
+- title: Events
+  blocks:
+    - id: notif_events_demo
+      type: Notification
+      properties:
+        status: info
+        title: Interactive Notification
+        description: Click the notification body or close it to trigger events.
+        duration: 0
+      events:
+        onClick:
+          - id: events_click_msg
+            type: DisplayMessage
+            params:
+              content: Notification body clicked!
+              status: info
+        onClose:
+          - id: events_close_msg
+            type: DisplayMessage
+            params:
+              content: Notification was closed.
+              status: success
+    - id: btn_events_demo
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open Interactive
+        color: primary
+        variant: solid
+      events:
+        onClick:
+          - id: open_events_demo
+            type: CallMethod
+            params:
+              blockId: notif_events_demo
+              method: open
+    - id: notif_events_close_action
+      type: Notification
+      properties:
+        status: warning
+        title: Session Timeout
+        description: Your session is about to expire. Close to extend.
+        duration: 0
+        button:
+          title: Extend Session
+          color: primary
+          variant: solid
+          size: small
+      events:
+        onClose:
+          - id: events_extend_msg
+            type: DisplayMessage
+            params:
+              content: Session extended for 30 minutes.
+              status: success
+    - id: btn_events_close_action
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Session Timeout
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: open_events_close
+            type: CallMethod
+            params:
+              blockId: notif_events_close_action
+              method: open
+    - id: notif_events_click_nav
+      type: Notification
+      properties:
+        status: success
+        title: New Comment
+        description: Click this notification to view the comment.
+        duration: 8
+      events:
+        onClick:
+          - id: events_nav_msg
+            type: DisplayMessage
+            params:
+              content: Navigating to comments section...
+              status: info
+    - id: btn_events_click_nav
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Click to Navigate
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: open_events_click_nav
+            type: CallMethod
+            params:
+              blockId: notif_events_click_nav
+              method: open
+
+- title: Style and CSS
+  blocks:
+    - id: notif_css_tailwind
+      type: Notification
+      class: shadow-2xl
+      properties:
+        status: success
+        title: Tailwind Shadow
+        description: This notification uses a Tailwind shadow-2xl class.
+    - id: btn_css_tailwind
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Tailwind Shadow
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: open_css_tailwind
+            type: CallMethod
+            params:
+              blockId: notif_css_tailwind
+              method: open
+    - id: notif_css_rounded
+      type: Notification
+      class: rounded-xl
+      properties:
+        status: info
+        title: Rounded Corners
+        description: Notification with extra-rounded corners via Tailwind.
+    - id: btn_css_rounded
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Rounded Corners
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: open_css_rounded
+            type: CallMethod
+            params:
+              blockId: notif_css_rounded
+              method: open
+    - id: notif_css_inline
+      type: Notification
+      style:
+        element:
+          borderRadius: 12
+          border: 2px solid #1890ff
+      properties:
+        status: info
+        title: Inline Style
+        description: This notification uses inline style with a blue border.
+    - id: btn_css_inline
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Inline Style
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: open_css_inline
+            type: CallMethod
+            params:
+              blockId: notif_css_inline
+              method: open
+
+- title: Theme Token Overrides
+  blocks:
+    - id: notif_theme_wide
+      type: Notification
+      properties:
+        status: info
+        title: Wide Notification
+        description: This notification is wider than the default 384px.
+        theme:
+          width: 500
+    - id: btn_theme_wide
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Wide (500px)
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: open_theme_wide
+            type: CallMethod
+            params:
+              blockId: notif_theme_wide
+              method: open
+    - id: notif_theme_zindex
+      type: Notification
+      properties:
+        status: warning
+        title: High Z-Index
+        description: This notification has an elevated z-index of 2000.
+        theme:
+          zIndexPopup: 2000
+    - id: btn_theme_zindex
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Z-Index 2000
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: open_theme_zindex
+            type: CallMethod
+            params:
+              blockId: notif_theme_zindex
+              method: open
+    - id: notif_theme_progress
+      type: Notification
+      properties:
+        status: success
+        title: Custom Progress Bar
+        description: The auto-close progress bar has a custom gradient.
+        duration: 8
+        theme:
+          progressBg: 'linear-gradient(to right, #52c41a, #1890ff)'
+    - id: btn_theme_progress
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Custom Progress
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: open_theme_progress
+            type: CallMethod
+            params:
+              blockId: notif_theme_progress
+              method: open
+    - id: notif_theme_combined
+      type: Notification
+      properties:
+        status: info
+        title: Combined Tokens
+        description: Wide notification with custom progress bar.
+        duration: 6
+        theme:
+          width: 450
+          progressBg: 'linear-gradient(to right, #722ed1, #eb2f96)'
+    - id: btn_theme_combined
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Combined Tokens
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: open_theme_combined
+            type: CallMethod
+            params:
+              blockId: notif_theme_combined
+              method: open
+
+- title: Notification in Order Processing
+  blocks:
+    - id: order_card
+      type: Card
+      properties:
+        title: Order #12847
+        size: small
+      blocks:
+        - id: order_status_text
+          type: Markdown
+          properties:
+            content: |
+              **Customer:** Sarah Johnson
+              **Items:** 3 items totaling $247.50
+              **Status:** Pending fulfillment
+        - id: notif_order_shipped
+          type: Notification
+          properties:
+            status: success
+            title: Order Shipped
+            description: 'Order #12847 has been shipped. Tracking number: <b>1Z999AA10123456784</b>'
+            icon: AiOutlineRocket
+            duration: 0
+            button:
+              title: View Tracking
+              color: primary
+              variant: solid
+              size: small
+          events:
+            onClose:
+              - id: order_close_msg
+                type: DisplayMessage
+                params:
+                  content: Notification dismissed.
+                  status: info
+        - id: notif_order_cancelled
+          type: Notification
+          properties:
+            status: error
+            title: Order Cancelled
+            description: 'Order #12847 has been cancelled. Refund of $247.50 initiated.'
+            icon: AiOutlineStop
+            duration: 0
+        - id: order_actions
+          type: Box
+          layout:
+            gap: 8
+            justify: flex-end
+          blocks:
+            - id: btn_order_cancel
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Cancel Order
+                color: danger
+                variant: outlined
+                icon: AiOutlineStop
+              events:
+                onClick:
+                  - id: order_cancel_notif
+                    type: CallMethod
+                    params:
+                      blockId: notif_order_cancelled
+                      method: open
+            - id: btn_order_ship
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Mark as Shipped
+                color: primary
+                variant: solid
+                icon: AiOutlineRocket
+              events:
+                onClick:
+                  - id: order_ship_notif
+                    type: CallMethod
+                    params:
+                      blockId: notif_order_shipped
+                      method: open
+
+- title: Notification in System Alerts
+  blocks:
+    - id: alerts_card
+      type: Card
+      properties:
+        title: System Monitor
+        size: small
+      blocks:
+        - id: alerts_description
+          type: Markdown
+          properties:
+            content: |
+              Monitor system health and receive real-time alerts. Click a button below to simulate different alert types.
+        - id: notif_alert_cpu
+          type: Notification
+          properties:
+            status: warning
+            title: High CPU Usage
+            description: 'CPU usage has exceeded <b>90%</b> on server <b>web-prod-03</b>. Consider scaling up or optimizing workloads.'
+            icon:
+              name: AiOutlineDashboard
+              color: '#fa8c16'
+            duration: 0
+            placement: topRight
+            button:
+              title: View Details
+              color: primary
+              variant: outlined
+              size: small
+          events:
+            onClick:
+              - id: alert_cpu_click
+                type: DisplayMessage
+                params:
+                  content: Opening server dashboard...
+                  status: info
+        - id: notif_alert_deploy
+          type: Notification
+          properties:
+            status: success
+            title: Deployment Successful
+            description: 'Version <b>2.4.1</b> deployed to production. All health checks passing.'
+            icon: AiOutlineCheckCircle
+            duration: 8
+          events:
+            onClose:
+              - id: alert_deploy_close
+                type: DisplayMessage
+                params:
+                  content: Deployment alert acknowledged.
+                  status: success
+        - id: notif_alert_security
+          type: Notification
+          properties:
+            status: error
+            title: Security Alert
+            description: 'Multiple failed login attempts detected from IP <b>192.168.1.42</b>. Account temporarily locked.'
+            icon:
+              name: AiOutlineLock
+              color: '#ff4d4f'
+            duration: 0
+            button:
+              title: Block IP
+              color: danger
+              variant: solid
+              size: small
+          events:
+            onClose:
+              - id: alert_security_close
+                type: SetState
+                params:
+                  securityAlertDismissed: true
+        - id: alerts_actions
+          type: Box
+          layout:
+            gap: 8
+          blocks:
+            - id: btn_alert_cpu
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: CPU Warning
+                color: default
+                variant: outlined
+                icon: AiOutlineDashboard
+              events:
+                onClick:
+                  - id: trigger_alert_cpu
+                    type: CallMethod
+                    params:
+                      blockId: notif_alert_cpu
+                      method: open
+            - id: btn_alert_deploy
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Deploy Success
+                color: primary
+                variant: outlined
+                icon: AiOutlineCheckCircle
+              events:
+                onClick:
+                  - id: trigger_alert_deploy
+                    type: CallMethod
+                    params:
+                      blockId: notif_alert_deploy
+                      method: open
+            - id: btn_alert_security
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Security Alert
+                color: danger
+                variant: outlined
+                icon: AiOutlineLock
+              events:
+                onClick:
+                  - id: trigger_alert_security
+                    type: CallMethod
+                    params:
+                      blockId: notif_alert_security
+                      method: open

@@ -12,161 +12,107 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- title: Basic
+- title: Title
   blocks:
-    - id: basic_row
-      type: Box
+    - id: title_simple
+      type: Tag
       layout:
-        gap: 8
-      blocks:
-        - id: basic_default
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Tag 1
-        - id: basic_tag2
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Tag 2
-        - id: basic_tag3
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Tag 3
-        - id: basic_html
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: '<b>Bold</b> Tag'
+        flex: 0 0 auto
+      properties:
+        title: Feature
+    - id: title_html_bold
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: '<b>Important</b> Update'
+    - id: title_html_styled
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: '<span style="letter-spacing: 1px">NEW</span>'
+    - id: title_fallback
+      type: Tag
+      layout:
+        flex: 0 0 auto
 
-- title: Preset Colors (Solid)
+- title: Preset Colors
   blocks:
-    - id: preset_status_row
+    - id: color_status_row
       type: Box
       layout:
         gap: 8
       blocks:
-        - id: pc_success
+        - id: color_success
           type: Tag
           layout:
             flex: 0 0 auto
           properties:
             title: success
             color: success
-        - id: pc_processing
+        - id: color_processing
           type: Tag
           layout:
             flex: 0 0 auto
           properties:
             title: processing
             color: processing
-        - id: pc_error
+        - id: color_error
           type: Tag
           layout:
             flex: 0 0 auto
           properties:
             title: error
             color: error
-        - id: pc_warning
+        - id: color_warning
           type: Tag
           layout:
             flex: 0 0 auto
           properties:
             title: warning
             color: warning
-        - id: pc_default
+        - id: color_default
           type: Tag
           layout:
             flex: 0 0 auto
           properties:
             title: default
             color: default
-    - id: preset_color_row
+    - id: color_named_row
       type: Box
       layout:
         gap: 8
       blocks:
-        - id: pc_blue
+        - id: color_blue
           type: Tag
           layout:
             flex: 0 0 auto
           properties:
             title: blue
             color: blue
-        - id: pc_cyan
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: cyan
-            color: cyan
-        - id: pc_geekblue
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: geekblue
-            color: geekblue
-        - id: pc_gold
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: gold
-            color: gold
-        - id: pc_green
+        - id: color_green
           type: Tag
           layout:
             flex: 0 0 auto
           properties:
             title: green
             color: green
-        - id: pc_lime
+        - id: color_gold
           type: Tag
           layout:
             flex: 0 0 auto
           properties:
-            title: lime
-            color: lime
-        - id: pc_magenta
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: magenta
-            color: magenta
-    - id: preset_color_row_2
-      type: Box
-      layout:
-        gap: 8
-      blocks:
-        - id: pc_orange
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: orange
-            color: orange
-        - id: pc_purple
+            title: gold
+            color: gold
+        - id: color_purple
           type: Tag
           layout:
             flex: 0 0 auto
           properties:
             title: purple
             color: purple
-        - id: pc_red
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: red
-            color: red
-        - id: pc_volcano
+        - id: color_volcano
           type: Tag
           layout:
             flex: 0 0 auto
@@ -174,517 +120,461 @@
             title: volcano
             color: volcano
 
-- title: Bordered vs Borderless
-  blocks:
-    - id: bordered_label
-      type: Markdown
-      properties:
-        content: '**Bordered (default):**'
-    - id: bordered_row
-      type: Box
-      layout:
-        gap: 8
-      blocks:
-        - id: bd_blue
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: blue
-            color: blue
-        - id: bd_green
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: green
-            color: green
-        - id: bd_red
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: red
-            color: red
-        - id: bd_gold
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: gold
-            color: gold
-        - id: bd_purple
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: purple
-            color: purple
-
-- title: With Icons
-  blocks:
-    - id: icon_row_status
-      type: Box
-      layout:
-        gap: 8
-      blocks:
-        - id: icon_check
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Approved
-            icon: AiOutlineCheck
-            color: success
-        - id: icon_close
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Rejected
-            icon: AiOutlineClose
-            color: error
-        - id: icon_sync
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Processing
-            icon: AiOutlineSync
-            color: processing
-        - id: icon_warning
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Warning
-            icon: AiOutlineWarning
-            color: warning
-    - id: icon_row_misc
-      type: Box
-      layout:
-        gap: 8
-      blocks:
-        - id: icon_star
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Featured
-            icon: AiOutlineStar
-            color: gold
-        - id: icon_heart
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Favorite
-            icon: AiOutlineHeart
-            color: magenta
-        - id: icon_thunder
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Fast
-            icon: AiOutlineThunderbolt
-            color: orange
-        - id: icon_lock
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Private
-            icon: AiOutlineLock
-            color: geekblue
-        - id: icon_tag
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Tagged
-            icon: AiOutlineTag
-            color: cyan
-    - id: icon_row_custom
-      type: Box
-      layout:
-        gap: 8
-      blocks:
-        - id: icon_custom_color
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Custom Icon
-            icon:
-              name: AiOutlineCrown
-              color: '#faad14'
-            color: gold
-        - id: icon_custom_large
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Big Icon
-            icon:
-              name: AiOutlineRocket
-              style:
-                fontSize: 16
-            color: purple
-
-- title: Closable Tags
-  blocks:
-    - id: closable_row
-      type: Box
-      layout:
-        gap: 8
-      blocks:
-        - id: closable_default
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Closable
-            closable: true
-        - id: closable_success
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Success
-            closable: true
-            color: success
-        - id: closable_error
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Error
-            closable: true
-            color: error
-        - id: closable_processing
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Processing
-            closable: true
-            color: processing
-        - id: closable_warning
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Warning
-            closable: true
-            color: warning
-    - id: closable_icon_row
-      type: Box
-      layout:
-        gap: 8
-      blocks:
-        - id: closable_icon_check
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Done
-            closable: true
-            icon: AiOutlineCheck
-            color: success
-        - id: closable_icon_star
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Starred
-            closable: true
-            icon: AiOutlineStar
-            color: gold
-
 - title: Custom Hex Colors
   blocks:
-    - id: hex_row_1
-      type: Box
+    - id: hex_coral
+      type: Tag
       layout:
-        gap: 8
-      blocks:
-        - id: hex_coral
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Coral
-            color: '#ff6b6b'
-        - id: hex_teal
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Teal
-            color: '#20c997'
-        - id: hex_indigo
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Indigo
-            color: '#4c6ef5'
-        - id: hex_amber
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Amber
-            color: '#fab005'
-        - id: hex_pink
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Pink
-            color: '#e64980'
-    - id: hex_row_2
-      type: Box
+        flex: 0 0 auto
+      properties:
+        title: Coral
+        color: '#ff6b6b'
+    - id: hex_teal
+      type: Tag
       layout:
-        gap: 8
-      blocks:
-        - id: hex_slate
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Slate
-            color: '#495057'
-        - id: hex_forest
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Forest
-            color: '#2b8a3e'
-        - id: hex_navy
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Navy
-            color: '#1864ab'
-        - id: hex_wine
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Wine
-            color: '#a61e4d'
-        - id: hex_bronze
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Bronze
-            color: '#b8860b'
+        flex: 0 0 auto
+      properties:
+        title: Teal
+        color: '#20c997'
+    - id: hex_indigo
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Indigo
+        color: '#4c6ef5'
+    - id: hex_navy
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Navy
+        color: '#1864ab'
 
-- title: Style Overrides
+- title: Icons
   blocks:
-    - id: style_row
-      type: Box
+    - id: icon_string
+      type: Tag
       layout:
-        gap: 8
-      blocks:
-        - id: style_rounded
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Rounded
-            color: blue
+        flex: 0 0 auto
+      properties:
+        title: Approved
+        icon: AiOutlineCheck
+        color: success
+    - id: icon_warning
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Warning
+        icon: AiOutlineWarning
+        color: warning
+    - id: icon_star
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Featured
+        icon: AiOutlineStar
+        color: gold
+    - id: icon_object_color
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Custom Icon
+        icon:
+          name: AiOutlineCrown
+          color: '#faad14'
+        color: gold
+    - id: icon_object_style
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Large Icon
+        icon:
+          name: AiOutlineRocket
           style:
-            --element:
-              borderRadius: 12px
-              padding: 0 12px
-        - id: style_bold
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Bold Text
-            color: green
-          style:
-            --element:
-              fontWeight: bold
-        - id: style_large
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Large Tag
-            color: purple
-          style:
-            --element:
-              fontSize: 16px
-              padding: 4px 12px
-              lineHeight: '24px'
-        - id: style_border
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Thick Border
-            color: volcano
-          style:
-            --element:
-              borderWidth: 2px
-        - id: style_shadow
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Shadow
-            color: gold
-          style:
-            --element:
-              boxShadow: 0 2px 4px rgba(0,0,0,0.15)
+            fontSize: 16
+        color: purple
+
+- title: Closable
+  blocks:
+    - id: closable_default
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Removable
+        closable: true
+    - id: closable_colored
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Done
+        closable: true
+        color: success
+    - id: closable_with_icon
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Starred
+        closable: true
+        icon: AiOutlineStar
+        color: gold
+    - id: closable_with_event
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Close me
+        closable: true
+        color: processing
+      events:
+        onClose:
+          - id: closable_event_msg
+            type: DisplayMessage
+            params:
+              content: Tag closed!
+              status: info
+
+- title: onClick Event
+  blocks:
+    - id: click_basic
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Click me
+        color: blue
+      events:
+        onClick:
+          - id: click_basic_msg
+            type: DisplayMessage
+            params:
+              content: Tag clicked!
+              status: info
+    - id: click_with_icon
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: View Details
+        icon: AiOutlineEye
+        color: geekblue
+      events:
+        onClick:
+          - id: click_icon_msg
+            type: DisplayMessage
+            params:
+              content: Opening details...
+              status: info
+    - id: click_set_state
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Select Category
+        color: purple
+      events:
+        onClick:
+          - id: click_set_state_action
+            type: SetState
+            params:
+              selectedCategory: design
+
+- title: Style and CSS
+  blocks:
+    - id: css_shadow
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      class: shadow-md
+      properties:
+        title: Shadow
+        color: blue
+    - id: css_rounded
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      class: rounded-full
+      properties:
+        title: Pill Shape
+        color: green
+    - id: css_uppercase
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      class: uppercase tracking-wider
+      properties:
+        title: Uppercase
+        color: purple
+    - id: style_inline_bold
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Bold Text
+        color: volcano
+      style:
+        --element:
+          fontWeight: bold
+          fontSize: 14px
+    - id: style_inline_padding
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Extra Padding
+        color: cyan
+      style:
+        --element:
+          padding: 4px 16px
+          borderWidth: 2px
 
 - title: Theme Token Overrides
   blocks:
-    - id: theme_row
-      type: Box
+    - id: theme_light_blue
+      type: Tag
       layout:
-        gap: 8
-      blocks:
-        - id: theme_custom_bg
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Custom Background
-            theme:
-              defaultBg: '#e6f7ff'
-              defaultColor: '#1677ff'
-        - id: theme_custom_dark
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Dark Tag
-            theme:
-              defaultBg: '#141414'
-              defaultColor: '#ffffff'
-        - id: theme_custom_warm
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Warm Tag
-            theme:
-              defaultBg: '#fff7e6'
-              defaultColor: '#d46b08'
+        flex: 0 0 auto
+      properties:
+        title: Light Blue
+        theme:
+          defaultBg: '#e6f7ff'
+          defaultColor: '#1677ff'
+    - id: theme_dark
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Dark Tag
+        theme:
+          defaultBg: '#141414'
+          defaultColor: '#ffffff'
+    - id: theme_warm
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Warm Tone
+        theme:
+          defaultBg: '#fff7e6'
+          defaultColor: '#d46b08'
+    - id: theme_solid_text
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Custom Solid
+        color: '#7c3aed'
+        theme:
+          solidTextColor: '#fde68a'
 
-- title: Combined Examples
+- title: Tag in Issue Tracker
   blocks:
-    - id: combined_status_row
-      type: Box
-      layout:
-        gap: 8
+    - id: issue_card
+      type: Card
+      properties:
+        title: 'BUG-1042: Login page crashes on invalid email'
+        size: small
       blocks:
-        - id: combined_active
-          type: Tag
-          layout:
-            flex: 0 0 auto
+        - id: issue_description
+          type: Markdown
           properties:
-            title: Active
-            icon: AiOutlineCheck
-            color: success
-          style:
-            --element:
-              fontWeight: bold
-        - id: combined_pending
-          type: Tag
+            content: 'When a user enters an email without a domain, the login page throws an unhandled exception and shows a blank screen.'
+        - id: issue_tags_row
+          type: Box
           layout:
-            flex: 0 0 auto
-          properties:
-            title: Pending Review
-            icon: AiOutlineClockCircle
-            color: warning
-            closable: true
-        - id: combined_draft
-          type: Tag
+            gap: 8
+          blocks:
+            - id: issue_status
+              type: Tag
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: In Progress
+                icon: AiOutlineSync
+                color: processing
+            - id: issue_priority
+              type: Tag
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: High Priority
+                icon: AiOutlineArrowUp
+                color: error
+              style:
+                --element:
+                  fontWeight: bold
+            - id: issue_label_bug
+              type: Tag
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: bug
+                color: red
+                closable: true
+              events:
+                onClose:
+                  - id: issue_remove_label
+                    type: DisplayMessage
+                    params:
+                      content: Label removed
+                      status: info
+            - id: issue_label_auth
+              type: Tag
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: authentication
+                color: geekblue
+                closable: true
+              events:
+                onClose:
+                  - id: issue_remove_auth_label
+                    type: DisplayMessage
+                    params:
+                      content: Label removed
+                      status: info
+        - id: issue_actions_row
+          type: Box
           layout:
-            flex: 0 0 auto
-          properties:
-            title: Draft
-            icon: AiOutlineEdit
-            color: default
-            closable: true
-    - id: combined_badge_row
-      type: Box
-      layout:
-        gap: 8
+            gap: 8
+            justify: flex-end
+          blocks:
+            - id: issue_assign_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Assign
+                icon: AiOutlineUser
+                color: default
+                variant: outlined
+                size: small
+              events:
+                onClick:
+                  - id: issue_assign_msg
+                    type: DisplayMessage
+                    params:
+                      content: Assignee updated
+                      status: success
+            - id: issue_resolve_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Resolve
+                icon: AiOutlineCheck
+                color: primary
+                variant: solid
+                size: small
+              events:
+                onClick:
+                  - id: issue_resolve_msg
+                    type: DisplayMessage
+                    params:
+                      content: Issue marked as resolved
+                      status: success
+
+- title: Tag in Product Catalog
+  blocks:
+    - id: catalog_card
+      type: Card
+      properties:
+        title: Wireless Noise-Cancelling Headphones
+        size: small
       blocks:
-        - id: combined_pill
-          type: Tag
+        - id: catalog_tags_row
+          type: Box
           layout:
-            flex: 0 0 auto
+            gap: 8
+          blocks:
+            - id: catalog_new
+              type: Tag
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: NEW
+                color: '#52c41a'
+              style:
+                --element:
+                  fontWeight: bold
+                  letterSpacing: 1px
+            - id: catalog_category
+              type: Tag
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Electronics
+                icon: AiOutlineThunderbolt
+                color: blue
+              events:
+                onClick:
+                  - id: catalog_cat_click
+                    type: Link
+                    params:
+                      pageId: introduction
+            - id: catalog_stock
+              type: Tag
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: In Stock
+                icon: AiOutlineCheck
+                color: success
+            - id: catalog_rating
+              type: Tag
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: '4.8 Stars'
+                icon: AiOutlineStar
+                color: gold
+        - id: catalog_description
+          type: Markdown
           properties:
-            title: v2.0.0
-            color: blue
-          style:
-            --element:
-              borderRadius: 20px
-              padding: 0 10px
-        - id: combined_count
-          type: Tag
+            content: 'Premium over-ear headphones with active noise cancellation, 30-hour battery life, and Bluetooth 5.3 connectivity.'
+        - id: catalog_price_row
+          type: Box
           layout:
-            flex: 0 0 auto
-          properties:
-            title: '99+'
-            color: red
-          style:
-            --element:
-              borderRadius: 20px
-              padding: 0 8px
-              fontWeight: bold
-        - id: combined_new
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: NEW
-            color: '#52c41a'
-          style:
-            --element:
-              fontWeight: bold
-              letterSpacing: 1px
-    - id: combined_labels_row
-      type: Box
-      layout:
-        gap: 8
-      blocks:
-        - id: combined_priority_high
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: High Priority
-            icon: AiOutlineArrowUp
-            color: error
-          style:
-            --element:
-              fontWeight: bold
-        - id: combined_priority_medium
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Medium
-            icon: AiOutlineMinus
-            color: warning
-        - id: combined_priority_low
-          type: Tag
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Low
-            icon: AiOutlineArrowDown
-            color: blue
+            gap: 8
+            align: center
+          blocks:
+            - id: catalog_price
+              type: Markdown
+              layout:
+                flex: 0 0 auto
+              properties:
+                content: '**$249.99**'
+            - id: catalog_discount
+              type: Tag
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: 20% OFF
+                color: red
+              style:
+                --element:
+                  fontWeight: bold
+            - id: catalog_add_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Add to Cart
+                icon: AiOutlineShoppingCart
+                color: primary
+                variant: solid
+                size: small
+              events:
+                onClick:
+                  - id: catalog_add_msg
+                    type: DisplayMessage
+                    params:
+                      content: Added to cart!
+                      status: success

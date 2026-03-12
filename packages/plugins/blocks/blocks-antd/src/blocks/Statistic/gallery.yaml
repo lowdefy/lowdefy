@@ -12,56 +12,39 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- title: Basic Numbers
+- title: Value and Title
   blocks:
-    - id: basic_number
+    - id: value_number
       type: Statistic
       layout:
         flex: 0 0 auto
       properties:
         title: Active Users
         value: 112893
-    - id: basic_decimal
+    - id: value_decimal
       type: Statistic
       layout:
         flex: 0 0 auto
       properties:
-        title: Account Balance (CNY)
+        title: Account Balance
         value: 112893.12
         precision: 2
-    - id: basic_small
-      type: Statistic
-      layout:
-        flex: 0 0 auto
-      properties:
-        title: Open Issues
-        value: 7
-
-- title: String Values
-  blocks:
-    - id: string_status
+    - id: value_string
       type: Statistic
       layout:
         flex: 0 0 auto
       properties:
         title: Status
         value: Running
-    - id: string_version
+    - id: value_version
       type: Statistic
       layout:
         flex: 0 0 auto
       properties:
         title: Version
         value: v4.2.1
-    - id: string_region
-      type: Statistic
-      layout:
-        flex: 0 0 auto
-      properties:
-        title: Region
-        value: US-East-1
 
-- title: Prefix Text
+- title: Prefix and Suffix
   blocks:
     - id: prefix_dollar
       type: Statistic
@@ -71,25 +54,6 @@
         title: Revenue
         value: 24500
         prefix: $
-    - id: prefix_euro
-      type: Statistic
-      layout:
-        flex: 0 0 auto
-      properties:
-        title: Budget
-        value: 180000
-        prefix: EUR
-    - id: prefix_tilde
-      type: Statistic
-      layout:
-        flex: 0 0 auto
-      properties:
-        title: Estimate
-        value: 1200
-        prefix: '~'
-
-- title: Suffix Text
-  blocks:
     - id: suffix_percent
       type: Statistic
       layout:
@@ -106,48 +70,19 @@
         title: Response Time
         value: 42
         suffix: ms
-    - id: suffix_per
+    - id: prefix_suffix_price
       type: Statistic
       layout:
         flex: 0 0 auto
       properties:
-        title: Throughput
-        value: 1250
-        suffix: '/sec'
-
-- title: Prefix and Suffix Combined
-  blocks:
-    - id: prefix_suffix_temp
-      type: Statistic
-      layout:
-        flex: 0 0 auto
-      properties:
-        title: Temperature
-        value: 22.4
-        suffix: C
-        prefix: '~'
-    - id: prefix_suffix_range
-      type: Statistic
-      layout:
-        flex: 0 0 auto
-      properties:
-        title: Price Range
+        title: Price
         value: 49.99
         prefix: $
         suffix: /mo
-    - id: prefix_suffix_score
-      type: Statistic
-      layout:
-        flex: 0 0 auto
-      properties:
-        title: Health Score
-        value: 92
-        suffix: / 100
-        prefix: '#'
 
-- title: Prefix Icons
+- title: Prefix and Suffix Icons
   blocks:
-    - id: icon_like
+    - id: prefixicon_like
       type: Statistic
       layout:
         flex: 0 0 auto
@@ -155,7 +90,7 @@
         title: Feedback
         value: 1128
         prefixIcon: AiOutlineLike
-    - id: icon_arrow_up
+    - id: prefixicon_arrow_up
       type: Statistic
       layout:
         flex: 0 0 auto
@@ -163,10 +98,10 @@
         title: Growth
         value: 11.28
         suffix: '%'
-        prefixIcon: AiOutlineArrowUp
-        valueStyle:
+        prefixIcon:
+          name: AiOutlineArrowUp
           color: '#3f8600'
-    - id: icon_arrow_down
+    - id: prefixicon_arrow_down
       type: Statistic
       layout:
         flex: 0 0 auto
@@ -174,30 +109,10 @@
         title: Decline
         value: 9.3
         suffix: '%'
-        prefixIcon: AiOutlineArrowDown
-        valueStyle:
+        prefixIcon:
+          name: AiOutlineArrowDown
           color: '#cf1322'
-    - id: icon_user
-      type: Statistic
-      layout:
-        flex: 0 0 auto
-      properties:
-        title: Online Users
-        value: 342
-        prefixIcon: AiOutlineUser
-    - id: icon_clock
-      type: Statistic
-      layout:
-        flex: 0 0 auto
-      properties:
-        title: Avg Duration
-        value: 4.2
-        suffix: min
-        prefixIcon: AiOutlineClockCircle
-
-- title: Suffix Icons
-  blocks:
-    - id: suffix_icon_trend
+    - id: suffixicon_rise
       type: Statistic
       layout:
         flex: 0 0 auto
@@ -205,20 +120,10 @@
         title: Revenue Trend
         value: 12500
         prefix: $
-        suffixIcon: AiOutlineRise
-        valueStyle:
+        suffixIcon:
+          name: AiOutlineRise
           color: '#3f8600'
-    - id: suffix_icon_fall
-      type: Statistic
-      layout:
-        flex: 0 0 auto
-      properties:
-        title: Churn Rate
-        value: 3.2
-        suffixIcon: AiOutlineFall
-        valueStyle:
-          color: '#cf1322'
-    - id: suffix_icon_info
+    - id: suffixicon_info
       type: Statistic
       layout:
         flex: 0 0 auto
@@ -226,39 +131,6 @@
         title: Sessions
         value: 8920
         suffixIcon: AiOutlineInfoCircle
-
-- title: Custom Prefix Icon Styling
-  blocks:
-    - id: icon_styled_green
-      type: Statistic
-      layout:
-        flex: 0 0 auto
-      properties:
-        title: Approved
-        value: 156
-        prefixIcon:
-          name: AiOutlineCheckCircle
-          color: '#52c41a'
-    - id: icon_styled_red
-      type: Statistic
-      layout:
-        flex: 0 0 auto
-      properties:
-        title: Rejected
-        value: 23
-        prefixIcon:
-          name: AiOutlineCloseCircle
-          color: '#ff4d4f'
-    - id: icon_styled_blue
-      type: Statistic
-      layout:
-        flex: 0 0 auto
-      properties:
-        title: Pending Review
-        value: 47
-        prefixIcon:
-          name: AiOutlineExclamationCircle
-          color: '#1677ff'
 
 - title: Precision
   blocks:
@@ -296,7 +168,7 @@
         value: 1.3245
         precision: 4
 
-- title: Custom Separators
+- title: Separators
   blocks:
     - id: sep_default
       type: Statistic
@@ -325,90 +197,6 @@
         precision: 2
         groupSeparator: '.'
         decimalSeparator: ','
-    - id: sep_underscore
-      type: Statistic
-      layout:
-        flex: 0 0 auto
-      properties:
-        title: Underscore Separator
-        value: 1234567
-        groupSeparator: '_'
-
-- title: Value Styles (Colors)
-  blocks:
-    - id: style_green
-      type: Statistic
-      layout:
-        flex: 0 0 auto
-      properties:
-        title: Uptime
-        value: 99.99
-        suffix: '%'
-        valueStyle:
-          color: '#3f8600'
-    - id: style_red
-      type: Statistic
-      layout:
-        flex: 0 0 auto
-      properties:
-        title: Errors
-        value: 47
-        valueStyle:
-          color: '#cf1322'
-    - id: style_blue
-      type: Statistic
-      layout:
-        flex: 0 0 auto
-      properties:
-        title: Total Revenue
-        value: 892400
-        prefix: $
-        valueStyle:
-          color: '#1677ff'
-    - id: style_purple
-      type: Statistic
-      layout:
-        flex: 0 0 auto
-      properties:
-        title: Score
-        value: 87
-        suffix: pts
-        valueStyle:
-          color: '#722ed1'
-
-- title: Value Styles (Font Size)
-  blocks:
-    - id: style_large
-      type: Statistic
-      layout:
-        flex: 0 0 auto
-      properties:
-        title: Total Revenue
-        value: 892400
-        prefix: $
-        valueStyle:
-          color: '#1677ff'
-          fontSize: 36
-    - id: style_small
-      type: Statistic
-      layout:
-        flex: 0 0 auto
-      properties:
-        title: Items in Cart
-        value: 3
-        valueStyle:
-          fontSize: 18
-    - id: style_bold
-      type: Statistic
-      layout:
-        flex: 0 0 auto
-      properties:
-        title: Conversion Rate
-        value: 12.8
-        suffix: '%'
-        valueStyle:
-          fontWeight: 800
-          color: '#52c41a'
 
 - title: Loading State
   blocks:
@@ -428,6 +216,15 @@
         title: Data Loaded
         value: 12345
         loading: false
+    - id: loading_with_prefix
+      type: Statistic
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Loading Revenue
+        value: 52800
+        prefix: $
+        loading: true
 
 - title: HTML in Title
   blocks:
@@ -454,61 +251,52 @@
         title: 'Server Status &#x2705;'
         value: Healthy
 
-- title: Style Overrides
+- title: Style and CSS
   blocks:
-    - id: style_card_bg
+    - id: css_tailwind_bg
       type: Statistic
       layout:
         flex: 0 0 auto
+      class: bg-green-50 p-4 rounded-lg border border-green-200
       properties:
         title: Monthly Revenue
         value: 52800
         prefix: $
-      style:
-        --element:
-          backgroundColor: '#f6ffed'
-          padding: 16px 24px
-          borderRadius: 8px
-          border: 1px solid #b7eb8f
-    - id: style_card_blue
+    - id: css_tailwind_blue
       type: Statistic
       layout:
         flex: 0 0 auto
+      class: bg-blue-50 p-4 rounded-lg border border-blue-200
       properties:
         title: Active Users
         value: 2847
         prefixIcon: AiOutlineTeam
-      style:
-        --element:
-          backgroundColor: '#e6f4ff'
-          padding: 16px 24px
-          borderRadius: 8px
-          border: 1px solid #91caff
-    - id: style_card_purple
+    - id: css_tailwind_center
       type: Statistic
       layout:
         flex: 0 0 auto
+      class: text-center bg-purple-50 p-4 rounded-lg border border-purple-200
       properties:
         title: Avg. Score
         value: 94.2
         suffix: '%'
-      style:
-        --element:
-          backgroundColor: '#f9f0ff'
-          padding: 16px 24px
-          borderRadius: 8px
-          border: 1px solid #d3adf7
-    - id: style_center
+    - id: css_inline_value
       type: Statistic
       layout:
         flex: 0 0 auto
       properties:
-        title: Centered Statistic
-        value: 7890
+        title: Error Rate
+        value: 0.12
+        suffix: '%'
       style:
         --element:
-          textAlign: center
-          minWidth: 180px
+          padding: 16px 24px
+          borderRadius: 8px
+          backgroundColor: '#fff2f0'
+          border: 1px solid #ffa39e
+        --value:
+          color: '#cf1322'
+          fontSize: 28
 
 - title: Theme Token Overrides
   blocks:
@@ -520,7 +308,7 @@
         title: Large Title Size
         value: 42
         theme:
-          titleFontSize: 18
+          titleFontSize: 20
     - id: theme_large_content
       type: Statistic
       layout:
@@ -542,83 +330,164 @@
         theme:
           colorText: '#722ed1'
           colorTextDescription: '#531dab'
-
-- title: Real-World Dashboard Row
-  blocks:
-    - id: dashboard_row
-      type: Box
+    - id: theme_font_family
+      type: Statistic
       layout:
-        gap: 24
+        flex: 0 0 auto
+      properties:
+        title: Custom Font
+        value: 88750
+        theme:
+          contentFontFamily: Georgia, serif
+          contentFontWeight: '600'
+
+- title: Statistic in Dashboard Overview
+  blocks:
+    - id: dashboard_card
+      type: Card
+      properties:
+        title: System Overview
+        size: small
       blocks:
-        - id: dash_revenue
-          type: Statistic
+        - id: dashboard_row
+          type: Box
           layout:
-            flex: 1 1 0
+            gap: 16
+          blocks:
+            - id: dash_revenue
+              type: Statistic
+              layout:
+                flex: 1 1 0
+              class: bg-green-50 p-4 rounded-lg
+              properties:
+                title: Total Revenue
+                value: 126560
+                prefix: $
+                precision: 0
+                prefixIcon:
+                  name: AiOutlineDollarCircle
+                  color: '#52c41a'
+            - id: dash_users
+              type: Statistic
+              layout:
+                flex: 1 1 0
+              class: bg-blue-50 p-4 rounded-lg
+              properties:
+                title: Active Users
+                value: 8920
+                prefixIcon:
+                  name: AiOutlineTeam
+                  color: '#1677ff'
+            - id: dash_errors
+              type: Statistic
+              layout:
+                flex: 1 1 0
+              class: bg-red-50 p-4 rounded-lg
+              properties:
+                title: Error Rate
+                value: 0.12
+                suffix: '%'
+                precision: 2
+                prefixIcon:
+                  name: AiOutlineBug
+                  color: '#ff4d4f'
+            - id: dash_uptime
+              type: Statistic
+              layout:
+                flex: 1 1 0
+              class: bg-green-50 p-4 rounded-lg
+              properties:
+                title: Uptime
+                value: 99.98
+                suffix: '%'
+                precision: 2
+                prefixIcon:
+                  name: AiOutlineCheckCircle
+                  color: '#52c41a'
+        - id: dashboard_updated
+          type: Markdown
           properties:
-            title: Total Revenue
-            value: 126560
-            prefix: $
-            precision: 0
-            prefixIcon:
-              name: AiOutlineDollarCircle
-              color: '#52c41a'
-            valueStyle:
-              color: '#3f8600'
-          style:
-            --element:
-              backgroundColor: '#f6ffed'
-              padding: 16px
-              borderRadius: 8px
-        - id: dash_users
-          type: Statistic
+            content: '_Last updated 2 minutes ago_'
+
+- title: Statistic in Sales Report
+  blocks:
+    - id: sales_card
+      type: Card
+      properties:
+        title: Q4 Sales Report
+        size: small
+      blocks:
+        - id: sales_stats
+          type: Box
           layout:
-            flex: 1 1 0
-          properties:
-            title: Active Users
-            value: 8920
-            prefixIcon:
-              name: AiOutlineTeam
-              color: '#1677ff'
-            valueStyle:
-              color: '#1677ff'
-          style:
-            --element:
-              backgroundColor: '#e6f4ff'
-              padding: 16px
-              borderRadius: 8px
-        - id: dash_errors
-          type: Statistic
+            gap: 16
+          blocks:
+            - id: sales_total
+              type: Statistic
+              layout:
+                flex: 1 1 0
+              properties:
+                title: Total Sales
+                value: 284300
+                prefix: $
+                precision: 0
+                prefixIcon:
+                  name: AiOutlineArrowUp
+                  color: '#3f8600'
+                theme:
+                  contentFontSize: 28
+            - id: sales_orders
+              type: Statistic
+              layout:
+                flex: 1 1 0
+              properties:
+                title: Orders
+                value: 1523
+                prefixIcon: AiOutlineShoppingCart
+            - id: sales_avg
+              type: Statistic
+              layout:
+                flex: 1 1 0
+              properties:
+                title: Avg. Order Value
+                value: 186.67
+                prefix: $
+                precision: 2
+        - id: sales_actions
+          type: Box
           layout:
-            flex: 1 1 0
-          properties:
-            title: Error Rate
-            value: 0.12
-            suffix: '%'
-            precision: 2
-            prefixIcon:
-              name: AiOutlineBug
-              color: '#ff4d4f'
-            valueStyle:
-              color: '#cf1322'
-          style:
-            --element:
-              backgroundColor: '#fff2f0'
-              padding: 16px
-              borderRadius: 8px
-        - id: dash_uptime
-          type: Statistic
-          layout:
-            flex: 1 1 0
-          properties:
-            title: Uptime
-            value: 99.98
-            suffix: '%'
-            precision: 2
-            prefixIcon:
-              name: AiOutlineCheckCircle
-              color: '#52c41a'
-          style:
-            --element:
-              backgroundColor: '#f6ffed'
-              padding: 16px
-              borderRadius: 8px
+            gap: 8
+            justify: flex-end
+          blocks:
+            - id: sales_export_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Export Report
+                icon: AiOutlineDownload
+                color: primary
+                variant: outlined
+              events:
+                onClick:
+                  - id: sales_export_msg
+                    type: DisplayMessage
+                    params:
+                      content: Report exported successfully.
+                      status: success
+            - id: sales_share_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Share
+                icon: AiOutlineShareAlt
+                color: primary
+                variant: solid
+              events:
+                onClick:
+                  - id: sales_share_msg
+                    type: DisplayMessage
+                    params:
+                      content: Share link copied to clipboard.
+                      status: success

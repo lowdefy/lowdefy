@@ -12,40 +12,58 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- title: Line Progress
+- title: Progress Types
   blocks:
-    - id: line_0
+    - id: type_line
+      type: Progress
+      properties:
+        type: line
+        percent: 60
+    - id: type_circle
+      type: Progress
+      layout:
+        flex: 0 0 auto
+      properties:
+        type: circle
+        percent: 75
+    - id: type_dashboard
+      type: Progress
+      layout:
+        flex: 0 0 auto
+      properties:
+        type: dashboard
+        percent: 80
+
+- title: Percent
+  blocks:
+    - id: percent_0
       type: Progress
       properties:
         percent: 0
-    - id: line_30
+    - id: percent_30
       type: Progress
       properties:
         percent: 30
-    - id: line_50
+    - id: percent_75
       type: Progress
       properties:
-        percent: 50
-    - id: line_70
-      type: Progress
-      properties:
-        percent: 70
-    - id: line_100
+        percent: 75
+    - id: percent_100
       type: Progress
       properties:
         percent: 100
 
-- title: Line Status
+- title: Status
   blocks:
     - id: status_normal
       type: Progress
       properties:
-        percent: 30
+        percent: 50
         status: normal
     - id: status_active
       type: Progress
       properties:
-        percent: 60
+        percent: 50
         status: active
     - id: status_success
       type: Progress
@@ -58,311 +76,74 @@
         percent: 70
         status: exception
 
-- title: Circle Progress
+- title: Show Info
   blocks:
-    - id: circle_0
+    - id: showinfo_true
       type: Progress
-      layout:
-        flex: 0 0 auto
       properties:
-        type: circle
-        percent: 0
-    - id: circle_25
-      type: Progress
-      layout:
-        flex: 0 0 auto
-      properties:
-        type: circle
-        percent: 25
-    - id: circle_50
-      type: Progress
-      layout:
-        flex: 0 0 auto
-      properties:
-        type: circle
-        percent: 50
-    - id: circle_75
-      type: Progress
-      layout:
-        flex: 0 0 auto
-      properties:
-        type: circle
-        percent: 75
-    - id: circle_100
-      type: Progress
-      layout:
-        flex: 0 0 auto
-      properties:
-        type: circle
-        percent: 100
-
-- title: Circle Status
-  blocks:
-    - id: circle_status_normal
-      type: Progress
-      layout:
-        flex: 0 0 auto
-      properties:
-        type: circle
-        percent: 45
-        status: normal
-    - id: circle_status_active
-      type: Progress
-      layout:
-        flex: 0 0 auto
-      properties:
-        type: circle
-        percent: 60
-        status: active
-    - id: circle_status_success
-      type: Progress
-      layout:
-        flex: 0 0 auto
-      properties:
-        type: circle
-        percent: 100
-        status: success
-    - id: circle_status_exception
-      type: Progress
-      layout:
-        flex: 0 0 auto
-      properties:
-        type: circle
-        percent: 70
-        status: exception
-
-- title: Dashboard Progress
-  blocks:
-    - id: dashboard_default
-      type: Progress
-      layout:
-        flex: 0 0 auto
-      properties:
-        type: dashboard
-        percent: 75
-    - id: dashboard_low
-      type: Progress
-      layout:
-        flex: 0 0 auto
-      properties:
-        type: dashboard
-        percent: 25
-    - id: dashboard_full
-      type: Progress
-      layout:
-        flex: 0 0 auto
-      properties:
-        type: dashboard
-        percent: 100
-
-- title: Dashboard Gap Positions
-  blocks:
-    - id: dashboard_gap_top
-      type: Progress
-      layout:
-        flex: 0 0 auto
-      properties:
-        type: dashboard
-        percent: 75
-        gapPosition: top
-    - id: dashboard_gap_bottom
-      type: Progress
-      layout:
-        flex: 0 0 auto
-      properties:
-        type: dashboard
-        percent: 50
-        gapPosition: bottom
-    - id: dashboard_gap_left
-      type: Progress
-      layout:
-        flex: 0 0 auto
-      properties:
-        type: dashboard
-        percent: 60
-        gapPosition: left
-    - id: dashboard_gap_right
-      type: Progress
-      layout:
-        flex: 0 0 auto
-      properties:
-        type: dashboard
-        percent: 85
-        gapPosition: right
-
-- title: Dashboard Gap Degrees
-  blocks:
-    - id: dashboard_gap_small
-      type: Progress
-      layout:
-        flex: 0 0 auto
-      properties:
-        type: dashboard
         percent: 65
-        gapDegree: 30
-    - id: dashboard_gap_default
+        showInfo: true
+    - id: showinfo_false
       type: Progress
-      layout:
-        flex: 0 0 auto
       properties:
-        type: dashboard
         percent: 65
-        gapDegree: 75
-    - id: dashboard_gap_large
+        showInfo: false
+    - id: showinfo_circle_true
       type: Progress
       layout:
         flex: 0 0 auto
       properties:
-        type: dashboard
+        type: circle
         percent: 65
-        gapDegree: 150
+        showInfo: true
+    - id: showinfo_circle_false
+      type: Progress
+      layout:
+        flex: 0 0 auto
+      properties:
+        type: circle
+        percent: 65
+        showInfo: false
 
-- title: Small Circles
+- title: Stroke Color
   blocks:
-    - id: small_circle_30
-      type: Progress
-      layout:
-        flex: 0 0 auto
-      properties:
-        type: circle
-        percent: 30
-        width: 80
-    - id: small_circle_70
-      type: Progress
-      layout:
-        flex: 0 0 auto
-      properties:
-        type: circle
-        percent: 70
-        width: 80
-    - id: small_circle_exception
-      type: Progress
-      layout:
-        flex: 0 0 auto
-      properties:
-        type: circle
-        percent: 100
-        width: 80
-        status: exception
-    - id: small_circle_success
-      type: Progress
-      layout:
-        flex: 0 0 auto
-      properties:
-        type: circle
-        percent: 100
-        width: 80
-
-- title: Large Circles
-  blocks:
-    - id: large_circle_60
-      type: Progress
-      layout:
-        flex: 0 0 auto
-      properties:
-        type: circle
-        percent: 60
-        width: 200
-    - id: large_circle_success
-      type: Progress
-      layout:
-        flex: 0 0 auto
-      properties:
-        type: circle
-        percent: 100
-        width: 200
-
-- title: Custom Stroke Colors (Line)
-  blocks:
-    - id: color_line_pink
+    - id: stroke_solid_color
       type: Progress
       properties:
         percent: 60
-        strokeColor: '#eb2f96'
-    - id: color_line_teal
-      type: Progress
-      properties:
-        percent: 80
-        strokeColor: '#13c2c2'
-    - id: color_line_gold
-      type: Progress
-      properties:
-        percent: 45
-        strokeColor: '#faad14'
-    - id: color_line_purple
-      type: Progress
-      properties:
-        percent: 90
         strokeColor: '#722ed1'
-
-- title: Custom Stroke Colors (Circle)
-  blocks:
-    - id: color_circle_purple
-      type: Progress
-      layout:
-        flex: 0 0 auto
-      properties:
-        type: circle
-        percent: 65
-        strokeColor: '#722ed1'
-    - id: color_circle_gold
-      type: Progress
-      layout:
-        flex: 0 0 auto
-      properties:
-        type: circle
-        percent: 85
-        strokeColor: '#faad14'
-    - id: color_circle_pink
-      type: Progress
-      layout:
-        flex: 0 0 auto
-      properties:
-        type: circle
-        percent: 50
-        strokeColor: '#eb2f96'
-    - id: color_circle_green
-      type: Progress
-      layout:
-        flex: 0 0 auto
-      properties:
-        type: circle
-        percent: 92
-        strokeColor: '#52c41a'
-
-- title: Gradient Stroke Colors (Line)
-  blocks:
-    - id: gradient_line_blue
+    - id: stroke_gradient
       type: Progress
       properties:
         percent: 80
         strokeColor:
           '0%': '#108ee9'
           '100%': '#87d068'
-    - id: gradient_line_warm
+    - id: stroke_warm_gradient
       type: Progress
       properties:
         percent: 65
         strokeColor:
           '0%': '#ff4d4f'
           '100%': '#faad14'
-    - id: gradient_line_cool
+    - id: stroke_circle_color
       type: Progress
+      layout:
+        flex: 0 0 auto
       properties:
-        percent: 90
-        strokeColor:
-          '0%': '#722ed1'
-          '100%': '#13c2c2'
+        type: circle
+        percent: 75
+        strokeColor: '#eb2f96'
 
 - title: Trail Color
   blocks:
-    - id: trail_blue
+    - id: trail_light_blue
       type: Progress
       properties:
         percent: 60
         strokeColor: '#1677ff'
         trailColor: '#e6f4ff'
-    - id: trail_green
+    - id: trail_light_green
       type: Progress
       properties:
         percent: 75
@@ -374,120 +155,93 @@
         flex: 0 0 auto
       properties:
         type: circle
-        percent: 45
-        strokeColor: '#1677ff'
-        trailColor: '#e6f4ff'
-    - id: trail_circle_purple
+        percent: 70
+        strokeColor: '#722ed1'
+        trailColor: '#f9f0ff'
+
+- title: Stroke Width
+  blocks:
+    - id: strokewidth_thin
+      type: Progress
+      properties:
+        percent: 60
+        strokeWidth: 4
+    - id: strokewidth_default
+      type: Progress
+      properties:
+        percent: 60
+    - id: strokewidth_thick
+      type: Progress
+      properties:
+        percent: 60
+        strokeWidth: 20
+    - id: strokewidth_circle
       type: Progress
       layout:
         flex: 0 0 auto
       properties:
         type: circle
-        percent: 70
-        strokeColor: '#722ed1'
-        trailColor: '#f9f0ff'
+        percent: 75
+        strokeWidth: 12
 
 - title: Stroke Linecap
   blocks:
     - id: linecap_round
       type: Progress
       properties:
-        percent: 60
+        percent: 50
         strokeLinecap: round
         strokeWidth: 12
-        strokeColor: '#52c41a'
     - id: linecap_square
       type: Progress
       properties:
-        percent: 60
+        percent: 50
         strokeLinecap: square
         strokeWidth: 12
-        strokeColor: '#1677ff'
-
-- title: Stroke Linecap (Circle)
-  blocks:
-    - id: circle_linecap_round
+    - id: linecap_circle_round
       type: Progress
       layout:
         flex: 0 0 auto
       properties:
         type: circle
-        percent: 75
+        percent: 50
         strokeLinecap: round
-    - id: circle_linecap_square
+    - id: linecap_circle_square
       type: Progress
       layout:
         flex: 0 0 auto
       properties:
         type: circle
-        percent: 75
+        percent: 50
         strokeLinecap: square
 
-- title: Stroke Width (Line)
+- title: Success Segment
   blocks:
-    - id: stroke_thin
+    - id: success_line
       type: Progress
       properties:
-        percent: 60
-        strokeWidth: 4
-    - id: stroke_default
+        percent: 80
+        success: 30
+    - id: success_line_high
       type: Progress
       properties:
-        percent: 60
-        strokeWidth: 8
-    - id: stroke_thick
+        percent: 100
+        success: 60
+    - id: success_circle
       type: Progress
+      layout:
+        flex: 0 0 auto
       properties:
-        percent: 60
-        strokeWidth: 16
-    - id: stroke_extra_thick
-      type: Progress
-      properties:
-        percent: 60
-        strokeWidth: 24
-        strokeColor: '#1677ff'
+        type: circle
+        percent: 90
+        success: 50
 
-- title: Stroke Width (Circle)
-  blocks:
-    - id: circle_thin_stroke
-      type: Progress
-      layout:
-        flex: 0 0 auto
-      properties:
-        type: circle
-        percent: 75
-        strokeWidth: 3
-    - id: circle_default_stroke
-      type: Progress
-      layout:
-        flex: 0 0 auto
-      properties:
-        type: circle
-        percent: 75
-        strokeWidth: 6
-    - id: circle_thick_stroke
-      type: Progress
-      layout:
-        flex: 0 0 auto
-      properties:
-        type: circle
-        percent: 75
-        strokeWidth: 12
-    - id: circle_extra_thick_stroke
-      type: Progress
-      layout:
-        flex: 0 0 auto
-      properties:
-        type: circle
-        percent: 75
-        strokeWidth: 20
-
-- title: Steps (Segmented Line)
+- title: Steps (Line Type)
   blocks:
     - id: steps_3
       type: Progress
       properties:
-        percent: 60
+        percent: 66
         steps: 3
     - id: steps_5
       type: Progress
@@ -497,7 +251,7 @@
     - id: steps_8
       type: Progress
       properties:
-        percent: 50
+        percent: 75
         steps: 8
     - id: steps_colored
       type: Progress
@@ -506,225 +260,510 @@
         steps: 5
         strokeColor: '#52c41a'
 
-- title: Show Info Toggle
+- title: Circle Width
   blocks:
-    - id: no_info_line
-      type: Progress
-      properties:
-        percent: 50
-        showInfo: false
-    - id: no_info_circle
+    - id: width_small
       type: Progress
       layout:
         flex: 0 0 auto
       properties:
         type: circle
-        percent: 75
-        showInfo: false
+        percent: 70
         width: 80
-    - id: no_info_dashboard
+    - id: width_default
+      type: Progress
+      layout:
+        flex: 0 0 auto
+      properties:
+        type: circle
+        percent: 70
+        width: 132
+    - id: width_large
+      type: Progress
+      layout:
+        flex: 0 0 auto
+      properties:
+        type: circle
+        percent: 70
+        width: 200
+
+- title: Dashboard Gap Degree
+  blocks:
+    - id: gap_small
       type: Progress
       layout:
         flex: 0 0 auto
       properties:
         type: dashboard
         percent: 60
-        showInfo: false
-        width: 80
-    - id: info_shown_line
-      type: Progress
-      properties:
-        percent: 50
-        showInfo: true
-
-- title: Segmented Success
-  blocks:
-    - id: success_line
-      type: Progress
-      properties:
-        percent: 60
-        success:
-          percent: 30
-    - id: success_line_high
-      type: Progress
-      properties:
-        percent: 90
-        success:
-          percent: 60
-    - id: success_circle
-      type: Progress
-      layout:
-        flex: 0 0 auto
-      properties:
-        type: circle
-        percent: 80
-        success:
-          percent: 50
-    - id: success_dashboard
+        gapDegree: 30
+    - id: gap_default
       type: Progress
       layout:
         flex: 0 0 auto
       properties:
         type: dashboard
-        percent: 75
-        success:
-          percent: 40
-
-- title: Style Overrides
-  blocks:
-    - id: style_line_margin
+        percent: 60
+        gapDegree: 75
+    - id: gap_large
       type: Progress
+      layout:
+        flex: 0 0 auto
       properties:
-        percent: 72
-        strokeColor: '#722ed1'
+        type: dashboard
+        percent: 60
+        gapDegree: 150
+
+- title: Dashboard Gap Position
+  blocks:
+    - id: gappos_top
+      type: Progress
+      layout:
+        flex: 0 0 auto
+      properties:
+        type: dashboard
+        percent: 65
+        gapPosition: top
+    - id: gappos_bottom
+      type: Progress
+      layout:
+        flex: 0 0 auto
+      properties:
+        type: dashboard
+        percent: 65
+        gapPosition: bottom
+    - id: gappos_left
+      type: Progress
+      layout:
+        flex: 0 0 auto
+      properties:
+        type: dashboard
+        percent: 65
+        gapPosition: left
+    - id: gappos_right
+      type: Progress
+      layout:
+        flex: 0 0 auto
+      properties:
+        type: dashboard
+        percent: 65
+        gapPosition: right
+
+- title: Style and CSS
+  blocks:
+    - id: css_tailwind_margin
+      type: Progress
+      class: my-4 mx-8
+      properties:
+        percent: 70
+    - id: css_tailwind_dark_bg
+      type: Box
+      class: bg-slate-800 p-4 rounded-lg
+      blocks:
+        - id: css_on_dark
+          type: Progress
+          properties:
+            percent: 65
+            strokeColor: '#69b1ff'
+            trailColor: 'rgba(255,255,255,0.1)'
+    - id: css_inline_max_width
+      type: Progress
       style:
-        --element:
-          maxWidth: 400px
-    - id: style_circle_shadow
+        element:
+          maxWidth: 300
+      properties:
+        percent: 55
+    - id: css_inline_circle_shadow
+      type: Progress
+      layout:
+        flex: 0 0 auto
+      style:
+        element:
+          filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15))
+      properties:
+        type: circle
+        percent: 85
+        strokeColor: '#52c41a'
+
+- title: Theme Token Overrides
+  blocks:
+    - id: theme_default_color
+      type: Progress
+      properties:
+        percent: 70
+        theme:
+          defaultColor: '#722ed1'
+    - id: theme_remaining_color
+      type: Progress
+      properties:
+        percent: 55
+        theme:
+          defaultColor: '#722ed1'
+          remainingColor: '#f9f0ff'
+    - id: theme_circle_text
       type: Progress
       layout:
         flex: 0 0 auto
       properties:
         type: circle
         percent: 88
-        strokeColor: '#1677ff'
-      style:
-        --element:
-          filter: drop-shadow(0 2px 8px rgba(22, 119, 255, 0.3))
-    - id: style_circle_bg
-      type: Progress
-      layout:
-        flex: 0 0 auto
-      properties:
-        type: circle
-        percent: 95
-        strokeColor: '#52c41a'
-      style:
-        --element:
-          backgroundColor: '#f6ffed'
-          padding: 16px
-          borderRadius: 8px
-
-- title: Theme Token Overrides
-  blocks:
-    - id: theme_custom_default_color
+        theme:
+          circleTextColor: '#1677ff'
+          circleTextFontSize: '1.5em'
+    - id: theme_line_border_radius
       type: Progress
       properties:
         percent: 70
+        strokeWidth: 16
         theme:
-          defaultColor: '#722ed1'
-    - id: theme_custom_remaining
-      type: Progress
-      properties:
-        percent: 55
-        theme:
-          remainingColor: '#f9f0ff'
-          defaultColor: '#722ed1'
-    - id: theme_circle_colors
-      type: Progress
-      layout:
-        flex: 0 0 auto
-      properties:
-        type: circle
-        percent: 82
-        theme:
-          defaultColor: '#eb2f96'
-          remainingColor: '#fff0f6'
-    - id: theme_success_color
-      type: Progress
-      properties:
-        percent: 100
-        status: success
-        theme:
-          colorSuccess: '#13c2c2'
+          lineBorderRadius: 0
 
-- title: Real-World Examples
+- title: Progress in File Upload
   blocks:
-    - id: example_upload_label
-      type: Markdown
+    - id: upload_card
+      type: Card
       properties:
-        content: '**File upload:**'
-    - id: example_upload
-      type: Progress
-      properties:
-        percent: 72
-        status: active
-        strokeColor:
-          '0%': '#108ee9'
-          '100%': '#87d068'
-    - id: example_skills_label
-      type: Markdown
-      properties:
-        content: '**Skill levels:**'
-    - id: example_skill_row
-      type: Box
-      layout:
-        gap: 16
+        title: Upload Documents
+        size: small
       blocks:
-        - id: example_skill_js
-          type: Progress
+        - id: upload_file_1_row
+          type: Box
           layout:
-            flex: 1 1 0
-          properties:
-            percent: 90
-            strokeColor: '#faad14'
-        - id: example_skill_py
-          type: Progress
+            gap: 8
+            align: center
+          blocks:
+            - id: upload_file_1_icon
+              type: Icon
+              layout:
+                flex: 0 0 auto
+              properties:
+                name: AiOutlineFile
+                size: 20
+                color: '#1677ff'
+            - id: upload_file_1_info
+              type: Box
+              layout:
+                flex: 1 1 auto
+              blocks:
+                - id: upload_file_1_name
+                  type: Markdown
+                  properties:
+                    content: '**report-q4.pdf** - 2.4 MB'
+                - id: upload_file_1_progress
+                  type: Progress
+                  properties:
+                    percent: 100
+                    status: success
+                    showInfo: true
+        - id: upload_file_2_row
+          type: Box
           layout:
-            flex: 1 1 0
-          properties:
-            percent: 75
-            strokeColor: '#1677ff'
-        - id: example_skill_go
-          type: Progress
+            gap: 8
+            align: center
+          blocks:
+            - id: upload_file_2_icon
+              type: Icon
+              layout:
+                flex: 0 0 auto
+              properties:
+                name: AiOutlineFile
+                size: 20
+                color: '#1677ff'
+            - id: upload_file_2_info
+              type: Box
+              layout:
+                flex: 1 1 auto
+              blocks:
+                - id: upload_file_2_name
+                  type: Markdown
+                  properties:
+                    content: '**data-export.csv** - 8.1 MB'
+                - id: upload_file_2_progress
+                  type: Progress
+                  properties:
+                    percent: 62
+                    status: active
+                    strokeColor:
+                      '0%': '#108ee9'
+                      '100%': '#87d068'
+        - id: upload_file_3_row
+          type: Box
           layout:
-            flex: 1 1 0
-          properties:
-            percent: 45
-            strokeColor: '#13c2c2'
-    - id: example_kpi_label
-      type: Markdown
+            gap: 8
+            align: center
+          blocks:
+            - id: upload_file_3_icon
+              type: Icon
+              layout:
+                flex: 0 0 auto
+              properties:
+                name: AiOutlineFile
+                size: 20
+                color: '#ff4d4f'
+            - id: upload_file_3_info
+              type: Box
+              layout:
+                flex: 1 1 auto
+              blocks:
+                - id: upload_file_3_name
+                  type: Markdown
+                  properties:
+                    content: '**image-corrupted.png** - Upload failed'
+                - id: upload_file_3_progress
+                  type: Progress
+                  properties:
+                    percent: 35
+                    status: exception
+        - id: upload_actions
+          type: Box
+          layout:
+            gap: 8
+            justify: flex-end
+          blocks:
+            - id: upload_retry_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Retry Failed
+                color: danger
+                variant: outlined
+                icon: AiOutlineReload
+                size: small
+              events:
+                onClick:
+                  - id: retry_msg
+                    type: DisplayMessage
+                    params:
+                      content: Retrying failed upload...
+                      status: info
+            - id: upload_more_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Upload More
+                color: primary
+                variant: solid
+                icon: AiOutlineUpload
+                size: small
+              events:
+                onClick:
+                  - id: upload_msg
+                    type: DisplayMessage
+                    params:
+                      content: File picker opened
+                      status: info
+
+- title: Progress in Onboarding Wizard
+  blocks:
+    - id: onboarding_card
+      type: Card
       properties:
-        content: '**KPI dashboard:**'
-    - id: example_kpi_row
-      type: Box
-      layout:
-        gap: 16
+        title: Account Setup
+        size: small
       blocks:
-        - id: example_kpi_cpu
-          type: Progress
+        - id: onboarding_overall
+          type: Box
           layout:
-            flex: 0 0 auto
-          properties:
-            type: dashboard
-            percent: 68
-            strokeColor: '#1677ff'
-            width: 100
-        - id: example_kpi_mem
-          type: Progress
+            gap: 8
+            align: center
+            justify: center
+          blocks:
+            - id: onboarding_circle
+              type: Progress
+              layout:
+                flex: 0 0 auto
+              properties:
+                type: circle
+                percent: 60
+                width: 100
+                strokeColor: '#1677ff'
+            - id: onboarding_desc
+              type: Markdown
+              layout:
+                flex: 1 1 auto
+              properties:
+                content: |
+                  **3 of 5 steps complete**
+
+                  Complete the remaining steps to finish setting up your account.
+        - id: onboarding_divider
+          type: Divider
+        - id: onboarding_step_1
+          type: Box
           layout:
-            flex: 0 0 auto
-          properties:
-            type: dashboard
-            percent: 85
-            strokeColor: '#faad14'
-            width: 100
-        - id: example_kpi_disk
-          type: Progress
+            gap: 8
+            align: center
+          blocks:
+            - id: onboarding_step_1_check
+              type: Icon
+              layout:
+                flex: 0 0 auto
+              properties:
+                name: AiOutlineCheckCircle
+                size: 18
+                color: '#52c41a'
+            - id: onboarding_step_1_label
+              type: Markdown
+              layout:
+                flex: 1 1 auto
+              properties:
+                content: '~~Create account~~'
+            - id: onboarding_step_1_bar
+              type: Progress
+              layout:
+                flex: 0 0 200px
+              properties:
+                percent: 100
+                status: success
+                showInfo: false
+        - id: onboarding_step_2
+          type: Box
           layout:
-            flex: 0 0 auto
-          properties:
-            type: dashboard
-            percent: 42
-            strokeColor: '#52c41a'
-            width: 100
-    - id: example_steps_label
-      type: Markdown
-      properties:
-        content: '**Onboarding progress:**'
-    - id: example_steps
-      type: Progress
-      properties:
-        percent: 60
-        steps: 5
-        strokeColor: '#52c41a'
+            gap: 8
+            align: center
+          blocks:
+            - id: onboarding_step_2_check
+              type: Icon
+              layout:
+                flex: 0 0 auto
+              properties:
+                name: AiOutlineCheckCircle
+                size: 18
+                color: '#52c41a'
+            - id: onboarding_step_2_label
+              type: Markdown
+              layout:
+                flex: 1 1 auto
+              properties:
+                content: '~~Verify email~~'
+            - id: onboarding_step_2_bar
+              type: Progress
+              layout:
+                flex: 0 0 200px
+              properties:
+                percent: 100
+                status: success
+                showInfo: false
+        - id: onboarding_step_3
+          type: Box
+          layout:
+            gap: 8
+            align: center
+          blocks:
+            - id: onboarding_step_3_check
+              type: Icon
+              layout:
+                flex: 0 0 auto
+              properties:
+                name: AiOutlineCheckCircle
+                size: 18
+                color: '#52c41a'
+            - id: onboarding_step_3_label
+              type: Markdown
+              layout:
+                flex: 1 1 auto
+              properties:
+                content: '~~Add profile photo~~'
+            - id: onboarding_step_3_bar
+              type: Progress
+              layout:
+                flex: 0 0 200px
+              properties:
+                percent: 100
+                status: success
+                showInfo: false
+        - id: onboarding_step_4
+          type: Box
+          layout:
+            gap: 8
+            align: center
+          blocks:
+            - id: onboarding_step_4_icon
+              type: Icon
+              layout:
+                flex: 0 0 auto
+              properties:
+                name: AiOutlineClockCircle
+                size: 18
+                color: '#1677ff'
+            - id: onboarding_step_4_label
+              type: Markdown
+              layout:
+                flex: 1 1 auto
+              properties:
+                content: '**Connect workspace**'
+            - id: onboarding_step_4_bar
+              type: Progress
+              layout:
+                flex: 0 0 200px
+              properties:
+                percent: 40
+                status: active
+                showInfo: false
+        - id: onboarding_step_5
+          type: Box
+          layout:
+            gap: 8
+            align: center
+          blocks:
+            - id: onboarding_step_5_icon
+              type: Icon
+              layout:
+                flex: 0 0 auto
+              properties:
+                name: AiOutlineClockCircle
+                size: 18
+                color: '#d9d9d9'
+            - id: onboarding_step_5_label
+              type: Markdown
+              layout:
+                flex: 1 1 auto
+              properties:
+                content: Invite team members
+            - id: onboarding_step_5_bar
+              type: Progress
+              layout:
+                flex: 0 0 200px
+              properties:
+                percent: 0
+                showInfo: false
+                trailColor: '#f0f0f0'
+        - id: onboarding_actions
+          type: Box
+          layout:
+            gap: 8
+            justify: flex-end
+          blocks:
+            - id: onboarding_skip_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Skip for Now
+                color: default
+                variant: text
+              events:
+                onClick:
+                  - id: skip_msg
+                    type: DisplayMessage
+                    params:
+                      content: You can complete setup later from your profile.
+                      status: info
+            - id: onboarding_continue_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Continue Setup
+                color: primary
+                variant: solid
+                icon: AiOutlineArrowRight
+              events:
+                onClick:
+                  - id: continue_msg
+                    type: DisplayMessage
+                    params:
+                      content: Connecting workspace...
+                      status: loading

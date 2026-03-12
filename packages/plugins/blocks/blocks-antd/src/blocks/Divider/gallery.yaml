@@ -12,98 +12,81 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- title: Horizontal Dividers
+- title: Type
   fullWidth: true
   blocks:
-    - id: hz_before
-      type: Paragraph
-      properties:
-        content: Content above the divider.
-    - id: hz_default
+    - id: type_horizontal
       type: Divider
-    - id: hz_after
-      type: Paragraph
-      properties:
-        content: Content below the divider.
-    - id: hz_another
+    - id: type_horizontal_titled
       type: Divider
-    - id: hz_more
-      type: Paragraph
       properties:
-        content: More content below the second divider.
-
-- title: Vertical Dividers
-  blocks:
-    - id: vertical_row
+        title: Horizontal Divider
+    - id: type_vertical_row
       type: Box
       layout:
         gap: 0
       blocks:
-        - id: vt_text_1
+        - id: type_vt_text_1
           type: Paragraph
           layout:
             flex: 0 0 auto
           properties:
-            content: Text
-        - id: vt_divider_1
+            content: Home
+        - id: type_vt_divider_1
           type: Divider
           layout:
             flex: 0 0 auto
           properties:
             type: vertical
-        - id: vt_text_2
+        - id: type_vt_text_2
           type: Paragraph
           layout:
             flex: 0 0 auto
           properties:
-            content: Link
-        - id: vt_divider_2
+            content: Settings
+        - id: type_vt_divider_2
           type: Divider
           layout:
             flex: 0 0 auto
           properties:
             type: vertical
-        - id: vt_text_3
+        - id: type_vt_text_3
           type: Paragraph
           layout:
             flex: 0 0 auto
           properties:
-            content: Link
+            content: Profile
 
-- title: With Title
+- title: Title
   fullWidth: true
   blocks:
-    - id: title_default
+    - id: title_plain_text
       type: Divider
       properties:
         title: Section Title
-    - id: title_html
+    - id: title_html_bold
       type: Divider
       properties:
-        title: '<b>Bold Title</b>'
-    - id: title_html_colored
+        title: '<b>Bold Section Header</b>'
+    - id: title_html_styled
       type: Divider
       properties:
-        title: '<span style="color: #1677ff">Blue Title</span>'
-    - id: title_html_icon
-      type: Divider
-      properties:
-        title: '<b>Important Section</b>'
+        title: '<span style="color: #1677ff; font-size: 16px">Highlighted Title</span>'
 
 - title: Title Orientation
   fullWidth: true
   blocks:
-    - id: orientation_left
+    - id: orient_left
       type: Divider
       properties:
         title: Left
         orientation: left
-    - id: orientation_center
+    - id: orient_center
       type: Divider
       properties:
-        title: Center
+        title: Center (default)
         orientation: center
-    - id: orientation_right
+    - id: orient_right
       type: Divider
       properties:
         title: Right
@@ -121,18 +104,12 @@
       properties:
         dashed: true
         title: Dashed with Title
-    - id: dashed_left
+    - id: dashed_left_title
       type: Divider
       properties:
         dashed: true
         title: Dashed Left
         orientation: left
-    - id: dashed_right
-      type: Divider
-      properties:
-        dashed: true
-        title: Dashed Right
-        orientation: right
 
 - title: Plain Style
   fullWidth: true
@@ -148,12 +125,6 @@
         title: Plain Left
         plain: true
         orientation: left
-    - id: plain_right
-      type: Divider
-      properties:
-        title: Plain Right
-        plain: true
-        orientation: right
     - id: plain_dashed
       type: Divider
       properties:
@@ -161,60 +132,25 @@
         plain: true
         dashed: true
 
-- title: Dashed + Plain + Orientation Combinations
+- title: Style and CSS
   fullWidth: true
   blocks:
-    - id: combo_solid_left
+    - id: css_tailwind_margin
       type: Divider
+      class: my-8
       properties:
-        title: Solid Left
-        orientation: left
-    - id: combo_solid_right
-      type: Divider
-      properties:
-        title: Solid Right
-        orientation: right
-    - id: combo_dashed_center
-      type: Divider
-      properties:
-        title: Dashed Center
-        dashed: true
-    - id: combo_plain_dashed_left
-      type: Divider
-      properties:
-        title: Plain Dashed Left
-        plain: true
-        dashed: true
-        orientation: left
-    - id: combo_plain_dashed_right
-      type: Divider
-      properties:
-        title: Plain Dashed Right
-        plain: true
-        dashed: true
-        orientation: right
-
-- title: Style Overrides
-  fullWidth: true
-  blocks:
-    - id: style_colored
+        title: Extra Margin via Tailwind
+    - id: css_inline_color
       type: Divider
       style:
         --element:
           borderColor: '#1677ff'
-    - id: style_thick
+    - id: css_inline_thick
       type: Divider
       style:
         --element:
-          borderWidth: 2px
-    - id: style_red_dashed
-      type: Divider
-      properties:
-        dashed: true
-      style:
-        --element:
-          borderColor: '#f5222d'
-    - id: style_title_colored
+          borderWidth: 3px
+    - id: css_inline_title_color
       type: Divider
       properties:
         title: Styled Title
@@ -222,13 +158,6 @@
         --element:
           color: '#722ed1'
           borderColor: '#722ed1'
-    - id: style_margin
-      type: Divider
-      properties:
-        title: Extra Spacing
-      style:
-        --element:
-          margin: 32px 0
 
 - title: Theme Token Overrides
   fullWidth: true
@@ -238,49 +167,209 @@
       properties:
         title: Wide Text Padding
         theme:
-          textPaddingInline: '2em'
-    - id: theme_orientation_margin
+          textPaddingInline: '3em'
+    - id: theme_orientation_tight
       type: Divider
       properties:
-        title: Tight Left Title
+        title: Tight Orientation Margin
         orientation: left
         theme:
           orientationMargin: 0
-    - id: theme_orientation_margin_wide
+    - id: theme_orientation_wide
       type: Divider
       properties:
-        title: Wide Left Title
+        title: Wide Orientation Margin
         orientation: left
         theme:
           orientationMargin: 0.25
+    - id: theme_vertical_margin
+      type: Box
+      layout:
+        gap: 0
+      blocks:
+        - id: theme_vm_text_1
+          type: Paragraph
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: Item A
+        - id: theme_vm_divider
+          type: Divider
+          layout:
+            flex: 0 0 auto
+          properties:
+            type: vertical
+            theme:
+              verticalMarginInline: 24
+        - id: theme_vm_text_2
+          type: Paragraph
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: Item B
 
-- title: Combined Examples
+- title: Divider in Settings Page
   fullWidth: true
   blocks:
-    - id: combined_section_header
-      type: Divider
+    - id: settings_card
+      type: Card
       properties:
-        title: '<b>Account Settings</b>'
-        orientation: left
-        plain: true
-      style:
-        --element:
-          color: '#1677ff'
-          borderColor: '#1677ff'
-    - id: combined_dashed_themed
-      type: Divider
-      properties:
-        title: End of Section
-        dashed: true
-        plain: true
-        orientation: right
-        theme:
-          textPaddingInline: '2em'
-    - id: combined_separator
-      type: Divider
-      properties:
-        dashed: true
-      style:
-        --element:
-          borderColor: '#d9d9d9'
-          margin: 8px 0
+        title: Account Settings
+        size: small
+      blocks:
+        - id: settings_profile_heading
+          type: Divider
+          properties:
+            title: Profile
+            orientation: left
+            plain: true
+        - id: settings_name
+          type: TextInput
+          properties:
+            label:
+              title: Display Name
+            placeholder: Enter your name
+        - id: settings_email
+          type: TextInput
+          properties:
+            label:
+              title: Email Address
+            placeholder: you@company.com
+        - id: settings_notifications_heading
+          type: Divider
+          properties:
+            title: Notifications
+            orientation: left
+            plain: true
+        - id: settings_notify_toggle
+          type: Switch
+          properties:
+            label:
+              title: Email Notifications
+        - id: settings_danger_heading
+          type: Divider
+          properties:
+            title: '<span style="color: #ff4d4f">Danger Zone</span>'
+            orientation: left
+            plain: true
+            dashed: true
+          style:
+            --element:
+              borderColor: '#ff4d4f'
+        - id: settings_delete_row
+          type: Box
+          layout:
+            gap: 8
+            justify: flex-end
+          blocks:
+            - id: settings_delete_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Delete Account
+                color: danger
+                variant: outlined
+                icon: AiOutlineDelete
+              events:
+                onClick:
+                  - id: settings_delete_msg
+                    type: DisplayMessage
+                    params:
+                      content: Account deletion requested.
+                      status: warning
+
+- title: Divider in Article Layout
+  fullWidth: true
+  blocks:
+    - id: article_card
+      type: Card
+      blocks:
+        - id: article_title
+          type: Markdown
+          properties:
+            content: |
+              ## Building Config-Driven Applications
+              A practical guide to rapid development with declarative frameworks.
+        - id: article_meta_row
+          type: Box
+          layout:
+            gap: 0
+          blocks:
+            - id: article_author
+              type: Paragraph
+              layout:
+                flex: 0 0 auto
+              properties:
+                content: By Jane Smith
+            - id: article_meta_divider_1
+              type: Divider
+              layout:
+                flex: 0 0 auto
+              properties:
+                type: vertical
+            - id: article_date
+              type: Paragraph
+              layout:
+                flex: 0 0 auto
+              properties:
+                content: March 2026
+            - id: article_meta_divider_2
+              type: Divider
+              layout:
+                flex: 0 0 auto
+              properties:
+                type: vertical
+            - id: article_reading_time
+              type: Paragraph
+              layout:
+                flex: 0 0 auto
+              properties:
+                content: 5 min read
+        - id: article_intro_divider
+          type: Divider
+        - id: article_body
+          type: Markdown
+          properties:
+            content: |
+              Config-driven frameworks allow teams to ship features faster by reducing boilerplate.
+              Instead of writing repetitive UI code, developers describe what they want in YAML or JSON.
+        - id: article_section_divider
+          type: Divider
+          properties:
+            title: Key Takeaways
+            orientation: left
+            plain: true
+        - id: article_takeaways
+          type: Markdown
+          properties:
+            content: |
+              - Declarative configs reduce development time by up to 60%
+              - Schema validation catches errors before deployment
+              - Teams can onboard new developers faster with standardized patterns
+        - id: article_footer_divider
+          type: Divider
+          properties:
+            dashed: true
+        - id: article_footer_row
+          type: Box
+          layout:
+            gap: 8
+            justify: flex-end
+          blocks:
+            - id: article_share_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Share Article
+                color: primary
+                variant: outlined
+                icon: AiOutlineShareAlt
+              events:
+                onClick:
+                  - id: article_share_msg
+                    type: DisplayMessage
+                    params:
+                      content: Link copied to clipboard!
+                      status: success
