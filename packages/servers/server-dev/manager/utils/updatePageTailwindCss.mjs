@@ -67,6 +67,7 @@ async function updatePageTailwindCss({ changedFiles, context }) {
   if (contentWritten) {
     await context.compileCss();
   }
+  return contentWritten;
 }
 
 export default updatePageTailwindCss;

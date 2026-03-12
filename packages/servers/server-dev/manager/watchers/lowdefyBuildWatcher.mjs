@@ -41,6 +41,7 @@ function lowdefyBuildWatcher(context) {
       }
     }
 
+    let tailwindWillReload = false;
     try {
       const isSkeletonChange =
         lowdefyYamlModified ||
@@ -52,13 +53,15 @@ function lowdefyBuildWatcher(context) {
       } else {
         const invalidatePath = path.join(context.directories.build, 'invalidatePages');
         fs.writeFileSync(invalidatePath, String(Date.now()));
-        await updatePageTailwindCss({ changedFiles, context });
+        tailwindWillReload = await updatePageTailwindCss({ changedFiles, context });
         context.logger.info('Page files changed, invalidated all pages.');
       }
     } catch (error) {
       context.logger.error(error);
     } finally {
-      await context.reloadClients();
+      if (!tailwindWillReload) {
+        await context.reloadClients();
+      }
     }
   };
   return setupWatcher({
