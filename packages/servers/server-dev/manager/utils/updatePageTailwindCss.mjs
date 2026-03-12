@@ -50,8 +50,10 @@ async function updatePageTailwindCss({ changedFiles, context }) {
         collectStrings(doc, allStrings);
         if (allStrings.length > 0) {
           const contentPath = path.join(
-            context.directories.build,
-            `tailwind-content/${pageId}.html`
+            context.directories.server,
+            'lowdefy-build',
+            'tailwind',
+            `${pageId}.html`
           );
           fs.mkdirSync(path.dirname(contentPath), { recursive: true });
           fs.writeFileSync(contentPath, allStrings.join('\n'));

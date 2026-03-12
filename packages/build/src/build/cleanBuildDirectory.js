@@ -14,10 +14,12 @@
   limitations under the License.
 */
 
+import path from 'path';
 import { cleanDirectory } from '@lowdefy/node-utils';
 
 async function cleanBuildDirectory({ context }) {
   await cleanDirectory(context.directories.build);
+  await cleanDirectory(path.join(context.directories.server, 'lowdefy-build', 'tailwind'));
 }
 
 export default cleanBuildDirectory;

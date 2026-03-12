@@ -39,7 +39,7 @@ function tailwindContentWatcher(context) {
   return setupWatcher({
     callback,
     context,
-    watchPaths: [path.join(context.directories.build, 'tailwind-content')],
+    watchPaths: [path.join(context.directories.server, 'lowdefy-build', 'tailwind')],
   });
 }
 

@@ -16,10 +16,17 @@
 
 import { jest } from '@jest/globals';
 
-import testContext from '../../test-utils/testContext.js';
-import { snapshotTypesMap } from '../../test-utils/runBuildForSnapshots.js';
-import makeId from '../../utils/makeId.js';
-import buildPageJit from './buildPageJit.js';
+const realNodeUtils = await import('@lowdefy/node-utils');
+const mockWriteFile = jest.fn();
+jest.unstable_mockModule('@lowdefy/node-utils', () => ({
+  ...realNodeUtils,
+  writeFile: mockWriteFile,
+}));
+
+const { default: testContext } = await import('../../test-utils/testContext.js');
+const { snapshotTypesMap } = await import('../../test-utils/runBuildForSnapshots.js');
+const { default: makeId } = await import('../../utils/makeId.js');
+const { default: buildPageJit } = await import('./buildPageJit.js');
 
 const mockReadConfigFile = jest.fn();
 const mockWriteBuildArtifact = jest.fn();
@@ -47,6 +54,8 @@ beforeEach(() => {
   mockReadConfigFile.mockReset();
   mockWriteBuildArtifact.mockReset();
   mockWriteBuildArtifact.mockResolvedValue(undefined);
+  mockWriteFile.mockReset();
+  mockWriteFile.mockResolvedValue(undefined);
 });
 
 test('buildPageJit returns null for unknown pageId', async () => {
