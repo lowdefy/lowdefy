@@ -84,12 +84,10 @@
       properties:
         s3GetPolicyRequestId: download_file
         theme:
-          actionsColor: '#531dab'
-          linkColor: '#1d39c4'
-          linkHoverColor: '#531dab'
-          itemHoverBg: '#f9f0ff'
-          itemBorderColor: '#d3adf7'
-          fontSize: 14
+          actionsColor: '#f5222d'
+          controlItemBgHover: '#f9f0ff'
+          colorIcon: '#f5222d'
+          fontSize: 18
         fileList:
           - key: contracts/nda.pdf
             type: application/pdf

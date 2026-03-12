@@ -58,7 +58,8 @@ export default {
       },
       theme: {
         type: 'object',
-        description: 'Antd design token overrides for this block.',
+        description:
+          'Antd design token overrides for this block. See <a href="https://ant.design/components/upload#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
           link: 'https://ant.design/components/upload#design-token',
@@ -68,29 +69,26 @@ export default {
             type: 'string',
             description: 'Color of action icons (download, preview).',
           },
-          itemBorderColor: {
-            type: 'string',
-            description: 'Border color of each file item.',
+          pictureCardSize: {
+            type: 'number',
+            description:
+              'Size of list items in card type (affects both picture-card and picture-circle).',
           },
-          itemHoverBg: {
+          controlItemBgHover: {
             type: 'string',
             description: 'Background color of file item on hover.',
           },
-          linkColor: {
+          colorIcon: {
             type: 'string',
-            description: 'Color of file name link text.',
-          },
-          linkHoverColor: {
-            type: 'string',
-            description: 'Color of file name link text on hover.',
+            description: 'Color of file icons.',
           },
           fontSize: {
             type: 'number',
             description: 'Font size of file name text.',
           },
-          lineHeight: {
+          borderRadiusSM: {
             type: 'number',
-            description: 'Line height of file list items.',
+            description: 'Border radius of file list items.',
           },
         },
       },

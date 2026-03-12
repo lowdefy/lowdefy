@@ -15,9 +15,9 @@
 */
 
 import React, { useEffect } from 'react';
-import { ConfigProvider, Upload } from 'antd';
-import { withBlockDefaults } from '@lowdefy/block-utils';
-import { type } from '@lowdefy/helpers';
+import { Upload } from 'antd';
+
+import withTheme from '../withTheme.js';
 
 const downloadFile = async ({ file, methods }) => {
   const s3DownloadPolicy = await methods.triggerEvent({
@@ -40,7 +40,7 @@ const S3Download = ({ blockId, classNames = {}, methods, properties, styles = {}
       ],
     });
   }, []);
-  const upload = (
+  return (
     <Upload
       id={blockId}
       className={classNames.element}
@@ -51,18 +51,12 @@ const S3Download = ({ blockId, classNames = {}, methods, properties, styles = {}
       onDownload={async (file) => await downloadFile({ file, methods })}
     />
   );
-  if (type.isObject(properties.theme)) {
-    return (
-      <ConfigProvider theme={{ components: { Upload: properties.theme } }}>{upload}</ConfigProvider>
-    );
-  }
-  return upload;
 };
 
 S3Download.meta = {
   category: 'display',
   icons: [],
-  styles: ['element'],
+  cssKeys: ['element'],
 };
 
-export default withBlockDefaults(S3Download);
+export default withTheme('Upload', S3Download);
