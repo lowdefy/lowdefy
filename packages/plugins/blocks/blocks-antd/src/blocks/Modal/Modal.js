@@ -15,7 +15,7 @@
 */
 
 import React, { useState, useEffect } from 'react';
-import { renderHtml } from '@lowdefy/block-utils';
+import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { get } from '@lowdefy/helpers';
 import { Modal } from 'antd';
 
@@ -108,10 +108,4 @@ const ModalBlock = ({
   );
 };
 
-ModalBlock.meta = {
-  category: 'container',
-  icons: [],
-  cssKeys: ['element', 'header', 'body', 'footer', 'mask', 'wrapper', 'content'],
-};
-
-export default withTheme('Modal', ModalBlock);
+export default withTheme('Modal', withBlockDefaults(ModalBlock));

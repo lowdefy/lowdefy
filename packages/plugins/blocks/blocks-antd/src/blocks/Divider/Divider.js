@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Divider } from 'antd';
-import { renderHtml } from '@lowdefy/block-utils';
+import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
 import withTheme from '../withTheme.js';
 
@@ -34,10 +34,4 @@ const DividerBlock = ({ blockId, classNames = {}, properties, styles = {}, metho
   </Divider>
 );
 
-DividerBlock.meta = {
-  category: 'display',
-  icons: [],
-  cssKeys: ['element'],
-};
-
-export default withTheme('Divider', DividerBlock);
+export default withTheme('Divider', withBlockDefaults(DividerBlock));

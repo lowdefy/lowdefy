@@ -18,6 +18,7 @@ import React from 'react';
 import { AutoComplete } from 'antd';
 import { type } from '@lowdefy/helpers';
 
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
 
@@ -100,11 +101,4 @@ const AutoCompleteInput = ({
   );
 };
 
-AutoCompleteInput.meta = {
-  valueType: 'string',
-  category: 'input',
-  icons: [...Label.meta.icons],
-  cssKeys: ['element', 'label', 'extra', 'feedback', 'options'],
-};
-
-export default withTheme('AutoComplete', AutoCompleteInput);
+export default withTheme('AutoComplete', withBlockDefaults(AutoCompleteInput));

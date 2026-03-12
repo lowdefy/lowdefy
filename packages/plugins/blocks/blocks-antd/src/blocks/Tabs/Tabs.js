@@ -15,7 +15,7 @@
 */
 
 import React, { useState, useEffect } from 'react';
-import { renderHtml } from '@lowdefy/block-utils';
+import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { Tabs } from 'antd';
 
 import withTheme from '../withTheme.js';
@@ -101,10 +101,4 @@ const TabsBlock = ({
   );
 };
 
-TabsBlock.meta = {
-  category: 'container',
-  icons: [],
-  cssKeys: ['element', 'tabBar', 'tabPane', 'inkBar'],
-};
-
-export default withTheme('Tabs', TabsBlock);
+export default withTheme('Tabs', withBlockDefaults(TabsBlock));

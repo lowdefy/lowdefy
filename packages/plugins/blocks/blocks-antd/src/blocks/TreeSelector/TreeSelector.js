@@ -16,7 +16,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Tree } from 'antd';
-import { renderHtml } from '@lowdefy/block-utils';
+import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
 import withTheme from '../withTheme.js';
 
@@ -105,11 +105,4 @@ const TreeSelector = ({
   );
 };
 
-TreeSelector.meta = {
-  category: 'input',
-  valueType: 'array',
-  icons: [],
-  cssKeys: ['element'],
-};
-
-export default withTheme('TreeSelect', TreeSelector);
+export default withTheme('TreeSelect', withBlockDefaults(TreeSelector));

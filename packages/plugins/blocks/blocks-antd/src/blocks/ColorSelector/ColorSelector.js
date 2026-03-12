@@ -18,6 +18,7 @@ import React from 'react';
 import { ColorPicker } from 'antd';
 import { type } from '@lowdefy/helpers';
 
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
 
@@ -91,11 +92,4 @@ const ColorSelectorInput = ({
   );
 };
 
-ColorSelectorInput.meta = {
-  valueType: 'string',
-  category: 'input',
-  icons: [...Label.meta.icons],
-  cssKeys: ['element', 'label', 'extra', 'feedback'],
-};
-
-export default withTheme('ColorSelector', ColorSelectorInput);
+export default withTheme('ColorSelector', withBlockDefaults(ColorSelectorInput));

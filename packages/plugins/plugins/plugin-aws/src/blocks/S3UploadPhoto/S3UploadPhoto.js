@@ -96,11 +96,4 @@ const S3UploadPhoto = ({ blockId, components: { Icon }, events, methods, propert
   );
 };
 
-S3UploadPhoto.meta = {
-  valueType: 'object',
-  category: 'input',
-  icons: ['AiOutlineLoading', 'AiOutlineCamera'],
-  styles: [],
-};
-
 export default withBlockDefaults(S3UploadPhoto);

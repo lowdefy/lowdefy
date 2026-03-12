@@ -17,7 +17,7 @@
 import React, { useEffect } from 'react';
 import { message } from 'antd';
 import { type } from '@lowdefy/helpers';
-import { ErrorBoundary, renderHtml } from '@lowdefy/block-utils';
+import { ErrorBoundary, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
 const MessageBlock = ({
   blockId,
@@ -52,10 +52,4 @@ const MessageBlock = ({
   return <div id={blockId} />;
 };
 
-MessageBlock.meta = {
-  category: 'display',
-  icons: [],
-  cssKeys: ['element'],
-};
-
-export default MessageBlock;
+export default withBlockDefaults(MessageBlock);

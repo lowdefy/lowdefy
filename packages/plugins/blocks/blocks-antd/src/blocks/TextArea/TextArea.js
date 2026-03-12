@@ -18,6 +18,7 @@ import React from 'react';
 import { type } from '@lowdefy/helpers';
 import { Input } from 'antd';
 
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
 import useRunAfterUpdate from '../../useRunAfterUpdate.js';
@@ -98,11 +99,4 @@ const TextAreaBlock = ({
   );
 };
 
-TextAreaBlock.meta = {
-  valueType: 'string',
-  category: 'input',
-  icons: [...Label.meta.icons],
-  cssKeys: ['element', 'label', 'extra', 'feedback'],
-};
-
-export default withTheme('Input', TextAreaBlock);
+export default withTheme('Input', withBlockDefaults(TextAreaBlock));

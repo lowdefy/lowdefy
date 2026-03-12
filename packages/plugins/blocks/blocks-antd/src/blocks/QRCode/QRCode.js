@@ -17,6 +17,7 @@
 import React from 'react';
 import { QRCode } from 'antd';
 
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
 const QRCodeBlock = ({ blockId, classNames = {}, methods, properties, styles = {} }) => (
@@ -40,10 +41,4 @@ const QRCodeBlock = ({ blockId, classNames = {}, methods, properties, styles = {
   />
 );
 
-QRCodeBlock.meta = {
-  category: 'display',
-  icons: [],
-  cssKeys: ['element'],
-};
-
-export default withTheme('QRCode', QRCodeBlock);
+export default withTheme('QRCode', withBlockDefaults(QRCodeBlock));

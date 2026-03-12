@@ -17,6 +17,7 @@
 import React from 'react';
 import { Avatar } from 'antd';
 
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
 const AvatarBlock = ({
@@ -97,10 +98,4 @@ const AvatarBlock = ({
   );
 };
 
-AvatarBlock.meta = {
-  category: 'display',
-  icons: [],
-  cssKeys: ['element', 'max'],
-};
-
-export default withTheme('Avatar', AvatarBlock);
+export default withTheme('Avatar', withBlockDefaults(AvatarBlock));

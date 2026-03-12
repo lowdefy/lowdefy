@@ -18,6 +18,7 @@ import React from 'react';
 import { ConfigProvider, Switch } from 'antd';
 import { type, serializer } from '@lowdefy/helpers';
 
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
 
@@ -109,11 +110,4 @@ const SwitchBlock = ({
   );
 };
 
-SwitchBlock.meta = {
-  valueType: 'boolean',
-  category: 'input',
-  icons: [...Label.meta.icons, 'AiOutlineCheck', 'AiOutlineClose'],
-  cssKeys: ['element', 'label', 'extra', 'feedback'],
-};
-
-export default withTheme('Switch', SwitchBlock);
+export default withTheme('Switch', withBlockDefaults(SwitchBlock));

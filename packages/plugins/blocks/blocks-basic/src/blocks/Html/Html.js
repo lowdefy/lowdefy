@@ -29,9 +29,4 @@ const HtmlBlock = ({ blockId, classNames, events, properties, methods, styles })
   />
 );
 
-HtmlBlock.meta = {
-  category: 'display',
-  icons: [],
-};
-
 export default withBlockDefaults(HtmlBlock);

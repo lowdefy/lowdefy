@@ -17,6 +17,7 @@
 import React, { useState, useEffect } from 'react';
 import { get } from '@lowdefy/helpers';
 import { Layout } from 'antd';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 
 const Sider = Layout.Sider;
 
@@ -67,10 +68,4 @@ const SiderBlock = ({
   );
 };
 
-SiderBlock.meta = {
-  category: 'container',
-  icons: [],
-  cssKeys: ['element'],
-};
-
-export default SiderBlock;
+export default withBlockDefaults(SiderBlock);

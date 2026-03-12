@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Card } from 'antd';
-import { renderHtml } from '@lowdefy/block-utils';
+import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
 import withTheme from '../withTheme.js';
 
@@ -54,10 +54,4 @@ const CardBlock = ({
   </Card>
 );
 
-CardBlock.meta = {
-  category: 'container',
-  icons: [],
-  cssKeys: ['element', 'header', 'body', 'cover', 'actions', 'extra'],
-};
-
-export default withTheme('Card', CardBlock);
+export default withTheme('Card', withBlockDefaults(CardBlock));

@@ -18,6 +18,7 @@ import React, { useEffect } from 'react';
 import { get } from '@lowdefy/helpers';
 import { List, Typography } from 'antd';
 
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import Button from '../Button/Button.js';
 import withTheme from '../withTheme.js';
 
@@ -149,11 +150,4 @@ const ControlledListBlock = ({
   );
 };
 
-ControlledListBlock.meta = {
-  valueType: 'array',
-  category: 'list',
-  icons: ['AiOutlinePlus', 'AiOutlineMinusCircle'],
-  cssKeys: ['element', 'header', 'footer', 'item'],
-};
-
-export default withTheme('List', ControlledListBlock);
+export default withTheme('List', withBlockDefaults(ControlledListBlock));

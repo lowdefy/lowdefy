@@ -22,9 +22,4 @@ const Throw = ({ properties }) => {
   throw new Error(message);
 };
 
-Throw.meta = {
-  category: 'display',
-  icons: [],
-};
-
 export default withBlockDefaults(Throw);

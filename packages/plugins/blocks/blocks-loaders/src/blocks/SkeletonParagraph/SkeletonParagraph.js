@@ -40,9 +40,4 @@ const SkeletonParagraph = ({ classNames, properties, styles }) => {
   );
 };
 
-SkeletonParagraph.meta = {
-  category: 'display',
-  icons: [],
-};
-
 export default withBlockDefaults(SkeletonParagraph);

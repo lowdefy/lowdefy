@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { renderHtml } from '@lowdefy/block-utils';
+import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 import { Typography } from 'antd';
 
@@ -116,10 +116,4 @@ const ParagraphBlock = ({
   </Paragraph>
 );
 
-ParagraphBlock.meta = {
-  category: 'display',
-  icons: [],
-  cssKeys: ['element'],
-};
-
-export default withTheme('Typography', ParagraphBlock);
+export default withTheme('Typography', withBlockDefaults(ParagraphBlock));

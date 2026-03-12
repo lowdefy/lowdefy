@@ -30,9 +30,4 @@ const ImgBlock = ({ blockId, classNames, events, properties, methods, styles }) 
   );
 };
 
-ImgBlock.meta = {
-  category: 'display',
-  icons: [],
-};
-
 export default withBlockDefaults(ImgBlock);

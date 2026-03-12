@@ -48,9 +48,4 @@ const SkeletonButton = ({ classNames, properties, styles }) => {
   );
 };
 
-SkeletonButton.meta = {
-  category: 'display',
-  icons: [],
-};
-
 export default withBlockDefaults(SkeletonButton);

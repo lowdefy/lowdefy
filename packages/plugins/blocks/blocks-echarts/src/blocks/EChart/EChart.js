@@ -110,9 +110,4 @@ class EChart extends React.Component {
   }
 }
 
-EChart.meta = {
-  category: 'display',
-  icons: [],
-};
-
 export default withBlockDefaults(EChart);

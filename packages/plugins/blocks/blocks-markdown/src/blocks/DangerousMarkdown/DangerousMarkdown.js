@@ -49,9 +49,4 @@ class DangerousMarkdown extends React.Component {
   }
 }
 
-DangerousMarkdown.meta = {
-  category: 'container',
-  icons: [],
-};
-
 export default withBlockDefaults(DangerousMarkdown);

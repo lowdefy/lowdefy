@@ -51,9 +51,4 @@ const SkeletonAvatar = ({ classNames, properties, styles }) => {
   );
 };
 
-SkeletonAvatar.meta = {
-  category: 'display',
-  icons: [],
-};
-
 export default withBlockDefaults(SkeletonAvatar);

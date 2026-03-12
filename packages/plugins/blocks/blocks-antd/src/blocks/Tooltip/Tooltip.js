@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Tooltip } from 'antd';
-import { renderHtml } from '@lowdefy/block-utils';
+import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
 import withTheme from '../withTheme.js';
 
@@ -47,10 +47,4 @@ const TooltipBlock = ({ blockId, classNames = {}, content, properties, methods, 
   </Tooltip>
 );
 
-TooltipBlock.meta = {
-  category: 'container',
-  icons: [],
-  cssKeys: ['element', 'inner'],
-};
-
-export default withTheme('Tooltip', TooltipBlock);
+export default withTheme('Tooltip', withBlockDefaults(TooltipBlock));

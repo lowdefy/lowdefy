@@ -53,10 +53,4 @@ const List = ({ blockId, classNames, events, list, methods, properties, styles }
   );
 };
 
-List.meta = {
-  category: 'list',
-  valueType: 'array',
-  icons: [],
-};
-
 export default withBlockDefaults(List);

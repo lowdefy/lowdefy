@@ -18,6 +18,7 @@ import React from 'react';
 import { type } from '@lowdefy/helpers';
 import { Badge } from 'antd';
 
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
 const BadgeBlock = ({
@@ -53,10 +54,4 @@ const BadgeBlock = ({
   </Badge>
 );
 
-BadgeBlock.meta = {
-  category: 'container',
-  icons: [],
-  cssKeys: ['element', 'indicator'],
-};
-
-export default withTheme('Badge', BadgeBlock);
+export default withTheme('Badge', withBlockDefaults(BadgeBlock));

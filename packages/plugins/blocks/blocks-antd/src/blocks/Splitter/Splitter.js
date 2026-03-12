@@ -17,6 +17,7 @@
 import React from 'react';
 import { Splitter } from 'antd';
 
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
 const SplitterBlock = ({ blockId, classNames = {}, content, methods, properties, styles = {} }) => {
@@ -58,10 +59,4 @@ const SplitterBlock = ({ blockId, classNames = {}, content, methods, properties,
   );
 };
 
-SplitterBlock.meta = {
-  category: 'container',
-  icons: [],
-  cssKeys: ['element'],
-};
-
-export default withTheme('Splitter', SplitterBlock);
+export default withTheme('Splitter', withBlockDefaults(SplitterBlock));

@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { ConfigProvider, Radio, Space } from 'antd';
-import { renderHtml } from '@lowdefy/block-utils';
+import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
 import Label from '../Label/Label.js';
@@ -106,11 +106,4 @@ const RadioSelector = ({
   );
 };
 
-RadioSelector.meta = {
-  valueType: 'any',
-  category: 'input',
-  icons: [...Label.meta.icons],
-  cssKeys: ['element', 'label', 'extra', 'feedback'],
-};
-
-export default withTheme('Radio', RadioSelector);
+export default withTheme('Radio', withBlockDefaults(RadioSelector));

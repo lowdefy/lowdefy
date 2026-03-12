@@ -61,9 +61,4 @@ const AnchorBlock = ({
   );
 };
 
-AnchorBlock.meta = {
-  category: 'display',
-  icons: ['AiOutlineLoading3Quarters'],
-};
-
 export default withBlockDefaults(AnchorBlock);

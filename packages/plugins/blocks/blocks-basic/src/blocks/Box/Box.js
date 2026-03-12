@@ -32,9 +32,4 @@ const Box = ({ blockId, classNames, content, events, methods, properties, styles
   );
 };
 
-Box.meta = {
-  category: 'container',
-  icons: [],
-};
-
 export default withBlockDefaults(Box);

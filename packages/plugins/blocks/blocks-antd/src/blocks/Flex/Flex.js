@@ -17,6 +17,7 @@
 import React from 'react';
 import { Flex } from 'antd';
 
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
 const FlexBlock = ({ blockId, classNames = {}, content, properties, styles = {} }) => (
@@ -36,10 +37,4 @@ const FlexBlock = ({ blockId, classNames = {}, content, properties, styles = {} 
   </Flex>
 );
 
-FlexBlock.meta = {
-  category: 'container',
-  icons: [],
-  cssKeys: ['element'],
-};
-
-export default withTheme('Flex', FlexBlock);
+export default withTheme('Flex', withBlockDefaults(FlexBlock));

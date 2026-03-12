@@ -92,10 +92,4 @@ class QRScanner extends React.Component {
   }
 }
 
-QRScanner.meta = {
-  valueType: 'object',
-  category: 'input',
-  icons: [],
-};
-
 export default withBlockDefaults(QRScanner);

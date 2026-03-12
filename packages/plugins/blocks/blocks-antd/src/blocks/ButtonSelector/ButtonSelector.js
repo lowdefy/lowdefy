@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { ConfigProvider, Radio } from 'antd';
-import { renderHtml } from '@lowdefy/block-utils';
+import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
 import Label from '../Label/Label.js';
@@ -105,11 +105,4 @@ const ButtonSelector = ({
   );
 };
 
-ButtonSelector.meta = {
-  valueType: 'any',
-  category: 'input',
-  icons: [...Label.meta.icons],
-  cssKeys: ['element', 'label', 'extra', 'feedback'],
-};
-
-export default withTheme('Radio', ButtonSelector);
+export default withTheme('Radio', withBlockDefaults(ButtonSelector));

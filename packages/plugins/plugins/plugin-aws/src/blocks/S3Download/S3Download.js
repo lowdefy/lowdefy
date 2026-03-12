@@ -16,6 +16,7 @@
 
 import React, { useEffect } from 'react';
 import { Upload } from 'antd';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 
 import withTheme from '../withTheme.js';
 
@@ -53,10 +54,4 @@ const S3Download = ({ blockId, classNames = {}, methods, properties, styles = {}
   );
 };
 
-S3Download.meta = {
-  category: 'display',
-  icons: [],
-  cssKeys: ['element'],
-};
-
-export default withTheme('Upload', S3Download);
+export default withBlockDefaults(withTheme('Upload', S3Download));

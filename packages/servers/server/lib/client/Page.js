@@ -22,6 +22,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 
 import actions from '../../build/plugins/actions.js';
+import blockMetas from '../../build/plugins/blockMetas.json';
 import blocks from '../../build/plugins/blocks.js';
 import icons from '../../build/plugins/icons.js';
 import operators from '../../build/plugins/operators/client.js';
@@ -42,6 +43,7 @@ const Page = ({ auth, lowdefy, pageConfig, rootConfig }) => {
       router={router}
       types={{
         actions,
+        blockMetas,
         blocks,
         icons,
         operators,

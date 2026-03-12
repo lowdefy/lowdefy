@@ -16,6 +16,7 @@
 
 import React from 'react';
 import { Layout } from 'antd';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 
 const Footer = Layout.Footer;
 
@@ -29,10 +30,4 @@ const FooterBlock = ({ blockId, classNames = {}, content, properties, styles = {
   </Footer>
 );
 
-FooterBlock.meta = {
-  category: 'container',
-  icons: [],
-  cssKeys: ['element'],
-};
-
-export default FooterBlock;
+export default withBlockDefaults(FooterBlock);

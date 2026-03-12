@@ -17,6 +17,7 @@
 import React, { useState } from 'react';
 import { Popover } from 'antd';
 
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
 const PopoverBlock = ({ blockId, classNames = {}, content, methods, properties, styles = {} }) => {
@@ -37,10 +38,4 @@ const PopoverBlock = ({ blockId, classNames = {}, content, methods, properties, 
   );
 };
 
-PopoverBlock.meta = {
-  category: 'container',
-  icons: [],
-  cssKeys: ['element', 'inner', 'title', 'content'],
-};
-
-export default withTheme('Popover', PopoverBlock);
+export default withTheme('Popover', withBlockDefaults(PopoverBlock));

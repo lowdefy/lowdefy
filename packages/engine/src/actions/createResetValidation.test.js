@@ -31,8 +31,12 @@ const lowdefy = {
       },
     },
     blockComponents: {
-      Button: { meta: { category: 'display' } },
-      TextInput: { meta: { category: 'input', valueType: 'string' } },
+      Button: {},
+      TextInput: {},
+    },
+    blockMetas: {
+      Button: { category: 'display' },
+      TextInput: { category: 'input', valueType: 'string' },
     },
     displayMessage,
   },

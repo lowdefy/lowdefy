@@ -16,7 +16,7 @@
 
 import React, { useEffect } from 'react';
 import { Modal } from 'antd';
-import { ErrorBoundary, renderHtml } from '@lowdefy/block-utils';
+import { ErrorBoundary, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
 const ConfirmModal = ({
   blockId,
@@ -99,10 +99,4 @@ const ConfirmModal = ({
   return <div id={blockId} />;
 };
 
-ConfirmModal.meta = {
-  category: 'container',
-  icons: [],
-  cssKeys: ['element', 'body'],
-};
-
-export default ConfirmModal;
+export default withBlockDefaults(ConfirmModal);

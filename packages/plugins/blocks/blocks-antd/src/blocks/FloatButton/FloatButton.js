@@ -17,6 +17,7 @@
 import React from 'react';
 import { FloatButton } from 'antd';
 
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
 const FloatButtonBlock = ({
@@ -49,10 +50,4 @@ const FloatButtonBlock = ({
   />
 );
 
-FloatButtonBlock.meta = {
-  category: 'display',
-  icons: [],
-  cssKeys: ['element'],
-};
-
-export default withTheme('FloatButton', FloatButtonBlock);
+export default withTheme('FloatButton', withBlockDefaults(FloatButtonBlock));

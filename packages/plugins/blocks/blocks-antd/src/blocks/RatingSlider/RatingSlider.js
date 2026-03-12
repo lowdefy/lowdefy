@@ -18,6 +18,7 @@ import React, { useState } from 'react';
 import { get, mergeObjects, serializer, type } from '@lowdefy/helpers';
 import { ConfigProvider, Slider } from 'antd';
 
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import CheckboxSelector from '../CheckboxSelector/CheckboxSelector.js';
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
@@ -218,11 +219,4 @@ const RatingSlider = ({
   );
 };
 
-RatingSlider.meta = {
-  valueType: 'any',
-  category: 'input',
-  icons: [...Label.meta.icons, 'AiOutlineFrown', 'AiOutlineSmile'],
-  cssKeys: ['element', 'label', 'extra', 'feedback'],
-};
-
-export default withTheme('Slider', RatingSlider);
+export default withTheme('Slider', withBlockDefaults(RatingSlider));

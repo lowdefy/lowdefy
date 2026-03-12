@@ -17,7 +17,7 @@
 import React from 'react';
 import { Collapse } from 'antd';
 import { serializer, type } from '@lowdefy/helpers';
-import { renderHtml } from '@lowdefy/block-utils';
+import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
 import withTheme from '../withTheme.js';
 
@@ -86,10 +86,4 @@ const CollapseBlock = ({
   );
 };
 
-CollapseBlock.meta = {
-  category: 'container',
-  icons: [],
-  cssKeys: ['element', 'header', 'content'],
-};
-
-export default withTheme('Collapse', CollapseBlock);
+export default withTheme('Collapse', withBlockDefaults(CollapseBlock));

@@ -35,7 +35,7 @@
   "exports": {
     "./*": "./dist/*",
     "./blocks": "./dist/blocks.js",
-    "./schemas": "./dist/schemas.js",
+    "./metas": "./dist/metas.js",
     "./types": "./dist/types.json"
   },
   "files": [

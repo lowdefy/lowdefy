@@ -32,9 +32,4 @@ const Skeleton = ({ classNames, properties, styles }) => {
   );
 };
 
-Skeleton.meta = {
-  category: 'display',
-  icons: [],
-};
-
 export default withBlockDefaults(Skeleton);

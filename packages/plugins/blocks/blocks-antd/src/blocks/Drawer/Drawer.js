@@ -18,6 +18,7 @@ import React, { useState, useEffect } from 'react';
 import { Drawer } from 'antd';
 import { get } from '@lowdefy/helpers';
 
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
 const handleClose = async ({ methods, rename, setOpen }) => {
@@ -132,10 +133,4 @@ const DrawerBlock = ({
   );
 };
 
-DrawerBlock.meta = {
-  category: 'container',
-  icons: [],
-  cssKeys: ['element', 'header', 'body', 'footer', 'mask', 'wrapper', 'content'],
-};
-
-export default withTheme('Drawer', DrawerBlock);
+export default withTheme('Drawer', withBlockDefaults(DrawerBlock));

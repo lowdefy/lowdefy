@@ -17,7 +17,7 @@
 import React from 'react';
 import { Statistic } from 'antd';
 import { type } from '@lowdefy/helpers';
-import { renderHtml } from '@lowdefy/block-utils';
+import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
 import withTheme from '../withTheme.js';
 
@@ -73,10 +73,4 @@ const StatisticBlock = ({
   );
 };
 
-StatisticBlock.meta = {
-  category: 'display',
-  icons: [],
-  cssKeys: ['element', 'value'],
-};
-
-export default withTheme('Statistic', StatisticBlock);
+export default withTheme('Statistic', withBlockDefaults(StatisticBlock));

@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Checkbox, ConfigProvider, Space } from 'antd';
-import { renderHtml } from '@lowdefy/block-utils';
+import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
@@ -78,11 +78,4 @@ const CheckboxSwitch = ({
   );
 };
 
-CheckboxSwitch.meta = {
-  valueType: 'boolean',
-  category: 'input',
-  icons: [...Label.meta.icons],
-  cssKeys: ['element', 'label', 'extra', 'feedback'],
-};
-
-export default withTheme('Checkbox', CheckboxSwitch);
+export default withTheme('Checkbox', withBlockDefaults(CheckboxSwitch));

@@ -17,7 +17,7 @@
 import React from 'react';
 import { Checkbox, ConfigProvider, Space } from 'antd';
 import { type } from '@lowdefy/helpers';
-import { renderHtml } from '@lowdefy/block-utils';
+import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
 import Label from '../Label/Label.js';
 import getValueIndex from '../../getValueIndex.js';
@@ -111,11 +111,4 @@ const CheckboxSelector = ({
   );
 };
 
-CheckboxSelector.meta = {
-  valueType: 'array',
-  category: 'input',
-  icons: [...Label.meta.icons],
-  cssKeys: ['element', 'label', 'extra', 'feedback'],
-};
-
-export default withTheme('Checkbox', CheckboxSelector);
+export default withTheme('Checkbox', withBlockDefaults(CheckboxSelector));

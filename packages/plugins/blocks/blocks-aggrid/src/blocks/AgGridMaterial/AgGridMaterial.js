@@ -22,22 +22,14 @@ import '@ag-grid-community/styles/ag-theme-material.css';
 
 import AgGrid from '../../AgGrid.js';
 
-const AgGridMaterial = ({ blockId, events, loading, methods, properties, styles = {} }) => (
+const AgGridMaterial = ({ blockId, events, loading, methods, properties, styles }) => (
   <div
     id={blockId}
-    className={`ag-theme-material ${methods.makeCssClass({
-      width: '100%',
-      height: properties.height ?? 500,
-      ...styles.element,
-    })}`}
+    className="ag-theme-material"
+    style={{ width: '100%', height: properties.height ?? 500, ...styles?.element }}
   >
     <AgGrid events={events} loading={loading} methods={methods} properties={properties} />
   </div>
 );
-
-AgGridMaterial.meta = {
-  category: 'display',
-  icons: [],
-};
 
 export default withBlockDefaults(AgGridMaterial);

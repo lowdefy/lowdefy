@@ -82,11 +82,4 @@ const S3UploadDragger = ({ blockId, methods, properties, value }) => {
   );
 };
 
-S3UploadDragger.meta = {
-  valueType: 'object',
-  category: 'input',
-  icons: [],
-  styles: [],
-};
-
 export default withBlockDefaults(S3UploadDragger);

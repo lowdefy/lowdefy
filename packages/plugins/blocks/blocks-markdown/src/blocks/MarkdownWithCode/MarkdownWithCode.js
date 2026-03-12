@@ -85,9 +85,4 @@ const MarkdownWithCode = ({ blockId, classNames, properties, styles }) => (
   </div>
 );
 
-MarkdownWithCode.meta = {
-  category: 'container',
-  icons: [],
-};
-
 export default withBlockDefaults(MarkdownWithCode);

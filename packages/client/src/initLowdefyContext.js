@@ -28,6 +28,7 @@ function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, 
     lowdefy._internal = {
       actions: types.actions,
       blockComponents: types.blocks,
+      blockMetas: types.blockMetas ?? {},
       components: {
         Icon: createIcon(types.icons),
       },

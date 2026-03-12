@@ -34,6 +34,7 @@
     "./*": "./dist/*",
     "./connections/*": "./dist/connections/*",
     "./blocks": "./dist/blocks.js",
+    "./metas": "./dist/metas.js",
     "./types": "./dist/types.json"
   },
   "files": [

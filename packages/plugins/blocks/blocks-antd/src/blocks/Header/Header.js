@@ -16,6 +16,7 @@
 
 import React from 'react';
 import { Layout } from 'antd';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 
 const Header = Layout.Header;
 
@@ -32,10 +33,4 @@ const HeaderBlock = ({ blockId, classNames = {}, content, properties, styles = {
   </Header>
 );
 
-HeaderBlock.meta = {
-  category: 'container',
-  icons: [],
-  cssKeys: ['element'],
-};
-
-export default HeaderBlock;
+export default withBlockDefaults(HeaderBlock);

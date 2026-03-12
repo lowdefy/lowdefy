@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Alert } from 'antd';
-import { renderHtml } from '@lowdefy/block-utils';
+import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
 import withTheme from '../withTheme.js';
@@ -67,10 +67,4 @@ const AlertBlock = ({
   );
 };
 
-AlertBlock.meta = {
-  category: 'container',
-  icons: [],
-  cssKeys: ['element', 'icon', 'message', 'description', 'action', 'closeIcon'],
-};
-
-export default withTheme('Alert', AlertBlock);
+export default withTheme('Alert', withBlockDefaults(AlertBlock));

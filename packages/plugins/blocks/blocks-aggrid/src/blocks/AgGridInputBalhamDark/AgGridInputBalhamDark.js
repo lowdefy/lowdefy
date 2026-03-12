@@ -29,17 +29,14 @@ const AgGridInputBalhamDark = ({
   methods,
   properties,
   required,
-  styles = {},
+  styles,
   validation,
   value,
 }) => (
   <div
     id={blockId}
-    className={`ag-theme-balham-dark ${methods.makeCssClass({
-      width: '100%',
-      height: properties.height ?? 500,
-      ...styles.element,
-    })}`}
+    className="ag-theme-balham-dark"
+    style={{ width: '100%', height: properties.height ?? 500, ...styles?.element }}
   >
     <AgGridInput
       blockId={blockId}
@@ -53,11 +50,5 @@ const AgGridInputBalhamDark = ({
     />
   </div>
 );
-
-AgGridInputBalhamDark.meta = {
-  category: 'input',
-  valueType: 'array',
-  icons: [],
-};
 
 export default withBlockDefaults(AgGridInputBalhamDark);

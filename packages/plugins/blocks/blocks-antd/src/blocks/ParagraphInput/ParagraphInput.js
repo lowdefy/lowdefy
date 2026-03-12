@@ -18,6 +18,7 @@ import React, { useState } from 'react';
 import { Typography } from 'antd';
 import { type } from '@lowdefy/helpers';
 
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
 const Paragraph = Typography.Paragraph;
@@ -143,11 +144,4 @@ const ParagraphInput = ({
   );
 };
 
-ParagraphInput.meta = {
-  valueType: 'string',
-  category: 'input',
-  icons: [],
-  cssKeys: ['element'],
-};
-
-export default withTheme('Typography', ParagraphInput);
+export default withTheme('Typography', withBlockDefaults(ParagraphInput));

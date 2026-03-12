@@ -15,7 +15,7 @@
 */
 
 import React, { useState } from 'react';
-import { renderHtml } from '@lowdefy/block-utils';
+import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { get, type } from '@lowdefy/helpers';
 import { Select } from 'antd';
 
@@ -159,11 +159,4 @@ const Selector = ({
   );
 };
 
-Selector.meta = {
-  valueType: 'any',
-  category: 'input',
-  icons: [...Label.meta.icons],
-  cssKeys: ['element', 'label', 'extra', 'feedback', 'options'],
-};
-
-export default withTheme('Select', Selector);
+export default withTheme('Select', withBlockDefaults(Selector));

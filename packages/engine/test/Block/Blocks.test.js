@@ -98,14 +98,13 @@ test('set block value to initValue in meta', async () => {
     ],
   };
   lowdefy._internal.blocks = {
+    ObjectBlock: {},
+  };
+  lowdefy._internal.blockMetas = {
     ObjectBlock: {
-      meta: {
-        category: 'input',
-        valueType: 'object',
-        initValue: {
-          a: 1,
-        },
-      },
+      category: 'input',
+      valueType: 'object',
+      initValue: { a: 1 },
     },
   };
   const context = await testContext({

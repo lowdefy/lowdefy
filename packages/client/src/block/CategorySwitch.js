@@ -45,7 +45,8 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
   }
 
   const classNames = resolveClassNames(block.eval.class);
-  switch (Component.meta.category) {
+  const category = lowdefy._internal.blockMetas[block.type]?.category;
+  switch (category) {
     case 'list':
       return (
         <List

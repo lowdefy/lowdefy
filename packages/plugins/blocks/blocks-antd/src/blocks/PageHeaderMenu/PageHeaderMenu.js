@@ -16,6 +16,7 @@
 
 import React from 'react';
 import { get, mergeObjects, type } from '@lowdefy/helpers';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 
 import Breadcrumb from '../Breadcrumb/Breadcrumb.js';
 import Content from '../Content/Content.js';
@@ -211,10 +212,4 @@ const PageHeaderMenu = ({
   );
 };
 
-PageHeaderMenu.meta = {
-  category: 'container',
-  icons: [...MobileMenu.meta.icons],
-  cssKeys: ['element', 'header', 'logo', 'menu', 'content', 'breadcrumb', 'footer'],
-};
-
-export default PageHeaderMenu;
+export default withBlockDefaults(PageHeaderMenu);

@@ -61,9 +61,4 @@ class DangerousHtml extends React.Component {
   }
 }
 
-DangerousHtml.meta = {
-  category: 'display',
-  icons: [],
-};
-
 export default withBlockDefaults(DangerousHtml);

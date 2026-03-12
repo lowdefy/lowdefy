@@ -18,6 +18,7 @@ import React from 'react';
 import { Timeline } from 'antd';
 import { get, mergeObjects, serializer, type } from '@lowdefy/helpers';
 
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
 // TODO: need to pass value to list blocks to render item level settings.
@@ -89,10 +90,4 @@ const TimelineList = ({
   );
 };
 
-TimelineList.meta = {
-  category: 'list',
-  icons: [],
-  cssKeys: ['element'],
-};
-
-export default withTheme('Timeline', TimelineList);
+export default withTheme('Timeline', withBlockDefaults(TimelineList));

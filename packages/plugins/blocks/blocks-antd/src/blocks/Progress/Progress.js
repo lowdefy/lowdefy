@@ -16,6 +16,7 @@
 
 import React from 'react';
 import { Progress } from 'antd';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
 const ProgressBlock = ({ blockId, classNames = {}, properties, styles = {} }) => (
@@ -39,10 +40,4 @@ const ProgressBlock = ({ blockId, classNames = {}, properties, styles = {} }) =>
   />
 );
 
-ProgressBlock.meta = {
-  category: 'display',
-  icons: [],
-  cssKeys: ['element'],
-};
-
-export default withTheme('Progress', ProgressBlock);
+export default withTheme('Progress', withBlockDefaults(ProgressBlock));

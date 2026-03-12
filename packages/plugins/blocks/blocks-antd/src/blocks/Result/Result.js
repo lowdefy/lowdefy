@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Result } from 'antd';
-import { renderHtml } from '@lowdefy/block-utils';
+import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
 import withTheme from '../withTheme.js';
 
@@ -48,10 +48,4 @@ const ResultBlock = ({
   </Result>
 );
 
-ResultBlock.meta = {
-  category: 'container',
-  icons: [],
-  cssKeys: ['element'],
-};
-
-export default withTheme('Result', ResultBlock);
+export default withTheme('Result', withBlockDefaults(ResultBlock));

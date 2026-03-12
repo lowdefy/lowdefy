@@ -20,6 +20,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc.js';
 import { type } from '@lowdefy/helpers';
 
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
 import disabledDate from '../../disabledDate.js';
@@ -107,11 +108,4 @@ const DateRangeSelector = ({
   );
 };
 
-DateRangeSelector.meta = {
-  valueType: 'array',
-  category: 'input',
-  icons: [...Label.meta.icons, 'AiOutlineCalendar'],
-  cssKeys: ['element', 'label', 'extra', 'feedback', 'popup'],
-};
-
-export default withTheme('DatePicker', DateRangeSelector);
+export default withTheme('DatePicker', withBlockDefaults(DateRangeSelector));

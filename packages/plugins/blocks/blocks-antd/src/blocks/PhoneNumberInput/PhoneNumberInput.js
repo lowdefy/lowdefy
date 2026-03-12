@@ -18,6 +18,7 @@ import React from 'react';
 import { Input, Select } from 'antd';
 import regions from './regions.js';
 
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
 import getValueIndex from '../../getValueIndex.js';
@@ -275,11 +276,4 @@ const PhoneNumberInput = ({
   );
 };
 
-PhoneNumberInput.meta = {
-  valueType: 'object',
-  category: 'input',
-  icons: [...Label.meta.icons],
-  cssKeys: ['element', 'label', 'extra', 'feedback', 'options', 'select'],
-};
-
-export default withTheme('Input', PhoneNumberInput);
+export default withTheme('Input', withBlockDefaults(PhoneNumberInput));

@@ -16,6 +16,7 @@
 
 import blockDefaultProps from './blockDefaultProps.js';
 import blockSchema from './blockSchema.js';
+import buildBlockSchema from './buildBlockSchema.js';
 import cn from './cn.js';
 import ErrorBoundary from './ErrorBoundary.js';
 import ErrorPage from './ErrorPage.js';
@@ -28,6 +29,7 @@ import withBlockDefaults from './withBlockDefaults.js';
 export {
   blockDefaultProps,
   blockSchema,
+  buildBlockSchema,
   cn,
   ErrorBoundary,
   ErrorPage,

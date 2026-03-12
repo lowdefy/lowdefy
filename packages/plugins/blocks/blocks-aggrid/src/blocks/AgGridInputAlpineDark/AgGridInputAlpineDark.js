@@ -29,17 +29,14 @@ const AgGridInputAlpineDark = ({
   methods,
   properties,
   required,
-  styles = {},
+  styles,
   validation,
   value,
 }) => (
   <div
     id={blockId}
-    className={`ag-theme-alpine-dark ${methods.makeCssClass({
-      width: '100%',
-      height: properties.height ?? 500,
-      ...styles.element,
-    })}`}
+    className="ag-theme-alpine-dark"
+    style={{ width: '100%', height: properties.height ?? 500, ...styles?.element }}
   >
     <AgGridInput
       blockId={blockId}
@@ -53,11 +50,5 @@ const AgGridInputAlpineDark = ({
     />
   </div>
 );
-
-AgGridInputAlpineDark.meta = {
-  category: 'input',
-  valueType: 'array',
-  icons: [],
-};
 
 export default withBlockDefaults(AgGridInputAlpineDark);

@@ -26,7 +26,6 @@ import normalizeClassAndStyles from './normalizeClassAndStyles.js';
 import normalizeLayout from './normalizeLayout.js';
 import setBlockId from './setBlockId.js';
 import validateBlock from './validateBlock.js';
-import validateCssKeys from './validateCssKeys.js';
 import validateSlots from './validateSlots.js';
 
 function buildBlock(block, pageContext) {
@@ -38,7 +37,6 @@ function buildBlock(block, pageContext) {
   buildEvents(block, pageContext);
   buildRequests(block, pageContext);
   normalizeClassAndStyles(block, pageContext);
-  validateCssKeys(block, pageContext);
   moveSubBlocksToSlot(block, pageContext);
   moveSkeletonBlocksToSlot(block, pageContext);
   validateSlots(block, pageContext);

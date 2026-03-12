@@ -57,9 +57,4 @@ const SkeletonInput = ({ classNames, properties, styles }) => {
   );
 };
 
-SkeletonInput.meta = {
-  category: 'display',
-  icons: [],
-};
-
 export default withBlockDefaults(SkeletonInput);

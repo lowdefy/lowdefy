@@ -22,22 +22,14 @@ import '@ag-grid-community/styles/ag-theme-balham.css';
 
 import AgGrid from '../../AgGrid.js';
 
-const AgGridBalham = ({ blockId, events, loading, methods, properties, styles = {} }) => (
+const AgGridBalham = ({ blockId, events, loading, methods, properties, styles }) => (
   <div
     id={blockId}
-    className={`ag-theme-balham ${methods.makeCssClass({
-      width: '100%',
-      height: properties.height ?? 500,
-      ...styles.element,
-    })}`}
+    className="ag-theme-balham"
+    style={{ width: '100%', height: properties.height ?? 500, ...styles?.element }}
   >
     <AgGrid events={events} loading={loading} methods={methods} properties={properties} />
   </div>
 );
-
-AgGridBalham.meta = {
-  category: 'display',
-  icons: [],
-};
 
 export default withBlockDefaults(AgGridBalham);

@@ -56,7 +56,9 @@ const LoadingBlock = ({
     Component = lowdefy._internal.blockComponents.Box;
   }
 
-  switch (Component.meta.category) {
+  const resolvedType = Component === lowdefy._internal.blockComponents.Box ? 'Box' : skeleton.type;
+  const category = lowdefy._internal.blockMetas[resolvedType]?.category;
+  switch (category) {
     case 'list':
       return (
         <LoadingList

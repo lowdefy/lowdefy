@@ -22,6 +22,7 @@ import weekOfYear from 'dayjs/plugin/weekOfYear.js';
 import advancedFormat from 'dayjs/plugin/advancedFormat.js';
 import { type } from '@lowdefy/helpers';
 
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
 import disabledDate from '../../disabledDate.js';
@@ -96,11 +97,4 @@ const WeekSelector = ({
   );
 };
 
-WeekSelector.meta = {
-  valueType: 'date',
-  category: 'input',
-  icons: [...Label.meta.icons, 'AiOutlineCalendar'],
-  cssKeys: ['element', 'label', 'extra', 'feedback', 'popup'],
-};
-
-export default withTheme('DatePicker', WeekSelector);
+export default withTheme('DatePicker', withBlockDefaults(WeekSelector));

@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Tag } from 'antd';
-import { renderHtml } from '@lowdefy/block-utils';
+import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
 import withTheme from '../withTheme.js';
@@ -63,10 +63,4 @@ const TagBlock = ({
   );
 };
 
-TagBlock.meta = {
-  category: 'display',
-  icons: [],
-  cssKeys: ['element'],
-};
-
-export default withTheme('Tag', TagBlock);
+export default withTheme('Tag', withBlockDefaults(TagBlock));

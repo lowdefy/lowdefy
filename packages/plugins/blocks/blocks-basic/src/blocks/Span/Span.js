@@ -29,9 +29,4 @@ const Span = ({ blockId, classNames, content, events, methods, properties, style
   </span>
 );
 
-Span.meta = {
-  category: 'container',
-  icons: [],
-};
-
 export default withBlockDefaults(Span);

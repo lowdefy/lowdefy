@@ -16,6 +16,7 @@
 
 import React from 'react';
 import { Layout } from 'antd';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 
 const LayoutBlock = ({ blockId, classNames = {}, content, properties, styles = {} }) => (
   <Layout id={blockId} className={classNames.element} style={styles.element}>
@@ -23,10 +24,4 @@ const LayoutBlock = ({ blockId, classNames = {}, content, properties, styles = {
   </Layout>
 );
 
-LayoutBlock.meta = {
-  category: 'container',
-  icons: [],
-  cssKeys: ['element'],
-};
-
-export default LayoutBlock;
+export default withBlockDefaults(LayoutBlock);

@@ -34,9 +34,4 @@ const DocSearchBlock = ({ properties }) => {
   );
 };
 
-DocSearchBlock.meta = {
-  category: 'display',
-  icons: [],
-};
-
 export default withBlockDefaults(DocSearchBlock);

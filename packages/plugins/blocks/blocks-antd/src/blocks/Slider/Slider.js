@@ -17,6 +17,7 @@
 import React from 'react';
 import { Slider } from 'antd';
 
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
 
@@ -72,11 +73,4 @@ const SliderBlock = ({
   );
 };
 
-SliderBlock.meta = {
-  valueType: 'any',
-  category: 'input',
-  icons: [...Label.meta.icons],
-  cssKeys: ['element', 'label', 'extra', 'feedback'],
-};
-
-export default withTheme('Slider', SliderBlock);
+export default withTheme('Slider', withBlockDefaults(SliderBlock));

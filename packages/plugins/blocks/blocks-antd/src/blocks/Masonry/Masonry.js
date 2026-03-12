@@ -17,6 +17,7 @@
 import React from 'react';
 import { Masonry } from 'antd';
 
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
 const MasonryBlock = ({ blockId, classNames = {}, content, properties, styles = {} }) => {
@@ -40,10 +41,4 @@ const MasonryBlock = ({ blockId, classNames = {}, content, properties, styles = 
   );
 };
 
-MasonryBlock.meta = {
-  category: 'container',
-  icons: [],
-  cssKeys: ['element'],
-};
-
-export default withTheme('Masonry', MasonryBlock);
+export default withTheme('Masonry', withBlockDefaults(MasonryBlock));

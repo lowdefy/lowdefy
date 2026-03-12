@@ -18,7 +18,7 @@
 // MIT Copyright (c) 2015-present Ant UED, https://xtech.antfin.com/ - 2020-09-08
 
 import React from 'react';
-import { renderHtml } from '@lowdefy/block-utils';
+import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { Col, Row } from 'antd';
 import classNames from 'classnames';
 import CSSMotion from '@rc-component/motion';
@@ -125,10 +125,4 @@ const Label = ({
   );
 };
 
-Label.meta = {
-  category: 'container',
-  icons: ['AiFillCloseCircle', 'AiFillCheckCircle', 'AiOutlineLoading', 'AiFillExclamationCircle'],
-  cssKeys: ['element', 'label', 'extra', 'feedback'],
-};
-
-export default Label;
+export default withBlockDefaults(Label);

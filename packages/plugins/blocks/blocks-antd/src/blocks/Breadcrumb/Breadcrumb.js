@@ -18,6 +18,7 @@ import React from 'react';
 import { type, get } from '@lowdefy/helpers';
 import { Breadcrumb } from 'antd';
 
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
 const BreadcrumbBlock = ({
@@ -77,10 +78,4 @@ const BreadcrumbBlock = ({
   );
 };
 
-BreadcrumbBlock.meta = {
-  category: 'display',
-  icons: [],
-  cssKeys: ['element'],
-};
-
-export default withTheme('Breadcrumb', BreadcrumbBlock);
+export default withTheme('Breadcrumb', withBlockDefaults(BreadcrumbBlock));

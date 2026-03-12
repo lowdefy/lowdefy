@@ -70,12 +70,10 @@ class Block {
     this.validationEval = {};
     this.visibleEval = {};
 
-    try {
-      this.meta = this.context._internal.lowdefy._internal.blockComponents[this.type].meta;
-    } catch (error) {
+    this.meta = this.context._internal.lowdefy._internal.blockMetas[this.type];
+    if (!this.meta) {
       throw new Error(
-        `Block type ${this.type} not found at ${this.blockId}. Check your plugins to make sure the block is installed. For more info, see https://docs.lowdefy.com/plugins.`,
-        { cause: error }
+        `Block type ${this.type} not found at ${this.blockId}. Check your plugins to make sure the block is installed. For more info, see https://docs.lowdefy.com/plugins.`
       );
     }
     if (!this.isContainer() && !this.isDisplay() && !this.isInput() && !this.isList()) {

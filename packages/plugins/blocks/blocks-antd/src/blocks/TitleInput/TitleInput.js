@@ -18,6 +18,7 @@ import React, { useState } from 'react';
 import { Typography } from 'antd';
 import { type } from '@lowdefy/helpers';
 
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
 const Title = Typography.Title;
@@ -138,11 +139,4 @@ const TitleInput = ({
   return titleEl;
 };
 
-TitleInput.meta = {
-  valueType: 'string',
-  category: 'input',
-  icons: [],
-  cssKeys: ['element'],
-};
-
-export default withTheme('Typography', TitleInput);
+export default withTheme('Typography', withBlockDefaults(TitleInput));

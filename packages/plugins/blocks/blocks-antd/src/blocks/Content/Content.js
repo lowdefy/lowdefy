@@ -16,6 +16,7 @@
 
 import React from 'react';
 import { Layout } from 'antd';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 
 const Content = Layout.Content;
 
@@ -25,10 +26,4 @@ const ContentBlock = ({ blockId, classNames = {}, content, properties, styles = 
   </Content>
 );
 
-ContentBlock.meta = {
-  category: 'container',
-  icons: [],
-  cssKeys: ['element'],
-};
-
-export default ContentBlock;
+export default withBlockDefaults(ContentBlock);

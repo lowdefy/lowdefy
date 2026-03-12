@@ -16,6 +16,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { mergeObjects, get } from '@lowdefy/helpers';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 
 import Button from '../Button/Button.js';
 import Drawer from '../Drawer/Drawer.js';
@@ -118,10 +119,4 @@ const MobileMenu = ({
   );
 };
 
-MobileMenu.meta = {
-  category: 'display',
-  icons: ['AiOutlineMenuUnfold', 'AiOutlineMenuFold'],
-  cssKeys: ['element'],
-};
-
-export default MobileMenu;
+export default withBlockDefaults(MobileMenu);

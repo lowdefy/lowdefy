@@ -18,6 +18,7 @@ import React, { useMemo } from 'react';
 import { Tour } from 'antd';
 import { type } from '@lowdefy/helpers';
 
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
 const TourBlock = ({ blockId, classNames = {}, methods, properties, styles = {} }) => {
@@ -70,10 +71,4 @@ const TourBlock = ({ blockId, classNames = {}, methods, properties, styles = {} 
   );
 };
 
-TourBlock.meta = {
-  category: 'display',
-  icons: [],
-  cssKeys: ['element', 'mask'],
-};
-
-export default withTheme('Tour', TourBlock);
+export default withTheme('Tour', withBlockDefaults(TourBlock));

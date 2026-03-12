@@ -16,6 +16,7 @@
 
 import React from 'react';
 import { ConfigProvider as AntdConfigProvider, theme } from 'antd';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 
 const algorithmMap = {
   default: theme.defaultAlgorithm,
@@ -56,10 +57,4 @@ const ConfigProviderBlock = ({ blockId, content, properties }) => {
   );
 };
 
-ConfigProviderBlock.meta = {
-  category: 'container',
-  icons: [],
-  cssKeys: [],
-};
-
-export default ConfigProviderBlock;
+export default withBlockDefaults(ConfigProviderBlock);

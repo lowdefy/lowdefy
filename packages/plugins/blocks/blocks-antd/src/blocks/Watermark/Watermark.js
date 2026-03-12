@@ -17,6 +17,7 @@
 import React from 'react';
 import { Watermark } from 'antd';
 
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
 const WatermarkBlock = ({ blockId, classNames = {}, content, properties, styles = {} }) => (
@@ -39,10 +40,4 @@ const WatermarkBlock = ({ blockId, classNames = {}, content, properties, styles 
   </Watermark>
 );
 
-WatermarkBlock.meta = {
-  category: 'container',
-  icons: [],
-  cssKeys: ['element'],
-};
-
-export default withTheme('Watermark', WatermarkBlock);
+export default withTheme('Watermark', withBlockDefaults(WatermarkBlock));

@@ -16,7 +16,7 @@
 
 import React from 'react';
 
-import { renderHtml } from '@lowdefy/block-utils';
+import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { Descriptions } from 'antd';
 import { type } from '@lowdefy/helpers';
 
@@ -86,10 +86,4 @@ const DescriptionsBlock = ({
   );
 };
 
-DescriptionsBlock.meta = {
-  category: 'container',
-  icons: [],
-  cssKeys: ['element', 'content', 'label'],
-};
-
-export default withTheme('Descriptions', DescriptionsBlock);
+export default withTheme('Descriptions', withBlockDefaults(DescriptionsBlock));

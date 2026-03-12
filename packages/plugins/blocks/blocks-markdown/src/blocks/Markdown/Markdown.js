@@ -35,9 +35,4 @@ const Markdown = ({ blockId, classNames, properties, styles }) => (
   </div>
 );
 
-Markdown.meta = {
-  category: 'container',
-  icons: [],
-};
-
 export default withBlockDefaults(Markdown);

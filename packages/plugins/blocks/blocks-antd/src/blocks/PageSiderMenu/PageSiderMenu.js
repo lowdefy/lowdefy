@@ -16,6 +16,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { get, mergeObjects, type } from '@lowdefy/helpers';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 
 import Affix from '../Affix/Affix.js';
 import Breadcrumb from '../Breadcrumb/Breadcrumb.js';
@@ -344,10 +345,4 @@ const PageSiderMenu = ({
   );
 };
 
-PageSiderMenu.meta = {
-  category: 'container',
-  icons: ['AiOutlineMenuFold', 'AiOutlineMenuUnfold', ...MobileMenu.meta.icons],
-  cssKeys: ['element', 'header', 'logo', 'sider', 'menu', 'content', 'breadcrumb', 'footer'],
-};
-
-export default PageSiderMenu;
+export default withBlockDefaults(PageSiderMenu);

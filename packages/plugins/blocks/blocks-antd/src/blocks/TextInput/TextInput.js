@@ -16,6 +16,7 @@
 
 import React from 'react';
 import { Input } from 'antd';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
 import useRunAfterUpdate from '../../useRunAfterUpdate.js';
@@ -142,11 +143,4 @@ const TextInput = ({
   );
 };
 
-TextInput.meta = {
-  valueType: 'string',
-  category: 'input',
-  icons: [...Label.meta.icons],
-  cssKeys: ['element', 'label', 'extra', 'feedback'],
-};
-
-export default withTheme('Input', TextInput);
+export default withTheme('Input', withBlockDefaults(TextInput));

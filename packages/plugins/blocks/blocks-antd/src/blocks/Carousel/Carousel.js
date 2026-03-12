@@ -16,6 +16,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { Carousel } from 'antd';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
 const getSlides = ({ content, properties }) => {
@@ -79,10 +80,4 @@ const CarouselBlock = ({ blockId, classNames = {}, content, properties, methods,
   );
 };
 
-CarouselBlock.meta = {
-  category: 'container',
-  icons: [],
-  cssKeys: ['element'],
-};
-
-export default withTheme('Carousel', CarouselBlock);
+export default withTheme('Carousel', withBlockDefaults(CarouselBlock));

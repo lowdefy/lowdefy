@@ -17,7 +17,7 @@
 import React from 'react';
 import { Button, ConfigProvider } from 'antd';
 import { get, type } from '@lowdefy/helpers';
-import { renderHtml } from '@lowdefy/block-utils';
+import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
 import withTheme from '../withTheme.js';
 
@@ -117,10 +117,4 @@ const ButtonBlock = ({
   return button;
 };
 
-ButtonBlock.meta = {
-  category: 'display',
-  icons: [],
-  cssKeys: ['element', 'icon'],
-};
-
-export default withTheme('Button', ButtonBlock);
+export default withTheme('Button', withBlockDefaults(ButtonBlock));

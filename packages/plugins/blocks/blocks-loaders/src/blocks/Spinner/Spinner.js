@@ -64,9 +64,4 @@ const Spinner = ({ classNames, properties, styles }) => {
   );
 };
 
-Spinner.meta = {
-  category: 'display',
-  icons: [],
-};
-
 export default withBlockDefaults(Spinner);

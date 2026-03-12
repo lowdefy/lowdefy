@@ -18,6 +18,7 @@ import React from 'react';
 import { Menu } from 'antd';
 import { type, get } from '@lowdefy/helpers';
 
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
 const getDefaultMenu = (menus, menuId = 'default', links) => {
@@ -195,10 +196,4 @@ const MenuComp = ({
   );
 };
 
-MenuComp.meta = {
-  category: 'display',
-  icons: [],
-  cssKeys: ['element', 'item'],
-};
-
-export default withTheme('Menu', MenuComp);
+export default withTheme('Menu', withBlockDefaults(MenuComp));

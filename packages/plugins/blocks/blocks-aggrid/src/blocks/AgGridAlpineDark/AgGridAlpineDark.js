@@ -22,22 +22,14 @@ import '@ag-grid-community/styles/ag-theme-alpine.css';
 
 import AgGrid from '../../AgGrid.js';
 
-const AgGridAlpineDark = ({ blockId, events, loading, methods, properties, styles = {} }) => (
+const AgGridAlpineDark = ({ blockId, events, loading, methods, properties, styles }) => (
   <div
     id={blockId}
-    className={`ag-theme-alpine-dark ${methods.makeCssClass({
-      width: '100%',
-      height: properties.height ?? 500,
-      ...styles.element,
-    })}`}
+    className="ag-theme-alpine-dark"
+    style={{ width: '100%', height: properties.height ?? 500, ...styles?.element }}
   >
     <AgGrid events={events} loading={loading} methods={methods} properties={properties} />
   </div>
 );
-
-AgGridAlpineDark.meta = {
-  category: 'display',
-  icons: [],
-};
 
 export default withBlockDefaults(AgGridAlpineDark);

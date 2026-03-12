@@ -19,9 +19,4 @@ import { withBlockDefaults } from '@lowdefy/block-utils';
 
 const IconBlock = ({ components: { Icon }, ...props }) => <Icon {...props} />;
 
-IconBlock.meta = {
-  category: 'display',
-  icons: [],
-};
-
 export default withBlockDefaults(IconBlock);

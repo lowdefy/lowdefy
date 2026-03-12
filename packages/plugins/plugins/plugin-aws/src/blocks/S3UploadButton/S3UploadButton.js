@@ -81,11 +81,4 @@ const S3UploadButtonBlock = ({ blockId, components, events, methods, properties,
   );
 };
 
-S3UploadButtonBlock.meta = {
-  valueType: 'object',
-  category: 'input',
-  icons: ['AiOutlineUpload'],
-  styles: [],
-};
-
 export default withBlockDefaults(S3UploadButtonBlock);

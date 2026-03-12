@@ -15,7 +15,7 @@
 */
 
 import React, { useEffect } from 'react';
-import { ErrorBoundary, renderHtml } from '@lowdefy/block-utils';
+import { ErrorBoundary, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { notification } from 'antd';
 import { type } from '@lowdefy/helpers';
 
@@ -75,10 +75,4 @@ const NotificationBlock = ({
   return <div id={blockId} />;
 };
 
-NotificationBlock.meta = {
-  category: 'display',
-  icons: [],
-  cssKeys: ['element'],
-};
-
-export default NotificationBlock;
+export default withBlockDefaults(NotificationBlock);

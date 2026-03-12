@@ -18,6 +18,7 @@ import React, { useState, useEffect } from 'react';
 import { Pagination } from 'antd';
 import { type } from '@lowdefy/helpers';
 
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
 const createChangeHandler =
@@ -100,14 +101,4 @@ const PaginationBlock = ({
   );
 };
 
-PaginationBlock.meta = {
-  valueType: 'object',
-  initValue: {
-    current: 1,
-  },
-  category: 'input',
-  icons: [],
-  cssKeys: ['element'],
-};
-
-export default withTheme('Pagination', PaginationBlock);
+export default withTheme('Pagination', withBlockDefaults(PaginationBlock));

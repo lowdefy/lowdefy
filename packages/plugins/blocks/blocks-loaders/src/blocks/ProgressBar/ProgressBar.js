@@ -50,9 +50,4 @@ const ProgressBar = ({ blockId, classNames, properties, styles }) => {
   );
 };
 
-ProgressBar.meta = {
-  category: 'display',
-  icons: [],
-};
-
 export default withBlockDefaults(ProgressBar);

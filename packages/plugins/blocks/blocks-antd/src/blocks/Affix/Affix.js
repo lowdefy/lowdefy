@@ -18,6 +18,7 @@ import React from 'react';
 import { Affix } from 'antd';
 import { get } from '@lowdefy/helpers';
 
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
 const AffixBlock = ({
@@ -46,10 +47,4 @@ const AffixBlock = ({
   </Affix>
 );
 
-AffixBlock.meta = {
-  category: 'container',
-  icons: [],
-  cssKeys: ['element'],
-};
-
-export default withTheme('Affix', AffixBlock);
+export default withTheme('Affix', withBlockDefaults(AffixBlock));
