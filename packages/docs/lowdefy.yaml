@@ -20,7 +20,6 @@ theme:
   antd:
     token:
       borderRadius: 6
-
 cli:
   disableTelemetry: true
   watchIgnore:

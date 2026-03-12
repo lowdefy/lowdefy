@@ -36,3 +36,5 @@ _ref:
           _ref:
             path: blocks/input/inputGalleryExamples.yaml
             transformer: templates/blocks/galleryExampleTransformer.js
+            vars:
+              showState: true

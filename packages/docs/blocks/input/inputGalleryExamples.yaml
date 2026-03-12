@@ -319,20 +319,25 @@
           title: WeekSelector
         placeholder: Select week
 
-- title: Color Pickers
+- title: Color Selectors
   blocks:
-    - id: ig_colorpicker
-      type: ColorPicker
+    - id: ig_colorselector
+      type: ColorSelector
       properties:
         label:
-          title: ColorPicker
-        defaultValue: '#1677ff'
+          title: ColorSelector
         showText: true
-    - id: ig_colorpicker_presets
-      type: ColorPicker
+      events:
+        onMount:
+          - id: set_ig_colorselector
+            type: SetState
+            params:
+              ig_colorselector: '#1677ff'
+    - id: ig_colorselector_presets
+      type: ColorSelector
       properties:
         label:
-          title: ColorPicker (presets)
+          title: ColorSelector (presets)
         showText: true
         presets:
           - label: Brand
@@ -349,6 +354,12 @@
               - '#666666'
               - '#999999'
               - '#ffffff'
+      events:
+        onMount:
+          - id: set_ig_colorselector_presets
+            type: SetState
+            params:
+              ig_colorselector_presets: '#1677ff'
 
 - title: Sliders & Pagination
   blocks:

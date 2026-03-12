@@ -63,23 +63,14 @@
         color: primary
         variant: link
 
-- title: Preset Colors
+- title: Colors
   blocks:
-    - id: colors_solid_row
+    - id: colors_preset_row
       type: Box
       layout:
         gap: 6
         justify: flex-start
       blocks:
-        - id: color_default
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: default
-            color: default
-            variant: solid
-            size: small
         - id: color_primary
           type: Button
           layout:
@@ -107,24 +98,6 @@
             color: blue
             variant: solid
             size: small
-        - id: color_purple
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: purple
-            color: purple
-            variant: solid
-            size: small
-        - id: color_cyan
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: cyan
-            color: cyan
-            variant: solid
-            size: small
         - id: color_green
           type: Button
           layout:
@@ -134,67 +107,46 @@
             color: green
             variant: solid
             size: small
-        - id: color_magenta
+        - id: color_purple
           type: Button
           layout:
             flex: 0 0 auto
           properties:
-            title: magenta
-            color: magenta
+            title: purple
+            color: purple
             variant: solid
             size: small
-        - id: color_red
+    - id: colors_hex_row
+      type: Box
+      layout:
+        gap: 6
+        justify: flex-start
+      blocks:
+        - id: hex_coral
           type: Button
           layout:
             flex: 0 0 auto
           properties:
-            title: red
-            color: red
+            title: '#ff6b6b'
+            color: '#ff6b6b'
             variant: solid
             size: small
-        - id: color_orange
+        - id: hex_teal
           type: Button
           layout:
             flex: 0 0 auto
           properties:
-            title: orange
-            color: orange
+            title: '#20c997'
+            color: '#20c997'
             variant: solid
             size: small
-        - id: color_volcano
+        - id: hex_indigo
           type: Button
           layout:
             flex: 0 0 auto
           properties:
-            title: volcano
-            color: volcano
-            variant: solid
-            size: small
-        - id: color_geekblue
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: geekblue
-            color: geekblue
-            variant: solid
-            size: small
-        - id: color_lime
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: lime
-            color: lime
-            variant: solid
-            size: small
-        - id: color_gold
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: gold
-            color: gold
+            title: '#4c6ef5'
+            color: '#4c6ef5'
             variant: solid
             size: small
     - id: colors_outlined_row
@@ -221,242 +173,14 @@
             color: danger
             variant: outlined
             size: small
-        - id: co_blue
+        - id: co_hex_pink
           type: Button
           layout:
             flex: 0 0 auto
           properties:
-            title: blue
-            color: blue
+            title: '#e64980'
+            color: '#e64980'
             variant: outlined
-            size: small
-        - id: co_purple
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: purple
-            color: purple
-            variant: outlined
-            size: small
-        - id: co_green
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: green
-            color: green
-            variant: outlined
-            size: small
-        - id: co_red
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: red
-            color: red
-            variant: outlined
-            size: small
-        - id: co_orange
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: orange
-            color: orange
-            variant: outlined
-            size: small
-
-- title: Color + Variant Matrix
-  blocks:
-    - id: mx_primary_label
-      type: Markdown
-      properties:
-        content: '**primary**'
-    - id: mx_primary_row
-      type: Box
-      layout:
-        gap: 6
-      blocks:
-        - id: mx_ps
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: solid
-            color: primary
-            variant: solid
-            size: small
-        - id: mx_po
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: outlined
-            color: primary
-            variant: outlined
-            size: small
-        - id: mx_pd
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: dashed
-            color: primary
-            variant: dashed
-            size: small
-        - id: mx_pf
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: filled
-            color: primary
-            variant: filled
-            size: small
-        - id: mx_pt
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: text
-            color: primary
-            variant: text
-            size: small
-        - id: mx_pl
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: link
-            color: primary
-            variant: link
-            size: small
-    - id: mx_danger_label
-      type: Markdown
-      properties:
-        content: '**danger**'
-    - id: mx_danger_row
-      type: Box
-      layout:
-        gap: 6
-      blocks:
-        - id: mx_ds
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: solid
-            color: danger
-            variant: solid
-            size: small
-        - id: mx_do
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: outlined
-            color: danger
-            variant: outlined
-            size: small
-        - id: mx_dd
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: dashed
-            color: danger
-            variant: dashed
-            size: small
-        - id: mx_df
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: filled
-            color: danger
-            variant: filled
-            size: small
-        - id: mx_dxt
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: text
-            color: danger
-            variant: text
-            size: small
-        - id: mx_dl
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: link
-            color: danger
-            variant: link
-            size: small
-    - id: mx_default_label
-      type: Markdown
-      properties:
-        content: '**default**'
-    - id: mx_default_row
-      type: Box
-      layout:
-        gap: 6
-      blocks:
-        - id: mx_xs
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: solid
-            color: default
-            variant: solid
-            size: small
-        - id: mx_xo
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: outlined
-            color: default
-            variant: outlined
-            size: small
-        - id: mx_xd
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: dashed
-            color: default
-            variant: dashed
-            size: small
-        - id: mx_xf
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: filled
-            color: default
-            variant: filled
-            size: small
-        - id: mx_xt
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: text
-            color: default
-            variant: text
-            size: small
-        - id: mx_xl
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: link
-            color: default
-            variant: link
             size: small
 
 - title: Sizes
@@ -495,7 +219,7 @@
       layout:
         flex: 0 0 auto
       properties:
-        title: Square
+        title: Square (default)
         color: primary
         variant: solid
     - id: shape_round
@@ -527,16 +251,6 @@
         color: primary
         variant: outlined
         hideTitle: true
-    - id: shape_circle_danger
-      type: Button
-      layout:
-        flex: 0 0 auto
-      properties:
-        icon: AiOutlineHeart
-        shape: circle
-        color: danger
-        variant: dashed
-        hideTitle: true
 
 - title: Icons
   blocks:
@@ -566,15 +280,6 @@
         title: Delete
         icon: AiOutlineDelete
         color: danger
-        variant: solid
-    - id: icon_check
-      type: Button
-      layout:
-        flex: 0 0 auto
-      properties:
-        title: Approve
-        icon: AiOutlineCheck
-        color: green
         variant: solid
     - id: icon_only
       type: Button
@@ -632,17 +337,8 @@
             ghost: true
             color: danger
             variant: solid
-        - id: ghost_outlined
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Outlined
-            ghost: true
-            color: primary
-            variant: outlined
 
-- title: Full Width (Block)
+- title: Full Width
   blocks:
     - id: block_primary
       type: Button
@@ -688,15 +384,6 @@
         disabled: true
         color: primary
         variant: outlined
-    - id: dis_dashed
-      type: Button
-      layout:
-        flex: 0 0 auto
-      properties:
-        title: Dashed
-        disabled: true
-        color: primary
-        variant: dashed
     - id: dis_text
       type: Button
       layout:
@@ -706,209 +393,6 @@
         disabled: true
         color: primary
         variant: text
-    - id: dis_link
-      type: Button
-      layout:
-        flex: 0 0 auto
-      properties:
-        title: Link
-        disabled: true
-        color: primary
-        variant: link
-
-- title: Custom Hex Colors
-  blocks:
-    - id: hex_solid_row
-      type: Box
-      layout:
-        gap: 8
-      blocks:
-        - id: hex_coral
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Coral
-            color: '#ff6b6b'
-            variant: solid
-        - id: hex_teal
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Teal
-            color: '#20c997'
-            variant: solid
-        - id: hex_indigo
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Indigo
-            color: '#4c6ef5'
-            variant: solid
-        - id: hex_amber
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Amber
-            color: '#fab005'
-            variant: solid
-        - id: hex_pink
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Pink
-            color: '#e64980'
-            variant: solid
-    - id: hex_outlined_row
-      type: Box
-      layout:
-        gap: 8
-      blocks:
-        - id: hexo_coral
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Coral
-            color: '#ff6b6b'
-            variant: outlined
-        - id: hexo_teal
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Teal
-            color: '#20c997'
-            variant: outlined
-        - id: hexo_indigo
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Indigo
-            color: '#4c6ef5'
-            variant: outlined
-        - id: hexo_amber
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Amber
-            color: '#fab005'
-            variant: outlined
-        - id: hexo_pink
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Pink
-            color: '#e64980'
-            variant: outlined
-
-- title: Button Groups
-  blocks:
-    - id: comp_actions_label
-      type: Markdown
-      properties:
-        content: '**Primary + Secondary:**'
-    - id: comp_actions_row
-      type: Box
-      layout:
-        gap: 8
-        justify: flex-end
-      blocks:
-        - id: comp_cancel
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Cancel
-            color: default
-            variant: outlined
-        - id: comp_submit
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Submit
-            color: primary
-            variant: solid
-    - id: comp_toolbar_label
-      type: Markdown
-      properties:
-        content: '**Icon toolbar:**'
-    - id: comp_toolbar_row
-      type: Box
-      layout:
-        gap: 4
-      blocks:
-        - id: tb_bold
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            icon: AiOutlineBold
-            hideTitle: true
-            color: default
-            variant: text
-        - id: tb_italic
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            icon: AiOutlineItalic
-            hideTitle: true
-            color: default
-            variant: text
-        - id: tb_underline
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            icon: AiOutlineUnderline
-            hideTitle: true
-            color: default
-            variant: text
-        - id: tb_link
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            icon: AiOutlineLink
-            hideTitle: true
-            color: default
-            variant: text
-    - id: comp_danger_label
-      type: Markdown
-      properties:
-        content: '**Danger confirmation:**'
-    - id: comp_danger_row
-      type: Box
-      layout:
-        gap: 8
-        justify: flex-end
-      blocks:
-        - id: comp_keep
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Keep
-            color: default
-            variant: outlined
-        - id: comp_delete
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Delete permanently
-            color: danger
-            variant: solid
-            icon: AiOutlineDelete
 
 - title: Link Buttons
   blocks:
@@ -931,6 +415,15 @@
         color: primary
         variant: solid
         icon: AiOutlineLink
+    - id: href_text
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Learn more
+        href: https://lowdefy.com
+        color: default
+        variant: text
 
 - title: HTML in Title
   blocks:
@@ -950,6 +443,58 @@
         title: 'Launch &#x1F680;'
         color: purple
         variant: solid
+    - id: html_styled
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: '<span style="letter-spacing: 2px">SUBMIT</span>'
+        color: green
+        variant: solid
+
+- title: Style and CSS
+  blocks:
+    - id: css_shadow
+      type: Button
+      layout:
+        flex: 0 0 auto
+      class: shadow-lg
+      properties:
+        title: Shadow
+        color: primary
+        variant: solid
+    - id: css_rounded
+      type: Button
+      layout:
+        flex: 0 0 auto
+      class: rounded-full
+      properties:
+        title: Rounded Full
+        color: purple
+        variant: solid
+    - id: css_gradient_bg
+      type: Box
+      class: bg-gradient-to-r from-slate-900 to-slate-700 p-4 rounded-lg
+      layout:
+        gap: 8
+      blocks:
+        - id: css_on_dark_solid
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: On Dark
+            color: primary
+            variant: solid
+        - id: css_on_dark_ghost
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Ghost
+            ghost: true
+            color: primary
+            variant: outlined
 
 - title: Theme Token Overrides
   blocks:
@@ -985,3 +530,128 @@
         theme:
           borderRadius: 40
           controlHeight: 48
+
+- title: Button in Contact Form
+  blocks:
+    - id: contact_card
+      type: Card
+      properties:
+        title: Contact Us
+        size: small
+      blocks:
+        - id: contact_name
+          type: TextInput
+          required: true
+          properties:
+            label:
+              title: Name
+            placeholder: Your full name
+        - id: contact_email
+          type: TextInput
+          required: true
+          properties:
+            label:
+              title: Email
+            placeholder: you@example.com
+        - id: contact_message
+          type: TextArea
+          required: true
+          properties:
+            label:
+              title: Message
+            placeholder: How can we help?
+            rows: 4
+        - id: contact_actions
+          type: Box
+          layout:
+            gap: 8
+            justify: flex-end
+          blocks:
+            - id: contact_cancel
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Cancel
+                color: default
+                variant: outlined
+              events:
+                onClick:
+                  - id: cancel_reset
+                    type: ResetValidation
+                  - id: cancel_msg
+                    type: DisplayMessage
+                    params:
+                      content: Form cleared
+                      status: info
+            - id: contact_submit
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Send Message
+                color: primary
+                variant: solid
+                icon: AiOutlineSend
+              events:
+                onClick:
+                  - id: submit_validate
+                    type: Validate
+                  - id: submit_msg
+                    type: DisplayMessage
+                    params:
+                      content: Message sent successfully!
+                      status: success
+
+- title: Button in Confirmation Dialog
+  blocks:
+    - id: confirm_card
+      type: Card
+      blocks:
+        - id: confirm_result
+          type: Result
+          properties:
+            status: warning
+            title: Delete Project?
+            subTitle: This action cannot be undone. All files, settings, and deployment history will be permanently removed.
+        - id: confirm_actions
+          type: Box
+          layout:
+            gap: 8
+            justify: center
+          blocks:
+            - id: confirm_keep
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Keep Project
+                color: default
+                variant: outlined
+              events:
+                onClick:
+                  - id: keep_msg
+                    type: DisplayMessage
+                    params:
+                      content: Project kept. No changes made.
+                      status: info
+            - id: confirm_delete
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Delete Permanently
+                color: danger
+                variant: solid
+                icon: AiOutlineDelete
+              events:
+                onClick:
+                  - id: delete_msg
+                    type: DisplayMessage
+                    params:
+                      content: Project deleted.
+                      status: success
+                  - id: delete_nav
+                    type: Link
+                    params:
+                      pageId: introduction

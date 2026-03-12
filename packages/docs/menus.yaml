@@ -344,9 +344,6 @@
         - id: CheckboxSwitch
           type: MenuLink
           pageId: CheckboxSwitch
-        - id: ColorPicker
-          type: MenuLink
-          pageId: ColorPicker
         - id: ColorSelector
           type: MenuLink
           pageId: ColorSelector
