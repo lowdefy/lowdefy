@@ -13,12 +13,62 @@
 # limitations under the License.
 
 - title: Basic Tour with Steps
-  fullWidth: true
   blocks:
+    - id: basic_btns_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: basic_steps_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: 3 Steps
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: basic_steps_start
+                type: SetState
+                params:
+                  basic_steps_tour_open: true
+        - id: basic_single_step_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Single Step
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: basic_single_step_start
+                type: SetState
+                params:
+                  basic_single_step_tour_open: true
+        - id: basic_detailed_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: 5 Steps
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: basic_detailed_start
+                type: SetState
+                params:
+                  basic_detailed_tour_open: true
     - id: basic_steps_tour
       type: Tour
       properties:
-        open: false
+        open:
+          _state: basic_steps_tour_open
         steps:
           - title: Welcome
             description: This is the first step of the tour.
@@ -26,17 +76,41 @@
             description: Discover the key features available in the dashboard.
           - title: Get Started
             description: You are all set to begin using the application.
+      events:
+        onClose:
+          - id: basic_steps_tour_close
+            type: SetState
+            params:
+              basic_steps_tour_open: false
+        onFinish:
+          - id: basic_steps_tour_finish
+            type: SetState
+            params:
+              basic_steps_tour_open: false
     - id: basic_single_step_tour
       type: Tour
       properties:
-        open: false
+        open:
+          _state: basic_single_step_tour_open
         steps:
           - title: Quick Tip
             description: A single-step tour works well for brief announcements.
+      events:
+        onClose:
+          - id: basic_single_step_tour_close
+            type: SetState
+            params:
+              basic_single_step_tour_open: false
+        onFinish:
+          - id: basic_single_step_tour_finish
+            type: SetState
+            params:
+              basic_single_step_tour_open: false
     - id: basic_detailed_tour
       type: Tour
       properties:
-        open: false
+        open:
+          _state: basic_detailed_tour_open
         steps:
           - title: Step 1 of 5
             description: Tours support many steps for longer walkthroughs.
@@ -48,30 +122,114 @@
             description: Steps are zero-indexed internally.
           - title: Step 5 of 5
             description: The last step shows a Finish button instead of Next.
+      events:
+        onClose:
+          - id: basic_detailed_tour_close
+            type: SetState
+            params:
+              basic_detailed_tour_open: false
+        onFinish:
+          - id: basic_detailed_tour_finish
+            type: SetState
+            params:
+              basic_detailed_tour_open: false
 
 - title: Tour Types
-  fullWidth: true
   blocks:
+    - id: type_btns_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: type_default_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Default
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: type_default_start
+                type: SetState
+                params:
+                  type_default_tour_open: true
+        - id: type_primary_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Primary
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: type_primary_start
+                type: SetState
+                params:
+                  type_primary_tour_open: true
+        - id: type_per_step_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Per Step
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: type_per_step_start
+                type: SetState
+                params:
+                  type_per_step_tour_open: true
     - id: type_default_tour
       type: Tour
       properties:
-        open: false
+        open:
+          _state: type_default_tour_open
         type: default
         steps:
           - title: Default Type
             description: Light background with dark text. Blends naturally with light-themed interfaces.
           - title: Subtle Guidance
             description: The default type is understated, ideal for non-intrusive tours.
+      events:
+        onClose:
+          - id: type_default_tour_close
+            type: SetState
+            params:
+              type_default_tour_open: false
+        onFinish:
+          - id: type_default_tour_finish
+            type: SetState
+            params:
+              type_default_tour_open: false
     - id: type_primary_tour
       type: Tour
       properties:
-        open: false
+        open:
+          _state: type_primary_tour_open
         type: primary
         steps:
           - title: Primary Type
             description: Bold colored background using the theme primary color.
           - title: High Visibility
             description: Primary tours draw attention and suit critical onboarding flows.
+      events:
+        onClose:
+          - id: type_primary_tour_close
+            type: SetState
+            params:
+              type_primary_tour_open: false
+        onFinish:
+          - id: type_primary_tour_finish
+            type: SetState
+            params:
+              type_primary_tour_open: false
     - id: type_per_step_row
       type: Box
       layout:
@@ -96,7 +254,8 @@
     - id: type_per_step_tour
       type: Tour
       properties:
-        open: false
+        open:
+          _state: type_per_step_tour_open
         type: default
         steps:
           - title: Introduction
@@ -107,10 +266,55 @@
             description: This step overrides to primary to draw extra attention.
             target: type_per_step_btn_2
             type: primary
+      events:
+        onClose:
+          - id: type_per_step_tour_close
+            type: SetState
+            params:
+              type_per_step_tour_open: false
+        onFinish:
+          - id: type_per_step_tour_finish
+            type: SetState
+            params:
+              type_per_step_tour_open: false
 
 - title: Targeted Steps
-  fullWidth: true
   blocks:
+    - id: target_btns_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: target_tour_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Button Targets
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: target_tour_start
+                type: SetState
+                params:
+                  target_tour_open: true
+        - id: target_mixed_tour_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Mixed Targets
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: target_mixed_tour_start
+                type: SetState
+                params:
+                  target_mixed_tour_open: true
     - id: target_row
       type: Box
       layout:
@@ -146,7 +350,8 @@
     - id: target_tour
       type: Tour
       properties:
-        open: false
+        open:
+          _state: target_tour_open
         steps:
           - title: Upload Files
             description: Click here to upload documents or images to the workspace.
@@ -157,6 +362,17 @@
           - title: Share with Team
             description: Share your work with team members via link or invitation.
             target: target_share_btn
+      events:
+        onClose:
+          - id: target_tour_close
+            type: SetState
+            params:
+              target_tour_open: false
+        onFinish:
+          - id: target_tour_finish
+            type: SetState
+            params:
+              target_tour_open: false
     - id: target_mixed_row
       type: Box
       layout:
@@ -181,7 +397,8 @@
     - id: target_mixed_tour
       type: Tour
       properties:
-        open: false
+        open:
+          _state: target_mixed_tour_open
         steps:
           - title: Search Bar
             description: Use the search bar to quickly find items.
@@ -189,10 +406,70 @@
           - title: Toggle Setting
             description: Toggle this switch to enable or disable notifications.
             target: target_mixed_switch
+      events:
+        onClose:
+          - id: target_mixed_tour_close
+            type: SetState
+            params:
+              target_mixed_tour_open: false
+        onFinish:
+          - id: target_mixed_tour_finish
+            type: SetState
+            params:
+              target_mixed_tour_open: false
 
 - title: Placement
-  fullWidth: true
   blocks:
+    - id: placement_btns_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: placement_tour_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Cardinal
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: placement_tour_start
+                type: SetState
+                params:
+                  placement_tour_open: true
+        - id: placement_fine_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Fine Placement
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: placement_fine_start
+                type: SetState
+                params:
+                  placement_fine_tour_open: true
+        - id: placement_level_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Tour-Level
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: placement_level_start
+                type: SetState
+                params:
+                  placement_tour_level_open: true
     - id: placement_row
       type: Box
       layout:
@@ -234,7 +511,8 @@
     - id: placement_tour
       type: Tour
       properties:
-        open: false
+        open:
+          _state: placement_tour_open
         steps:
           - title: Top Placement
             description: Guide card appears above the target element.
@@ -252,10 +530,22 @@
             description: Guide card appears to the left of the target.
             target: placement_left_btn
             placement: left
+      events:
+        onClose:
+          - id: placement_tour_close
+            type: SetState
+            params:
+              placement_tour_open: false
+        onFinish:
+          - id: placement_tour_finish
+            type: SetState
+            params:
+              placement_tour_open: false
     - id: placement_fine_tour
       type: Tour
       properties:
-        open: false
+        open:
+          _state: placement_fine_tour_open
         steps:
           - title: Top Left
             description: Aligned to the top-left corner of the target.
@@ -266,20 +556,107 @@
           - title: Right Top
             description: On the right side, aligned to the top.
             placement: rightTop
+      events:
+        onClose:
+          - id: placement_fine_tour_close
+            type: SetState
+            params:
+              placement_fine_tour_open: false
+        onFinish:
+          - id: placement_fine_tour_finish
+            type: SetState
+            params:
+              placement_fine_tour_open: false
     - id: placement_tour_level
       type: Tour
       properties:
-        open: false
+        open:
+          _state: placement_tour_level_open
         placement: bottom
         steps:
           - title: Tour-Level Placement
             description: Setting placement on the tour applies to all steps by default.
           - title: Consistent Position
             description: All steps appear below the target unless overridden at the step level.
+      events:
+        onClose:
+          - id: placement_tour_level_close
+            type: SetState
+            params:
+              placement_tour_level_open: false
+        onFinish:
+          - id: placement_tour_level_finish
+            type: SetState
+            params:
+              placement_tour_level_open: false
 
 - title: Mask Configuration
-  fullWidth: true
   blocks:
+    - id: mask_btns_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: mask_enabled_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Mask On
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: mask_enabled_start
+                type: SetState
+                params:
+                  mask_enabled_tour_open: true
+        - id: mask_disabled_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Mask Off
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: mask_disabled_start
+                type: SetState
+                params:
+                  mask_disabled_tour_open: true
+        - id: mask_custom_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Custom Mask
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: mask_custom_start
+                type: SetState
+                params:
+                  mask_custom_tour_open: true
+        - id: mask_per_step_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Per Step
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: mask_per_step_start
+                type: SetState
+                params:
+                  mask_per_step_tour_open: true
     - id: mask_row
       type: Box
       layout:
@@ -296,32 +673,69 @@
     - id: mask_enabled_tour
       type: Tour
       properties:
-        open: false
+        open:
+          _state: mask_enabled_tour_open
         mask: true
         steps:
           - title: Mask Enabled
             description: The background is dimmed, drawing focus to the tour card.
             target: mask_target_btn
+      events:
+        onClose:
+          - id: mask_enabled_tour_close
+            type: SetState
+            params:
+              mask_enabled_tour_open: false
+        onFinish:
+          - id: mask_enabled_tour_finish
+            type: SetState
+            params:
+              mask_enabled_tour_open: false
     - id: mask_disabled_tour
       type: Tour
       properties:
-        open: false
+        open:
+          _state: mask_disabled_tour_open
         mask: false
         steps:
           - title: Mask Disabled
             description: No overlay is shown. The page remains fully visible and interactive.
+      events:
+        onClose:
+          - id: mask_disabled_tour_close
+            type: SetState
+            params:
+              mask_disabled_tour_open: false
+        onFinish:
+          - id: mask_disabled_tour_finish
+            type: SetState
+            params:
+              mask_disabled_tour_open: false
     - id: mask_custom_tour
       type: Tour
+      style:
+        --mask:
+          boxShadow: inset 0 0 15px #333
       properties:
-        open: false
+        open:
+          _state: mask_custom_tour_open
         mask:
-          style:
-            boxShadow: inset 0 0 15px #333
           color: rgba(80, 0, 130, 0.5)
         steps:
           - title: Custom Mask
             description: A purple-tinted overlay with an inner shadow effect.
             target: mask_target_btn
+      events:
+        onClose:
+          - id: mask_custom_tour_close
+            type: SetState
+            params:
+              mask_custom_tour_open: false
+        onFinish:
+          - id: mask_custom_tour_finish
+            type: SetState
+            params:
+              mask_custom_tour_open: false
     - id: mask_per_step_row
       type: Box
       layout:
@@ -346,7 +760,8 @@
     - id: mask_per_step_tour
       type: Tour
       properties:
-        open: false
+        open:
+          _state: mask_per_step_tour_open
         mask: true
         steps:
           - title: Masked
@@ -357,37 +772,148 @@
             description: This step hides the mask for a clear view.
             target: mask_per_step_btn_2
             mask: false
+      events:
+        onClose:
+          - id: mask_per_step_tour_close
+            type: SetState
+            params:
+              mask_per_step_tour_open: false
+        onFinish:
+          - id: mask_per_step_tour_finish
+            type: SetState
+            params:
+              mask_per_step_tour_open: false
 
 - title: Arrow Configuration
-  fullWidth: true
   blocks:
+    - id: arrow_btns_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: arrow_enabled_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Arrow On
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: arrow_enabled_start
+                type: SetState
+                params:
+                  arrow_enabled_tour_open: true
+        - id: arrow_disabled_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Arrow Off
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: arrow_disabled_start
+                type: SetState
+                params:
+                  arrow_disabled_tour_open: true
+        - id: arrow_centered_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Centered
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: arrow_centered_start
+                type: SetState
+                params:
+                  arrow_centered_tour_open: true
+        - id: arrow_per_step_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Per Step
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: arrow_per_step_start
+                type: SetState
+                params:
+                  arrow_per_step_tour_open: true
     - id: arrow_enabled_tour
       type: Tour
       properties:
-        open: false
+        open:
+          _state: arrow_enabled_tour_open
         arrow: true
         steps:
           - title: Arrow Visible
             description: An arrow points from the guide card toward the target element.
           - title: Visual Connection
             description: Arrows help users understand which element the step references.
+      events:
+        onClose:
+          - id: arrow_enabled_tour_close
+            type: SetState
+            params:
+              arrow_enabled_tour_open: false
+        onFinish:
+          - id: arrow_enabled_tour_finish
+            type: SetState
+            params:
+              arrow_enabled_tour_open: false
     - id: arrow_disabled_tour
       type: Tour
       properties:
-        open: false
+        open:
+          _state: arrow_disabled_tour_open
         arrow: false
         steps:
           - title: No Arrow
             description: Without arrows, the guide card appears as a clean floating panel.
+      events:
+        onClose:
+          - id: arrow_disabled_tour_close
+            type: SetState
+            params:
+              arrow_disabled_tour_open: false
+        onFinish:
+          - id: arrow_disabled_tour_finish
+            type: SetState
+            params:
+              arrow_disabled_tour_open: false
     - id: arrow_centered_tour
       type: Tour
       properties:
-        open: false
+        open:
+          _state: arrow_centered_tour_open
         arrow:
           pointAtCenter: true
         steps:
           - title: Centered Arrow
             description: The arrow points precisely at the center of the target element.
+      events:
+        onClose:
+          - id: arrow_centered_tour_close
+            type: SetState
+            params:
+              arrow_centered_tour_open: false
+        onFinish:
+          - id: arrow_centered_tour_finish
+            type: SetState
+            params:
+              arrow_centered_tour_open: false
     - id: arrow_per_step_row
       type: Box
       layout:
@@ -412,7 +938,8 @@
     - id: arrow_per_step_tour
       type: Tour
       properties:
-        open: false
+        open:
+          _state: arrow_per_step_tour_open
         steps:
           - title: Default Arrow
             description: This step shows the default arrow.
@@ -423,14 +950,60 @@
             target: arrow_per_step_btn_2
             arrow:
               pointAtCenter: true
+      events:
+        onClose:
+          - id: arrow_per_step_tour_close
+            type: SetState
+            params:
+              arrow_per_step_tour_open: false
+        onFinish:
+          - id: arrow_per_step_tour_finish
+            type: SetState
+            params:
+              arrow_per_step_tour_open: false
 
 - title: Cover Images
-  fullWidth: true
   blocks:
+    - id: cover_btns_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: cover_tour_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Cover Tour
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: cover_tour_start
+                type: SetState
+                params:
+                  cover_tour_open: true
+        - id: cover_target_tour_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: With Targets
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: cover_target_tour_start
+                type: SetState
+                params:
+                  cover_target_tour_open: true
     - id: cover_tour
       type: Tour
       properties:
-        open: false
+        open:
+          _state: cover_tour_open
         steps:
           - title: Welcome to the Dashboard
             description: Get familiar with the main interface and its key areas.
@@ -440,6 +1013,17 @@
             cover: https://gw.alipayobjects.com/zos/bmw-prod/ed5cf3c4-5e34-43e5-9c39-fe131c7cf88e.png
           - title: All Done
             description: You are ready to start using the application.
+      events:
+        onClose:
+          - id: cover_tour_close
+            type: SetState
+            params:
+              cover_tour_open: false
+        onFinish:
+          - id: cover_tour_finish
+            type: SetState
+            params:
+              cover_tour_open: false
     - id: cover_target_row
       type: Box
       layout:
@@ -466,7 +1050,8 @@
     - id: cover_target_tour
       type: Tour
       properties:
-        open: false
+        open:
+          _state: cover_target_tour_open
         steps:
           - title: Dashboard Overview
             description: The dashboard shows a summary of your workspace activity.
@@ -476,14 +1061,75 @@
             description: Adjust preferences and integrations from the settings page.
             target: cover_target_btn_2
             cover: https://gw.alipayobjects.com/zos/bmw-prod/ed5cf3c4-5e34-43e5-9c39-fe131c7cf88e.png
+      events:
+        onClose:
+          - id: cover_target_tour_close
+            type: SetState
+            params:
+              cover_target_tour_open: false
+        onFinish:
+          - id: cover_target_tour_finish
+            type: SetState
+            params:
+              cover_target_tour_open: false
 
 - title: Closable and Keyboard Navigation
-  fullWidth: true
   blocks:
+    - id: closable_btns_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: closable_tour_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Closable
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: closable_tour_start
+                type: SetState
+                params:
+                  closable_tour_open: true
+        - id: not_closable_tour_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Not Closable
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: not_closable_tour_start
+                type: SetState
+                params:
+                  not_closable_tour_open: true
+        - id: closable_per_step_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Per Step
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: closable_per_step_start
+                type: SetState
+                params:
+                  closable_per_step_tour_open: true
     - id: closable_tour
       type: Tour
       properties:
-        open: false
+        open:
+          _state: closable_tour_open
         closable: true
         keyboard: true
         steps:
@@ -493,10 +1139,22 @@
             description: Use arrow keys to navigate between steps.
           - title: Final Step
             description: Both close button and keyboard shortcuts are available throughout.
+      events:
+        onClose:
+          - id: closable_tour_close
+            type: SetState
+            params:
+              closable_tour_open: false
+        onFinish:
+          - id: closable_tour_finish
+            type: SetState
+            params:
+              closable_tour_open: false
     - id: not_closable_tour
       type: Tour
       properties:
-        open: false
+        open:
+          _state: not_closable_tour_open
         closable: false
         keyboard: false
         steps:
@@ -504,6 +1162,17 @@
             description: Close button and Escape key are disabled. Use Next and Previous buttons.
           - title: Must Complete
             description: Users must step through all steps to finish the tour.
+      events:
+        onClose:
+          - id: not_closable_tour_close
+            type: SetState
+            params:
+              not_closable_tour_open: false
+        onFinish:
+          - id: not_closable_tour_finish
+            type: SetState
+            params:
+              not_closable_tour_open: false
     - id: closable_per_step_row
       type: Box
       layout:
@@ -528,7 +1197,8 @@
     - id: closable_per_step_tour
       type: Tour
       properties:
-        open: false
+        open:
+          _state: closable_per_step_tour_open
         closable: true
         steps:
           - title: Closable Step
@@ -539,14 +1209,75 @@
             description: This step hides the close button. Navigate forward to continue.
             target: closable_per_step_btn_2
             closable: false
+      events:
+        onClose:
+          - id: closable_per_step_tour_close
+            type: SetState
+            params:
+              closable_per_step_tour_open: false
+        onFinish:
+          - id: closable_per_step_tour_finish
+            type: SetState
+            params:
+              closable_per_step_tour_open: false
 
 - title: Animation, Scroll, and Disabled Interaction
-  fullWidth: true
   blocks:
+    - id: anim_btns_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: animated_tour_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Animated
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: animated_tour_start
+                type: SetState
+                params:
+                  animated_tour_open: true
+        - id: no_animation_tour_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: No Animation
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: no_animation_tour_start
+                type: SetState
+                params:
+                  no_animation_tour_open: true
+        - id: disabled_interaction_tour_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Disabled Interaction
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: disabled_interaction_tour_start
+                type: SetState
+                params:
+                  disabled_interaction_tour_open: true
     - id: animated_tour
       type: Tour
       properties:
-        open: false
+        open:
+          _state: animated_tour_open
         animated: true
         scrollIntoViewOptions: true
         steps:
@@ -554,15 +1285,38 @@
             description: Smooth transitions between steps with animation enabled.
           - title: Auto Scroll
             description: Target elements automatically scroll into view when a step activates.
+      events:
+        onClose:
+          - id: animated_tour_close
+            type: SetState
+            params:
+              animated_tour_open: false
+        onFinish:
+          - id: animated_tour_finish
+            type: SetState
+            params:
+              animated_tour_open: false
     - id: no_animation_tour
       type: Tour
       properties:
-        open: false
+        open:
+          _state: no_animation_tour_open
         animated: false
         scrollIntoViewOptions: false
         steps:
           - title: No Animation
             description: Instant transitions without animation. Scroll to target is also disabled.
+      events:
+        onClose:
+          - id: no_animation_tour_close
+            type: SetState
+            params:
+              no_animation_tour_open: false
+        onFinish:
+          - id: no_animation_tour_finish
+            type: SetState
+            params:
+              no_animation_tour_open: false
     - id: disabled_interaction_row
       type: Box
       layout:
@@ -580,7 +1334,8 @@
     - id: disabled_interaction_tour
       type: Tour
       properties:
-        open: false
+        open:
+          _state: disabled_interaction_tour_open
         disabledInteraction: true
         steps:
           - title: Interaction Disabled
@@ -588,10 +1343,85 @@
             target: disabled_interaction_btn
           - title: Read-Only Tour
             description: Users can only navigate tour steps, not interact with highlighted elements.
+      events:
+        onClose:
+          - id: disabled_interaction_tour_close
+            type: SetState
+            params:
+              disabled_interaction_tour_open: false
+        onFinish:
+          - id: disabled_interaction_tour_finish
+            type: SetState
+            params:
+              disabled_interaction_tour_open: false
 
 - title: Gap and Current Step
-  fullWidth: true
   blocks:
+    - id: gap_btns_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: gap_default_tour_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Default Gap
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: gap_default_tour_start
+                type: SetState
+                params:
+                  gap_default_tour_open: true
+        - id: gap_large_tour_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Large Gap
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: gap_large_tour_start
+                type: SetState
+                params:
+                  gap_large_tour_open: true
+        - id: gap_tight_tour_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: No Gap
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: gap_tight_tour_start
+                type: SetState
+                params:
+                  gap_tight_tour_open: true
+        - id: current_step_tour_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Start at Step 2
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: current_step_tour_start
+                type: SetState
+                params:
+                  current_step_tour_open: true
     - id: gap_row
       type: Box
       layout:
@@ -624,15 +1454,28 @@
     - id: gap_default_tour
       type: Tour
       properties:
-        open: false
+        open:
+          _state: gap_default_tour_open
         steps:
           - title: Default Gap
             description: Standard spacing between the highlighted area and the target.
             target: gap_default_btn
+      events:
+        onClose:
+          - id: gap_default_tour_close
+            type: SetState
+            params:
+              gap_default_tour_open: false
+        onFinish:
+          - id: gap_default_tour_finish
+            type: SetState
+            params:
+              gap_default_tour_open: false
     - id: gap_large_tour
       type: Tour
       properties:
-        open: false
+        open:
+          _state: gap_large_tour_open
         gap:
           x: 20
           y: 20
@@ -640,10 +1483,22 @@
           - title: Large Gap
             description: Increased gap (20px) around the target for more breathing room.
             target: gap_large_btn
+      events:
+        onClose:
+          - id: gap_large_tour_close
+            type: SetState
+            params:
+              gap_large_tour_open: false
+        onFinish:
+          - id: gap_large_tour_finish
+            type: SetState
+            params:
+              gap_large_tour_open: false
     - id: gap_tight_tour
       type: Tour
       properties:
-        open: false
+        open:
+          _state: gap_tight_tour_open
         gap:
           x: 0
           y: 0
@@ -651,10 +1506,22 @@
           - title: No Gap
             description: The highlight fits tightly around the target with zero spacing.
             target: gap_tight_btn
+      events:
+        onClose:
+          - id: gap_tight_tour_close
+            type: SetState
+            params:
+              gap_tight_tour_open: false
+        onFinish:
+          - id: gap_tight_tour_finish
+            type: SetState
+            params:
+              gap_tight_tour_open: false
     - id: current_step_tour
       type: Tour
       properties:
-        open: false
+        open:
+          _state: current_step_tour_open
         current: 1
         steps:
           - title: Step One
@@ -663,37 +1530,147 @@
             description: The tour opens at this step because current is set to 1 (zero-indexed).
           - title: Step Three
             description: This is the third and final step.
+      events:
+        onClose:
+          - id: current_step_tour_close
+            type: SetState
+            params:
+              current_step_tour_open: false
+        onFinish:
+          - id: current_step_tour_finish
+            type: SetState
+            params:
+              current_step_tour_open: false
 
 - title: Z-Index Control
-  fullWidth: true
   blocks:
+    - id: zindex_btns_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: zindex_default_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Default (1070)
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: zindex_default_start
+                type: SetState
+                params:
+                  zindex_default_tour_open: true
+        - id: zindex_high_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: High (2000)
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: zindex_high_start
+                type: SetState
+                params:
+                  zindex_high_tour_open: true
+        - id: zindex_low_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Low (900)
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: zindex_low_start
+                type: SetState
+                params:
+                  zindex_low_tour_open: true
     - id: zindex_default_tour
       type: Tour
       properties:
-        open: false
+        open:
+          _state: zindex_default_tour_open
         steps:
           - title: Default Z-Index
             description: Tour uses the default stacking order (1070). Appears above most content.
+      events:
+        onClose:
+          - id: zindex_default_tour_close
+            type: SetState
+            params:
+              zindex_default_tour_open: false
+        onFinish:
+          - id: zindex_default_tour_finish
+            type: SetState
+            params:
+              zindex_default_tour_open: false
     - id: zindex_high_tour
       type: Tour
       properties:
-        open: false
+        open:
+          _state: zindex_high_tour_open
         zIndex: 2000
         steps:
           - title: High Z-Index (2000)
             description: Tour renders above other overlays such as modals and drawers.
+      events:
+        onClose:
+          - id: zindex_high_tour_close
+            type: SetState
+            params:
+              zindex_high_tour_open: false
+        onFinish:
+          - id: zindex_high_tour_finish
+            type: SetState
+            params:
+              zindex_high_tour_open: false
     - id: zindex_low_tour
       type: Tour
       properties:
-        open: false
+        open:
+          _state: zindex_low_tour_open
         zIndex: 900
         steps:
           - title: Low Z-Index (900)
             description: Tour renders below some overlays. Fixed headers may appear above it.
+      events:
+        onClose:
+          - id: zindex_low_tour_close
+            type: SetState
+            params:
+              zindex_low_tour_open: false
+        onFinish:
+          - id: zindex_low_tour_finish
+            type: SetState
+            params:
+              zindex_low_tour_open: false
 
 - title: Events
-  fullWidth: true
   blocks:
+    - id: events_start_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Start Events Tour
+        color: primary
+        variant: outlined
+        size: small
+      events:
+        onClick:
+          - id: events_tour_start
+            type: SetState
+            params:
+              events_tour_open: true
     - id: events_row
       type: Box
       layout:
@@ -718,7 +1695,8 @@
     - id: events_tour
       type: Tour
       properties:
-        open: false
+        open:
+          _state: events_tour_open
         steps:
           - title: First Step
             description: Navigate forward to trigger the onChange event.
@@ -734,12 +1712,20 @@
               content: Step changed!
               status: info
         onClose:
+          - id: events_tour_close
+            type: SetState
+            params:
+              events_tour_open: false
           - id: events_on_close
             type: DisplayMessage
             params:
               content: Tour closed.
               status: warning
         onFinish:
+          - id: events_tour_finish
+            type: SetState
+            params:
+              events_tour_open: false
           - id: events_on_finish
             type: DisplayMessage
             params:
@@ -747,34 +1733,134 @@
               status: success
 
 - title: Style and CSS
-  fullWidth: true
   blocks:
+    - id: css_btns_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: css_tailwind_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Shadow
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: css_tailwind_start
+                type: SetState
+                params:
+                  css_tailwind_tour_open: true
+        - id: css_rounded_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Rounded
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: css_rounded_start
+                type: SetState
+                params:
+                  css_rounded_tour_open: true
+        - id: css_inline_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Inline Style
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: css_inline_start
+                type: SetState
+                params:
+                  css_inline_tour_open: true
+        - id: css_dark_tour_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Dark Background
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: css_dark_tour_start
+                type: SetState
+                params:
+                  css_dark_tour_open: true
     - id: css_tailwind_tour
       type: Tour
       class: shadow-2xl
       properties:
-        open: false
+        open:
+          _state: css_tailwind_tour_open
         steps:
           - title: Tailwind Shadow
             description: Tailwind utility classes can be applied via the class property.
+      events:
+        onClose:
+          - id: css_tailwind_tour_close
+            type: SetState
+            params:
+              css_tailwind_tour_open: false
+        onFinish:
+          - id: css_tailwind_tour_finish
+            type: SetState
+            params:
+              css_tailwind_tour_open: false
     - id: css_rounded_tour
       type: Tour
       class: rounded-2xl
       properties:
-        open: false
+        open:
+          _state: css_rounded_tour_open
         steps:
           - title: Tailwind Rounded
             description: Additional border radius applied via Tailwind class.
+      events:
+        onClose:
+          - id: css_rounded_tour_close
+            type: SetState
+            params:
+              css_rounded_tour_open: false
+        onFinish:
+          - id: css_rounded_tour_finish
+            type: SetState
+            params:
+              css_rounded_tour_open: false
     - id: css_inline_tour
       type: Tour
       properties:
-        open: false
+        open:
+          _state: css_inline_tour_open
         steps:
           - title: Inline Style
             description: The element style key controls the tour card appearance.
       style:
         --element:
           maxWidth: 320px
+      events:
+        onClose:
+          - id: css_inline_tour_close
+            type: SetState
+            params:
+              css_inline_tour_open: false
+        onFinish:
+          - id: css_inline_tour_finish
+            type: SetState
+            params:
+              css_inline_tour_open: false
     - id: css_dark_bg
       type: Box
       class: bg-gradient-to-r from-slate-900 to-slate-700 p-4 rounded-lg
@@ -786,26 +1872,103 @@
           layout:
             flex: 0 0 auto
           properties:
-            title: Start Tour on Dark Background
+            title: Target on Dark Background
             ghost: true
             color: primary
             variant: outlined
     - id: css_dark_tour
       type: Tour
       properties:
-        open: false
+        open:
+          _state: css_dark_tour_open
         steps:
           - title: Dark Background Context
             description: Tour cards remain visible against dark page backgrounds.
             target: css_dark_btn
+      events:
+        onClose:
+          - id: css_dark_tour_close
+            type: SetState
+            params:
+              css_dark_tour_open: false
+        onFinish:
+          - id: css_dark_tour_finish
+            type: SetState
+            params:
+              css_dark_tour_open: false
 
 - title: Theme Token Overrides
-  fullWidth: true
   blocks:
+    - id: theme_btns_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: theme_purple_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Purple Primary
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: theme_purple_start
+                type: SetState
+                params:
+                  theme_purple_tour_open: true
+        - id: theme_rounded_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Rounded Card
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: theme_rounded_start
+                type: SetState
+                params:
+                  theme_rounded_tour_open: true
+        - id: theme_large_font_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Large Text
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: theme_large_font_start
+                type: SetState
+                params:
+                  theme_large_font_tour_open: true
+        - id: theme_combined_start_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Combined
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: theme_combined_start
+                type: SetState
+                params:
+                  theme_combined_tour_open: true
     - id: theme_purple_tour
       type: Tour
       properties:
-        open: false
+        open:
+          _state: theme_purple_tour_open
         type: primary
         theme:
           colorPrimary: '#722ed1'
@@ -814,30 +1977,66 @@
             description: Custom purple colorPrimary changes background and button colors.
           - title: Brand Alignment
             description: Theme tokens align the tour with your brand palette.
+      events:
+        onClose:
+          - id: theme_purple_tour_close
+            type: SetState
+            params:
+              theme_purple_tour_open: false
+        onFinish:
+          - id: theme_purple_tour_finish
+            type: SetState
+            params:
+              theme_purple_tour_open: false
     - id: theme_rounded_tour
       type: Tour
       properties:
-        open: false
+        open:
+          _state: theme_rounded_tour_open
         theme:
           borderRadiusLG: 20
           padding: 24
         steps:
           - title: Rounded Card
             description: Increased border radius (20px) and padding (24px) for a softer look.
+      events:
+        onClose:
+          - id: theme_rounded_tour_close
+            type: SetState
+            params:
+              theme_rounded_tour_open: false
+        onFinish:
+          - id: theme_rounded_tour_finish
+            type: SetState
+            params:
+              theme_rounded_tour_open: false
     - id: theme_large_font_tour
       type: Tour
       properties:
-        open: false
+        open:
+          _state: theme_large_font_tour_open
         theme:
           fontSize: 16
           fontSizeLG: 20
         steps:
           - title: Large Text
             description: Increased font sizes improve readability and accessibility.
+      events:
+        onClose:
+          - id: theme_large_font_tour_close
+            type: SetState
+            params:
+              theme_large_font_tour_open: false
+        onFinish:
+          - id: theme_large_font_tour_finish
+            type: SetState
+            params:
+              theme_large_font_tour_open: false
     - id: theme_combined_tour
       type: Tour
       properties:
-        open: false
+        open:
+          _state: theme_combined_tour_open
         type: primary
         theme:
           colorPrimary: '#fa541c'
@@ -849,6 +2048,17 @@
             description: Multiple tokens create a cohesive warm-themed tour.
           - title: Previous Button
             description: The primaryPrevBtnBg token makes the Previous button more visible.
+      events:
+        onClose:
+          - id: theme_combined_tour_close
+            type: SetState
+            params:
+              theme_combined_tour_open: false
+        onFinish:
+          - id: theme_combined_tour_finish
+            type: SetState
+            params:
+              theme_combined_tour_open: false
 
 - title: Tour in Onboarding Flow
   fullWidth: true

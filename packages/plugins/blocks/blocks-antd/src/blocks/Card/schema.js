@@ -30,20 +30,6 @@ const schema = {
         default: false,
         description: 'Lift up when hovering card.',
       },
-      headerStyle: {
-        type: 'object',
-        description: 'Css style to applied to card header.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
-      bodyStyle: {
-        type: 'object',
-        description: 'Css style to applied to card body.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
       inner: {
         type: 'boolean',
         default: false,

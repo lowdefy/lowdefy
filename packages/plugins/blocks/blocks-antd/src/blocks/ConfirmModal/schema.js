@@ -23,13 +23,6 @@ const schema = {
         type: 'string',
         description: 'Modal title - supports html.',
       },
-      bodyStyle: {
-        type: 'object',
-        description: 'Css style to applied to modal body.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
       centered: {
         type: 'boolean',
         default: false,

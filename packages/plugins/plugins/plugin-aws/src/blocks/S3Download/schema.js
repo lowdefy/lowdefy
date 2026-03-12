@@ -54,40 +54,44 @@ export default {
       s3GetPolicyRequestId: {
         type: 'string',
         description:
-          'Id of a request of type s3GetPolicyRequestId that defines to which S3 bucket and what file should be downloaded.',
-        docs: {
-          displayType: 'manual',
-          block: {
-            id: 'block_properties_s3GetPolicyRequestId',
-            layout: { _global: 'settings_input_layout' },
-            type: 'Label',
-            required: true,
-            properties: {
-              title: 's3GetPolicyRequestId',
-              span: 8,
-              align: 'right',
-            },
-            blocks: [
-              {
-                id: 'block_properties_s3GetPolicyRequestId_text',
-                type: 'Markdown',
-                style: {
-                  color: '#8c8c8c',
-                },
-                properties: {
-                  content:
-                    'Id of a request of type AwsS3PresignedGetPolicy that defines to which S3 bucket and what file should be downloaded.',
-                },
-              },
-            ],
-          },
-        },
+          'Id of a request of type AwsS3PresignedGetObject that defines which S3 bucket and file to download.',
       },
-      style: {
+      theme: {
         type: 'object',
-        description: 'Css style object to applied to download component.',
+        description: 'Antd design token overrides for this block.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/upload#design-token',
+        },
+        properties: {
+          actionsColor: {
+            type: 'string',
+            description: 'Color of action icons (download, preview).',
+          },
+          itemBorderColor: {
+            type: 'string',
+            description: 'Border color of each file item.',
+          },
+          itemHoverBg: {
+            type: 'string',
+            description: 'Background color of file item on hover.',
+          },
+          linkColor: {
+            type: 'string',
+            description: 'Color of file name link text.',
+          },
+          linkHoverColor: {
+            type: 'string',
+            description: 'Color of file name link text on hover.',
+          },
+          fontSize: {
+            type: 'number',
+            description: 'Font size of file name text.',
+          },
+          lineHeight: {
+            type: 'number',
+            description: 'Line height of file list items.',
+          },
         },
       },
     },
@@ -101,4 +105,5 @@ export default {
       },
     },
   },
+  cssKeys: ['element'],
 };

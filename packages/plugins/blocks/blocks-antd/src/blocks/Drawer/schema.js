@@ -56,30 +56,9 @@ const schema = {
           displayType: 'string',
         },
       },
-      headerStyle: {
-        type: 'object',
-        description: 'Css style to applied to drawer header.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
-      bodyStyle: {
-        type: 'object',
-        description: 'Css style to applied to drawer body.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
       contentWrapperStyle: {
         type: 'object',
         description: 'Css style to applied to content area.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
-      maskStyle: {
-        type: 'object',
-        description: 'Css style to applied to drawer mask.',
         docs: {
           displayType: 'yaml',
         },

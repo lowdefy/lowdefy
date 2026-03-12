@@ -135,25 +135,36 @@ function transformer(sections, vars) {
       properties: {
         title: section.title,
       },
-      blocks: [
-        {
-          id: `gallery_examples_${slug}`,
-          type: 'Box',
-          layout: {
-            gap: 8,
-          },
-          blocks: section.blocks,
-        },
-        {
-          id: `gallery_collapse_${slug}`,
-          type: 'Collapse',
-          properties: {
-            defaultActiveKey: showState ? ['state'] : [],
-            panels,
-          },
-          slots,
-        },
-      ],
+      blocks: section.hideConfig
+        ? [
+            {
+              id: `gallery_examples_${slug}`,
+              type: 'Box',
+              layout: {
+                gap: 8,
+              },
+              blocks: section.blocks,
+            },
+          ]
+        : [
+            {
+              id: `gallery_examples_${slug}`,
+              type: 'Box',
+              layout: {
+                gap: 8,
+              },
+              blocks: section.blocks,
+            },
+            {
+              id: `gallery_collapse_${slug}`,
+              type: 'Collapse',
+              properties: {
+                defaultActiveKey: showState ? ['state'] : [],
+                panels,
+              },
+              slots,
+            },
+          ],
     };
   });
 }

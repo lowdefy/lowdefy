@@ -30,13 +30,6 @@ const schema = {
         default: true,
         description: 'Include a colon in item labels.',
       },
-      contentStyle: {
-        type: 'object',
-        description: 'Customize content style.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
       column: {
         default: 3,
         oneOf: [
@@ -177,13 +170,6 @@ const schema = {
             },
           },
         ],
-      },
-      labelStyle: {
-        type: 'object',
-        description: 'Customize label style.',
-        docs: {
-          displayType: 'yaml',
-        },
       },
       layout: {
         type: 'string',

@@ -15,8 +15,9 @@
 */
 
 import React, { useEffect } from 'react';
-import { Upload } from 'antd';
+import { ConfigProvider, Upload } from 'antd';
 import { withBlockDefaults } from '@lowdefy/block-utils';
+import { type } from '@lowdefy/helpers';
 
 const downloadFile = async ({ file, methods }) => {
   const s3DownloadPolicy = await methods.triggerEvent({
@@ -26,7 +27,7 @@ const downloadFile = async ({ file, methods }) => {
   window.open(s3DownloadPolicy?.responses?.__getS3DownloadPolicy?.response?.[0]);
 };
 
-const S3Download = ({ blockId, methods, properties }) => {
+const S3Download = ({ blockId, classNames = {}, methods, properties, styles = {} }) => {
   useEffect(() => {
     methods.registerEvent({
       name: '__getS3DownloadPolicy',
@@ -39,22 +40,29 @@ const S3Download = ({ blockId, methods, properties }) => {
       ],
     });
   }, []);
-  return (
+  const upload = (
     <Upload
       id={blockId}
-      className={methods.makeCssClass([properties.style])}
+      className={classNames.element}
+      style={styles.element}
       fileList={properties.fileList ?? []}
       onPreview={async (file) => await downloadFile({ file, methods })}
       showUploadList={{ showRemoveIcon: false, showDownloadIcon: true }}
       onDownload={async (file) => await downloadFile({ file, methods })}
     />
   );
+  if (type.isObject(properties.theme)) {
+    return (
+      <ConfigProvider theme={{ components: { Upload: properties.theme } }}>{upload}</ConfigProvider>
+    );
+  }
+  return upload;
 };
 
 S3Download.meta = {
   category: 'display',
   icons: [],
-  styles: [],
+  styles: ['element'],
 };
 
 export default withBlockDefaults(S3Download);

@@ -230,7 +230,7 @@ const schema = {
       description: 'Triggered when the tour finishes (all steps completed).',
     },
   },
-  cssKeys: ['element'],
+  cssKeys: ['element', 'mask'],
 };
 
 export default schema;

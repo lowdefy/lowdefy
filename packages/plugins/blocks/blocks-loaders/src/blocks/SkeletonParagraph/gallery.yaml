@@ -148,7 +148,7 @@
           layout:
             gap: 12
             align: center
-            contentDirection: row
+            direction: row
           blocks:
             - id: card_avatar
               type: SkeletonAvatar

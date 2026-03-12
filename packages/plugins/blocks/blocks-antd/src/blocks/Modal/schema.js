@@ -20,13 +20,6 @@ const schema = {
     type: 'object',
     additionalProperties: false,
     properties: {
-      bodyStyle: {
-        type: 'object',
-        description: 'Css style to applied to modal body.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
       centered: {
         type: 'boolean',
         default: false,
@@ -51,13 +44,6 @@ const schema = {
         type: 'boolean',
         default: true,
         description: 'Whether show mask or not.',
-      },
-      maskStyle: {
-        type: 'object',
-        description: 'Css style to applied to modal mask.',
-        docs: {
-          displayType: 'yaml',
-        },
       },
       maskClosable: {
         type: 'boolean',

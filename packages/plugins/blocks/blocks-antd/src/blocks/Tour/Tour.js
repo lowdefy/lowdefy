@@ -16,6 +16,7 @@
 
 import React, { useMemo } from 'react';
 import { Tour } from 'antd';
+import { type } from '@lowdefy/helpers';
 
 import withTheme from '../withTheme.js';
 
@@ -40,7 +41,14 @@ const TourBlock = ({ blockId, classNames = {}, methods, properties, styles = {} 
       current={properties.current}
       type={properties.type}
       placement={properties.placement}
-      mask={properties.mask}
+      mask={
+        type.isObject(properties.mask) || styles.mask
+          ? {
+              ...(type.isObject(properties.mask) ? properties.mask : {}),
+              style: styles.mask,
+            }
+          : properties.mask
+      }
       arrow={properties.arrow}
       closable={properties.closable}
       keyboard={properties.keyboard}
@@ -65,7 +73,7 @@ const TourBlock = ({ blockId, classNames = {}, methods, properties, styles = {} 
 TourBlock.meta = {
   category: 'display',
   icons: [],
-  cssKeys: ['element'],
+  cssKeys: ['element', 'mask'],
 };
 
 export default withTheme('Tour', TourBlock);

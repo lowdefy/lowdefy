@@ -68,6 +68,14 @@ _ref:
                     url: https://github.com/lowdefy/lowdefy/tree/main/{{ github_path }}
                     newTab: true
 
+{% if note %}
+      - id: gallery_note
+        type: Alert
+        properties:
+          type: warning
+          showIcon: true
+          message: {{ note }}
+{% endif %}
       - id: gallery_grid
         type: Box
         layout:

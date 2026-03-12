@@ -167,7 +167,7 @@
           type: Box
           layout:
             gap: 16
-            contentDirection: row
+            direction: row
           blocks:
             - id: form_first_name
               type: SkeletonInput
