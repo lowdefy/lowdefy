@@ -67,6 +67,14 @@ export default createBlockHelper({
   locator,
   do: {
     open: (page, blockId) => locator(page, blockId).click(),
+    fill: async (page, blockId, startVal, endVal) => {
+      await startInput(page, blockId).click();
+      await page.keyboard.type(startVal);
+      await page.keyboard.press('Enter');
+      await endInput(page, blockId).click();
+      await page.keyboard.type(endVal);
+      await page.keyboard.press('Enter');
+    },
     select: async (page, blockId, startDateStr, endDateStr) => {
       const [sYear, sMonth] = startDateStr.split('-').map(Number);
       const [eYear, eMonth] = endDateStr.split('-').map(Number);

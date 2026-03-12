@@ -36,15 +36,16 @@ const monthNames = [
 ];
 
 const navigateToMonth = async (dropdown, targetYear, targetMonth) => {
-  const headerView = dropdown.locator('.ant-picker-header-view');
+  const datePanel = dropdown.locator('.ant-picker-date-panel');
+  const headerView = datePanel.locator('.ant-picker-header-view');
   while (true) {
     const headerText = await headerView.textContent();
     const currentYear = parseInt(headerText.match(/\d{4}/)[0]);
     if (currentYear === targetYear) break;
     if (currentYear > targetYear) {
-      await dropdown.locator('.ant-picker-header-super-prev-btn').click();
+      await datePanel.locator('.ant-picker-header-super-prev-btn').click();
     } else {
-      await dropdown.locator('.ant-picker-header-super-next-btn').click();
+      await datePanel.locator('.ant-picker-header-super-next-btn').click();
     }
   }
   while (true) {
@@ -53,9 +54,9 @@ const navigateToMonth = async (dropdown, targetYear, targetMonth) => {
     const currentMonth = monthNames.indexOf(currentMonthName) + 1;
     if (currentMonth === targetMonth) break;
     if (currentMonth > targetMonth) {
-      await dropdown.locator('.ant-picker-header-prev-btn').click();
+      await datePanel.locator('.ant-picker-header-prev-btn').click();
     } else {
-      await dropdown.locator('.ant-picker-header-next-btn').click();
+      await datePanel.locator('.ant-picker-header-next-btn').click();
     }
   }
 };
@@ -64,6 +65,11 @@ export default createBlockHelper({
   locator,
   do: {
     open: (page, blockId) => locator(page, blockId).click(),
+    fill: async (page, blockId, val) => {
+      await input(page, blockId).click();
+      await page.keyboard.type(val);
+      await page.keyboard.press('Enter');
+    },
     select: async (page, blockId, dateTimeString) => {
       const [datePart, timePart] = dateTimeString.split(' ');
       const [year, month] = datePart.split('-').map(Number);

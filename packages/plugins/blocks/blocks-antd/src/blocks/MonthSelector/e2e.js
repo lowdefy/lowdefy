@@ -38,6 +38,11 @@ export default createBlockHelper({
   locator,
   do: {
     open: (page, blockId) => locator(page, blockId).click(),
+    fill: async (page, blockId, val) => {
+      await input(page, blockId).click();
+      await page.keyboard.type(val);
+      await page.keyboard.press('Enter');
+    },
     select: async (page, blockId, monthString) => {
       const [year] = monthString.split('-').map(Number);
       await locator(page, blockId).click();
