@@ -18,6 +18,9 @@ function transformer(obj) {
   if (!obj.methods) {
     return obj.page;
   }
+  if (!obj.page.blocks) {
+    return obj.page;
+  }
   const contentArray = obj.page.blocks[0].slots.content.blocks[0].blocks[1].blocks;
   const operatorName = obj.page.properties.title;
 
