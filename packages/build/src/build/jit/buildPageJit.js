@@ -88,10 +88,12 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
 
     // If this is a module page, set up module context
     let moduleVars = null;
+    let moduleDependencies = null;
     let moduleEntry = null;
     if (pageEntry.moduleEntryId) {
       moduleEntry = buildContext.modules[pageEntry.moduleEntryId];
       moduleVars = moduleEntry?.vars ?? null;
+      moduleDependencies = moduleEntry?.moduleDependencies ?? null;
     }
 
     // Resolve the page file from scratch using the source file path determined
@@ -115,6 +117,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
         sourceRefId: null,
         vars: {},
         moduleVars,
+        moduleDependencies,
         packageRoot: moduleEntry?.packageRoot ?? null,
         path: '',
         currentFile: pageEntry.refPath ?? pageEntry.resolverOriginal?.resolver ?? '',
@@ -153,6 +156,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       sourceRefId: null,
       vars: refDef.vars ?? {},
       moduleVars,
+      moduleDependencies,
       packageRoot: moduleEntry?.packageRoot ?? null,
       path: '',
       currentFile: refDef.path ?? '',
