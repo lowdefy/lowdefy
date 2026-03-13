@@ -1,0 +1,259 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic
+  blocks:
+    - id: basic_default
+      type: S3UploadPhoto
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+    - id: basic_custom_title
+      type: S3UploadPhoto
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        title: Add Photo
+    - id: basic_html_title
+      type: S3UploadPhoto
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        title: 'Upload <b>profile</b> photo'
+
+- title: Upload Limits
+  blocks:
+    - id: limit_single
+      type: S3UploadPhoto
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        singleFile: true
+        title: Single Photo
+    - id: limit_max_three
+      type: S3UploadPhoto
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        maxCount: 3
+        title: Max 3 Photos
+    - id: limit_single_hidden
+      type: S3UploadPhoto
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        singleFile: true
+        showUploadList: false
+        title: Single (No List)
+
+- title: Upload List Visibility
+  blocks:
+    - id: list_visible
+      type: S3UploadPhoto
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        showUploadList: true
+        title: List Visible
+    - id: list_hidden
+      type: S3UploadPhoto
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        showUploadList: false
+        title: List Hidden
+    - id: list_multi_hidden
+      type: S3UploadPhoto
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        maxCount: 5
+        showUploadList: false
+        title: Multi (No List)
+
+- title: Disabled State
+  blocks:
+    - id: disabled_default
+      type: S3UploadPhoto
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        disabled: true
+    - id: disabled_custom_title
+      type: S3UploadPhoto
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        disabled: true
+        title: Photo Locked
+    - id: disabled_hidden_list
+      type: S3UploadPhoto
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        disabled: true
+        showUploadList: false
+        title: Disabled (No List)
+
+- title: Card Styling
+  blocks:
+    - id: style_rounded
+      type: S3UploadPhoto
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        title: Rounded
+        style:
+          borderRadius: 50%
+    - id: style_large
+      type: S3UploadPhoto
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        title: Large Card
+        style:
+          width: 150
+          height: 150
+    - id: style_colored
+      type: S3UploadPhoto
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        title: Tinted
+        style:
+          backgroundColor: '#f0f5ff'
+          color: '#1677ff'
+
+- title: Style Overrides
+  blocks:
+    - id: style_element_bg
+      type: S3UploadPhoto
+      style:
+        --element:
+          background: '#f6ffed'
+          borderRadius: 8
+          padding: 8
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        title: Green Background
+    - id: style_element_border
+      type: S3UploadPhoto
+      style:
+        --element:
+          border: 2px solid #d3adf7
+          borderRadius: 12
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        title: Purple Border
+    - id: style_tailwind
+      type: S3UploadPhoto
+      class: shadow-md rounded-lg
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        title: Tailwind Shadow
+
+- title: S3UploadPhoto in User Profile
+  blocks:
+    - id: profile_card
+      type: Card
+      properties:
+        title: Edit Profile
+      blocks:
+        - id: profile_photo
+          type: S3UploadPhoto
+          properties:
+            title: Profile Photo
+            s3PostPolicyRequestId: s3_upload_policy_request
+            singleFile: true
+            style:
+              borderRadius: 50%
+        - id: profile_name
+          type: TextInput
+          required: true
+          properties:
+            title: Full Name
+            placeholder: Enter your name
+            prefixIcon: AiOutlineUser
+        - id: profile_email
+          type: TextInput
+          properties:
+            title: Email
+            placeholder: you@example.com
+            prefixIcon: AiOutlineMail
+        - id: profile_save
+          type: Button
+          properties:
+            title: Save Profile
+            color: primary
+            variant: solid
+            icon: AiOutlineSave
+          events:
+            onClick:
+              - id: validate_profile
+                type: Validate
+              - id: save_msg
+                type: DisplayMessage
+                params:
+                  content: Profile saved successfully!
+                  status: success
+
+- title: S3UploadPhoto in Product Listing
+  blocks:
+    - id: product_card
+      type: Card
+      properties:
+        title: Add Product
+      blocks:
+        - id: product_photos
+          type: S3UploadPhoto
+          properties:
+            title: Product Photos
+            s3PostPolicyRequestId: s3_upload_policy_request
+            maxCount: 5
+          events:
+            onChange:
+              - id: photo_state
+                type: SetState
+                params:
+                  photosUploaded: true
+        - id: product_name
+          type: TextInput
+          required: true
+          properties:
+            title: Product Name
+            placeholder: Enter product name
+        - id: product_category
+          type: Selector
+          properties:
+            title: Category
+            placeholder: Select category
+            options:
+              - label: Electronics
+                value: electronics
+              - label: Clothing
+                value: clothing
+              - label: Home & Garden
+                value: home
+              - label: Sports
+                value: sports
+        - id: product_price
+          type: NumberInput
+          properties:
+            title: Price
+            placeholder: 0.00
+            min: 0
+            precision: 2
+            prefix: $
+        - id: product_submit
+          type: Button
+          properties:
+            title: List Product
+            color: primary
+            variant: solid
+            icon: AiOutlineCheck
+            block: true
+          events:
+            onClick:
+              - id: validate_product
+                type: Validate
+              - id: list_msg
+                type: DisplayMessage
+                params:
+                  content: Product listed successfully!
+                  status: success
