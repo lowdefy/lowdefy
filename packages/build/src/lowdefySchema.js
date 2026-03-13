@@ -1381,6 +1381,13 @@ export default {
               type: 'Module "connections" should be an object.',
             },
           },
+          dependencies: {
+            type: 'object',
+            additionalProperties: { type: 'string' },
+            errorMessage: {
+              type: 'Module "dependencies" should be an object with string values.',
+            },
+          },
         },
         additionalProperties: false,
         errorMessage: {

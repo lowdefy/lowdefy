@@ -294,6 +294,280 @@ pages:
   expect(context.modules['my-mod']).toBeDefined();
 });
 
+test('registerModuleEntry parses dependencies array from manifest', async () => {
+  const context = createTestContext();
+  const files = [
+    {
+      path: '/modules/my-mod/module.lowdefy.yaml',
+      content: `
+dependencies:
+  - id: contacts
+    description: Contact management
+  - id: layout
+    description: Page layout components
+pages: []
+`,
+    },
+  ];
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+
+  await registerModuleEntry({
+    entry: { id: 'my-mod', source: 'file:../mod', vars: {} },
+    resolvedPaths: {
+      packageRoot: '/modules/my-mod',
+      moduleRoot: '/modules/my-mod',
+      isLocal: true,
+    },
+    context,
+  });
+
+  expect(context.modules['my-mod'].dependencies).toEqual([
+    { id: 'contacts', description: 'Contact management' },
+    { id: 'layout', description: 'Page layout components' },
+  ]);
+});
+
+test('registerModuleEntry defaults dependencies to empty array when absent', async () => {
+  const context = createTestContext();
+  const files = [
+    {
+      path: '/modules/my-mod/module.lowdefy.yaml',
+      content: `
+pages: []
+`,
+    },
+  ];
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+
+  await registerModuleEntry({
+    entry: { id: 'my-mod', source: 'file:../mod', vars: {} },
+    resolvedPaths: {
+      packageRoot: '/modules/my-mod',
+      moduleRoot: '/modules/my-mod',
+      isLocal: true,
+    },
+    context,
+  });
+
+  expect(context.modules['my-mod'].dependencies).toEqual([]);
+});
+
+test('registerModuleEntry throws when dependencies item has no string id', async () => {
+  const context = createTestContext();
+  const files = [
+    {
+      path: '/modules/my-mod/module.lowdefy.yaml',
+      content: `
+dependencies:
+  - description: Missing id field
+pages: []
+`,
+    },
+  ];
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+
+  await expect(
+    registerModuleEntry({
+      entry: { id: 'my-mod', source: 'file:../mod', vars: {} },
+      resolvedPaths: {
+        packageRoot: '/modules/my-mod',
+        moduleRoot: '/modules/my-mod',
+        isLocal: true,
+      },
+      context,
+    })
+  ).rejects.toThrow('each item in "dependencies" must have a string "id"');
+});
+
+test('registerModuleEntry parses exports object from manifest', async () => {
+  const context = createTestContext();
+  const files = [
+    {
+      path: '/modules/my-mod/module.lowdefy.yaml',
+      content: `
+exports:
+  pages:
+    - id: company-list
+    - id: company-detail
+  components:
+    - id: company-selector
+      description: Dropdown selector
+  menus:
+    - id: default
+  connections:
+    - id: companies-db
+  api:
+    - id: save-company
+pages: []
+`,
+    },
+  ];
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+
+  await registerModuleEntry({
+    entry: { id: 'my-mod', source: 'file:../mod', vars: {} },
+    resolvedPaths: {
+      packageRoot: '/modules/my-mod',
+      moduleRoot: '/modules/my-mod',
+      isLocal: true,
+    },
+    context,
+  });
+
+  expect(context.modules['my-mod'].exports).toEqual({
+    pages: [{ id: 'company-list' }, { id: 'company-detail' }],
+    components: [{ id: 'company-selector', description: 'Dropdown selector' }],
+    menus: [{ id: 'default' }],
+    connections: [{ id: 'companies-db' }],
+    api: [{ id: 'save-company' }],
+  });
+});
+
+test('registerModuleEntry defaults exports sections to empty arrays when absent', async () => {
+  const context = createTestContext();
+  const files = [
+    {
+      path: '/modules/my-mod/module.lowdefy.yaml',
+      content: `
+pages: []
+`,
+    },
+  ];
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+
+  await registerModuleEntry({
+    entry: { id: 'my-mod', source: 'file:../mod', vars: {} },
+    resolvedPaths: {
+      packageRoot: '/modules/my-mod',
+      moduleRoot: '/modules/my-mod',
+      isLocal: true,
+    },
+    context,
+  });
+
+  expect(context.modules['my-mod'].exports).toEqual({
+    pages: [],
+    components: [],
+    menus: [],
+    connections: [],
+    api: [],
+  });
+});
+
+test('registerModuleEntry throws when exports section item has no string id', async () => {
+  const context = createTestContext();
+  const files = [
+    {
+      path: '/modules/my-mod/module.lowdefy.yaml',
+      content: `
+exports:
+  pages:
+    - description: Missing id
+pages: []
+`,
+    },
+  ];
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+
+  await expect(
+    registerModuleEntry({
+      entry: { id: 'my-mod', source: 'file:../mod', vars: {} },
+      resolvedPaths: {
+        packageRoot: '/modules/my-mod',
+        moduleRoot: '/modules/my-mod',
+        isLocal: true,
+      },
+      context,
+    })
+  ).rejects.toThrow('each item in exports.pages must have a string "id"');
+});
+
+test('registerModuleEntry throws for unknown exports sections', async () => {
+  const context = createTestContext();
+  const files = [
+    {
+      path: '/modules/my-mod/module.lowdefy.yaml',
+      content: `
+exports:
+  widgets:
+    - id: foo
+pages: []
+`,
+    },
+  ];
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+
+  await expect(
+    registerModuleEntry({
+      entry: { id: 'my-mod', source: 'file:../mod', vars: {} },
+      resolvedPaths: {
+        packageRoot: '/modules/my-mod',
+        moduleRoot: '/modules/my-mod',
+        isLocal: true,
+      },
+      context,
+    })
+  ).rejects.toThrow('unknown exports section "widgets"');
+});
+
+test('registerModuleEntry stores moduleDependencies from entry dependencies', async () => {
+  const context = createTestContext();
+  const files = [
+    {
+      path: '/modules/my-mod/module.lowdefy.yaml',
+      content: `
+pages: []
+`,
+    },
+  ];
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+
+  await registerModuleEntry({
+    entry: {
+      id: 'my-mod',
+      source: 'file:../mod',
+      vars: {},
+      dependencies: { layout: 'app-layout', contacts: 'crm-contacts' },
+    },
+    resolvedPaths: {
+      packageRoot: '/modules/my-mod',
+      moduleRoot: '/modules/my-mod',
+      isLocal: true,
+    },
+    context,
+  });
+
+  expect(context.modules['my-mod'].moduleDependencies).toEqual({
+    layout: 'app-layout',
+    contacts: 'crm-contacts',
+  });
+});
+
+test('registerModuleEntry defaults moduleDependencies to empty object when absent', async () => {
+  const context = createTestContext();
+  const files = [
+    {
+      path: '/modules/my-mod/module.lowdefy.yaml',
+      content: `
+pages: []
+`,
+    },
+  ];
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+
+  await registerModuleEntry({
+    entry: { id: 'my-mod', source: 'file:../mod', vars: {} },
+    resolvedPaths: {
+      packageRoot: '/modules/my-mod',
+      moduleRoot: '/modules/my-mod',
+      isLocal: true,
+    },
+    context,
+  });
+
+  expect(context.modules['my-mod'].moduleDependencies).toEqual({});
+});
+
 test('registerModuleEntry stores connections from entry', async () => {
   const context = createTestContext();
   const files = [

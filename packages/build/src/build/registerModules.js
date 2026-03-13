@@ -92,6 +92,48 @@ async function registerModuleEntry({ entry, resolvedPaths, context }) {
 
   manifest = evaluateStaticOperators({ context, input: manifest, refDef });
 
+  // Parse dependencies array from manifest
+  const dependencies = manifest.dependencies ?? [];
+  for (const dep of dependencies) {
+    if (!type.isString(dep.id)) {
+      throw new ConfigError(
+        `Module "${entry.id}": each item in "dependencies" must have a string "id".`
+      );
+    }
+  }
+
+  // Parse exports object from manifest
+  const rawExports = manifest.exports ?? {};
+  const exportSections = ['pages', 'components', 'menus', 'connections', 'api'];
+  const exports = {};
+
+  for (const section of exportSections) {
+    const items = rawExports[section] ?? [];
+    if (!type.isArray(items)) {
+      throw new ConfigError(
+        `Module "${entry.id}": exports.${section} must be an array.`
+      );
+    }
+    for (const item of items) {
+      if (!type.isString(item.id)) {
+        throw new ConfigError(
+          `Module "${entry.id}": each item in exports.${section} must have a string "id".`
+        );
+      }
+    }
+    exports[section] = items;
+  }
+
+  // Reject unknown keys in exports
+  for (const key of Object.keys(rawExports)) {
+    if (!exportSections.includes(key)) {
+      throw new ConfigError(
+        `Module "${entry.id}": unknown exports section "${key}". ` +
+          `Valid sections: ${exportSections.join(', ')}.`
+      );
+    }
+  }
+
   // Validate module vars against manifest var definitions
   const varDefs = manifest.vars ?? {};
   for (const [varName, varDef] of Object.entries(varDefs)) {
@@ -155,6 +197,9 @@ async function registerModuleEntry({ entry, resolvedPaths, context }) {
     vars: entry.vars ?? {},
     connections: entry.connections ?? {},
     manifest,
+    dependencies,
+    exports,
+    moduleDependencies: entry.dependencies ?? {},
   };
 }
 
