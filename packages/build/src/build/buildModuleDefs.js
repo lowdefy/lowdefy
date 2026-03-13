@@ -24,6 +24,7 @@ import collectDynamicIdentifiers from './collectDynamicIdentifiers.js';
 import validateOperatorsDynamic from './validateOperatorsDynamic.js';
 import fetchModules from './fetchModules.js';
 import registerModuleEntry from './registerModules.js';
+import resolveModuleDependencies from './resolveModuleDependencies.js';
 
 validateOperatorsDynamic({ operators });
 const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
@@ -79,6 +80,9 @@ async function buildModuleDefs({ context }) {
       context,
     });
   }
+
+  // Step 2: Auto-wire and validate dependency wiring
+  resolveModuleDependencies({ context });
 }
 
 export default buildModuleDefs;
