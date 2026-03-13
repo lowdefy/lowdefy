@@ -223,10 +223,6 @@ export default {
           },
         },
       },
-      style: {
-        type: 'object',
-        description: 'Custom CSS properties to apply to the map container.',
-      },
     },
   },
 };

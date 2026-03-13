@@ -29,8 +29,22 @@ function updateHeatmap(data) {
   return new window.google.maps.LatLng(data);
 }
 
-const GoogleMapsHeatmap = ({ blockId, content, methods, properties }) => (
-  <Map blockId={blockId} content={content} methods={methods} properties={properties}>
+const GoogleMapsHeatmap = ({
+  blockId,
+  classNames = {},
+  content,
+  methods,
+  properties,
+  styles = {},
+}) => (
+  <Map
+    blockId={blockId}
+    classNames={classNames}
+    content={content}
+    methods={methods}
+    properties={properties}
+    styles={styles}
+  >
     {(map, bounds) =>
       map &&
       bounds &&
