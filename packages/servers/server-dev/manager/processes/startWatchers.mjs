@@ -17,7 +17,6 @@
 import envWatcher from '../watchers/envWatcher.mjs';
 import lowdefyBuildWatcher from '../watchers/lowdefyBuildWatcher.mjs';
 import nextBuildWatcher from '../watchers/nextBuildWatcher.mjs';
-import tailwindContentWatcher from '../watchers/tailwindContentWatcher.mjs';
 
 function startWatchers(context) {
   return async () => {
@@ -25,7 +24,6 @@ function startWatchers(context) {
       envWatcher(context),
       lowdefyBuildWatcher(context),
       nextBuildWatcher(context),
-      tailwindContentWatcher(context),
     ]);
   };
 }

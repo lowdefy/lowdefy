@@ -56,6 +56,12 @@ async function fetchPageConfig(url) {
   const jsEntries = await fetchJsEntries(basePath);
   data._jsEntries = jsEntries;
 
+  // Bust CSS cache so the browser picks up newly compiled Tailwind classes
+  const cssLink = document.getElementById('tailwind-jit-css');
+  if (cssLink) {
+    cssLink.href = `${basePath}/tailwind-jit.css?v=${Date.now()}`;
+  }
+
   return data;
 }
 
