@@ -20,6 +20,8 @@ export default {
   valueType: null,
   cssKeys: {
     element: 'The Notification element.',
+    closeIcon: 'The close icon in the Notification.',
+    icon: 'The icon in the Notification.',
   },
   events: {
     onClose: 'Trigger actions when notification is closed.',

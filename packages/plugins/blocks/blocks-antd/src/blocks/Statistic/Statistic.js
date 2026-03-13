@@ -50,8 +50,10 @@ const StatisticBlock = ({
         properties.prefixIcon ? (
           <Icon
             blockId={`${blockId}_prefixIcon`}
+            classNames={{ element: classNames.prefixIcon }}
             events={events}
             properties={properties.prefixIcon}
+            styles={{ element: styles.prefixIcon }}
           />
         ) : (
           properties.prefix ?? ''
@@ -61,8 +63,10 @@ const StatisticBlock = ({
         properties.suffixIcon ? (
           <Icon
             blockId={`${blockId}_suffixIcon`}
+            classNames={{ element: classNames.suffixIcon }}
             events={events}
             properties={properties.suffixIcon}
+            styles={{ element: styles.suffixIcon }}
           />
         ) : (
           properties.suffix ?? ''

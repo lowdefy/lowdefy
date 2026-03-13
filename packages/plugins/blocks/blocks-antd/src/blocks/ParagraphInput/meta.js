@@ -20,6 +20,8 @@ export default {
   valueType: 'string',
   cssKeys: {
     element: 'The ParagraphInput element.',
+    copyableIcon: 'The copyable icon in the ParagraphInput.',
+    editableIcon: 'The editable icon in the ParagraphInput.',
   },
   events: {
     onExpand: 'Trigger action when ellipse expand is clicked.',

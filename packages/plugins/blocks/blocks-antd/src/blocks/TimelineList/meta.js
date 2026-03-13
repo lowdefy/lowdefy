@@ -20,6 +20,8 @@ export default {
   valueType: null,
   cssKeys: {
     element: 'The TimelineList element.',
+    icon: 'The icon in the TimelineList items.',
+    pendingDotIcon: 'The pending dot icon in the TimelineList.',
   },
   properties: {
     type: 'object',

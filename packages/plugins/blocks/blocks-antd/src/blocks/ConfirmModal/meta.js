@@ -21,6 +21,9 @@ export default {
   cssKeys: {
     element: 'The ConfirmModal element.',
     body: 'The ConfirmModal body.',
+    cancelIcon: 'The cancel button icon in the ConfirmModal.',
+    icon: 'The icon in the ConfirmModal.',
+    okIcon: 'The ok button icon in the ConfirmModal.',
   },
   events: {
     onOk: 'Trigger actions when Ok button is clicked.',

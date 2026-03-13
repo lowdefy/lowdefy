@@ -26,6 +26,7 @@ export default {
     extra: 'The MonthSelector extra content.',
     feedback: 'The MonthSelector validation feedback.',
     popup: 'The MonthSelector popup.',
+    suffixIcon: 'The suffix icon in the MonthSelector.',
   },
   events: {
     onChange: 'Trigger actions when selection is changed.',

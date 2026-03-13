@@ -20,6 +20,7 @@ export default {
   valueType: null,
   cssKeys: {
     element: 'The Message element.',
+    icon: 'The icon in the Message.',
   },
   events: {
     onClose: 'Trigger actions when message is closed.',

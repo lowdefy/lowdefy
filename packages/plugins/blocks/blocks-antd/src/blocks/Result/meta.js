@@ -21,6 +21,7 @@ export default {
   slots: ['content', 'extra'],
   cssKeys: {
     element: 'The Result element.',
+    icon: 'The icon in the Result.',
   },
   properties: {
     type: 'object',

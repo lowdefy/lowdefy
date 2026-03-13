@@ -105,8 +105,10 @@ const MultipleSelector = ({
                 properties.suffixIcon && (
                   <Icon
                     blockId={`${blockId}_suffixIcon`}
+                    classNames={{ element: classNames.suffixIcon }}
                     events={events}
                     properties={properties.suffixIcon}
+                    styles={{ element: styles.suffixIcon }}
                   />
                 )
               }
@@ -114,8 +116,10 @@ const MultipleSelector = ({
                 properties.clearIcon && (
                   <Icon
                     blockId={`${blockId}_clearIcon`}
+                    classNames={{ element: classNames.clearIcon }}
                     events={events}
                     properties={properties.clearIcon}
+                    styles={{ element: styles.clearIcon }}
                   />
                 )
               }
@@ -123,8 +127,10 @@ const MultipleSelector = ({
                 properties.selectedIcon && (
                   <Icon
                     blockId={`${blockId}_selectedIcon`}
+                    classNames={{ element: classNames.selectedIcon }}
                     events={events}
                     properties={properties.selectedIcon}
+                    styles={{ element: styles.selectedIcon }}
                   />
                 )
               }

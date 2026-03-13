@@ -93,7 +93,13 @@ const ButtonBlock = ({
       size={properties.size}
       icon={
         properties.icon && (
-          <Icon blockId={`${blockId}_icon`} events={events} properties={properties.icon} />
+          <Icon
+            blockId={`${blockId}_icon`}
+            classNames={{ element: classNames.icon }}
+            events={events}
+            properties={properties.icon}
+            styles={{ element: styles.icon }}
+          />
         )
       }
       onClick={onClick || (() => methods.triggerEvent({ name: onClickActionName }))}

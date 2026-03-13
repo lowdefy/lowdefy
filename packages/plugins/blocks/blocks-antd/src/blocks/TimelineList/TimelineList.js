@@ -47,8 +47,10 @@ const TimelineList = ({
         properties.pendingDotIcon && (
           <Icon
             blockId={`${blockId}_pendingDotIcon`}
+            classNames={{ element: classNames.pendingDotIcon }}
             events={events}
-            properties={mergeObjects([{ style: { fontSize: 16 } }, properties.pendingDotIcon])}
+            properties={properties.pendingDotIcon}
+            styles={{ element: { fontSize: 16, ...styles.pendingDotIcon } }}
           />
         )
       }
@@ -76,8 +78,10 @@ const TimelineList = ({
               icon && (
                 <Icon
                   blockId={`${blockId}_${i}_icon`}
+                  classNames={{ element: classNames.icon }}
                   events={events}
-                  properties={mergeObjects([{ style, color }, icon])}
+                  properties={mergeObjects([{ color }, icon])}
+                  styles={{ element: { ...style, ...styles.icon } }}
                 />
               )
             }

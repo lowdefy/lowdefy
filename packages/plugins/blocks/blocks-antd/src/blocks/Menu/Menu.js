@@ -35,6 +35,7 @@ function buildMenuItems({
   events,
   components: { Icon, Link },
   classNames,
+  styles,
   isTopLevel = true,
 }) {
   return (links ?? []).map((link, i) => {
@@ -60,6 +61,7 @@ function buildMenuItems({
           events,
           components: { Icon, Link },
           classNames,
+          styles,
           isTopLevel: false,
         }),
       };
@@ -67,7 +69,13 @@ function buildMenuItems({
       if (isTopLevel) {
         // Top-level MenuGroup → collapsible submenu (with icon)
         groupItem.icon = link.properties?.icon ? (
-          <Icon blockId={`${link.id}_icon`} events={events} properties={link.properties.icon} />
+          <Icon
+            blockId={`${link.id}_icon`}
+            classNames={{ element: classNames.icon }}
+            events={events}
+            properties={link.properties.icon}
+            styles={{ element: styles.icon }}
+          />
         ) : undefined;
       } else {
         // Nested MenuGroup → non-collapsible group header
@@ -83,7 +91,13 @@ function buildMenuItems({
       danger: link.properties?.danger,
       className: classNames.item,
       icon: link.properties?.icon ? (
-        <Icon blockId={`${link.id}_icon`} events={events} properties={link.properties.icon} />
+        <Icon
+          blockId={`${link.id}_icon`}
+          classNames={{ element: classNames.icon }}
+          events={events}
+          properties={link.properties.icon}
+          styles={{ element: styles.icon }}
+        />
       ) : undefined,
       label: (
         <Link
@@ -130,6 +144,7 @@ const MenuComp = ({
     events,
     components: { Icon, Link },
     classNames,
+    styles,
   });
 
   return (
@@ -142,8 +157,10 @@ const MenuComp = ({
         properties.expandIcon && (
           <Icon
             blockId={`${blockId}_expandIcon`}
+            classNames={{ element: classNames.expandIcon }}
             events={events}
             properties={properties.expandIcon}
+            styles={{ element: styles.expandIcon }}
           />
         )
       }

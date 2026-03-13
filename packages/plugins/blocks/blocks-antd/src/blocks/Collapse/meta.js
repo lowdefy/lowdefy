@@ -20,6 +20,7 @@ export default {
   valueType: null,
   cssKeys: {
     element: 'The Collapse element.',
+    expandIcon: 'The expand icon in the Collapse.',
     header: 'The Collapse header.',
     content: 'The Collapse content.',
   },

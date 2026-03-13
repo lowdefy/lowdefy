@@ -22,7 +22,7 @@ blocks:
 
   - id: carousel_basic
     type: Carousel
-    areas:
+    slots:
       slide1:
         blocks:
           - id: carousel_basic_slide1
@@ -50,7 +50,7 @@ blocks:
     type: Carousel
     properties:
       dots: false
-    areas:
+    slots:
       slide1:
         blocks:
           - id: carousel_no_dots_slide1
@@ -62,7 +62,7 @@ blocks:
     type: Carousel
     properties:
       dotPosition: left
-    areas:
+    slots:
       slide1:
         blocks:
           - id: carousel_dots_left_slide1
@@ -80,7 +80,7 @@ blocks:
     type: Carousel
     properties:
       dotPosition: top
-    areas:
+    slots:
       slide1:
         blocks:
           - id: carousel_dots_top_slide1
@@ -102,7 +102,7 @@ blocks:
     type: Carousel
     properties:
       arrows: true
-    areas:
+    slots:
       slide1:
         blocks:
           - id: carousel_arrows_slide1
@@ -130,7 +130,7 @@ blocks:
     type: Carousel
     properties:
       effect: fade
-    areas:
+    slots:
       slide1:
         blocks:
           - id: carousel_fade_slide1
@@ -152,7 +152,7 @@ blocks:
     type: Carousel
     properties:
       vertical: true
-    areas:
+    slots:
       slide1:
         blocks:
           - id: carousel_vertical_slide1
@@ -179,7 +179,7 @@ blocks:
           params:
             carousel_current_slide:
               _event: current.key
-    areas:
+    slots:
       slide1:
         blocks:
           - id: carousel_afterchange_slide1

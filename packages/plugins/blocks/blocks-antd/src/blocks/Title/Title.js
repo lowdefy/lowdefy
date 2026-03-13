@@ -54,21 +54,27 @@ const TitleBlock = ({
                     <Icon
                       key="copy-icon"
                       blockId={`${blockId}_copyable_before_icon`}
+                      classNames={{ element: classNames.copyableIcon }}
                       events={events}
                       properties={properties.copyable.icon[0]}
+                      styles={{ element: styles.copyableIcon }}
                     />,
                     <Icon
                       key="copied-icon"
                       blockId={`${blockId}_copyable_after_icon`}
+                      classNames={{ element: classNames.copyableIcon }}
                       events={events}
                       properties={properties.copyable.icon[1]}
+                      styles={{ element: styles.copyableIcon }}
                     />,
                   ]
                 ) : (
                   <Icon
                     blockId={`${blockId}_copyable_icon`}
+                    classNames={{ element: classNames.copyableIcon }}
                     events={events}
                     properties={properties.copyable.icon}
+                    styles={{ element: styles.copyableIcon }}
                   />
                 )),
               tooltips: properties.copyable.tooltips,

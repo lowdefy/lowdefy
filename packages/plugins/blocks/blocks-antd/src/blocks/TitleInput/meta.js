@@ -20,6 +20,8 @@ export default {
   valueType: 'string',
   cssKeys: {
     element: 'The TitleInput element.',
+    copyableIcon: 'The copyable icon in the TitleInput.',
+    editableIcon: 'The editable icon in the TitleInput.',
   },
   events: {
     onExpand: 'Trigger action when ellipse expand is clicked.',

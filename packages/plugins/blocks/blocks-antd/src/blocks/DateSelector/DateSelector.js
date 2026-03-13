@@ -72,8 +72,10 @@ const DateSelector = ({
               suffixIcon={
                 <Icon
                   blockId={`${blockId}_suffixIcon`}
+                  classNames={{ element: classNames.suffixIcon }}
                   events={events}
                   properties={properties.suffixIcon ?? 'AiOutlineCalendar'}
+                  styles={{ element: styles.suffixIcon }}
                 />
               }
               disabledDate={disabledDate(properties.disabledDates)}

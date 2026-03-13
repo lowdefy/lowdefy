@@ -20,6 +20,7 @@ export default {
   valueType: null,
   cssKeys: {
     element: 'The Title element.',
+    copyableIcon: 'The copyable icon in the Title.',
   },
   events: {
     onExpand: 'Trigger action when ellipse expand is clicked.',

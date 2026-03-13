@@ -29,7 +29,7 @@ blocks:
     type: Badge
     properties:
       count: 10
-    areas:
+    slots:
       content:
         blocks:
           - id: badge_content_avatar
@@ -72,7 +72,7 @@ blocks:
     type: Badge
     properties:
       dot: true
-    areas:
+    slots:
       content:
         blocks:
           - id: badge_dot_avatar
@@ -89,7 +89,7 @@ blocks:
     properties:
       count: 5
       size: small
-    areas:
+    slots:
       content:
         blocks:
           - id: badge_small_avatar
@@ -102,7 +102,7 @@ blocks:
     properties:
       count: 5
       size: default
-    areas:
+    slots:
       content:
         blocks:
           - id: badge_default_avatar
@@ -153,7 +153,7 @@ blocks:
     properties:
       count: 5
       color: '#52c41a'
-    areas:
+    slots:
       content:
         blocks:
           - id: badge_color_avatar
@@ -169,7 +169,7 @@ blocks:
     type: Badge
     properties:
       icon: AiOutlineClockCircle
-    areas:
+    slots:
       content:
         blocks:
           - id: badge_icon_avatar
@@ -186,7 +186,7 @@ blocks:
     properties:
       count: 5
       title: Custom tooltip title
-    areas:
+    slots:
       content:
         blocks:
           - id: badge_title_avatar

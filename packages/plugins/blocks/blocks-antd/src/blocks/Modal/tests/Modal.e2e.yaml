@@ -24,7 +24,7 @@ blocks:
     type: Modal
     properties:
       title: Basic Modal
-    areas:
+    slots:
       content:
         blocks:
           - id: modal_basic_content
@@ -55,7 +55,7 @@ blocks:
     type: Modal
     properties:
       title: <strong>Custom HTML Title</strong>
-    areas:
+    slots:
       content:
         blocks:
           - id: modal_custom_title_content
@@ -83,7 +83,7 @@ blocks:
     properties:
       title: Centered Modal
       centered: true
-    areas:
+    slots:
       content:
         blocks:
           - id: modal_centered_content
@@ -111,7 +111,7 @@ blocks:
     properties:
       title: No Close Button
       closable: false
-    areas:
+    slots:
       content:
         blocks:
           - id: modal_no_close_content
@@ -140,7 +140,7 @@ blocks:
       title: Custom Buttons
       okText: Confirm
       cancelText: Dismiss
-    areas:
+    slots:
       content:
         blocks:
           - id: modal_custom_buttons_content
@@ -168,7 +168,7 @@ blocks:
     properties:
       title: Custom Width
       width: 800
-    areas:
+    slots:
       content:
         blocks:
           - id: modal_custom_width_content
@@ -196,7 +196,7 @@ blocks:
     properties:
       title: No Footer
       footer: false
-    areas:
+    slots:
       content:
         blocks:
           - id: modal_no_footer_content
@@ -224,7 +224,7 @@ blocks:
     properties:
       title: Mask Not Closable
       maskClosable: false
-    areas:
+    slots:
       content:
         blocks:
           - id: modal_mask_not_closable_content
@@ -261,7 +261,7 @@ blocks:
           type: SetState
           params:
             modal_ok_fired: true
-    areas:
+    slots:
       content:
         blocks:
           - id: modal_onok_content
@@ -306,7 +306,7 @@ blocks:
           type: SetState
           params:
             modal_cancel_fired: true
-    areas:
+    slots:
       content:
         blocks:
           - id: modal_oncancel_content
@@ -351,7 +351,7 @@ blocks:
           type: SetState
           params:
             modal_open_fired: true
-    areas:
+    slots:
       content:
         blocks:
           - id: modal_onopen_content
@@ -396,7 +396,7 @@ blocks:
           type: SetState
           params:
             modal_close_fired: true
-    areas:
+    slots:
       content:
         blocks:
           - id: modal_onclose_content
@@ -439,7 +439,7 @@ blocks:
     type: Modal
     properties:
       title: Toggle Modal
-    areas:
+    slots:
       content:
         blocks:
           - id: modal_toggle_content
@@ -464,7 +464,7 @@ blocks:
     type: Modal
     properties:
       title: Custom Footer Modal
-    areas:
+    slots:
       content:
         blocks:
           - id: modal_custom_footer_content

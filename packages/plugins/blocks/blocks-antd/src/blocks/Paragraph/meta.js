@@ -20,6 +20,7 @@ export default {
   valueType: null,
   cssKeys: {
     element: 'The Paragraph element.',
+    copyableIcon: 'The copyable icon in the Paragraph.',
   },
   events: {
     onExpand: 'Trigger action when ellipse expand is clicked.',

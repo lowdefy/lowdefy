@@ -180,15 +180,23 @@ const RatingSlider = ({
             {!properties.disableIcons && (
               <Icon
                 blockId={`${blockId}_iconMin`}
+                classNames={{ element: classNames.minIcon }}
                 events={events}
                 properties={mergeObjects([
                   {
                     name: 'AiOutlineFrown',
-                    style: { flex: '0 0 1', fontSize: '20px', padding: '6px 6px 0 0' },
                     color: properties.color,
                   },
                   propertiesIconMin,
                 ])}
+                styles={{
+                  element: {
+                    flex: '0 0 1',
+                    fontSize: '20px',
+                    padding: '6px 6px 0 0',
+                    ...styles.minIcon,
+                  },
+                }}
               />
             )}
             {hasSliderTheme ? (
@@ -201,15 +209,23 @@ const RatingSlider = ({
             {!properties.disableIcons && (
               <Icon
                 blockId={`${blockId}_iconMax`}
+                classNames={{ element: classNames.maxIcon }}
                 events={events}
                 properties={mergeObjects([
                   {
                     name: 'AiOutlineSmile',
-                    style: { flex: '0 0 1', fontSize: '20px', padding: '6px 0 0 6px' },
                     color: properties.color,
                   },
                   propertiesIconMax,
                 ])}
+                styles={{
+                  element: {
+                    flex: '0 0 1',
+                    fontSize: '20px',
+                    padding: '6px 0 0 6px',
+                    ...styles.maxIcon,
+                  },
+                }}
               />
             )}
           </div>

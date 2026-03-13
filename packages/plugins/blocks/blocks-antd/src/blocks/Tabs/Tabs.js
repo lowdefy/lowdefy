@@ -90,7 +90,15 @@ const TabsBlock = ({
         disabled: tab.disabled,
         label: (
           <span style={tab.titleStyle}>
-            {tab.icon && <Icon blockId={`${blockId}_icon`} events={events} properties={tab.icon} />}
+            {tab.icon && (
+              <Icon
+                blockId={`${blockId}_icon`}
+                classNames={{ element: classNames.icon }}
+                events={events}
+                properties={tab.icon}
+                styles={{ element: styles.icon }}
+              />
+            )}
             {tab.title ? renderHtml({ html: tab.title, methods }) : tab.key}
           </span>
         ),

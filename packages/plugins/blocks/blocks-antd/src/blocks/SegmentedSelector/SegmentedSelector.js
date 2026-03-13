@@ -69,8 +69,10 @@ const SegmentedSelector = ({
                     icon: opt.icon ? (
                       <Icon
                         blockId={`${blockId}_${i}_icon`}
+                        classNames={{ element: classNames.icon }}
                         events={events}
                         properties={opt.icon}
+                        styles={{ element: styles.icon }}
                       />
                     ) : undefined,
                   }

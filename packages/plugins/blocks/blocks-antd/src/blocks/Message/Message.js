@@ -39,8 +39,10 @@ const MessageBlock = ({
           <ErrorBoundary onError={handleError}>
             <Icon
               blockId={`${blockId}_icon`}
+              classNames={{ element: classNames.icon }}
               events={events}
               properties={args.icon ?? properties.icon}
+              styles={{ element: styles.icon }}
             />
           </ErrorBoundary>
         ),

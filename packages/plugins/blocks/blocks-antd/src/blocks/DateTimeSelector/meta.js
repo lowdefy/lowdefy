@@ -26,6 +26,7 @@ export default {
     extra: 'The DateTimeSelector extra content.',
     feedback: 'The DateTimeSelector validation feedback.',
     popup: 'The DateTimeSelector popup.',
+    suffixIcon: 'The suffix icon in the DateTimeSelector.',
   },
   events: {
     onChange: 'Trigger actions when selection is changed.',

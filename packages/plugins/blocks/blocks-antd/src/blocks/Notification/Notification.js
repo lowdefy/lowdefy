@@ -46,7 +46,13 @@ const NotificationBlock = ({
         top: properties.top,
         icon: properties.icon && (
           <ErrorBoundary onError={handleError}>
-            <Icon blockId={`${blockId}_icon`} events={events} properties={properties.icon} />
+            <Icon
+              blockId={`${blockId}_icon`}
+              classNames={{ element: classNames.icon }}
+              events={events}
+              properties={properties.icon}
+              styles={{ element: styles.icon }}
+            />
           </ErrorBoundary>
         ),
         btn: properties.button && (
@@ -64,8 +70,10 @@ const NotificationBlock = ({
           <ErrorBoundary onError={handleError}>
             <Icon
               blockId={`${blockId}_closeIcon`}
+              classNames={{ element: classNames.closeIcon }}
               events={events}
               properties={properties.closeIcon}
+              styles={{ element: styles.closeIcon }}
             />
           </ErrorBoundary>
         ),

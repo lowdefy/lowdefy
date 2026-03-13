@@ -20,6 +20,7 @@ export default {
   valueType: null,
   cssKeys: {
     element: 'The Avatar element.',
+    icon: 'The icon in the Avatar.',
     max: 'The Avatar max overflow style.',
   },
   events: {

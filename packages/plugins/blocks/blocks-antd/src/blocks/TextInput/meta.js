@@ -25,6 +25,8 @@ export default {
     label: 'The TextInput label.',
     extra: 'The TextInput extra content.',
     feedback: 'The TextInput validation feedback.',
+    prefixIcon: 'The prefix icon in the TextInput.',
+    suffixIcon: 'The suffix icon in the TextInput.',
   },
   events: {
     onBlur: 'Trigger action event occurs when text input loses focus.',

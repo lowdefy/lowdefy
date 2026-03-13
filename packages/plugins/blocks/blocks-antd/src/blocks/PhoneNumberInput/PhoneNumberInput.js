@@ -249,8 +249,10 @@ const PhoneNumberInput = ({
                 (properties.prefixIcon && (
                   <Icon
                     blockId={`${blockId}_prefixIcon`}
+                    classNames={{ element: classNames.prefixIcon }}
                     events={events}
                     properties={properties.prefixIcon}
+                    styles={{ element: styles.prefixIcon }}
                   />
                 ))
               }
@@ -261,8 +263,10 @@ const PhoneNumberInput = ({
                     {properties.suffixIcon && (
                       <Icon
                         blockId={`${blockId}_suffixIcon`}
+                        classNames={{ element: classNames.suffixIcon }}
                         events={events}
                         properties={properties.suffixIcon}
+                        styles={{ element: styles.suffixIcon }}
                       />
                     )}
                   </>

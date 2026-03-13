@@ -26,7 +26,9 @@ export default {
     extra: 'The PhoneNumberInput extra content.',
     feedback: 'The PhoneNumberInput validation feedback.',
     options: 'The PhoneNumberInput options.',
+    prefixIcon: 'The prefix icon in the PhoneNumberInput.',
     select: 'The PhoneNumberInput select.',
+    suffixIcon: 'The suffix icon in the PhoneNumberInput.',
   },
   events: {
     onInputChange: 'Trigger action when text input is changed.',

@@ -22,10 +22,12 @@ export default {
   valueType: 'any',
   cssKeys: {
     element: 'The Selector element.',
+    clearIcon: 'The clear icon in the Selector.',
     label: 'The Selector label.',
     extra: 'The Selector extra content.',
     feedback: 'The Selector validation feedback.',
     options: 'The Selector options.',
+    suffixIcon: 'The suffix icon in the Selector.',
   },
   events: {
     onBlur: 'Trigger action event occurs when selector loses focus.',

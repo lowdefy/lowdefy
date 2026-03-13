@@ -22,9 +22,11 @@ export default {
   valueType: 'boolean',
   cssKeys: {
     element: 'The Switch element.',
+    checkedIcon: 'The checked icon in the Switch.',
     label: 'The Switch label.',
     extra: 'The Switch extra content.',
     feedback: 'The Switch validation feedback.',
+    uncheckedIcon: 'The unchecked icon in the Switch.',
   },
   events: {
     onChange: 'Trigger action when switch is changed.',

@@ -23,6 +23,7 @@ export default {
     header: 'The ControlledList header.',
     footer: 'The ControlledList footer.',
     item: 'The ControlledList item.',
+    removeIcon: 'The remove item icon in the ControlledList.',
   },
   properties: {
     type: 'object',

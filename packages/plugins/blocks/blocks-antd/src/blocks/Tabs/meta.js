@@ -20,6 +20,7 @@ export default {
   valueType: null,
   cssKeys: {
     element: 'The Tabs element.',
+    icon: 'The icon in the Tabs.',
     tabBar: 'The Tabs tab bar.',
     tabPane: 'The Tabs tab pane.',
     inkBar: 'The Tabs ink bar.',

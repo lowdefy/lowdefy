@@ -26,6 +26,7 @@ export default {
     extra: 'The WeekSelector extra content.',
     feedback: 'The WeekSelector validation feedback.',
     popup: 'The WeekSelector popup.',
+    suffixIcon: 'The suffix icon in the WeekSelector.',
   },
   events: {
     onChange: 'Trigger action when week is changed.',

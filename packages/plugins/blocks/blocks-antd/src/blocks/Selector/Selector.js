@@ -71,8 +71,10 @@ const Selector = ({
                 properties.suffixIcon && (
                   <Icon
                     blockId={`${blockId}_suffixIcon`}
+                    classNames={{ element: classNames.suffixIcon }}
                     events={events}
                     properties={properties.suffixIcon}
+                    styles={{ element: styles.suffixIcon }}
                   />
                 )
               }
@@ -80,8 +82,10 @@ const Selector = ({
                 properties.clearIcon && (
                   <Icon
                     blockId={`${blockId}_clearIcon`}
+                    classNames={{ element: classNames.clearIcon }}
                     events={events}
                     properties={properties.clearIcon}
+                    styles={{ element: styles.clearIcon }}
                   />
                 )
               }

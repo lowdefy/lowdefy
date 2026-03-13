@@ -35,7 +35,13 @@ const TagBlock = ({
   const additionalProps = {};
   if (properties.icon) {
     additionalProps.icon = (
-      <Icon blockId={`${blockId}_icon`} events={events} properties={properties.icon} />
+      <Icon
+        blockId={`${blockId}_icon`}
+        classNames={{ element: classNames.icon }}
+        events={events}
+        properties={properties.icon}
+        styles={{ element: styles.icon }}
+      />
     );
   }
   if (onClick || events.onClick) {

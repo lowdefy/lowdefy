@@ -59,8 +59,10 @@ const AvatarBlock = ({
               avatar.icon && (
                 <Icon
                   blockId={`${blockId}_avatar_${i}_icon`}
+                  classNames={{ element: classNames.icon }}
                   events={events}
                   properties={avatar.icon}
+                  styles={{ element: styles.icon }}
                 />
               )
             }
@@ -89,7 +91,13 @@ const AvatarBlock = ({
       }}
       icon={
         properties.icon && (
-          <Icon blockId={`${blockId}_icon`} events={events} properties={properties.icon} />
+          <Icon
+            blockId={`${blockId}_icon`}
+            classNames={{ element: classNames.icon }}
+            events={events}
+            properties={properties.icon}
+            styles={{ element: styles.icon }}
+          />
         )
       }
     >

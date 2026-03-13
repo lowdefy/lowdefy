@@ -25,6 +25,8 @@ export default {
     label: 'The RatingSlider label.',
     extra: 'The RatingSlider extra content.',
     feedback: 'The RatingSlider validation feedback.',
+    minIcon: 'The min icon in the RatingSlider.',
+    maxIcon: 'The max icon in the RatingSlider.',
   },
   events: {
     onChange: 'Trigger action when rating is changed.',

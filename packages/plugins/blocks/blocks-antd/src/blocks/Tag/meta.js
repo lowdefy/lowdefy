@@ -20,6 +20,7 @@ export default {
   valueType: null,
   cssKeys: {
     element: 'The Tag element.',
+    icon: 'The icon in the Tag.',
   },
   events: {
     onClick: 'Called when Tag is clicked.',

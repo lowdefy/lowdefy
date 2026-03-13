@@ -124,22 +124,26 @@ const ControlledListBlock = ({
             !properties.hideRemoveButton &&
             list.length > (properties.minItems ?? 0) && [
               // eslint-disable-next-line react/jsx-key
-              <Icon
-                blockId={`${blockId}_${i}_remove_icon`}
-                events={events}
-                properties={{
-                  name: 'AiOutlineMinusCircle',
-                  ...properties.removeItemIcon,
-                  style: {
-                    paddingLeft:
-                      properties.size === 'small' ? 2 : properties.size === 'large' ? 6 : 4,
-                    fontSize:
-                      properties.size === 'small' ? 16 : properties.size === 'large' ? 20 : 18,
-                    ...(properties.removeItemIcon?.style ? properties.removeItemIcon.style : {}),
-                  },
+              <span
+                style={{
+                  paddingLeft:
+                    properties.size === 'small' ? 2 : properties.size === 'large' ? 6 : 4,
+                  fontSize:
+                    properties.size === 'small' ? 16 : properties.size === 'large' ? 20 : 18,
                 }}
-                onClick={() => methods.removeItem(i)}
-              />,
+              >
+                <Icon
+                  blockId={`${blockId}_${i}_remove_icon`}
+                  classNames={{ element: classNames.removeIcon }}
+                  events={events}
+                  properties={{
+                    name: 'AiOutlineMinusCircle',
+                    ...properties.removeItemIcon,
+                  }}
+                  styles={{ element: styles.removeIcon }}
+                  onClick={() => methods.removeItem(i)}
+                />
+              </span>,
             ]
           }
         >

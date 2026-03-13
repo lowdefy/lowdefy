@@ -26,6 +26,7 @@ export default {
     extra: 'The DateRangeSelector extra content.',
     feedback: 'The DateRangeSelector validation feedback.',
     popup: 'The DateRangeSelector popup.',
+    suffixIcon: 'The suffix icon in the DateRangeSelector.',
   },
   events: {
     onChange: 'Trigger actions when selection is changed.',

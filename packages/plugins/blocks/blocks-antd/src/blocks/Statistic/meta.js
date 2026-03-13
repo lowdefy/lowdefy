@@ -20,6 +20,8 @@ export default {
   valueType: null,
   cssKeys: {
     element: 'The Statistic element.',
+    prefixIcon: 'The prefix icon in the Statistic.',
+    suffixIcon: 'The suffix icon in the Statistic.',
     value: 'The Statistic value.',
   },
   properties: {

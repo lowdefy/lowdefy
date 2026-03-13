@@ -34,7 +34,13 @@ const ConfirmModal = ({
       if (properties.icon) {
         additionalProps.icon = (
           <ErrorBoundary onError={handleError}>
-            <Icon blockId={`${blockId}_icon`} events={events} properties={properties.icon} />
+            <Icon
+              blockId={`${blockId}_icon`}
+              classNames={{ element: classNames.icon }}
+              events={events}
+              properties={properties.icon}
+              styles={{ element: styles.icon }}
+            />
           </ErrorBoundary>
         );
       }
@@ -57,8 +63,10 @@ const ConfirmModal = ({
                 <ErrorBoundary onError={handleError}>
                   <Icon
                     blockId={`${blockId}_ok_icon`}
+                    classNames={{ element: classNames.okIcon }}
                     events={events}
                     properties={properties.okButton.icon}
+                    styles={{ element: styles.okIcon }}
                   />
                 </ErrorBoundary>
               ),
@@ -71,8 +79,10 @@ const ConfirmModal = ({
                 <ErrorBoundary onError={handleError}>
                   <Icon
                     blockId={`${blockId}_cancel_icon`}
+                    classNames={{ element: classNames.cancelIcon }}
                     events={events}
                     properties={properties.cancelButton.icon}
+                    styles={{ element: styles.cancelIcon }}
                   />
                 </ErrorBoundary>
               ),

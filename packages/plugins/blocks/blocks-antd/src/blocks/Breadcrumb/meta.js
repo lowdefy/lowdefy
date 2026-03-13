@@ -20,6 +20,7 @@ export default {
   valueType: null,
   cssKeys: {
     element: 'The Breadcrumb element.',
+    icon: 'The icon in the Breadcrumb.',
   },
   events: {
     onClick: 'Triggered when breadcrumb item is clicked. Provides clicked link and index as args.',

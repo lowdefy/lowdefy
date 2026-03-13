@@ -22,6 +22,7 @@ export default {
   valueType: 'any',
   cssKeys: {
     element: 'The SegmentedSelector element.',
+    icon: 'The icon in the SegmentedSelector.',
     label: 'The SegmentedSelector label.',
     extra: 'The SegmentedSelector extra content.',
     feedback: 'The SegmentedSelector validation feedback.',

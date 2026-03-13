@@ -39,7 +39,13 @@ const FloatButtonBlock = ({
     tooltip={properties.tooltip}
     icon={
       properties.icon && (
-        <Icon blockId={`${blockId}_icon`} events={events} properties={properties.icon} />
+        <Icon
+          blockId={`${blockId}_icon`}
+          classNames={{ element: classNames.icon }}
+          events={events}
+          properties={properties.icon}
+          styles={{ element: styles.icon }}
+        />
       )
     }
     htmlType={properties.htmlType}

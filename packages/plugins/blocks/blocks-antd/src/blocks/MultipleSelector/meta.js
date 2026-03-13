@@ -22,10 +22,13 @@ export default {
   valueType: 'array',
   cssKeys: {
     element: 'The MultipleSelector element.',
+    clearIcon: 'The clear icon in the MultipleSelector.',
     label: 'The MultipleSelector label.',
     extra: 'The MultipleSelector extra content.',
     feedback: 'The MultipleSelector validation feedback.',
     options: 'The MultipleSelector options.',
+    selectedIcon: 'The selected item icon in the MultipleSelector.',
+    suffixIcon: 'The suffix icon in the MultipleSelector.',
   },
   events: {
     onChange: 'Trigger actions when selection is changed.',

@@ -20,6 +20,7 @@ export default {
   valueType: null,
   cssKeys: {
     element: 'The FloatButton element.',
+    icon: 'The icon in the FloatButton.',
   },
   events: {
     onClick: 'Trigger action when button is clicked.',

@@ -20,6 +20,8 @@ export default {
   valueType: null,
   cssKeys: {
     element: 'The Menu element.',
+    expandIcon: 'The expand icon in the Menu.',
+    icon: 'The icon in the Menu.',
     item: 'The Menu item.',
   },
   events: {

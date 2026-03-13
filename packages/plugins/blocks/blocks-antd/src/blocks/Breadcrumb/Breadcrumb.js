@@ -54,14 +54,14 @@ const BreadcrumbBlock = ({
                 {link.icon && (
                   <Icon
                     blockId={`${blockId}_${index}_icon`}
+                    classNames={{ element: classNames.icon }}
                     events={events}
                     properties={{
                       name: type.isString(link.icon) && link.icon,
                       ...(type.isObject(link.icon) ? link.icon : {}),
-                      style: {
-                        marginRight: 8,
-                        ...(type.isObject(link.icon?.style) ? link.icon.style : {}),
-                      },
+                    }}
+                    styles={{
+                      element: { marginRight: 8, ...styles.icon },
                     }}
                   />
                 )}

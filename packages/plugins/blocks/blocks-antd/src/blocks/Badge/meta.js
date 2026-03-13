@@ -20,6 +20,7 @@ export default {
   valueType: null,
   cssKeys: {
     element: 'The Badge element.',
+    icon: 'The icon in the Badge.',
     indicator: 'The Badge indicator.',
   },
   properties: {
