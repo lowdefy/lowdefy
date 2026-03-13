@@ -537,7 +537,7 @@
     - id: css_custom_msg
       type: Message
       style:
-        element:
+        --element:
           border: '2px solid #1677ff'
           borderRadius: 8
       properties:

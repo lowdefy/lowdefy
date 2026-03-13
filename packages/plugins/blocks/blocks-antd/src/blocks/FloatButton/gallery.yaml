@@ -17,7 +17,7 @@
     - id: type_default
       type: FloatButton
       style:
-        element:
+        --element:
           position: relative
           insetInlineEnd: auto
           insetBlockEnd: auto
@@ -28,7 +28,7 @@
     - id: type_primary
       type: FloatButton
       style:
-        element:
+        --element:
           position: relative
           insetInlineEnd: auto
           insetBlockEnd: auto
@@ -39,7 +39,7 @@
     - id: type_primary_icon
       type: FloatButton
       style:
-        element:
+        --element:
           position: relative
           insetInlineEnd: auto
           insetBlockEnd: auto
@@ -53,7 +53,7 @@
     - id: shape_circle
       type: FloatButton
       style:
-        element:
+        --element:
           position: relative
           insetInlineEnd: auto
           insetBlockEnd: auto
@@ -64,7 +64,7 @@
     - id: shape_square
       type: FloatButton
       style:
-        element:
+        --element:
           position: relative
           insetInlineEnd: auto
           insetBlockEnd: auto
@@ -75,7 +75,7 @@
     - id: shape_square_primary
       type: FloatButton
       style:
-        element:
+        --element:
           position: relative
           insetInlineEnd: auto
           insetBlockEnd: auto
@@ -90,7 +90,7 @@
     - id: icon_string
       type: FloatButton
       style:
-        element:
+        --element:
           position: relative
           insetInlineEnd: auto
           insetBlockEnd: auto
@@ -100,7 +100,7 @@
     - id: icon_object
       type: FloatButton
       style:
-        element:
+        --element:
           position: relative
           insetInlineEnd: auto
           insetBlockEnd: auto
@@ -111,7 +111,7 @@
     - id: icon_colored
       type: FloatButton
       style:
-        element:
+        --element:
           position: relative
           insetInlineEnd: auto
           insetBlockEnd: auto
@@ -123,7 +123,7 @@
     - id: icon_comment
       type: FloatButton
       style:
-        element:
+        --element:
           position: relative
           insetInlineEnd: auto
           insetBlockEnd: auto
@@ -137,7 +137,7 @@
     - id: tooltip_basic
       type: FloatButton
       style:
-        element:
+        --element:
           position: relative
           insetInlineEnd: auto
           insetBlockEnd: auto
@@ -147,7 +147,7 @@
     - id: tooltip_long
       type: FloatButton
       style:
-        element:
+        --element:
           position: relative
           insetInlineEnd: auto
           insetBlockEnd: auto
@@ -157,7 +157,7 @@
     - id: tooltip_primary
       type: FloatButton
       style:
-        element:
+        --element:
           position: relative
           insetInlineEnd: auto
           insetBlockEnd: auto
@@ -171,7 +171,7 @@
     - id: desc_basic
       type: FloatButton
       style:
-        element:
+        --element:
           position: relative
           insetInlineEnd: auto
           insetBlockEnd: auto
@@ -183,7 +183,7 @@
     - id: desc_docs
       type: FloatButton
       style:
-        element:
+        --element:
           position: relative
           insetInlineEnd: auto
           insetBlockEnd: auto
@@ -195,7 +195,7 @@
     - id: desc_no_icon
       type: FloatButton
       style:
-        element:
+        --element:
           position: relative
           insetInlineEnd: auto
           insetBlockEnd: auto
@@ -209,7 +209,7 @@
     - id: badge_count
       type: FloatButton
       style:
-        element:
+        --element:
           position: relative
           insetInlineEnd: auto
           insetBlockEnd: auto
@@ -221,7 +221,7 @@
     - id: badge_dot
       type: FloatButton
       style:
-        element:
+        --element:
           position: relative
           insetInlineEnd: auto
           insetBlockEnd: auto
@@ -233,7 +233,7 @@
     - id: badge_overflow
       type: FloatButton
       style:
-        element:
+        --element:
           position: relative
           insetInlineEnd: auto
           insetBlockEnd: auto
@@ -249,7 +249,7 @@
     - id: href_basic
       type: FloatButton
       style:
-        element:
+        --element:
           position: relative
           insetInlineEnd: auto
           insetBlockEnd: auto
@@ -260,7 +260,7 @@
     - id: href_blank
       type: FloatButton
       style:
-        element:
+        --element:
           position: relative
           insetInlineEnd: auto
           insetBlockEnd: auto
@@ -272,7 +272,7 @@
     - id: href_primary
       type: FloatButton
       style:
-        element:
+        --element:
           position: relative
           insetInlineEnd: auto
           insetBlockEnd: auto
@@ -288,7 +288,7 @@
     - id: htmltype_button
       type: FloatButton
       style:
-        element:
+        --element:
           position: relative
           insetInlineEnd: auto
           insetBlockEnd: auto
@@ -299,7 +299,7 @@
     - id: htmltype_submit
       type: FloatButton
       style:
-        element:
+        --element:
           position: relative
           insetInlineEnd: auto
           insetBlockEnd: auto
@@ -311,7 +311,7 @@
     - id: htmltype_reset
       type: FloatButton
       style:
-        element:
+        --element:
           position: relative
           insetInlineEnd: auto
           insetBlockEnd: auto
@@ -326,7 +326,7 @@
       type: FloatButton
       class: shadow-xl
       style:
-        element:
+        --element:
           position: relative
           insetInlineEnd: auto
           insetBlockEnd: auto
@@ -336,7 +336,7 @@
     - id: css_opacity
       type: FloatButton
       style:
-        element:
+        --element:
           position: relative
           insetInlineEnd: auto
           insetBlockEnd: auto
@@ -348,7 +348,7 @@
       type: FloatButton
       class: ring-2 ring-blue-400
       style:
-        element:
+        --element:
           position: relative
           insetInlineEnd: auto
           insetBlockEnd: auto
@@ -365,7 +365,7 @@
         - id: css_on_dark
           type: FloatButton
           style:
-            element:
+            --element:
               position: relative
               insetInlineEnd: auto
               insetBlockEnd: auto
@@ -379,7 +379,7 @@
     - id: theme_green
       type: FloatButton
       style:
-        element:
+        --element:
           position: relative
           insetInlineEnd: auto
           insetBlockEnd: auto
@@ -393,7 +393,7 @@
     - id: theme_dark_bg
       type: FloatButton
       style:
-        element:
+        --element:
           position: relative
           insetInlineEnd: auto
           insetBlockEnd: auto
@@ -406,7 +406,7 @@
     - id: theme_large
       type: FloatButton
       style:
-        element:
+        --element:
           position: relative
           insetInlineEnd: auto
           insetBlockEnd: auto
@@ -420,7 +420,7 @@
     - id: theme_custom_badge
       type: FloatButton
       style:
-        element:
+        --element:
           position: relative
           insetInlineEnd: auto
           insetBlockEnd: auto
@@ -480,7 +480,7 @@
         - id: dashboard_float
           type: FloatButton
           style:
-            element:
+            --element:
               position: relative
               insetInlineEnd: auto
               insetBlockEnd: auto
@@ -540,7 +540,7 @@
             - id: help_float
               type: FloatButton
               style:
-                element:
+                --element:
                   position: relative
                   insetInlineEnd: auto
                   insetBlockEnd: auto
