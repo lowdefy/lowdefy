@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/container/Tabs.yaml
     block_type: Tabs
     antd_component: Tabs
+    antd_url: tabs
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Tabs
     schema: ../plugins/blocks/blocks-antd/src/blocks/Tabs/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Tabs/gallery.yaml

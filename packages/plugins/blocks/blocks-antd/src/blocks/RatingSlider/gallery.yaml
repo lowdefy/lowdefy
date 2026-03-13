@@ -207,13 +207,6 @@
           color: '#52c41a'
         min: 0
         max: 10
-    - id: icons_disabled
-      type: RatingSlider
-      properties:
-        title: Icons Disabled
-        disableIcons: true
-        min: 0
-        max: 10
 
 - title: Color
   blocks:
@@ -250,13 +243,6 @@
       properties:
         title: Purple
         color: '#722ed1'
-        min: 0
-        max: 10
-    - id: color_teal
-      type: RatingSlider
-      properties:
-        title: Teal
-        color: '#13c2c2'
         min: 0
         max: 10
 
@@ -336,19 +322,6 @@
         title: No Colon
         label:
           colon: false
-    - id: label_disabled
-      type: RatingSlider
-      properties:
-        label:
-          disabled: true
-        min: 0
-        max: 10
-    - id: label_html_title
-      type: RatingSlider
-      properties:
-        title: '<b>Bold</b> <em>Rating</em>'
-        label:
-          extra: '<span style="color: #999">Supports HTML in title and extra</span>'
 
 - title: No Icons, No N/A (Minimal)
   blocks:
@@ -547,34 +520,112 @@
           railHoverBg: '#efdbff'
           dotBorderColor: '#d3adf7'
           dotActiveBorderColor: '#722ed1'
-    - id: theme_bold_handle
-      type: RatingSlider
+
+- title: RatingSlider in Product Review
+  blocks:
+    - id: applied_product_review_card
+      type: Card
       properties:
-        title: Bold Handle Border
-        min: 0
-        max: 10
-        theme:
-          handleLineWidth: 4
-          handleLineWidthHover: 5
-    - id: theme_combined
-      type: RatingSlider
+        title: Write a Product Review
+      blocks:
+        - id: applied_product_review_rating
+          type: RatingSlider
+          properties:
+            title: Product Rating
+            min: 1
+            max: 5
+            step: 1
+            color: '#fa8c16'
+            minIcon: AiOutlineStar
+            maxIcon: AiFillStar
+            showMarks: true
+            showDots: true
+            disableNotApplicable: true
+            label:
+              extra: How would you rate this product?
+          events:
+            onChange:
+              - id: applied_product_review_set_rating
+                type: SetState
+                params:
+                  productRating:
+                    _event: value
+        - id: applied_product_review_text
+          type: TextArea
+          properties:
+            title: Your Review
+            label:
+              extra: Tell us more about your experience.
+            rows: 4
+        - id: applied_product_review_submit
+          type: Button
+          properties:
+            title: Submit Review
+            icon: AiOutlineSend
+            type: primary
+            block: true
+          events:
+            onClick:
+              - id: applied_product_review_validate
+                type: Validate
+              - id: applied_product_review_message
+                type: DisplayMessage
+                params:
+                  content: Thank you for your review!
+                  status: success
+
+- title: RatingSlider in Survey Form
+  blocks:
+    - id: applied_survey_card
+      type: Card
       properties:
-        title: Combined Token Overrides
-        min: 0
-        max: 10
-        color: '#fa8c16'
-        disableNotApplicable: true
-        tooltipVisible: always
-        theme:
-          handleSize: 12
-          handleSizeHover: 14
-          railSize: 6
-          trackBg: '#ffd591'
-          trackHoverBg: '#ffa940'
-          handleColor: '#fa8c16'
-          handleActiveColor: '#d46b08'
-          railBg: '#fff7e6'
-          railHoverBg: '#ffe7ba'
-          dotSize: 10
-          dotBorderColor: '#ffd591'
-          dotActiveBorderColor: '#fa8c16'
+        title: Customer Feedback Survey
+      blocks:
+        - id: applied_survey_service_rating
+          type: RatingSlider
+          properties:
+            title: Service Quality
+            min: 1
+            max: 10
+            color: '#1677ff'
+            minIcon: AiOutlineFrown
+            maxIcon: AiOutlineSmile
+            showMarks: true
+            label:
+              extra: How would you rate the service you received?
+        - id: applied_survey_quality_rating
+          type: RatingSlider
+          properties:
+            title: Product Quality
+            min: 1
+            max: 10
+            color: '#52c41a'
+            minIcon: AiOutlineDislike
+            maxIcon: AiOutlineLike
+            showMarks: true
+            label:
+              extra: How would you rate the quality of our products?
+        - id: applied_survey_value_rating
+          type: RatingSlider
+          properties:
+            title: Value for Money
+            min: 1
+            max: 10
+            color: '#fa8c16'
+            showMarks: true
+            label:
+              extra: How would you rate the value for money?
+        - id: applied_survey_submit
+          type: Button
+          properties:
+            title: Submit Survey
+            icon: AiOutlineCheck
+            type: primary
+            block: true
+          events:
+            onClick:
+              - id: applied_survey_message
+                type: DisplayMessage
+                params:
+                  content: Survey submitted successfully. Thank you for your feedback!
+                  status: success

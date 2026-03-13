@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/container/PageHeaderMenu.yaml
     block_type: PageHeaderMenu
     antd_component: Layout
+    antd_url: layout
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/PageHeaderMenu
     schema: ../plugins/blocks/blocks-antd/src/blocks/PageHeaderMenu/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/PageHeaderMenu/gallery.yaml

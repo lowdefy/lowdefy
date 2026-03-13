@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/container/ConfigProvider.yaml
     block_type: ConfigProvider
     antd_component: ConfigProvider
+    antd_url: config-provider
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/ConfigProvider
     schema: ../plugins/blocks/blocks-antd/src/blocks/ConfigProvider/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/ConfigProvider/gallery.yaml

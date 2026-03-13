@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/input/CheckboxSwitch.yaml
     block_type: CheckboxSwitch
     antd_component: Checkbox
+    antd_url: checkbox
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/CheckboxSwitch
     schema: ../plugins/blocks/blocks-antd/src/blocks/CheckboxSwitch/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/CheckboxSwitch/gallery.yaml

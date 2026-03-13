@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/container/Watermark.yaml
     block_type: Watermark
     antd_component: Watermark
+    antd_url: watermark
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Watermark
     schema: ../plugins/blocks/blocks-antd/src/blocks/Watermark/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Watermark/gallery.yaml

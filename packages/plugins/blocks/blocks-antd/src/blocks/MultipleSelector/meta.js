@@ -60,7 +60,8 @@ export default {
       bordered: {
         type: 'boolean',
         default: true,
-        description: 'Whether or not the selector has a border style.',
+        description:
+          'Whether or not the selector has a border style. Deprecated, use variant instead.',
       },
       clearIcon: {
         type: ['string', 'object'],
@@ -282,6 +283,11 @@ export default {
       title: {
         type: 'string',
         description: 'Multiple selector label title - supports html.',
+      },
+      variant: {
+        type: 'string',
+        enum: ['outlined', 'filled', 'borderless'],
+        description: 'Input visual variant. When set, takes precedence over bordered.',
       },
       renderTags: {
         type: 'boolean',

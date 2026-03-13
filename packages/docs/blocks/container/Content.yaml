@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/container/Content.yaml
     block_type: Content
     antd_component: Content
+    antd_url: layout
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Content
     schema: ../plugins/blocks/blocks-antd/src/blocks/Content/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Content/gallery.yaml

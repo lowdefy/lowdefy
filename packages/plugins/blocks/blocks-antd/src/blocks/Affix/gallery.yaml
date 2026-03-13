@@ -26,16 +26,16 @@
             color: primary
             variant: solid
 
-- title: Offset Top Variants
+- title: Offset Top
   blocks:
-    - id: affix_top_0
+    - id: affix_offset_top_0
       type: Affix
       layout:
         flex: 0 0 auto
       properties:
         offsetTop: 0
       blocks:
-        - id: affix_top_0_btn
+        - id: affix_offset_top_0_btn
           type: Button
           layout:
             flex: 0 0 auto
@@ -44,14 +44,14 @@
             color: primary
             variant: solid
             size: small
-    - id: affix_top_20
+    - id: affix_offset_top_20
       type: Affix
       layout:
         flex: 0 0 auto
       properties:
         offsetTop: 20
       blocks:
-        - id: affix_top_20_btn
+        - id: affix_offset_top_20_btn
           type: Button
           layout:
             flex: 0 0 auto
@@ -60,49 +60,33 @@
             color: primary
             variant: outlined
             size: small
-    - id: affix_top_50
+    - id: affix_offset_top_80
       type: Affix
       layout:
         flex: 0 0 auto
       properties:
-        offsetTop: 50
+        offsetTop: 80
       blocks:
-        - id: affix_top_50_btn
+        - id: affix_offset_top_80_btn
           type: Button
           layout:
             flex: 0 0 auto
           properties:
-            title: Offset 50px
+            title: Offset 80px
             color: primary
             variant: dashed
-            size: small
-    - id: affix_top_100
-      type: Affix
-      layout:
-        flex: 0 0 auto
-      properties:
-        offsetTop: 100
-      blocks:
-        - id: affix_top_100_btn
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Offset 100px
-            color: default
-            variant: outlined
             size: small
 
 - title: Offset Bottom
   blocks:
-    - id: affix_bottom_0
+    - id: affix_offset_bottom_0
       type: Affix
       layout:
         flex: 0 0 auto
       properties:
         offsetBottom: 0
       blocks:
-        - id: affix_bottom_0_btn
+        - id: affix_offset_bottom_0_btn
           type: Button
           layout:
             flex: 0 0 auto
@@ -111,163 +95,321 @@
             color: primary
             variant: solid
             size: small
-    - id: affix_bottom_20
+    - id: affix_offset_bottom_30
       type: Affix
       layout:
         flex: 0 0 auto
       properties:
-        offsetBottom: 20
+        offsetBottom: 30
       blocks:
-        - id: affix_bottom_20_btn
+        - id: affix_offset_bottom_30_btn
           type: Button
           layout:
             flex: 0 0 auto
           properties:
-            title: Bottom 20px
+            title: Bottom 30px
             color: primary
             variant: outlined
             size: small
-    - id: affix_bottom_50
+    - id: affix_offset_bottom_60
       type: Affix
       layout:
         flex: 0 0 auto
       properties:
-        offsetBottom: 50
+        offsetBottom: 60
       blocks:
-        - id: affix_bottom_50_btn
+        - id: affix_offset_bottom_60_btn
           type: Button
           layout:
             flex: 0 0 auto
           properties:
-            title: Bottom 50px
+            title: Bottom 60px
             color: primary
             variant: dashed
             size: small
 
-- title: Affix with Rich Content
+- title: onChange Event
   blocks:
-    - id: affix_rich_card
+    - id: affix_on_change
       type: Affix
       properties:
         offsetTop: 10
+      events:
+        onChange:
+          - id: affix_on_change_message
+            type: DisplayMessage
+            params:
+              content:
+                _if:
+                  test:
+                    _event: affixed
+                  then: Affix is now fixed to the viewport.
+                  else: Affix returned to its original position.
+              duration: 3
       blocks:
-        - id: affix_rich_card_inner
-          type: Card
-          properties:
-            title: Sticky Card
-            size: small
-          blocks:
-            - id: affix_rich_card_msg
-              type: Paragraph
-              properties:
-                content: This card becomes fixed when scrolled past its original position.
-            - id: affix_rich_card_row
-              type: Box
-              layout:
-                gap: 8
-                justify: flex-end
-              blocks:
-                - id: affix_rich_card_cancel
-                  type: Button
-                  layout:
-                    flex: 0 0 auto
-                  properties:
-                    title: Cancel
-                    color: default
-                    variant: outlined
-                    size: small
-                - id: affix_rich_card_save
-                  type: Button
-                  layout:
-                    flex: 0 0 auto
-                  properties:
-                    title: Save
-                    color: primary
-                    variant: solid
-                    size: small
-
-- title: Affix Toolbar
-  blocks:
-    - id: affix_toolbar
-      type: Affix
-      properties:
-        offsetTop: 10
-      blocks:
-        - id: affix_toolbar_row
-          type: Box
-          layout:
-            gap: 4
-          blocks:
-            - id: affix_tb_back
-              type: Button
-              layout:
-                flex: 0 0 auto
-              properties:
-                icon: AiOutlineArrowLeft
-                hideTitle: true
-                color: default
-                variant: outlined
-                size: small
-            - id: affix_tb_save
-              type: Button
-              layout:
-                flex: 0 0 auto
-              properties:
-                title: Save
-                icon: AiOutlineSave
-                color: primary
-                variant: solid
-                size: small
-            - id: affix_tb_undo
-              type: Button
-              layout:
-                flex: 0 0 auto
-              properties:
-                icon: AiOutlineUndo
-                hideTitle: true
-                color: default
-                variant: text
-                size: small
-            - id: affix_tb_redo
-              type: Button
-              layout:
-                flex: 0 0 auto
-              properties:
-                icon: AiOutlineRedo
-                hideTitle: true
-                color: default
-                variant: text
-                size: small
-
-- title: Style Overrides
-  blocks:
-    - id: affix_style
-      type: Affix
-      properties:
-        offsetTop: 10
-      style:
-        --element:
-          zIndex: 100
-      blocks:
-        - id: affix_style_btn
+        - id: affix_on_change_btn
           type: Button
           properties:
-            title: Custom z-index (100)
+            title: Scroll to trigger onChange
             color: primary
             variant: solid
 
 - title: Theme Token Overrides
   blocks:
-    - id: affix_theme_zindex
+    - id: affix_theme_default_z
       type: Affix
+      layout:
+        flex: 0 0 auto
       properties:
         offsetTop: 10
         theme:
-          zIndexPopup: 50
+          zIndexPopup: 10
       blocks:
-        - id: affix_theme_zindex_btn
+        - id: affix_theme_default_z_btn
           type: Button
+          layout:
+            flex: 0 0 auto
           properties:
-            title: Custom zIndexPopup (50)
+            title: Default z-index (10)
+            color: default
+            variant: outlined
+            size: small
+    - id: affix_theme_high_z
+      type: Affix
+      layout:
+        flex: 0 0 auto
+      properties:
+        offsetTop: 10
+        theme:
+          zIndexPopup: 100
+      blocks:
+        - id: affix_theme_high_z_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: High z-index (100)
+            color: primary
+            variant: solid
+            size: small
+    - id: affix_theme_low_z
+      type: Affix
+      layout:
+        flex: 0 0 auto
+      properties:
+        offsetTop: 10
+        theme:
+          zIndexPopup: 1
+      blocks:
+        - id: affix_theme_low_z_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Low z-index (1)
+            color: default
+            variant: dashed
+            size: small
+
+- title: Styled with CSS Key (element)
+  blocks:
+    - id: affix_css_shadow
+      type: Affix
+      layout:
+        flex: 0 0 auto
+      class:
+        element: shadow-lg rounded-lg
+      properties:
+        offsetTop: 10
+      blocks:
+        - id: affix_css_shadow_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Shadow + Rounded
+            color: primary
+            variant: solid
+            size: small
+    - id: affix_css_bg
+      type: Affix
+      layout:
+        flex: 0 0 auto
+      class:
+        element: bg-blue-50 p-2 rounded-md
+      properties:
+        offsetTop: 10
+      blocks:
+        - id: affix_css_bg_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Blue Background
             color: primary
             variant: outlined
+            size: small
+    - id: affix_css_ring
+      type: Affix
+      layout:
+        flex: 0 0 auto
+      class:
+        element: ring-2 ring-green-400 rounded-lg
+      properties:
+        offsetTop: 10
+      blocks:
+        - id: affix_css_ring_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Ring Border
+            color: default
+            variant: outlined
+            size: small
+
+- title: Inline Style Overrides (element)
+  blocks:
+    - id: affix_style_zindex
+      type: Affix
+      properties:
+        offsetTop: 10
+      style:
+        --element:
+          zIndex: 200
+          boxShadow: 0 4px 12px rgba(0, 0, 0, 0.15)
+      blocks:
+        - id: affix_style_zindex_btn
+          type: Button
+          properties:
+            title: Custom z-index (200) + Shadow
+            color: primary
+            variant: solid
+
+- title: Sticky Form Toolbar
+  blocks:
+    - id: affix_form_toolbar
+      type: Affix
+      properties:
+        offsetTop: 0
+      blocks:
+        - id: affix_form_toolbar_card
+          type: Card
+          properties:
+            size: small
+            bordered: true
+          blocks:
+            - id: affix_form_toolbar_row
+              type: Box
+              layout:
+                gap: 8
+                justify: space-between
+                align: center
+              blocks:
+                - id: affix_form_toolbar_title
+                  type: Title
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    content: Edit Employee Record
+                    level: 5
+                - id: affix_form_toolbar_actions
+                  type: Box
+                  layout:
+                    flex: 0 0 auto
+                    gap: 8
+                  blocks:
+                    - id: affix_form_toolbar_discard
+                      type: Button
+                      layout:
+                        flex: 0 0 auto
+                      properties:
+                        title: Discard
+                        color: default
+                        variant: outlined
+                        size: small
+                      events:
+                        onClick:
+                          - id: affix_form_toolbar_discard_msg
+                            type: DisplayMessage
+                            params:
+                              content: Changes discarded.
+                              status: warning
+                    - id: affix_form_toolbar_save
+                      type: Button
+                      layout:
+                        flex: 0 0 auto
+                      properties:
+                        title: Save Changes
+                        icon: AiOutlineSave
+                        color: primary
+                        variant: solid
+                        size: small
+                      events:
+                        onClick:
+                          - id: affix_form_toolbar_save_msg
+                            type: DisplayMessage
+                            params:
+                              content: Employee record saved successfully.
+                              status: success
+
+- title: Fixed Bottom Action Bar
+  blocks:
+    - id: affix_bottom_bar
+      type: Affix
+      properties:
+        offsetBottom: 0
+      blocks:
+        - id: affix_bottom_bar_card
+          type: Card
+          class: shadow-lg
+          properties:
+            size: small
+          blocks:
+            - id: affix_bottom_bar_row
+              type: Box
+              layout:
+                gap: 12
+                justify: flex-end
+                align: center
+              blocks:
+                - id: affix_bottom_bar_status
+                  type: Paragraph
+                  layout:
+                    flex: 1 1 0
+                  properties:
+                    content: 3 items selected
+                - id: affix_bottom_bar_delete
+                  type: Button
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Delete
+                    icon: AiOutlineDelete
+                    color: danger
+                    variant: outlined
+                    size: small
+                  events:
+                    onClick:
+                      - id: affix_bottom_bar_delete_msg
+                        type: DisplayMessage
+                        params:
+                          content: Items deleted.
+                          status: error
+                - id: affix_bottom_bar_export
+                  type: Button
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Export
+                    icon: AiOutlineDownload
+                    color: primary
+                    variant: solid
+                    size: small
+                  events:
+                    onClick:
+                      - id: affix_bottom_bar_export_msg
+                        type: DisplayMessage
+                        params:
+                          content: Export started.
+                          status: success

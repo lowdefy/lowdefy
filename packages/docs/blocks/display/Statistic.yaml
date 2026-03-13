@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/display/Statistic.yaml
     block_type: Statistic
     antd_component: Statistic
+    antd_url: statistic
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Statistic
     schema: ../plugins/blocks/blocks-antd/src/blocks/Statistic/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Statistic/gallery.yaml

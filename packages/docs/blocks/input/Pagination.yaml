@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/input/Pagination.yaml
     block_type: Pagination
     antd_component: Pagination
+    antd_url: pagination
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Pagination
     schema: ../plugins/blocks/blocks-antd/src/blocks/Pagination/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Pagination/gallery.yaml

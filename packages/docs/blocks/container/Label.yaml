@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/container/Label.yaml
     block_type: Label
     antd_component: Label
+    antd_url: form
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Label
     schema: ../plugins/blocks/blocks-antd/src/blocks/Label/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Label/gallery.yaml

@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/container/Popover.yaml
     block_type: Popover
     antd_component: Popover
+    antd_url: popover
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Popover
     schema: ../plugins/blocks/blocks-antd/src/blocks/Popover/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Popover/gallery.yaml

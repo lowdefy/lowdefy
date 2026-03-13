@@ -38,10 +38,7 @@
             value: weekly
           - label: Monthly
             value: monthly
-
-- title: Solid vs Outline Comparison
-  blocks:
-    - id: solid_comparison
+    - id: solid_outline_alignment
       type: ButtonSelector
       properties:
         title: Solid - filled background on selected
@@ -55,20 +52,54 @@
             value: right
           - label: Justify
             value: justify
-    - id: outline_comparison
+
+- title: Options
+  blocks:
+    - id: string_options
       type: ButtonSelector
       properties:
-        title: Outline - bordered highlight on selected
-        buttonStyle: outline
+        title: Simple String Array
+        buttonStyle: solid
         options:
-          - label: Left
-            value: left
-          - label: Center
-            value: center
-          - label: Right
-            value: right
-          - label: Justify
-            value: justify
+          - Red
+          - Green
+          - Blue
+    - id: status_options
+      type: ButtonSelector
+      properties:
+        title: Object Options with Labels
+        buttonStyle: solid
+        options:
+          - label: Active
+            value: active
+          - label: Pending
+            value: pending
+          - label: Archived
+            value: archived
+    - id: html_labels
+      type: ButtonSelector
+      properties:
+        title: HTML in Option Labels
+        buttonStyle: solid
+        options:
+          - label: '<b>Bold</b>'
+            value: bold
+          - label: '<i>Italic</i>'
+            value: italic
+          - label: '<u>Underline</u>'
+            value: underline
+    - id: html_emoji_labels
+      type: ButtonSelector
+      properties:
+        title: Emoji Labels
+        buttonStyle: solid
+        options:
+          - label: '&#x2705; Approved'
+            value: approved
+          - label: '&#x23F3; Pending'
+            value: pending
+          - label: '&#x274C; Rejected'
+            value: rejected
 
 - title: Sizes
   blocks:
@@ -134,84 +165,6 @@
           - Option B
           - Option C
 
-- title: String Options
-  blocks:
-    - id: string_options
-      type: ButtonSelector
-      properties:
-        title: Simple String Array
-        buttonStyle: solid
-        options:
-          - Red
-          - Green
-          - Blue
-    - id: number_options
-      type: ButtonSelector
-      properties:
-        title: Number Options
-        buttonStyle: solid
-        options:
-          - 10
-          - 20
-          - 50
-          - 100
-
-- title: Object Options with Labels
-  blocks:
-    - id: status_options
-      type: ButtonSelector
-      properties:
-        title: Status
-        buttonStyle: solid
-        options:
-          - label: Active
-            value: active
-          - label: Pending
-            value: pending
-          - label: Archived
-            value: archived
-    - id: priority_options
-      type: ButtonSelector
-      properties:
-        title: Priority Level
-        buttonStyle: solid
-        options:
-          - label: Low
-            value: low
-          - label: Medium
-            value: medium
-          - label: High
-            value: high
-          - label: Critical
-            value: critical
-
-- title: HTML Labels
-  blocks:
-    - id: html_labels
-      type: ButtonSelector
-      properties:
-        title: HTML in Option Labels
-        buttonStyle: solid
-        options:
-          - label: '<b>Bold</b>'
-            value: bold
-          - label: '<i>Italic</i>'
-            value: italic
-          - label: '<u>Underline</u>'
-            value: underline
-    - id: html_emoji_labels
-      type: ButtonSelector
-      properties:
-        title: Emoji Labels
-        buttonStyle: solid
-        options:
-          - label: '&#x2705; Approved'
-            value: approved
-          - label: '&#x23F3; Pending'
-            value: pending
-          - label: '&#x274C; Rejected'
-            value: rejected
-
 - title: Many Options
   blocks:
     - id: many_options
@@ -246,7 +199,7 @@
           - label: 'No'
             value: false
 
-- title: Disabled Whole Block
+- title: Disabled
   blocks:
     - id: disabled_solid
       type: ButtonSelector
@@ -274,27 +227,11 @@
             value: b
           - label: Option C
             value: c
-
-- title: Disabled Individual Options
-  blocks:
     - id: disabled_option_solid
       type: ButtonSelector
       properties:
-        title: Disabled Option (Solid)
+        title: Disabled Individual Option (Solid)
         buttonStyle: solid
-        options:
-          - label: Available
-            value: available
-          - label: Unavailable
-            value: unavailable
-            disabled: true
-          - label: In Stock
-            value: in_stock
-    - id: disabled_option_outline
-      type: ButtonSelector
-      properties:
-        title: Disabled Option (Outline)
-        buttonStyle: outline
         options:
           - label: Available
             value: available
@@ -338,6 +275,41 @@
             value: subtle
             style:
               fontStyle: italic
+    - id: option_styles_solid
+      type: ButtonSelector
+      properties:
+        title: Styled Solid Options
+        buttonStyle: solid
+        options:
+          - label: Default
+            value: default
+          - label: Emphasized
+            value: emphasized
+            style:
+              fontWeight: bold
+              letterSpacing: 1
+          - label: Light
+            value: light
+            style:
+              fontStyle: italic
+              opacity: 0.8
+    - id: option_styles_mixed
+      type: ButtonSelector
+      properties:
+        title: Mixed Option Styling
+        buttonStyle: outline
+        options:
+          - label: Regular
+            value: regular
+          - label: Important
+            value: important
+            style:
+              fontWeight: bold
+              textDecoration: underline
+          - label: Muted
+            value: muted
+            style:
+              opacity: 0.6
 
 - title: Color
   blocks:
@@ -497,9 +469,6 @@
             value: a
           - label: Option B
             value: b
-
-- title: Label Inline
-  blocks:
     - id: label_inline
       type: ButtonSelector
       properties:
@@ -515,44 +484,12 @@
             value: center
           - label: Right
             value: right
-    - id: label_inline_right
-      type: ButtonSelector
-      properties:
-        title: Inline Right Aligned
-        label:
-          inline: true
-          span: 8
-          align: right
-        buttonStyle: solid
-        options:
-          - label: Option A
-            value: a
-          - label: Option B
-            value: b
-          - label: Option C
-            value: c
-
-- title: No Label
-  blocks:
     - id: no_label_solid
       type: ButtonSelector
       properties:
         label:
           disabled: true
         buttonStyle: solid
-        options:
-          - label: Left
-            value: left
-          - label: Center
-            value: center
-          - label: Right
-            value: right
-    - id: no_label_outline
-      type: ButtonSelector
-      properties:
-        label:
-          disabled: true
-        buttonStyle: outline
         options:
           - label: Left
             value: left
@@ -582,6 +519,62 @@
           - Option B
           - Option C
 
+- title: Style
+  blocks:
+    - id: style_custom_width
+      type: ButtonSelector
+      properties:
+        title: Custom Width
+        buttonStyle: solid
+        options:
+          - Option A
+          - Option B
+          - Option C
+      style:
+        width: 400
+
+- title: Class Overrides (Tailwind)
+  blocks:
+    - id: class_padding
+      type: ButtonSelector
+      properties:
+        title: Tailwind Padding
+        buttonStyle: solid
+        options:
+          - label: Option A
+            value: a
+          - label: Option B
+            value: b
+          - label: Option C
+            value: c
+        class: p-4
+    - id: class_shadow_rounded
+      type: ButtonSelector
+      properties:
+        title: Shadow and Rounded
+        buttonStyle: solid
+        options:
+          - label: Option A
+            value: a
+          - label: Option B
+            value: b
+          - label: Option C
+            value: c
+        class: shadow-md rounded-lg p-2
+    - id: class_background
+      type: ButtonSelector
+      properties:
+        title: Background Color
+        buttonStyle: solid
+        options:
+          - label: Option A
+            value: a
+          - label: Option B
+            value: b
+          - label: Option C
+            value: c
+        class: bg-gray-50 p-3 rounded
+
 - title: Theme Token Overrides
   blocks:
     - id: theme_large_radius
@@ -598,37 +591,6 @@
             value: c
         theme:
           borderRadius: 20
-    - id: theme_custom_font
-      type: ButtonSelector
-      properties:
-        title: Large Font Size
-        buttonStyle: solid
-        options:
-          - label: Option A
-            value: a
-          - label: Option B
-            value: b
-          - label: Option C
-            value: c
-        theme:
-          fontSize: 18
-    - id: theme_tall_buttons
-      type: ButtonSelector
-      properties:
-        title: Tall Buttons
-        buttonStyle: solid
-        options:
-          - label: Option A
-            value: a
-          - label: Option B
-            value: b
-          - label: Option C
-            value: c
-        theme:
-          controlHeight: 48
-
-- title: Theme Radio Component Tokens
-  blocks:
     - id: theme_button_bg
       type: ButtonSelector
       properties:
@@ -661,23 +623,6 @@
         theme:
           buttonColor: '#531dab'
           buttonCheckedBg: '#f9f0ff'
-    - id: theme_padding
-      type: ButtonSelector
-      properties:
-        title: Wide Padding
-        buttonStyle: solid
-        options:
-          - label: A
-            value: a
-          - label: B
-            value: b
-          - label: C
-            value: c
-        theme:
-          buttonPaddingInline: 32
-
-- title: Theme Combination
-  blocks:
     - id: theme_pill_selector
       type: ButtonSelector
       properties:
@@ -715,77 +660,144 @@
         theme:
           buttonPaddingInline: 6
           borderRadiusSM: 2
-    - id: theme_bold_border
-      type: ButtonSelector
-      properties:
-        title: Bold Border
-        buttonStyle: outline
-        options:
-          - label: Option A
-            value: a
-          - label: Option B
-            value: b
-          - label: Option C
-            value: c
-        theme:
-          lineWidth: 2
 
-- title: Use Cases
+- title: ButtonSelector in Survey Form
   blocks:
-    - id: usecase_view_mode
-      type: ButtonSelector
+    - id: applied_survey_card
+      type: Card
       properties:
-        title: View Mode
-        buttonStyle: solid
-        size: small
-        label:
-          disabled: true
-        options:
-          - label: Grid
-            value: grid
-          - label: List
-            value: list
-          - label: Board
-            value: board
-    - id: usecase_time_range
-      type: ButtonSelector
+        title: Customer Satisfaction Survey
+      blocks:
+        - id: applied_survey_name
+          type: TextInput
+          properties:
+            title: Your Name
+            placeholder: Enter your full name
+        - id: applied_survey_rating
+          type: ButtonSelector
+          properties:
+            title: How satisfied are you with our service?
+            buttonStyle: solid
+            color: '#1677ff'
+            options:
+              - label: Very Unsatisfied
+                value: 1
+              - label: Unsatisfied
+                value: 2
+              - label: Neutral
+                value: 3
+              - label: Satisfied
+                value: 4
+              - label: Very Satisfied
+                value: 5
+        - id: applied_survey_recommend
+          type: ButtonSelector
+          properties:
+            title: Would you recommend us to a friend?
+            buttonStyle: solid
+            options:
+              - label: Definitely
+                value: definitely
+              - label: Probably
+                value: probably
+              - label: Not Sure
+                value: not_sure
+              - label: Unlikely
+                value: unlikely
+        - id: applied_survey_comments
+          type: TextArea
+          properties:
+            title: Additional Comments
+            placeholder: Tell us more about your experience...
+        - id: applied_survey_submit
+          type: Button
+          properties:
+            title: Submit Survey
+            type: primary
+            icon: AiOutlineSend
+          events:
+            onClick:
+              - id: survey_submit_action
+                type: DisplayMessage
+                params:
+                  content:
+                    _string.concat:
+                      - 'Thank you for your feedback! Rating: '
+                      - _state: applied_survey_rating
+                  status: success
+
+- title: ButtonSelector in Settings Page
+  blocks:
+    - id: applied_settings_card
+      type: Card
       properties:
-        title: Time Range
-        buttonStyle: solid
-        options:
-          - label: 1H
-            value: 1h
-          - label: 24H
-            value: 24h
-          - label: 7D
-            value: 7d
-          - label: 30D
-            value: 30d
-          - label: 1Y
-            value: 1y
-    - id: usecase_billing
-      type: ButtonSelector
-      properties:
-        title: Billing Cycle
-        buttonStyle: solid
-        color: '#1677ff'
-        options:
-          - label: Monthly
-            value: monthly
-          - label: Yearly (Save 20%)
-            value: yearly
-    - id: usecase_sort_order
-      type: ButtonSelector
-      properties:
-        title: Sort Order
-        buttonStyle: outline
-        size: small
-        options:
-          - label: A-Z
-            value: asc
-          - label: Z-A
-            value: desc
-          - label: Newest
-            value: newest
-          - label: Oldest
-            value: oldest
+        title: Display Settings
+      blocks:
+        - id: applied_settings_theme
+          type: ButtonSelector
+          properties:
+            title: Theme
+            buttonStyle: solid
+            options:
+              - label: Light
+                value: light
+              - label: Dark
+                value: dark
+              - label: System
+                value: system
+          events:
+            onChange:
+              - id: theme_change_action
+                type: SetState
+                params:
+                  selected_theme:
+                    _state: applied_settings_theme
+        - id: applied_settings_language
+          type: ButtonSelector
+          properties:
+            title: Language
+            buttonStyle: outline
+            options:
+              - label: English
+                value: en
+              - label: Spanish
+                value: es
+              - label: French
+                value: fr
+              - label: German
+                value: de
+        - id: applied_settings_font_size
+          type: ButtonSelector
+          properties:
+            title: Font Size
+            buttonStyle: solid
+            size: small
+            options:
+              - label: Small
+                value: small
+              - label: Medium
+                value: medium
+              - label: Large
+                value: large
+        - id: applied_settings_save
+          type: Button
+          properties:
+            title: Save Settings
+            type: primary
+            icon: AiOutlineSave
+          events:
+            onClick:
+              - id: settings_save_action
+                type: DisplayMessage
+                params:
+                  content: Settings saved successfully
+                  status: success
+              - id: settings_set_global
+                type: SetGlobal
+                params:
+                  theme:
+                    _state: applied_settings_theme
+                  language:
+                    _state: applied_settings_language
+                  fontSize:
+                    _state: applied_settings_font_size

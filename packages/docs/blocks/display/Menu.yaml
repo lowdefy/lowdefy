@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/display/Menu.yaml
     block_type: Menu
     antd_component: Menu
+    antd_url: menu
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Menu
     schema: ../plugins/blocks/blocks-antd/src/blocks/Menu/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Menu/gallery.yaml

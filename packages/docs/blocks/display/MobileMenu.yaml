@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/display/MobileMenu.yaml
     block_type: MobileMenu
     antd_component: Menu
+    antd_url: menu
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/MobileMenu
     schema: ../plugins/blocks/blocks-antd/src/blocks/MobileMenu/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/MobileMenu/gallery.yaml

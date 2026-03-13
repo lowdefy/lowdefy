@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/container/Header.yaml
     block_type: Header
     antd_component: Header
+    antd_url: layout
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Header
     schema: ../plugins/blocks/blocks-antd/src/blocks/Header/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Header/gallery.yaml

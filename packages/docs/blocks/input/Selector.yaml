@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/input/Selector.yaml
     block_type: Selector
     antd_component: Select
+    antd_url: select
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Selector
     schema: ../plugins/blocks/blocks-antd/src/blocks/Selector/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Selector/gallery.yaml

@@ -12,86 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Note: GoogleMapsScript loads the Google Maps JavaScript API.
-# A valid apiKey is required for the script to load and child map blocks to render.
-# It should wrap GoogleMaps or GoogleMapsHeatmap blocks as a parent container.
-
-- title: Default Script Loader
-  blocks:
-    - id: google_maps_script_default
-      type: GoogleMapsScript
-      properties:
-        apiKey: YOUR_GOOGLE_MAPS_API_KEY
-
-- title: With Language and Region
-  blocks:
-    - id: google_maps_script_lang_en
-      type: GoogleMapsScript
-      properties:
-        apiKey: YOUR_GOOGLE_MAPS_API_KEY
-        language: en
-        region: US
-    - id: google_maps_script_lang_ja
-      type: GoogleMapsScript
-      properties:
-        apiKey: YOUR_GOOGLE_MAPS_API_KEY
-        language: ja
-        region: JP
-    - id: google_maps_script_lang_de
-      type: GoogleMapsScript
-      properties:
-        apiKey: YOUR_GOOGLE_MAPS_API_KEY
-        language: de
-        region: DE
-
-- title: With Visualization Library
-  blocks:
-    - id: google_maps_script_visualization
-      type: GoogleMapsScript
-      properties:
-        apiKey: YOUR_GOOGLE_MAPS_API_KEY
-        libraries:
-          - visualization
-
-- title: Multiple Libraries
-  blocks:
-    - id: google_maps_script_multi_libs
-      type: GoogleMapsScript
-      properties:
-        apiKey: YOUR_GOOGLE_MAPS_API_KEY
-        libraries:
-          - visualization
-          - drawing
-          - geometry
-          - places
-
-- title: With API Version
-  blocks:
-    - id: google_maps_script_version_weekly
-      type: GoogleMapsScript
-      properties:
-        apiKey: YOUR_GOOGLE_MAPS_API_KEY
-        version: weekly
-    - id: google_maps_script_version_quarterly
-      type: GoogleMapsScript
-      properties:
-        apiKey: YOUR_GOOGLE_MAPS_API_KEY
-        version: quarterly
-
-- title: With Channel
-  blocks:
-    - id: google_maps_script_channel
-      type: GoogleMapsScript
-      properties:
-        apiKey: YOUR_GOOGLE_MAPS_API_KEY
-        channel: my-app-channel
+# Note: Only one GoogleMapsScript can be used per page.
+# This gallery uses a single example to avoid script loader conflicts.
 
 - title: Full Configuration
+  fullWidth: true
   blocks:
-    - id: google_maps_script_full
+    - id: gms_full_config
       type: GoogleMapsScript
       properties:
-        apiKey: YOUR_GOOGLE_MAPS_API_KEY
+        apiKey:
+          _build.env: GOOGLE_MAPS_API_KEY
         language: en
         region: US
         version: weekly
@@ -99,3 +30,28 @@
           - visualization
           - places
         channel: production
+      blocks:
+        - id: gms_full_config_map
+          type: GoogleMaps
+          properties:
+            map:
+              center:
+                lat: 40.7128
+                lng: -74.006
+              zoom: 12
+            markers:
+              - position:
+                  lat: 40.7484
+                  lng: -73.9857
+                label: A
+                title: Empire State Building
+              - position:
+                  lat: 40.6892
+                  lng: -74.0445
+                label: B
+                title: Statue of Liberty
+              - position:
+                  lat: 40.7589
+                  lng: -73.9851
+                label: C
+                title: Times Square

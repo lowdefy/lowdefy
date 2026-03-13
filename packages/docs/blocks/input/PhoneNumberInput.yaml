@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/input/PhoneNumberInput.yaml
     block_type: PhoneNumberInput
     antd_component: Input
+    antd_url: input
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/PhoneNumberInput
     schema: ../plugins/blocks/blocks-antd/src/blocks/PhoneNumberInput/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/PhoneNumberInput/gallery.yaml

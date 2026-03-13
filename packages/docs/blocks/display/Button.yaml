@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/display/Button.yaml
     block_type: Button
     antd_component: Button
+    antd_url: button
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Button
     schema: ../plugins/blocks/blocks-antd/src/blocks/Button/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Button/gallery.yaml

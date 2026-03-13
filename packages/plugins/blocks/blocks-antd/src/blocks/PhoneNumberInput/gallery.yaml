@@ -140,64 +140,37 @@
         placeholder: Large input
 
 # ──────────────────────────────────────────────
-# Disabled State
+# Toggle Properties
 # ──────────────────────────────────────────────
 
-- title: Disabled State
+- title: Toggle Properties
   blocks:
-    - id: disabled_empty
+    - id: toggle_disabled
       type: PhoneNumberInput
       properties:
-        title: Disabled (Empty)
-        disabled: true
-        placeholder: Cannot edit
-    - id: disabled_with_region
-      type: PhoneNumberInput
-      properties:
-        title: Disabled (With Region)
+        title: Disabled
         disabled: true
         defaultRegion: US
         placeholder: Cannot edit
-
-# ──────────────────────────────────────────────
-# Borderless
-# ──────────────────────────────────────────────
-
-- title: Borderless
-  blocks:
-    - id: borderless_default
+    - id: toggle_borderless
       type: PhoneNumberInput
       properties:
         title: Borderless
         bordered: false
-        placeholder: No border style
-    - id: borderless_with_region
-      type: PhoneNumberInput
-      properties:
-        title: Borderless With Region
-        bordered: false
         defaultRegion: GB
-        placeholder: No border
-
-# ──────────────────────────────────────────────
-# Allow Clear
-# ──────────────────────────────────────────────
-
-- title: Allow Clear
-  blocks:
-    - id: clear_enabled
+        placeholder: No border style
+    - id: toggle_allow_clear
       type: PhoneNumberInput
       properties:
         title: Allow Clear
         allowClear: true
         placeholder: Type then clear
-    - id: clear_with_region
+    - id: toggle_arrow_hidden
       type: PhoneNumberInput
       properties:
-        title: Allow Clear With Region
-        allowClear: true
-        defaultRegion: US
-        placeholder: Clearable input
+        title: Arrow Hidden
+        showArrow: false
+        placeholder: Selector without arrow
 
 # ──────────────────────────────────────────────
 # Max Length
@@ -264,13 +237,6 @@
 
 - title: Label Options
   blocks:
-    - id: label_colon_true
-      type: PhoneNumberInput
-      properties:
-        title: With Colon
-        placeholder: Colon shown (default)
-        label:
-          colon: true
     - id: label_colon_false
       type: PhoneNumberInput
       properties:
@@ -278,15 +244,6 @@
         placeholder: No colon
         label:
           colon: false
-    - id: label_align_left
-      type: PhoneNumberInput
-      properties:
-        title: Left Aligned
-        placeholder: Label aligned left
-        label:
-          inline: true
-          align: left
-          span: 8
     - id: label_align_right
       type: PhoneNumberInput
       properties:
@@ -384,23 +341,32 @@
           replacement: ''
 
 # ──────────────────────────────────────────────
-# Show Arrow
+# Style and Class Overrides
 # ──────────────────────────────────────────────
 
-- title: Show Arrow
+- title: Style and Class Overrides
   blocks:
-    - id: arrow_visible
+    - id: css_shadow
       type: PhoneNumberInput
+      class: shadow-md
       properties:
-        title: Arrow Visible (Default)
-        showArrow: true
-        placeholder: Selector has arrow
-    - id: arrow_hidden
+        title: Shadow
+        placeholder: Using Tailwind shadow class
+    - id: css_rounded
       type: PhoneNumberInput
+      class: rounded-lg
       properties:
-        title: Arrow Hidden
-        showArrow: false
-        placeholder: Selector without arrow
+        title: Rounded
+        placeholder: Using Tailwind rounded class
+    - id: css_custom_bg
+      type: PhoneNumberInput
+      style:
+        --element:
+          backgroundColor: '#f0f5ff'
+          borderColor: '#adc6ff'
+      properties:
+        title: Custom Background
+        placeholder: Light blue background via inline style
 
 # ──────────────────────────────────────────────
 # Theme Token Overrides
@@ -418,15 +384,6 @@
           hoverBorderColor: '#73d13d'
         label:
           disabled: true
-    - id: theme_hover_border
-      type: PhoneNumberInput
-      properties:
-        title: Custom Hover Border
-        placeholder: Hover to see orange border
-        theme:
-          hoverBorderColor: '#fa8c16'
-        label:
-          disabled: true
     - id: theme_addon_bg
       type: PhoneNumberInput
       properties:
@@ -436,27 +393,6 @@
           addonBg: '#e6f7ff'
         label:
           disabled: true
-    - id: theme_bg_container
-      type: PhoneNumberInput
-      properties:
-        title: Custom Background
-        placeholder: Light purple background
-        theme:
-          colorBgContainer: '#f9f0ff'
-        label:
-          disabled: true
-    - id: theme_placeholder_color
-      type: PhoneNumberInput
-      properties:
-        title: Custom Placeholder Color
-        placeholder: Orange placeholder text
-        theme:
-          colorTextPlaceholder: '#fa8c16'
-        label:
-          disabled: true
-
-- title: Theme - Combined Custom Theme
-  blocks:
     - id: theme_combined_green
       type: PhoneNumberInput
       properties:
@@ -592,3 +528,148 @@
         label:
           extra: Select your country and enter your phone number.
           colon: false
+
+# ──────────────────────────────────────────────
+# PhoneNumberInput in Contact Form
+# ──────────────────────────────────────────────
+
+- title: PhoneNumberInput in Contact Form
+  blocks:
+    - id: contact_card
+      type: Card
+      properties:
+        title: Contact Us
+      blocks:
+        - id: contact_name
+          type: TextInput
+          required: true
+          properties:
+            title: Full Name
+            prefixIcon: AiOutlineUser
+            placeholder: John Doe
+            label:
+              colon: false
+        - id: contact_email
+          type: TextInput
+          required: true
+          properties:
+            title: Email Address
+            type: email
+            prefixIcon: AiOutlineMail
+            placeholder: john@example.com
+            label:
+              colon: false
+        - id: contact_phone
+          type: PhoneNumberInput
+          required: true
+          properties:
+            title: Phone Number
+            defaultRegion: US
+            allowClear: true
+            prefixIcon: AiOutlinePhone
+            placeholder: (555) 123-4567
+            label:
+              colon: false
+              extra: Include your area code.
+          events:
+            onChange:
+              - id: contact_phone_set
+                type: SetState
+                params:
+                  contact_phone:
+                    _event: value
+        - id: contact_actions
+          type: Box
+          layout:
+            gap: 8
+            justify: flex-end
+          blocks:
+            - id: contact_submit
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Send Message
+                color: primary
+                variant: solid
+                icon: AiOutlineSend
+              events:
+                onClick:
+                  - id: contact_validate
+                    type: Validate
+                  - id: contact_success
+                    type: DisplayMessage
+                    params:
+                      content: Message sent successfully!
+                      status: success
+
+# ──────────────────────────────────────────────
+# PhoneNumberInput in Registration Page
+# ──────────────────────────────────────────────
+
+- title: PhoneNumberInput in Registration Page
+  blocks:
+    - id: register_card
+      type: Card
+      properties:
+        title: Create Account
+      blocks:
+        - id: register_phone
+          type: PhoneNumberInput
+          required: true
+          properties:
+            title: Mobile Number
+            defaultRegion: US
+            allowClear: true
+            prefixIcon: AiOutlineMobile
+            placeholder: Enter mobile number
+            label:
+              colon: false
+              extra: We will send a verification code to this number.
+          events:
+            onChange:
+              - id: register_phone_set
+                type: SetState
+                params:
+                  register_phone:
+                    _event: value
+        - id: register_password
+          type: PasswordInput
+          required: true
+          properties:
+            title: Password
+            prefixIcon: AiOutlineLock
+            placeholder: At least 8 characters
+            label:
+              colon: false
+        - id: register_terms
+          type: CheckboxSwitch
+          required: true
+          properties:
+            title: I agree to the Terms and Conditions
+            label:
+              disabled: true
+        - id: register_actions
+          type: Box
+          layout:
+            gap: 8
+            justify: flex-end
+          blocks:
+            - id: register_submit
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Create Account
+                color: primary
+                variant: solid
+                icon: AiOutlineArrowRight
+              events:
+                onClick:
+                  - id: register_validate
+                    type: Validate
+                  - id: register_success
+                    type: DisplayMessage
+                    params:
+                      content: Account created successfully!
+                      status: success

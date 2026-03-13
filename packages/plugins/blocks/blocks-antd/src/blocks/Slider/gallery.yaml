@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- title: Basic Slider
+- title: Basic
   fullWidth: true
   blocks:
     - id: slider_basic
@@ -21,6 +21,28 @@
         title: Basic Slider
     - id: slider_basic_no_title
       type: Slider
+    - id: slider_range_basic
+      type: Slider
+      properties:
+        title: Price Range
+        range: true
+        min: 0
+        max: 1000
+        step: 50
+    - id: slider_range_marks
+      type: Slider
+      properties:
+        title: Age Range
+        range: true
+        min: 0
+        max: 100
+        marks:
+          0: '0'
+          18: '18'
+          35: '35'
+          50: '50'
+          65: '65'
+          100: '100'
 
 - title: Min, Max, and Step
   fullWidth: true
@@ -53,32 +75,6 @@
         max: 1
         step: 0.1
 
-- title: Range Slider
-  fullWidth: true
-  blocks:
-    - id: slider_range_basic
-      type: Slider
-      properties:
-        title: Price Range
-        range: true
-        min: 0
-        max: 1000
-        step: 50
-    - id: slider_range_marks
-      type: Slider
-      properties:
-        title: Age Range
-        range: true
-        min: 0
-        max: 100
-        marks:
-          0: '0'
-          18: '18'
-          35: '35'
-          50: '50'
-          65: '65'
-          100: '100'
-
 - title: Marks
   fullWidth: true
   blocks:
@@ -107,7 +103,7 @@
           75: Very Good
           100: Excellent
 
-- title: Dots
+- title: Display Options
   fullWidth: true
   blocks:
     - id: slider_dots
@@ -118,34 +114,6 @@
         min: 0
         max: 100
         step: 10
-    - id: slider_dots_marks
-      type: Slider
-      properties:
-        title: Dots with Marks
-        dots: true
-        min: 0
-        max: 100
-        step: 20
-        marks:
-          0: '0'
-          20: '20'
-          40: '40'
-          60: '60'
-          80: '80'
-          100: '100'
-
-- title: Included
-  fullWidth: true
-  blocks:
-    - id: slider_included_true
-      type: Slider
-      properties:
-        title: Included (default)
-        included: true
-        marks:
-          0: '0'
-          50: '50'
-          100: '100'
     - id: slider_included_false
       type: Slider
       properties:
@@ -155,10 +123,6 @@
           0: '0'
           50: '50'
           100: '100'
-
-- title: Reverse
-  fullWidth: true
-  blocks:
     - id: slider_reverse
       type: Slider
       properties:
@@ -187,6 +151,22 @@
         title: Always Show Tooltip
         tooltip:
           open: true
+        min: 0
+        max: 100
+    - id: slider_tooltip_hidden
+      type: Slider
+      properties:
+        title: Tooltip Hidden
+        tooltip:
+          open: false
+        min: 0
+        max: 100
+    - id: slider_tooltip_placement
+      type: Slider
+      properties:
+        title: Tooltip on Bottom
+        tooltip:
+          placement: bottom
         min: 0
         max: 100
 
@@ -340,13 +320,61 @@
   blocks:
     - id: slider_style_element
       type: Slider
+      style:
+        --element:
+          padding: 0 20px
       properties:
         title: Custom Rail Padding
         min: 0
         max: 100
+    - id: slider_style_label
+      type: Slider
+      style:
+        --label:
+          color: '#531dab'
+          fontWeight: bold
+      properties:
+        title: Styled Label
+        min: 0
+        max: 100
+    - id: slider_style_combined
+      type: Slider
       style:
         --element:
-          padding: 0 20px
+          background: '#f6ffed'
+          borderRadius: 8
+          padding: 12px 20px
+        --label:
+          color: '#389e0d'
+      properties:
+        title: Combined Element and Label Styles
+        min: 0
+        max: 100
+
+- title: Class Overrides (Tailwind)
+  fullWidth: true
+  blocks:
+    - id: slider_class_shadow
+      type: Slider
+      class: rounded-lg shadow-sm
+      properties:
+        title: Rounded with Shadow
+        min: 0
+        max: 100
+    - id: slider_class_border
+      type: Slider
+      class: border-2 border-blue-200 p-2
+      properties:
+        title: Blue Border
+        min: 0
+        max: 100
+    - id: slider_class_background
+      type: Slider
+      class: bg-gray-50 rounded-md p-3
+      properties:
+        title: Gray Background
+        min: 0
+        max: 100
 
 - title: Theme Token Overrides
   fullWidth: true
@@ -394,3 +422,182 @@
           handleColor: '#ff4d4f'
           handleActiveColor: '#cf1322'
           handleActiveOutlineColor: 'rgba(255,77,79,0.2)'
+
+- title: Slider in Audio Settings
+  fullWidth: true
+  blocks:
+    - id: applied_audio_card
+      type: Card
+      properties:
+        title: Audio Settings
+      blocks:
+        - id: applied_audio_volume
+          type: Slider
+          properties:
+            title: Master Volume
+            min: 0
+            max: 100
+            step: 1
+            marks:
+              0: '0'
+              50: '50'
+              100: '100'
+          events:
+            onMount:
+              - id: set_volume
+                type: SetState
+                params:
+                  applied_audio_volume: 75
+        - id: applied_audio_bass
+          type: Slider
+          properties:
+            title: Bass
+            min: -12
+            max: 12
+            step: 1
+            marks:
+              -12: '-12 dB'
+              0: '0 dB'
+              12: '+12 dB'
+          events:
+            onMount:
+              - id: set_bass
+                type: SetState
+                params:
+                  applied_audio_bass: 0
+        - id: applied_audio_treble
+          type: Slider
+          properties:
+            title: Treble
+            min: -12
+            max: 12
+            step: 1
+            marks:
+              -12: '-12 dB'
+              0: '0 dB'
+              12: '+12 dB'
+          events:
+            onMount:
+              - id: set_treble
+                type: SetState
+                params:
+                  applied_audio_treble: 0
+        - id: applied_audio_balance
+          type: Slider
+          properties:
+            title: Left/Right Balance
+            min: -50
+            max: 50
+            step: 1
+            marks:
+              -50: Left
+              0: Center
+              50: Right
+          events:
+            onMount:
+              - id: set_balance
+                type: SetState
+                params:
+                  applied_audio_balance: 0
+        - id: applied_audio_save
+          type: Button
+          properties:
+            title: Apply Settings
+            type: primary
+            icon: AiOutlineSave
+          events:
+            onClick:
+              - id: audio_save_action
+                type: DisplayMessage
+                params:
+                  content:
+                    _string.concat:
+                      - 'Audio settings applied. Volume: '
+                      - _state: applied_audio_volume
+                      - '%'
+                  status: success
+              - id: audio_set_global
+                type: SetGlobal
+                params:
+                  audioVolume:
+                    _state: applied_audio_volume
+                  audioBass:
+                    _state: applied_audio_bass
+                  audioTreble:
+                    _state: applied_audio_treble
+
+- title: Slider in Price Filter
+  fullWidth: true
+  blocks:
+    - id: applied_price_card
+      type: Card
+      properties:
+        title: Filter Products
+      blocks:
+        - id: applied_price_search
+          type: TextInput
+          properties:
+            title: Search Products
+            placeholder: Enter product name or keyword
+        - id: applied_price_range
+          type: Slider
+          properties:
+            title: Price Range
+            range: true
+            min: 0
+            max: 500
+            step: 10
+            marks:
+              0: '$0'
+              100: '$100'
+              250: '$250'
+              500: '$500'
+          events:
+            onMount:
+              - id: set_price_range
+                type: SetState
+                params:
+                  applied_price_range:
+                    - 50
+                    - 300
+        - id: applied_price_rating
+          type: Slider
+          properties:
+            title: Minimum Customer Rating
+            min: 1
+            max: 5
+            step: 0.5
+            dots: true
+            marks:
+              1: '1'
+              2: '2'
+              3: '3'
+              4: '4'
+              5: '5'
+          events:
+            onMount:
+              - id: set_rating
+                type: SetState
+                params:
+                  applied_price_rating: 3
+        - id: applied_price_apply
+          type: Button
+          properties:
+            title: Apply Filters
+            type: primary
+            icon: AiOutlineFilter
+          events:
+            onClick:
+              - id: price_filter_action
+                type: DisplayMessage
+                params:
+                  content: Filters applied successfully
+                  status: success
+              - id: price_filter_set_state
+                type: SetState
+                params:
+                  active_filters:
+                    priceRange:
+                      _state: applied_price_range
+                    minRating:
+                      _state: applied_price_rating

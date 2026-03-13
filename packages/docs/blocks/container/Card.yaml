@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/container/Card.yaml
     block_type: Card
     antd_component: Card
+    antd_url: card
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Card
     schema: ../plugins/blocks/blocks-antd/src/blocks/Card/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Card/gallery.yaml

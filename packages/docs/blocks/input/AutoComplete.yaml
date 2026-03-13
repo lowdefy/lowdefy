@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/input/AutoComplete.yaml
     block_type: AutoComplete
     antd_component: AutoComplete
+    antd_url: auto-complete
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/AutoComplete
     schema: ../plugins/blocks/blocks-antd/src/blocks/AutoComplete/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/AutoComplete/gallery.yaml

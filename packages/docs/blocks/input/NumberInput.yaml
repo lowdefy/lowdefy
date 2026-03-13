@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/input/NumberInput.yaml
     block_type: NumberInput
     antd_component: InputNumber
+    antd_url: input-number
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/NumberInput
     schema: ../plugins/blocks/blocks-antd/src/blocks/NumberInput/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/NumberInput/gallery.yaml

@@ -1,0 +1,275 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic
+  blocks:
+    - id: basic_default
+      type: S3UploadDragger
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+    - id: basic_custom_title
+      type: S3UploadDragger
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        title: Drop your files here
+    - id: basic_html_title
+      type: S3UploadDragger
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        title: '<b>Upload</b> your <i>documents</i> here'
+
+- title: File Type Restrictions
+  blocks:
+    - id: accept_images
+      type: S3UploadDragger
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        title: Drag images here
+        accept: 'image/*'
+    - id: accept_pdfs
+      type: S3UploadDragger
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        title: Drag PDF files here
+        accept: '.pdf'
+    - id: accept_specific
+      type: S3UploadDragger
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        title: Drag image files here (.jpg, .png, .gif)
+        accept: '.jpg,.png,.gif'
+
+- title: Upload Limits
+  blocks:
+    - id: limit_single
+      type: S3UploadDragger
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        title: Upload a single file
+        singleFile: true
+    - id: limit_max_three
+      type: S3UploadDragger
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        title: Upload up to 3 files
+        maxCount: 3
+    - id: limit_single_images
+      type: S3UploadDragger
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        title: Upload a single image
+        singleFile: true
+        accept: 'image/*'
+
+- title: Drag Area Styling
+  blocks:
+    - id: style_light_blue
+      type: S3UploadDragger
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        title: Light blue background
+        style:
+          background: '#e6f7ff'
+    - id: style_dashed_border
+      type: S3UploadDragger
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        title: Dashed border style
+        style:
+          border: 2px dashed #1890ff
+          borderRadius: 12
+    - id: style_large_padding
+      type: S3UploadDragger
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        title: Larger drop area with custom font
+        style:
+          padding: 40
+          fontSize: 18
+
+- title: Disabled State
+  blocks:
+    - id: disabled_default
+      type: S3UploadDragger
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        disabled: true
+    - id: disabled_custom_title
+      type: S3UploadDragger
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        disabled: true
+        title: Uploads are currently disabled
+    - id: disabled_hidden_list
+      type: S3UploadDragger
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        disabled: true
+        title: Disabled with hidden list
+        showUploadList: false
+
+- title: Upload List Visibility
+  blocks:
+    - id: list_visible
+      type: S3UploadDragger
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        title: Upload list visible (default)
+        showUploadList: true
+    - id: list_hidden
+      type: S3UploadDragger
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        title: Upload list hidden
+        showUploadList: false
+    - id: list_single_hidden
+      type: S3UploadDragger
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        title: Single file, list hidden
+        singleFile: true
+        showUploadList: false
+
+- title: Style Overrides
+  blocks:
+    - id: style_element_bg
+      type: S3UploadDragger
+      style:
+        --element:
+          background: '#f6ffed'
+          borderRadius: 12
+          padding: 8
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        title: Custom element background
+    - id: style_element_border
+      type: S3UploadDragger
+      style:
+        --element:
+          border: 2px solid #d9d9d9
+          boxShadow: 0 2px 8px rgba(0,0,0,0.1)
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        title: Styled with border and shadow
+    - id: style_class_tailwind
+      type: S3UploadDragger
+      class: rounded-xl shadow-md
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        title: Tailwind rounded with shadow
+
+- title: S3UploadDragger in File Submission Form
+  blocks:
+    - id: submission_card
+      type: Card
+      properties:
+        title: Submit Files
+        size: small
+      blocks:
+        - id: submission_description
+          type: TextInput
+          required: true
+          properties:
+            label:
+              title: File Description
+            placeholder: Describe the file you are uploading
+        - id: submission_category
+          type: Selector
+          required: true
+          properties:
+            label:
+              title: File Category
+            placeholder: Select a category
+            options:
+              - label: Documents
+                value: documents
+              - label: Images
+                value: images
+              - label: Spreadsheets
+                value: spreadsheets
+              - label: Other
+                value: other
+        - id: submission_upload
+          type: S3UploadDragger
+          properties:
+            s3PostPolicyRequestId: s3_upload_policy_request
+            title: Drag files here or click to browse
+            accept: '.pdf,.docx,.xlsx,.png,.jpg'
+        - id: submission_actions
+          type: Box
+          layout:
+            justify: flex-end
+          blocks:
+            - id: submission_submit
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Submit
+                color: primary
+                variant: solid
+                icon: AiOutlineUpload
+              events:
+                onClick:
+                  - id: submit_validate
+                    type: Validate
+                  - id: submit_msg
+                    type: DisplayMessage
+                    params:
+                      content: Files submitted successfully!
+                      status: success
+
+- title: S3UploadDragger in Photo Gallery Upload
+  blocks:
+    - id: gallery_card
+      type: Card
+      properties:
+        title: Upload Photos
+        size: small
+      blocks:
+        - id: gallery_album_name
+          type: TextInput
+          required: true
+          properties:
+            label:
+              title: Album Name
+            placeholder: Enter album name
+        - id: gallery_upload
+          type: S3UploadDragger
+          properties:
+            s3PostPolicyRequestId: s3_upload_policy_request
+            title: Drag photos here or click to browse
+            accept: 'image/*'
+            maxCount: 10
+        - id: gallery_actions
+          type: Box
+          layout:
+            justify: flex-end
+          blocks:
+            - id: gallery_submit
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Upload Photos
+                color: primary
+                variant: solid
+                icon: AiOutlineCloudUpload
+              events:
+                onClick:
+                  - id: gallery_msg
+                    type: DisplayMessage
+                    params:
+                      content: Photos uploaded to album!
+                      status: success

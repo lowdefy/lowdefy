@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/display/Divider.yaml
     block_type: Divider
     antd_component: Divider
+    antd_url: divider
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Divider
     schema: ../plugins/blocks/blocks-antd/src/blocks/Divider/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Divider/gallery.yaml

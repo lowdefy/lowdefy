@@ -171,23 +171,33 @@
           - Gamma
           - Delta
 
-- title: Borderless
+- title: Variants
   blocks:
-    - id: bordered_true
+    - id: variant_outlined
       type: AutoComplete
       properties:
-        title: With Border (default)
-        bordered: true
+        title: Outlined (default)
+        variant: outlined
         placeholder: Standard border
         options:
           - Option A
           - Option B
           - Option C
-    - id: bordered_false
+    - id: variant_filled
+      type: AutoComplete
+      properties:
+        title: Filled
+        variant: filled
+        placeholder: Filled background
+        options:
+          - Option A
+          - Option B
+          - Option C
+    - id: variant_borderless
       type: AutoComplete
       properties:
         title: Borderless
-        bordered: false
+        variant: borderless
         placeholder: No border style
         options:
           - Option A
@@ -558,37 +568,149 @@
           - Alpha
           - Beta
 
-- title: Sizes with Borderless
+- title: Sizes with Variants
   blocks:
-    - id: borderless_small
+    - id: filled_small
       type: AutoComplete
       properties:
-        title: Borderless Small
+        title: Filled Small
         size: small
-        bordered: false
-        placeholder: Borderless small
+        variant: filled
+        placeholder: Filled small
         options:
           - One
           - Two
           - Three
-    - id: borderless_default
+    - id: filled_default
       type: AutoComplete
       properties:
-        title: Borderless Default
-        bordered: false
-        placeholder: Borderless default
+        title: Filled Default
+        variant: filled
+        placeholder: Filled default
         options:
           - One
           - Two
           - Three
-    - id: borderless_large
+    - id: filled_large
       type: AutoComplete
       properties:
-        title: Borderless Large
+        title: Filled Large
         size: large
-        bordered: false
-        placeholder: Borderless large
+        variant: filled
+        placeholder: Filled large
         options:
           - One
           - Two
           - Three
+
+- title: AutoComplete in Search Form
+  blocks:
+    - id: applied_search_form
+      type: Card
+      properties:
+        title: Product Search
+      blocks:
+        - id: applied_search_input
+          type: AutoComplete
+          properties:
+            title: Search Products
+            placeholder: Start typing a product name...
+            size: large
+            options:
+              - MacBook Pro 16"
+              - MacBook Air M3
+              - iPad Pro 13"
+              - iPhone 16 Pro
+              - Apple Watch Ultra
+              - AirPods Pro
+          events:
+            onChange:
+              - id: search_message
+                type: DisplayMessage
+                params:
+                  content:
+                    _string.concat:
+                      - 'Searching for: '
+                      - _state: applied_search_input
+                  duration: 1
+        - id: applied_search_button
+          type: Button
+          properties:
+            title: Search
+            icon: AiOutlineSearch
+            type: primary
+            size: large
+          events:
+            onClick:
+              - id: search_action
+                type: DisplayMessage
+                params:
+                  content:
+                    _if:
+                      test:
+                        _ne:
+                          - _state: applied_search_input
+                          - null
+                      then:
+                        _string.concat:
+                          - 'Searching for: '
+                          - _state: applied_search_input
+                      else: Please enter a search term
+
+- title: AutoComplete in User Profile Form
+  blocks:
+    - id: applied_profile_card
+      type: Card
+      properties:
+        title: Profile Settings
+      blocks:
+        - id: applied_profile_name
+          type: TextInput
+          properties:
+            title: Full Name
+            placeholder: Enter your full name
+        - id: applied_profile_role
+          type: AutoComplete
+          properties:
+            title: Job Title
+            label:
+              extra: Select a common title or type your own
+            placeholder: e.g. Software Engineer
+            options:
+              - Software Engineer
+              - Senior Software Engineer
+              - Staff Engineer
+              - Engineering Manager
+              - Product Manager
+              - Designer
+              - Data Scientist
+              - DevOps Engineer
+              - QA Engineer
+              - Technical Lead
+        - id: applied_profile_department
+          type: AutoComplete
+          properties:
+            title: Department
+            placeholder: Select or type department
+            options:
+              - Engineering
+              - Product
+              - Design
+              - Marketing
+              - Sales
+              - Operations
+              - Finance
+              - Human Resources
+        - id: applied_profile_save
+          type: Button
+          properties:
+            title: Save Profile
+            type: primary
+            icon: AiOutlineSave
+          events:
+            onClick:
+              - id: save_action
+                type: DisplayMessage
+                params:
+                  content: Profile saved successfully
+                  status: success

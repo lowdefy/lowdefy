@@ -161,3 +161,465 @@
                     padding: 16px
                   properties:
                     content: Right side panel for supplementary content, filters, or navigation.
+
+- title: Theme Token Overrides
+  fullWidth: true
+  blocks:
+    - id: layout_theme_outer
+      type: Layout
+      style:
+        minHeight: 280px
+      properties:
+        theme:
+          bodyBg: '#f0f5ff'
+          headerBg: '#1d39c4'
+          footerBg: '#d6e4ff'
+          siderBg: '#e6f7ff'
+          triggerBg: '#597ef7'
+          triggerColor: '#ffffff'
+          triggerHeight: 48
+      blocks:
+        - id: layout_theme_header
+          type: Header
+          style:
+            display: flex
+            alignItems: center
+            paddingInline: 24px
+          blocks:
+            - id: layout_theme_header_text
+              type: Paragraph
+              properties:
+                content: Custom themed header via Layout design tokens
+                style:
+                  color: white
+                  margin: 0
+        - id: layout_theme_inner
+          type: Layout
+          blocks:
+            - id: layout_theme_sider
+              type: Sider
+              properties:
+                theme: light
+                width: 180
+                initialCollapsed: false
+                collapsible: true
+              blocks:
+                - id: layout_theme_sider_text
+                  type: Paragraph
+                  style:
+                    padding: 16px
+                  properties:
+                    content: Sider with custom background color set via the siderBg token. The trigger bar uses triggerBg and triggerColor tokens.
+            - id: layout_theme_content
+              type: Content
+              style:
+                padding: 24px
+              blocks:
+                - id: layout_theme_content_text
+                  type: Paragraph
+                  properties:
+                    content: The Layout theme property accepts antd design tokens like headerBg, footerBg, siderBg, bodyBg, triggerBg, triggerColor, and triggerHeight. These cascade to child Header, Footer, Sider, and Content blocks.
+        - id: layout_theme_footer
+          type: Footer
+          style:
+            textAlign: center
+          blocks:
+            - id: layout_theme_footer_text
+              type: Paragraph
+              properties:
+                content: Footer styled with footerBg token
+
+- title: Styled Layout (Tailwind CSS)
+  fullWidth: true
+  blocks:
+    - id: layout_tailwind_outer
+      type: Layout
+      class: rounded-lg overflow-hidden shadow-lg border border-gray-200
+      style:
+        minHeight: 280px
+      blocks:
+        - id: layout_tailwind_header
+          type: Header
+          class: bg-indigo-700
+          style:
+            display: flex
+            alignItems: center
+            paddingInline: 24px
+          blocks:
+            - id: layout_tailwind_header_text
+              type: Paragraph
+              properties:
+                content: Tailwind-styled Layout
+                style:
+                  color: white
+                  margin: 0
+        - id: layout_tailwind_content
+          type: Content
+          class: bg-gray-50
+          style:
+            padding: 24px
+          blocks:
+            - id: layout_tailwind_content_text
+              type: Paragraph
+              properties:
+                content: The Layout block has a single cssKey called "element". Use the class property to apply Tailwind utility classes directly to the Layout wrapper. Here the outer Layout uses rounded corners, shadow, and a border. Child blocks like Header, Content, and Footer can each have their own class applied.
+        - id: layout_tailwind_footer
+          type: Footer
+          class: bg-indigo-50 text-center
+          blocks:
+            - id: layout_tailwind_footer_text
+              type: Paragraph
+              properties:
+                content: Footer with Tailwind background
+
+- title: CSS Key Element Styling
+  fullWidth: true
+  blocks:
+    - id: layout_csskey_outer
+      type: Layout
+      class:
+        element: border-2 border-dashed border-blue-400 rounded-xl p-1
+      style:
+        minHeight: 200px
+      blocks:
+        - id: layout_csskey_header
+          type: Header
+          class:
+            element: rounded-t-lg
+          style:
+            display: flex
+            alignItems: center
+            paddingInline: 24px
+          blocks:
+            - id: layout_csskey_header_text
+              type: Paragraph
+              properties:
+                content: Header with element cssKey
+                style:
+                  color: white
+                  margin: 0
+        - id: layout_csskey_content
+          type: Content
+          class:
+            element: bg-white
+          style:
+            padding: 24px
+          blocks:
+            - id: layout_csskey_content_text
+              type: Paragraph
+              properties:
+                content: 'Layout exposes a single CSS key: "element", which targets the outermost Layout wrapper. Use class as an object with the element key to apply Tailwind classes specifically to the Layout container. Here the dashed border makes the Layout boundary visible.'
+
+- title: Layout in Admin Dashboard
+  fullWidth: true
+  blocks:
+    - id: layout_admin_outer
+      type: Layout
+      style:
+        minHeight: 450px
+      blocks:
+        - id: layout_admin_header
+          type: Header
+          style:
+            display: flex
+            alignItems: center
+            justifyContent: space-between
+            paddingInline: 24px
+          blocks:
+            - id: layout_admin_header_title
+              type: Title
+              layout:
+                flex: 0 0 auto
+              properties:
+                content: Acme Admin
+                level: 4
+                style:
+                  color: white
+                  margin: 0
+            - id: layout_admin_header_actions
+              type: Box
+              layout:
+                flex: 0 0 auto
+                gap: 12
+                align: center
+              blocks:
+                - id: layout_admin_header_bell
+                  type: Button
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    icon: AiOutlineBell
+                    color: default
+                    variant: text
+                    hideTitle: true
+                    style:
+                      color: white
+                - id: layout_admin_header_avatar
+                  type: Avatar
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    icon: AiOutlineUser
+                    size: 32
+                    color: '#001529'
+                    backgroundColor: '#ffffff'
+        - id: layout_admin_inner
+          type: Layout
+          blocks:
+            - id: layout_admin_sider
+              type: Sider
+              properties:
+                theme: dark
+                width: 220
+                initialCollapsed: false
+                collapsible: true
+                breakpoint: lg
+              blocks:
+                - id: layout_admin_menu
+                  type: Menu
+                  properties:
+                    mode: inline
+                    theme: dark
+                    links:
+                      - id: layout_admin_menu_dashboard
+                        type: MenuLink
+                        properties:
+                          title: Dashboard
+                          icon: AiOutlineDashboard
+                      - id: layout_admin_menu_users
+                        type: MenuLink
+                        properties:
+                          title: Users
+                          icon: AiOutlineTeam
+                      - id: layout_admin_menu_orders
+                        type: MenuLink
+                        properties:
+                          title: Orders
+                          icon: AiOutlineShoppingCart
+                      - id: layout_admin_menu_reports
+                        type: MenuLink
+                        properties:
+                          title: Reports
+                          icon: AiOutlineBarChart
+                      - id: layout_admin_menu_settings
+                        type: MenuLink
+                        properties:
+                          title: Settings
+                          icon: AiOutlineSetting
+            - id: layout_admin_content_area
+              type: Content
+              style:
+                padding: 24px
+                background: '#f5f5f5'
+              blocks:
+                - id: layout_admin_breadcrumb
+                  type: Breadcrumb
+                  properties:
+                    list:
+                      - Home
+                      - Dashboard
+                - id: layout_admin_stats_row
+                  type: Box
+                  layout:
+                    gap: 16
+                  blocks:
+                    - id: layout_admin_stat_users
+                      type: Card
+                      layout:
+                        flex: 1 1 0
+                      properties:
+                        size: small
+                      blocks:
+                        - id: layout_admin_stat_users_val
+                          type: Statistic
+                          properties:
+                            title: Total Users
+                            value: 12480
+                    - id: layout_admin_stat_orders
+                      type: Card
+                      layout:
+                        flex: 1 1 0
+                      properties:
+                        size: small
+                      blocks:
+                        - id: layout_admin_stat_orders_val
+                          type: Statistic
+                          properties:
+                            title: Orders Today
+                            value: 342
+                    - id: layout_admin_stat_revenue
+                      type: Card
+                      layout:
+                        flex: 1 1 0
+                      properties:
+                        size: small
+                      blocks:
+                        - id: layout_admin_stat_revenue_val
+                          type: Statistic
+                          properties:
+                            title: Revenue
+                            value: 58200
+                            prefix: $
+                - id: layout_admin_main_card
+                  type: Card
+                  properties:
+                    title: Recent Orders
+                  blocks:
+                    - id: layout_admin_table_placeholder
+                      type: Paragraph
+                      properties:
+                        content: This is where a data table or chart would display recent order information. The Layout block provides the overall page structure with a dark sidebar, top header, and scrollable content area.
+        - id: layout_admin_footer
+          type: Footer
+          style:
+            textAlign: center
+          blocks:
+            - id: layout_admin_footer_text
+              type: Paragraph
+              properties:
+                content: Acme Corp Admin Panel - Version 3.2.1
+
+- title: Layout in Documentation Site
+  fullWidth: true
+  blocks:
+    - id: layout_docs_outer
+      type: Layout
+      style:
+        minHeight: 450px
+      properties:
+        theme:
+          headerBg: '#ffffff'
+      blocks:
+        - id: layout_docs_header
+          type: Header
+          style:
+            display: flex
+            alignItems: center
+            justifyContent: space-between
+            paddingInline: 24px
+            borderBottom: 1px solid #f0f0f0
+          blocks:
+            - id: layout_docs_header_left
+              type: Box
+              layout:
+                flex: 0 0 auto
+                gap: 16
+                align: center
+              blocks:
+                - id: layout_docs_logo
+                  type: Title
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    content: DevDocs
+                    level: 4
+                    style:
+                      margin: 0
+                - id: layout_docs_version_tag
+                  type: Tag
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: v4.2
+                    color: blue
+            - id: layout_docs_header_right
+              type: Box
+              layout:
+                flex: 0 0 auto
+                gap: 8
+              blocks:
+                - id: layout_docs_search_btn
+                  type: Button
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    icon: AiOutlineSearch
+                    title: Search docs...
+                    color: default
+                    variant: outlined
+                - id: layout_docs_github_btn
+                  type: Button
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    icon: AiOutlineGithub
+                    color: default
+                    variant: text
+                    hideTitle: true
+        - id: layout_docs_inner
+          type: Layout
+          blocks:
+            - id: layout_docs_sider
+              type: Sider
+              properties:
+                theme: light
+                width: 260
+                initialCollapsed: false
+                collapsible: false
+                breakpoint: md
+              style:
+                borderRight: 1px solid #f0f0f0
+              blocks:
+                - id: layout_docs_nav_title
+                  type: Paragraph
+                  style:
+                    padding: 16px 24px 8px
+                    fontWeight: 600
+                  properties:
+                    content: Getting Started
+                - id: layout_docs_nav_menu
+                  type: Menu
+                  properties:
+                    mode: inline
+                    theme: light
+                    links:
+                      - id: layout_docs_nav_intro
+                        type: MenuLink
+                        properties:
+                          title: Introduction
+                          icon: AiOutlineRead
+                      - id: layout_docs_nav_install
+                        type: MenuLink
+                        properties:
+                          title: Installation
+                          icon: AiOutlineDownload
+                      - id: layout_docs_nav_config
+                        type: MenuLink
+                        properties:
+                          title: Configuration
+                          icon: AiOutlineTool
+                      - id: layout_docs_nav_deploy
+                        type: MenuLink
+                        properties:
+                          title: Deployment
+                          icon: AiOutlineCloudUpload
+            - id: layout_docs_content_area
+              type: Content
+              style:
+                padding: 32px 48px
+                background: '#ffffff'
+                maxWidth: 900px
+              blocks:
+                - id: layout_docs_content_breadcrumb
+                  type: Breadcrumb
+                  properties:
+                    list:
+                      - Docs
+                      - Getting Started
+                      - Introduction
+                - id: layout_docs_content_title
+                  type: Title
+                  properties:
+                    content: Introduction
+                    level: 2
+                - id: layout_docs_content_paragraph
+                  type: Paragraph
+                  properties:
+                    content: Welcome to DevDocs. This guide walks you through setting up your first project. The page uses a Layout with a light-themed Sider for documentation navigation, a white Header with logo and search, and a Content area with comfortable reading width.
+                - id: layout_docs_content_alert
+                  type: Alert
+                  properties:
+                    type: info
+                    message: Tip
+                    description: The Layout block is the top-level structural container. Nest Header, Content, Footer, and Sider blocks inside to build any page structure.
+                    showIcon: true

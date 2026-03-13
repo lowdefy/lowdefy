@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/container/Splitter.yaml
     block_type: Splitter
     antd_component: Splitter
+    antd_url: splitter
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Splitter
     schema: ../plugins/blocks/blocks-antd/src/blocks/Splitter/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Splitter/gallery.yaml
