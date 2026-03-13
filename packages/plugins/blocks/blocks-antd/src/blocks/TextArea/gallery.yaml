@@ -81,18 +81,12 @@
         title: 6 Rows
         rows: 6
         placeholder: Six rows
-    - id: rows_8
+    - id: rows_10
       type: TextArea
       properties:
-        title: 8 Rows
-        rows: 8
-        placeholder: Eight rows
-    - id: rows_12
-      type: TextArea
-      properties:
-        title: 12 Rows
-        rows: 12
-        placeholder: Twelve rows - suitable for large text content
+        title: 10 Rows
+        rows: 10
+        placeholder: Ten rows - suitable for large text content
 - title: Auto Size (Boolean)
   blocks:
     - id: auto_size_true
@@ -148,13 +142,6 @@
         autoSize:
           minRows: 2
         placeholder: Starts at 2 rows, grows indefinitely
-    - id: auto_size_max_only
-      type: TextArea
-      properties:
-        title: Max 4 Rows (No Min)
-        autoSize:
-          maxRows: 4
-        placeholder: Grows up to 4 rows maximum
 - title: Allow Clear
   blocks:
     - id: allow_clear_true
@@ -578,7 +565,7 @@
         placeholder: Tailwind border classes
         label:
           disabled: true
-- title: Theme Token Overrides - Colors
+- title: Theme Token Overrides
   blocks:
     - id: theme_active_border
       type: TextArea
@@ -587,29 +574,6 @@
         placeholder: Click to see custom focus color
         theme:
           colorPrimary: '#722ed1'
-    - id: theme_hover_border
-      type: TextArea
-      properties:
-        title: Custom Hover Color
-        placeholder: Hover to see custom color
-        theme:
-          colorPrimaryHover: '#eb2f96'
-    - id: theme_bg
-      type: TextArea
-      properties:
-        title: Custom Background
-        placeholder: Custom background color
-        theme:
-          colorBgContainer: '#f9f0ff'
-    - id: theme_border
-      type: TextArea
-      properties:
-        title: Custom Border Color
-        placeholder: Custom border color
-        theme:
-          colorBorder: '#b37feb'
-- title: Theme Token Overrides - Sizing
-  blocks:
     - id: theme_font_size
       type: TextArea
       properties:
@@ -617,37 +581,6 @@
         placeholder: 18px font size
         theme:
           fontSize: 18
-    - id: theme_font_size_lg
-      type: TextArea
-      properties:
-        title: Large Size with Custom Font
-        size: large
-        placeholder: 20px font for large size
-        theme:
-          fontSizeLG: 20
-    - id: theme_border_radius
-      type: TextArea
-      properties:
-        title: Large Border Radius
-        placeholder: Rounded corners
-        theme:
-          borderRadius: 16
-- title: Theme Token Overrides - Padding
-  blocks:
-    - id: theme_padding_inline
-      type: TextArea
-      properties:
-        title: Extra Horizontal Padding
-        placeholder: More horizontal space
-        theme:
-          paddingInline: 20
-    - id: theme_padding_block
-      type: TextArea
-      properties:
-        title: Extra Vertical Padding
-        placeholder: More vertical space
-        theme:
-          paddingBlock: 12
     - id: theme_padding_combined
       type: TextArea
       properties:
@@ -656,8 +589,6 @@
         theme:
           paddingInline: 24
           paddingBlock: 16
-- title: Theme Token Overrides - Combined
-  blocks:
     - id: theme_purple
       type: TextArea
       properties:
@@ -669,17 +600,6 @@
           colorBgContainer: '#faf0ff'
           colorBorder: '#d3adf7'
           borderRadius: 12
-    - id: theme_green
-      type: TextArea
-      properties:
-        title: Green Theme
-        placeholder: Green-themed textarea
-        theme:
-          colorPrimary: '#389e0d'
-          colorPrimaryHover: '#52c41a'
-          colorBgContainer: '#f6ffed'
-          colorBorder: '#b7eb8f'
-          borderRadius: 8
     - id: theme_warm
       type: TextArea
       properties:

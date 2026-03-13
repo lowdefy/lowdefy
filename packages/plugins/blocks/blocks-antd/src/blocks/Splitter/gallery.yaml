@@ -86,7 +86,7 @@
                   properties:
                     content: Bottom Panel
 
-- title: Three Panels
+- title: Three Panels with Default Sizes
   blocks:
     - id: three_h
       type: Splitter
@@ -113,7 +113,7 @@
                 - id: three_h_first_text
                   type: Paragraph
                   properties:
-                    content: Panel 1
+                    content: '25%'
         second:
           blocks:
             - id: three_h_second
@@ -123,7 +123,7 @@
                 - id: three_h_second_text
                   type: Paragraph
                   properties:
-                    content: Panel 2
+                    content: '50%'
         third:
           blocks:
             - id: three_h_third
@@ -133,11 +133,9 @@
                 - id: three_h_third_text
                   type: Paragraph
                   properties:
-                    content: Panel 3
+                    content: '25%'
 
-- title: Four Panels
-  blocks:
-    - id: four_h
+    - id: pixel_sizes
       type: Splitter
       style:
         height: 180px
@@ -146,55 +144,30 @@
       properties:
         layout: horizontal
         panels:
-          - key: p1
-            defaultSize: 25
-          - key: p2
-            defaultSize: 25
-          - key: p3
-            defaultSize: 25
-          - key: p4
-            defaultSize: 25
+          - key: px_fixed
+            defaultSize: '200px'
+          - key: px_flex
       slots:
-        p1:
+        px_fixed:
           blocks:
-            - id: four_h_p1
+            - id: pixel_sizes_fixed
               type: Box
-              class: bg-red-50 h-full flex items-center justify-center
+              class: bg-teal-100 h-full flex items-center justify-center
               blocks:
-                - id: four_h_p1_text
+                - id: pixel_sizes_fixed_text
                   type: Paragraph
                   properties:
-                    content: Panel 1
-        p2:
+                    content: Fixed 200px
+        px_flex:
           blocks:
-            - id: four_h_p2
+            - id: pixel_sizes_flex
               type: Box
-              class: bg-orange-50 h-full flex items-center justify-center
+              class: bg-teal-50 h-full flex items-center justify-center
               blocks:
-                - id: four_h_p2_text
+                - id: pixel_sizes_flex_text
                   type: Paragraph
                   properties:
-                    content: Panel 2
-        p3:
-          blocks:
-            - id: four_h_p3
-              type: Box
-              class: bg-yellow-50 h-full flex items-center justify-center
-              blocks:
-                - id: four_h_p3_text
-                  type: Paragraph
-                  properties:
-                    content: Panel 3
-        p4:
-          blocks:
-            - id: four_h_p4
-              type: Box
-              class: bg-green-50 h-full flex items-center justify-center
-              blocks:
-                - id: four_h_p4_text
-                  type: Paragraph
-                  properties:
-                    content: Panel 4
+                    content: Flexible remainder
 
 - title: Min and Max Size Constraints
   blocks:
@@ -241,8 +214,9 @@
                 - id: constrained_main_desc
                   type: Paragraph
                   properties:
-                    content: This panel fills the remaining space. The left panel cannot be resized smaller than 20% or larger than 40%.
-    - id: constrained_both
+                    content: The left panel cannot be resized smaller than 20% or larger than 40%.
+
+    - id: constrained_px
       type: Splitter
       style:
         height: 200px
@@ -251,51 +225,51 @@
       properties:
         layout: horizontal
         panels:
-          - key: c_left
+          - key: cpx_left
             defaultSize: 30
             min: '100px'
             max: '400px'
-          - key: c_center
+          - key: cpx_center
             defaultSize: 40
-          - key: c_right
+          - key: cpx_right
             defaultSize: 30
             min: '100px'
             max: '300px'
       slots:
-        c_left:
+        cpx_left:
           blocks:
-            - id: constrained_both_left
+            - id: constrained_px_left
               type: Box
               class: bg-purple-50 h-full p-4 flex items-center justify-center
               blocks:
-                - id: constrained_both_left_text
+                - id: constrained_px_left_text
                   type: Paragraph
                   properties:
                     content: 'Min: 100px / Max: 400px'
-        c_center:
+        cpx_center:
           blocks:
-            - id: constrained_both_center
+            - id: constrained_px_center
               type: Box
               class: bg-gray-50 h-full p-4 flex items-center justify-center
               blocks:
-                - id: constrained_both_center_text
+                - id: constrained_px_center_text
                   type: Paragraph
                   properties:
                     content: Flexible Center
-        c_right:
+        cpx_right:
           blocks:
-            - id: constrained_both_right
+            - id: constrained_px_right
               type: Box
               class: bg-rose-50 h-full p-4 flex items-center justify-center
               blocks:
-                - id: constrained_both_right_text
+                - id: constrained_px_right_text
                   type: Paragraph
                   properties:
                     content: 'Min: 100px / Max: 300px'
 
 - title: Collapsible Panels
   blocks:
-    - id: collapsible_left
+    - id: collapsible_simple
       type: Splitter
       style:
         height: 200px
@@ -312,28 +286,29 @@
       slots:
         col_sidebar:
           blocks:
-            - id: collapsible_left_sidebar
+            - id: collapsible_simple_sidebar
               type: Box
               class: bg-blue-100 h-full p-4
               blocks:
-                - id: collapsible_left_sidebar_text
+                - id: collapsible_simple_sidebar_text
                   type: Paragraph
                   properties:
                     content: '<b>Collapsible Sidebar</b>'
-                - id: collapsible_left_sidebar_desc
+                - id: collapsible_simple_sidebar_desc
                   type: Paragraph
                   properties:
                     content: Click the arrow on the divider to collapse this panel.
         col_body:
           blocks:
-            - id: collapsible_left_body
+            - id: collapsible_simple_body
               type: Box
               class: bg-white h-full p-4
               blocks:
-                - id: collapsible_left_body_text
+                - id: collapsible_simple_body_text
                   type: Paragraph
                   properties:
                     content: Main body content remains visible when the sidebar is collapsed.
+
     - id: collapsible_both
       type: Splitter
       style:
@@ -441,122 +416,6 @@
                   properties:
                     content: Collapse right only
 
-- title: Default Sizes
-  blocks:
-    - id: default_sizes_uneven
-      type: Splitter
-      style:
-        height: 180px
-        border: 1px solid #e8e8e8
-        borderRadius: 8px
-      properties:
-        layout: horizontal
-        panels:
-          - key: ds_narrow
-            defaultSize: 20
-          - key: ds_wide
-            defaultSize: 80
-      slots:
-        ds_narrow:
-          blocks:
-            - id: default_sizes_narrow
-              type: Box
-              class: bg-orange-100 h-full flex items-center justify-center
-              blocks:
-                - id: default_sizes_narrow_text
-                  type: Paragraph
-                  properties:
-                    content: '20%'
-        ds_wide:
-          blocks:
-            - id: default_sizes_wide
-              type: Box
-              class: bg-orange-50 h-full flex items-center justify-center
-              blocks:
-                - id: default_sizes_wide_text
-                  type: Paragraph
-                  properties:
-                    content: '80%'
-    - id: default_sizes_thirds
-      type: Splitter
-      style:
-        height: 180px
-        border: 1px solid #e8e8e8
-        borderRadius: 8px
-      properties:
-        layout: horizontal
-        panels:
-          - key: ds_t1
-            defaultSize: 33
-          - key: ds_t2
-            defaultSize: 34
-          - key: ds_t3
-            defaultSize: 33
-      slots:
-        ds_t1:
-          blocks:
-            - id: default_sizes_t1
-              type: Box
-              class: bg-violet-100 h-full flex items-center justify-center
-              blocks:
-                - id: default_sizes_t1_text
-                  type: Paragraph
-                  properties:
-                    content: '33%'
-        ds_t2:
-          blocks:
-            - id: default_sizes_t2
-              type: Box
-              class: bg-violet-50 h-full flex items-center justify-center
-              blocks:
-                - id: default_sizes_t2_text
-                  type: Paragraph
-                  properties:
-                    content: '34%'
-        ds_t3:
-          blocks:
-            - id: default_sizes_t3
-              type: Box
-              class: bg-violet-100 h-full flex items-center justify-center
-              blocks:
-                - id: default_sizes_t3_text
-                  type: Paragraph
-                  properties:
-                    content: '33%'
-    - id: default_sizes_pixel
-      type: Splitter
-      style:
-        height: 180px
-        border: 1px solid #e8e8e8
-        borderRadius: 8px
-      properties:
-        layout: horizontal
-        panels:
-          - key: ds_px_fixed
-            defaultSize: '200px'
-          - key: ds_px_flex
-      slots:
-        ds_px_fixed:
-          blocks:
-            - id: default_sizes_px_fixed
-              type: Box
-              class: bg-teal-100 h-full flex items-center justify-center
-              blocks:
-                - id: default_sizes_px_fixed_text
-                  type: Paragraph
-                  properties:
-                    content: Fixed 200px
-        ds_px_flex:
-          blocks:
-            - id: default_sizes_px_flex
-              type: Box
-              class: bg-teal-50 h-full flex items-center justify-center
-              blocks:
-                - id: default_sizes_px_flex_text
-                  type: Paragraph
-                  properties:
-                    content: Flexible remainder
-
 - title: Non-resizable Panel
   blocks:
     - id: nonresizable
@@ -607,12 +466,180 @@
                   properties:
                     content: Resizable
 
+- title: Lazy Panel Rendering
+  blocks:
+    - id: lazy_splitter
+      type: Splitter
+      style:
+        height: 200px
+        border: 1px solid #e8e8e8
+        borderRadius: 8px
+      properties:
+        layout: horizontal
+        lazy: true
+        panels:
+          - key: lazy_left
+            defaultSize: 50
+            collapsible: true
+          - key: lazy_right
+            defaultSize: 50
+      slots:
+        lazy_left:
+          blocks:
+            - id: lazy_left_box
+              type: Box
+              class: bg-orange-50 h-full p-4 flex items-center justify-center
+              blocks:
+                - id: lazy_left_text
+                  type: Paragraph
+                  properties:
+                    content: Lazy rendering defers content until the panel is visible. Collapse and expand to see the effect.
+        lazy_right:
+          blocks:
+            - id: lazy_right_box
+              type: Box
+              class: bg-orange-100 h-full p-4 flex items-center justify-center
+              blocks:
+                - id: lazy_right_text
+                  type: Paragraph
+                  properties:
+                    content: This panel content is also lazily rendered.
+
+- title: Event Actions
+  blocks:
+    - id: event_splitter
+      type: Splitter
+      style:
+        height: 200px
+        border: 1px solid #e8e8e8
+        borderRadius: 8px
+      properties:
+        layout: horizontal
+        panels:
+          - key: evt_left
+            defaultSize: 50
+            collapsible: true
+          - key: evt_right
+            defaultSize: 50
+      events:
+        onResizeEnd:
+          - id: event_resize_msg
+            type: DisplayMessage
+            params:
+              content:
+                _string.concat:
+                  - 'Resize complete. Panel sizes: '
+                  - _json.stringify:
+                      on:
+                        _event: sizes
+              duration: 2
+        onCollapse:
+          - id: event_collapse_msg
+            type: DisplayMessage
+            params:
+              content:
+                _if:
+                  test:
+                    _event: collapsed
+                  then: Panel collapsed.
+                  else: Panel expanded.
+              duration: 2
+      slots:
+        evt_left:
+          blocks:
+            - id: event_left_box
+              type: Box
+              class: bg-indigo-50 h-full p-4
+              blocks:
+                - id: event_left_title
+                  type: Paragraph
+                  properties:
+                    content: '<b>Collapsible Panel</b>'
+                - id: event_left_desc
+                  type: Paragraph
+                  properties:
+                    content: Collapse this panel or resize the divider to see event messages.
+        evt_right:
+          blocks:
+            - id: event_right_box
+              type: Box
+              class: bg-white h-full p-4
+              blocks:
+                - id: event_right_desc
+                  type: Paragraph
+                  properties:
+                    content: The onResizeEnd and onCollapse events fire DisplayMessage actions to show the current panel state.
+
+    - id: event_state_splitter
+      type: Splitter
+      style:
+        height: 220px
+        border: 1px solid #e8e8e8
+        borderRadius: 8px
+      properties:
+        layout: horizontal
+        panels:
+          - key: es_left
+            defaultSize: 40
+          - key: es_right
+            defaultSize: 60
+      events:
+        onResizeEnd:
+          - id: event_set_state
+            type: SetState
+            params:
+              splitter_sizes:
+                _event: sizes
+        onResizeStart:
+          - id: event_resize_start_msg
+            type: DisplayMessage
+            params:
+              content: Resizing started...
+              duration: 1
+      slots:
+        es_left:
+          blocks:
+            - id: es_left_box
+              type: Box
+              class: bg-cyan-50 h-full p-4
+              blocks:
+                - id: es_left_title
+                  type: Paragraph
+                  properties:
+                    content: '<b>State Tracking</b>'
+                - id: es_left_desc
+                  type: Paragraph
+                  properties:
+                    content: Resize the panels. The onResizeStart fires a message and onResizeEnd saves panel sizes to state.
+        es_right:
+          blocks:
+            - id: es_right_box
+              type: Box
+              class: bg-white h-full p-4
+              blocks:
+                - id: es_right_title
+                  type: Paragraph
+                  properties:
+                    content: '<b>Current sizes:</b>'
+                - id: es_right_sizes
+                  type: Paragraph
+                  properties:
+                    content:
+                      _if:
+                        test:
+                          _state: splitter_sizes
+                        then:
+                          _json.stringify:
+                            on:
+                              _state: splitter_sizes
+                        else: Resize panels to see sizes here.
+
 - title: Nested Splitters
   blocks:
     - id: nested_outer
       type: Splitter
       style:
-        height: 400px
+        height: 350px
         border: 1px solid #e8e8e8
         borderRadius: 8px
       properties:
@@ -647,10 +674,6 @@
                   type: Paragraph
                   properties:
                     content: Settings
-                - id: nested_sidebar_item_4
-                  type: Paragraph
-                  properties:
-                    content: Reports
         n_main:
           blocks:
             - id: nested_inner
@@ -680,7 +703,7 @@
                         - id: nested_content_desc
                           type: Paragraph
                           properties:
-                            content: This demonstrates a horizontal splitter with a nested vertical splitter. The sidebar splits horizontally, while the main area is split vertically into content and a bottom panel.
+                            content: A horizontal splitter with a nested vertical splitter. The sidebar splits horizontally, while the main area is split vertically into content and a bottom panel.
                 n_footer:
                   blocks:
                     - id: nested_footer
@@ -695,352 +718,6 @@
                           type: Paragraph
                           properties:
                             content: Collapsible bottom panel inside the nested vertical splitter.
-
-- title: IDE-style Layout
-  blocks:
-    - id: ide_outer
-      type: Splitter
-      style:
-        height: 450px
-        border: 1px solid #d9d9d9
-        borderRadius: 8px
-      properties:
-        layout: horizontal
-        panels:
-          - key: ide_explorer
-            defaultSize: 20
-            min: 12
-            collapsible: true
-          - key: ide_right
-            defaultSize: 80
-      slots:
-        ide_explorer:
-          blocks:
-            - id: ide_explorer_box
-              type: Box
-              class: bg-slate-800 h-full p-3
-              blocks:
-                - id: ide_explorer_title
-                  type: Paragraph
-                  style:
-                    color: '#9ca3af'
-                    fontSize: 11px
-                    textTransform: uppercase
-                    letterSpacing: 1px
-                  properties:
-                    content: Explorer
-                - id: ide_explorer_f1
-                  type: Paragraph
-                  style:
-                    color: '#e2e8f0'
-                    fontSize: 13px
-                  properties:
-                    content: 'src/'
-                - id: ide_explorer_f2
-                  type: Paragraph
-                  style:
-                    color: '#94a3b8'
-                    fontSize: 13px
-                    paddingLeft: 12px
-                  properties:
-                    content: 'index.js'
-                - id: ide_explorer_f3
-                  type: Paragraph
-                  style:
-                    color: '#94a3b8'
-                    fontSize: 13px
-                    paddingLeft: 12px
-                  properties:
-                    content: 'App.js'
-                - id: ide_explorer_f4
-                  type: Paragraph
-                  style:
-                    color: '#94a3b8'
-                    fontSize: 13px
-                    paddingLeft: 12px
-                  properties:
-                    content: 'utils.js'
-                - id: ide_explorer_f5
-                  type: Paragraph
-                  style:
-                    color: '#e2e8f0'
-                    fontSize: 13px
-                  properties:
-                    content: 'package.json'
-        ide_right:
-          blocks:
-            - id: ide_inner
-              type: Splitter
-              style:
-                height: 100%
-              properties:
-                layout: vertical
-                panels:
-                  - key: ide_editor
-                    defaultSize: 65
-                  - key: ide_terminal
-                    defaultSize: 35
-                    min: 15
-                    collapsible: true
-              slots:
-                ide_editor:
-                  blocks:
-                    - id: ide_editor_box
-                      type: Box
-                      class: bg-slate-900 h-full p-4
-                      blocks:
-                        - id: ide_editor_tab
-                          type: Paragraph
-                          style:
-                            color: '#64748b'
-                            fontSize: 12px
-                            borderBottom: 1px solid #334155
-                            paddingBottom: 8px
-                          properties:
-                            content: 'App.js'
-                        - id: ide_editor_code
-                          type: Paragraph
-                          style:
-                            color: '#e2e8f0'
-                            fontFamily: monospace
-                            fontSize: 13px
-                            lineHeight: 1.6
-                          properties:
-                            content: '<span style="color:#c084fc">function</span> <span style="color:#67e8f9">App</span>() {<br>&nbsp;&nbsp;<span style="color:#c084fc">return</span> (<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#67e8f9">div</span>&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hello World<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span style="color:#67e8f9">div</span>&gt;<br>&nbsp;&nbsp;);<br>}'
-                ide_terminal:
-                  blocks:
-                    - id: ide_terminal_box
-                      type: Box
-                      class: bg-gray-950 h-full p-3
-                      blocks:
-                        - id: ide_terminal_title
-                          type: Paragraph
-                          style:
-                            color: '#64748b'
-                            fontSize: 11px
-                            textTransform: uppercase
-                            letterSpacing: 1px
-                            borderBottom: 1px solid #1e293b
-                            paddingBottom: 6px
-                          properties:
-                            content: Terminal
-                        - id: ide_terminal_line
-                          type: Paragraph
-                          style:
-                            color: '#22c55e'
-                            fontFamily: monospace
-                            fontSize: 13px
-                          properties:
-                            content: '$ npm start'
-                        - id: ide_terminal_output
-                          type: Paragraph
-                          style:
-                            color: '#94a3b8'
-                            fontFamily: monospace
-                            fontSize: 13px
-                          properties:
-                            content: 'Compiled successfully!'
-
-- title: Panels with Rich Content
-  blocks:
-    - id: rich_h
-      type: Splitter
-      style:
-        height: 280px
-        border: 1px solid #e8e8e8
-        borderRadius: 8px
-      properties:
-        layout: horizontal
-        panels:
-          - key: rich_left
-            defaultSize: 50
-          - key: rich_right
-            defaultSize: 50
-      slots:
-        rich_left:
-          blocks:
-            - id: rich_left_box
-              type: Box
-              class: h-full p-4
-              blocks:
-                - id: rich_left_card
-                  type: Card
-                  properties:
-                    title: Project Overview
-                    size: small
-                  blocks:
-                    - id: rich_left_card_p1
-                      type: Paragraph
-                      properties:
-                        content: This panel contains a Card block inside a Splitter panel, demonstrating that any block type can be placed within splitter panels.
-                    - id: rich_left_card_tag
-                      type: Tag
-                      properties:
-                        title: Active
-                        color: success
-        rich_right:
-          blocks:
-            - id: rich_right_box
-              type: Box
-              class: h-full p-4
-              blocks:
-                - id: rich_right_card
-                  type: Card
-                  properties:
-                    title: Statistics
-                    size: small
-                  blocks:
-                    - id: rich_right_stat
-                      type: Statistic
-                      properties:
-                        title: Total Users
-                        value: 1428
-                    - id: rich_right_progress
-                      type: Progress
-                      properties:
-                        percent: 72
-
-- title: Colored Background Panels
-  blocks:
-    - id: color_h
-      type: Splitter
-      style:
-        height: 200px
-        borderRadius: 8px
-        overflow: hidden
-      properties:
-        layout: horizontal
-        panels:
-          - key: c_red
-            defaultSize: 25
-          - key: c_blue
-            defaultSize: 25
-          - key: c_green
-            defaultSize: 25
-          - key: c_purple
-            defaultSize: 25
-      slots:
-        c_red:
-          blocks:
-            - id: color_red_panel
-              type: Box
-              class: h-full flex items-center justify-center
-              style:
-                background: 'linear-gradient(135deg, #fee2e2, #fecaca)'
-              blocks:
-                - id: color_red_text
-                  type: Paragraph
-                  style:
-                    color: '#991b1b'
-                    fontWeight: 600
-                  properties:
-                    content: Red
-        c_blue:
-          blocks:
-            - id: color_blue_panel
-              type: Box
-              class: h-full flex items-center justify-center
-              style:
-                background: 'linear-gradient(135deg, #dbeafe, #bfdbfe)'
-              blocks:
-                - id: color_blue_text
-                  type: Paragraph
-                  style:
-                    color: '#1e40af'
-                    fontWeight: 600
-                  properties:
-                    content: Blue
-        c_green:
-          blocks:
-            - id: color_green_panel
-              type: Box
-              class: h-full flex items-center justify-center
-              style:
-                background: 'linear-gradient(135deg, #dcfce7, #bbf7d0)'
-              blocks:
-                - id: color_green_text
-                  type: Paragraph
-                  style:
-                    color: '#166534'
-                    fontWeight: 600
-                  properties:
-                    content: Green
-        c_purple:
-          blocks:
-            - id: color_purple_panel
-              type: Box
-              class: h-full flex items-center justify-center
-              style:
-                background: 'linear-gradient(135deg, #f3e8ff, #e9d5ff)'
-              blocks:
-                - id: color_purple_text
-                  type: Paragraph
-                  style:
-                    color: '#6b21a8'
-                    fontWeight: 600
-                  properties:
-                    content: Purple
-    - id: color_v
-      type: Splitter
-      style:
-        height: 250px
-        borderRadius: 8px
-        overflow: hidden
-      properties:
-        layout: vertical
-        panels:
-          - key: cv_top
-            defaultSize: 33
-          - key: cv_mid
-            defaultSize: 34
-          - key: cv_bot
-            defaultSize: 33
-      slots:
-        cv_top:
-          blocks:
-            - id: color_v_top
-              type: Box
-              class: h-full flex items-center justify-center
-              style:
-                background: 'linear-gradient(90deg, #fef3c7, #fde68a)'
-              blocks:
-                - id: color_v_top_text
-                  type: Paragraph
-                  style:
-                    color: '#92400e'
-                    fontWeight: 600
-                  properties:
-                    content: Top Section
-        cv_mid:
-          blocks:
-            - id: color_v_mid
-              type: Box
-              class: h-full flex items-center justify-center
-              style:
-                background: 'linear-gradient(90deg, #e0f2fe, #bae6fd)'
-              blocks:
-                - id: color_v_mid_text
-                  type: Paragraph
-                  style:
-                    color: '#0c4a6e'
-                    fontWeight: 600
-                  properties:
-                    content: Middle Section
-        cv_bot:
-          blocks:
-            - id: color_v_bot
-              type: Box
-              class: h-full flex items-center justify-center
-              style:
-                background: 'linear-gradient(90deg, #fce7f3, #fbcfe8)'
-              blocks:
-                - id: color_v_bot_text
-                  type: Paragraph
-                  style:
-                    color: '#9d174d'
-                    fontWeight: 600
-                  properties:
-                    content: Bottom Section
 
 - title: Theme Token Overrides
   blocks:
@@ -1071,7 +748,7 @@
                 - id: theme_thick_left_text
                   type: Paragraph
                   properties:
-                    content: Thicker blue splitter bar
+                    content: 'splitBarSize: 4, splitTriggerSize: 24'
         ttb_right:
           blocks:
             - id: theme_thick_right
@@ -1081,8 +758,9 @@
                 - id: theme_thick_right_text
                   type: Paragraph
                   properties:
-                    content: Larger trigger area (24px)
-    - id: theme_custom_colors
+                    content: Thicker blue splitter bar with larger trigger area
+
+    - id: theme_green
       type: Splitter
       style:
         height: 200px
@@ -1091,37 +769,39 @@
       properties:
         layout: horizontal
         panels:
-          - key: tcc_left
+          - key: tg_left
             defaultSize: 50
             collapsible: true
-          - key: tcc_right
+          - key: tg_right
             defaultSize: 50
         theme:
           splitBarSize: 3
           colorFill: '#52c41a'
           colorPrimary: '#52c41a'
+          colorText: '#52c41a'
           splitTriggerSize: 20
       slots:
-        tcc_left:
+        tg_left:
           blocks:
-            - id: theme_colors_left
+            - id: theme_green_left
               type: Box
               class: bg-green-50 h-full p-4 flex items-center justify-center
               blocks:
-                - id: theme_colors_left_text
+                - id: theme_green_left_text
                   type: Paragraph
                   properties:
-                    content: Green themed divider
-        tcc_right:
+                    content: Green themed divider, arrows, and resize dots
+        tg_right:
           blocks:
-            - id: theme_colors_right
+            - id: theme_green_right
               type: Box
               class: bg-green-100 h-full p-4 flex items-center justify-center
               blocks:
-                - id: theme_colors_right_text
+                - id: theme_green_right_text
                   type: Paragraph
                   properties:
-                    content: Green collapse arrows
+                    content: 'colorFill, colorPrimary, colorText overridden'
+
     - id: theme_minimal
       type: Splitter
       style:
@@ -1149,7 +829,7 @@
                 - id: theme_minimal_left_text
                   type: Paragraph
                   properties:
-                    content: Minimal divider
+                    content: Minimal divider with no visible trigger handle
         tm_right:
           blocks:
             - id: theme_minimal_right
@@ -1159,4 +839,672 @@
                 - id: theme_minimal_right_text
                   type: Paragraph
                   properties:
-                    content: No visible trigger handle
+                    content: 'resizeSpinnerSize: 0, splitTriggerSize: 0'
+
+    - id: theme_custom_handle
+      type: Splitter
+      style:
+        height: 200px
+        border: 1px solid #e8e8e8
+        borderRadius: 8px
+      properties:
+        layout: horizontal
+        panels:
+          - key: tch_left
+            defaultSize: 50
+          - key: tch_right
+            defaultSize: 50
+        theme:
+          splitBarDraggableSize: 40
+          colorFillTertiary: '#e6f4ff'
+          colorFillSecondary: '#91caff'
+          colorBgElevated: '#bae0ff'
+          borderRadius: 12
+      slots:
+        tch_left:
+          blocks:
+            - id: theme_handle_left
+              type: Box
+              class: bg-sky-50 h-full p-4 flex items-center justify-center
+              blocks:
+                - id: theme_handle_left_text
+                  type: Paragraph
+                  properties:
+                    content: Custom drag handle with blue tones
+        tch_right:
+          blocks:
+            - id: theme_handle_right
+              type: Box
+              class: bg-sky-100 h-full p-4 flex items-center justify-center
+              blocks:
+                - id: theme_handle_right_text
+                  type: Paragraph
+                  properties:
+                    content: 'splitBarDraggableSize: 40, borderRadius: 12'
+
+- title: Styled with Tailwind CSS (element)
+  blocks:
+    - id: css_rounded
+      type: Splitter
+      class:
+        element: rounded-2xl shadow-lg overflow-hidden
+      style:
+        height: 200px
+      properties:
+        layout: horizontal
+        panels:
+          - key: css_r_left
+            defaultSize: 50
+          - key: css_r_right
+            defaultSize: 50
+      slots:
+        css_r_left:
+          blocks:
+            - id: css_rounded_left
+              type: Box
+              class: bg-gradient-to-br from-blue-50 to-indigo-100 h-full p-4 flex items-center justify-center
+              blocks:
+                - id: css_rounded_left_text
+                  type: Paragraph
+                  properties:
+                    content: The element CSS key applies Tailwind classes to the outer Splitter wrapper.
+        css_r_right:
+          blocks:
+            - id: css_rounded_right
+              type: Box
+              class: bg-gradient-to-br from-indigo-100 to-purple-100 h-full p-4 flex items-center justify-center
+              blocks:
+                - id: css_rounded_right_text
+                  type: Paragraph
+                  properties:
+                    content: 'class.element: rounded-2xl shadow-lg overflow-hidden'
+
+    - id: css_border
+      type: Splitter
+      class:
+        element: border-2 border-dashed border-blue-300 rounded-xl
+      style:
+        height: 180px
+      properties:
+        layout: horizontal
+        panels:
+          - key: css_b_left
+            defaultSize: 40
+          - key: css_b_right
+            defaultSize: 60
+      slots:
+        css_b_left:
+          blocks:
+            - id: css_border_left
+              type: Box
+              class: bg-blue-50 h-full p-4 flex items-center justify-center
+              blocks:
+                - id: css_border_left_text
+                  type: Paragraph
+                  properties:
+                    content: Dashed blue border via Tailwind
+        css_b_right:
+          blocks:
+            - id: css_border_right
+              type: Box
+              class: bg-white h-full p-4 flex items-center justify-center
+              blocks:
+                - id: css_border_right_text
+                  type: Paragraph
+                  properties:
+                    content: 'class.element: border-2 border-dashed border-blue-300 rounded-xl'
+
+- title: Code Editor with Preview
+  blocks:
+    - id: editor_outer
+      type: Splitter
+      style:
+        height: 420px
+        border: 1px solid #d9d9d9
+        borderRadius: 8px
+      properties:
+        layout: horizontal
+        panels:
+          - key: editor_files
+            defaultSize: 18
+            min: 12
+            collapsible: true
+          - key: editor_main
+            defaultSize: 82
+      events:
+        onCollapse:
+          - id: editor_collapse_msg
+            type: DisplayMessage
+            params:
+              content:
+                _if:
+                  test:
+                    _event: collapsed
+                  then: File explorer collapsed.
+                  else: File explorer expanded.
+              duration: 2
+      slots:
+        editor_files:
+          blocks:
+            - id: editor_files_box
+              type: Box
+              class: bg-slate-800 h-full p-3
+              blocks:
+                - id: editor_files_title
+                  type: Paragraph
+                  style:
+                    color: '#9ca3af'
+                    fontSize: 11px
+                    textTransform: uppercase
+                    letterSpacing: 1px
+                  properties:
+                    content: Explorer
+                - id: editor_files_f1
+                  type: Paragraph
+                  style:
+                    color: '#e2e8f0'
+                    fontSize: 13px
+                  properties:
+                    content: 'src/'
+                - id: editor_files_f2
+                  type: Paragraph
+                  style:
+                    color: '#94a3b8'
+                    fontSize: 13px
+                    paddingLeft: 12px
+                  properties:
+                    content: 'index.js'
+                - id: editor_files_f3
+                  type: Paragraph
+                  style:
+                    color: '#94a3b8'
+                    fontSize: 13px
+                    paddingLeft: 12px
+                  properties:
+                    content: 'App.js'
+                - id: editor_files_f4
+                  type: Paragraph
+                  style:
+                    color: '#94a3b8'
+                    fontSize: 13px
+                    paddingLeft: 12px
+                  properties:
+                    content: 'styles.css'
+                - id: editor_files_f5
+                  type: Paragraph
+                  style:
+                    color: '#e2e8f0'
+                    fontSize: 13px
+                  properties:
+                    content: 'package.json'
+        editor_main:
+          blocks:
+            - id: editor_inner
+              type: Splitter
+              style:
+                height: 100%
+              properties:
+                layout: vertical
+                panels:
+                  - key: editor_code
+                    defaultSize: 65
+                  - key: editor_terminal
+                    defaultSize: 35
+                    min: 15
+                    collapsible: true
+              slots:
+                editor_code:
+                  blocks:
+                    - id: editor_code_box
+                      type: Box
+                      class: bg-slate-900 h-full p-4
+                      blocks:
+                        - id: editor_code_tab
+                          type: Paragraph
+                          style:
+                            color: '#64748b'
+                            fontSize: 12px
+                            borderBottom: 1px solid #334155
+                            paddingBottom: 8px
+                          properties:
+                            content: 'App.js'
+                        - id: editor_code_content
+                          type: Paragraph
+                          style:
+                            color: '#e2e8f0'
+                            fontFamily: monospace
+                            fontSize: 13px
+                            lineHeight: 1.6
+                          properties:
+                            content: '<span style="color:#c084fc">import</span> React <span style="color:#c084fc">from</span> <span style="color:#a5d6ff">"react"</span>;<br><br><span style="color:#c084fc">function</span> <span style="color:#67e8f9">App</span>() {<br>&nbsp;&nbsp;<span style="color:#c084fc">return</span> (<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#67e8f9">div</span> <span style="color:#79c0ff">className</span>=<span style="color:#a5d6ff">"app"</span>&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color:#67e8f9">h1</span>&gt;Hello World&lt;/<span style="color:#67e8f9">h1</span>&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span style="color:#67e8f9">div</span>&gt;<br>&nbsp;&nbsp;);<br>}'
+                editor_terminal:
+                  blocks:
+                    - id: editor_terminal_box
+                      type: Box
+                      class: bg-gray-950 h-full p-3
+                      blocks:
+                        - id: editor_terminal_title
+                          type: Paragraph
+                          style:
+                            color: '#64748b'
+                            fontSize: 11px
+                            textTransform: uppercase
+                            letterSpacing: 1px
+                            borderBottom: 1px solid #1e293b
+                            paddingBottom: 6px
+                          properties:
+                            content: Terminal
+                        - id: editor_terminal_line
+                          type: Paragraph
+                          style:
+                            color: '#22c55e'
+                            fontFamily: monospace
+                            fontSize: 13px
+                          properties:
+                            content: '$ npm start'
+                        - id: editor_terminal_output
+                          type: Paragraph
+                          style:
+                            color: '#94a3b8'
+                            fontFamily: monospace
+                            fontSize: 13px
+                          properties:
+                            content: 'Compiled successfully!'
+
+- title: Dashboard with Sidebar and Detail Panels
+  blocks:
+    - id: dashboard_outer
+      type: Splitter
+      style:
+        height: 400px
+        border: 1px solid #e8e8e8
+        borderRadius: 8px
+      properties:
+        layout: horizontal
+        panels:
+          - key: dash_nav
+            defaultSize: 22
+            min: 15
+            max: 35
+            collapsible: true
+          - key: dash_content
+            defaultSize: 50
+          - key: dash_detail
+            defaultSize: 28
+            min: 20
+            collapsible: true
+      events:
+        onResizeEnd:
+          - id: dash_resize_state
+            type: SetState
+            params:
+              dashboard_layout:
+                _event: sizes
+      slots:
+        dash_nav:
+          blocks:
+            - id: dash_nav_box
+              type: Box
+              class: bg-slate-50 h-full p-0
+              blocks:
+                - id: dash_nav_card
+                  type: Card
+                  properties:
+                    title: Navigation
+                    size: small
+                    bordered: false
+                  blocks:
+                    - id: dash_nav_item1
+                      type: Button
+                      properties:
+                        title: Overview
+                        icon: AiOutlineDashboard
+                        variant: text
+                        block: true
+                    - id: dash_nav_item2
+                      type: Button
+                      properties:
+                        title: Analytics
+                        icon: AiOutlineBarChart
+                        variant: text
+                        block: true
+                    - id: dash_nav_item3
+                      type: Button
+                      properties:
+                        title: Users
+                        icon: AiOutlineTeam
+                        variant: text
+                        block: true
+                    - id: dash_nav_item4
+                      type: Button
+                      properties:
+                        title: Settings
+                        icon: AiOutlineSetting
+                        variant: text
+                        block: true
+        dash_content:
+          blocks:
+            - id: dash_content_box
+              type: Box
+              class: h-full p-4
+              blocks:
+                - id: dash_content_title
+                  type: Title
+                  properties:
+                    content: Overview
+                    level: 4
+                - id: dash_stats_row
+                  type: Box
+                  layout:
+                    gap: 16
+                  blocks:
+                    - id: dash_stat_users
+                      type: Card
+                      layout:
+                        flex: 1 1 0
+                      properties:
+                        size: small
+                      blocks:
+                        - id: dash_stat_users_val
+                          type: Statistic
+                          properties:
+                            title: Total Users
+                            value: 2846
+                    - id: dash_stat_revenue
+                      type: Card
+                      layout:
+                        flex: 1 1 0
+                      properties:
+                        size: small
+                      blocks:
+                        - id: dash_stat_revenue_val
+                          type: Statistic
+                          properties:
+                            title: Revenue
+                            value: 48200
+                            prefix: $
+                - id: dash_progress_card
+                  type: Card
+                  properties:
+                    title: Monthly Target
+                    size: small
+                  blocks:
+                    - id: dash_progress_bar
+                      type: Progress
+                      properties:
+                        percent: 72
+        dash_detail:
+          blocks:
+            - id: dash_detail_box
+              type: Box
+              class: bg-gray-50 h-full p-0
+              blocks:
+                - id: dash_detail_card
+                  type: Card
+                  properties:
+                    title: Recent Activity
+                    size: small
+                    bordered: false
+                  blocks:
+                    - id: dash_detail_item1
+                      type: Paragraph
+                      properties:
+                        content: '<b>Sarah</b> updated the project plan <i>2 min ago</i>'
+                    - id: dash_detail_divider1
+                      type: Divider
+                    - id: dash_detail_item2
+                      type: Paragraph
+                      properties:
+                        content: '<b>James</b> added 3 team members <i>15 min ago</i>'
+                    - id: dash_detail_divider2
+                      type: Divider
+                    - id: dash_detail_item3
+                      type: Paragraph
+                      properties:
+                        content: '<b>System</b> completed deployment <i>1 hour ago</i>'
+                    - id: dash_detail_divider3
+                      type: Divider
+                    - id: dash_detail_item4
+                      type: Paragraph
+                      properties:
+                        content: '<b>Alex</b> resolved 5 support tickets <i>3 hours ago</i>'
+
+- title: Email Client Layout
+  blocks:
+    - id: email_outer
+      type: Splitter
+      class:
+        element: rounded-lg shadow-md overflow-hidden
+      style:
+        height: 420px
+      properties:
+        layout: horizontal
+        panels:
+          - key: email_folders
+            defaultSize: 20
+            min: 15
+            collapsible: true
+          - key: email_list
+            defaultSize: 35
+            min: 25
+          - key: email_preview
+            defaultSize: 45
+      events:
+        onCollapse:
+          - id: email_collapse_action
+            type: DisplayMessage
+            params:
+              content:
+                _if:
+                  test:
+                    _event: collapsed
+                  then: Folder panel collapsed. Click the arrow to expand.
+                  else: Folder panel expanded.
+              duration: 2
+      slots:
+        email_folders:
+          blocks:
+            - id: email_folders_box
+              type: Box
+              class: bg-slate-50 h-full p-3
+              blocks:
+                - id: email_folders_title
+                  type: Paragraph
+                  style:
+                    fontWeight: 600
+                    fontSize: 13px
+                    color: '#64748b'
+                    textTransform: uppercase
+                    letterSpacing: 0.5px
+                  properties:
+                    content: Folders
+                - id: email_folder_inbox
+                  type: Button
+                  properties:
+                    title: Inbox (12)
+                    icon: AiOutlineInbox
+                    variant: text
+                    block: true
+                    size: small
+                - id: email_folder_sent
+                  type: Button
+                  properties:
+                    title: Sent
+                    icon: AiOutlineSend
+                    variant: text
+                    block: true
+                    size: small
+                - id: email_folder_drafts
+                  type: Button
+                  properties:
+                    title: Drafts (3)
+                    icon: AiOutlineEdit
+                    variant: text
+                    block: true
+                    size: small
+                - id: email_folder_trash
+                  type: Button
+                  properties:
+                    title: Trash
+                    icon: AiOutlineDelete
+                    variant: text
+                    block: true
+                    size: small
+        email_list:
+          blocks:
+            - id: email_list_box
+              type: Box
+              class: h-full p-0
+              blocks:
+                - id: email_list_header
+                  type: Box
+                  class: px-3 py-2 border-b border-gray-200
+                  blocks:
+                    - id: email_list_search
+                      type: Paragraph
+                      style:
+                        color: '#94a3b8'
+                        fontSize: 13px
+                      properties:
+                        content: 'Inbox - 12 messages'
+                - id: email_msg1
+                  type: Box
+                  class: px-3 py-2 border-b border-gray-100 bg-blue-50
+                  blocks:
+                    - id: email_msg1_from
+                      type: Paragraph
+                      style:
+                        fontWeight: 600
+                        fontSize: 13px
+                      properties:
+                        content: Alice Johnson
+                    - id: email_msg1_subject
+                      type: Paragraph
+                      style:
+                        fontSize: 13px
+                      properties:
+                        content: 'Q4 Planning Meeting Notes'
+                    - id: email_msg1_time
+                      type: Paragraph
+                      style:
+                        fontSize: 11px
+                        color: '#94a3b8'
+                      properties:
+                        content: 10:30 AM
+                - id: email_msg2
+                  type: Box
+                  class: px-3 py-2 border-b border-gray-100
+                  blocks:
+                    - id: email_msg2_from
+                      type: Paragraph
+                      style:
+                        fontWeight: 600
+                        fontSize: 13px
+                      properties:
+                        content: Bob Williams
+                    - id: email_msg2_subject
+                      type: Paragraph
+                      style:
+                        fontSize: 13px
+                      properties:
+                        content: 'Design review feedback'
+                    - id: email_msg2_time
+                      type: Paragraph
+                      style:
+                        fontSize: 11px
+                        color: '#94a3b8'
+                      properties:
+                        content: 9:15 AM
+                - id: email_msg3
+                  type: Box
+                  class: px-3 py-2 border-b border-gray-100
+                  blocks:
+                    - id: email_msg3_from
+                      type: Paragraph
+                      style:
+                        fontSize: 13px
+                      properties:
+                        content: Carol Davis
+                    - id: email_msg3_subject
+                      type: Paragraph
+                      style:
+                        fontSize: 13px
+                      properties:
+                        content: 'Updated project timeline'
+                    - id: email_msg3_time
+                      type: Paragraph
+                      style:
+                        fontSize: 11px
+                        color: '#94a3b8'
+                      properties:
+                        content: Yesterday
+        email_preview:
+          blocks:
+            - id: email_preview_box
+              type: Box
+              class: h-full p-4
+              blocks:
+                - id: email_preview_subject
+                  type: Title
+                  properties:
+                    content: Q4 Planning Meeting Notes
+                    level: 4
+                - id: email_preview_meta
+                  type: Box
+                  layout:
+                    gap: 8
+                    align: center
+                  blocks:
+                    - id: email_preview_avatar
+                      type: Avatar
+                      layout:
+                        flex: 0 0 auto
+                      properties:
+                        icon: AiOutlineUser
+                        size: 32
+                        color: '#fff'
+                        backgroundColor: '#1677ff'
+                    - id: email_preview_sender
+                      type: Box
+                      layout:
+                        flex: 1 1 0
+                      blocks:
+                        - id: email_preview_from
+                          type: Paragraph
+                          style:
+                            fontWeight: 600
+                            fontSize: 14px
+                          properties:
+                            content: Alice Johnson
+                        - id: email_preview_date
+                          type: Paragraph
+                          style:
+                            fontSize: 12px
+                            color: '#94a3b8'
+                          properties:
+                            content: 'March 13, 2026 at 10:30 AM'
+                - id: email_preview_divider
+                  type: Divider
+                - id: email_preview_body
+                  type: Paragraph
+                  properties:
+                    content: 'Hi team, here are the key takeaways from our Q4 planning meeting yesterday. We agreed on the following priorities: launching the new dashboard feature, improving API performance by 30%, and completing the migration to the new design system.'
+                - id: email_preview_body2
+                  type: Paragraph
+                  properties:
+                    content: 'Please review the attached document and share any feedback by end of week. Our next sync is scheduled for Monday at 2 PM.'
+                - id: email_preview_tags
+                  type: Box
+                  layout:
+                    gap: 8
+                  blocks:
+                    - id: email_preview_tag1
+                      type: Tag
+                      properties:
+                        title: Planning
+                        color: blue
+                    - id: email_preview_tag2
+                      type: Tag
+                      properties:
+                        title: Q4
+                        color: purple

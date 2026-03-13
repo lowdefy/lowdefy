@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/input/Switch.yaml
     block_type: Switch
     antd_component: Switch
+    antd_url: switch
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Switch
     schema: ../plugins/blocks/blocks-antd/src/blocks/Switch/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Switch/gallery.yaml

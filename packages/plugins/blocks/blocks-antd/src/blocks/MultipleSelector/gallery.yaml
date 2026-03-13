@@ -106,9 +106,9 @@
           - Blue
           - Yellow
 
-- title: Allow Clear
+- title: Toggle Properties
   blocks:
-    - id: allow_clear_true
+    - id: toggle_allow_clear
       type: MultipleSelector
       properties:
         title: Allow Clear (default)
@@ -120,18 +120,30 @@
             value: b
           - label: Option C
             value: c
-    - id: allow_clear_false
+    - id: toggle_no_arrow
       type: MultipleSelector
       properties:
-        title: No Clear Button
-        allowClear: false
+        title: No Arrow
+        showArrow: false
         options:
-          - label: Option A
-            value: a
-          - label: Option B
-            value: b
-          - label: Option C
-            value: c
+          - label: Cat
+            value: cat
+          - label: Dog
+            value: dog
+          - label: Bird
+            value: bird
+    - id: toggle_auto_focus
+      type: MultipleSelector
+      properties:
+        title: Auto Focus
+        autoFocus: true
+        options:
+          - label: React
+            value: react
+          - label: Vue
+            value: vue
+          - label: Angular
+            value: angular
 
 - title: Bordered
   blocks:
@@ -281,33 +293,6 @@
           - label: Go
             value: go
 
-- title: Show Arrow
-  blocks:
-    - id: show_arrow_true
-      type: MultipleSelector
-      properties:
-        title: With Arrow (default)
-        showArrow: true
-        options:
-          - label: Cat
-            value: cat
-          - label: Dog
-            value: dog
-          - label: Bird
-            value: bird
-    - id: show_arrow_false
-      type: MultipleSelector
-      properties:
-        title: No Arrow
-        showArrow: false
-        options:
-          - label: Cat
-            value: cat
-          - label: Dog
-            value: dog
-          - label: Bird
-            value: bird
-
 - title: Custom Icons
   blocks:
     - id: custom_suffix_icon
@@ -363,7 +348,7 @@
           - label: Bronze Plan
             value: bronze
 
-- title: Render Tags with Colors
+- title: Render Tags
   blocks:
     - id: tags_preset_colors
       type: MultipleSelector
@@ -441,9 +426,6 @@
             value: volcano
             tag:
               color: volcano
-
-- title: Render Tags with Hex Colors
-  blocks:
     - id: tags_hex_colors
       type: MultipleSelector
       properties:
@@ -470,9 +452,6 @@
             value: pink
             tag:
               color: '#e64980'
-
-- title: Render Tags with Titles
-  blocks:
     - id: tags_custom_titles
       type: MultipleSelector
       properties:
@@ -504,6 +483,24 @@
             tag:
               title: UX
               color: magenta
+    - id: render_tags_false
+      type: MultipleSelector
+      properties:
+        title: Tags Rendering Off (default)
+        renderTags: false
+        options:
+          - label: Alpha
+            value: alpha
+            tag:
+              color: blue
+          - label: Beta
+            value: beta
+            tag:
+              color: green
+          - label: Gamma
+            value: gamma
+            tag:
+              color: red
 
 - title: Render Tags with Icons
   blocks:
@@ -558,27 +555,6 @@
               icon: AiOutlineArrowDown
               color: green
 
-- title: Render Tags Disabled
-  blocks:
-    - id: render_tags_false
-      type: MultipleSelector
-      properties:
-        title: Tags Rendering Off (default)
-        renderTags: false
-        options:
-          - label: Alpha
-            value: alpha
-            tag:
-              color: blue
-          - label: Beta
-            value: beta
-            tag:
-              color: green
-          - label: Gamma
-            value: gamma
-            tag:
-              color: red
-
 - title: Disabled State
   blocks:
     - id: disabled_multi
@@ -611,33 +587,9 @@
           - label: Pre-order
             value: preorder
 
-- title: Option Styles
+- title: Options
   blocks:
-    - id: styled_options
-      type: MultipleSelector
-      properties:
-        title: Styled Options
-        options:
-          - label: Important
-            value: important
-            style:
-              fontWeight: bold
-              color: '#ff4d4f'
-          - label: Normal
-            value: normal
-          - label: Dimmed
-            value: dimmed
-            style:
-              color: '#8c8c8c'
-              fontStyle: italic
-          - label: Highlighted
-            value: highlighted
-            style:
-              backgroundColor: '#fffbe6'
-
-- title: Filter String
-  blocks:
-    - id: filter_string
+    - id: options_filter_string
       type: MultipleSelector
       properties:
         title: Search by Filter String
@@ -658,6 +610,39 @@
           - label: Express
             value: express
             filterString: javascript js node express backend
+    - id: options_styled
+      type: MultipleSelector
+      properties:
+        title: Styled Options
+        options:
+          - label: Important
+            value: important
+            style:
+              fontWeight: bold
+              color: '#ff4d4f'
+          - label: Normal
+            value: normal
+          - label: Dimmed
+            value: dimmed
+            style:
+              color: '#8c8c8c'
+              fontStyle: italic
+          - label: Highlighted
+            value: highlighted
+            style:
+              backgroundColor: '#fffbe6'
+    - id: options_allow_clear_false
+      type: MultipleSelector
+      properties:
+        title: No Clear Button
+        allowClear: false
+        options:
+          - label: Option A
+            value: a
+          - label: Option B
+            value: b
+          - label: Option C
+            value: c
 
 - title: Label Options
   blocks:
@@ -705,6 +690,62 @@
           - Apple
           - Banana
           - Cherry
+    - id: label_extra
+      type: MultipleSelector
+      properties:
+        title: Skills
+        label:
+          extra: Select all skills that apply to this role.
+        options:
+          - label: JavaScript
+            value: js
+          - label: Python
+            value: py
+          - label: SQL
+            value: sql
+          - label: Docker
+            value: docker
+    - id: label_extra_html
+      type: MultipleSelector
+      properties:
+        title: Technologies
+        label:
+          extra: 'Choose from the <b>approved</b> technology list.'
+        options:
+          - label: React
+            value: react
+          - label: Node.js
+            value: node
+          - label: PostgreSQL
+            value: pg
+    - id: label_no_label
+      type: MultipleSelector
+      properties:
+        label:
+          disabled: true
+        placeholder: Select tags...
+        options:
+          - label: Frontend
+            value: frontend
+          - label: Backend
+            value: backend
+          - label: DevOps
+            value: devops
+          - label: Design
+            value: design
+          - label: QA
+            value: qa
+    - id: label_feedback_on
+      type: MultipleSelector
+      properties:
+        title: With Feedback
+        label:
+          hasFeedback: true
+        options:
+          - label: Valid
+            value: valid
+          - label: Invalid
+            value: invalid
 
 - title: Label Inline
   blocks:
@@ -736,82 +777,6 @@
             value: 2
           - label: Option 3
             value: 3
-
-- title: Label Extra
-  blocks:
-    - id: label_extra
-      type: MultipleSelector
-      properties:
-        title: Skills
-        label:
-          extra: Select all skills that apply to this role.
-        options:
-          - label: JavaScript
-            value: js
-          - label: Python
-            value: py
-          - label: SQL
-            value: sql
-          - label: Docker
-            value: docker
-    - id: label_extra_html
-      type: MultipleSelector
-      properties:
-        title: Technologies
-        label:
-          extra: 'Choose from the <b>approved</b> technology list.'
-        options:
-          - label: React
-            value: react
-          - label: Node.js
-            value: node
-          - label: PostgreSQL
-            value: pg
-
-- title: No Label
-  blocks:
-    - id: no_label_multi
-      type: MultipleSelector
-      properties:
-        label:
-          disabled: true
-        placeholder: Select tags...
-        options:
-          - label: Frontend
-            value: frontend
-          - label: Backend
-            value: backend
-          - label: DevOps
-            value: devops
-          - label: Design
-            value: design
-          - label: QA
-            value: qa
-
-- title: Label Feedback
-  blocks:
-    - id: label_feedback_on
-      type: MultipleSelector
-      properties:
-        title: With Feedback
-        label:
-          hasFeedback: true
-        options:
-          - label: Valid
-            value: valid
-          - label: Invalid
-            value: invalid
-    - id: label_feedback_off
-      type: MultipleSelector
-      properties:
-        title: No Feedback
-        label:
-          hasFeedback: false
-        options:
-          - label: Valid
-            value: valid
-          - label: Invalid
-            value: invalid
 
 - title: Style and Class Overrides
   blocks:
@@ -848,6 +813,32 @@
             value: 2
           - label: Option 3
             value: 3
+    - id: class_tailwind_element
+      type: MultipleSelector
+      properties:
+        title: Tailwind Element Class
+        label:
+          disabled: true
+        options:
+          - label: One
+            value: 1
+          - label: Two
+            value: 2
+          - label: Three
+            value: 3
+      class:
+        element: rounded-lg shadow-sm
+    - id: class_tailwind_label
+      type: MultipleSelector
+      properties:
+        title: Styled Label
+        options:
+          - label: Alpha
+            value: alpha
+          - label: Beta
+            value: beta
+      class:
+        label: text-blue-600 font-semibold
 
 - title: Theme Token Overrides
   blocks:
@@ -905,38 +896,6 @@
             value: large
           - label: Extra Large
             value: xl
-    - id: theme_option_size
-      type: MultipleSelector
-      properties:
-        title: Custom Option Sizing
-        theme:
-          optionHeight: 40
-          optionFontSize: 16
-          optionPadding: '8px 16px'
-        options:
-          - label: Enterprise Plan
-            value: enterprise
-          - label: Business Plan
-            value: business
-          - label: Starter Plan
-            value: starter
-    - id: theme_selector_bg
-      type: MultipleSelector
-      properties:
-        title: Custom Selector Background
-        theme:
-          selectorBg: '#fff7e6'
-          clearBg: '#fff7e6'
-        options:
-          - label: Warm
-            value: warm
-          - label: Cool
-            value: cool
-          - label: Neutral
-            value: neutral
-
-- title: Theme Size Overrides
-  blocks:
     - id: theme_large_tags
       type: MultipleSelector
       properties:
@@ -1048,3 +1007,143 @@
             value: reporting
             tag:
               color: cyan
+
+- title: MultipleSelector in Team Assignment
+  blocks:
+    - id: applied2_team_card
+      type: Card
+      properties:
+        title: Assign Team Members
+      blocks:
+        - id: applied2_team_project_name
+          type: TextInput
+          properties:
+            title: Project Name
+            placeholder: Enter project name
+            prefixIcon: AiOutlineProject
+        - id: applied2_team_members
+          type: MultipleSelector
+          properties:
+            title: Team Members
+            placeholder: Select team members...
+            renderTags: true
+            maxTagCount: 4
+            label:
+              extra: Select all team members for this project.
+            options:
+              - label: Alice Chen
+                value: alice
+                tag:
+                  color: blue
+              - label: Bob Martinez
+                value: bob
+                tag:
+                  color: green
+              - label: Carol Nguyen
+                value: carol
+                tag:
+                  color: purple
+              - label: David Kim
+                value: david
+                tag:
+                  color: orange
+              - label: Emma Wilson
+                value: emma
+                tag:
+                  color: cyan
+              - label: Frank Patel
+                value: frank
+                tag:
+                  color: magenta
+        - id: applied2_team_deadline
+          type: DateSelector
+          properties:
+            title: Project Deadline
+            placeholder: Select deadline
+            format: DD MMM YYYY
+            suffixIcon: AiOutlineCalendar
+        - id: applied2_team_assign_btn
+          type: Button
+          properties:
+            title: Assign Team
+            icon: AiOutlineTeam
+            type: primary
+            size: large
+            block: true
+          events:
+            onClick:
+              - id: assign_team_action
+                type: DisplayMessage
+                params:
+                  content: Team has been assigned to the project.
+                  duration: 3
+
+- title: MultipleSelector in Filter Panel
+  blocks:
+    - id: applied_filter_card
+      type: Card
+      properties:
+        title: Filter Products
+      blocks:
+        - id: applied_filter_categories
+          type: MultipleSelector
+          properties:
+            title: Categories
+            placeholder: Select categories to filter...
+            renderTags: true
+            options:
+              - label: Electronics
+                value: electronics
+                tag:
+                  color: blue
+              - label: Clothing
+                value: clothing
+                tag:
+                  color: green
+              - label: Books
+                value: books
+                tag:
+                  color: purple
+              - label: Home & Garden
+                value: home
+                tag:
+                  color: orange
+              - label: Sports
+                value: sports
+                tag:
+                  color: cyan
+          events:
+            onChange:
+              - id: filter_set_categories
+                type: SetState
+                params:
+                  selected_categories:
+                    _state: applied_filter_categories
+        - id: applied_filter_price_range
+          type: Selector
+          properties:
+            title: Price Range
+            placeholder: Select a price range...
+            options:
+              - label: Under $25
+                value: under_25
+              - label: $25 - $50
+                value: 25_50
+              - label: $50 - $100
+                value: 50_100
+              - label: Over $100
+                value: over_100
+        - id: applied_filter_apply_btn
+          type: Button
+          properties:
+            title: Apply Filters
+            icon: AiOutlineFilter
+            type: primary
+            block: true
+          events:
+            onClick:
+              - id: filter_apply_action
+                type: DisplayMessage
+                params:
+                  content: Filters applied successfully.
+                  duration: 3

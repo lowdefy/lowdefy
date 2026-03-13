@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/input/TreeSelector.yaml
     block_type: TreeSelector
     antd_component: TreeSelect
+    antd_url: tree-select
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/TreeSelector
     schema: ../plugins/blocks/blocks-antd/src/blocks/TreeSelector/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/TreeSelector/gallery.yaml

@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/input/CheckboxSelector.yaml
     block_type: CheckboxSelector
     antd_component: Checkbox
+    antd_url: checkbox
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/CheckboxSelector
     schema: ../plugins/blocks/blocks-antd/src/blocks/CheckboxSelector/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/CheckboxSelector/gallery.yaml

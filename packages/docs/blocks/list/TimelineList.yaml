@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/TimelineList/TimelineList.yaml
     block_type: TimelineList
     antd_component: Timeline
+    antd_url: timeline
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/TimelineList
     schema: ../plugins/blocks/blocks-antd/src/blocks/TimelineList/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/TimelineList/gallery.yaml

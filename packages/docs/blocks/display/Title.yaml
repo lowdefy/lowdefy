@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/display/Title.yaml
     block_type: Title
     antd_component: Typography
+    antd_url: typography
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Title
     schema: ../plugins/blocks/blocks-antd/src/blocks/Title/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Title/gallery.yaml

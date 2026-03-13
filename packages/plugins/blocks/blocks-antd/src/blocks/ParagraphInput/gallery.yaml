@@ -430,17 +430,6 @@
             type: SetState
             params:
               style_mark: Marked (highlighted) paragraph text.
-    - id: style_code
-      type: ParagraphInput
-      properties:
-        code: true
-        editable: true
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              style_code: Code style paragraph text.
 - title: Text Styles - Combined
   blocks:
     - id: combo_strong_italic
@@ -479,18 +468,6 @@
             type: SetState
             params:
               combo_strong_underline: Strong and underline combined paragraph.
-    - id: combo_italic_delete
-      type: ParagraphInput
-      properties:
-        italic: true
-        delete: true
-        editable: true
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              combo_italic_delete: Italic and delete combined paragraph.
     - id: combo_strong_italic_underline
       type: ParagraphInput
       properties:
@@ -504,30 +481,6 @@
             type: SetState
             params:
               combo_strong_italic_underline: Strong, italic, and underline combined paragraph.
-    - id: combo_mark_code
-      type: ParagraphInput
-      properties:
-        mark: true
-        code: true
-        editable: true
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              combo_mark_code: Mark and code combined paragraph.
-    - id: combo_strong_code
-      type: ParagraphInput
-      properties:
-        strong: true
-        code: true
-        editable: true
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              combo_strong_code: Strong and code combined paragraph.
     - id: combo_all_styles
       type: ParagraphInput
       properties:
@@ -1197,7 +1150,7 @@
             type: SetState
             params:
               class_gradient_bg: Tailwind gradient background with padding and rounded corners.
-- title: Theme Token Overrides - Text Colors
+- title: Theme Token Overrides
   blocks:
     - id: theme_color_text
       type: ParagraphInput
@@ -1211,127 +1164,6 @@
             type: SetState
             params:
               theme_color_text: Custom text color using colorText token.
-    - id: theme_color_link
-      type: ParagraphInput
-      properties:
-        editable: true
-        theme:
-          colorLink: '#eb2f96'
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              theme_color_link: Custom link color using colorLink token.
-    - id: theme_color_success
-      type: ParagraphInput
-      properties:
-        type: success
-        editable: true
-        theme:
-          colorSuccess: '#389e0d'
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              theme_color_success: Custom success color for success type.
-    - id: theme_color_warning
-      type: ParagraphInput
-      properties:
-        type: warning
-        editable: true
-        theme:
-          colorWarning: '#d48806'
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              theme_color_warning: Custom warning color for warning type.
-    - id: theme_color_error
-      type: ParagraphInput
-      properties:
-        type: danger
-        editable: true
-        theme:
-          colorError: '#cf1322'
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              theme_color_error: Custom error color for danger type.
-    - id: theme_color_text_secondary
-      type: ParagraphInput
-      properties:
-        type: secondary
-        editable: true
-        theme:
-          colorTextSecondary: '#8c8c8c'
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              theme_color_text_secondary: Custom secondary text color.
-    - id: theme_color_text_disabled
-      type: ParagraphInput
-      properties:
-        disabled: true
-        editable: false
-        theme:
-          colorTextDisabled: '#bfbfbf'
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              theme_color_text_disabled: Custom disabled text color.
-    - id: theme_color_text_description
-      type: ParagraphInput
-      properties:
-        editable: true
-        theme:
-          colorTextDescription: '#8c8c8c'
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              theme_color_text_description: Custom description text color token.
-- title: Theme Token Overrides - Link Colors
-  blocks:
-    - id: theme_link_base
-      type: ParagraphInput
-      properties:
-        editable: true
-        theme:
-          colorLink: '#722ed1'
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              theme_link_base: Custom link color applied via theme token.
-    - id: theme_link_hover
-      type: ParagraphInput
-      properties:
-        editable: true
-        theme:
-          colorLinkHover: '#9254de'
-          colorLinkActive: '#531dab'
-        ellipsis:
-          rows: 1
-          expandable: true
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              theme_link_hover: Custom link hover color. Hover over expand links to see.
-- title: Theme Token Overrides - Font Family
-  blocks:
     - id: theme_font_serif
       type: ParagraphInput
       properties:
@@ -1344,81 +1176,6 @@
             type: SetState
             params:
               theme_font_serif: Serif font family applied to this paragraph. Georgia and Times New Roman.
-    - id: theme_font_mono
-      type: ParagraphInput
-      properties:
-        editable: true
-        theme:
-          fontFamily: '"Courier New", "Consolas", monospace'
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              theme_font_mono: Monospace font family applied to this paragraph. Courier New and Consolas.
-    - id: theme_font_sans
-      type: ParagraphInput
-      properties:
-        editable: true
-        theme:
-          fontFamily: '"Verdana", "Helvetica", sans-serif'
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              theme_font_sans: Custom sans-serif font family. Verdana and Helvetica.
-- title: Theme Token Overrides - Font Size
-  blocks:
-    - id: theme_font_size_12
-      type: ParagraphInput
-      properties:
-        editable: true
-        theme:
-          fontSize: 12
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              theme_font_size_12: Small font size (12px) paragraph.
-    - id: theme_font_size_14
-      type: ParagraphInput
-      properties:
-        editable: true
-        theme:
-          fontSize: 14
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              theme_font_size_14: Default font size (14px) paragraph.
-    - id: theme_font_size_16
-      type: ParagraphInput
-      properties:
-        editable: true
-        theme:
-          fontSizeLG: 16
-          fontSize: 16
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              theme_font_size_16: Large font size (16px) paragraph using fontSizeLG token.
-    - id: theme_font_size_18
-      type: ParagraphInput
-      properties:
-        editable: true
-        theme:
-          fontSize: 18
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              theme_font_size_18: Large font size (18px) paragraph.
     - id: theme_font_size_24
       type: ParagraphInput
       properties:
@@ -1431,47 +1188,6 @@
             type: SetState
             params:
               theme_font_size_24: Extra large font size (24px) paragraph.
-- title: Theme Token Overrides - Font Weight
-  blocks:
-    - id: theme_weight_300
-      type: ParagraphInput
-      properties:
-        strong: true
-        editable: true
-        theme:
-          fontWeightStrong: 300
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              theme_weight_300: Light font weight (300) on strong paragraph.
-    - id: theme_weight_400
-      type: ParagraphInput
-      properties:
-        strong: true
-        editable: true
-        theme:
-          fontWeightStrong: 400
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              theme_weight_400: Normal font weight (400) on strong paragraph.
-    - id: theme_weight_600
-      type: ParagraphInput
-      properties:
-        strong: true
-        editable: true
-        theme:
-          fontWeightStrong: 600
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              theme_weight_600: Semi-bold font weight (600) on strong paragraph (default).
     - id: theme_weight_900
       type: ParagraphInput
       properties:
@@ -1485,75 +1201,6 @@
             type: SetState
             params:
               theme_weight_900: Heavy font weight (900) on strong paragraph.
-- title: Theme Token Overrides - Line Height
-  blocks:
-    - id: theme_lineheight_tight
-      type: ParagraphInput
-      properties:
-        editable: true
-        theme:
-          lineHeight: 1.2
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              theme_lineheight_tight: Tight line height (1.2) makes lines closer together. This paragraph demonstrates compact vertical spacing between lines of text. Useful for dense content areas.
-    - id: theme_lineheight_default
-      type: ParagraphInput
-      properties:
-        editable: true
-        theme:
-          lineHeight: 1.5714
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              theme_lineheight_default: Default line height (1.5714) provides standard spacing between lines. This is the Ant Design default and offers good readability for body text.
-    - id: theme_lineheight_relaxed
-      type: ParagraphInput
-      properties:
-        editable: true
-        theme:
-          lineHeight: 2
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              theme_lineheight_relaxed: Relaxed line height (2.0) gives generous spacing between lines. This paragraph demonstrates loose vertical spacing that can improve readability for longer content.
-- title: Theme Token Overrides - Combined
-  blocks:
-    - id: theme_combined_purple
-      type: ParagraphInput
-      properties:
-        editable: true
-        theme:
-          colorText: '#722ed1'
-          fontFamily: '"Georgia", serif'
-          fontSize: 18
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              theme_combined_purple: Purple theme with serif font and large size.
-    - id: theme_combined_green
-      type: ParagraphInput
-      properties:
-        type: success
-        editable: true
-        theme:
-          colorSuccess: '#237804'
-          fontFamily: '"Verdana", sans-serif'
-          fontSize: 16
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              theme_combined_green: Green success theme with custom font.
     - id: theme_combined_elegant
       type: ParagraphInput
       properties:
@@ -1570,36 +1217,6 @@
             type: SetState
             params:
               theme_combined_elegant: Elegant styling with custom colors and typography.
-    - id: theme_combined_mono_code
-      type: ParagraphInput
-      properties:
-        code: true
-        editable: true
-        theme:
-          fontFamily: '"JetBrains Mono", "Fira Code", monospace'
-          fontSize: 13
-          lineHeight: 1.6
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              theme_combined_mono_code: Monospace code-like styling with small font size.
-    - id: theme_combined_warm
-      type: ParagraphInput
-      properties:
-        editable: true
-        theme:
-          colorText: '#d46b08'
-          fontFamily: '"Georgia", serif'
-          fontSize: 16
-          lineHeight: 1.8
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              theme_combined_warm: Warm toned paragraph with orange text and serif font.
 - title: Combined Features - Editable + Copyable
   blocks:
     - id: feat_editable_copyable

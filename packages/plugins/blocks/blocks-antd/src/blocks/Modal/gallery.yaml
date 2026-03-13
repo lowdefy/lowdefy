@@ -45,6 +45,35 @@
           properties:
             content: Click Ok to confirm or Cancel to dismiss.
 
+- title: Title Property
+  blocks:
+    - id: modal_html_title_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open Modal with HTML Title
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: modal_html_title_open
+            type: CallMethod
+            params:
+              blockId: modal_html_title
+              method: setOpen
+              args:
+                open: true
+    - id: modal_html_title
+      type: Modal
+      properties:
+        title: '<b>Bold</b> and <em>italic</em> title'
+      blocks:
+        - id: modal_html_title_content
+          type: Paragraph
+          properties:
+            content: The modal title supports HTML markup for rich text formatting.
+
 - title: Custom Button Text
   blocks:
     - id: modal_btn_text_trigger
@@ -75,6 +104,41 @@
           type: Paragraph
           properties:
             content: The okText and cancelText properties customize the footer button labels. This modal uses "Save Changes" and "Discard" instead of "Ok" and "Cancel".
+
+- title: Custom Button Props
+  blocks:
+    - id: modal_btn_props_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open Modal with Custom Buttons
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: modal_btn_props_open
+            type: CallMethod
+            params:
+              blockId: modal_btn_props
+              method: setOpen
+              args:
+                open: true
+    - id: modal_btn_props
+      type: Modal
+      properties:
+        title: Danger Confirmation
+        okText: Delete
+        cancelText: Keep
+        okButtonProps:
+          danger: true
+        cancelButtonProps:
+          type: primary
+      blocks:
+        - id: modal_btn_props_content
+          type: Paragraph
+          properties:
+            content: Custom button props allow fine-grained control over the footer buttons. Here the Ok button is styled as a danger button, and the Cancel button uses primary styling.
 
 - title: Centered Modal
   blocks:
@@ -126,24 +190,6 @@
               method: setOpen
               args:
                 open: true
-    - id: modal_default_w_trigger
-      type: Button
-      layout:
-        flex: 0 0 auto
-      properties:
-        title: Default (520px)
-        color: primary
-        variant: outlined
-        size: small
-      events:
-        onClick:
-          - id: modal_default_w_open
-            type: CallMethod
-            params:
-              blockId: modal_default_w
-              method: setOpen
-              args:
-                open: true
     - id: modal_wide_trigger
       type: Button
       layout:
@@ -190,15 +236,6 @@
           type: Paragraph
           properties:
             content: A compact 300px modal, suitable for simple confirmations.
-    - id: modal_default_w
-      type: Modal
-      properties:
-        title: Default Width
-      blocks:
-        - id: modal_default_w_content
-          type: Paragraph
-          properties:
-            content: Default width of 520px.
     - id: modal_wide
       type: Modal
       properties:
@@ -279,23 +316,6 @@
 
 - title: Mask Options
   blocks:
-    - id: modal_mask_closable_trigger
-      type: Button
-      layout:
-        flex: 0 0 auto
-      properties:
-        title: Mask Closable (default)
-        color: primary
-        variant: outlined
-      events:
-        onClick:
-          - id: modal_mask_closable_open
-            type: CallMethod
-            params:
-              blockId: modal_mask_closable
-              method: setOpen
-              args:
-                open: true
     - id: modal_mask_not_closable_trigger
       type: Button
       layout:
@@ -330,16 +350,6 @@
               method: setOpen
               args:
                 open: true
-    - id: modal_mask_closable
-      type: Modal
-      properties:
-        title: Mask Closable
-        maskClosable: true
-      blocks:
-        - id: modal_mask_closable_content
-          type: Paragraph
-          properties:
-            content: Clicking the mask area (outside the modal) closes the modal. This is the default.
     - id: modal_mask_not_closable
       type: Modal
       properties:
@@ -495,124 +505,36 @@
           properties:
             content: The footer slot replaces the default Ok/Cancel buttons with custom content. This example shows a Delete button on the left and Save/Cancel on the right.
 
-- title: Toggle Method
+- title: Wrapper Style
   blocks:
-    - id: modal_toggle_trigger
+    - id: modal_wrapper_style_trigger
       type: Button
       layout:
         flex: 0 0 auto
       properties:
-        title: Toggle Modal
-        color: primary
-        variant: solid
-        icon: AiOutlineSwap
-      events:
-        onClick:
-          - id: modal_toggle_call
-            type: CallMethod
-            params:
-              blockId: modal_toggle
-              method: toggleOpen
-    - id: modal_toggle
-      type: Modal
-      properties:
-        title: Toggle Modal
-      blocks:
-        - id: modal_toggle_content
-          type: Paragraph
-          properties:
-            content: This modal uses the toggleOpen method. Each click of the button alternates between open and closed states.
-
-- title: Custom Button Props
-  blocks:
-    - id: modal_btn_props_trigger
-      type: Button
-      layout:
-        flex: 0 0 auto
-      properties:
-        title: Open Modal with Custom Buttons
+        title: Open Modal with Wrapper Style
         color: primary
         variant: outlined
       events:
         onClick:
-          - id: modal_btn_props_open
+          - id: modal_wrapper_style_open
             type: CallMethod
             params:
-              blockId: modal_btn_props
+              blockId: modal_wrapper_style
               method: setOpen
               args:
                 open: true
-    - id: modal_btn_props
+    - id: modal_wrapper_style
       type: Modal
       properties:
-        title: Danger Confirmation
-        okText: Delete
-        cancelText: Keep
-        okButtonProps:
-          danger: true
-        cancelButtonProps:
-          type: primary
+        title: Wrapper Style Modal
+        wrapperStyle:
+          overflow: hidden
       blocks:
-        - id: modal_btn_props_content
+        - id: modal_wrapper_style_content
           type: Paragraph
           properties:
-            content: Custom button props allow fine-grained control over the footer buttons. Here the Ok button is styled as a danger button, and the Cancel button uses primary styling.
-
-- title: Rich Content Modal
-  blocks:
-    - id: modal_rich_trigger
-      type: Button
-      layout:
-        flex: 0 0 auto
-      properties:
-        title: View Details
-        color: primary
-        variant: solid
-        icon: AiOutlineInfoCircle
-      events:
-        onClick:
-          - id: modal_rich_open
-            type: CallMethod
-            params:
-              blockId: modal_rich
-              method: setOpen
-              args:
-                open: true
-    - id: modal_rich
-      type: Modal
-      properties:
-        title: Order Details
-        width: 640
-        okText: Confirm Order
-        cancelText: Close
-      blocks:
-        - id: modal_rich_desc
-          type: Descriptions
-          properties:
-            column: 2
-            items:
-              - label: Order ID
-                value: '#ORD-2026-0042'
-              - label: Status
-                value: Processing
-              - label: Customer
-                value: Jane Cooper
-              - label: Email
-                value: jane@example.com
-              - label: Total
-                value: '$1,248.00'
-              - label: Payment
-                value: Credit Card
-        - id: modal_rich_divider
-          type: Divider
-        - id: modal_rich_progress_label
-          type: Paragraph
-          properties:
-            content: 'Fulfillment Progress:'
-        - id: modal_rich_progress
-          type: Progress
-          properties:
-            percent: 65
+            content: The wrapperStyle property applies CSS to the modal wrapper element. This can control overflow, positioning, and other layout aspects of the wrapper container.
 
 - title: Custom Z-Index
   blocks:
@@ -644,72 +566,120 @@
           properties:
             content: This modal uses a custom z-index of 2000 to ensure it appears above other overlays. The default is 1000.
 
-- title: Styled Modal
+- title: Toggle Method
   blocks:
-    - id: modal_styled_trigger
+    - id: modal_toggle_trigger
       type: Button
       layout:
         flex: 0 0 auto
       properties:
-        title: Open Styled Modal
+        title: Toggle Modal
+        color: primary
+        variant: solid
+        icon: AiOutlineSwap
+      events:
+        onClick:
+          - id: modal_toggle_call
+            type: CallMethod
+            params:
+              blockId: modal_toggle
+              method: toggleOpen
+    - id: modal_toggle
+      type: Modal
+      properties:
+        title: Toggle Modal
+      blocks:
+        - id: modal_toggle_content
+          type: Paragraph
+          properties:
+            content: This modal uses the toggleOpen method. Each click of the button alternates between open and closed states.
+
+- title: Events
+  blocks:
+    - id: modal_events_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open Modal with Events
         color: primary
         variant: solid
       events:
         onClick:
-          - id: modal_styled_open
+          - id: modal_events_open
             type: CallMethod
             params:
-              blockId: modal_styled
+              blockId: modal_events
               method: setOpen
               args:
                 open: true
-    - id: modal_styled
+    - id: modal_events
       type: Modal
       properties:
-        title: Styled Modal
-      style:
-        --body:
-          backgroundColor: '#f6ffed'
-          padding: 24px
-        mask:
-          backgroundColor: 'rgba(0, 100, 0, 0.15)'
+        title: Modal with Events
+      events:
+        onOpen:
+          - id: modal_events_on_open
+            type: DisplayMessage
+            params:
+              content: Modal opened.
+              status: info
+        onOk:
+          - id: modal_events_on_ok
+            type: DisplayMessage
+            params:
+              content: Ok button clicked.
+              status: success
+        onCancel:
+          - id: modal_events_on_cancel
+            type: DisplayMessage
+            params:
+              content: Cancel button clicked.
+              status: warning
+        onClose:
+          - id: modal_events_on_close
+            type: DisplayMessage
+            params:
+              content: Modal closed.
+              status: info
       blocks:
-        - id: modal_styled_content
+        - id: modal_events_content
           type: Paragraph
           properties:
-            content: This modal uses style.body and style.mask to apply custom background colors. The body has a green tint and the mask has a subtle green overlay.
+            content: This modal demonstrates all four events. onOpen fires when the modal opens, onOk when the Ok button is clicked, onCancel when Cancel is clicked, and onClose fires after either onOk or onCancel completes.
 
 - title: Theme Token Overrides
   blocks:
-    - id: modal_theme_trigger
+    - id: modal_theme_blue_trigger
       type: Button
       layout:
         flex: 0 0 auto
       properties:
-        title: Open Themed Modal
+        title: Open Blue Themed Modal
         color: primary
         variant: solid
       events:
         onClick:
-          - id: modal_theme_open
+          - id: modal_theme_blue_open
             type: CallMethod
             params:
-              blockId: modal_theme
+              blockId: modal_theme_blue
               method: setOpen
               args:
                 open: true
-    - id: modal_theme
+    - id: modal_theme_blue
       type: Modal
       properties:
-        title: Custom Theme Modal
+        title: Blue Theme Modal
         theme:
           headerBg: '#e6f4ff'
           contentBg: '#f0f5ff'
           titleColor: '#0958d9'
           titleFontSize: 20
+          titleLineHeight: 1.8
           borderRadiusLG: 16
       blocks:
-        - id: modal_theme_content
+        - id: modal_theme_blue_content
           type: Paragraph
           properties:
             content: This modal overrides design tokens via the theme property. The header has a blue background, custom title color and size, and larger border radius.
@@ -741,37 +711,337 @@
           titleColor: '#d46b08'
           colorBgMask: 'rgba(250, 173, 20, 0.1)'
           borderRadiusLG: 20
+          headerBorderBottom: 1px solid #ffd591
+          footerBorderTop: 1px solid #ffd591
+          headerMarginBottom: 0
+          footerMarginTop: 0
+          headerPadding: 16px 24px
+          bodyPadding: 24
+          footerPadding: 16px 24px
       blocks:
         - id: modal_theme_warm_content
           type: Paragraph
           properties:
-            content: A warm-toned modal using theme tokens for header, content, footer backgrounds, and a tinted mask overlay.
+            content: A warm-toned modal using an extensive set of theme tokens including headerBg, contentBg, footerBg, titleColor, colorBgMask, headerBorderBottom, footerBorderTop, headerPadding, bodyPadding, footerPadding, and margin tokens.
 
-- title: HTML Title
+- title: Styled Modal (CSS Keys)
   blocks:
-    - id: modal_html_title_trigger
+    - id: modal_styled_body_trigger
       type: Button
       layout:
         flex: 0 0 auto
       properties:
-        title: Open Modal with HTML Title
+        title: Open Styled Modal
+        color: primary
+        variant: solid
+      events:
+        onClick:
+          - id: modal_styled_body_open
+            type: CallMethod
+            params:
+              blockId: modal_styled_body
+              method: setOpen
+              args:
+                open: true
+    - id: modal_styled_body
+      type: Modal
+      properties:
+        title: Styled Modal
+      style:
+        --body:
+          backgroundColor: '#f6ffed'
+          padding: 24px
+        --mask:
+          backgroundColor: 'rgba(0, 100, 0, 0.15)'
+      blocks:
+        - id: modal_styled_body_content
+          type: Paragraph
+          properties:
+            content: This modal uses style.body and style.mask to apply custom background colors. The body has a green tint and the mask has a subtle green overlay.
+    - id: modal_styled_wrapper_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open Modal with Wrapper Style
         color: primary
         variant: outlined
       events:
         onClick:
-          - id: modal_html_title_open
+          - id: modal_styled_wrapper_open
             type: CallMethod
             params:
-              blockId: modal_html_title
+              blockId: modal_styled_wrapper
               method: setOpen
               args:
                 open: true
-    - id: modal_html_title
+    - id: modal_styled_wrapper
       type: Modal
       properties:
-        title: '<b>Bold</b> and <em>italic</em> title'
+        title: Custom Wrapper Style
+      style:
+        --element:
+          borderRadius: 20px
+        --wrapper:
+          backdropFilter: blur(2px)
       blocks:
-        - id: modal_html_title_content
+        - id: modal_styled_wrapper_content
           type: Paragraph
           properties:
-            content: The modal title supports HTML markup for rich text formatting.
+            content: The element, wrapper, header, body, footer, mask, and content CSS keys allow targeting different parts of the modal with inline styles or Tailwind classes.
+
+- title: CSS Key Classes (Tailwind)
+  blocks:
+    - id: modal_css_keys_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open Modal with Tailwind Classes
+        color: primary
+        variant: solid
+      events:
+        onClick:
+          - id: modal_css_keys_open
+            type: CallMethod
+            params:
+              blockId: modal_css_keys
+              method: setOpen
+              args:
+                open: true
+    - id: modal_css_keys
+      type: Modal
+      properties:
+        title: Tailwind Styled Modal
+      class:
+        header: bg-blue-50
+        body: bg-gray-50 p-8
+        footer: bg-blue-50
+        content: rounded-2xl overflow-hidden
+      blocks:
+        - id: modal_css_keys_content
+          type: Paragraph
+          properties:
+            content: 'Modal supports these CSS keys for Tailwind class targeting: element, header, body, footer, mask, wrapper, content. Use class as an object to apply Tailwind utilities to each area independently.'
+
+- title: Modal as User Profile Editor
+  blocks:
+    - id: modal_profile_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Edit Profile
+        color: primary
+        variant: solid
+        icon: AiOutlineEdit
+      events:
+        onClick:
+          - id: modal_profile_open
+            type: CallMethod
+            params:
+              blockId: modal_profile
+              method: setOpen
+              args:
+                open: true
+    - id: modal_profile
+      type: Modal
+      properties:
+        title: Edit Your Profile
+        width: 640
+        okText: Save Profile
+        cancelText: Cancel
+        centered: true
+        theme:
+          headerBg: '#fafafa'
+          headerBorderBottom: 1px solid #f0f0f0
+          headerMarginBottom: 0
+      events:
+        onOk:
+          - id: modal_profile_save
+            type: DisplayMessage
+            params:
+              content: Profile saved successfully.
+              status: success
+      blocks:
+        - id: modal_profile_avatar_row
+          type: Box
+          layout:
+            gap: 16
+            align: center
+          blocks:
+            - id: modal_profile_avatar
+              type: Avatar
+              layout:
+                flex: 0 0 auto
+              properties:
+                icon: AiOutlineUser
+                size: 72
+                color: '#fff'
+                backgroundColor: '#1677ff'
+            - id: modal_profile_info
+              type: Box
+              layout:
+                flex: 1 1 0
+                direction: column
+                gap: 4
+              blocks:
+                - id: modal_profile_name_title
+                  type: Title
+                  properties:
+                    content: Jane Cooper
+                    level: 4
+                - id: modal_profile_role_text
+                  type: Paragraph
+                  properties:
+                    content: Senior Product Designer
+        - id: modal_profile_divider
+          type: Divider
+        - id: modal_profile_name_input
+          type: TextInput
+          properties:
+            title: Full Name
+            placeholder: Enter your full name
+        - id: modal_profile_email_input
+          type: TextInput
+          properties:
+            title: Email Address
+            placeholder: Enter your email
+        - id: modal_profile_bio_input
+          type: TextArea
+          properties:
+            title: Bio
+            placeholder: Tell us about yourself
+            rows: 3
+
+- title: Modal as Confirmation Dialog
+  blocks:
+    - id: modal_confirm_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Delete Project
+        color: danger
+        variant: solid
+        icon: AiOutlineDelete
+      events:
+        onClick:
+          - id: modal_confirm_open
+            type: CallMethod
+            params:
+              blockId: modal_confirm
+              method: setOpen
+              args:
+                open: true
+    - id: modal_confirm
+      type: Modal
+      properties:
+        title: Delete Project?
+        width: 420
+        centered: true
+        okText: Delete Permanently
+        cancelText: Keep Project
+        okButtonProps:
+          danger: true
+        closable: false
+        maskClosable: false
+        theme:
+          headerBg: '#fff2f0'
+          titleColor: '#cf1322'
+      events:
+        onOk:
+          - id: modal_confirm_delete
+            type: DisplayMessage
+            params:
+              content: Project deleted.
+              status: success
+        onCancel:
+          - id: modal_confirm_keep
+            type: DisplayMessage
+            params:
+              content: Project kept.
+              status: info
+      blocks:
+        - id: modal_confirm_warning
+          type: Paragraph
+          properties:
+            content: This action cannot be undone. All project data, files, and team assignments will be permanently removed.
+        - id: modal_confirm_details
+          type: Descriptions
+          properties:
+            column: 1
+            size: small
+            items:
+              - label: Project
+                value: Project Alpha
+              - label: Owner
+                value: Jane Cooper
+              - label: Files
+                value: 248 files (1.2 GB)
+
+- title: Modal as Image Preview
+  blocks:
+    - id: modal_image_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Preview Image
+        color: primary
+        variant: outlined
+        icon: AiOutlinePicture
+      events:
+        onClick:
+          - id: modal_image_open
+            type: CallMethod
+            params:
+              blockId: modal_image
+              method: setOpen
+              args:
+                open: true
+    - id: modal_image
+      type: Modal
+      properties:
+        title: Mountain Landscape
+        width: 720
+        footer: false
+        centered: true
+        theme:
+          bodyPadding: 0
+          headerMarginBottom: 0
+      blocks:
+        - id: modal_image_html
+          type: Html
+          properties:
+            html: '<img src="https://picsum.photos/seed/mountain/700/400" alt="Mountain landscape" style="width:100%; display:block;" />'
+        - id: modal_image_caption
+          type: Box
+          layout:
+            gap: 8
+            align: center
+            justify: space-between
+          class: p-4
+          blocks:
+            - id: modal_image_desc
+              type: Paragraph
+              layout:
+                flex: 1 1 0
+              properties:
+                content: A serene mountain landscape captured at golden hour. Photography by John Doe.
+            - id: modal_image_tags
+              type: Box
+              layout:
+                flex: 0 0 auto
+                gap: 8
+              blocks:
+                - id: modal_image_tag1
+                  type: Tag
+                  properties:
+                    title: Photography
+                    color: blue
+                - id: modal_image_tag2
+                  type: Tag
+                  properties:
+                    title: Featured
+                    color: gold

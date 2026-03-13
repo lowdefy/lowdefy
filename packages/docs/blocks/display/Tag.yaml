@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/display/Tag.yaml
     block_type: Tag
     antd_component: Tag
+    antd_url: tag
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Tag
     schema: ../plugins/blocks/blocks-antd/src/blocks/Tag/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Tag/gallery.yaml

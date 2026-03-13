@@ -44,7 +44,8 @@ export default {
       bordered: {
         type: 'boolean',
         default: true,
-        description: 'Whether or not the number input has a border style.',
+        description:
+          'Whether or not the number input has a border style. Deprecated, use variant instead.',
       },
       controls: {
         type: 'boolean',
@@ -157,6 +158,11 @@ export default {
       title: {
         type: 'string',
         description: 'Number input label title - supports html.',
+      },
+      variant: {
+        type: 'string',
+        enum: ['outlined', 'filled', 'borderless'],
+        description: 'Input visual variant. When set, takes precedence over bordered.',
       },
       theme: {
         type: 'object',

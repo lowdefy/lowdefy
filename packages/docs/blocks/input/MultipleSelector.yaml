@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/input/MultipleSelector.yaml
     block_type: MultipleSelector
     antd_component: Select
+    antd_url: select
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/MultipleSelector
     schema: ../plugins/blocks/blocks-antd/src/blocks/MultipleSelector/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/MultipleSelector/gallery.yaml

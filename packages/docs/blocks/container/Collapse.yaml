@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/container/Collapse.yaml
     block_type: Collapse
     antd_component: Collapse
+    antd_url: collapse
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Collapse
     schema: ../plugins/blocks/blocks-antd/src/blocks/Collapse/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Collapse/gallery.yaml

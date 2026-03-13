@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/container/Affix.yaml
     block_type: Affix
     antd_component: Affix
+    antd_url: affix
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Affix
     schema: ../plugins/blocks/blocks-antd/src/blocks/Affix/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Affix/gallery.yaml

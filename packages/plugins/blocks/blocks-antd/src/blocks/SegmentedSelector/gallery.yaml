@@ -160,7 +160,7 @@
           - label: Critical
             value: critical
 
-- title: Shapes
+- title: Shape and Block Mode
   blocks:
     - id: shape_default
       type: SegmentedSelector
@@ -186,38 +186,6 @@
             value: grid
           - label: Board
             value: board
-
-- title: Round Shape Sizes
-  blocks:
-    - id: round_small
-      type: SegmentedSelector
-      properties:
-        title: Small Round
-        shape: round
-        size: small
-        options:
-          - On
-          - Off
-    - id: round_default
-      type: SegmentedSelector
-      properties:
-        title: Default Round
-        shape: round
-        options:
-          - On
-          - Off
-    - id: round_large
-      type: SegmentedSelector
-      properties:
-        title: Large Round
-        shape: round
-        size: large
-        options:
-          - On
-          - Off
-
-- title: Block Mode
-  blocks:
     - id: block_segmented
       type: SegmentedSelector
       properties:
@@ -230,37 +198,6 @@
             value: grid
           - label: Board
             value: board
-    - id: block_large
-      type: SegmentedSelector
-      properties:
-        title: Full Width Large
-        block: true
-        size: large
-        options:
-          - label: Overview
-            value: overview
-          - label: Analytics
-            value: analytics
-          - label: Reports
-            value: reports
-          - label: Settings
-            value: settings
-    - id: block_small
-      type: SegmentedSelector
-      properties:
-        title: Full Width Small
-        block: true
-        size: small
-        options:
-          - label: Day
-            value: day
-          - label: Week
-            value: week
-          - label: Month
-            value: month
-
-- title: Block Mode with Round Shape
-  blocks:
     - id: block_round
       type: SegmentedSelector
       properties:
@@ -307,26 +244,6 @@
           - label: Calendar
             value: calendar
             icon: AiOutlineCalendar
-    - id: icon_file_type
-      type: SegmentedSelector
-      properties:
-        title: File Type
-        options:
-          - label: Images
-            value: images
-            icon: AiOutlinePicture
-          - label: Videos
-            value: videos
-            icon: AiOutlinePlayCircle
-          - label: Audio
-            value: audio
-            icon: AiOutlineSound
-          - label: Docs
-            value: docs
-            icon: AiOutlineFile
-
-- title: Icons with Sizes
-  blocks:
     - id: icon_small
       type: SegmentedSelector
       properties:
@@ -342,24 +259,6 @@
           - label: Terrain
             value: terrain
             icon: AiOutlineBlock
-    - id: icon_large
-      type: SegmentedSelector
-      properties:
-        title: Large Icons
-        size: large
-        options:
-          - label: Map
-            value: map
-            icon: AiOutlineEnvironment
-          - label: Satellite
-            value: satellite
-            icon: AiOutlineGlobal
-          - label: Terrain
-            value: terrain
-            icon: AiOutlineBlock
-
-- title: Icons with Block Mode
-  blocks:
     - id: icon_block
       type: SegmentedSelector
       properties:
@@ -378,9 +277,6 @@
           - label: Profile
             value: profile
             icon: AiOutlineUser
-
-- title: Icons with Round Shape
-  blocks:
     - id: icon_round
       type: SegmentedSelector
       properties:
@@ -429,19 +325,6 @@
           - label: Settings
             value: settings
             icon: AiOutlineSetting
-
-- title: Vertical Sizes
-  blocks:
-    - id: vertical_small
-      type: SegmentedSelector
-      properties:
-        title: Small Vertical
-        vertical: true
-        size: small
-        options:
-          - Tab 1
-          - Tab 2
-          - Tab 3
     - id: vertical_large
       type: SegmentedSelector
       properties:
@@ -464,18 +347,6 @@
           - Option A
           - Option B
           - Option C
-    - id: disabled_single
-      type: SegmentedSelector
-      properties:
-        title: Single Disabled Option
-        options:
-          - label: Available
-            value: available
-          - label: Unavailable
-            value: unavailable
-            disabled: true
-          - label: In Stock
-            value: in_stock
     - id: disabled_multiple
       type: SegmentedSelector
       properties:
@@ -491,9 +362,6 @@
           - label: Enterprise (Coming Soon)
             value: enterprise
             disabled: true
-
-- title: Disabled with Icons
-  blocks:
     - id: disabled_icons
       type: SegmentedSelector
       properties:
@@ -510,22 +378,12 @@
             value: delete
             icon: AiOutlineDelete
 
-- title: Label Configuration
+- title: Label Options
   blocks:
     - id: label_default
       type: SegmentedSelector
       properties:
         title: Default Label
-        options:
-          - Alpha
-          - Beta
-          - Gamma
-    - id: label_colon_false
-      type: SegmentedSelector
-      properties:
-        title: No Colon
-        label:
-          colon: false
         options:
           - Alpha
           - Beta
@@ -543,9 +401,6 @@
             value: staging
           - label: Prod
             value: prod
-
-- title: Label Inline
-  blocks:
     - id: label_inline
       type: SegmentedSelector
       properties:
@@ -575,9 +430,6 @@
             value: dark
           - label: Auto
             value: auto
-
-- title: No Label
-  blocks:
     - id: no_label_segmented
       type: SegmentedSelector
       properties:
@@ -592,23 +444,8 @@
             value: month
           - label: Year
             value: year
-    - id: no_label_icons
-      type: SegmentedSelector
-      properties:
-        label:
-          disabled: true
-        options:
-          - label: Table
-            value: table
-            icon: AiOutlineTable
-          - label: Chart
-            value: chart
-            icon: AiOutlinePieChart
-          - label: Map
-            value: map
-            icon: AiOutlineEnvironment
 
-- title: Style Overrides
+- title: Style and Class Overrides
   blocks:
     - id: style_background
       type: SegmentedSelector
@@ -640,9 +477,6 @@
         --element:
           border: '2px solid #91caff'
           borderRadius: 8
-
-- title: Class Overrides
-  blocks:
     - id: class_shadow
       type: SegmentedSelector
       class: shadow-md
@@ -655,20 +489,8 @@
             value: popular
           - label: Featured
             value: featured
-    - id: class_rounded
-      type: SegmentedSelector
-      class: rounded-xl
-      properties:
-        title: Extra Rounded
-        options:
-          - label: Posts
-            value: posts
-          - label: Comments
-            value: comments
-          - label: Likes
-            value: likes
 
-- title: Theme Token Overrides - Track
+- title: Theme Token Overrides
   blocks:
     - id: theme_dark_track
       type: SegmentedSelector
@@ -688,25 +510,6 @@
           itemSelectedColor: '#ffffff'
           itemHoverColor: '#ffffffd9'
           itemHoverBg: '#ffffff1a'
-    - id: theme_light_track
-      type: SegmentedSelector
-      properties:
-        title: Light Blue Track
-        options:
-          - label: All
-            value: all
-          - label: Active
-            value: active
-          - label: Closed
-            value: closed
-        theme:
-          trackBg: '#e6f4ff'
-          itemSelectedBg: '#1677ff'
-          itemSelectedColor: '#ffffff'
-          trackPadding: 4
-
-- title: Theme Token Overrides - Colors
-  blocks:
     - id: theme_green
       type: SegmentedSelector
       properties:
@@ -739,127 +542,6 @@
           itemSelectedBg: '#722ed1'
           itemSelectedColor: '#ffffff'
           itemHoverBg: '#d3adf780'
-    - id: theme_orange
-      type: SegmentedSelector
-      properties:
-        title: Orange Theme
-        options:
-          - label: Draft
-            value: draft
-          - label: Review
-            value: review
-          - label: Published
-            value: published
-        theme:
-          trackBg: '#fff7e6'
-          itemSelectedBg: '#fa8c16'
-          itemSelectedColor: '#ffffff'
-          itemHoverBg: '#ffd59180'
-
-- title: Theme Token Overrides - Sizes
-  blocks:
-    - id: theme_large_radius
-      type: SegmentedSelector
-      properties:
-        title: Large Border Radius
-        options:
-          - label: Left
-            value: left
-          - label: Center
-            value: center
-          - label: Right
-            value: right
-        theme:
-          borderRadius: 20
-          borderRadiusLG: 20
-          borderRadiusSM: 20
-    - id: theme_custom_height
-      type: SegmentedSelector
-      properties:
-        title: Custom Height
-        size: large
-        options:
-          - label: Compact
-            value: compact
-          - label: Normal
-            value: normal
-          - label: Spacious
-            value: spacious
-        theme:
-          controlHeight: 48
-          controlHeightLG: 56
-    - id: theme_custom_font
-      type: SegmentedSelector
-      properties:
-        title: Large Font
-        options:
-          - label: Small
-            value: small
-          - label: Medium
-            value: medium
-          - label: Large
-            value: large
-        theme:
-          fontSize: 16
-
-- title: Theme Token Overrides - Active State
-  blocks:
-    - id: theme_active_red
-      type: SegmentedSelector
-      properties:
-        title: Red Active State
-        options:
-          - label: Info
-            value: info
-          - label: Warning
-            value: warning
-          - label: Error
-            value: error
-        theme:
-          itemActiveBg: '#fff1f0'
-          itemHoverBg: '#fff1f0'
-          itemSelectedBg: '#ff4d4f'
-          itemSelectedColor: '#ffffff'
-          trackBg: '#fff7f7'
-    - id: theme_active_cyan
-      type: SegmentedSelector
-      properties:
-        title: Cyan Active State
-        options:
-          - label: Inbox
-            value: inbox
-          - label: Sent
-            value: sent
-          - label: Drafts
-            value: drafts
-        theme:
-          itemActiveBg: '#e6fffb'
-          itemHoverBg: '#e6fffb'
-          itemSelectedBg: '#13c2c2'
-          itemSelectedColor: '#ffffff'
-          trackBg: '#f0fffe'
-
-- title: Theme with Round Shape
-  blocks:
-    - id: theme_round_blue
-      type: SegmentedSelector
-      properties:
-        title: Round Blue Pill
-        shape: round
-        options:
-          - label: All
-            value: all
-          - label: Mine
-            value: mine
-          - label: Shared
-            value: shared
-        theme:
-          trackBg: '#e6f4ff'
-          itemSelectedBg: '#1677ff'
-          itemSelectedColor: '#ffffff'
-          borderRadius: 40
-          borderRadiusLG: 40
-          borderRadiusSM: 40
     - id: theme_round_dark
       type: SegmentedSelector
       properties:
@@ -882,9 +564,6 @@
           itemHoverBg: '#ffffff14'
           borderRadius: 40
           borderRadiusLG: 40
-
-- title: Theme with Block Mode
-  blocks:
     - id: theme_block_gradient
       type: SegmentedSelector
       properties:
@@ -906,78 +585,133 @@
           itemHoverBg: '#adc6ff80'
           trackPadding: 4
 
-- title: Theme with Vertical Layout
+- title: SegmentedSelector in Dashboard View
   blocks:
-    - id: theme_vertical_teal
-      type: SegmentedSelector
+    - id: applied2_dashboard_card
+      type: Card
       properties:
-        title: Vertical Teal
-        vertical: true
-        options:
-          - label: Step 1
-            value: step1
-          - label: Step 2
-            value: step2
-          - label: Step 3
-            value: step3
-        theme:
-          trackBg: '#e6fffb'
-          itemSelectedBg: '#13c2c2'
-          itemSelectedColor: '#ffffff'
-          itemHoverBg: '#87e8de80'
+        title: Sales Dashboard
+      blocks:
+        - id: applied2_dashboard_view_toggle
+          type: SegmentedSelector
+          properties:
+            title: View
+            block: true
+            size: large
+            label:
+              disabled: true
+            options:
+              - label: Overview
+                value: overview
+                icon: AiOutlineDashboard
+              - label: Charts
+                value: charts
+                icon: AiOutlineBarChart
+              - label: Table
+                value: table
+                icon: AiOutlineTable
+          events:
+            onChange:
+              - id: view_changed_action
+                type: SetState
+                params:
+                  applied2_dashboard_view: _state: applied2_dashboard_view_toggle
+        - id: applied2_dashboard_date_range
+          type: DateRangeSelector
+          properties:
+            title: Date Range
+            placeholder:
+              - From
+              - To
+            format: DD MMM YYYY
+            label:
+              disabled: true
+        - id: applied2_dashboard_refresh_btn
+          type: Button
+          properties:
+            title: Refresh Data
+            icon: AiOutlineReload
+            type: primary
+          events:
+            onClick:
+              - id: refresh_action
+                type: DisplayMessage
+                params:
+                  content: Dashboard data refreshed.
+                  duration: 2
 
-- title: Theme with Icons
+- title: SegmentedSelector in Settings Page
   blocks:
-    - id: theme_icons_gold
-      type: SegmentedSelector
+    - id: applied3_settings_card
+      type: Card
       properties:
-        title: Gold Icons
-        options:
-          - label: Photos
-            value: photos
-            icon: AiOutlineCamera
-          - label: Videos
-            value: videos
-            icon: AiOutlineVideoCamera
-          - label: Music
-            value: music
-            icon: AiOutlineCustomerService
-        theme:
-          trackBg: '#fffbe6'
-          itemSelectedBg: '#faad14'
-          itemSelectedColor: '#ffffff'
-          itemHoverBg: '#ffe58f80'
-
-- title: Combination - Block + Round + Large + Icons + Theme
-  blocks:
-    - id: combo_full
-      type: SegmentedSelector
-      properties:
-        title: Full Featured
-        block: true
-        shape: round
-        size: large
-        options:
-          - label: Home
-            value: home
-            icon: AiOutlineHome
-          - label: Explore
-            value: explore
-            icon: AiOutlineCompass
-          - label: Create
-            value: create
-            icon: AiOutlinePlus
-          - label: Messages
-            value: messages
-            icon: AiOutlineMail
-          - label: Profile
-            value: profile
-            icon: AiOutlineUser
-        theme:
-          trackBg: '#f5f5f5'
-          itemSelectedBg: '#1677ff'
-          itemSelectedColor: '#ffffff'
-          trackPadding: 4
-          borderRadius: 40
-          borderRadiusLG: 40
-          controlHeightLG: 52
+        title: Application Settings
+      blocks:
+        - id: applied3_theme_selector
+          type: SegmentedSelector
+          properties:
+            title: Theme
+            block: true
+            options:
+              - label: Light
+                value: light
+                icon: AiOutlineBulb
+              - label: Dark
+                value: dark
+                icon: AiOutlineEyeInvisible
+              - label: System
+                value: system
+                icon: AiOutlineLaptop
+          events:
+            onChange:
+              - id: theme_changed_action
+                type: SetState
+                params:
+                  applied3_theme: _state: applied3_theme_selector
+        - id: applied3_language_selector
+          type: SegmentedSelector
+          properties:
+            title: Language
+            options:
+              - label: English
+                value: en
+              - label: French
+                value: fr
+              - label: German
+                value: de
+          events:
+            onChange:
+              - id: language_changed_action
+                type: SetState
+                params:
+                  applied3_language: _state: applied3_language_selector
+        - id: applied3_notifications_toggle
+          type: SegmentedSelector
+          properties:
+            title: Notifications
+            options:
+              - label: All
+                value: all
+              - label: Important
+                value: important
+              - label: None
+                value: none
+          events:
+            onChange:
+              - id: notifications_changed_action
+                type: SetState
+                params:
+                  applied3_notifications: _state: applied3_notifications_toggle
+        - id: applied3_save_btn
+          type: Button
+          properties:
+            title: Save Settings
+            icon: AiOutlineSave
+            type: primary
+          events:
+            onClick:
+              - id: save_settings_action
+                type: DisplayMessage
+                params:
+                  content: Settings saved successfully.
+                  duration: 2

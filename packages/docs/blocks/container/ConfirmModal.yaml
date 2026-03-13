@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/container/ConfirmModal.yaml
     block_type: ConfirmModal
     antd_component: Modal
+    antd_url: modal
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/ConfirmModal
     schema: ../plugins/blocks/blocks-antd/src/blocks/ConfirmModal/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/ConfirmModal/gallery.yaml

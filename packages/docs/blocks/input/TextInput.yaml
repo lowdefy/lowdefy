@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/input/TextInput.yaml
     block_type: TextInput
     antd_component: Input
+    antd_url: input
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/TextInput
     schema: ../plugins/blocks/blocks-antd/src/blocks/TextInput/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/TextInput/gallery.yaml

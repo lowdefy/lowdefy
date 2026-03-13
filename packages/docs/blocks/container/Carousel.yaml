@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/container/Carousel.yaml
     block_type: Carousel
     antd_component: Carousel
+    antd_url: carousel
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Carousel
     schema: ../plugins/blocks/blocks-antd/src/blocks/Carousel/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Carousel/gallery.yaml

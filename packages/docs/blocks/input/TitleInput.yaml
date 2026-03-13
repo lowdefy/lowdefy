@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/input/TitleInput.yaml
     block_type: TitleInput
     antd_component: Typography
+    antd_url: typography
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/TitleInput
     schema: ../plugins/blocks/blocks-antd/src/blocks/TitleInput/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/TitleInput/gallery.yaml

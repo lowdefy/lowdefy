@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/display/Tour.yaml
     block_type: Tour
     antd_component: Tour
+    antd_url: tour
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Tour
     schema: ../plugins/blocks/blocks-antd/src/blocks/Tour/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Tour/gallery.yaml

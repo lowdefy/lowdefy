@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/list/MasonryList.yaml
     block_type: MasonryList
     antd_component: List
+    antd_url: list
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/MasonryList
     schema: ../plugins/blocks/blocks-antd/src/blocks/MasonryList/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/MasonryList/gallery.yaml

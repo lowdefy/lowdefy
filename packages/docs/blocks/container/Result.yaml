@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/container/Result.yaml
     block_type: Result
     antd_component: Result
+    antd_url: result
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Result
     schema: ../plugins/blocks/blocks-antd/src/blocks/Result/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Result/gallery.yaml

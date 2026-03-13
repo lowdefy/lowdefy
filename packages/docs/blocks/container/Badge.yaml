@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/container/Badge.yaml
     block_type: Badge
     antd_component: Badge
+    antd_url: badge
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Badge
     schema: ../plugins/blocks/blocks-antd/src/blocks/Badge/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Badge/gallery.yaml
