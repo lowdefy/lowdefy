@@ -209,13 +209,19 @@ For each page:
 **File:** `packages/build/src/build/buildPages/buildBlock/buildBlock.js`
 
 ```javascript
-validateBlock()       // Check structure
-setBlockId()          // Assign unique ID
-buildEvents()         // Process on* handlers
-buildRequests()       // Extract requests
-moveSubBlocksToArea() // Reorganize layout
-countBlockTypes()     // Track usage
-buildSubBlocks()      // Recurse into children
+validateBlock()             // Check structure
+setBlockId()                // Assign unique ID
+normalizeLayout()           // Normalize layout config
+moveAreasToSlots()          // Deprecation: areas → slots
+countBlockOperators()       // Count operator usage
+buildEvents()               // Process on* handlers
+buildRequests()             // Extract requests
+normalizeClassAndStyles()   // Normalize class/style to canonical form
+moveSubBlocksToSlot()       // blocks → slots.content.blocks
+moveSkeletonBlocksToSlot()  // Handle skeleton block markers
+validateSlots()             // Validate slot structure
+countBlockTypes()           // Track usage
+buildSubBlocks()            // Recurse into children
 ```
 
 ### Menus
@@ -414,7 +420,7 @@ Runs the full build pipeline but stops `_ref` resolution at page content boundar
 **File:** `packages/build/src/build/jit/isPageContentPath.js`
 
 ```javascript
-const PAGE_CONTENT_KEYS = ['blocks', 'areas', 'events', 'requests', 'layout'];
+const PAGE_CONTENT_KEYS = ['blocks', 'areas', 'slots', 'events', 'requests', 'layout'];
 
 function isPageContentPath(jsonPath) {
   if (!jsonPath.startsWith('pages.')) return false;
@@ -435,13 +441,15 @@ When the walker encounters a `_ref` at a matching path, it creates a `~shallow` 
 The walker also deletes page content keys (`blocks`, `areas`, `events`, `requests`, `layout`) from page objects during traversal, preventing unnecessary `_build.*` evaluation on content that will be resolved later by JIT.
 
 The shallow build then:
-1. Runs skeleton build steps (buildApp, buildAuth, buildConnections, buildApi, buildMenu)
-2. Creates a **page registry** with raw (unresolved) page content
-3. Creates a **file dependency map** for targeted invalidation
-4. Adds all types from installed packages (since page-level types aren't counted)
-5. Writes skeleton artifacts + `pageRegistry.json` + `jsMap.json`
+1. Collects all string content from pages via `collectPageContent()` into `context.tailwindContentMap` (before stripping)
+2. Strips page content keys from pages (`stripPageContent`)
+3. Runs skeleton build steps (buildApp, buildAuth, buildConnections, buildApi, buildMenu)
+4. Creates a **page registry** with page metadata and source file references
+5. Adds all types from installed packages (since page-level types aren't counted)
+6. Writes skeleton artifacts + `pageRegistry.json` + `jsMap.json`
+7. Writes per-page tailwind HTML files via `writeGlobalsCss` (from `tailwindContentMap`)
 
-**Output:** `{ components, pageRegistry, fileDependencyMap, context }`
+**Output:** `{ components, pageRegistry, context }`
 
 ### Phase 2: JIT Page Build (`buildPageJit`)
 
@@ -461,7 +469,7 @@ When a page is requested, uses the walker to resolve page content:
 9. validatePageTypes() — check block/action/operator types exist
 10. validateLinkReferences(), validateStateReferences(), etc.
 11. jsMapParser() — extract _js functions (client + server)
-12. writePageJit() — write page JSON, request JSONs, updated keyMap/refMap/jsMap
+12. writePageJit() — write page JSON, request JSONs, updated keyMap/refMap/jsMap, per-page tailwind HTML
 ```
 
 ### Supporting Modules
@@ -471,7 +479,8 @@ When a page is requested, uses the walker to resolve page content:
 | `createPageRegistry` | `jit/createPageRegistry.js` | Extracts page metadata + raw content from shallow-built components |
 | `createFileDependencyMap` | `jit/createFileDependencyMap.js` | Maps config files → page IDs for targeted invalidation |
 | `writePageRegistry` | `jit/writePageRegistry.js` | Serializes page registry to `pageRegistry.json` |
-| `writePageJit` | `jit/writePageJit.js` | Writes page/request JSONs + updated maps + JS files |
+| `writePageJit` | `jit/writePageJit.js` | Writes page/request JSONs + updated maps + JS files + per-page tailwind HTML |
+| `collectPageContent` | `collectPageContent.js` | Extracts all string content from page blocks for Tailwind scanning |
 | `isPageContentPath` | `jit/isPageContentPath.js` | Semantic segment matching for stop paths |
 | `pageContentKeys` | `jit/pageContentKeys.js` | List of page content keys (`blocks`, `areas`, etc.) |
 
@@ -494,14 +503,23 @@ Imported by the dev server as `@lowdefy/build/dev`.
 In dev mode, the build directory contains additional JIT artifacts:
 
 ```
-.lowdefy/dev/build/
-├── pageRegistry.json      # Page metadata + raw content for JIT
-├── jsMap.json             # JS hash maps (restored by JIT build context)
-├── invalidatePages.json   # Page IDs to invalidate (cross-process)
-├── pages/{pageId}/        # Written by JIT build on first request
-│   ├── {pageId}.json
-│   └── requests/{requestId}.json
-└── ... (standard skeleton artifacts)
+.lowdefy/dev/
+├── build/
+│   ├── pageRegistry.json      # Page metadata + source refs for JIT
+│   ├── jsMap.json             # JS hash maps (restored by JIT build context)
+│   ├── invalidatePages        # Timestamp file — triggers JIT cache invalidation
+│   ├── globals.css            # Generated CSS with @source, @theme, layer order
+│   ├── tailwind-candidates.css # Trigger file for CSS recompilation
+│   ├── pages/{pageId}/        # Written by JIT build on first request
+│   │   ├── {pageId}.json
+│   │   └── requests/{requestId}.json
+│   └── ... (standard skeleton artifacts)
+├── lowdefy-build/
+│   └── tailwind/              # Per-page content files for Tailwind scanning
+│       ├── {pageId1}.html     # Written by skeleton build + updated by JIT/watcher
+│       └── {pageId2}.html
+└── public/
+    └── tailwind-jit.css       # Compiled CSS output (PostCSS + Tailwind)
 ```
 
 ## Customization Points

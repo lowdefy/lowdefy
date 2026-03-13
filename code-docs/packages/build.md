@@ -272,7 +272,10 @@ Replaces the old `writeStyleImports`. Generates `globals.css` which is imported 
 2. **Tailwind CSS v4 import** — `@import "tailwindcss";`
 3. **Grid CSS import** — `@import "@lowdefy/layout/grid.css";` for the layout grid system.
 4. **Optional user styles** — imports `public/styles.css` if present (in the `components` layer).
-5. **Content sources** — `@source` directive for Tailwind to scan block packages for class usage.
+5. **Content sources** — `@source` directives for Tailwind to scan block packages and per-page HTML content files for class usage.
+6. **Trigger import** — `@import './tailwind-candidates.css'` that is rewritten on page changes to trigger CSS recompilation.
+
+Also writes per-page tailwind HTML files from `context.tailwindContentMap` to `lowdefy-build/tailwind/{pageId}.html` for Tailwind v4 to scan via `@source "../lowdefy-build/tailwind/*.html"`.
 6. **Antd-to-Tailwind theme bridge** — `@theme` block that maps `--ant-*` CSS variables to Tailwind design tokens (colors, radius, font-size, font-family). Users can override these via `theme.tailwind` in `lowdefy.yaml`.
 
 If `public/styles.less` is detected, a `ConfigWarning` with `prodError: true` is emitted, advising migration.
@@ -414,7 +417,8 @@ await buildPageJit({
 | `createPageRegistry` | `jit/createPageRegistry.js` | Extract page metadata + raw content from shallow-built components |
 | `createFileDependencyMap` | `jit/createFileDependencyMap.js` | Map config files → page IDs for targeted invalidation |
 | `writePageRegistry` | `jit/writePageRegistry.js` | Serialize page registry to JSON |
-| `writePageJit` | `jit/writePageJit.js` | Write page/request JSONs + updated maps + JS files |
+| `writePageJit` | `jit/writePageJit.js` | Write page/request JSONs + updated maps + JS files + per-page tailwind HTML |
+| `collectPageContent` | `collectPageContent.js` | Extract all string content from page blocks for Tailwind scanning |
 | `isPageContentPath` | `jit/isPageContentPath.js` | Semantic segment matching for shallow build stop paths |
 | `pageContentKeys` | `jit/pageContentKeys.js` | List of page content keys used by `isPageContentPath` |
 
@@ -423,7 +427,7 @@ await buildPageJit({
 The walker's `shouldStop` callback uses `isPageContentPath()` for semantic path matching. Any path under `pages.` containing a page content key segment is stopped:
 
 ```javascript
-const PAGE_CONTENT_KEYS = ['blocks', 'areas', 'events', 'requests', 'layout'];
+const PAGE_CONTENT_KEYS = ['blocks', 'areas', 'slots', 'events', 'requests', 'layout'];
 
 function isPageContentPath(jsonPath) {
   if (!jsonPath.startsWith('pages.')) return false;
