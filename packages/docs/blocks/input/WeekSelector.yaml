@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/input/WeekSelector.yaml
     block_type: WeekSelector
     antd_component: DatePicker
+    antd_url: date-picker
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/WeekSelector
     schema: ../plugins/blocks/blocks-antd/src/blocks/WeekSelector/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/WeekSelector/gallery.yaml

@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/display/QRCode.yaml
     block_type: QRCode
     antd_component: QRCode
+    antd_url: qr-code
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/QRCode
     schema: ../plugins/blocks/blocks-antd/src/blocks/QRCode/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/QRCode/gallery.yaml

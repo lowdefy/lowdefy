@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/display/FloatButton.yaml
     block_type: FloatButton
     antd_component: FloatButton
+    antd_url: float-button
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/FloatButton
     schema: ../plugins/blocks/blocks-antd/src/blocks/FloatButton/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/FloatButton/gallery.yaml

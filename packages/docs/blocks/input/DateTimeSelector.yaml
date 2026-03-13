@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/input/DateTimeSelector.yaml
     block_type: DateTimeSelector
     antd_component: DatePicker
+    antd_url: date-picker
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/DateTimeSelector
     schema: ../plugins/blocks/blocks-antd/src/blocks/DateTimeSelector/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/DateTimeSelector/gallery.yaml

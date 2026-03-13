@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/container/Alert.yaml
     block_type: Alert
     antd_component: Alert
+    antd_url: alert
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Alert
     schema: ../plugins/blocks/blocks-antd/src/blocks/Alert/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Alert/gallery.yaml

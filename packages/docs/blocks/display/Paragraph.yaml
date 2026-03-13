@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/display/Paragraph.yaml
     block_type: Paragraph
     antd_component: Typography
+    antd_url: typography
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Paragraph
     schema: ../plugins/blocks/blocks-antd/src/blocks/Paragraph/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Paragraph/gallery.yaml

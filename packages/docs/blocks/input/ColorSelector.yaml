@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/input/ColorSelector.yaml
     block_type: ColorSelector
     antd_component: ColorPicker
+    antd_url: color-picker
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/ColorSelector
     schema: ../plugins/blocks/blocks-antd/src/blocks/ColorSelector/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/ColorSelector/gallery.yaml

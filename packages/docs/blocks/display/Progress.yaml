@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/display/Progress.yaml
     block_type: Progress
     antd_component: Progress
+    antd_url: progress
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Progress
     schema: ../plugins/blocks/blocks-antd/src/blocks/Progress/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Progress/gallery.yaml

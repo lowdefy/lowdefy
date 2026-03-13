@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/container/Flex.yaml
     block_type: Flex
     antd_component: Flex
+    antd_url: flex
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Flex
     schema: ../plugins/blocks/blocks-antd/src/blocks/Flex/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Flex/gallery.yaml

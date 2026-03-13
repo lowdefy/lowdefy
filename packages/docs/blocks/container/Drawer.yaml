@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/container/Drawer.yaml
     block_type: Drawer
     antd_component: Drawer
+    antd_url: drawer
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Drawer
     schema: ../plugins/blocks/blocks-antd/src/blocks/Drawer/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Drawer/gallery.yaml

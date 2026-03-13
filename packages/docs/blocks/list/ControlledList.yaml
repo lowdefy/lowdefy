@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/list/ControlledList.yaml
     block_type: ControlledList
     antd_component: List
+    antd_url: list
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/ControlledList
     schema: ../plugins/blocks/blocks-antd/src/blocks/ControlledList/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/ControlledList/gallery.yaml

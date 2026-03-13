@@ -21,6 +21,7 @@ _ref:
     filePath: blocks/input/TextArea.yaml
     block_type: TextArea
     antd_component: Input
+    antd_url: input
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/TextArea
     schema: ../plugins/blocks/blocks-antd/src/blocks/TextArea/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/TextArea/gallery.yaml
