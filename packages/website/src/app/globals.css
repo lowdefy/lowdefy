@@ -219,6 +219,22 @@
   @apply my-8 border-slate-200 dark:border-slate-800;
 }
 
+.article-content table {
+  @apply mb-6 w-full text-sm sm:text-base border-collapse border border-slate-200 dark:border-slate-700;
+}
+
+.article-content thead {
+  @apply bg-slate-50 dark:bg-slate-800/60;
+}
+
+.article-content th {
+  @apply px-4 py-2 text-left font-semibold text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700;
+}
+
+.article-content td {
+  @apply px-4 py-2 border border-slate-200 dark:border-slate-700;
+}
+
 /* Dark scrollbar for code blocks */
 .scrollbar-dark::-webkit-scrollbar {
   width: 6px;
