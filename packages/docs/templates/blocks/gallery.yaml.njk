@@ -76,6 +76,32 @@ _ref:
           showIcon: true
           message: {{ note }}
 {% endif %}
+{% if wrapperType %}
+      - id: gallery_wrapper
+        type: {{ wrapperType }}
+        properties:
+          _var: wrapperProperties
+        blocks:
+          - id: gallery_grid
+            type: Box
+            layout:
+              wrap: wrap
+              gap: 16
+{% if onInit %}
+            events:
+              onMount:
+                _var: onInit
+{% endif %}
+            blocks:
+              _ref:
+                path:
+                  _var: gallery
+                transformer: templates/blocks/galleryExampleTransformer.js
+{% if section == 'Input Blocks' %}
+                vars:
+                  showState: true
+{% endif %}
+{% else %}
       - id: gallery_grid
         type: Box
         layout:
@@ -94,6 +120,7 @@ _ref:
 {% if section == 'Input Blocks' %}
             vars:
               showState: true
+{% endif %}
 {% endif %}
 
       - id: gallery_ref_divider
