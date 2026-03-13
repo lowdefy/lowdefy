@@ -45,7 +45,7 @@
             value: au
           - label: Germany
             value: de
-- title: String Options
+- title: Options
   blocks:
     - id: string_options
       type: Selector
@@ -60,30 +60,6 @@
           - Blue
           - Indigo
           - Violet
-    - id: string_options_no_clear
-      type: Selector
-      properties:
-        title: Strings (No Clear)
-        allowClear: false
-        options:
-          - Monday
-          - Tuesday
-          - Wednesday
-          - Thursday
-          - Friday
-- title: Number Options
-  blocks:
-    - id: number_options
-      type: Selector
-      properties:
-        title: Select a Number
-        placeholder: Pick a number...
-        options:
-          - 10
-          - 20
-          - 30
-          - 40
-          - 50
     - id: number_options_mixed
       type: Selector
       properties:
@@ -100,48 +76,10 @@
             value: 25
           - label: One hundred items
             value: 100
-- title: Object Options with Label and Value
-  blocks:
-    - id: object_options
-      type: Selector
-      properties:
-        title: Programming Language
-        placeholder: Select a language...
-        options:
-          - label: JavaScript
-            value: js
-          - label: Python
-            value: py
-          - label: TypeScript
-            value: ts
-          - label: Ruby
-            value: rb
-          - label: Go
-            value: go
-          - label: Rust
-            value: rust
-          - label: Java
-            value: java
-          - label: C++
-            value: cpp
-    - id: object_value_types
-      type: Selector
-      properties:
-        title: Complex Values
-        placeholder: Select an option...
-        options:
-          - label: String value
-            value: hello
-          - label: Number value
-            value: 42
-          - label: Boolean value
-            value: true
-- title: HTML Labels
-  blocks:
     - id: html_labels
       type: Selector
       properties:
-        title: Styled Labels
+        title: HTML Labels
         placeholder: Select a priority...
         options:
           - label: '<span style="color: #f5222d; font-weight: bold;">Critical</span>'
@@ -154,22 +92,6 @@
             value: low
           - label: '<span style="color: #8c8c8c;">None</span>'
             value: none
-    - id: html_labels_rich
-      type: Selector
-      properties:
-        title: Rich Labels
-        placeholder: Choose a plan...
-        options:
-          - label: '<b>Free</b> - <small style="color: #8c8c8c;">$0/month</small>'
-            value: free
-          - label: '<b>Starter</b> - <small style="color: #1677ff;">$9/month</small>'
-            value: starter
-          - label: '<b>Pro</b> - <small style="color: #722ed1;">$29/month</small>'
-            value: pro
-          - label: '<b>Enterprise</b> - <small style="color: #fa8c16;">Contact us</small>'
-            value: enterprise
-- title: Styled Options
-  blocks:
     - id: styled_options
       type: Selector
       properties:
@@ -201,31 +123,25 @@
             style:
               color: '#f5222d'
               fontWeight: bold
-    - id: styled_options_bg
+    - id: disabled_options
       type: Selector
       properties:
-        title: Styled Backgrounds
-        placeholder: Select a status...
+        title: Product Availability
+        placeholder: Select a product...
         options:
-          - label: Active
-            value: active
-            style:
-              backgroundColor: '#f6ffed'
-              borderRadius: 4
-              padding: 2px 8px
-          - label: Pending
-            value: pending
-            style:
-              backgroundColor: '#fffbe6'
-              borderRadius: 4
-              padding: 2px 8px
-          - label: Inactive
-            value: inactive
-            style:
-              backgroundColor: '#fff2f0'
-              borderRadius: 4
-              padding: 2px 8px
-- title: Filter Strings
+          - label: Widget A - In Stock
+            value: widget_a
+          - label: Widget B - Sold Out
+            value: widget_b
+            disabled: true
+          - label: Widget C - In Stock
+            value: widget_c
+          - label: Widget D - Coming Soon
+            value: widget_d
+            disabled: true
+          - label: Widget E - In Stock
+            value: widget_e
+- title: Search and Filter
   blocks:
     - id: filter_string
       type: Selector
@@ -277,45 +193,88 @@
           - label: <b>Dave Brown</b> - <small>Sales</small>
             value: dave
             filterString: Dave Brown Sales Account
-- title: Disabled Options
+    - id: search_disabled
+      type: Selector
+      properties:
+        title: Non-Searchable
+        showSearch: false
+        placeholder: Select without search...
+        options:
+          - label: Option A
+            value: a
+          - label: Option B
+            value: b
+          - label: Option C
+            value: c
+- title: Toggle Properties
   blocks:
-    - id: disabled_options
+    - id: allow_clear_false
       type: Selector
       properties:
-        title: Product Availability
-        placeholder: Select a product...
+        title: Not Clearable
+        allowClear: false
+        placeholder: Cannot be cleared once set...
         options:
-          - label: Widget A - In Stock
-            value: widget_a
-          - label: Widget B - Sold Out
-            value: widget_b
-            disabled: true
-          - label: Widget C - In Stock
-            value: widget_c
-          - label: Widget D - Coming Soon
-            value: widget_d
-            disabled: true
-          - label: Widget E - In Stock
-            value: widget_e
-          - label: Widget F - Discontinued
-            value: widget_f
-            disabled: true
-    - id: disabled_options_styled
+          - label: Red
+            value: red
+          - label: Green
+            value: green
+          - label: Blue
+            value: blue
+    - id: bordered_false
       type: Selector
       properties:
-        title: Subscription Tiers
-        placeholder: Choose your plan...
+        title: Borderless
+        bordered: false
         options:
-          - label: '<span style="color: #52c41a;">Basic - Available</span>'
-            value: basic
-          - label: '<span style="color: #52c41a;">Standard - Available</span>'
-            value: standard
-          - label: '<span style="color: #faad14;">Premium - Waitlist</span>'
-            value: premium
-            disabled: true
-          - label: '<span style="color: #f5222d;">Enterprise - Invite Only</span>'
-            value: enterprise
-            disabled: true
+          - label: Option A
+            value: a
+          - label: Option B
+            value: b
+          - label: Option C
+            value: c
+    - id: arrow_hidden
+      type: Selector
+      properties:
+        title: Arrow Hidden
+        showArrow: false
+        options:
+          - label: Alpha
+            value: alpha
+          - label: Beta
+            value: beta
+          - label: Gamma
+            value: gamma
+    - id: disabled_selector
+      type: Selector
+      properties:
+        title: Fully Disabled
+        disabled: true
+        placeholder: This selector is disabled
+        options:
+          - label: Option A
+            value: a
+          - label: Option B
+            value: b
+          - label: Option C
+            value: c
+    - id: no_label_selector
+      type: Selector
+      properties:
+        label:
+          disabled: true
+        placeholder: Select a color...
+        options:
+          - label: Red
+            value: red
+          - label: Orange
+            value: orange
+          - label: Yellow
+            value: yellow
+          - label: Green
+            value: green
+          - label: Blue
+            value: blue
 - title: Sizes
   blocks:
     - id: size_small
@@ -353,132 +312,6 @@
           - Cherry
           - Date
           - Elderberry
-- title: Search
-  blocks:
-    - id: search_enabled
-      type: Selector
-      properties:
-        title: Searchable (Default)
-        showSearch: true
-        placeholder: Type to search...
-        options:
-          - label: JavaScript
-            value: js
-          - label: Python
-            value: py
-          - label: TypeScript
-            value: ts
-          - label: Ruby
-            value: rb
-          - label: Go
-            value: go
-          - label: Rust
-            value: rust
-          - label: Java
-            value: java
-          - label: C#
-            value: csharp
-          - label: PHP
-            value: php
-          - label: Swift
-            value: swift
-          - label: Kotlin
-            value: kotlin
-          - label: Scala
-            value: scala
-    - id: search_disabled
-      type: Selector
-      properties:
-        title: Non-Searchable
-        showSearch: false
-        placeholder: Select without search...
-        options:
-          - label: Option A
-            value: a
-          - label: Option B
-            value: b
-          - label: Option C
-            value: c
-- title: Allow Clear
-  blocks:
-    - id: allow_clear_true
-      type: Selector
-      properties:
-        title: Clearable (Default)
-        allowClear: true
-        placeholder: Select and then clear...
-        options:
-          - label: Red
-            value: red
-          - label: Green
-            value: green
-          - label: Blue
-            value: blue
-    - id: allow_clear_false
-      type: Selector
-      properties:
-        title: Not Clearable
-        allowClear: false
-        placeholder: Cannot be cleared once set...
-        options:
-          - label: Red
-            value: red
-          - label: Green
-            value: green
-          - label: Blue
-            value: blue
-- title: Bordered / Borderless
-  blocks:
-    - id: bordered_true
-      type: Selector
-      properties:
-        title: Bordered (Default)
-        bordered: true
-        options:
-          - label: Option A
-            value: a
-          - label: Option B
-            value: b
-          - label: Option C
-            value: c
-    - id: bordered_false
-      type: Selector
-      properties:
-        title: Borderless
-        bordered: false
-        options:
-          - label: Option A
-            value: a
-          - label: Option B
-            value: b
-          - label: Option C
-            value: c
-- title: Show / Hide Arrow
-  blocks:
-    - id: arrow_visible
-      type: Selector
-      properties:
-        title: Arrow Visible (Default)
-        showArrow: true
-        options:
-          - label: Alpha
-            value: alpha
-          - label: Beta
-            value: beta
-          - label: Gamma
-            value: gamma
-    - id: arrow_hidden
-      type: Selector
-      properties:
-        title: Arrow Hidden
-        showArrow: false
-        options:
-          - label: Alpha
-            value: alpha
-          - label: Beta
-            value: beta
-          - label: Gamma
-            value: gamma
 - title: Custom Icons
   blocks:
     - id: custom_suffix_icon
@@ -580,37 +413,6 @@
             value: alpha
           - label: Beta
             value: beta
-- title: Disabled
-  blocks:
-    - id: disabled_selector
-      type: Selector
-      properties:
-        title: Fully Disabled
-        disabled: true
-        placeholder: This selector is disabled
-        options:
-          - label: Option A
-            value: a
-          - label: Option B
-            value: b
-          - label: Option C
-            value: c
-    - id: disabled_with_value
-      type: Selector
-      properties:
-        title: Disabled with Value
-        disabled: true
-        options:
-          - label: Locked Selection
-            value: locked
-          - label: Other Option
-            value: other
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              disabled_with_value: locked
 - title: Label Configuration
   blocks:
     - id: label_default
@@ -664,49 +466,6 @@
           - Apple
           - Banana
           - Cherry
-    - id: label_extra_html
-      type: Selector
-      properties:
-        title: HTML Extra
-        label:
-          extra: Visit <a href="https://lowdefy.com" target="_blank">Lowdefy</a> for more info.
-        options:
-          - Apple
-          - Banana
-          - Cherry
-- title: No Label
-  blocks:
-    - id: no_label_selector
-      type: Selector
-      properties:
-        label:
-          disabled: true
-        placeholder: Select a color...
-        options:
-          - label: Red
-            value: red
-          - label: Orange
-            value: orange
-          - label: Yellow
-            value: yellow
-          - label: Green
-            value: green
-          - label: Blue
-            value: blue
-    - id: no_label_large
-      type: Selector
-      properties:
-        label:
-          disabled: true
-        size: large
-        placeholder: Large without label...
-        options:
-          - label: Alpha
-            value: alpha
-          - label: Beta
-            value: beta
-          - label: Gamma
-            value: gamma
 - title: CSS Keys
   blocks:
     - id: css_element
@@ -910,20 +669,6 @@
           optionSelectedBg: '#f9f0ff'
           optionSelectedColor: '#722ed1'
           optionSelectedFontWeight: 700
-    - id: theme_active_bg
-      type: Selector
-      properties:
-        title: Custom Hover Color
-        placeholder: Hover over options...
-        options:
-          - label: Option A
-            value: a
-          - label: Option B
-            value: b
-          - label: Option C
-            value: c
-        theme:
-          optionActiveBg: '#fff7e6'
     - id: theme_border_colors
       type: Selector
       properties:
@@ -957,49 +702,20 @@
           optionFontSize: 16
           optionLineHeight: 1.8
           optionPadding: 8px 16px
-    - id: theme_selector_bg
+    - id: theme_size_sm
       type: Selector
       properties:
-        title: Custom Background
-        placeholder: Selector with tinted background...
+        title: Custom Small
+        size: small
+        placeholder: Custom small selector...
         options:
-          - label: First
-            value: first
-          - label: Second
-            value: second
-          - label: Third
-            value: third
+          - Alpha
+          - Beta
+          - Gamma
         theme:
-          selectorBg: '#f0f5ff'
-          clearBg: '#f0f5ff'
-    - id: theme_radius
-      type: Selector
-      properties:
-        title: Round Corners
-        placeholder: Extra round selector...
-        options:
-          - label: Circle
-            value: circle
-          - label: Square
-            value: square
-          - label: Triangle
-            value: triangle
-        theme:
-          borderRadius: 16
-    - id: theme_font_size
-      type: Selector
-      properties:
-        title: Large Font
-        placeholder: Bigger text...
-        options:
-          - label: Large text option A
-            value: a
-          - label: Large text option B
-            value: b
-          - label: Large text option C
-            value: c
-        theme:
-          fontSize: 18
+          controlHeightSM: 20
+          borderRadiusSM: 2
+          fontSizeSM: 12
     - id: theme_combined
       type: Selector
       properties:
@@ -1026,50 +742,6 @@
           activeOutlineColor: rgba(114, 46, 209, 0.1)
           optionHeight: 40
           selectorBg: '#fafafa'
-- title: Sizes with Theme Overrides
-  blocks:
-    - id: theme_size_sm
-      type: Selector
-      properties:
-        title: Custom Small
-        size: small
-        placeholder: Custom small selector...
-        options:
-          - Alpha
-          - Beta
-          - Gamma
-        theme:
-          controlHeightSM: 20
-          borderRadiusSM: 2
-          fontSizeSM: 12
-    - id: theme_size_default
-      type: Selector
-      properties:
-        title: Custom Default
-        placeholder: Custom default selector...
-        options:
-          - Alpha
-          - Beta
-          - Gamma
-        theme:
-          controlHeight: 40
-          borderRadius: 10
-          fontSize: 15
-    - id: theme_size_lg
-      type: Selector
-      properties:
-        title: Custom Large
-        size: large
-        placeholder: Custom large selector...
-        options:
-          - Alpha
-          - Beta
-          - Gamma
-        theme:
-          controlHeightLG: 52
-          borderRadiusLG: 16
-          fontSizeLG: 18
-          singleItemHeightLG: 52
 - title: Combined Features
   blocks:
     - id: combined_search_styled
@@ -1166,3 +838,179 @@
           optionSelectedBg: '#e6fffb'
           hoverBorderColor: '#13c2c2'
           activeBorderColor: '#08979c'
+
+- title: Selector in User Registration
+  blocks:
+    - id: applied2_registration_card
+      type: Card
+      properties:
+        title: User Preferences
+      blocks:
+        - id: applied2_reg_country
+          type: Selector
+          properties:
+            title: Country
+            showSearch: true
+            placeholder: Select your country...
+            suffixIcon: AiOutlineGlobal
+            options:
+              - label: United States
+                value: us
+              - label: United Kingdom
+                value: uk
+              - label: Canada
+                value: ca
+              - label: Australia
+                value: au
+              - label: Germany
+                value: de
+              - label: France
+                value: fr
+              - label: Japan
+                value: jp
+              - label: Brazil
+                value: br
+              - label: South Africa
+                value: za
+        - id: applied2_reg_language
+          type: Selector
+          properties:
+            title: Preferred Language
+            placeholder: Select language...
+            options:
+              - label: English
+                value: en
+              - label: Spanish
+                value: es
+              - label: French
+                value: fr
+              - label: German
+                value: de
+              - label: Japanese
+                value: ja
+              - label: Portuguese
+                value: pt
+        - id: applied2_reg_timezone
+          type: Selector
+          properties:
+            title: Timezone
+            showSearch: true
+            placeholder: Select your timezone...
+            suffixIcon: AiOutlineClockCircle
+            label:
+              extra: Used for scheduling and notifications.
+            options:
+              - label: UTC-8 Pacific Time
+                value: america_los_angeles
+              - label: UTC-5 Eastern Time
+                value: america_new_york
+              - label: UTC+0 London
+                value: europe_london
+              - label: UTC+1 Berlin
+                value: europe_berlin
+              - label: UTC+8 Singapore
+                value: asia_singapore
+              - label: UTC+9 Tokyo
+                value: asia_tokyo
+              - label: UTC+10 Sydney
+                value: australia_sydney
+        - id: applied2_reg_save_btn
+          type: Button
+          properties:
+            title: Save Preferences
+            icon: AiOutlineSave
+            type: primary
+            size: large
+            block: true
+          events:
+            onClick:
+              - id: save_prefs_action
+                type: DisplayMessage
+                params:
+                  content: Your preferences have been saved.
+                  duration: 3
+
+- title: Selector in Order Form
+  blocks:
+    - id: applied3_order_card
+      type: Card
+      properties:
+        title: Place an Order
+      blocks:
+        - id: applied3_product
+          type: Selector
+          properties:
+            title: Product
+            showSearch: true
+            placeholder: Select a product...
+            suffixIcon: AiOutlineShopping
+            options:
+              - label: Laptop Pro 15"
+                value: laptop_pro
+              - label: Wireless Mouse
+                value: mouse
+              - label: Mechanical Keyboard
+                value: keyboard
+              - label: USB-C Hub
+                value: hub
+              - label: Monitor 27"
+                value: monitor
+          events:
+            onChange:
+              - id: set_product_state
+                type: SetState
+                params:
+                  selected_product:
+                    _state: applied3_product
+        - id: applied3_quantity
+          type: Selector
+          properties:
+            title: Quantity
+            allowClear: false
+            placeholder: Select quantity...
+            options:
+              - label: '1'
+                value: 1
+              - label: '2'
+                value: 2
+              - label: '5'
+                value: 5
+              - label: '10'
+                value: 10
+          events:
+            onChange:
+              - id: set_quantity_state
+                type: SetState
+                params:
+                  selected_quantity:
+                    _state: applied3_quantity
+        - id: applied3_shipping
+          type: Selector
+          properties:
+            title: Shipping Method
+            placeholder: Choose shipping...
+            options:
+              - label: Standard (5-7 days)
+                value: standard
+              - label: Express (2-3 days)
+                value: express
+              - label: Overnight
+                value: overnight
+                style:
+                  color: '#1677ff'
+                  fontWeight: bold
+        - id: applied3_place_order_btn
+          type: Button
+          properties:
+            title: Place Order
+            icon: AiOutlineCheckCircle
+            type: primary
+            size: large
+            block: true
+          events:
+            onClick:
+              - id: order_confirmation
+                type: DisplayMessage
+                params:
+                  content: Order placed successfully!
+                  duration: 3

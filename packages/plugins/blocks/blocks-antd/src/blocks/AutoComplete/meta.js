@@ -51,7 +51,8 @@ export default {
       bordered: {
         type: 'boolean',
         default: true,
-        description: 'Whether or not the input has a border style.',
+        description:
+          'Whether or not the input has a border style. Deprecated, use variant instead.',
       },
       backfill: {
         type: 'boolean',
@@ -136,6 +137,11 @@ export default {
         type: 'string',
         description:
           'Title to describe the input component, if no title is specified the block id is displayed.',
+      },
+      variant: {
+        type: 'string',
+        enum: ['outlined', 'filled', 'borderless'],
+        description: 'Input visual variant. When set, takes precedence over bordered.',
       },
       theme: {
         type: 'object',

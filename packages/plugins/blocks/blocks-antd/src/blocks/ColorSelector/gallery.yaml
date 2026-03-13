@@ -20,15 +20,13 @@
         content: 'ColorSelector is externally controlled — use an `onMount` event with `SetState` to set an initial color. Without it, the picker starts empty. The other examples on this page are initialized via the page `onInit` event.'
     - id: init_empty
       type: ColorSelector
-      layout:
-        flex: 0 0 auto
       properties:
+        title: Empty Picker
         showText: true
     - id: init_with_value
       type: ColorSelector
-      layout:
-        flex: 0 0 auto
       properties:
+        title: Initialized Picker
         showText: true
       events:
         onMount:
@@ -142,81 +140,47 @@
         allowClear: true
         showText: true
 
-- title: Arrow Visibility
+- title: Toggle Properties
   blocks:
-    - id: arrow_label
-      type: Markdown
-      properties:
-        content: '**Default (arrow visible):**'
-    - id: arrow_visible
-      type: ColorSelector
-      layout:
-        flex: 0 0 auto
-      properties:
-        arrow: true
-    - id: no_arrow_label
-      type: Markdown
-      properties:
-        content: '**Arrow hidden:**'
-    - id: arrow_hidden
+    - id: toggle_arrow_hidden
       type: ColorSelector
       layout:
         flex: 0 0 auto
       properties:
         arrow: false
-
-- title: Disabled Alpha
-  blocks:
-    - id: alpha_enabled_label
-      type: Markdown
-      properties:
-        content: '**Alpha enabled (default):**'
-    - id: alpha_enabled
-      type: ColorSelector
-      layout:
-        flex: 0 0 auto
-      properties:
-        disabledAlpha: false
         showText: true
-    - id: alpha_disabled_label
-      type: Markdown
-      properties:
-        content: '**Alpha disabled:**'
-    - id: alpha_disabled
+    - id: toggle_alpha_disabled
       type: ColorSelector
       layout:
         flex: 0 0 auto
       properties:
         disabledAlpha: true
         showText: true
-
-- title: Disabled Format Selector
-  blocks:
-    - id: format_enabled_label
-      type: Markdown
-      properties:
-        content: '**Format selector enabled (default):**'
-    - id: format_selector_enabled
-      type: ColorSelector
-      layout:
-        flex: 0 0 auto
-      properties:
-        disabledFormat: false
-        showText: true
-    - id: format_disabled_label
-      type: Markdown
-      properties:
-        content: '**Format selector disabled:**'
-    - id: format_selector_disabled
+    - id: toggle_format_disabled
       type: ColorSelector
       layout:
         flex: 0 0 auto
       properties:
         disabledFormat: true
         showText: true
+    - id: toggle_all_disabled
+      type: ColorSelector
+      layout:
+        flex: 0 0 auto
+      properties:
+        arrow: false
+        disabledAlpha: true
+        disabledFormat: true
+        showText: true
 
-- title: Single Mode
+- title: Modes
   blocks:
+    - id: mode_default
+      type: ColorSelector
+      layout:
+        flex: 0 0 auto
+      properties:
+        showText: true
     - id: mode_single
       type: ColorSelector
       layout:
@@ -224,9 +188,6 @@
       properties:
         mode: single
         showText: true
-
-- title: Gradient Mode
-  blocks:
     - id: mode_gradient
       type: ColorSelector
       layout:
@@ -287,18 +248,8 @@
         flex: 0 0 auto
       properties:
         placement: bottomLeft
-    - id: placement_bottomRight_label
-      type: Markdown
-      properties:
-        content: '**Bottom Right:**'
-    - id: placement_bottomRight
-      type: ColorSelector
-      layout:
-        flex: 0 0 auto
-      properties:
-        placement: bottomRight
 
-- title: Presets - Brand Colors
+- title: Presets
   blocks:
     - id: presets_brand
       type: ColorSelector
@@ -323,9 +274,6 @@
               - '#999999'
               - '#cccccc'
               - '#ffffff'
-
-- title: Presets - Extended Palette
-  blocks:
     - id: presets_extended
       type: ColorSelector
       layout:
@@ -368,9 +316,6 @@
               - '#722ed1'
               - '#531dab'
               - '#22075e'
-
-- title: Presets - Status Colors
-  blocks:
     - id: presets_status
       type: ColorSelector
       layout:
@@ -501,6 +446,13 @@
           borderRadius: 8px
       properties:
         showText: true
+    - id: style_tailwind
+      type: ColorSelector
+      layout:
+        flex: 0 0 auto
+      properties:
+        showText: true
+        class: rounded-lg shadow-sm
     - id: style_large_swatch
       type: ColorSelector
       layout:
@@ -676,3 +628,180 @@
           colorPickerSliderHeight: 10
           colorPickerPresetColorSize: 28
           borderRadius: 12
+
+- title: ColorSelector in Theme Editor
+  blocks:
+    - id: applied_theme_editor_card
+      type: Card
+      properties:
+        title: Brand Theme Settings
+      blocks:
+        - id: applied_theme_brand_name
+          type: TextInput
+          properties:
+            title: Brand Name
+            placeholder: Enter your brand name
+        - id: applied_theme_primary_color
+          type: ColorSelector
+          properties:
+            title: Primary Color
+            showText: true
+            format: hex
+            disabledAlpha: true
+            label:
+              extra: Used for buttons, links, and active elements
+            presets:
+              - label: Popular
+                colors:
+                  - '#1677ff'
+                  - '#52c41a'
+                  - '#faad14'
+                  - '#f5222d'
+                  - '#722ed1'
+                  - '#13c2c2'
+          events:
+            onMount:
+              - id: set_primary_color
+                type: SetState
+                params:
+                  applied_theme_primary_color: '#1677ff'
+            onChange:
+              - id: primary_color_change
+                type: DisplayMessage
+                params:
+                  content:
+                    _string.concat:
+                      - 'Primary color updated to '
+                      - _state: applied_theme_primary_color
+                  duration: 1
+        - id: applied_theme_secondary_color
+          type: ColorSelector
+          properties:
+            title: Secondary Color
+            showText: true
+            format: hex
+            disabledAlpha: true
+            label:
+              extra: Used for backgrounds and secondary actions
+            presets:
+              - label: Popular
+                colors:
+                  - '#f0f5ff'
+                  - '#f6ffed'
+                  - '#fffbe6'
+                  - '#fff2f0'
+                  - '#f9f0ff'
+                  - '#e6fffb'
+          events:
+            onMount:
+              - id: set_secondary_color
+                type: SetState
+                params:
+                  applied_theme_secondary_color: '#f0f5ff'
+        - id: applied_theme_save_btn
+          type: Button
+          properties:
+            title: Save Theme
+            type: primary
+            icon: AiOutlineSave
+          events:
+            onClick:
+              - id: theme_save_action
+                type: DisplayMessage
+                params:
+                  content: Brand theme saved successfully
+                  status: success
+              - id: theme_set_global
+                type: SetGlobal
+                params:
+                  primaryColor:
+                    _state: applied_theme_primary_color
+                  secondaryColor:
+                    _state: applied_theme_secondary_color
+
+- title: ColorSelector in Product Customizer
+  blocks:
+    - id: applied_product_card
+      type: Card
+      properties:
+        title: Customize Your Product
+      blocks:
+        - id: applied_product_name
+          type: TextInput
+          properties:
+            title: Product Name
+            placeholder: e.g. Custom T-Shirt
+        - id: applied_product_body_color
+          type: ColorSelector
+          properties:
+            title: Body Color
+            showText: true
+            size: large
+            disabledAlpha: true
+            presets:
+              - label: Available Colors
+                colors:
+                  - '#ffffff'
+                  - '#000000'
+                  - '#1a3c6e'
+                  - '#8b0000'
+                  - '#2e8b57'
+                  - '#daa520'
+          events:
+            onMount:
+              - id: set_body_color
+                type: SetState
+                params:
+                  applied_product_body_color: '#1a3c6e'
+            onChange:
+              - id: body_color_change
+                type: SetState
+                params:
+                  product_body_color:
+                    _state: applied_product_body_color
+        - id: applied_product_accent_color
+          type: ColorSelector
+          properties:
+            title: Accent Color
+            showText: true
+            size: large
+            disabledAlpha: true
+            presets:
+              - label: Available Colors
+                colors:
+                  - '#ff4d4f'
+                  - '#ff7a45'
+                  - '#ffc53d'
+                  - '#52c41a'
+                  - '#1677ff'
+                  - '#722ed1'
+          events:
+            onMount:
+              - id: set_accent_color
+                type: SetState
+                params:
+                  applied_product_accent_color: '#ff4d4f'
+        - id: applied_product_quantity
+          type: NumberInput
+          properties:
+            title: Quantity
+            min: 1
+            max: 100
+        - id: applied_product_add_to_cart
+          type: Button
+          properties:
+            title: Add to Cart
+            type: primary
+            icon: AiOutlineShoppingCart
+          events:
+            onClick:
+              - id: add_to_cart_action
+                type: DisplayMessage
+                params:
+                  content:
+                    _string.concat:
+                      - 'Added to cart with body color '
+                      - _state: applied_product_body_color
+                      - ' and accent color '
+                      - _state: applied_product_accent_color
+                  status: success

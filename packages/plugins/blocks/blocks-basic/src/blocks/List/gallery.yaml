@@ -12,7 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- title: Basic List
+# ──────────────────────────────────────────────
+# Properties
+# ──────────────────────────────────────────────
+
+- title: Direction
   fullWidth: true
   blocks:
     - id: list_basic
@@ -23,10 +27,6 @@
           properties:
             html:
               _state: item.text
-
-- title: Row Direction
-  fullWidth: true
-  blocks:
     - id: list_row
       type: List
       properties:
@@ -45,10 +45,6 @@
           properties:
             content:
               _state: item.label
-
-- title: Column Direction
-  fullWidth: true
-  blocks:
     - id: list_column
       type: List
       properties:
@@ -68,10 +64,6 @@
               properties:
                 html:
                   _state: item.name
-
-- title: Row Reverse Direction
-  fullWidth: true
-  blocks:
     - id: list_row_rev
       type: List
       properties:
@@ -90,10 +82,6 @@
           properties:
             content:
               _state: item.label
-
-- title: Column Reverse Direction
-  fullWidth: true
-  blocks:
     - id: list_col_rev
       type: List
       properties:
@@ -114,13 +102,9 @@
                 html:
                   _state: item.name
 
-- title: Wrap
+- title: Wrap and Scroll
   fullWidth: true
   blocks:
-    - id: list_wrap_label
-      type: Markdown
-      properties:
-        content: '**wrap: wrap (default when direction is set):**'
     - id: list_wrap
       type: List
       properties:
@@ -142,10 +126,6 @@
           properties:
             content:
               _state: item.label
-    - id: list_nowrap_label
-      type: Markdown
-      properties:
-        content: '**wrap: nowrap:**'
     - id: list_nowrap
       type: List
       properties:
@@ -170,14 +150,6 @@
           properties:
             content:
               _state: item.label
-
-- title: Scroll
-  fullWidth: true
-  blocks:
-    - id: list_scroll_label
-      type: Markdown
-      properties:
-        content: '**scroll: true limits the list height and adds a scrollbar:**'
     - id: list_scroll
       type: List
       properties:
@@ -205,15 +177,115 @@
                 html:
                   _state: item.name
 
-- title: Styled List Items
+# ──────────────────────────────────────────────
+# Styling
+# ──────────────────────────────────────────────
+
+- title: Styled with Tailwind Classes
   fullWidth: true
   blocks:
-    - id: list_styled
+    - id: list_tw_rounded
+      type: List
+      properties:
+        direction: column
+      class: bg-gray-50 p-4 rounded-xl shadow-sm
+      blocks:
+        - id: list_tw_rounded_item
+          type: Html
+          properties:
+            html:
+              _state: item.text
+    - id: list_tw_border
+      type: List
+      properties:
+        direction: column
+      class: border-2 border-dashed border-blue-400 p-4 rounded-lg
+      blocks:
+        - id: list_tw_border_item
+          type: Html
+          properties:
+            html:
+              _state: item.text
+    - id: list_tw_accent
+      type: List
+      properties:
+        direction: column
+      class: border-l-4 border-l-green-500 pl-4 py-2 bg-green-50 rounded-r-lg
+      blocks:
+        - id: list_tw_accent_item
+          type: Html
+          properties:
+            html:
+              _state: item.text
+
+- title: Styled with CSS Key Object
+  fullWidth: true
+  blocks:
+    - id: list_csskey_blue
+      type: List
+      properties:
+        direction: column
+      style:
+        --element:
+          background: '#f0f5ff'
+          padding: 16
+          borderRadius: 8
+          border: 1px solid #91caff
+      blocks:
+        - id: list_csskey_blue_item
+          type: Html
+          properties:
+            html:
+              _state: item.text
+    - id: list_csskey_shadow
+      type: List
+      properties:
+        direction: column
+      style:
+        --element:
+          padding: 16
+          borderRadius: 12
+          boxShadow: 0 4px 12px rgba(0, 0, 0, 0.1)
+          background: '#ffffff'
+      blocks:
+        - id: list_csskey_shadow_item
+          type: Html
+          properties:
+            html:
+              _state: item.text
+    - id: list_csskey_dark
+      type: List
+      properties:
+        direction: column
+      style:
+        --element:
+          background: '#1a1a2e'
+          color: '#e0e0e0'
+          padding: 16
+          borderRadius: 8
+      blocks:
+        - id: list_csskey_dark_item
+          type: Html
+          style:
+            --element:
+              color: '#a0a0a0'
+          properties:
+            html:
+              _state: item.text
+
+# ──────────────────────────────────────────────
+# Applied Examples
+# ──────────────────────────────────────────────
+
+- title: List in User Directory
+  fullWidth: true
+  blocks:
+    - id: list_user_dir
       type: List
       properties:
         direction: column
       blocks:
-        - id: list_styled_item
+        - id: list_user_dir_item
           type: Box
           layout:
             gap: 12
@@ -225,8 +297,15 @@
               borderRadius: 8
               border: 1px solid #f0f0f0
               marginBottom: 8
+          events:
+            onClick:
+              - id: list_user_dir_click
+                type: SetState
+                params:
+                  selectedUser:
+                    _state: item.name
           blocks:
-            - id: list_styled_item_icon
+            - id: list_user_dir_icon
               type: Icon
               layout:
                 flex: 0 0 auto
@@ -234,7 +313,7 @@
                 name: AiOutlineUser
                 size: 24
                 color: '#1677ff'
-            - id: list_styled_item_name
+            - id: list_user_dir_name
               type: Html
               layout:
                 flex: 1
@@ -242,16 +321,16 @@
                 html:
                   _state: item.name
 
-- title: Card List
+- title: List in Card Gallery
   fullWidth: true
   blocks:
-    - id: list_cards
+    - id: list_card_gallery
       type: List
       properties:
         direction: row
         wrap: wrap
       blocks:
-        - id: list_cards_item
+        - id: list_card_gallery_item
           type: Box
           layout:
             flex: 0 0 200px
@@ -262,8 +341,15 @@
               borderRadius: 8
               boxShadow: 0 2px 8px rgba(0, 0, 0, 0.1)
               margin: 4
+          events:
+            onClick:
+              - id: list_card_gallery_click
+                type: SetState
+                params:
+                  selectedCard:
+                    _state: item.title
           blocks:
-            - id: list_cards_item_title
+            - id: list_card_gallery_title
               type: Html
               properties:
                 html:
@@ -271,28 +357,8 @@
                     template: '<h4 style="margin: 0 0 8px 0;">{{ item.title }}</h4>'
                     on:
                       _state: true
-            - id: list_cards_item_desc
+            - id: list_card_gallery_desc
               type: Html
               properties:
                 html:
                   _state: item.description
-
-- title: Style Overrides
-  fullWidth: true
-  blocks:
-    - id: list_styled_container
-      type: List
-      properties:
-        direction: column
-      style:
-        --element:
-          background: '#f0f5ff'
-          padding: 16
-          borderRadius: 8
-          border: 1px solid #91caff
-      blocks:
-        - id: list_styled_container_item
-          type: Html
-          properties:
-            html:
-              _state: item.text

@@ -594,6 +594,37 @@
               type: Paragraph
               properties:
                 content: Same height as tallest sibling.
+    - id: flex_a_baseline_label
+      type: Markdown
+      properties:
+        content: '**align: baseline**'
+    - id: flex_a_baseline
+      type: Flex
+      class: bg-gray-50 p-2 rounded
+      properties:
+        align: baseline
+        gap: 16
+      blocks:
+        - id: flex_ab_1
+          type: Title
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: Large Title
+            level: 2
+        - id: flex_ab_2
+          type: Paragraph
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: Body text aligned to the same baseline.
+        - id: flex_ab_3
+          type: Title
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: Small
+            level: 5
 
 - title: Wrap
   fullWidth: true
@@ -745,115 +776,114 @@
               properties:
                 content: flex 2 (grows 2x)
 
-- title: Composition - Toolbar
-  fullWidth: true
+- title: Custom Element Type
   blocks:
-    - id: flex_toolbar
+    - id: flex_component_nav
       type: Flex
-      class: bg-white p-3 rounded-lg shadow-sm border
       properties:
-        justify: space-between
-        align: center
-        gap: 8
+        component: nav
+        gap: 16
+        justify: center
       blocks:
-        - id: flex_toolbar_left
-          type: Flex
+        - id: flex_component_nav_link1
+          type: Button
+          layout:
+            flex: 0 0 auto
           properties:
-            gap: 8
-            align: center
-          blocks:
-            - id: flex_toolbar_title
-              type: Title
-              layout:
-                flex: 0 0 auto
-              properties:
-                content: Dashboard
-                level: 5
-            - id: flex_toolbar_tag
-              type: Tag
-              layout:
-                flex: 0 0 auto
-              properties:
-                title: Live
-                color: success
-        - id: flex_toolbar_right
-          type: Flex
+            title: Home
+            color: primary
+            variant: link
+        - id: flex_component_nav_link2
+          type: Button
+          layout:
+            flex: 0 0 auto
           properties:
-            gap: 8
-          blocks:
-            - id: flex_toolbar_btn_filter
-              type: Button
-              layout:
-                flex: 0 0 auto
-              properties:
-                title: Filter
-                icon: AiOutlineFilter
-                color: default
-                variant: outlined
-                size: small
-            - id: flex_toolbar_btn_export
-              type: Button
-              layout:
-                flex: 0 0 auto
-              properties:
-                title: Export
-                icon: AiOutlineDownload
-                color: primary
-                variant: solid
-                size: small
+            title: About
+            color: primary
+            variant: link
+        - id: flex_component_nav_link3
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Contact
+            color: primary
+            variant: link
 
-- title: Composition - Card Row
+- title: Theme Token Overrides
   blocks:
-    - id: flex_card_row
+    - id: flex_theme_padding
+      type: Flex
+      properties:
+        gap: 12
+        theme:
+          padding: 24
+          margin: 8
+      blocks:
+        - id: flex_theme_padding_btn1
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Custom Padding
+            color: primary
+            variant: solid
+        - id: flex_theme_padding_btn2
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: And Margin
+            color: primary
+            variant: outlined
+
+    - id: flex_theme_bg
+      type: Flex
+      properties:
+        gap: 12
+        theme:
+          colorBgContainer: '#f6ffed'
+      blocks:
+        - id: flex_theme_bg_btn1
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Token A
+            color: green
+            variant: solid
+        - id: flex_theme_bg_btn2
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Token B
+            color: green
+            variant: outlined
+
+    - id: flex_theme_combined
       type: Flex
       properties:
         gap: 16
-        wrap: true
+        vertical: true
+        theme:
+          padding: 20
+          margin: 4
+          colorBgContainer: '#e6f4ff'
       blocks:
-        - id: flex_cr_card1
-          type: Card
-          layout:
-            flex: 1 1 200px
+        - id: flex_theme_combined_title
+          type: Title
           properties:
-            title: Users
-            size: small
-          blocks:
-            - id: flex_cr_stat1
-              type: Statistic
-              properties:
-                title: Total
-                value: 1234
-        - id: flex_cr_card2
-          type: Card
-          layout:
-            flex: 1 1 200px
+            content: All Theme Tokens
+            level: 5
+        - id: flex_theme_combined_p
+          type: Paragraph
           properties:
-            title: Revenue
-            size: small
-          blocks:
-            - id: flex_cr_stat2
-              type: Statistic
-              properties:
-                title: Monthly
-                value: 8650
-                prefix: $
-        - id: flex_cr_card3
-          type: Card
-          layout:
-            flex: 1 1 200px
-          properties:
-            title: Orders
-            size: small
-          blocks:
-            - id: flex_cr_stat3
-              type: Statistic
-              properties:
-                title: This Week
-                value: 56
+            content: Combining padding, margin, and colorBgContainer tokens for a fully themed Flex container.
 
-- title: Style Overrides
+- title: Styled with CSS Keys
   blocks:
-    - id: flex_style_bg
+    - id: flex_style_inline
       type: Flex
       style:
         --element:
@@ -865,7 +895,7 @@
         gap: 12
         justify: center
       blocks:
-        - id: flex_style_btn1
+        - id: flex_style_inline_btn1
           type: Button
           layout:
             flex: 0 0 auto
@@ -873,38 +903,518 @@
             title: Styled Container
             color: primary
             variant: solid
-        - id: flex_style_btn2
+        - id: flex_style_inline_btn2
           type: Button
           layout:
             flex: 0 0 auto
           properties:
-            title: With Background
+            title: With Dashed Border
             color: primary
             variant: outlined
 
-- title: Theme Token Overrides
-  blocks:
-    - id: flex_theme_example
+    - id: flex_style_dark
       type: Flex
+      style:
+        --element:
+          backgroundColor: '#1f1f1f'
+          padding: 20px
+          borderRadius: 12px
       properties:
         gap: 12
-        theme:
-          colorBgContainer: '#f6ffed'
-          padding: 16
+        justify: space-between
+        align: center
       blocks:
-        - id: flex_theme_btn1
+        - id: flex_style_dark_title
+          type: Title
+          layout:
+            flex: 0 0 auto
+          class: text-white
+          properties:
+            content: Dark Panel
+            level: 5
+        - id: flex_style_dark_btn
           type: Button
           layout:
             flex: 0 0 auto
           properties:
-            title: Token A
-            color: green
+            title: Action
+            color: primary
             variant: solid
-        - id: flex_theme_btn2
+            size: small
+
+- title: Tailwind Class Styling
+  blocks:
+    - id: flex_tw_gradient
+      type: Flex
+      class:
+        element: bg-gradient-to-r from-blue-500 to-purple-600 p-6 rounded-xl shadow-lg
+      properties:
+        gap: 16
+        align: center
+        justify: space-between
+      blocks:
+        - id: flex_tw_gradient_title
+          type: Title
+          layout:
+            flex: 0 0 auto
+          class: text-white
+          properties:
+            content: Gradient Flex
+            level: 4
+        - id: flex_tw_gradient_btn
           type: Button
           layout:
             flex: 0 0 auto
           properties:
-            title: Token B
-            color: green
-            variant: outlined
+            title: Learn More
+            color: default
+            variant: solid
+            size: small
+
+    - id: flex_tw_bordered
+      type: Flex
+      class:
+        element: border-2 border-dashed border-gray-300 p-4 rounded-lg hover:border-blue-400 transition-colors duration-200
+      properties:
+        gap: 12
+        justify: center
+        wrap: true
+      blocks:
+        - id: flex_tw_bordered_tag1
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Hover me
+            color: blue
+        - id: flex_tw_bordered_tag2
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Dashed border
+            color: cyan
+        - id: flex_tw_bordered_tag3
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Transitions
+            color: purple
+
+    - id: flex_tw_ring
+      type: Flex
+      class:
+        element: ring-2 ring-green-400 ring-offset-2 p-4 rounded-lg bg-green-50
+      properties:
+        gap: 8
+        align: center
+      blocks:
+        - id: flex_tw_ring_icon
+          type: Icon
+          layout:
+            flex: 0 0 auto
+          properties:
+            name: AiOutlineCheckCircle
+            color: '#52c41a'
+            size: 24
+        - id: flex_tw_ring_text
+          type: Paragraph
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: Ring utility applied to the element CSS key.
+
+- title: Application Toolbar
+  fullWidth: true
+  blocks:
+    - id: flex_app_toolbar
+      type: Flex
+      class: bg-white p-3 rounded-lg shadow-sm border
+      properties:
+        justify: space-between
+        align: center
+        gap: 8
+      blocks:
+        - id: flex_app_toolbar_left
+          type: Flex
+          properties:
+            gap: 8
+            align: center
+          blocks:
+            - id: flex_app_toolbar_title
+              type: Title
+              layout:
+                flex: 0 0 auto
+              properties:
+                content: Dashboard
+                level: 5
+            - id: flex_app_toolbar_tag
+              type: Tag
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Live
+                color: success
+        - id: flex_app_toolbar_right
+          type: Flex
+          properties:
+            gap: 8
+          blocks:
+            - id: flex_app_toolbar_btn_filter
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Filter
+                icon: AiOutlineFilter
+                color: default
+                variant: outlined
+                size: small
+              events:
+                onClick:
+                  - id: flex_app_toolbar_filter_msg
+                    type: DisplayMessage
+                    params:
+                      content: Filter panel toggled.
+                      status: info
+            - id: flex_app_toolbar_btn_export
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Export
+                icon: AiOutlineDownload
+                color: primary
+                variant: solid
+                size: small
+              events:
+                onClick:
+                  - id: flex_app_toolbar_export_msg
+                    type: DisplayMessage
+                    params:
+                      content: Export started.
+                      status: success
+
+- title: Statistics Dashboard Row
+  blocks:
+    - id: flex_stats_row
+      type: Flex
+      properties:
+        gap: 16
+        wrap: true
+      blocks:
+        - id: flex_stats_card1
+          type: Card
+          layout:
+            flex: 1 1 200px
+          properties:
+            title: Users
+            size: small
+            hoverable: true
+          blocks:
+            - id: flex_stats_stat1
+              type: Statistic
+              properties:
+                title: Total
+                value: 1234
+            - id: flex_stats_tag1
+              type: Tag
+              properties:
+                title: +8.2%
+                color: success
+        - id: flex_stats_card2
+          type: Card
+          layout:
+            flex: 1 1 200px
+          properties:
+            title: Revenue
+            size: small
+            hoverable: true
+          blocks:
+            - id: flex_stats_stat2
+              type: Statistic
+              properties:
+                title: Monthly
+                value: 8650
+                prefix: $
+            - id: flex_stats_tag2
+              type: Tag
+              properties:
+                title: +12.5%
+                color: success
+        - id: flex_stats_card3
+          type: Card
+          layout:
+            flex: 1 1 200px
+          properties:
+            title: Orders
+            size: small
+            hoverable: true
+          blocks:
+            - id: flex_stats_stat3
+              type: Statistic
+              properties:
+                title: This Week
+                value: 56
+            - id: flex_stats_tag3
+              type: Tag
+              properties:
+                title: -3.1%
+                color: error
+
+- title: User Profile Header
+  fullWidth: true
+  blocks:
+    - id: flex_profile_header
+      type: Flex
+      class: bg-white p-6 rounded-xl shadow-sm border
+      properties:
+        gap: 24
+        align: center
+        wrap: true
+      blocks:
+        - id: flex_profile_avatar
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            icon: AiOutlineUser
+            size: 72
+            color: '#fff'
+            backgroundColor: '#1677ff'
+        - id: flex_profile_info
+          type: Flex
+          layout:
+            flex: 1 1 200px
+          properties:
+            vertical: true
+            gap: 4
+          blocks:
+            - id: flex_profile_name
+              type: Title
+              properties:
+                content: Jane Cooper
+                level: 4
+            - id: flex_profile_role
+              type: Paragraph
+              properties:
+                content: Senior Product Designer at Acme Corp
+            - id: flex_profile_tags
+              type: Flex
+              properties:
+                gap: 8
+                wrap: true
+              blocks:
+                - id: flex_profile_tag1
+                  type: Tag
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Design
+                    color: blue
+                - id: flex_profile_tag2
+                  type: Tag
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: UX Research
+                    color: purple
+                - id: flex_profile_tag3
+                  type: Tag
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Figma
+                    color: cyan
+        - id: flex_profile_actions
+          type: Flex
+          layout:
+            flex: 0 0 auto
+          properties:
+            gap: 8
+          blocks:
+            - id: flex_profile_btn_msg
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Message
+                icon: AiOutlineMail
+                color: primary
+                variant: outlined
+              events:
+                onClick:
+                  - id: flex_profile_msg_action
+                    type: DisplayMessage
+                    params:
+                      content: Opening message composer...
+                      status: info
+            - id: flex_profile_btn_follow
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Follow
+                icon: AiOutlineUserAdd
+                color: primary
+                variant: solid
+              events:
+                onClick:
+                  - id: flex_profile_follow_action
+                    type: SetState
+                    params:
+                      following: true
+                  - id: flex_profile_follow_msg
+                    type: DisplayMessage
+                    params:
+                      content: You are now following Jane Cooper.
+                      status: success
+
+- title: Feature Comparison Cards
+  blocks:
+    - id: flex_features_row
+      type: Flex
+      properties:
+        gap: 16
+        wrap: true
+        align: stretch
+      blocks:
+        - id: flex_feature_card1
+          type: Card
+          layout:
+            flex: 1 1 240px
+          properties:
+            hoverable: true
+          blocks:
+            - id: flex_feature1_icon_row
+              type: Flex
+              properties:
+                gap: 12
+                align: center
+              blocks:
+                - id: flex_feature1_icon
+                  type: Icon
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    name: AiOutlineThunderbolt
+                    color: '#1677ff'
+                    size: 28
+                - id: flex_feature1_title
+                  type: Title
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    content: Fast Builds
+                    level: 5
+            - id: flex_feature1_desc
+              type: Paragraph
+              properties:
+                content: Incremental compilation and smart caching reduce build times by up to 80% compared to traditional frameworks.
+            - id: flex_feature1_btn
+              type: Button
+              properties:
+                title: Learn More
+                color: primary
+                variant: link
+                size: small
+              events:
+                onClick:
+                  - id: flex_feature1_link
+                    type: Link
+                    params:
+                      url: https://docs.lowdefy.com
+                      newTab: true
+        - id: flex_feature_card2
+          type: Card
+          layout:
+            flex: 1 1 240px
+          properties:
+            hoverable: true
+          blocks:
+            - id: flex_feature2_icon_row
+              type: Flex
+              properties:
+                gap: 12
+                align: center
+              blocks:
+                - id: flex_feature2_icon
+                  type: Icon
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    name: AiOutlineSafety
+                    color: '#52c41a'
+                    size: 28
+                - id: flex_feature2_title
+                  type: Title
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    content: Secure by Default
+                    level: 5
+            - id: flex_feature2_desc
+              type: Paragraph
+              properties:
+                content: Built-in authentication, role-based access control, and automatic input sanitization protect your application out of the box.
+            - id: flex_feature2_btn
+              type: Button
+              properties:
+                title: Learn More
+                color: primary
+                variant: link
+                size: small
+              events:
+                onClick:
+                  - id: flex_feature2_link
+                    type: Link
+                    params:
+                      url: https://docs.lowdefy.com
+                      newTab: true
+        - id: flex_feature_card3
+          type: Card
+          layout:
+            flex: 1 1 240px
+          properties:
+            hoverable: true
+          blocks:
+            - id: flex_feature3_icon_row
+              type: Flex
+              properties:
+                gap: 12
+                align: center
+              blocks:
+                - id: flex_feature3_icon
+                  type: Icon
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    name: AiOutlineExpandAlt
+                    color: '#722ed1'
+                    size: 28
+                - id: flex_feature3_title
+                  type: Title
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    content: Fully Extensible
+                    level: 5
+            - id: flex_feature3_desc
+              type: Paragraph
+              properties:
+                content: Custom plugins for blocks, connections, operators, and actions let you extend functionality to match any requirement.
+            - id: flex_feature3_btn
+              type: Button
+              properties:
+                title: Learn More
+                color: primary
+                variant: link
+                size: small
+              events:
+                onClick:
+                  - id: flex_feature3_link
+                    type: Link
+                    params:
+                      url: https://docs.lowdefy.com
+                      newTab: true

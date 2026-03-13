@@ -19,37 +19,14 @@
       properties:
         title: Small
         size: small
-        label:
-          disabled: true
     - id: dts_size_default
       type: DateTimeSelector
       properties:
         title: Default
-        label:
-          disabled: true
     - id: dts_size_large
       type: DateTimeSelector
       properties:
         title: Large
-        size: large
-        label:
-          disabled: true
-
-- title: Sizes with Labels
-  blocks:
-    - id: dts_size_label_small
-      type: DateTimeSelector
-      properties:
-        title: Small with Label
-        size: small
-    - id: dts_size_label_default
-      type: DateTimeSelector
-      properties:
-        title: Default with Label
-    - id: dts_size_label_large
-      type: DateTimeSelector
-      properties:
-        title: Large with Label
         size: large
 
 - title: Variants
@@ -75,105 +52,6 @@
         variant: borderless
         label:
           disabled: true
-
-- title: Variant + Size Matrix
-  blocks:
-    - id: dts_mx_outlined_label
-      type: Markdown
-      properties:
-        content: '**outlined**'
-    - id: dts_mx_outlined_row
-      type: Box
-      layout:
-        gap: 8
-      blocks:
-        - id: dts_mx_outlined_sm
-          type: DateTimeSelector
-          properties:
-            title: Small
-            variant: outlined
-            size: small
-            label:
-              disabled: true
-        - id: dts_mx_outlined_md
-          type: DateTimeSelector
-          properties:
-            title: Default
-            variant: outlined
-            label:
-              disabled: true
-        - id: dts_mx_outlined_lg
-          type: DateTimeSelector
-          properties:
-            title: Large
-            variant: outlined
-            size: large
-            label:
-              disabled: true
-    - id: dts_mx_filled_label
-      type: Markdown
-      properties:
-        content: '**filled**'
-    - id: dts_mx_filled_row
-      type: Box
-      layout:
-        gap: 8
-      blocks:
-        - id: dts_mx_filled_sm
-          type: DateTimeSelector
-          properties:
-            title: Small
-            variant: filled
-            size: small
-            label:
-              disabled: true
-        - id: dts_mx_filled_md
-          type: DateTimeSelector
-          properties:
-            title: Default
-            variant: filled
-            label:
-              disabled: true
-        - id: dts_mx_filled_lg
-          type: DateTimeSelector
-          properties:
-            title: Large
-            variant: filled
-            size: large
-            label:
-              disabled: true
-    - id: dts_mx_borderless_label
-      type: Markdown
-      properties:
-        content: '**borderless**'
-    - id: dts_mx_borderless_row
-      type: Box
-      layout:
-        gap: 8
-      blocks:
-        - id: dts_mx_borderless_sm
-          type: DateTimeSelector
-          properties:
-            title: Small
-            variant: borderless
-            size: small
-            label:
-              disabled: true
-        - id: dts_mx_borderless_md
-          type: DateTimeSelector
-          properties:
-            title: Default
-            variant: borderless
-            label:
-              disabled: true
-        - id: dts_mx_borderless_lg
-          type: DateTimeSelector
-          properties:
-            title: Large
-            variant: borderless
-            size: large
-            label:
-              disabled: true
 
 - title: Time Format Options
   blocks:
@@ -211,13 +89,6 @@
         hourStep: 2
         label:
           disabled: true
-    - id: dts_step_hour_3
-      type: DateTimeSelector
-      properties:
-        title: 3-Hour Steps
-        hourStep: 3
-        label:
-          disabled: true
     - id: dts_step_minute_10
       type: DateTimeSelector
       properties:
@@ -246,15 +117,6 @@
         timeFormat: HH:mm:ss
         format: YYYY-MM-DD HH:mm:ss
         secondStep: 10
-        label:
-          disabled: true
-    - id: dts_step_second_15
-      type: DateTimeSelector
-      properties:
-        title: 15-Second Steps
-        timeFormat: HH:mm:ss
-        format: YYYY-MM-DD HH:mm:ss
-        secondStep: 15
         label:
           disabled: true
 
@@ -288,26 +150,11 @@
         format: DD MMMM YYYY HH:mm
         label:
           disabled: true
-    - id: dts_fmt_short_month
-      type: DateTimeSelector
-      properties:
-        title: DD MMM YYYY HH:mm
-        format: DD MMM YYYY HH:mm
-        label:
-          disabled: true
     - id: dts_fmt_dot
       type: DateTimeSelector
       properties:
         title: DD.MM.YYYY HH:mm
         format: DD.MM.YYYY HH:mm
-        label:
-          disabled: true
-    - id: dts_fmt_with_seconds
-      type: DateTimeSelector
-      properties:
-        title: YYYY-MM-DD HH:mm:ss
-        format: YYYY-MM-DD HH:mm:ss
-        timeFormat: HH:mm:ss
         label:
           disabled: true
 
@@ -487,7 +334,7 @@
         label:
           disabled: true
 
-- title: Disabled Dates - Min/Max
+- title: Disabled Dates
   blocks:
     - id: dts_dd_min
       type: DateTimeSelector
@@ -495,14 +342,6 @@
         title: Min Date (2024-01-01)
         disabledDates:
           min: '2024-01-01'
-        label:
-          disabled: true
-    - id: dts_dd_max
-      type: DateTimeSelector
-      properties:
-        title: Max Date (2025-12-31)
-        disabledDates:
-          max: '2025-12-31'
         label:
           disabled: true
     - id: dts_dd_range
@@ -514,9 +353,6 @@
           max: '2024-12-31'
         label:
           disabled: true
-
-- title: Disabled Dates - Specific Dates
-  blocks:
     - id: dts_dd_specific
       type: DateTimeSelector
       properties:
@@ -528,9 +364,6 @@
             - '2026-03-25'
         label:
           disabled: true
-
-- title: Disabled Dates - Date Ranges
-  blocks:
     - id: dts_dd_ranges
       type: DateTimeSelector
       properties:
@@ -567,9 +400,6 @@
         label:
           inline: true
           span: 8
-
-- title: Label with Extra Text
-  blocks:
     - id: dts_lbl_extra
       type: DateTimeSelector
       properties:
@@ -577,13 +407,13 @@
         label:
           extra: Select the date and time for your appointment.
         placeholder: Select date & time
-    - id: dts_lbl_extra_html
+    - id: dts_lbl_hidden
       type: DateTimeSelector
       properties:
-        title: Event Start
+        title: Hidden Label
         label:
-          extra: 'Choose the <b>start date and time</b> for your event.'
-        placeholder: Select event start
+          disabled: true
+        placeholder: No label shown
 
 - title: Label Inline with Span
   blocks:
@@ -608,24 +438,6 @@
         label:
           inline: true
           span: 12
-
-- title: Label Disabled (No Label)
-  blocks:
-    - id: dts_lbl_hidden
-      type: DateTimeSelector
-      properties:
-        title: Hidden Label
-        label:
-          disabled: true
-        placeholder: No label shown
-    - id: dts_lbl_hidden_filled
-      type: DateTimeSelector
-      properties:
-        title: Hidden Label Filled
-        label:
-          disabled: true
-        variant: filled
-        placeholder: No label, filled variant
 
 - title: Custom Style
   blocks:
@@ -699,26 +511,6 @@
           disabled: true
         theme:
           colorBgContainer: '#f9f0ff'
-    - id: dts_theme_font
-      type: DateTimeSelector
-      properties:
-        title: Large Font
-        label:
-          disabled: true
-        theme:
-          fontSize: 18
-    - id: dts_theme_border
-      type: DateTimeSelector
-      properties:
-        title: Thick Border
-        label:
-          disabled: true
-        theme:
-          lineWidth: 2
-          colorBorder: '#d3adf7'
-
-- title: Theme Token - Sizes
-  blocks:
     - id: dts_theme_tall
       type: DateTimeSelector
       properties:
@@ -729,116 +521,6 @@
           controlHeight: 48
           fontSize: 18
           borderRadius: 12
-    - id: dts_theme_compact
-      type: DateTimeSelector
-      properties:
-        title: Compact Input
-        size: small
-        label:
-          disabled: true
-        theme:
-          controlHeightSM: 20
-          fontSizeSM: 12
-          borderRadiusSM: 2
-    - id: dts_theme_large_override
-      type: DateTimeSelector
-      properties:
-        title: Large Override
-        size: large
-        label:
-          disabled: true
-        theme:
-          controlHeightLG: 52
-          fontSizeLG: 20
-          borderRadiusLG: 16
-
-- title: Theme Token - Colors
-  blocks:
-    - id: dts_theme_green
-      type: DateTimeSelector
-      properties:
-        title: Green Theme
-        label:
-          disabled: true
-        theme:
-          colorPrimary: '#52c41a'
-    - id: dts_theme_orange
-      type: DateTimeSelector
-      properties:
-        title: Orange Theme
-        label:
-          disabled: true
-        theme:
-          colorPrimary: '#fa8c16'
-    - id: dts_theme_red
-      type: DateTimeSelector
-      properties:
-        title: Red Theme
-        label:
-          disabled: true
-        theme:
-          colorPrimary: '#ff4d4f'
-    - id: dts_theme_brand
-      type: DateTimeSelector
-      properties:
-        title: Brand Purple
-        label:
-          disabled: true
-        theme:
-          colorPrimary: '#722ed1'
-          colorBorder: '#d3adf7'
-          colorBgContainer: '#faf0ff'
-    - id: dts_theme_placeholder_color
-      type: DateTimeSelector
-      properties:
-        title: Custom Placeholder Color
-        placeholder: Custom colored placeholder
-        label:
-          disabled: true
-        theme:
-          colorTextPlaceholder: '#eb2f96'
-
-- title: Theme Token - Padding
-  blocks:
-    - id: dts_theme_pad_wide
-      type: DateTimeSelector
-      properties:
-        title: Wide Padding
-        label:
-          disabled: true
-        theme:
-          paddingInline: 24
-          paddingBlock: 8
-    - id: dts_theme_pad_narrow
-      type: DateTimeSelector
-      properties:
-        title: Narrow Padding
-        label:
-          disabled: true
-        theme:
-          paddingInline: 4
-          paddingBlock: 2
-    - id: dts_theme_pad_large
-      type: DateTimeSelector
-      properties:
-        title: Large Wide Padding
-        size: large
-        label:
-          disabled: true
-        theme:
-          paddingInlineLG: 24
-          paddingBlockLG: 10
-
-- title: Theme Token - Popup & Cells
-  blocks:
-    - id: dts_theme_cell_hover
-      type: DateTimeSelector
-      properties:
-        title: Custom Cell Hover
-        label:
-          disabled: true
-        theme:
-          cellHoverBg: 'rgba(114, 46, 209, 0.1)'
     - id: dts_theme_active_border
       type: DateTimeSelector
       properties:
@@ -848,24 +530,6 @@
         theme:
           activeBorderColor: '#fa8c16'
           hoverBorderColor: '#ffc069'
-    - id: dts_theme_time_panel
-      type: DateTimeSelector
-      properties:
-        title: Larger Time Panel
-        label:
-          disabled: true
-        theme:
-          timeColumnHeight: 280
-          timeCellHeight: 36
-          timeColumnWidth: 72
-    - id: dts_theme_addon_bg
-      type: DateTimeSelector
-      properties:
-        title: Custom Addon Background
-        label:
-          disabled: true
-        theme:
-          addonBg: '#f0f5ff'
 
 - title: Combined Features
   blocks:
@@ -913,17 +577,6 @@
           max: '2026-12-31'
         label:
           extra: Only dates in 2026 are available. Times in 30-minute slots.
-    - id: dts_combo_seconds
-      type: DateTimeSelector
-      properties:
-        title: Precise Timestamp
-        format: YYYY-MM-DD HH:mm:ss
-        timeFormat: HH:mm:ss
-        secondStep: 1
-        minuteStep: 1
-        placeholder: Select precise date & time
-        label:
-          extra: Select date and time down to the second.
     - id: dts_combo_utc_large
       type: DateTimeSelector
       properties:
@@ -954,31 +607,106 @@
           borderRadius: 20
           controlHeightLG: 48
           fontSize: 16
-    - id: dts_combo_inline_filled
-      type: DateTimeSelector
+
+- title: DateTimeSelector in Appointment Booking
+  blocks:
+    - id: applied2_appt_card
+      type: Card
       properties:
-        title: Inline Filled
-        variant: filled
-        format: DD MMM YYYY HH:mm
-        minuteStep: 10
-        label:
-          inline: true
-          span: 6
-          colon: false
-    - id: dts_combo_styled
-      type: DateTimeSelector
-      class: rounded-xl shadow-md
-      style:
-        --element:
-          background: '#fffbe6'
+        title: Book an Appointment
+      blocks:
+        - id: applied2_appt_datetime
+          type: DateTimeSelector
+          properties:
+            title: Appointment Date & Time
+            placeholder: Select date and time
+            format: DD MMMM YYYY HH:mm
+            minuteStep: 15
+            size: large
+            suffixIcon: AiOutlineSchedule
+            label:
+              extra: Appointments are available in 15-minute slots.
+            disabledDates:
+              min: '2026-03-15'
+        - id: applied2_appt_service
+          type: Selector
+          properties:
+            title: Service
+            placeholder: Select a service...
+            options:
+              - label: General Consultation
+                value: general
+              - label: Follow-Up Visit
+                value: followup
+              - label: Specialist Referral
+                value: specialist
+              - label: Annual Check-Up
+                value: annual
+        - id: applied2_appt_notes
+          type: TextArea
+          properties:
+            title: Additional Notes
+            placeholder: Any details the provider should know...
+            label:
+              extra: Optional. Share symptoms or questions in advance.
+        - id: applied2_appt_book_btn
+          type: Button
+          properties:
+            title: Book Appointment
+            icon: AiOutlineCalendar
+            type: primary
+            size: large
+            block: true
+          events:
+            onClick:
+              - id: book_appt_action
+                type: DisplayMessage
+                params:
+                  content: Appointment booked successfully! A confirmation email has been sent.
+                  duration: 3
+
+- title: DateTimeSelector in Meeting Scheduler
+  blocks:
+    - id: applied3_meeting_card
+      type: Card
       properties:
-        title: Styled DateTime
-        format: DD/MM/YYYY HH:mm
-        size: large
-        minuteStep: 15
-        label:
-          disabled: true
-        theme:
-          colorPrimary: '#faad14'
-          borderRadius: 12
-          controlHeightLG: 48
+        title: Schedule a Meeting
+      blocks:
+        - id: applied3_meeting_title
+          type: TextInput
+          properties:
+            title: Meeting Title
+            placeholder: Enter meeting subject...
+        - id: applied3_meeting_datetime
+          type: DateTimeSelector
+          properties:
+            title: Meeting Date & Time
+            placeholder: Select meeting date and time
+            format: DD MMMM YYYY HH:mm
+            minuteStep: 15
+            suffixIcon: AiOutlineClockCircle
+            label:
+              extra: Meetings are scheduled in 15-minute increments.
+            disabledDates:
+              min: '2026-03-13'
+          events:
+            onChange:
+              - id: meeting_datetime_change
+                type: SetState
+                params:
+                  meetingDateSelected: true
+        - id: applied3_meeting_schedule_btn
+          type: Button
+          properties:
+            title: Schedule Meeting
+            icon: AiOutlineSchedule
+            type: primary
+            size: large
+            block: true
+          events:
+            onClick:
+              - id: schedule_meeting_action
+                type: DisplayMessage
+                params:
+                  content: Meeting scheduled! Calendar invites will be sent to all participants.
+                  duration: 3

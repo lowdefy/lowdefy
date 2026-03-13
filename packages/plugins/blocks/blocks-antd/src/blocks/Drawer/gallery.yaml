@@ -178,24 +178,6 @@
               method: setOpen
               args:
                 open: true
-    - id: drawer_default_btn
-      type: Button
-      layout:
-        flex: 0 0 auto
-      properties:
-        title: Default (256px)
-        color: primary
-        variant: outlined
-        size: small
-      events:
-        onClick:
-          - id: drawer_default_size_open
-            type: CallMethod
-            params:
-              blockId: drawer_default_size
-              method: setOpen
-              args:
-                open: true
     - id: drawer_wide_btn
       type: Button
       layout:
@@ -242,15 +224,6 @@
           type: Paragraph
           properties:
             content: A narrow 200px drawer, suitable for simple menus or quick settings.
-    - id: drawer_default_size
-      type: Drawer
-      properties:
-        title: Default Width
-      blocks:
-        - id: drawer_default_size_content
-          type: Paragraph
-          properties:
-            content: Default drawer width of 256px.
     - id: drawer_wide
       type: Drawer
       properties:
@@ -430,6 +403,93 @@
           properties:
             content: The mask is visible but clicking it does not close the drawer. Users must use the close button or Escape key.
 
+- title: Keyboard Close
+  blocks:
+    - id: drawer_keyboard_on_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Keyboard Enabled (default)
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: drawer_keyboard_on_open
+            type: CallMethod
+            params:
+              blockId: drawer_keyboard_on
+              method: setOpen
+              args:
+                open: true
+    - id: drawer_keyboard_off_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Keyboard Disabled
+        color: danger
+        variant: outlined
+      events:
+        onClick:
+          - id: drawer_keyboard_off_open
+            type: CallMethod
+            params:
+              blockId: drawer_keyboard_off
+              method: setOpen
+              args:
+                open: true
+    - id: drawer_keyboard_on
+      type: Drawer
+      properties:
+        title: Press Escape to Close
+        keyboard: true
+      blocks:
+        - id: drawer_keyboard_on_content
+          type: Paragraph
+          properties:
+            content: Pressing the Escape key closes this drawer. This is the default behavior.
+    - id: drawer_keyboard_off
+      type: Drawer
+      properties:
+        title: Escape Disabled
+        keyboard: false
+      blocks:
+        - id: drawer_keyboard_off_content
+          type: Paragraph
+          properties:
+            content: Pressing Escape does not close this drawer. The user must click the close button or mask to dismiss.
+
+- title: Custom Z-Index
+  blocks:
+    - id: drawer_zindex_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open Drawer (z-index 2000)
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: drawer_zindex_open
+            type: CallMethod
+            params:
+              blockId: drawer_zindex
+              method: setOpen
+              args:
+                open: true
+    - id: drawer_zindex
+      type: Drawer
+      properties:
+        title: High Z-Index Drawer
+        zIndex: 2000
+      blocks:
+        - id: drawer_zindex_content
+          type: Paragraph
+          properties:
+            content: This drawer uses a custom z-index of 2000 to ensure it appears above other overlays. The default is 1000.
+
 - title: Extra Slot
   blocks:
     - id: drawer_extra_btn
@@ -522,172 +582,62 @@
           properties:
             content: This drawer uses the toggleOpen method. Each click of the button alternates between open and closed states.
 
-- title: Keyboard Close
+- title: Drawer Events
   blocks:
-    - id: drawer_keyboard_on_btn
+    - id: drawer_events_btn
       type: Button
       layout:
         flex: 0 0 auto
       properties:
-        title: Keyboard Enabled (default)
-        color: primary
-        variant: outlined
-      events:
-        onClick:
-          - id: drawer_keyboard_on_open
-            type: CallMethod
-            params:
-              blockId: drawer_keyboard_on
-              method: setOpen
-              args:
-                open: true
-    - id: drawer_keyboard_off_btn
-      type: Button
-      layout:
-        flex: 0 0 auto
-      properties:
-        title: Keyboard Disabled
-        color: danger
-        variant: outlined
-      events:
-        onClick:
-          - id: drawer_keyboard_off_open
-            type: CallMethod
-            params:
-              blockId: drawer_keyboard_off
-              method: setOpen
-              args:
-                open: true
-    - id: drawer_keyboard_on
-      type: Drawer
-      properties:
-        title: Press Escape to Close
-        keyboard: true
-      blocks:
-        - id: drawer_keyboard_on_content
-          type: Paragraph
-          properties:
-            content: Pressing the Escape key closes this drawer. This is the default behavior.
-    - id: drawer_keyboard_off
-      type: Drawer
-      properties:
-        title: Escape Disabled
-        keyboard: false
-      blocks:
-        - id: drawer_keyboard_off_content
-          type: Paragraph
-          properties:
-            content: Pressing Escape does not close this drawer. The user must click the close button or mask to dismiss.
-
-- title: Custom Z-Index
-  blocks:
-    - id: drawer_zindex_btn
-      type: Button
-      layout:
-        flex: 0 0 auto
-      properties:
-        title: Open Drawer (z-index 2000)
-        color: primary
-        variant: outlined
-      events:
-        onClick:
-          - id: drawer_zindex_open
-            type: CallMethod
-            params:
-              blockId: drawer_zindex
-              method: setOpen
-              args:
-                open: true
-    - id: drawer_zindex
-      type: Drawer
-      properties:
-        title: High Z-Index Drawer
-        zIndex: 2000
-      blocks:
-        - id: drawer_zindex_content
-          type: Paragraph
-          properties:
-            content: This drawer uses a custom z-index of 2000 to ensure it appears above other overlays. The default is 1000.
-
-- title: Rich Content Drawer
-  blocks:
-    - id: drawer_rich_btn
-      type: Button
-      layout:
-        flex: 0 0 auto
-      properties:
-        title: User Details
+        title: Open Drawer with Events
         color: primary
         variant: solid
-        icon: AiOutlineUser
       events:
         onClick:
-          - id: drawer_rich_open
+          - id: drawer_events_open
             type: CallMethod
             params:
-              blockId: drawer_rich
+              blockId: drawer_events
               method: setOpen
               args:
                 open: true
-    - id: drawer_rich
+    - id: drawer_events
       type: Drawer
       properties:
-        title: User Profile
+        title: Drawer with Events
         width: 400
+      events:
+        onOpen:
+          - id: drawer_events_on_open_msg
+            type: DisplayMessage
+            params:
+              content: Drawer opened
+              duration: 2
+        onClose:
+          - id: drawer_events_on_close_msg
+            type: DisplayMessage
+            params:
+              content: Drawer closing...
+              duration: 2
+        afterClose:
+          - id: drawer_events_after_close_msg
+            type: DisplayMessage
+            params:
+              content: Drawer fully closed
+              duration: 2
       blocks:
-        - id: drawer_rich_avatar_row
-          type: Box
-          layout:
-            gap: 16
-            align: center
-          blocks:
-            - id: drawer_rich_avatar
-              type: Avatar
-              layout:
-                flex: 0 0 auto
-              properties:
-                icon: AiOutlineUser
-                size: 64
-                color: '#fff'
-                backgroundColor: '#1677ff'
-            - id: drawer_rich_info
-              type: Box
-              layout:
-                flex: 1 1 0
-                direction: column
-                gap: 4
-              blocks:
-                - id: drawer_rich_name
-                  type: Title
-                  properties:
-                    content: Jane Cooper
-                    level: 4
-                - id: drawer_rich_role
-                  type: Paragraph
-                  properties:
-                    content: Senior Product Designer
-        - id: drawer_rich_divider
-          type: Divider
-        - id: drawer_rich_details
-          type: Descriptions
+        - id: drawer_events_p1
+          type: Paragraph
           properties:
-            size: small
-            column: 1
-            items:
-              - label: Email
-                value: jane.cooper@example.com
-              - label: Phone
-                value: +1 (555) 123-4567
-              - label: Location
-                value: San Francisco, CA
-              - label: Department
-                value: Design
-              - label: Start Date
-                value: January 15, 2023
+            content: This drawer triggers DisplayMessage actions on onOpen, onClose, and afterClose events. Close the drawer to see all three messages fire in sequence.
+        - id: drawer_events_p2
+          type: Paragraph
+          properties:
+            content: 'Available events: onOpen fires when opening, onClose fires when the close action starts, onToggle fires on toggle, afterClose fires after the close animation completes, and afterOpenChange fires after any open state transition.'
 
-- title: Styled Drawer
+- title: Inline Styles
   blocks:
-    - id: drawer_styled_btn
+    - id: drawer_inline_style_btn
       type: Button
       layout:
         flex: 0 0 auto
@@ -697,14 +647,14 @@
         variant: solid
       events:
         onClick:
-          - id: drawer_styled_open
+          - id: drawer_inline_style_open
             type: CallMethod
             params:
-              blockId: drawer_styled
+              blockId: drawer_inline_style
               method: setOpen
               args:
                 open: true
-    - id: drawer_styled
+    - id: drawer_inline_style
       type: Drawer
       properties:
         title: Styled Drawer
@@ -715,31 +665,123 @@
         --body:
           backgroundColor: '#f0f5ff'
       blocks:
-        - id: drawer_styled_content
+        - id: drawer_inline_style_content
           type: Paragraph
           properties:
             content: This drawer uses style.header and style.body to apply custom background colors to the header and body areas.
 
-- title: Theme Token Overrides
+- title: CSS Key Classes
   blocks:
-    - id: drawer_theme_btn
+    - id: drawer_css_keys_btn
       type: Button
       layout:
         flex: 0 0 auto
       properties:
-        title: Open Themed Drawer
+        title: Open CSS Styled Drawer
         color: primary
         variant: solid
       events:
         onClick:
-          - id: drawer_theme_open
+          - id: drawer_css_keys_open
             type: CallMethod
             params:
-              blockId: drawer_theme
+              blockId: drawer_css_keys
               method: setOpen
               args:
                 open: true
-    - id: drawer_theme
+    - id: drawer_css_keys
+      type: Drawer
+      properties:
+        title: Tailwind CSS Keys
+      class:
+        header: bg-blue-50
+        body: bg-gray-50
+      blocks:
+        - id: drawer_css_keys_content
+          type: Paragraph
+          properties:
+            content: 'Drawer supports these CSS keys: element, header, body, footer, mask, wrapper, content. Use class as an object to target each area with Tailwind classes.'
+
+    - id: drawer_css_accent_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open Accent Drawer
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: drawer_css_accent_open
+            type: CallMethod
+            params:
+              blockId: drawer_css_accent
+              method: setOpen
+              args:
+                open: true
+    - id: drawer_css_accent
+      type: Drawer
+      properties:
+        title: Accent Header
+      class:
+        header: bg-gradient-to-r from-purple-500 to-indigo-600 text-white
+        body: bg-slate-50
+      blocks:
+        - id: drawer_css_accent_content
+          type: Paragraph
+          properties:
+            content: A gradient header created using Tailwind classes on the header CSS key. The body uses a subtle gray background.
+
+    - id: drawer_css_mask_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open Blurred Mask Drawer
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: drawer_css_mask_open
+            type: CallMethod
+            params:
+              blockId: drawer_css_mask
+              method: setOpen
+              args:
+                open: true
+    - id: drawer_css_mask
+      type: Drawer
+      properties:
+        title: Custom Mask Style
+      class:
+        mask: backdrop-blur-sm
+        content: rounded-l-xl
+      blocks:
+        - id: drawer_css_mask_content
+          type: Paragraph
+          properties:
+            content: The mask CSS key applies a backdrop blur effect, and the content CSS key adds rounded corners to the drawer panel.
+
+- title: Theme Token Overrides
+  blocks:
+    - id: drawer_theme_green_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Green Theme
+        color: primary
+        variant: solid
+      events:
+        onClick:
+          - id: drawer_theme_green_open
+            type: CallMethod
+            params:
+              blockId: drawer_theme_green
+              method: setOpen
+              args:
+                open: true
+    - id: drawer_theme_green
       type: Drawer
       properties:
         title: Custom Theme Drawer
@@ -747,16 +789,17 @@
           colorBgElevated: '#f6ffed'
           colorBgMask: 'rgba(0, 100, 0, 0.15)'
       blocks:
-        - id: drawer_theme_content
+        - id: drawer_theme_green_content
           type: Paragraph
           properties:
-            content: This drawer overrides design tokens via the theme property. The background uses a green tint and the mask has a subtle green overlay.
+            content: Overrides colorBgElevated for a green-tinted background and colorBgMask for a subtle green mask overlay.
+
     - id: drawer_theme_dark_btn
       type: Button
       layout:
         flex: 0 0 auto
       properties:
-        title: Open Dark Themed Drawer
+        title: Dark Theme
         color: default
         variant: solid
       events:
@@ -785,3 +828,361 @@
           class: text-gray-300
           properties:
             content: A dark-themed drawer using design token overrides for background, text, and icon colors.
+
+    - id: drawer_theme_spacing_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Custom Spacing
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: drawer_theme_spacing_open
+            type: CallMethod
+            params:
+              blockId: drawer_theme_spacing
+              method: setOpen
+              args:
+                open: true
+    - id: drawer_theme_spacing
+      type: Drawer
+      properties:
+        title: Custom Footer Padding
+        theme:
+          footerPaddingBlock: 16
+          footerPaddingInline: 24
+          zIndexPopup: 1500
+      blocks:
+        - id: drawer_theme_spacing_content
+          type: Paragraph
+          properties:
+            content: Overrides footerPaddingBlock, footerPaddingInline, and zIndexPopup design tokens. These control footer spacing and the popup layer z-index.
+
+- title: Drawer as Edit Form
+  blocks:
+    - id: drawer_edit_form_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Edit Record
+        color: primary
+        variant: solid
+        icon: AiOutlineEdit
+      events:
+        onClick:
+          - id: drawer_edit_form_open
+            type: CallMethod
+            params:
+              blockId: drawer_edit_form
+              method: setOpen
+              args:
+                open: true
+    - id: drawer_edit_form
+      type: Drawer
+      properties:
+        title: Edit Customer
+        width: 480
+      slots:
+        extra:
+          blocks:
+            - id: drawer_edit_form_extra_row
+              type: Box
+              layout:
+                gap: 8
+              blocks:
+                - id: drawer_edit_form_cancel_btn
+                  type: Button
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Cancel
+                    color: default
+                    variant: outlined
+                    size: small
+                  events:
+                    onClick:
+                      - id: drawer_edit_form_cancel
+                        type: CallMethod
+                        params:
+                          blockId: drawer_edit_form
+                          method: setOpen
+                          args:
+                            open: false
+                - id: drawer_edit_form_save_btn
+                  type: Button
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Save Changes
+                    color: primary
+                    variant: solid
+                    size: small
+                  events:
+                    onClick:
+                      - id: drawer_edit_form_save_msg
+                        type: DisplayMessage
+                        params:
+                          content: Changes saved successfully
+                          status: success
+                          duration: 3
+                      - id: drawer_edit_form_close
+                        type: CallMethod
+                        params:
+                          blockId: drawer_edit_form
+                          method: setOpen
+                          args:
+                            open: false
+      blocks:
+        - id: drawer_edit_form_name
+          type: TextInput
+          properties:
+            title: Full Name
+            placeholder: Enter customer name
+        - id: drawer_edit_form_email
+          type: TextInput
+          properties:
+            title: Email Address
+            placeholder: customer@example.com
+        - id: drawer_edit_form_phone
+          type: TextInput
+          properties:
+            title: Phone Number
+            placeholder: +1 (555) 000-0000
+        - id: drawer_edit_form_status
+          type: Selector
+          properties:
+            title: Status
+            options:
+              - label: Active
+                value: active
+              - label: Inactive
+                value: inactive
+              - label: Pending
+                value: pending
+        - id: drawer_edit_form_notes
+          type: TextArea
+          properties:
+            title: Notes
+            placeholder: Additional notes about this customer...
+            autoSize:
+              minRows: 3
+
+- title: Drawer as Filter Panel
+  blocks:
+    - id: drawer_filter_panel_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Filters
+        color: default
+        variant: outlined
+        icon: AiOutlineFilter
+      events:
+        onClick:
+          - id: drawer_filter_panel_open
+            type: CallMethod
+            params:
+              blockId: drawer_filter_panel
+              method: setOpen
+              args:
+                open: true
+    - id: drawer_filter_panel
+      type: Drawer
+      properties:
+        title: Filter Results
+        placement: left
+        width: 320
+      events:
+        onClose:
+          - id: drawer_filter_panel_close_msg
+            type: DisplayMessage
+            params:
+              content: Filters applied
+              status: info
+              duration: 2
+      slots:
+        extra:
+          blocks:
+            - id: drawer_filter_panel_clear_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Clear All
+                color: danger
+                variant: link
+                size: small
+              events:
+                onClick:
+                  - id: drawer_filter_panel_clear_msg
+                    type: DisplayMessage
+                    params:
+                      content: All filters cleared
+                      status: warning
+                      duration: 2
+      blocks:
+        - id: drawer_filter_panel_category
+          type: MultipleSelector
+          properties:
+            title: Category
+            options:
+              - label: Electronics
+                value: electronics
+              - label: Clothing
+                value: clothing
+              - label: Books
+                value: books
+              - label: Home & Garden
+                value: home
+        - id: drawer_filter_panel_price
+          type: Slider
+          properties:
+            title: Price Range
+            min: 0
+            max: 500
+            step: 10
+        - id: drawer_filter_panel_rating
+          type: ButtonSelector
+          properties:
+            title: Minimum Rating
+            options:
+              - label: Any
+                value: 0
+              - label: 3+
+                value: 3
+              - label: 4+
+                value: 4
+              - label: 5
+                value: 5
+        - id: drawer_filter_panel_in_stock
+          type: Switch
+          properties:
+            title: In Stock Only
+        - id: drawer_filter_panel_apply_btn
+          type: Button
+          properties:
+            title: Apply Filters
+            color: primary
+            variant: solid
+            block: true
+          events:
+            onClick:
+              - id: drawer_filter_panel_apply_msg
+                type: DisplayMessage
+                params:
+                  content: Filters applied to results
+                  status: success
+                  duration: 2
+              - id: drawer_filter_panel_apply_close
+                type: CallMethod
+                params:
+                  blockId: drawer_filter_panel
+                  method: setOpen
+                  args:
+                    open: false
+
+- title: Drawer as User Profile Panel
+  blocks:
+    - id: drawer_profile_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: View Profile
+        color: primary
+        variant: solid
+        icon: AiOutlineUser
+      events:
+        onClick:
+          - id: drawer_profile_open
+            type: CallMethod
+            params:
+              blockId: drawer_profile
+              method: setOpen
+              args:
+                open: true
+    - id: drawer_profile
+      type: Drawer
+      properties:
+        title: User Profile
+        width: 400
+      blocks:
+        - id: drawer_profile_avatar_row
+          type: Box
+          layout:
+            gap: 16
+            align: center
+          blocks:
+            - id: drawer_profile_avatar
+              type: Avatar
+              layout:
+                flex: 0 0 auto
+              properties:
+                icon: AiOutlineUser
+                size: 64
+                color: '#fff'
+                backgroundColor: '#1677ff'
+            - id: drawer_profile_info
+              type: Box
+              layout:
+                flex: 1 1 0
+                direction: column
+                gap: 4
+              blocks:
+                - id: drawer_profile_name
+                  type: Title
+                  properties:
+                    content: Jane Cooper
+                    level: 4
+                - id: drawer_profile_role_tag
+                  type: Tag
+                  properties:
+                    title: Senior Product Designer
+                    color: blue
+        - id: drawer_profile_divider
+          type: Divider
+        - id: drawer_profile_details
+          type: Descriptions
+          properties:
+            size: small
+            column: 1
+            items:
+              - label: Email
+                value: jane.cooper@example.com
+              - label: Phone
+                value: +1 (555) 123-4567
+              - label: Location
+                value: San Francisco, CA
+              - label: Department
+                value: Design
+              - label: Start Date
+                value: January 15, 2023
+        - id: drawer_profile_divider2
+          type: Divider
+        - id: drawer_profile_actions_row
+          type: Box
+          layout:
+            gap: 8
+          blocks:
+            - id: drawer_profile_edit_btn
+              type: Button
+              layout:
+                flex: 1 1 0
+              properties:
+                title: Edit Profile
+                color: primary
+                variant: outlined
+                icon: AiOutlineEdit
+            - id: drawer_profile_message_btn
+              type: Button
+              layout:
+                flex: 1 1 0
+              properties:
+                title: Send Message
+                color: primary
+                variant: solid
+                icon: AiOutlineMail

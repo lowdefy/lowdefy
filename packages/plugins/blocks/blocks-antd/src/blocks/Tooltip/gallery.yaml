@@ -376,7 +376,7 @@
             title: blue
             color: blue
           blocks:
-            - id: tooltip_color_blue_btn
+            - id: tooltip_color_blue_tag
               type: Tag
               properties:
                 title: blue
@@ -389,7 +389,7 @@
             title: purple
             color: purple
           blocks:
-            - id: tooltip_color_purple_btn
+            - id: tooltip_color_purple_tag
               type: Tag
               properties:
                 title: purple
@@ -402,7 +402,7 @@
             title: cyan
             color: cyan
           blocks:
-            - id: tooltip_color_cyan_btn
+            - id: tooltip_color_cyan_tag
               type: Tag
               properties:
                 title: cyan
@@ -415,24 +415,11 @@
             title: green
             color: green
           blocks:
-            - id: tooltip_color_green_btn
+            - id: tooltip_color_green_tag
               type: Tag
               properties:
                 title: green
                 color: green
-        - id: tooltip_color_magenta
-          type: Tooltip
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: magenta
-            color: magenta
-          blocks:
-            - id: tooltip_color_magenta_btn
-              type: Tag
-              properties:
-                title: magenta
-                color: magenta
         - id: tooltip_color_red
           type: Tooltip
           layout:
@@ -441,76 +428,11 @@
             title: red
             color: red
           blocks:
-            - id: tooltip_color_red_btn
+            - id: tooltip_color_red_tag
               type: Tag
               properties:
                 title: red
                 color: red
-        - id: tooltip_color_orange
-          type: Tooltip
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: orange
-            color: orange
-          blocks:
-            - id: tooltip_color_orange_btn
-              type: Tag
-              properties:
-                title: orange
-                color: orange
-        - id: tooltip_color_volcano
-          type: Tooltip
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: volcano
-            color: volcano
-          blocks:
-            - id: tooltip_color_volcano_btn
-              type: Tag
-              properties:
-                title: volcano
-                color: volcano
-        - id: tooltip_color_geekblue
-          type: Tooltip
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: geekblue
-            color: geekblue
-          blocks:
-            - id: tooltip_color_geekblue_btn
-              type: Tag
-              properties:
-                title: geekblue
-                color: geekblue
-        - id: tooltip_color_lime
-          type: Tooltip
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: lime
-            color: lime
-          blocks:
-            - id: tooltip_color_lime_btn
-              type: Tag
-              properties:
-                title: lime
-                color: lime
-        - id: tooltip_color_gold
-          type: Tooltip
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: gold
-            color: gold
-          blocks:
-            - id: tooltip_color_gold_btn
-              type: Tag
-              properties:
-                title: gold
-                color: gold
 
     - id: tooltip_color_custom_row
       type: Box
@@ -525,7 +447,7 @@
             title: 'Custom color: #ff6b6b'
             color: '#ff6b6b'
           blocks:
-            - id: tooltip_color_hex1_btn
+            - id: tooltip_color_hex1_tag
               type: Tag
               properties:
                 title: '#ff6b6b'
@@ -537,7 +459,7 @@
             title: 'Custom color: #20c997'
             color: '#20c997'
           blocks:
-            - id: tooltip_color_hex2_btn
+            - id: tooltip_color_hex2_tag
               type: Tag
               properties:
                 title: '#20c997'
@@ -549,7 +471,7 @@
             title: 'Custom color: #4c6ef5'
             color: '#4c6ef5'
           blocks:
-            - id: tooltip_color_hex3_btn
+            - id: tooltip_color_hex3_tag
               type: Tag
               properties:
                 title: '#4c6ef5'
@@ -680,7 +602,7 @@
             color: primary
             variant: dashed
 
-- title: Default Open
+- title: Default Open and Destroy on Hide
   blocks:
     - id: tooltip_default_open
       type: Tooltip
@@ -698,6 +620,41 @@
           properties:
             title: Visible by default
             color: green
+            variant: solid
+    - id: tooltip_destroy_on_hide
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: This tooltip DOM is destroyed when hidden
+        destroyTooltipOnHide: true
+      blocks:
+        - id: tooltip_destroy_on_hide_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Destroy on hide
+            color: default
+            variant: outlined
+
+- title: Z-Index
+  blocks:
+    - id: tooltip_zindex_high
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: High z-index tooltip (2000)
+        zIndex: 2000
+      blocks:
+        - id: tooltip_zindex_high_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: zIndex 2000
+            color: primary
             variant: solid
 
 - title: On Various Elements
@@ -743,34 +700,76 @@
             color: danger
             variant: text
 
-- title: Style Overrides
+- title: onOpenChange Event
   blocks:
-    - id: tooltip_style_override
+    - id: tooltip_event_open_change
       type: Tooltip
       layout:
         flex: 0 0 auto
       properties:
-        title: Styled tooltip
-      style:
-        --inner:
-          backgroundColor: '#1a1a2e'
-          color: '#e94560'
-          borderRadius: 12
-          padding: '12px 20px'
-          fontSize: 16
+        title: This tooltip fires an event on open/close
+      events:
+        onOpenChange:
+          - id: tooltip_event_display_message
+            type: DisplayMessage
+            params:
+              content: Tooltip visibility changed!
+              duration: 2
       blocks:
-        - id: tooltip_style_override_btn
+        - id: tooltip_event_open_change_btn
           type: Button
           layout:
             flex: 0 0 auto
           properties:
-            title: Custom styled
+            title: Hover to trigger event
+            color: primary
+            variant: solid
+    - id: tooltip_event_set_state
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Tracks tooltip state
+        trigger: click
+      events:
+        onOpenChange:
+          - id: tooltip_event_set_state_action
+            type: SetState
+            params:
+              tooltip_was_toggled: true
+      blocks:
+        - id: tooltip_event_set_state_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Click to toggle and set state
+            color: primary
+            variant: outlined
+
+- title: Overlay Style
+  blocks:
+    - id: tooltip_overlay_style
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Tooltip with custom overlay style
+        overlayStyle:
+          boxShadow: 0 4px 12px rgba(0, 0, 0, 0.3)
+      blocks:
+        - id: tooltip_overlay_style_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Custom overlay shadow
             color: primary
             variant: solid
 
 - title: Theme Token Overrides
   blocks:
-    - id: tooltip_theme_large
+    - id: tooltip_theme_large_radius
       type: Tooltip
       layout:
         flex: 0 0 auto
@@ -779,7 +778,7 @@
         theme:
           borderRadius: 16
       blocks:
-        - id: tooltip_theme_large_btn
+        - id: tooltip_theme_large_radius_btn
           type: Button
           layout:
             flex: 0 0 auto
@@ -792,7 +791,7 @@
       layout:
         flex: 0 0 auto
       properties:
-        title: Custom background
+        title: Custom background and text color
         theme:
           colorBgSpotlight: '#2d3436'
           colorTextLightSolid: '#74b9ff'
@@ -802,7 +801,7 @@
           layout:
             flex: 0 0 auto
           properties:
-            title: Custom theme
+            title: Custom colors
             color: primary
             variant: outlined
     - id: tooltip_theme_font
@@ -810,9 +809,10 @@
       layout:
         flex: 0 0 auto
       properties:
-        title: Larger font size tooltip
+        title: Larger font size and line height
         theme:
           fontSize: 18
+          lineHeight: 2
       blocks:
         - id: tooltip_theme_font_btn
           type: Button
@@ -822,3 +822,393 @@
             title: Large font
             color: primary
             variant: dashed
+    - id: tooltip_theme_wide
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: This tooltip has a wider max width so longer text can display on a single line without wrapping.
+        theme:
+          maxWidth: 500
+      blocks:
+        - id: tooltip_theme_wide_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Wide tooltip (500px)
+            color: default
+            variant: outlined
+    - id: tooltip_theme_compact
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Compact tooltip
+        theme:
+          paddingXS: 4
+          controlHeight: 24
+          fontSize: 12
+      blocks:
+        - id: tooltip_theme_compact_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Compact theme
+            color: default
+            variant: dashed
+    - id: tooltip_theme_zindex
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Custom z-index via theme
+        theme:
+          zIndexPopup: 2000
+      blocks:
+        - id: tooltip_theme_zindex_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Theme z-index
+            color: default
+            variant: outlined
+
+- title: Style and CSS Classes
+  blocks:
+    - id: tooltip_style_element
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Styled with element CSS key
+      style:
+        --element:
+          cursor: help
+      blocks:
+        - id: tooltip_style_element_p
+          type: Paragraph
+          properties:
+            content: Hover me (help cursor via element style)
+    - id: tooltip_style_inner
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Custom inner styling
+      style:
+        --inner:
+          backgroundColor: '#1a1a2e'
+          color: '#e94560'
+          borderRadius: 12
+          padding: '12px 20px'
+          fontSize: 16
+      blocks:
+        - id: tooltip_style_inner_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Custom inner style
+            color: primary
+            variant: solid
+    - id: tooltip_class_element
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Tailwind on element wrapper
+      class:
+        element: cursor-help
+      blocks:
+        - id: tooltip_class_element_text
+          type: Paragraph
+          properties:
+            content: Hover me (Tailwind element class)
+    - id: tooltip_class_inner
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Tailwind on inner popup
+      class:
+        inner: text-lg font-bold
+      blocks:
+        - id: tooltip_class_inner_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Tailwind inner class
+            color: primary
+            variant: outlined
+
+- title: Tooltip in Data Table Header
+  blocks:
+    - id: tooltip_table_header_card
+      type: Card
+      properties:
+        title: Monthly Sales Report
+        size: small
+      blocks:
+        - id: tooltip_table_header_row
+          type: Box
+          layout:
+            gap: 0
+            direction: column
+          blocks:
+            - id: tooltip_table_header_labels
+              type: Box
+              class: bg-gray-50 px-4 py-2 border-b border-gray-200
+              layout:
+                gap: 0
+              blocks:
+                - id: tooltip_table_hdr_product
+                  type: Tooltip
+                  layout:
+                    flex: 2 1 0
+                  properties:
+                    title: The product name as listed in the inventory system
+                    placement: top
+                  blocks:
+                    - id: tooltip_table_hdr_product_text
+                      type: Paragraph
+                      class: font-semibold text-gray-600 text-sm m-0
+                      properties:
+                        content: Product
+                - id: tooltip_table_hdr_revenue
+                  type: Tooltip
+                  layout:
+                    flex: 1 1 0
+                  properties:
+                    title: Total revenue after discounts and returns
+                    placement: top
+                  blocks:
+                    - id: tooltip_table_hdr_revenue_text
+                      type: Paragraph
+                      class: font-semibold text-gray-600 text-sm m-0
+                      properties:
+                        content: Revenue
+                - id: tooltip_table_hdr_units
+                  type: Tooltip
+                  layout:
+                    flex: 1 1 0
+                  properties:
+                    title: Number of individual units sold this month
+                    placement: top
+                  blocks:
+                    - id: tooltip_table_hdr_units_text
+                      type: Paragraph
+                      class: font-semibold text-gray-600 text-sm m-0
+                      properties:
+                        content: Units Sold
+            - id: tooltip_table_row_1
+              type: Box
+              class: px-4 py-2 border-b border-gray-100
+              layout:
+                gap: 0
+              blocks:
+                - id: tooltip_table_row_1_product
+                  type: Paragraph
+                  layout:
+                    flex: 2 1 0
+                  class: text-sm m-0
+                  properties:
+                    content: Widget Pro
+                - id: tooltip_table_row_1_revenue
+                  type: Paragraph
+                  layout:
+                    flex: 1 1 0
+                  class: text-sm m-0
+                  properties:
+                    content: $12,450
+                - id: tooltip_table_row_1_units
+                  type: Paragraph
+                  layout:
+                    flex: 1 1 0
+                  class: text-sm m-0
+                  properties:
+                    content: '342'
+            - id: tooltip_table_row_2
+              type: Box
+              class: px-4 py-2
+              layout:
+                gap: 0
+              blocks:
+                - id: tooltip_table_row_2_product
+                  type: Paragraph
+                  layout:
+                    flex: 2 1 0
+                  class: text-sm m-0
+                  properties:
+                    content: Gadget X
+                - id: tooltip_table_row_2_revenue
+                  type: Paragraph
+                  layout:
+                    flex: 1 1 0
+                  class: text-sm m-0
+                  properties:
+                    content: $8,230
+                - id: tooltip_table_row_2_units
+                  type: Paragraph
+                  layout:
+                    flex: 1 1 0
+                  class: text-sm m-0
+                  properties:
+                    content: '189'
+
+- title: Tooltip on Form Labels
+  blocks:
+    - id: tooltip_form_card
+      type: Card
+      properties:
+        title: User Profile Settings
+      blocks:
+        - id: tooltip_form_username
+          type: TextInput
+          properties:
+            label:
+              title: Username
+              extra:
+                - id: tooltip_form_username_help
+                  type: Tooltip
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Your unique username. Must be 3-20 characters, letters and numbers only.
+                    placement: right
+                  blocks:
+                    - id: tooltip_form_username_icon
+                      type: Icon
+                      layout:
+                        flex: 0 0 auto
+                      properties:
+                        name: AiOutlineQuestionCircle
+                        size: 14
+                        color: '#8c8c8c'
+            placeholder: Enter your username
+        - id: tooltip_form_email
+          type: TextInput
+          properties:
+            label:
+              title: Email Address
+              extra:
+                - id: tooltip_form_email_help
+                  type: Tooltip
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: We will send account notifications to this address. You can change it at any time.
+                    placement: right
+                  blocks:
+                    - id: tooltip_form_email_icon
+                      type: Icon
+                      layout:
+                        flex: 0 0 auto
+                      properties:
+                        name: AiOutlineQuestionCircle
+                        size: 14
+                        color: '#8c8c8c'
+            placeholder: Enter your email
+
+- title: Tooltip on Dashboard Metrics
+  blocks:
+    - id: tooltip_dashboard_row
+      type: Box
+      layout:
+        gap: 16
+      blocks:
+        - id: tooltip_dashboard_users_card
+          type: Card
+          layout:
+            flex: 1 1 0
+          properties:
+            size: small
+          blocks:
+            - id: tooltip_dashboard_users_header
+              type: Box
+              layout:
+                gap: 8
+                align: center
+              blocks:
+                - id: tooltip_dashboard_users_title
+                  type: Paragraph
+                  layout:
+                    flex: 1 1 0
+                  class: text-gray-500 text-sm m-0
+                  properties:
+                    content: Active Users
+                - id: tooltip_dashboard_users_info
+                  type: Tooltip
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Users who have logged in at least once in the last 30 days
+                    placement: top
+                  blocks:
+                    - id: tooltip_dashboard_users_info_icon
+                      type: Icon
+                      layout:
+                        flex: 0 0 auto
+                      properties:
+                        name: AiOutlineInfoCircle
+                        size: 14
+                        color: '#8c8c8c'
+            - id: tooltip_dashboard_users_stat
+              type: Statistic
+              properties:
+                value: 2847
+            - id: tooltip_dashboard_users_tag
+              type: Tag
+              properties:
+                title: +12.3%
+                color: success
+
+        - id: tooltip_dashboard_revenue_card
+          type: Card
+          layout:
+            flex: 1 1 0
+          properties:
+            size: small
+          blocks:
+            - id: tooltip_dashboard_revenue_header
+              type: Box
+              layout:
+                gap: 8
+                align: center
+              blocks:
+                - id: tooltip_dashboard_revenue_title
+                  type: Paragraph
+                  layout:
+                    flex: 1 1 0
+                  class: text-gray-500 text-sm m-0
+                  properties:
+                    content: Monthly Revenue
+                - id: tooltip_dashboard_revenue_info
+                  type: Tooltip
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Gross revenue before taxes and refunds for the current billing period
+                    placement: top
+                  blocks:
+                    - id: tooltip_dashboard_revenue_info_icon
+                      type: Icon
+                      layout:
+                        flex: 0 0 auto
+                      properties:
+                        name: AiOutlineInfoCircle
+                        size: 14
+                        color: '#8c8c8c'
+            - id: tooltip_dashboard_revenue_stat
+              type: Statistic
+              properties:
+                value: 64250
+                prefix: $
+            - id: tooltip_dashboard_revenue_tag
+              type: Tag
+              properties:
+                title: +8.7%
+                color: success

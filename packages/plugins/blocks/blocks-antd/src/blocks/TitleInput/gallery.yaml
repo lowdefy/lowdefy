@@ -246,33 +246,6 @@
             type: SetState
             params:
               combined_underline_mark: Underlined and Marked
-    - id: combined_italic_underline_mark
-      type: TitleInput
-      properties:
-        level: 3
-        italic: true
-        underline: true
-        mark: true
-        editable: true
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              combined_italic_underline_mark: Italic, Underlined, and Marked
-    - id: combined_code_delete
-      type: TitleInput
-      properties:
-        level: 3
-        code: true
-        delete: true
-        editable: true
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              combined_code_delete: Code and Strikethrough
     - id: combined_all_styles
       type: TitleInput
       properties:
@@ -338,18 +311,6 @@
             type: SetState
             params:
               color_coral: Coral Title
-    - id: color_orange
-      type: TitleInput
-      properties:
-        level: 3
-        color: '#fa8c16'
-        editable: true
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              color_orange: Orange Title
     - id: color_teal
       type: TitleInput
       properties:
@@ -481,19 +442,6 @@
             type: SetState
             params:
               editable_editing_state: Starts in editing mode
-    - id: editable_max_length_short
-      type: TitleInput
-      properties:
-        level: 3
-        editable:
-          maxLength: 20
-          tooltip: Only 20 characters
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              editable_max_length_short: Short limit (20 chars)
 - title: Ellipsis
   blocks:
     - id: ellipsis_boolean
@@ -681,54 +629,6 @@
             type: SetState
             params:
               level_1_secondary: Level 1 Secondary
-    - id: level_1_success
-      type: TitleInput
-      properties:
-        level: 1
-        type: success
-        editable: true
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              level_1_success: Level 1 Success
-    - id: level_1_warning
-      type: TitleInput
-      properties:
-        level: 1
-        type: warning
-        editable: true
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              level_1_warning: Level 1 Warning
-    - id: level_1_danger
-      type: TitleInput
-      properties:
-        level: 1
-        type: danger
-        editable: true
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              level_1_danger: Level 1 Danger
-    - id: level_2_secondary
-      type: TitleInput
-      properties:
-        level: 2
-        type: secondary
-        editable: true
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              level_2_secondary: Level 2 Secondary
     - id: level_2_success
       type: TitleInput
       properties:
@@ -741,54 +641,6 @@
             type: SetState
             params:
               level_2_success: Level 2 Success
-    - id: level_2_warning
-      type: TitleInput
-      properties:
-        level: 2
-        type: warning
-        editable: true
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              level_2_warning: Level 2 Warning
-    - id: level_2_danger
-      type: TitleInput
-      properties:
-        level: 2
-        type: danger
-        editable: true
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              level_2_danger: Level 2 Danger
-    - id: level_3_secondary
-      type: TitleInput
-      properties:
-        level: 3
-        type: secondary
-        editable: true
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              level_3_secondary: Level 3 Secondary
-    - id: level_3_success
-      type: TitleInput
-      properties:
-        level: 3
-        type: success
-        editable: true
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              level_3_success: Level 3 Success
     - id: level_3_warning
       type: TitleInput
       properties:
@@ -801,54 +653,6 @@
             type: SetState
             params:
               level_3_warning: Level 3 Warning
-    - id: level_3_danger
-      type: TitleInput
-      properties:
-        level: 3
-        type: danger
-        editable: true
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              level_3_danger: Level 3 Danger
-    - id: level_4_secondary
-      type: TitleInput
-      properties:
-        level: 4
-        type: secondary
-        editable: true
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              level_4_secondary: Level 4 Secondary
-    - id: level_4_success
-      type: TitleInput
-      properties:
-        level: 4
-        type: success
-        editable: true
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              level_4_success: Level 4 Success
-    - id: level_4_warning
-      type: TitleInput
-      properties:
-        level: 4
-        type: warning
-        editable: true
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              level_4_warning: Level 4 Warning
     - id: level_4_danger
       type: TitleInput
       properties:
@@ -861,18 +665,6 @@
             type: SetState
             params:
               level_4_danger: Level 4 Danger
-    - id: level_5_secondary
-      type: TitleInput
-      properties:
-        level: 5
-        type: secondary
-        editable: true
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              level_5_secondary: Level 5 Secondary
     - id: level_5_success
       type: TitleInput
       properties:
@@ -885,30 +677,6 @@
             type: SetState
             params:
               level_5_success: Level 5 Success
-    - id: level_5_warning
-      type: TitleInput
-      properties:
-        level: 5
-        type: warning
-        editable: true
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              level_5_warning: Level 5 Warning
-    - id: level_5_danger
-      type: TitleInput
-      properties:
-        level: 5
-        type: danger
-        editable: true
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              level_5_danger: Level 5 Danger
 - title: Theme Token Overrides
   blocks:
     - id: theme_color_text
@@ -950,48 +718,6 @@
             type: SetState
             params:
               theme_font_weight_strong: Custom Font Weight
-    - id: theme_color_success
-      type: TitleInput
-      properties:
-        level: 3
-        type: success
-        editable: true
-        theme:
-          colorSuccess: '#389e0d'
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              theme_color_success: Custom Success Color
-    - id: theme_color_warning
-      type: TitleInput
-      properties:
-        level: 3
-        type: warning
-        editable: true
-        theme:
-          colorWarning: '#d48806'
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              theme_color_warning: Custom Warning Color
-    - id: theme_color_error
-      type: TitleInput
-      properties:
-        level: 3
-        type: danger
-        editable: true
-        theme:
-          colorError: '#cf1322'
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              theme_color_error: Custom Danger/Error Color
     - id: theme_font_size_heading3
       type: TitleInput
       properties:
@@ -1005,84 +731,6 @@
             type: SetState
             params:
               theme_font_size_heading3: Large Font Size for h3
-    - id: theme_font_size_heading4
-      type: TitleInput
-      properties:
-        level: 4
-        editable: true
-        theme:
-          fontSizeHeading4: 28
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              theme_font_size_heading4: Large Font Size for h4
-    - id: theme_line_height
-      type: TitleInput
-      properties:
-        level: 3
-        editable: true
-        theme:
-          lineHeightHeading3: 1.8
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              theme_line_height: Custom Line Height
-    - id: theme_title_margin_top
-      type: TitleInput
-      properties:
-        level: 3
-        editable: true
-        theme:
-          titleMarginTop: 2em
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              theme_title_margin_top: Custom Title Margin Top
-    - id: theme_title_margin_bottom
-      type: TitleInput
-      properties:
-        level: 3
-        editable: true
-        theme:
-          titleMarginBottom: 1em
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              theme_title_margin_bottom: Custom Title Margin Bottom
-    - id: theme_font_size_small
-      type: TitleInput
-      properties:
-        level: 5
-        editable: true
-        theme:
-          fontSizeHeading5: 12
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              theme_font_size_small: Smaller Font Size for h5
-    - id: theme_font_size_large
-      type: TitleInput
-      properties:
-        level: 1
-        editable: true
-        theme:
-          fontSizeHeading1: 48
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              theme_font_size_large: Larger Font Size for h1
     - id: theme_multiple_tokens
       type: TitleInput
       properties:
@@ -1128,20 +776,6 @@
             type: SetState
             params:
               combined_type_styles_copyable: Success Type with Italic and Copyable
-    - id: combined_warning_underline_mark
-      type: TitleInput
-      properties:
-        level: 3
-        type: warning
-        underline: true
-        mark: true
-        editable: true
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              combined_warning_underline_mark: Warning with Underline and Mark
     - id: combined_color_styles_editable
       type: TitleInput
       properties:
@@ -1176,55 +810,6 @@
             type: SetState
             params:
               combined_ellipsis_copyable_editable: This is a very long title that combines ellipsis truncation with both copyable and editable features to demonstrate how multiple features work together in a single component.
-    - id: combined_danger_italic_underline_copyable
-      type: TitleInput
-      properties:
-        level: 2
-        type: danger
-        italic: true
-        underline: true
-        copyable:
-          text: Copied danger title text
-        editable: true
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              combined_danger_italic_underline_copyable: Danger Italic Underline Copyable
-    - id: combined_secondary_code_mark
-      type: TitleInput
-      properties:
-        level: 4
-        type: secondary
-        code: true
-        mark: true
-        editable: true
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              combined_secondary_code_mark: Secondary Code and Mark
-    - id: combined_theme_styles_editable
-      type: TitleInput
-      properties:
-        level: 3
-        italic: true
-        underline: true
-        editable:
-          tooltip: Edit this themed title
-          maxLength: 80
-        theme:
-          colorText: '#08979c'
-          fontFamily: Georgia, serif
-          fontWeightStrong: 800
-      events:
-        onMount:
-          - id: set_default
-            type: SetState
-            params:
-              combined_theme_styles_editable: Themed Title with Styles
     - id: combined_full_featured
       type: TitleInput
       properties:
@@ -1248,41 +833,174 @@
             type: SetState
             params:
               combined_full_featured: Full-Featured Title Input
-    - id: combined_level_5_all_decorations
+- title: Style and Class Overrides
+  blocks:
+    - id: style_override_inline
       type: TitleInput
       properties:
-        level: 5
-        italic: true
-        underline: true
-        mark: true
-        code: true
-        copyable: true
+        level: 3
         editable: true
+      style:
+        background: linear-gradient(90deg, #f0f5ff, #fff)
+        padding: 8px 16px
+        borderLeft: 4px solid #1677ff
       events:
         onMount:
           - id: set_default
             type: SetState
             params:
-              combined_level_5_all_decorations: Level 5 with All Decorations
-    - id: combined_level_1_themed_editable
+              style_override_inline: Inline Styled Title
+    - id: style_override_tailwind
       type: TitleInput
       properties:
-        level: 1
-        color: '#1d39c4'
-        editable:
-          tooltip: Edit this grand heading
-          maxLength: 60
-        copyable:
-          tooltips:
-            - Copy heading
-            - Heading copied!
-        theme:
-          fontSizeHeading1: 44
-          fontWeightStrong: 900
-          lineHeightHeading1: 1.3
+        level: 3
+        editable: true
+      style:
+        className: rounded-lg bg-gray-50 p-3 shadow-sm
       events:
         onMount:
           - id: set_default
             type: SetState
             params:
-              combined_level_1_themed_editable: Grand Themed Heading
+              style_override_tailwind: Tailwind Styled Title
+    - id: style_override_combined
+      type: TitleInput
+      properties:
+        level: 2
+        type: success
+        editable: true
+      style:
+        border: 1px dashed #52c41a
+        borderRadius: 8px
+        padding: 12px 20px
+        className: shadow-md
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              style_override_combined: Combined Inline and Tailwind Styles
+
+- title: TitleInput in Document Editor
+  blocks:
+    - id: applied2_doc_editor_card
+      type: Card
+      properties:
+        title: Document Editor
+      blocks:
+        - id: applied2_doc_title
+          type: TitleInput
+          properties:
+            level: 2
+            editable:
+              tooltip: Click to rename this document
+              maxLength: 80
+            copyable: true
+          events:
+            onMount:
+              - id: set_doc_title_default
+                type: SetState
+                params:
+                  applied2_doc_title: Untitled Document
+        - id: applied2_doc_status
+          type: Selector
+          properties:
+            title: Status
+            placeholder: Select document status...
+            options:
+              - label: Draft
+                value: draft
+              - label: In Review
+                value: review
+              - label: Approved
+                value: approved
+              - label: Published
+                value: published
+        - id: applied2_doc_category
+          type: Selector
+          properties:
+            title: Category
+            placeholder: Select category...
+            options:
+              - label: Technical Specification
+                value: tech_spec
+              - label: User Guide
+                value: user_guide
+              - label: Release Notes
+                value: release_notes
+              - label: Internal Memo
+                value: memo
+        - id: applied2_doc_save_btn
+          type: Button
+          properties:
+            title: Save Document
+            icon: AiOutlineSave
+            type: primary
+            size: large
+            block: true
+          events:
+            onClick:
+              - id: save_doc_action
+                type: DisplayMessage
+                params:
+                  content: Document saved successfully.
+                  duration: 3
+
+- title: TitleInput in Blog Post Editor
+  blocks:
+    - id: applied3_blog_editor_card
+      type: Card
+      properties:
+        title: Blog Post Editor
+      blocks:
+        - id: applied3_post_title
+          type: TitleInput
+          properties:
+            level: 1
+            editable:
+              tooltip: Enter your blog post title
+              maxLength: 120
+            copyable: true
+          events:
+            onMount:
+              - id: set_post_title_default
+                type: SetState
+                params:
+                  applied3_post_title: Untitled Blog Post
+        - id: applied3_post_content
+          type: TextArea
+          properties:
+            title: Content
+            placeholder: Write your blog post content here...
+            autoSize:
+              minRows: 6
+              maxRows: 16
+        - id: applied3_post_category
+          type: Selector
+          properties:
+            title: Category
+            placeholder: Select a category...
+            options:
+              - label: Technology
+                value: technology
+              - label: Design
+                value: design
+              - label: Business
+                value: business
+              - label: Lifestyle
+                value: lifestyle
+        - id: applied3_publish_btn
+          type: Button
+          properties:
+            title: Publish Post
+            icon: AiOutlineSend
+            type: primary
+            size: large
+            block: true
+          events:
+            onClick:
+              - id: publish_post_action
+                type: DisplayMessage
+                params:
+                  content: Blog post published successfully.
+                  duration: 3

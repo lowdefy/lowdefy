@@ -15,7 +15,7 @@
 - title: Basic Footer
   fullWidth: true
   blocks:
-    - id: footer_basic
+    - id: footer_basic_layout
       type: Layout
       blocks:
         - id: footer_basic_content
@@ -42,7 +42,7 @@
 - title: Footer with Links
   fullWidth: true
   blocks:
-    - id: footer_links
+    - id: footer_links_layout
       type: Layout
       blocks:
         - id: footer_links_content
@@ -67,7 +67,7 @@
                 gap: 16
                 justify: center
               blocks:
-                - id: footer_link_privacy
+                - id: footer_links_privacy
                   type: Button
                   layout:
                     flex: 0 0 auto
@@ -75,7 +75,13 @@
                     title: Privacy Policy
                     color: default
                     variant: link
-                - id: footer_link_terms
+                  events:
+                    onClick:
+                      - id: footer_links_privacy_link
+                        type: Link
+                        params:
+                          url: /privacy
+                - id: footer_links_terms
                   type: Button
                   layout:
                     flex: 0 0 auto
@@ -83,7 +89,13 @@
                     title: Terms of Service
                     color: default
                     variant: link
-                - id: footer_link_contact
+                  events:
+                    onClick:
+                      - id: footer_links_terms_link
+                        type: Link
+                        params:
+                          url: /terms
+                - id: footer_links_contact
                   type: Button
                   layout:
                     flex: 0 0 auto
@@ -91,6 +103,12 @@
                     title: Contact Us
                     color: default
                     variant: link
+                  events:
+                    onClick:
+                      - id: footer_links_contact_link
+                        type: Link
+                        params:
+                          url: /contact
             - id: footer_links_copyright
               type: Paragraph
               properties:
@@ -99,10 +117,124 @@
                   marginTop: 8px
                   color: '#999'
 
-- title: Styled Footer
+- title: Theme Token Overrides
   fullWidth: true
   blocks:
-    - id: footer_styled
+    - id: footer_theme_layout
+      type: Layout
+      blocks:
+        - id: footer_theme_content
+          type: Content
+          style:
+            padding: 24px
+            background: '#fff'
+            minHeight: 80px
+          blocks:
+            - id: footer_theme_content_text
+              type: Paragraph
+              properties:
+                content: The theme property passes antd design token overrides scoped to this Footer instance.
+        - id: footer_theme_el
+          type: Footer
+          properties:
+            theme:
+              colorBgContainer: '#e6f4ff'
+              colorText: '#1677ff'
+              paddingInline: 48
+              paddingBlock: 24
+          style:
+            textAlign: center
+          blocks:
+            - id: footer_theme_text
+              type: Paragraph
+              properties:
+                content: Footer with custom theme tokens - blue background, adjusted padding.
+
+    - id: footer_theme_warm_layout
+      type: Layout
+      blocks:
+        - id: footer_theme_warm_content
+          type: Content
+          style:
+            padding: 24px
+            background: '#fff'
+            minHeight: 80px
+          blocks:
+            - id: footer_theme_warm_content_text
+              type: Paragraph
+              properties:
+                content: Theme tokens let you customize colors, spacing, and typography through the antd design system.
+        - id: footer_theme_warm_el
+          type: Footer
+          properties:
+            theme:
+              colorBgContainer: '#fff7e6'
+              colorText: '#d46b08'
+          style:
+            textAlign: center
+          blocks:
+            - id: footer_theme_warm_text
+              type: Paragraph
+              properties:
+                content: Warm-toned footer using colorBgContainer and colorText tokens.
+
+- title: Styled Footer (Tailwind CSS)
+  fullWidth: true
+  blocks:
+    - id: footer_tw_layout
+      type: Layout
+      blocks:
+        - id: footer_tw_content
+          type: Content
+          style:
+            padding: 24px
+            background: '#fff'
+            minHeight: 80px
+          blocks:
+            - id: footer_tw_content_text
+              type: Paragraph
+              properties:
+                content: Use the class property to apply Tailwind CSS classes to the Footer element via the element CSS key.
+        - id: footer_tw_el
+          type: Footer
+          class:
+            element: bg-slate-900 text-center
+          blocks:
+            - id: footer_tw_text
+              type: Paragraph
+              class: text-white
+              properties:
+                content: Dark footer styled with Tailwind classes on the element CSS key.
+
+    - id: footer_tw_accent_layout
+      type: Layout
+      blocks:
+        - id: footer_tw_accent_content
+          type: Content
+          style:
+            padding: 24px
+            background: '#fff'
+            minHeight: 80px
+          blocks:
+            - id: footer_tw_accent_content_text
+              type: Paragraph
+              properties:
+                content: Combine Tailwind border, background, and text utilities for accent styling.
+        - id: footer_tw_accent_el
+          type: Footer
+          class:
+            element: bg-green-50 border-t-4 border-t-green-500 text-center
+          blocks:
+            - id: footer_tw_accent_text
+              type: Paragraph
+              class: text-green-800
+              properties:
+                content: Footer with a green top accent border using Tailwind utility classes.
+
+- title: Footer with Inline Styles
+  fullWidth: true
+  blocks:
+    - id: footer_styled_layout
       type: Layout
       blocks:
         - id: footer_styled_content
@@ -115,7 +247,7 @@
             - id: footer_styled_content_text
               type: Paragraph
               properties:
-                content: The Footer block renders at the bottom of a Layout. It hides on print (hide-on-print class) and auto-centers its content with margin auto.
+                content: The style property applies inline CSS to the Footer. The block adds margin auto by default and hides on print via the hide-on-print class.
         - id: footer_styled_el
           type: Footer
           style:
@@ -126,7 +258,264 @@
             - id: footer_styled_text
               type: Paragraph
               properties:
-                content: Dark styled footer with custom background
+                content: Dark styled footer with custom background and padding
                 style:
                   color: white
                   margin: 0
+
+- title: Footer in Corporate Site
+  fullWidth: true
+  blocks:
+    - id: footer_corp_layout
+      type: Layout
+      blocks:
+        - id: footer_corp_content
+          type: Content
+          style:
+            padding: 24px
+            background: '#fff'
+            minHeight: 100px
+          blocks:
+            - id: footer_corp_content_text
+              type: Paragraph
+              properties:
+                content: Main website content goes here.
+        - id: footer_corp_el
+          type: Footer
+          class:
+            element: bg-gray-100
+          style:
+            padding: 40px 50px 24px
+          blocks:
+            - id: footer_corp_columns
+              type: Box
+              layout:
+                gap: 32
+                justify: space-between
+              blocks:
+                - id: footer_corp_col1
+                  type: Box
+                  layout:
+                    flex: 1 1 200px
+                    direction: column
+                    gap: 8
+                  blocks:
+                    - id: footer_corp_col1_title
+                      type: Title
+                      properties:
+                        content: Acme Corp
+                        level: 5
+                    - id: footer_corp_col1_desc
+                      type: Paragraph
+                      properties:
+                        content: Building better tools for modern teams since 2020.
+                        style:
+                          color: '#666'
+                - id: footer_corp_col2
+                  type: Box
+                  layout:
+                    flex: 0 0 auto
+                    direction: column
+                    gap: 4
+                  blocks:
+                    - id: footer_corp_col2_title
+                      type: Title
+                      properties:
+                        content: Product
+                        level: 5
+                    - id: footer_corp_col2_link1
+                      type: Button
+                      properties:
+                        title: Features
+                        color: default
+                        variant: link
+                        size: small
+                    - id: footer_corp_col2_link2
+                      type: Button
+                      properties:
+                        title: Pricing
+                        color: default
+                        variant: link
+                        size: small
+                    - id: footer_corp_col2_link3
+                      type: Button
+                      properties:
+                        title: Documentation
+                        color: default
+                        variant: link
+                        size: small
+                - id: footer_corp_col3
+                  type: Box
+                  layout:
+                    flex: 0 0 auto
+                    direction: column
+                    gap: 4
+                  blocks:
+                    - id: footer_corp_col3_title
+                      type: Title
+                      properties:
+                        content: Company
+                        level: 5
+                    - id: footer_corp_col3_link1
+                      type: Button
+                      properties:
+                        title: About
+                        color: default
+                        variant: link
+                        size: small
+                    - id: footer_corp_col3_link2
+                      type: Button
+                      properties:
+                        title: Careers
+                        color: default
+                        variant: link
+                        size: small
+                    - id: footer_corp_col3_link3
+                      type: Button
+                      properties:
+                        title: Contact
+                        color: default
+                        variant: link
+                        size: small
+            - id: footer_corp_divider
+              type: Divider
+            - id: footer_corp_bottom
+              type: Box
+              layout:
+                justify: space-between
+                align: center
+              blocks:
+                - id: footer_corp_copyright
+                  type: Paragraph
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    content: '© 2026 Acme Corp. All rights reserved.'
+                    style:
+                      color: '#999'
+                      margin: 0
+                - id: footer_corp_social
+                  type: Box
+                  layout:
+                    flex: 0 0 auto
+                    gap: 12
+                  blocks:
+                    - id: footer_corp_social_github
+                      type: Button
+                      layout:
+                        flex: 0 0 auto
+                      properties:
+                        icon: AiOutlineGithub
+                        color: default
+                        variant: text
+                        size: small
+                        hideTitle: true
+                      events:
+                        onClick:
+                          - id: footer_corp_social_github_link
+                            type: Link
+                            params:
+                              url: https://github.com
+                              newTab: true
+                    - id: footer_corp_social_twitter
+                      type: Button
+                      layout:
+                        flex: 0 0 auto
+                      properties:
+                        icon: AiOutlineTwitter
+                        color: default
+                        variant: text
+                        size: small
+                        hideTitle: true
+                      events:
+                        onClick:
+                          - id: footer_corp_social_twitter_link
+                            type: Link
+                            params:
+                              url: https://twitter.com
+                              newTab: true
+
+- title: Footer in Admin Dashboard
+  fullWidth: true
+  blocks:
+    - id: footer_admin_layout
+      type: Layout
+      blocks:
+        - id: footer_admin_sider
+          type: Sider
+          properties:
+            width: 200
+            theme: dark
+          style:
+            minHeight: 200px
+          blocks:
+            - id: footer_admin_sider_menu
+              type: Menu
+              properties:
+                theme: dark
+                mode: inline
+                options:
+                  - id: footer_admin_menu_dashboard
+                    title: Dashboard
+                    icon: AiOutlineDashboard
+                  - id: footer_admin_menu_users
+                    title: Users
+                    icon: AiOutlineUser
+                  - id: footer_admin_menu_settings
+                    title: Settings
+                    icon: AiOutlineSetting
+        - id: footer_admin_inner_layout
+          type: Layout
+          blocks:
+            - id: footer_admin_content
+              type: Content
+              style:
+                padding: 24px
+                background: '#fff'
+                minHeight: 120px
+              blocks:
+                - id: footer_admin_content_title
+                  type: Title
+                  properties:
+                    content: Dashboard
+                    level: 3
+                - id: footer_admin_stats_row
+                  type: Box
+                  layout:
+                    gap: 16
+                  blocks:
+                    - id: footer_admin_stat1
+                      type: Statistic
+                      layout:
+                        flex: 1 1 0
+                      properties:
+                        title: Total Users
+                        value: 1284
+                    - id: footer_admin_stat2
+                      type: Statistic
+                      layout:
+                        flex: 1 1 0
+                      properties:
+                        title: Active Sessions
+                        value: 312
+                    - id: footer_admin_stat3
+                      type: Statistic
+                      layout:
+                        flex: 1 1 0
+                      properties:
+                        title: Pending Tasks
+                        value: 47
+            - id: footer_admin_el
+              type: Footer
+              style:
+                textAlign: center
+                padding: 12px 50px
+              blocks:
+                - id: footer_admin_text
+                  type: Paragraph
+                  properties:
+                    content: Admin Portal v2.4.1 - Powered by Lowdefy
+                    style:
+                      color: '#999'
+                      margin: 0
+                      fontSize: 12px

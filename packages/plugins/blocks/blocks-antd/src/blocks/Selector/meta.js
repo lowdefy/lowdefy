@@ -52,7 +52,8 @@ export default {
       bordered: {
         type: 'boolean',
         default: true,
-        description: 'Whether or not the selector has a border style.',
+        description:
+          'Whether or not the selector has a border style. Deprecated, use variant instead.',
       },
       clearIcon: {
         type: ['string', 'object'],
@@ -242,6 +243,11 @@ export default {
         type: 'string',
         description:
           'Title to describe the input component, if no title is specified the block id is displayed - supports html.',
+      },
+      variant: {
+        type: 'string',
+        enum: ['outlined', 'filled', 'borderless'],
+        description: 'Input visual variant. When set, takes precedence over bordered.',
       },
       theme: {
         type: 'object',

@@ -15,12 +15,12 @@
 - title: Basic Sider
   fullWidth: true
   blocks:
-    - id: sider_basic_layout
+    - id: basic_layout
       type: Layout
       style:
         minHeight: 300px
       blocks:
-        - id: sider_basic
+        - id: basic_sider
           type: Sider
           properties:
             theme: light
@@ -28,47 +28,47 @@
             initialCollapsed: false
             collapsible: false
           blocks:
-            - id: sider_basic_menu
+            - id: basic_menu
               type: Menu
               properties:
                 mode: inline
                 theme: light
                 links:
-                  - id: sider_basic_home
+                  - id: basic_home
                     type: MenuLink
                     properties:
                       title: Home
                       icon: AiOutlineHome
-                  - id: sider_basic_users
+                  - id: basic_users
                     type: MenuLink
                     properties:
                       title: Users
                       icon: AiOutlineUser
-                  - id: sider_basic_settings
+                  - id: basic_settings
                     type: MenuLink
                     properties:
                       title: Settings
                       icon: AiOutlineSetting
-        - id: sider_basic_content
+        - id: basic_content
           type: Content
           style:
             padding: 24px
             background: '#fff'
           blocks:
-            - id: sider_basic_content_text
+            - id: basic_content_text
               type: Paragraph
               properties:
                 content: The Sider block provides a sidebar within a Layout. It supports collapsing, themes, breakpoints, and custom widths. Place navigation menus or supplementary content inside the sider.
 
-- title: Dark Theme Sider
+- title: Dark Theme
   fullWidth: true
   blocks:
-    - id: sider_dark_layout
+    - id: dark_layout
       type: Layout
       style:
         minHeight: 300px
       blocks:
-        - id: sider_dark
+        - id: dark_sider
           type: Sider
           properties:
             theme: dark
@@ -76,47 +76,47 @@
             initialCollapsed: false
             collapsible: false
           blocks:
-            - id: sider_dark_menu
+            - id: dark_menu
               type: Menu
               properties:
                 mode: inline
                 theme: dark
                 links:
-                  - id: sider_dark_dashboard
+                  - id: dark_dashboard
                     type: MenuLink
                     properties:
                       title: Dashboard
                       icon: AiOutlineDashboard
-                  - id: sider_dark_analytics
+                  - id: dark_analytics
                     type: MenuLink
                     properties:
                       title: Analytics
                       icon: AiOutlineBarChart
-                  - id: sider_dark_files
+                  - id: dark_files
                     type: MenuLink
                     properties:
                       title: Files
                       icon: AiOutlineFile
-        - id: sider_dark_content
+        - id: dark_content
           type: Content
           style:
             padding: 24px
             background: '#fff'
           blocks:
-            - id: sider_dark_content_text
+            - id: dark_content_text
               type: Paragraph
               properties:
-                content: Dark theme sider with matching dark-themed menu for a professional look.
+                content: Setting theme to "dark" gives the sider a dark background with light text. Match the Menu theme to the sider theme for a consistent appearance.
 
 - title: Collapsible Sider
   fullWidth: true
   blocks:
-    - id: sider_collapsible_layout
+    - id: collapsible_layout
       type: Layout
       style:
         minHeight: 300px
       blocks:
-        - id: sider_collapsible
+        - id: collapsible_sider
           type: Sider
           properties:
             theme: light
@@ -124,47 +124,47 @@
             collapsible: true
             initialCollapsed: false
           blocks:
-            - id: sider_collapsible_menu
+            - id: collapsible_menu
               type: Menu
               properties:
                 mode: inline
                 theme: light
                 links:
-                  - id: sider_col_inbox
+                  - id: col_inbox
                     type: MenuLink
                     properties:
                       title: Inbox
                       icon: AiOutlineInbox
-                  - id: sider_col_starred
+                  - id: col_starred
                     type: MenuLink
                     properties:
                       title: Starred
                       icon: AiOutlineStar
-                  - id: sider_col_sent
+                  - id: col_sent
                     type: MenuLink
                     properties:
                       title: Sent
                       icon: AiOutlineSend
-        - id: sider_collapsible_content
+        - id: collapsible_content
           type: Content
           style:
             padding: 24px
             background: '#fff'
           blocks:
-            - id: sider_collapsible_content_text
+            - id: collapsible_content_text
               type: Paragraph
               properties:
-                content: This sider has collapsible set to true. Use the collapse trigger at the bottom to toggle the sidebar between expanded and collapsed states. The menu icons remain visible when collapsed.
+                content: With collapsible set to true a collapse trigger appears at the bottom. Toggle between expanded and collapsed states. Menu icons remain visible when collapsed.
 
-- title: Initially Collapsed Sider
+- title: Initially Collapsed
   fullWidth: true
   blocks:
-    - id: sider_collapsed_layout
+    - id: init_collapsed_layout
       type: Layout
       style:
         minHeight: 300px
       blocks:
-        - id: sider_collapsed
+        - id: init_collapsed_sider
           type: Sider
           properties:
             theme: light
@@ -172,47 +172,47 @@
             collapsible: true
             initialCollapsed: true
           blocks:
-            - id: sider_collapsed_menu
+            - id: init_collapsed_menu
               type: Menu
               properties:
                 mode: inline
                 theme: light
                 links:
-                  - id: sider_ic_overview
+                  - id: ic_overview
                     type: MenuLink
                     properties:
                       title: Overview
                       icon: AiOutlineAppstore
-                  - id: sider_ic_reports
+                  - id: ic_reports
                     type: MenuLink
                     properties:
                       title: Reports
                       icon: AiOutlineFileText
-                  - id: sider_ic_config
+                  - id: ic_config
                     type: MenuLink
                     properties:
                       title: Configuration
                       icon: AiOutlineTool
-        - id: sider_collapsed_content
+        - id: init_collapsed_content
           type: Content
           style:
             padding: 24px
             background: '#fff'
           blocks:
-            - id: sider_collapsed_content_text
+            - id: init_collapsed_content_text
               type: Paragraph
               properties:
-                content: This sider starts in a collapsed state with initialCollapsed set to true. Click the collapse trigger to expand it.
+                content: This sider starts collapsed with initialCollapsed set to true. Click the collapse trigger to expand it.
 
-- title: Sider with Custom Collapsed Width
+- title: Custom Collapsed Width
   fullWidth: true
   blocks:
-    - id: sider_custom_width_layout
+    - id: cw_layout
       type: Layout
       style:
         minHeight: 300px
       blocks:
-        - id: sider_custom_width
+        - id: cw_sider
           type: Sider
           properties:
             theme: dark
@@ -221,52 +221,52 @@
             collapsible: true
             initialCollapsed: true
           blocks:
-            - id: sider_custom_width_menu
+            - id: cw_menu
               type: Menu
               properties:
                 mode: inline
                 theme: dark
                 links:
-                  - id: sider_cw_projects
+                  - id: cw_projects
                     type: MenuLink
                     properties:
                       title: Projects
                       icon: AiOutlineProject
-                  - id: sider_cw_tasks
+                  - id: cw_tasks
                     type: MenuLink
                     properties:
                       title: Tasks
                       icon: AiOutlineCheckSquare
-        - id: sider_custom_width_content
+        - id: cw_content
           type: Content
           style:
             padding: 24px
             background: '#fff'
           blocks:
-            - id: sider_custom_width_content_text
+            - id: cw_content_text
               type: Paragraph
               properties:
-                content: Setting collapsedWidth to 0 completely hides the sider when collapsed and shows a special floating trigger. This is useful for mobile-friendly layouts where sidebar space needs to be fully reclaimed.
+                content: Setting collapsedWidth to 0 completely hides the sider when collapsed and shows a special floating trigger. Useful for mobile-friendly layouts where sidebar space needs to be fully reclaimed.
 
-- title: Sider with Reverse Arrow
+- title: Reverse Arrow (Right-Side Sider)
   fullWidth: true
   blocks:
-    - id: sider_reverse_layout
+    - id: reverse_layout
       type: Layout
       style:
         minHeight: 300px
       blocks:
-        - id: sider_reverse_content
+        - id: reverse_content
           type: Content
           style:
             padding: 24px
             background: '#fff'
           blocks:
-            - id: sider_reverse_content_text
+            - id: reverse_content_text
               type: Paragraph
               properties:
-                content: The Sider is on the right side of the layout with reverseArrow set to true. This flips the collapse arrow direction to match the right-side placement.
-        - id: sider_reverse
+                content: The Sider is placed on the right side of the layout with reverseArrow set to true. This flips the collapse arrow direction to match the right-side placement.
+        - id: reverse_sider
           type: Sider
           properties:
             theme: light
@@ -277,19 +277,723 @@
           style:
             borderLeft: 1px solid #f0f0f0
           blocks:
-            - id: sider_reverse_menu
+            - id: reverse_menu
               type: Menu
               properties:
                 mode: inline
                 theme: light
                 links:
-                  - id: sider_rev_details
+                  - id: rev_details
                     type: MenuLink
                     properties:
                       title: Details
                       icon: AiOutlineInfoCircle
-                  - id: sider_rev_history
+                  - id: rev_history
                     type: MenuLink
                     properties:
                       title: History
                       icon: AiOutlineHistory
+
+- title: Breakpoint Responsive
+  fullWidth: true
+  blocks:
+    - id: bp_layout
+      type: Layout
+      style:
+        minHeight: 300px
+      blocks:
+        - id: bp_sider
+          type: Sider
+          properties:
+            theme: light
+            width: 200
+            collapsible: true
+            initialCollapsed: false
+            breakpoint: lg
+          events:
+            onBreakpoint:
+              - id: bp_sider_set_state
+                type: SetState
+                params:
+                  breakpointTriggered: true
+          blocks:
+            - id: bp_menu
+              type: Menu
+              properties:
+                mode: inline
+                theme: light
+                links:
+                  - id: bp_home
+                    type: MenuLink
+                    properties:
+                      title: Home
+                      icon: AiOutlineHome
+                  - id: bp_search
+                    type: MenuLink
+                    properties:
+                      title: Search
+                      icon: AiOutlineSearch
+        - id: bp_content
+          type: Content
+          style:
+            padding: 24px
+            background: '#fff'
+          blocks:
+            - id: bp_content_text
+              type: Paragraph
+              properties:
+                content: The breakpoint property controls when the sider automatically collapses on smaller screens. Set to "lg" here, so the sider collapses when the viewport is below the large breakpoint. Supported values are xs, sm, md, lg, xl, and xxl.
+
+- title: Custom Width
+  fullWidth: true
+  blocks:
+    - id: width_layout
+      type: Layout
+      style:
+        minHeight: 300px
+      blocks:
+        - id: width_sider
+          type: Sider
+          properties:
+            theme: light
+            width: 300
+            collapsible: false
+            initialCollapsed: false
+          blocks:
+            - id: width_menu
+              type: Menu
+              properties:
+                mode: inline
+                theme: light
+                links:
+                  - id: width_nav1
+                    type: MenuLink
+                    properties:
+                      title: Getting Started
+                      icon: AiOutlineRocket
+                  - id: width_nav2
+                    type: MenuLink
+                    properties:
+                      title: Documentation
+                      icon: AiOutlineBook
+                  - id: width_nav3
+                    type: MenuLink
+                    properties:
+                      title: API Reference
+                      icon: AiOutlineCode
+        - id: width_content
+          type: Content
+          style:
+            padding: 24px
+            background: '#fff'
+          blocks:
+            - id: width_content_text
+              type: Paragraph
+              properties:
+                content: The width property accepts a number (pixels) or string value. Here the sider is set to 300px wide, providing more room for longer menu labels or nested navigation.
+
+- title: Events and Actions
+  fullWidth: true
+  blocks:
+    - id: events_layout
+      type: Layout
+      style:
+        minHeight: 300px
+      blocks:
+        - id: events_sider
+          type: Sider
+          properties:
+            theme: light
+            width: 200
+            collapsible: true
+            initialCollapsed: false
+          events:
+            onOpen:
+              - id: events_on_open_action
+                type: SetState
+                params:
+                  siderState: open
+            onClose:
+              - id: events_on_close_action
+                type: SetState
+                params:
+                  siderState: closed
+          blocks:
+            - id: events_menu
+              type: Menu
+              properties:
+                mode: inline
+                theme: light
+                links:
+                  - id: events_nav_home
+                    type: MenuLink
+                    properties:
+                      title: Home
+                      icon: AiOutlineHome
+                  - id: events_nav_alerts
+                    type: MenuLink
+                    properties:
+                      title: Alerts
+                      icon: AiOutlineBell
+        - id: events_content
+          type: Content
+          style:
+            padding: 24px
+            background: '#fff'
+          blocks:
+            - id: events_state_label
+              type: Paragraph
+              properties:
+                content:
+                  _nunjucks:
+                    template: 'Sider state: {{ siderState }}'
+                    on:
+                      _state: true
+            - id: events_content_text
+              type: Paragraph
+              properties:
+                content: The Sider fires onOpen and onClose events when it expands or collapses. Use these events with SetState or other actions to react to sider state changes. Toggle the sider to see the state update above.
+
+- title: Theme Token Overrides
+  fullWidth: true
+  blocks:
+    - id: token_layout
+      type: Layout
+      style:
+        minHeight: 300px
+      blocks:
+        - id: token_sider
+          type: Sider
+          properties:
+            theme: light
+            width: 220
+            collapsible: true
+            initialCollapsed: false
+            designTokens:
+              colorPrimary: '#722ed1'
+              colorBgContainer: '#f9f0ff'
+              colorText: '#531dab'
+          blocks:
+            - id: token_menu
+              type: Menu
+              properties:
+                mode: inline
+                theme: light
+                links:
+                  - id: token_nav_explore
+                    type: MenuLink
+                    properties:
+                      title: Explore
+                      icon: AiOutlineCompass
+                  - id: token_nav_favorites
+                    type: MenuLink
+                    properties:
+                      title: Favorites
+                      icon: AiOutlineHeart
+                  - id: token_nav_settings
+                    type: MenuLink
+                    properties:
+                      title: Settings
+                      icon: AiOutlineSetting
+        - id: token_content
+          type: Content
+          style:
+            padding: 24px
+            background: '#fff'
+          blocks:
+            - id: token_content_text
+              type: Paragraph
+              properties:
+                content: Use designTokens to override antd theme tokens on the Sider. Here colorBgContainer changes the sidebar background, colorPrimary affects the selected item highlight, and colorText changes the menu text color.
+
+    - id: token_dark_layout
+      type: Layout
+      style:
+        minHeight: 300px
+      blocks:
+        - id: token_dark_sider
+          type: Sider
+          properties:
+            theme: dark
+            width: 220
+            collapsible: true
+            initialCollapsed: false
+            designTokens:
+              colorPrimary: '#52c41a'
+              colorBgContainer: '#1a1a2e'
+          blocks:
+            - id: token_dark_menu
+              type: Menu
+              properties:
+                mode: inline
+                theme: dark
+                links:
+                  - id: token_dark_nav_status
+                    type: MenuLink
+                    properties:
+                      title: Status
+                      icon: AiOutlineCheckCircle
+                  - id: token_dark_nav_logs
+                    type: MenuLink
+                    properties:
+                      title: Logs
+                      icon: AiOutlineFileText
+                  - id: token_dark_nav_deploy
+                    type: MenuLink
+                    properties:
+                      title: Deploy
+                      icon: AiOutlineCloudUpload
+        - id: token_dark_content
+          type: Content
+          style:
+            padding: 24px
+            background: '#fff'
+          blocks:
+            - id: token_dark_content_text
+              type: Paragraph
+              properties:
+                content: Token overrides work with both light and dark themes. This dark sider uses a custom navy background and green primary color for the active menu item highlight.
+
+- title: Styled Sider (Tailwind CSS)
+  fullWidth: true
+  blocks:
+    - id: css_layout
+      type: Layout
+      style:
+        minHeight: 300px
+      blocks:
+        - id: css_sider
+          type: Sider
+          properties:
+            theme: light
+            width: 220
+            collapsible: false
+            initialCollapsed: false
+          class:
+            element: bg-gradient-to-b from-indigo-50 to-white border-r border-indigo-200
+          blocks:
+            - id: css_menu
+              type: Menu
+              properties:
+                mode: inline
+                theme: light
+                links:
+                  - id: css_nav_workspace
+                    type: MenuLink
+                    properties:
+                      title: Workspace
+                      icon: AiOutlineAppstore
+                  - id: css_nav_members
+                    type: MenuLink
+                    properties:
+                      title: Members
+                      icon: AiOutlineTeam
+                  - id: css_nav_billing
+                    type: MenuLink
+                    properties:
+                      title: Billing
+                      icon: AiOutlineCreditCard
+        - id: css_content
+          type: Content
+          style:
+            padding: 24px
+            background: '#fff'
+          blocks:
+            - id: css_content_text
+              type: Paragraph
+              properties:
+                content: The Sider has a single CSS key called "element" which targets the entire sider container. Use it with Tailwind classes for gradients, borders, shadows, and other visual effects.
+
+    - id: css_shadow_layout
+      type: Layout
+      style:
+        minHeight: 300px
+      blocks:
+        - id: css_shadow_sider
+          type: Sider
+          properties:
+            theme: light
+            width: 200
+            collapsible: false
+            initialCollapsed: false
+          class:
+            element: shadow-lg bg-white
+          blocks:
+            - id: css_shadow_menu
+              type: Menu
+              properties:
+                mode: inline
+                theme: light
+                links:
+                  - id: css_sh_dashboard
+                    type: MenuLink
+                    properties:
+                      title: Dashboard
+                      icon: AiOutlineDashboard
+                  - id: css_sh_analytics
+                    type: MenuLink
+                    properties:
+                      title: Analytics
+                      icon: AiOutlineLineChart
+        - id: css_shadow_content
+          type: Content
+          style:
+            padding: 24px
+            background: '#fff'
+          blocks:
+            - id: css_shadow_content_text
+              type: Paragraph
+              properties:
+                content: A shadow-lg class on the element CSS key gives the sider an elevated appearance that visually separates it from the main content area.
+
+- title: Sider in Admin Panel
+  fullWidth: true
+  blocks:
+    - id: admin_layout
+      type: Layout
+      style:
+        minHeight: 400px
+      blocks:
+        - id: admin_sider
+          type: Sider
+          properties:
+            theme: dark
+            width: 240
+            collapsible: true
+            initialCollapsed: false
+          events:
+            onClose:
+              - id: admin_on_close
+                type: SetState
+                params:
+                  adminSiderOpen: false
+            onOpen:
+              - id: admin_on_open
+                type: SetState
+                params:
+                  adminSiderOpen: true
+          blocks:
+            - id: admin_logo_box
+              type: Box
+              style:
+                padding: 16px
+                textAlign: center
+              blocks:
+                - id: admin_logo_title
+                  type: Title
+                  class: text-white
+                  properties:
+                    content: Admin
+                    level: 4
+            - id: admin_menu
+              type: Menu
+              properties:
+                mode: inline
+                theme: dark
+                links:
+                  - id: admin_nav_dashboard
+                    type: MenuLink
+                    properties:
+                      title: Dashboard
+                      icon: AiOutlineDashboard
+                  - id: admin_nav_users
+                    type: MenuGroup
+                    properties:
+                      title: User Management
+                      icon: AiOutlineTeam
+                    links:
+                      - id: admin_nav_all_users
+                        type: MenuLink
+                        properties:
+                          title: All Users
+                      - id: admin_nav_roles
+                        type: MenuLink
+                        properties:
+                          title: Roles
+                  - id: admin_nav_content
+                    type: MenuGroup
+                    properties:
+                      title: Content
+                      icon: AiOutlineFileText
+                    links:
+                      - id: admin_nav_pages
+                        type: MenuLink
+                        properties:
+                          title: Pages
+                      - id: admin_nav_media
+                        type: MenuLink
+                        properties:
+                          title: Media
+                  - id: admin_nav_settings
+                    type: MenuLink
+                    properties:
+                      title: Settings
+                      icon: AiOutlineSetting
+        - id: admin_content
+          type: Content
+          style:
+            padding: 24px
+            background: '#f5f5f5'
+          blocks:
+            - id: admin_header_row
+              type: Box
+              layout:
+                gap: 16
+                justify: space-between
+                align: center
+              blocks:
+                - id: admin_page_title
+                  type: Title
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    content: Dashboard
+                    level: 3
+                - id: admin_header_actions
+                  type: Box
+                  layout:
+                    flex: 0 0 auto
+                    gap: 8
+                  blocks:
+                    - id: admin_notif_btn
+                      type: Button
+                      layout:
+                        flex: 0 0 auto
+                      properties:
+                        icon: AiOutlineBell
+                        color: default
+                        variant: text
+                        hideTitle: true
+                    - id: admin_profile_btn
+                      type: Button
+                      layout:
+                        flex: 0 0 auto
+                      properties:
+                        icon: AiOutlineUser
+                        color: default
+                        variant: text
+                        hideTitle: true
+            - id: admin_stats_row
+              type: Box
+              layout:
+                gap: 16
+              blocks:
+                - id: admin_stat_users
+                  type: Card
+                  layout:
+                    flex: 1 1 0
+                  properties:
+                    size: small
+                  blocks:
+                    - id: admin_stat_users_val
+                      type: Statistic
+                      properties:
+                        title: Total Users
+                        value: 2847
+                - id: admin_stat_revenue
+                  type: Card
+                  layout:
+                    flex: 1 1 0
+                  properties:
+                    size: small
+                  blocks:
+                    - id: admin_stat_revenue_val
+                      type: Statistic
+                      properties:
+                        title: Revenue
+                        value: 48200
+                        prefix: $
+                - id: admin_stat_orders
+                  type: Card
+                  layout:
+                    flex: 1 1 0
+                  properties:
+                    size: small
+                  blocks:
+                    - id: admin_stat_orders_val
+                      type: Statistic
+                      properties:
+                        title: Orders
+                        value: 384
+
+- title: Sider in Settings Page
+  fullWidth: true
+  blocks:
+    - id: settings_layout
+      type: Layout
+      style:
+        minHeight: 400px
+      blocks:
+        - id: settings_sider
+          type: Sider
+          properties:
+            theme: light
+            width: 220
+            collapsible: false
+            initialCollapsed: false
+          style:
+            borderRight: 1px solid #f0f0f0
+          blocks:
+            - id: settings_heading
+              type: Title
+              style:
+                padding: 16px 16px 8px
+              properties:
+                content: Settings
+                level: 5
+            - id: settings_menu
+              type: Menu
+              properties:
+                mode: inline
+                theme: light
+                links:
+                  - id: settings_nav_profile
+                    type: MenuLink
+                    properties:
+                      title: Profile
+                      icon: AiOutlineUser
+                  - id: settings_nav_account
+                    type: MenuLink
+                    properties:
+                      title: Account
+                      icon: AiOutlineSafety
+                  - id: settings_nav_notifications
+                    type: MenuLink
+                    properties:
+                      title: Notifications
+                      icon: AiOutlineBell
+                  - id: settings_nav_appearance
+                    type: MenuLink
+                    properties:
+                      title: Appearance
+                      icon: AiOutlineBgColors
+                  - id: settings_nav_integrations
+                    type: MenuLink
+                    properties:
+                      title: Integrations
+                      icon: AiOutlineApi
+        - id: settings_content
+          type: Content
+          style:
+            padding: 24px
+            background: '#fff'
+          blocks:
+            - id: settings_content_title
+              type: Title
+              properties:
+                content: Profile Settings
+                level: 4
+            - id: settings_content_desc
+              type: Paragraph
+              properties:
+                content: Manage your personal information and preferences.
+            - id: settings_divider
+              type: Divider
+            - id: settings_form_name
+              type: TextInput
+              properties:
+                title: Display Name
+                placeholder: Enter your name
+            - id: settings_form_email
+              type: TextInput
+              properties:
+                title: Email Address
+                placeholder: you@example.com
+            - id: settings_form_bio
+              type: TextArea
+              properties:
+                title: Bio
+                placeholder: Tell us about yourself
+            - id: settings_form_save
+              type: Button
+              properties:
+                title: Save Changes
+                color: primary
+                variant: solid
+                icon: AiOutlineSave
+
+- title: Sider in Documentation Browser
+  fullWidth: true
+  blocks:
+    - id: docs_layout
+      type: Layout
+      style:
+        minHeight: 400px
+      blocks:
+        - id: docs_sider
+          type: Sider
+          properties:
+            theme: light
+            width: 260
+            collapsible: true
+            initialCollapsed: false
+            breakpoint: md
+          class:
+            element: border-r border-gray-200
+          blocks:
+            - id: docs_search
+              type: TextInput
+              style:
+                padding: 12px 16px
+              properties:
+                placeholder: Search docs...
+                prefixIcon: AiOutlineSearch
+            - id: docs_menu
+              type: Menu
+              properties:
+                mode: inline
+                theme: light
+                links:
+                  - id: docs_nav_getting_started
+                    type: MenuGroup
+                    properties:
+                      title: Getting Started
+                    links:
+                      - id: docs_nav_intro
+                        type: MenuLink
+                        properties:
+                          title: Introduction
+                      - id: docs_nav_install
+                        type: MenuLink
+                        properties:
+                          title: Installation
+                      - id: docs_nav_quickstart
+                        type: MenuLink
+                        properties:
+                          title: Quick Start
+                  - id: docs_nav_guides
+                    type: MenuGroup
+                    properties:
+                      title: Guides
+                    links:
+                      - id: docs_nav_blocks
+                        type: MenuLink
+                        properties:
+                          title: Blocks
+                      - id: docs_nav_operators
+                        type: MenuLink
+                        properties:
+                          title: Operators
+                      - id: docs_nav_actions
+                        type: MenuLink
+                        properties:
+                          title: Actions
+        - id: docs_content
+          type: Content
+          style:
+            padding: 32px
+            background: '#fff'
+          blocks:
+            - id: docs_content_title
+              type: Title
+              properties:
+                content: Introduction
+                level: 3
+            - id: docs_content_p1
+              type: Paragraph
+              properties:
+                content: Welcome to the documentation. This page gives an overview of the framework and how to get started building your first application.
+            - id: docs_content_p2
+              type: Paragraph
+              properties:
+                content: Use the sidebar on the left to browse through different sections. On smaller screens the sidebar collapses automatically thanks to the breakpoint property set to "md".
