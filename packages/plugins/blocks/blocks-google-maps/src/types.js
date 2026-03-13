@@ -14,16 +14,8 @@
   limitations under the License.
 */
 
-export default {
-  blocks: ['GoogleMaps', 'GoogleMapsHeatmap', 'GoogleMapsScript'],
-  icons: {
-    GoogleMaps: [],
-    GoogleMapsHeatmap: [],
-    GoogleMapsScript: [],
-  },
-  blockMetas: {
-    GoogleMapsScript: {
-      slots: ['content'],
-    },
-  },
-};
+import { extractBlockTypes } from '@lowdefy/block-utils';
+
+import * as metas from './metas.js';
+
+export default extractBlockTypes(metas);
