@@ -16,10 +16,36 @@
   blocks:
     - id: notif_status_success
       type: Notification
+      layout:
+        span: 0
       properties:
         status: success
         title: Changes Saved
         description: Your changes have been saved successfully.
+    - id: notif_status_error
+      type: Notification
+      layout:
+        span: 0
+      properties:
+        status: error
+        title: Save Failed
+        description: Failed to save your changes. Please try again.
+    - id: notif_status_warning
+      type: Notification
+      layout:
+        span: 0
+      properties:
+        status: warning
+        title: Disk Space Low
+        description: Server storage is running below 10% capacity.
+    - id: notif_status_info
+      type: Notification
+      layout:
+        span: 0
+      properties:
+        status: info
+        title: Update Available
+        description: A new version of the application is available.
     - id: btn_status_success
       type: Button
       layout:
@@ -36,12 +62,6 @@
             params:
               blockId: notif_status_success
               method: open
-    - id: notif_status_error
-      type: Notification
-      properties:
-        status: error
-        title: Save Failed
-        description: Failed to save your changes. Please try again.
     - id: btn_status_error
       type: Button
       layout:
@@ -58,12 +78,6 @@
             params:
               blockId: notif_status_error
               method: open
-    - id: notif_status_warning
-      type: Notification
-      properties:
-        status: warning
-        title: Disk Space Low
-        description: Server storage is running below 10% capacity.
     - id: btn_status_warning
       type: Button
       layout:
@@ -80,12 +94,6 @@
             params:
               blockId: notif_status_warning
               method: open
-    - id: notif_status_info
-      type: Notification
-      properties:
-        status: info
-        title: Update Available
-        description: A new version of the application is available.
     - id: btn_status_info
       type: Button
       layout:
@@ -107,11 +115,40 @@
   blocks:
     - id: notif_place_top_right
       type: Notification
+      layout:
+        span: 0
       properties:
         status: info
         title: Top Right
         description: Default placement position.
         placement: topRight
+    - id: notif_place_top_left
+      type: Notification
+      layout:
+        span: 0
+      properties:
+        status: info
+        title: Top Left
+        description: Appears at the top left corner.
+        placement: topLeft
+    - id: notif_place_bottom_right
+      type: Notification
+      layout:
+        span: 0
+      properties:
+        status: info
+        title: Bottom Right
+        description: Appears at the bottom right corner.
+        placement: bottomRight
+    - id: notif_place_bottom_left
+      type: Notification
+      layout:
+        span: 0
+      properties:
+        status: info
+        title: Bottom Left
+        description: Appears at the bottom left corner.
+        placement: bottomLeft
     - id: btn_place_top_right
       type: Button
       layout:
@@ -127,13 +164,6 @@
             params:
               blockId: notif_place_top_right
               method: open
-    - id: notif_place_top_left
-      type: Notification
-      properties:
-        status: info
-        title: Top Left
-        description: Appears at the top left corner.
-        placement: topLeft
     - id: btn_place_top_left
       type: Button
       layout:
@@ -149,13 +179,6 @@
             params:
               blockId: notif_place_top_left
               method: open
-    - id: notif_place_bottom_right
-      type: Notification
-      properties:
-        status: info
-        title: Bottom Right
-        description: Appears at the bottom right corner.
-        placement: bottomRight
     - id: btn_place_bottom_right
       type: Button
       layout:
@@ -171,13 +194,6 @@
             params:
               blockId: notif_place_bottom_right
               method: open
-    - id: notif_place_bottom_left
-      type: Notification
-      properties:
-        status: info
-        title: Bottom Left
-        description: Appears at the bottom left corner.
-        placement: bottomLeft
     - id: btn_place_bottom_left
       type: Button
       layout:
@@ -198,11 +214,39 @@
   blocks:
     - id: notif_dur_short
       type: Notification
+      layout:
+        span: 0
       properties:
         status: info
         title: Quick Notice
         description: Disappears in 2 seconds.
         duration: 2
+    - id: notif_dur_default
+      type: Notification
+      layout:
+        span: 0
+      properties:
+        status: info
+        title: Default Duration
+        description: Auto-closes after 4.5 seconds (default).
+    - id: notif_dur_long
+      type: Notification
+      layout:
+        span: 0
+      properties:
+        status: info
+        title: Extended Duration
+        description: Stays visible for 10 seconds.
+        duration: 10
+    - id: notif_dur_sticky
+      type: Notification
+      layout:
+        span: 0
+      properties:
+        status: warning
+        title: Persistent
+        description: Will not auto-close (duration 0). Must be dismissed manually.
+        duration: 0
     - id: btn_dur_short
       type: Button
       layout:
@@ -218,12 +262,6 @@
             params:
               blockId: notif_dur_short
               method: open
-    - id: notif_dur_default
-      type: Notification
-      properties:
-        status: info
-        title: Default Duration
-        description: Auto-closes after 4.5 seconds (default).
     - id: btn_dur_default
       type: Button
       layout:
@@ -239,13 +277,6 @@
             params:
               blockId: notif_dur_default
               method: open
-    - id: notif_dur_long
-      type: Notification
-      properties:
-        status: info
-        title: Extended Duration
-        description: Stays visible for 10 seconds.
-        duration: 10
     - id: btn_dur_long
       type: Button
       layout:
@@ -261,13 +292,6 @@
             params:
               blockId: notif_dur_long
               method: open
-    - id: notif_dur_sticky
-      type: Notification
-      properties:
-        status: warning
-        title: Persistent
-        description: Will not auto-close (duration 0). Must be dismissed manually.
-        duration: 0
     - id: btn_dur_sticky
       type: Button
       layout:
@@ -288,11 +312,36 @@
   blocks:
     - id: notif_icon_string
       type: Notification
+      layout:
+        span: 0
       properties:
         status: success
         title: Download Complete
         description: Your file has been downloaded successfully.
         icon: AiOutlineDownload
+    - id: notif_icon_colored
+      type: Notification
+      layout:
+        span: 0
+      properties:
+        status: info
+        title: Starred Item
+        description: Item has been added to your favorites.
+        icon:
+          name: AiOutlineStar
+          color: '#faad14'
+    - id: notif_icon_sized
+      type: Notification
+      layout:
+        span: 0
+      properties:
+        status: warning
+        title: Session Expiring
+        description: Your session will expire in 5 minutes.
+        icon:
+          name: AiOutlineLock
+          color: '#fa8c16'
+          size: 28
     - id: btn_icon_string
       type: Button
       layout:
@@ -309,15 +358,6 @@
             params:
               blockId: notif_icon_string
               method: open
-    - id: notif_icon_colored
-      type: Notification
-      properties:
-        status: info
-        title: Starred Item
-        description: Item has been added to your favorites.
-        icon:
-          name: AiOutlineStar
-          color: '#faad14'
     - id: btn_icon_colored
       type: Button
       layout:
@@ -334,16 +374,6 @@
             params:
               blockId: notif_icon_colored
               method: open
-    - id: notif_icon_sized
-      type: Notification
-      properties:
-        status: warning
-        title: Session Expiring
-        description: Your session will expire in 5 minutes.
-        icon:
-          name: AiOutlineLock
-          color: '#fa8c16'
-          size: 28
     - id: btn_icon_sized
       type: Button
       layout:
@@ -365,11 +395,36 @@
   blocks:
     - id: notif_close_icon_string
       type: Notification
+      layout:
+        span: 0
       properties:
         status: info
         title: Custom Close
         description: This notification has a custom close icon.
         closeIcon: AiOutlineCloseSquare
+        duration: 0
+    - id: notif_close_icon_styled
+      type: Notification
+      layout:
+        span: 0
+      properties:
+        status: warning
+        title: Styled Close
+        description: Close icon with custom color and size.
+        closeIcon:
+          name: AiOutlineCloseCircle
+          color: '#ff4d4f'
+          size: 18
+        duration: 0
+    - id: notif_close_icon_arrow
+      type: Notification
+      layout:
+        span: 0
+      properties:
+        status: success
+        title: Arrow Close
+        description: Uses an arrow icon instead of the default close.
+        closeIcon: AiOutlineArrowRight
         duration: 0
     - id: btn_close_icon_string
       type: Button
@@ -386,17 +441,6 @@
             params:
               blockId: notif_close_icon_string
               method: open
-    - id: notif_close_icon_styled
-      type: Notification
-      properties:
-        status: warning
-        title: Styled Close
-        description: Close icon with custom color and size.
-        closeIcon:
-          name: AiOutlineCloseCircle
-          color: '#ff4d4f'
-          size: 18
-        duration: 0
     - id: btn_close_icon_styled
       type: Button
       layout:
@@ -412,14 +456,6 @@
             params:
               blockId: notif_close_icon_styled
               method: open
-    - id: notif_close_icon_arrow
-      type: Notification
-      properties:
-        status: success
-        title: Arrow Close
-        description: Uses an arrow icon instead of the default close.
-        closeIcon: AiOutlineArrowRight
-        duration: 0
     - id: btn_close_icon_arrow
       type: Button
       layout:
@@ -440,6 +476,8 @@
   blocks:
     - id: notif_btn_confirm
       type: Notification
+      layout:
+        span: 0
       properties:
         status: info
         title: Action Required
@@ -450,6 +488,35 @@
           icon: AiOutlineCheck
           color: primary
           variant: solid
+          size: small
+    - id: notif_btn_retry
+      type: Notification
+      layout:
+        span: 0
+      properties:
+        status: error
+        title: Upload Failed
+        description: The file could not be uploaded. Please try again.
+        duration: 0
+        button:
+          title: Retry
+          icon: AiOutlineReload
+          color: danger
+          variant: solid
+          size: small
+    - id: notif_btn_undo
+      type: Notification
+      layout:
+        span: 0
+      properties:
+        status: success
+        title: Item Deleted
+        description: The record has been removed from the database.
+        duration: 0
+        button:
+          title: Undo
+          color: default
+          variant: outlined
           size: small
     - id: btn_trigger_confirm
       type: Button
@@ -466,19 +533,6 @@
             params:
               blockId: notif_btn_confirm
               method: open
-    - id: notif_btn_retry
-      type: Notification
-      properties:
-        status: error
-        title: Upload Failed
-        description: The file could not be uploaded. Please try again.
-        duration: 0
-        button:
-          title: Retry
-          icon: AiOutlineReload
-          color: danger
-          variant: solid
-          size: small
     - id: btn_trigger_retry
       type: Button
       layout:
@@ -494,18 +548,6 @@
             params:
               blockId: notif_btn_retry
               method: open
-    - id: notif_btn_undo
-      type: Notification
-      properties:
-        status: success
-        title: Item Deleted
-        description: The record has been removed from the database.
-        duration: 0
-        button:
-          title: Undo
-          color: default
-          variant: outlined
-          size: small
     - id: btn_trigger_undo
       type: Button
       layout:
@@ -526,12 +568,33 @@
   blocks:
     - id: notif_top_offset
       type: Notification
+      layout:
+        span: 0
       properties:
         status: info
         title: Top Offset
         description: Positioned 80px from the top of the viewport.
         placement: topRight
         top: 80
+    - id: notif_bottom_offset
+      type: Notification
+      layout:
+        span: 0
+      properties:
+        status: info
+        title: Bottom Offset
+        description: Positioned 80px from the bottom of the viewport.
+        placement: bottomRight
+        bottom: 80
+    - id: notif_default_offset
+      type: Notification
+      layout:
+        span: 0
+      properties:
+        status: info
+        title: Default Offset
+        description: Uses the default 24px offset.
+        placement: topRight
     - id: btn_top_offset
       type: Button
       layout:
@@ -547,14 +610,6 @@
             params:
               blockId: notif_top_offset
               method: open
-    - id: notif_bottom_offset
-      type: Notification
-      properties:
-        status: info
-        title: Bottom Offset
-        description: Positioned 80px from the bottom of the viewport.
-        placement: bottomRight
-        bottom: 80
     - id: btn_bottom_offset
       type: Button
       layout:
@@ -570,13 +625,6 @@
             params:
               blockId: notif_bottom_offset
               method: open
-    - id: notif_default_offset
-      type: Notification
-      properties:
-        status: info
-        title: Default Offset
-        description: Uses the default 24px offset.
-        placement: topRight
     - id: btn_default_offset
       type: Button
       layout:
@@ -597,10 +645,29 @@
   blocks:
     - id: notif_html_bold
       type: Notification
+      layout:
+        span: 0
       properties:
         status: success
         title: '<b>Deployment</b> Complete'
         description: 'Deployed to <b>production</b>. Visit <a href="https://lowdefy.com">the site</a> to verify.'
+    - id: notif_html_styled
+      type: Notification
+      layout:
+        span: 0
+      properties:
+        status: warning
+        title: Maintenance Scheduled
+        description: '<span style="color: #fa8c16; font-weight: bold;">Downtime:</span> Saturday 2:00 AM - 6:00 AM UTC.'
+    - id: notif_html_list
+      type: Notification
+      layout:
+        span: 0
+      properties:
+        status: info
+        title: Release Notes
+        description: '<ul><li>Fixed login timeout issue</li><li>Added dark mode support</li><li>Improved dashboard performance</li></ul>'
+        duration: 0
     - id: btn_html_bold
       type: Button
       layout:
@@ -616,12 +683,6 @@
             params:
               blockId: notif_html_bold
               method: open
-    - id: notif_html_styled
-      type: Notification
-      properties:
-        status: warning
-        title: Maintenance Scheduled
-        description: '<span style="color: #fa8c16; font-weight: bold;">Downtime:</span> Saturday 2:00 AM - 6:00 AM UTC.'
     - id: btn_html_styled
       type: Button
       layout:
@@ -637,13 +698,6 @@
             params:
               blockId: notif_html_styled
               method: open
-    - id: notif_html_list
-      type: Notification
-      properties:
-        status: info
-        title: Release Notes
-        description: '<ul><li>Fixed login timeout issue</li><li>Added dark mode support</li><li>Improved dashboard performance</li></ul>'
-        duration: 0
     - id: btn_html_list
       type: Button
       layout:
@@ -664,12 +718,34 @@
   blocks:
     - id: notif_style_border
       type: Notification
+      layout:
+        span: 0
       properties:
         status: success
         title: Custom Border
         description: This notification has a left green border.
         notificationStyle:
           borderLeft: 4px solid #52c41a
+    - id: notif_style_bg
+      type: Notification
+      layout:
+        span: 0
+      properties:
+        status: warning
+        title: Custom Background
+        description: This notification has a custom background color.
+        notificationStyle:
+          background: '#fffbe6'
+    - id: notif_style_shadow
+      type: Notification
+      layout:
+        span: 0
+      properties:
+        status: info
+        title: Heavy Shadow
+        description: This notification has an elevated shadow.
+        notificationStyle:
+          boxShadow: 0 6px 24px rgba(0, 0, 0, 0.2)
     - id: btn_style_border
       type: Button
       layout:
@@ -685,14 +761,6 @@
             params:
               blockId: notif_style_border
               method: open
-    - id: notif_style_bg
-      type: Notification
-      properties:
-        status: warning
-        title: Custom Background
-        description: This notification has a custom background color.
-        notificationStyle:
-          background: '#fffbe6'
     - id: btn_style_bg
       type: Button
       layout:
@@ -708,14 +776,6 @@
             params:
               blockId: notif_style_bg
               method: open
-    - id: notif_style_shadow
-      type: Notification
-      properties:
-        status: info
-        title: Heavy Shadow
-        description: This notification has an elevated shadow.
-        notificationStyle:
-          boxShadow: 0 6px 24px rgba(0, 0, 0, 0.2)
     - id: btn_style_shadow
       type: Button
       layout:
@@ -736,6 +796,8 @@
   blocks:
     - id: notif_override_base
       type: Notification
+      layout:
+        span: 0
       properties:
         status: info
         title: Default Title
@@ -805,6 +867,8 @@
   blocks:
     - id: notif_events_demo
       type: Notification
+      layout:
+        span: 0
       properties:
         status: info
         title: Interactive Notification
@@ -823,23 +887,10 @@
             params:
               content: Notification was closed.
               status: success
-    - id: btn_events_demo
-      type: Button
-      layout:
-        flex: 0 0 auto
-      properties:
-        title: Open Interactive
-        color: primary
-        variant: solid
-      events:
-        onClick:
-          - id: open_events_demo
-            type: CallMethod
-            params:
-              blockId: notif_events_demo
-              method: open
     - id: notif_events_close_action
       type: Notification
+      layout:
+        span: 0
       properties:
         status: warning
         title: Session Timeout
@@ -857,6 +908,37 @@
             params:
               content: Session extended for 30 minutes.
               status: success
+    - id: notif_events_click_nav
+      type: Notification
+      layout:
+        span: 0
+      properties:
+        status: success
+        title: New Comment
+        description: Click this notification to view the comment.
+        duration: 8
+      events:
+        onClick:
+          - id: events_nav_msg
+            type: DisplayMessage
+            params:
+              content: Navigating to comments section...
+              status: info
+    - id: btn_events_demo
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open Interactive
+        color: primary
+        variant: solid
+      events:
+        onClick:
+          - id: open_events_demo
+            type: CallMethod
+            params:
+              blockId: notif_events_demo
+              method: open
     - id: btn_events_close_action
       type: Button
       layout:
@@ -872,20 +954,6 @@
             params:
               blockId: notif_events_close_action
               method: open
-    - id: notif_events_click_nav
-      type: Notification
-      properties:
-        status: success
-        title: New Comment
-        description: Click this notification to view the comment.
-        duration: 8
-      events:
-        onClick:
-          - id: events_nav_msg
-            type: DisplayMessage
-            params:
-              content: Navigating to comments section...
-              status: info
     - id: btn_events_click_nav
       type: Button
       layout:
@@ -906,11 +974,34 @@
   blocks:
     - id: notif_css_tailwind
       type: Notification
+      layout:
+        span: 0
       class: shadow-2xl
       properties:
         status: success
         title: Tailwind Shadow
         description: This notification uses a Tailwind shadow-2xl class.
+    - id: notif_css_rounded
+      type: Notification
+      layout:
+        span: 0
+      class: rounded-xl
+      properties:
+        status: info
+        title: Rounded Corners
+        description: Notification with extra-rounded corners via Tailwind.
+    - id: notif_css_inline
+      type: Notification
+      layout:
+        span: 0
+      style:
+        --element:
+          borderRadius: 12
+          border: 2px solid #1890ff
+      properties:
+        status: info
+        title: Inline Style
+        description: This notification uses inline style with a blue border.
     - id: btn_css_tailwind
       type: Button
       layout:
@@ -926,13 +1017,6 @@
             params:
               blockId: notif_css_tailwind
               method: open
-    - id: notif_css_rounded
-      type: Notification
-      class: rounded-xl
-      properties:
-        status: info
-        title: Rounded Corners
-        description: Notification with extra-rounded corners via Tailwind.
     - id: btn_css_rounded
       type: Button
       layout:
@@ -948,16 +1032,6 @@
             params:
               blockId: notif_css_rounded
               method: open
-    - id: notif_css_inline
-      type: Notification
-      style:
-        element:
-          borderRadius: 12
-          border: 2px solid #1890ff
-      properties:
-        status: info
-        title: Inline Style
-        description: This notification uses inline style with a blue border.
     - id: btn_css_inline
       type: Button
       layout:
@@ -978,12 +1052,47 @@
   blocks:
     - id: notif_theme_wide
       type: Notification
+      layout:
+        span: 0
       properties:
         status: info
         title: Wide Notification
         description: This notification is wider than the default 384px.
         theme:
           width: 500
+    - id: notif_theme_zindex
+      type: Notification
+      layout:
+        span: 0
+      properties:
+        status: warning
+        title: High Z-Index
+        description: This notification has an elevated z-index of 2000.
+        theme:
+          zIndexPopup: 2000
+    - id: notif_theme_progress
+      type: Notification
+      layout:
+        span: 0
+      properties:
+        status: success
+        title: Custom Progress Bar
+        description: The auto-close progress bar has a custom gradient.
+        duration: 8
+        theme:
+          progressBg: 'linear-gradient(to right, #52c41a, #1890ff)'
+    - id: notif_theme_combined
+      type: Notification
+      layout:
+        span: 0
+      properties:
+        status: info
+        title: Combined Tokens
+        description: Wide notification with custom progress bar.
+        duration: 6
+        theme:
+          width: 450
+          progressBg: 'linear-gradient(to right, #722ed1, #eb2f96)'
     - id: btn_theme_wide
       type: Button
       layout:
@@ -999,14 +1108,6 @@
             params:
               blockId: notif_theme_wide
               method: open
-    - id: notif_theme_zindex
-      type: Notification
-      properties:
-        status: warning
-        title: High Z-Index
-        description: This notification has an elevated z-index of 2000.
-        theme:
-          zIndexPopup: 2000
     - id: btn_theme_zindex
       type: Button
       layout:
@@ -1022,15 +1123,6 @@
             params:
               blockId: notif_theme_zindex
               method: open
-    - id: notif_theme_progress
-      type: Notification
-      properties:
-        status: success
-        title: Custom Progress Bar
-        description: The auto-close progress bar has a custom gradient.
-        duration: 8
-        theme:
-          progressBg: 'linear-gradient(to right, #52c41a, #1890ff)'
     - id: btn_theme_progress
       type: Button
       layout:
@@ -1046,16 +1138,6 @@
             params:
               blockId: notif_theme_progress
               method: open
-    - id: notif_theme_combined
-      type: Notification
-      properties:
-        status: info
-        title: Combined Tokens
-        description: Wide notification with custom progress bar.
-        duration: 6
-        theme:
-          width: 450
-          progressBg: 'linear-gradient(to right, #722ed1, #eb2f96)'
     - id: btn_theme_combined
       type: Button
       layout:
@@ -1089,6 +1171,8 @@
               **Status:** Pending fulfillment
         - id: notif_order_shipped
           type: Notification
+          layout:
+            span: 0
           properties:
             status: success
             title: Order Shipped
@@ -1109,6 +1193,8 @@
                   status: info
         - id: notif_order_cancelled
           type: Notification
+          layout:
+            span: 0
           properties:
             status: error
             title: Order Cancelled
@@ -1169,6 +1255,8 @@
               Monitor system health and receive real-time alerts. Click a button below to simulate different alert types.
         - id: notif_alert_cpu
           type: Notification
+          layout:
+            span: 0
           properties:
             status: warning
             title: High CPU Usage
@@ -1192,6 +1280,8 @@
                   status: info
         - id: notif_alert_deploy
           type: Notification
+          layout:
+            span: 0
           properties:
             status: success
             title: Deployment Successful
@@ -1207,6 +1297,8 @@
                   status: success
         - id: notif_alert_security
           type: Notification
+          layout:
+            span: 0
           properties:
             status: error
             title: Security Alert

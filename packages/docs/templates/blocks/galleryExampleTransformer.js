@@ -78,7 +78,9 @@ function transformer(sections, vars) {
       key: 'config',
       title: 'Config',
       icon: 'AiOutlineCode',
+      extraKey: `config_extra_${slug}`,
     });
+    const configBlocks = JSON.parse(JSON.stringify(section.blocks));
     const slots = {
       config: {
         blocks: [
@@ -102,10 +104,7 @@ function transformer(sections, vars) {
                       template: '```yaml\n{{ blocks | safe }}```\n',
                       on: {
                         blocks: {
-                          _custom_yaml_stringify: [
-                            JSON.parse(JSON.stringify(section.blocks)),
-                            { sortKeys: false },
-                          ],
+                          _custom_yaml_stringify: [configBlocks, { sortKeys: false }],
                         },
                       },
                     },
@@ -116,6 +115,42 @@ function transformer(sections, vars) {
           },
         ],
       },
+    };
+
+    slots[`config_extra_${slug}`] = {
+      blocks: [
+        {
+          id: `gallery_copy_${slug}`,
+          type: 'Button',
+          properties: {
+            icon: 'AiOutlineCopy',
+            type: 'text',
+            size: 'small',
+            shape: 'circle',
+          },
+          events: {
+            onClick: [
+              {
+                id: `copy_config_${slug}`,
+                type: 'CopyToClipboard',
+                params: {
+                  copy: {
+                    _custom_yaml_stringify: [configBlocks, { sortKeys: false }],
+                  },
+                },
+              },
+              {
+                id: `copy_message_${slug}`,
+                type: 'DisplayMessage',
+                params: {
+                  content: 'Config copied to clipboard',
+                  duration: 2,
+                },
+              },
+            ],
+          },
+        },
+      ],
     };
 
     if (showState) {
