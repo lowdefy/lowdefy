@@ -16,7 +16,7 @@
 
 import React, { useState } from 'react';
 import { type } from '@lowdefy/helpers';
-import { makeCssClass, createIcon } from '@lowdefy/block-utils';
+import { createIcon } from '@lowdefy/block-utils';
 
 import schemaTest from './schemaTest.js';
 
@@ -80,7 +80,6 @@ const stubBlockProps = ({ block, meta, logger = () => null, initialValue, schema
   };
   // mock default block methods
   block.methods = {
-    makeCssClass,
     registerEvent: ({ name, actions }) => {
       block.events[name] = actions;
       return;

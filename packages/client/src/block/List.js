@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Area, BlockLayout } from '@lowdefy/layout';
-import { cn, makeCssClass } from '@lowdefy/block-utils';
+import { cn } from '@lowdefy/block-utils';
 
 import Block from './Block.js';
 import resolveClassNames from './resolveClassNames.js';
@@ -61,7 +61,6 @@ const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
     >
       <Component
         methods={Object.assign(block.methods, {
-          makeCssClass,
           moveItemDown: block.moveItemDown,
           moveItemUp: block.moveItemUp,
           pushItem: block.pushItem,

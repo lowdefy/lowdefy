@@ -15,7 +15,6 @@
 */
 
 import React, { useReducer, useEffect } from 'react';
-import { makeCssClass } from '@lowdefy/block-utils';
 
 const initialState = {
   progress: 0,
@@ -73,7 +72,7 @@ const ProgressBarController = ({ id, lowdefy, resetContext }) => {
       blockId={id}
       components={lowdefy._internal.components}
       menus={lowdefy.menus}
-      methods={{ makeCssClass }}
+      methods={{}}
       pageId={lowdefy.pageId}
       properties={state}
     />

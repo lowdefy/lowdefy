@@ -10,7 +10,6 @@ Object {
   "list": Array [],
   "menus": Array [],
   "methods": Object {
-    "makeCssClass": [Function],
     "registerEvent": [Function],
     "registerMethod": [Function],
     "triggerEvent": [Function],

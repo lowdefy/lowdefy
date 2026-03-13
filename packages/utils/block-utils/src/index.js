@@ -22,8 +22,6 @@ import ErrorBoundary from './ErrorBoundary.js';
 import ErrorPage from './ErrorPage.js';
 import extractBlockTypes from './extractBlockTypes.js';
 import HtmlComponent from './HtmlComponent.js';
-import makeCssClass from './makeCssClass.js';
-import mediaToCssObject from './mediaToCssObject.js';
 import renderHtml from './renderHtml.js';
 import withBlockDefaults from './withBlockDefaults.js';
 
@@ -36,8 +34,6 @@ export {
   ErrorPage,
   extractBlockTypes,
   HtmlComponent,
-  makeCssClass,
-  mediaToCssObject,
   renderHtml,
   withBlockDefaults,
 };

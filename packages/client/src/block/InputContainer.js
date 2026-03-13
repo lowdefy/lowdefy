@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Area, BlockLayout } from '@lowdefy/layout';
-import { cn, makeCssClass } from '@lowdefy/block-utils';
+import { cn } from '@lowdefy/block-utils';
 
 import Block from './Block.js';
 import resolveClassNames from './resolveClassNames.js';
@@ -59,7 +59,6 @@ const InputContainer = ({ block, Blocks, Component, context, loading, lowdefy })
     >
       <Component
         methods={Object.assign(block.methods, {
-          makeCssClass,
           registerEvent: block.registerEvent,
           registerMethod: block.registerMethod,
           triggerEvent: block.triggerEvent,

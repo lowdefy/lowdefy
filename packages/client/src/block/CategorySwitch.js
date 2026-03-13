@@ -16,7 +16,6 @@
 
 import React from 'react';
 import { BlockLayout } from '@lowdefy/layout';
-import { makeCssClass } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
 import InputContainer from './InputContainer.js';
@@ -30,6 +29,7 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
   if (block.eval.visible === false)
     return <div id={`vs-${block.blockId}`} style={{ display: 'none' }} />;
   const Component = lowdefy._internal.blockComponents[block.type];
+  const classNames = resolveClassNames(block.eval.class);
 
   if (loading && type.isObject(block.eval.skeleton)) {
     return (
@@ -37,6 +37,7 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
         blockLayout={block.eval.layout}
         blockProperties={block.eval.properties}
         blockStyle={block.eval.style?.block}
+        blockClass={classNames}
         context={context}
         lowdefy={lowdefy}
         skeleton={block.eval.skeleton}
@@ -44,7 +45,6 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
     );
   }
 
-  const classNames = resolveClassNames(block.eval.class);
   const category = lowdefy._internal.blockMetas[block.type]?.category;
   switch (category) {
     case 'list':
@@ -79,7 +79,6 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
         >
           <Component
             methods={Object.assign(block.methods, {
-              makeCssClass,
               registerEvent: block.registerEvent,
               registerMethod: block.registerMethod,
               setValue: block.setValue,
@@ -123,7 +122,6 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
         >
           <Component
             methods={Object.assign(block.methods, {
-              makeCssClass,
               registerEvent: block.registerEvent,
               registerMethod: block.registerMethod,
               triggerEvent: block.triggerEvent,

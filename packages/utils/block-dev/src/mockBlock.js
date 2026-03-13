@@ -14,8 +14,6 @@
   limitations under the License.
 */
 
-import { makeCssClass } from '@lowdefy/block-utils';
-
 import stubBlockProps from './stubBlockProps.js';
 
 const mockBlock = ({ meta, schema }) => {
@@ -32,7 +30,6 @@ const mockBlock = ({ meta, schema }) => {
   const triggerEvent = jest.fn();
   const unshiftItem = jest.fn();
   const methods = {
-    makeCssClass,
     moveItemDown,
     moveItemUp,
     pushItem,

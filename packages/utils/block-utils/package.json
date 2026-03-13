@@ -41,7 +41,6 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@emotion/css": "11.11.2",
     "@lowdefy/errors": "4.7.0",
     "@lowdefy/helpers": "4.7.0",
     "clsx": "2.1.1",
@@ -52,7 +51,6 @@
   },
   "devDependencies": {
     "@babel/core": "7.23.3",
-    "@emotion/jest": "11.10.5",
     "@swc/cli": "0.8.0",
     "@swc/core": "1.15.18",
     "@swc/jest": "0.2.39",

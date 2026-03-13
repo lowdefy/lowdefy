@@ -15,13 +15,10 @@
 */
 import React, { useEffect } from 'react';
 import { BlockLayout } from '@lowdefy/layout';
-import { makeCssClass } from '@lowdefy/block-utils';
-
 import LoadingContainer from './LoadingContainer.js';
 import LoadingList from './LoadingList.js';
 
 const blockMethods = {
-  makeCssClass,
   moveItemDown: () => {},
   moveItemUp: () => {},
   pushItem: () => {},
@@ -34,6 +31,7 @@ const blockMethods = {
 };
 
 const LoadingBlock = ({
+  blockClass,
   blockId,
   blockLayout,
   blockProperties,
@@ -72,6 +70,7 @@ const LoadingBlock = ({
     case 'container':
       return (
         <LoadingContainer
+          blockClass={blockClass}
           blockId={blockId}
           blockLayout={blockLayout}
           blockProperties={blockProperties}
@@ -88,6 +87,7 @@ const LoadingBlock = ({
           style={skeleton.style ?? blockStyle}
           id={`s-bl-${blockId}-${skeleton.id}`}
           layout={skeleton.layout ?? blockLayout}
+          className={skeleton.class ?? blockClass}
         >
           <Component
             basePath={lowdefy.basePath}

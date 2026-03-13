@@ -18,12 +18,9 @@ import { jest } from '@jest/globals';
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { makeCssClass } from '@lowdefy/block-utils';
-
 import createIcon from './createIcon.js';
 
 const methods = {
-  makeCssClass,
   triggerEvent: jest.fn(),
 };
 
@@ -78,13 +75,14 @@ test.skip('Icon properties.spin', () => {
   expect(container.firstChild).toMatchSnapshot();
 });
 
-test.skip('Icon properties.style', () => {
+test.skip('Icon styles.element', () => {
   const IconComponent = createIcon(Icons);
   const { container } = render(
     <IconComponent
       id="test-id"
       methods={methods}
-      properties={{ name: 'AiIcon', style: { background: 'yellow' } }}
+      properties={{ name: 'AiIcon' }}
+      styles={{ element: { background: 'yellow' } }}
     />
   );
   expect(container.firstChild).toMatchSnapshot();
