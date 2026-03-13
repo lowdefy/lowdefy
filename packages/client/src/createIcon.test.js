@@ -18,7 +18,17 @@ import { jest } from '@jest/globals';
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import createIcon from './createIcon.js';
+
+// Mock @ant-design/icons to avoid ESM/CJS interop issues in Jest.
+// The real Icon component wraps children in <span role="img" class="anticon">.
+jest.unstable_mockModule('@ant-design/icons', () => ({
+  __esModule: true,
+  default: React.forwardRef(({ component: Component, ...rest }, ref) =>
+    Component ? <Component /> : null
+  ),
+}));
+
+const { default: createIcon } = await import('./createIcon.js');
 
 const methods = {
   triggerEvent: jest.fn(),
@@ -39,19 +49,19 @@ const Icons = {
   },
 };
 
-test.skip('Icon default', () => {
+test('Icon default', () => {
   const IconComponent = createIcon(Icons);
   const { container } = render(<IconComponent methods={methods} />);
   expect(container.firstChild).toMatchSnapshot();
 });
 
-test.skip('Icon default and id', () => {
+test('Icon default and id', () => {
   const IconComponent = createIcon(Icons);
   const { container } = render(<IconComponent id="test-id" methods={methods} />);
   expect(container.firstChild).toMatchSnapshot();
 });
 
-test.skip('Icon properties.name', () => {
+test('Icon properties.name', () => {
   const IconComponent = createIcon(Icons);
   const { container } = render(
     <IconComponent id="test-id" methods={methods} properties={{ name: 'AiIcon' }} />
@@ -59,7 +69,7 @@ test.skip('Icon properties.name', () => {
   expect(container.firstChild).toMatchSnapshot();
 });
 
-test.skip('Icon properties string', () => {
+test('Icon properties string', () => {
   const IconComponent = createIcon(Icons);
   const { container } = render(
     <IconComponent id="test-id" methods={methods} properties="AiIcon" />
@@ -67,7 +77,7 @@ test.skip('Icon properties string', () => {
   expect(container.firstChild).toMatchSnapshot();
 });
 
-test.skip('Icon properties.spin', () => {
+test('Icon properties.spin', () => {
   const IconComponent = createIcon(Icons);
   const { container } = render(
     <IconComponent id="test-id" methods={methods} properties={{ name: 'AiIcon', spin: true }} />
@@ -75,7 +85,7 @@ test.skip('Icon properties.spin', () => {
   expect(container.firstChild).toMatchSnapshot();
 });
 
-test.skip('Icon styles.element', () => {
+test('Icon styles.element', () => {
   const IconComponent = createIcon(Icons);
   const { container } = render(
     <IconComponent
@@ -88,7 +98,7 @@ test.skip('Icon styles.element', () => {
   expect(container.firstChild).toMatchSnapshot();
 });
 
-test.skip('Icon properties.name error', () => {
+test('Icon properties.name error', () => {
   const IconComponent = createIcon(Icons);
   const { container } = render(
     <IconComponent id="test-id" methods={methods} properties={{ name: 'ErrorIcon' }} />
@@ -97,7 +107,7 @@ test.skip('Icon properties.name error', () => {
 });
 
 // TODO
-// test.skip('Icon onClick.loading false', () => {
+// test('Icon onClick.loading false', () => {
 //   const IconComponent = createIcon(Icons);
 //   const { container } = render(
 //     <IconComponent
@@ -112,7 +122,7 @@ test.skip('Icon properties.name error', () => {
 //   expect(methods.triggerEvent).toHaveBeenCalledWith({ name: 'onClick' });
 // });
 
-// test.skip('Icon onClick.loading true', () => {
+// test('Icon onClick.loading true', () => {
 //   const IconComponent = createIcon(Icons);
 //   const { container } = render(
 //     <IconComponent
