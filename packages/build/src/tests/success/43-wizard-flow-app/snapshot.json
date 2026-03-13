@@ -1422,8 +1422,8 @@
                 },
                 "~k": "2v"
               },
-              "~k": "2t",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "2t"
             }
           ],
           "~k": "2s"
@@ -1513,8 +1513,8 @@
                 },
                 "~k": "d"
               },
-              "~k": "c",
-              "blockId": "steps"
+              "blockId": "steps",
+              "~k": "c"
             },
             {
               "id": "block:wizard:step1:0",
@@ -1536,7 +1536,6 @@
                 "title": "Step 1 - Personal Info",
                 "~k": "n"
               },
-              "~k": "j",
               "blockId": "step1",
               "areas": {
                 "content": {
@@ -1550,8 +1549,8 @@
                           "title": "First Name",
                           "~k": "q"
                         },
-                        "~k": "p",
-                        "blockId": "firstName"
+                        "blockId": "firstName",
+                        "~k": "p"
                       },
                       {
                         "id": "block:wizard:lastName:0",
@@ -1561,8 +1560,8 @@
                           "title": "Last Name",
                           "~k": "s"
                         },
-                        "~k": "r",
-                        "blockId": "lastName"
+                        "blockId": "lastName",
+                        "~k": "r"
                       },
                       {
                         "id": "block:wizard:nextBtn1:0",
@@ -1601,8 +1600,8 @@
                           },
                           "~k": "v"
                         },
-                        "~k": "t",
-                        "blockId": "nextBtn1"
+                        "blockId": "nextBtn1",
+                        "~k": "t"
                       }
                     ],
                     "~k": "o"
@@ -1610,7 +1609,8 @@
                   "~k": "3c"
                 },
                 "~k": "3b"
-              }
+              },
+              "~k": "j"
             },
             {
               "id": "block:wizard:step2:0",
@@ -1632,7 +1632,6 @@
                 "title": "Step 2 - Contact Info",
                 "~k": "14"
               },
-              "~k": "10",
               "blockId": "step2",
               "areas": {
                 "content": {
@@ -1646,8 +1645,8 @@
                           "title": "Email",
                           "~k": "17"
                         },
-                        "~k": "16",
-                        "blockId": "email"
+                        "blockId": "email",
+                        "~k": "16"
                       },
                       {
                         "id": "block:wizard:phone:0",
@@ -1656,8 +1655,8 @@
                           "title": "Phone",
                           "~k": "19"
                         },
-                        "~k": "18",
-                        "blockId": "phone"
+                        "blockId": "phone",
+                        "~k": "18"
                       },
                       {
                         "id": "block:wizard:backBtn2:0",
@@ -1690,8 +1689,8 @@
                           },
                           "~k": "1c"
                         },
-                        "~k": "1a",
-                        "blockId": "backBtn2"
+                        "blockId": "backBtn2",
+                        "~k": "1a"
                       },
                       {
                         "id": "block:wizard:nextBtn2:0",
@@ -1730,8 +1729,8 @@
                           },
                           "~k": "1i"
                         },
-                        "~k": "1g",
-                        "blockId": "nextBtn2"
+                        "blockId": "nextBtn2",
+                        "~k": "1g"
                       }
                     ],
                     "~k": "15"
@@ -1739,7 +1738,8 @@
                   "~k": "3g"
                 },
                 "~k": "3f"
-              }
+              },
+              "~k": "10"
             },
             {
               "id": "block:wizard:step3:0",
@@ -1761,7 +1761,6 @@
                 "title": "Step 3 - Confirmation",
                 "~k": "1r"
               },
-              "~k": "1n",
               "blockId": "step3",
               "areas": {
                 "content": {
@@ -1810,8 +1809,8 @@
                           },
                           "~k": "1u"
                         },
-                        "~k": "1t",
-                        "blockId": "summary"
+                        "blockId": "summary",
+                        "~k": "1t"
                       },
                       {
                         "id": "block:wizard:backBtn3:0",
@@ -1844,8 +1843,8 @@
                           },
                           "~k": "26"
                         },
-                        "~k": "24",
-                        "blockId": "backBtn3"
+                        "blockId": "backBtn3",
+                        "~k": "24"
                       },
                       {
                         "id": "block:wizard:submitBtn:0",
@@ -1879,8 +1878,8 @@
                           },
                           "~k": "2c"
                         },
-                        "~k": "2a",
-                        "blockId": "submitBtn"
+                        "blockId": "submitBtn",
+                        "~k": "2a"
                       }
                     ],
                     "~k": "1s"
@@ -1888,7 +1887,8 @@
                   "~k": "3m"
                 },
                 "~k": "3l"
-              }
+              },
+              "~k": "1n"
             },
             {
               "id": "block:wizard:complete:0",
@@ -1912,8 +1912,8 @@
                 "subTitle": "Your account has been created.",
                 "~k": "2k"
               },
-              "~k": "2g",
-              "blockId": "complete"
+              "blockId": "complete",
+              "~k": "2g"
             }
           ],
           "~k": "b"

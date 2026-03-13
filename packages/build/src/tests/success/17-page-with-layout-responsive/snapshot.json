@@ -870,8 +870,8 @@
                 },
                 "~k": "n"
               },
-              "~k": "l",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "l"
             }
           ],
           "~k": "k"
@@ -928,8 +928,8 @@
                 },
                 "~k": "8"
               },
-              "~k": "7",
-              "blockId": "responsive"
+              "blockId": "responsive",
+              "~k": "7"
             }
           ],
           "~k": "6"

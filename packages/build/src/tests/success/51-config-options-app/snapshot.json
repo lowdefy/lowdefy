@@ -930,8 +930,8 @@
                 },
                 "~k": "q"
               },
-              "~k": "o",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "o"
             }
           ],
           "~k": "n"
@@ -976,8 +976,8 @@
                 "content": "About Us",
                 "~k": "f"
               },
-              "~k": "e",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "e"
             }
           ],
           "~k": "d"
@@ -1016,8 +1016,8 @@
                 "content": "Welcome to the App",
                 "~k": "a"
               },
-              "~k": "9",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "9"
             }
           ],
           "~k": "8"

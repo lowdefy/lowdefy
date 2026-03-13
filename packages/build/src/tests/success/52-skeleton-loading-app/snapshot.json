@@ -1054,8 +1054,8 @@
                 },
                 "~k": "1b"
               },
-              "~k": "19",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "19"
             }
           ],
           "~k": "18"
@@ -1100,8 +1100,8 @@
                 "title": "Card Loading State",
                 "~k": "9"
               },
-              "~k": "8",
-              "blockId": "isLoading"
+              "blockId": "isLoading",
+              "~k": "8"
             },
             {
               "id": "block:home:avatarLoaded:0",
@@ -1110,8 +1110,8 @@
                 "title": "Avatar Loaded",
                 "~k": "b"
               },
-              "~k": "a",
-              "blockId": "avatarLoaded"
+              "blockId": "avatarLoaded",
+              "~k": "a"
             },
             {
               "id": "block:home:btnLoading:0",
@@ -1120,8 +1120,8 @@
                 "title": "Button Loading",
                 "~k": "d"
               },
-              "~k": "c",
-              "blockId": "btnLoading"
+              "blockId": "btnLoading",
+              "~k": "c"
             },
             {
               "id": "block:home:loadingCard:0",
@@ -1138,7 +1138,6 @@
                 },
                 "~k": "g"
               },
-              "~k": "e",
               "blockId": "loadingCard",
               "areas": {
                 "content": {
@@ -1151,8 +1150,8 @@
                           "content": "This content shows after loading",
                           "~k": "k"
                         },
-                        "~k": "j",
-                        "blockId": "content"
+                        "blockId": "content",
+                        "~k": "j"
                       }
                     ],
                     "~k": "i"
@@ -1160,12 +1159,12 @@
                   "~k": "1q"
                 },
                 "~k": "1p"
-              }
+              },
+              "~k": "e"
             },
             {
               "id": "block:home:avatarSkeleton:0",
               "type": "Box",
-              "~k": "l",
               "blockId": "avatarSkeleton",
               "areas": {
                 "content": {
@@ -1181,8 +1180,8 @@
                           },
                           "~k": "o"
                         },
-                        "~k": "n",
-                        "blockId": "avatar"
+                        "blockId": "avatar",
+                        "~k": "n"
                       },
                       {
                         "id": "block:home:actualAvatar:0",
@@ -1195,8 +1194,8 @@
                           "src": "https://example.com/avatar.jpg",
                           "~k": "s"
                         },
-                        "~k": "q",
-                        "blockId": "actualAvatar"
+                        "blockId": "actualAvatar",
+                        "~k": "q"
                       }
                     ],
                     "~k": "m"
@@ -1204,12 +1203,12 @@
                   "~k": "1s"
                 },
                 "~k": "1r"
-              }
+              },
+              "~k": "l"
             },
             {
               "id": "block:home:buttonSkeleton:0",
               "type": "Box",
-              "~k": "t",
               "blockId": "buttonSkeleton",
               "areas": {
                 "content": {
@@ -1222,8 +1221,8 @@
                           "_state": "btnLoading",
                           "~k": "w"
                         },
-                        "~k": "v",
-                        "blockId": "skelBtn"
+                        "blockId": "skelBtn",
+                        "~k": "v"
                       },
                       {
                         "id": "block:home:realBtn:0",
@@ -1239,8 +1238,8 @@
                           "title": "Click Me",
                           "~k": "10"
                         },
-                        "~k": "x",
-                        "blockId": "realBtn"
+                        "blockId": "realBtn",
+                        "~k": "x"
                       }
                     ],
                     "~k": "u"
@@ -1248,7 +1247,8 @@
                   "~k": "1u"
                 },
                 "~k": "1t"
-              }
+              },
+              "~k": "t"
             }
           ],
           "~k": "7"

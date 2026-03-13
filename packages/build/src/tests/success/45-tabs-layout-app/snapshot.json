@@ -1267,8 +1267,8 @@
                 },
                 "~k": "28"
               },
-              "~k": "26",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "26"
             }
           ],
           "~k": "25"
@@ -1313,8 +1313,8 @@
                 "content": "Tabs Layout Demo",
                 "~k": "9"
               },
-              "~k": "8",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "8"
             },
             {
               "id": "block:home:mainTabs:0",
@@ -1335,8 +1335,8 @@
                           "content": "Overview Tab",
                           "~k": "g"
                         },
-                        "~k": "f",
-                        "blockId": "overviewTitle"
+                        "blockId": "overviewTitle",
+                        "~k": "f"
                       },
                       {
                         "id": "block:home:overviewContent:0",
@@ -1345,13 +1345,12 @@
                           "content": "This is the overview section with general information.",
                           "~k": "i"
                         },
-                        "~k": "h",
-                        "blockId": "overviewContent"
+                        "blockId": "overviewContent",
+                        "~k": "h"
                       },
                       {
                         "id": "block:home:overviewStats:0",
                         "type": "Box",
-                        "~k": "j",
                         "blockId": "overviewStats",
                         "areas": {
                           "content": {
@@ -1369,8 +1368,8 @@
                                     "value": 1234,
                                     "~k": "n"
                                   },
-                                  "~k": "l",
-                                  "blockId": "stat1"
+                                  "blockId": "stat1",
+                                  "~k": "l"
                                 },
                                 {
                                   "id": "block:home:stat2:0",
@@ -1384,8 +1383,8 @@
                                     "value": 890,
                                     "~k": "q"
                                   },
-                                  "~k": "o",
-                                  "blockId": "stat2"
+                                  "blockId": "stat2",
+                                  "~k": "o"
                                 },
                                 {
                                   "id": "block:home:stat3:0",
@@ -1399,8 +1398,8 @@
                                     "value": 344,
                                     "~k": "t"
                                   },
-                                  "~k": "r",
-                                  "blockId": "stat3"
+                                  "blockId": "stat3",
+                                  "~k": "r"
                                 }
                               ],
                               "~k": "k"
@@ -1408,7 +1407,8 @@
                             "~k": "2n"
                           },
                           "~k": "2m"
-                        }
+                        },
+                        "~k": "j"
                       }
                     ],
                     "~k": "e"
@@ -1426,8 +1426,8 @@
                           "content": "Details Tab",
                           "~k": "x"
                         },
-                        "~k": "w",
-                        "blockId": "detailsTitle"
+                        "blockId": "detailsTitle",
+                        "~k": "w"
                       },
                       {
                         "id": "block:home:detailsForm:0",
@@ -1436,7 +1436,6 @@
                           "title": "Edit Details",
                           "~k": "z"
                         },
-                        "~k": "y",
                         "blockId": "detailsForm",
                         "areas": {
                           "content": {
@@ -1449,8 +1448,8 @@
                                     "title": "Name",
                                     "~k": "12"
                                   },
-                                  "~k": "11",
-                                  "blockId": "detailName"
+                                  "blockId": "detailName",
+                                  "~k": "11"
                                 },
                                 {
                                   "id": "block:home:detailDesc:0",
@@ -1459,8 +1458,8 @@
                                     "title": "Description",
                                     "~k": "14"
                                   },
-                                  "~k": "13",
-                                  "blockId": "detailDesc"
+                                  "blockId": "detailDesc",
+                                  "~k": "13"
                                 }
                               ],
                               "~k": "10"
@@ -1468,7 +1467,8 @@
                             "~k": "2p"
                           },
                           "~k": "2o"
-                        }
+                        },
+                        "~k": "y"
                       }
                     ],
                     "~k": "v"
@@ -1486,13 +1486,12 @@
                           "content": "Settings Tab",
                           "~k": "18"
                         },
-                        "~k": "17",
-                        "blockId": "settingsTitle"
+                        "blockId": "settingsTitle",
+                        "~k": "17"
                       },
                       {
                         "id": "block:home:settingsList:0",
                         "type": "Card",
-                        "~k": "19",
                         "blockId": "settingsList",
                         "areas": {
                           "content": {
@@ -1505,8 +1504,8 @@
                                     "title": "Enable Feature",
                                     "~k": "1c"
                                   },
-                                  "~k": "1b",
-                                  "blockId": "enableFeature"
+                                  "blockId": "enableFeature",
+                                  "~k": "1b"
                                 },
                                 {
                                   "id": "block:home:maxItems:0",
@@ -1517,8 +1516,8 @@
                                     "max": 100,
                                     "~k": "1e"
                                   },
-                                  "~k": "1d",
-                                  "blockId": "maxItems"
+                                  "blockId": "maxItems",
+                                  "~k": "1d"
                                 },
                                 {
                                   "id": "block:home:theme:0",
@@ -1542,8 +1541,8 @@
                                     },
                                     "~k": "1g"
                                   },
-                                  "~k": "1f",
-                                  "blockId": "theme"
+                                  "blockId": "theme",
+                                  "~k": "1f"
                                 }
                               ],
                               "~k": "1a"
@@ -1551,7 +1550,8 @@
                             "~k": "2r"
                           },
                           "~k": "2q"
-                        }
+                        },
+                        "~k": "19"
                       }
                     ],
                     "~k": "16"
@@ -1560,8 +1560,8 @@
                 },
                 "~k": "c"
               },
-              "~k": "a",
-              "blockId": "mainTabs"
+              "blockId": "mainTabs",
+              "~k": "a"
             },
             {
               "id": "block:home:nestedTabs:0",
@@ -1570,7 +1570,6 @@
                 "title": "Nested Tabs Example",
                 "~k": "1l"
               },
-              "~k": "1k",
               "blockId": "nestedTabs",
               "areas": {
                 "content": {
@@ -1594,8 +1593,8 @@
                                     "content": "Inner Tab 1 Content",
                                     "~k": "1t"
                                   },
-                                  "~k": "1s",
-                                  "blockId": "inner1"
+                                  "blockId": "inner1",
+                                  "~k": "1s"
                                 }
                               ],
                               "~k": "1r"
@@ -1612,8 +1611,8 @@
                                     "content": "Inner Tab 2 Content",
                                     "~k": "1x"
                                   },
-                                  "~k": "1w",
-                                  "blockId": "inner2"
+                                  "blockId": "inner2",
+                                  "~k": "1w"
                                 }
                               ],
                               "~k": "1v"
@@ -1622,8 +1621,8 @@
                           },
                           "~k": "1p"
                         },
-                        "~k": "1n",
-                        "blockId": "innerTabs"
+                        "blockId": "innerTabs",
+                        "~k": "1n"
                       }
                     ],
                     "~k": "1m"
@@ -1631,7 +1630,8 @@
                   "~k": "2t"
                 },
                 "~k": "2s"
-              }
+              },
+              "~k": "1k"
             }
           ],
           "~k": "7"

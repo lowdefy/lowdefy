@@ -1275,12 +1275,12 @@
                 "title": "Home",
                 "~k": "8"
               },
-              "~k": "7",
               "auth": {
                 "public": true,
                 "~k": "2i"
               },
-              "menuItemId": "home"
+              "menuItemId": "home",
+              "~k": "7"
             },
             {
               "id": "menuitem:default:section1",
@@ -1299,12 +1299,12 @@
                       "title": "Page 2",
                       "~k": "d"
                     },
-                    "~k": "c",
                     "auth": {
                       "public": true,
                       "~k": "2k"
                     },
-                    "menuItemId": "link1"
+                    "menuItemId": "link1",
+                    "~k": "c"
                   },
                   {
                     "id": "menuitem:default:link2",
@@ -1314,12 +1314,12 @@
                       "title": "Page 3",
                       "~k": "f"
                     },
-                    "~k": "e",
                     "auth": {
                       "public": true,
                       "~k": "2l"
                     },
-                    "menuItemId": "link2"
+                    "menuItemId": "link2",
+                    "~k": "e"
                   },
                   {
                     "id": "menuitem:default:link3",
@@ -1329,12 +1329,12 @@
                       "title": "Page 4",
                       "~k": "h"
                     },
-                    "~k": "g",
                     "auth": {
                       "public": true,
                       "~k": "2m"
                     },
-                    "menuItemId": "link3"
+                    "menuItemId": "link3",
+                    "~k": "g"
                   },
                   {
                     "id": "menuitem:default:link4",
@@ -1344,22 +1344,22 @@
                       "title": "Page 5",
                       "~k": "j"
                     },
-                    "~k": "i",
                     "auth": {
                       "public": true,
                       "~k": "2n"
                     },
-                    "menuItemId": "link4"
+                    "menuItemId": "link4",
+                    "~k": "i"
                   }
                 ],
                 "~k": "2j"
               },
-              "~k": "9",
               "auth": {
                 "public": true,
                 "~k": "2o"
               },
-              "menuItemId": "section1"
+              "menuItemId": "section1",
+              "~k": "9"
             },
             {
               "id": "menuitem:default:section2",
@@ -1378,12 +1378,12 @@
                       "title": "Page 6",
                       "~k": "o"
                     },
-                    "~k": "n",
                     "auth": {
                       "public": true,
                       "~k": "2q"
                     },
-                    "menuItemId": "link5"
+                    "menuItemId": "link5",
+                    "~k": "n"
                   },
                   {
                     "id": "menuitem:default:link6",
@@ -1393,12 +1393,12 @@
                       "title": "Page 7",
                       "~k": "q"
                     },
-                    "~k": "p",
                     "auth": {
                       "public": true,
                       "~k": "2r"
                     },
-                    "menuItemId": "link6"
+                    "menuItemId": "link6",
+                    "~k": "p"
                   },
                   {
                     "id": "menuitem:default:link7",
@@ -1408,28 +1408,28 @@
                       "title": "Page 8",
                       "~k": "s"
                     },
-                    "~k": "r",
                     "auth": {
                       "public": true,
                       "~k": "2s"
                     },
-                    "menuItemId": "link7"
+                    "menuItemId": "link7",
+                    "~k": "r"
                   }
                 ],
                 "~k": "2p"
               },
-              "~k": "k",
               "auth": {
                 "public": true,
                 "~k": "2t"
               },
-              "menuItemId": "section2"
+              "menuItemId": "section2",
+              "~k": "k"
             }
           ],
           "~k": "2h"
         },
-        "~k": "5",
-        "menuId": "default"
+        "menuId": "default",
+        "~k": "5"
       }
     ],
     "~k": "4"
@@ -1482,8 +1482,8 @@
                 },
                 "~k": "28"
               },
-              "~k": "26",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "26"
             }
           ],
           "~k": "25"
@@ -1528,8 +1528,8 @@
                 "content": "Page 1 Content",
                 "~k": "y"
               },
-              "~k": "x",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "x"
             }
           ],
           "~k": "w"
@@ -1568,8 +1568,8 @@
                 "content": "Page 2 Content",
                 "~k": "13"
               },
-              "~k": "12",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "12"
             }
           ],
           "~k": "11"
@@ -1608,8 +1608,8 @@
                 "content": "Page 3 Content",
                 "~k": "18"
               },
-              "~k": "17",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "17"
             }
           ],
           "~k": "16"
@@ -1648,8 +1648,8 @@
                 "content": "Page 4 Content",
                 "~k": "1d"
               },
-              "~k": "1c",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "1c"
             }
           ],
           "~k": "1b"
@@ -1688,8 +1688,8 @@
                 "content": "Page 5 Content",
                 "~k": "1i"
               },
-              "~k": "1h",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "1h"
             }
           ],
           "~k": "1g"
@@ -1728,8 +1728,8 @@
                 "content": "Page 6 Content",
                 "~k": "1n"
               },
-              "~k": "1m",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "1m"
             }
           ],
           "~k": "1l"
@@ -1768,8 +1768,8 @@
                 "content": "Page 7 Content",
                 "~k": "1s"
               },
-              "~k": "1r",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "1r"
             }
           ],
           "~k": "1q"
@@ -1808,8 +1808,8 @@
                 "content": "Page 8 Content",
                 "~k": "1x"
               },
-              "~k": "1w",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "1w"
             }
           ],
           "~k": "1v"
