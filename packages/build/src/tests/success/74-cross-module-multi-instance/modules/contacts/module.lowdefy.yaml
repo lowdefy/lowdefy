@@ -1,0 +1,24 @@
+name: Contacts
+
+vars:
+  label:
+    type: string
+    default: Contacts
+
+dependencies:
+  - id: companies
+
+exports:
+  pages:
+    - id: contact-detail
+  components:
+    - id: contact-selector
+
+components:
+  - id: contact-selector
+    type: Component
+    component:
+      _ref: components/contact-selector.yaml
+
+pages:
+  - _ref: pages/contact-detail.yaml

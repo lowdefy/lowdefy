@@ -1,0 +1,10 @@
+id: contact-detail
+type: Box
+blocks:
+  - id: contact-heading
+    type: Title
+    properties:
+      content: Contact Detail
+  - _ref:
+      module: companies
+      component: company-selector

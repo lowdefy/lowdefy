@@ -1,0 +1,14 @@
+id: default
+links:
+  - id: contact-list
+    type: MenuLink
+    pageId:
+      _module.pageId: contact-list
+    properties:
+      title: Contact List
+  - id: contact-detail
+    type: MenuLink
+    pageId:
+      _module.pageId: contact-detail
+    properties:
+      title: Contact Detail

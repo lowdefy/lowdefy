@@ -1,0 +1,5 @@
+id: contact-picker
+type: Selector
+properties:
+  label:
+    _module.var: label

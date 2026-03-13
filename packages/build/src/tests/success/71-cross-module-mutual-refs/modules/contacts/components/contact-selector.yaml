@@ -1,0 +1,4 @@
+id: contact-picker
+type: Selector
+properties:
+  label: Select Contact

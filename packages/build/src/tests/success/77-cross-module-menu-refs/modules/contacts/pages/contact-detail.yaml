@@ -1,0 +1,7 @@
+id: contact-detail
+type: Box
+blocks:
+  - id: title
+    type: Title
+    properties:
+      content: Contact Detail

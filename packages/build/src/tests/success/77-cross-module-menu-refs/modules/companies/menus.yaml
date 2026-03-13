@@ -1,0 +1,11 @@
+id: default
+links:
+  - id: company-list
+    type: MenuLink
+    pageId:
+      _module.pageId: company-list
+    properties:
+      title: Company List
+  - _ref:
+      module: contacts
+      menu: default

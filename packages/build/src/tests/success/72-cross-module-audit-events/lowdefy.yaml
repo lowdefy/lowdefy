@@ -1,0 +1,14 @@
+# 72: Cross-module audit events
+# Tests API endpoint references across modules using _module.endpointId object form.
+lowdefy: local
+name: Audit Events Test
+
+modules:
+  - id: events
+    source: 'file:modules/events'
+  - id: companies
+    source: 'file:modules/companies'
+
+pages:
+  - id: home
+    type: Box

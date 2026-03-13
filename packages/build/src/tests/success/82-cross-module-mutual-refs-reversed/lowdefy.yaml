@@ -1,0 +1,15 @@
+# 82: Cross-module mutual entity references (reversed order)
+# Same as fixture 71 but modules are listed in reversed order.
+# Verifies ordering does not affect build output.
+lowdefy: local
+name: Mutual Refs Test
+
+modules:
+  - id: companies
+    source: 'file:../71-cross-module-mutual-refs/modules/companies'
+  - id: contacts
+    source: 'file:../71-cross-module-mutual-refs/modules/contacts'
+
+pages:
+  - id: home
+    type: Box

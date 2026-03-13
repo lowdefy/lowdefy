@@ -1,0 +1,16 @@
+id: contact-list
+type: Box
+blocks:
+  - _ref:
+      module: layout
+      component: page-wrapper
+      vars:
+        sidebar:
+          _ref:
+            module: widgets
+            component: nav-widget
+        content:
+          id: contact-table
+          type: Title
+          properties:
+            content: Contacts

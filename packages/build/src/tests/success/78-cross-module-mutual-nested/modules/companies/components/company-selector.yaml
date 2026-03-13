@@ -1,0 +1,10 @@
+id: company-box
+type: Box
+blocks:
+  - id: company-dropdown
+    type: Selector
+    properties:
+      label: Select Company
+  - _ref:
+      module: contacts
+      component: contact-selector

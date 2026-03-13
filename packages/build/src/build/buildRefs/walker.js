@@ -82,10 +82,15 @@ class WalkContext {
     });
   }
 
-  forRef({ refId, vars, filePath, moduleVars, packageRoot, moduleDependencies }) {
+  forRef({ refId, vars, filePath, moduleVars, packageRoot, moduleDependencies, extraRefChainKeys }) {
     const newChain = new Set(this.refChain);
     if (filePath) {
       newChain.add(filePath);
+    }
+    if (extraRefChainKeys) {
+      for (const key of extraRefChainKeys) {
+        newChain.add(key);
+      }
     }
     return new WalkContext({
       buildContext: this.buildContext,
@@ -339,6 +344,7 @@ async function resolveRef(node, ctx) {
     );
   }
 
+
   // Steps 7-14: File operations that can fail independently per ref.
   // Errors are collected so the walker can continue processing sibling refs,
   // allowing multiple errors to be reported at once.
@@ -364,11 +370,32 @@ async function resolveRef(node, ctx) {
       });
     }
 
+    // 7b. Circular detection for cross-module component/menu refs.
+    // File-based cycle detection (step 6) misses these because each module
+    // has a different file path. Use a synthetic key with the resolved
+    // concrete entry ID: "module:<entryId>/<type>:<name>".
+    if (resolvedEntryId && (refDef.component || refDef.menu)) {
+      const exportType = refDef.component ? 'component' : 'menu';
+      const exportName = refDef.component ?? refDef.menu;
+      const cycleKey = `module:${resolvedEntryId}/${exportType}:${exportName}`;
+      if (ctx.refChain.has(cycleKey)) {
+        const chainDisplay = [...ctx.refChain, cycleKey].join('\n  -> ');
+        throw new ConfigError(
+          `Circular module reference detected. Module "${resolvedEntryId}" ${exportType} "${exportName}" ` +
+            `references itself through:\n  -> ${chainDisplay}`,
+          { filePath: ctx.currentFile }
+        );
+      }
+    }
+
     // 8. Create child context for the ref
     let childCtx;
     if (refDef.module && (refDef.component || refDef.menu)) {
       const moduleEntry = ctx.buildContext.modules[resolvedEntryId];
       const deferredFrom = content['~deferredFrom'];
+      const exportType = refDef.component ? 'component' : 'menu';
+      const exportName = refDef.component ?? refDef.menu;
+      const cycleKey = `module:${resolvedEntryId}/${exportType}:${exportName}`;
       childCtx = ctx.forRef({
         refId: refDef.id,
         vars: refDef.vars,
@@ -376,6 +403,7 @@ async function resolveRef(node, ctx) {
         moduleVars: moduleEntry.vars,
         packageRoot: moduleEntry.packageRoot,
         moduleDependencies: moduleEntry.moduleDependencies,
+        extraRefChainKeys: [cycleKey],
       });
     } else {
       childCtx = ctx.forRef({

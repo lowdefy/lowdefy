@@ -1,0 +1,12 @@
+id: company-list
+type: Box
+blocks:
+  - _ref:
+      module: layout
+      component: page-wrapper
+      vars:
+        content:
+          id: company-table
+          type: Title
+          properties:
+            content: Companies

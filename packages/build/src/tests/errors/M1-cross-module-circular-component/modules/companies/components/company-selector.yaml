@@ -1,0 +1,6 @@
+id: company-box
+type: Box
+blocks:
+  - _ref:
+      module: contacts
+      component: contact-selector

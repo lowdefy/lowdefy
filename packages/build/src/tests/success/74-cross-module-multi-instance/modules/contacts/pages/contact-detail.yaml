@@ -1,0 +1,15 @@
+id: contact-detail
+type: Box
+blocks:
+  - id: heading
+    type: Title
+    properties:
+      content:
+        _module.var: label
+  - id: view-company
+    type: Anchor
+    properties:
+      href:
+        _module.pageId:
+          id: company-detail
+          module: companies

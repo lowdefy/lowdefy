@@ -1,0 +1,5 @@
+name: Contacts
+
+pages:
+  - id: contact-list
+    type: Box

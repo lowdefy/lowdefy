@@ -1,0 +1,7 @@
+id: contact-list
+type: Box
+blocks:
+  - id: title
+    type: Title
+    properties:
+      content: Contact List

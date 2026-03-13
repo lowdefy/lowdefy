@@ -1,0 +1,15 @@
+name: Contacts
+
+exports:
+  pages:
+    - id: contact-list
+    - id: contact-detail
+  menus:
+    - id: default
+
+menus:
+  - _ref: menus.yaml
+
+pages:
+  - _ref: pages/contact-list.yaml
+  - _ref: pages/contact-detail.yaml

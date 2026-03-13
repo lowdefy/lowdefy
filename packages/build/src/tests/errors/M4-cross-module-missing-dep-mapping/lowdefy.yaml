@@ -1,0 +1,11 @@
+# M4: Missing dependency mapping — no auto-wire match, no explicit wiring
+lowdefy: local
+name: Missing Dep Mapping Test
+
+modules:
+  - id: contacts
+    source: 'file:modules/contacts'
+
+pages:
+  - id: home
+    type: Box

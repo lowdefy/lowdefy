@@ -1,0 +1,21 @@
+# 80: Cross-module ref in vars of another cross-module ref
+# Tests inner _ref resolves before outer, and _var receives resolved content.
+lowdefy: local
+name: Ref In Vars Test
+
+modules:
+  - id: widgets
+    source: 'file:modules/widgets'
+  - id: app-layout
+    source: 'file:modules/layout'
+    dependencies:
+      widgets: widgets
+  - id: contacts
+    source: 'file:modules/contacts'
+    dependencies:
+      layout: app-layout
+      widgets: widgets
+
+pages:
+  - id: home
+    type: Box

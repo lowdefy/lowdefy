@@ -1,0 +1,6 @@
+id: c-box
+type: Box
+blocks:
+  - _ref:
+      module: mod-a
+      component: comp-a

@@ -1,0 +1,19 @@
+name: Module C
+
+dependencies:
+  - id: mod-a
+
+exports:
+  components:
+    - id: comp-c
+
+components:
+  - id: comp-c
+    type: Component
+    component:
+      id: c-box
+      type: Box
+      blocks:
+        - _ref:
+            module: mod-a
+            component: comp-a

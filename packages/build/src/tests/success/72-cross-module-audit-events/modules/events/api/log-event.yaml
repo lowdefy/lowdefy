@@ -1,0 +1,10 @@
+id: log-event
+type: Endpoint
+routine:
+  - id: log
+    type: AxiosHttp
+    connectionId:
+      _module.connectionId: event-store
+    properties:
+      method: post
+      url: /events

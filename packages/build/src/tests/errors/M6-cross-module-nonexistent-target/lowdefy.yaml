@@ -1,0 +1,13 @@
+# M6: Dependency mapping references non-existent module entry
+lowdefy: local
+name: Nonexistent Target Test
+
+modules:
+  - id: contacts
+    source: 'file:modules/contacts'
+    dependencies:
+      companies: does-not-exist
+
+pages:
+  - id: home
+    type: Box

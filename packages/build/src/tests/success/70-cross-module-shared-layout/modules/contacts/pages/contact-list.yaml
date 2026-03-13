@@ -1,0 +1,12 @@
+id: contact-list
+type: Box
+blocks:
+  - _ref:
+      module: layout
+      component: page-wrapper
+      vars:
+        content:
+          id: contact-table
+          type: Title
+          properties:
+            content: Contact List

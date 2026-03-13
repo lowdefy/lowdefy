@@ -1,0 +1,9 @@
+id: default
+links:
+  - id: contact-list
+    type: MenuLink
+    pageId:
+      _module.pageId: contact-list
+  - _ref:
+      module: companies
+      menu: default

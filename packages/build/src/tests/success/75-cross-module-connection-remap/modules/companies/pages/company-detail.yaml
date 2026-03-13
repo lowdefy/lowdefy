@@ -1,0 +1,11 @@
+id: company-detail
+type: Box
+blocks:
+  - id: company-name
+    type: Title
+    properties:
+      content: Company Detail
+      connectionRef:
+        _module.connectionId:
+          id: contacts-db
+          module: contacts

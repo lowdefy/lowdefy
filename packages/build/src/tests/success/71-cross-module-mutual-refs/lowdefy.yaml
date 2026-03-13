@@ -1,0 +1,14 @@
+# 71: Cross-module mutual entity references
+# Tests mutual dependencies with auto-wire, component embedding, and page linking.
+lowdefy: local
+name: Mutual Refs Test
+
+modules:
+  - id: contacts
+    source: 'file:modules/contacts'
+  - id: companies
+    source: 'file:modules/companies'
+
+pages:
+  - id: home
+    type: Box

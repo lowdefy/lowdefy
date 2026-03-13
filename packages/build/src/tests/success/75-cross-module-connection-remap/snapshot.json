@@ -1,0 +1,2277 @@
+{
+  "app.json": {
+    "html": {
+      "appendBody": "",
+      "appendHead": "",
+      "~k": "12"
+    },
+    "git_sha": "test-git-sha-for-snapshots",
+    "~k": "11"
+  },
+  "auth.json": {
+    "api": {
+      "roles": {
+        "~k": "1r"
+      },
+      "~k": "1q"
+    },
+    "authPages": {
+      "~k": "1s"
+    },
+    "pages": {
+      "roles": {
+        "~k": "1u"
+      },
+      "~k": "1t"
+    },
+    "callbacks": {
+      "~arr": [],
+      "~k": "1v"
+    },
+    "events": {
+      "~arr": [],
+      "~k": "1w"
+    },
+    "providers": {
+      "~arr": [],
+      "~k": "1x"
+    },
+    "session": {
+      "~k": "1y"
+    },
+    "theme": {
+      "~k": "1z"
+    },
+    "configured": false,
+    "~k": "1p"
+  },
+  "config.json": {
+    "~k": "14"
+  },
+  "connections/shared-mongodb.json": {
+    "id": "connection:shared-mongodb",
+    "type": "MongoDBCollection",
+    "properties": {
+      "databaseUri": "mongodb://localhost/shared",
+      "collection": "data",
+      "~k": "c"
+    },
+    "connectionId": "shared-mongodb",
+    "~k": "b"
+  },
+  "global.json": {},
+  "keyMap.json": {
+    "9": {
+      "key": "root",
+      "~k_parent": "8",
+      "~l": 3
+    },
+    "10": {
+      "key": "root.pages[3:404:Result].areas.extra.blocks[0:home:Button].events.onClick[0:home:Link].params",
+      "~k_parent": "z"
+    },
+    "11": {
+      "key": "root.app",
+      "~k_parent": "9"
+    },
+    "12": {
+      "key": "root.app.html",
+      "~k_parent": "11"
+    },
+    "13": {
+      "key": "root.logger",
+      "~k_parent": "9"
+    },
+    "14": {
+      "key": "root.config",
+      "~k_parent": "9"
+    },
+    "16": {
+      "key": "root.pages",
+      "~k_parent": "9"
+    },
+    "17": {
+      "key": "root.pages[0:home:Box]",
+      "~k_parent": "16"
+    },
+    "18": {
+      "key": "root.pages[0:home:Box].auth",
+      "~k_parent": "17"
+    },
+    "19": {
+      "key": "root.pages[0:home:Box].requests",
+      "~k_parent": "17"
+    },
+    "20": {
+      "key": "root.menus",
+      "~k_parent": "9"
+    },
+    "21": {
+      "key": "root.menus[0:default]",
+      "~k_parent": "20"
+    },
+    "22": {
+      "key": "root.menus[0:default].links",
+      "~k_parent": "21"
+    },
+    "23": {
+      "key": "root.menus[0:default].links[0:0:MenuLink]",
+      "~k_parent": "22"
+    },
+    "24": {
+      "key": "root.menus[0:default].links[0:0:MenuLink].auth",
+      "~k_parent": "23"
+    },
+    "25": {
+      "key": "root.menus[0:default].links[1:1:MenuLink]",
+      "~k_parent": "22"
+    },
+    "26": {
+      "key": "root.menus[0:default].links[1:1:MenuLink].auth",
+      "~k_parent": "25"
+    },
+    "27": {
+      "key": "root.menus[0:default].links[2:2:MenuLink]",
+      "~k_parent": "22"
+    },
+    "28": {
+      "key": "root.menus[0:default].links[2:2:MenuLink].auth",
+      "~k_parent": "27"
+    },
+    "29": {
+      "key": "root.types",
+      "~k_parent": "9"
+    },
+    "30": {
+      "key": "root.types.blocks.Spinner",
+      "~k_parent": "2h"
+    },
+    "31": {
+      "key": "root.types.blocks.Message",
+      "~k_parent": "2h"
+    },
+    "32": {
+      "key": "root.types.connections",
+      "~k_parent": "29"
+    },
+    "33": {
+      "key": "root.types.connections.MongoDBCollection",
+      "~k_parent": "32"
+    },
+    "34": {
+      "key": "root.types.requests",
+      "~k_parent": "29"
+    },
+    "35": {
+      "key": "root.types.api",
+      "~k_parent": "29"
+    },
+    "36": {
+      "key": "root.types.operators",
+      "~k_parent": "29"
+    },
+    "37": {
+      "key": "root.types.operators.client",
+      "~k_parent": "36"
+    },
+    "38": {
+      "key": "root.types.operators.client._not",
+      "~k_parent": "37"
+    },
+    "39": {
+      "key": "root.types.operators.client._type",
+      "~k_parent": "37"
+    },
+    "40": {
+      "key": "root.imports.blocks[16]",
+      "~k_parent": "3j"
+    },
+    "41": {
+      "key": "root.imports.blocks[17]",
+      "~k_parent": "3j"
+    },
+    "42": {
+      "key": "root.imports.blocks[18]",
+      "~k_parent": "3j"
+    },
+    "43": {
+      "key": "root.imports.blocks[19]",
+      "~k_parent": "3j"
+    },
+    "44": {
+      "key": "root.imports.connections",
+      "~k_parent": "3b"
+    },
+    "45": {
+      "key": "root.imports.connections[0]",
+      "~k_parent": "44"
+    },
+    "46": {
+      "key": "root.imports.icons",
+      "~k_parent": "3b"
+    },
+    "47": {
+      "key": "root.imports.icons[0]",
+      "~k_parent": "46"
+    },
+    "48": {
+      "key": "root.imports.icons[0].icons",
+      "~k_parent": "47"
+    },
+    "49": {
+      "key": "root.imports.icons[1]",
+      "~k_parent": "46"
+    },
+    "50": {
+      "key": "root.imports.icons[14].icons",
+      "~k_parent": "4z"
+    },
+    "51": {
+      "key": "root.imports.icons[15]",
+      "~k_parent": "46"
+    },
+    "52": {
+      "key": "root.imports.icons[15].icons",
+      "~k_parent": "51"
+    },
+    "53": {
+      "key": "root.imports.icons[16]",
+      "~k_parent": "46"
+    },
+    "54": {
+      "key": "root.imports.icons[16].icons",
+      "~k_parent": "53"
+    },
+    "55": {
+      "key": "root.imports.icons[17]",
+      "~k_parent": "46"
+    },
+    "56": {
+      "key": "root.imports.icons[17].icons",
+      "~k_parent": "55"
+    },
+    "57": {
+      "key": "root.imports.icons[18]",
+      "~k_parent": "46"
+    },
+    "58": {
+      "key": "root.imports.icons[18].icons",
+      "~k_parent": "57"
+    },
+    "59": {
+      "key": "root.imports.icons[19]",
+      "~k_parent": "46"
+    },
+    "a": {
+      "key": "root.connections",
+      "~k_parent": "9",
+      "~l": 6
+    },
+    "b": {
+      "key": "root.connections[0:shared-mongodb:MongoDBCollection]",
+      "~k_parent": "a",
+      "~l": 7
+    },
+    "c": {
+      "key": "root.connections[0:shared-mongodb:MongoDBCollection].properties",
+      "~k_parent": "b",
+      "~l": 9
+    },
+    "d": {
+      "key": "root.pages",
+      "~k_parent": "9",
+      "~l": 21
+    },
+    "e": {
+      "key": "root.pages[0:home:Box]",
+      "~k_parent": "d",
+      "~l": 22
+    },
+    "f": {
+      "key": "root.pages[1:contacts/contact-list:Box]",
+      "~k_parent": "d",
+      "~r": "5",
+      "~l": 1
+    },
+    "g": {
+      "key": "root.pages[1:contacts/contact-list:Box].blocks",
+      "~k_parent": "f",
+      "~r": "5",
+      "~l": 3
+    },
+    "h": {
+      "key": "root.pages[1:contacts/contact-list:Box].blocks[0:contact-name:Title]",
+      "~k_parent": "g",
+      "~r": "5",
+      "~l": 4
+    },
+    "i": {
+      "key": "root.pages[1:contacts/contact-list:Box].blocks[0:contact-name:Title].properties",
+      "~k_parent": "h",
+      "~r": "5",
+      "~l": 6
+    },
+    "j": {
+      "key": "root.pages[2:companies/company-detail:Box]",
+      "~k_parent": "d",
+      "~r": "6",
+      "~l": 1
+    },
+    "k": {
+      "key": "root.pages[2:companies/company-detail:Box].blocks",
+      "~k_parent": "j",
+      "~r": "6",
+      "~l": 3
+    },
+    "l": {
+      "key": "root.pages[2:companies/company-detail:Box].blocks[0:company-name:Title]",
+      "~k_parent": "k",
+      "~r": "6",
+      "~l": 4
+    },
+    "m": {
+      "key": "root.pages[2:companies/company-detail:Box].blocks[0:company-name:Title].properties",
+      "~k_parent": "l",
+      "~r": "6",
+      "~l": 6
+    },
+    "o": {
+      "key": "root.pages",
+      "~k_parent": "9"
+    },
+    "p": {
+      "key": "root.pages[3:404:Result]",
+      "~k_parent": "o"
+    },
+    "q": {
+      "key": "root.pages[3:404:Result].style",
+      "~k_parent": "p"
+    },
+    "r": {
+      "key": "root.pages[3:404:Result].properties",
+      "~k_parent": "p"
+    },
+    "s": {
+      "key": "root.pages[3:404:Result].areas",
+      "~k_parent": "p"
+    },
+    "t": {
+      "key": "root.pages[3:404:Result].areas.extra",
+      "~k_parent": "s"
+    },
+    "u": {
+      "key": "root.pages[3:404:Result].areas.extra.blocks",
+      "~k_parent": "t"
+    },
+    "v": {
+      "key": "root.pages[3:404:Result].areas.extra.blocks[0:home:Button]",
+      "~k_parent": "u"
+    },
+    "w": {
+      "key": "root.pages[3:404:Result].areas.extra.blocks[0:home:Button].properties",
+      "~k_parent": "v"
+    },
+    "x": {
+      "key": "root.pages[3:404:Result].areas.extra.blocks[0:home:Button].events",
+      "~k_parent": "v"
+    },
+    "y": {
+      "key": "root.pages[3:404:Result].areas.extra.blocks[0:home:Button].events.onClick",
+      "~k_parent": "x"
+    },
+    "z": {
+      "key": "root.pages[3:404:Result].areas.extra.blocks[0:home:Button].events.onClick[0:home:Link]",
+      "~k_parent": "y"
+    },
+    "1a": {
+      "key": "root.pages[1:contacts/contact-list:Box]",
+      "~k_parent": "16"
+    },
+    "1b": {
+      "key": "root.pages[1:contacts/contact-list:Box].auth",
+      "~k_parent": "1a"
+    },
+    "1c": {
+      "key": "root.pages[1:contacts/contact-list:Box].areas",
+      "~k_parent": "1a"
+    },
+    "1d": {
+      "key": "root.pages[1:contacts/contact-list:Box].areas.content",
+      "~k_parent": "1c"
+    },
+    "1e": {
+      "key": "root.pages[1:contacts/contact-list:Box].requests",
+      "~k_parent": "1a"
+    },
+    "1f": {
+      "key": "root.pages[2:companies/company-detail:Box]",
+      "~k_parent": "16"
+    },
+    "1g": {
+      "key": "root.pages[2:companies/company-detail:Box].auth",
+      "~k_parent": "1f"
+    },
+    "1h": {
+      "key": "root.pages[2:companies/company-detail:Box].areas",
+      "~k_parent": "1f"
+    },
+    "1i": {
+      "key": "root.pages[2:companies/company-detail:Box].areas.content",
+      "~k_parent": "1h"
+    },
+    "1j": {
+      "key": "root.pages[2:companies/company-detail:Box].requests",
+      "~k_parent": "1f"
+    },
+    "1k": {
+      "key": "root.pages[3:404:Result]",
+      "~k_parent": "16"
+    },
+    "1l": {
+      "key": "root.pages[3:404:Result].areas.extra.blocks[0:home:Button].events.onClick",
+      "~k_parent": "x"
+    },
+    "1m": {
+      "key": "root.pages[3:404:Result].areas.extra.blocks[0:home:Button].events.onClick.catch",
+      "~k_parent": "1l"
+    },
+    "1n": {
+      "key": "root.pages[3:404:Result].auth",
+      "~k_parent": "1k"
+    },
+    "1o": {
+      "key": "root.pages[3:404:Result].requests",
+      "~k_parent": "1k"
+    },
+    "1p": {
+      "key": "root.auth",
+      "~k_parent": "9"
+    },
+    "1q": {
+      "key": "root.auth.api",
+      "~k_parent": "1p"
+    },
+    "1r": {
+      "key": "root.auth.api.roles",
+      "~k_parent": "1q"
+    },
+    "1s": {
+      "key": "root.auth.authPages",
+      "~k_parent": "1p"
+    },
+    "1t": {
+      "key": "root.auth.pages",
+      "~k_parent": "1p"
+    },
+    "1u": {
+      "key": "root.auth.pages.roles",
+      "~k_parent": "1t"
+    },
+    "1v": {
+      "key": "root.auth.callbacks",
+      "~k_parent": "1p"
+    },
+    "1w": {
+      "key": "root.auth.events",
+      "~k_parent": "1p"
+    },
+    "1x": {
+      "key": "root.auth.providers",
+      "~k_parent": "1p"
+    },
+    "1y": {
+      "key": "root.auth.session",
+      "~k_parent": "1p"
+    },
+    "1z": {
+      "key": "root.auth.theme",
+      "~k_parent": "1p"
+    },
+    "2a": {
+      "key": "root.types.actions",
+      "~k_parent": "29"
+    },
+    "2b": {
+      "key": "root.types.actions.Link",
+      "~k_parent": "2a"
+    },
+    "2c": {
+      "key": "root.types.auth",
+      "~k_parent": "29"
+    },
+    "2d": {
+      "key": "root.types.auth.adapters",
+      "~k_parent": "2c"
+    },
+    "2e": {
+      "key": "root.types.auth.callbacks",
+      "~k_parent": "2c"
+    },
+    "2f": {
+      "key": "root.types.auth.events",
+      "~k_parent": "2c"
+    },
+    "2g": {
+      "key": "root.types.auth.providers",
+      "~k_parent": "2c"
+    },
+    "2h": {
+      "key": "root.types.blocks",
+      "~k_parent": "29"
+    },
+    "2i": {
+      "key": "root.types.blocks.Box",
+      "~k_parent": "2h"
+    },
+    "2j": {
+      "key": "root.types.blocks.Title",
+      "~k_parent": "2h"
+    },
+    "2k": {
+      "key": "root.types.blocks.Result",
+      "~k_parent": "2h"
+    },
+    "2l": {
+      "key": "root.types.blocks.Button",
+      "~k_parent": "2h"
+    },
+    "2m": {
+      "key": "root.types.blocks.Anchor",
+      "~k_parent": "2h"
+    },
+    "2n": {
+      "key": "root.types.blocks.DangerousHtml",
+      "~k_parent": "2h"
+    },
+    "2o": {
+      "key": "root.types.blocks.Html",
+      "~k_parent": "2h"
+    },
+    "2p": {
+      "key": "root.types.blocks.Icon",
+      "~k_parent": "2h"
+    },
+    "2q": {
+      "key": "root.types.blocks.Img",
+      "~k_parent": "2h"
+    },
+    "2r": {
+      "key": "root.types.blocks.List",
+      "~k_parent": "2h"
+    },
+    "2s": {
+      "key": "root.types.blocks.Span",
+      "~k_parent": "2h"
+    },
+    "2t": {
+      "key": "root.types.blocks.Throw",
+      "~k_parent": "2h"
+    },
+    "2u": {
+      "key": "root.types.blocks.ProgressBar",
+      "~k_parent": "2h"
+    },
+    "2v": {
+      "key": "root.types.blocks.Skeleton",
+      "~k_parent": "2h"
+    },
+    "2w": {
+      "key": "root.types.blocks.SkeletonAvatar",
+      "~k_parent": "2h"
+    },
+    "2x": {
+      "key": "root.types.blocks.SkeletonButton",
+      "~k_parent": "2h"
+    },
+    "2y": {
+      "key": "root.types.blocks.SkeletonInput",
+      "~k_parent": "2h"
+    },
+    "2z": {
+      "key": "root.types.blocks.SkeletonParagraph",
+      "~k_parent": "2h"
+    },
+    "3a": {
+      "key": "root.types.operators.server",
+      "~k_parent": "36"
+    },
+    "3b": {
+      "key": "root.imports",
+      "~k_parent": "9"
+    },
+    "3c": {
+      "key": "root.imports.actions",
+      "~k_parent": "3b"
+    },
+    "3d": {
+      "key": "root.imports.actions[0]",
+      "~k_parent": "3c"
+    },
+    "3e": {
+      "key": "root.imports.auth",
+      "~k_parent": "3b"
+    },
+    "3f": {
+      "key": "root.imports.auth.adapters",
+      "~k_parent": "3e"
+    },
+    "3g": {
+      "key": "root.imports.auth.callbacks",
+      "~k_parent": "3e"
+    },
+    "3h": {
+      "key": "root.imports.auth.events",
+      "~k_parent": "3e"
+    },
+    "3i": {
+      "key": "root.imports.auth.providers",
+      "~k_parent": "3e"
+    },
+    "3j": {
+      "key": "root.imports.blocks",
+      "~k_parent": "3b"
+    },
+    "3k": {
+      "key": "root.imports.blocks[0]",
+      "~k_parent": "3j"
+    },
+    "3l": {
+      "key": "root.imports.blocks[1]",
+      "~k_parent": "3j"
+    },
+    "3m": {
+      "key": "root.imports.blocks[2]",
+      "~k_parent": "3j"
+    },
+    "3n": {
+      "key": "root.imports.blocks[3]",
+      "~k_parent": "3j"
+    },
+    "3o": {
+      "key": "root.imports.blocks[4]",
+      "~k_parent": "3j"
+    },
+    "3p": {
+      "key": "root.imports.blocks[5]",
+      "~k_parent": "3j"
+    },
+    "3q": {
+      "key": "root.imports.blocks[6]",
+      "~k_parent": "3j"
+    },
+    "3r": {
+      "key": "root.imports.blocks[7]",
+      "~k_parent": "3j"
+    },
+    "3s": {
+      "key": "root.imports.blocks[8]",
+      "~k_parent": "3j"
+    },
+    "3t": {
+      "key": "root.imports.blocks[9]",
+      "~k_parent": "3j"
+    },
+    "3u": {
+      "key": "root.imports.blocks[10]",
+      "~k_parent": "3j"
+    },
+    "3v": {
+      "key": "root.imports.blocks[11]",
+      "~k_parent": "3j"
+    },
+    "3w": {
+      "key": "root.imports.blocks[12]",
+      "~k_parent": "3j"
+    },
+    "3x": {
+      "key": "root.imports.blocks[13]",
+      "~k_parent": "3j"
+    },
+    "3y": {
+      "key": "root.imports.blocks[14]",
+      "~k_parent": "3j"
+    },
+    "3z": {
+      "key": "root.imports.blocks[15]",
+      "~k_parent": "3j"
+    },
+    "4a": {
+      "key": "root.imports.icons[1].icons",
+      "~k_parent": "49"
+    },
+    "4b": {
+      "key": "root.imports.icons[2]",
+      "~k_parent": "46"
+    },
+    "4c": {
+      "key": "root.imports.icons[2].icons",
+      "~k_parent": "4b"
+    },
+    "4d": {
+      "key": "root.imports.icons[3]",
+      "~k_parent": "46"
+    },
+    "4e": {
+      "key": "root.imports.icons[3].icons",
+      "~k_parent": "4d"
+    },
+    "4f": {
+      "key": "root.imports.icons[4]",
+      "~k_parent": "46"
+    },
+    "4g": {
+      "key": "root.imports.icons[4].icons",
+      "~k_parent": "4f"
+    },
+    "4h": {
+      "key": "root.imports.icons[5]",
+      "~k_parent": "46"
+    },
+    "4i": {
+      "key": "root.imports.icons[5].icons",
+      "~k_parent": "4h"
+    },
+    "4j": {
+      "key": "root.imports.icons[6]",
+      "~k_parent": "46"
+    },
+    "4k": {
+      "key": "root.imports.icons[6].icons",
+      "~k_parent": "4j"
+    },
+    "4l": {
+      "key": "root.imports.icons[7]",
+      "~k_parent": "46"
+    },
+    "4m": {
+      "key": "root.imports.icons[7].icons",
+      "~k_parent": "4l"
+    },
+    "4n": {
+      "key": "root.imports.icons[8]",
+      "~k_parent": "46"
+    },
+    "4o": {
+      "key": "root.imports.icons[8].icons",
+      "~k_parent": "4n"
+    },
+    "4p": {
+      "key": "root.imports.icons[9]",
+      "~k_parent": "46"
+    },
+    "4q": {
+      "key": "root.imports.icons[9].icons",
+      "~k_parent": "4p"
+    },
+    "4r": {
+      "key": "root.imports.icons[10]",
+      "~k_parent": "46"
+    },
+    "4s": {
+      "key": "root.imports.icons[10].icons",
+      "~k_parent": "4r"
+    },
+    "4t": {
+      "key": "root.imports.icons[11]",
+      "~k_parent": "46"
+    },
+    "4u": {
+      "key": "root.imports.icons[11].icons",
+      "~k_parent": "4t"
+    },
+    "4v": {
+      "key": "root.imports.icons[12]",
+      "~k_parent": "46"
+    },
+    "4w": {
+      "key": "root.imports.icons[12].icons",
+      "~k_parent": "4v"
+    },
+    "4x": {
+      "key": "root.imports.icons[13]",
+      "~k_parent": "46"
+    },
+    "4y": {
+      "key": "root.imports.icons[13].icons",
+      "~k_parent": "4x"
+    },
+    "4z": {
+      "key": "root.imports.icons[14]",
+      "~k_parent": "46"
+    },
+    "5a": {
+      "key": "root.imports.icons[19].icons",
+      "~k_parent": "59"
+    },
+    "5b": {
+      "key": "root.imports.icons[20]",
+      "~k_parent": "46"
+    },
+    "5c": {
+      "key": "root.imports.icons[20].icons",
+      "~k_parent": "5b"
+    },
+    "5d": {
+      "key": "root.imports.icons[21]",
+      "~k_parent": "46"
+    },
+    "5e": {
+      "key": "root.imports.icons[21].icons",
+      "~k_parent": "5d"
+    },
+    "5f": {
+      "key": "root.imports.icons[22]",
+      "~k_parent": "46"
+    },
+    "5g": {
+      "key": "root.imports.icons[22].icons",
+      "~k_parent": "5f"
+    },
+    "5h": {
+      "key": "root.imports.icons[23]",
+      "~k_parent": "46"
+    },
+    "5i": {
+      "key": "root.imports.icons[23].icons",
+      "~k_parent": "5h"
+    },
+    "5j": {
+      "key": "root.imports.icons[24]",
+      "~k_parent": "46"
+    },
+    "5k": {
+      "key": "root.imports.icons[24].icons",
+      "~k_parent": "5j"
+    },
+    "5l": {
+      "key": "root.imports.icons[25]",
+      "~k_parent": "46"
+    },
+    "5m": {
+      "key": "root.imports.icons[25].icons",
+      "~k_parent": "5l"
+    },
+    "5n": {
+      "key": "root.imports.icons[26]",
+      "~k_parent": "46"
+    },
+    "5o": {
+      "key": "root.imports.icons[26].icons",
+      "~k_parent": "5n"
+    },
+    "5p": {
+      "key": "root.imports.icons[27]",
+      "~k_parent": "46"
+    },
+    "5q": {
+      "key": "root.imports.icons[27].icons",
+      "~k_parent": "5p"
+    },
+    "5r": {
+      "key": "root.imports.requests",
+      "~k_parent": "3b"
+    },
+    "5s": {
+      "key": "root.imports.operators",
+      "~k_parent": "3b"
+    },
+    "5t": {
+      "key": "root.imports.operators.client",
+      "~k_parent": "5s"
+    },
+    "5u": {
+      "key": "root.imports.operators.client[0]",
+      "~k_parent": "5t"
+    },
+    "5v": {
+      "key": "root.imports.operators.client[1]",
+      "~k_parent": "5t"
+    },
+    "5w": {
+      "key": "root.imports.operators.server",
+      "~k_parent": "5s"
+    },
+    "5x": {
+      "key": "root.imports.styles",
+      "~k_parent": "3b"
+    }
+  },
+  "logger.json": {
+    "~k": "13"
+  },
+  "menus.json": {
+    "~arr": [
+      {
+        "id": "menu:default",
+        "links": {
+          "~arr": [
+            {
+              "id": "menuitem:default:0",
+              "type": "MenuLink",
+              "pageId": "home",
+              "auth": {
+                "public": true,
+                "~k": "24"
+              },
+              "menuItemId": "0",
+              "~k": "23"
+            },
+            {
+              "id": "menuitem:default:1",
+              "type": "MenuLink",
+              "pageId": "contacts/contact-list",
+              "auth": {
+                "public": true,
+                "~k": "26"
+              },
+              "menuItemId": "1",
+              "~k": "25"
+            },
+            {
+              "id": "menuitem:default:2",
+              "type": "MenuLink",
+              "pageId": "companies/company-detail",
+              "auth": {
+                "public": true,
+                "~k": "28"
+              },
+              "menuItemId": "2",
+              "~k": "27"
+            }
+          ],
+          "~k": "22"
+        },
+        "menuId": "default",
+        "~k": "21"
+      }
+    ],
+    "~k": "20"
+  },
+  "pages/404.json": {
+    "id": "page:404",
+    "type": "Result",
+    "style": {
+      "minHeight": "100vh",
+      "~k": "q"
+    },
+    "properties": {
+      "status": "info",
+      "title": "404",
+      "subTitle": "Sorry, the page you are visiting does not exist.",
+      "~k": "r"
+    },
+    "areas": {
+      "extra": {
+        "blocks": {
+          "~arr": [
+            {
+              "id": "block:404:home:0",
+              "type": "Button",
+              "properties": {
+                "title": "Go to home page",
+                "~k": "w"
+              },
+              "events": {
+                "onClick": {
+                  "try": {
+                    "~arr": [
+                      {
+                        "id": "home",
+                        "type": "Link",
+                        "params": {
+                          "home": true,
+                          "~k": "10"
+                        },
+                        "~k": "z"
+                      }
+                    ],
+                    "~k": "y"
+                  },
+                  "catch": {
+                    "~arr": [],
+                    "~k": "1m"
+                  },
+                  "~k": "1l"
+                },
+                "~k": "x"
+              },
+              "blockId": "home",
+              "~k": "v"
+            }
+          ],
+          "~k": "u"
+        },
+        "~k": "t"
+      },
+      "~k": "s"
+    },
+    "auth": {
+      "public": true,
+      "~k": "1n"
+    },
+    "pageId": "404",
+    "blockId": "404",
+    "requests": {
+      "~arr": [],
+      "~k": "1o"
+    },
+    "~k": "1k"
+  },
+  "pages/companies/company-detail.json": {
+    "id": "page:companies/company-detail",
+    "type": "Box",
+    "auth": {
+      "public": true,
+      "~k": "1g"
+    },
+    "pageId": "companies/company-detail",
+    "blockId": "companies/company-detail",
+    "areas": {
+      "content": {
+        "blocks": {
+          "~arr": [
+            {
+              "id": "block:companies/company-detail:company-name:0",
+              "type": "Title",
+              "properties": {
+                "content": "Company Detail",
+                "connectionRef": "shared-mongodb",
+                "~k": "m"
+              },
+              "blockId": "company-name",
+              "~k": "l"
+            }
+          ],
+          "~k": "k"
+        },
+        "~k": "1i"
+      },
+      "~k": "1h"
+    },
+    "requests": {
+      "~arr": [],
+      "~k": "1j"
+    },
+    "~k": "1f"
+  },
+  "pages/contacts/contact-list.json": {
+    "id": "page:contacts/contact-list",
+    "type": "Box",
+    "auth": {
+      "public": true,
+      "~k": "1b"
+    },
+    "pageId": "contacts/contact-list",
+    "blockId": "contacts/contact-list",
+    "areas": {
+      "content": {
+        "blocks": {
+          "~arr": [
+            {
+              "id": "block:contacts/contact-list:contact-name:0",
+              "type": "Title",
+              "properties": {
+                "content": "Contact List",
+                "~k": "i"
+              },
+              "blockId": "contact-name",
+              "~k": "h"
+            }
+          ],
+          "~k": "g"
+        },
+        "~k": "1d"
+      },
+      "~k": "1c"
+    },
+    "requests": {
+      "~arr": [],
+      "~k": "1e"
+    },
+    "~k": "1a"
+  },
+  "pages/home.json": {
+    "id": "page:home",
+    "type": "Box",
+    "auth": {
+      "public": true,
+      "~k": "18"
+    },
+    "pageId": "home",
+    "blockId": "home",
+    "requests": {
+      "~arr": [],
+      "~k": "19"
+    },
+    "~k": "17"
+  },
+  "plugins/actionSchemas.json": {
+    "Link": {
+      "type": "object",
+      "params": {
+        "oneOf": [
+          {
+            "type": "string",
+            "description": "Shorthand for pageId."
+          },
+          {
+            "type": "object",
+            "description": "Link parameters.",
+            "properties": {
+              "pageId": {
+                "type": "string",
+                "description": "The pageId to link to."
+              },
+              "url": {
+                "type": "string",
+                "description": "An external URL to link to."
+              },
+              "newWindow": {
+                "type": "boolean",
+                "description": "Open the link in a new window."
+              },
+              "urlQuery": {
+                "type": "object",
+                "description": "URL query parameters."
+              },
+              "input": {
+                "type": "object",
+                "description": "Input to pass to the linked page."
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "plugins/actions.js": "import { Link as Link } from '@lowdefy/actions-core/actions';\nexport default {\n  Link,\n  };",
+  "plugins/auth/adapters.js": "export default {\n  };",
+  "plugins/auth/callbacks.js": "export default {\n  };",
+  "plugins/auth/events.js": "export default {\n  };",
+  "plugins/auth/providers.js": "export default {\n  };",
+  "plugins/blockSchemas.json": {
+    "Box": {
+      "type": "object",
+      "properties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "content": {
+            "type": "string",
+            "description": "Box content string. Overrides the \"content\" content area."
+          },
+          "style": {
+            "type": "object",
+            "description": "Css style object to apply to Box div.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      },
+      "events": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "onClick": {
+            "type": "array",
+            "description": "Trigger actions when the Box is clicked."
+          },
+          "onPaste": {
+            "type": "array",
+            "description": "Trigger actions when the element is focused and a paste event is triggered."
+          }
+        }
+      }
+    },
+    "Anchor": {
+      "type": "object",
+      "properties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "ariaLabel": {
+            "type": "string",
+            "description": "Arial-label to apply to link tag."
+          },
+          "back": {
+            "type": "boolean",
+            "description": "When the link is clicked, trigger the browser back."
+          },
+          "home": {
+            "type": "boolean",
+            "description": "When the link is clicked, route to the home page."
+          },
+          "input": {
+            "type": "object",
+            "description": "When the link is clicked, pass data as the input object to the next Lowdefy page.  Can only be used with pageId link and newTab false.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "urlQuery": {
+            "type": "object",
+            "description": "When the link is clicked, pass data as a url query to the next page.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "disabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Disable the anchor if true."
+          },
+          "icon": {
+            "type": [
+              "string",
+              "object"
+            ],
+            "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block for anchor icon.",
+            "docs": {
+              "displayType": "icon"
+            }
+          },
+          "pageId": {
+            "type": "string",
+            "description": "When the link is clicked, route to the provided Lowdefy page."
+          },
+          "href": {
+            "type": "string",
+            "description": "The href to link to when the anchor link is clicked."
+          },
+          "url": {
+            "type": "string",
+            "description": "External url to link to when the anchor link is clicked."
+          },
+          "rel": {
+            "type": "string",
+            "default": "noopener noreferrer",
+            "description": "The relationship of the linked URL as space-separated link types."
+          },
+          "newTab": {
+            "type": "boolean",
+            "default": false,
+            "description": "Open link in a new tab when the anchor link is clicked."
+          },
+          "replace": {
+            "type": "boolean",
+            "default": false,
+            "description": "Prevent adding a new entry into browser history by replacing the url instead of pushing into history. Can only be used with pageId link and newTab false."
+          },
+          "scroll": {
+            "type": "boolean",
+            "default": false,
+            "description": "Disable scrolling to the top of the page after page transition. Can only be used with pageId link and newTab false."
+          },
+          "style": {
+            "type": "object",
+            "description": "Css style object to applied to anchor.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "title": {
+            "type": "string",
+            "description": "Text to display in the anchor."
+          }
+        }
+      },
+      "events": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "onClick": {
+            "type": "array",
+            "description": "Called when Anchor is clicked."
+          }
+        }
+      }
+    },
+    "DangerousHtml": {
+      "type": "object",
+      "properties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "html": {
+            "type": "string",
+            "description": "Content to be rendered as Html.",
+            "docs": {
+              "displayType": "text-area"
+            }
+          },
+          "DOMPurifyOptions": {
+            "type": "object",
+            "description": "Customize DOMPurify options. Options are only applied when the block is mounted, thus any parsed settings is only applied at first render.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "style": {
+            "type": "object",
+            "description": "Css style object to apply to Html div.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      }
+    },
+    "Html": {
+      "type": "object",
+      "properties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "html": {
+            "type": "string",
+            "description": "Content to be rendered as Html.",
+            "docs": {
+              "displayType": "text-area"
+            }
+          },
+          "style": {
+            "type": "object",
+            "description": "Css style object to apply to Html div.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      },
+      "events": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "onTextSelection": {
+            "type": "array",
+            "description": "Trigger action when text is selected and pass selected text to the event object."
+          }
+        }
+      }
+    },
+    "Icon": {
+      "type": "object",
+      "properties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "color": {
+            "type": "string",
+            "description": "Primary icon color.",
+            "docs": {
+              "displayType": "color"
+            }
+          },
+          "name": {
+            "type": "string",
+            "default": "AiOutlineCloseCircle",
+            "description": "Name of icon to be displayed."
+          },
+          "rotate": {
+            "type": "number",
+            "description": "Number of degrees to rotate the icon."
+          },
+          "size": {
+            "type": [
+              "string",
+              "number"
+            ],
+            "description": "Size of the icon.",
+            "docs": {
+              "displayType": "number"
+            }
+          },
+          "spin": {
+            "type": "boolean",
+            "default": false,
+            "description": "Continuously spin icon with animation."
+          },
+          "title": {
+            "type": "string",
+            "description": "Icon hover title for accessibility."
+          },
+          "style": {
+            "type": "object",
+            "description": "CSS style object.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "disableLoadingIcon": {
+            "type": "boolean",
+            "default": false,
+            "description": "While loading after the icon has been clicked, don't render the loading icon."
+          }
+        }
+      },
+      "events": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "onClick": {
+            "type": "array",
+            "description": "Trigger actions when icon is clicked."
+          }
+        }
+      }
+    },
+    "Img": {
+      "type": "object",
+      "properties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "src"
+        ],
+        "properties": {
+          "src": {
+            "type": "string",
+            "description": "The image URL."
+          },
+          "alt": {
+            "type": "string",
+            "description": "Alternative text description of the image."
+          },
+          "crossOrigin": {
+            "type": "string",
+            "enum": [
+              "anonymous",
+              "use-credentials"
+            ],
+            "description": "Indicates if the fetching of the image must be done using a CORS request."
+          },
+          "decoding": {
+            "type": "string",
+            "enum": [
+              "sync",
+              "async",
+              "auto"
+            ],
+            "description": "An image decoding hint to the browser. Sync for atomic presentation with other content, async,  to reduce delay in presenting other content and auto leave to browser to decide."
+          },
+          "height": {
+            "type": "number",
+            "description": "Height of the image."
+          },
+          "loading": {
+            "type": "string",
+            "enum": [
+              "eager",
+              "lazy"
+            ],
+            "description": "How the browser should load the image. Eager loads the image immediately, lazy, defers loading until the image it reaches a calculated distance from the viewport, as defined by the browser."
+          },
+          "sizes": {
+            "type": "string",
+            "description": "Indicating a set of source sizes of strings separated by commas."
+          },
+          "srcSet": {
+            "type": "string",
+            "description": "Possible image sources for the user agent to use, strings separated by commas.",
+            "docs": {
+              "displayType": "text-area"
+            }
+          },
+          "style": {
+            "type": "object",
+            "description": "Css style object to applied to the image.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "width": {
+            "type": "number",
+            "description": "Width of the image."
+          }
+        }
+      }
+    },
+    "List": {
+      "type": "object",
+      "properties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "direction": {
+            "type": "string",
+            "enum": [
+              "row",
+              "column",
+              "row-reverse",
+              "column-reverse"
+            ],
+            "description": "List content along a 'row' or down a 'column'. Applies the 'flex-direction' css property to the List block."
+          },
+          "wrap": {
+            "type": "string",
+            "enum": [
+              "wrap",
+              "nowrap",
+              "wrap-reverse"
+            ],
+            "description": "Specifies wrapping style to be applied to List block as 'wrap', 'nowrap' or 'wrap-reverse'. Applies the 'flex-wrap' css property to the List block - defaults to 'wrap', requires List direction to be set."
+          },
+          "scroll": {
+            "type": "boolean",
+            "description": "Specifies whether scrolling should be applied to the List, can be true or false. Applies the 'overflow' css property to the List block - defaults to 'visible', requires List direction to be set."
+          },
+          "style": {
+            "type": "object",
+            "description": "Css style object to apply to List block.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      },
+      "events": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "onClick": {
+            "type": "array",
+            "description": "Trigger actions when the List is clicked."
+          }
+        }
+      }
+    },
+    "Span": {
+      "type": "object",
+      "properties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "content": {
+            "type": "string",
+            "description": "Span content string. Overrides the \"content\" content area."
+          },
+          "style": {
+            "type": "object",
+            "description": "Css style object to apply to Span div.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      },
+      "events": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "onClick": {
+            "type": "array",
+            "description": "Trigger actions when the Span is clicked."
+          }
+        }
+      }
+    },
+    "Throw": {
+      "type": "object",
+      "properties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Error message to throw.",
+            "default": "Intentional error thrown by Throw block"
+          }
+        }
+      },
+      "events": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {}
+      }
+    },
+    "Result": {
+      "type": "object",
+      "properties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "icon": {
+            "type": [
+              "string",
+              "object"
+            ],
+            "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon to use as result image.",
+            "docs": {
+              "displayType": "icon"
+            }
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "success",
+              "error",
+              "info",
+              "warning",
+              "404",
+              "403",
+              "500"
+            ],
+            "default": "info",
+            "description": "Status of the result. Determines image and color."
+          },
+          "subTitle": {
+            "type": "string",
+            "description": "Result subtitle or secondary text - supports html."
+          },
+          "title": {
+            "type": "string",
+            "description": "Result title or primary text - supports html."
+          }
+        }
+      }
+    },
+    "Message": {
+      "type": "object",
+      "properties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "content": {
+            "type": "string",
+            "description": "The content of the message - supports html."
+          },
+          "duration": {
+            "type": "number",
+            "default": 4.5,
+            "description": "Time(seconds) before auto-dismiss, don't dismiss if set to 0."
+          },
+          "icon": {
+            "type": [
+              "string",
+              "object"
+            ],
+            "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize message icon.",
+            "docs": {
+              "displayType": "icon"
+            }
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "success",
+              "error",
+              "info",
+              "warning",
+              "loading"
+            ],
+            "default": "info",
+            "description": "Message status type."
+          },
+          "messageStyle": {
+            "type": "object",
+            "description": "Css style to applied to message.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      },
+      "events": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "onClose": {
+            "type": "array",
+            "description": "Trigger actions when message is closed."
+          }
+        }
+      }
+    },
+    "ProgressBar": {
+      "type": "object",
+      "properties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "style": {
+            "type": "object",
+            "description": "Css style object to apply to the skeleton.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "height": {
+            "type": [
+              "number",
+              "string"
+            ],
+            "description": "Height of the skeleton."
+          },
+          "width": {
+            "type": [
+              "number",
+              "string"
+            ],
+            "description": "Width of the skeleton."
+          }
+        }
+      },
+      "events": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {}
+      }
+    },
+    "Skeleton": {
+      "type": "object",
+      "properties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "style": {
+            "type": "object",
+            "description": "Css style object to apply to the skeleton.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "height": {
+            "type": [
+              "number",
+              "string"
+            ],
+            "description": "Height of the skeleton.",
+            "docs": {
+              "displayType": "string"
+            }
+          },
+          "width": {
+            "type": [
+              "number",
+              "string"
+            ],
+            "description": "Width of the skeleton.",
+            "docs": {
+              "displayType": "string"
+            }
+          }
+        }
+      },
+      "events": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {}
+      }
+    },
+    "SkeletonAvatar": {
+      "type": "object",
+      "properties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "style": {
+            "type": "object",
+            "description": "Css style object to apply to the skeleton.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "size": {
+            "type": "string",
+            "default": "medium",
+            "description": "Size of the skeleton.",
+            "enum": [
+              "small",
+              "medium",
+              "large"
+            ]
+          },
+          "shape": {
+            "type": "string",
+            "default": "round",
+            "description": "Shape of the skeleton.",
+            "enum": [
+              "square",
+              "round"
+            ]
+          }
+        }
+      },
+      "events": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {}
+      }
+    },
+    "SkeletonButton": {
+      "type": "object",
+      "properties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "style": {
+            "type": "object",
+            "description": "Css style object to apply to the skeleton.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "size": {
+            "type": "string",
+            "default": "medium",
+            "description": "Size of the skeleton.",
+            "enum": [
+              "small",
+              "medium",
+              "large"
+            ]
+          },
+          "width": {
+            "type": [
+              "number",
+              "string"
+            ],
+            "description": "Width of the skeleton.",
+            "docs": {
+              "displayType": "string"
+            }
+          }
+        }
+      },
+      "events": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {}
+      }
+    },
+    "SkeletonInput": {
+      "type": "object",
+      "properties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "labelStyle": {
+            "type": "object",
+            "description": "Css style object to apply to the label skeleton.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "inputStyle": {
+            "type": "object",
+            "description": "Css style object to apply to the input skeleton.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "size": {
+            "type": "string",
+            "default": "medium",
+            "description": "Size of the skeleton.",
+            "enum": [
+              "small",
+              "medium",
+              "large"
+            ]
+          },
+          "width": {
+            "type": [
+              "number",
+              "string"
+            ],
+            "description": "Width of the skeleton.",
+            "docs": {
+              "displayType": "string"
+            }
+          },
+          "labelHeight": {
+            "type": [
+              "number",
+              "string"
+            ],
+            "description": "Height of the skeleton.",
+            "docs": {
+              "displayType": "string"
+            }
+          },
+          "labelWidth": {
+            "type": [
+              "number",
+              "string"
+            ],
+            "description": "Width of the skeleton.",
+            "docs": {
+              "displayType": "string"
+            }
+          },
+          "inputHeight": {
+            "type": [
+              "number",
+              "string"
+            ],
+            "description": "Height of the skeleton.",
+            "docs": {
+              "displayType": "string"
+            }
+          }
+        }
+      },
+      "events": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {}
+      }
+    },
+    "SkeletonParagraph": {
+      "type": "object",
+      "properties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "style": {
+            "type": "object",
+            "description": "Css style object to apply to the skeleton.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "lines": {
+            "type": "number",
+            "default": 4,
+            "description": "Number of paragraph lines of the skeleton."
+          },
+          "width": {
+            "type": [
+              "number",
+              "string"
+            ],
+            "description": "Width of the skeleton.",
+            "docs": {
+              "displayType": "string"
+            }
+          }
+        }
+      },
+      "events": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {}
+      }
+    },
+    "Spinner": {
+      "type": "object",
+      "properties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "style": {
+            "type": "object",
+            "description": "Css style object to apply to the icon.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "size": {
+            "type": "string",
+            "description": "Size of the icon spinner.",
+            "enum": [
+              "small",
+              "medium",
+              "large"
+            ]
+          }
+        }
+      },
+      "events": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {}
+      }
+    }
+  },
+  "plugins/blocks.js": "import { Box as Box } from '@lowdefy/blocks-basic/blocks';\nimport { Title as Title } from '@lowdefy/blocks-basic/blocks';\nimport { Result as Result } from '@lowdefy/blocks-antd/blocks';\nimport { Button as Button } from '@lowdefy/blocks-basic/blocks';\nimport { Anchor as Anchor } from '@lowdefy/blocks-basic/blocks';\nimport { DangerousHtml as DangerousHtml } from '@lowdefy/blocks-basic/blocks';\nimport { Html as Html } from '@lowdefy/blocks-basic/blocks';\nimport { Icon as Icon } from '@lowdefy/blocks-basic/blocks';\nimport { Img as Img } from '@lowdefy/blocks-basic/blocks';\nimport { List as List } from '@lowdefy/blocks-basic/blocks';\nimport { Span as Span } from '@lowdefy/blocks-basic/blocks';\nimport { Throw as Throw } from '@lowdefy/blocks-basic/blocks';\nimport { ProgressBar as ProgressBar } from '@lowdefy/blocks-loaders/blocks';\nimport { Skeleton as Skeleton } from '@lowdefy/blocks-loaders/blocks';\nimport { SkeletonAvatar as SkeletonAvatar } from '@lowdefy/blocks-loaders/blocks';\nimport { SkeletonButton as SkeletonButton } from '@lowdefy/blocks-loaders/blocks';\nimport { SkeletonInput as SkeletonInput } from '@lowdefy/blocks-loaders/blocks';\nimport { SkeletonParagraph as SkeletonParagraph } from '@lowdefy/blocks-loaders/blocks';\nimport { Spinner as Spinner } from '@lowdefy/blocks-loaders/blocks';\nimport { Message as Message } from '@lowdefy/blocks-antd/blocks';\nexport default {\n  Box,\n  Title,\n  Result,\n  Button,\n  Anchor,\n  DangerousHtml,\n  Html,\n  Icon,\n  Img,\n  List,\n  Span,\n  Throw,\n  ProgressBar,\n  Skeleton,\n  SkeletonAvatar,\n  SkeletonButton,\n  SkeletonInput,\n  SkeletonParagraph,\n  Spinner,\n  Message,\n  };",
+  "plugins/connections.js": "import { MongoDBCollection as MongoDBCollection } from '@lowdefy/connection-mongodb/connections';\nexport default {\n  MongoDBCollection,\n  };",
+  "plugins/icons.js": "import { AiOutlineExclamationCircle, AiOutlineLoading3Quarters } from 'react-icons/ai';\nexport default {\n  AiOutlineExclamationCircle,\n  AiOutlineLoading3Quarters,\n};",
+  "plugins/operatorSchemas.json": {
+    "_not": {
+      "type": "object",
+      "params": {
+        "type": "boolean",
+        "description": "Boolean value to negate."
+      }
+    },
+    "_type": {
+      "type": "object",
+      "params": {
+        "oneOf": [
+          {
+            "type": "string",
+            "enum": [
+              "string",
+              "array",
+              "date",
+              "object",
+              "boolean",
+              "number",
+              "integer",
+              "null",
+              "undefined",
+              "none",
+              "primitive"
+            ],
+            "description": "Type name to test against state value at current location."
+          },
+          {
+            "type": "object",
+            "required": [
+              "type"
+            ],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "string",
+                  "array",
+                  "date",
+                  "object",
+                  "boolean",
+                  "number",
+                  "integer",
+                  "null",
+                  "undefined",
+                  "none",
+                  "primitive"
+                ],
+                "description": "Type name to test."
+              },
+              "on": {
+                "description": "Value to test the type of."
+              },
+              "key": {
+                "type": "string",
+                "description": "State key to test the type of."
+              }
+            },
+            "additionalProperties": false
+          }
+        ]
+      }
+    }
+  },
+  "plugins/operators/client.js": "import { _not as _not } from '@lowdefy/operators-js/operators/client';\nimport { _type as _type } from '@lowdefy/operators-js/operators/client';\nexport default {\n  _not,\n  _type,\n  };",
+  "plugins/operators/clientJsMap.js": "\nexport default {\n  };",
+  "plugins/operators/server.js": "export default {\n  };",
+  "plugins/operators/serverJsMap.js": "\nexport default {\n  };",
+  "plugins/styles.less": "@import '@lowdefy/layout/style.less';\n@import '@lowdefy/client/style.less';\n\n",
+  "refMap.json": {
+    "1": {
+      "parent": null
+    },
+    "2": {
+      "parent": null
+    },
+    "3": {
+      "parent": null
+    },
+    "4": {
+      "parent": "2",
+      "lineNumber": 10,
+      "path": "<CONFIG_DIR>/modules/contacts/connections/contacts-db.yaml"
+    },
+    "5": {
+      "parent": "2",
+      "lineNumber": 13,
+      "path": "<CONFIG_DIR>/modules/contacts/pages/contact-list.yaml"
+    },
+    "6": {
+      "parent": "3",
+      "lineNumber": 11,
+      "path": "<CONFIG_DIR>/modules/companies/pages/company-detail.yaml"
+    },
+    "7": {
+      "parent": null
+    }
+  },
+  "types.json": {
+    "actions": {
+      "Link": {
+        "originalTypeName": "Link",
+        "package": "@lowdefy/actions-core",
+        "count": 1,
+        "~k": "2b"
+      },
+      "~k": "2a"
+    },
+    "auth": {
+      "adapters": {
+        "~k": "2d"
+      },
+      "callbacks": {
+        "~k": "2e"
+      },
+      "events": {
+        "~k": "2f"
+      },
+      "providers": {
+        "~k": "2g"
+      },
+      "~k": "2c"
+    },
+    "blocks": {
+      "Box": {
+        "originalTypeName": "Box",
+        "package": "@lowdefy/blocks-basic",
+        "count": 4,
+        "~k": "2i"
+      },
+      "Title": {
+        "originalTypeName": "Title",
+        "package": "@lowdefy/blocks-basic",
+        "count": 2,
+        "~k": "2j"
+      },
+      "Result": {
+        "originalTypeName": "Result",
+        "package": "@lowdefy/blocks-antd",
+        "count": 1,
+        "~k": "2k"
+      },
+      "Button": {
+        "originalTypeName": "Button",
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "2l"
+      },
+      "Anchor": {
+        "originalTypeName": "Anchor",
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "2m"
+      },
+      "DangerousHtml": {
+        "originalTypeName": "DangerousHtml",
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "2n"
+      },
+      "Html": {
+        "originalTypeName": "Html",
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "2o"
+      },
+      "Icon": {
+        "originalTypeName": "Icon",
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "2p"
+      },
+      "Img": {
+        "originalTypeName": "Img",
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "2q"
+      },
+      "List": {
+        "originalTypeName": "List",
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "2r"
+      },
+      "Span": {
+        "originalTypeName": "Span",
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "2s"
+      },
+      "Throw": {
+        "originalTypeName": "Throw",
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "2t"
+      },
+      "ProgressBar": {
+        "originalTypeName": "ProgressBar",
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "2u"
+      },
+      "Skeleton": {
+        "originalTypeName": "Skeleton",
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "2v"
+      },
+      "SkeletonAvatar": {
+        "originalTypeName": "SkeletonAvatar",
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "2w"
+      },
+      "SkeletonButton": {
+        "originalTypeName": "SkeletonButton",
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "2x"
+      },
+      "SkeletonInput": {
+        "originalTypeName": "SkeletonInput",
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "2y"
+      },
+      "SkeletonParagraph": {
+        "originalTypeName": "SkeletonParagraph",
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "2z"
+      },
+      "Spinner": {
+        "originalTypeName": "Spinner",
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "30"
+      },
+      "Message": {
+        "originalTypeName": "Message",
+        "package": "@lowdefy/blocks-antd",
+        "count": 1,
+        "~k": "31"
+      },
+      "~k": "2h"
+    },
+    "connections": {
+      "MongoDBCollection": {
+        "originalTypeName": "MongoDBCollection",
+        "package": "@lowdefy/connection-mongodb",
+        "count": 1,
+        "~k": "33"
+      },
+      "~k": "32"
+    },
+    "requests": {
+      "~k": "34"
+    },
+    "api": {
+      "~k": "35"
+    },
+    "operators": {
+      "client": {
+        "_not": {
+          "originalTypeName": "_not",
+          "package": "@lowdefy/operators-js",
+          "count": 1,
+          "~k": "38"
+        },
+        "_type": {
+          "originalTypeName": "_type",
+          "package": "@lowdefy/operators-js",
+          "count": 1,
+          "~k": "39"
+        },
+        "~k": "37"
+      },
+      "server": {
+        "~k": "3a"
+      },
+      "~k": "36"
+    },
+    "~k": "29"
+  }
+}

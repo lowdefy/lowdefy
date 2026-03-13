@@ -1,0 +1,7 @@
+id: company-list
+type: Box
+blocks:
+  - id: title
+    type: Title
+    properties:
+      content: Company List
