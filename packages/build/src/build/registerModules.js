@@ -30,7 +30,7 @@ import validateOperatorsDynamic from './validateOperatorsDynamic.js';
 validateOperatorsDynamic({ operators });
 const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
 
-async function registerModuleEntry({ entry, resolvedPaths, context }) {
+async function resolveLocalManifest({ entry, resolvedPaths, context }) {
   if (!entry.id || !type.isString(entry.id)) {
     throw new ConfigError("Module entry 'id' is required and must be a string.");
   }
@@ -59,7 +59,7 @@ async function registerModuleEntry({ entry, resolvedPaths, context }) {
   const refDef = makeRefDefinition(moduleYamlPath, null, context.refMap);
   const content = await getRefContent({ context, refDef, referencedFrom: null });
 
-  // Resolve _ref and _module.var operators using the walker
+  // Run walker with shouldStop preserving content that may contain cross-module refs
   const ctx = new WalkContext({
     buildContext: context,
     refId: refDef.id,
@@ -75,22 +75,15 @@ async function registerModuleEntry({ entry, resolvedPaths, context }) {
     dynamicIdentifiers,
     shouldStop: (childPath) => {
       if (/^components\.\d+\.component$/.test(childPath)) return 'preserve';
+      if (/^pages(\..*)?$/.test(childPath)) return 'preserve';
+      if (/^api(\..*)?$/.test(childPath)) return 'preserve';
+      if (/^connections(\..*)?$/.test(childPath)) return 'preserve';
+      if (/^menus\.\d+\.links$/.test(childPath)) return 'preserve';
       return false;
     },
   });
 
-  let manifest = await resolve(content, ctx);
-
-  // Filter null entries produced by _ref resolution failures (walker returns null
-  // for ConfigErrors and collects them). Without this, null entries cause crashes
-  // downstream when accessing .id on processed items.
-  for (const key of ['pages', 'connections', 'api']) {
-    if (type.isArray(manifest[key])) {
-      manifest[key] = manifest[key].filter((item) => !type.isNone(item));
-    }
-  }
-
-  manifest = evaluateStaticOperators({ context, input: manifest, refDef });
+  const manifest = await resolve(content, ctx);
 
   // Parse dependencies array from manifest
   const dependencies = manifest.dependencies ?? [];
@@ -200,7 +193,48 @@ async function registerModuleEntry({ entry, resolvedPaths, context }) {
     dependencies,
     exports,
     moduleDependencies: entry.dependencies ?? {},
+    refDef,
   };
 }
 
-export default registerModuleEntry;
+async function resolveFullManifest({ entryId, context }) {
+  const moduleEntry = context.modules[entryId];
+  const { manifest, vars, packageRoot, moduleRoot, moduleDependencies, refDef } = moduleEntry;
+
+  const moduleYamlPath = path.join(moduleRoot, 'module.lowdefy.yaml');
+
+  const ctx = new WalkContext({
+    buildContext: context,
+    refId: refDef.id,
+    sourceRefId: null,
+    vars: {},
+    moduleVars: vars,
+    moduleDependencies,
+    packageRoot,
+    path: '',
+    currentFile: moduleYamlPath,
+    refChain: new Set(refDef.path ? [refDef.path] : []),
+    operators,
+    env: process.env,
+    dynamicIdentifiers,
+    shouldStop: (childPath) => {
+      if (/^components\.\d+\.component$/.test(childPath)) return 'preserve';
+      return false;
+    },
+  });
+
+  let resolved = await resolve(manifest, ctx);
+
+  resolved = evaluateStaticOperators({ context, input: resolved, refDef });
+
+  // Filter null entries produced by _ref resolution failures
+  for (const key of ['pages', 'connections', 'api']) {
+    if (type.isArray(resolved[key])) {
+      resolved[key] = resolved[key].filter((item) => !type.isNone(item));
+    }
+  }
+
+  moduleEntry.manifest = resolved;
+}
+
+export { resolveLocalManifest, resolveFullManifest };

@@ -31,11 +31,12 @@ function createModuleEntry({
   return {
     id,
     manifest: { components, menus, pages, connections, api },
+    moduleDependencies: {},
   };
 }
 
 describe('getModuleRefContent', () => {
-  test('returns component content from module manifest', async () => {
+  test('returns component content and entryId from module manifest', async () => {
     const componentContent = { id: 'badge', type: 'Box', properties: { color: 'red' } };
     const context = createContext({
       modules: {
@@ -50,10 +51,10 @@ describe('getModuleRefContent', () => {
       refDef: { module: 'notifications', component: 'notification-badge' },
       referencedFrom: 'lowdefy.yaml',
     });
-    expect(result).toEqual(componentContent);
+    expect(result).toEqual({ content: componentContent, entryId: 'notifications' });
   });
 
-  test('returns menu links from module manifest', async () => {
+  test('returns menu links and entryId from module manifest', async () => {
     const links = [{ id: 'users', pageId: 'users-list' }];
     const context = createContext({
       modules: {
@@ -67,10 +68,10 @@ describe('getModuleRefContent', () => {
       refDef: { module: 'team-users', menu: 'default' },
       referencedFrom: 'lowdefy.yaml',
     });
-    expect(result).toEqual(links);
+    expect(result).toEqual({ content: links, entryId: 'team-users' });
   });
 
-  test('returns page object from module manifest', async () => {
+  test('throws ConfigError for page ref (cross-module not supported)', async () => {
     const page = { id: 'users-list', type: 'PageSiderMenu', blocks: [] };
     const context = createContext({
       modules: {
@@ -79,15 +80,16 @@ describe('getModuleRefContent', () => {
         }),
       },
     });
-    const result = await getModuleRefContent({
-      context,
-      refDef: { module: 'team-users', page: 'users-list' },
-      referencedFrom: 'lowdefy.yaml',
-    });
-    expect(result).toEqual(page);
+    await expect(
+      getModuleRefContent({
+        context,
+        refDef: { module: 'team-users', page: 'users-list' },
+        referencedFrom: 'lowdefy.yaml',
+      })
+    ).rejects.toThrow('Cross-module _ref does not support "page"');
   });
 
-  test('returns connection object from module manifest', async () => {
+  test('throws ConfigError for connection ref (cross-module not supported)', async () => {
     const connection = { id: 'users-db', type: 'MongoDBCollection' };
     const context = createContext({
       modules: {
@@ -96,15 +98,16 @@ describe('getModuleRefContent', () => {
         }),
       },
     });
-    const result = await getModuleRefContent({
-      context,
-      refDef: { module: 'team-users', connection: 'users-db' },
-      referencedFrom: 'lowdefy.yaml',
-    });
-    expect(result).toEqual(connection);
+    await expect(
+      getModuleRefContent({
+        context,
+        refDef: { module: 'team-users', connection: 'users-db' },
+        referencedFrom: 'lowdefy.yaml',
+      })
+    ).rejects.toThrow('Cross-module _ref does not support "connection"');
   });
 
-  test('returns api endpoint object from module manifest', async () => {
+  test('throws ConfigError for api ref (cross-module not supported)', async () => {
     const endpoint = { id: 'get-users', type: 'MongoDBFind' };
     const context = createContext({
       modules: {
@@ -113,12 +116,13 @@ describe('getModuleRefContent', () => {
         }),
       },
     });
-    const result = await getModuleRefContent({
-      context,
-      refDef: { module: 'team-users', api: 'get-users' },
-      referencedFrom: 'lowdefy.yaml',
-    });
-    expect(result).toEqual(endpoint);
+    await expect(
+      getModuleRefContent({
+        context,
+        refDef: { module: 'team-users', api: 'get-users' },
+        referencedFrom: 'lowdefy.yaml',
+      })
+    ).rejects.toThrow('Cross-module _ref does not support "api"');
   });
 
   test('throws ConfigError when module entry is not found', async () => {
@@ -145,7 +149,7 @@ describe('getModuleRefContent', () => {
         referencedFrom: 'lowdefy.yaml',
       })
     ).rejects.toThrow(
-      'Module _ref requires "component", "menu", "page", "connection", or "api" property.'
+      'Module _ref requires "component" or "menu" property.'
     );
   });
 
@@ -164,21 +168,6 @@ describe('getModuleRefContent', () => {
         referencedFrom: 'lowdefy.yaml',
       })
     ).rejects.toThrow('Module "team-users" does not export component "nonexistent".');
-  });
-
-  test('throws ConfigError for missing page export', async () => {
-    const context = createContext({
-      modules: {
-        'team-users': createModuleEntry({ pages: [] }),
-      },
-    });
-    await expect(
-      getModuleRefContent({
-        context,
-        refDef: { module: 'team-users', page: 'missing-page' },
-        referencedFrom: 'lowdefy.yaml',
-      })
-    ).rejects.toThrow('Module "team-users" does not export page "missing-page".');
   });
 
   test('handles empty manifest arrays gracefully', async () => {
@@ -202,16 +191,17 @@ describe('getModuleRefContent', () => {
         'team-users': {
           id: 'team-users',
           manifest: {},
+          moduleDependencies: {},
         },
       },
     });
     await expect(
       getModuleRefContent({
         context,
-        refDef: { module: 'team-users', connection: 'db' },
+        refDef: { module: 'team-users', component: 'x' },
         referencedFrom: 'lowdefy.yaml',
       })
-    ).rejects.toThrow('Module "team-users" does not export connection "db".');
+    ).rejects.toThrow('Module "team-users" does not export component "x".');
   });
 
   test('component export type takes priority over menu', async () => {
@@ -224,6 +214,7 @@ describe('getModuleRefContent', () => {
             components: [{ id: 'x', component: componentContent }],
             menus: [{ id: 'x', links: [] }],
           },
+          moduleDependencies: {},
         },
       },
     });
@@ -232,6 +223,136 @@ describe('getModuleRefContent', () => {
       refDef: { module: 'mod', component: 'x', menu: 'x' },
       referencedFrom: 'lowdefy.yaml',
     });
-    expect(result).toEqual(componentContent);
+    expect(result).toEqual({ content: componentContent, entryId: 'mod' });
+  });
+
+  test('resolves abstract dependency name through walkCtx.moduleDependencies', async () => {
+    const componentContent = { type: 'Box', properties: { title: 'Contact' } };
+    const context = createContext({
+      modules: {
+        'crm-contacts': createModuleEntry({
+          id: 'crm-contacts',
+          components: [{ id: 'selector', component: componentContent }],
+        }),
+      },
+    });
+    const walkCtx = {
+      moduleDependencies: { contacts: 'crm-contacts' },
+    };
+    const result = await getModuleRefContent({
+      context,
+      refDef: { module: 'contacts', component: 'selector' },
+      referencedFrom: 'page.yaml',
+      walkCtx,
+    });
+    expect(result).toEqual({ content: componentContent, entryId: 'crm-contacts' });
+  });
+
+  test('uses raw name as entry ID when no moduleDependencies in walkCtx', async () => {
+    const componentContent = { type: 'Box' };
+    const context = createContext({
+      modules: {
+        notifications: createModuleEntry({
+          id: 'notifications',
+          components: [{ id: 'badge', component: componentContent }],
+        }),
+      },
+    });
+    const result = await getModuleRefContent({
+      context,
+      refDef: { module: 'notifications', component: 'badge' },
+      referencedFrom: 'lowdefy.yaml',
+      walkCtx: null,
+    });
+    expect(result).toEqual({ content: componentContent, entryId: 'notifications' });
+  });
+
+  test('throws with wiring info when abstract name maps to nonexistent entry', async () => {
+    const context = createContext({ modules: {} });
+    const walkCtx = {
+      moduleDependencies: { contacts: 'missing-entry' },
+    };
+    await expect(
+      getModuleRefContent({
+        context,
+        refDef: { module: 'contacts', component: 'selector' },
+        referencedFrom: 'page.yaml',
+        walkCtx,
+      })
+    ).rejects.toThrow(
+      'Module entry "contacts" not found. ("contacts" was mapped to "missing-entry" via dependency wiring.)'
+    );
+  });
+
+  test('abstract name in wiring takes precedence over concrete entry with same name', async () => {
+    const wrongContent = { type: 'Wrong' };
+    const rightContent = { type: 'Right' };
+    const context = createContext({
+      modules: {
+        contacts: createModuleEntry({
+          id: 'contacts',
+          components: [{ id: 'selector', component: wrongContent }],
+        }),
+        'contacts-other': createModuleEntry({
+          id: 'contacts-other',
+          components: [{ id: 'selector', component: rightContent }],
+        }),
+      },
+    });
+    const walkCtx = {
+      moduleDependencies: { contacts: 'contacts-other' },
+    };
+    const result = await getModuleRefContent({
+      context,
+      refDef: { module: 'contacts', component: 'selector' },
+      referencedFrom: 'page.yaml',
+      walkCtx,
+    });
+    expect(result).toEqual({ content: rightContent, entryId: 'contacts-other' });
+  });
+
+  test('page ref error suggests _module.pageId operator', async () => {
+    const context = createContext({
+      modules: {
+        'team-users': createModuleEntry({ pages: [{ id: 'list' }] }),
+      },
+    });
+    await expect(
+      getModuleRefContent({
+        context,
+        refDef: { module: 'team-users', page: 'list' },
+        referencedFrom: 'lowdefy.yaml',
+      })
+    ).rejects.toThrow('Use _module.pageId');
+  });
+
+  test('connection ref error suggests _module.connectionId operator', async () => {
+    const context = createContext({
+      modules: {
+        'team-users': createModuleEntry({ connections: [{ id: 'db' }] }),
+      },
+    });
+    await expect(
+      getModuleRefContent({
+        context,
+        refDef: { module: 'team-users', connection: 'db' },
+        referencedFrom: 'lowdefy.yaml',
+      })
+    ).rejects.toThrow('Use _module.connectionId');
+  });
+
+  test('api ref error suggests _module.endpointId operator', async () => {
+    const context = createContext({
+      modules: {
+        'team-users': createModuleEntry({ api: [{ id: 'ep' }] }),
+      },
+    });
+    await expect(
+      getModuleRefContent({
+        context,
+        refDef: { module: 'team-users', api: 'ep' },
+        referencedFrom: 'lowdefy.yaml',
+      })
+    ).rejects.toThrow('Use _module.endpointId');
   });
 });

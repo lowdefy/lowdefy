@@ -21,6 +21,7 @@ import { ConfigError } from '@lowdefy/errors';
 import { evaluateOperators } from '@lowdefy/operators';
 import makeRefDefinition from './makeRefDefinition.js';
 import getRefContent from './getRefContent.js';
+import getModuleRefContent from './getModuleRefContent.js';
 import runTransformer from './runTransformer.js';
 import getKey from './getKey.js';
 import resolveModuleOperators, {
@@ -36,6 +37,7 @@ class WalkContext {
     sourceRefId,
     vars,
     moduleVars,
+    moduleDependencies,
     packageRoot,
     path,
     currentFile,
@@ -50,6 +52,7 @@ class WalkContext {
     this.sourceRefId = sourceRefId;
     this.vars = vars;
     this.moduleVars = moduleVars;
+    this.moduleDependencies = moduleDependencies;
     this.packageRoot = packageRoot;
     this.path = path;
     this.currentFile = currentFile;
@@ -67,6 +70,7 @@ class WalkContext {
       sourceRefId: this.sourceRefId,
       vars: this.vars,
       moduleVars: this.moduleVars,
+      moduleDependencies: this.moduleDependencies,
       packageRoot: this.packageRoot,
       path: this.path ? `${this.path}.${segment}` : segment,
       currentFile: this.currentFile,
@@ -78,7 +82,7 @@ class WalkContext {
     });
   }
 
-  forRef({ refId, vars, filePath, moduleVars, packageRoot }) {
+  forRef({ refId, vars, filePath, moduleVars, packageRoot, moduleDependencies }) {
     const newChain = new Set(this.refChain);
     if (filePath) {
       newChain.add(filePath);
@@ -89,6 +93,7 @@ class WalkContext {
       sourceRefId: this.refId,
       vars: vars ?? {},
       moduleVars: moduleVars ?? this.moduleVars,
+      moduleDependencies: moduleDependencies ?? this.moduleDependencies,
       packageRoot: packageRoot ?? this.packageRoot,
       path: this.path,
       currentFile: filePath ?? this.currentFile,
@@ -339,16 +344,30 @@ async function resolveRef(node, ctx) {
   // allowing multiple errors to be reported at once.
   try {
     // 7. Load content
-    let content = await getRefContent({
-      context: ctx.buildContext,
-      refDef,
-      referencedFrom: ctx.currentFile,
-    });
+    let content;
+    let resolvedEntryId = null;
+
+    if (refDef.module) {
+      const result = await getModuleRefContent({
+        context: ctx.buildContext,
+        refDef,
+        referencedFrom: ctx.currentFile,
+        walkCtx: ctx,
+      });
+      content = result.content;
+      resolvedEntryId = result.entryId;
+    } else {
+      content = await getRefContent({
+        context: ctx.buildContext,
+        refDef,
+        referencedFrom: ctx.currentFile,
+      });
+    }
 
     // 8. Create child context for the ref
     let childCtx;
-    if (refDef.module && refDef.component) {
-      const moduleEntry = ctx.buildContext.modules[refDef.module];
+    if (refDef.module && (refDef.component || refDef.menu)) {
+      const moduleEntry = ctx.buildContext.modules[resolvedEntryId];
       const deferredFrom = content['~deferredFrom'];
       childCtx = ctx.forRef({
         refId: refDef.id,
@@ -356,6 +375,7 @@ async function resolveRef(node, ctx) {
         filePath: deferredFrom ?? path.join(moduleEntry.moduleRoot, 'module.lowdefy.yaml'),
         moduleVars: moduleEntry.vars,
         packageRoot: moduleEntry.packageRoot,
+        moduleDependencies: moduleEntry.moduleDependencies,
       });
     } else {
       childCtx = ctx.forRef({
@@ -370,7 +390,7 @@ async function resolveRef(node, ctx) {
 
     // 10. Module ref post-processing — resolve ID operators and scope menu IDs
     if (refDef.module) {
-      const moduleEntry = ctx.buildContext.modules[refDef.module];
+      const moduleEntry = ctx.buildContext.modules[resolvedEntryId];
       content = resolveModuleOperators({
         input: content,
         moduleEntry,

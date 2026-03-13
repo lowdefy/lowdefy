@@ -23,7 +23,7 @@ import evaluateStaticOperators from './buildRefs/evaluateStaticOperators.js';
 import collectDynamicIdentifiers from './collectDynamicIdentifiers.js';
 import validateOperatorsDynamic from './validateOperatorsDynamic.js';
 import fetchModules from './fetchModules.js';
-import registerModuleEntry from './registerModules.js';
+import { resolveLocalManifest, resolveFullManifest } from './registerModules.js';
 import resolveModuleDependencies from './resolveModuleDependencies.js';
 
 validateOperatorsDynamic({ operators });
@@ -73,8 +73,9 @@ async function buildModuleDefs({ context }) {
 
   const resolvedPaths = await fetchModules({ moduleEntries, context });
 
+  // Step 1: Local resolve — concrete arrays, preserved content, exports/deps extracted
   for (const entry of moduleEntries) {
-    await registerModuleEntry({
+    await resolveLocalManifest({
       entry,
       resolvedPaths: resolvedPaths[entry.id],
       context,
@@ -83,6 +84,11 @@ async function buildModuleDefs({ context }) {
 
   // Step 2: Auto-wire and validate dependency wiring
   resolveModuleDependencies({ context });
+
+  // Step 3: Full resolve — cross-module refs, preserved content
+  for (const entryId of Object.keys(context.modules)) {
+    await resolveFullManifest({ entryId, context });
+  }
 }
 
 export default buildModuleDefs;

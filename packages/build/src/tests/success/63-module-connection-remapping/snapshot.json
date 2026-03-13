@@ -56,8 +56,8 @@
       "collection": "notifications",
       "~k": "d"
     },
-    "~k": "c",
-    "connectionId": "app-mongodb"
+    "connectionId": "app-mongodb",
+    "~k": "c"
   },
   "connections/app-sendgrid.json": {
     "id": "connection:app-sendgrid",
@@ -66,8 +66,8 @@
       "apiKey": "test-key",
       "~k": "f"
     },
-    "~k": "e",
-    "connectionId": "app-sendgrid"
+    "connectionId": "app-sendgrid",
+    "~k": "e"
   },
   "connections/notify2/email.json": {
     "id": "connection:notify2/email",
@@ -80,8 +80,8 @@
       "from": "other@example.com",
       "~k": "h"
     },
-    "~k": "g",
-    "connectionId": "notify2/email"
+    "connectionId": "notify2/email",
+    "~k": "g"
   },
   "global.json": {},
   "keyMap.json": {
@@ -386,43 +386,43 @@
     "l": {
       "key": "root.pages[1:notify/inbox:Box]",
       "~k_parent": "j",
-      "~r": "4",
+      "~r": "5",
       "~l": 1
     },
     "m": {
       "key": "root.pages[1:notify/inbox:Box].blocks",
       "~k_parent": "l",
-      "~r": "4",
+      "~r": "5",
       "~l": 3
     },
     "n": {
       "key": "root.pages[1:notify/inbox:Box].blocks[0:send-btn:Button]",
       "~k_parent": "m",
-      "~r": "4",
+      "~r": "5",
       "~l": 4
     },
     "o": {
       "key": "root.pages[1:notify/inbox:Box].blocks[0:send-btn:Button].properties",
       "~k_parent": "n",
-      "~r": "4",
+      "~r": "5",
       "~l": 6
     },
     "p": {
       "key": "root.pages[1:notify/inbox:Box].blocks[0:send-btn:Button].requests",
       "~k_parent": "n",
-      "~r": "4",
+      "~r": "5",
       "~l": 8
     },
     "q": {
       "key": "root.pages[1:notify/inbox:Box].blocks[0:send-btn:Button].requests[0:app-sendgrid:SendGridMailSend]",
       "~k_parent": "p",
-      "~r": "4",
+      "~r": "5",
       "~l": 9
     },
     "r": {
       "key": "root.pages[1:notify/inbox:Box].blocks[0:send-btn:Button].requests[0:app-sendgrid:SendGridMailSend].properties",
       "~k_parent": "q",
-      "~r": "4",
+      "~r": "5",
       "~l": 13
     },
     "s": {
@@ -1115,8 +1115,8 @@
                 },
                 "~k": "19"
               },
-              "~k": "17",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "17"
             }
           ],
           "~k": "16"
@@ -1172,8 +1172,8 @@
                 "title": "Send",
                 "~k": "o"
               },
-              "~k": "n",
-              "blockId": "send-btn"
+              "blockId": "send-btn",
+              "~k": "n"
             }
           ],
           "~k": "m"
@@ -1186,12 +1186,12 @@
       "~arr": [
         {
           "id": "request:notify/inbox:send-email",
-          "~k": "q",
           "payload": {
             "~k": "1r"
           },
           "requestId": "send-email",
-          "pageId": "notify/inbox"
+          "pageId": "notify/inbox",
+          "~k": "q"
         }
       ],
       "~k": "1q"
@@ -1206,7 +1206,6 @@
       "to": "user@example.com",
       "~k": "r"
     },
-    "~k": "q",
     "payload": {
       "~k": "1r"
     },
@@ -1215,7 +1214,8 @@
       "~k": "1s"
     },
     "requestId": "send-email",
-    "pageId": "notify/inbox"
+    "pageId": "notify/inbox",
+    "~k": "q"
   },
   "pages/notify2/inbox.json": {
     "id": "page:notify2/inbox",
@@ -1237,8 +1237,8 @@
                 "title": "Send",
                 "~k": "v"
               },
-              "~k": "u",
-              "blockId": "send-btn"
+              "blockId": "send-btn",
+              "~k": "u"
             }
           ],
           "~k": "t"
@@ -1251,12 +1251,12 @@
       "~arr": [
         {
           "id": "request:notify2/inbox:send-email",
-          "~k": "x",
           "payload": {
             "~k": "1y"
           },
           "requestId": "send-email",
-          "pageId": "notify2/inbox"
+          "pageId": "notify2/inbox",
+          "~k": "x"
         }
       ],
       "~k": "1x"
@@ -1271,7 +1271,6 @@
       "to": "user@example.com",
       "~k": "y"
     },
-    "~k": "x",
     "payload": {
       "~k": "1y"
     },
@@ -1280,7 +1279,8 @@
       "~k": "1z"
     },
     "requestId": "send-email",
-    "pageId": "notify2/inbox"
+    "pageId": "notify2/inbox",
+    "~k": "x"
   },
   "plugins/actionSchemas.json": {
     "Link": {
@@ -2280,25 +2280,25 @@
       "parent": null
     },
     "3": {
+      "parent": null
+    },
+    "4": {
       "parent": "2",
       "lineNumber": 14,
       "path": "<CONFIG_DIR>/modules/notifier/connections/email.yaml"
     },
-    "4": {
+    "5": {
       "parent": "2",
       "lineNumber": 17,
       "path": "<CONFIG_DIR>/modules/notifier/pages/inbox.yaml"
     },
-    "5": {
-      "parent": null
-    },
     "6": {
-      "parent": "5",
+      "parent": "3",
       "lineNumber": 14,
       "path": "<CONFIG_DIR>/modules/notifier/connections/email.yaml"
     },
     "7": {
-      "parent": "5",
+      "parent": "3",
       "lineNumber": 17,
       "path": "<CONFIG_DIR>/modules/notifier/pages/inbox.yaml"
     },

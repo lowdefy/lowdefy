@@ -17,7 +17,7 @@
 import { jest } from '@jest/globals';
 
 import testContext from '../test-utils/testContext.js';
-import registerModuleEntry from './registerModules.js';
+import { resolveLocalManifest, resolveFullManifest } from './registerModules.js';
 
 const mockReadConfigFile = jest.fn();
 
@@ -44,7 +44,7 @@ beforeEach(() => {
   mockReadConfigFile.mockReset();
 });
 
-test('registerModuleEntry registers a module with resolved manifest', async () => {
+test('resolveLocalManifest registers a module with locally resolved manifest', async () => {
   const context = createTestContext();
   const files = [
     {
@@ -58,7 +58,7 @@ pages:
   ];
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
 
-  await registerModuleEntry({
+  await resolveLocalManifest({
     entry: { id: 'team-users', source: 'file:../modules/team-users', vars: {} },
     resolvedPaths: {
       packageRoot: '/modules/team-users',
@@ -72,15 +72,14 @@ pages:
   expect(context.modules['team-users'].id).toBe('team-users');
   expect(context.modules['team-users'].source).toBe('file:../modules/team-users');
   expect(context.modules['team-users'].isLocal).toBe(true);
-  expect(context.modules['team-users'].manifest.pages).toEqual([
-    expect.objectContaining({ id: 'users-page', type: 'Box' }),
-  ]);
+  // Pages are preserved in local resolve
+  expect(context.modules['team-users'].manifest.pages).toBeDefined();
 });
 
-test('registerModuleEntry throws when entry id is missing', async () => {
+test('resolveLocalManifest throws when entry id is missing', async () => {
   const context = createTestContext();
   await expect(
-    registerModuleEntry({
+    resolveLocalManifest({
       entry: { source: 'file:../mod' },
       resolvedPaths: { packageRoot: '/mod', moduleRoot: '/mod', isLocal: true },
       context,
@@ -88,10 +87,10 @@ test('registerModuleEntry throws when entry id is missing', async () => {
   ).rejects.toThrow("Module entry 'id' is required and must be a string.");
 });
 
-test('registerModuleEntry throws when entry id is not a string', async () => {
+test('resolveLocalManifest throws when entry id is not a string', async () => {
   const context = createTestContext();
   await expect(
-    registerModuleEntry({
+    resolveLocalManifest({
       entry: { id: 123, source: 'file:../mod' },
       resolvedPaths: { packageRoot: '/mod', moduleRoot: '/mod', isLocal: true },
       context,
@@ -99,10 +98,10 @@ test('registerModuleEntry throws when entry id is not a string', async () => {
   ).rejects.toThrow("Module entry 'id' is required and must be a string.");
 });
 
-test('registerModuleEntry throws when entry id contains a slash', async () => {
+test('resolveLocalManifest throws when entry id contains a slash', async () => {
   const context = createTestContext();
   await expect(
-    registerModuleEntry({
+    resolveLocalManifest({
       entry: { id: 'team/users', source: 'file:../mod' },
       resolvedPaths: { packageRoot: '/mod', moduleRoot: '/mod', isLocal: true },
       context,
@@ -110,10 +109,10 @@ test('registerModuleEntry throws when entry id contains a slash', async () => {
   ).rejects.toThrow('must not contain');
 });
 
-test('registerModuleEntry throws when source is missing', async () => {
+test('resolveLocalManifest throws when source is missing', async () => {
   const context = createTestContext();
   await expect(
-    registerModuleEntry({
+    resolveLocalManifest({
       entry: { id: 'my-mod' },
       resolvedPaths: { packageRoot: '/mod', moduleRoot: '/mod', isLocal: true },
       context,
@@ -121,12 +120,12 @@ test('registerModuleEntry throws when source is missing', async () => {
   ).rejects.toThrow("'source' is required and must be a string");
 });
 
-test('registerModuleEntry throws for duplicate entry ids', async () => {
+test('resolveLocalManifest throws for duplicate entry ids', async () => {
   const context = createTestContext();
   context.modules['team-users'] = { id: 'team-users' };
 
   await expect(
-    registerModuleEntry({
+    resolveLocalManifest({
       entry: { id: 'team-users', source: 'file:../mod' },
       resolvedPaths: { packageRoot: '/mod', moduleRoot: '/mod', isLocal: true },
       context,
@@ -134,12 +133,12 @@ test('registerModuleEntry throws for duplicate entry ids', async () => {
   ).rejects.toThrow('Duplicate module entry id "team-users"');
 });
 
-test('registerModuleEntry throws when module.lowdefy.yaml is not found', async () => {
+test('resolveLocalManifest throws when module.lowdefy.yaml is not found', async () => {
   const context = createTestContext();
   mockReadConfigFile.mockImplementation(() => null);
 
   await expect(
-    registerModuleEntry({
+    resolveLocalManifest({
       entry: { id: 'my-mod', source: 'file:../mod' },
       resolvedPaths: { packageRoot: '/mod', moduleRoot: '/mod', isLocal: true },
       context,
@@ -147,7 +146,7 @@ test('registerModuleEntry throws when module.lowdefy.yaml is not found', async (
   ).rejects.toThrow('Referenced file does not exist');
 });
 
-test('registerModuleEntry throws when required var is missing', async () => {
+test('resolveLocalManifest throws when required var is missing', async () => {
   const context = createTestContext();
   const files = [
     {
@@ -164,7 +163,7 @@ pages: []
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
 
   await expect(
-    registerModuleEntry({
+    resolveLocalManifest({
       entry: { id: 'my-mod', source: 'file:../mod', vars: {} },
       resolvedPaths: {
         packageRoot: '/modules/my-mod',
@@ -176,7 +175,7 @@ pages: []
   ).rejects.toThrow('requires var "apiKey"');
 });
 
-test('registerModuleEntry throws when var type does not match', async () => {
+test('resolveLocalManifest throws when var type does not match', async () => {
   const context = createTestContext();
   const files = [
     {
@@ -192,7 +191,7 @@ pages: []
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
 
   await expect(
-    registerModuleEntry({
+    resolveLocalManifest({
       entry: { id: 'my-mod', source: 'file:../mod', vars: { count: 'not-a-number' } },
       resolvedPaths: {
         packageRoot: '/modules/my-mod',
@@ -204,7 +203,7 @@ pages: []
   ).rejects.toThrow('must be type "number" but got "string"');
 });
 
-test('registerModuleEntry throws when required plugin is missing from app', async () => {
+test('resolveLocalManifest throws when required plugin is missing from app', async () => {
   const context = createTestContext({ plugins: [] });
   const files = [
     {
@@ -220,7 +219,7 @@ pages: []
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
 
   await expect(
-    registerModuleEntry({
+    resolveLocalManifest({
       entry: { id: 'my-mod', source: 'file:../mod', vars: {} },
       resolvedPaths: {
         packageRoot: '/modules/my-mod',
@@ -232,7 +231,7 @@ pages: []
   ).rejects.toThrow('requires plugin "@lowdefy/blocks-antd"');
 });
 
-test('registerModuleEntry throws when plugin version does not satisfy range', async () => {
+test('resolveLocalManifest throws when plugin version does not satisfy range', async () => {
   const context = createTestContext({
     plugins: [{ name: '@lowdefy/blocks-antd', version: '3.0.0' }],
   });
@@ -250,7 +249,7 @@ pages: []
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
 
   await expect(
-    registerModuleEntry({
+    resolveLocalManifest({
       entry: { id: 'my-mod', source: 'file:../mod', vars: {} },
       resolvedPaths: {
         packageRoot: '/modules/my-mod',
@@ -262,7 +261,7 @@ pages: []
   ).rejects.toThrow('but the app has version "3.0.0" installed');
 });
 
-test('registerModuleEntry accepts plugin when version satisfies range', async () => {
+test('resolveLocalManifest accepts plugin when version satisfies range', async () => {
   const context = createTestContext({
     plugins: [{ name: '@lowdefy/blocks-antd', version: '4.5.2' }],
   });
@@ -281,7 +280,7 @@ pages:
   ];
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
 
-  await registerModuleEntry({
+  await resolveLocalManifest({
     entry: { id: 'my-mod', source: 'file:../mod', vars: {} },
     resolvedPaths: {
       packageRoot: '/modules/my-mod',
@@ -294,7 +293,7 @@ pages:
   expect(context.modules['my-mod']).toBeDefined();
 });
 
-test('registerModuleEntry parses dependencies array from manifest', async () => {
+test('resolveLocalManifest parses dependencies array from manifest', async () => {
   const context = createTestContext();
   const files = [
     {
@@ -311,7 +310,7 @@ pages: []
   ];
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
 
-  await registerModuleEntry({
+  await resolveLocalManifest({
     entry: { id: 'my-mod', source: 'file:../mod', vars: {} },
     resolvedPaths: {
       packageRoot: '/modules/my-mod',
@@ -327,7 +326,7 @@ pages: []
   ]);
 });
 
-test('registerModuleEntry defaults dependencies to empty array when absent', async () => {
+test('resolveLocalManifest defaults dependencies to empty array when absent', async () => {
   const context = createTestContext();
   const files = [
     {
@@ -339,7 +338,7 @@ pages: []
   ];
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
 
-  await registerModuleEntry({
+  await resolveLocalManifest({
     entry: { id: 'my-mod', source: 'file:../mod', vars: {} },
     resolvedPaths: {
       packageRoot: '/modules/my-mod',
@@ -352,7 +351,7 @@ pages: []
   expect(context.modules['my-mod'].dependencies).toEqual([]);
 });
 
-test('registerModuleEntry throws when dependencies item has no string id', async () => {
+test('resolveLocalManifest throws when dependencies item has no string id', async () => {
   const context = createTestContext();
   const files = [
     {
@@ -367,7 +366,7 @@ pages: []
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
 
   await expect(
-    registerModuleEntry({
+    resolveLocalManifest({
       entry: { id: 'my-mod', source: 'file:../mod', vars: {} },
       resolvedPaths: {
         packageRoot: '/modules/my-mod',
@@ -379,7 +378,7 @@ pages: []
   ).rejects.toThrow('each item in "dependencies" must have a string "id"');
 });
 
-test('registerModuleEntry parses exports object from manifest', async () => {
+test('resolveLocalManifest parses exports object from manifest', async () => {
   const context = createTestContext();
   const files = [
     {
@@ -404,7 +403,7 @@ pages: []
   ];
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
 
-  await registerModuleEntry({
+  await resolveLocalManifest({
     entry: { id: 'my-mod', source: 'file:../mod', vars: {} },
     resolvedPaths: {
       packageRoot: '/modules/my-mod',
@@ -423,7 +422,7 @@ pages: []
   });
 });
 
-test('registerModuleEntry defaults exports sections to empty arrays when absent', async () => {
+test('resolveLocalManifest defaults exports sections to empty arrays when absent', async () => {
   const context = createTestContext();
   const files = [
     {
@@ -435,7 +434,7 @@ pages: []
   ];
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
 
-  await registerModuleEntry({
+  await resolveLocalManifest({
     entry: { id: 'my-mod', source: 'file:../mod', vars: {} },
     resolvedPaths: {
       packageRoot: '/modules/my-mod',
@@ -454,7 +453,7 @@ pages: []
   });
 });
 
-test('registerModuleEntry throws when exports section item has no string id', async () => {
+test('resolveLocalManifest throws when exports section item has no string id', async () => {
   const context = createTestContext();
   const files = [
     {
@@ -470,7 +469,7 @@ pages: []
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
 
   await expect(
-    registerModuleEntry({
+    resolveLocalManifest({
       entry: { id: 'my-mod', source: 'file:../mod', vars: {} },
       resolvedPaths: {
         packageRoot: '/modules/my-mod',
@@ -482,7 +481,7 @@ pages: []
   ).rejects.toThrow('each item in exports.pages must have a string "id"');
 });
 
-test('registerModuleEntry throws for unknown exports sections', async () => {
+test('resolveLocalManifest throws for unknown exports sections', async () => {
   const context = createTestContext();
   const files = [
     {
@@ -498,7 +497,7 @@ pages: []
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
 
   await expect(
-    registerModuleEntry({
+    resolveLocalManifest({
       entry: { id: 'my-mod', source: 'file:../mod', vars: {} },
       resolvedPaths: {
         packageRoot: '/modules/my-mod',
@@ -510,7 +509,7 @@ pages: []
   ).rejects.toThrow('unknown exports section "widgets"');
 });
 
-test('registerModuleEntry stores moduleDependencies from entry dependencies', async () => {
+test('resolveLocalManifest stores moduleDependencies from entry dependencies', async () => {
   const context = createTestContext();
   const files = [
     {
@@ -522,7 +521,7 @@ pages: []
   ];
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
 
-  await registerModuleEntry({
+  await resolveLocalManifest({
     entry: {
       id: 'my-mod',
       source: 'file:../mod',
@@ -543,7 +542,7 @@ pages: []
   });
 });
 
-test('registerModuleEntry defaults moduleDependencies to empty object when absent', async () => {
+test('resolveLocalManifest defaults moduleDependencies to empty object when absent', async () => {
   const context = createTestContext();
   const files = [
     {
@@ -555,7 +554,7 @@ pages: []
   ];
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
 
-  await registerModuleEntry({
+  await resolveLocalManifest({
     entry: { id: 'my-mod', source: 'file:../mod', vars: {} },
     resolvedPaths: {
       packageRoot: '/modules/my-mod',
@@ -568,7 +567,7 @@ pages: []
   expect(context.modules['my-mod'].moduleDependencies).toEqual({});
 });
 
-test('registerModuleEntry stores connections from entry', async () => {
+test('resolveLocalManifest stores connections from entry', async () => {
   const context = createTestContext();
   const files = [
     {
@@ -580,7 +579,7 @@ pages: []
   ];
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
 
-  await registerModuleEntry({
+  await resolveLocalManifest({
     entry: {
       id: 'my-mod',
       source: 'file:../mod',
@@ -598,4 +597,121 @@ pages: []
   expect(context.modules['my-mod'].connections).toEqual({
     db: { connectionString: 'mongodb://localhost' },
   });
+});
+
+test('resolveLocalManifest preserves pages, api, connections, and menu links', async () => {
+  const context = createTestContext();
+  const files = [
+    {
+      path: '/modules/my-mod/module.lowdefy.yaml',
+      content: `
+pages:
+  - id: my-page
+    type: Box
+    blocks:
+      - id: block1
+        type: TextInput
+connections:
+  - id: my-conn
+    type: MongoDBCollection
+api:
+  - id: my-endpoint
+    type: MongoDBFind
+menus:
+  - id: default
+    links:
+      - id: link1
+        pageId: my-page
+components:
+  - id: my-comp
+    component:
+      id: inner
+      type: Box
+`,
+    },
+  ];
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+
+  await resolveLocalManifest({
+    entry: { id: 'my-mod', source: 'file:../mod', vars: {} },
+    resolvedPaths: {
+      packageRoot: '/modules/my-mod',
+      moduleRoot: '/modules/my-mod',
+      isLocal: true,
+    },
+    context,
+  });
+
+  const manifest = context.modules['my-mod'].manifest;
+  // Pages, connections, api preserved (content exists but was stopped from deep resolution)
+  expect(manifest.pages).toBeDefined();
+  expect(manifest.connections).toBeDefined();
+  expect(manifest.api).toBeDefined();
+  expect(manifest.menus).toBeDefined();
+  expect(manifest.components).toBeDefined();
+});
+
+test('resolveFullManifest resolves preserved content in second pass', async () => {
+  const context = createTestContext();
+  const files = [
+    {
+      path: '/modules/my-mod/module.lowdefy.yaml',
+      content: `
+pages:
+  - id: my-page
+    type: Box
+`,
+    },
+  ];
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+
+  await resolveLocalManifest({
+    entry: { id: 'my-mod', source: 'file:../mod', vars: {} },
+    resolvedPaths: {
+      packageRoot: '/modules/my-mod',
+      moduleRoot: '/modules/my-mod',
+      isLocal: true,
+    },
+    context,
+  });
+
+  await resolveFullManifest({ entryId: 'my-mod', context });
+
+  expect(context.modules['my-mod'].manifest.pages).toEqual([
+    expect.objectContaining({ id: 'my-page', type: 'Box' }),
+  ]);
+});
+
+test('resolveFullManifest filters null entries from pages, connections, api', async () => {
+  const context = createTestContext();
+  const files = [
+    {
+      path: '/modules/my-mod/module.lowdefy.yaml',
+      content: `
+pages:
+  - id: good-page
+    type: Box
+`,
+    },
+  ];
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+
+  await resolveLocalManifest({
+    entry: { id: 'my-mod', source: 'file:../mod', vars: {} },
+    resolvedPaths: {
+      packageRoot: '/modules/my-mod',
+      moduleRoot: '/modules/my-mod',
+      isLocal: true,
+    },
+    context,
+  });
+
+  // Manually inject a null to simulate a failed ref resolution
+  context.modules['my-mod'].manifest.pages.push(null);
+
+  await resolveFullManifest({ entryId: 'my-mod', context });
+
+  expect(context.modules['my-mod'].manifest.pages).toEqual([
+    expect.objectContaining({ id: 'good-page', type: 'Box' }),
+  ]);
 });
