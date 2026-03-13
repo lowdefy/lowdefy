@@ -18,6 +18,11 @@ export default {
   category: 'input',
   icons: ['AiOutlineLoading', 'AiOutlineCamera'],
   valueType: 'object',
+  cssKeys: {
+    element: 'The upload content area.',
+    icon: 'The icon in the S3UploadPhoto.',
+    title: 'The upload title text.',
+  },
   events: {
     onChange: 'Triggered when the upload state is changing.',
     onProgress: 'Triggered when the upload state is in progress.',
@@ -57,13 +62,6 @@ export default {
         default: false,
         description:
           'Only allow a single file to be uploaded. Only one file can be selected in the prompt.',
-      },
-      style: {
-        type: 'object',
-        description: 'Css style object to applied to draggable area.',
-        docs: {
-          displayType: 'yaml',
-        },
       },
     },
   },

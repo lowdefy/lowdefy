@@ -13,6 +13,7 @@
 # limitations under the License.
 
 - title: Inline Code
+  fullWidth: true
   blocks:
     - id: inline_basic
       type: MarkdownWithCode
@@ -362,6 +363,7 @@
           ```
 
 - title: skipHtml Property
+  fullWidth: true
   blocks:
     - id: skip_html_false
       type: MarkdownWithCode
@@ -380,6 +382,7 @@
           With skipHtml enabled, any HTML tags like <b>bold</b> are completely removed from the output rather than shown as escaped text.
 
 - title: Style Override
+  fullWidth: true
   blocks:
     - id: style_element
       type: MarkdownWithCode

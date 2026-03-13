@@ -24,7 +24,7 @@ import getOnPaste from '../utils/getOnPaste.js';
 
 const { Dragger } = Upload;
 
-const S3UploadDragger = ({ blockId, methods, properties, value }) => {
+const S3UploadDragger = ({ blockId, classNames = {}, methods, properties, styles = {}, value }) => {
   const [state, loadFileList, setFileList, removeFile, setValue] = useFileList({
     properties,
     methods,
@@ -59,7 +59,8 @@ const S3UploadDragger = ({ blockId, methods, properties, value }) => {
       <Dragger
         accept={properties.accept ?? '*'}
         beforeUpload={loadFileList}
-        className={methods.makeCssClass([properties.style])}
+        className={classNames.element}
+        style={styles.element}
         customRequest={s3UploadRequest}
         disabled={properties.disabled}
         fileList={state.fileList}
@@ -71,7 +72,7 @@ const S3UploadDragger = ({ blockId, methods, properties, value }) => {
           methods.triggerEvent({ name: 'onChange' });
         }}
       >
-        <div className="ant-upload-hint">
+        <div className={classNames.hint} style={styles.hint}>
           {renderHtml({
             html: properties.title ?? 'Click or drag to add a file.',
             methods,

@@ -40,7 +40,7 @@ const MAP_PROPS = {
 };
 
 // Implements https://react-google-maps-api-docs.netlify.app/#googlemap
-const Map = ({ blockId, children, content, methods, properties, styles = {} }) => {
+const Map = ({ blockId, children, classNames = {}, content, methods, properties, styles = {} }) => {
   const [map, setMap] = useState();
   const [bounds, setBounds] = useState();
 
@@ -106,7 +106,8 @@ const Map = ({ blockId, children, content, methods, properties, styles = {} }) =
     <GoogleMap
       {...properties.map} // https://react-google-maps-api-docs.netlify.app/#googlemap
       id={blockId}
-      mapContainerClassName={methods.makeCssClass([STYLE_DEFAULTS, styles.element])}
+      mapContainerClassName={classNames.element}
+      mapContainerStyle={{ ...STYLE_DEFAULTS, ...styles.element }}
       center={MAP_PROPS.center}
       zoom={MAP_PROPS.zoom}
       onLoad={(newMap, event) => {

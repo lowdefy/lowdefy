@@ -55,7 +55,6 @@
     "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "@emotion/jest": "11.10.5",
     "@lowdefy/ajv": "4.7.0",
     "@lowdefy/block-dev": "4.7.0",
     "@lowdefy/jest-yaml-transform": "4.7.0",

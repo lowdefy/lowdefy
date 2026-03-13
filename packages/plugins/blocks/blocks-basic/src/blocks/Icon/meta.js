@@ -18,6 +18,9 @@ export default {
   category: 'display',
   icons: [],
   valueType: null,
+  cssKeys: {
+    element: 'The Icon element.',
+  },
   events: {
     onClick: 'Trigger actions when icon is clicked.',
   },

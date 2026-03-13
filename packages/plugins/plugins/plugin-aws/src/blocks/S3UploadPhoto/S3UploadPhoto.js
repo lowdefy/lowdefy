@@ -22,7 +22,16 @@ import { Upload } from 'antd';
 import useFileList from '../utils/useFileList.js';
 import getS3Upload from '../utils/getS3Upload.js';
 
-const S3UploadPhoto = ({ blockId, components: { Icon }, events, methods, properties, value }) => {
+const S3UploadPhoto = ({
+  blockId,
+  classNames = {},
+  components: { Icon },
+  events,
+  methods,
+  properties,
+  styles = {},
+  value,
+}) => {
   const [state, loadFileList, setFileList, removeFile, setValue] = useFileList({
     properties,
     methods,
@@ -67,25 +76,25 @@ const S3UploadPhoto = ({ blockId, components: { Icon }, events, methods, propert
         methods.triggerEvent({ name: 'onChange' });
       }}
     >
-      <div className={methods.makeCssClass([properties.style])}>
+      <div className={classNames.element} style={styles.element}>
         {loading ? (
           <Icon
             blockId={`${blockId}_icon`}
+            classNames={{ element: classNames.icon }}
             events={events}
             properties={{ name: 'AiOutlineLoading', size: 24 }}
+            styles={{ element: styles.icon }}
           />
         ) : (
           <Icon
             blockId={`${blockId}_icon`}
+            classNames={{ element: classNames.icon }}
             events={events}
             properties={{ name: 'AiOutlineCamera', size: 24 }}
+            styles={{ element: styles.icon }}
           />
         )}
-        <div
-          style={{
-            marginTop: 8,
-          }}
-        >
+        <div className={classNames.title} style={{ marginTop: 8, ...styles.title }}>
           {renderHtml({
             html: properties.title ?? 'Upload image',
             methods,

@@ -27,6 +27,7 @@
           ###### Heading 6
 
 - title: Bold, Italic and Strikethrough
+  fullWidth: true
   blocks:
     - id: format_bold
       type: Markdown
@@ -58,6 +59,7 @@
           You can also nest them: **This is bold, and *this part is bold italic*.**
 
 - title: Unordered Lists
+  fullWidth: true
   blocks:
     - id: list_unordered_simple
       type: Markdown
@@ -82,6 +84,7 @@
             - Peas
 
 - title: Ordered Lists
+  fullWidth: true
   blocks:
     - id: list_ordered_simple
       type: Markdown
@@ -105,6 +108,7 @@
           3. Deploy to production
 
 - title: Task Lists
+  fullWidth: true
   blocks:
     - id: task_list
       type: Markdown
@@ -120,6 +124,7 @@
           - [ ] Deploy to production
 
 - title: Inline Links
+  fullWidth: true
   blocks:
     - id: links_inline
       type: Markdown
@@ -143,6 +148,7 @@
           [2]: https://github.com/lowdefy/lowdefy
 
 - title: Images
+  fullWidth: true
   blocks:
     - id: image_basic
       type: Markdown
@@ -159,6 +165,7 @@
           [logo]: /logo_example.png
 
 - title: Blockquotes
+  fullWidth: true
   blocks:
     - id: quote_simple
       type: Markdown
@@ -264,6 +271,7 @@
           *Last updated: March 2026*
 
 - title: skipHtml Property
+  fullWidth: true
   blocks:
     - id: skip_html_false
       type: Markdown
@@ -284,6 +292,7 @@
           With skipHtml enabled, any HTML tags like <b>bold</b> or <div>divs</div> are completely removed from the output rather than being shown as escaped text.
 
 - title: Style Override
+  fullWidth: true
   blocks:
     - id: style_element
       type: Markdown

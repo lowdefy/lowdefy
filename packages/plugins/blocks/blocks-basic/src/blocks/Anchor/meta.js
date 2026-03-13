@@ -20,6 +20,7 @@ export default {
   valueType: null,
   cssKeys: {
     element: 'The anchor element.',
+    icon: 'The icon in the Anchor.',
   },
   events: {
     onClick: 'Called when Anchor is clicked.',

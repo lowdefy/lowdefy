@@ -46,12 +46,14 @@ const AnchorBlock = ({
           {icon && (
             <Icon
               blockId={`${blockId}_icon`}
+              classNames={{ element: classNames?.icon }}
               events={events}
               properties={
                 get(events, 'onClick.loading')
                   ? { name: 'AiOutlineLoading3Quarters', spin: true }
                   : icon
               }
+              styles={{ element: styles?.icon }}
             />
           )}
           {title || defaultTitle}

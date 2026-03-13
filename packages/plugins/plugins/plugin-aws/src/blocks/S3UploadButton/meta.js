@@ -18,6 +18,9 @@ export default {
   category: 'input',
   icons: ['AiOutlineUpload'],
   valueType: 'object',
+  cssKeys: {
+    element: 'The upload wrapper element.',
+  },
   events: {
     onChange: 'Triggered when the upload state is changing.',
     onProgress: 'Triggered when the upload state is in progress.',

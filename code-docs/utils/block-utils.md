@@ -6,49 +6,18 @@ Runtime utilities for block components.
 
 Provides browser-side utilities for:
 
-- CSS class generation with media queries
 - Safe HTML rendering
 - Error boundaries
 - Block schema defaults
+- Tailwind CSS class merging (`cn`)
 
 ## Installation
 
 ```javascript
-import { makeCssClass, ErrorBoundary, HtmlComponent } from '@lowdefy/block-utils';
+import { ErrorBoundary, HtmlComponent, cn } from '@lowdefy/block-utils';
 ```
 
 ## Functions
-
-### makeCssClass (deprecated)
-
-> **Note:** `makeCssClass()` has been removed as part of the antd v6 upgrade. Blocks now receive `className` and `style` props directly. See `@lowdefy/client` for the new pattern where `classNames.block`/`styles.block` are passed to BlockLayout.
-
-### mediaToCssObject(styles, styleObjectOnly)
-
-Transform shorthand media queries to CSS objects. Breakpoint values align with Tailwind CSS v4:
-
-| Shortcut | Breakpoint | CSS                                     |
-| -------- | ---------- | --------------------------------------- |
-| `xs`     | 640px      | `@media screen and (max-width: 640px)`  |
-| `sm`     | 768px      | `@media screen and (max-width: 768px)`  |
-| `md`     | 1024px     | `@media screen and (max-width: 1024px)` |
-| `lg`     | 1280px     | `@media screen and (max-width: 1280px)` |
-| `xl`     | 1536px     | `@media screen and (max-width: 1536px)` |
-
-The `xxl` breakpoint has been renamed to `2xl`.
-
-```javascript
-const input = {
-  color: 'red',
-  '@media sm': { color: 'blue' },
-};
-
-const output = mediaToCssObject(input);
-// {
-//   color: 'red',
-//   '@media screen and (max-width: 768px)': { color: 'blue' }
-// }
-```
 
 ### renderHtml(html)
 
@@ -135,6 +104,7 @@ export default extractBlockTypes(metas);
 **Input:** `metas` — object with block names as keys and meta objects as values (typically a namespace import of `metas.js`).
 
 **Output:** `{ blocks, icons, blockMetas }` where:
+
 - `blocks` — array of block type names
 - `icons` — map of block name → icon name arrays
 - `blockMetas` — map of block name → `{ category, valueType?, initValue?, slots?, cssKeys? }` (cssKeys are reduced to an array of key names)
@@ -153,6 +123,7 @@ const schema = buildBlockSchema(meta);
 ```
 
 The generated schema includes:
+
 - **`class`** — validates `--block` and `--{cssKey}` entries from `meta.cssKeys`
 - **`style`** — validates `--block` and `--{cssKey}` entries for inline styles
 - **`events`** — validates event names from `meta.events`
@@ -189,38 +160,12 @@ import { blockSchema } from '@lowdefy/block-utils';
 
 - React 18.2.0
 - React-DOM 18.2.0
-- `@emotion/css` (11.11.2)
 - `dompurify` (3.2.4)
-- `@lowdefy/helpers` (4.4.0)
+- `@lowdefy/helpers` (4.7.0)
+- `clsx` (2.1.1)
+- `tailwind-merge` (2.6.0)
 
 ## Usage Examples
-
-### Styled Block
-
-```javascript
-import { makeCssClass } from '@lowdefy/block-utils';
-
-const Button = ({ properties, methods }) => {
-  const className = makeCssClass({
-    padding: '8px 16px',
-    backgroundColor: properties.color || 'blue',
-    color: 'white',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    '@media sm': {
-      padding: '6px 12px',
-      fontSize: '14px',
-    },
-  });
-
-  return (
-    <button className={className} onClick={() => methods.triggerEvent({ name: 'onClick' })}>
-      {properties.label}
-    </button>
-  );
-};
-```
 
 ### Block with HTML Content
 
@@ -240,14 +185,13 @@ const RichText = ({ properties }) => {
 
 ## Key Files
 
-| File                      | Purpose                    |
-| ------------------------- | -------------------------- |
-| `src/extractBlockTypes.js` | Derive types from metas barrel |
-| `src/buildBlockSchema.js`  | Generate JSON Schema from meta |
-| `src/makeCssClass.js`      | CSS class generation           |
-| `src/mediaToCssObject.js`  | Media query transformation     |
-| `src/renderHtml.js`        | HTML sanitization              |
-| `src/ErrorBoundary.js`     | Error boundary component       |
-| `src/HtmlComponent.js`     | Safe HTML component            |
-| `src/blockSchema.js`       | Default block schema           |
-| `src/withBlockDefaults.js` | Block default props wrapper    |
+| File                       | Purpose                                 |
+| -------------------------- | --------------------------------------- |
+| `src/extractBlockTypes.js` | Derive types from metas barrel          |
+| `src/buildBlockSchema.js`  | Generate JSON Schema from meta          |
+| `src/cn.js`                | Tailwind class merging (clsx + twMerge) |
+| `src/renderHtml.js`        | HTML sanitization                       |
+| `src/ErrorBoundary.js`     | Error boundary component                |
+| `src/HtmlComponent.js`     | Safe HTML component                     |
+| `src/blockSchema.js`       | Default block schema                    |
+| `src/withBlockDefaults.js` | Block default props wrapper             |

@@ -294,28 +294,28 @@ text-primary → color: var(--color-primary)
 
 **File:** `packages/build/src/build/writePluginImports/writeGlobalsCss.js` — `BRIDGE_DEFAULTS`
 
-| Tailwind Token         | CSS Variable             | Antd Source                       |
-| ---------------------- | ------------------------ | --------------------------------- |
-| `color-primary`        | `--color-primary`        | `var(--ant-color-primary)`        |
-| `color-primary-hover`  | `--color-primary-hover`  | `var(--ant-color-primary-hover)`  |
-| `color-primary-active` | `--color-primary-active` | `var(--ant-color-primary-active)` |
-| `color-primary-bg`     | `--color-primary-bg`     | `var(--ant-color-primary-bg)`     |
-| `color-success`        | `--color-success`        | `var(--ant-color-success)`        |
-| `color-warning`        | `--color-warning`        | `var(--ant-color-warning)`        |
-| `color-error`          | `--color-error`          | `var(--ant-color-error)`          |
-| `color-info`           | `--color-info`           | `var(--ant-color-info)`           |
-| `color-text-primary`   | `--color-text-primary`   | `var(--ant-color-text)`           |
-| `color-text-secondary` | `--color-text-secondary` | `var(--ant-color-text-secondary)` |
-| `color-bg-container`   | `--color-bg-container`   | `var(--ant-color-bg-container)`   |
-| `color-bg-layout`      | `--color-bg-layout`      | `var(--ant-color-bg-layout)`      |
-| `color-border`         | `--color-border`         | `var(--ant-color-border)`         |
-| `radius-DEFAULT`       | `--radius`               | `var(--ant-border-radius)`        |
-| `radius-sm`            | `--radius-sm`            | `var(--ant-border-radius-sm)`     |
-| `radius-lg`            | `--radius-lg`            | `var(--ant-border-radius-lg)`     |
-| `font-size-DEFAULT`    | `--font-size`            | `var(--ant-font-size)`            |
-| `font-size-sm`         | `--font-size-sm`         | `var(--ant-font-size-sm)`         |
-| `font-size-lg`         | `--font-size-lg`         | `var(--ant-font-size-lg)`         |
-| `font-family-sans`     | `--font-family-sans`     | `var(--ant-font-family)`          |
+| Tailwind Token           | CSS Variable             | Antd Source                       |
+| ------------------------ | ------------------------ | --------------------------------- |
+| `--color-primary`        | `--color-primary`        | `var(--ant-color-primary)`        |
+| `--color-primary-hover`  | `--color-primary-hover`  | `var(--ant-color-primary-hover)`  |
+| `--color-primary-active` | `--color-primary-active` | `var(--ant-color-primary-active)` |
+| `--color-primary-bg`     | `--color-primary-bg`     | `var(--ant-color-primary-bg)`     |
+| `--color-success`        | `--color-success`        | `var(--ant-color-success)`        |
+| `--color-warning`        | `--color-warning`        | `var(--ant-color-warning)`        |
+| `--color-error`          | `--color-error`          | `var(--ant-color-error)`          |
+| `--color-info`           | `--color-info`           | `var(--ant-color-info)`           |
+| `--color-text-primary`   | `--color-text-primary`   | `var(--ant-color-text)`           |
+| `--color-text-secondary` | `--color-text-secondary` | `var(--ant-color-text-secondary)` |
+| `--color-bg-container`   | `--color-bg-container`   | `var(--ant-color-bg-container)`   |
+| `--color-bg-layout`      | `--color-bg-layout`      | `var(--ant-color-bg-layout)`      |
+| `--color-border`         | `--color-border`         | `var(--ant-color-border)`         |
+| `--radius`               | `--radius`               | `var(--ant-border-radius)`        |
+| `--radius-sm`            | `--radius-sm`            | `var(--ant-border-radius-sm)`     |
+| `--radius-lg`            | `--radius-lg`            | `var(--ant-border-radius-lg)`     |
+| `--font-size`            | `--font-size`            | `var(--ant-font-size)`            |
+| `--font-size-sm`         | `--font-size-sm`         | `var(--ant-font-size-sm)`         |
+| `--font-size-lg`         | `--font-size-lg`         | `var(--ant-font-size-lg)`         |
+| `--font-family-sans`     | `--font-family-sans`     | `var(--ant-font-family)`          |
 
 ### Usage in YAML
 
