@@ -1249,8 +1249,8 @@
                 },
                 "~k": "26"
               },
-              "~k": "24",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "24"
             }
           ],
           "~k": "23"
@@ -1295,13 +1295,12 @@
                 "content": "Responsive Layout Demo",
                 "~k": "9"
               },
-              "~k": "8",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "8"
             },
             {
               "id": "block:home:responsiveRow:0",
               "type": "Box",
-              "~k": "a",
               "blockId": "responsiveRow",
               "areas": {
                 "content": {
@@ -1322,7 +1321,6 @@
                           "title": "Card 1",
                           "~k": "e"
                         },
-                        "~k": "c",
                         "blockId": "card1",
                         "areas": {
                           "content": {
@@ -1335,8 +1333,8 @@
                                     "content": "Full width on mobile, half on tablet, quarter on desktop",
                                     "~k": "h"
                                   },
-                                  "~k": "g",
-                                  "blockId": "content1"
+                                  "blockId": "content1",
+                                  "~k": "g"
                                 }
                               ],
                               "~k": "f"
@@ -1344,7 +1342,8 @@
                             "~k": "2n"
                           },
                           "~k": "2m"
-                        }
+                        },
+                        "~k": "c"
                       },
                       {
                         "id": "block:home:card2:0",
@@ -1361,7 +1360,6 @@
                           "title": "Card 2",
                           "~k": "k"
                         },
-                        "~k": "i",
                         "blockId": "card2",
                         "areas": {
                           "content": {
@@ -1374,8 +1372,8 @@
                                     "content": "Responsive card",
                                     "~k": "n"
                                   },
-                                  "~k": "m",
-                                  "blockId": "content2"
+                                  "blockId": "content2",
+                                  "~k": "m"
                                 }
                               ],
                               "~k": "l"
@@ -1383,7 +1381,8 @@
                             "~k": "2p"
                           },
                           "~k": "2o"
-                        }
+                        },
+                        "~k": "i"
                       },
                       {
                         "id": "block:home:card3:0",
@@ -1400,7 +1399,6 @@
                           "title": "Card 3",
                           "~k": "q"
                         },
-                        "~k": "o",
                         "blockId": "card3",
                         "areas": {
                           "content": {
@@ -1413,8 +1411,8 @@
                                     "content": "Adapts to screen size",
                                     "~k": "t"
                                   },
-                                  "~k": "s",
-                                  "blockId": "content3"
+                                  "blockId": "content3",
+                                  "~k": "s"
                                 }
                               ],
                               "~k": "r"
@@ -1422,7 +1420,8 @@
                             "~k": "2r"
                           },
                           "~k": "2q"
-                        }
+                        },
+                        "~k": "o"
                       },
                       {
                         "id": "block:home:card4:0",
@@ -1439,7 +1438,6 @@
                           "title": "Card 4",
                           "~k": "w"
                         },
-                        "~k": "u",
                         "blockId": "card4",
                         "areas": {
                           "content": {
@@ -1452,8 +1450,8 @@
                                     "content": "Full width except on xl screens",
                                     "~k": "z"
                                   },
-                                  "~k": "y",
-                                  "blockId": "content4"
+                                  "blockId": "content4",
+                                  "~k": "y"
                                 }
                               ],
                               "~k": "x"
@@ -1461,7 +1459,8 @@
                             "~k": "2t"
                           },
                           "~k": "2s"
-                        }
+                        },
+                        "~k": "u"
                       }
                     ],
                     "~k": "b"
@@ -1469,7 +1468,8 @@
                   "~k": "2l"
                 },
                 "~k": "2k"
-              }
+              },
+              "~k": "a"
             },
             {
               "id": "block:home:gutterDemo:0",
@@ -1478,7 +1478,6 @@
                 "gutter": 16,
                 "~k": "11"
               },
-              "~k": "10",
               "blockId": "gutterDemo",
               "areas": {
                 "content": {
@@ -1495,7 +1494,6 @@
                           "title": "Gutter 1",
                           "~k": "15"
                         },
-                        "~k": "13",
                         "blockId": "gutterCard1",
                         "areas": {
                           "content": {
@@ -1508,8 +1506,8 @@
                                     "content": "With 16px gutter",
                                     "~k": "18"
                                   },
-                                  "~k": "17",
-                                  "blockId": "gc1"
+                                  "blockId": "gc1",
+                                  "~k": "17"
                                 }
                               ],
                               "~k": "16"
@@ -1517,7 +1515,8 @@
                             "~k": "2x"
                           },
                           "~k": "2w"
-                        }
+                        },
+                        "~k": "13"
                       },
                       {
                         "id": "block:home:gutterCard2:0",
@@ -1530,7 +1529,6 @@
                           "title": "Gutter 2",
                           "~k": "1b"
                         },
-                        "~k": "19",
                         "blockId": "gutterCard2",
                         "areas": {
                           "content": {
@@ -1543,8 +1541,8 @@
                                     "content": "Spacing between cards",
                                     "~k": "1e"
                                   },
-                                  "~k": "1d",
-                                  "blockId": "gc2"
+                                  "blockId": "gc2",
+                                  "~k": "1d"
                                 }
                               ],
                               "~k": "1c"
@@ -1552,7 +1550,8 @@
                             "~k": "2z"
                           },
                           "~k": "2y"
-                        }
+                        },
+                        "~k": "19"
                       },
                       {
                         "id": "block:home:gutterCard3:0",
@@ -1565,7 +1564,6 @@
                           "title": "Gutter 3",
                           "~k": "1h"
                         },
-                        "~k": "1f",
                         "blockId": "gutterCard3",
                         "areas": {
                           "content": {
@@ -1578,8 +1576,8 @@
                                     "content": "Consistent spacing",
                                     "~k": "1k"
                                   },
-                                  "~k": "1j",
-                                  "blockId": "gc3"
+                                  "blockId": "gc3",
+                                  "~k": "1j"
                                 }
                               ],
                               "~k": "1i"
@@ -1587,7 +1585,8 @@
                             "~k": "31"
                           },
                           "~k": "30"
-                        }
+                        },
+                        "~k": "1f"
                       }
                     ],
                     "~k": "12"
@@ -1595,7 +1594,8 @@
                   "~k": "2v"
                 },
                 "~k": "2u"
-              }
+              },
+              "~k": "10"
             },
             {
               "id": "block:home:flexDemo:0",
@@ -1614,7 +1614,6 @@
                 "backgroundColor": "#f5f5f5",
                 "~k": "1o"
               },
-              "~k": "1l",
               "blockId": "flexDemo",
               "areas": {
                 "content": {
@@ -1627,8 +1626,8 @@
                           "title": "Left",
                           "~k": "1r"
                         },
-                        "~k": "1q",
-                        "blockId": "flexItem1"
+                        "blockId": "flexItem1",
+                        "~k": "1q"
                       },
                       {
                         "id": "block:home:flexItem2:0",
@@ -1637,8 +1636,8 @@
                           "title": "Center",
                           "~k": "1t"
                         },
-                        "~k": "1s",
-                        "blockId": "flexItem2"
+                        "blockId": "flexItem2",
+                        "~k": "1s"
                       },
                       {
                         "id": "block:home:flexItem3:0",
@@ -1647,8 +1646,8 @@
                           "title": "Right",
                           "~k": "1v"
                         },
-                        "~k": "1u",
-                        "blockId": "flexItem3"
+                        "blockId": "flexItem3",
+                        "~k": "1u"
                       }
                     ],
                     "~k": "1p"
@@ -1656,7 +1655,8 @@
                   "~k": "33"
                 },
                 "~k": "32"
-              }
+              },
+              "~k": "1l"
             }
           ],
           "~k": "7"

@@ -1490,12 +1490,12 @@
                 "icon": "AiOutlineHome",
                 "~k": "8"
               },
-              "~k": "7",
               "auth": {
                 "public": true,
                 "~k": "38"
               },
-              "menuItemId": "home"
+              "menuItemId": "home",
+              "~k": "7"
             },
             {
               "id": "menuitem:default:products",
@@ -1515,12 +1515,12 @@
                       "title": "All Products",
                       "~k": "d"
                     },
-                    "~k": "c",
                     "auth": {
                       "public": true,
                       "~k": "3a"
                     },
-                    "menuItemId": "all-products"
+                    "menuItemId": "all-products",
+                    "~k": "c"
                   },
                   {
                     "id": "menuitem:default:categories",
@@ -1539,12 +1539,12 @@
                             "title": "Electronics",
                             "~k": "i"
                           },
-                          "~k": "h",
                           "auth": {
                             "public": true,
                             "~k": "3c"
                           },
-                          "menuItemId": "electronics"
+                          "menuItemId": "electronics",
+                          "~k": "h"
                         },
                         {
                           "id": "menuitem:default:clothing",
@@ -1554,22 +1554,22 @@
                             "title": "Clothing",
                             "~k": "k"
                           },
-                          "~k": "j",
                           "auth": {
                             "public": true,
                             "~k": "3d"
                           },
-                          "menuItemId": "clothing"
+                          "menuItemId": "clothing",
+                          "~k": "j"
                         }
                       ],
                       "~k": "3b"
                     },
-                    "~k": "e",
                     "auth": {
                       "public": true,
                       "~k": "3e"
                     },
-                    "menuItemId": "categories"
+                    "menuItemId": "categories",
+                    "~k": "e"
                   },
                   {
                     "id": "menuitem:default:featured",
@@ -1579,22 +1579,22 @@
                       "title": "Featured",
                       "~k": "m"
                     },
-                    "~k": "l",
                     "auth": {
                       "public": true,
                       "~k": "3f"
                     },
-                    "menuItemId": "featured"
+                    "menuItemId": "featured",
+                    "~k": "l"
                   }
                 ],
                 "~k": "39"
               },
-              "~k": "9",
               "auth": {
                 "public": true,
                 "~k": "3g"
               },
-              "menuItemId": "products"
+              "menuItemId": "products",
+              "~k": "9"
             },
             {
               "id": "menuitem:default:services",
@@ -1614,12 +1614,12 @@
                       "title": "Consulting",
                       "~k": "r"
                     },
-                    "~k": "q",
                     "auth": {
                       "public": true,
                       "~k": "3i"
                     },
-                    "menuItemId": "consulting"
+                    "menuItemId": "consulting",
+                    "~k": "q"
                   },
                   {
                     "id": "menuitem:default:support",
@@ -1629,22 +1629,22 @@
                       "title": "Support",
                       "~k": "t"
                     },
-                    "~k": "s",
                     "auth": {
                       "public": true,
                       "~k": "3j"
                     },
-                    "menuItemId": "support"
+                    "menuItemId": "support",
+                    "~k": "s"
                   }
                 ],
                 "~k": "3h"
               },
-              "~k": "n",
               "auth": {
                 "public": true,
                 "~k": "3k"
               },
-              "menuItemId": "services"
+              "menuItemId": "services",
+              "~k": "n"
             },
             {
               "id": "menuitem:default:about",
@@ -1655,12 +1655,12 @@
                 "icon": "AiOutlineInfo",
                 "~k": "v"
               },
-              "~k": "u",
               "auth": {
                 "public": true,
                 "~k": "3l"
               },
-              "menuItemId": "about"
+              "menuItemId": "about",
+              "~k": "u"
             },
             {
               "id": "menuitem:default:contact",
@@ -1671,18 +1671,18 @@
                 "icon": "AiOutlineMail",
                 "~k": "x"
               },
-              "~k": "w",
               "auth": {
                 "public": true,
                 "~k": "3m"
               },
-              "menuItemId": "contact"
+              "menuItemId": "contact",
+              "~k": "w"
             }
           ],
           "~k": "37"
         },
-        "~k": "5",
-        "menuId": "default"
+        "menuId": "default",
+        "~k": "5"
       },
       {
         "id": "menu:footer",
@@ -1696,12 +1696,12 @@
                 "title": "Privacy Policy",
                 "~k": "11"
               },
-              "~k": "10",
               "auth": {
                 "public": true,
                 "~k": "3o"
               },
-              "menuItemId": "privacy"
+              "menuItemId": "privacy",
+              "~k": "10"
             },
             {
               "id": "menuitem:footer:terms",
@@ -1711,18 +1711,18 @@
                 "title": "Terms of Service",
                 "~k": "13"
               },
-              "~k": "12",
               "auth": {
                 "public": true,
                 "~k": "3p"
               },
-              "menuItemId": "terms"
+              "menuItemId": "terms",
+              "~k": "12"
             }
           ],
           "~k": "3n"
         },
-        "~k": "y",
-        "menuId": "footer"
+        "menuId": "footer",
+        "~k": "y"
       }
     ],
     "~k": "4"
@@ -1775,8 +1775,8 @@
                 },
                 "~k": "2y"
               },
-              "~k": "2w",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "2w"
             }
           ],
           "~k": "2v"
@@ -1821,8 +1821,8 @@
                 "content": "About Us",
                 "~k": "28"
               },
-              "~k": "27",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "27"
             }
           ],
           "~k": "26"
@@ -1861,8 +1861,8 @@
                 "content": "Clothing Category",
                 "~k": "1o"
               },
-              "~k": "1n",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "1n"
             }
           ],
           "~k": "1m"
@@ -1901,8 +1901,8 @@
                 "content": "Consulting Services",
                 "~k": "1y"
               },
-              "~k": "1x",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "1x"
             }
           ],
           "~k": "1w"
@@ -1941,8 +1941,8 @@
                 "content": "Contact Us",
                 "~k": "2d"
               },
-              "~k": "2c",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "2c"
             }
           ],
           "~k": "2b"
@@ -1981,8 +1981,8 @@
                 "content": "Electronics Category",
                 "~k": "1j"
               },
-              "~k": "1i",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "1i"
             }
           ],
           "~k": "1h"
@@ -2021,8 +2021,8 @@
                 "content": "Featured Products",
                 "~k": "1t"
               },
-              "~k": "1s",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "1s"
             }
           ],
           "~k": "1r"
@@ -2061,8 +2061,8 @@
                 "content": "Welcome",
                 "~k": "19"
               },
-              "~k": "18",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "18"
             }
           ],
           "~k": "17"
@@ -2101,8 +2101,8 @@
                 "content": "Privacy Policy",
                 "~k": "2i"
               },
-              "~k": "2h",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "2h"
             }
           ],
           "~k": "2g"
@@ -2141,8 +2141,8 @@
                 "content": "All Products",
                 "~k": "1e"
               },
-              "~k": "1d",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "1d"
             }
           ],
           "~k": "1c"
@@ -2181,8 +2181,8 @@
                 "content": "Support Services",
                 "~k": "23"
               },
-              "~k": "22",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "22"
             }
           ],
           "~k": "21"
@@ -2221,8 +2221,8 @@
                 "content": "Terms of Service",
                 "~k": "2n"
               },
-              "~k": "2m",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "2m"
             }
           ],
           "~k": "2l"

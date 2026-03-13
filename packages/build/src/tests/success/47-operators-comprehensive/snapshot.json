@@ -1786,8 +1786,8 @@
                 },
                 "~k": "43"
               },
-              "~k": "41",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "41"
             }
           ],
           "~k": "40"
@@ -1832,8 +1832,8 @@
                 "title": "Show Advanced Options",
                 "~k": "e"
               },
-              "~k": "d",
-              "blockId": "showAdvanced"
+              "blockId": "showAdvanced",
+              "~k": "d"
             },
             {
               "id": "block:home:conditionalBlock:0",
@@ -1850,7 +1850,6 @@
                 },
                 "~k": "g"
               },
-              "~k": "f",
               "blockId": "conditionalBlock",
               "areas": {
                 "content": {
@@ -1863,8 +1862,8 @@
                           "content": "Advanced Options",
                           "~k": "l"
                         },
-                        "~k": "k",
-                        "blockId": "advancedTitle"
+                        "blockId": "advancedTitle",
+                        "~k": "k"
                       }
                     ],
                     "~k": "j"
@@ -1872,7 +1871,8 @@
                   "~k": "4i"
                 },
                 "~k": "4h"
-              }
+              },
+              "~k": "f"
             },
             {
               "id": "block:home:arrayDemo:0",
@@ -1881,7 +1881,6 @@
                 "title": "Array Operations",
                 "~k": "n"
               },
-              "~k": "m",
               "blockId": "arrayDemo",
               "areas": {
                 "content": {
@@ -1904,8 +1903,8 @@
                           },
                           "~k": "q"
                         },
-                        "~k": "p",
-                        "blockId": "arrayLength"
+                        "blockId": "arrayLength",
+                        "~k": "p"
                       },
                       {
                         "id": "block:home:filteredUsers:0",
@@ -1942,7 +1941,6 @@
                           },
                           "~k": "v"
                         },
-                        "~k": "u",
                         "blockId": "filteredUsers",
                         "areas": {
                           "content": {
@@ -1958,8 +1956,8 @@
                                     },
                                     "~k": "16"
                                   },
-                                  "~k": "15",
-                                  "blockId": "userName"
+                                  "blockId": "userName",
+                                  "~k": "15"
                                 }
                               ],
                               "~k": "14"
@@ -1967,7 +1965,8 @@
                             "~k": "4m"
                           },
                           "~k": "4l"
-                        }
+                        },
+                        "~k": "u"
                       }
                     ],
                     "~k": "o"
@@ -1975,7 +1974,8 @@
                   "~k": "4k"
                 },
                 "~k": "4j"
-              }
+              },
+              "~k": "m"
             },
             {
               "id": "block:home:mathDemo:0",
@@ -1984,7 +1984,6 @@
                 "title": "Math Operations",
                 "~k": "19"
               },
-              "~k": "18",
               "blockId": "mathDemo",
               "areas": {
                 "content": {
@@ -1998,8 +1997,8 @@
                           "value": 60,
                           "~k": "1c"
                         },
-                        "~k": "1b",
-                        "blockId": "sumResult"
+                        "blockId": "sumResult",
+                        "~k": "1b"
                       },
                       {
                         "id": "block:home:productResult:0",
@@ -2009,8 +2008,8 @@
                           "value": 24,
                           "~k": "1e"
                         },
-                        "~k": "1d",
-                        "blockId": "productResult"
+                        "blockId": "productResult",
+                        "~k": "1d"
                       },
                       {
                         "id": "block:home:divideResult:0",
@@ -2020,8 +2019,8 @@
                           "value": 25,
                           "~k": "1g"
                         },
-                        "~k": "1f",
-                        "blockId": "divideResult"
+                        "blockId": "divideResult",
+                        "~k": "1f"
                       }
                     ],
                     "~k": "1a"
@@ -2029,7 +2028,8 @@
                   "~k": "4o"
                 },
                 "~k": "4n"
-              }
+              },
+              "~k": "18"
             },
             {
               "id": "block:home:stringDemo:0",
@@ -2038,7 +2038,6 @@
                 "title": "String Operations",
                 "~k": "1i"
               },
-              "~k": "1h",
               "blockId": "stringDemo",
               "areas": {
                 "content": {
@@ -2057,8 +2056,8 @@
                           },
                           "~k": "1l"
                         },
-                        "~k": "1k",
-                        "blockId": "upperCase"
+                        "blockId": "upperCase",
+                        "~k": "1k"
                       },
                       {
                         "id": "block:home:stringLength:0",
@@ -2074,8 +2073,8 @@
                           },
                           "~k": "1p"
                         },
-                        "~k": "1o",
-                        "blockId": "stringLength"
+                        "blockId": "stringLength",
+                        "~k": "1o"
                       },
                       {
                         "id": "block:home:textInput:0",
@@ -2084,8 +2083,8 @@
                           "title": "Enter Text",
                           "~k": "1t"
                         },
-                        "~k": "1s",
-                        "blockId": "textInput"
+                        "blockId": "textInput",
+                        "~k": "1s"
                       }
                     ],
                     "~k": "1j"
@@ -2093,7 +2092,8 @@
                   "~k": "4q"
                 },
                 "~k": "4p"
-              }
+              },
+              "~k": "1h"
             },
             {
               "id": "block:home:objectDemo:0",
@@ -2102,7 +2102,6 @@
                 "title": "Object Operations",
                 "~k": "1v"
               },
-              "~k": "1u",
               "blockId": "objectDemo",
               "areas": {
                 "content": {
@@ -2127,8 +2126,8 @@
                           },
                           "~k": "1y"
                         },
-                        "~k": "1x",
-                        "blockId": "objectKeys"
+                        "blockId": "objectKeys",
+                        "~k": "1x"
                       }
                     ],
                     "~k": "1w"
@@ -2136,7 +2135,8 @@
                   "~k": "4s"
                 },
                 "~k": "4r"
-              }
+              },
+              "~k": "1u"
             },
             {
               "id": "block:home:comparisonDemo:0",
@@ -2145,7 +2145,6 @@
                 "title": "Comparisons",
                 "~k": "24"
               },
-              "~k": "23",
               "blockId": "comparisonDemo",
               "areas": {
                 "content": {
@@ -2175,8 +2174,8 @@
                           "color": "green",
                           "~k": "2b"
                         },
-                        "~k": "26",
-                        "blockId": "eqResult"
+                        "blockId": "eqResult",
+                        "~k": "26"
                       },
                       {
                         "id": "block:home:gtResult:0",
@@ -2199,8 +2198,8 @@
                           "color": "blue",
                           "~k": "2g"
                         },
-                        "~k": "2c",
-                        "blockId": "gtResult"
+                        "blockId": "gtResult",
+                        "~k": "2c"
                       },
                       {
                         "id": "block:home:value1:0",
@@ -2209,8 +2208,8 @@
                           "title": "Value 1",
                           "~k": "2i"
                         },
-                        "~k": "2h",
-                        "blockId": "value1"
+                        "blockId": "value1",
+                        "~k": "2h"
                       },
                       {
                         "id": "block:home:value2:0",
@@ -2219,8 +2218,8 @@
                           "title": "Value 2",
                           "~k": "2k"
                         },
-                        "~k": "2j",
-                        "blockId": "value2"
+                        "blockId": "value2",
+                        "~k": "2j"
                       },
                       {
                         "id": "block:home:numberInput:0",
@@ -2229,8 +2228,8 @@
                           "title": "Number",
                           "~k": "2m"
                         },
-                        "~k": "2l",
-                        "blockId": "numberInput"
+                        "blockId": "numberInput",
+                        "~k": "2l"
                       }
                     ],
                     "~k": "25"
@@ -2238,7 +2237,8 @@
                   "~k": "4u"
                 },
                 "~k": "4t"
-              }
+              },
+              "~k": "23"
             },
             {
               "id": "block:home:logicalDemo:0",
@@ -2247,7 +2247,6 @@
                 "title": "Logical Operations",
                 "~k": "2o"
               },
-              "~k": "2n",
               "blockId": "logicalDemo",
               "areas": {
                 "content": {
@@ -2277,8 +2276,8 @@
                           "message": "Both checkboxes are checked!",
                           "~k": "2v"
                         },
-                        "~k": "2q",
-                        "blockId": "andResult"
+                        "blockId": "andResult",
+                        "~k": "2q"
                       },
                       {
                         "id": "block:home:orResult:0",
@@ -2304,8 +2303,8 @@
                           "message": "At least one checkbox is checked",
                           "~k": "31"
                         },
-                        "~k": "2w",
-                        "blockId": "orResult"
+                        "blockId": "orResult",
+                        "~k": "2w"
                       },
                       {
                         "id": "block:home:notResult:0",
@@ -2322,8 +2321,8 @@
                           "message": "Checkbox 1 is not checked",
                           "~k": "35"
                         },
-                        "~k": "32",
-                        "blockId": "notResult"
+                        "blockId": "notResult",
+                        "~k": "32"
                       },
                       {
                         "id": "block:home:checkbox1:0",
@@ -2332,8 +2331,8 @@
                           "title": "Checkbox 1",
                           "~k": "37"
                         },
-                        "~k": "36",
-                        "blockId": "checkbox1"
+                        "blockId": "checkbox1",
+                        "~k": "36"
                       },
                       {
                         "id": "block:home:checkbox2:0",
@@ -2342,8 +2341,8 @@
                           "title": "Checkbox 2",
                           "~k": "39"
                         },
-                        "~k": "38",
-                        "blockId": "checkbox2"
+                        "blockId": "checkbox2",
+                        "~k": "38"
                       }
                     ],
                     "~k": "2p"
@@ -2351,7 +2350,8 @@
                   "~k": "4w"
                 },
                 "~k": "4v"
-              }
+              },
+              "~k": "2n"
             },
             {
               "id": "block:home:typeDemo:0",
@@ -2360,7 +2360,6 @@
                 "title": "Type Checking",
                 "~k": "3b"
               },
-              "~k": "3a",
               "blockId": "typeDemo",
               "areas": {
                 "content": {
@@ -2384,8 +2383,8 @@
                           "title": "Is String",
                           "~k": "3h"
                         },
-                        "~k": "3d",
-                        "blockId": "isString"
+                        "blockId": "isString",
+                        "~k": "3d"
                       },
                       {
                         "id": "block:home:typeInput:0",
@@ -2394,8 +2393,8 @@
                           "title": "Type Input",
                           "~k": "3j"
                         },
-                        "~k": "3i",
-                        "blockId": "typeInput"
+                        "blockId": "typeInput",
+                        "~k": "3i"
                       }
                     ],
                     "~k": "3c"
@@ -2403,7 +2402,8 @@
                   "~k": "4y"
                 },
                 "~k": "4x"
-              }
+              },
+              "~k": "3a"
             },
             {
               "id": "block:home:dateDemo:0",
@@ -2412,7 +2412,6 @@
                 "title": "Date Operations",
                 "~k": "3l"
               },
-              "~k": "3k",
               "blockId": "dateDemo",
               "areas": {
                 "content": {
@@ -2426,8 +2425,8 @@
                             "~d": 1705320000000
                           }
                         },
-                        "~k": "3n",
-                        "blockId": "currentDate"
+                        "blockId": "currentDate",
+                        "~k": "3n"
                       },
                       {
                         "id": "block:home:formattedDate:0",
@@ -2444,8 +2443,8 @@
                           },
                           "~k": "3q"
                         },
-                        "~k": "3p",
-                        "blockId": "formattedDate"
+                        "blockId": "formattedDate",
+                        "~k": "3p"
                       }
                     ],
                     "~k": "3m"
@@ -2453,7 +2452,8 @@
                   "~k": "50"
                 },
                 "~k": "4z"
-              }
+              },
+              "~k": "3k"
             }
           ],
           "~k": "c"

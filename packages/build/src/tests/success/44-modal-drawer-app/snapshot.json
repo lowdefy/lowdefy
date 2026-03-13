@@ -1236,8 +1236,8 @@
                 },
                 "~k": "1x"
               },
-              "~k": "1v",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "1v"
             }
           ],
           "~k": "1u"
@@ -1282,8 +1282,8 @@
                 "content": "Modal & Drawer Demo",
                 "~k": "9"
               },
-              "~k": "8",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "8"
             },
             {
               "id": "block:home:openModalBtn:0",
@@ -1318,8 +1318,8 @@
                 },
                 "~k": "c"
               },
-              "~k": "a",
-              "blockId": "openModalBtn"
+              "blockId": "openModalBtn",
+              "~k": "a"
             },
             {
               "id": "block:home:openDrawerBtn:0",
@@ -1353,8 +1353,8 @@
                 },
                 "~k": "i"
               },
-              "~k": "g",
-              "blockId": "openDrawerBtn"
+              "blockId": "openDrawerBtn",
+              "~k": "g"
             },
             {
               "id": "block:home:myModal:0",
@@ -1412,7 +1412,6 @@
                 },
                 "~k": "o"
               },
-              "~k": "m",
               "blockId": "myModal",
               "areas": {
                 "content": {
@@ -1421,7 +1420,6 @@
                       {
                         "id": "block:home:modalContent:0",
                         "type": "Box",
-                        "~k": "w",
                         "blockId": "modalContent",
                         "areas": {
                           "content": {
@@ -1434,8 +1432,8 @@
                                     "title": "Enter Value",
                                     "~k": "z"
                                   },
-                                  "~k": "y",
-                                  "blockId": "modalForm"
+                                  "blockId": "modalForm",
+                                  "~k": "y"
                                 },
                                 {
                                   "id": "block:home:modalSwitch:0",
@@ -1444,8 +1442,8 @@
                                     "title": "Enable Feature",
                                     "~k": "11"
                                   },
-                                  "~k": "10",
-                                  "blockId": "modalSwitch"
+                                  "blockId": "modalSwitch",
+                                  "~k": "10"
                                 }
                               ],
                               "~k": "x"
@@ -1453,7 +1451,8 @@
                             "~k": "2m"
                           },
                           "~k": "2l"
-                        }
+                        },
+                        "~k": "w"
                       }
                     ],
                     "~k": "v"
@@ -1461,7 +1460,8 @@
                   "~k": "2k"
                 },
                 "~k": "2j"
-              }
+              },
+              "~k": "m"
             },
             {
               "id": "block:home:myDrawer:0",
@@ -1496,7 +1496,6 @@
                 },
                 "~k": "14"
               },
-              "~k": "12",
               "blockId": "myDrawer",
               "areas": {
                 "content": {
@@ -1505,7 +1504,6 @@
                       {
                         "id": "block:home:drawerContent:0",
                         "type": "Box",
-                        "~k": "19",
                         "blockId": "drawerContent",
                         "areas": {
                           "content": {
@@ -1518,8 +1516,8 @@
                                     "title": "Name",
                                     "~k": "1c"
                                   },
-                                  "~k": "1b",
-                                  "blockId": "settingName"
+                                  "blockId": "settingName",
+                                  "~k": "1b"
                                 },
                                 {
                                   "id": "block:home:settingEmail:0",
@@ -1528,8 +1526,8 @@
                                     "title": "Email",
                                     "~k": "1e"
                                   },
-                                  "~k": "1d",
-                                  "blockId": "settingEmail"
+                                  "blockId": "settingEmail",
+                                  "~k": "1d"
                                 },
                                 {
                                   "id": "block:home:settingNotif:0",
@@ -1538,8 +1536,8 @@
                                     "title": "Notifications",
                                     "~k": "1g"
                                   },
-                                  "~k": "1f",
-                                  "blockId": "settingNotif"
+                                  "blockId": "settingNotif",
+                                  "~k": "1f"
                                 },
                                 {
                                   "id": "block:home:saveSettings:0",
@@ -1574,8 +1572,8 @@
                                     },
                                     "~k": "1j"
                                   },
-                                  "~k": "1h",
-                                  "blockId": "saveSettings"
+                                  "blockId": "saveSettings",
+                                  "~k": "1h"
                                 }
                               ],
                               "~k": "1a"
@@ -1583,7 +1581,8 @@
                             "~k": "2s"
                           },
                           "~k": "2r"
-                        }
+                        },
+                        "~k": "19"
                       }
                     ],
                     "~k": "18"
@@ -1591,7 +1590,8 @@
                   "~k": "2q"
                 },
                 "~k": "2p"
-              }
+              },
+              "~k": "12"
             }
           ],
           "~k": "7"

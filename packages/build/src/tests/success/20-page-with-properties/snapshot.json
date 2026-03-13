@@ -855,8 +855,8 @@
                 },
                 "~k": "k"
               },
-              "~k": "i",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "i"
             }
           ],
           "~k": "h"
@@ -906,8 +906,8 @@
                 "icon": "AiOutlineCheck",
                 "~k": "9"
               },
-              "~k": "8",
-              "blockId": "button"
+              "blockId": "button",
+              "~k": "8"
             }
           ],
           "~k": "7"

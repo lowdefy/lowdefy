@@ -19,8 +19,10 @@ import { get } from '@lowdefy/helpers';
 import getRefPath from './getRefPath.js';
 import makeId from '../../utils/makeId.js';
 
-function makeRefDefinition(refDefinition, parent, refMap, lineNumber) {
-  const id = makeId.next();
+function makeRefDefinition(refDefinition, parent, refMap, lineNumber, walkerPath) {
+  // Use walker tree path when available for deterministic IDs under parallel
+  // resolution. Falls back to counter for root ref and JIT-created refs.
+  const id = walkerPath != null ? walkerPath : makeId.next();
   const refDef = {
     parent,
     lineNumber,

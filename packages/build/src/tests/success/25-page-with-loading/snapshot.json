@@ -863,8 +863,8 @@
                 },
                 "~k": "k"
               },
-              "~k": "i",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "i"
             }
           ],
           "~k": "h"
@@ -903,8 +903,8 @@
               "id": "block:home:spinner:0",
               "type": "Spinner",
               "loading": true,
-              "~k": "7",
-              "blockId": "spinner"
+              "blockId": "spinner",
+              "~k": "7"
             },
             {
               "id": "block:home:content:0",
@@ -914,8 +914,8 @@
                 "content": "Content",
                 "~k": "9"
               },
-              "~k": "8",
-              "blockId": "content"
+              "blockId": "content",
+              "~k": "8"
             }
           ],
           "~k": "6"

@@ -1004,8 +1004,8 @@
                 },
                 "~k": "11"
               },
-              "~k": "z",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "z"
             }
           ],
           "~k": "y"
@@ -1050,7 +1050,6 @@
                 "title": "Level 1",
                 "~k": "9"
               },
-              "~k": "8",
               "blockId": "level1",
               "areas": {
                 "content": {
@@ -1059,7 +1058,6 @@
                       {
                         "id": "block:nested:level2:0",
                         "type": "Box",
-                        "~k": "b",
                         "blockId": "level2",
                         "areas": {
                           "content": {
@@ -1072,7 +1070,6 @@
                                     "title": "Level 3",
                                     "~k": "e"
                                   },
-                                  "~k": "d",
                                   "blockId": "level3",
                                   "areas": {
                                     "content": {
@@ -1081,7 +1078,6 @@
                                           {
                                             "id": "block:nested:level4:0",
                                             "type": "Box",
-                                            "~k": "g",
                                             "blockId": "level4",
                                             "areas": {
                                               "content": {
@@ -1094,7 +1090,6 @@
                                                         "title": "Level 5",
                                                         "~k": "j"
                                                       },
-                                                      "~k": "i",
                                                       "blockId": "level5",
                                                       "areas": {
                                                         "content": {
@@ -1103,7 +1098,6 @@
                                                               {
                                                                 "id": "block:nested:level6:0",
                                                                 "type": "Box",
-                                                                "~k": "l",
                                                                 "blockId": "level6",
                                                                 "areas": {
                                                                   "content": {
@@ -1116,8 +1110,8 @@
                                                                             "content": "Deeply nested content",
                                                                             "~k": "o"
                                                                           },
-                                                                          "~k": "n",
-                                                                          "blockId": "level7"
+                                                                          "blockId": "level7",
+                                                                          "~k": "n"
                                                                         },
                                                                         {
                                                                           "id": "block:nested:level7b:0",
@@ -1126,8 +1120,8 @@
                                                                             "title": "Deep Button",
                                                                             "~k": "q"
                                                                           },
-                                                                          "~k": "p",
-                                                                          "blockId": "level7b"
+                                                                          "blockId": "level7b",
+                                                                          "~k": "p"
                                                                         }
                                                                       ],
                                                                       "~k": "m"
@@ -1135,7 +1129,8 @@
                                                                     "~k": "1q"
                                                                   },
                                                                   "~k": "1p"
-                                                                }
+                                                                },
+                                                                "~k": "l"
                                                               }
                                                             ],
                                                             "~k": "k"
@@ -1143,7 +1138,8 @@
                                                           "~k": "1o"
                                                         },
                                                         "~k": "1n"
-                                                      }
+                                                      },
+                                                      "~k": "i"
                                                     }
                                                   ],
                                                   "~k": "h"
@@ -1151,7 +1147,8 @@
                                                 "~k": "1m"
                                               },
                                               "~k": "1l"
-                                            }
+                                            },
+                                            "~k": "g"
                                           }
                                         ],
                                         "~k": "f"
@@ -1159,7 +1156,8 @@
                                       "~k": "1k"
                                     },
                                     "~k": "1j"
-                                  }
+                                  },
+                                  "~k": "d"
                                 }
                               ],
                               "~k": "c"
@@ -1167,7 +1165,8 @@
                             "~k": "1i"
                           },
                           "~k": "1h"
-                        }
+                        },
+                        "~k": "b"
                       }
                     ],
                     "~k": "a"
@@ -1175,7 +1174,8 @@
                   "~k": "1g"
                 },
                 "~k": "1f"
-              }
+              },
+              "~k": "8"
             }
           ],
           "~k": "7"

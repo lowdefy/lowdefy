@@ -868,8 +868,8 @@
                 },
                 "~k": "l"
               },
-              "~k": "j",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "j"
             }
           ],
           "~k": "i"
@@ -911,8 +911,8 @@
                 "content": "Always visible",
                 "~k": "8"
               },
-              "~k": "7",
-              "blockId": "alwaysVisible"
+              "blockId": "alwaysVisible",
+              "~k": "7"
             },
             {
               "id": "block:home:hidden:0",
@@ -922,8 +922,8 @@
                 "content": "Hidden block",
                 "~k": "a"
               },
-              "~k": "9",
-              "blockId": "hidden"
+              "blockId": "hidden",
+              "~k": "9"
             }
           ],
           "~k": "6"
