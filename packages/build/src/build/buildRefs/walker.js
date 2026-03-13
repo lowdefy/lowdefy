@@ -374,6 +374,7 @@ async function resolveRef(node, ctx) {
       content = resolveModuleOperators({
         input: content,
         moduleEntry,
+        context: ctx.buildContext,
       });
 
       if (refDef.menu) {

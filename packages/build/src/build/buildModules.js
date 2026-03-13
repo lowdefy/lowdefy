@@ -89,6 +89,7 @@ function buildModules({ components, context }) {
       const processed = resolveModuleOperators({
         input: page,
         moduleEntry,
+        context,
       });
       processed.id = `${entry.id}/${processed.id}`;
       components.pages = components.pages ?? [];
@@ -101,6 +102,7 @@ function buildModules({ components, context }) {
       const processed = resolveModuleOperators({
         input: conn,
         moduleEntry,
+        context,
       });
       processed.id = `${entry.id}/${processed.id}`;
       components.connections = components.connections ?? [];
@@ -112,6 +114,7 @@ function buildModules({ components, context }) {
       const processed = resolveModuleOperators({
         input: endpoint,
         moduleEntry,
+        context,
       });
       processed.id = `${entry.id}/${processed.id}`;
       components.api = components.api ?? [];

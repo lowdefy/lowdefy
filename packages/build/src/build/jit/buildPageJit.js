@@ -174,6 +174,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       processed = resolveModuleOperators({
         input: processed,
         moduleEntry,
+        context: buildContext,
       });
     }
 
