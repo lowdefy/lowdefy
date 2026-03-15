@@ -14,12 +14,19 @@
   limitations under the License.
 */
 
+import fs from 'fs';
+import path from 'path';
 import axios from 'axios';
 import semver from 'semver';
 
-async function validateVersion({ cliVersion, lowdefyVersion, logger, requiresLowdefyYaml }) {
-  const ui =
-    logger?.ui ??
+async function validateVersion({
+  cliVersion,
+  lowdefyVersion,
+  logger,
+  requiresLowdefyYaml,
+  configDirectory,
+}) {
+  const ui = logger?.ui ??
     logger ?? {
       warn: (message) => console.warn(message),
     };
@@ -79,6 +86,28 @@ async function validateVersion({ cliVersion, lowdefyVersion, logger, requiresLow
     }
   } catch (error) {
     ui.warn('Failed to check for latest Lowdefy version.');
+  }
+
+  // Check for pending codemods from an interrupted upgrade
+  if (configDirectory) {
+    try {
+      const upgradeStatePath = path.join(configDirectory, '.lowdefy', 'upgrade-state.json');
+      if (fs.existsSync(upgradeStatePath)) {
+        const state = JSON.parse(fs.readFileSync(upgradeStatePath, 'utf8'));
+        const skipped = state.phases
+          .flatMap((p) => p.codemods)
+          .filter((c) => c.status === 'skipped');
+        if (skipped.length > 0) {
+          ui.warn(`
+-------------------------------------------------------------
+  ${skipped.length} codemod(s) were skipped during upgrade.
+  Run "npx lowdefy upgrade --resume" to complete them.
+-------------------------------------------------------------`);
+        }
+      }
+    } catch {
+      // Ignore errors reading upgrade state
+    }
   }
 }
 

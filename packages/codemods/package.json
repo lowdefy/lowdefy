@@ -1,0 +1,17 @@
+{
+  "name": "@lowdefy/codemods",
+  "version": "5.0.0",
+  "description": "Codemod scripts and migration prompts for Lowdefy version upgrades",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lowdefy/lowdefy.git",
+    "directory": "packages/codemods"
+  },
+  "main": "registry.json",
+  "files": [
+    "registry.json",
+    "v*/"
+  ],
+  "dependencies": {}
+}

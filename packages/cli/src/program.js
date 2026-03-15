@@ -23,6 +23,7 @@ import init from './commands/init/init.js';
 import initDocker from './commands/init-docker/initDocker.js';
 import initVercel from './commands/init-vercel/initVercel.js';
 import start from './commands/start/start.js';
+import upgrade from './commands/upgrade/upgrade.js';
 import runCommand from './utils/runCommand.js';
 
 const require = createRequire(import.meta.url);
@@ -144,5 +145,19 @@ program
   .addOption(options.port)
   .addOption(options.serverDirectory)
   .action(runCommand({ cliVersion, handler: start }));
+
+program
+  .command('upgrade')
+  .description('Upgrade a Lowdefy app to a newer version, applying codemods.')
+  .usage('[options]')
+  .addOption(options.configDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .addOption(new Option('--to <version>', 'Target version. Default: latest stable.'))
+  .addOption(new Option('--plan', 'Show upgrade plan without executing.'))
+  .addOption(new Option('--dry-run', 'Run scripts in dry-run mode (no file changes).'))
+  .addOption(new Option('--scripts-only', 'Skip AI-guided codemods.'))
+  .addOption(new Option('--resume', 'Resume a previously interrupted upgrade.'))
+  .action(runCommand({ cliVersion, handler: upgrade }));
 
 export default program;
