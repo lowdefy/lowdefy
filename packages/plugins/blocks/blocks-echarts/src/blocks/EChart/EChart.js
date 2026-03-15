@@ -78,9 +78,12 @@ class EChart extends React.Component {
   render() {
     return (
       <div
+        className={this.props.classNames?.element}
         style={{
           height: this.props.properties.height ?? 300,
           width: this.props.properties.width ?? '100%',
+          minWidth: 0,
+          ...this.props.styles?.element,
         }}
       >
         <ReactECharts
@@ -98,11 +101,8 @@ class EChart extends React.Component {
                   }
                 : this.props.properties.option?.dataset,
           }}
-          opts={{
-            height: this.props.properties.height ?? 300,
-            ...(this.props.properties.init ?? {}),
-          }}
-          style={this.props.styles?.element ?? {}}
+          opts={this.props.properties.init}
+          style={{ width: '100%', height: '100%' }}
           theme={this.props.properties.theme && `custom_theme_${this.props.blockId}`}
         />
       </div>

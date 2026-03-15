@@ -83,7 +83,7 @@ importers:
         version: 0.2.39(@swc/core@1.15.18)
       jest:
         specifier: 28.1.3
-        version: 28.1.3(@types/node@20.6.2)
+        version: 28.1.3(@types/node@16.18.101)
 
   packages/build:
     dependencies:
@@ -292,7 +292,7 @@ importers:
         version: 0.2.39(@swc/core@1.15.18)
       jest:
         specifier: 28.1.3
-        version: 28.1.3(@types/node@16.18.101)
+        version: 28.1.3(@types/node@20.6.2)
 
   packages/client:
     dependencies:
@@ -783,11 +783,11 @@ importers:
         specifier: 4.7.0
         version: link:../../../utils/block-utils
       echarts:
-        specifier: 5.5.1
-        version: 5.5.1
+        specifier: 6.0.0
+        version: 6.0.0
       echarts-for-react:
-        specifier: 3.0.2
-        version: 3.0.2(echarts@5.5.1)(react@18.2.0)
+        specifier: 3.0.5
+        version: 3.0.5(echarts@6.0.0)(react@18.2.0)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -6853,14 +6853,14 @@ packages:
   ecdsa-sig-formatter@1.0.11:
     resolution: {integrity: sha512-nagl3RYrbNv6kQkeJIpt6NJZy8twLB/2vtz6yN9Z4vRKHN4/QZJIEbqohALSgwKdnksuY3k5Addp5lg8sVoVcQ==}
 
-  echarts-for-react@3.0.2:
-    resolution: {integrity: sha512-DRwIiTzx8JfwPOVgGttDytBqdp5VzCSyMRIxubgU/g2n9y3VLUmF2FK7Icmg/sNVkv4+rktmrLN9w22U2yy3fA==}
+  echarts-for-react@3.0.5:
+    resolution: {integrity: sha512-YpEI5Ty7O/2nvCfQ7ybNa+S90DwE8KYZWacGvJW4luUqywP7qStQ+pxDlYOmr4jGDu10mhEkiAuMKcUlT4W5vg==}
     peerDependencies:
-      echarts: ^3.0.0 || ^4.0.0 || ^5.0.0
+      echarts: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0
       react: ^15.0.0 || >=16.0.0
 
-  echarts@5.5.1:
-    resolution: {integrity: sha512-Fce8upazaAXUVUVsjgV6mBnGuqgO+JNDlcgF79Dksy4+wgGpQB2lmYoO4TSweFg/mZITdpGHomw/cNBJZj1icA==}
+  echarts@6.0.0:
+    resolution: {integrity: sha512-Tte/grDQRiETQP4xz3iZWSvoHrkCQtwqd6hs+mifXcjrCuo2iKWbajFObuLJVBlDIJlOzgQPd1hsaKt/3+OMkQ==}
 
   electron-to-chromium@1.4.542:
     resolution: {integrity: sha512-6+cpa00G09N3sfh2joln4VUXHquWrOFx3FLZqiVQvl45+zS9DskDBTPvob+BhvFRmTBkyDSk0vvLMMRo/qc6mQ==}
@@ -11722,8 +11722,8 @@ packages:
   zod@4.3.6:
     resolution: {integrity: sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg==}
 
-  zrender@5.6.0:
-    resolution: {integrity: sha512-uzgraf4njmmHAbEUxMJ8Oxg+P3fT04O+9p7gY+wJRVxo8Ge+KmYv0WJev945EH4wFuc4OY2NLXz46FZrWS9xJg==}
+  zrender@6.0.0:
+    resolution: {integrity: sha512-41dFXEEXuJpNecuUQq6JlbybmnHaqqpGlbH1yxnA5V9MMP4SbohSVZsJIwz+zdjQXSSlR1Vc34EgH1zxyTDvhg==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -12320,13 +12320,13 @@ snapshots:
 
   '@azure/abort-controller@1.1.0':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@azure/core-auth@1.5.0':
     dependencies:
       '@azure/abort-controller': 1.1.0
       '@azure/core-util': 1.4.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@azure/core-client@1.7.3':
     dependencies:
@@ -12336,7 +12336,7 @@ snapshots:
       '@azure/core-tracing': 1.0.1
       '@azure/core-util': 1.4.0
       '@azure/logger': 1.0.4
-      tslib: 2.6.2
+      tslib: 2.8.1
     transitivePeerDependencies:
       - supports-color
 
@@ -12353,11 +12353,11 @@ snapshots:
       '@azure/abort-controller': 1.1.0
       '@azure/core-util': 1.4.0
       '@azure/logger': 1.0.4
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@azure/core-paging@1.5.0':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@azure/core-rest-pipeline@1.12.1':
     dependencies:
@@ -12369,18 +12369,18 @@ snapshots:
       form-data: 4.0.0
       http-proxy-agent: 5.0.0
       https-proxy-agent: 5.0.1
-      tslib: 2.6.2
+      tslib: 2.8.1
     transitivePeerDependencies:
       - supports-color
 
   '@azure/core-tracing@1.0.1':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@azure/core-util@1.4.0':
     dependencies:
       '@azure/abort-controller': 1.1.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@azure/identity@2.1.0':
     dependencies:
@@ -12398,7 +12398,7 @@ snapshots:
       jws: 4.0.0
       open: 8.4.2
       stoppable: 1.1.0
-      tslib: 2.6.2
+      tslib: 2.8.1
       uuid: 8.3.2
     transitivePeerDependencies:
       - supports-color
@@ -12415,13 +12415,13 @@ snapshots:
       '@azure/core-tracing': 1.0.1
       '@azure/core-util': 1.4.0
       '@azure/logger': 1.0.4
-      tslib: 2.6.2
+      tslib: 2.8.1
     transitivePeerDependencies:
       - supports-color
 
   '@azure/logger@1.0.4':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@azure/msal-browser@2.38.2':
     dependencies:
@@ -12947,17 +12947,17 @@ snapshots:
   '@emnapi/core@1.8.1':
     dependencies:
       '@emnapi/wasi-threads': 1.1.0
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@emnapi/runtime@1.8.1':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@emnapi/wasi-threads@1.1.0':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@emotion/hash@0.8.0': {}
@@ -14059,7 +14059,7 @@ snapshots:
       is-glob: 4.0.3
       open: 9.1.0
       picocolors: 1.1.1
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@playwright/test@1.50.1':
     dependencies:
@@ -15096,7 +15096,7 @@ snapshots:
   '@swc/helpers@0.5.5':
     dependencies:
       '@swc/counter': 0.1.3
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@swc/jest@0.2.39(@swc/core@1.15.18)':
     dependencies:
@@ -15223,7 +15223,7 @@ snapshots:
 
   '@tybys/wasm-util@0.10.1':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@types/aria-query@5.0.1': {}
@@ -16223,7 +16223,7 @@ snapshots:
 
   async-mutex@0.4.1:
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   asynciterator.prototype@1.0.0:
     dependencies:
@@ -17218,17 +17218,17 @@ snapshots:
     dependencies:
       safe-buffer: 5.2.1
 
-  echarts-for-react@3.0.2(echarts@5.5.1)(react@18.2.0):
+  echarts-for-react@3.0.5(echarts@6.0.0)(react@18.2.0):
     dependencies:
-      echarts: 5.5.1
+      echarts: 6.0.0
       fast-deep-equal: 3.1.3
       react: 18.2.0
       size-sensor: 1.0.1
 
-  echarts@5.5.1:
+  echarts@6.0.0:
     dependencies:
       tslib: 2.3.0
-      zrender: 5.6.0
+      zrender: 6.0.0
 
   electron-to-chromium@1.4.542: {}
 
@@ -20394,7 +20394,7 @@ snapshots:
       new-find-package-json: 2.0.0
       semver: 7.7.1
       tar-stream: 3.1.7
-      tslib: 2.6.2
+      tslib: 2.8.1
       yauzl: 3.2.0
     transitivePeerDependencies:
       - '@aws-sdk/credential-providers'
@@ -22333,7 +22333,7 @@ snapshots:
   synckit@0.8.5:
     dependencies:
       '@pkgr/utils': 2.4.2
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   tailwind-merge@2.6.0: {}
 
@@ -23379,7 +23379,7 @@ snapshots:
 
   zod@4.3.6: {}
 
-  zrender@5.6.0:
+  zrender@6.0.0:
     dependencies:
       tslib: 2.3.0
 
