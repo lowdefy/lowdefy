@@ -96,7 +96,11 @@ test('yaml propertiesGetterTransformer', () => {
 });
 
 test('yaml defaultValueTransformer', () => {
-  expect(defaultValueTransformer(schema)).toMatchInlineSnapshot(`Object {}`);
+  expect(defaultValueTransformer(schema)).toMatchInlineSnapshot(`
+    Object {
+      "field": "",
+    }
+  `);
   const schemaDV = {
     properties: {
       type: 'object',
@@ -233,7 +237,13 @@ test('yaml schemaNested propertiesGetterTransformer', () => {
 });
 
 test('yaml schemaNested defaultValueTransformer', () => {
-  expect(defaultValueTransformer(schemaNested)).toMatchInlineSnapshot(`Object {}`);
+  expect(defaultValueTransformer(schemaNested)).toMatchInlineSnapshot(`
+    Object {
+      "obj": Object {
+        "field": "",
+      },
+    }
+  `);
   const schemaDV = {
     properties: {
       type: 'object',

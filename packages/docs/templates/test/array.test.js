@@ -332,7 +332,23 @@ test('array schemaOneOfPrimitive propertiesFormTransformer', () => {
       Object {
         "blocks": Array [
           Object {
-            "areas": Object {
+            "id": "$",
+            "layout": Object {
+              "gap": 0,
+            },
+            "properties": Object {
+              "bodyStyle": Object {
+                "padding": 0,
+              },
+              "headerStyle": Object {
+                "background": "rgba(0, 0, 0, 0.06)",
+                "color": "rgba(0, 0, 0, 0.45)",
+              },
+              "inner": true,
+              "size": "small",
+              "title": "Select $ type",
+            },
+            "slots": Object {
               "content": Object {
                 "blocks": Array [
                   Object {
@@ -420,22 +436,6 @@ test('array schemaOneOfPrimitive propertiesFormTransformer', () => {
                   },
                 ],
               },
-            },
-            "id": "$",
-            "layout": Object {
-              "gap": 0,
-            },
-            "properties": Object {
-              "bodyStyle": Object {
-                "padding": 0,
-              },
-              "headerStyle": Object {
-                "background": "rgba(0, 0, 0, 0.06)",
-                "color": "rgba(0, 0, 0, 0.45)",
-              },
-              "inner": true,
-              "size": "small",
-              "title": "Select $ type",
             },
             "type": "Card",
           },
@@ -606,7 +606,23 @@ test('array schemaPrimitiveOneOf propertiesFormTransformer', () => {
   expect(propertiesFormTransformer(schemaPrimitiveOneOf)).toMatchInlineSnapshot(`
     Array [
       Object {
-        "areas": Object {
+        "id": "options",
+        "layout": Object {
+          "gap": 0,
+        },
+        "properties": Object {
+          "bodyStyle": Object {
+            "padding": 0,
+          },
+          "headerStyle": Object {
+            "background": "rgba(0, 0, 0, 0.06)",
+            "color": "rgba(0, 0, 0, 0.45)",
+          },
+          "inner": true,
+          "size": "small",
+          "title": "Select options type",
+        },
+        "slots": Object {
           "content": Object {
             "blocks": Array [
               Object {
@@ -722,22 +738,6 @@ test('array schemaPrimitiveOneOf propertiesFormTransformer', () => {
               },
             ],
           },
-        },
-        "id": "options",
-        "layout": Object {
-          "gap": 0,
-        },
-        "properties": Object {
-          "bodyStyle": Object {
-            "padding": 0,
-          },
-          "headerStyle": Object {
-            "background": "rgba(0, 0, 0, 0.06)",
-            "color": "rgba(0, 0, 0, 0.45)",
-          },
-          "inner": true,
-          "size": "small",
-          "title": "Select options type",
         },
         "type": "Card",
       },
@@ -883,7 +883,23 @@ test('array schemaOneOfArrayStrArrayYaml propertiesFormTransformer', () => {
   expect(propertiesFormTransformer(schemaOneOfArrayStrArrayYaml)).toMatchInlineSnapshot(`
     Array [
       Object {
-        "areas": Object {
+        "id": "options",
+        "layout": Object {
+          "gap": 0,
+        },
+        "properties": Object {
+          "bodyStyle": Object {
+            "padding": 0,
+          },
+          "headerStyle": Object {
+            "background": "rgba(0, 0, 0, 0.06)",
+            "color": "rgba(0, 0, 0, 0.45)",
+          },
+          "inner": true,
+          "size": "small",
+          "title": "Select options type",
+        },
+        "slots": Object {
           "content": Object {
             "blocks": Array [
               Object {
@@ -1002,22 +1018,6 @@ test('array schemaOneOfArrayStrArrayYaml propertiesFormTransformer', () => {
               },
             ],
           },
-        },
-        "id": "options",
-        "layout": Object {
-          "gap": 0,
-        },
-        "properties": Object {
-          "bodyStyle": Object {
-            "padding": 0,
-          },
-          "headerStyle": Object {
-            "background": "rgba(0, 0, 0, 0.06)",
-            "color": "rgba(0, 0, 0, 0.45)",
-          },
-          "inner": true,
-          "size": "small",
-          "title": "Select options type",
         },
         "type": "Card",
       },
