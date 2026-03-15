@@ -6,7 +6,6 @@
 '@lowdefy/blocks-markdown': major
 '@lowdefy/blocks-aggrid': major
 '@lowdefy/blocks-google-maps': major
-'@lowdefy/blocks-algolia': major
 '@lowdefy/blocks-qr': major
 '@lowdefy/connection-axios-http': major
 '@lowdefy/connection-elasticsearch': major

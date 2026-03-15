@@ -71,7 +71,6 @@
     "@lowdefy/actions-core": "4.7.0",
     "@lowdefy/actions-pdf-make": "4.7.0",
     "@lowdefy/blocks-aggrid": "4.7.0",
-    "@lowdefy/blocks-algolia": "4.7.0",
     "@lowdefy/blocks-antd": "4.7.0",
     "@lowdefy/blocks-echarts": "4.7.0",
     "@lowdefy/blocks-google-maps": "4.7.0",

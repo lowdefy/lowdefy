@@ -23,7 +23,6 @@
     "plugins": {
       "blocks": [
         "@lowdefy/blocks-aggrid",
-        "@lowdefy/blocks-algolia",
         "@lowdefy/blocks-antd",
         "@lowdefy/blocks-basic",
         "@lowdefy/blocks-echarts",

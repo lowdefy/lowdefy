@@ -8242,26 +8242,6 @@
       "lineNumber": 13,
       "path": "pages/settings.yaml"
     },
-    "pages.1.blocks.0": {
-      "parent": "pages.1",
-      "lineNumber": 6,
-      "path": "blocks/page-header.yaml"
-    },
-    "pages.1.blocks.1.blocks.0": {
-      "parent": "pages.1",
-      "lineNumber": 12,
-      "path": "components/form-field.yaml"
-    },
-    "pages.1.blocks.1.blocks.1": {
-      "parent": "pages.1",
-      "lineNumber": 17,
-      "path": "components/form-field.yaml"
-    },
-    "pages.1.blocks.2": {
-      "parent": "pages.1",
-      "lineNumber": 22,
-      "path": "blocks/page-footer.yaml"
-    },
     "pages.0.blocks.0": {
       "parent": "pages.0",
       "lineNumber": 6,
@@ -8280,6 +8260,26 @@
     "pages.0.blocks.2": {
       "parent": "pages.0",
       "lineNumber": 20,
+      "path": "blocks/page-footer.yaml"
+    },
+    "pages.1.blocks.0": {
+      "parent": "pages.1",
+      "lineNumber": 6,
+      "path": "blocks/page-header.yaml"
+    },
+    "pages.1.blocks.1.blocks.0": {
+      "parent": "pages.1",
+      "lineNumber": 12,
+      "path": "components/form-field.yaml"
+    },
+    "pages.1.blocks.1.blocks.1": {
+      "parent": "pages.1",
+      "lineNumber": 17,
+      "path": "components/form-field.yaml"
+    },
+    "pages.1.blocks.2": {
+      "parent": "pages.1",
+      "lineNumber": 22,
       "path": "blocks/page-footer.yaml"
     }
   },
