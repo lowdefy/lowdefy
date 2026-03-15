@@ -1,0 +1,65 @@
+# Copyright 2020-2026 Lowdefy, Inc
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Default
+  blocks:
+    - id: example_search_default
+      type: Search
+      properties:
+        indexUrl: /search-index.json
+      events:
+        onSelect:
+          - id: navigate
+            type: Link
+            params:
+              pageId:
+                _event: pageId
+
+- title: Runtime Documents
+  blocks:
+    - id: example_search_runtime
+      type: Search
+      properties:
+        documents:
+          - id: intro
+            title: Introduction
+            content: Welcome to the documentation. This guide covers all features.
+            category: guide
+          - id: getting-started
+            title: Getting Started
+            content: Follow these steps to set up your project quickly.
+            category: guide
+          - id: api-ref
+            title: API Reference
+            content: Complete API documentation for all endpoints and methods.
+            category: api
+        fields: [title, content]
+        storeFields: [title, category, id]
+        searchOptions:
+          boost:
+            title: 2
+          fuzzy: 0.2
+        result:
+          title: title
+          description: content
+        placeholder: Search documents...
+      events:
+        onSelect:
+          - id: show_result
+            type: DisplayMessage
+            params:
+              content:
+                _string.concat:
+                  - 'Selected: '
+                  - _event: title

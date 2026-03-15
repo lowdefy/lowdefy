@@ -714,6 +714,23 @@ export default {
                         },
                       },
                     },
+                    shortcut: {
+                      anyOf: [
+                        {
+                          type: 'string',
+                          errorMessage: {
+                            type: 'Event "shortcut" should be a string.',
+                          },
+                        },
+                        {
+                          type: 'array',
+                          items: { type: 'string' },
+                          errorMessage: {
+                            type: 'Event "shortcut" should be a string or array of strings.',
+                          },
+                        },
+                      ],
+                    },
                   },
                 },
               ],

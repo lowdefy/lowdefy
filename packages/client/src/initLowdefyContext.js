@@ -18,6 +18,7 @@ import createCallAPI from './createCallAPI.js';
 import createAuthMethods from './auth/createAuthMethods.js';
 import createCallRequest from './createCallRequest.js';
 import createIcon from './createIcon.js';
+import createShortcutBadge from './createShortcutBadge.js';
 import createLinkComponent from './createLinkComponent.js';
 import createHandleError from './createHandleError.js';
 import { createBrowserLogger } from '@lowdefy/logger/browser';
@@ -31,6 +32,7 @@ function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, 
       blockMetas: types.blockMetas ?? {},
       components: {
         Icon: createIcon(types.icons),
+        ShortcutBadge: createShortcutBadge(),
       },
       displayMessage: ({ content }) => {
         console.log(content);

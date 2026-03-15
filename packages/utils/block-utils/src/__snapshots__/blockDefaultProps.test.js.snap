@@ -4,7 +4,9 @@ exports[`default 1`] = `
 Object {
   "basePath": "",
   "blockId": "undefined_id",
-  "components": Object {},
+  "components": Object {
+    "ShortcutBadge": [Function],
+  },
   "content": Object {},
   "events": Object {},
   "list": Array [],
