@@ -22,11 +22,6 @@ import runScript from './runScript.js';
 import handlePrompt from './handlePrompt.js';
 import { askQuestion } from './handlePrompt.js';
 
-function sortByCategory(codemods) {
-  const order = { A: 0, B: 1, C: 2 };
-  return [...codemods].sort((a, b) => (order[a.category] ?? 3) - (order[b.category] ?? 3));
-}
-
 function updateLowdefyVersion(configDirectory, version) {
   const yamlPath = path.join(configDirectory, 'lowdefy.yaml');
   if (!fs.existsSync(yamlPath)) return;
@@ -56,11 +51,17 @@ async function executePhase({
 }) {
   logger.info(`\nPhase: Upgrading to v${phase.version} — ${phase.description}`);
 
-  const sorted = sortByCategory(phase.codemods);
   const results = [];
 
-  for (const codemod of sorted) {
+  // Execute codemods in registry order (numbering determines sequence)
+  for (const codemod of phase.codemods) {
     const label = `[${codemod.category}] ${codemod.description}`;
+
+    if (!codemod.path) {
+      logger.warn(`  ${label} — no path defined, skipping.`);
+      results.push({ id: codemod.id, status: 'skipped' });
+      continue;
+    }
 
     if (codemod.category === 'C' && scriptsOnly) {
       logger.info(`  ${label} — skipped (--scripts-only)`);
@@ -68,16 +69,12 @@ async function executePhase({
       continue;
     }
 
-    if (codemod.category === 'A' || codemod.category === 'B') {
-      if (!codemod.script) {
-        logger.warn(`  ${label} — no script defined, skipping.`);
-        results.push({ id: codemod.id, status: 'skipped' });
-        continue;
-      }
+    const codemodPath = path.join(codemodsDirectory, codemod.path);
+    const isScript = codemod.path.endsWith('.mjs');
 
-      const scriptPath = path.join(codemodsDirectory, codemod.script);
+    if (isScript) {
       logger.info(`  ${label}`);
-      const result = await runScript({ scriptPath, targetDirectory, apply });
+      const result = await runScript({ scriptPath: codemodPath, targetDirectory, apply });
 
       if (result.success) {
         logger.info(`    ✓ Done`);
@@ -95,25 +92,16 @@ async function executePhase({
       }
 
       results.push({ id: codemod.id, status: result.success ? 'completed' : 'failed' });
-      continue;
-    }
-
-    if (codemod.category === 'C') {
+    } else {
+      // Category C — prompt/guide markdown file
       logger.info(`  ${label}`);
-      const promptPath = codemod.prompt ? path.join(codemodsDirectory, codemod.prompt) : null;
-      const guidePath = codemod.guide ? path.join(codemodsDirectory, codemod.guide) : null;
       const result = await handlePrompt({
-        promptPath,
-        guidePath,
+        path: codemodPath,
         codemodId: codemod.id,
         logger,
       });
       results.push({ id: codemod.id, status: result.status });
-      continue;
     }
-
-    logger.warn(`  ${label} — unknown category "${codemod.category}", skipping.`);
-    results.push({ id: codemod.id, status: 'skipped' });
   }
 
   if (apply) {

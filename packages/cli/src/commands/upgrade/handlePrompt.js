@@ -50,56 +50,44 @@ function copyToClipboard(text) {
   }
 }
 
-async function handlePrompt({ promptPath, guidePath, codemodId, logger }) {
+async function handlePrompt({ path: filePath, codemodId, logger }) {
   const aiTool = detectAiTool();
-  const promptContent =
-    promptPath && fs.existsSync(promptPath) ? fs.readFileSync(promptPath, 'utf8') : null;
-  const guideContent =
-    guidePath && fs.existsSync(guidePath) ? fs.readFileSync(guidePath, 'utf8') : null;
 
-  const displayContent = promptContent ?? guideContent;
-  if (!displayContent) {
-    logger.warn(`No prompt or guide found for ${codemodId}. Skipping.`);
+  if (!filePath || !fs.existsSync(filePath)) {
+    logger.warn(`No prompt/guide found for ${codemodId}. Skipping.`);
     return { status: 'skipped' };
   }
 
-  const options = [];
+  const content = fs.readFileSync(filePath, 'utf8');
+
   if (aiTool) {
-    options.push({ key: 'copy', label: `Copy migration prompt to clipboard` });
-    options.push({ key: 'guide', label: 'View manual migration guide' });
-    options.push({ key: 'skip', label: 'Skip for now' });
-    logger.info(`${aiTool} detected.`);
-  } else {
-    options.push({ key: 'copy', label: 'Copy migration prompt to clipboard' });
-    options.push({ key: 'guide', label: 'View manual migration guide' });
-    options.push({ key: 'skip', label: 'Skip for now' });
+    logger.info(`    ${aiTool} detected.`);
   }
 
-  options.forEach((opt, i) => {
-    logger.info(`  [${i + 1}] ${opt.label}`);
-  });
+  logger.info('    [1] Copy migration prompt to clipboard');
+  logger.info('    [2] View migration guide');
+  logger.info('    [3] Skip for now');
 
-  const answer = await askQuestion('  > ');
-  const index = parseInt(answer, 10) - 1;
-  const choice = options[index]?.key ?? 'skip';
+  const answer = await askQuestion('    > ');
+  const choice = parseInt(answer, 10);
 
-  if (choice === 'copy') {
-    const copied = copyToClipboard(promptContent ?? displayContent);
+  if (choice === 1) {
+    const copied = copyToClipboard(content);
     if (copied) {
       logger.info(
-        'Prompt copied to clipboard. Paste into your AI tool, then press Enter when done.'
+        '    Prompt copied to clipboard. Paste into your AI tool, then press Enter when done.'
       );
     } else {
-      logger.info('Could not copy to clipboard. Prompt content:');
-      logger.info(displayContent);
+      logger.info('    Could not copy to clipboard. Content:');
+      logger.info(content);
     }
-    await askQuestion('Press Enter when done...');
+    await askQuestion('    Press Enter when done...');
     return { status: 'completed' };
   }
 
-  if (choice === 'guide') {
-    logger.info(guideContent ?? promptContent);
-    await askQuestion('Press Enter when done...');
+  if (choice === 2) {
+    logger.info(content);
+    await askQuestion('    Press Enter when done...');
     return { status: 'completed' };
   }
 
