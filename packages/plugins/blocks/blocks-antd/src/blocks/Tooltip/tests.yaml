@@ -35,11 +35,11 @@
   properties:
     title: color blue
     color: blue
-- id: 'properties.defaultVisible: true'
+- id: 'properties.defaultOpen: true'
   type: Tooltip
   properties:
-    title: defaultVisible true
-    defaultVisible: true
+    title: defaultOpen true
+    defaultOpen: true
 - id: 'properties.mouseEnterDelay: 1'
   type: Tooltip
   properties:

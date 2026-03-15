@@ -32,19 +32,19 @@ export default {
       },
       orientation: {
         type: 'string',
-        default: 'center',
-        enum: ['left', 'right', 'center'],
-        description: 'Position of title inside divider.',
+        default: 'horizontal',
+        enum: ['horizontal', 'vertical'],
+        description: 'Direction of the divider line.',
       },
       title: {
         type: 'string',
         description: 'Divider title - supports html.',
       },
-      type: {
+      titlePlacement: {
         type: 'string',
-        default: 'horizontal',
-        enum: ['horizontal', 'vertical'],
-        description: 'Direction type of divider',
+        default: 'center',
+        enum: ['left', 'right', 'center'],
+        description: 'Position of title text within the divider.',
       },
       plain: {
         type: 'boolean',

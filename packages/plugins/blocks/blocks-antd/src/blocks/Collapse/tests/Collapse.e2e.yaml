@@ -103,7 +103,7 @@ blocks:
   - id: collapse_icon_right
     type: Collapse
     properties:
-      expandIconPosition: right
+      expandIconPlacement: end
       panels:
         - key: iconright1
           title: Icon on Right

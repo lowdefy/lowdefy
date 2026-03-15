@@ -14,10 +14,10 @@
 
 - id: default
   type: Notification
-- id: 'properties.message'
+- id: 'properties.title'
   type: Notification
   properties:
-    message: Notification message
+    title: Notification title
 - id: 'properties.description:'
   type: Notification
   properties:
@@ -27,70 +27,70 @@
   properties:
     placement: bottomLeft
     bottom: 250
-    message: Notification message
+    title: Notification title
 - id: 'properties.top: 250 placement: topLeft'
   type: Notification
   properties:
     placement: topLeft
     top: 250
-    message: Notification message
+    title: Notification title
 - id: 'properties.button: icon'
   type: Notification
   properties:
     button:
       icon: AiOutlineSave
       title: Close
-    message: Notification message
+    title: Notification title
 - id: 'properties.duration: 6'
   type: Notification
   properties:
     duration: 6
-    message: Notification message
+    title: Notification title
 - id: 'properties.icon'
   type: Notification
   properties:
     icon: AiFillAccountBook
-    message: Notification message
+    title: Notification title
 - id: 'properties.closeIcon: AiOutlineAlert'
   type: Notification
   properties:
     closeIcon: AiOutlineAlert
-    message: Notification message
+    title: Notification title
 - id: 'properties.placement: topLeft'
   type: Notification
   properties:
     placement: topLeft
-    message: Notification message
+    title: Notification title
 - id: 'properties.placement: bottomLeft'
   type: Notification
   properties:
     placement: bottomLeft
-    message: Notification message
+    title: Notification title
 - id: 'properties.placement: bottomRight'
   type: Notification
   properties:
     placement: bottomRight
-    message: Notification message
+    title: Notification title
 - id: 'properties.status: error'
   type: Notification
   properties:
     status: error
-    message: Notification message
+    title: Notification title
 - id: 'properties.status: info'
   type: Notification
   properties:
     status: info
-    message: Notification message
+    title: Notification title
 - id: 'properties.status: warning'
   type: Notification
   properties:
     status: warning
-    message: Notification message
+    title: Notification title
     description: 'Notification status type.'
-- id: 'with message uses html'
+- id: 'with title uses html'
   type: Notification
   properties:
-    message: <div style="background:red;">Notification Message</div>
+    title: <div style="background:red;">Notification Title</div>
 - id: 'with description uses html'
   type: Notification
   properties:

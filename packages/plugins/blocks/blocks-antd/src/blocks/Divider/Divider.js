@@ -28,7 +28,7 @@ const DividerBlock = ({ blockId, classNames = {}, properties, styles = {}, metho
     titlePlacement={properties.titlePlacement}
     plain={properties.plain}
     style={styles.element}
-    orientation={properties.type}
+    orientation={properties.orientation}
   >
     {renderHtml({ html: properties.title, methods })}
   </Divider>

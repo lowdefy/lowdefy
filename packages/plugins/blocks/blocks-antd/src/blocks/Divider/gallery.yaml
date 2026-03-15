@@ -37,7 +37,7 @@
           layout:
             flex: 0 0 auto
           properties:
-            type: vertical
+            orientation: vertical
         - id: type_vt_text_2
           type: Paragraph
           layout:
@@ -49,7 +49,7 @@
           layout:
             flex: 0 0 auto
           properties:
-            type: vertical
+            orientation: vertical
         - id: type_vt_text_3
           type: Paragraph
           layout:
@@ -73,24 +73,24 @@
       properties:
         title: '<span style="color: #1677ff; font-size: 16px">Highlighted Title</span>'
 
-- title: Title Orientation
+- title: Title Placement
   fullWidth: true
   blocks:
     - id: orient_left
       type: Divider
       properties:
         title: Left
-        orientation: left
+        titlePlacement: left
     - id: orient_center
       type: Divider
       properties:
         title: Center (default)
-        orientation: center
+        titlePlacement: center
     - id: orient_right
       type: Divider
       properties:
         title: Right
-        orientation: right
+        titlePlacement: right
 
 - title: Dashed
   fullWidth: true
@@ -109,7 +109,7 @@
       properties:
         dashed: true
         title: Dashed Left
-        orientation: left
+        titlePlacement: left
 
 - title: Plain Style
   fullWidth: true
@@ -124,7 +124,7 @@
       properties:
         title: Plain Left
         plain: true
-        orientation: left
+        titlePlacement: left
     - id: plain_dashed
       type: Divider
       properties:
@@ -172,14 +172,14 @@
       type: Divider
       properties:
         title: Tight Orientation Margin
-        orientation: left
+        titlePlacement: left
         theme:
           orientationMargin: 0
     - id: theme_orientation_wide
       type: Divider
       properties:
         title: Wide Orientation Margin
-        orientation: left
+        titlePlacement: left
         theme:
           orientationMargin: 0.25
     - id: theme_vertical_margin
@@ -198,7 +198,7 @@
           layout:
             flex: 0 0 auto
           properties:
-            type: vertical
+            orientation: vertical
             theme:
               verticalMarginInline: 24
         - id: theme_vm_text_2
@@ -221,7 +221,7 @@
           type: Divider
           properties:
             title: Profile
-            orientation: left
+            titlePlacement: left
             plain: true
         - id: settings_name
           type: TextInput
@@ -239,7 +239,7 @@
           type: Divider
           properties:
             title: Notifications
-            orientation: left
+            titlePlacement: left
             plain: true
         - id: settings_notify_toggle
           type: Switch
@@ -250,7 +250,7 @@
           type: Divider
           properties:
             title: '<span style="color: #ff4d4f">Danger Zone</span>'
-            orientation: left
+            titlePlacement: left
             plain: true
             dashed: true
           style:
@@ -307,7 +307,7 @@
               layout:
                 flex: 0 0 auto
               properties:
-                type: vertical
+                orientation: vertical
             - id: article_date
               type: Paragraph
               layout:
@@ -319,7 +319,7 @@
               layout:
                 flex: 0 0 auto
               properties:
-                type: vertical
+                orientation: vertical
             - id: article_reading_time
               type: Paragraph
               layout:
@@ -338,7 +338,7 @@
           type: Divider
           properties:
             title: Key Takeaways
-            orientation: left
+            titlePlacement: left
             plain: true
         - id: article_takeaways
           type: Markdown

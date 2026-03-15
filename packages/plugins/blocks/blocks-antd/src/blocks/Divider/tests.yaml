@@ -22,32 +22,32 @@
   type: Divider
   properties:
     dashed: true
-- id: 'properties.orientation: left'
+- id: 'properties.titlePlacement: left'
   type: Divider
   properties:
     title: Divider title
-    orientation: left
-- id: 'properties.orientation: right'
+    titlePlacement: left
+- id: 'properties.titlePlacement: right'
   type: Divider
   properties:
     title: Divider title
-    orientation: right
-- id: 'properties.orientation: center'
+    titlePlacement: right
+- id: 'properties.titlePlacement: center'
   type: Divider
   properties:
     title: Divider title
-    orientation: center
-- id: 'properties.type: vertical'
+    titlePlacement: center
+- id: 'properties.orientation: vertical'
   type: Divider
   properties:
     title: Divider title
-    type: vertical
-- id: 'properties.type: horizontal'
+    orientation: vertical
+- id: 'properties.orientation: horizontal'
   type: Divider
   properties:
     title: Divider title
-    type: horizontal
-- id: 'properties.type: true'
+    orientation: horizontal
+- id: 'properties.plain: true'
   type: Divider
   properties:
     title: Divider title

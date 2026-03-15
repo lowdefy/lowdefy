@@ -39,7 +39,10 @@ const NotificationBlock = ({
         style: styles.element,
         description: renderHtml({ html: args.description || properties.description, methods }),
         duration: type.isNone(args.duration) ? properties.duration : args.duration,
-        message: renderHtml({ html: args.title || properties.title || blockId, methods }),
+        title: renderHtml({
+          html: args.title || properties.title || blockId,
+          methods,
+        }),
         onClick: () => methods.triggerEvent({ name: 'onClick' }),
         onClose: () => methods.triggerEvent({ name: 'onClose' }),
         placement: properties.placement,

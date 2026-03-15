@@ -141,7 +141,7 @@
     - id: pos_top_tabs
       type: Tabs
       properties:
-        tabPosition: top
+        tabPlacement: top
         tabs:
           - key: pos_top_first
             title: First
@@ -175,7 +175,7 @@
     - id: pos_bottom_tabs
       type: Tabs
       properties:
-        tabPosition: bottom
+        tabPlacement: bottom
         tabs:
           - key: pos_bot_inbox
             title: Inbox
@@ -209,7 +209,7 @@
     - id: pos_left_tabs
       type: Tabs
       properties:
-        tabPosition: left
+        tabPlacement: left
         tabs:
           - key: pos_left_general
             title: General
@@ -251,7 +251,7 @@
     - id: pos_right_tabs
       type: Tabs
       properties:
-        tabPosition: right
+        tabPlacement: right
         tabs:
           - key: pos_right_desc
             title: Description
@@ -944,7 +944,7 @@
       type: Tabs
       properties:
         tabType: card
-        tabPosition: left
+        tabPlacement: left
         tabs:
           - key: lc_account
             title: Account
@@ -1242,7 +1242,7 @@
     - id: theme_vertical_tabs
       type: Tabs
       properties:
-        tabPosition: left
+        tabPlacement: left
         theme:
           verticalItemPadding: '12px 32px'
           verticalItemMargin: '8px 0 0 0'

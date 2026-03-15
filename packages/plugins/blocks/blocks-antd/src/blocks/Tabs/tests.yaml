@@ -251,10 +251,10 @@
       blocks:
         - id: ex_1_block_3
           type: Test
-- id: 'properties.tabPosition: right - top is default'
+- id: 'properties.tabPlacement: right - top is default'
   type: Tabs
   properties:
-    tabPosition: right
+    tabPlacement: right
     tabs:
       - key: content_one
         title: Title One
@@ -275,10 +275,10 @@
       blocks:
         - id: ex_1_block_3
           type: Test
-- id: 'properties.tabPosition: bottom'
+- id: 'properties.tabPlacement: bottom'
   type: Tabs
   properties:
-    tabPosition: bottom
+    tabPlacement: bottom
     tabs:
       - key: content_one
         title: Title One
@@ -299,10 +299,10 @@
       blocks:
         - id: ex_1_block_3
           type: Test
-- id: 'properties.tabPosition: left'
+- id: 'properties.tabPlacement: left'
   type: Tabs
   properties:
-    tabPosition: left
+    tabPlacement: left
     tabs:
       - key: content_one
         title: Title One

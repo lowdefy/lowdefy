@@ -19,7 +19,12 @@ import { Layout } from 'antd';
 import { withBlockDefaults } from '@lowdefy/block-utils';
 
 const LayoutBlock = ({ blockId, classNames = {}, content, properties, styles = {} }) => (
-  <Layout id={blockId} className={classNames.element} style={styles.element}>
+  <Layout
+    id={blockId}
+    className={classNames.element}
+    hasSider={properties.hasSider}
+    style={styles.element}
+  >
     {content.content && content.content()}
   </Layout>
 );

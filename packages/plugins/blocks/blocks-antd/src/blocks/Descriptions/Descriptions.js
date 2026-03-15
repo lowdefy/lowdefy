@@ -37,7 +37,7 @@ const DescriptionsBlock = ({
   return (
     <Descriptions
       id={blockId}
-      variant={properties.bordered === false ? 'borderless' : properties.variant}
+      bordered={properties.bordered}
       colon={properties.colon}
       column={properties.column}
       extra={content.extra && content.extra()}

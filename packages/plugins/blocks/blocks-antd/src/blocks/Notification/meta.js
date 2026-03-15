@@ -71,7 +71,7 @@ export default {
           displayType: 'icon',
         },
       },
-      message: {
+      title: {
         type: 'string',
         description: 'The title of notification box - supports html.',
       },

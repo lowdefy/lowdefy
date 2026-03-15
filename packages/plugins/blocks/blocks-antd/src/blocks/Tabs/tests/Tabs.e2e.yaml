@@ -118,7 +118,7 @@ blocks:
   - id: tabs_position_left
     type: Tabs
     properties:
-      tabPosition: left
+      tabPlacement: left
       tabs:
         - key: left1
           title: Left Tab
@@ -133,7 +133,7 @@ blocks:
   - id: tabs_position_right
     type: Tabs
     properties:
-      tabPosition: right
+      tabPlacement: right
       tabs:
         - key: right1
           title: Right Tab

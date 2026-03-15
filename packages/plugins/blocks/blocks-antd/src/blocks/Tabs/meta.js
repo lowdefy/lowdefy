@@ -38,7 +38,7 @@ export default {
         type: 'boolean',
         default: true,
         description:
-          'Whether to change tabs with animation. Only works while tabPosition is top or bottom.',
+          'Whether to change tabs with animation. Only works while tabPlacement is top or bottom.',
       },
       defaultActiveKey: {
         type: 'string',
@@ -50,7 +50,7 @@ export default {
         enum: ['default', 'small', 'large'],
         description: 'Size of the tabs.',
       },
-      tabPosition: {
+      tabPlacement: {
         type: 'string',
         default: 'top',
         enum: ['top', 'right', 'bottom', 'left'],

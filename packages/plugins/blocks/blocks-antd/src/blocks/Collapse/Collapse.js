@@ -48,7 +48,7 @@ const CollapseBlock = ({
     <Collapse
       id={blockId}
       defaultActiveKey={properties.defaultActiveKey || panels[0].key}
-      variant={properties.bordered === false ? 'borderless' : properties.variant}
+      bordered={properties.bordered}
       accordion={properties.accordion}
       onChange={(activeKey) => methods.triggerEvent({ name: 'onChange', event: { activeKey } })}
       expandIcon={
@@ -63,7 +63,7 @@ const CollapseBlock = ({
           />
         ))
       }
-      expandIconPlacement={properties.expandIconPlacement}
+      expandIconPlacement={properties.expandIconPlacement ?? properties.expandIconPosition}
       destroyInactivePanel={properties.destroyInactivePanel}
       className={classNames.element}
       classNames={{ header: classNames.header, content: classNames.content }}
