@@ -42,6 +42,43 @@
               pageId:
                 _event: pageId
 
+- title: Analytics Events
+  blocks:
+    - id: example_search_analytics
+      type: Search
+      properties:
+        indexUrl: /search-index.json
+      events:
+        onSearch:
+          - id: track_search
+            type: DisplayMessage
+            params:
+              content:
+                _string.concat:
+                  - 'Search: "'
+                  - _event: value
+                  - '" ('
+                  - _event: resultCount
+                  - ' results)'
+        onSelect:
+          - id: track_click
+            type: DisplayMessage
+            params:
+              content:
+                _string.concat:
+                  - 'Clicked "'
+                  - _event: title
+                  - '" for query "'
+                  - _event: query
+                  - '" ('
+                  - _event: resultCount
+                  - ' results)'
+          - id: navigate
+            type: Link
+            params:
+              pageId:
+                _event: pageId
+
 - title: Runtime Documents
   blocks:
     - id: example_search_runtime

@@ -35,8 +35,10 @@ export default {
     empty: 'The empty state message.',
   },
   events: {
-    onSelect: 'Trigger actions when a search result is selected.',
-    onSearch: 'Trigger actions when the search query changes.',
+    onSelect:
+      'Trigger actions when a search result is selected. Passes the result item fields, plus `query` (the search term) and `resultCount` (total results for that query).',
+    onSearch:
+      'Trigger actions when the search query changes. Passes `value` (the search term) and `resultCount` (number of matching results).',
     onOpen: 'Trigger actions when the search modal opens.',
     onClose: 'Trigger actions when the search modal closes.',
   },

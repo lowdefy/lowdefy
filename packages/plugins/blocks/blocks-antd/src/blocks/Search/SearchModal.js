@@ -50,10 +50,13 @@ function SearchModal({
   const handleSelect = useCallback(
     (item) => {
       recentSearches.addSearch(query);
-      methods.triggerEvent({ name: 'onSelect', event: item });
+      methods.triggerEvent({
+        name: 'onSelect',
+        event: { ...item, query, resultCount: results.length },
+      });
       onClose();
     },
-    [query, methods, onClose, recentSearches]
+    [query, results, methods, onClose, recentSearches]
   );
 
   const handleSelectByIndex = useCallback(
