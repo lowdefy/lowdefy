@@ -33,7 +33,7 @@ const PageSiderMenu = ({
   basePath,
   blockId,
   classNames = {},
-  components: { Icon, Link },
+  components: { Icon, Link, ShortcutBadge },
   events,
   content,
   menus,
@@ -56,7 +56,7 @@ const PageSiderMenu = ({
   return (
     <Layout
       blockId={blockId}
-      components={{ Icon, Link }}
+      components={{ Icon, Link, ShortcutBadge }}
       events={events}
       styles={{
         element: mergeObjects([{ minHeight: '100vh' }, styles.element]),
@@ -66,7 +66,7 @@ const PageSiderMenu = ({
           <>
             <Header
               blockId={`${blockId}_header`}
-              components={{ Icon, Link }}
+              components={{ Icon, Link, ShortcutBadge }}
               classNames={{ element: classNames.header }}
               events={events}
               properties={properties.header ?? {}}
@@ -94,7 +94,7 @@ const PageSiderMenu = ({
                       <div className="block lg:hidden pl-4">
                         <MobileMenu
                           blockId={`${blockId}_mobile_menu`}
-                          components={{ Icon, Link }}
+                          components={{ Icon, Link, ShortcutBadge }}
                           basePath={basePath}
                           events={events}
                           methods={methods}
@@ -153,7 +153,7 @@ const PageSiderMenu = ({
             />
             <Layout
               blockId={`${blockId}_layout`}
-              components={{ Icon, Link }}
+              components={{ Icon, Link, ShortcutBadge }}
               events={events}
               properties={{ hasSider: true, ...properties.layout }}
               styles={{ element: properties.layout?.style }}
@@ -162,7 +162,7 @@ const PageSiderMenu = ({
                   <>
                     <Sider
                       blockId={`${blockId}_sider`}
-                      components={{ Icon, Link }}
+                      components={{ Icon, Link, ShortcutBadge }}
                       events={events}
                       methods={methods}
                       properties={mergeObjects([
@@ -190,7 +190,7 @@ const PageSiderMenu = ({
                           >
                             <Menu
                               blockId={`${blockId}_menu`}
-                              components={{ Icon, Link }}
+                              components={{ Icon, Link, ShortcutBadge }}
                               basePath={basePath}
                               classNames={{ element: classNames.menu ?? 'hidden lg:block' }}
                               events={events}
@@ -224,7 +224,7 @@ const PageSiderMenu = ({
                             {!get(properties, 'sider.hideToggleButton') ?? (
                               <Affix
                                 blockId={`${blockId}_toggle_sider_affix`}
-                                components={{ Icon, Link }}
+                                components={{ Icon, Link, ShortcutBadge }}
                                 events={events}
                                 properties={{ offsetBottom: 0 }}
                                 methods={methods}
@@ -245,7 +245,7 @@ const PageSiderMenu = ({
                                     >
                                       <Button
                                         blockId={`${blockId}_toggle_sider`}
-                                        components={{ Icon, Link }}
+                                        components={{ Icon, Link, ShortcutBadge }}
                                         events={events}
                                         properties={{
                                           hideTitle: true,
@@ -277,7 +277,7 @@ const PageSiderMenu = ({
                     />
                     <Content
                       blockId={`${blockId}_content`}
-                      components={{ Icon, Link }}
+                      components={{ Icon, Link, ShortcutBadge }}
                       classNames={{ element: classNames.content }}
                       events={events}
                       properties={properties.content ?? {}}
@@ -297,7 +297,7 @@ const PageSiderMenu = ({
                               <Breadcrumb
                                 blockId={`${blockId}_breadcrumb`}
                                 basePath={basePath}
-                                components={{ Icon, Link }}
+                                components={{ Icon, Link, ShortcutBadge }}
                                 classNames={{ element: classNames.breadcrumb }}
                                 events={events}
                                 methods={methods}
@@ -318,7 +318,7 @@ const PageSiderMenu = ({
                             {content.footer && (
                               <Footer
                                 blockId={`${blockId}_footer`}
-                                components={{ Icon, Link }}
+                                components={{ Icon, Link, ShortcutBadge }}
                                 classNames={{ element: classNames.footer }}
                                 events={events}
                                 properties={properties.footer}

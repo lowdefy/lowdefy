@@ -164,3 +164,30 @@ blocks:
           type: Wait
           params:
             ms: 2000
+
+  - id: button_shortcut
+    type: Button
+    properties:
+      title: Save
+    events:
+      onClick:
+        shortcut: mod+s
+        try:
+          - id: save_action
+            type: SetState
+            params:
+              saved: true
+
+  - id: button_shortcut_no_title
+    type: Button
+    properties:
+      icon: AiOutlineSearch
+      hideTitle: true
+    events:
+      onClick:
+        shortcut: mod+k
+        try:
+          - id: search_action
+            type: SetState
+            params:
+              searched: true

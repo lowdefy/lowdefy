@@ -63,3 +63,16 @@ blocks:
           type: SetState
           params:
             anchor_clicked: true
+
+  - id: anchor_shortcut
+    type: Anchor
+    properties:
+      title: Docs
+    events:
+      onClick:
+        shortcut: mod+d
+        try:
+          - id: docs_action
+            type: SetState
+            params:
+              docs_opened: true

@@ -24,7 +24,7 @@ import SearchModal from './SearchModal.js';
 import useSearchIndex from './useSearchIndex.js';
 import useRecentSearches from './useRecentSearches.js';
 
-import './style.css';
+import './style.module.css';
 
 const isMac = typeof navigator !== 'undefined' && /Mac|iPhone|iPad|iPod/.test(navigator.userAgent);
 
@@ -51,7 +51,14 @@ function matchesShortcut(e, parsed) {
   );
 }
 
-function SearchBlock({ blockId, classNames = {}, methods, properties, styles = {} }) {
+function SearchBlock({
+  blockId,
+  classNames = {},
+  components: { ShortcutBadge },
+  methods,
+  properties,
+  styles = {},
+}) {
   const [open, setOpen] = useState(false);
 
   const searchIndex = useSearchIndex({
@@ -95,8 +102,6 @@ function SearchBlock({ blockId, classNames = {}, methods, properties, styles = {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [properties.shortcut, open, handleOpen, handleClose]);
 
-  const shortcutLabel = isMac ? '\u2318K' : 'Ctrl+K';
-
   return (
     <div id={blockId} className={cn(classNames.element)} style={styles.element}>
       <Button
@@ -107,12 +112,7 @@ function SearchBlock({ blockId, classNames = {}, methods, properties, styles = {
         <SearchOutlined />
         <span className="lf-search-trigger-label">{properties.label ?? 'Search'}</span>
         {properties.showShortcut !== false && (
-          <span
-            className={cn('lf-search-shortcut-badge', classNames.triggerBadge)}
-            style={styles.triggerBadge}
-          >
-            {shortcutLabel}
-          </span>
+          <ShortcutBadge shortcut={properties.shortcut ?? 'mod+k'} />
         )}
       </Button>
       <SearchModal

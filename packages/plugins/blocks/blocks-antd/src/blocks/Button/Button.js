@@ -58,7 +58,7 @@ function getButtonProps(properties) {
 const ButtonBlock = ({
   blockId,
   classNames = {},
-  components: { Icon },
+  components: { Icon, ShortcutBadge },
   events,
   loading,
   methods,
@@ -105,11 +105,15 @@ const ButtonBlock = ({
       onClick={onClick || (() => methods.triggerEvent({ name: onClickActionName }))}
     >
       {!properties.hideTitle &&
-        !(properties.shape === 'circle' && type.isNone(properties.title)) &&
-        renderHtml({
-          html: type.isNone(properties.title) ? blockId : properties.title,
-          methods,
-        })}
+        !(properties.shape === 'circle' && type.isNone(properties.title)) && (
+          <>
+            {renderHtml({
+              html: type.isNone(properties.title) ? blockId : properties.title,
+              methods,
+            })}
+            <ShortcutBadge shortcut={events[onClickActionName]?.shortcut} />
+          </>
+        )}
     </Button>
   );
 

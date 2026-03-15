@@ -143,4 +143,13 @@ test.describe('Tag Block', () => {
     // Ant Design hides the tag after close is clicked
     await expect(tag).toBeHidden();
   });
+
+  test('renders shortcut badge when onClick has shortcut', async ({ page }) => {
+    const tag = getTag(page, 'tag_shortcut');
+    await expect(tag).toBeVisible();
+    // ShortcutBadge renders kbd elements for each key segment
+    const kbd = tag.locator('kbd');
+    await expect(kbd.first()).toBeAttached();
+    expect(await kbd.count()).toBeGreaterThanOrEqual(2);
+  });
 });

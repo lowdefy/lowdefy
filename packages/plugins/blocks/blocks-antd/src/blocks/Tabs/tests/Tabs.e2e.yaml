@@ -274,3 +274,39 @@ blocks:
               - 'Active: '
               - _state: tabs_active_key
           else: ''
+
+  # ============================================
+  # SHORTCUT BADGE TESTS
+  # ============================================
+
+  - id: tabs_shortcut
+    type: Tabs
+    properties:
+      tabs:
+        - key: sc_tab1
+          title: First
+          shortcut: mod+1
+        - key: sc_tab2
+          title: Second
+          shortcut: mod+2
+        - key: sc_no_shortcut
+          title: No Shortcut
+    slots:
+      sc_tab1:
+        blocks:
+          - id: tabs_sc_tab1_content
+            type: Span
+            properties:
+              content: First tab content
+      sc_tab2:
+        blocks:
+          - id: tabs_sc_tab2_content
+            type: Span
+            properties:
+              content: Second tab content
+      sc_no_shortcut:
+        blocks:
+          - id: tabs_sc_no_shortcut_content
+            type: Span
+            properties:
+              content: No shortcut content

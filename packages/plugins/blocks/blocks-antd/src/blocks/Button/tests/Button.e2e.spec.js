@@ -150,4 +150,22 @@ test.describe('Button Block', () => {
     // The button should show loading spinner (ant-btn-loading class)
     await expect(button).toHaveClass(/ant-btn-loading/);
   });
+
+  test('renders shortcut badge when onClick has shortcut', async ({ page }) => {
+    const button = getButton(page, 'button_shortcut');
+    await expect(button).toBeVisible();
+    // ShortcutBadge renders kbd elements for each key segment
+    const kbd = button.locator('kbd');
+    await expect(kbd.first()).toBeAttached();
+    // Should have at least 2 kbd elements (modifier + key)
+    expect(await kbd.count()).toBeGreaterThanOrEqual(2);
+  });
+
+  test('does not render shortcut badge when hideTitle is true', async ({ page }) => {
+    const button = getButton(page, 'button_shortcut_no_title');
+    await expect(button).toBeVisible();
+    // ShortcutBadge should not appear when title is hidden
+    const kbd = button.locator('kbd');
+    expect(await kbd.count()).toBe(0);
+  });
 });

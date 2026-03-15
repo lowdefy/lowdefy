@@ -26,6 +26,22 @@
               pageId:
                 _event: pageId
 
+- title: Custom Shortcut
+  blocks:
+    - id: example_search_custom_shortcut
+      type: Search
+      properties:
+        indexUrl: /search-index.json
+        shortcut: mod+j
+        label: Quick Find
+      events:
+        onSelect:
+          - id: navigate
+            type: Link
+            params:
+              pageId:
+                _event: pageId
+
 - title: Runtime Documents
   blocks:
     - id: example_search_runtime

@@ -22,7 +22,7 @@ const AnchorBlock = ({
   blockId,
   classNames,
   events,
-  components: { Icon, Link },
+  components: { Icon, Link, ShortcutBadge },
   methods,
   properties,
   styles,
@@ -57,6 +57,7 @@ const AnchorBlock = ({
             />
           )}
           {title || defaultTitle}
+          <ShortcutBadge shortcut={events.onClick?.shortcut} />
         </>
       )}
     </Link>
