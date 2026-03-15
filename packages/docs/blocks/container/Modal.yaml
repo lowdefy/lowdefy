@@ -27,3 +27,4 @@ _ref:
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Modal/gallery.yaml
     description: >
       Modal dialog overlay for focused content.
+      Add `shortcut: Escape` to the `onClose` event to run custom actions when Escape is pressed. Ant Design's Modal already closes on Escape by default — the shortcut triggers your custom actions in addition to the built-in close.

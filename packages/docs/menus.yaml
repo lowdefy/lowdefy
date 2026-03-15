@@ -83,6 +83,11 @@
           pageId: events-and-actions
           properties:
             title: Events and Actions
+        - id: keyboard-shortcuts
+          type: MenuLink
+          pageId: keyboard-shortcuts
+          properties:
+            title: Keyboard Shortcuts
         - id: operators
           type: MenuLink
           pageId: operators
@@ -1029,13 +1034,18 @@
         title: Migration
         icon: RiArrowLeftRightLine
       links:
-        - id: v3-to-v4
+        - id: upgrade-guide
           type: MenuLink
-          pageId: v3-to-v4
+          pageId: upgrade-guide
           properties:
-            title: V3 to V4
+            title: Upgrade Guide
         - id: v4-to-v5
           type: MenuLink
           pageId: v4-to-v5
           properties:
             title: V4 to V5
+        - id: v3-to-v4
+          type: MenuLink
+          pageId: v3-to-v4
+          properties:
+            title: V3 to V4

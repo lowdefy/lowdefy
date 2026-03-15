@@ -17,6 +17,7 @@
 - _ref: concepts/layout-overview.yaml
 - _ref: concepts/connections-and-requests.yaml
 - _ref: concepts/events-and-actions.yaml
+- _ref: concepts/keyboard-shortcuts.yaml
 - _ref: concepts/operators.yaml
 - _ref: concepts/secrets.yaml
 - _ref: concepts/logger.yaml
@@ -279,6 +280,7 @@
 - _ref: controls/try.yaml
 # - _ref: controls/while.yaml # TODO: Add back when while control implemented
 
+- _ref: migration/upgrade-guide.yaml
 - _ref: migration/v3-to-v4.yaml
 - _ref: migration/v4-to-v5.yaml
 

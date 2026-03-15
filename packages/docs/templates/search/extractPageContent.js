@@ -17,7 +17,6 @@
 function extractPageContent(page) {
   const texts = [];
   texts.push(page.properties?.title ?? page.id);
-
   function walkBlock(block) {
     if (!block) return;
     texts.push(block.id);
@@ -27,13 +26,17 @@ function extractPageContent(page) {
     if (props.description) texts.push(props.description);
     if (props.placeholder) texts.push(props.placeholder);
     if (props.label) texts.push(props.label);
-    (props.items ?? []).forEach((item) => {
-      if (item.title) texts.push(item.title);
-      if (item.description) texts.push(item.description);
-    });
-    (props.options ?? []).forEach((option) => {
-      if (option.label) texts.push(option.label);
-    });
+    if (Array.isArray(props.items)) {
+      props.items.forEach((item) => {
+        if (item.title) texts.push(item.title);
+        if (item.description) texts.push(item.description);
+      });
+    }
+    if (Array.isArray(props.options)) {
+      props.options.forEach((option) => {
+        if (option.label) texts.push(option.label);
+      });
+    }
     // Recurse into nested blocks
     (block.blocks ?? []).forEach(walkBlock);
     // Recurse into areas (legacy) and slots

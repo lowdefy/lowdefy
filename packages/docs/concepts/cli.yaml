@@ -64,6 +64,7 @@ _ref:
             - `--no-next-build`: Do not build the Next.js server, and only build the Lowdefy config. Used in some deployment scripts where the Next.js build is done as a separate step.
             - `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
             - `--server-directory <server-directory>`: Change the server directory, the directory in which the production server is placed. The default is `<config-directory>/.lowdefy/server`.
+            - `--skip-codemod-check`: Suppress warnings about pending codemod upgrades.
 
 
             ## dev
@@ -79,6 +80,7 @@ _ref:
             - `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
             - `--watch <paths...>`: A list of paths to files or directories that should be watched for changes. Globs are supported. Specify each path to watch separated by spaces.
             - `--watch-ignore <patterns...>`: A list of paths to files or directories that should be ignored by the file watcher. Globs are supported. Specify each path to watch separated by spaces.
+            - `--skip-codemod-check`: Suppress warnings about pending codemod upgrades.
 
             ## init
 
@@ -102,6 +104,42 @@ _ref:
             - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
             - `--disable-telemetry`: Disable telemetry.
             - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+
+            ## upgrade
+
+            The `upgrade` command upgrades a Lowdefy app to a newer version by running codemods that handle breaking changes automatically.
+
+            It fetches the latest `@lowdefy/codemods` package, resolves the version chain from your current version to the target, and executes migration scripts phase by phase.
+
+            ```
+            pnpx lowdefy@4 upgrade
+            pnpx lowdefy@4 upgrade --to 6.0.0
+            ```
+
+            - `--to <version>`: Target version to upgrade to. Defaults to the latest stable release.
+            - `--plan`: Show the upgrade plan without executing.
+            - `--dry-run`: Run scripts in dry-run mode (no file changes).
+            - `--scripts-only`: Skip AI-guided codemods (run only automated scripts).
+            - `--resume`: Resume a previously interrupted upgrade.
+            - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+            - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+
+            ### How it works
+
+            1. Reads your current version from `lowdefy.yaml`.
+            2. Queries npm for the latest stable Lowdefy version (or uses `--to`).
+            3. Fetches `@lowdefy/codemods@latest` — the codemods package containing all migrations.
+            4. Resolves the upgrade chain — which intermediate versions need codemods.
+            5. Executes codemods phase by phase (automated scripts first, then AI-guided prompts).
+            6. Updates `lowdefy.yaml` after each phase and suggests a git commit.
+
+            ### Codemod categories
+
+            - **Category A** — Automated scripts. Run without human input. Handles renames, restructures, and syntax changes.
+            - **Category B** — Semi-automated scripts. Run and generate a review report. The CLI pauses for you to review before continuing.
+            - **Category C** — AI-guided. Copies a migration prompt to clipboard or runs via Claude Code. For changes that need intent understanding, not just syntax matching.
+
+            See the [Upgrade Guide](/upgrade-guide) for more detail on how the upgrade system works.
 
             ## start
 
@@ -143,6 +181,7 @@ _ref:
             - `serverDirectory: string`: Change the server directory, the directory in which the production server is placed. The default is `<config-directory>/.lowdefy/server`.
             - `watch: string[]`: A list of paths to files or directories that should be watched for changes.
             - `watchIgnore: string[]`: A list of paths to files or directories that should be ignored by the file watcher. Globs are supported.
+            - `skipCodemodCheck: boolean`: Suppress warnings about pending codemod upgrades during build and dev.
 
             The `--config-directory` option cannot be set from the `lowdefy.yaml` file.
 

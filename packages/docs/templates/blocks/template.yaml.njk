@@ -528,6 +528,11 @@ blocks:
                                         - $project:
                                             events:
                                               $objectToArray: $events
+                      - id: event_shortcut_link
+                        type: Markdown
+                        properties:
+                          content: |
+                            Events support [keyboard shortcuts](/events-and-actions#keyboard-shortcuts).
 
 
                   required:

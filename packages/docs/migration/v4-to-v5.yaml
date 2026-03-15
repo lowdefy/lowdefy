@@ -559,5 +559,5 @@ _ref:
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: V3 to V4
-            previous_page_id: v3-to-v4
+            previous_page_title: Upgrade Guide
+            previous_page_id: upgrade-guide
