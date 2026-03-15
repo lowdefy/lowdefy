@@ -14,546 +14,505 @@
 
 - title: Type
   blocks:
-    - id: type_default
+    - id: float_demo
       type: FloatButton
-      style:
-        --element:
-          position: relative
-          insetInlineEnd: auto
-          insetBlockEnd: auto
+      visible:
+        _state: float_active
       properties:
-        type: default
+        type:
+          _state: float_props.type
+        shape:
+          _state: float_props.shape
+        icon:
+          _state: float_props.icon
+        tooltip:
+          _state: float_props.tooltip
+        description:
+          _state: float_props.description
+        badge:
+          _state: float_props.badge
+        href:
+          _state: float_props.href
+        target:
+          _state: float_props.target
+        theme:
+          _state: float_props.theme
+      events:
+        onClick:
+          - id: float_click_msg
+            type: DisplayMessage
+            params:
+              content: FloatButton clicked!
+              status: info
+    - id: btn_type_default
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Default
+        color: default
+        variant: outlined
         icon: AiOutlineQuestionCircle
-        tooltip: Default type
-    - id: type_primary
-      type: FloatButton
-      style:
-        --element:
-          position: relative
-          insetInlineEnd: auto
-          insetBlockEnd: auto
+      events:
+        onClick:
+          - id: set_type_default
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                type: default
+                icon: AiOutlineQuestionCircle
+                tooltip: Default type
+    - id: btn_type_primary
+      type: Button
+      layout:
+        flex: 0 0 auto
       properties:
-        type: primary
+        title: Primary
+        color: primary
+        variant: outlined
         icon: AiOutlineQuestionCircle
-        tooltip: Primary type
-    - id: type_primary_icon
-      type: FloatButton
-      style:
-        --element:
-          position: relative
-          insetInlineEnd: auto
-          insetBlockEnd: auto
+      events:
+        onClick:
+          - id: set_type_primary
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                type: primary
+                icon: AiOutlineQuestionCircle
+                tooltip: Primary type
+    - id: btn_type_support
+      type: Button
+      layout:
+        flex: 0 0 auto
       properties:
-        type: primary
+        title: Support
+        color: primary
+        variant: outlined
         icon: AiOutlineCustomerService
-        tooltip: Support
+      events:
+        onClick:
+          - id: set_type_support
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                type: primary
+                icon: AiOutlineCustomerService
+                tooltip: Contact support
 
 - title: Shape
   blocks:
-    - id: shape_circle
-      type: FloatButton
-      style:
-        --element:
-          position: relative
-          insetInlineEnd: auto
-          insetBlockEnd: auto
+    - id: btn_shape_circle
+      type: Button
+      layout:
+        flex: 0 0 auto
       properties:
-        shape: circle
-        icon: AiOutlinePlus
-        tooltip: Circle (default)
-    - id: shape_square
-      type: FloatButton
-      style:
-        --element:
-          position: relative
-          insetInlineEnd: auto
-          insetBlockEnd: auto
+        title: Circle
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: set_shape_circle
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                shape: circle
+                icon: AiOutlinePlus
+                tooltip: Circle (default)
+    - id: btn_shape_square
+      type: Button
+      layout:
+        flex: 0 0 auto
       properties:
-        shape: square
-        icon: AiOutlineSetting
-        tooltip: Square shape
-    - id: shape_square_primary
-      type: FloatButton
-      style:
-        --element:
-          position: relative
-          insetInlineEnd: auto
-          insetBlockEnd: auto
+        title: Square
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: set_shape_square
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                shape: square
+                icon: AiOutlineSetting
+                tooltip: Square shape
+    - id: btn_shape_square_primary
+      type: Button
+      layout:
+        flex: 0 0 auto
       properties:
-        shape: square
-        type: primary
-        icon: AiOutlineEdit
-        tooltip: Square primary
+        title: Square Primary
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: set_shape_square_primary
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                shape: square
+                type: primary
+                icon: AiOutlineEdit
+                tooltip: Square primary
 
 - title: Icon
   blocks:
-    - id: icon_string
-      type: FloatButton
-      style:
-        --element:
-          position: relative
-          insetInlineEnd: auto
-          insetBlockEnd: auto
+    - id: btn_icon_string
+      type: Button
+      layout:
+        flex: 0 0 auto
       properties:
+        title: String
+        color: default
+        variant: outlined
         icon: AiOutlineQuestionCircle
-        tooltip: String icon
-    - id: icon_object
-      type: FloatButton
-      style:
-        --element:
-          position: relative
-          insetInlineEnd: auto
-          insetBlockEnd: auto
+      events:
+        onClick:
+          - id: set_icon_string
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                icon: AiOutlineQuestionCircle
+                tooltip: String icon
+    - id: btn_icon_object
+      type: Button
+      layout:
+        flex: 0 0 auto
       properties:
-        icon:
-          name: AiOutlineRocket
-        tooltip: Object icon
-    - id: icon_colored
-      type: FloatButton
-      style:
-        --element:
-          position: relative
-          insetInlineEnd: auto
-          insetBlockEnd: auto
+        title: Object
+        color: default
+        variant: outlined
+        icon: AiOutlineRocket
+      events:
+        onClick:
+          - id: set_icon_object
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                icon:
+                  name: AiOutlineRocket
+                tooltip: Object icon
+    - id: btn_icon_colored
+      type: Button
+      layout:
+        flex: 0 0 auto
       properties:
-        icon:
-          name: AiOutlineHeart
-          color: '#eb2f96'
-        tooltip: Colored icon
-    - id: icon_comment
-      type: FloatButton
-      style:
-        --element:
-          position: relative
-          insetInlineEnd: auto
-          insetBlockEnd: auto
-      properties:
-        icon: AiOutlineComment
-        type: primary
-        tooltip: Comment
+        title: Colored
+        color: default
+        variant: outlined
+        icon: AiOutlineHeart
+      events:
+        onClick:
+          - id: set_icon_colored
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                icon:
+                  name: AiOutlineHeart
+                  color: '#eb2f96'
+                tooltip: Colored icon
 
 - title: Tooltip
   blocks:
-    - id: tooltip_basic
-      type: FloatButton
-      style:
-        --element:
-          position: relative
-          insetInlineEnd: auto
-          insetBlockEnd: auto
+    - id: btn_tooltip_short
+      type: Button
+      layout:
+        flex: 0 0 auto
       properties:
-        tooltip: Help
-        icon: AiOutlineQuestionCircle
-    - id: tooltip_long
-      type: FloatButton
-      style:
-        --element:
-          position: relative
-          insetInlineEnd: auto
-          insetBlockEnd: auto
+        title: Short
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: set_tooltip_short
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                icon: AiOutlineQuestionCircle
+                tooltip: Help
+    - id: btn_tooltip_long
+      type: Button
+      layout:
+        flex: 0 0 auto
       properties:
-        tooltip: Click here to get help from our support team
-        icon: AiOutlineCustomerService
-    - id: tooltip_primary
-      type: FloatButton
-      style:
-        --element:
-          position: relative
-          insetInlineEnd: auto
-          insetBlockEnd: auto
-      properties:
-        tooltip: Send feedback
-        icon: AiOutlineComment
-        type: primary
+        title: Long
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: set_tooltip_long
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                icon: AiOutlineCustomerService
+                tooltip: Click here to get help from our support team
 
 - title: Description
   blocks:
-    - id: desc_basic
-      type: FloatButton
-      style:
-        --element:
-          position: relative
-          insetInlineEnd: auto
-          insetBlockEnd: auto
+    - id: btn_desc_icon
+      type: Button
+      layout:
+        flex: 0 0 auto
       properties:
-        description: Help
-        type: primary
-        shape: square
+        title: With Icon
+        color: primary
+        variant: outlined
         icon: AiOutlineQuestionCircle
-    - id: desc_docs
-      type: FloatButton
-      style:
-        --element:
-          position: relative
-          insetInlineEnd: auto
-          insetBlockEnd: auto
+      events:
+        onClick:
+          - id: set_desc_icon
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                shape: square
+                type: primary
+                icon: AiOutlineQuestionCircle
+                description: Help
+    - id: btn_desc_docs
+      type: Button
+      layout:
+        flex: 0 0 auto
       properties:
-        description: Docs
-        type: primary
-        shape: square
+        title: Docs
+        color: primary
+        variant: outlined
         icon: AiOutlineFileText
-    - id: desc_no_icon
-      type: FloatButton
-      style:
-        --element:
-          position: relative
-          insetInlineEnd: auto
-          insetBlockEnd: auto
+      events:
+        onClick:
+          - id: set_desc_docs
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                shape: square
+                type: primary
+                icon: AiOutlineFileText
+                description: Docs
+    - id: btn_desc_text
+      type: Button
+      layout:
+        flex: 0 0 auto
       properties:
-        description: Chat
-        shape: square
-        type: primary
+        title: Text Only
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: set_desc_text
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                shape: square
+                type: primary
+                description: Chat
 
 - title: Badge
   blocks:
-    - id: badge_count
-      type: FloatButton
-      style:
-        --element:
-          position: relative
-          insetInlineEnd: auto
-          insetBlockEnd: auto
-      properties:
-        icon: AiOutlineBell
-        tooltip: Notifications
-        badge:
-          count: 5
-    - id: badge_dot
-      type: FloatButton
-      style:
-        --element:
-          position: relative
-          insetInlineEnd: auto
-          insetBlockEnd: auto
-      properties:
-        icon: AiOutlineMail
-        tooltip: Messages
-        badge:
-          dot: true
-    - id: badge_overflow
-      type: FloatButton
-      style:
-        --element:
-          position: relative
-          insetInlineEnd: auto
-          insetBlockEnd: auto
-      properties:
-        icon: AiOutlineInbox
-        tooltip: Inbox
-        badge:
-          count: 99
-          overflowCount: 50
-
-- title: Href and Target
-  blocks:
-    - id: href_basic
-      type: FloatButton
-      style:
-        --element:
-          position: relative
-          insetInlineEnd: auto
-          insetBlockEnd: auto
-      properties:
-        icon: AiOutlineLink
-        tooltip: Open Lowdefy
-        href: https://lowdefy.com
-    - id: href_blank
-      type: FloatButton
-      style:
-        --element:
-          position: relative
-          insetInlineEnd: auto
-          insetBlockEnd: auto
-      properties:
-        icon: AiOutlineGlobal
-        tooltip: Open in new tab
-        href: https://docs.lowdefy.com
-        target: _blank
-    - id: href_primary
-      type: FloatButton
-      style:
-        --element:
-          position: relative
-          insetInlineEnd: auto
-          insetBlockEnd: auto
-      properties:
-        icon: AiOutlineFileText
-        tooltip: View documentation
-        href: https://docs.lowdefy.com
-        target: _blank
-        type: primary
-
-- title: HTML Type
-  blocks:
-    - id: htmltype_button
-      type: FloatButton
-      style:
-        --element:
-          position: relative
-          insetInlineEnd: auto
-          insetBlockEnd: auto
-      properties:
-        icon: AiOutlineQuestionCircle
-        tooltip: Button (default)
-        htmlType: button
-    - id: htmltype_submit
-      type: FloatButton
-      style:
-        --element:
-          position: relative
-          insetInlineEnd: auto
-          insetBlockEnd: auto
-      properties:
-        icon: AiOutlineCheck
-        tooltip: Submit type
-        htmlType: submit
-        type: primary
-    - id: htmltype_reset
-      type: FloatButton
-      style:
-        --element:
-          position: relative
-          insetInlineEnd: auto
-          insetBlockEnd: auto
-      properties:
-        icon: AiOutlineUndo
-        tooltip: Reset type
-        htmlType: reset
-
-- title: Style and CSS
-  blocks:
-    - id: css_shadow
-      type: FloatButton
-      class: shadow-xl
-      style:
-        --element:
-          position: relative
-          insetInlineEnd: auto
-          insetBlockEnd: auto
-      properties:
-        icon: AiOutlineStar
-        tooltip: Shadow
-    - id: css_opacity
-      type: FloatButton
-      style:
-        --element:
-          position: relative
-          insetInlineEnd: auto
-          insetBlockEnd: auto
-          opacity: 0.6
-      properties:
-        icon: AiOutlineEye
-        tooltip: Reduced opacity
-    - id: css_ring
-      type: FloatButton
-      class: ring-2 ring-blue-400
-      style:
-        --element:
-          position: relative
-          insetInlineEnd: auto
-          insetBlockEnd: auto
-      properties:
-        icon: AiOutlinePlus
-        tooltip: Ring highlight
-        type: primary
-    - id: css_on_dark_bg
-      type: Box
-      class: bg-gradient-to-r from-slate-900 to-slate-700 p-4 rounded-lg
+    - id: btn_badge_count
+      type: Button
       layout:
-        gap: 8
-      blocks:
-        - id: css_on_dark
-          type: FloatButton
-          style:
-            --element:
-              position: relative
-              insetInlineEnd: auto
-              insetBlockEnd: auto
-          properties:
-            icon: AiOutlineBulb
-            tooltip: On dark background
-            type: primary
+        flex: 0 0 auto
+      properties:
+        title: Count
+        color: default
+        variant: outlined
+        icon: AiOutlineBell
+      events:
+        onClick:
+          - id: set_badge_count
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                icon: AiOutlineBell
+                tooltip: Notifications
+                badge:
+                  count: 5
+    - id: btn_badge_dot
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Dot
+        color: default
+        variant: outlined
+        icon: AiOutlineMail
+      events:
+        onClick:
+          - id: set_badge_dot
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                icon: AiOutlineMail
+                tooltip: Messages
+                badge:
+                  dot: true
+    - id: btn_badge_overflow
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Overflow
+        color: default
+        variant: outlined
+        icon: AiOutlineInbox
+      events:
+        onClick:
+          - id: set_badge_overflow
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                icon: AiOutlineInbox
+                tooltip: Inbox
+                badge:
+                  count: 99
+                  overflowCount: 50
+
+- title: Href
+  blocks:
+    - id: btn_href_link
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Link
+        color: default
+        variant: outlined
+        icon: AiOutlineLink
+      events:
+        onClick:
+          - id: set_href_link
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                icon: AiOutlineLink
+                tooltip: Open Lowdefy (new tab)
+                href: https://lowdefy.com
+                target: _blank
+    - id: btn_href_docs
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Docs Link
+        color: primary
+        variant: outlined
+        icon: AiOutlineFileText
+      events:
+        onClick:
+          - id: set_href_docs
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                type: primary
+                icon: AiOutlineFileText
+                tooltip: View documentation (new tab)
+                href: https://docs.lowdefy.com
+                target: _blank
 
 - title: Theme Token Overrides
   blocks:
-    - id: theme_green
-      type: FloatButton
-      style:
-        --element:
-          position: relative
-          insetInlineEnd: auto
-          insetBlockEnd: auto
+    - id: btn_theme_green
+      type: Button
+      layout:
+        flex: 0 0 auto
       properties:
+        title: Green
+        color: primary
+        variant: outlined
         icon: AiOutlineCheck
-        tooltip: Green primary
-        type: primary
-        theme:
-          colorPrimary: '#52c41a'
-          colorPrimaryHover: '#73d13d'
-    - id: theme_dark_bg
-      type: FloatButton
-      style:
-        --element:
-          position: relative
-          insetInlineEnd: auto
-          insetBlockEnd: auto
-      properties:
-        icon: AiOutlineSetting
-        tooltip: Dark background
-        theme:
-          colorBgElevated: '#1f1f1f'
-          colorText: '#ffffff'
-    - id: theme_large
-      type: FloatButton
-      style:
-        --element:
-          position: relative
-          insetInlineEnd: auto
-          insetBlockEnd: auto
-      properties:
-        icon: AiOutlinePlus
-        tooltip: Large button
-        type: primary
-        theme:
-          controlHeightLG: 56
-          fontSizeIcon: 24
-    - id: theme_custom_badge
-      type: FloatButton
-      style:
-        --element:
-          position: relative
-          insetInlineEnd: auto
-          insetBlockEnd: auto
-      properties:
-        icon: AiOutlineBell
-        tooltip: Custom badge color
-        badge:
-          count: 3
-        theme:
-          badgeColor: '#722ed1'
-          dotSize: 12
-
-- title: FloatButton in Dashboard
-  blocks:
-    - id: dashboard_card
-      type: Card
-      properties:
-        title: Sales Overview
-        size: small
-      blocks:
-        - id: dashboard_stats
-          type: Box
-          layout:
-            gap: 16
-          blocks:
-            - id: dashboard_revenue
-              type: Statistic
-              layout:
-                flex: 1 1 auto
-              properties:
-                title: Total Revenue
-                value: 48250
-                prefix: $
-                precision: 0
-            - id: dashboard_orders
-              type: Statistic
-              layout:
-                flex: 1 1 auto
-              properties:
-                title: Orders
-                value: 312
-            - id: dashboard_growth
-              type: Statistic
-              layout:
-                flex: 1 1 auto
-              properties:
-                title: Growth
-                value: 12.5
-                suffix: '%'
-        - id: dashboard_divider
-          type: Divider
-        - id: dashboard_info
-          type: Markdown
-          properties:
-            content: |
-              Updated 5 minutes ago. Use the floating button to export this report or get help.
-        - id: dashboard_float
-          type: FloatButton
-          style:
-            --element:
-              position: relative
-              insetInlineEnd: auto
-              insetBlockEnd: auto
-          properties:
-            icon: AiOutlineDownload
-            tooltip: Export report
-            type: primary
-          events:
-            onClick:
-              - id: dashboard_export_msg
-                type: DisplayMessage
-                params:
-                  content: Report export started
-                  status: success
-
-- title: FloatButton in Help Center
-  blocks:
-    - id: help_card
-      type: Card
-      properties:
-        title: Getting Started
-        size: small
-      blocks:
-        - id: help_content
-          type: Markdown
-          properties:
-            content: |
-              Welcome to the platform. Follow these steps to get started:
-
-              1. **Create a project** - Set up your first Lowdefy project.
-              2. **Add pages** - Define your app layout with pages and blocks.
-              3. **Connect data** - Link to your database or API.
-
-              Need help? Click the floating support button below.
-        - id: help_actions
-          type: Box
-          layout:
-            gap: 8
-            justify: flex-end
-          blocks:
-            - id: help_docs_btn
-              type: Button
-              layout:
-                flex: 0 0 auto
-              properties:
-                title: Read the Docs
-                color: primary
-                variant: outlined
-                icon: AiOutlineFileText
-              events:
-                onClick:
-                  - id: help_docs_link
-                    type: Link
-                    params:
-                      url: https://docs.lowdefy.com
-                      newWindow: true
-            - id: help_float
-              type: FloatButton
-              style:
-                --element:
-                  position: relative
-                  insetInlineEnd: auto
-                  insetBlockEnd: auto
-              properties:
-                icon: AiOutlineCustomerService
-                tooltip: Contact support
+      events:
+        onClick:
+          - id: set_theme_green
+            type: SetState
+            params:
+              float_active: true
+              float_props:
                 type: primary
+                icon: AiOutlineCheck
+                tooltip: Green primary
+                theme:
+                  colorPrimary: '#52c41a'
+                  colorPrimaryHover: '#73d13d'
+    - id: btn_theme_dark
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Dark
+        color: default
+        variant: outlined
+        icon: AiOutlineSetting
+      events:
+        onClick:
+          - id: set_theme_dark
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                icon: AiOutlineSetting
+                tooltip: Dark background
+                theme:
+                  colorBgElevated: '#1f1f1f'
+                  colorText: '#ffffff'
+    - id: btn_theme_large
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Large
+        color: primary
+        variant: outlined
+        icon: AiOutlinePlus
+      events:
+        onClick:
+          - id: set_theme_large
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                type: primary
+                icon: AiOutlinePlus
+                tooltip: Large button
+                theme:
+                  controlHeightLG: 56
+                  fontSizeIcon: 24
+    - id: btn_theme_badge
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Custom Badge
+        color: default
+        variant: outlined
+        icon: AiOutlineBell
+      events:
+        onClick:
+          - id: set_theme_badge
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                icon: AiOutlineBell
+                tooltip: Custom badge color
                 badge:
-                  dot: true
-              events:
-                onClick:
-                  - id: help_support_msg
-                    type: DisplayMessage
-                    params:
-                      content: Opening support chat...
-                      status: info
+                  count: 3
+                theme:
+                  badgeColor: '#722ed1'
+                  dotSize: 12

@@ -766,21 +766,99 @@
                   properties:
                     content: 'Dashboard redesign project'
 
-- title: Avatar in Comment Thread
+- title: Comment Thread
   blocks:
-    - id: comment_card
-      type: Card
-      properties:
-        title: Discussion
-        size: small
+    - id: thread
+      type: Box
+      layout:
+        gap: 0
       blocks:
-        - id: comment_1_row
+        - id: c1
           type: Box
           layout:
             gap: 12
             align: flex-start
+            wrap: nowrap
+          style:
+            --element:
+              padding: 16px 0
           blocks:
-            - id: comment_1_avatar
+            - id: c1_avatar
+              type: Avatar
+              layout:
+                flex: 0 0 auto
+              properties:
+                src: https://api.dicebear.com/7.x/miniavs/svg?seed=sarah
+              style:
+                --element:
+                  border: 2px solid #1677ff
+              events:
+                onClick:
+                  - id: c1_profile
+                    type: DisplayMessage
+                    params:
+                      content: View Sarah Chen's profile
+                      status: info
+            - id: c1_body
+              type: Box
+              layout:
+                flex: 1 1 0
+                gap: 4
+              blocks:
+                - id: c1_header
+                  type: Html
+                  properties:
+                    html: '<b>Sarah Chen</b> <span style="color:#8c8c8c;font-size:13px">&middot; 2h ago</span>'
+                - id: c1_text
+                  type: Span
+                  properties:
+                    content: The new dashboard layout looks great. Can we add a date filter to the reports section?
+                - id: c1_actions
+                  type: Box
+                  layout:
+                    gap: 16
+                  style:
+                    --element:
+                      marginTop: 4
+                  blocks:
+                    - id: c1_like
+                      type: Anchor
+                      layout:
+                        flex: 0 0 auto
+                      properties:
+                        icon: AiOutlineLike
+                        title: Like
+                      style:
+                        --element:
+                          fontSize: 13px
+                          color: '#8c8c8c'
+                    - id: c1_reply
+                      type: Anchor
+                      layout:
+                        flex: 0 0 auto
+                      properties:
+                        icon: AiOutlineMessage
+                        title: Reply
+                      style:
+                        --element:
+                          fontSize: 13px
+                          color: '#8c8c8c'
+        - id: c_divider_1
+          type: Divider
+          style:
+            --element:
+              margin: 0
+        - id: c2
+          type: Box
+          layout:
+            gap: 12
+            align: flex-start
+            wrap: nowrap
+          style:
+            --element:
+              padding: 16px 0
+          blocks:
+            - id: c2_avatar
               type: Avatar
               layout:
                 flex: 0 0 auto
@@ -789,31 +867,71 @@
                 color: '#1677ff'
               events:
                 onClick:
-                  - id: comment_1_click
+                  - id: c2_profile
                     type: DisplayMessage
                     params:
-                      content: Viewing profile for Marcus Reed
+                      content: View Marcus Reed's profile
                       status: info
-            - id: comment_1_body
+            - id: c2_body
               type: Box
               layout:
-                gap: 0
+                flex: 1 1 0
+                gap: 4
               blocks:
-                - id: comment_1_text
-                  type: Markdown
+                - id: c2_header
+                  type: Html
                   properties:
-                    content: '**Marcus Reed** - The new dashboard layout looks great. Can we add a date filter to the reports section?'
-        - id: comment_divider
+                    html: '<b>Marcus Reed</b> <span style="color:#8c8c8c;font-size:13px">&middot; 1h ago</span>'
+                - id: c2_text
+                  type: Span
+                  properties:
+                    content: Good idea! I will add it to the next sprint. Should be ready by Friday.
+                - id: c2_actions
+                  type: Box
+                  layout:
+                    gap: 16
+                  style:
+                    --element:
+                      marginTop: 4
+                  blocks:
+                    - id: c2_like
+                      type: Anchor
+                      layout:
+                        flex: 0 0 auto
+                      properties:
+                        icon: AiOutlineLike
+                        title: Like
+                      style:
+                        --element:
+                          fontSize: 13px
+                          color: '#8c8c8c'
+                    - id: c2_reply
+                      type: Anchor
+                      layout:
+                        flex: 0 0 auto
+                      properties:
+                        icon: AiOutlineMessage
+                        title: Reply
+                      style:
+                        --element:
+                          fontSize: 13px
+                          color: '#8c8c8c'
+        - id: c_divider_2
           type: Divider
-          properties:
-            dashed: true
-        - id: comment_2_row
+          style:
+            --element:
+              margin: 0
+        - id: c3
           type: Box
           layout:
             gap: 12
             align: flex-start
+            wrap: nowrap
+          style:
+            --element:
+              padding: 16px 0
           blocks:
-            - id: comment_2_avatar
+            - id: c3_avatar
               type: Avatar
               layout:
                 flex: 0 0 auto
@@ -821,52 +939,102 @@
                 src: https://api.dicebear.com/7.x/miniavs/svg?seed=elena
               events:
                 onClick:
-                  - id: comment_2_click
+                  - id: c3_profile
                     type: DisplayMessage
                     params:
-                      content: Viewing profile for Elena Torres
+                      content: View Elena Torres's profile
                       status: info
-            - id: comment_2_body
+            - id: c3_body
               type: Box
               layout:
-                gap: 0
+                flex: 1 1 0
+                gap: 4
               blocks:
-                - id: comment_2_text
-                  type: Markdown
+                - id: c3_header
+                  type: Html
                   properties:
-                    content: '**Elena Torres** - Good idea! I will add it to the next sprint. Should be ready by Friday.'
-        - id: comment_input_row
+                    html: '<b>Elena Torres</b> <span style="color:#8c8c8c;font-size:13px">&middot; 45m ago</span>'
+                - id: c3_text
+                  type: Span
+                  properties:
+                    content: "I've started on the date picker component. Quick question \u2014 should it default to the current month or last 30 days?"
+                - id: c3_actions
+                  type: Box
+                  layout:
+                    gap: 16
+                  style:
+                    --element:
+                      marginTop: 4
+                  blocks:
+                    - id: c3_like
+                      type: Anchor
+                      layout:
+                        flex: 0 0 auto
+                      properties:
+                        icon: AiOutlineLike
+                        title: Like
+                      style:
+                        --element:
+                          fontSize: 13px
+                          color: '#8c8c8c'
+                    - id: c3_reply
+                      type: Anchor
+                      layout:
+                        flex: 0 0 auto
+                      properties:
+                        icon: AiOutlineMessage
+                        title: Reply
+                      style:
+                        --element:
+                          fontSize: 13px
+                          color: '#8c8c8c'
+        - id: c_divider_3
+          type: Divider
+          style:
+            --element:
+              margin: 0
+        - id: reply_row
           type: Box
           layout:
-            gap: 8
-            align: center
+            gap: 12
+            align: flex-start
+            wrap: nowrap
+          style:
+            --element:
+              paddingTop: 16
           blocks:
-            - id: comment_my_avatar
+            - id: reply_avatar
               type: Avatar
               layout:
                 flex: 0 0 auto
               properties:
                 icon: AiOutlineUser
                 color: '#52c41a'
-            - id: comment_input
-              type: TextInput
-              properties:
-                label:
-                  disabled: true
-                placeholder: Write a reply...
-            - id: comment_send_btn
-              type: Button
+            - id: reply_body
+              type: Box
               layout:
-                flex: 0 0 auto
-              properties:
-                title: Reply
-                color: primary
-                variant: solid
-                icon: AiOutlineSend
-              events:
-                onClick:
-                  - id: comment_send_msg
-                    type: DisplayMessage
-                    params:
-                      content: Reply posted
-                      status: success
+                flex: 1 1 0
+                gap: 8
+              blocks:
+                - id: reply_input
+                  type: TextInput
+                  properties:
+                    label:
+                      disabled: true
+                    placeholder: Write a reply...
+                - id: reply_btn
+                  type: Button
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Reply
+                    color: primary
+                    variant: solid
+                    icon: AiOutlineSend
+                  events:
+                    onClick:
+                      - id: reply_msg
+                        type: DisplayMessage
+                        params:
+                          content: Reply posted
+                          status: success
