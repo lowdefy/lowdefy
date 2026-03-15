@@ -576,7 +576,7 @@ describe('vars', () => {
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
-    expect(res).toEqual({ ref: null });
+    expect(res).toEqual({ ref: { field: null } });
     expect(context.errors).toHaveLength(1);
     expect(context.errors[0].message).toMatch(
       '_var operator takes a string or object with "key" field as arguments.'
@@ -1842,5 +1842,146 @@ a:
     });
     await expect(buildRefs({ context })).rejects.toThrow('Unexpected programming error');
     expect(context.errors).toHaveLength(0);
+  });
+});
+
+describe('parallel resolution', () => {
+  test('wide array resolves all siblings in correct positions', async () => {
+    const count = 20;
+    const pageRefs = Array.from(
+      { length: count },
+      (_, i) => `  - _ref: page-${String(i + 1).padStart(2, '0')}.yaml`
+    ).join('\n');
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `pages:\n${pageRefs}`,
+      },
+      ...Array.from({ length: count }, (_, i) => ({
+        path: `page-${String(i + 1).padStart(2, '0')}.yaml`,
+        content: `id: page-${String(i + 1).padStart(2, '0')}`,
+      })),
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(res.pages).toHaveLength(count);
+    for (let i = 0; i < count; i++) {
+      expect(res.pages[i]).toEqual({ id: `page-${String(i + 1).padStart(2, '0')}` });
+    }
+  });
+
+  test('wide object resolves all sibling keys correctly', async () => {
+    const keys = Array.from({ length: 10 }, (_, i) => `key${i + 1}`);
+    const yamlLines = keys.map((k) => `${k}:\n  _ref: ${k}.yaml`).join('\n');
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: yamlLines,
+      },
+      ...keys.map((k) => ({
+        path: `${k}.yaml`,
+        content: `value: ${k}`,
+      })),
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    for (const k of keys) {
+      expect(res[k]).toEqual({ value: k });
+    }
+  });
+
+  test('multiple errors collected from sibling refs with missing files', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+items:
+  - _ref: missing-1.yaml
+  - _ref: exists.yaml
+  - _ref: missing-2.yaml`,
+      },
+      {
+        path: 'exists.yaml',
+        content: 'id: exists',
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(res.items[0]).toBeNull();
+    expect(res.items[1]).toEqual({ id: 'exists' });
+    expect(res.items[2]).toBeNull();
+    expect(context.errors).toHaveLength(2);
+    expect(context.errors.some((e) => e.message.includes('missing-1.yaml'))).toBe(true);
+    expect(context.errors.some((e) => e.message.includes('missing-2.yaml'))).toBe(true);
+  });
+
+  test('malformed _var errors collected from siblings alongside valid refs', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+items:
+  - _var: 42
+  - _ref: valid.yaml
+  - _var:
+    - 1
+    - 2`,
+      },
+      {
+        path: 'valid.yaml',
+        content: 'id: valid',
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(res.items[0]).toBeNull();
+    expect(res.items[1]).toEqual({ id: 'valid' });
+    expect(res.items[2]).toBeNull();
+    expect(context.errors).toHaveLength(2);
+    expect(
+      context.errors.every((e) =>
+        e.message.includes('_var operator takes a string or object with "key" field')
+      )
+    ).toBe(true);
+  });
+
+  test('nested parallel resolves refs inside refs correctly', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+root:
+  _ref: parent.yaml`,
+      },
+      {
+        path: 'parent.yaml',
+        content: `
+a:
+  _ref: child-a.yaml
+b:
+  _ref: child-b.yaml
+c:
+  _ref: child-c.yaml`,
+      },
+      {
+        path: 'child-a.yaml',
+        content: 'value: a',
+      },
+      {
+        path: 'child-b.yaml',
+        content: 'value: b',
+      },
+      {
+        path: 'child-c.yaml',
+        content: 'value: c',
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(res.root).toEqual({
+      a: { value: 'a' },
+      b: { value: 'b' },
+      c: { value: 'c' },
+    });
   });
 });
