@@ -14,6 +14,7 @@ New `Search` display block provides a full-text search command palette (Cmd+K / 
 - **Term highlighting**: Matched search terms highlighted in results
 - **Recent searches**: localStorage-backed search history with configurable count
 - **14 CSS slots**: Full style customization via `styles`/`classNames` (trigger, modal, input, results, groups, highlights)
+- **Analytics-friendly events**: `onSelect` passes the result item, search `query`, and `resultCount` for click-through tracking; `onSearch` passes the search term and result count on each query change
 
 ### Docs app integration
 
