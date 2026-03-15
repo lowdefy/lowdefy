@@ -76,15 +76,16 @@ test.describe('NumberInput Block', () => {
 
   test('hides controls when controls is false', async ({ page }) => {
     const block = getBlock(page, 'numberinput_no_controls');
-    const handler = block.locator('.ant-input-number-handler-wrap');
-    await expect(handler).toBeHidden();
+    // antd v6 uses .ant-input-number-actions instead of .ant-input-number-handler-wrap
+    const handler = block.locator('.ant-input-number-actions');
+    await expect(handler).toHaveCount(0);
   });
 
   test('shows controls when controls is true', async ({ page }) => {
     const block = getBlock(page, 'numberinput_controls');
-    // Hover to show controls
+    // Hover to show controls - antd v6 uses .ant-input-number-actions
     await block.hover();
-    const handler = block.locator('.ant-input-number-handler-wrap');
+    const handler = block.locator('.ant-input-number-actions');
     await expect(handler).toBeVisible();
   });
 
@@ -94,7 +95,11 @@ test.describe('NumberInput Block', () => {
 
   test('onChange event fires when typing', async ({ page }) => {
     const input = getInput(page, 'numberinput_onchange');
-    await input.fill('123');
+    // antd v6 InputNumber: use click + keyboard typing instead of fill
+    await input.click();
+    await input.press('Control+a');
+    await page.keyboard.type('123');
+    await input.press('Enter');
 
     const display = getBlock(page, 'onchange_display');
     await expect(display).toHaveText('Value: 123');
@@ -103,8 +108,9 @@ test.describe('NumberInput Block', () => {
   test('onBlur event fires when input loses focus', async ({ page }) => {
     const input = getInput(page, 'numberinput_onblur');
 
-    await input.focus();
-    await input.blur();
+    await input.click();
+    // Click elsewhere to blur
+    await page.click('body');
 
     const display = getBlock(page, 'onblur_display');
     await expect(display).toHaveText('Blur fired');
@@ -112,7 +118,7 @@ test.describe('NumberInput Block', () => {
 
   test('onFocus event fires when input gains focus', async ({ page }) => {
     const input = getInput(page, 'numberinput_onfocus');
-    await input.focus();
+    await input.click();
 
     const display = getBlock(page, 'onfocus_display');
     await expect(display).toHaveText('Focus fired');
@@ -120,7 +126,7 @@ test.describe('NumberInput Block', () => {
 
   test('onPressEnter event fires when Enter is pressed', async ({ page }) => {
     const input = getInput(page, 'numberinput_onpressenter');
-    await input.focus();
+    await input.click();
     await page.keyboard.press('Enter');
 
     const display = getBlock(page, 'onpressenter_display');
@@ -133,7 +139,11 @@ test.describe('NumberInput Block', () => {
 
   test('can type number into input', async ({ page }) => {
     const input = getInput(page, 'numberinput_typing');
-    await input.fill('99');
+    // antd v6 InputNumber: use click + keyboard typing instead of fill
+    await input.click();
+    await input.press('Control+a');
+    await page.keyboard.type('99');
+    await input.press('Enter');
 
     const display = getBlock(page, 'typing_display');
     await expect(display).toHaveText('Typed: 99');
@@ -146,11 +156,11 @@ test.describe('NumberInput Block', () => {
     // Initial value is 10
     await expect(input).toHaveValue('10');
 
-    // Hover to show controls
+    // Hover to show controls - antd v6 uses .ant-input-number-action-up
     await block.hover();
 
     // Click up handler
-    const upHandler = block.locator('.ant-input-number-handler-up');
+    const upHandler = block.locator('.ant-input-number-action-up');
     await upHandler.click();
 
     // Value should be incremented
@@ -164,11 +174,11 @@ test.describe('NumberInput Block', () => {
     // Initial value is 10
     await expect(input).toHaveValue('10');
 
-    // Hover to show controls
+    // Hover to show controls - antd v6 uses .ant-input-number-action-down
     await block.hover();
 
     // Click down handler
-    const downHandler = block.locator('.ant-input-number-handler-down');
+    const downHandler = block.locator('.ant-input-number-action-down');
     await downHandler.click();
 
     // Value should be decremented

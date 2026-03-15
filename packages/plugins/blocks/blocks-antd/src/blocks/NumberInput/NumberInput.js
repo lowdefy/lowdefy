@@ -27,6 +27,7 @@ const NumberInput = ({
   events,
   components,
   loading,
+  methods,
   properties,
   required,
   styles = {},

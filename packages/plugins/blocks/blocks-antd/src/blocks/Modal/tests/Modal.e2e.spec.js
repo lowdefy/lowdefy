@@ -41,7 +41,7 @@ test.describe('Modal Block', () => {
 
     // Wait for modal to appear - Ant Design Modal renders in a portal
     // It may take a moment for the animation
-    const modal = page.locator('.ant-modal-content');
+    const modal = page.locator('.ant-modal-container');
     await expect(modal).toBeVisible({ timeout: 10000 });
     await expect(page.locator('.ant-modal-title')).toHaveText('Basic Modal');
     await expect(page.locator('.ant-modal-body')).toContainText('This is the modal content.');
@@ -204,7 +204,7 @@ test.describe('Modal Block', () => {
     const toggleBtn = getBlock(page, 'toggle_modal').locator('.ant-btn');
 
     // Modal should be closed initially
-    const modal = page.locator('.ant-modal-content');
+    const modal = page.locator('.ant-modal-container');
     await expect(modal).toBeHidden();
 
     // Toggle open

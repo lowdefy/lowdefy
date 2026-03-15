@@ -42,12 +42,14 @@ blocks:
       title: Account Balance
       value: 1234.5678
       precision: 2
+      groupSeparator: ''
 
   - id: statistic_no_precision
     type: Statistic
     properties:
       title: Raw Value
       value: 1234.5678
+      groupSeparator: ''
 
   # ============================================
   # PREFIX/SUFFIX TESTS
@@ -98,6 +100,7 @@ blocks:
       title: Price
       value: 1234.56
       decimalSeparator: ','
+      groupSeparator: ''
       precision: 2
 
   # ============================================

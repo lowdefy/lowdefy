@@ -26,7 +26,7 @@ export default createBlockHelper({
   },
   expect: {
     message: (page, blockId, text) =>
-      expect(locator(page, blockId).locator('.ant-alert-message')).toHaveText(text),
+      expect(locator(page, blockId).locator('.ant-alert-title')).toHaveText(text),
     description: (page, blockId, text) =>
       expect(locator(page, blockId).locator('.ant-alert-description')).toHaveText(text),
     type: (page, blockId, type) =>

@@ -54,9 +54,9 @@ test.describe('Carousel Block', () => {
     const carousel = getCarousel(page, 'carousel_dots_left');
     await expect(carousel).toBeVisible();
 
-    // Left position class
+    // Left position class (antd v6 maps 'left' to 'start')
     const dots = getDots(carousel);
-    await expect(dots).toHaveClass(/slick-dots-left/);
+    await expect(dots).toHaveClass(/slick-dots-start/);
   });
 
   test('renders dots on top position', async ({ page }) => {
