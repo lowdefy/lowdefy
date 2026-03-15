@@ -38,6 +38,7 @@ packages/utils/node-utils/test/copyFile/**
 app/**
 
 packages/docs/public/sitemap.xml
+packages/docs/public/search-index.json
 packages/website/public/sitemap.xml
 
 lerna-debug.log
