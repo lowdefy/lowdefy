@@ -1,0 +1,418 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Sizes
+  blocks:
+    - id: size_small
+      type: PasswordInput
+      properties:
+        title: Small
+        size: small
+        placeholder: Enter password
+    - id: size_default
+      type: PasswordInput
+      properties:
+        title: Default
+        placeholder: Enter password
+    - id: size_large
+      type: PasswordInput
+      properties:
+        title: Large
+        size: large
+        placeholder: Enter password
+
+- title: Visibility Toggle
+  blocks:
+    - id: toggle_on
+      type: PasswordInput
+      properties:
+        title: With Visibility Toggle (default)
+        visibilityToggle: true
+        placeholder: Click the eye icon to reveal
+    - id: toggle_off
+      type: PasswordInput
+      properties:
+        title: Without Visibility Toggle
+        visibilityToggle: false
+        placeholder: Password cannot be revealed
+    - id: toggle_disabled
+      type: PasswordInput
+      properties:
+        title: Disabled With Toggle
+        disabled: true
+        visibilityToggle: true
+        placeholder: Toggle also disabled
+
+- title: Placeholder Variations
+  blocks:
+    - id: placeholder_default
+      type: PasswordInput
+      properties:
+        title: Default Placeholder
+        placeholder: Enter your password
+    - id: placeholder_hint
+      type: PasswordInput
+      properties:
+        title: Descriptive Placeholder
+        placeholder: Must be at least 8 characters
+    - id: placeholder_none
+      type: PasswordInput
+      properties:
+        title: No Placeholder
+
+- title: Disabled State
+  blocks:
+    - id: disabled_empty
+      type: PasswordInput
+      properties:
+        title: Disabled (empty)
+        disabled: true
+        placeholder: Cannot edit
+    - id: disabled_no_toggle
+      type: PasswordInput
+      properties:
+        title: Disabled Without Toggle
+        disabled: true
+        visibilityToggle: false
+        placeholder: No toggle, no edit
+
+- title: Borderless Variant
+  blocks:
+    - id: borderless_default
+      type: PasswordInput
+      properties:
+        title: Borderless
+        bordered: false
+        placeholder: No border style
+    - id: borderless_disabled
+      type: PasswordInput
+      properties:
+        title: Disabled + Borderless
+        disabled: true
+        bordered: false
+        placeholder: Disabled and borderless
+
+- title: AutoFocus
+  blocks:
+    - id: autofocus_on
+      type: PasswordInput
+      properties:
+        title: AutoFocus Enabled
+        autoFocus: true
+        placeholder: This input is focused on load
+    - id: autofocus_off
+      type: PasswordInput
+      properties:
+        title: AutoFocus Disabled (default)
+        autoFocus: false
+        placeholder: Normal focus behavior
+
+- title: Label Options
+  blocks:
+    - id: label_default
+      type: PasswordInput
+      properties:
+        title: Default Label
+        placeholder: Default label above
+    - id: label_custom_title
+      type: PasswordInput
+      properties:
+        title: '<b>Bold</b> Label Title'
+        placeholder: Label supports html
+    - id: label_no_colon
+      type: PasswordInput
+      properties:
+        title: No Colon
+        label:
+          colon: false
+        placeholder: Label without colon
+    - id: label_right_align
+      type: PasswordInput
+      properties:
+        title: Right Aligned
+        label:
+          align: right
+          inline: true
+          span: 8
+        placeholder: Label aligned right
+    - id: label_disabled
+      type: PasswordInput
+      properties:
+        title: Hidden Label
+        label:
+          disabled: true
+        placeholder: Label is hidden
+
+- title: Label Inline
+  blocks:
+    - id: inline_default
+      type: PasswordInput
+      properties:
+        title: Inline Label
+        label:
+          inline: true
+          span: 6
+        placeholder: Inline layout
+    - id: inline_right
+      type: PasswordInput
+      properties:
+        title: Inline Right
+        label:
+          inline: true
+          span: 6
+          align: right
+        placeholder: Label aligned right
+    - id: inline_wide
+      type: PasswordInput
+      properties:
+        title: Wide Label Span
+        label:
+          inline: true
+          span: 10
+        placeholder: Wider label column
+
+- title: Label Extra & Feedback
+  blocks:
+    - id: label_extra
+      type: PasswordInput
+      properties:
+        title: With Extra Text
+        label:
+          extra: Use at least 8 characters with a mix of letters, numbers & symbols.
+        placeholder: Enter a strong password
+    - id: label_extra_html
+      type: PasswordInput
+      properties:
+        title: Extra With HTML
+        label:
+          extra: '<span style="color: #888;">Tip: avoid using personal information.</span>'
+        placeholder: Choose wisely
+    - id: label_no_feedback
+      type: PasswordInput
+      properties:
+        title: No Validation Feedback
+        label:
+          hasFeedback: false
+        placeholder: Feedback text hidden
+
+- title: CSS Styles & Class Names
+  blocks:
+    - id: style_element
+      type: PasswordInput
+      properties:
+        title: Custom Element Style
+        placeholder: Custom border and background
+      style:
+        --element:
+          borderColor: '#722ed1'
+          backgroundColor: '#f9f0ff'
+    - id: style_label
+      type: PasswordInput
+      properties:
+        title: Custom Label Style
+        placeholder: Styled label above
+      style:
+        --label:
+          color: '#1677ff'
+          fontWeight: bold
+          fontSize: 16
+    - id: style_extra
+      type: PasswordInput
+      properties:
+        title: Styled Extra
+        label:
+          extra: This extra text is styled.
+        placeholder: Enter password
+      style:
+        --extra:
+          color: '#fa8c16'
+          fontStyle: italic
+    - id: style_feedback
+      type: PasswordInput
+      properties:
+        title: Styled Feedback
+        label:
+          hasFeedback: true
+        placeholder: Enter password
+      style:
+        --feedback:
+          color: '#52c41a'
+          fontWeight: bold
+    - id: class_element
+      type: PasswordInput
+      class: rounded-lg shadow-md
+      properties:
+        title: With Tailwind Classes
+        placeholder: Rounded shadow input
+    - id: class_custom
+      type: PasswordInput
+      class: border-2 border-blue-400
+      properties:
+        title: Custom Border Class
+        placeholder: Blue border class
+
+- title: Combined State Examples
+  blocks:
+    - id: combo_large_no_toggle
+      type: PasswordInput
+      properties:
+        title: Large + No Toggle + Borderless
+        size: large
+        visibilityToggle: false
+        bordered: false
+        placeholder: Large borderless no toggle
+    - id: combo_small_disabled_toggle
+      type: PasswordInput
+      properties:
+        title: Small + Disabled + Toggle
+        size: small
+        disabled: true
+        visibilityToggle: true
+        placeholder: Small disabled with toggle
+
+- title: Theme Token Overrides
+  blocks:
+    - id: theme_large_radius
+      type: PasswordInput
+      properties:
+        title: Large Border Radius
+        placeholder: Rounded corners
+        theme:
+          borderRadius: 16
+    - id: theme_purple
+      type: PasswordInput
+      properties:
+        title: Purple Theme
+        placeholder: Purple accented input
+        theme:
+          activeBorderColor: '#722ed1'
+          hoverBorderColor: '#9254de'
+          activeShadow: '0 0 0 2px rgba(114, 46, 209, 0.2)'
+    - id: theme_large_pill
+      type: PasswordInput
+      properties:
+        title: Pill Input
+        size: large
+        placeholder: Pill shaped password input
+        theme:
+          borderRadius: 32
+          borderRadiusLG: 32
+          paddingInlineLG: 20
+    - id: theme_font_padding
+      type: PasswordInput
+      properties:
+        title: Large Font & Extra Padding
+        placeholder: More spacious input
+        theme:
+          fontSize: 18
+          paddingBlock: 8
+          paddingInline: 16
+    - id: theme_inline_pink
+      type: PasswordInput
+      properties:
+        title: Themed Inline
+        label:
+          inline: true
+          span: 6
+        placeholder: Themed inline input
+        theme:
+          activeBorderColor: '#eb2f96'
+          activeShadow: '0 0 0 2px rgba(235, 47, 150, 0.2)'
+          borderRadius: 12
+
+- title: PasswordInput in Login Form
+  blocks:
+    - id: login_card
+      type: Card
+      properties:
+        title: Login
+      blocks:
+        - id: login_username
+          type: TextInput
+          required: true
+          properties:
+            title: Username
+            placeholder: Enter your username
+            prefixIcon: AiOutlineUser
+        - id: login_password
+          type: PasswordInput
+          required: true
+          properties:
+            title: Password
+            placeholder: Enter your password
+            visibilityToggle: true
+            label:
+              extra: Must be at least 8 characters.
+        - id: login_submit_btn
+          type: Button
+          properties:
+            title: Sign In
+            icon: AiOutlineLogin
+            type: primary
+            size: large
+            block: true
+          events:
+            onClick:
+              - id: login_validate
+                type: Validate
+              - id: login_success_message
+                type: DisplayMessage
+                params:
+                  content: Login successful!
+                  duration: 3
+
+- title: PasswordInput in Account Security
+  blocks:
+    - id: applied2_security_card
+      type: Card
+      properties:
+        title: Change Password
+      blocks:
+        - id: applied2_current_password
+          type: PasswordInput
+          properties:
+            title: Current Password
+            placeholder: Enter your current password
+            visibilityToggle: true
+        - id: applied2_new_password
+          type: PasswordInput
+          properties:
+            title: New Password
+            placeholder: Enter a new password
+            visibilityToggle: true
+            label:
+              extra: Use at least 8 characters with a mix of letters, numbers, and symbols.
+        - id: applied2_confirm_password
+          type: PasswordInput
+          properties:
+            title: Confirm New Password
+            placeholder: Re-enter your new password
+            visibilityToggle: true
+            label:
+              extra: Must match the new password above.
+        - id: applied2_save_password_btn
+          type: Button
+          properties:
+            title: Update Password
+            icon: AiOutlineLock
+            type: primary
+            size: large
+            block: true
+          events:
+            onClick:
+              - id: save_password_action
+                type: DisplayMessage
+                params:
+                  content: Your password has been updated successfully.
+                  duration: 3

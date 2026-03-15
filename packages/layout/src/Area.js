@@ -15,33 +15,47 @@
 */
 
 import React from 'react';
-import { Row } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-utils';
-
-import gutterSetup from './gutterSetup.js';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import layoutParamsToArea from './layoutParamsToArea.js';
+import deriveAreaStyle from './deriveAreaStyle.js';
 
-const Area = ({ area = {}, areaKey, areaStyle, children, id, layout, makeCssClass }) => {
+const ALIGN_MAP = {
+  top: 'flex-start',
+  middle: 'center',
+  bottom: 'flex-end',
+  stretch: 'stretch',
+};
+
+const JUSTIFY_MAP = {
+  start: 'flex-start',
+  center: 'center',
+  end: 'flex-end',
+  'space-between': 'space-between',
+  'space-around': 'space-around',
+  'space-evenly': 'space-evenly',
+};
+
+const Area = ({ area = {}, areaKey, children, id, layout, className, style }) => {
   const derivedArea = layoutParamsToArea({ area, areaKey, layout });
+  const gapStyle = deriveAreaStyle(derivedArea);
+
   return (
-    <Row
+    <div
       id={id}
-      align={derivedArea.align}
-      className={makeCssClass(areaStyle)}
-      gutter={gutterSetup(derivedArea.gutter)}
-      justify={derivedArea.justify}
+      className={['lf-row', className].filter(Boolean).join(' ')}
       style={{
-        // antd keeps bottom margin which can cause overflow issues.
+        ...gapStyle,
+        alignItems: ALIGN_MAP[derivedArea.align],
+        justifyContent: JUSTIFY_MAP[derivedArea.justify],
         flexDirection: derivedArea.direction,
-        flexWrap: derivedArea.wrap,
+        flexWrap: derivedArea.wrap ?? 'wrap',
         overflow: derivedArea.overflow,
+        ...style,
       }}
     >
       {children}
-    </Row>
+    </div>
   );
 };
 
-Area.defaultProps = blockDefaultProps;
-
-export default Area;
+export default withBlockDefaults(Area);

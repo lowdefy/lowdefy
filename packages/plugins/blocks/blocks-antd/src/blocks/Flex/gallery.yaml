@@ -1,0 +1,1420 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic Horizontal
+  blocks:
+    - id: flex_basic
+      type: Flex
+      properties:
+        gap: 8
+      blocks:
+        - id: flex_basic_btn1
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: One
+            color: primary
+            variant: solid
+        - id: flex_basic_btn2
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Two
+            color: primary
+            variant: outlined
+        - id: flex_basic_btn3
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Three
+            color: primary
+            variant: dashed
+
+- title: Vertical Layout
+  blocks:
+    - id: flex_vertical
+      type: Flex
+      properties:
+        vertical: true
+        gap: 12
+      blocks:
+        - id: flex_vert_card1
+          type: Card
+          properties:
+            title: First
+            size: small
+          blocks:
+            - id: flex_vert_card1_p
+              type: Paragraph
+              properties:
+                content: Stacked vertically.
+        - id: flex_vert_card2
+          type: Card
+          properties:
+            title: Second
+            size: small
+          blocks:
+            - id: flex_vert_card2_p
+              type: Paragraph
+              properties:
+                content: Below the first card.
+        - id: flex_vert_card3
+          type: Card
+          properties:
+            title: Third
+            size: small
+          blocks:
+            - id: flex_vert_card3_p
+              type: Paragraph
+              properties:
+                content: Below the second card.
+
+- title: Gap Presets
+  blocks:
+    - id: flex_gap_small_label
+      type: Markdown
+      properties:
+        content: '**gap: small (8px)**'
+    - id: flex_gap_small
+      type: Flex
+      properties:
+        gap: small
+      blocks:
+        - id: flex_gs_1
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Tag A
+            color: blue
+        - id: flex_gs_2
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Tag B
+            color: blue
+        - id: flex_gs_3
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Tag C
+            color: blue
+    - id: flex_gap_middle_label
+      type: Markdown
+      properties:
+        content: '**gap: middle (16px)**'
+    - id: flex_gap_middle
+      type: Flex
+      properties:
+        gap: middle
+      blocks:
+        - id: flex_gm_1
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Tag A
+            color: green
+        - id: flex_gm_2
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Tag B
+            color: green
+        - id: flex_gm_3
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Tag C
+            color: green
+    - id: flex_gap_large_label
+      type: Markdown
+      properties:
+        content: '**gap: large (24px)**'
+    - id: flex_gap_large
+      type: Flex
+      properties:
+        gap: large
+      blocks:
+        - id: flex_gl_1
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Tag A
+            color: orange
+        - id: flex_gl_2
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Tag B
+            color: orange
+        - id: flex_gl_3
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Tag C
+            color: orange
+    - id: flex_gap_custom_label
+      type: Markdown
+      properties:
+        content: '**gap: 40 (custom number)**'
+    - id: flex_gap_custom
+      type: Flex
+      properties:
+        gap: 40
+      blocks:
+        - id: flex_gc_1
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Tag A
+            color: purple
+        - id: flex_gc_2
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Tag B
+            color: purple
+        - id: flex_gc_3
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Tag C
+            color: purple
+
+- title: Justify Content
+  fullWidth: true
+  blocks:
+    - id: flex_j_start_label
+      type: Markdown
+      properties:
+        content: '**justify: flex-start**'
+    - id: flex_j_start
+      type: Flex
+      class: bg-gray-50 p-2 rounded
+      properties:
+        justify: flex-start
+        gap: 8
+      blocks:
+        - id: flex_js_1
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: A
+            color: primary
+            variant: solid
+            size: small
+        - id: flex_js_2
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: B
+            color: primary
+            variant: solid
+            size: small
+        - id: flex_js_3
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: C
+            color: primary
+            variant: solid
+            size: small
+    - id: flex_j_center_label
+      type: Markdown
+      properties:
+        content: '**justify: center**'
+    - id: flex_j_center
+      type: Flex
+      class: bg-gray-50 p-2 rounded
+      properties:
+        justify: center
+        gap: 8
+      blocks:
+        - id: flex_jc_1
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: A
+            color: blue
+            variant: solid
+            size: small
+        - id: flex_jc_2
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: B
+            color: blue
+            variant: solid
+            size: small
+        - id: flex_jc_3
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: C
+            color: blue
+            variant: solid
+            size: small
+    - id: flex_j_end_label
+      type: Markdown
+      properties:
+        content: '**justify: flex-end**'
+    - id: flex_j_end
+      type: Flex
+      class: bg-gray-50 p-2 rounded
+      properties:
+        justify: flex-end
+        gap: 8
+      blocks:
+        - id: flex_je_1
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: A
+            color: green
+            variant: solid
+            size: small
+        - id: flex_je_2
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: B
+            color: green
+            variant: solid
+            size: small
+        - id: flex_je_3
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: C
+            color: green
+            variant: solid
+            size: small
+    - id: flex_j_between_label
+      type: Markdown
+      properties:
+        content: '**justify: space-between**'
+    - id: flex_j_between
+      type: Flex
+      class: bg-gray-50 p-2 rounded
+      properties:
+        justify: space-between
+      blocks:
+        - id: flex_jb_1
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: A
+            color: orange
+            variant: solid
+            size: small
+        - id: flex_jb_2
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: B
+            color: orange
+            variant: solid
+            size: small
+        - id: flex_jb_3
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: C
+            color: orange
+            variant: solid
+            size: small
+    - id: flex_j_around_label
+      type: Markdown
+      properties:
+        content: '**justify: space-around**'
+    - id: flex_j_around
+      type: Flex
+      class: bg-gray-50 p-2 rounded
+      properties:
+        justify: space-around
+      blocks:
+        - id: flex_ja_1
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: A
+            color: purple
+            variant: solid
+            size: small
+        - id: flex_ja_2
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: B
+            color: purple
+            variant: solid
+            size: small
+        - id: flex_ja_3
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: C
+            color: purple
+            variant: solid
+            size: small
+    - id: flex_j_evenly_label
+      type: Markdown
+      properties:
+        content: '**justify: space-evenly**'
+    - id: flex_j_evenly
+      type: Flex
+      class: bg-gray-50 p-2 rounded
+      properties:
+        justify: space-evenly
+      blocks:
+        - id: flex_jev_1
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: A
+            color: red
+            variant: solid
+            size: small
+        - id: flex_jev_2
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: B
+            color: red
+            variant: solid
+            size: small
+        - id: flex_jev_3
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: C
+            color: red
+            variant: solid
+            size: small
+
+- title: Align Items
+  fullWidth: true
+  blocks:
+    - id: flex_a_start_label
+      type: Markdown
+      properties:
+        content: '**align: flex-start**'
+    - id: flex_a_start
+      type: Flex
+      class: bg-gray-50 p-2 rounded
+      style:
+        --element:
+          minHeight: 80px
+      properties:
+        align: flex-start
+        gap: 8
+      blocks:
+        - id: flex_as_1
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Short
+            color: primary
+            variant: solid
+        - id: flex_as_2
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Tall
+            color: primary
+            variant: solid
+            size: large
+        - id: flex_as_3
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Short
+            color: primary
+            variant: solid
+            size: small
+    - id: flex_a_center_label
+      type: Markdown
+      properties:
+        content: '**align: center**'
+    - id: flex_a_center
+      type: Flex
+      class: bg-gray-50 p-2 rounded
+      style:
+        --element:
+          minHeight: 80px
+      properties:
+        align: center
+        gap: 8
+      blocks:
+        - id: flex_ac_1
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Short
+            color: blue
+            variant: solid
+        - id: flex_ac_2
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Tall
+            color: blue
+            variant: solid
+            size: large
+        - id: flex_ac_3
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Short
+            color: blue
+            variant: solid
+            size: small
+    - id: flex_a_end_label
+      type: Markdown
+      properties:
+        content: '**align: flex-end**'
+    - id: flex_a_end
+      type: Flex
+      class: bg-gray-50 p-2 rounded
+      style:
+        --element:
+          minHeight: 80px
+      properties:
+        align: flex-end
+        gap: 8
+      blocks:
+        - id: flex_ae_1
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Short
+            color: green
+            variant: solid
+        - id: flex_ae_2
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Tall
+            color: green
+            variant: solid
+            size: large
+        - id: flex_ae_3
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Short
+            color: green
+            variant: solid
+            size: small
+    - id: flex_a_stretch_label
+      type: Markdown
+      properties:
+        content: '**align: stretch**'
+    - id: flex_a_stretch
+      type: Flex
+      class: bg-gray-50 p-2 rounded
+      style:
+        --element:
+          minHeight: 80px
+      properties:
+        align: stretch
+        gap: 8
+      blocks:
+        - id: flex_ax_1
+          type: Card
+          layout:
+            flex: 1 1 0
+          properties:
+            size: small
+          blocks:
+            - id: flex_ax_1_p
+              type: Paragraph
+              properties:
+                content: Stretches to fill.
+        - id: flex_ax_2
+          type: Card
+          layout:
+            flex: 1 1 0
+          properties:
+            size: small
+          blocks:
+            - id: flex_ax_2_p
+              type: Paragraph
+              properties:
+                content: Same height as tallest sibling.
+    - id: flex_a_baseline_label
+      type: Markdown
+      properties:
+        content: '**align: baseline**'
+    - id: flex_a_baseline
+      type: Flex
+      class: bg-gray-50 p-2 rounded
+      properties:
+        align: baseline
+        gap: 16
+      blocks:
+        - id: flex_ab_1
+          type: Title
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: Large Title
+            level: 2
+        - id: flex_ab_2
+          type: Paragraph
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: Body text aligned to the same baseline.
+        - id: flex_ab_3
+          type: Title
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: Small
+            level: 5
+
+- title: Wrap
+  fullWidth: true
+  blocks:
+    - id: flex_wrap_label
+      type: Markdown
+      properties:
+        content: '**wrap: true** - items wrap to next line when space runs out'
+    - id: flex_wrap
+      type: Flex
+      class: bg-gray-50 p-2 rounded
+      properties:
+        wrap: true
+        gap: 8
+      blocks:
+        - id: flex_w_1
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Alpha
+            color: primary
+            variant: solid
+        - id: flex_w_2
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Bravo
+            color: blue
+            variant: solid
+        - id: flex_w_3
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Charlie
+            color: green
+            variant: solid
+        - id: flex_w_4
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Delta
+            color: orange
+            variant: solid
+        - id: flex_w_5
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Echo
+            color: purple
+            variant: solid
+        - id: flex_w_6
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Foxtrot
+            color: red
+            variant: solid
+        - id: flex_w_7
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Golf
+            color: cyan
+            variant: solid
+        - id: flex_w_8
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Hotel
+            color: magenta
+            variant: solid
+        - id: flex_w_9
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: India
+            color: gold
+            variant: solid
+        - id: flex_w_10
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Juliet
+            color: lime
+            variant: solid
+
+- title: Flex Shorthand Property
+  fullWidth: true
+  blocks:
+    - id: flex_prop_label
+      type: Markdown
+      properties:
+        content: '**flex** property on the Flex container itself sets the CSS flex shorthand'
+    - id: flex_prop_outer
+      type: Flex
+      properties:
+        gap: 16
+      blocks:
+        - id: flex_prop_grow
+          type: Flex
+          layout:
+            flex: 1 1 0
+          class: bg-blue-50 p-4 rounded
+          properties:
+            flex: 1
+            justify: center
+            align: center
+          blocks:
+            - id: flex_prop_grow_txt
+              type: Paragraph
+              properties:
+                content: flex 1 (grows)
+        - id: flex_prop_fixed
+          type: Flex
+          layout:
+            flex: 0 0 auto
+          class: bg-green-50 p-4 rounded
+          properties:
+            flex: none
+            justify: center
+            align: center
+          blocks:
+            - id: flex_prop_fixed_txt
+              type: Paragraph
+              properties:
+                content: flex none (fixed)
+        - id: flex_prop_grow2
+          type: Flex
+          layout:
+            flex: 2 1 0
+          class: bg-orange-50 p-4 rounded
+          properties:
+            flex: 2
+            justify: center
+            align: center
+          blocks:
+            - id: flex_prop_grow2_txt
+              type: Paragraph
+              properties:
+                content: flex 2 (grows 2x)
+
+- title: Custom Element Type
+  blocks:
+    - id: flex_component_nav
+      type: Flex
+      properties:
+        component: nav
+        gap: 16
+        justify: center
+      blocks:
+        - id: flex_component_nav_link1
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Home
+            color: primary
+            variant: link
+        - id: flex_component_nav_link2
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: About
+            color: primary
+            variant: link
+        - id: flex_component_nav_link3
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Contact
+            color: primary
+            variant: link
+
+- title: Theme Token Overrides
+  blocks:
+    - id: flex_theme_padding
+      type: Flex
+      properties:
+        gap: 12
+        theme:
+          padding: 24
+          margin: 8
+      blocks:
+        - id: flex_theme_padding_btn1
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Custom Padding
+            color: primary
+            variant: solid
+        - id: flex_theme_padding_btn2
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: And Margin
+            color: primary
+            variant: outlined
+
+    - id: flex_theme_bg
+      type: Flex
+      properties:
+        gap: 12
+        theme:
+          colorBgContainer: '#f6ffed'
+      blocks:
+        - id: flex_theme_bg_btn1
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Token A
+            color: green
+            variant: solid
+        - id: flex_theme_bg_btn2
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Token B
+            color: green
+            variant: outlined
+
+    - id: flex_theme_combined
+      type: Flex
+      properties:
+        gap: 16
+        vertical: true
+        theme:
+          padding: 20
+          margin: 4
+          colorBgContainer: '#e6f4ff'
+      blocks:
+        - id: flex_theme_combined_title
+          type: Title
+          properties:
+            content: All Theme Tokens
+            level: 5
+        - id: flex_theme_combined_p
+          type: Paragraph
+          properties:
+            content: Combining padding, margin, and colorBgContainer tokens for a fully themed Flex container.
+
+- title: Styled with CSS Keys
+  blocks:
+    - id: flex_style_inline
+      type: Flex
+      style:
+        --element:
+          backgroundColor: '#f0f5ff'
+          padding: 16px
+          borderRadius: 8px
+          border: 1px dashed #91caff
+      properties:
+        gap: 12
+        justify: center
+      blocks:
+        - id: flex_style_inline_btn1
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Styled Container
+            color: primary
+            variant: solid
+        - id: flex_style_inline_btn2
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: With Dashed Border
+            color: primary
+            variant: outlined
+
+    - id: flex_style_dark
+      type: Flex
+      style:
+        --element:
+          backgroundColor: '#1f1f1f'
+          padding: 20px
+          borderRadius: 12px
+      properties:
+        gap: 12
+        justify: space-between
+        align: center
+      blocks:
+        - id: flex_style_dark_title
+          type: Title
+          layout:
+            flex: 0 0 auto
+          class: text-white
+          properties:
+            content: Dark Panel
+            level: 5
+        - id: flex_style_dark_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Action
+            color: primary
+            variant: solid
+            size: small
+
+- title: Tailwind Class Styling
+  blocks:
+    - id: flex_tw_gradient
+      type: Flex
+      class:
+        element: bg-gradient-to-r from-blue-500 to-purple-600 p-6 rounded-xl shadow-lg
+      properties:
+        gap: 16
+        align: center
+        justify: space-between
+      blocks:
+        - id: flex_tw_gradient_title
+          type: Title
+          layout:
+            flex: 0 0 auto
+          class: text-white
+          properties:
+            content: Gradient Flex
+            level: 4
+        - id: flex_tw_gradient_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Learn More
+            color: default
+            variant: solid
+            size: small
+
+    - id: flex_tw_bordered
+      type: Flex
+      class:
+        element: border-2 border-dashed border-gray-300 p-4 rounded-lg hover:border-blue-400 transition-colors duration-200
+      properties:
+        gap: 12
+        justify: center
+        wrap: true
+      blocks:
+        - id: flex_tw_bordered_tag1
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Hover me
+            color: blue
+        - id: flex_tw_bordered_tag2
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Dashed border
+            color: cyan
+        - id: flex_tw_bordered_tag3
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Transitions
+            color: purple
+
+    - id: flex_tw_ring
+      type: Flex
+      class:
+        element: ring-2 ring-green-400 ring-offset-2 p-4 rounded-lg bg-green-50
+      properties:
+        gap: 8
+        align: center
+      blocks:
+        - id: flex_tw_ring_icon
+          type: Icon
+          layout:
+            flex: 0 0 auto
+          properties:
+            name: AiOutlineCheckCircle
+            color: '#52c41a'
+            size: 24
+        - id: flex_tw_ring_text
+          type: Paragraph
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: Ring utility applied to the element CSS key.
+
+- title: Application Toolbar
+  fullWidth: true
+  blocks:
+    - id: flex_app_toolbar
+      type: Flex
+      class: bg-white p-3 rounded-lg shadow-sm border
+      properties:
+        justify: space-between
+        align: center
+        gap: 8
+      blocks:
+        - id: flex_app_toolbar_left
+          type: Flex
+          properties:
+            gap: 8
+            align: center
+          blocks:
+            - id: flex_app_toolbar_title
+              type: Title
+              layout:
+                flex: 0 0 auto
+              properties:
+                content: Dashboard
+                level: 5
+            - id: flex_app_toolbar_tag
+              type: Tag
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Live
+                color: success
+        - id: flex_app_toolbar_right
+          type: Flex
+          properties:
+            gap: 8
+          blocks:
+            - id: flex_app_toolbar_btn_filter
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Filter
+                icon: AiOutlineFilter
+                color: default
+                variant: outlined
+                size: small
+              events:
+                onClick:
+                  - id: flex_app_toolbar_filter_msg
+                    type: DisplayMessage
+                    params:
+                      content: Filter panel toggled.
+                      status: info
+            - id: flex_app_toolbar_btn_export
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Export
+                icon: AiOutlineDownload
+                color: primary
+                variant: solid
+                size: small
+              events:
+                onClick:
+                  - id: flex_app_toolbar_export_msg
+                    type: DisplayMessage
+                    params:
+                      content: Export started.
+                      status: success
+
+- title: Statistics Dashboard Row
+  blocks:
+    - id: flex_stats_row
+      type: Flex
+      properties:
+        gap: 16
+        wrap: true
+      blocks:
+        - id: flex_stats_card1
+          type: Card
+          layout:
+            flex: 1 1 200px
+          properties:
+            title: Users
+            size: small
+            hoverable: true
+          blocks:
+            - id: flex_stats_stat1
+              type: Statistic
+              properties:
+                title: Total
+                value: 1234
+            - id: flex_stats_tag1
+              type: Tag
+              properties:
+                title: +8.2%
+                color: success
+        - id: flex_stats_card2
+          type: Card
+          layout:
+            flex: 1 1 200px
+          properties:
+            title: Revenue
+            size: small
+            hoverable: true
+          blocks:
+            - id: flex_stats_stat2
+              type: Statistic
+              properties:
+                title: Monthly
+                value: 8650
+                prefix: $
+            - id: flex_stats_tag2
+              type: Tag
+              properties:
+                title: +12.5%
+                color: success
+        - id: flex_stats_card3
+          type: Card
+          layout:
+            flex: 1 1 200px
+          properties:
+            title: Orders
+            size: small
+            hoverable: true
+          blocks:
+            - id: flex_stats_stat3
+              type: Statistic
+              properties:
+                title: This Week
+                value: 56
+            - id: flex_stats_tag3
+              type: Tag
+              properties:
+                title: -3.1%
+                color: error
+
+- title: User Profile Header
+  fullWidth: true
+  blocks:
+    - id: flex_profile_header
+      type: Flex
+      class: bg-white p-6 rounded-xl shadow-sm border
+      properties:
+        gap: 24
+        align: center
+        wrap: true
+      blocks:
+        - id: flex_profile_avatar
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            icon: AiOutlineUser
+            size: 72
+            color: '#fff'
+            backgroundColor: '#1677ff'
+        - id: flex_profile_info
+          type: Flex
+          layout:
+            flex: 1 1 200px
+          properties:
+            vertical: true
+            gap: 4
+          blocks:
+            - id: flex_profile_name
+              type: Title
+              properties:
+                content: Jane Cooper
+                level: 4
+            - id: flex_profile_role
+              type: Paragraph
+              properties:
+                content: Senior Product Designer at Acme Corp
+            - id: flex_profile_tags
+              type: Flex
+              properties:
+                gap: 8
+                wrap: true
+              blocks:
+                - id: flex_profile_tag1
+                  type: Tag
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Design
+                    color: blue
+                - id: flex_profile_tag2
+                  type: Tag
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: UX Research
+                    color: purple
+                - id: flex_profile_tag3
+                  type: Tag
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Figma
+                    color: cyan
+        - id: flex_profile_actions
+          type: Flex
+          layout:
+            flex: 0 0 auto
+          properties:
+            gap: 8
+          blocks:
+            - id: flex_profile_btn_msg
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Message
+                icon: AiOutlineMail
+                color: primary
+                variant: outlined
+              events:
+                onClick:
+                  - id: flex_profile_msg_action
+                    type: DisplayMessage
+                    params:
+                      content: Opening message composer...
+                      status: info
+            - id: flex_profile_btn_follow
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Follow
+                icon: AiOutlineUserAdd
+                color: primary
+                variant: solid
+              events:
+                onClick:
+                  - id: flex_profile_follow_action
+                    type: SetState
+                    params:
+                      following: true
+                  - id: flex_profile_follow_msg
+                    type: DisplayMessage
+                    params:
+                      content: You are now following Jane Cooper.
+                      status: success
+
+- title: Feature Comparison Cards
+  blocks:
+    - id: flex_features_row
+      type: Flex
+      properties:
+        gap: 16
+        wrap: true
+        align: stretch
+      blocks:
+        - id: flex_feature_card1
+          type: Card
+          layout:
+            flex: 1 1 240px
+          properties:
+            hoverable: true
+          blocks:
+            - id: flex_feature1_icon_row
+              type: Flex
+              properties:
+                gap: 12
+                align: center
+              blocks:
+                - id: flex_feature1_icon
+                  type: Icon
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    name: AiOutlineThunderbolt
+                    color: '#1677ff'
+                    size: 28
+                - id: flex_feature1_title
+                  type: Title
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    content: Fast Builds
+                    level: 5
+            - id: flex_feature1_desc
+              type: Paragraph
+              properties:
+                content: Incremental compilation and smart caching reduce build times by up to 80% compared to traditional frameworks.
+            - id: flex_feature1_btn
+              type: Button
+              properties:
+                title: Learn More
+                color: primary
+                variant: link
+                size: small
+              events:
+                onClick:
+                  - id: flex_feature1_link
+                    type: Link
+                    params:
+                      url: https://docs.lowdefy.com
+                      newTab: true
+        - id: flex_feature_card2
+          type: Card
+          layout:
+            flex: 1 1 240px
+          properties:
+            hoverable: true
+          blocks:
+            - id: flex_feature2_icon_row
+              type: Flex
+              properties:
+                gap: 12
+                align: center
+              blocks:
+                - id: flex_feature2_icon
+                  type: Icon
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    name: AiOutlineSafety
+                    color: '#52c41a'
+                    size: 28
+                - id: flex_feature2_title
+                  type: Title
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    content: Secure by Default
+                    level: 5
+            - id: flex_feature2_desc
+              type: Paragraph
+              properties:
+                content: Built-in authentication, role-based access control, and automatic input sanitization protect your application out of the box.
+            - id: flex_feature2_btn
+              type: Button
+              properties:
+                title: Learn More
+                color: primary
+                variant: link
+                size: small
+              events:
+                onClick:
+                  - id: flex_feature2_link
+                    type: Link
+                    params:
+                      url: https://docs.lowdefy.com
+                      newTab: true
+        - id: flex_feature_card3
+          type: Card
+          layout:
+            flex: 1 1 240px
+          properties:
+            hoverable: true
+          blocks:
+            - id: flex_feature3_icon_row
+              type: Flex
+              properties:
+                gap: 12
+                align: center
+              blocks:
+                - id: flex_feature3_icon
+                  type: Icon
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    name: AiOutlineExpandAlt
+                    color: '#722ed1'
+                    size: 28
+                - id: flex_feature3_title
+                  type: Title
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    content: Fully Extensible
+                    level: 5
+            - id: flex_feature3_desc
+              type: Paragraph
+              properties:
+                content: Custom plugins for blocks, connections, operators, and actions let you extend functionality to match any requirement.
+            - id: flex_feature3_btn
+              type: Button
+              properties:
+                title: Learn More
+                color: primary
+                variant: link
+                size: small
+              events:
+                onClick:
+                  - id: flex_feature3_link
+                    type: Link
+                    params:
+                      url: https://docs.lowdefy.com
+                      newTab: true

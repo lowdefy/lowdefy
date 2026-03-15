@@ -1,10 +1,12 @@
 const { withSentryConfig } = require('@sentry/nextjs');
-const withLess = require('next-with-less');
 const lowdefyConfig = require('./build/config.json');
+const blockPackages = require('./build/blockPackages.json');
 
-const nextConfig = withLess({
+const nextConfig = {
   basePath: lowdefyConfig.basePath,
   reactStrictMode: true,
+  transpilePackages: ['@lowdefy/client', ...blockPackages],
+  turbopack: {},
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {
@@ -23,11 +25,7 @@ const nextConfig = withLess({
   poweredByHeader: false,
   // productionBrowserSourceMaps: true
   output: process.env.LOWDEFY_BUILD_OUTPUT_STANDALONE === '1' ? 'standalone' : undefined,
-  outputFileTracing: true,
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-});
+};
 
 // Only wrap with Sentry if SENTRY_DSN is configured
 // This enables source map uploads when SENTRY_AUTH_TOKEN is present

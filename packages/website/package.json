@@ -38,8 +38,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@ant-design/icons": "4.8.0",
-    "@vercel/analytics": "^1.6.1",
+    "@ant-design/icons": "6.1.0",
+    "@vercel/analytics": "1.6.1",
     "framer-motion": "^11.0.0",
     "gray-matter": "4.0.3",
     "lucide-react": "^0.400.0",

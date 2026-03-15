@@ -187,6 +187,75 @@ For each cc-doc that needs updating:
 - Avoid speculation - only document what was discovered
 - User docs must be beginner-friendly - no internal implementation details
 
+#### Block Gallery Documentation Standards
+
+**REQUIRED: Follow these rules when creating or updating block gallery.yaml files.**
+
+Gallery files live at `packages/plugins/blocks/blocks-antd/src/blocks/{BlockName}/gallery.yaml` and are rendered by the `gallery.yaml.njk` template.
+
+**Example density — min 3, max 5 per concept:**
+
+- Each property or concept gets 3–5 examples. Enough to show meaningful variations, not so many it becomes noise.
+- Pick the most distinct, informative variations. If a property has only 2 meaningful states (e.g., `disabled: true/false`), use 2.
+- Combine related properties into single examples where it makes sense (e.g., show `size` + `variant` together in a matrix rather than separate sections).
+
+**Applied examples — min 2 per block:**
+
+- Every gallery MUST include at least 2 fully defined applied-example sections at the end.
+- Title these descriptively: "{BlockName} in {Context}" (e.g., "Button in Webform", "Alert in Settings Page", "Card as Product Listing"). Never prefix with "Real World:".
+- Show the block used alongside other blocks in a practical scenario (e.g., a Card containing a form with TextInput, Selector, and Button blocks; an Alert inside a Result page with action buttons).
+- Include action usage where it makes sense — opening modals, displaying messages, setting state, navigating pages. Use `events.onClick`, `events.onChange`, etc. with actions like `DisplayMessage`, `SetState`, `SetGlobal`, `Link`, `Validate`, `ResetValidation`, or `CallMethod`.
+- Examples should feel like something a developer would actually build — not contrived demos.
+- Use realistic content (user profiles, order summaries, dashboards, form layouts) not lorem ipsum.
+
+**Server-side examples (where applicable):**
+
+- For blocks that display server data (tables, selectors with options, statistics), include one example using the test connection.
+- The test connection is defined once in the docs app config and available to all gallery pages:
+
+```yaml
+# Test connection - defined in lowdefy.yaml
+connections:
+  - id: test_connection
+    type: AxiosHttp
+    properties:
+      baseURL: https://jsonplaceholder.typicode.com
+```
+
+- Reference it in gallery examples with a request block pattern:
+
+```yaml
+- id: real_world_with_data
+  type: Card
+  properties:
+    title: User Directory
+  requests:
+    - id: fetch_users
+      type: AxiosHttp
+      connectionId: test_connection
+      properties:
+        url: /users
+  blocks:
+    - id: user_list
+      type: Selector
+      properties:
+        label: Select User
+        options:
+          _request: fetch_users
+```
+
+- Only use server calls where they add real value to the example. Static data is fine for most property demos.
+
+**Quality checklist for block galleries:**
+
+- [ ] Every schema property is demonstrated (but max 3 examples each)
+- [ ] designTokens section exists in schema.js
+- [ ] Theme Token Override section in gallery
+- [ ] Style/CSS section with Tailwind class examples
+- [ ] Min 2 real-world examples at end
+- [ ] All block IDs unique across file
+- [ ] Apache 2.0 license header present
+
 ### Phase 7: Validate
 
 ```bash

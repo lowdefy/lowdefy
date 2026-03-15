@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import basicTypes from '@lowdefy/blocks-basic/types';
-import loaderTypes from '@lowdefy/blocks-loaders/types';
 import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 
+import basicTypes from '@lowdefy/blocks-basic/types';
+import loaderTypes from '@lowdefy/blocks-loaders/types';
 import findSimilarString from '../utils/findSimilarString.js';
 
 function buildTypeClass(

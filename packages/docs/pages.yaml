@@ -24,6 +24,7 @@
 - _ref: concepts/hosting-files.yaml
 - _ref: concepts/custom-html.yaml
 - _ref: concepts/custom-styling.yaml
+- _ref: concepts/theming.yaml
 - _ref: concepts/cli.yaml
 - _ref: concepts/api.yaml
 
@@ -57,6 +58,7 @@
 - _ref: testing/e2e-auth.yaml
 - _ref: testing/e2e-configuration.yaml
 
+- _ref: blocks/input/InputGallery.yaml
 - _ref: blocks/input/AutoComplete.yaml
 - _ref: blocks/input/ButtonSelector.yaml
 - _ref: blocks/input/CheckboxSelector.yaml
@@ -74,6 +76,7 @@
 - _ref: blocks/input/PhoneNumberInput.yaml
 - _ref: blocks/input/RadioSelector.yaml
 - _ref: blocks/input/RatingSlider.yaml
+- _ref: blocks/input/SegmentedSelector.yaml
 - _ref: blocks/input/S3UploadButton.yaml
 - _ref: blocks/input/S3UploadDragger.yaml
 - _ref: blocks/input/S3UploadPhoto.yaml
@@ -95,6 +98,7 @@
 - _ref: blocks/display/Divider.yaml
 - _ref: blocks/display/DocSearch.yaml
 - _ref: blocks/display/EChart.yaml
+- _ref: blocks/display/FloatButton.yaml
 - _ref: blocks/display/Html.yaml
 - _ref: blocks/display/Icon.yaml
 - _ref: blocks/display/Img.yaml
@@ -106,6 +110,7 @@
 - _ref: blocks/display/Notification.yaml
 - _ref: blocks/display/Paragraph.yaml
 - _ref: blocks/display/Progress.yaml
+- _ref: blocks/display/QRCode.yaml
 - _ref: blocks/display/S3Download.yaml
 - _ref: blocks/display/Skeleton.yaml
 - _ref: blocks/display/SkeletonAvatar.yaml
@@ -115,6 +120,7 @@
 - _ref: blocks/display/Statistic.yaml
 - _ref: blocks/display/Tag.yaml
 - _ref: blocks/display/Title.yaml
+- _ref: blocks/display/Tour.yaml
 
 - _ref: blocks/container/Alert.yaml
 - _ref: blocks/container/Affix.yaml
@@ -123,11 +129,12 @@
 - _ref: blocks/container/Card.yaml
 - _ref: blocks/container/Carousel.yaml
 - _ref: blocks/container/Collapse.yaml
-- _ref: blocks/container/Comment.yaml
+- _ref: blocks/container/ConfigProvider.yaml
 - _ref: blocks/container/ConfirmModal.yaml
 - _ref: blocks/container/Content.yaml
 - _ref: blocks/container/Descriptions.yaml
 - _ref: blocks/container/Drawer.yaml
+- _ref: blocks/container/Flex.yaml
 - _ref: blocks/container/Footer.yaml
 - _ref: blocks/container/GoogleMaps.yaml
 - _ref: blocks/container/GoogleMapsHeatmap.yaml
@@ -135,6 +142,7 @@
 - _ref: blocks/container/Header.yaml
 - _ref: blocks/container/Label.yaml
 - _ref: blocks/container/Layout.yaml
+- _ref: blocks/container/Masonry.yaml
 - _ref: blocks/container/Modal.yaml
 - _ref: blocks/container/PageHeaderMenu.yaml
 - _ref: blocks/container/PageSiderMenu.yaml
@@ -142,12 +150,15 @@
 - _ref: blocks/container/Result.yaml
 - _ref: blocks/container/Sider.yaml
 - _ref: blocks/container/Span.yaml
+- _ref: blocks/container/Splitter.yaml
 - _ref: blocks/container/Spinner.yaml
 - _ref: blocks/container/Tabs.yaml
 - _ref: blocks/container/Tooltip.yaml
+- _ref: blocks/container/Watermark.yaml
 
 - _ref: blocks/list/ControlledList.yaml
 - _ref: blocks/list/List.yaml
+- _ref: blocks/list/MasonryList.yaml
 # - _ref: blocks/list/TimelineList.yaml # TODO:
 
 - _ref: connections/AmazonRedshift.yaml
@@ -224,7 +235,7 @@
 - _ref: operators/_math.yaml
 - _ref: operators/_media.yaml
 - _ref: operators/_menu.yaml
-- _ref: operators/_moment.yaml
+- _ref: operators/_dayjs.yaml
 - _ref: operators/_mql.yaml
 - _ref: operators/_ne.yaml
 - _ref: operators/_not.yaml
@@ -246,6 +257,7 @@
 - _ref: operators/_subtract.yaml
 - _ref: operators/_sum.yaml
 - _ref: operators/_switch.yaml
+- _ref: operators/_theme.yaml
 - _ref: operators/_type.yaml
 - _ref: operators/_uri.yaml
 - _ref: operators/_url_query.yaml
@@ -268,5 +280,6 @@
 # - _ref: controls/while.yaml # TODO: Add back when while control implemented
 
 - _ref: migration/v3-to-v4.yaml
+- _ref: migration/v4-to-v5.yaml
 
 - _ref: 404.yaml

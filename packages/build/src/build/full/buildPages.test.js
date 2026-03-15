@@ -295,14 +295,14 @@ test('nested blocks', () => {
         blockId: 'page_1',
         type: 'Container',
         requests: [],
-        areas: {
+        slots: {
           content: {
             blocks: [
               {
                 id: 'block:page_1:block_1:0',
                 blockId: 'block_1',
                 type: 'Container',
-                areas: {
+                slots: {
                   content: {
                     blocks: [
                       {
@@ -339,7 +339,7 @@ describe('block areas', () => {
       ],
     };
     expect(() => buildPages({ components, context })).toThrow(
-      'Expected blocks to be an array at page1 in area content on page page1.'
+      'Expected blocks to be an array at page1 in slot content on page page1.'
     );
   });
 
@@ -366,7 +366,7 @@ describe('block areas', () => {
           pageId: 'page1',
           type: 'Container',
           requests: [],
-          areas: {
+          slots: {
             content: {
               blocks: [],
             },
@@ -406,7 +406,7 @@ describe('block areas', () => {
           pageId: '1',
           type: 'Container',
           requests: [],
-          areas: {
+          slots: {
             content: {
               blocks: [
                 {
@@ -453,7 +453,7 @@ describe('block areas', () => {
           blockId: '1',
           type: 'Container',
           requests: [],
-          areas: {
+          slots: {
             content: {
               gutter: 20,
               blocks: [
@@ -508,7 +508,7 @@ describe('block areas', () => {
           blockId: '1',
           type: 'Container',
           requests: [],
-          areas: {
+          slots: {
             content: {
               blocks: [
                 {
@@ -569,7 +569,7 @@ describe('block areas', () => {
           blockId: '1',
           type: 'Container',
           requests: [],
-          areas: {
+          slots: {
             content: {
               blocks: [
                 {
@@ -638,7 +638,7 @@ describe('block areas', () => {
           blockId: '1',
           type: 'Container',
           requests: [],
-          areas: {
+          slots: {
             content: {
               blocks: [
                 {
@@ -723,21 +723,21 @@ describe('block areas', () => {
           blockId: '1',
           type: 'Container',
           requests: [],
-          areas: {
+          slots: {
             content: {
               blocks: [
                 {
                   id: 'block:1:card:0',
                   blockId: 'card',
                   type: 'Container',
-                  areas: {
+                  slots: {
                     content: {
                       blocks: [
                         {
                           id: 'block:1:card2:0',
                           blockId: 'card2',
                           type: 'Container',
-                          areas: {
+                          slots: {
                             title: {
                               blocks: [
                                 {
@@ -821,7 +821,7 @@ test('user defined skeleton', () => {
           },
         ],
         requests: [],
-        areas: {
+        slots: {
           content: {
             blocks: [
               {
@@ -876,7 +876,7 @@ test('create unique block ids', () => {
         blockId: 'page_1',
         type: 'Container',
         requests: [],
-        areas: {
+        slots: {
           content: {
             blocks: [
               {
@@ -900,6 +900,27 @@ test('create unique block ids', () => {
       },
     ],
   });
+});
+
+test('block with same id as page throws', () => {
+  const components = {
+    pages: [
+      {
+        id: 'box',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'box',
+            type: 'Display',
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context })).toThrow(
+    'Block id "box" on page "box" collides with the page id. A block cannot have the same id as its page.'
+  );
 });
 
 test('different blockId counter for each page', () => {
@@ -947,7 +968,7 @@ test('different blockId counter for each page', () => {
         blockId: 'page_1',
         type: 'Container',
         requests: [],
-        areas: {
+        slots: {
           content: {
             blocks: [
               {
@@ -971,7 +992,7 @@ test('different blockId counter for each page', () => {
         blockId: 'page_2',
         type: 'Container',
         requests: [],
-        areas: {
+        slots: {
           content: {
             blocks: [
               {

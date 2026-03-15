@@ -1,0 +1,624 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Sizes
+  blocks:
+    - id: size_small
+      type: DateSelector
+      properties:
+        title: Small
+        size: small
+    - id: size_default
+      type: DateSelector
+      properties:
+        title: Default
+    - id: size_large
+      type: DateSelector
+      properties:
+        title: Large
+        size: large
+
+- title: Variants
+  blocks:
+    - id: variant_outlined
+      type: DateSelector
+      properties:
+        title: Outlined (default)
+        variant: outlined
+        label:
+          disabled: true
+    - id: variant_filled
+      type: DateSelector
+      properties:
+        title: Filled
+        variant: filled
+        label:
+          disabled: true
+    - id: variant_borderless
+      type: DateSelector
+      properties:
+        title: Borderless
+        variant: borderless
+        label:
+          disabled: true
+
+- title: Format Variations
+  blocks:
+    - id: format_iso
+      type: DateSelector
+      properties:
+        title: YYYY-MM-DD (ISO)
+        format: YYYY-MM-DD
+        label:
+          disabled: true
+    - id: format_slash
+      type: DateSelector
+      properties:
+        title: DD/MM/YYYY
+        format: DD/MM/YYYY
+        label:
+          disabled: true
+    - id: format_us
+      type: DateSelector
+      properties:
+        title: MM/DD/YYYY (US)
+        format: MM/DD/YYYY
+        label:
+          disabled: true
+    - id: format_long
+      type: DateSelector
+      properties:
+        title: DD MMMM YYYY
+        format: DD MMMM YYYY
+        label:
+          disabled: true
+    - id: format_dot
+      type: DateSelector
+      properties:
+        title: DD.MM.YYYY
+        format: DD.MM.YYYY
+        label:
+          disabled: true
+
+- title: Placeholder
+  blocks:
+    - id: placeholder_default
+      type: DateSelector
+      properties:
+        title: Default Placeholder
+        label:
+          disabled: true
+    - id: placeholder_custom
+      type: DateSelector
+      properties:
+        title: Custom Placeholder
+        placeholder: Pick a date...
+        label:
+          disabled: true
+    - id: placeholder_descriptive
+      type: DateSelector
+      properties:
+        title: Descriptive Placeholder
+        placeholder: When did this happen?
+        label:
+          disabled: true
+
+- title: Allow Clear
+  blocks:
+    - id: clear_enabled
+      type: DateSelector
+      properties:
+        title: Allow Clear (default)
+        allowClear: true
+        label:
+          disabled: true
+    - id: clear_disabled
+      type: DateSelector
+      properties:
+        title: No Clear Button
+        allowClear: false
+        label:
+          disabled: true
+
+- title: Show Today Button
+  blocks:
+    - id: today_enabled
+      type: DateSelector
+      properties:
+        title: Show Today (default)
+        showToday: true
+        label:
+          disabled: true
+    - id: today_disabled
+      type: DateSelector
+      properties:
+        title: No Today Button
+        showToday: false
+        label:
+          disabled: true
+
+- title: Suffix Icon
+  blocks:
+    - id: icon_default
+      type: DateSelector
+      properties:
+        title: Default Calendar Icon
+        label:
+          disabled: true
+    - id: icon_clock
+      type: DateSelector
+      properties:
+        title: Clock Icon
+        suffixIcon: AiOutlineClockCircle
+        label:
+          disabled: true
+    - id: icon_schedule
+      type: DateSelector
+      properties:
+        title: Schedule Icon
+        suffixIcon: AiOutlineSchedule
+        label:
+          disabled: true
+    - id: icon_custom_color
+      type: DateSelector
+      properties:
+        title: Custom Color Icon
+        suffixIcon:
+          name: AiOutlineCalendar
+          color: '#1677ff'
+        label:
+          disabled: true
+    - id: icon_heart
+      type: DateSelector
+      properties:
+        title: Heart Icon
+        suffixIcon:
+          name: AiOutlineHeart
+          color: '#ff4d4f'
+        label:
+          disabled: true
+
+- title: Disabled State
+  blocks:
+    - id: disabled_default
+      type: DateSelector
+      properties:
+        title: Disabled
+        disabled: true
+        label:
+          disabled: true
+    - id: disabled_outlined
+      type: DateSelector
+      properties:
+        title: Disabled Outlined
+        disabled: true
+        variant: outlined
+        label:
+          disabled: true
+    - id: disabled_filled
+      type: DateSelector
+      properties:
+        title: Disabled Filled
+        disabled: true
+        variant: filled
+        label:
+          disabled: true
+    - id: disabled_borderless
+      type: DateSelector
+      properties:
+        title: Disabled Borderless
+        disabled: true
+        variant: borderless
+        label:
+          disabled: true
+
+- title: Auto Focus
+  blocks:
+    - id: autofocus_off
+      type: DateSelector
+      properties:
+        title: No Auto Focus (default)
+        autoFocus: false
+        label:
+          disabled: true
+    - id: autofocus_on
+      type: DateSelector
+      properties:
+        title: Auto Focus Enabled
+        autoFocus: true
+        label:
+          disabled: true
+
+- title: Disabled Dates
+  blocks:
+    - id: disabled_dates_min
+      type: DateSelector
+      properties:
+        title: Min Date (2024-01-01)
+        disabledDates:
+          min: '2024-01-01'
+        label:
+          disabled: true
+    - id: disabled_dates_max
+      type: DateSelector
+      properties:
+        title: Max Date (2025-12-31)
+        disabledDates:
+          max: '2025-12-31'
+        label:
+          disabled: true
+    - id: disabled_dates_range
+      type: DateSelector
+      properties:
+        title: Min & Max (2024 only)
+        disabledDates:
+          min: '2024-01-01'
+          max: '2024-12-31'
+        label:
+          disabled: true
+    - id: disabled_specific
+      type: DateSelector
+      properties:
+        title: Specific Dates Disabled
+        disabledDates:
+          dates:
+            - '2026-03-15'
+            - '2026-03-20'
+            - '2026-03-25'
+        label:
+          disabled: true
+    - id: disabled_date_ranges
+      type: DateSelector
+      properties:
+        title: Date Ranges Disabled
+        disabledDates:
+          ranges:
+            - ['2026-03-10', '2026-03-14']
+            - ['2026-03-20', '2026-03-24']
+        label:
+          disabled: true
+
+- title: Label Options
+  blocks:
+    - id: label_default
+      type: DateSelector
+      properties:
+        title: Default Label
+    - id: label_colon_off
+      type: DateSelector
+      properties:
+        title: No Colon
+        label:
+          colon: false
+    - id: label_right
+      type: DateSelector
+      properties:
+        title: Align Right
+        label:
+          align: right
+    - id: label_inline
+      type: DateSelector
+      properties:
+        title: Inline Label
+        label:
+          inline: true
+          span: 8
+    - id: label_extra
+      type: DateSelector
+      properties:
+        title: Date of Birth
+        label:
+          extra: Enter your date of birth in the format YYYY-MM-DD.
+        placeholder: Select your date of birth
+    - id: label_hidden
+      type: DateSelector
+      properties:
+        title: Hidden Label
+        label:
+          disabled: true
+        placeholder: No label shown
+
+- title: Label Inline with Span
+  blocks:
+    - id: label_inline_4
+      type: DateSelector
+      properties:
+        title: Span 4
+        label:
+          inline: true
+          span: 4
+    - id: label_inline_8
+      type: DateSelector
+      properties:
+        title: Span 8
+        label:
+          inline: true
+          span: 8
+    - id: label_inline_12
+      type: DateSelector
+      properties:
+        title: Span 12
+        label:
+          inline: true
+          span: 12
+
+- title: HTML Title
+  blocks:
+    - id: html_title_bold
+      type: DateSelector
+      properties:
+        title: '<b>Bold</b> date selector'
+        label:
+          disabled: true
+    - id: html_title_color
+      type: DateSelector
+      properties:
+        title: '<span style="color: #1677ff">Blue</span> date selector'
+        label:
+          disabled: true
+
+- title: Custom Style
+  blocks:
+    - id: style_width
+      type: DateSelector
+      style:
+        width: 300
+      properties:
+        title: Fixed Width (300px)
+        label:
+          disabled: true
+    - id: style_element
+      type: DateSelector
+      style:
+        --element:
+          background: '#f0f5ff'
+      properties:
+        title: Custom Background
+        label:
+          disabled: true
+    - id: style_label
+      type: DateSelector
+      style:
+        --label:
+          color: '#531dab'
+          fontWeight: bold
+      properties:
+        title: Styled Label
+
+- title: Custom CSS Class
+  blocks:
+    - id: class_rounded
+      type: DateSelector
+      class: rounded-lg shadow-sm
+      properties:
+        title: Rounded with Shadow
+        label:
+          disabled: true
+    - id: class_border
+      type: DateSelector
+      class: border-2 border-blue-200
+      properties:
+        title: Blue Border
+        label:
+          disabled: true
+
+- title: Theme Token Overrides
+  blocks:
+    - id: theme_primary_color
+      type: DateSelector
+      properties:
+        title: Custom Primary Color
+        label:
+          disabled: true
+        theme:
+          colorPrimary: '#722ed1'
+    - id: theme_large_radius
+      type: DateSelector
+      properties:
+        title: Large Border Radius
+        label:
+          disabled: true
+        theme:
+          borderRadius: 16
+    - id: theme_custom_bg
+      type: DateSelector
+      properties:
+        title: Custom Background
+        variant: filled
+        label:
+          disabled: true
+        theme:
+          colorBgContainer: '#f9f0ff'
+    - id: theme_tall
+      type: DateSelector
+      properties:
+        title: Tall Input
+        label:
+          disabled: true
+        theme:
+          controlHeight: 48
+          fontSize: 18
+          borderRadius: 12
+    - id: theme_brand_color
+      type: DateSelector
+      properties:
+        title: Brand Purple
+        label:
+          disabled: true
+        theme:
+          colorPrimary: '#722ed1'
+          colorBorder: '#d3adf7'
+          colorBgContainer: '#faf0ff'
+
+- title: Combined Features
+  blocks:
+    - id: combined_full
+      type: DateSelector
+      properties:
+        title: Appointment Date
+        placeholder: Select appointment date
+        format: DD MMMM YYYY
+        size: large
+        suffixIcon: AiOutlineSchedule
+        showToday: true
+        allowClear: true
+        label:
+          extra: Choose your preferred appointment date.
+          colon: false
+    - id: combined_minimal
+      type: DateSelector
+      properties:
+        title: Date
+        variant: borderless
+        size: small
+        allowClear: false
+        showToday: false
+        format: DD/MM/YYYY
+        placeholder: dd/mm/yyyy
+        label:
+          disabled: true
+    - id: combined_restricted
+      type: DateSelector
+      properties:
+        title: Event Registration
+        placeholder: Select event date
+        format: DD MMM YYYY
+        suffixIcon:
+          name: AiOutlineCalendar
+          color: '#1677ff'
+        disabledDates:
+          min: '2026-01-01'
+          max: '2026-12-31'
+        label:
+          extra: Only dates in 2026 are available.
+    - id: combined_themed
+      type: DateSelector
+      properties:
+        title: Themed Picker
+        variant: filled
+        size: large
+        format: DD MMMM YYYY
+        placeholder: Choose a special date...
+        suffixIcon:
+          name: AiOutlineHeart
+          color: '#eb2f96'
+        label:
+          disabled: true
+        theme:
+          colorPrimary: '#eb2f96'
+          borderRadius: 20
+          controlHeightLG: 48
+          fontSize: 16
+
+- title: DateSelector in Event Registration
+  blocks:
+    - id: applied2_event_reg_card
+      type: Card
+      properties:
+        title: Event Registration
+      blocks:
+        - id: applied2_event_date
+          type: DateSelector
+          properties:
+            title: Event Date
+            placeholder: Select event date
+            format: DD MMMM YYYY
+            size: large
+            suffixIcon: AiOutlineCalendar
+            label:
+              extra: Choose the date you would like to attend.
+            disabledDates:
+              min: '2026-04-01'
+              max: '2026-12-31'
+        - id: applied2_event_name
+          type: TextInput
+          properties:
+            title: Full Name
+            placeholder: Enter your full name
+            prefixIcon: AiOutlineUser
+        - id: applied2_event_email
+          type: TextInput
+          properties:
+            title: Email Address
+            placeholder: you@example.com
+            prefixIcon: AiOutlineMail
+            label:
+              extra: We will send your confirmation to this address.
+        - id: applied2_event_register_btn
+          type: Button
+          properties:
+            title: Register
+            icon: AiOutlineCheck
+            type: primary
+            size: large
+            block: true
+          events:
+            onClick:
+              - id: register_action
+                type: DisplayMessage
+                params:
+                  content: Registration submitted successfully!
+                  duration: 3
+
+- title: DateSelector in Profile Settings
+  blocks:
+    - id: applied3_profile_card
+      type: Card
+      properties:
+        title: Profile Settings
+      blocks:
+        - id: applied3_display_name
+          type: TextInput
+          properties:
+            title: Display Name
+            placeholder: Enter your display name
+            prefixIcon: AiOutlineUser
+        - id: applied3_date_of_birth
+          type: DateSelector
+          properties:
+            title: Date of Birth
+            placeholder: Select your date of birth
+            format: DD MMMM YYYY
+            suffixIcon: AiOutlineCalendar
+            label:
+              extra: Used to verify your age.
+            disabledDates:
+              max: '2008-12-31'
+          events:
+            onChange:
+              - id: dob_changed_action
+                type: SetState
+                params:
+                  dob_updated: true
+        - id: applied3_email
+          type: TextInput
+          properties:
+            title: Email Address
+            placeholder: you@example.com
+            prefixIcon: AiOutlineMail
+        - id: applied3_save_btn
+          type: Button
+          properties:
+            title: Save Profile
+            icon: AiOutlineSave
+            type: primary
+            size: large
+            block: true
+          events:
+            onClick:
+              - id: save_profile_action
+                type: DisplayMessage
+                params:
+                  content: Profile saved successfully!
+                  duration: 3

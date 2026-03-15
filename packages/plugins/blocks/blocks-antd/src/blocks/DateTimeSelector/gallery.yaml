@@ -1,0 +1,712 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Sizes
+  blocks:
+    - id: dts_size_small
+      type: DateTimeSelector
+      properties:
+        title: Small
+        size: small
+    - id: dts_size_default
+      type: DateTimeSelector
+      properties:
+        title: Default
+    - id: dts_size_large
+      type: DateTimeSelector
+      properties:
+        title: Large
+        size: large
+
+- title: Variants
+  blocks:
+    - id: dts_variant_outlined
+      type: DateTimeSelector
+      properties:
+        title: Outlined (default)
+        variant: outlined
+        label:
+          disabled: true
+    - id: dts_variant_filled
+      type: DateTimeSelector
+      properties:
+        title: Filled
+        variant: filled
+        label:
+          disabled: true
+    - id: dts_variant_borderless
+      type: DateTimeSelector
+      properties:
+        title: Borderless
+        variant: borderless
+        label:
+          disabled: true
+
+- title: Time Format Options
+  blocks:
+    - id: dts_tf_hours_minutes
+      type: DateTimeSelector
+      properties:
+        title: Hours & Minutes (HH:mm)
+        timeFormat: HH:mm
+        format: YYYY-MM-DD HH:mm
+        label:
+          disabled: true
+    - id: dts_tf_with_seconds
+      type: DateTimeSelector
+      properties:
+        title: With Seconds (HH:mm:ss)
+        timeFormat: HH:mm:ss
+        format: YYYY-MM-DD HH:mm:ss
+        label:
+          disabled: true
+    - id: dts_tf_hours_only
+      type: DateTimeSelector
+      properties:
+        title: Hours Only (HH)
+        timeFormat: HH
+        format: YYYY-MM-DD HH
+        label:
+          disabled: true
+
+- title: Time Step Intervals
+  blocks:
+    - id: dts_step_hour_2
+      type: DateTimeSelector
+      properties:
+        title: 2-Hour Steps
+        hourStep: 2
+        label:
+          disabled: true
+    - id: dts_step_minute_10
+      type: DateTimeSelector
+      properties:
+        title: 10-Minute Steps
+        minuteStep: 10
+        label:
+          disabled: true
+    - id: dts_step_minute_15
+      type: DateTimeSelector
+      properties:
+        title: 15-Minute Steps
+        minuteStep: 15
+        label:
+          disabled: true
+    - id: dts_step_minute_30
+      type: DateTimeSelector
+      properties:
+        title: 30-Minute Steps
+        minuteStep: 30
+        label:
+          disabled: true
+    - id: dts_step_second_10
+      type: DateTimeSelector
+      properties:
+        title: 10-Second Steps
+        timeFormat: HH:mm:ss
+        format: YYYY-MM-DD HH:mm:ss
+        secondStep: 10
+        label:
+          disabled: true
+
+- title: Date Format Variations
+  blocks:
+    - id: dts_fmt_iso
+      type: DateTimeSelector
+      properties:
+        title: YYYY-MM-DD HH:mm (ISO)
+        format: YYYY-MM-DD HH:mm
+        label:
+          disabled: true
+    - id: dts_fmt_slash
+      type: DateTimeSelector
+      properties:
+        title: DD/MM/YYYY HH:mm
+        format: DD/MM/YYYY HH:mm
+        label:
+          disabled: true
+    - id: dts_fmt_us
+      type: DateTimeSelector
+      properties:
+        title: MM/DD/YYYY HH:mm (US)
+        format: MM/DD/YYYY HH:mm
+        label:
+          disabled: true
+    - id: dts_fmt_long
+      type: DateTimeSelector
+      properties:
+        title: DD MMMM YYYY HH:mm
+        format: DD MMMM YYYY HH:mm
+        label:
+          disabled: true
+    - id: dts_fmt_dot
+      type: DateTimeSelector
+      properties:
+        title: DD.MM.YYYY HH:mm
+        format: DD.MM.YYYY HH:mm
+        label:
+          disabled: true
+
+- title: Placeholder
+  blocks:
+    - id: dts_ph_default
+      type: DateTimeSelector
+      properties:
+        title: Default Placeholder
+        label:
+          disabled: true
+    - id: dts_ph_custom
+      type: DateTimeSelector
+      properties:
+        title: Custom Placeholder
+        placeholder: Choose date and time...
+        label:
+          disabled: true
+    - id: dts_ph_descriptive
+      type: DateTimeSelector
+      properties:
+        title: Descriptive Placeholder
+        placeholder: When did this event occur?
+        label:
+          disabled: true
+    - id: dts_ph_appointment
+      type: DateTimeSelector
+      properties:
+        title: Appointment Placeholder
+        placeholder: Select appointment date & time
+        label:
+          disabled: true
+
+- title: Allow Clear
+  blocks:
+    - id: dts_clear_enabled
+      type: DateTimeSelector
+      properties:
+        title: Allow Clear (default)
+        allowClear: true
+        label:
+          disabled: true
+    - id: dts_clear_disabled
+      type: DateTimeSelector
+      properties:
+        title: No Clear Button
+        allowClear: false
+        label:
+          disabled: true
+
+- title: Show Today & Show Now
+  blocks:
+    - id: dts_today_enabled
+      type: DateTimeSelector
+      properties:
+        title: Show Today (default)
+        showToday: true
+        label:
+          disabled: true
+    - id: dts_today_disabled
+      type: DateTimeSelector
+      properties:
+        title: No Today Button
+        showToday: false
+        label:
+          disabled: true
+    - id: dts_now_enabled
+      type: DateTimeSelector
+      properties:
+        title: Show Now (default)
+        showNow: true
+        label:
+          disabled: true
+    - id: dts_now_disabled
+      type: DateTimeSelector
+      properties:
+        title: No Now Button
+        showNow: false
+        label:
+          disabled: true
+    - id: dts_both_disabled
+      type: DateTimeSelector
+      properties:
+        title: No Today & No Now
+        showToday: false
+        showNow: false
+        label:
+          disabled: true
+
+- title: UTC Selection
+  blocks:
+    - id: dts_utc_off
+      type: DateTimeSelector
+      properties:
+        title: Local Time (default)
+        selectUTC: false
+        label:
+          disabled: true
+    - id: dts_utc_on
+      type: DateTimeSelector
+      properties:
+        title: UTC Mode
+        selectUTC: true
+        label:
+          disabled: true
+
+- title: Disabled State
+  blocks:
+    - id: dts_dis_outlined
+      type: DateTimeSelector
+      properties:
+        title: Disabled Outlined
+        disabled: true
+        variant: outlined
+        label:
+          disabled: true
+    - id: dts_dis_filled
+      type: DateTimeSelector
+      properties:
+        title: Disabled Filled
+        disabled: true
+        variant: filled
+        label:
+          disabled: true
+    - id: dts_dis_borderless
+      type: DateTimeSelector
+      properties:
+        title: Disabled Borderless
+        disabled: true
+        variant: borderless
+        label:
+          disabled: true
+    - id: dts_dis_with_label
+      type: DateTimeSelector
+      properties:
+        title: Disabled with Label
+        disabled: true
+
+- title: Suffix Icon
+  blocks:
+    - id: dts_icon_default
+      type: DateTimeSelector
+      properties:
+        title: Default Calendar Icon
+        label:
+          disabled: true
+    - id: dts_icon_clock
+      type: DateTimeSelector
+      properties:
+        title: Clock Icon
+        suffixIcon: AiOutlineClockCircle
+        label:
+          disabled: true
+    - id: dts_icon_schedule
+      type: DateTimeSelector
+      properties:
+        title: Schedule Icon
+        suffixIcon: AiOutlineSchedule
+        label:
+          disabled: true
+    - id: dts_icon_custom_color
+      type: DateTimeSelector
+      properties:
+        title: Custom Color Icon
+        suffixIcon:
+          name: AiOutlineCalendar
+          color: '#1677ff'
+        label:
+          disabled: true
+    - id: dts_icon_heart
+      type: DateTimeSelector
+      properties:
+        title: Heart Icon
+        suffixIcon:
+          name: AiOutlineHeart
+          color: '#ff4d4f'
+        label:
+          disabled: true
+
+- title: Disabled Dates
+  blocks:
+    - id: dts_dd_min
+      type: DateTimeSelector
+      properties:
+        title: Min Date (2024-01-01)
+        disabledDates:
+          min: '2024-01-01'
+        label:
+          disabled: true
+    - id: dts_dd_range
+      type: DateTimeSelector
+      properties:
+        title: Min & Max (2024 only)
+        disabledDates:
+          min: '2024-01-01'
+          max: '2024-12-31'
+        label:
+          disabled: true
+    - id: dts_dd_specific
+      type: DateTimeSelector
+      properties:
+        title: Specific Dates Disabled
+        disabledDates:
+          dates:
+            - '2026-03-15'
+            - '2026-03-20'
+            - '2026-03-25'
+        label:
+          disabled: true
+    - id: dts_dd_ranges
+      type: DateTimeSelector
+      properties:
+        title: Date Ranges Disabled
+        disabledDates:
+          ranges:
+            - ['2026-03-10', '2026-03-14']
+            - ['2026-03-20', '2026-03-24']
+        label:
+          disabled: true
+
+- title: Label Options
+  blocks:
+    - id: dts_lbl_default
+      type: DateTimeSelector
+      properties:
+        title: Default Label
+    - id: dts_lbl_colon_off
+      type: DateTimeSelector
+      properties:
+        title: No Colon
+        label:
+          colon: false
+    - id: dts_lbl_right
+      type: DateTimeSelector
+      properties:
+        title: Align Right
+        label:
+          align: right
+    - id: dts_lbl_inline
+      type: DateTimeSelector
+      properties:
+        title: Inline Label
+        label:
+          inline: true
+          span: 8
+    - id: dts_lbl_extra
+      type: DateTimeSelector
+      properties:
+        title: Appointment Time
+        label:
+          extra: Select the date and time for your appointment.
+        placeholder: Select date & time
+    - id: dts_lbl_hidden
+      type: DateTimeSelector
+      properties:
+        title: Hidden Label
+        label:
+          disabled: true
+        placeholder: No label shown
+
+- title: Label Inline with Span
+  blocks:
+    - id: dts_lbl_span_4
+      type: DateTimeSelector
+      properties:
+        title: Span 4
+        label:
+          inline: true
+          span: 4
+    - id: dts_lbl_span_8
+      type: DateTimeSelector
+      properties:
+        title: Span 8
+        label:
+          inline: true
+          span: 8
+    - id: dts_lbl_span_12
+      type: DateTimeSelector
+      properties:
+        title: Span 12
+        label:
+          inline: true
+          span: 12
+
+- title: Custom Style
+  blocks:
+    - id: dts_style_width
+      type: DateTimeSelector
+      style:
+        width: 400
+      properties:
+        title: Fixed Width (400px)
+        label:
+          disabled: true
+    - id: dts_style_element
+      type: DateTimeSelector
+      style:
+        --element:
+          background: '#f0f5ff'
+      properties:
+        title: Custom Background
+        label:
+          disabled: true
+    - id: dts_style_label
+      type: DateTimeSelector
+      style:
+        --label:
+          color: '#531dab'
+          fontWeight: bold
+      properties:
+        title: Styled Label
+
+- title: Custom CSS Class
+  blocks:
+    - id: dts_class_rounded
+      type: DateTimeSelector
+      class: rounded-lg shadow-sm
+      properties:
+        title: Rounded with Shadow
+        label:
+          disabled: true
+    - id: dts_class_border
+      type: DateTimeSelector
+      class: border-2 border-blue-200
+      properties:
+        title: Blue Border
+        label:
+          disabled: true
+
+- title: Theme Token Overrides
+  blocks:
+    - id: dts_theme_primary
+      type: DateTimeSelector
+      properties:
+        title: Custom Primary Color
+        label:
+          disabled: true
+        theme:
+          colorPrimary: '#722ed1'
+    - id: dts_theme_radius
+      type: DateTimeSelector
+      properties:
+        title: Large Border Radius
+        label:
+          disabled: true
+        theme:
+          borderRadius: 16
+    - id: dts_theme_bg
+      type: DateTimeSelector
+      properties:
+        title: Custom Background
+        variant: filled
+        label:
+          disabled: true
+        theme:
+          colorBgContainer: '#f9f0ff'
+    - id: dts_theme_tall
+      type: DateTimeSelector
+      properties:
+        title: Tall Input
+        label:
+          disabled: true
+        theme:
+          controlHeight: 48
+          fontSize: 18
+          borderRadius: 12
+    - id: dts_theme_active_border
+      type: DateTimeSelector
+      properties:
+        title: Custom Active Border
+        label:
+          disabled: true
+        theme:
+          activeBorderColor: '#fa8c16'
+          hoverBorderColor: '#ffc069'
+
+- title: Combined Features
+  blocks:
+    - id: dts_combo_appointment
+      type: DateTimeSelector
+      properties:
+        title: Appointment Date & Time
+        placeholder: Select appointment date & time
+        format: DD MMMM YYYY HH:mm
+        size: large
+        suffixIcon: AiOutlineSchedule
+        showToday: true
+        showNow: true
+        allowClear: true
+        minuteStep: 15
+        label:
+          extra: Choose your preferred appointment date and time.
+          colon: false
+    - id: dts_combo_minimal
+      type: DateTimeSelector
+      properties:
+        title: Date & Time
+        variant: borderless
+        size: small
+        allowClear: false
+        showToday: false
+        showNow: false
+        format: DD/MM/YYYY HH:mm
+        placeholder: dd/mm/yyyy hh:mm
+        label:
+          disabled: true
+    - id: dts_combo_restricted
+      type: DateTimeSelector
+      properties:
+        title: Event Registration
+        placeholder: Select event date & time
+        format: DD MMM YYYY HH:mm
+        minuteStep: 30
+        hourStep: 1
+        suffixIcon:
+          name: AiOutlineCalendar
+          color: '#1677ff'
+        disabledDates:
+          min: '2026-01-01'
+          max: '2026-12-31'
+        label:
+          extra: Only dates in 2026 are available. Times in 30-minute slots.
+    - id: dts_combo_utc_large
+      type: DateTimeSelector
+      properties:
+        title: UTC Timestamp
+        format: YYYY-MM-DD HH:mm
+        selectUTC: true
+        size: large
+        variant: filled
+        suffixIcon: AiOutlineClockCircle
+        label:
+          extra: Time is recorded in UTC.
+    - id: dts_combo_themed
+      type: DateTimeSelector
+      properties:
+        title: Themed Picker
+        variant: filled
+        size: large
+        format: DD MMMM YYYY HH:mm
+        placeholder: Choose a special date & time...
+        minuteStep: 15
+        suffixIcon:
+          name: AiOutlineHeart
+          color: '#eb2f96'
+        label:
+          disabled: true
+        theme:
+          colorPrimary: '#eb2f96'
+          borderRadius: 20
+          controlHeightLG: 48
+          fontSize: 16
+
+- title: DateTimeSelector in Appointment Booking
+  blocks:
+    - id: applied2_appt_card
+      type: Card
+      properties:
+        title: Book an Appointment
+      blocks:
+        - id: applied2_appt_datetime
+          type: DateTimeSelector
+          properties:
+            title: Appointment Date & Time
+            placeholder: Select date and time
+            format: DD MMMM YYYY HH:mm
+            minuteStep: 15
+            size: large
+            suffixIcon: AiOutlineSchedule
+            label:
+              extra: Appointments are available in 15-minute slots.
+            disabledDates:
+              min: '2026-03-15'
+        - id: applied2_appt_service
+          type: Selector
+          properties:
+            title: Service
+            placeholder: Select a service...
+            options:
+              - label: General Consultation
+                value: general
+              - label: Follow-Up Visit
+                value: followup
+              - label: Specialist Referral
+                value: specialist
+              - label: Annual Check-Up
+                value: annual
+        - id: applied2_appt_notes
+          type: TextArea
+          properties:
+            title: Additional Notes
+            placeholder: Any details the provider should know...
+            label:
+              extra: Optional. Share symptoms or questions in advance.
+        - id: applied2_appt_book_btn
+          type: Button
+          properties:
+            title: Book Appointment
+            icon: AiOutlineCalendar
+            type: primary
+            size: large
+            block: true
+          events:
+            onClick:
+              - id: book_appt_action
+                type: DisplayMessage
+                params:
+                  content: Appointment booked successfully! A confirmation email has been sent.
+                  duration: 3
+
+- title: DateTimeSelector in Meeting Scheduler
+  blocks:
+    - id: applied3_meeting_card
+      type: Card
+      properties:
+        title: Schedule a Meeting
+      blocks:
+        - id: applied3_meeting_title
+          type: TextInput
+          properties:
+            title: Meeting Title
+            placeholder: Enter meeting subject...
+        - id: applied3_meeting_datetime
+          type: DateTimeSelector
+          properties:
+            title: Meeting Date & Time
+            placeholder: Select meeting date and time
+            format: DD MMMM YYYY HH:mm
+            minuteStep: 15
+            suffixIcon: AiOutlineClockCircle
+            label:
+              extra: Meetings are scheduled in 15-minute increments.
+            disabledDates:
+              min: '2026-03-13'
+          events:
+            onChange:
+              - id: meeting_datetime_change
+                type: SetState
+                params:
+                  meetingDateSelected: true
+        - id: applied3_meeting_schedule_btn
+          type: Button
+          properties:
+            title: Schedule Meeting
+            icon: AiOutlineSchedule
+            type: primary
+            size: large
+            block: true
+          events:
+            onClick:
+              - id: schedule_meeting_action
+                type: DisplayMessage
+                params:
+                  content: Meeting scheduled! Calendar invites will be sent to all participants.
+                  duration: 3

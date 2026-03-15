@@ -1,0 +1,234 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic File List
+  blocks:
+    - id: basic_download
+      type: S3Download
+      properties:
+        s3GetPolicyRequestId: download_file
+        fileList:
+          - key: report.pdf
+            type: application/pdf
+            name: report.pdf
+          - key: photo.jpg
+            type: image/jpeg
+            name: photo.jpg
+
+- title: Single File
+  blocks:
+    - id: single_file
+      type: S3Download
+      properties:
+        s3GetPolicyRequestId: download_file
+        fileList:
+          - key: invoice_2026_001.pdf
+            type: application/pdf
+            name: invoice_2026_001.pdf
+
+- title: Multiple File Types
+  blocks:
+    - id: multi_type
+      type: S3Download
+      properties:
+        s3GetPolicyRequestId: download_file
+        fileList:
+          - key: documents/contract.pdf
+            type: application/pdf
+            name: contract.pdf
+          - key: images/logo.png
+            type: image/png
+            name: logo.png
+          - key: data/export.csv
+            type: text/csv
+            name: export.csv
+          - key: archives/backup.zip
+            type: application/zip
+            name: backup.zip
+
+- title: Style and Class Overrides
+  blocks:
+    - id: styled_download
+      type: S3Download
+      style:
+        --element:
+          background: '#f6ffed'
+          border: 1px solid #b7eb8f
+          borderRadius: 8
+          padding: 12
+      properties:
+        s3GetPolicyRequestId: download_file
+        fileList:
+          - key: report.pdf
+            type: application/pdf
+            name: Quarterly Report.pdf
+          - key: summary.pdf
+            type: application/pdf
+            name: Executive Summary.pdf
+
+- title: Theme Token Overrides
+  blocks:
+    - id: themed_download
+      type: S3Download
+      properties:
+        s3GetPolicyRequestId: download_file
+        theme:
+          actionsColor: '#f5222d'
+          controlItemBgHover: '#f9f0ff'
+          colorIcon: '#f5222d'
+          fontSize: 18
+        fileList:
+          - key: contracts/nda.pdf
+            type: application/pdf
+            name: Non-Disclosure Agreement.pdf
+          - key: contracts/sla.pdf
+            type: application/pdf
+            name: Service Level Agreement.pdf
+          - key: contracts/msa.pdf
+            type: application/pdf
+            name: Master Services Agreement.pdf
+
+- title: S3Download in Document Portal
+  fullWidth: true
+  hideConfig: true
+  blocks:
+    - id: portal_example
+      type: MarkdownWithCode
+      properties:
+        content: |
+          Full page config with connection, request, and S3Download block:
+          ```yaml
+          # lowdefy.yaml
+          connections:
+            - id: project_files
+              type: AwsS3Bucket
+              properties:
+                accessKeyId:
+                  _secret: FILES_S3_ACCESS_KEY_ID
+                secretAccessKey:
+                  _secret: FILES_S3_SECRET_ACCESS_KEY
+                region: us-east-1
+                bucket:
+                  _secret: FILES_S3_BUCKET
+
+          # page config
+          id: document_portal
+          type: PageSiderMenu
+          blocks:
+            - id: documents_card
+              type: Card
+              properties:
+                title: Project Documents
+              blocks:
+                - id: download_files
+                  type: S3Download
+                  properties:
+                    s3GetPolicyRequestId: download_file
+                    fileList:
+                      - key: projects/alpha/proposal.pdf
+                        type: application/pdf
+                        name: Project Alpha - Proposal.pdf
+                      - key: projects/alpha/budget.xlsx
+                        type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+                        name: Project Alpha - Budget.xlsx
+                  requests:
+                    - id: download_file
+                      type: AwsS3PresignedGetObject
+                      connectionId: project_files
+                      payload:
+                        key:
+                          _event: file.key
+                        type:
+                          _event: file.type
+                      properties:
+                        key:
+                          _payload: key
+                        responseContentType:
+                          _payload: type
+          ```
+
+- title: S3Download with S3Upload
+  fullWidth: true
+  hideConfig: true
+  blocks:
+    - id: upload_download_example
+      type: MarkdownWithCode
+      properties:
+        content: |
+          Upload and download files on the same page by mapping the S3Upload fileList to S3Download:
+          ```yaml
+          # lowdefy.yaml
+          connections:
+            - id: attachments
+              type: AwsS3Bucket
+              properties:
+                accessKeyId:
+                  _secret: FILES_S3_ACCESS_KEY_ID
+                secretAccessKey:
+                  _secret: FILES_S3_SECRET_ACCESS_KEY
+                region: us-east-1
+                bucket:
+                  _secret: FILES_S3_BUCKET
+                write: true
+
+          # page config
+          id: file_management
+          type: PageSiderMenu
+          blocks:
+            - id: upload_card
+              type: Card
+              properties:
+                title: Upload Files
+              blocks:
+                - id: upload_files
+                  type: S3Upload
+                  properties:
+                    s3PutPolicyRequestId: upload_policy
+                  requests:
+                    - id: upload_policy
+                      type: AwsS3PresignedPutObject
+                      connectionId: attachments
+                      payload:
+                        filename:
+                          _event: filename
+                      properties:
+                        key:
+                          _payload: filename
+            - id: download_card
+              type: Card
+              properties:
+                title: Download Uploaded Files
+              blocks:
+                - id: download_files
+                  type: S3Download
+                  properties:
+                    s3GetPolicyRequestId: download_policy
+                    # Map fileList directly from S3Upload state
+                    fileList:
+                      _state: upload_files
+                  requests:
+                    - id: download_policy
+                      type: AwsS3PresignedGetObject
+                      connectionId: attachments
+                      payload:
+                        key:
+                          _event: file.key
+                        type:
+                          _event: file.type
+                      properties:
+                        key:
+                          _payload: key
+                        responseContentType:
+                          _payload: type
+          ```

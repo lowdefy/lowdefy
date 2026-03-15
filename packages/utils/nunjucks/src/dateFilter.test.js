@@ -22,13 +22,16 @@
   Licensed under the Apache 2.0 license.
 */
 
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc.js';
 import nunjucks from 'nunjucks';
-import moment from 'moment';
 import dateFilter from './dateFilter.js';
 
+dayjs.extend(utc);
+
 const testDate = new Date('2015-03-21');
-const testMoment = moment(testDate);
-const testMomentPlus = moment(testDate).add(7, 'days');
+const testDayjs = dayjs(testDate);
+const testDayjsPlus = dayjs(testDate).add(7, 'days');
 const testFilterName = 'custom_filter';
 const testFormat = 'YYYY';
 const testDefFormat = 'YYYY-MM-DD';
@@ -43,20 +46,20 @@ const renderNunjucks = (filter, str) => {
 
 describe('dateFunction - format arg', () => {
   test('no arg - using default format', () => {
-    expect(dateFilter(testDate)).toEqual(testMoment.format());
+    expect(dateFilter(testDate)).toEqual(testDayjs.format());
   });
 
   test('using "' + testFormat + '" arg', () => {
-    expect(dateFilter(testDate, testFormat)).toEqual(testMoment.format(testFormat));
+    expect(dateFilter(testDate, testFormat)).toEqual(testDayjs.format(testFormat));
   });
 });
 
 describe('dateFunction - moment method calls', () => {
   test('using the "add" method', () => {
-    expect(dateFilter(testDate, 'add', 7, 'days').format()).toEqual(testMomentPlus.format());
+    expect(dateFilter(testDate, 'add', 7, 'days').format()).toEqual(testDayjsPlus.format());
   });
   test('using the "utc" method', () => {
-    expect(dateFilter(testDate, 'utc').format()).toEqual(moment(testDate).utc().format());
+    expect(dateFilter(testDate, 'utc').format()).toEqual(dayjs(testDate).utc().format());
   });
 });
 
@@ -64,25 +67,25 @@ describe('nunjucksFilter - filter installation', () => {
   test('using default filter name "date" manually', () => {
     env.addFilter('date', dateFilter);
     expect(typeof renderNunjucks()).toEqual('string');
-    expect(renderNunjucks()).toEqual(testMoment.format());
+    expect(renderNunjucks()).toEqual(testDayjs.format());
   });
 
   test('using filter auto-install with default filter name', () => {
     dateFilter.install(env);
     expect(typeof renderNunjucks()).toEqual('string');
-    expect(renderNunjucks()).toEqual(testMoment.format());
+    expect(renderNunjucks()).toEqual(testDayjs.format());
   });
 
   test('using filter auto-install with default filter name and no "env"', () => {
     dateFilter.install();
     expect(typeof renderNunjucks()).toEqual('string');
-    expect(renderNunjucks()).toEqual(testMoment.format());
+    expect(renderNunjucks()).toEqual(testDayjs.format());
   });
 
   test('using filter auto-install with custom filter name', () => {
     dateFilter.install(env, testFilterName);
     expect(typeof renderNunjucks(testFilterName)).toEqual('string');
-    expect(renderNunjucks(testFilterName)).toEqual(testMoment.format());
+    expect(renderNunjucks(testFilterName)).toEqual(testDayjs.format());
   });
 });
 
@@ -90,7 +93,7 @@ describe('nunjucksFilter - default date format', () => {
   test('using no arg', () => {
     env.addFilter('date', dateFilter);
     dateFilter.setDefaultFormat(testDefFormat);
-    expect(dateFilter(testDate)).toEqual(testMoment.format(testDefFormat));
+    expect(dateFilter(testDate)).toEqual(testDayjs.format(testDefFormat));
     dateFilter.setDefaultFormat(null);
   });
 });
@@ -102,7 +105,7 @@ describe('nunjucksFilter - format calls', () => {
       'string'
     );
     expect(renderNunjucks('date', '{{ my_date | date("' + testFormat + '") }}')).toEqual(
-      testMoment.format(testFormat)
+      testDayjs.format(testFormat)
     );
   });
 });
@@ -112,7 +115,7 @@ describe('nunjucksFilter - format calls with custom default date format', () => 
     env.addFilter('date', dateFilter);
     dateFilter.setDefaultFormat(testDefFormat);
     expect(typeof renderNunjucks()).toEqual('string');
-    expect(renderNunjucks()).toEqual(testMoment.format(testDefFormat));
+    expect(renderNunjucks()).toEqual(testDayjs.format(testDefFormat));
     dateFilter.setDefaultFormat(null);
   });
 });
@@ -124,12 +127,12 @@ describe('nunjucksFilter - moment methods calls', () => {
       'string'
     );
     expect(renderNunjucks('date', '{{ my_date | date("add", 7, "days") | date }}')).toEqual(
-      testMomentPlus.format()
+      testDayjsPlus.format()
     );
   });
   test('utc method', () => {
     expect(renderNunjucks('date', '{{ my_date | date("utc") | date }}')).toEqual(
-      moment(testDate).utc().format()
+      dayjs(testDate).utc().format()
     );
   });
 });
@@ -138,15 +141,13 @@ describe('nunjucksFilter - return nunjucks errors', () => {
   test('using no arg', () => {
     env.addFilter('date', dateFilter);
     dateFilter.setDefaultFormat(testDefFormat);
-    expect(renderNunjucks('date', '{{ my_date | date(111)}}')).toEqual(
-      'TypeError: format.match is not a function'
-    );
+    expect(renderNunjucks('date', '{{ my_date | date(111)}}')).toMatch(/^TypeError:/);
     dateFilter.setDefaultFormat(null);
   });
   test('using no arg', () => {
     env.addFilter('date', dateFilter);
     dateFilter.setDefaultFormat(testDefFormat);
-    expect(renderNunjucks('date', '{{ false | date }}')).toEqual('Invalid date');
+    expect(renderNunjucks('date', '{{ false | date }}')).toEqual('Invalid Date');
     dateFilter.setDefaultFormat(null);
   });
 });
@@ -157,23 +158,23 @@ describe('dateFilter - edge cases', () => {
     expect(dateFilter(undefined)).toEqual('');
   });
   test('booleans', () => {
-    expect(dateFilter(true)).toEqual('Invalid date');
-    expect(dateFilter(false)).toEqual('Invalid date');
+    expect(dateFilter(true)).toEqual('Invalid Date');
+    expect(dateFilter(false)).toEqual('Invalid Date');
   });
   test('strings', () => {
-    expect(dateFilter('')).toEqual('Invalid date');
-    expect(dateFilter('x')).toEqual('Invalid date');
-    expect(dateFilter('2020-01-02')).toEqual(moment('2020-01-02').format());
+    expect(dateFilter('')).toEqual('Invalid Date');
+    expect(dateFilter('x')).toEqual('Invalid Date');
+    expect(dateFilter('2020-01-02')).toEqual(dayjs('2020-01-02').format());
   });
   test('arrays and objects', () => {
-    expect(dateFilter([])).toEqual('Invalid date');
-    expect(dateFilter({})).toEqual('Invalid date');
+    expect(dateFilter([])).toEqual('Invalid Date');
+    expect(dateFilter({})).toEqual('Invalid Date');
   });
   test('numbers', () => {
-    expect(dateFilter(0)).toEqual(moment(0).format());
-    expect(dateFilter(1)).toEqual(moment(1).format());
-    expect(dateFilter(-1)).toEqual(moment(-1).format());
-    expect(dateFilter(0.1)).toEqual(moment(0.1).format());
-    expect(dateFilter(-0.1)).toEqual(moment(-0.1).format());
+    expect(dateFilter(0)).toEqual(dayjs(0).format());
+    expect(dateFilter(1)).toEqual(dayjs(1).format());
+    expect(dateFilter(-1)).toEqual(dayjs(-1).format());
+    expect(dateFilter(0.1)).toEqual(dayjs(0.1).format());
+    expect(dateFilter(-0.1)).toEqual(dayjs(-0.1).format());
   });
 });

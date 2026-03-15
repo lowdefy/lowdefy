@@ -1,0 +1,111 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+export default {
+  category: 'display',
+  icons: [],
+  valueType: null,
+  cssKeys: {
+    element: 'The AgGridMaterial element.',
+  },
+  events: {
+    onCellClick: 'Trigger event when a cell is clicked.',
+    onFilterChanged: 'Trigger event when the filter changes.',
+    onRowClick: 'Trigger event when a row is clicked.',
+    onRowSelected: 'Trigger event when a row is selected.',
+    onSelectionChanged: 'Triggered when the selected rows are changed.',
+    onSortChanged: 'Trigger event when the sort changes.',
+  },
+  properties: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      height: {
+        type: ['number', 'string'],
+        default: 'auto',
+        description: 'Specify table height explicitly, in pixel.',
+      },
+      rowData: {
+        type: 'array',
+        description: 'The list of data to display on the table.',
+      },
+      rowId: {
+        type: 'string',
+        description:
+          'The data field to use in `getRowId` which results in Row Selection being maintained across Row Data changes (assuming the Row exists in both sets). See Ag Grid docs for more details (https://www.ag-grid.com/react-data-grid/data-update-row-data/).',
+      },
+      defaultColDef: {
+        type: 'object',
+        description:
+          'Column properties which get applied to all columns. See all (https://www.ag-grid.com/javascript-data-grid/column-properties/).',
+      },
+      columnDefs: {
+        type: 'array',
+        description: 'A list of properties for each column.',
+        items: {
+          type: 'object',
+          properties: {
+            field: {
+              type: 'string',
+              description:
+                "The field of the row object to get the cell's data from. Deep references into a row object is supported via dot notation, i.e 'address.firstLine'.",
+            },
+            headerName: {
+              type: 'string',
+              description:
+                'The name to render in the column header. If not specified and field is specified, the field name will be used as the header name.',
+            },
+            filter: {
+              type: 'boolean',
+              default: false,
+              description:
+                'Filter component to use for this column. Set to true to use the default filter.',
+            },
+            sortable: {
+              type: 'boolean',
+              default: false,
+              description: 'Set to true to allow sorting on this column.',
+            },
+            resizable: {
+              type: 'boolean',
+              default: false,
+              description: 'Set to true to allow this column should be resized.',
+            },
+            width: {
+              type: 'number',
+              description: 'Initial width in pixels for the cell.',
+            },
+            cellStyle: {
+              type: 'number',
+              description:
+                'An object of css values returning an object of css values for a particular cell.',
+            },
+            cellRenderer: {
+              type: 'object',
+              description:
+                "Provide your own cell Renderer function (using the `_function` operator) for this column's cells.",
+            },
+            valueFormatter: {
+              type: ['object', 'string'],
+              description:
+                'A function (using the `_function` operator) or expression to format a value, should return a string. Not used for CSV export or copy to clipboard, only for UI cell rendering.',
+            },
+          },
+        },
+      },
+    },
+  },
+};

@@ -1,0 +1,313 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Headings
+  fullWidth: true
+  blocks:
+    - id: headings_all
+      type: Markdown
+      properties:
+        content: |
+          # Heading 1
+          ## Heading 2
+          ### Heading 3
+          #### Heading 4
+          ##### Heading 5
+          ###### Heading 6
+
+- title: Bold, Italic and Strikethrough
+  fullWidth: true
+  blocks:
+    - id: format_bold
+      type: Markdown
+      properties:
+        content: |
+          **This entire line is bold text.**
+
+          Use double asterisks for **bold words** in a sentence.
+    - id: format_italic
+      type: Markdown
+      properties:
+        content: |
+          *This entire line is italic text.*
+
+          Use single asterisks for *italic words* in a sentence.
+    - id: format_strikethrough
+      type: Markdown
+      properties:
+        content: |
+          ~~This text has been removed.~~
+
+          The old price was ~~$99.99~~ and the new price is **$49.99**.
+    - id: format_combined
+      type: Markdown
+      properties:
+        content: |
+          Combine formatting: ***bold and italic***, **bold with ~~strikethrough~~**, and *italic with ~~strikethrough~~*.
+
+          You can also nest them: **This is bold, and *this part is bold italic*.**
+
+- title: Unordered Lists
+  fullWidth: true
+  blocks:
+    - id: list_unordered_simple
+      type: Markdown
+      properties:
+        content: |
+          - Apples
+          - Bananas
+          - Cherries
+          - Dates
+    - id: list_unordered_nested
+      type: Markdown
+      properties:
+        content: |
+          - Fruits
+            - Apples
+            - Bananas
+              - Cavendish
+              - Plantain
+            - Cherries
+          - Vegetables
+            - Carrots
+            - Peas
+
+- title: Ordered Lists
+  fullWidth: true
+  blocks:
+    - id: list_ordered_simple
+      type: Markdown
+      properties:
+        content: |
+          1. First step
+          2. Second step
+          3. Third step
+          4. Fourth step
+    - id: list_ordered_nested
+      type: Markdown
+      properties:
+        content: |
+          1. Plan the project
+             1. Define requirements
+             2. Create timeline
+          2. Build the app
+             1. Set up environment
+             2. Write configuration
+             3. Test locally
+          3. Deploy to production
+
+- title: Task Lists
+  fullWidth: true
+  blocks:
+    - id: task_list
+      type: Markdown
+      properties:
+        content: |
+          **Project Checklist:**
+
+          - [x] Set up repository
+          - [x] Install dependencies
+          - [x] Create lowdefy.yaml
+          - [ ] Add authentication
+          - [ ] Configure database
+          - [ ] Deploy to production
+
+- title: Inline Links
+  fullWidth: true
+  blocks:
+    - id: links_inline
+      type: Markdown
+      properties:
+        content: |
+          Visit [Lowdefy](https://lowdefy.com) for more information.
+
+          Check the [documentation](https://docs.lowdefy.com "Lowdefy Docs") with a tooltip title.
+
+          Auto-linked URL: https://lowdefy.com
+    - id: links_reference
+      type: Markdown
+      properties:
+        content: |
+          Reference-style links are useful for readability:
+
+          [Lowdefy][1] is a config-driven framework. Read the [docs][docs-link] to get started. See the [GitHub repo][2] for source code.
+
+          [1]: https://lowdefy.com
+          [docs-link]: https://docs.lowdefy.com
+          [2]: https://github.com/lowdefy/lowdefy
+
+- title: Images
+  fullWidth: true
+  blocks:
+    - id: image_basic
+      type: Markdown
+      properties:
+        content: |
+          An inline image:
+
+          ![Lowdefy Logo](/logo_example.png "Lowdefy Logo")
+
+          Images can also use reference-style links:
+
+          ![Alt text][logo]
+
+          [logo]: /logo_example.png
+
+- title: Blockquotes
+  fullWidth: true
+  blocks:
+    - id: quote_simple
+      type: Markdown
+      properties:
+        content: |
+          > Configuration is the new code. Define your entire application with simple, readable YAML.
+    - id: quote_with_formatting
+      type: Markdown
+      properties:
+        content: |
+          > **Important:** Blockquotes can contain other formatting.
+          >
+          > - Bullet points work inside quotes
+          > - So does **bold** and *italic* text
+          >
+          > They can span multiple paragraphs.
+    - id: quote_nested
+      type: Markdown
+      properties:
+        content: |
+          > This is a top-level quote.
+          >
+          > > This is a nested quote inside the first one.
+          > >
+          > > > And this is nested even deeper.
+
+- title: Horizontal Rules
+  fullWidth: true
+  blocks:
+    - id: hr_example
+      type: Markdown
+      properties:
+        content: |
+          Content above the first rule.
+
+          ---
+
+          Content between the rules. You can use three hyphens, asterisks, or underscores.
+
+          ***
+
+          Content after the second rule.
+
+          ___
+
+          Final content below.
+
+- title: Tables
+  fullWidth: true
+  blocks:
+    - id: table_basic
+      type: Markdown
+      properties:
+        content: |
+          | Property | Type | Default | Description |
+          | --- | --- | --- | --- |
+          | content | string | - | Markdown content to render |
+          | skipHtml | boolean | false | Skip rendering HTML in markdown |
+    - id: table_aligned
+      type: Markdown
+      properties:
+        content: |
+          | Left Aligned | Center Aligned | Right Aligned |
+          | :--- | :---: | ---: |
+          | Row 1 Col 1 | Row 1 Col 2 | $10.00 |
+          | Row 2 Col 1 | Row 2 Col 2 | $25.50 |
+          | Row 3 Col 1 | Row 3 Col 2 | $99.99 |
+          | **Total** | | **$135.49** |
+
+- title: Combined Content
+  fullWidth: true
+  blocks:
+    - id: combined_document
+      type: Markdown
+      properties:
+        content: |
+          ## Project Overview
+
+          This document demonstrates how multiple markdown elements combine into a cohesive document.
+
+          ### Features
+
+          The application supports the following capabilities:
+
+          | Feature | Status | Priority |
+          | --- | --- | --- |
+          | Authentication | Complete | High |
+          | Dashboard | In Progress | High |
+          | Reports | Planned | Medium |
+
+          ### Getting Started
+
+          1. Clone the repository
+          2. Install dependencies
+          3. Configure your `lowdefy.yaml` file
+
+          > **Note:** Make sure you have Node.js 18 or later installed before starting.
+
+          For more details, visit the [documentation](https://docs.lowdefy.com).
+
+          ---
+
+          *Last updated: March 2026*
+
+- title: skipHtml Property
+  fullWidth: true
+  blocks:
+    - id: skip_html_false
+      type: Markdown
+      properties:
+        content: |
+          **skipHtml: false (default)**
+
+          HTML tags like <b>bold</b> are escaped and shown as text: `<b>bold</b>`
+
+          The Markdown block escapes HTML by default for security.
+    - id: skip_html_true
+      type: Markdown
+      properties:
+        skipHtml: true
+        content: |
+          **skipHtml: true**
+
+          With skipHtml enabled, any HTML tags like <b>bold</b> or <div>divs</div> are completely removed from the output rather than being shown as escaped text.
+
+- title: Style Override
+  fullWidth: true
+  blocks:
+    - id: style_element
+      type: Markdown
+      style:
+        --element:
+          backgroundColor: '#f0f5ff'
+          padding: 16
+          borderRadius: 8
+          border: '1px solid #adc6ff'
+      properties:
+        content: |
+          ### Styled Container
+
+          The `element` style key applies CSS to the outer wrapper div. Use it to add background colors, padding, borders, and other container-level styles.
+
+          - Custom background color
+          - Rounded corners
+          - Border styling

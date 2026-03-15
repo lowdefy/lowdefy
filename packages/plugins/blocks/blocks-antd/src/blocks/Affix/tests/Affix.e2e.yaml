@@ -28,7 +28,7 @@ blocks:
     type: Affix
     properties:
       offsetTop: 10
-    areas:
+    slots:
       content:
         blocks:
           - id: affix_basic_button
@@ -44,7 +44,7 @@ blocks:
     type: Affix
     properties:
       offsetTop: 50
-    areas:
+    slots:
       content:
         blocks:
           - id: affix_offset_top_content
@@ -62,7 +62,7 @@ blocks:
       offsetTop: 100
       style:
         zIndex: 100
-    areas:
+    slots:
       content:
         blocks:
           - id: affix_styled_content

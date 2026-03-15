@@ -1,0 +1,59 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- id: default
+  type: FloatButton
+- id: 'properties.type: default'
+  type: FloatButton
+  properties:
+    type: default
+- id: 'properties.type: primary'
+  type: FloatButton
+  properties:
+    type: primary
+- id: 'properties.shape: circle'
+  type: FloatButton
+  properties:
+    shape: circle
+- id: 'properties.shape: square'
+  type: FloatButton
+  properties:
+    shape: square
+- id: properties.description
+  type: FloatButton
+  properties:
+    description: Help
+    shape: square
+- id: properties.tooltip
+  type: FloatButton
+  properties:
+    tooltip: Click me
+- id: properties.icon
+  type: FloatButton
+  properties:
+    icon: AiOutlineQuestion
+- id: properties.href
+  type: FloatButton
+  properties:
+    href: https://lowdefy.com
+    target: _blank
+- id: properties.badge
+  type: FloatButton
+  properties:
+    badge:
+      count: 5
+- id: 'properties.htmlType: submit'
+  type: FloatButton
+  properties:
+    htmlType: submit

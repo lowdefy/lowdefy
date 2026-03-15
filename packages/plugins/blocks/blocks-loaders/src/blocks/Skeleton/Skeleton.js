@@ -15,22 +15,21 @@
 */
 
 import React from 'react';
-import { blockDefaultProps } from '@lowdefy/block-utils';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 
-const Skeleton = ({ properties, methods }) => {
+import cssStyles from './style.module.css';
+
+const Skeleton = ({ classNames, properties, styles }) => {
   return (
     <div
-      className={'skeleton ' + methods.makeCssClass(properties.style)}
-      style={{ width: properties.width ?? '100%', height: properties.height ?? '100%' }}
+      className={cssStyles.skeleton + (classNames?.element ? ' ' + classNames.element : '')}
+      style={{
+        width: properties.width ?? '100%',
+        height: properties.height ?? '100%',
+        ...styles?.element,
+      }}
     />
   );
 };
 
-Skeleton.defaultProps = blockDefaultProps;
-Skeleton.meta = {
-  category: 'display',
-  icons: [],
-  styles: ['blocks/Skeleton/style.less'],
-};
-
-export default Skeleton;
+export default withBlockDefaults(Skeleton);

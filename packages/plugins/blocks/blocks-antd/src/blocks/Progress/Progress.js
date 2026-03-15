@@ -16,14 +16,17 @@
 
 import React from 'react';
 import { Progress } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-utils';
+import { withBlockDefaults } from '@lowdefy/block-utils';
+import withTheme from '../withTheme.js';
 
-const ProgressBlock = ({ blockId, properties }) => (
+const ProgressBlock = ({ blockId, classNames = {}, properties, styles = {} }) => (
   <Progress
+    className={classNames.element}
     gapDegree={properties.gapDegree}
-    gapPosition={properties.gapPosition}
+    gapPlacement={properties.gapPlacement}
     id={blockId}
     percent={properties.percent}
+    style={styles.element}
     showInfo={properties.showInfo}
     status={properties.status}
     steps={properties.steps}
@@ -37,11 +40,4 @@ const ProgressBlock = ({ blockId, properties }) => (
   />
 );
 
-ProgressBlock.defaultProps = blockDefaultProps;
-ProgressBlock.meta = {
-  category: 'display',
-  icons: [],
-  styles: ['blocks/Progress/style.less'],
-};
-
-export default ProgressBlock;
+export default withTheme('Progress', withBlockDefaults(ProgressBlock));

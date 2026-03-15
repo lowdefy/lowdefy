@@ -16,7 +16,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { get, mergeObjects, type } from '@lowdefy/helpers';
-import { blockDefaultProps } from '@lowdefy/block-utils';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 
 import Affix from '../Affix/Affix.js';
 import Breadcrumb from '../Breadcrumb/Breadcrumb.js';
@@ -32,6 +32,7 @@ import Sider from '../Sider/Sider.js';
 const PageSiderMenu = ({
   basePath,
   blockId,
+  classNames = {},
   components: { Icon, Link },
   events,
   content,
@@ -39,6 +40,7 @@ const PageSiderMenu = ({
   methods,
   pageId,
   properties,
+  styles = {},
 }) => {
   const [openSiderState, setSiderOpen] = useState(!properties.sider?.initialCollapsed);
   useEffect(() => {
@@ -51,90 +53,45 @@ const PageSiderMenu = ({
       setSiderOpen(open);
     });
   });
-  const styles = {
-    layout: { minHeight: '100vh' },
-    header: {
-      display: 'flex',
-      alignItems: 'center',
-      padding: '0 46px',
-      xs: { padding: '0 10px' },
-      sm: { padding: '0 15px' },
-      md: { padding: '0 30px' },
-      lg: { padding: '0 46px' },
-      flexDirection: 'row-reverse',
-    },
-    headerContent: {
-      alignItems: 'center',
-      flex: '1 1 auto',
-      display: 'flex',
-      justifyContent: 'flex-end',
-    },
-    logo: {
-      margin: '0 30px 0 0',
-      flex: '0 1 auto',
-      width: 130,
-      xs: { margin: '0 5px', width: 40 },
-      sm: { margin: '0 10px', width: 130 },
-      md: { margin: '0 15px' },
-    },
-    desktop: {
-      display: 'none',
-      lg: { display: 'block' },
-    },
-    mobile: {
-      display: 'block',
-      lg: { display: 'none' },
-    },
-    mdMenu: {
-      paddingLeft: '1rem',
-    },
-    body: {
-      padding: '0 40px 40px 40px',
-      xs: { padding: '0 5px 5px 5px' },
-      sm: { padding: '0 10px 10px 10px' },
-      md: { padding: '0 20px 20px 20px' },
-      lg: { padding: '0 40px 40px 40px' },
-    },
-    sider: {
-      display: 'flex',
-      height: '100%',
-      flexDirection: 'column',
-    },
-    content: {},
-    breadcrumb: {
-      margin: '16px 0',
-    },
-    noBreadcrumb: {
-      padding: '20px 0',
-      xs: { padding: '5px 0' },
-      sm: { padding: '5px 0' },
-      md: { padding: '10px 0' },
-    },
-  };
   return (
     <Layout
       blockId={blockId}
       components={{ Icon, Link }}
       events={events}
-      properties={{ style: mergeObjects([styles.layout, properties.style]) }}
+      styles={{
+        element: mergeObjects([{ minHeight: '100vh' }, styles.element]),
+      }}
       content={{
-        // TODO: use next/image
         content: () => (
           <>
             <Header
               blockId={`${blockId}_header`}
               components={{ Icon, Link }}
+              classNames={{ element: classNames.header }}
               events={events}
-              properties={mergeObjects([{ style: styles.header }, properties.header])}
+              properties={properties.header ?? {}}
+              styles={{
+                element: mergeObjects([
+                  {
+                    display: 'flex',
+                    alignItems: 'center',
+                    flexDirection: 'row-reverse',
+                  },
+                  styles.header,
+                ]),
+              }}
               content={{
                 content: () => (
                   <>
-                    <div className={methods.makeCssClass(styles.headerContent)}>
+                    <div className="flex flex-auto items-center justify-end">
                       {content.header &&
                         content.header(
-                          mergeObjects([{ width: 'auto' }, properties.header?.contentStyle])
+                          mergeObjects([
+                            { width: 'auto', alignItems: 'center', flexWrap: 'nowrap' },
+                            properties.header?.contentStyle,
+                          ])
                         )}
-                      <div className={methods.makeCssClass([styles.mobile, styles.mdMenu])}>
+                      <div className="block lg:hidden pl-4">
                         <MobileMenu
                           blockId={`${blockId}_mobile_menu`}
                           components={{ Icon, Link }}
@@ -182,7 +139,11 @@ const PageSiderMenu = ({
                             }-theme.png`
                           }
                           alt={properties.logo?.alt ?? 'Lowdefy'}
-                          className={methods.makeCssClass([styles.logo, properties.logo?.style])}
+                          className={
+                            classNames.logo ??
+                            'mr-[30px] shrink w-10 sm:w-[130px] mx-1.5 sm:mx-2.5 md:mx-4'
+                          }
+                          style={mergeObjects([properties.logo?.style, styles.logo])}
                         />
                       </picture>
                     </Link>
@@ -194,7 +155,8 @@ const PageSiderMenu = ({
               blockId={`${blockId}_layout`}
               components={{ Icon, Link }}
               events={events}
-              properties={properties.layout}
+              properties={{ hasSider: true, ...properties.layout }}
+              styles={{ element: properties.layout?.style }}
               content={{
                 content: () => (
                   <>
@@ -206,10 +168,11 @@ const PageSiderMenu = ({
                       properties={mergeObjects([
                         {
                           theme: get(properties, 'sider.theme') ?? 'light',
-                          style: styles.desktop,
                         },
                         properties.sider,
                       ])}
+                      classNames={{ element: classNames.sider ?? 'hidden lg:block' }}
+                      styles={{ element: styles.sider }}
                       rename={{
                         methods: {
                           toggleOpen: '_toggleSiderOpen',
@@ -218,11 +181,18 @@ const PageSiderMenu = ({
                       }}
                       content={{
                         content: () => (
-                          <div style={styles.sider}>
+                          <div
+                            style={{
+                              display: 'flex',
+                              height: '100%',
+                              flexDirection: 'column',
+                            }}
+                          >
                             <Menu
                               blockId={`${blockId}_menu`}
                               components={{ Icon, Link }}
                               basePath={basePath}
+                              classNames={{ element: classNames.menu ?? 'hidden lg:block' }}
                               events={events}
                               methods={methods}
                               menus={menus}
@@ -231,12 +201,11 @@ const PageSiderMenu = ({
                                 {
                                   mode: 'inline',
                                   theme: get(properties, 'sider.theme') ?? 'light',
-                                  // collapsed: !openSiderState,
                                 },
-                                { style: styles.desktop },
                                 properties.menu,
                                 properties.menuLg,
                               ])}
+                              styles={{ element: styles.menu }}
                               rename={{
                                 methods: {
                                   toggleOpen: 'toggleMobileMenuOpen',
@@ -309,8 +278,18 @@ const PageSiderMenu = ({
                     <Content
                       blockId={`${blockId}_content`}
                       components={{ Icon, Link }}
+                      classNames={{ element: classNames.content }}
                       events={events}
-                      properties={mergeObjects([{ style: styles.body }, properties.content])}
+                      properties={properties.content ?? {}}
+                      styles={{
+                        element: mergeObjects([
+                          {
+                            padding: '0 40px 40px 40px',
+                            minWidth: 0,
+                          },
+                          styles.content,
+                        ]),
+                      }}
                       content={{
                         content: () => (
                           <>
@@ -319,12 +298,13 @@ const PageSiderMenu = ({
                                 blockId={`${blockId}_breadcrumb`}
                                 basePath={basePath}
                                 components={{ Icon, Link }}
+                                classNames={{ element: classNames.breadcrumb }}
                                 events={events}
                                 methods={methods}
-                                properties={mergeObjects([
-                                  { style: styles.breadcrumb },
-                                  properties.breadcrumb,
-                                ])}
+                                properties={properties.breadcrumb}
+                                styles={{
+                                  element: mergeObjects([{ margin: '16px 0' }, styles.breadcrumb]),
+                                }}
                                 rename={{
                                   events: {
                                     onClick: 'onBreadcrumbClick',
@@ -332,15 +312,19 @@ const PageSiderMenu = ({
                                 }}
                               />
                             ) : (
-                              <div className={methods.makeCssClass(styles.noBreadcrumb)} />
+                              <div className="py-1.5 sm:py-1.5 md:py-2.5 lg:py-5" />
                             )}
                             {content.content && content.content()}
                             {content.footer && (
                               <Footer
                                 blockId={`${blockId}_footer`}
                                 components={{ Icon, Link }}
+                                classNames={{ element: classNames.footer }}
                                 events={events}
                                 properties={properties.footer}
+                                styles={{
+                                  element: mergeObjects([properties.footer?.style, styles.footer]),
+                                }}
                                 content={{
                                   content: () => content.footer(),
                                 }}
@@ -361,11 +345,4 @@ const PageSiderMenu = ({
   );
 };
 
-PageSiderMenu.defaultProps = blockDefaultProps;
-PageSiderMenu.meta = {
-  category: 'container',
-  icons: ['AiOutlineMenuFold', 'AiOutlineMenuUnfold', ...MobileMenu.meta.icons],
-  styles: ['blocks/PageSiderMenu/style.less'],
-};
-
-export default PageSiderMenu;
+export default withBlockDefaults(PageSiderMenu);

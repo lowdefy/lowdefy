@@ -1,0 +1,644 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Sizes
+  blocks:
+    - id: month_size_small
+      type: MonthSelector
+      properties:
+        title: Small
+        size: small
+    - id: month_size_default
+      type: MonthSelector
+      properties:
+        title: Default
+    - id: month_size_large
+      type: MonthSelector
+      properties:
+        title: Large
+        size: large
+
+- title: Variants
+  blocks:
+    - id: month_variant_outlined
+      type: MonthSelector
+      properties:
+        title: Outlined (default)
+        variant: outlined
+        label:
+          disabled: true
+    - id: month_variant_filled
+      type: MonthSelector
+      properties:
+        title: Filled
+        variant: filled
+        label:
+          disabled: true
+    - id: month_variant_borderless
+      type: MonthSelector
+      properties:
+        title: Borderless
+        variant: borderless
+        label:
+          disabled: true
+
+- title: Format Variations
+  blocks:
+    - id: month_format_default
+      type: MonthSelector
+      properties:
+        title: YYYY-MM (default)
+        format: YYYY-MM
+        label:
+          disabled: true
+    - id: month_format_long
+      type: MonthSelector
+      properties:
+        title: MMMM YYYY
+        format: MMMM YYYY
+        label:
+          disabled: true
+    - id: month_format_short
+      type: MonthSelector
+      properties:
+        title: MMM YYYY
+        format: MMM YYYY
+        label:
+          disabled: true
+    - id: month_format_numeric
+      type: MonthSelector
+      properties:
+        title: MM/YYYY
+        format: MM/YYYY
+        label:
+          disabled: true
+    - id: month_format_month_only
+      type: MonthSelector
+      properties:
+        title: MMMM (Month Name Only)
+        format: MMMM
+        label:
+          disabled: true
+
+- title: Placeholder
+  blocks:
+    - id: month_placeholder_default
+      type: MonthSelector
+      properties:
+        title: Default Placeholder
+        label:
+          disabled: true
+    - id: month_placeholder_custom
+      type: MonthSelector
+      properties:
+        title: Custom Placeholder
+        placeholder: Pick a month...
+        label:
+          disabled: true
+    - id: month_placeholder_descriptive
+      type: MonthSelector
+      properties:
+        title: Descriptive Placeholder
+        placeholder: When did this start?
+        label:
+          disabled: true
+    - id: month_placeholder_format_hint
+      type: MonthSelector
+      properties:
+        title: Format Hint Placeholder
+        placeholder: e.g. January 2026
+        format: MMMM YYYY
+        label:
+          disabled: true
+
+- title: Allow Clear
+  blocks:
+    - id: month_clear_enabled
+      type: MonthSelector
+      properties:
+        title: Allow Clear (default)
+        allowClear: true
+        label:
+          disabled: true
+    - id: month_clear_disabled
+      type: MonthSelector
+      properties:
+        title: No Clear Button
+        allowClear: false
+        label:
+          disabled: true
+
+- title: Show Today Button
+  blocks:
+    - id: month_today_enabled
+      type: MonthSelector
+      properties:
+        title: Show Today (default)
+        showToday: true
+        label:
+          disabled: true
+    - id: month_today_disabled
+      type: MonthSelector
+      properties:
+        title: No Today Button
+        showToday: false
+        label:
+          disabled: true
+
+- title: Suffix Icon
+  blocks:
+    - id: month_icon_default
+      type: MonthSelector
+      properties:
+        title: Default Calendar Icon
+        label:
+          disabled: true
+    - id: month_icon_clock
+      type: MonthSelector
+      properties:
+        title: Clock Icon
+        suffixIcon: AiOutlineClockCircle
+        label:
+          disabled: true
+    - id: month_icon_schedule
+      type: MonthSelector
+      properties:
+        title: Schedule Icon
+        suffixIcon: AiOutlineSchedule
+        label:
+          disabled: true
+    - id: month_icon_custom_color
+      type: MonthSelector
+      properties:
+        title: Custom Color Icon
+        suffixIcon:
+          name: AiOutlineCalendar
+          color: '#1677ff'
+        label:
+          disabled: true
+    - id: month_icon_heart
+      type: MonthSelector
+      properties:
+        title: Heart Icon
+        suffixIcon:
+          name: AiOutlineHeart
+          color: '#ff4d4f'
+        label:
+          disabled: true
+
+- title: Disabled State
+  blocks:
+    - id: month_disabled_default
+      type: MonthSelector
+      properties:
+        title: Disabled
+        disabled: true
+        label:
+          disabled: true
+    - id: month_disabled_outlined
+      type: MonthSelector
+      properties:
+        title: Disabled Outlined
+        disabled: true
+        variant: outlined
+        label:
+          disabled: true
+    - id: month_disabled_filled
+      type: MonthSelector
+      properties:
+        title: Disabled Filled
+        disabled: true
+        variant: filled
+        label:
+          disabled: true
+    - id: month_disabled_borderless
+      type: MonthSelector
+      properties:
+        title: Disabled Borderless
+        disabled: true
+        variant: borderless
+        label:
+          disabled: true
+
+- title: Auto Focus
+  blocks:
+    - id: month_autofocus_off
+      type: MonthSelector
+      properties:
+        title: No Auto Focus (default)
+        autoFocus: false
+        label:
+          disabled: true
+    - id: month_autofocus_on
+      type: MonthSelector
+      properties:
+        title: Auto Focus Enabled
+        autoFocus: true
+        label:
+          disabled: true
+
+- title: Disabled Dates
+  blocks:
+    - id: month_disabled_dates_min
+      type: MonthSelector
+      properties:
+        title: Min Date (2024-01-01)
+        disabledDates:
+          min: '2024-01-01'
+        label:
+          disabled: true
+    - id: month_disabled_dates_max
+      type: MonthSelector
+      properties:
+        title: Max Date (2025-12-31)
+        disabledDates:
+          max: '2025-12-31'
+        label:
+          disabled: true
+    - id: month_disabled_dates_range
+      type: MonthSelector
+      properties:
+        title: Min & Max (2025 only)
+        disabledDates:
+          min: '2025-01-01'
+          max: '2025-12-31'
+        label:
+          disabled: true
+    - id: month_disabled_specific
+      type: MonthSelector
+      properties:
+        title: Specific Months Disabled
+        disabledDates:
+          dates:
+            - '2026-03-01'
+            - '2026-06-01'
+            - '2026-12-01'
+        label:
+          disabled: true
+    - id: month_disabled_date_ranges
+      type: MonthSelector
+      properties:
+        title: Date Ranges Disabled
+        disabledDates:
+          ranges:
+            - ['2026-04-01', '2026-06-30']
+            - ['2026-10-01', '2026-12-31']
+        label:
+          disabled: true
+
+- title: Label Options
+  blocks:
+    - id: month_label_default
+      type: MonthSelector
+      properties:
+        title: Default Label
+    - id: month_label_extra
+      type: MonthSelector
+      properties:
+        title: Billing Month
+        label:
+          extra: Select the billing month for this invoice.
+        placeholder: Select billing month
+    - id: month_label_inline_right
+      type: MonthSelector
+      properties:
+        title: Inline Right-Aligned
+        label:
+          inline: true
+          span: 8
+          align: right
+    - id: month_label_hidden
+      type: MonthSelector
+      properties:
+        title: Hidden Label
+        label:
+          disabled: true
+        placeholder: No label shown
+    - id: month_label_feedback_on
+      type: MonthSelector
+      properties:
+        title: With Feedback
+        label:
+          hasFeedback: true
+      required: true
+
+- title: Label Inline with Span
+  blocks:
+    - id: month_label_inline_4
+      type: MonthSelector
+      properties:
+        title: Span 4
+        label:
+          inline: true
+          span: 4
+    - id: month_label_inline_8
+      type: MonthSelector
+      properties:
+        title: Span 8
+        label:
+          inline: true
+          span: 8
+    - id: month_label_inline_12
+      type: MonthSelector
+      properties:
+        title: Span 12
+        label:
+          inline: true
+          span: 12
+
+- title: HTML Title
+  blocks:
+    - id: month_html_title_bold
+      type: MonthSelector
+      properties:
+        title: '<b>Bold</b> month selector'
+        label:
+          disabled: true
+    - id: month_html_title_color
+      type: MonthSelector
+      properties:
+        title: '<span style="color: #1677ff">Blue</span> month selector'
+        label:
+          disabled: true
+    - id: month_html_title_italic
+      type: MonthSelector
+      properties:
+        title: '<i>Italic</i> month selector'
+        label:
+          disabled: true
+
+- title: Custom Style
+  blocks:
+    - id: month_style_width
+      type: MonthSelector
+      style:
+        width: 300
+      properties:
+        title: Fixed Width (300px)
+        label:
+          disabled: true
+    - id: month_style_element
+      type: MonthSelector
+      style:
+        --element:
+          background: '#f0f5ff'
+      properties:
+        title: Custom Background
+        label:
+          disabled: true
+    - id: month_style_label
+      type: MonthSelector
+      style:
+        --label:
+          color: '#531dab'
+          fontWeight: bold
+      properties:
+        title: Styled Label
+
+- title: Custom CSS Class
+  blocks:
+    - id: month_class_rounded
+      type: MonthSelector
+      class: rounded-lg shadow-sm
+      properties:
+        title: Rounded with Shadow
+        label:
+          disabled: true
+    - id: month_class_border
+      type: MonthSelector
+      class: border-2 border-blue-200
+      properties:
+        title: Blue Border
+        label:
+          disabled: true
+
+- title: Theme Token Overrides
+  blocks:
+    - id: month_theme_primary_color
+      type: MonthSelector
+      properties:
+        title: Custom Primary Color
+        label:
+          disabled: true
+        theme:
+          colorPrimary: '#722ed1'
+    - id: month_theme_large_radius
+      type: MonthSelector
+      properties:
+        title: Large Border Radius
+        label:
+          disabled: true
+        theme:
+          borderRadius: 16
+    - id: month_theme_custom_bg
+      type: MonthSelector
+      properties:
+        title: Custom Background
+        variant: filled
+        label:
+          disabled: true
+        theme:
+          colorBgContainer: '#f9f0ff'
+    - id: month_theme_brand_color
+      type: MonthSelector
+      properties:
+        title: Brand Purple
+        label:
+          disabled: true
+        theme:
+          colorPrimary: '#722ed1'
+          colorBorder: '#d3adf7'
+          colorBgContainer: '#faf0ff'
+    - id: month_theme_tall
+      type: MonthSelector
+      properties:
+        title: Tall Input
+        label:
+          disabled: true
+        theme:
+          controlHeight: 48
+          fontSize: 18
+          borderRadius: 12
+
+- title: Combined Features
+  blocks:
+    - id: month_combined_full
+      type: MonthSelector
+      properties:
+        title: Billing Period
+        placeholder: Select billing month
+        format: MMMM YYYY
+        size: large
+        suffixIcon: AiOutlineSchedule
+        showToday: true
+        allowClear: true
+        label:
+          extra: Choose the month for your billing cycle.
+          colon: false
+    - id: month_combined_minimal
+      type: MonthSelector
+      properties:
+        title: Month
+        variant: borderless
+        size: small
+        allowClear: false
+        showToday: false
+        format: MM/YYYY
+        placeholder: mm/yyyy
+        label:
+          disabled: true
+    - id: month_combined_restricted
+      type: MonthSelector
+      properties:
+        title: Fiscal Year Month
+        placeholder: Select fiscal month
+        format: MMM YYYY
+        suffixIcon:
+          name: AiOutlineCalendar
+          color: '#1677ff'
+        disabledDates:
+          min: '2026-01-01'
+          max: '2026-12-31'
+        label:
+          extra: Only months in 2026 are available.
+    - id: month_combined_themed
+      type: MonthSelector
+      properties:
+        title: Themed Picker
+        variant: filled
+        size: large
+        format: MMMM YYYY
+        placeholder: Choose a special month...
+        suffixIcon:
+          name: AiOutlineHeart
+          color: '#eb2f96'
+        label:
+          disabled: true
+        theme:
+          colorPrimary: '#eb2f96'
+          borderRadius: 20
+          controlHeightLG: 48
+          fontSize: 16
+
+- title: MonthSelector in Budget Tracker
+  blocks:
+    - id: applied2_budget_card
+      type: Card
+      properties:
+        title: Monthly Budget Entry
+      blocks:
+        - id: applied2_budget_month
+          type: MonthSelector
+          properties:
+            title: Budget Month
+            placeholder: Select month
+            format: MMMM YYYY
+            size: large
+            suffixIcon: AiOutlineCalendar
+            label:
+              extra: Choose the month for this budget entry.
+        - id: applied2_budget_category
+          type: Selector
+          properties:
+            title: Category
+            placeholder: Select budget category...
+            options:
+              - label: Rent & Utilities
+                value: rent
+              - label: Groceries
+                value: groceries
+              - label: Transportation
+                value: transport
+              - label: Entertainment
+                value: entertainment
+              - label: Savings
+                value: savings
+              - label: Healthcare
+                value: healthcare
+        - id: applied2_budget_amount
+          type: NumberInput
+          properties:
+            title: Amount
+            placeholder: Enter amount
+            prefixIcon: AiOutlineDollar
+            label:
+              extra: Enter the budgeted amount for this category.
+        - id: applied2_budget_save_btn
+          type: Button
+          properties:
+            title: Save Budget Entry
+            icon: AiOutlineSave
+            type: primary
+            size: large
+            block: true
+          events:
+            onClick:
+              - id: save_budget_action
+                type: DisplayMessage
+                params:
+                  content: Budget entry saved successfully.
+                  duration: 3
+
+- title: MonthSelector in Subscription Billing
+  blocks:
+    - id: applied3_billing_card
+      type: Card
+      properties:
+        title: Subscription Billing Setup
+      blocks:
+        - id: applied3_billing_month
+          type: MonthSelector
+          properties:
+            title: Billing Start Month
+            placeholder: Select start month
+            format: MMMM YYYY
+            size: large
+            suffixIcon: AiOutlineCalendar
+            label:
+              extra: Choose when the subscription billing begins.
+            disabledDates:
+              min: '2026-03-01'
+          events:
+            onChange:
+              - id: billing_month_change
+                type: SetState
+                params:
+                  billingMonthSelected: true
+        - id: applied3_billing_plan
+          type: Selector
+          properties:
+            title: Plan Type
+            placeholder: Select a plan...
+            options:
+              - label: Basic - $9/mo
+                value: basic
+              - label: Professional - $29/mo
+                value: professional
+              - label: Enterprise - $99/mo
+                value: enterprise
+        - id: applied3_billing_confirm_btn
+          type: Button
+          properties:
+            title: Confirm Subscription
+            icon: AiOutlineCreditCard
+            type: primary
+            size: large
+            block: true
+          events:
+            onClick:
+              - id: confirm_billing_action
+                type: DisplayMessage
+                params:
+                  content: Subscription billing confirmed.
+                  duration: 3

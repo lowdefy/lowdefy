@@ -20,7 +20,7 @@ const pageId = 'one';
 
 const lowdefy = { pageId };
 
-test('registerMethod adds a method to RootAreas.methods', async () => {
+test('registerMethod adds a method to RootSlots.methods', async () => {
   const pageConfig = {
     id: 'root',
     type: 'Box',
@@ -35,7 +35,7 @@ test('registerMethod adds a method to RootAreas.methods', async () => {
     lowdefy,
     pageConfig,
   });
-  const { text } = context._internal.RootAreas.map;
+  const { text } = context._internal.RootSlots.map;
 
   expect(text.registerMethod).toBeDefined();
   expect(text.methods).toEqual({});
@@ -45,7 +45,7 @@ test('registerMethod adds a method to RootAreas.methods', async () => {
   expect(text.methods.fn()).toEqual('fn response');
 });
 
-test('registerMethod add multiple methods to RootAreas.methods', async () => {
+test('registerMethod add multiple methods to RootSlots.methods', async () => {
   const pageConfig = {
     id: 'root',
     type: 'Box',
@@ -64,7 +64,7 @@ test('registerMethod add multiple methods to RootAreas.methods', async () => {
     lowdefy,
     pageConfig,
   });
-  const { textA, textB } = context._internal.RootAreas.map;
+  const { textA, textB } = context._internal.RootSlots.map;
 
   const methodA = () => 'fn A response';
   const methodB1 = () => 'fn B1 response';

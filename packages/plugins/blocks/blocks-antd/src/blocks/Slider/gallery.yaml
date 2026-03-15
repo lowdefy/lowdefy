@@ -1,0 +1,603 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic
+  fullWidth: true
+  blocks:
+    - id: slider_basic
+      type: Slider
+      properties:
+        title: Basic Slider
+    - id: slider_basic_no_title
+      type: Slider
+    - id: slider_range_basic
+      type: Slider
+      properties:
+        title: Price Range
+        range: true
+        min: 0
+        max: 1000
+        step: 50
+    - id: slider_range_marks
+      type: Slider
+      properties:
+        title: Age Range
+        range: true
+        min: 0
+        max: 100
+        marks:
+          0: '0'
+          18: '18'
+          35: '35'
+          50: '50'
+          65: '65'
+          100: '100'
+
+- title: Min, Max, and Step
+  fullWidth: true
+  blocks:
+    - id: slider_min_max
+      type: Slider
+      properties:
+        title: Temperature (10 to 50)
+        min: 10
+        max: 50
+    - id: slider_step_10
+      type: Slider
+      properties:
+        title: Step of 10
+        min: 0
+        max: 100
+        step: 10
+    - id: slider_step_5
+      type: Slider
+      properties:
+        title: Step of 5
+        min: 0
+        max: 50
+        step: 5
+    - id: slider_step_decimal
+      type: Slider
+      properties:
+        title: Decimal Step (0.1)
+        min: 0
+        max: 1
+        step: 0.1
+
+- title: Marks
+  fullWidth: true
+  blocks:
+    - id: slider_marks_basic
+      type: Slider
+      properties:
+        title: Temperature
+        min: 0
+        max: 100
+        marks:
+          0: '0°C'
+          26: '26°C'
+          37: '37°C'
+          100: '100°C'
+    - id: slider_marks_only
+      type: Slider
+      properties:
+        title: Rating (marks only, step null)
+        min: 0
+        max: 100
+        step: null
+        marks:
+          0: Poor
+          25: Fair
+          50: Good
+          75: Very Good
+          100: Excellent
+
+- title: Display Options
+  fullWidth: true
+  blocks:
+    - id: slider_dots
+      type: Slider
+      properties:
+        title: Dots at Each Step
+        dots: true
+        min: 0
+        max: 100
+        step: 10
+    - id: slider_included_false
+      type: Slider
+      properties:
+        title: Not Included
+        included: false
+        marks:
+          0: '0'
+          50: '50'
+          100: '100'
+    - id: slider_reverse
+      type: Slider
+      properties:
+        title: Reversed Slider
+        reverse: true
+        min: 0
+        max: 100
+    - id: slider_reverse_marks
+      type: Slider
+      properties:
+        title: Reversed with Marks
+        reverse: true
+        min: 0
+        max: 100
+        marks:
+          0: Start
+          50: Middle
+          100: End
+
+- title: Tooltip
+  fullWidth: true
+  blocks:
+    - id: slider_tooltip_open
+      type: Slider
+      properties:
+        title: Always Show Tooltip
+        tooltip:
+          open: true
+        min: 0
+        max: 100
+    - id: slider_tooltip_hidden
+      type: Slider
+      properties:
+        title: Tooltip Hidden
+        tooltip:
+          open: false
+        min: 0
+        max: 100
+    - id: slider_tooltip_placement
+      type: Slider
+      properties:
+        title: Tooltip on Bottom
+        tooltip:
+          placement: bottom
+        min: 0
+        max: 100
+
+- title: Vertical Sliders
+  blocks:
+    - id: slider_vertical_row
+      type: Box
+      layout:
+        gap: 40
+        align: flex-start
+      style:
+        --element:
+          height: 250px
+          padding: 20px
+      blocks:
+        - id: slider_vertical_basic
+          type: Slider
+          layout:
+            flex: 0 0 auto
+          properties:
+            vertical: true
+            label:
+              disabled: true
+        - id: slider_vertical_marks
+          type: Slider
+          layout:
+            flex: 0 0 auto
+          properties:
+            vertical: true
+            min: 0
+            max: 100
+            marks:
+              0: '0'
+              25: '25'
+              50: '50'
+              75: '75'
+              100: '100'
+            label:
+              disabled: true
+        - id: slider_vertical_range
+          type: Slider
+          layout:
+            flex: 0 0 auto
+          properties:
+            vertical: true
+            range: true
+            min: 0
+            max: 100
+            step: 10
+            label:
+              disabled: true
+        - id: slider_vertical_dots
+          type: Slider
+          layout:
+            flex: 0 0 auto
+          properties:
+            vertical: true
+            dots: true
+            min: 0
+            max: 100
+            step: 20
+            label:
+              disabled: true
+
+- title: Disabled State
+  fullWidth: true
+  blocks:
+    - id: slider_disabled
+      type: Slider
+      properties:
+        title: Disabled Slider
+        disabled: true
+    - id: slider_disabled_marks
+      type: Slider
+      properties:
+        title: Disabled with Marks
+        disabled: true
+        marks:
+          0: Low
+          50: Medium
+          100: High
+    - id: slider_disabled_range
+      type: Slider
+      properties:
+        title: Disabled Range
+        disabled: true
+        range: true
+
+- title: Label Properties
+  fullWidth: true
+  blocks:
+    - id: slider_label_inline
+      type: Slider
+      properties:
+        title: Inline Label
+        label:
+          inline: true
+          span: 6
+        min: 0
+        max: 100
+    - id: slider_label_extra
+      type: Slider
+      properties:
+        title: With Extra Text
+        label:
+          extra: Drag to set the desired value
+        min: 0
+        max: 100
+    - id: slider_label_colon_false
+      type: Slider
+      properties:
+        title: No Colon
+        label:
+          colon: false
+        min: 0
+        max: 100
+    - id: slider_label_disabled
+      type: Slider
+      properties:
+        label:
+          disabled: true
+        min: 0
+        max: 100
+
+- title: Sizes
+  fullWidth: true
+  blocks:
+    - id: slider_size_small
+      type: Slider
+      properties:
+        title: Small
+        size: small
+        min: 0
+        max: 100
+    - id: slider_size_default
+      type: Slider
+      properties:
+        title: Default
+        min: 0
+        max: 100
+    - id: slider_size_large
+      type: Slider
+      properties:
+        title: Large
+        size: large
+        min: 0
+        max: 100
+
+- title: Style Overrides
+  fullWidth: true
+  blocks:
+    - id: slider_style_element
+      type: Slider
+      style:
+        --element:
+          padding: 0 20px
+      properties:
+        title: Custom Rail Padding
+        min: 0
+        max: 100
+    - id: slider_style_label
+      type: Slider
+      style:
+        --label:
+          color: '#531dab'
+          fontWeight: bold
+      properties:
+        title: Styled Label
+        min: 0
+        max: 100
+    - id: slider_style_combined
+      type: Slider
+      style:
+        --element:
+          background: '#f6ffed'
+          borderRadius: 8
+          padding: 12px 20px
+        --label:
+          color: '#389e0d'
+      properties:
+        title: Combined Element and Label Styles
+        min: 0
+        max: 100
+
+- title: Class Overrides (Tailwind)
+  fullWidth: true
+  blocks:
+    - id: slider_class_shadow
+      type: Slider
+      class: rounded-lg shadow-sm
+      properties:
+        title: Rounded with Shadow
+        min: 0
+        max: 100
+    - id: slider_class_border
+      type: Slider
+      class: border-2 border-blue-200 p-2
+      properties:
+        title: Blue Border
+        min: 0
+        max: 100
+    - id: slider_class_background
+      type: Slider
+      class: bg-gray-50 rounded-md p-3
+      properties:
+        title: Gray Background
+        min: 0
+        max: 100
+
+- title: Theme Token Overrides
+  fullWidth: true
+  blocks:
+    - id: slider_theme_custom_colors
+      type: Slider
+      properties:
+        title: Custom Track Colors
+        min: 0
+        max: 100
+        theme:
+          trackBg: '#52c41a'
+          trackHoverBg: '#389e0d'
+          handleColor: '#52c41a'
+          handleActiveColor: '#389e0d'
+    - id: slider_theme_large_handle
+      type: Slider
+      properties:
+        title: Large Handle
+        min: 0
+        max: 100
+        theme:
+          handleSize: 16
+          handleSizeHover: 20
+          handleLineWidth: 3
+    - id: slider_theme_thick_rail
+      type: Slider
+      properties:
+        title: Thick Rail
+        min: 0
+        max: 100
+        theme:
+          railSize: 8
+          railBg: '#f0f0f0'
+          railHoverBg: '#d9d9d9'
+    - id: slider_theme_danger
+      type: Slider
+      properties:
+        title: Danger Theme
+        min: 0
+        max: 100
+        theme:
+          trackBg: '#ff4d4f'
+          trackHoverBg: '#cf1322'
+          handleColor: '#ff4d4f'
+          handleActiveColor: '#cf1322'
+          handleActiveOutlineColor: 'rgba(255,77,79,0.2)'
+
+- title: Slider in Audio Settings
+  fullWidth: true
+  blocks:
+    - id: applied_audio_card
+      type: Card
+      properties:
+        title: Audio Settings
+      blocks:
+        - id: applied_audio_volume
+          type: Slider
+          properties:
+            title: Master Volume
+            min: 0
+            max: 100
+            step: 1
+            marks:
+              0: '0'
+              50: '50'
+              100: '100'
+          events:
+            onMount:
+              - id: set_volume
+                type: SetState
+                params:
+                  applied_audio_volume: 75
+        - id: applied_audio_bass
+          type: Slider
+          properties:
+            title: Bass
+            min: -12
+            max: 12
+            step: 1
+            marks:
+              -12: '-12 dB'
+              0: '0 dB'
+              12: '+12 dB'
+          events:
+            onMount:
+              - id: set_bass
+                type: SetState
+                params:
+                  applied_audio_bass: 0
+        - id: applied_audio_treble
+          type: Slider
+          properties:
+            title: Treble
+            min: -12
+            max: 12
+            step: 1
+            marks:
+              -12: '-12 dB'
+              0: '0 dB'
+              12: '+12 dB'
+          events:
+            onMount:
+              - id: set_treble
+                type: SetState
+                params:
+                  applied_audio_treble: 0
+        - id: applied_audio_balance
+          type: Slider
+          properties:
+            title: Left/Right Balance
+            min: -50
+            max: 50
+            step: 1
+            marks:
+              -50: Left
+              0: Center
+              50: Right
+          events:
+            onMount:
+              - id: set_balance
+                type: SetState
+                params:
+                  applied_audio_balance: 0
+        - id: applied_audio_save
+          type: Button
+          properties:
+            title: Apply Settings
+            type: primary
+            icon: AiOutlineSave
+          events:
+            onClick:
+              - id: audio_save_action
+                type: DisplayMessage
+                params:
+                  content:
+                    _string.concat:
+                      - 'Audio settings applied. Volume: '
+                      - _state: applied_audio_volume
+                      - '%'
+                  status: success
+              - id: audio_set_global
+                type: SetGlobal
+                params:
+                  audioVolume:
+                    _state: applied_audio_volume
+                  audioBass:
+                    _state: applied_audio_bass
+                  audioTreble:
+                    _state: applied_audio_treble
+
+- title: Slider in Price Filter
+  fullWidth: true
+  blocks:
+    - id: applied_price_card
+      type: Card
+      properties:
+        title: Filter Products
+      blocks:
+        - id: applied_price_search
+          type: TextInput
+          properties:
+            title: Search Products
+            placeholder: Enter product name or keyword
+        - id: applied_price_range
+          type: Slider
+          properties:
+            title: Price Range
+            range: true
+            min: 0
+            max: 500
+            step: 10
+            marks:
+              0: '$0'
+              100: '$100'
+              250: '$250'
+              500: '$500'
+          events:
+            onMount:
+              - id: set_price_range
+                type: SetState
+                params:
+                  applied_price_range:
+                    - 50
+                    - 300
+        - id: applied_price_rating
+          type: Slider
+          properties:
+            title: Minimum Customer Rating
+            min: 1
+            max: 5
+            step: 0.5
+            dots: true
+            marks:
+              1: '1'
+              2: '2'
+              3: '3'
+              4: '4'
+              5: '5'
+          events:
+            onMount:
+              - id: set_rating
+                type: SetState
+                params:
+                  applied_price_rating: 3
+        - id: applied_price_apply
+          type: Button
+          properties:
+            title: Apply Filters
+            type: primary
+            icon: AiOutlineFilter
+          events:
+            onClick:
+              - id: price_filter_action
+                type: DisplayMessage
+                params:
+                  content: Filters applied successfully
+                  status: success
+              - id: price_filter_set_state
+                type: SetState
+                params:
+                  active_filters:
+                    priceRange:
+                      _state: applied_price_range
+                    minRating:
+                      _state: applied_price_rating

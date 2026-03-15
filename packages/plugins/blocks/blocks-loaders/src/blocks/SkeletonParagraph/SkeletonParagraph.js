@@ -15,25 +15,24 @@
 */
 
 import React from 'react';
-import { blockDefaultProps } from '@lowdefy/block-utils';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 
 import Skeleton from '../Skeleton/Skeleton.js';
 
-const SkeletonParagraph = ({ properties, methods }) => {
+const SkeletonParagraph = ({ classNames, properties, styles }) => {
   const lines = [...Array(properties.lines ?? 4).keys()];
   return (
-    <div style={{ width: properties.width ?? '100%' }}>
+    <div
+      className={classNames?.element}
+      style={{ width: properties.width ?? '100%', ...styles?.element }}
+    >
       {lines.map((key) => (
         <Skeleton
           key={key}
-          methods={methods}
+          styles={{ element: { marginBottom: '1rem' } }}
           properties={{
-            ...{
-              height: '1.25rem',
-              width: key === lines.length - 1 && key !== 0 ? '40%' : '100%',
-              style: { marginBottom: '1rem' },
-            },
-            ...(properties.style || {}),
+            height: '1.25rem',
+            width: key === lines.length - 1 && key !== 0 ? '40%' : '100%',
           }}
         />
       ))}
@@ -41,11 +40,4 @@ const SkeletonParagraph = ({ properties, methods }) => {
   );
 };
 
-SkeletonParagraph.defaultProps = blockDefaultProps;
-SkeletonParagraph.meta = {
-  category: 'display',
-  icons: [],
-  styles: ['blocks/SkeletonParagraph/style.less'],
-};
-
-export default SkeletonParagraph;
+export default withBlockDefaults(SkeletonParagraph);

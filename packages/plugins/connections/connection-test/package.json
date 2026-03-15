@@ -14,10 +14,17 @@
     "./types": "./src/types.js"
   },
   "files": [
-    "src/*"
+    "src/*",
+    "dist/*"
   ],
+  "scripts": {
+    "build": "echo 'No compilation needed — exports directly from src.'"
+  },
   "dependencies": {
     "@lowdefy/errors": "4.7.0"
+  },
+  "devDependencies": {
+    "@lowdefy/node-utils": "4.5.2"
   },
   "publishConfig": {
     "access": "public"

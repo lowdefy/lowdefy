@@ -1,0 +1,1214 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic Tooltip
+  blocks:
+    - id: tooltip_basic
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: This is a tooltip
+      blocks:
+        - id: tooltip_basic_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Hover me
+            color: primary
+            variant: solid
+
+    - id: tooltip_html
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: '<b>Bold</b> and <em>italic</em> text'
+      blocks:
+        - id: tooltip_html_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: HTML content
+            color: primary
+            variant: outlined
+
+    - id: tooltip_long
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: This is a longer tooltip message that demonstrates how the tooltip wraps text when the content exceeds the default maximum width.
+      blocks:
+        - id: tooltip_long_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Long text
+            color: default
+            variant: outlined
+
+- title: Placements
+  blocks:
+    - id: tooltip_placement_label_top
+      type: Markdown
+      properties:
+        content: '**Top placements:**'
+    - id: tooltip_placement_top_row
+      type: Box
+      layout:
+        gap: 8
+        justify: center
+      blocks:
+        - id: tooltip_topLeft
+          type: Tooltip
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: topLeft
+            placement: topLeft
+          blocks:
+            - id: tooltip_topLeft_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: topLeft
+                color: default
+                variant: outlined
+                size: small
+        - id: tooltip_top
+          type: Tooltip
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: top
+            placement: top
+          blocks:
+            - id: tooltip_top_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: top
+                color: primary
+                variant: solid
+                size: small
+        - id: tooltip_topRight
+          type: Tooltip
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: topRight
+            placement: topRight
+          blocks:
+            - id: tooltip_topRight_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: topRight
+                color: default
+                variant: outlined
+                size: small
+
+    - id: tooltip_placement_label_bottom
+      type: Markdown
+      properties:
+        content: '**Bottom placements:**'
+    - id: tooltip_placement_bottom_row
+      type: Box
+      layout:
+        gap: 8
+        justify: center
+      blocks:
+        - id: tooltip_bottomLeft
+          type: Tooltip
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: bottomLeft
+            placement: bottomLeft
+          blocks:
+            - id: tooltip_bottomLeft_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: bottomLeft
+                color: default
+                variant: outlined
+                size: small
+        - id: tooltip_bottom
+          type: Tooltip
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: bottom
+            placement: bottom
+          blocks:
+            - id: tooltip_bottom_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: bottom
+                color: primary
+                variant: solid
+                size: small
+        - id: tooltip_bottomRight
+          type: Tooltip
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: bottomRight
+            placement: bottomRight
+          blocks:
+            - id: tooltip_bottomRight_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: bottomRight
+                color: default
+                variant: outlined
+                size: small
+
+    - id: tooltip_placement_label_left
+      type: Markdown
+      properties:
+        content: '**Left placements:**'
+    - id: tooltip_placement_left_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: tooltip_left
+          type: Tooltip
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: left
+            placement: left
+          blocks:
+            - id: tooltip_left_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: left
+                color: primary
+                variant: solid
+                size: small
+        - id: tooltip_leftTop
+          type: Tooltip
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: leftTop
+            placement: leftTop
+          blocks:
+            - id: tooltip_leftTop_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: leftTop
+                color: default
+                variant: outlined
+                size: small
+        - id: tooltip_leftBottom
+          type: Tooltip
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: leftBottom
+            placement: leftBottom
+          blocks:
+            - id: tooltip_leftBottom_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: leftBottom
+                color: default
+                variant: outlined
+                size: small
+
+    - id: tooltip_placement_label_right
+      type: Markdown
+      properties:
+        content: '**Right placements:**'
+    - id: tooltip_placement_right_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: tooltip_right
+          type: Tooltip
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: right
+            placement: right
+          blocks:
+            - id: tooltip_right_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: right
+                color: primary
+                variant: solid
+                size: small
+        - id: tooltip_rightTop
+          type: Tooltip
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: rightTop
+            placement: rightTop
+          blocks:
+            - id: tooltip_rightTop_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: rightTop
+                color: default
+                variant: outlined
+                size: small
+        - id: tooltip_rightBottom
+          type: Tooltip
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: rightBottom
+            placement: rightBottom
+          blocks:
+            - id: tooltip_rightBottom_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: rightBottom
+                color: default
+                variant: outlined
+                size: small
+
+- title: Trigger Modes
+  blocks:
+    - id: tooltip_trigger_hover
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Triggered by hover
+        trigger: hover
+      blocks:
+        - id: tooltip_trigger_hover_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Hover (default)
+            color: primary
+            variant: solid
+    - id: tooltip_trigger_click
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Triggered by click
+        trigger: click
+      blocks:
+        - id: tooltip_trigger_click_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Click
+            color: primary
+            variant: outlined
+    - id: tooltip_trigger_focus
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Triggered by focus
+        trigger: focus
+      blocks:
+        - id: tooltip_trigger_focus_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Focus (tab to me)
+            color: primary
+            variant: dashed
+
+- title: Preset Colors
+  blocks:
+    - id: tooltip_color_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: tooltip_color_blue
+          type: Tooltip
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: blue
+            color: blue
+          blocks:
+            - id: tooltip_color_blue_tag
+              type: Tag
+              properties:
+                title: blue
+                color: blue
+        - id: tooltip_color_purple
+          type: Tooltip
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: purple
+            color: purple
+          blocks:
+            - id: tooltip_color_purple_tag
+              type: Tag
+              properties:
+                title: purple
+                color: purple
+        - id: tooltip_color_cyan
+          type: Tooltip
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: cyan
+            color: cyan
+          blocks:
+            - id: tooltip_color_cyan_tag
+              type: Tag
+              properties:
+                title: cyan
+                color: cyan
+        - id: tooltip_color_green
+          type: Tooltip
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: green
+            color: green
+          blocks:
+            - id: tooltip_color_green_tag
+              type: Tag
+              properties:
+                title: green
+                color: green
+        - id: tooltip_color_red
+          type: Tooltip
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: red
+            color: red
+          blocks:
+            - id: tooltip_color_red_tag
+              type: Tag
+              properties:
+                title: red
+                color: red
+
+    - id: tooltip_color_custom_row
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: tooltip_color_hex1
+          type: Tooltip
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: 'Custom color: #ff6b6b'
+            color: '#ff6b6b'
+          blocks:
+            - id: tooltip_color_hex1_tag
+              type: Tag
+              properties:
+                title: '#ff6b6b'
+        - id: tooltip_color_hex2
+          type: Tooltip
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: 'Custom color: #20c997'
+            color: '#20c997'
+          blocks:
+            - id: tooltip_color_hex2_tag
+              type: Tag
+              properties:
+                title: '#20c997'
+        - id: tooltip_color_hex3
+          type: Tooltip
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: 'Custom color: #4c6ef5'
+            color: '#4c6ef5'
+          blocks:
+            - id: tooltip_color_hex3_tag
+              type: Tag
+              properties:
+                title: '#4c6ef5'
+
+- title: Arrow Point at Center
+  blocks:
+    - id: tooltip_arrow_default
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Arrow at edge (default)
+        placement: topLeft
+        arrowPointAtCenter: false
+      blocks:
+        - id: tooltip_arrow_default_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Default arrow
+            color: default
+            variant: outlined
+    - id: tooltip_arrow_center
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Arrow at center
+        placement: topLeft
+        arrowPointAtCenter: true
+      blocks:
+        - id: tooltip_arrow_center_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Arrow at center
+            color: primary
+            variant: solid
+
+- title: Auto Adjust Overflow
+  blocks:
+    - id: tooltip_overflow_on
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: This tooltip auto-adjusts when near the viewport edge
+        autoAdjustOverflow: true
+        placement: top
+      blocks:
+        - id: tooltip_overflow_on_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Auto adjust (default)
+            color: primary
+            variant: solid
+    - id: tooltip_overflow_off
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: This tooltip stays in position even near viewport edges
+        autoAdjustOverflow: false
+        placement: top
+      blocks:
+        - id: tooltip_overflow_off_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: No auto adjust
+            color: default
+            variant: outlined
+
+- title: Delay Settings
+  blocks:
+    - id: tooltip_delay_fast
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Instant tooltip
+        mouseEnterDelay: 0
+        mouseLeaveDelay: 0
+      blocks:
+        - id: tooltip_delay_fast_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: No delay
+            color: primary
+            variant: solid
+    - id: tooltip_delay_slow_enter
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: This tooltip has a 1 second enter delay
+        mouseEnterDelay: 1
+      blocks:
+        - id: tooltip_delay_slow_enter_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: 1s enter delay
+            color: primary
+            variant: outlined
+    - id: tooltip_delay_slow_leave
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: This tooltip stays 2 seconds after mouse leaves
+        mouseLeaveDelay: 2
+      blocks:
+        - id: tooltip_delay_slow_leave_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: 2s leave delay
+            color: primary
+            variant: dashed
+
+- title: Default Open and Destroy on Hide
+  blocks:
+    - id: tooltip_default_open
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: I am open by default
+        defaultOpen: true
+        placement: right
+      blocks:
+        - id: tooltip_default_open_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Visible by default
+            color: green
+            variant: solid
+    - id: tooltip_destroy_on_hide
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: This tooltip DOM is destroyed when hidden
+        destroyTooltipOnHide: true
+      blocks:
+        - id: tooltip_destroy_on_hide_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Destroy on hide
+            color: default
+            variant: outlined
+
+- title: Z-Index
+  blocks:
+    - id: tooltip_zindex_high
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: High z-index tooltip (2000)
+        zIndex: 2000
+      blocks:
+        - id: tooltip_zindex_high_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: zIndex 2000
+            color: primary
+            variant: solid
+
+- title: On Various Elements
+  blocks:
+    - id: tooltip_on_text
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Tooltip on a paragraph
+      blocks:
+        - id: tooltip_on_text_p
+          type: Paragraph
+          properties:
+            content: Hover over this text to see the tooltip.
+    - id: tooltip_on_tag
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Tooltip on a tag
+      blocks:
+        - id: tooltip_on_tag_el
+          type: Tag
+          properties:
+            title: Hover tag
+            color: blue
+    - id: tooltip_on_icon_btn
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Delete this item
+        placement: bottom
+      blocks:
+        - id: tooltip_on_icon_btn_el
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            icon: AiOutlineDelete
+            hideTitle: true
+            color: danger
+            variant: text
+
+- title: onOpenChange Event
+  blocks:
+    - id: tooltip_event_open_change
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: This tooltip fires an event on open/close
+      events:
+        onOpenChange:
+          - id: tooltip_event_display_message
+            type: DisplayMessage
+            params:
+              content: Tooltip visibility changed!
+              duration: 2
+      blocks:
+        - id: tooltip_event_open_change_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Hover to trigger event
+            color: primary
+            variant: solid
+    - id: tooltip_event_set_state
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Tracks tooltip state
+        trigger: click
+      events:
+        onOpenChange:
+          - id: tooltip_event_set_state_action
+            type: SetState
+            params:
+              tooltip_was_toggled: true
+      blocks:
+        - id: tooltip_event_set_state_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Click to toggle and set state
+            color: primary
+            variant: outlined
+
+- title: Overlay Style
+  blocks:
+    - id: tooltip_overlay_style
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Tooltip with custom overlay style
+        overlayStyle:
+          boxShadow: 0 4px 12px rgba(0, 0, 0, 0.3)
+      blocks:
+        - id: tooltip_overlay_style_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Custom overlay shadow
+            color: primary
+            variant: solid
+
+- title: Theme Token Overrides
+  blocks:
+    - id: tooltip_theme_large_radius
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Large radius tooltip
+        theme:
+          borderRadius: 16
+      blocks:
+        - id: tooltip_theme_large_radius_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Large radius
+            color: primary
+            variant: solid
+    - id: tooltip_theme_bg
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Custom background and text color
+        theme:
+          colorBgSpotlight: '#2d3436'
+          colorTextLightSolid: '#74b9ff'
+      blocks:
+        - id: tooltip_theme_bg_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Custom colors
+            color: primary
+            variant: outlined
+    - id: tooltip_theme_font
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Larger font size and line height
+        theme:
+          fontSize: 18
+          lineHeight: 2
+      blocks:
+        - id: tooltip_theme_font_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Large font
+            color: primary
+            variant: dashed
+    - id: tooltip_theme_wide
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: This tooltip has a wider max width so longer text can display on a single line without wrapping.
+        theme:
+          maxWidth: 500
+      blocks:
+        - id: tooltip_theme_wide_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Wide tooltip (500px)
+            color: default
+            variant: outlined
+    - id: tooltip_theme_compact
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Compact tooltip
+        theme:
+          paddingXS: 4
+          controlHeight: 24
+          fontSize: 12
+      blocks:
+        - id: tooltip_theme_compact_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Compact theme
+            color: default
+            variant: dashed
+    - id: tooltip_theme_zindex
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Custom z-index via theme
+        theme:
+          zIndexPopup: 2000
+      blocks:
+        - id: tooltip_theme_zindex_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Theme z-index
+            color: default
+            variant: outlined
+
+- title: Style and CSS Classes
+  blocks:
+    - id: tooltip_style_element
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Styled with element CSS key
+      style:
+        --element:
+          cursor: help
+      blocks:
+        - id: tooltip_style_element_p
+          type: Paragraph
+          properties:
+            content: Hover me (help cursor via element style)
+    - id: tooltip_style_inner
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Custom inner styling
+      style:
+        --inner:
+          backgroundColor: '#1a1a2e'
+          color: '#e94560'
+          borderRadius: 12
+          padding: '12px 20px'
+          fontSize: 16
+      blocks:
+        - id: tooltip_style_inner_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Custom inner style
+            color: primary
+            variant: solid
+    - id: tooltip_class_element
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Tailwind on element wrapper
+      class:
+        element: cursor-help
+      blocks:
+        - id: tooltip_class_element_text
+          type: Paragraph
+          properties:
+            content: Hover me (Tailwind element class)
+    - id: tooltip_class_inner
+      type: Tooltip
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Tailwind on inner popup
+      class:
+        inner: text-lg font-bold
+      blocks:
+        - id: tooltip_class_inner_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Tailwind inner class
+            color: primary
+            variant: outlined
+
+- title: Tooltip in Data Table Header
+  blocks:
+    - id: tooltip_table_header_card
+      type: Card
+      properties:
+        title: Monthly Sales Report
+        size: small
+      blocks:
+        - id: tooltip_table_header_row
+          type: Box
+          layout:
+            gap: 0
+            direction: column
+          blocks:
+            - id: tooltip_table_header_labels
+              type: Box
+              class: bg-gray-50 px-4 py-2 border-b border-gray-200
+              layout:
+                gap: 0
+              blocks:
+                - id: tooltip_table_hdr_product
+                  type: Tooltip
+                  layout:
+                    flex: 2 1 0
+                  properties:
+                    title: The product name as listed in the inventory system
+                    placement: top
+                  blocks:
+                    - id: tooltip_table_hdr_product_text
+                      type: Paragraph
+                      class: font-semibold text-gray-600 text-sm m-0
+                      properties:
+                        content: Product
+                - id: tooltip_table_hdr_revenue
+                  type: Tooltip
+                  layout:
+                    flex: 1 1 0
+                  properties:
+                    title: Total revenue after discounts and returns
+                    placement: top
+                  blocks:
+                    - id: tooltip_table_hdr_revenue_text
+                      type: Paragraph
+                      class: font-semibold text-gray-600 text-sm m-0
+                      properties:
+                        content: Revenue
+                - id: tooltip_table_hdr_units
+                  type: Tooltip
+                  layout:
+                    flex: 1 1 0
+                  properties:
+                    title: Number of individual units sold this month
+                    placement: top
+                  blocks:
+                    - id: tooltip_table_hdr_units_text
+                      type: Paragraph
+                      class: font-semibold text-gray-600 text-sm m-0
+                      properties:
+                        content: Units Sold
+            - id: tooltip_table_row_1
+              type: Box
+              class: px-4 py-2 border-b border-gray-100
+              layout:
+                gap: 0
+              blocks:
+                - id: tooltip_table_row_1_product
+                  type: Paragraph
+                  layout:
+                    flex: 2 1 0
+                  class: text-sm m-0
+                  properties:
+                    content: Widget Pro
+                - id: tooltip_table_row_1_revenue
+                  type: Paragraph
+                  layout:
+                    flex: 1 1 0
+                  class: text-sm m-0
+                  properties:
+                    content: $12,450
+                - id: tooltip_table_row_1_units
+                  type: Paragraph
+                  layout:
+                    flex: 1 1 0
+                  class: text-sm m-0
+                  properties:
+                    content: '342'
+            - id: tooltip_table_row_2
+              type: Box
+              class: px-4 py-2
+              layout:
+                gap: 0
+              blocks:
+                - id: tooltip_table_row_2_product
+                  type: Paragraph
+                  layout:
+                    flex: 2 1 0
+                  class: text-sm m-0
+                  properties:
+                    content: Gadget X
+                - id: tooltip_table_row_2_revenue
+                  type: Paragraph
+                  layout:
+                    flex: 1 1 0
+                  class: text-sm m-0
+                  properties:
+                    content: $8,230
+                - id: tooltip_table_row_2_units
+                  type: Paragraph
+                  layout:
+                    flex: 1 1 0
+                  class: text-sm m-0
+                  properties:
+                    content: '189'
+
+- title: Tooltip on Form Labels
+  blocks:
+    - id: tooltip_form_card
+      type: Card
+      properties:
+        title: User Profile Settings
+      blocks:
+        - id: tooltip_form_username
+          type: TextInput
+          properties:
+            label:
+              title: Username
+              extra:
+                - id: tooltip_form_username_help
+                  type: Tooltip
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Your unique username. Must be 3-20 characters, letters and numbers only.
+                    placement: right
+                  blocks:
+                    - id: tooltip_form_username_icon
+                      type: Icon
+                      layout:
+                        flex: 0 0 auto
+                      properties:
+                        name: AiOutlineQuestionCircle
+                        size: 14
+                        color: '#8c8c8c'
+            placeholder: Enter your username
+        - id: tooltip_form_email
+          type: TextInput
+          properties:
+            label:
+              title: Email Address
+              extra:
+                - id: tooltip_form_email_help
+                  type: Tooltip
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: We will send account notifications to this address. You can change it at any time.
+                    placement: right
+                  blocks:
+                    - id: tooltip_form_email_icon
+                      type: Icon
+                      layout:
+                        flex: 0 0 auto
+                      properties:
+                        name: AiOutlineQuestionCircle
+                        size: 14
+                        color: '#8c8c8c'
+            placeholder: Enter your email
+
+- title: Tooltip on Dashboard Metrics
+  blocks:
+    - id: tooltip_dashboard_row
+      type: Box
+      layout:
+        gap: 16
+      blocks:
+        - id: tooltip_dashboard_users_card
+          type: Card
+          layout:
+            flex: 1 1 0
+          properties:
+            size: small
+          blocks:
+            - id: tooltip_dashboard_users_header
+              type: Box
+              layout:
+                gap: 8
+                align: center
+              blocks:
+                - id: tooltip_dashboard_users_title
+                  type: Paragraph
+                  layout:
+                    flex: 1 1 0
+                  class: text-gray-500 text-sm m-0
+                  properties:
+                    content: Active Users
+                - id: tooltip_dashboard_users_info
+                  type: Tooltip
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Users who have logged in at least once in the last 30 days
+                    placement: top
+                  blocks:
+                    - id: tooltip_dashboard_users_info_icon
+                      type: Icon
+                      layout:
+                        flex: 0 0 auto
+                      properties:
+                        name: AiOutlineInfoCircle
+                        size: 14
+                        color: '#8c8c8c'
+            - id: tooltip_dashboard_users_stat
+              type: Statistic
+              properties:
+                value: 2847
+            - id: tooltip_dashboard_users_tag
+              type: Tag
+              properties:
+                title: +12.3%
+                color: success
+
+        - id: tooltip_dashboard_revenue_card
+          type: Card
+          layout:
+            flex: 1 1 0
+          properties:
+            size: small
+          blocks:
+            - id: tooltip_dashboard_revenue_header
+              type: Box
+              layout:
+                gap: 8
+                align: center
+              blocks:
+                - id: tooltip_dashboard_revenue_title
+                  type: Paragraph
+                  layout:
+                    flex: 1 1 0
+                  class: text-gray-500 text-sm m-0
+                  properties:
+                    content: Monthly Revenue
+                - id: tooltip_dashboard_revenue_info
+                  type: Tooltip
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Gross revenue before taxes and refunds for the current billing period
+                    placement: top
+                  blocks:
+                    - id: tooltip_dashboard_revenue_info_icon
+                      type: Icon
+                      layout:
+                        flex: 0 0 auto
+                      properties:
+                        name: AiOutlineInfoCircle
+                        size: 14
+                        color: '#8c8c8c'
+            - id: tooltip_dashboard_revenue_stat
+              type: Statistic
+              properties:
+                value: 64250
+                prefix: $
+            - id: tooltip_dashboard_revenue_tag
+              type: Tag
+              properties:
+                title: +8.7%
+                color: success

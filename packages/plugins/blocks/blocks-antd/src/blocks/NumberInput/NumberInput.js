@@ -15,29 +15,34 @@
 */
 
 import React from 'react';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 import { InputNumber } from 'antd';
 
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import Label from '../Label/Label.js';
+import withTheme from '../withTheme.js';
 
 const NumberInput = ({
   blockId,
+  classNames = {},
   events,
   components,
   loading,
   methods,
   properties,
   required,
+  styles = {},
   validation,
   value,
 }) => {
   return (
     <Label
       blockId={blockId}
+      classNames={classNames}
       components={components}
       events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       required={required}
+      styles={styles}
       validation={validation}
       content={{
         content: () => (
@@ -45,8 +50,9 @@ const NumberInput = ({
             id={`${blockId}_input`}
             autoComplete="off"
             autoFocus={properties.autoFocus}
-            bordered={properties.bordered}
-            className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
+            variant={properties.bordered === false ? 'borderless' : properties.variant}
+            className={classNames.element}
+            style={{ width: '100%', ...styles.element }}
             controls={properties.controls}
             decimalSeparator={properties.decimalSeparator}
             disabled={properties.disabled || loading}
@@ -81,12 +87,4 @@ const NumberInput = ({
   );
 };
 
-NumberInput.defaultProps = blockDefaultProps;
-NumberInput.meta = {
-  valueType: 'number',
-  category: 'input',
-  icons: [...Label.meta.icons],
-  styles: ['blocks/NumberInput/style.less'],
-};
-
-export default NumberInput;
+export default withTheme('InputNumber', withBlockDefaults(NumberInput));

@@ -143,6 +143,11 @@
           pageId: custom-styling
           properties:
             title: Custom Styling
+        - id: theming
+          type: MenuLink
+          pageId: theming
+          properties:
+            title: Theming
         - id: custom-html
           type: MenuLink
           pageId: custom-html
@@ -322,6 +327,11 @@
         title: Input Blocks
         icon: AiOutlineForm
       links:
+        - id: InputGallery
+          type: MenuLink
+          pageId: InputGallery
+          properties:
+            title: Input Gallery
         - id: AutoComplete
           type: MenuLink
           pageId: AutoComplete
@@ -373,6 +383,9 @@
         - id: RatingSlider
           type: MenuLink
           pageId: RatingSlider
+        - id: SegmentedSelector
+          type: MenuLink
+          pageId: SegmentedSelector
         - id: S3UploadButton
           type: MenuLink
           pageId: S3UploadButton
@@ -412,9 +425,6 @@
         - id: AgGrid
           type: MenuLink
           pageId: AgGrid
-        - id: Alert
-          type: MenuLink
-          pageId: Alert
         - id: Anchor
           type: MenuLink
           pageId: Anchor
@@ -433,9 +443,6 @@
         - id: DangerousMarkdown
           type: MenuLink
           pageId: DangerousMarkdown
-        - id: Descriptions
-          type: MenuLink
-          pageId: Descriptions
         - id: Divider
           type: MenuLink
           pageId: Divider
@@ -445,6 +452,9 @@
         - id: EChart
           type: MenuLink
           pageId: EChart
+        - id: FloatButton
+          type: MenuLink
+          pageId: FloatButton
         - id: Html
           type: MenuLink
           pageId: Html
@@ -478,6 +488,9 @@
         - id: Progress
           type: MenuLink
           pageId: Progress
+        - id: QRCode
+          type: MenuLink
+          pageId: QRCode
         - id: S3Download
           type: MenuLink
           pageId: S3Download
@@ -505,6 +518,9 @@
         - id: Title
           type: MenuLink
           pageId: Title
+        - id: Tour
+          type: MenuLink
+          pageId: Tour
 
     - id: blocks_container
       type: MenuGroup
@@ -515,6 +531,9 @@
         - id: Affix
           type: MenuLink
           pageId: Affix
+        - id: Alert
+          type: MenuLink
+          pageId: Alert
         - id: Badge
           type: MenuLink
           pageId: Badge
@@ -530,18 +549,24 @@
         - id: Collapse
           type: MenuLink
           pageId: Collapse
-        - id: Comment
+        - id: ConfigProvider
           type: MenuLink
-          pageId: Comment
+          pageId: ConfigProvider
         - id: ConfirmModal
           type: MenuLink
           pageId: ConfirmModal
         - id: Content
           type: MenuLink
           pageId: Content
+        - id: Descriptions
+          type: MenuLink
+          pageId: Descriptions
         - id: Drawer
           type: MenuLink
           pageId: Drawer
+        - id: Flex
+          type: MenuLink
+          pageId: Flex
         - id: Footer
           type: MenuLink
           pageId: Footer
@@ -563,6 +588,9 @@
         - id: Layout
           type: MenuLink
           pageId: Layout
+        - id: Masonry
+          type: MenuLink
+          pageId: Masonry
         - id: Modal
           type: MenuLink
           pageId: Modal
@@ -584,6 +612,9 @@
         - id: Span
           type: MenuLink
           pageId: Span
+        - id: Splitter
+          type: MenuLink
+          pageId: Splitter
         - id: Spinner
           type: MenuLink
           pageId: Spinner
@@ -593,6 +624,9 @@
         - id: Tooltip
           type: MenuLink
           pageId: Tooltip
+        - id: Watermark
+          type: MenuLink
+          pageId: Watermark
 
     - id: blocks_list
       type: MenuGroup
@@ -606,6 +640,9 @@
         - id: List
           type: MenuLink
           pageId: List
+        - id: MasonryList
+          type: MenuLink
+          pageId: MasonryList
         # - id: TimelineList
         #   type: MenuLink
         #   pageId: TimelineList
@@ -854,9 +891,9 @@
         - id: _menu
           type: MenuLink
           pageId: _menu
-        - id: _moment
+        - id: _dayjs
           type: MenuLink
-          pageId: _moment
+          pageId: _dayjs
         - id: _mql
           type: MenuLink
           pageId: _mql
@@ -920,6 +957,9 @@
         - id: _switch
           type: MenuLink
           pageId: _switch
+        - id: _theme
+          type: MenuLink
+          pageId: _theme
         - id: _type
           type: MenuLink
           pageId: _type
@@ -994,14 +1034,8 @@
           pageId: v3-to-v4
           properties:
             title: V3 to V4
-    - id: versions
-      type: MenuGroup
-      properties:
-        title: Lowdefy Versions
-        icon: AiOutlineBranches
-      links:
-        - id: v3
+        - id: v4-to-v5
           type: MenuLink
-          url: https://docs-v3.lowdefy.com
+          pageId: v4-to-v5
           properties:
-            title: Version 3
+            title: V4 to V5

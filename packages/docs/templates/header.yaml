@@ -47,8 +47,9 @@
     flex: 1 0 auto
   properties:
     title: Why Lowdefy
-    type: text
-    size: large
+    color: default
+    variant: text
+    size: small
     href: https://lowdefy.com
 - id: tutorial_button
   type: Button
@@ -68,8 +69,9 @@
     flex: 1 0 auto
   properties:
     title: Getting Started
-    type: text
-    size: large
+    color: default
+    variant: text
+    size: small
   events:
     onClick:
       - id: tutorial_link
@@ -91,8 +93,9 @@
     flex: 1 0 auto
   properties:
     title: Join our Discord
-    type: text
-    size: large
+    color: default
+    variant: text
+    size: small
     href: https://discord.gg/WmcJgXt
 - id: github_button
   type: Button
@@ -109,7 +112,8 @@
     flex: 1 0 auto
   properties:
     title: Star on Github
-    type: text
+    color: default
+    variant: text
     icon: AiFillGithub
-    size: large
+    size: small
     href: https://github.com/lowdefy/lowdefy

@@ -16,26 +16,28 @@
 
 import React from 'react';
 import { Area, BlockLayout } from '@lowdefy/layout';
-import { makeCssClass } from '@lowdefy/block-utils';
+import { cn } from '@lowdefy/block-utils';
 
 import Block from './Block.js';
+import resolveClassNames from './resolveClassNames.js';
 
 const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
+  const classNames = resolveClassNames(block.eval.class);
   const content = {};
   const contentList = [];
-  Blocks.subAreas[block.id].forEach((SBlock) => {
-    Object.keys(SBlock.areas).forEach((areaKey) => {
-      content[areaKey] = (areaStyle) => (
+  Blocks.subSlots[block.id].forEach((SBlock) => {
+    Object.keys(SBlock.slots).forEach((slotKey) => {
+      content[slotKey] = (contentStyle) => (
         <Area
-          area={block.eval.areas[areaKey]}
-          areaKey={areaKey}
-          areaStyle={[areaStyle, block.eval.areas[areaKey]?.style]}
-          id={`ar-${block.blockId}-${SBlock.id}-${areaKey}`}
-          key={`ar-${block.blockId}-${SBlock.id}-${areaKey}`}
+          area={block.eval.slots[slotKey]}
+          areaKey={slotKey}
+          style={{ ...block.eval.slots[slotKey]?.style, ...contentStyle }}
+          className={cn(block.eval.class?.[slotKey])}
+          id={`ar-${block.blockId}-${SBlock.id}-${slotKey}`}
+          key={`ar-${block.blockId}-${SBlock.id}-${slotKey}`}
           layout={block.eval.layout}
-          makeCssClass={makeCssClass}
         >
-          {SBlock.areas[areaKey].blocks.map((bl) => (
+          {SBlock.slots[slotKey].blocks.map((bl) => (
             <Block
               block={bl}
               Blocks={SBlock}
@@ -52,14 +54,13 @@ const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
   });
   return (
     <BlockLayout
-      blockStyle={block.eval.style}
+      style={block.eval.style?.block}
+      className={classNames.block}
       id={`bl-${block.blockId}`}
       layout={block.eval.layout}
-      makeCssClass={makeCssClass}
     >
       <Component
         methods={Object.assign(block.methods, {
-          makeCssClass,
           moveItemDown: block.moveItemDown,
           moveItemUp: block.moveItemUp,
           pushItem: block.pushItem,
@@ -71,8 +72,9 @@ const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
         })}
         basePath={lowdefy.basePath}
         blockId={block.blockId}
+        classNames={classNames}
         components={lowdefy._internal.components}
-        events={block.eval.events}
+        events={block.eval.events ?? {}}
         key={block.blockId}
         list={contentList}
         loading={loading}
@@ -80,6 +82,7 @@ const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
         pageId={lowdefy.pageId}
         properties={block.eval.properties}
         required={block.eval.required}
+        styles={block.eval.style ?? {}}
         validation={block.eval.validation}
       />
     </BlockLayout>

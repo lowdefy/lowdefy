@@ -36,7 +36,7 @@ test.describe('MultipleSelector Block', () => {
   test('renders with default placeholder', async ({ page }) => {
     const selector = getSelector(page, 'ms_basic');
     await expect(selector).toBeVisible();
-    const placeholder = selector.locator('.ant-select-selection-placeholder');
+    const placeholder = selector.locator('.ant-select-placeholder');
     await expect(placeholder).toHaveText('Select items');
   });
 
@@ -55,7 +55,7 @@ test.describe('MultipleSelector Block', () => {
 
   test('renders with custom placeholder', async ({ page }) => {
     const selector = getSelector(page, 'ms_placeholder');
-    const placeholder = selector.locator('.ant-select-selection-placeholder');
+    const placeholder = selector.locator('.ant-select-placeholder');
     await expect(placeholder).toHaveText('Choose items');
   });
 
@@ -88,7 +88,7 @@ test.describe('MultipleSelector Block', () => {
 
   test('hides arrow when showArrow is false', async ({ page }) => {
     const selector = getSelector(page, 'ms_no_arrow');
-    await expect(selector.locator('.ant-select-arrow')).toBeHidden();
+    await expect(selector.locator('.ant-select-suffix')).toBeHidden();
   });
 
   test('limits displayed tags with maxTagCount', async ({ page }) => {
@@ -115,11 +115,11 @@ test.describe('MultipleSelector Block', () => {
     await page.keyboard.press('Escape');
 
     // Should show 2 tags + overflow indicator (maxTagCount=2)
-    // Total items = 3: 2 visible tags + 1 overflow indicator (e.g. "+ 2...")
-    const allItems = selector.locator('.ant-select-selection-item-content');
-    await expect(allItems).toHaveCount(3);
+    // The visible tag contents should be limited by maxTagCount
+    const visibleTags = selector.locator('.ant-select-selection-item-content');
+    await expect(visibleTags).toHaveCount(3);
     // The overflow indicator should show "+2" (4 selected - 2 visible = 2 hidden)
-    const overflowItem = selector.locator('.ant-select-selection-overflow-item-rest');
+    const overflowItem = selector.locator('.ant-select-content-item-rest');
     await expect(overflowItem).toBeVisible();
   });
 
@@ -304,7 +304,7 @@ test.describe('MultipleSelector Block', () => {
     await clearBtn.click();
 
     // Verify cleared - placeholder should be visible
-    await expect(selector.locator('.ant-select-selection-placeholder')).toBeVisible();
+    await expect(selector.locator('.ant-select-placeholder')).toBeVisible();
   });
 
   test('can filter options by typing', async ({ page }) => {
@@ -331,6 +331,6 @@ test.describe('MultipleSelector Block', () => {
     await expect(dropdown).toBeVisible();
 
     // No value should be selected
-    await expect(selector.locator('.ant-select-selection-placeholder')).toBeVisible();
+    await expect(selector.locator('.ant-select-placeholder')).toBeVisible();
   });
 });

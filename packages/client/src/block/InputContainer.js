@@ -16,29 +16,31 @@
 
 import React from 'react';
 import { Area, BlockLayout } from '@lowdefy/layout';
-import { makeCssClass } from '@lowdefy/block-utils';
+import { cn } from '@lowdefy/block-utils';
 
 import Block from './Block.js';
+import resolveClassNames from './resolveClassNames.js';
 
 const InputContainer = ({ block, Blocks, Component, context, loading, lowdefy }) => {
+  const classNames = resolveClassNames(block.eval.class);
   const content = {};
   // eslint-disable-next-line prefer-destructuring
-  const areas = Blocks.subAreas[block.id][0].areas;
-  Object.keys(areas).forEach((areaKey, i) => {
-    content[areaKey] = (areaStyle) => (
+  const slots = Blocks.subSlots[block.id][0].slots;
+  Object.keys(slots).forEach((slotKey, i) => {
+    content[slotKey] = (contentStyle) => (
       <Area
-        area={block.eval.areas[areaKey]}
-        areaKey={areaKey}
-        areaStyle={[areaStyle, block.eval.areas[areaKey]?.style]}
-        id={`ar-${block.blockId}-${areaKey}`}
-        key={`ar-${block.blockId}-${areaKey}-${i}`}
+        area={block.eval.slots[slotKey]}
+        areaKey={slotKey}
+        style={{ ...block.eval.slots[slotKey]?.style, ...contentStyle }}
+        className={cn(block.eval.class?.[slotKey])}
+        id={`ar-${block.blockId}-${slotKey}`}
+        key={`ar-${block.blockId}-${slotKey}-${i}`}
         layout={block.eval.layout}
-        makeCssClass={makeCssClass}
       >
-        {areas[areaKey].blocks.map((bl, k) => (
+        {slots[slotKey].blocks.map((bl, k) => (
           <Block
             block={bl}
-            Blocks={Blocks.subAreas[block.id][0]}
+            Blocks={Blocks.subSlots[block.id][0]}
             context={context}
             key={`co-${bl.blockId}-${k}`}
             lowdefy={lowdefy}
@@ -50,14 +52,13 @@ const InputContainer = ({ block, Blocks, Component, context, loading, lowdefy })
   });
   return (
     <BlockLayout
-      blockStyle={block.eval.style}
+      style={block.eval.style?.block}
+      className={classNames.block}
       id={`bl-${block.blockId}`}
       layout={block.eval.layout}
-      makeCssClass={makeCssClass}
     >
       <Component
         methods={Object.assign(block.methods, {
-          makeCssClass,
           registerEvent: block.registerEvent,
           registerMethod: block.registerMethod,
           triggerEvent: block.triggerEvent,
@@ -70,15 +71,17 @@ const InputContainer = ({ block, Blocks, Component, context, loading, lowdefy })
         })}
         basePath={lowdefy.basePath}
         blockId={block.blockId}
+        classNames={classNames}
         components={lowdefy._internal.components}
         content={content}
-        events={block.eval.events}
+        events={block.eval.events ?? {}}
         key={block.blockId}
         loading={loading}
         menus={lowdefy.menus}
         pageId={lowdefy.pageId}
         properties={block.eval.properties}
         required={block.eval.required}
+        styles={block.eval.style ?? {}}
         validation={block.eval.validation}
         value={block.value}
       />

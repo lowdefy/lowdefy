@@ -16,9 +16,11 @@
 
 import React from 'react';
 import { type } from '@lowdefy/helpers';
-import { blockDefaultProps } from '@lowdefy/block-utils';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 
-const Spinner = ({ properties, methods }) => {
+import cssStyles from './style.module.css';
+
+const Spinner = ({ classNames, properties, styles }) => {
   let size = properties.size ?? 20;
   if (type.isString(size)) {
     switch (properties.size) {
@@ -34,15 +36,14 @@ const Spinner = ({ properties, methods }) => {
   }
   return (
     <span
-      className={methods.makeCssClass([
-        {
-          height: size,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        },
-        properties.style,
-      ])}
+      className={classNames?.element}
+      style={{
+        height: size,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        ...styles?.element,
+      }}
     >
       <svg
         viewBox="0 0 1024 1024"
@@ -52,7 +53,7 @@ const Spinner = ({ properties, methods }) => {
         height={size}
         fill="currentColor"
         aria-hidden="true"
-        className="spinner"
+        className={cssStyles.spinner}
       >
         <path
           fill="#bfbfbf"
@@ -63,11 +64,4 @@ const Spinner = ({ properties, methods }) => {
   );
 };
 
-Spinner.defaultProps = blockDefaultProps;
-Spinner.meta = {
-  category: 'display',
-  icons: [],
-  styles: ['blocks/Spinner/style.less'],
-};
-
-export default Spinner;
+export default withBlockDefaults(Spinner);

@@ -15,43 +15,70 @@
 */
 
 import React, { useEffect } from 'react';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import { ErrorBoundary, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { notification } from 'antd';
 import { type } from '@lowdefy/helpers';
 
 import Button from '../Button/Button.js';
 
-const NotificationBlock = ({ blockId, components: { Icon }, events, methods, properties }) => {
+const NotificationBlock = ({
+  blockId,
+  classNames = {},
+  components: { Icon, handleError },
+  events,
+  methods,
+  properties,
+  styles = {},
+}) => {
   useEffect(() => {
     methods.registerMethod('open', (args = {}) => {
       notification[args.status || properties.status || 'success']({
         id: `${blockId}_notification`,
         bottom: properties.bottom,
-        className: methods.makeCssClass(properties.notificationStyle),
+        className: classNames.element,
+        style: styles.element,
         description: renderHtml({ html: args.description || properties.description, methods }),
         duration: type.isNone(args.duration) ? properties.duration : args.duration,
-        message: renderHtml({ html: args.message || properties.message || blockId, methods }),
+        title: renderHtml({
+          html: args.title || properties.title || blockId,
+          methods,
+        }),
         onClick: () => methods.triggerEvent({ name: 'onClick' }),
         onClose: () => methods.triggerEvent({ name: 'onClose' }),
         placement: properties.placement,
         top: properties.top,
         icon: properties.icon && (
-          <Icon blockId={`${blockId}_icon`} events={events} properties={properties.icon} />
+          <ErrorBoundary onError={handleError}>
+            <Icon
+              blockId={`${blockId}_icon`}
+              classNames={{ element: classNames.icon }}
+              events={events}
+              properties={properties.icon}
+              styles={{ element: styles.icon }}
+            />
+          </ErrorBoundary>
         ),
         btn: properties.button && (
-          <Button
-            blockId={`${blockId}_button`}
-            events={events}
-            properties={properties.button}
-            onClick={() => methods.triggerEvent({ name: 'onClose' })}
-          />
+          <ErrorBoundary onError={handleError}>
+            <Button
+              blockId={`${blockId}_button`}
+              components={{ Icon }}
+              events={events}
+              properties={properties.button}
+              onClick={() => methods.triggerEvent({ name: 'onClose' })}
+            />
+          </ErrorBoundary>
         ),
         closeIcon: properties.closeIcon && (
-          <Icon
-            blockId={`${blockId}_closeIcon`}
-            events={events}
-            properties={properties.closeIcon}
-          />
+          <ErrorBoundary onError={handleError}>
+            <Icon
+              blockId={`${blockId}_closeIcon`}
+              classNames={{ element: classNames.closeIcon }}
+              events={events}
+              properties={properties.closeIcon}
+              styles={{ element: styles.closeIcon }}
+            />
+          </ErrorBoundary>
         ),
       });
     });
@@ -59,11 +86,4 @@ const NotificationBlock = ({ blockId, components: { Icon }, events, methods, pro
   return <div id={blockId} />;
 };
 
-NotificationBlock.defaultProps = blockDefaultProps;
-NotificationBlock.meta = {
-  category: 'display',
-  icons: [],
-  styles: ['blocks/Notification/style.less'],
-};
-
-export default NotificationBlock;
+export default withBlockDefaults(NotificationBlock);

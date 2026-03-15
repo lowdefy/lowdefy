@@ -16,18 +16,27 @@
 
 import React from 'react';
 import { get } from '@lowdefy/helpers';
-import { blockDefaultProps } from '@lowdefy/block-utils';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 
-const AnchorBlock = ({ blockId, events, components: { Icon, Link }, methods, properties }) => {
+const AnchorBlock = ({
+  blockId,
+  classNames,
+  events,
+  components: { Icon, Link },
+  methods,
+  properties,
+  styles,
+}) => {
   const disabled = properties.disabled || get(events, 'onClick.loading');
   const { icon, title, ...linkProperties } = properties;
   return (
     <Link
       id={blockId}
-      className={methods.makeCssClass([
-        properties.style,
-        disabled && { color: '#BEBEBE', cursor: 'not-allowed' },
-      ])}
+      className={classNames?.element}
+      style={{
+        ...(disabled ? { color: '#BEBEBE', cursor: 'not-allowed' } : {}),
+        ...styles?.element,
+      }}
       disabled={disabled}
       onClick={() => methods.triggerEvent({ name: 'onClick' })}
       {...linkProperties}
@@ -37,12 +46,14 @@ const AnchorBlock = ({ blockId, events, components: { Icon, Link }, methods, pro
           {icon && (
             <Icon
               blockId={`${blockId}_icon`}
+              classNames={{ element: classNames?.icon }}
               events={events}
               properties={
                 get(events, 'onClick.loading')
                   ? { name: 'AiOutlineLoading3Quarters', spin: true }
                   : icon
               }
+              styles={{ element: { marginRight: 4, ...styles?.icon } }}
             />
           )}
           {title || defaultTitle}
@@ -52,11 +63,4 @@ const AnchorBlock = ({ blockId, events, components: { Icon, Link }, methods, pro
   );
 };
 
-AnchorBlock.defaultProps = blockDefaultProps;
-AnchorBlock.meta = {
-  category: 'display',
-  icons: ['AiOutlineLoading3Quarters'],
-  styles: [],
-};
-
-export default AnchorBlock;
+export default withBlockDefaults(AnchorBlock);

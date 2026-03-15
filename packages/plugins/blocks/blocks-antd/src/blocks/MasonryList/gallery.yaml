@@ -1,0 +1,436 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Column Layouts
+  fullWidth: true
+  blocks:
+    - id: ml_two_col
+      type: MasonryList
+      properties:
+        columns: 2
+        gutter: 16
+      blocks:
+        - id: ml_two_col_card
+          type: Card
+          properties:
+            size: small
+          blocks:
+            - id: ml_two_col_card_title
+              type: Title
+              properties:
+                content:
+                  _state: item.title
+                level: 5
+            - id: ml_two_col_card_p
+              type: Paragraph
+              properties:
+                content:
+                  _state: item.description
+
+    - id: ml_three_col
+      type: MasonryList
+      properties:
+        columns: 3
+        gutter: 16
+      blocks:
+        - id: ml_three_col_card
+          type: Card
+          properties:
+            size: small
+          blocks:
+            - id: ml_three_col_card_title
+              type: Title
+              properties:
+                content:
+                  _state: item.title
+                level: 5
+            - id: ml_three_col_card_p
+              type: Paragraph
+              properties:
+                content:
+                  _state: item.description
+
+    - id: ml_four_col
+      type: MasonryList
+      properties:
+        columns: 4
+        gutter: 16
+      blocks:
+        - id: ml_four_col_card
+          type: Card
+          properties:
+            size: small
+          blocks:
+            - id: ml_four_col_card_title
+              type: Title
+              properties:
+                content:
+                  _state: item.title
+                level: 5
+            - id: ml_four_col_card_p
+              type: Paragraph
+              properties:
+                content:
+                  _state: item.description
+
+- title: Gutter and Rendering Options
+  fullWidth: true
+  blocks:
+    - id: ml_gutter_small
+      type: MasonryList
+      properties:
+        columns: 3
+        gutter: 8
+      blocks:
+        - id: ml_gutter_small_card
+          type: Card
+          properties:
+            size: small
+          blocks:
+            - id: ml_gutter_small_card_p
+              type: Paragraph
+              properties:
+                content:
+                  _state: item.title
+
+    - id: ml_gutter_large
+      type: MasonryList
+      properties:
+        columns: 3
+        gutter: 32
+      blocks:
+        - id: ml_gutter_large_card
+          type: Card
+          properties:
+            size: small
+          blocks:
+            - id: ml_gutter_large_card_p
+              type: Paragraph
+              properties:
+                content:
+                  _state: item.title
+
+    - id: ml_gutter_array
+      type: MasonryList
+      properties:
+        columns: 3
+        gutter:
+          - 20
+          - 12
+      blocks:
+        - id: ml_gutter_array_card
+          type: Card
+          properties:
+            size: small
+            hoverable: true
+          blocks:
+            - id: ml_gutter_array_card_p
+              type: Paragraph
+              properties:
+                content:
+                  _state: item.title
+
+    - id: ml_sequential
+      type: MasonryList
+      properties:
+        columns: 3
+        gutter: 16
+        sequential: true
+      blocks:
+        - id: ml_seq_card
+          type: Card
+          properties:
+            size: small
+          blocks:
+            - id: ml_seq_card_p
+              type: Paragraph
+              properties:
+                content:
+                  _state: item.content
+
+- title: CSS Styling with Tailwind Classes
+  fullWidth: true
+  blocks:
+    - id: ml_css_bg
+      type: MasonryList
+      class:
+        element: bg-gray-100 p-6 rounded-xl
+      properties:
+        columns: 3
+        gutter: 16
+      blocks:
+        - id: ml_css_bg_card
+          type: Card
+          properties:
+            size: small
+          blocks:
+            - id: ml_css_bg_card_p
+              type: Paragraph
+              properties:
+                content:
+                  _state: item.title
+
+    - id: ml_css_border
+      type: MasonryList
+      class:
+        element: border-2 border-dashed border-blue-300 p-4 rounded-lg
+      properties:
+        columns: 2
+        gutter: 12
+      blocks:
+        - id: ml_css_border_card
+          type: Card
+          properties:
+            size: small
+          blocks:
+            - id: ml_css_border_card_p
+              type: Paragraph
+              properties:
+                content:
+                  _state: item.title
+
+    - id: ml_css_shadow
+      type: MasonryList
+      class:
+        element: shadow-lg rounded-xl bg-white p-4
+      properties:
+        columns: 3
+        gutter: 12
+      blocks:
+        - id: ml_css_shadow_card
+          type: Card
+          properties:
+            size: small
+          blocks:
+            - id: ml_css_shadow_card_p
+              type: Paragraph
+              properties:
+                content:
+                  _state: item.title
+
+- title: Theme Token Overrides
+  fullWidth: true
+  blocks:
+    - id: ml_theme_blue
+      type: MasonryList
+      properties:
+        columns: 3
+        gutter: 16
+        theme:
+          colorBgContainer: '#f0f5ff'
+          colorBorderSecondary: '#adc6ff'
+          borderRadiusLG: 16
+      blocks:
+        - id: ml_theme_blue_card
+          type: Card
+          properties:
+            size: small
+          blocks:
+            - id: ml_theme_blue_card_p
+              type: Paragraph
+              properties:
+                content:
+                  _state: item.title
+
+    - id: ml_theme_warm
+      type: MasonryList
+      properties:
+        columns: 2
+        gutter: 16
+        theme:
+          colorBgContainer: '#fffbe6'
+          colorBorderSecondary: '#ffd591'
+          colorTextHeading: '#d46b08'
+          colorText: '#874d00'
+      blocks:
+        - id: ml_theme_warm_card
+          type: Card
+          properties:
+            size: small
+          blocks:
+            - id: ml_theme_warm_card_p
+              type: Paragraph
+              properties:
+                content:
+                  _state: item.title
+
+    - id: ml_theme_sharp
+      type: MasonryList
+      properties:
+        columns: 3
+        gutter: 16
+        theme:
+          borderRadiusLG: 0
+          colorBgContainer: '#fafafa'
+      blocks:
+        - id: ml_theme_sharp_card
+          type: Card
+          properties:
+            size: small
+          blocks:
+            - id: ml_theme_sharp_card_p
+              type: Paragraph
+              properties:
+                content:
+                  _state: item.title
+
+    - id: ml_theme_dark
+      type: MasonryList
+      properties:
+        columns: 3
+        gutter: 16
+        theme:
+          colorBgContainer: '#1f1f1f'
+          colorText: '#e6e6e6'
+          colorTextHeading: '#ffffff'
+          colorBorderSecondary: '#434343'
+      blocks:
+        - id: ml_theme_dark_card
+          type: Card
+          properties:
+            size: small
+          blocks:
+            - id: ml_theme_dark_card_p
+              type: Paragraph
+              properties:
+                content:
+                  _state: item.title
+
+- title: MasonryList in Task Board
+  fullWidth: true
+  blocks:
+    - id: ml_tasks_title
+      type: Title
+      properties:
+        content: Project Tasks
+        level: 4
+    - id: ml_tasks
+      type: MasonryList
+      properties:
+        columns: 3
+        gutter: 16
+      blocks:
+        - id: ml_tasks_card
+          type: Card
+          properties:
+            size: small
+            hoverable: true
+          blocks:
+            - id: ml_tasks_card_title
+              type: Title
+              properties:
+                content:
+                  _state: item.title
+                level: 5
+            - id: ml_tasks_card_desc
+              type: Paragraph
+              properties:
+                content:
+                  _state: item.description
+            - id: ml_tasks_card_tags
+              type: Box
+              layout:
+                gap: 8
+              blocks:
+                - id: ml_tasks_card_tag
+                  type: Tag
+                  properties:
+                    title:
+                      _state: item.status
+                    color:
+                      _if:
+                        test:
+                          _eq:
+                            - _state: item.status
+                            - Done
+                        then: green
+                        else: blue
+            - id: ml_tasks_card_btn
+              type: Button
+              properties:
+                title: View Details
+                color: primary
+                variant: outlined
+                block: true
+                size: small
+                icon: AiOutlineEye
+              events:
+                onClick:
+                  - id: ml_tasks_card_msg
+                    type: DisplayMessage
+                    params:
+                      content:
+                        _string.concat:
+                          - 'Viewing task: '
+                          - _state: item.title
+                      status: info
+
+- title: MasonryList in Product Catalog
+  fullWidth: true
+  blocks:
+    - id: ml_products_title
+      type: Title
+      properties:
+        content: Featured Products
+        level: 4
+    - id: ml_products
+      type: MasonryList
+      class:
+        element: bg-gray-50 p-6 rounded-xl
+      properties:
+        columns: 3
+        gutter: 16
+      blocks:
+        - id: ml_products_card
+          type: Card
+          properties:
+            size: small
+            hoverable: true
+          blocks:
+            - id: ml_products_card_name
+              type: Title
+              properties:
+                content:
+                  _state: item.name
+                level: 5
+            - id: ml_products_card_desc
+              type: Paragraph
+              properties:
+                content:
+                  _state: item.description
+            - id: ml_products_card_price
+              type: Statistic
+              properties:
+                value:
+                  _state: item.price
+                prefix: $
+            - id: ml_products_card_btn
+              type: Button
+              properties:
+                title: Add to Cart
+                color: primary
+                variant: solid
+                block: true
+                size: small
+                icon: AiOutlineShoppingCart
+              events:
+                onClick:
+                  - id: ml_products_card_msg
+                    type: DisplayMessage
+                    params:
+                      content:
+                        _string.concat:
+                          - _state: item.name
+                          - ' added to cart'
+                      status: success

@@ -13,26 +13,17 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
+    pageId: Collapse
+    pageTitle: Collapse
+    section: Container Blocks
+    filePath: blocks/container/Collapse.yaml
     block_type: Collapse
-    category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Collapse/schema.json
-    description_content: |
-      A container with collapsible panels. The area keys are user defined, and should be listed under the `panels` property. Each panel also has a 'extra' content area, the key of which can be defined in the `panels.$.extraKey` property.
-    init_state_values:
-      block.properties.panels:
-        - key: panel1
-          extraKey: panel1Extra
-          title: Panel 1
-        - key: panel2
-          title: Panel 2
-        - key: panel3
-          disabled: true
-          title: Panel 3
-    user_defined_areas: true
-    areas:
-      - panel1
-      - panel1Extra
-      - panel2
-      - panel3
+    antd_component: Collapse
+    antd_url: collapse
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/Collapse
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Collapse/meta.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/Collapse/gallery.yaml
+    description: >
+      Collapsible panels with accordion mode and custom icons.

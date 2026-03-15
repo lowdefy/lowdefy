@@ -35,7 +35,7 @@ test.describe('Notification Block', () => {
 
     const notification = getNotification(page);
     await expect(notification).toBeVisible();
-    await expect(notification.locator('.ant-notification-notice-message')).toHaveText(
+    await expect(notification.locator('.ant-notification-notice-title')).toHaveText(
       'Basic Notification'
     );
     await expect(notification.locator('.ant-notification-notice-description')).toContainText(
@@ -53,7 +53,7 @@ test.describe('Notification Block', () => {
 
     const notification = getNotification(page);
     await expect(notification).toBeVisible();
-    await expect(notification.locator('.ant-notification-notice-message')).toHaveText('Success!');
+    await expect(notification.locator('.ant-notification-notice-title')).toHaveText('Success!');
     // Check for success icon
     const icon = notification.locator('.anticon-check-circle');
     await expect(icon).toBeAttached();
@@ -65,7 +65,7 @@ test.describe('Notification Block', () => {
 
     const notification = getNotification(page);
     await expect(notification).toBeVisible();
-    await expect(notification.locator('.ant-notification-notice-message')).toHaveText('Error');
+    await expect(notification.locator('.ant-notification-notice-title')).toHaveText('Error');
     // Check for error icon
     const icon = notification.locator('.anticon-close-circle');
     await expect(icon).toBeAttached();
@@ -77,7 +77,7 @@ test.describe('Notification Block', () => {
 
     const notification = getNotification(page);
     await expect(notification).toBeVisible();
-    await expect(notification.locator('.ant-notification-notice-message')).toHaveText('Warning');
+    await expect(notification.locator('.ant-notification-notice-title')).toHaveText('Warning');
     // Check for warning icon
     const icon = notification.locator('.anticon-exclamation-circle');
     await expect(icon).toBeAttached();
@@ -89,9 +89,7 @@ test.describe('Notification Block', () => {
 
     const notification = getNotification(page);
     await expect(notification).toBeVisible();
-    await expect(notification.locator('.ant-notification-notice-message')).toHaveText(
-      'Information'
-    );
+    await expect(notification.locator('.ant-notification-notice-title')).toHaveText('Information');
     // Check for info icon
     const icon = notification.locator('.anticon-info-circle');
     await expect(icon).toBeAttached();
@@ -105,36 +103,34 @@ test.describe('Notification Block', () => {
     const openBtn = getBlock(page, 'open_top_right').locator('.ant-btn');
     await openBtn.click();
 
-    // Check notification appears at top right
-    const container = page.locator('.ant-notification-topRight');
-    await expect(container).toBeVisible();
+    // In antd v6, the placement container div is not considered "visible" by Playwright
+    // (zero intrinsic size), so check for a visible notice inside the placement container.
+    const notice = page.locator('.ant-notification-topRight .ant-notification-notice');
+    await expect(notice).toBeVisible();
   });
 
   test('renders notification at top left', async ({ page }) => {
     const openBtn = getBlock(page, 'open_top_left').locator('.ant-btn');
     await openBtn.click();
 
-    // Check notification appears at top left
-    const container = page.locator('.ant-notification-topLeft');
-    await expect(container).toBeVisible();
+    const notice = page.locator('.ant-notification-topLeft .ant-notification-notice');
+    await expect(notice).toBeVisible();
   });
 
   test('renders notification at bottom right', async ({ page }) => {
     const openBtn = getBlock(page, 'open_bottom_right').locator('.ant-btn');
     await openBtn.click();
 
-    // Check notification appears at bottom right
-    const container = page.locator('.ant-notification-bottomRight');
-    await expect(container).toBeVisible();
+    const notice = page.locator('.ant-notification-bottomRight .ant-notification-notice');
+    await expect(notice).toBeVisible();
   });
 
   test('renders notification at bottom left', async ({ page }) => {
     const openBtn = getBlock(page, 'open_bottom_left').locator('.ant-btn');
     await openBtn.click();
 
-    // Check notification appears at bottom left
-    const container = page.locator('.ant-notification-bottomLeft');
-    await expect(container).toBeVisible();
+    const notice = page.locator('.ant-notification-bottomLeft .ant-notification-notice');
+    await expect(notice).toBeVisible();
   });
 
   // ============================================
@@ -174,7 +170,7 @@ test.describe('Notification Block', () => {
 
     const notification = getNotification(page);
     await expect(notification).toBeVisible();
-    await expect(notification.locator('.ant-notification-notice-message')).toHaveText(
+    await expect(notification.locator('.ant-notification-notice-title')).toHaveText(
       'Runtime Success'
     );
     await expect(notification.locator('.ant-notification-notice-description')).toContainText(

@@ -1,0 +1,664 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic Span
+  blocks:
+    - id: span_basic
+      type: Span
+      blocks:
+        - id: span_basic_text
+          type: Html
+          properties:
+            html: This is text inside a Span block using the content area.
+
+    - id: span_basic_empty
+      type: Span
+      properties:
+        content: A Span with no child blocks, using the content property instead.
+
+- title: Content Property
+  blocks:
+    - id: span_content_plain
+      type: Span
+      properties:
+        content: Plain text rendered via the content property.
+    - id: span_content_html
+      type: Span
+      properties:
+        content: '<b>Bold</b>, <i>italic</i>, and <u>underlined</u> via the content property.'
+    - id: span_content_overrides
+      type: Span
+      properties:
+        content: This content property overrides the content area below.
+      blocks:
+        - id: span_content_overrides_child
+          type: Html
+          properties:
+            html: This child block is hidden because the content property takes priority.
+
+- title: Content Area with Child Blocks
+  blocks:
+    - id: span_content_area
+      type: Span
+      blocks:
+        - id: span_content_area_icon
+          type: Icon
+          layout:
+            flex: 0 0 auto
+          properties:
+            name: AiOutlineInfoCircle
+            size: 14
+            color: '#1677ff'
+        - id: span_content_area_text
+          type: Html
+          layout:
+            flex: 0 0 auto
+          properties:
+            html: Child blocks render inside the content area when no content property is set.
+
+- title: onClick Event
+  blocks:
+    - id: span_click_basic
+      type: Span
+      style:
+        --element:
+          color: '#1677ff'
+          textDecoration: underline
+          cursor: pointer
+      properties:
+        content: Click me to show a message
+      events:
+        onClick:
+          - id: span_click_basic_msg
+            type: DisplayMessage
+            params:
+              content: You clicked the Span!
+              status: success
+
+    - id: span_click_set_state
+      type: Span
+      style:
+        --element:
+          background: '#e6f4ff'
+          padding: 4px 12px
+          borderRadius: 4
+          color: '#1677ff'
+          fontWeight: bold
+      properties:
+        content: Click to update state
+      events:
+        onClick:
+          - id: span_click_set_state_action
+            type: SetState
+            params:
+              spanClicked: true
+              clickedAt:
+                _date: now
+
+    - id: span_click_link
+      type: Span
+      style:
+        --element:
+          color: '#722ed1'
+          textDecoration: underline
+      properties:
+        content: Click to navigate
+      events:
+        onClick:
+          - id: span_click_link_action
+            type: Link
+            params:
+              url: https://docs.lowdefy.com
+              newTab: true
+
+- title: Style Overrides
+  blocks:
+    - id: span_style_underline
+      type: Span
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          textDecoration: underline
+          textDecorationColor: '#1677ff'
+          textUnderlineOffset: 4px
+      properties:
+        content: Underlined span
+    - id: span_style_uppercase
+      type: Span
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          textTransform: uppercase
+          letterSpacing: 2
+          fontSize: 12
+          fontWeight: bold
+          color: '#8c8c8c'
+      properties:
+        content: uppercase span
+    - id: span_style_mono
+      type: Span
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          fontFamily: monospace
+          background: '#f5f5f5'
+          padding: 2px 6px
+          borderRadius: 4
+          fontSize: 13
+          color: '#cf1322'
+      properties:
+        content: monospace code style
+    - id: span_style_gradient
+      type: Span
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          background: linear-gradient(90deg, #1677ff, #722ed1)
+          color: '#ffffff'
+          padding: 4px 12px
+          borderRadius: 6
+          fontWeight: bold
+      properties:
+        content: Gradient span
+
+- title: Tailwind CSS Classes
+  blocks:
+    - id: span_tw_bold_blue
+      type: Span
+      layout:
+        flex: 0 0 auto
+      class:
+        element: font-bold text-blue-600
+      properties:
+        content: Bold blue text via Tailwind
+    - id: span_tw_bg_pill
+      type: Span
+      layout:
+        flex: 0 0 auto
+      class:
+        element: bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium
+      properties:
+        content: Pill badge
+    - id: span_tw_hover
+      type: Span
+      layout:
+        flex: 0 0 auto
+      class:
+        element: text-gray-600 hover:text-blue-600 hover:underline transition-colors duration-200 cursor-pointer
+      properties:
+        content: Hover for effect
+    - id: span_tw_ring
+      type: Span
+      layout:
+        flex: 0 0 auto
+      class:
+        element: ring-2 ring-purple-300 bg-purple-50 text-purple-700 px-3 py-1 rounded-md text-sm
+      properties:
+        content: Ring outline
+
+- title: Inline with Text
+  blocks:
+    - id: span_inline_wrapper
+      type: Box
+      blocks:
+        - id: span_inline_before
+          type: Span
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: 'This paragraph has an '
+        - id: span_inline_highlight
+          type: Span
+          layout:
+            flex: 0 0 auto
+          style:
+            --element:
+              color: '#1677ff'
+              fontWeight: bold
+          properties:
+            content: inline highlighted Span
+        - id: span_inline_after
+          type: Span
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: ' mixed with regular text.'
+
+- title: Multiple Inline Spans
+  blocks:
+    - id: span_multi_wrapper
+      type: Box
+      blocks:
+        - id: span_multi_hello
+          type: Span
+          layout:
+            flex: 0 0 auto
+          style:
+            --element:
+              fontWeight: bold
+          properties:
+            content: 'Hello, '
+        - id: span_multi_world
+          type: Span
+          layout:
+            flex: 0 0 auto
+          style:
+            --element:
+              color: '#1677ff'
+          properties:
+            content: 'world'
+        - id: span_multi_excl
+          type: Span
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: '!'
+
+- title: Nested Spans
+  blocks:
+    - id: span_nested_outer
+      type: Span
+      style:
+        --element:
+          padding: 8px 12px
+          background: '#f5f5f5'
+          borderRadius: 6
+          display: inline-flex
+          alignItems: center
+          gap: 8
+      blocks:
+        - id: span_nested_label
+          type: Span
+          layout:
+            flex: 0 0 auto
+          style:
+            --element:
+              fontWeight: bold
+              color: '#262626'
+          properties:
+            content: 'Status:'
+        - id: span_nested_value
+          type: Span
+          layout:
+            flex: 0 0 auto
+          style:
+            --element:
+              color: '#52c41a'
+          blocks:
+            - id: span_nested_value_icon
+              type: Icon
+              layout:
+                flex: 0 0 auto
+              properties:
+                name: AiOutlineCheckCircle
+                size: 14
+                color: '#52c41a'
+            - id: span_nested_value_text
+              type: Html
+              layout:
+                flex: 0 0 auto
+              properties:
+                html: Active
+
+- title: Colored Tags
+  blocks:
+    - id: span_tag_blue
+      type: Span
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          background: '#e6f4ff'
+          color: '#1677ff'
+          padding: 2px 8px
+          borderRadius: 4
+          fontSize: 12
+          border: 1px solid #91caff
+      properties:
+        content: Info
+    - id: span_tag_green
+      type: Span
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          background: '#f6ffed'
+          color: '#52c41a'
+          padding: 2px 8px
+          borderRadius: 4
+          fontSize: 12
+          border: 1px solid #b7eb8f
+      properties:
+        content: Success
+    - id: span_tag_red
+      type: Span
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          background: '#fff2f0'
+          color: '#ff4d4f'
+          padding: 2px 8px
+          borderRadius: 4
+          fontSize: 12
+          border: 1px solid #ffccc7
+      properties:
+        content: Error
+
+- title: Badge-Style Spans
+  blocks:
+    - id: span_badge_primary
+      type: Span
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          background: '#1677ff'
+          color: '#ffffff'
+          padding: 2px 10px
+          borderRadius: 12
+          fontSize: 12
+          fontWeight: bold
+      properties:
+        content: NEW
+    - id: span_badge_danger
+      type: Span
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          background: '#ff4d4f'
+          color: '#ffffff'
+          padding: 2px 10px
+          borderRadius: 12
+          fontSize: 12
+          fontWeight: bold
+      properties:
+        content: '3'
+    - id: span_badge_success
+      type: Span
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          background: '#52c41a'
+          color: '#ffffff'
+          padding: 2px 10px
+          borderRadius: 12
+          fontSize: 12
+          fontWeight: bold
+      properties:
+        content: LIVE
+
+- title: Inline Icon and Text
+  blocks:
+    - id: span_icon_smile
+      type: Span
+      style:
+        --element:
+          display: inline-flex
+          alignItems: center
+          gap: 6
+      blocks:
+        - id: span_icon_smile_icon
+          type: Icon
+          layout:
+            flex: 0 0 auto
+          properties:
+            name: AiOutlineSmile
+            size: 16
+            color: '#faad14'
+        - id: span_icon_smile_label
+          type: Html
+          layout:
+            flex: 0 0 auto
+          properties:
+            html: Happy face
+    - id: span_icon_check
+      type: Span
+      style:
+        --element:
+          display: inline-flex
+          alignItems: center
+          gap: 6
+      blocks:
+        - id: span_icon_check_icon
+          type: Icon
+          layout:
+            flex: 0 0 auto
+          properties:
+            name: AiOutlineCheckCircle
+            size: 16
+            color: '#52c41a'
+        - id: span_icon_check_label
+          type: Html
+          layout:
+            flex: 0 0 auto
+          properties:
+            html: Approved
+    - id: span_icon_warning
+      type: Span
+      style:
+        --element:
+          display: inline-flex
+          alignItems: center
+          gap: 6
+      blocks:
+        - id: span_icon_warning_icon
+          type: Icon
+          layout:
+            flex: 0 0 auto
+          properties:
+            name: AiOutlineWarning
+            size: 16
+            color: '#ff4d4f'
+        - id: span_icon_warning_label
+          type: Html
+          layout:
+            flex: 0 0 auto
+          properties:
+            html: Warning
+
+- title: Order Status Indicator
+  blocks:
+    - id: span_order_wrapper
+      type: Box
+      layout:
+        gap: 16
+        align: center
+      blocks:
+        - id: span_order_label
+          type: Span
+          layout:
+            flex: 0 0 auto
+          style:
+            --element:
+              fontWeight: bold
+              color: '#262626'
+          properties:
+            content: 'Order #10482:'
+        - id: span_order_shipped
+          type: Span
+          layout:
+            flex: 0 0 auto
+          style:
+            --element:
+              display: inline-flex
+              alignItems: center
+              gap: 6
+              background: '#f6ffed'
+              color: '#52c41a'
+              padding: 4px 12px
+              borderRadius: 12
+              fontSize: 13
+              fontWeight: 500
+              border: 1px solid #b7eb8f
+          blocks:
+            - id: span_order_shipped_icon
+              type: Icon
+              layout:
+                flex: 0 0 auto
+              properties:
+                name: AiOutlineCheckCircle
+                size: 14
+                color: '#52c41a'
+            - id: span_order_shipped_text
+              type: Html
+              layout:
+                flex: 0 0 auto
+              properties:
+                html: Shipped
+        - id: span_order_date
+          type: Span
+          layout:
+            flex: 0 0 auto
+          style:
+            --element:
+              color: '#8c8c8c'
+              fontSize: 13
+          properties:
+            content: Estimated delivery Mar 18, 2026
+
+- title: Breadcrumb Navigation
+  blocks:
+    - id: span_breadcrumb_wrapper
+      type: Box
+      layout:
+        gap: 8
+        align: center
+      blocks:
+        - id: span_breadcrumb_home
+          type: Span
+          layout:
+            flex: 0 0 auto
+          style:
+            --element:
+              color: '#1677ff'
+              cursor: pointer
+          properties:
+            content: Home
+          events:
+            onClick:
+              - id: span_breadcrumb_home_click
+                type: Link
+                params:
+                  pageId: home
+        - id: span_breadcrumb_sep1
+          type: Span
+          layout:
+            flex: 0 0 auto
+          style:
+            --element:
+              color: '#d9d9d9'
+          properties:
+            content: /
+        - id: span_breadcrumb_products
+          type: Span
+          layout:
+            flex: 0 0 auto
+          style:
+            --element:
+              color: '#1677ff'
+              cursor: pointer
+          properties:
+            content: Products
+          events:
+            onClick:
+              - id: span_breadcrumb_products_click
+                type: Link
+                params:
+                  pageId: products
+        - id: span_breadcrumb_sep2
+          type: Span
+          layout:
+            flex: 0 0 auto
+          style:
+            --element:
+              color: '#d9d9d9'
+          properties:
+            content: /
+        - id: span_breadcrumb_current
+          type: Span
+          layout:
+            flex: 0 0 auto
+          style:
+            --element:
+              color: '#595959'
+              fontWeight: 500
+          properties:
+            content: Widget Pro X
+
+- title: User Profile Badge
+  blocks:
+    - id: span_profile_wrapper
+      type: Box
+      layout:
+        gap: 12
+        align: center
+      blocks:
+        - id: span_profile_avatar
+          type: Icon
+          layout:
+            flex: 0 0 auto
+          properties:
+            name: AiOutlineUser
+            size: 20
+            color: '#1677ff'
+        - id: span_profile_name
+          type: Span
+          layout:
+            flex: 0 0 auto
+          style:
+            --element:
+              fontWeight: bold
+              fontSize: 14
+              color: '#262626'
+          properties:
+            content: Sarah Mitchell
+        - id: span_profile_role
+          type: Span
+          layout:
+            flex: 0 0 auto
+          class:
+            element: bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full text-xs font-medium
+          properties:
+            content: Admin
+        - id: span_profile_status
+          type: Span
+          layout:
+            flex: 0 0 auto
+          style:
+            --element:
+              display: inline-flex
+              alignItems: center
+              gap: 4
+              fontSize: 12
+              color: '#52c41a'
+          blocks:
+            - id: span_profile_status_dot
+              type: Html
+              layout:
+                flex: 0 0 auto
+              properties:
+                html: '<span style="width:6px;height:6px;background:#52c41a;border-radius:50%;display:inline-block;"></span>'
+            - id: span_profile_status_text
+              type: Html
+              layout:
+                flex: 0 0 auto
+              properties:
+                html: Online

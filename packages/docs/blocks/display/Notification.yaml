@@ -13,22 +13,17 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: Notification
-    category: display
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Notification/schema.json
+    pageId: Notification
+    pageTitle: Notification
+    section: Display Blocks
     filePath: blocks/display/Notification.yaml
-    description_content: |
-      Display a popup notification on the page.
-
-      > To display a notification, invoke the open method.
-
-    methods:
-      - name: open
-        onClick:
-          - id: open
-            type: CallMethod
-            params:
-              blockId: block_id
-              method: open
+    block_type: Notification
+    antd_component: Notification
+    antd_url: notification
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/Notification
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Notification/meta.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/Notification/gallery.yaml
+    description: >
+      Notification message displayed in the corner of the page.

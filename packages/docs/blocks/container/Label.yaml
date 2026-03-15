@@ -13,16 +13,17 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: Label
-    category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Label/schema.json
+    pageId: Label
+    pageTitle: Label
+    section: Container Blocks
     filePath: blocks/container/Label.yaml
-    description_content: |
-      A container that provides a label for a input block. Most input block use Label by default.
-    init_property_values:
-      title: Input title
-    areas:
-      - content
-      # - label
+    block_type: Label
+    antd_component: Label
+    antd_url: form
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/Label
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Label/meta.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/Label/gallery.yaml
+    description: >
+      Form label wrapper with title, description, and validation feedback.

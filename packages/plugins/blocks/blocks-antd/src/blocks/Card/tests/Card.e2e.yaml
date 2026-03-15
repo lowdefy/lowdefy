@@ -24,7 +24,7 @@ blocks:
     type: Card
     properties:
       title: Basic Card
-    areas:
+    slots:
       content:
         blocks:
           - id: card_basic_content
@@ -34,7 +34,7 @@ blocks:
 
   - id: card_no_title
     type: Card
-    areas:
+    slots:
       content:
         blocks:
           - id: card_no_title_content
@@ -51,7 +51,7 @@ blocks:
     properties:
       title: Small Card
       size: small
-    areas:
+    slots:
       content:
         blocks:
           - id: card_small_content
@@ -68,7 +68,7 @@ blocks:
     properties:
       title: Bordered Card
       bordered: true
-    areas:
+    slots:
       content:
         blocks:
           - id: card_bordered_content
@@ -81,7 +81,7 @@ blocks:
     properties:
       title: Borderless Card
       bordered: false
-    areas:
+    slots:
       content:
         blocks:
           - id: card_borderless_content
@@ -94,7 +94,7 @@ blocks:
     properties:
       title: Hoverable Card
       hoverable: true
-    areas:
+    slots:
       content:
         blocks:
           - id: card_hoverable_content
@@ -107,7 +107,7 @@ blocks:
     properties:
       title: Inner Card
       inner: true
-    areas:
+    slots:
       content:
         blocks:
           - id: card_inner_content
@@ -123,7 +123,7 @@ blocks:
     type: Card
     properties:
       title: Card with Extra
-    areas:
+    slots:
       content:
         blocks:
           - id: card_with_extra_content
@@ -142,7 +142,7 @@ blocks:
     type: Card
     properties:
       title: Card with Cover
-    areas:
+    slots:
       cover:
         blocks:
           - id: card_cover_image
@@ -159,7 +159,7 @@ blocks:
 
   - id: card_title_block
     type: Card
-    areas:
+    slots:
       title:
         blocks:
           - id: card_title_block_title
@@ -188,7 +188,7 @@ blocks:
           type: SetState
           params:
             card_clicked: true
-    areas:
+    slots:
       content:
         blocks:
           - id: card_onclick_content

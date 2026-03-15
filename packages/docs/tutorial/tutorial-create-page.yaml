@@ -41,13 +41,13 @@ _ref:
                 properties:
                   title: New ticket # The title in the browser tab.
                 layout:
-                  contentJustify: center # Center the contents of the page.
+                  justify: center # Center the contents of the page.
                 blocks:
                   - id: content_card
                     type: Card
                     layout:
                       size: 800 # Set the size of the card so it does not fill the full screen.
-                      contentGutter: 16 # Make a 16px gap between all blocks in this card.
+                      gap: 16 # Make a 16px gap between all blocks in this card.
                     blocks:
                       - id: page_heading
                         type: Title
@@ -94,10 +94,8 @@ _ref:
       - id: example1
         type: PageHeaderMenu
         layout:
-          contentJustify: center
+          justify: center
         properties:
-          style:
-            minHeight: 300px
           menu:
             links:
               - id: new-ticket
@@ -109,6 +107,9 @@ _ref:
                 properties:
                   title: welcome
 
+        style:
+          --element:
+            minHeight: 300px
         blocks:
           - id: content_card
             type: Card

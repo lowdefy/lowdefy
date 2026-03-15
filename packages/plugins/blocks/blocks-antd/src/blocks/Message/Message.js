@@ -17,9 +17,17 @@
 import React, { useEffect } from 'react';
 import { message } from 'antd';
 import { type } from '@lowdefy/helpers';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import { ErrorBoundary, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
-const MessageBlock = ({ blockId, components: { Icon }, events, methods, properties }) => {
+const MessageBlock = ({
+  blockId,
+  classNames = {},
+  components: { Icon, handleError } = {},
+  events,
+  methods,
+  properties,
+  styles = {},
+}) => {
   useEffect(() => {
     methods.registerMethod('open', (args = {}) => {
       return message[args.status ?? properties.status ?? 'success']({
@@ -28,24 +36,22 @@ const MessageBlock = ({ blockId, components: { Icon }, events, methods, properti
         duration: type.isNone(args.duration) ? properties.duration : args.duration,
         onClose: () => methods.triggerEvent({ name: 'onClose' }),
         icon: (args.icon ?? properties.icon) && (
-          <Icon
-            blockId={`${blockId}_icon`}
-            events={events}
-            properties={args.icon ?? properties.icon}
-          />
+          <ErrorBoundary onError={handleError}>
+            <Icon
+              blockId={`${blockId}_icon`}
+              classNames={{ element: classNames.icon }}
+              events={events}
+              properties={args.icon ?? properties.icon}
+              styles={{ element: styles.icon }}
+            />
+          </ErrorBoundary>
         ),
-        className: methods.makeCssClass(properties.messageStyle),
+        className: classNames.element,
+        style: styles.element,
       });
     });
   });
   return <div id={blockId} />;
 };
 
-MessageBlock.defaultProps = blockDefaultProps;
-MessageBlock.meta = {
-  category: 'display',
-  icons: [],
-  styles: ['blocks/Message/style.less'],
-};
-
-export default MessageBlock;
+export default withBlockDefaults(MessageBlock);

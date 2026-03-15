@@ -17,11 +17,11 @@
 import { getFromObject } from '@lowdefy/operators';
 
 const breakpoints = {
-  xs: 576,
+  xs: 640,
   sm: 768,
-  md: 992,
-  lg: 1200,
-  xl: 1600,
+  md: 1024,
+  lg: 1280,
+  xl: 1536,
 };
 
 function _media({ arrayIndices, location, params, globals }) {
@@ -47,7 +47,7 @@ function _media({ arrayIndices, location, params, globals }) {
       size = 'xl';
       break;
     default:
-      size = 'xxl';
+      size = '2xl';
       break;
   }
   const media = {

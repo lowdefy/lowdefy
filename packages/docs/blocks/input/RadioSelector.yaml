@@ -13,24 +13,17 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: RadioSelector
-    value_type: any
-    category: input
-    schema: ../plugins/blocks/blocks-antd/src/blocks/RadioSelector/schema.json
+    pageId: RadioSelector
+    pageTitle: RadioSelector
+    section: Input Blocks
     filePath: blocks/input/RadioSelector.yaml
-    init_state_values:
-      __type_block.properties.options: object[]
-      __object_arr_block.properties.options:
-        - label: First
-          value: '1'
-        - label: Second
-          value: '2'
-
-    description_content: |
-      The `RadioSelector` block is a set of radio buttons that allow a user to select a single value from a set of options.
-
-      The options for the selector can be provides as either an array of primitive values (Strings, numbers, booleans or dates), or as an array of label-value pairs, where the label is a string, and the value can be of any type, including objects like dates and arrays.
-
-      > Other selector blocks are `ButtonSelector`, `CheckboxSelector`, `MultipleSelector` and `Selector`.
+    block_type: RadioSelector
+    antd_component: Radio
+    antd_url: radio
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/RadioSelector
+    schema: ../plugins/blocks/blocks-antd/src/blocks/RadioSelector/meta.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/RadioSelector/gallery.yaml
+    description: >
+      Radio group for selecting a single option.

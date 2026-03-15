@@ -53,7 +53,7 @@ properties:
     style:
       background: '#FFFFFF'
       padding: 16px 0px 0px 0px
-areas:
+slots:
   header:
     blocks:
       _ref: templates/header.yaml
@@ -111,7 +111,7 @@ areas:
         type: Box
         layout:
           flex: 0 1 800px
-          contentGutter: 16
+          gap: 16
         style:
           marginTop: 32
         blocks:
@@ -125,7 +125,7 @@ areas:
           - id: content
             type: Box
             layout:
-              contentGutter: 16
+              gap: 16
             blocks:
               _var: content
           {% if discussionsLink %}
@@ -146,7 +146,7 @@ areas:
             type: Box
             layout:
               span: 12
-              contentGutter: 16
+              gap: 16
             blocks:
               - id: md_author
                 type: MarkdownWithCode
@@ -167,7 +167,7 @@ areas:
             type: Box
             layout:
               span: 12
-              contentGutter: 16
+              gap: 16
             blocks:
               - id: md_author
                 type: MarkdownWithCode

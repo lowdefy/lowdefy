@@ -1,0 +1,262 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Default
+  blocks:
+    - id: spinner_default
+      type: Spinner
+
+- title: Named Sizes
+  blocks:
+    - id: spinner_named_small
+      type: Spinner
+      layout:
+        flex: 0 0 auto
+      properties:
+        size: small
+    - id: spinner_named_medium
+      type: Spinner
+      layout:
+        flex: 0 0 auto
+      properties:
+        size: medium
+    - id: spinner_named_large
+      type: Spinner
+      layout:
+        flex: 0 0 auto
+      properties:
+        size: large
+
+- title: Custom Numeric Sizes
+  blocks:
+    - id: spinner_numeric_16
+      type: Spinner
+      layout:
+        flex: 0 0 auto
+      properties:
+        size: 16
+    - id: spinner_numeric_32
+      type: Spinner
+      layout:
+        flex: 0 0 auto
+      properties:
+        size: 32
+    - id: spinner_numeric_64
+      type: Spinner
+      layout:
+        flex: 0 0 auto
+      properties:
+        size: 64
+
+- title: Styled Spinners (Tailwind CSS)
+  blocks:
+    - id: spinner_styled_blue
+      type: Spinner
+      layout:
+        flex: 0 0 auto
+      class:
+        element: text-blue-500
+      properties:
+        size: large
+    - id: spinner_styled_green
+      type: Spinner
+      layout:
+        flex: 0 0 auto
+      class:
+        element: text-green-500
+      properties:
+        size: large
+    - id: spinner_styled_red
+      type: Spinner
+      layout:
+        flex: 0 0 auto
+      class:
+        element: text-red-500
+      properties:
+        size: large
+    - id: spinner_styled_purple
+      type: Spinner
+      layout:
+        flex: 0 0 auto
+      class:
+        element: text-purple-600
+      properties:
+        size: large
+
+- title: CSS Key Styling
+  blocks:
+    - id: spinner_css_bg_pill
+      type: Spinner
+      layout:
+        flex: 0 0 auto
+      class:
+        element: bg-blue-50 p-4 rounded-full
+      properties:
+        size: large
+    - id: spinner_css_bordered
+      type: Spinner
+      layout:
+        flex: 0 0 auto
+      class:
+        element: border border-gray-200 p-3 rounded-lg bg-white shadow-sm
+      properties:
+        size: medium
+    - id: spinner_css_dark_bg
+      type: Spinner
+      layout:
+        flex: 0 0 auto
+      class:
+        element: bg-gray-800 text-white p-4 rounded-xl
+      properties:
+        size: large
+
+- title: Inline Style Overrides
+  blocks:
+    - id: spinner_style_custom_color
+      type: Spinner
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          color: '#fa8c16'
+      properties:
+        size: large
+    - id: spinner_style_padded
+      type: Spinner
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          padding: 16px
+          backgroundColor: '#f6ffed'
+          borderRadius: 12px
+      properties:
+        size: medium
+
+- title: Data Loading Overlay
+  blocks:
+    - id: spinner_loading_overlay_card
+      type: Card
+      properties:
+        title: Recent Orders
+      slots:
+        extra:
+          blocks:
+            - id: spinner_loading_overlay_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Refresh
+                icon: AiOutlineReload
+                color: primary
+                variant: outlined
+                size: small
+              events:
+                onClick:
+                  - id: spinner_loading_overlay_msg
+                    type: DisplayMessage
+                    params:
+                      content: Fetching latest orders...
+                      duration: 2
+      blocks:
+        - id: spinner_loading_overlay_box
+          type: Box
+          layout:
+            direction: column
+            align: center
+            justify: center
+            gap: 12
+          style:
+            --element:
+              minHeight: 200px
+          blocks:
+            - id: spinner_loading_overlay_spinner
+              type: Spinner
+              layout:
+                flex: 0 0 auto
+              class:
+                element: text-blue-500
+              properties:
+                size: large
+            - id: spinner_loading_overlay_text
+              type: Paragraph
+              layout:
+                flex: 0 0 auto
+              class: text-gray-400
+              properties:
+                content: Loading orders...
+
+- title: Button with Loading State
+  blocks:
+    - id: spinner_btn_loading_card
+      type: Card
+      properties:
+        title: Submit Application
+      blocks:
+        - id: spinner_btn_loading_form_name
+          type: TextInput
+          properties:
+            label:
+              title: Full Name
+            placeholder: Enter your name
+        - id: spinner_btn_loading_form_email
+          type: TextInput
+          properties:
+            label:
+              title: Email Address
+            placeholder: you@example.com
+        - id: spinner_btn_loading_row
+          type: Box
+          layout:
+            gap: 12
+            align: center
+            justify: end
+          blocks:
+            - id: spinner_btn_loading_indicator
+              type: Spinner
+              layout:
+                flex: 0 0 auto
+              class:
+                element: text-blue-500
+              visible:
+                _if:
+                  test:
+                    _eq:
+                      - _state: submitting
+                      - true
+                  then: true
+                  else: false
+              properties:
+                size: small
+            - id: spinner_btn_loading_submit
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Submit
+                color: primary
+                variant: solid
+                icon: AiOutlineSend
+              events:
+                onClick:
+                  - id: spinner_btn_loading_set_state
+                    type: SetState
+                    params:
+                      submitting: true
+                  - id: spinner_btn_loading_msg
+                    type: DisplayMessage
+                    params:
+                      content: Application submitted successfully!
+                      duration: 3

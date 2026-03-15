@@ -48,7 +48,7 @@ test('color propertiesFormTransformer', () => {
             "extra": "description",
             "span": 8,
           },
-          "showValue": true,
+          "showText": true,
           "size": "small",
           "title": "field",
         },

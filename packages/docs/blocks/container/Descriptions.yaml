@@ -13,41 +13,17 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
-  ~ignoreBuildChecks:
-    - state-refs
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: Descriptions
-    category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Descriptions/schema.json
+    pageId: Descriptions
+    pageTitle: Descriptions
+    section: Container Blocks
     filePath: blocks/container/Descriptions.yaml
-    init_state_values:
-      __type_block.properties.column: number
-      __type_block.properties.items: object[]
-      __object_arr_block.properties.items:
-        - label: Item One
-          value: 1
-        - label: Item Two
-          value: 2
-        - label: Item Three
-          value: 3
-        - label: Item Four
-          value: 4
-          span: 3
-
-    description_content: |
-      Display multiple read-only fields in groups. Commonly used to display a detailed set of data.
-
-    examples:
-      - title: Object data example
-        block:
-          id: object_example
-          type: Descriptions
-          properties:
-            bordered: true
-            items:
-              Location: South Africa
-              Temperature: 22
-              Date: 2021-02-02
-    areas:
-      - extra
+    block_type: Descriptions
+    antd_component: Descriptions
+    antd_url: descriptions
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/Descriptions
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Descriptions/meta.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/Descriptions/gallery.yaml
+    description: >
+      Description list with configurable layout and columns.

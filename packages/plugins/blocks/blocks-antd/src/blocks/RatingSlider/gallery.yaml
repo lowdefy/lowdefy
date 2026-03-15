@@ -1,0 +1,631 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Default
+  blocks:
+    - id: default_rating
+      type: RatingSlider
+      properties:
+        title: Satisfaction Rating
+
+- title: Custom Ranges
+  blocks:
+    - id: range_0_5
+      type: RatingSlider
+      properties:
+        title: Rating (0-5)
+        min: 0
+        max: 5
+    - id: range_1_10
+      type: RatingSlider
+      properties:
+        title: Rating (1-10)
+        min: 1
+        max: 10
+    - id: range_0_100_step10
+      type: RatingSlider
+      properties:
+        title: Percentage (0-100, step 10)
+        min: 0
+        max: 100
+        step: 10
+        showDots: false
+    - id: range_negative
+      type: RatingSlider
+      properties:
+        title: Temperature (-5 to 5)
+        min: -5
+        max: 5
+
+- title: Step Values
+  blocks:
+    - id: step_1
+      type: RatingSlider
+      properties:
+        title: Step 1 (default)
+        min: 0
+        max: 10
+        step: 1
+    - id: step_2
+      type: RatingSlider
+      properties:
+        title: Step 2
+        min: 0
+        max: 10
+        step: 2
+    - id: step_5
+      type: RatingSlider
+      properties:
+        title: Step 5
+        min: 0
+        max: 50
+        step: 5
+    - id: step_half
+      type: RatingSlider
+      properties:
+        title: Step 0.5
+        min: 0
+        max: 5
+        step: 0.5
+
+- title: Marks and Dots
+  blocks:
+    - id: marks_and_dots
+      type: RatingSlider
+      properties:
+        title: Marks and Dots (defaults)
+        showMarks: true
+        showDots: true
+    - id: marks_only
+      type: RatingSlider
+      properties:
+        title: Marks Only (no dots)
+        showMarks: true
+        showDots: false
+    - id: dots_only
+      type: RatingSlider
+      properties:
+        title: Dots Only (no marks)
+        showMarks: false
+        showDots: true
+    - id: no_marks_no_dots
+      type: RatingSlider
+      properties:
+        title: No Marks, No Dots
+        showMarks: false
+        showDots: false
+    - id: marks_step_2
+      type: RatingSlider
+      properties:
+        title: Marks with Step 2
+        min: 0
+        max: 10
+        step: 2
+        showMarks: true
+        showDots: true
+
+- title: Tooltip Modes
+  blocks:
+    - id: tooltip_onclick
+      type: RatingSlider
+      properties:
+        title: Tooltip on Click (default)
+        tooltipVisible: onClick
+    - id: tooltip_always
+      type: RatingSlider
+      properties:
+        title: Tooltip Always Visible
+        tooltipVisible: always
+    - id: tooltip_never
+      type: RatingSlider
+      properties:
+        title: Tooltip Never Visible
+        tooltipVisible: never
+
+- title: N/A Option
+  blocks:
+    - id: na_default
+      type: RatingSlider
+      properties:
+        title: With N/A Option (default)
+        min: 0
+        max: 10
+    - id: na_disabled
+      type: RatingSlider
+      properties:
+        title: N/A Disabled
+        disableNotApplicable: true
+        min: 0
+        max: 10
+    - id: na_custom_label
+      type: RatingSlider
+      properties:
+        title: Custom N/A Label
+        notApplicableLabel: None
+        min: 0
+        max: 10
+    - id: na_skip_label
+      type: RatingSlider
+      properties:
+        title: N/A as "Skip"
+        notApplicableLabel: Skip
+        min: 1
+        max: 5
+
+- title: Icons
+  blocks:
+    - id: icons_default
+      type: RatingSlider
+      properties:
+        title: Default Icons (Frown / Smile)
+        min: 0
+        max: 10
+    - id: icons_custom
+      type: RatingSlider
+      properties:
+        title: Custom Icons (Dislike / Like)
+        minIcon: AiOutlineDislike
+        maxIcon: AiOutlineLike
+        min: 0
+        max: 10
+    - id: icons_star
+      type: RatingSlider
+      properties:
+        title: Star Icons
+        minIcon: AiOutlineStar
+        maxIcon: AiFillStar
+        min: 1
+        max: 5
+    - id: icons_heart
+      type: RatingSlider
+      properties:
+        title: Heart Icons
+        minIcon: AiOutlineHeart
+        maxIcon: AiFillHeart
+        min: 0
+        max: 10
+    - id: icons_object_config
+      type: RatingSlider
+      properties:
+        title: Icon Object Config (colored)
+        minIcon:
+          name: AiOutlineArrowDown
+          color: '#ff4d4f'
+        maxIcon:
+          name: AiOutlineArrowUp
+          color: '#52c41a'
+        min: 0
+        max: 10
+
+- title: Color
+  blocks:
+    - id: color_blue
+      type: RatingSlider
+      properties:
+        title: Blue (default primary)
+        color: '#1677ff'
+        min: 0
+        max: 10
+    - id: color_green
+      type: RatingSlider
+      properties:
+        title: Green
+        color: '#52c41a'
+        min: 0
+        max: 10
+    - id: color_orange
+      type: RatingSlider
+      properties:
+        title: Orange
+        color: '#fa8c16'
+        min: 0
+        max: 10
+    - id: color_red
+      type: RatingSlider
+      properties:
+        title: Red
+        color: '#ff4d4f'
+        min: 0
+        max: 10
+    - id: color_purple
+      type: RatingSlider
+      properties:
+        title: Purple
+        color: '#722ed1'
+        min: 0
+        max: 10
+
+- title: Disabled State
+  blocks:
+    - id: disabled_default
+      type: RatingSlider
+      properties:
+        title: Disabled
+        disabled: true
+    - id: disabled_no_icons
+      type: RatingSlider
+      properties:
+        title: Disabled Without Icons
+        disabled: true
+        disableIcons: true
+    - id: disabled_no_na
+      type: RatingSlider
+      properties:
+        title: Disabled, No N/A
+        disabled: true
+        disableNotApplicable: true
+    - id: disabled_colored
+      type: RatingSlider
+      properties:
+        title: Disabled with Color
+        disabled: true
+        color: '#722ed1'
+
+- title: AutoFocus
+  blocks:
+    - id: autofocus_enabled
+      type: RatingSlider
+      properties:
+        title: AutoFocus Enabled
+        autoFocus: true
+        min: 0
+        max: 5
+    - id: autofocus_disabled
+      type: RatingSlider
+      properties:
+        title: AutoFocus Disabled (default)
+        autoFocus: false
+        min: 0
+        max: 5
+
+- title: Label Configurations
+  blocks:
+    - id: label_default
+      type: RatingSlider
+      properties:
+        title: Default Label
+    - id: label_with_extra
+      type: RatingSlider
+      properties:
+        title: Rating with Extra
+        label:
+          extra: Please rate your experience from 0 to 10.
+    - id: label_inline
+      type: RatingSlider
+      properties:
+        title: Inline Label
+        label:
+          inline: true
+          span: 6
+    - id: label_inline_right
+      type: RatingSlider
+      properties:
+        title: Inline Right-Aligned
+        label:
+          inline: true
+          span: 6
+          align: right
+    - id: label_no_colon
+      type: RatingSlider
+      properties:
+        title: No Colon
+        label:
+          colon: false
+
+- title: No Icons, No N/A (Minimal)
+  blocks:
+    - id: minimal_slider
+      type: RatingSlider
+      properties:
+        title: Minimal Slider
+        disableIcons: true
+        disableNotApplicable: true
+        min: 0
+        max: 10
+    - id: minimal_no_marks
+      type: RatingSlider
+      properties:
+        title: Minimal No Marks
+        disableIcons: true
+        disableNotApplicable: true
+        showMarks: false
+        showDots: false
+        min: 0
+        max: 10
+    - id: minimal_no_label
+      type: RatingSlider
+      properties:
+        label:
+          disabled: true
+        disableIcons: true
+        disableNotApplicable: true
+        min: 0
+        max: 5
+
+- title: Combined Features
+  blocks:
+    - id: combo_survey_satisfaction
+      type: RatingSlider
+      properties:
+        title: Customer Satisfaction
+        min: 1
+        max: 5
+        step: 1
+        color: '#52c41a'
+        minIcon: AiOutlineFrown
+        maxIcon: AiOutlineSmile
+        tooltipVisible: always
+        showMarks: true
+        showDots: true
+        label:
+          extra: Rate your overall satisfaction
+    - id: combo_nps
+      type: RatingSlider
+      properties:
+        title: Net Promoter Score
+        min: 0
+        max: 10
+        step: 1
+        color: '#1677ff'
+        minIcon: AiOutlineDislike
+        maxIcon: AiOutlineLike
+        tooltipVisible: onClick
+        showMarks: true
+        showDots: true
+        notApplicableLabel: Prefer not to say
+        label:
+          extra: How likely are you to recommend us?
+    - id: combo_temperature
+      type: RatingSlider
+      properties:
+        title: Temperature Preference
+        min: 0
+        max: 100
+        step: 5
+        color: '#fa8c16'
+        disableIcons: true
+        disableNotApplicable: true
+        tooltipVisible: always
+        showMarks: true
+        showDots: false
+        label:
+          extra: Set your preferred temperature (0-100)
+    - id: combo_difficulty
+      type: RatingSlider
+      properties:
+        title: Difficulty Level
+        min: 1
+        max: 5
+        step: 1
+        color: '#ff4d4f'
+        minIcon:
+          name: AiOutlineSmile
+          color: '#52c41a'
+        maxIcon:
+          name: AiOutlineWarning
+          color: '#ff4d4f'
+        disableNotApplicable: true
+        showMarks: true
+        showDots: true
+        tooltipVisible: onClick
+
+- title: Style Overrides
+  blocks:
+    - id: style_background
+      type: RatingSlider
+      properties:
+        title: Custom Background
+        min: 0
+        max: 10
+      style:
+        --element:
+          backgroundColor: '#f0f5ff'
+          padding: 8
+          borderRadius: 8
+    - id: style_wide
+      type: RatingSlider
+      properties:
+        title: Full Width with Padding
+        min: 0
+        max: 10
+        disableNotApplicable: true
+      style:
+        --element:
+          paddingLeft: 16
+          paddingRight: 16
+
+- title: Class Overrides
+  blocks:
+    - id: class_rounded
+      type: RatingSlider
+      class: rounded-lg shadow-sm p-2 border border-gray-200
+      properties:
+        title: Rounded Card Style
+        min: 0
+        max: 10
+    - id: class_gradient_bg
+      type: RatingSlider
+      class: bg-gradient-to-r from-blue-50 to-purple-50 p-3 rounded-md
+      properties:
+        title: Gradient Background
+        min: 0
+        max: 10
+        color: '#722ed1'
+
+- title: Theme Token Overrides
+  blocks:
+    - id: theme_large_handle
+      type: RatingSlider
+      properties:
+        title: Large Handle
+        min: 0
+        max: 10
+        theme:
+          handleSize: 14
+          handleSizeHover: 16
+    - id: theme_thick_rail
+      type: RatingSlider
+      properties:
+        title: Thick Rail
+        min: 0
+        max: 10
+        theme:
+          railSize: 8
+    - id: theme_custom_colors
+      type: RatingSlider
+      properties:
+        title: Custom Track and Rail Colors
+        min: 0
+        max: 10
+        theme:
+          trackBg: '#b7eb8f'
+          trackHoverBg: '#73d13d'
+          handleColor: '#52c41a'
+          handleActiveColor: '#389e0d'
+          railBg: '#f6ffed'
+          railHoverBg: '#d9f7be'
+    - id: theme_large_dots
+      type: RatingSlider
+      properties:
+        title: Large Dots
+        min: 0
+        max: 10
+        showDots: true
+        theme:
+          dotSize: 12
+    - id: theme_purple_slider
+      type: RatingSlider
+      properties:
+        title: Purple Theme
+        min: 0
+        max: 10
+        color: '#722ed1'
+        theme:
+          trackBg: '#d3adf7'
+          trackHoverBg: '#b37feb'
+          handleColor: '#722ed1'
+          handleActiveColor: '#531dab'
+          railBg: '#f9f0ff'
+          railHoverBg: '#efdbff'
+          dotBorderColor: '#d3adf7'
+          dotActiveBorderColor: '#722ed1'
+
+- title: RatingSlider in Product Review
+  blocks:
+    - id: applied_product_review_card
+      type: Card
+      properties:
+        title: Write a Product Review
+      blocks:
+        - id: applied_product_review_rating
+          type: RatingSlider
+          properties:
+            title: Product Rating
+            min: 1
+            max: 5
+            step: 1
+            color: '#fa8c16'
+            minIcon: AiOutlineStar
+            maxIcon: AiFillStar
+            showMarks: true
+            showDots: true
+            disableNotApplicable: true
+            label:
+              extra: How would you rate this product?
+          events:
+            onChange:
+              - id: applied_product_review_set_rating
+                type: SetState
+                params:
+                  productRating:
+                    _event: value
+        - id: applied_product_review_text
+          type: TextArea
+          properties:
+            title: Your Review
+            label:
+              extra: Tell us more about your experience.
+            rows: 4
+        - id: applied_product_review_submit
+          type: Button
+          properties:
+            title: Submit Review
+            icon: AiOutlineSend
+            type: primary
+            block: true
+          events:
+            onClick:
+              - id: applied_product_review_validate
+                type: Validate
+              - id: applied_product_review_message
+                type: DisplayMessage
+                params:
+                  content: Thank you for your review!
+                  status: success
+
+- title: RatingSlider in Survey Form
+  blocks:
+    - id: applied_survey_card
+      type: Card
+      properties:
+        title: Customer Feedback Survey
+      blocks:
+        - id: applied_survey_service_rating
+          type: RatingSlider
+          properties:
+            title: Service Quality
+            min: 1
+            max: 10
+            color: '#1677ff'
+            minIcon: AiOutlineFrown
+            maxIcon: AiOutlineSmile
+            showMarks: true
+            label:
+              extra: How would you rate the service you received?
+        - id: applied_survey_quality_rating
+          type: RatingSlider
+          properties:
+            title: Product Quality
+            min: 1
+            max: 10
+            color: '#52c41a'
+            minIcon: AiOutlineDislike
+            maxIcon: AiOutlineLike
+            showMarks: true
+            label:
+              extra: How would you rate the quality of our products?
+        - id: applied_survey_value_rating
+          type: RatingSlider
+          properties:
+            title: Value for Money
+            min: 1
+            max: 10
+            color: '#fa8c16'
+            showMarks: true
+            label:
+              extra: How would you rate the value for money?
+        - id: applied_survey_submit
+          type: Button
+          properties:
+            title: Submit Survey
+            icon: AiOutlineCheck
+            type: primary
+            block: true
+          events:
+            onClick:
+              - id: applied_survey_message
+                type: DisplayMessage
+                params:
+                  content: Survey submitted successfully. Thank you for your feedback!
+                  status: success

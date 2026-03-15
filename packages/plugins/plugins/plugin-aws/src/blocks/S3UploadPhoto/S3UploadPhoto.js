@@ -15,14 +15,23 @@
 */
 
 import React, { useEffect, useState } from 'react';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import { withBlockDefaults, renderHtml } from '@lowdefy/block-utils';
 
 import { Upload } from 'antd';
 
 import useFileList from '../utils/useFileList.js';
 import getS3Upload from '../utils/getS3Upload.js';
 
-const S3UploadPhoto = ({ blockId, components: { Icon }, events, methods, properties, value }) => {
+const S3UploadPhoto = ({
+  blockId,
+  classNames = {},
+  components: { Icon },
+  events,
+  methods,
+  properties,
+  styles = {},
+  value,
+}) => {
   const [state, loadFileList, setFileList, removeFile, setValue] = useFileList({
     properties,
     methods,
@@ -67,25 +76,25 @@ const S3UploadPhoto = ({ blockId, components: { Icon }, events, methods, propert
         methods.triggerEvent({ name: 'onChange' });
       }}
     >
-      <div className={methods.makeCssClass([properties.style])}>
+      <div className={classNames.element} style={styles.element}>
         {loading ? (
           <Icon
             blockId={`${blockId}_icon`}
+            classNames={{ element: classNames.icon }}
             events={events}
             properties={{ name: 'AiOutlineLoading', size: 24 }}
+            styles={{ element: styles.icon }}
           />
         ) : (
           <Icon
             blockId={`${blockId}_icon`}
+            classNames={{ element: classNames.icon }}
             events={events}
             properties={{ name: 'AiOutlineCamera', size: 24 }}
+            styles={{ element: styles.icon }}
           />
         )}
-        <div
-          style={{
-            marginTop: 8,
-          }}
-        >
+        <div className={classNames.title} style={{ marginTop: 8, ...styles.title }}>
           {renderHtml({
             html: properties.title ?? 'Upload image',
             methods,
@@ -96,12 +105,4 @@ const S3UploadPhoto = ({ blockId, components: { Icon }, events, methods, propert
   );
 };
 
-S3UploadPhoto.defaultProps = blockDefaultProps;
-S3UploadPhoto.meta = {
-  valueType: 'object',
-  category: 'input',
-  icons: ['AiOutlineLoading', 'AiOutlineCamera'],
-  styles: ['blocks/S3UploadPhoto/style.less'],
-};
-
-export default S3UploadPhoto;
+export default withBlockDefaults(S3UploadPhoto);

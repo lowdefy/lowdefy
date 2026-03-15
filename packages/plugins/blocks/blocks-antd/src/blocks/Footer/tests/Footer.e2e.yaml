@@ -22,7 +22,7 @@ blocks:
 
   - id: footer_basic
     type: Footer
-    areas:
+    slots:
       content:
         blocks:
           - id: footer_basic_content
@@ -41,7 +41,7 @@ blocks:
         backgroundColor: '#f5f5f5'
         textAlign: center
         padding: 24px
-    areas:
+    slots:
       content:
         blocks:
           - id: footer_with_style_content
@@ -55,7 +55,7 @@ blocks:
 
   - id: footer_with_links
     type: Footer
-    areas:
+    slots:
       content:
         blocks:
           - id: footer_link_1

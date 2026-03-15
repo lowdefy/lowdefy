@@ -1,0 +1,492 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Note: All examples on this page are wrapped in a single GoogleMapsScript
+# block via the docs page template. Individual examples do not need their own script.
+
+- title: Default Map
+  blocks:
+    - id: gm_default
+      type: GoogleMaps
+
+- title: Center and Zoom
+  blocks:
+    - id: gm_center_paris
+      type: GoogleMaps
+      properties:
+        map:
+          center:
+            lat: 48.8566
+            lng: 2.3522
+          zoom: 14
+
+- title: Map Type Options
+  blocks:
+    - id: gm_type_satellite
+      type: GoogleMaps
+      properties:
+        map:
+          center:
+            lat: 37.7749
+            lng: -122.4194
+          zoom: 13
+          mapTypeId: satellite
+
+- title: Map UI Controls
+  blocks:
+    - id: gm_no_default_ui
+      type: GoogleMaps
+      properties:
+        map:
+          center:
+            lat: 34.0522
+            lng: -118.2437
+          zoom: 10
+          disableDefaultUI: true
+    - id: gm_selective_controls
+      type: GoogleMaps
+      properties:
+        map:
+          center:
+            lat: 34.0522
+            lng: -118.2437
+          zoom: 10
+          zoomControl: false
+          streetViewControl: false
+          fullscreenControl: true
+          mapTypeControl: false
+
+- title: Single Marker
+  blocks:
+    - id: gm_single_marker
+      type: GoogleMaps
+      properties:
+        map:
+          center:
+            lat: 48.8566
+            lng: 2.3522
+          zoom: 14
+        markers:
+          - position:
+              lat: 48.8584
+              lng: 2.2945
+            label: E
+            title: Eiffel Tower
+
+- title: Multiple Markers
+  blocks:
+    - id: gm_multi_markers
+      type: GoogleMaps
+      properties:
+        map:
+          center:
+            lat: 40.7484
+            lng: -73.9857
+          zoom: 12
+        markers:
+          - position:
+              lat: 40.6892
+              lng: -74.0445
+            label: A
+            title: Statue of Liberty
+          - position:
+              lat: 40.7484
+              lng: -73.9857
+            label: B
+            title: Empire State Building
+          - position:
+              lat: 40.7589
+              lng: -73.9851
+            label: C
+            title: Times Square
+          - position:
+              lat: 40.7527
+              lng: -73.9772
+            label: D
+            title: Grand Central Terminal
+
+- title: Marker Clusterers
+  blocks:
+    - id: gm_clusterer_basic
+      type: GoogleMaps
+      properties:
+        map:
+          center:
+            lat: 51.51
+            lng: -0.13
+          zoom: 12
+        markerClusterers:
+          - markers:
+              - position:
+                  lat: 51.5074
+                  lng: -0.1278
+              - position:
+                  lat: 51.5155
+                  lng: -0.1419
+              - position:
+                  lat: 51.5014
+                  lng: -0.1419
+              - position:
+                  lat: 51.5194
+                  lng: -0.1270
+              - position:
+                  lat: 51.5033
+                  lng: -0.1195
+    - id: gm_clusterer_options
+      type: GoogleMaps
+      properties:
+        map:
+          center:
+            lat: 51.51
+            lng: -0.13
+          zoom: 10
+        markerClusterers:
+          - markers:
+              - position:
+                  lat: 51.5074
+                  lng: -0.1278
+              - position:
+                  lat: 51.5155
+                  lng: -0.1419
+              - position:
+                  lat: 51.5014
+                  lng: -0.1419
+              - position:
+                  lat: 51.5194
+                  lng: -0.1270
+              - position:
+                  lat: 51.5033
+                  lng: -0.1195
+              - position:
+                  lat: 51.4900
+                  lng: -0.1400
+              - position:
+                  lat: 51.5250
+                  lng: -0.1100
+            options:
+              averageCenter: true
+              gridSize: 60
+              minimumClusterSize: 3
+              zoomOnClick: true
+
+- title: Info Window
+  blocks:
+    - id: gm_info_window
+      type: GoogleMaps
+      properties:
+        map:
+          center:
+            lat: -33.8568
+            lng: 151.2153
+          zoom: 15
+        markers:
+          - position:
+              lat: -33.8568
+              lng: 151.2153
+            title: Sydney Opera House
+        infoWindow:
+          position:
+            lat: -33.8568
+            lng: 151.2153
+
+- title: Auto Bounds
+  blocks:
+    - id: gm_auto_bounds_enabled
+      type: GoogleMaps
+      properties:
+        markers:
+          - position:
+              lat: 48.8566
+              lng: 2.3522
+            label: Paris
+          - position:
+              lat: 35.6762
+              lng: 139.6503
+            label: Tokyo
+          - position:
+              lat: -33.8688
+              lng: 151.2093
+            label: Sydney
+    - id: gm_auto_bounds_disabled
+      type: GoogleMaps
+      properties:
+        autoBounds: false
+        map:
+          center:
+            lat: 0
+            lng: 0
+          zoom: 2
+        markers:
+          - position:
+              lat: 48.8566
+              lng: 2.3522
+          - position:
+              lat: 35.6762
+              lng: 139.6503
+
+- title: Custom Map Style
+  blocks:
+    - id: gm_custom_style_tall
+      type: GoogleMaps
+      properties:
+        style:
+          height: 500px
+        map:
+          center:
+            lat: 40.7128
+            lng: -74.006
+          zoom: 12
+    - id: gm_custom_style_compact
+      type: GoogleMaps
+      properties:
+        style:
+          height: 200px
+        map:
+          center:
+            lat: 51.5074
+            lng: -0.1278
+          zoom: 10
+
+- title: Heatmap Layer
+  blocks:
+    - id: gm_heatmap
+      type: GoogleMaps
+      properties:
+        map:
+          center:
+            lat: 37.775
+            lng: -122.434
+          zoom: 13
+        heatmap:
+          data:
+            - lat: 37.782
+              lng: -122.447
+              weight: 3
+            - lat: 37.782
+              lng: -122.445
+              weight: 2
+            - lat: 37.782
+              lng: -122.443
+              weight: 5
+            - lat: 37.780
+              lng: -122.440
+              weight: 1
+            - lat: 37.779
+              lng: -122.438
+              weight: 4
+            - lat: 37.774
+              lng: -122.430
+              weight: 2
+            - lat: 37.770
+              lng: -122.425
+              weight: 3
+
+- title: Map Event Actions
+  blocks:
+    - id: gm_events_click
+      type: GoogleMaps
+      properties:
+        map:
+          center:
+            lat: 51.5074
+            lng: -0.1278
+          zoom: 12
+        markers:
+          - position:
+              lat: 51.5074
+              lng: -0.1278
+            label: A
+            title: Central London
+      events:
+        onClick:
+          - id: gm_click_action
+            type: DisplayMessage
+            params:
+              content: Map clicked!
+              duration: 3
+        onMarkerClick:
+          - id: gm_marker_click_action
+            type: DisplayMessage
+            params:
+              content: Marker clicked!
+              duration: 3
+        onZoomChanged:
+          - id: gm_zoom_action
+            type: SetState
+            params:
+              lastZoomEvent: zoom level changed
+
+- title: Styled Map Container (Tailwind CSS)
+  blocks:
+    - id: gm_tailwind_rounded
+      type: GoogleMaps
+      class: rounded-xl overflow-hidden shadow-lg
+      properties:
+        map:
+          center:
+            lat: 48.8566
+            lng: 2.3522
+          zoom: 13
+    - id: gm_tailwind_bordered
+      type: GoogleMaps
+      class: rounded-lg border-2 border-blue-400 shadow-md
+      properties:
+        map:
+          center:
+            lat: 35.6762
+            lng: 139.6503
+          zoom: 12
+
+- title: CSS Key Classes
+  blocks:
+    - id: gm_css_key_element
+      type: GoogleMaps
+      class:
+        element: rounded-2xl overflow-hidden shadow-xl border border-gray-200
+      properties:
+        map:
+          center:
+            lat: 40.4168
+            lng: -3.7038
+          zoom: 13
+
+- title: GoogleMaps in Store Locator
+  fullWidth: true
+  blocks:
+    - id: gm_store_locator_title
+      type: Title
+      properties:
+        content: Coffee Shop Locations
+        level: 4
+    - id: gm_store_locator_description
+      type: Paragraph
+      properties:
+        content: Find your nearest branch. Click a marker for details.
+    - id: gm_store_locator_map
+      type: GoogleMaps
+      class: rounded-lg overflow-hidden shadow-md
+      properties:
+        style:
+          height: 400px
+        map:
+          center:
+            lat: 40.7580
+            lng: -73.9855
+          zoom: 14
+        markers:
+          - position:
+              lat: 40.7614
+              lng: -73.9776
+            label: '1'
+            title: 5th Avenue Branch
+          - position:
+              lat: 40.7549
+              lng: -73.9840
+            label: '2'
+            title: Times Square Branch
+          - position:
+              lat: 40.7527
+              lng: -73.9772
+            label: '3'
+            title: Grand Central Branch
+      events:
+        onMarkerClick:
+          - id: gm_store_locator_marker_click
+            type: DisplayMessage
+            params:
+              content: Loading branch details...
+              duration: 2
+
+- title: GoogleMaps in Delivery Tracking Dashboard
+  fullWidth: true
+  blocks:
+    - id: gm_delivery_header
+      type: Box
+      layout:
+        gap: 16
+        align: center
+      blocks:
+        - id: gm_delivery_title
+          type: Title
+          layout:
+            flex: 1 1 0
+          properties:
+            content: Active Deliveries
+            level: 4
+        - id: gm_delivery_count
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: 4 in transit
+            color: processing
+    - id: gm_delivery_map
+      type: GoogleMaps
+      class: rounded-lg overflow-hidden border border-gray-200
+      properties:
+        style:
+          height: 450px
+        map:
+          center:
+            lat: 51.51
+            lng: -0.12
+          zoom: 12
+        markers:
+          - position:
+              lat: 51.5225
+              lng: -0.0835
+            label: '1'
+            title: 'Order #1042 - En route'
+          - position:
+              lat: 51.5074
+              lng: -0.1278
+            label: '2'
+            title: 'Order #1043 - Arriving soon'
+          - position:
+              lat: 51.4975
+              lng: -0.1357
+            label: '3'
+            title: 'Order #1044 - Picked up'
+          - position:
+              lat: 51.5155
+              lng: -0.1419
+            label: '4'
+            title: 'Order #1045 - En route'
+      events:
+        onMarkerClick:
+          - id: gm_delivery_marker_action
+            type: DisplayMessage
+            params:
+              content: Opening delivery details...
+              duration: 2
+    - id: gm_delivery_legend
+      type: Box
+      layout:
+        gap: 16
+      blocks:
+        - id: gm_delivery_tag1
+          type: Tag
+          properties:
+            title: En route
+            color: blue
+        - id: gm_delivery_tag2
+          type: Tag
+          properties:
+            title: Arriving soon
+            color: green
+        - id: gm_delivery_tag3
+          type: Tag
+          properties:
+            title: Picked up
+            color: orange

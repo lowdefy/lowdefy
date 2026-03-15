@@ -1,0 +1,553 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic Week Picker
+  blocks:
+    - id: ws_basic_default
+      type: WeekSelector
+      properties:
+        title: Select a Week
+    - id: ws_basic_with_extra
+      type: WeekSelector
+      properties:
+        title: Reporting Week
+        placeholder: Pick a week...
+        label:
+          extra: Choose the week for the weekly report.
+
+- title: Sizes
+  blocks:
+    - id: ws_size_small
+      type: WeekSelector
+      properties:
+        title: Small
+        size: small
+    - id: ws_size_default
+      type: WeekSelector
+      properties:
+        title: Default
+    - id: ws_size_large
+      type: WeekSelector
+      properties:
+        title: Large
+        size: large
+
+- title: Variants
+  blocks:
+    - id: ws_variant_outlined
+      type: WeekSelector
+      properties:
+        title: Outlined (default)
+        variant: outlined
+    - id: ws_variant_filled
+      type: WeekSelector
+      properties:
+        title: Filled
+        variant: filled
+    - id: ws_variant_borderless
+      type: WeekSelector
+      properties:
+        title: Borderless
+        variant: borderless
+
+- title: Format Variations
+  blocks:
+    - id: ws_fmt_default
+      type: WeekSelector
+      properties:
+        title: YYYY-wo (default)
+        format: YYYY-wo
+        label:
+          disabled: true
+    - id: ws_fmt_reversed
+      type: WeekSelector
+      properties:
+        title: wo-YYYY
+        format: wo-YYYY
+        label:
+          disabled: true
+    - id: ws_fmt_week_prefix
+      type: WeekSelector
+      properties:
+        title: YYYY [Week] wo
+        format: YYYY [Week] wo
+        label:
+          disabled: true
+    - id: ws_fmt_w_prefix
+      type: WeekSelector
+      properties:
+        title: YYYY [W]ww
+        format: YYYY [W]ww
+        label:
+          disabled: true
+
+- title: Placeholder
+  blocks:
+    - id: ws_ph_default
+      type: WeekSelector
+      properties:
+        title: Default Placeholder
+        label:
+          disabled: true
+    - id: ws_ph_custom
+      type: WeekSelector
+      properties:
+        title: Custom Placeholder
+        placeholder: Pick a week...
+        label:
+          disabled: true
+    - id: ws_ph_descriptive
+      type: WeekSelector
+      properties:
+        title: Descriptive Placeholder
+        placeholder: Which week does the report cover?
+        label:
+          disabled: true
+
+- title: Allow Clear
+  blocks:
+    - id: ws_clear_enabled
+      type: WeekSelector
+      properties:
+        title: Allow Clear (default)
+        allowClear: true
+        label:
+          disabled: true
+    - id: ws_clear_disabled
+      type: WeekSelector
+      properties:
+        title: No Clear Button
+        allowClear: false
+        label:
+          disabled: true
+
+- title: Show Today Button
+  blocks:
+    - id: ws_today_enabled
+      type: WeekSelector
+      properties:
+        title: Show Today (default)
+        showToday: true
+        label:
+          disabled: true
+    - id: ws_today_disabled
+      type: WeekSelector
+      properties:
+        title: No Today Button
+        showToday: false
+        label:
+          disabled: true
+
+- title: Suffix Icon
+  blocks:
+    - id: ws_icon_default
+      type: WeekSelector
+      properties:
+        title: Default Calendar Icon
+        label:
+          disabled: true
+    - id: ws_icon_clock
+      type: WeekSelector
+      properties:
+        title: Clock Icon
+        suffixIcon: AiOutlineClockCircle
+        label:
+          disabled: true
+    - id: ws_icon_schedule
+      type: WeekSelector
+      properties:
+        title: Schedule Icon
+        suffixIcon: AiOutlineSchedule
+        label:
+          disabled: true
+    - id: ws_icon_custom_color
+      type: WeekSelector
+      properties:
+        title: Custom Color Icon
+        suffixIcon:
+          name: AiOutlineCalendar
+          color: '#1677ff'
+        label:
+          disabled: true
+
+- title: Disabled State
+  blocks:
+    - id: ws_dis_default
+      type: WeekSelector
+      properties:
+        title: Disabled
+        disabled: true
+        label:
+          disabled: true
+    - id: ws_dis_filled
+      type: WeekSelector
+      properties:
+        title: Disabled Filled
+        disabled: true
+        variant: filled
+        label:
+          disabled: true
+
+- title: Disabled Dates
+  blocks:
+    - id: ws_dd_min
+      type: WeekSelector
+      properties:
+        title: Min Date (2024-01-01)
+        disabledDates:
+          min: '2024-01-01'
+        label:
+          disabled: true
+    - id: ws_dd_range
+      type: WeekSelector
+      properties:
+        title: Min & Max (2026 only)
+        disabledDates:
+          min: '2026-01-01'
+          max: '2026-12-31'
+        label:
+          disabled: true
+    - id: ws_dd_specific
+      type: WeekSelector
+      properties:
+        title: Specific Dates Disabled
+        disabledDates:
+          dates:
+            - '2026-03-15'
+            - '2026-03-20'
+            - '2026-03-25'
+        label:
+          disabled: true
+    - id: ws_dd_date_ranges
+      type: WeekSelector
+      properties:
+        title: Date Ranges Disabled
+        disabledDates:
+          ranges:
+            - ['2026-03-10', '2026-03-14']
+            - ['2026-03-20', '2026-03-24']
+        label:
+          disabled: true
+
+- title: Label Options
+  blocks:
+    - id: ws_lbl_default
+      type: WeekSelector
+      properties:
+        title: Default Label
+    - id: ws_lbl_colon_off
+      type: WeekSelector
+      properties:
+        title: No Colon
+        label:
+          colon: false
+    - id: ws_lbl_inline
+      type: WeekSelector
+      properties:
+        title: Inline Label
+        label:
+          inline: true
+          span: 8
+    - id: ws_lbl_extra
+      type: WeekSelector
+      properties:
+        title: Sprint Week
+        label:
+          extra: 'Choose the <b>sprint week</b> for your team.'
+        placeholder: Select sprint week
+
+- title: Label Disabled (No Label)
+  blocks:
+    - id: ws_lbl_hidden
+      type: WeekSelector
+      properties:
+        title: Hidden Label
+        label:
+          disabled: true
+        placeholder: No label shown
+    - id: ws_lbl_hidden_filled
+      type: WeekSelector
+      properties:
+        title: Hidden Label Filled
+        label:
+          disabled: true
+        variant: filled
+        placeholder: No label, filled variant
+
+- title: AutoFocus
+  blocks:
+    - id: ws_af_on
+      type: WeekSelector
+      properties:
+        title: Auto Focus Enabled
+        autoFocus: true
+        label:
+          disabled: true
+
+- title: Style Overrides
+  blocks:
+    - id: ws_style_element_bg
+      type: WeekSelector
+      style:
+        --element:
+          background: '#f0f5ff'
+      properties:
+        title: Custom Background
+        label:
+          disabled: true
+    - id: ws_style_label
+      type: WeekSelector
+      style:
+        --label:
+          color: '#531dab'
+          fontWeight: bold
+      properties:
+        title: Styled Label
+
+- title: Class Overrides (Tailwind)
+  blocks:
+    - id: ws_class_rounded
+      type: WeekSelector
+      class: rounded-lg shadow-sm
+      properties:
+        title: Rounded with Shadow
+        label:
+          disabled: true
+    - id: ws_class_border
+      type: WeekSelector
+      class: border-2 border-blue-200
+      properties:
+        title: Blue Border
+        label:
+          disabled: true
+
+- title: Theme Token Overrides
+  blocks:
+    - id: ws_theme_primary_color
+      type: WeekSelector
+      properties:
+        title: Custom Primary Color
+        label:
+          disabled: true
+        theme:
+          colorPrimary: '#722ed1'
+    - id: ws_theme_large_radius
+      type: WeekSelector
+      properties:
+        title: Large Border Radius
+        label:
+          disabled: true
+        theme:
+          borderRadius: 16
+    - id: ws_theme_tall
+      type: WeekSelector
+      properties:
+        title: Tall Input
+        label:
+          disabled: true
+        theme:
+          controlHeight: 48
+          fontSize: 18
+          borderRadius: 12
+    - id: ws_theme_brand_color
+      type: WeekSelector
+      properties:
+        title: Brand Purple
+        label:
+          disabled: true
+        theme:
+          colorPrimary: '#722ed1'
+          colorBorder: '#d3adf7'
+          colorBgContainer: '#faf0ff'
+    - id: ws_theme_popup_highlight
+      type: WeekSelector
+      properties:
+        title: Custom Cell Highlight
+        label:
+          disabled: true
+        theme:
+          cellActiveWithRangeBg: '#ffe7ba'
+          activeBorderColor: '#fa8c16'
+          cellHoverBg: 'rgba(250, 140, 22, 0.1)'
+
+- title: Combined Features
+  blocks:
+    - id: ws_combined_full
+      type: WeekSelector
+      properties:
+        title: Sprint Planning Week
+        placeholder: Select sprint week
+        format: YYYY [Week] wo
+        size: large
+        suffixIcon: AiOutlineSchedule
+        showToday: true
+        allowClear: true
+        label:
+          extra: Choose the week for sprint planning.
+          colon: false
+    - id: ws_combined_minimal
+      type: WeekSelector
+      properties:
+        title: Week
+        variant: borderless
+        size: small
+        allowClear: false
+        showToday: false
+        format: YYYY-ww
+        placeholder: wk
+        label:
+          disabled: true
+    - id: ws_combined_restricted
+      type: WeekSelector
+      properties:
+        title: Fiscal Week
+        placeholder: Select fiscal week
+        format: YYYY [W]ww
+        suffixIcon:
+          name: AiOutlineCalendar
+          color: '#1677ff'
+        disabledDates:
+          min: '2026-01-01'
+          max: '2026-12-31'
+        label:
+          extra: Only weeks in fiscal year 2026 are available.
+
+- title: WeekSelector in Sprint Planning
+  blocks:
+    - id: applied_sprint_card
+      type: Card
+      properties:
+        title: Sprint Planning
+      blocks:
+        - id: applied_sprint_week
+          type: WeekSelector
+          properties:
+            title: Sprint Week
+            placeholder: Select sprint week
+            format: YYYY [Week] wo
+            size: large
+            suffixIcon: AiOutlineSchedule
+            label:
+              extra: Choose the week this sprint begins.
+        - id: applied_sprint_team
+          type: Selector
+          properties:
+            title: Team
+            placeholder: Select team...
+            options:
+              - label: Frontend
+                value: frontend
+              - label: Backend
+                value: backend
+              - label: Mobile
+                value: mobile
+              - label: Infrastructure
+                value: infra
+        - id: applied_sprint_capacity
+          type: NumberInput
+          properties:
+            title: Team Capacity
+            placeholder: Enter story points
+            label:
+              extra: Total story points available for this sprint.
+        - id: applied_sprint_btn
+          type: Button
+          properties:
+            title: Start Sprint
+            icon: AiOutlineThunderbolt
+            type: primary
+            block: true
+          events:
+            onClick:
+              - id: start_sprint_action
+                type: DisplayMessage
+                params:
+                  content: Sprint has been started successfully!
+                  status: success
+
+- title: WeekSelector in Timesheet Entry
+  blocks:
+    - id: applied_ts_card
+      type: Card
+      properties:
+        title: Log Weekly Hours
+      blocks:
+        - id: applied_ts_week
+          type: WeekSelector
+          properties:
+            title: Work Week
+            placeholder: Select week to log
+            format: YYYY [W]ww
+            disabledDates:
+              min: '2026-01-01'
+            label:
+              extra: Select the week you want to submit hours for.
+          events:
+            onChange:
+              - id: week_selected
+                type: SetState
+                params:
+                  selectedWeek:
+                    _state: applied_ts_week
+        - id: applied_ts_project
+          type: Selector
+          properties:
+            title: Project
+            placeholder: Select project...
+            options:
+              - label: Website Redesign
+                value: web-redesign
+              - label: API Migration
+                value: api-migration
+              - label: Mobile App v2
+                value: mobile-v2
+              - label: Internal Tools
+                value: internal
+        - id: applied_ts_hours
+          type: NumberInput
+          properties:
+            title: Hours Worked
+            placeholder: Enter hours
+            min: 0
+            max: 60
+            precision: 1
+            label:
+              extra: Total hours for the selected week.
+        - id: applied_ts_notes
+          type: TextArea
+          properties:
+            title: Notes
+            placeholder: Describe what you worked on...
+            autoSize:
+              minRows: 2
+              maxRows: 4
+        - id: applied_ts_submit
+          type: Button
+          properties:
+            title: Submit Timesheet
+            icon: AiOutlineCheck
+            type: primary
+            block: true
+          events:
+            onClick:
+              - id: submit_ts
+                type: Validate
+                params:
+                  - applied_ts_week
+                  - applied_ts_hours
+              - id: ts_success
+                type: DisplayMessage
+                params:
+                  content: Timesheet submitted successfully.
+                  status: success

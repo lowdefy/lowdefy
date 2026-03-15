@@ -1,0 +1,182 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic HTML
+  blocks:
+    - id: basic_paragraph
+      type: DangerousHtml
+      properties:
+        html: '<p>This is a basic paragraph rendered as HTML.</p>'
+    - id: basic_heading
+      type: DangerousHtml
+      properties:
+        html: '<h3>Heading rendered with DangerousHtml</h3>'
+    - id: basic_link
+      type: DangerousHtml
+      properties:
+        html: '<p>Visit <a href="https://lowdefy.com" target="_blank" rel="noopener noreferrer">Lowdefy</a> for more info.</p>'
+    - id: basic_multiple_headings
+      type: DangerousHtml
+      properties:
+        html: '<h4>Section Title</h4><p>Some paragraph text below the heading.</p><h5>Sub-section</h5><p>More text in the sub-section.</p>'
+
+- title: Styled HTML
+  blocks:
+    - id: styled_colored
+      type: DangerousHtml
+      properties:
+        html: '<p style="color: #1890ff; font-weight: bold; font-size: 18px;">Blue bold text with inline styles</p>'
+    - id: styled_box_success
+      type: DangerousHtml
+      properties:
+        html: '<div style="padding: 16px; background-color: #f6ffed; border: 1px solid #b7eb8f; border-radius: 6px;"><strong>Success:</strong> Your changes have been saved.</div>'
+    - id: styled_box_warning
+      type: DangerousHtml
+      properties:
+        html: '<div style="padding: 16px; background-color: #fffbe6; border: 1px solid #ffe58f; border-radius: 6px;"><strong>Warning:</strong> Please review your settings before proceeding.</div>'
+    - id: styled_box_error
+      type: DangerousHtml
+      properties:
+        html: '<div style="padding: 16px; background-color: #fff2f0; border: 1px solid #ffccc7; border-radius: 6px;"><strong>Error:</strong> Unable to complete the operation.</div>'
+    - id: styled_box_info
+      type: DangerousHtml
+      properties:
+        html: '<div style="padding: 16px; background-color: #e6f4ff; border: 1px solid #91caff; border-radius: 6px;"><strong>Info:</strong> The system will undergo maintenance at midnight.</div>'
+
+- title: Lists
+  blocks:
+    - id: list_unordered
+      type: DangerousHtml
+      properties:
+        html: '<ul style="list-style-type: disc; padding-left: 20px;"><li>First item</li><li>Second item</li><li>Third item</li></ul>'
+    - id: list_ordered
+      type: DangerousHtml
+      properties:
+        html: '<ol style="padding-left: 20px;"><li>Step one</li><li>Step two</li><li>Step three</li></ol>'
+    - id: list_colored
+      type: DangerousHtml
+      properties:
+        html: '<ul style="list-style-type: disc; padding-left: 20px;"><li style="color: #52c41a;">Completed</li><li style="color: #faad14;">In Progress</li><li style="color: #ff4d4f;">Overdue</li></ul>'
+    - id: list_nested
+      type: DangerousHtml
+      properties:
+        html: '<ul style="padding-left: 20px;"><li>Parent item<ul style="padding-left: 20px;"><li>Child item 1</li><li>Child item 2</li></ul></li><li>Another parent item</li></ul>'
+    - id: list_definition
+      type: DangerousHtml
+      properties:
+        html: '<dl><dt style="font-weight: bold;">Term 1</dt><dd style="margin-left: 20px; color: #595959;">Definition of the first term.</dd><dt style="font-weight: bold;">Term 2</dt><dd style="margin-left: 20px; color: #595959;">Definition of the second term.</dd></dl>'
+
+- title: HTML Table
+  blocks:
+    - id: table_simple
+      type: DangerousHtml
+      properties:
+        html: '<table style="width: 100%; border-collapse: collapse;"><thead><tr><th style="border: 1px solid #d9d9d9; padding: 8px; background: #fafafa; text-align: left;">Name</th><th style="border: 1px solid #d9d9d9; padding: 8px; background: #fafafa; text-align: left;">Role</th><th style="border: 1px solid #d9d9d9; padding: 8px; background: #fafafa; text-align: left;">Status</th></tr></thead><tbody><tr><td style="border: 1px solid #d9d9d9; padding: 8px;">Alice</td><td style="border: 1px solid #d9d9d9; padding: 8px;">Developer</td><td style="border: 1px solid #d9d9d9; padding: 8px;">Active</td></tr><tr><td style="border: 1px solid #d9d9d9; padding: 8px;">Bob</td><td style="border: 1px solid #d9d9d9; padding: 8px;">Designer</td><td style="border: 1px solid #d9d9d9; padding: 8px;">Active</td></tr><tr><td style="border: 1px solid #d9d9d9; padding: 8px;">Charlie</td><td style="border: 1px solid #d9d9d9; padding: 8px;">Manager</td><td style="border: 1px solid #d9d9d9; padding: 8px;">Away</td></tr></tbody></table>'
+    - id: table_striped
+      type: DangerousHtml
+      properties:
+        html: '<table style="width: 100%; border-collapse: collapse;"><thead><tr><th style="border: 1px solid #d9d9d9; padding: 10px; background: #1677ff; color: white; text-align: left;">Product</th><th style="border: 1px solid #d9d9d9; padding: 10px; background: #1677ff; color: white; text-align: right;">Price</th><th style="border: 1px solid #d9d9d9; padding: 10px; background: #1677ff; color: white; text-align: center;">Stock</th></tr></thead><tbody><tr style="background: #ffffff;"><td style="border: 1px solid #d9d9d9; padding: 10px;">Widget A</td><td style="border: 1px solid #d9d9d9; padding: 10px; text-align: right;">$29.99</td><td style="border: 1px solid #d9d9d9; padding: 10px; text-align: center;">150</td></tr><tr style="background: #f5f5f5;"><td style="border: 1px solid #d9d9d9; padding: 10px;">Widget B</td><td style="border: 1px solid #d9d9d9; padding: 10px; text-align: right;">$49.99</td><td style="border: 1px solid #d9d9d9; padding: 10px; text-align: center;">85</td></tr><tr style="background: #ffffff;"><td style="border: 1px solid #d9d9d9; padding: 10px;">Widget C</td><td style="border: 1px solid #d9d9d9; padding: 10px; text-align: right;">$19.99</td><td style="border: 1px solid #d9d9d9; padding: 10px; text-align: center;">320</td></tr></tbody></table>'
+
+- title: Embedded Media Placeholders
+  blocks:
+    - id: media_video_placeholder
+      type: DangerousHtml
+      properties:
+        html: '<div style="width: 100%; max-width: 560px; aspect-ratio: 16/9; background: #f0f0f0; border: 2px dashed #d9d9d9; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #8c8c8c; font-size: 16px;">Video Placeholder (16:9)</div>'
+    - id: media_iframe_placeholder
+      type: DangerousHtml
+      properties:
+        html: '<div style="width: 100%; max-width: 400px; height: 300px; background: #f5f5f5; border: 2px dashed #d9d9d9; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #8c8c8c;">Embedded Content Area</div>'
+
+- title: Complex Layout
+  blocks:
+    - id: layout_card
+      type: DangerousHtml
+      properties:
+        html: '<div style="max-width: 400px; border: 1px solid #d9d9d9; border-radius: 8px; overflow: hidden;"><div style="padding: 16px; background: #fafafa; border-bottom: 1px solid #d9d9d9;"><h4 style="margin: 0;">Card Title</h4></div><div style="padding: 16px;"><p style="margin: 0 0 12px 0; color: #595959;">This is a card-like layout created purely with HTML and inline styles.</p><div style="display: flex; gap: 8px;"><span style="background: #e6f4ff; color: #1677ff; padding: 2px 8px; border-radius: 4px; font-size: 12px;">Tag 1</span><span style="background: #f6ffed; color: #52c41a; padding: 2px 8px; border-radius: 4px; font-size: 12px;">Tag 2</span></div></div></div>'
+    - id: layout_flex_row
+      type: DangerousHtml
+      properties:
+        html: '<div style="display: flex; gap: 16px; flex-wrap: wrap;"><div style="flex: 1; min-width: 150px; padding: 16px; background: #e6f4ff; border-radius: 8px; text-align: center;"><div style="font-size: 24px; font-weight: bold; color: #1677ff;">42</div><div style="color: #595959; font-size: 12px;">Active Users</div></div><div style="flex: 1; min-width: 150px; padding: 16px; background: #f6ffed; border-radius: 8px; text-align: center;"><div style="font-size: 24px; font-weight: bold; color: #52c41a;">128</div><div style="color: #595959; font-size: 12px;">Completed</div></div><div style="flex: 1; min-width: 150px; padding: 16px; background: #fff7e6; border-radius: 8px; text-align: center;"><div style="font-size: 24px; font-weight: bold; color: #fa8c16;">7</div><div style="color: #595959; font-size: 12px;">Pending</div></div></div>'
+    - id: layout_timeline
+      type: DangerousHtml
+      properties:
+        html: '<div style="padding-left: 20px; border-left: 2px solid #1677ff;"><div style="position: relative; padding-bottom: 16px;"><div style="position: absolute; left: -26px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: #1677ff;"></div><div style="font-weight: bold;">Step 1: Setup</div><div style="color: #595959; font-size: 13px;">Configure your project settings.</div></div><div style="position: relative; padding-bottom: 16px;"><div style="position: absolute; left: -26px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: #1677ff;"></div><div style="font-weight: bold;">Step 2: Build</div><div style="color: #595959; font-size: 13px;">Run the build pipeline.</div></div><div style="position: relative;"><div style="position: absolute; left: -26px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: #d9d9d9;"></div><div style="font-weight: bold; color: #8c8c8c;">Step 3: Deploy</div><div style="color: #bfbfbf; font-size: 13px;">Deploy to production.</div></div></div>'
+
+- title: DOMPurify Options
+  blocks:
+    - id: purify_default_label
+      type: Markdown
+      properties:
+        content: '**Default (scripts and event handlers stripped):**'
+    - id: purify_default
+      type: DangerousHtml
+      properties:
+        html: '<p>Safe content rendered. <script>alert("removed")</script></p>'
+    - id: purify_allow_target_label
+      type: Markdown
+      properties:
+        content: '**With ADD_ATTR to allow target attribute:**'
+    - id: purify_allow_target
+      type: DangerousHtml
+      properties:
+        html: '<a href="https://lowdefy.com" target="_blank">Link with target=_blank allowed</a>'
+        DOMPurifyOptions:
+          ADD_ATTR:
+            - target
+
+- title: Style Overrides
+  blocks:
+    - id: style_padded
+      type: DangerousHtml
+      style:
+        --element:
+          padding: 20
+          background: '#f9f9f9'
+          borderRadius: 8
+          border: 1px solid #e8e8e8
+      properties:
+        html: '<p style="margin: 0;">Content inside a styled DangerousHtml container with padding and background.</p>'
+    - id: style_max_width
+      type: DangerousHtml
+      style:
+        --element:
+          maxWidth: 400
+          margin: 0 auto
+          padding: 16
+          background: '#e6f4ff'
+          borderRadius: 8
+          textAlign: center
+      properties:
+        html: '<p style="margin: 0; color: #1677ff; font-weight: bold;">Centered container with max-width constraint.</p>'
+    - id: style_shadow
+      type: DangerousHtml
+      style:
+        --element:
+          padding: 20
+          borderRadius: 12
+          boxShadow: 0 4px 12px rgba(0, 0, 0, 0.1)
+          background: '#ffffff'
+      properties:
+        html: '<h4 style="margin: 0 0 8px 0;">Elevated Card</h4><p style="margin: 0; color: #595959;">A DangerousHtml block styled with a box shadow for an elevated card appearance.</p>'
+    - id: style_border_left
+      type: DangerousHtml
+      style:
+        --element:
+          borderLeft: 4px solid #722ed1
+          paddingLeft: 16
+          paddingTop: 8
+          paddingBottom: 8
+      properties:
+        html: '<p style="margin: 0; color: #722ed1; font-weight: 500;">Highlighted with a purple left border accent.</p>'

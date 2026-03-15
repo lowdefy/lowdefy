@@ -36,6 +36,7 @@ import buildLogger from './build/buildLogger.js';
 import buildMenu from './build/buildMenu.js';
 import buildPages from './build/full/buildPages.js';
 import buildRefs from './build/buildRefs/buildRefs.js';
+import collectPageContent from './build/collectPageContent.js';
 import buildTypes from './build/buildTypes.js';
 import cleanBuildDirectory from './build/cleanBuildDirectory.js';
 import copyPublicFolder from './build/copyPublicFolder.js';
@@ -48,6 +49,7 @@ import writeConfig from './build/writeConfig.js';
 import writeConnections from './build/writeConnections.js';
 import writeApi from './build/writeApi.js';
 import writeGlobal from './build/writeGlobal.js';
+import writeTheme from './build/writeTheme.js';
 import writeJs from './build/buildJs/writeJs.js';
 import writeLogger from './build/writeLogger.js';
 import writeMaps from './build/writeMaps.js';
@@ -103,6 +105,15 @@ async function build(options) {
     tryBuildStep(buildImports, 'buildImports', { components, context });
     // Final addKeys pass to ensure all objects (including those created by build steps) have ~k
     tryBuildStep(addKeys, 'addKeys', { components, context });
+    // Collect page content strings for Tailwind to scan
+    context.tailwindContentMap = new Map();
+    for (const page of components.pages ?? []) {
+      const content = collectPageContent([page]);
+      if (content) {
+        context.tailwindContentMap.set(page.pageId, content);
+      }
+    }
+
     // Check if there are any collected errors before writing
     logCollectedErrors(context);
 
@@ -116,6 +127,7 @@ async function build(options) {
     await writePages({ components, context });
     await writeConfig({ components, context });
     await writeGlobal({ components, context });
+    await writeTheme({ components, context });
     await writeLogger({ components, context });
     await writeMaps({ components, context });
     await writeMenus({ components, context });

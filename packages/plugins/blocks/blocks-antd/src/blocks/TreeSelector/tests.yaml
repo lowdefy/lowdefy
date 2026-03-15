@@ -1,0 +1,140 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- id: default
+  type: TreeSelector
+  properties:
+    options:
+      - label: Node 1
+        value: '1'
+        children:
+          - label: Node 1.1
+            value: '1.1'
+          - label: Node 1.2
+            value: '1.2'
+      - label: Node 2
+        value: '2'
+- id: 'properties.title: My Tree'
+  type: TreeSelector
+  properties:
+    title: My Tree
+    options:
+      - label: Node 1
+        value: '1'
+- id: 'properties.showLine: true'
+  type: TreeSelector
+  properties:
+    showLine: true
+    options:
+      - label: Node 1
+        value: '1'
+        children:
+          - label: Node 1.1
+            value: '1.1'
+      - label: Node 2
+        value: '2'
+- id: 'properties.defaultExpandAll: true'
+  type: TreeSelector
+  properties:
+    defaultExpandAll: true
+    options:
+      - label: Parent
+        value: parent
+        children:
+          - label: Child 1
+            value: child1
+          - label: Child 2
+            value: child2
+- id: 'properties.checkable: true'
+  type: TreeSelector
+  properties:
+    checkable: true
+    options:
+      - label: Node 1
+        value: '1'
+        children:
+          - label: Node 1.1
+            value: '1.1'
+      - label: Node 2
+        value: '2'
+- id: 'properties.disabled: true'
+  type: TreeSelector
+  properties:
+    disabled: true
+    options:
+      - label: Node 1
+        value: '1'
+- id: 'properties.selectable: false'
+  type: TreeSelector
+  properties:
+    selectable: false
+    options:
+      - label: Node 1
+        value: '1'
+- id: 'properties.label title: My Tree Title'
+  type: TreeSelector
+  properties:
+    label:
+      title: My Tree Title
+    options:
+      - label: Node 1
+        value: '1'
+- id: 'properties.label span: 12'
+  type: TreeSelector
+  properties:
+    label:
+      span: 12
+    options:
+      - label: Node 1
+        value: '1'
+- id: 'properties.label align: right'
+  type: TreeSelector
+  properties:
+    label:
+      align: right
+    options:
+      - label: Node 1
+        value: '1'
+- id: 'properties.label inline: true'
+  type: TreeSelector
+  properties:
+    label:
+      inline: true
+    options:
+      - label: Node 1
+        value: '1'
+- id: 'properties.label disabled: true'
+  type: TreeSelector
+  properties:
+    label:
+      disabled: true
+    options:
+      - label: Node 1
+        value: '1'
+- id: 'properties.label colon: false'
+  type: TreeSelector
+  properties:
+    label:
+      colon: false
+    options:
+      - label: Node 1
+        value: '1'
+- id: 'properties.label extra: showing extra'
+  type: TreeSelector
+  properties:
+    label:
+      extra: showing extra
+    options:
+      - label: Node 1
+        value: '1'

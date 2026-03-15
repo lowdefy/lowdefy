@@ -1,4 +1,3 @@
-/* eslint-disable import/namespace */
 /*
   Copyright 2020-2026 Lowdefy, Inc
 
@@ -15,16 +14,8 @@
   limitations under the License.
 */
 
-import * as blocks from './blocks.js';
+import { extractBlockTypes } from '@lowdefy/block-utils';
 
-const icons = {};
-const styles = {};
-Object.keys(blocks).forEach((block) => {
-  icons[block] = blocks[block].meta.icons ?? [];
-  styles[block] = blocks[block].meta.styles ?? [];
-});
-export default {
-  blocks: Object.keys(blocks),
-  icons,
-  styles: { default: ['style.less'], ...styles },
-};
+import * as metas from './metas.js';
+
+export default extractBlockTypes(metas);

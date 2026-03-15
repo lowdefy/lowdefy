@@ -30,7 +30,7 @@ blocks:
           title: Tab 2
         - key: tab3
           title: Tab 3
-    areas:
+    slots:
       tab1:
         blocks:
           - id: tabs_basic_tab1_content
@@ -61,7 +61,7 @@ blocks:
       tabs:
         - key: small1
           title: Small Tab
-    areas:
+    slots:
       small1:
         blocks:
           - id: tabs_small_content
@@ -76,7 +76,7 @@ blocks:
       tabs:
         - key: large1
           title: Large Tab
-    areas:
+    slots:
       large1:
         blocks:
           - id: tabs_large_content
@@ -97,7 +97,7 @@ blocks:
           title: Card Tab 1
         - key: card2
           title: Card Tab 2
-    areas:
+    slots:
       card1:
         blocks:
           - id: tabs_card_tab1_content
@@ -118,11 +118,11 @@ blocks:
   - id: tabs_position_left
     type: Tabs
     properties:
-      tabPosition: left
+      tabPlacement: left
       tabs:
         - key: left1
           title: Left Tab
-    areas:
+    slots:
       left1:
         blocks:
           - id: tabs_position_left_content
@@ -133,11 +133,11 @@ blocks:
   - id: tabs_position_right
     type: Tabs
     properties:
-      tabPosition: right
+      tabPlacement: right
       tabs:
         - key: right1
           title: Right Tab
-    areas:
+    slots:
       right1:
         blocks:
           - id: tabs_position_right_content
@@ -158,7 +158,7 @@ blocks:
         - key: disabled
           title: Disabled Tab
           disabled: true
-    areas:
+    slots:
       enabled:
         blocks:
           - id: tabs_disabled_enabled_content
@@ -185,7 +185,7 @@ blocks:
           title: First Tab
         - key: second
           title: Second Tab (Default)
-    areas:
+    slots:
       first:
         blocks:
           - id: tabs_default_first_content
@@ -213,7 +213,7 @@ blocks:
         - key: settings
           title: Settings
           icon: AiOutlineSetting
-    areas:
+    slots:
       home:
         blocks:
           - id: tabs_icon_home_content
@@ -246,7 +246,7 @@ blocks:
           params:
             tabs_active_key:
               _event: activeKey
-    areas:
+    slots:
       change1:
         blocks:
           - id: tabs_onchange_tab1_content

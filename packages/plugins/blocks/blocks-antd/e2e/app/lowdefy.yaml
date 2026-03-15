@@ -61,7 +61,6 @@ pages:
   # Step 2.3: Utility Display
   - _ref: ../../src/blocks/Tooltip/tests/Tooltip.e2e.yaml
   - _ref: ../../src/blocks/Popover/tests/Popover.e2e.yaml
-  - _ref: ../../src/blocks/Comment/tests/Comment.e2e.yaml
   - _ref: ../../src/blocks/TimelineList/tests/TimelineList.e2e.yaml
   # Step 3.1: Core Layout
   - _ref: ../../src/blocks/Layout/tests/Layout.e2e.yaml

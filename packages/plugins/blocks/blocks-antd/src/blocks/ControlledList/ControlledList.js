@@ -17,17 +17,20 @@
 import React, { useEffect } from 'react';
 import { get } from '@lowdefy/helpers';
 import { List, Typography } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import Button from '../Button/Button.js';
+import withTheme from '../withTheme.js';
 
 const ControlledListBlock = ({
   blockId,
+  classNames = {},
   components: { Icon, Link },
   events,
   list,
   methods,
   properties,
+  styles = {},
 }) => {
   useEffect(() => {
     methods.registerMethod('moveItemDown', methods.moveItemDown);
@@ -41,30 +44,23 @@ const ControlledListBlock = ({
       methods.pushItem({});
     }
   }
-  const styles = {
-    header: {
-      display: 'flex',
-      flexDirection: 'row',
-      flexWrap: 'nowrap',
-      justifyContent: 'space-between',
-    },
-    footer: {
-      display: 'flex',
-      flexDirection: 'row',
-      flexWrap: 'nowrap',
-      justifyContent: 'space-between',
-    },
-    item: {
-      width: '100%',
-    },
-  };
   return (
     <List
       id={blockId}
+      className={classNames.element}
       size={properties.size}
+      style={styles.element}
       header={
         (properties.title || (properties.addToFront && !properties.hideAddButton)) && (
-          <div className={methods.makeCssClass([styles.header, properties.headerStyle])}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              flexWrap: 'nowrap',
+              justifyContent: 'space-between',
+              ...styles.header,
+            }}
+          >
             {properties.title ? (
               <Typography.Text strong>{properties.title}</Typography.Text>
             ) : (
@@ -91,7 +87,15 @@ const ControlledListBlock = ({
       footer={
         !properties.addToFront &&
         !properties.hideAddButton && (
-          <div className={methods.makeCssClass([styles.footer, properties.footerStyle])}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              flexWrap: 'nowrap',
+              justifyContent: 'space-between',
+              ...styles.footer,
+            }}
+          >
             <br />
             <Button
               blockId={`${blockId}_add_button`}
@@ -115,27 +119,31 @@ const ControlledListBlock = ({
       renderItem={(item, i) => (
         <List.Item
           key={`${blockId}_${i}`}
-          className={methods.makeCssClass([styles.item, properties.itemStyle])}
+          style={{ width: '100%', ...styles.item }}
           extra={
             !properties.hideRemoveButton &&
             list.length > (properties.minItems ?? 0) && [
               // eslint-disable-next-line react/jsx-key
-              <Icon
-                blockId={`${blockId}_${i}_remove_icon`}
-                events={events}
-                properties={{
-                  name: 'AiOutlineMinusCircle',
-                  ...properties.removeItemIcon,
-                  style: {
-                    paddingLeft:
-                      properties.size === 'small' ? 2 : properties.size === 'large' ? 6 : 4,
-                    fontSize:
-                      properties.size === 'small' ? 16 : properties.size === 'large' ? 20 : 18,
-                    ...(properties.removeItemIcon?.style ? properties.removeItemIcon.style : {}),
-                  },
+              <span
+                style={{
+                  paddingLeft:
+                    properties.size === 'small' ? 2 : properties.size === 'large' ? 6 : 4,
+                  fontSize:
+                    properties.size === 'small' ? 16 : properties.size === 'large' ? 20 : 18,
                 }}
-                onClick={() => methods.removeItem(i)}
-              />,
+              >
+                <Icon
+                  blockId={`${blockId}_${i}_remove_icon`}
+                  classNames={{ element: classNames.removeIcon }}
+                  events={events}
+                  properties={{
+                    name: 'AiOutlineMinusCircle',
+                    ...properties.removeItemIcon,
+                  }}
+                  styles={{ element: styles.removeIcon }}
+                  onClick={() => methods.removeItem(i)}
+                />
+              </span>,
             ]
           }
         >
@@ -146,12 +154,4 @@ const ControlledListBlock = ({
   );
 };
 
-ControlledListBlock.defaultProps = blockDefaultProps;
-ControlledListBlock.meta = {
-  valueType: 'array',
-  category: 'list',
-  icons: ['AiOutlinePlus', 'AiOutlineMinusCircle'],
-  styles: ['blocks/ControlledList/style.less'],
-};
-
-export default ControlledListBlock;
+export default withTheme('List', withBlockDefaults(ControlledListBlock));

@@ -19,6 +19,7 @@ import path from 'path';
 import { serializer } from '@lowdefy/helpers';
 import { buildPageJit, createContext, makeId } from '@lowdefy/build/dev';
 
+import compileCss from './compileCss.js';
 import createLogger from './log/createLogger.js';
 import PageCache from './pageCache.mjs';
 
@@ -155,11 +156,12 @@ async function buildPageIfNeeded({ pageId, buildDirectory, configDirectory }) {
       return result;
     }
     pageCache.markCompiled(pageId);
+    await compileCss(buildDirectory);
     jitLogger.info(
       { spin: 'succeed', color: 'white' },
       `Built page "${pageId}" in ${formatDuration(Date.now() - startTime)}.`
     );
-    return true;
+    return { built: true, warnings: result?._warnings };
   } finally {
     pageCache.releaseBuildLock(pageId);
   }

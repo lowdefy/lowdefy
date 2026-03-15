@@ -13,11 +13,17 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: Divider
-    category: display
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Divider/schema.json
+    pageId: Divider
+    pageTitle: Divider
+    section: Display Blocks
     filePath: blocks/display/Divider.yaml
-    description_content: |
-      A divider line. Can be used horizontally or vertically.
+    block_type: Divider
+    antd_component: Divider
+    antd_url: divider
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/Divider
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Divider/meta.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/Divider/gallery.yaml
+    description: >
+      Horizontal or vertical divider with optional text and orientation.

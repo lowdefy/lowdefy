@@ -14,11 +14,7 @@
   limitations under the License.
 */
 
-import * as connections from './connections.js';
-
 export default {
-  connections: Object.keys(connections),
-  requests: Object.keys(connections)
-    .map((connection) => Object.keys(connections[connection].requests))
-    .flat(),
+  connections: ['TestConnection'],
+  requests: ['TestLog', 'TestError'],
 };

@@ -15,9 +15,11 @@
 */
 
 import React, { useState, useEffect } from 'react';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 import { Pagination } from 'antd';
 import { type } from '@lowdefy/helpers';
+
+import { withBlockDefaults } from '@lowdefy/block-utils';
+import withTheme from '../withTheme.js';
 
 const createChangeHandler =
   ({ eventName, methods, setState }) =>
@@ -39,7 +41,15 @@ const calculateState = ({ defaultCurrent, defaultPageSize, value }) => {
   return state;
 };
 
-const PaginationBlock = ({ blockId, loading, methods, properties, value }) => {
+const PaginationBlock = ({
+  blockId,
+  classNames = {},
+  loading,
+  methods,
+  properties,
+  styles = {},
+  value,
+}) => {
   const [state, setState] = useState(() =>
     calculateState({
       defaultCurrent: 1,
@@ -72,6 +82,7 @@ const PaginationBlock = ({ blockId, loading, methods, properties, value }) => {
   return (
     <Pagination
       id={blockId}
+      className={classNames.element}
       disabled={properties.disabled || loading}
       hideOnSinglePage={properties.hideOnSinglePage}
       onChange={createChangeHandler({ eventName: 'onChange', methods, setState })}
@@ -83,19 +94,11 @@ const PaginationBlock = ({ blockId, loading, methods, properties, value }) => {
       showTotal={showTotal}
       simple={!!properties.simple}
       size={properties.size}
+      style={styles.element}
       total={properties.total !== undefined ? properties.total : 100}
       current={state.current}
     />
   );
 };
-PaginationBlock.defaultProps = blockDefaultProps;
-PaginationBlock.meta = {
-  valueType: 'object',
-  initValue: {
-    current: 1,
-  },
-  category: 'input',
-  icons: [],
-  styles: ['blocks/Pagination/style.less'],
-};
-export default PaginationBlock;
+
+export default withTheme('Pagination', withBlockDefaults(PaginationBlock));

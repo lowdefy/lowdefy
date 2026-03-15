@@ -1,0 +1,832 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic PageHeaderMenu
+  fullWidth: true
+  blocks:
+    - id: phm_basic
+      type: PageHeaderMenu
+      properties:
+        header:
+          theme: dark
+        menu:
+          theme: dark
+          links:
+            - id: phm_basic_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+            - id: phm_basic_about
+              type: MenuLink
+              properties:
+                title: About
+            - id: phm_basic_contact
+              type: MenuLink
+              properties:
+                title: Contact
+      blocks:
+        - id: phm_basic_content
+          type: Paragraph
+          properties:
+            content: PageHeaderMenu provides a full page layout with a horizontal navigation menu in the header. The menu links are configured through the menu.links property. On mobile screens, the menu collapses into a mobile drawer.
+
+- title: Light Theme Header
+  fullWidth: true
+  blocks:
+    - id: phm_light
+      type: PageHeaderMenu
+      properties:
+        header:
+          theme: light
+        menu:
+          theme: light
+          links:
+            - id: phm_light_dash
+              type: MenuLink
+              properties:
+                title: Dashboard
+                icon: AiOutlineDashboard
+            - id: phm_light_users
+              type: MenuLink
+              properties:
+                title: Users
+                icon: AiOutlineUser
+            - id: phm_light_settings
+              type: MenuLink
+              properties:
+                title: Settings
+                icon: AiOutlineSetting
+      blocks:
+        - id: phm_light_content
+          type: Paragraph
+          properties:
+            content: Setting header.theme to light gives the header a white background. The menu theme should match the header theme for a consistent look.
+
+- title: Menu with Groups
+  fullWidth: true
+  blocks:
+    - id: phm_groups
+      type: PageHeaderMenu
+      properties:
+        header:
+          theme: dark
+        menu:
+          theme: dark
+          links:
+            - id: phm_grp_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+            - id: phm_grp_products
+              type: MenuGroup
+              properties:
+                title: Products
+                icon: AiOutlineAppstore
+              links:
+                - id: phm_grp_software
+                  type: MenuLink
+                  properties:
+                    title: Software
+                - id: phm_grp_hardware
+                  type: MenuLink
+                  properties:
+                    title: Hardware
+            - id: phm_grp_services
+              type: MenuGroup
+              properties:
+                title: Services
+                icon: AiOutlineTool
+              links:
+                - id: phm_grp_consulting
+                  type: MenuLink
+                  properties:
+                    title: Consulting
+                - id: phm_grp_training
+                  type: MenuLink
+                  properties:
+                    title: Training
+                - id: phm_grp_support
+                  type: MenuLink
+                  properties:
+                    title: Support
+      blocks:
+        - id: phm_groups_content
+          type: Paragraph
+          properties:
+            content: Menu items can be organized into groups using MenuGroup. Groups create dropdown submenus in the horizontal header navigation.
+
+- title: With Breadcrumb
+  fullWidth: true
+  blocks:
+    - id: phm_breadcrumb
+      type: PageHeaderMenu
+      properties:
+        header:
+          theme: dark
+        breadcrumb:
+          separator: /
+          list:
+            - Home
+            - Products
+            - Detail
+        menu:
+          theme: dark
+          links:
+            - id: phm_bc_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+            - id: phm_bc_products
+              type: MenuLink
+              properties:
+                title: Products
+      blocks:
+        - id: phm_breadcrumb_content
+          type: Paragraph
+          properties:
+            content: Breadcrumbs are enabled by setting the breadcrumb property with a list of path items and an optional custom separator. When breadcrumb is not set, a default vertical spacer is shown instead.
+
+- title: Breadcrumb with Custom Separator
+  fullWidth: true
+  blocks:
+    - id: phm_bc_custom
+      type: PageHeaderMenu
+      properties:
+        header:
+          theme: dark
+        breadcrumb:
+          separator: '>'
+          list:
+            - Dashboard
+            - Reports
+            - Monthly
+        menu:
+          theme: dark
+          links:
+            - id: phm_bcc_dash
+              type: MenuLink
+              properties:
+                title: Dashboard
+                icon: AiOutlineDashboard
+            - id: phm_bcc_reports
+              type: MenuLink
+              properties:
+                title: Reports
+                icon: AiOutlineBarChart
+      events:
+        onBreadcrumbClick:
+          - id: phm_bcc_action
+            type: DisplayMessage
+            params:
+              content: Breadcrumb clicked!
+              duration: 2
+      blocks:
+        - id: phm_bc_custom_content
+          type: Paragraph
+          properties:
+            content: The breadcrumb separator can be customized to any string. The onBreadcrumbClick event fires when any breadcrumb item is clicked, allowing navigation or other actions.
+
+- title: With Footer Slot
+  fullWidth: true
+  blocks:
+    - id: phm_footer
+      type: PageHeaderMenu
+      properties:
+        header:
+          theme: dark
+        menu:
+          theme: dark
+          links:
+            - id: phm_ft_home
+              type: MenuLink
+              properties:
+                title: Home
+            - id: phm_ft_about
+              type: MenuLink
+              properties:
+                title: About
+        footer:
+          style:
+            textAlign: center
+      blocks:
+        - id: phm_footer_main
+          type: Paragraph
+          properties:
+            content: The footer slot renders at the bottom of the page. Configure it using the slots.footer key. Footer properties like style can be set via properties.footer.
+      slots:
+        footer:
+          blocks:
+            - id: phm_footer_text
+              type: Paragraph
+              properties:
+                content: My Application - Footer Content
+                style:
+                  textAlign: center
+                  margin: 0
+
+- title: With Header Slot
+  fullWidth: true
+  blocks:
+    - id: phm_header_slot
+      type: PageHeaderMenu
+      properties:
+        header:
+          theme: dark
+          contentStyle:
+            alignItems: center
+        menu:
+          theme: dark
+          links:
+            - id: phm_hs_home
+              type: MenuLink
+              properties:
+                title: Home
+            - id: phm_hs_pages
+              type: MenuLink
+              properties:
+                title: Pages
+      slots:
+        header:
+          blocks:
+            - id: phm_header_slot_avatar
+              type: Avatar
+              layout:
+                flex: 0 0 auto
+              properties:
+                icon: AiOutlineUser
+                size: small
+      blocks:
+        - id: phm_header_slot_content
+          type: Paragraph
+          properties:
+            content: The header slot allows you to place custom blocks in the header area next to the menu, such as user avatars, notification badges, or action buttons. The header.contentStyle property controls the layout of these slot items.
+
+- title: Custom Logo Settings
+  fullWidth: true
+  blocks:
+    - id: phm_logo
+      type: PageHeaderMenu
+      properties:
+        logo:
+          alt: Custom App Logo
+          breakpoint: 577
+          style:
+            maxHeight: 40px
+        header:
+          theme: dark
+        menu:
+          theme: dark
+          links:
+            - id: phm_logo_home
+              type: MenuLink
+              properties:
+                title: Home
+            - id: phm_logo_docs
+              type: MenuLink
+              properties:
+                title: Docs
+      blocks:
+        - id: phm_logo_content
+          type: Paragraph
+          properties:
+            content: The logo property configures the header logo with src, srcMobile, alt text, breakpoint for responsive switching between desktop and mobile images, and custom styles via logo.style. When not set, it defaults to Lowdefy branding.
+
+- title: Desktop and Mobile Menu Overrides
+  fullWidth: true
+  blocks:
+    - id: phm_menu_overrides
+      type: PageHeaderMenu
+      properties:
+        header:
+          theme: dark
+        menu:
+          theme: dark
+          links:
+            - id: phm_mo_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+            - id: phm_mo_features
+              type: MenuLink
+              properties:
+                title: Features
+                icon: AiOutlineAppstore
+            - id: phm_mo_pricing
+              type: MenuLink
+              properties:
+                title: Pricing
+                icon: AiOutlineDollar
+        menuLg:
+          theme: dark
+        menuMd:
+          theme: light
+      blocks:
+        - id: phm_menu_overrides_content
+          type: Paragraph
+          properties:
+            content: Use menuLg to override menu properties for desktop (large screen) display and menuMd to override menu properties for the mobile drawer. This allows different themes or configurations for each screen size.
+
+- title: Header and Content Inline Styles
+  fullWidth: true
+  blocks:
+    - id: phm_inline_styles
+      type: PageHeaderMenu
+      properties:
+        header:
+          theme: light
+          style:
+            borderBottom: 2px solid #1677ff
+          contentStyle:
+            alignItems: center
+        content:
+          style:
+            padding: 0 60px 60px 60px
+            backgroundColor: '#fafafa'
+        menu:
+          theme: light
+          links:
+            - id: phm_is_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+            - id: phm_is_docs
+              type: MenuLink
+              properties:
+                title: Documentation
+                icon: AiOutlineBook
+      blocks:
+        - id: phm_inline_styles_content
+          type: Paragraph
+          properties:
+            content: The header.style property applies custom CSS to the header bar, while header.contentStyle controls the flex layout of header slot content. The content.style property customizes the main content area padding and background.
+
+- title: Menu Item Events
+  fullWidth: true
+  blocks:
+    - id: phm_events
+      type: PageHeaderMenu
+      properties:
+        header:
+          theme: dark
+        menu:
+          theme: dark
+          links:
+            - id: phm_ev_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+            - id: phm_ev_projects
+              type: MenuLink
+              properties:
+                title: Projects
+                icon: AiOutlineProject
+            - id: phm_ev_settings
+              type: MenuLink
+              properties:
+                title: Settings
+                icon: AiOutlineSetting
+      events:
+        onMenuItemClick:
+          - id: phm_ev_click_action
+            type: DisplayMessage
+            params:
+              content: Menu item clicked!
+              duration: 2
+        onMenuItemSelect:
+          - id: phm_ev_select_action
+            type: DisplayMessage
+            params:
+              content: Menu item selected!
+              duration: 2
+      blocks:
+        - id: phm_events_content
+          type: Paragraph
+          properties:
+            content: PageHeaderMenu supports onMenuItemClick and onMenuItemSelect events for menu interactions. The onOpen, onClose, and onToggleDrawer events fire when the mobile menu drawer is toggled. The onToggleMenuGroup event fires when a menu group is expanded.
+
+- title: Style with CSS Keys
+  fullWidth: true
+  blocks:
+    - id: phm_css_keys
+      type: PageHeaderMenu
+      style:
+        --header:
+          borderBottom: 3px solid #722ed1
+        --content:
+          backgroundColor: '#f9f0ff'
+        --breadcrumb:
+          padding: 8px 0
+      properties:
+        header:
+          theme: light
+        breadcrumb:
+          list:
+            - Home
+            - Gallery
+        menu:
+          theme: light
+          links:
+            - id: phm_ck_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+            - id: phm_ck_gallery
+              type: MenuLink
+              properties:
+                title: Gallery
+                icon: AiOutlinePicture
+      blocks:
+        - id: phm_css_keys_content
+          type: Paragraph
+          properties:
+            content: 'PageHeaderMenu supports these CSS keys via the style property: element (outer wrapper), header (header bar), logo (logo image), menu (navigation menu), content (main content area), breadcrumb (breadcrumb bar), and footer (footer area).'
+
+- title: Tailwind CSS Classes
+  fullWidth: true
+  blocks:
+    - id: phm_tailwind
+      type: PageHeaderMenu
+      class:
+        header: bg-slate-900
+        content: bg-slate-50
+        footer: bg-slate-100 border-t border-slate-200
+      properties:
+        header:
+          theme: dark
+        menu:
+          theme: dark
+          links:
+            - id: phm_tw_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+            - id: phm_tw_about
+              type: MenuLink
+              properties:
+                title: About
+                icon: AiOutlineInfoCircle
+        footer:
+          style:
+            textAlign: center
+      blocks:
+        - id: phm_tailwind_content
+          type: Paragraph
+          properties:
+            content: Use the class property as an object to apply Tailwind CSS classes to individual CSS key areas. Each key (element, header, logo, menu, content, breadcrumb, footer) can receive its own set of utility classes.
+      slots:
+        footer:
+          blocks:
+            - id: phm_tw_footer_text
+              type: Paragraph
+              properties:
+                content: Styled footer with Tailwind border and background
+                style:
+                  margin: 0
+
+- title: Theme Token Overrides
+  fullWidth: true
+  blocks:
+    - id: phm_themed
+      type: PageHeaderMenu
+      properties:
+        header:
+          theme: dark
+        menu:
+          theme: dark
+          links:
+            - id: phm_th_home
+              type: MenuLink
+              properties:
+                title: Home
+            - id: phm_th_pages
+              type: MenuLink
+              properties:
+                title: Pages
+        theme:
+          colorPrimary: '#722ed1'
+      blocks:
+        - id: phm_themed_content
+          type: Paragraph
+          properties:
+            content: The theme property allows overriding Ant Design design tokens for the entire page. Here colorPrimary is set to purple, affecting the menu selection highlight and other primary-colored elements.
+
+- title: Theme Tokens with Custom Layout Colors
+  fullWidth: true
+  blocks:
+    - id: phm_themed_layout
+      type: PageHeaderMenu
+      properties:
+        header:
+          theme: light
+        menu:
+          theme: light
+          links:
+            - id: phm_tl_overview
+              type: MenuLink
+              properties:
+                title: Overview
+                icon: AiOutlineAppstore
+            - id: phm_tl_reports
+              type: MenuLink
+              properties:
+                title: Reports
+                icon: AiOutlineBarChart
+        theme:
+          colorPrimary: '#52c41a'
+          colorBgContainer: '#f6ffed'
+          colorText: '#135200'
+      blocks:
+        - id: phm_themed_layout_content
+          type: Paragraph
+          properties:
+            content: Multiple theme tokens can be combined to create a fully custom color scheme. The colorBgContainer token affects the content background, colorText changes body text, and colorPrimary sets the accent color for menus and interactive elements.
+
+- title: Company Intranet Portal
+  fullWidth: true
+  blocks:
+    - id: phm_intranet
+      type: PageHeaderMenu
+      properties:
+        logo:
+          alt: Acme Corp
+        header:
+          theme: dark
+          contentStyle:
+            alignItems: center
+            gap: 12px
+        breadcrumb:
+          list:
+            - Intranet
+            - Team Directory
+        menu:
+          theme: dark
+          links:
+            - id: phm_intranet_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+            - id: phm_intranet_directory
+              type: MenuLink
+              properties:
+                title: Team Directory
+                icon: AiOutlineTeam
+            - id: phm_intranet_resources
+              type: MenuGroup
+              properties:
+                title: Resources
+                icon: AiOutlineBook
+              links:
+                - id: phm_intranet_policies
+                  type: MenuLink
+                  properties:
+                    title: Company Policies
+                - id: phm_intranet_benefits
+                  type: MenuLink
+                  properties:
+                    title: Benefits Guide
+                - id: phm_intranet_handbook
+                  type: MenuLink
+                  properties:
+                    title: Employee Handbook
+            - id: phm_intranet_help
+              type: MenuLink
+              properties:
+                title: IT Support
+                icon: AiOutlineQuestionCircle
+      events:
+        onMenuItemClick:
+          - id: phm_intranet_nav_action
+            type: DisplayMessage
+            params:
+              content: Navigating...
+              duration: 1
+        onBreadcrumbClick:
+          - id: phm_intranet_bc_action
+            type: DisplayMessage
+            params:
+              content: Breadcrumb navigation
+              duration: 1
+      slots:
+        header:
+          blocks:
+            - id: phm_intranet_header_row
+              type: Box
+              layout:
+                gap: 12
+                align: center
+                flex: 0 0 auto
+              blocks:
+                - id: phm_intranet_notif_btn
+                  type: Button
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    icon: AiOutlineBell
+                    color: default
+                    variant: text
+                    hideTitle: true
+                    size: small
+                - id: phm_intranet_avatar
+                  type: Avatar
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    icon: AiOutlineUser
+                    size: small
+        footer:
+          blocks:
+            - id: phm_intranet_footer_row
+              type: Box
+              layout:
+                justify: center
+                gap: 24
+              blocks:
+                - id: phm_intranet_footer_copy
+                  type: Paragraph
+                  properties:
+                    content: Acme Corp Intranet - Internal Use Only
+                    style:
+                      margin: 0
+                      color: '#888'
+      blocks:
+        - id: phm_intranet_welcome
+          type: Title
+          properties:
+            content: Welcome back, Jane
+            level: 3
+        - id: phm_intranet_cards
+          type: Box
+          layout:
+            gap: 16
+          blocks:
+            - id: phm_intranet_card_announce
+              type: Card
+              layout:
+                flex: 1 1 300px
+              properties:
+                title: Announcements
+              blocks:
+                - id: phm_intranet_announce_1
+                  type: Paragraph
+                  properties:
+                    content: 'Office hours updated: Building opens at 7:00 AM starting next Monday.'
+                - id: phm_intranet_announce_2
+                  type: Paragraph
+                  properties:
+                    content: 'Q1 All-Hands meeting scheduled for March 28 at 2:00 PM in the main auditorium.'
+            - id: phm_intranet_card_links
+              type: Card
+              layout:
+                flex: 1 1 300px
+              properties:
+                title: Quick Links
+              blocks:
+                - id: phm_intranet_link_1
+                  type: Paragraph
+                  properties:
+                    content: Submit a Time-Off Request
+                - id: phm_intranet_link_2
+                  type: Paragraph
+                  properties:
+                    content: View Expense Reports
+                - id: phm_intranet_link_3
+                  type: Paragraph
+                  properties:
+                    content: Book a Meeting Room
+
+- title: Documentation Site Layout
+  fullWidth: true
+  blocks:
+    - id: phm_docs_site
+      type: PageHeaderMenu
+      properties:
+        logo:
+          alt: DevDocs
+        header:
+          theme: light
+          contentStyle:
+            alignItems: center
+            gap: 8px
+          style:
+            borderBottom: 1px solid #e8e8e8
+        menu:
+          theme: light
+          links:
+            - id: phm_docs_guide
+              type: MenuLink
+              properties:
+                title: Guide
+                icon: AiOutlineBook
+            - id: phm_docs_api_ref
+              type: MenuLink
+              properties:
+                title: API Reference
+                icon: AiOutlineApi
+            - id: phm_docs_examples
+              type: MenuLink
+              properties:
+                title: Examples
+                icon: AiOutlineCode
+            - id: phm_docs_community
+              type: MenuLink
+              properties:
+                title: Community
+                icon: AiOutlineGlobal
+        breadcrumb:
+          separator: /
+          list:
+            - Docs
+            - Getting Started
+            - Installation
+        content:
+          style:
+            maxWidth: 960px
+            margin: 0 auto
+            padding: 0 40px 40px 40px
+        theme:
+          colorPrimary: '#1677ff'
+      slots:
+        header:
+          blocks:
+            - id: phm_docs_search_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Search
+                icon: AiOutlineSearch
+                color: default
+                variant: outlined
+                size: small
+            - id: phm_docs_github_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                icon: AiOutlineGithub
+                color: default
+                variant: text
+                hideTitle: true
+                size: small
+      events:
+        onMenuItemSelect:
+          - id: phm_docs_nav_action
+            type: DisplayMessage
+            params:
+              content: Loading documentation section...
+              duration: 1
+      blocks:
+        - id: phm_docs_title
+          type: Title
+          properties:
+            content: Installation
+            level: 2
+        - id: phm_docs_intro
+          type: Paragraph
+          properties:
+            content: Get started by installing the framework via npm or yarn. Follow the steps below to set up your development environment and create your first application.
+        - id: phm_docs_alert
+          type: Alert
+          properties:
+            message: Prerequisites
+            description: Make sure you have Node.js version 18 or higher installed before proceeding.
+            type: info
+            showIcon: true
+        - id: phm_docs_steps_card
+          type: Card
+          properties:
+            title: Setup Steps
+            size: small
+          blocks:
+            - id: phm_docs_step_1
+              type: Paragraph
+              properties:
+                content: '1. Initialize a new project directory and run the setup command.'
+            - id: phm_docs_step_2
+              type: Paragraph
+              properties:
+                content: '2. Configure your lowdefy.yaml file with pages and connections.'
+            - id: phm_docs_step_3
+              type: Paragraph
+              properties:
+                content: '3. Start the development server to preview your application.'

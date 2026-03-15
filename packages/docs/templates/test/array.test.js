@@ -56,7 +56,7 @@ test('array propertiesFormTransformer', () => {
         ],
         "id": "block.properties.options",
         "layout": Object {
-          "contentGutter": 0,
+          "gap": 0,
         },
         "properties": Object {
           "itemStyle": Object {
@@ -186,7 +186,7 @@ test('array schemaArrayObject propertiesFormTransformer', () => {
             ],
             "id": "block.properties.options.$",
             "layout": Object {
-              "contentGutter": 0,
+              "gap": 0,
             },
             "properties": Object {
               "bodyStyle": Object {
@@ -200,7 +200,7 @@ test('array schemaArrayObject propertiesFormTransformer', () => {
         ],
         "id": "block.properties.options",
         "layout": Object {
-          "contentGutter": 0,
+          "gap": 0,
         },
         "properties": Object {
           "itemStyle": Object {
@@ -332,7 +332,23 @@ test('array schemaOneOfPrimitive propertiesFormTransformer', () => {
       Object {
         "blocks": Array [
           Object {
-            "areas": Object {
+            "id": "$",
+            "layout": Object {
+              "gap": 0,
+            },
+            "properties": Object {
+              "bodyStyle": Object {
+                "padding": 0,
+              },
+              "headerStyle": Object {
+                "background": "rgba(0, 0, 0, 0.06)",
+                "color": "rgba(0, 0, 0, 0.45)",
+              },
+              "inner": true,
+              "size": "small",
+              "title": "Select $ type",
+            },
+            "slots": Object {
               "content": Object {
                 "blocks": Array [
                   Object {
@@ -421,28 +437,12 @@ test('array schemaOneOfPrimitive propertiesFormTransformer', () => {
                 ],
               },
             },
-            "id": "$",
-            "layout": Object {
-              "contentGutter": 0,
-            },
-            "properties": Object {
-              "bodyStyle": Object {
-                "padding": 0,
-              },
-              "headerStyle": Object {
-                "background": "rgba(0, 0, 0, 0.06)",
-                "color": "rgba(0, 0, 0, 0.45)",
-              },
-              "inner": true,
-              "size": "small",
-              "title": "Select $ type",
-            },
             "type": "Card",
           },
         ],
         "id": "block.properties.options",
         "layout": Object {
-          "contentGutter": 0,
+          "gap": 0,
         },
         "properties": Object {
           "itemStyle": Object {
@@ -606,7 +606,23 @@ test('array schemaPrimitiveOneOf propertiesFormTransformer', () => {
   expect(propertiesFormTransformer(schemaPrimitiveOneOf)).toMatchInlineSnapshot(`
     Array [
       Object {
-        "areas": Object {
+        "id": "options",
+        "layout": Object {
+          "gap": 0,
+        },
+        "properties": Object {
+          "bodyStyle": Object {
+            "padding": 0,
+          },
+          "headerStyle": Object {
+            "background": "rgba(0, 0, 0, 0.06)",
+            "color": "rgba(0, 0, 0, 0.45)",
+          },
+          "inner": true,
+          "size": "small",
+          "title": "Select options type",
+        },
+        "slots": Object {
           "content": Object {
             "blocks": Array [
               Object {
@@ -629,7 +645,7 @@ test('array schemaPrimitiveOneOf propertiesFormTransformer', () => {
                 ],
                 "id": "__string_arr_block.properties.options",
                 "layout": Object {
-                  "contentGutter": 0,
+                  "gap": 0,
                 },
                 "properties": Object {
                   "itemStyle": Object {
@@ -675,7 +691,7 @@ test('array schemaPrimitiveOneOf propertiesFormTransformer', () => {
                 ],
                 "id": "__number_arr_block.properties.options",
                 "layout": Object {
-                  "contentGutter": 0,
+                  "gap": 0,
                 },
                 "properties": Object {
                   "itemStyle": Object {
@@ -722,22 +738,6 @@ test('array schemaPrimitiveOneOf propertiesFormTransformer', () => {
               },
             ],
           },
-        },
-        "id": "options",
-        "layout": Object {
-          "contentGutter": 0,
-        },
-        "properties": Object {
-          "bodyStyle": Object {
-            "padding": 0,
-          },
-          "headerStyle": Object {
-            "background": "rgba(0, 0, 0, 0.06)",
-            "color": "rgba(0, 0, 0, 0.45)",
-          },
-          "inner": true,
-          "size": "small",
-          "title": "Select options type",
         },
         "type": "Card",
       },
@@ -883,7 +883,23 @@ test('array schemaOneOfArrayStrArrayYaml propertiesFormTransformer', () => {
   expect(propertiesFormTransformer(schemaOneOfArrayStrArrayYaml)).toMatchInlineSnapshot(`
     Array [
       Object {
-        "areas": Object {
+        "id": "options",
+        "layout": Object {
+          "gap": 0,
+        },
+        "properties": Object {
+          "bodyStyle": Object {
+            "padding": 0,
+          },
+          "headerStyle": Object {
+            "background": "rgba(0, 0, 0, 0.06)",
+            "color": "rgba(0, 0, 0, 0.45)",
+          },
+          "inner": true,
+          "size": "small",
+          "title": "Select options type",
+        },
+        "slots": Object {
           "content": Object {
             "blocks": Array [
               Object {
@@ -906,7 +922,7 @@ test('array schemaOneOfArrayStrArrayYaml propertiesFormTransformer', () => {
                 ],
                 "id": "__string_arr_block.properties.options",
                 "layout": Object {
-                  "contentGutter": 0,
+                  "gap": 0,
                 },
                 "properties": Object {
                   "itemStyle": Object {
@@ -955,7 +971,7 @@ test('array schemaOneOfArrayStrArrayYaml propertiesFormTransformer', () => {
                 ],
                 "id": "__object_arr_block.properties.options",
                 "layout": Object {
-                  "contentGutter": 0,
+                  "gap": 0,
                 },
                 "properties": Object {
                   "itemStyle": Object {
@@ -1002,22 +1018,6 @@ test('array schemaOneOfArrayStrArrayYaml propertiesFormTransformer', () => {
               },
             ],
           },
-        },
-        "id": "options",
-        "layout": Object {
-          "contentGutter": 0,
-        },
-        "properties": Object {
-          "bodyStyle": Object {
-            "padding": 0,
-          },
-          "headerStyle": Object {
-            "background": "rgba(0, 0, 0, 0.06)",
-            "color": "rgba(0, 0, 0, 0.45)",
-          },
-          "inner": true,
-          "size": "small",
-          "title": "Select options type",
         },
         "type": "Card",
       },
@@ -1178,7 +1178,7 @@ test('array propertiesFormTransformer schemaNestedArray', () => {
                 ],
                 "id": "block.properties.arr1.$.arr2",
                 "layout": Object {
-                  "contentGutter": 0,
+                  "gap": 0,
                 },
                 "properties": Object {
                   "itemStyle": Object {
@@ -1213,7 +1213,7 @@ test('array propertiesFormTransformer schemaNestedArray', () => {
             ],
             "id": "block.properties.arr1.$",
             "layout": Object {
-              "contentGutter": 0,
+              "gap": 0,
             },
             "properties": Object {
               "bodyStyle": Object {
@@ -1227,7 +1227,7 @@ test('array propertiesFormTransformer schemaNestedArray', () => {
         ],
         "id": "block.properties.arr1",
         "layout": Object {
-          "contentGutter": 0,
+          "gap": 0,
         },
         "properties": Object {
           "itemStyle": Object {

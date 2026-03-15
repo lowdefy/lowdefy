@@ -28,6 +28,7 @@ function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, 
     lowdefy._internal = {
       actions: types.actions,
       blockComponents: types.blocks,
+      blockMetas: types.blockMetas ?? {},
       components: {
         Icon: createIcon(types.icons),
       },
@@ -57,6 +58,7 @@ function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, 
     lowdefy.contexts = {};
     lowdefy.inputs = {};
     lowdefy.lowdefyGlobal = config.rootConfig.lowdefyGlobal;
+    lowdefy.theme = config.rootConfig.theme ?? {};
 
     lowdefy._internal.callAPI = createCallAPI(lowdefy);
     lowdefy._internal.auth = createAuthMethods(lowdefy, auth);
@@ -67,6 +69,7 @@ function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, 
       lowdefy._internal.updaters[blockId] && lowdefy._internal.updaters[blockId]();
     lowdefy._internal.logger = createBrowserLogger();
     lowdefy._internal.handleError = createHandleError(lowdefy);
+    lowdefy._internal.components.handleError = lowdefy._internal.handleError;
 
     if (stage === 'dev' || stage === 'e2e') {
       window.lowdefy = lowdefy;

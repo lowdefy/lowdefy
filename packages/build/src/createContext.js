@@ -29,6 +29,7 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
     directories,
     errors: [],
     jsMap: {},
+    warnings: [],
     keyMap: {},
     logger,
     readConfigFile: createReadConfigFile({ directories }),
@@ -57,6 +58,8 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
     typesMap: mergeObjects([defaultTypesMap, customTypesMap]),
     writeBuildArtifact: createWriteBuildArtifact({ directories }),
   };
+
+  context.blockMetas = context.typesMap.blockMetas ?? {};
 
   context.handleError = createBuildHandleError({ context });
   context.handleWarning = createHandleWarning({ context });

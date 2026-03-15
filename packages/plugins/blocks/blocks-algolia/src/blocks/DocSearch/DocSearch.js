@@ -16,7 +16,7 @@
 
 import React from 'react';
 import * as docsearchReact from '@docsearch/react';
-import { blockDefaultProps } from '@lowdefy/block-utils';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 const { DocSearch } = docsearchReact;
 
 const DocSearchBlock = ({ properties }) => {
@@ -34,11 +34,4 @@ const DocSearchBlock = ({ properties }) => {
   );
 };
 
-DocSearchBlock.defaultProps = blockDefaultProps;
-DocSearchBlock.meta = {
-  category: 'display',
-  icons: [],
-  styles: [],
-};
-
-export default DocSearchBlock;
+export default withBlockDefaults(DocSearchBlock);

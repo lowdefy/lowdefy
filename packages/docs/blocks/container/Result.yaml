@@ -13,22 +13,17 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: Result
-    category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Result/schema.json
+    pageId: Result
+    pageTitle: Result
+    section: Container Blocks
     filePath: blocks/container/Result.yaml
-    description_content: |
-      Used to provide feedback the results of a task or error.
-    areas:
-      - content
-      - extra
-    examples:
-      - title: 500 Error
-        block:
-          id: error_example
-          type: Result
-          properties:
-            status: 500
-            title: An error occurred
+    block_type: Result
+    antd_component: Result
+    antd_url: result
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/Result
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Result/meta.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/Result/gallery.yaml
+    description: >
+      Result page with status icon, title, and extra actions.

@@ -1,0 +1,201 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: {{ pageId }}
+    pageTitle: {{ pageTitle }}
+    section: {{ section }}
+    filePath:
+      _var: filePath
+    fullWidth: true
+    content:
+      - id: gallery_intro
+        type: Markdown
+        properties:
+          content: |
+            {{ description }}
+      - id: gallery_links
+        type: Box
+        layout:
+          gap: 8
+          justify: start
+        blocks:
+{% if antd_component %}
+          - id: gallery_antd_link
+            type: Button
+            layout:
+              flex: 0 0 auto
+            properties:
+              title: Ant Design {{ antd_component }}
+              type: link
+              icon: AiOutlineLink
+              size: small
+            events:
+              onClick:
+                - id: open_antd
+                  type: Link
+                  params:
+                    url: https://ant.design/components/{{ antd_url }}
+                    newTab: true
+{% endif %}
+          - id: gallery_github_link
+            type: Button
+            layout:
+              flex: 0 0 auto
+            properties:
+              title: {{ block_type }} Source on GitHub
+              type: link
+              icon: AiFillGithub
+              size: small
+            events:
+              onClick:
+                - id: open_github
+                  type: Link
+                  params:
+                    url: https://github.com/lowdefy/lowdefy/tree/main/{{ github_path }}
+                    newTab: true
+
+{% if note %}
+      - id: gallery_note
+        type: Alert
+        properties:
+          type: warning
+          showIcon: true
+          message: {{ note }}
+{% endif %}
+{% if wrapperType %}
+      - id: gallery_wrapper
+        type: {{ wrapperType }}
+        properties:
+          _var: wrapperProperties
+        blocks:
+          - id: gallery_grid
+            type: Box
+            layout:
+              wrap: wrap
+              gap: 16
+{% if onInit %}
+            events:
+              onMount:
+                _var: onInit
+{% endif %}
+            blocks:
+              _ref:
+                path:
+                  _var: gallery
+                transformer: templates/blocks/galleryExampleTransformer.js
+{% if section == 'Input Blocks' %}
+                vars:
+                  showState: true
+{% endif %}
+{% else %}
+      - id: gallery_grid
+        type: Box
+        layout:
+          wrap: wrap
+          gap: 16
+{% if onInit %}
+        events:
+          onMount:
+            _var: onInit
+{% endif %}
+        blocks:
+          _ref:
+            path:
+              _var: gallery
+            transformer: templates/blocks/galleryExampleTransformer.js
+{% if section == 'Input Blocks' %}
+            vars:
+              showState: true
+{% endif %}
+{% endif %}
+
+      - id: gallery_ref_divider
+        type: Divider
+        properties:
+          title: API Reference
+
+      - id: gallery_properties_card
+        type: Card
+        properties:
+          title: Properties
+        blocks:
+          - id: gallery_properties_table
+            type: Markdown
+            properties:
+              content:
+                _ref:
+                  path:
+                    _var: schema
+                  transformer: templates/blocks/galleryTransformer.js
+                  vars:
+                    table: properties
+
+      - id: gallery_events_keys_row
+        type: Box
+        layout:
+          gap: 16
+        blocks:
+          - id: gallery_events_card
+            type: Card
+            layout:
+              flex: 1 1 0
+            properties:
+              title: Events
+            blocks:
+              - id: gallery_events_table
+                type: Markdown
+                properties:
+                  content:
+                    _ref:
+                      path:
+                        _var: schema
+                      transformer: templates/blocks/galleryTransformer.js
+                      vars:
+                        table: events
+          - id: gallery_css_card
+            type: Card
+            layout:
+              flex: 1 1 0
+            properties:
+              title: Style & Class Keys
+            blocks:
+              - id: gallery_css_table
+                type: Markdown
+                properties:
+                  content:
+                    _ref:
+                      path:
+                        _var: schema
+                      transformer: templates/blocks/galleryTransformer.js
+                      vars:
+                        table: cssKeys
+
+      - id: gallery_tokens_card
+        type: Card
+        properties:
+          title: Design Tokens
+        blocks:
+          - id: gallery_tokens_table
+            type: Markdown
+            properties:
+              content:
+                _ref:
+                  path:
+                    _var: schema
+                  transformer: templates/blocks/galleryTransformer.js
+                  vars:
+                    table: designTokens

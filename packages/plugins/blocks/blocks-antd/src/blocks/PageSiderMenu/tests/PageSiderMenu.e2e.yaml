@@ -54,7 +54,7 @@ properties:
   logo:
     alt: Test Logo
 
-areas:
+slots:
   header:
     blocks:
       - id: header_content

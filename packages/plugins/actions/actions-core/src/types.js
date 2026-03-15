@@ -14,8 +14,27 @@
   limitations under the License.
 */
 
-import * as actions from './actions.js';
-
 export default {
-  actions: Object.keys(actions),
+  actions: [
+    'CallAPI',
+    'CallMethod',
+    'CopyToClipboard',
+    'DisplayMessage',
+    'Fetch',
+    'GeolocationCurrentPosition',
+    'Link',
+    'Login',
+    'Logout',
+    'Request',
+    'Reset',
+    'ResetValidation',
+    'ScrollTo',
+    'SetFocus',
+    'SetGlobal',
+    'SetState',
+    'Throw',
+    'UpdateSession',
+    'Validate',
+    'Wait',
+  ],
 };

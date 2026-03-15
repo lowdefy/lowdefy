@@ -13,19 +13,15 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: Markdown
-    category: display
-    schema: ../plugins/blocks/blocks-markdown/src/blocks/Markdown/schema.json
+    pageId: Markdown
+    pageTitle: Markdown
+    section: Display Blocks
     filePath: blocks/display/Markdown.yaml
-    init_property_values:
-      content: |
-        ### Welcome to Lowdefy
-
-        Click [here](https://lowdefy.com) to learn more about Lowdefy.
-
-    description_content: |
-      Render markdown text content.
-
-      > For more details on markdown syntax see: [Markdown cheat sheet](https://guides.github.com/features/mastering-markdown/).
+    block_type: Markdown
+    github_path: packages/plugins/blocks/blocks-markdown/src/blocks/Markdown
+    schema: ../plugins/blocks/blocks-markdown/src/blocks/Markdown/meta.js
+    gallery: ../plugins/blocks/blocks-markdown/src/blocks/Markdown/gallery.yaml
+    description: >
+      Render Markdown content as HTML.

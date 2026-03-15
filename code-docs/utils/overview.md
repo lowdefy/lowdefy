@@ -85,11 +85,8 @@ if (!result.valid) {
 ### Block Development
 
 ```javascript
-import { makeCssClass, ErrorBoundary } from '@lowdefy/block-utils';
+import { ErrorBoundary, cn } from '@lowdefy/block-utils';
 import { mockBlock, runBlockSchemaTests } from '@lowdefy/block-dev';
-
-// Generate CSS class
-const className = makeCssClass({ color: 'red', '@media sm': { color: 'blue' } });
 
 // Test blocks
 const block = mockBlock({ meta, schema });

@@ -57,7 +57,7 @@ The run script does the following:
     - <build-dir>/config.json changes, rebuild and restart server.
 
   If user styles change:
-    - <public-dir>/styles.less changes, rebuild and restart server.
+    - <public-dir>/styles.css changes, rebuild and restart server.
 
   If new plugin type in an existing plugin package is used:
     - <build-dir>/plugins/** changes,  rebuild next and restart server.

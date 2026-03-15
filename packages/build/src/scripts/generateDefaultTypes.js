@@ -27,7 +27,6 @@ const defaultPackages = [
   '@lowdefy/blocks-algolia',
   '@lowdefy/blocks-antd',
   '@lowdefy/blocks-basic',
-  '@lowdefy/blocks-color-selectors',
   '@lowdefy/blocks-echarts',
   '@lowdefy/blocks-google-maps',
   '@lowdefy/blocks-loaders',
@@ -46,7 +45,7 @@ const defaultPackages = [
   '@lowdefy/operators-diff',
   '@lowdefy/operators-js',
   '@lowdefy/operators-jsonata',
-  '@lowdefy/operators-moment',
+  '@lowdefy/operators-dayjs',
   '@lowdefy/operators-mql',
   '@lowdefy/operators-nunjucks',
   '@lowdefy/operators-uuid',
@@ -67,6 +66,7 @@ async function generateDefaultTypesMap() {
       events: {},
       providers: {},
     },
+    blockMetas: {},
     blocks: {},
     connections: {},
     icons: {},
@@ -75,25 +75,19 @@ async function generateDefaultTypesMap() {
       server: {},
     },
     requests: {},
-    styles: {
-      packages: {},
-      blocks: {},
-    },
   };
 
-  await Promise.all(
-    defaultPackages.map(async (packageName) => {
-      const { default: types } = await import(`${packageName}/types`);
-      const version =
-        packageFile.devDependencies[packageName] || packageFile.dependencies[packageName];
-      createPluginTypesMap({
-        packageTypes: types,
-        typesMap: defaultTypesMap,
-        packageName,
-        version,
-      });
-    })
-  );
+  for (const packageName of defaultPackages) {
+    const { default: types } = await import(`${packageName}/types`);
+    const version =
+      packageFile.devDependencies[packageName] || packageFile.dependencies[packageName];
+    createPluginTypesMap({
+      packageTypes: types,
+      typesMap: defaultTypesMap,
+      packageName,
+      version,
+    });
+  }
 
   await writeFile(
     path.resolve(process.cwd(), './dist/defaultTypesMap.js'),

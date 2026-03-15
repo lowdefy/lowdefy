@@ -1,0 +1,493 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic QR Code
+  blocks:
+    - id: qr_basic_url
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://lowdefy.com
+    - id: qr_basic_text
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: Hello, World!
+    - id: qr_basic_long_url
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://docs.lowdefy.com/tutorial-start
+
+- title: Sizes
+  blocks:
+    - id: qr_size_small
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://lowdefy.com
+        size: 80
+    - id: qr_size_default
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://lowdefy.com
+        size: 160
+    - id: qr_size_large
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://lowdefy.com
+        size: 240
+
+- title: Colors
+  blocks:
+    - id: qr_color_default
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://lowdefy.com
+    - id: qr_color_blue
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://lowdefy.com
+        color: '#1677ff'
+    - id: qr_color_green
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://lowdefy.com
+        color: '#52c41a'
+    - id: qr_color_purple
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://lowdefy.com
+        color: '#722ed1'
+
+- title: Background Colors
+  blocks:
+    - id: qr_bg_light_blue
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://lowdefy.com
+        color: '#1677ff'
+        bgColor: '#e6f4ff'
+    - id: qr_bg_light_green
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://lowdefy.com
+        color: '#135200'
+        bgColor: '#d9f7be'
+    - id: qr_bg_dark_navy
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://lowdefy.com
+        color: '#ffffff'
+        bgColor: '#001529'
+    - id: qr_bg_transparent
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://lowdefy.com
+        bgColor: transparent
+
+- title: Error Correction Levels
+  blocks:
+    - id: qr_ec_low
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://lowdefy.com
+        errorLevel: L
+    - id: qr_ec_medium
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://lowdefy.com
+        errorLevel: M
+    - id: qr_ec_quartile
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://lowdefy.com
+        errorLevel: Q
+    - id: qr_ec_high
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://lowdefy.com
+        errorLevel: H
+
+- title: Icon
+  blocks:
+    - id: qr_icon_small
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://lowdefy.com
+        size: 200
+        errorLevel: H
+        icon: https://lowdefy.com/favicon-32x32.png
+        iconSize: 24
+    - id: qr_icon_default
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://lowdefy.com
+        size: 200
+        errorLevel: H
+        icon: https://lowdefy.com/favicon-32x32.png
+        iconSize: 40
+    - id: qr_icon_large
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://lowdefy.com
+        size: 200
+        errorLevel: H
+        icon: https://lowdefy.com/favicon-32x32.png
+        iconSize: 48
+
+- title: Bordered
+  blocks:
+    - id: qr_bordered_true
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://lowdefy.com
+        bordered: true
+    - id: qr_bordered_false
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://lowdefy.com
+        bordered: false
+    - id: qr_bordered_colored
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://lowdefy.com
+        bordered: true
+        color: '#1677ff'
+        bgColor: '#e6f4ff'
+
+- title: Status
+  blocks:
+    - id: qr_status_active
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://lowdefy.com
+        status: active
+    - id: qr_status_expired
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://lowdefy.com
+        status: expired
+    - id: qr_status_loading
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://lowdefy.com
+        status: loading
+    - id: qr_status_scanned
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://lowdefy.com
+        status: scanned
+
+- title: Render Type
+  blocks:
+    - id: qr_type_canvas
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://lowdefy.com
+        type: canvas
+    - id: qr_type_svg
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://lowdefy.com
+        type: svg
+
+- title: Margin Size
+  blocks:
+    - id: qr_margin_0
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://lowdefy.com
+        marginSize: 0
+        bordered: true
+    - id: qr_margin_2
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://lowdefy.com
+        marginSize: 2
+        bordered: true
+    - id: qr_margin_6
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://lowdefy.com
+        marginSize: 6
+        bordered: true
+
+- title: Minimum Version
+  blocks:
+    - id: qr_version_1
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://lowdefy.com
+        minVersion: 1
+    - id: qr_version_5
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://lowdefy.com
+        minVersion: 5
+    - id: qr_version_10
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://lowdefy.com
+        minVersion: 10
+
+- title: Style and CSS
+  blocks:
+    - id: qr_css_shadow
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      class: shadow-lg
+      properties:
+        value: https://lowdefy.com
+    - id: qr_css_rounded
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      class: shadow-xl rounded-2xl overflow-hidden
+      properties:
+        value: https://lowdefy.com
+        color: '#1677ff'
+        bgColor: '#f0f5ff'
+    - id: qr_css_inline_border
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          borderColor: '#1677ff'
+          borderWidth: 2
+      properties:
+        value: https://lowdefy.com
+        bordered: true
+    - id: qr_css_inline_shadow
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      style:
+        --element:
+          boxShadow: 0 4px 12px rgba(0, 0, 0, 0.15)
+          borderRadius: 16
+      properties:
+        value: https://lowdefy.com
+
+- title: Theme Token Overrides
+  blocks:
+    - id: qr_theme_radius
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://lowdefy.com
+        theme:
+          borderRadiusLG: 24
+    - id: qr_theme_container
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://lowdefy.com
+        theme:
+          colorBgContainer: '#f0f5ff'
+          colorSplit: '#1677ff'
+    - id: qr_theme_padding
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://lowdefy.com
+        theme:
+          padding: 24
+          borderRadiusLG: 16
+    - id: qr_theme_cover
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://lowdefy.com
+        status: expired
+        theme:
+          QRCodeCoverBackgroundColor: rgba(0, 0, 0, 0.8)
+          QRCodeTextColor: '#ffffff'
+
+- title: QRCode in Event Ticket
+  blocks:
+    - id: ticket_card
+      type: Card
+      layout:
+        flex: 0 0 380px
+      properties:
+        title: Tech Conference 2026
+        size: small
+      blocks:
+        - id: ticket_details
+          type: Descriptions
+          properties:
+            size: small
+            column: 1
+            items:
+              - label: Date
+                value: March 28, 2026
+              - label: Venue
+                value: Convention Center, Hall B
+              - label: Ticket
+                value: 'General Admission #4821'
+        - id: ticket_qr_row
+          type: Box
+          layout:
+            contentAlign: center
+            gap: 8
+          blocks:
+            - id: ticket_qr
+              type: QRCode
+              layout:
+                flex: 0 0 auto
+              properties:
+                value: 'TICKET:CONF2026:GA:4821:VALID'
+                size: 180
+                errorLevel: H
+                bordered: false
+            - id: ticket_hint
+              type: Paragraph
+              properties:
+                content: Present this QR code at the entrance for check-in.
+                type: secondary
+
+- title: QRCode in Wi-Fi Share Card
+  blocks:
+    - id: wifi_card
+      type: Card
+      layout:
+        flex: 0 0 340px
+      properties:
+        title: Guest Wi-Fi
+        size: small
+      blocks:
+        - id: wifi_qr_row
+          type: Box
+          layout:
+            contentAlign: center
+            gap: 8
+          blocks:
+            - id: wifi_qr
+              type: QRCode
+              layout:
+                flex: 0 0 auto
+              properties:
+                value: 'WIFI:T:WPA;S:OfficeGuest;P:welcome2026;;'
+                size: 200
+                color: '#1677ff'
+                bgColor: '#e6f4ff'
+                errorLevel: Q
+                bordered: false
+        - id: wifi_details
+          type: Descriptions
+          properties:
+            size: small
+            column: 1
+            items:
+              - label: Network
+                value: OfficeGuest
+              - label: Password
+                value: welcome2026
+        - id: wifi_actions
+          type: Box
+          layout:
+            gap: 8
+            justify: flex-end
+          blocks:
+            - id: wifi_refresh_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Generate New Password
+                color: primary
+                variant: outlined
+                icon: AiOutlineReload
+              events:
+                onClick:
+                  - id: wifi_refresh_msg
+                    type: DisplayMessage
+                    params:
+                      content: New Wi-Fi password generated.
+                      status: success

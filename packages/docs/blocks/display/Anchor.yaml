@@ -13,13 +13,15 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: Anchor
-    category: display
-    schema: ../plugins/blocks/blocks-basic/src/blocks/Anchor/schema.json
+    pageId: Anchor
+    pageTitle: Anchor
+    section: Display Blocks
     filePath: blocks/display/Anchor.yaml
-    description_content: |
-      Anchor link block. Creates a clickable icon and/ or text.
-
-      > When changing the relationship (`rel`) property of the linked URL, make sure you understand the security implications. Read more about link types [here](https://developer.mozilla.org/en-US/docs/Web/HTML/Link_types).
+    block_type: Anchor
+    github_path: packages/plugins/blocks/blocks-basic/src/blocks/Anchor
+    schema: ../plugins/blocks/blocks-basic/src/blocks/Anchor/meta.js
+    gallery: ../plugins/blocks/blocks-basic/src/blocks/Anchor/gallery.yaml
+    description: >
+      Hyperlink anchor for navigation.

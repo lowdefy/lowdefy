@@ -15,13 +15,14 @@
 */
 
 import React, { useState } from 'react';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { get, type } from '@lowdefy/helpers';
 import { Select } from 'antd';
 
 import getUniqueValues from '../../getUniqueValues.js';
 import getValueIndex from '../../getValueIndex.js';
 import Label from '../Label/Label.js';
+import withTheme from '../withTheme.js';
 import Tag from '../Tag/Tag.js';
 
 const Option = Select.Option;
@@ -33,11 +34,11 @@ const tagRender = (props, option, methods, components) => {
       components={components}
       methods={methods}
       onClose={onClose}
+      styles={{ element: { marginRight: 3, ...(option?.tag?.style ?? {}) } }}
       properties={{
         title: label ?? '',
         ...(option?.tag ?? {}),
         closable,
-        style: { marginRight: 3, ...(option?.tag?.style ?? {}) },
       }}
     />
   );
@@ -45,12 +46,14 @@ const tagRender = (props, option, methods, components) => {
 
 const MultipleSelector = ({
   blockId,
+  classNames = {},
   components: { Icon },
   events,
   loading,
   methods,
   properties,
   required,
+  styles = {},
   validation,
   value,
 }) => {
@@ -60,21 +63,24 @@ const MultipleSelector = ({
   return (
     <Label
       blockId={blockId}
+      classNames={classNames}
       components={{ Icon }}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       required={required}
+      styles={styles}
       validation={validation}
       content={{
         content: () => (
-          <div className={methods.makeCssClass({ width: '100%' })}>
+          <div style={{ width: '100%' }}>
             <div id={`${blockId}_${elementId}_popup`} />
             <Select
               id={`${blockId}_input`}
               allowClear={properties.allowClear !== false}
               autoClearSearchValue={properties.autoClearSearchValue}
               autoFocus={properties.autoFocus}
-              bordered={properties.bordered}
-              className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
+              variant={properties.bordered === false ? 'borderless' : properties.variant}
+              className={classNames.element}
+              style={{ width: '100%', ...styles.element }}
               disabled={properties.disabled || loading}
               getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
               mode="multiple"
@@ -99,8 +105,10 @@ const MultipleSelector = ({
                 properties.suffixIcon && (
                   <Icon
                     blockId={`${blockId}_suffixIcon`}
+                    classNames={{ element: classNames.suffixIcon }}
                     events={events}
                     properties={properties.suffixIcon}
+                    styles={{ element: styles.suffixIcon }}
                   />
                 )
               }
@@ -108,8 +116,10 @@ const MultipleSelector = ({
                 properties.clearIcon && (
                   <Icon
                     blockId={`${blockId}_clearIcon`}
+                    classNames={{ element: classNames.clearIcon }}
                     events={events}
                     properties={properties.clearIcon}
+                    styles={{ element: styles.clearIcon }}
                   />
                 )
               }
@@ -117,8 +127,10 @@ const MultipleSelector = ({
                 properties.selectedIcon && (
                   <Icon
                     blockId={`${blockId}_selectedIcon`}
+                    classNames={{ element: classNames.selectedIcon }}
                     events={events}
                     properties={properties.selectedIcon}
+                    styles={{ element: styles.selectedIcon }}
                   />
                 )
               }
@@ -159,7 +171,8 @@ const MultipleSelector = ({
               {uniqueValueOptions.map((opt, i) =>
                 type.isPrimitive(opt) ? (
                   <Option
-                    className={methods.makeCssClass(properties.optionsStyle)}
+                    style={styles.options}
+                    className={classNames.options}
                     id={`${blockId}_${i}`}
                     key={i}
                     value={`${i}`}
@@ -168,7 +181,8 @@ const MultipleSelector = ({
                   </Option>
                 ) : (
                   <Option
-                    className={methods.makeCssClass([properties.optionsStyle, opt.style])}
+                    style={{ ...styles.options, ...opt.style }}
+                    className={classNames.options}
                     disabled={opt.disabled}
                     filterstring={opt.filterString}
                     id={`${blockId}_${i}`}
@@ -189,12 +203,4 @@ const MultipleSelector = ({
   );
 };
 
-MultipleSelector.defaultProps = blockDefaultProps;
-MultipleSelector.meta = {
-  valueType: 'array',
-  category: 'input',
-  icons: [...Label.meta.icons],
-  styles: ['blocks/MultipleSelector/style.less'],
-};
-
-export default MultipleSelector;
+export default withTheme('Select', withBlockDefaults(MultipleSelector));

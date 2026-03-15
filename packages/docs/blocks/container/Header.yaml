@@ -13,14 +13,17 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: Header
-    category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Header/schema.json
+    pageId: Header
+    pageTitle: Header
+    section: Container Blocks
     filePath: blocks/container/Header.yaml
-    description_content: |
-      The `Header` block provides a page container for a [header](https://4x.ant.design/components/layout/) area with content.
-
-    areas:
-      - content
+    block_type: Header
+    antd_component: Header
+    antd_url: layout
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/Header
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Header/meta.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/Header/gallery.yaml
+    description: >
+      Page header layout section.

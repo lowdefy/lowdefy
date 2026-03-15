@@ -13,14 +13,17 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: WeekSelector
-    value_type: date
-    category: input
-    schema: ../plugins/blocks/blocks-antd/src/blocks/WeekSelector/schema.json
+    pageId: WeekSelector
+    pageTitle: WeekSelector
+    section: Input Blocks
     filePath: blocks/input/WeekSelector.yaml
-    description_content: |
-      The `WeekSelector` block allows a user to select a week. The value is a date object, with day and time values of midnight on the first monday of the week GMT.
-
-      > Other date type blocks are `DateRangeSelector`, `DateSelector`, `DateTimeSelector` and `MonthSelector`.
+    block_type: WeekSelector
+    antd_component: DatePicker
+    antd_url: date-picker
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/WeekSelector
+    schema: ../plugins/blocks/blocks-antd/src/blocks/WeekSelector/meta.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/WeekSelector/gallery.yaml
+    description: >
+      Week picker for selecting a week of the year.

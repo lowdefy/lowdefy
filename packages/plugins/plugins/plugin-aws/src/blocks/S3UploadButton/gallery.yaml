@@ -1,0 +1,349 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic
+  blocks:
+    - id: basic_default
+      type: S3UploadButton
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+    - id: basic_custom_title
+      type: S3UploadButton
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        button:
+          icon: UploadOutlined
+          title: Choose File
+          type: default
+    - id: basic_custom_icon
+      type: S3UploadButton
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        button:
+          icon: AiOutlineCloudUpload
+          title: Upload to Cloud
+          type: default
+
+- title: File Type Restrictions
+  blocks:
+    - id: accept_images
+      type: S3UploadButton
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        accept: 'image/*'
+        button:
+          icon: AiOutlinePicture
+          title: Upload Image
+          type: default
+    - id: accept_pdf
+      type: S3UploadButton
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        accept: '.pdf'
+        button:
+          icon: AiOutlineFilePdf
+          title: Upload PDF
+          type: default
+    - id: accept_specific
+      type: S3UploadButton
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        accept: '.jpg,.png,.gif'
+        button:
+          icon: AiOutlinePicture
+          title: Upload JPG, PNG, or GIF
+          type: default
+
+- title: Upload Limits
+  blocks:
+    - id: limit_single
+      type: S3UploadButton
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        singleFile: true
+        button:
+          icon: UploadOutlined
+          title: Upload Single File
+          type: default
+    - id: limit_max_three
+      type: S3UploadButton
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        maxCount: 3
+        button:
+          icon: UploadOutlined
+          title: Upload (Max 3)
+          type: default
+    - id: limit_single_images
+      type: S3UploadButton
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        singleFile: true
+        accept: 'image/*'
+        button:
+          icon: AiOutlinePicture
+          title: Upload One Image
+          type: default
+
+- title: Button Customization
+  blocks:
+    - id: button_primary
+      type: S3UploadButton
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        button:
+          icon: UploadOutlined
+          title: Upload
+          type: primary
+    - id: button_large
+      type: S3UploadButton
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        button:
+          icon: UploadOutlined
+          title: Upload Files
+          type: default
+          size: large
+    - id: button_different_icon
+      type: S3UploadButton
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        button:
+          icon: AiOutlinePaperClip
+          title: Attach Files
+          type: default
+
+- title: Disabled State
+  blocks:
+    - id: disabled_default
+      type: S3UploadButton
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        disabled: true
+    - id: disabled_primary
+      type: S3UploadButton
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        disabled: true
+        button:
+          icon: UploadOutlined
+          title: Upload
+          type: primary
+    - id: disabled_hidden_list
+      type: S3UploadButton
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        disabled: true
+        showUploadList: false
+
+- title: Upload List Visibility
+  blocks:
+    - id: list_visible
+      type: S3UploadButton
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        showUploadList: true
+        button:
+          icon: UploadOutlined
+          title: Upload (List Visible)
+          type: default
+    - id: list_hidden
+      type: S3UploadButton
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        showUploadList: false
+        button:
+          icon: UploadOutlined
+          title: Upload (No List)
+          type: default
+    - id: list_single_hidden
+      type: S3UploadButton
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        singleFile: true
+        showUploadList: false
+        button:
+          icon: UploadOutlined
+          title: Upload Single (No List)
+          type: default
+
+- title: Label Options
+  blocks:
+    - id: label_default
+      type: S3UploadButton
+      properties:
+        title: Upload Attachment
+        s3PostPolicyRequestId: s3_upload_policy_request
+    - id: label_inline
+      type: S3UploadButton
+      properties:
+        title: Attachment
+        s3PostPolicyRequestId: s3_upload_policy_request
+        label:
+          inline: true
+          span: 8
+    - id: label_extra
+      type: S3UploadButton
+      properties:
+        title: Upload Document
+        s3PostPolicyRequestId: s3_upload_policy_request
+        label:
+          extra: Accepted formats are PDF, DOCX, and PNG. Max size 10MB.
+
+- title: Style Overrides
+  blocks:
+    - id: style_element_bg
+      type: S3UploadButton
+      style:
+        --element:
+          background: '#f6ffed'
+          border: 1px solid #b7eb8f
+          borderRadius: 8
+          padding: 12
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        button:
+          icon: UploadOutlined
+          title: Upload
+          type: default
+    - id: style_label
+      type: S3UploadButton
+      style:
+        --label:
+          color: '#722ed1'
+          fontWeight: bold
+      properties:
+        title: Upload Files
+        s3PostPolicyRequestId: s3_upload_policy_request
+    - id: style_tailwind
+      type: S3UploadButton
+      class: shadow-md rounded-lg
+      properties:
+        s3PostPolicyRequestId: s3_upload_policy_request
+        button:
+          icon: UploadOutlined
+          title: Upload
+          type: default
+
+- title: S3UploadButton in Document Management
+  blocks:
+    - id: doc_mgmt_card
+      type: Card
+      properties:
+        title: Upload Document
+      blocks:
+        - id: doc_name
+          type: TextInput
+          required: true
+          properties:
+            title: Document Name
+            placeholder: Enter document name
+            label:
+              colon: false
+        - id: doc_category
+          type: Selector
+          properties:
+            title: Category
+            placeholder: Select category
+            label:
+              colon: false
+            options:
+              - label: Contracts
+                value: contracts
+              - label: Invoices
+                value: invoices
+              - label: Reports
+                value: reports
+              - label: Other
+                value: other
+        - id: doc_upload
+          type: S3UploadButton
+          properties:
+            title: Attachment
+            s3PostPolicyRequestId: s3_upload_policy_request
+            accept: '.pdf,.docx,.xlsx'
+            button:
+              icon: AiOutlineFilePdf
+              title: Choose Document
+              type: default
+            label:
+              colon: false
+              extra: Accepted formats are PDF, DOCX, and XLSX.
+        - id: doc_save
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Save Document
+            color: primary
+            variant: solid
+            icon: AiOutlineSave
+          events:
+            onClick:
+              - id: save_validate
+                type: Validate
+              - id: save_msg
+                type: DisplayMessage
+                params:
+                  content: Document saved successfully!
+                  status: success
+
+- title: S3UploadButton in Profile Picture Upload
+  blocks:
+    - id: profile_card
+      type: Card
+      properties:
+        title: Update Profile
+      blocks:
+        - id: profile_avatar
+          type: S3UploadButton
+          properties:
+            title: Profile Picture
+            s3PostPolicyRequestId: s3_upload_policy_request
+            singleFile: true
+            accept: 'image/*'
+            button:
+              icon: AiOutlineCamera
+              title: Choose Photo
+              type: default
+            label:
+              colon: false
+              extra: Upload a JPG, PNG, or GIF image.
+        - id: profile_display_name
+          type: TextInput
+          required: true
+          properties:
+            title: Display Name
+            prefixIcon: AiOutlineUser
+            placeholder: Enter your display name
+            label:
+              colon: false
+        - id: profile_update
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Update Profile
+            color: primary
+            variant: solid
+            icon: AiOutlineCheck
+          events:
+            onClick:
+              - id: update_validate
+                type: Validate
+              - id: update_msg
+                type: DisplayMessage
+                params:
+                  content: Profile updated successfully!
+                  status: success

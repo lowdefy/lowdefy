@@ -1,5 +1,5 @@
 /*
-  Copyright 2021 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,7 +15,10 @@
 */
 
 import React from 'react';
-import { blockDefaultProps } from '@lowdefy/block-utils';
+import { withBlockDefaults } from '@lowdefy/block-utils';
+
+import '@ag-grid-community/styles/ag-grid.css';
+import '@ag-grid-community/styles/ag-theme-balham.css';
 
 import AgGridInput from '../../AgGridInput.js';
 
@@ -26,16 +29,14 @@ const AgGridInputBalham = ({
   methods,
   properties,
   required,
+  styles,
   validation,
   value,
 }) => (
   <div
     id={blockId}
-    className={`ag-theme-balham ${methods.makeCssClass({
-      width: '100%',
-      height: properties.height ?? 500,
-      ...properties.style,
-    })}`}
+    className="ag-theme-balham"
+    style={{ width: '100%', height: properties.height ?? 500, ...styles?.element }}
   >
     <AgGridInput
       blockId={blockId}
@@ -50,12 +51,4 @@ const AgGridInputBalham = ({
   </div>
 );
 
-AgGridInputBalham.defaultProps = blockDefaultProps;
-AgGridInputBalham.meta = {
-  category: 'input',
-  valueType: 'array',
-  icons: [],
-  styles: ['blocks/AgGridInputBalham/style.less'],
-};
-
-export default AgGridInputBalham;
+export default withBlockDefaults(AgGridInputBalham);

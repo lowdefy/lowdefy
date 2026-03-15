@@ -146,7 +146,7 @@ test('manual schemaNested propertiesFormTransformer', () => {
         ],
         "id": "block.properties.obj",
         "layout": Object {
-          "contentGutter": 0,
+          "gap": 0,
         },
         "properties": Object {
           "bodyStyle": Object {

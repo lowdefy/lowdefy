@@ -16,37 +16,59 @@
 
 import React, { useEffect } from 'react';
 import { Modal } from 'antd';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import { ErrorBoundary, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
-const ConfirmModal = ({ blockId, events, content, components: { Icon }, methods, properties }) => {
+const ConfirmModal = ({
+  blockId,
+  classNames = {},
+  events,
+  content,
+  components: { Icon, handleError },
+  methods,
+  properties,
+  styles = {},
+}) => {
   useEffect(() => {
     methods.registerMethod('open', (args = {}) => {
       const additionalProps = {};
       if (properties.icon) {
         additionalProps.icon = (
-          <Icon blockId={`${blockId}_icon`} events={events} properties={properties.icon} />
+          <ErrorBoundary onError={handleError}>
+            <Icon
+              blockId={`${blockId}_icon`}
+              classNames={{ element: classNames.icon }}
+              events={events}
+              properties={properties.icon}
+              styles={{ element: styles.icon }}
+            />
+          </ErrorBoundary>
         );
       }
       methods.triggerEvent({ name: 'onOpen' });
       Modal[args.status || properties.status || 'confirm']({
         id: `${blockId}_confirm_modal`,
         title: renderHtml({ html: properties.title, methods }),
-        bodyStyle: methods.makeCssClass(properties.bodyStyle, true),
         content:
           (content.content && content.content()) ??
           renderHtml({ html: properties.content, methods }),
-        className: methods.makeCssClass(properties.modalStyle),
+        className: classNames.element,
+        style: styles.element,
+        styles: { body: styles.body },
         closable: properties.closable,
         okText: properties.okText ?? 'Ok',
         okButtonProps: properties.okButton?.icon
           ? {
               ...properties.okButton,
               icon: properties.okButton.icon && (
-                <Icon
-                  blockId={`${blockId}_ok_icon`}
-                  events={events}
-                  properties={properties.okButton.icon}
-                />
+                <ErrorBoundary onError={handleError}>
+                  <Icon
+                    blockId={`${blockId}_ok_icon`}
+                    classNames={{ element: classNames.okIcon }}
+                    events={events}
+                    properties={properties.okButton.icon}
+                    styles={{ element: styles.okIcon }}
+                  />
+                </ErrorBoundary>
               ),
             }
           : properties.okButton,
@@ -54,11 +76,15 @@ const ConfirmModal = ({ blockId, events, content, components: { Icon }, methods,
           ? {
               ...properties.cancelButton,
               icon: properties.cancelButton.icon && (
-                <Icon
-                  blockId={`${blockId}_ok_icon`}
-                  events={events}
-                  properties={properties.cancelButton.icon}
-                />
+                <ErrorBoundary onError={handleError}>
+                  <Icon
+                    blockId={`${blockId}_cancel_icon`}
+                    classNames={{ element: classNames.cancelIcon }}
+                    events={events}
+                    properties={properties.cancelButton.icon}
+                    styles={{ element: styles.cancelIcon }}
+                  />
+                </ErrorBoundary>
               ),
             }
           : properties.cancelButton,
@@ -83,11 +109,4 @@ const ConfirmModal = ({ blockId, events, content, components: { Icon }, methods,
   return <div id={blockId} />;
 };
 
-ConfirmModal.defaultProps = blockDefaultProps;
-ConfirmModal.meta = {
-  category: 'container',
-  icons: [],
-  styles: ['blocks/ConfirmModal/style.less'],
-};
-
-export default ConfirmModal;
+export default withBlockDefaults(ConfirmModal);

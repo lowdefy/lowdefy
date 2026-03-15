@@ -16,22 +16,32 @@
 
 import React from 'react';
 import { Tag } from 'antd';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
+
+import withTheme from '../withTheme.js';
 
 const TagBlock = ({
   blockId,
+  classNames = {},
   components: { Icon },
   events,
   methods,
   onClick,
   onClose,
   properties,
+  styles = {},
 }) => {
   const additionalProps = {};
   if (properties.icon) {
     additionalProps.icon = (
-      <Icon blockId={`${blockId}_icon`} events={events} properties={properties.icon} />
+      <Icon
+        blockId={`${blockId}_icon`}
+        classNames={{ element: classNames.icon }}
+        events={events}
+        properties={properties.icon}
+        styles={{ element: styles.icon }}
+      />
     );
   }
   if (onClick || events.onClick) {
@@ -45,7 +55,8 @@ const TagBlock = ({
       id={blockId}
       closable={properties.closable}
       color={properties.color}
-      className={methods.makeCssClass(properties.style)}
+      className={classNames.element}
+      style={styles.element}
       {...additionalProps}
     >
       {type.isString(properties.title)
@@ -58,11 +69,4 @@ const TagBlock = ({
   );
 };
 
-TagBlock.defaultProps = blockDefaultProps;
-TagBlock.meta = {
-  category: 'display',
-  icons: [],
-  styles: ['blocks/Tag/style.less'],
-};
-
-export default TagBlock;
+export default withTheme('Tag', withBlockDefaults(TagBlock));

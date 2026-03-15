@@ -180,11 +180,9 @@ Modified files should always have the Apache license header with the end date se
 Structure: `blocks/{BlockName}/` with `{BlockName}.js`, `schema.json`, `examples.yaml`, optional `style.less`
 
 ```javascript
-import { blockDefaultProps } from '@lowdefy/block-utils';
 function MyBlock({ blockId, methods, properties }) {
   return <div id={blockId}>{properties.title}</div>;
 }
-MyBlock.defaultProps = blockDefaultProps;
 MyBlock.meta = { category: 'display', icons: [], styles: [] };
 export default MyBlock;
 ```
@@ -498,7 +496,6 @@ applyArrayIndices(path, indices);
 ## @lowdefy/block-utils
 
 ```javascript
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
-MyBlock.defaultProps = blockDefaultProps; // Required for all blocks
+import { renderHtml } from '@lowdefy/block-utils';
 renderHtml({ html: properties.content, methods }); // Safe HTML rendering
 ```

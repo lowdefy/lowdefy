@@ -13,8 +13,6 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import makeCssClass from './makeCssClass.js';
-
 const blockDefaultProps = {
   basePath: '',
   blockId: 'undefined_id',
@@ -24,7 +22,6 @@ const blockDefaultProps = {
   list: [],
   menus: [],
   methods: {
-    makeCssClass,
     registerEvent: () => undefined,
     registerMethod: () => undefined,
     triggerEvent: () => undefined,

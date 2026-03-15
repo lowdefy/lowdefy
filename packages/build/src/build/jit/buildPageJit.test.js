@@ -16,10 +16,17 @@
 
 import { jest } from '@jest/globals';
 
-import testContext from '../../test-utils/testContext.js';
-import { snapshotTypesMap } from '../../test-utils/runBuildForSnapshots.js';
-import makeId from '../../utils/makeId.js';
-import buildPageJit from './buildPageJit.js';
+const realNodeUtils = await import('@lowdefy/node-utils');
+const mockWriteFile = jest.fn();
+jest.unstable_mockModule('@lowdefy/node-utils', () => ({
+  ...realNodeUtils,
+  writeFile: mockWriteFile,
+}));
+
+const { default: testContext } = await import('../../test-utils/testContext.js');
+const { snapshotTypesMap } = await import('../../test-utils/runBuildForSnapshots.js');
+const { default: makeId } = await import('../../utils/makeId.js');
+const { default: buildPageJit } = await import('./buildPageJit.js');
 
 const mockReadConfigFile = jest.fn();
 const mockWriteBuildArtifact = jest.fn();
@@ -47,6 +54,8 @@ beforeEach(() => {
   mockReadConfigFile.mockReset();
   mockWriteBuildArtifact.mockReset();
   mockWriteBuildArtifact.mockResolvedValue(undefined);
+  mockWriteFile.mockReset();
+  mockWriteFile.mockResolvedValue(undefined);
 });
 
 test('buildPageJit returns null for unknown pageId', async () => {
@@ -190,7 +199,7 @@ areas:
   expect(result.id).toBe('page:home');
   expect(result.type).toBe('PageHeaderMenu');
   // The sidebar var should have been resolved from components/sidebar.yaml
-  const contentBlocks = result.areas?.content?.blocks ?? [];
+  const contentBlocks = result.slots?.content?.blocks ?? [];
   expect(contentBlocks).toHaveLength(1);
   expect(contentBlocks[0].blockId).toBe('sidebar_title');
   expect(contentBlocks[0].type).toBe('Title');
@@ -240,7 +249,7 @@ areas:
     pageRegistry,
     context,
   });
-  const contentBlocks1 = result1.areas?.content?.blocks ?? [];
+  const contentBlocks1 = result1.slots?.content?.blocks ?? [];
   expect(contentBlocks1[0].blockId).toBe('sidebar_v1');
 
   // Second build: sidebar file changed on disk
@@ -277,7 +286,7 @@ areas:
     pageRegistry,
     context,
   });
-  const contentBlocks2 = result2.areas?.content?.blocks ?? [];
+  const contentBlocks2 = result2.slots?.content?.blocks ?? [];
   expect(contentBlocks2[0].blockId).toBe('sidebar_v2');
 });
 
@@ -340,7 +349,7 @@ type: TextInput
   });
 
   expect(result.id).toBe('page:home');
-  const contentBlocks = result.areas?.content?.blocks ?? [];
+  const contentBlocks = result.slots?.content?.blocks ?? [];
   expect(contentBlocks).toHaveLength(2);
   expect(contentBlocks[0].blockId).toBe('block1');
   expect(contentBlocks[1].blockId).toBe('block2');
@@ -561,6 +570,59 @@ test('buildPageJit resolver page traces errors back to resolver when inner _ref 
   }
 });
 
+test('buildPageJit writes keyMap/refMap so error handler resolves correct location', async () => {
+  const context = createTestContext();
+  mockFiles([
+    {
+      path: 'page-with-action.yaml',
+      content: `id: action-page
+type: PageHeaderMenu
+blocks:
+  - id: btn1
+    type: Button
+    events:
+      onClick:
+        - id: my_action
+          type: UndefinedAction
+          params:
+            message: test`,
+    },
+  ]);
+
+  const pageEntry = {
+    pageId: 'action-page',
+    auth: { public: true },
+    refId: 'ref-action-page',
+    refPath: 'page-with-action.yaml',
+  };
+  const pageRegistry = new Map([['action-page', pageEntry]]);
+
+  await expect(
+    buildPageJit({
+      pageId: 'action-page',
+      pageRegistry,
+      context,
+    })
+  ).rejects.toMatchObject({
+    message: expect.stringContaining('Action type "UndefinedAction" was used but is not defined'),
+  });
+
+  // Verify keyMap.json and refMap.json were written to disk before the error
+  const writeArgs = mockWriteBuildArtifact.mock.calls.map((c) => c[0]);
+  expect(writeArgs).toContain('keyMap.json');
+  expect(writeArgs).toContain('refMap.json');
+
+  // The written keyMap should contain the action's ~k with correct ~l
+  const keyMapCall = mockWriteBuildArtifact.mock.calls.find((c) => c[0] === 'keyMap.json');
+  const keyMap = JSON.parse(keyMapCall[1]);
+  // Find the entry for the UndefinedAction (line 9 in the YAML: "type: UndefinedAction")
+  const actionEntry = Object.values(keyMap).find(
+    (entry) => entry.key && entry.key.includes('UndefinedAction')
+  );
+  expect(actionEntry).toBeDefined();
+  expect(actionEntry['~l']).toBe(8);
+});
+
 test('two JIT builds with object vars produce identical results and do not mutate unresolvedVars', async () => {
   const context = createTestContext();
   mockFiles([
@@ -598,7 +660,7 @@ areas:
     context,
   });
 
-  const contentBlocks1 = result1.areas?.content?.blocks ?? [];
+  const contentBlocks1 = result1.slots?.content?.blocks ?? [];
   expect(contentBlocks1).toHaveLength(1);
   expect(contentBlocks1[0].blockId).toBe('h1');
 
@@ -618,7 +680,7 @@ areas:
     context,
   });
 
-  const contentBlocks2 = result2.areas?.content?.blocks ?? [];
+  const contentBlocks2 = result2.slots?.content?.blocks ?? [];
   expect(contentBlocks2).toHaveLength(1);
   expect(contentBlocks2[0].blockId).toBe('h1');
 

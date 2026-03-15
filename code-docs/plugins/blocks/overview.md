@@ -23,32 +23,104 @@ Blocks are:
 
 ## Available Block Packages
 
-| Package                                                 | Description                 | Block Count |
-| ------------------------------------------------------- | --------------------------- | ----------- |
-| [@lowdefy/blocks-antd](./antd.md)                       | Primary UI kit (Ant Design) | 62          |
-| [@lowdefy/blocks-basic](./basic.md)                     | HTML primitives             | 8           |
-| [@lowdefy/blocks-aggrid](./aggrid.md)                   | AG Grid data tables         | 1           |
-| [@lowdefy/blocks-echarts](./echarts.md)                 | ECharts visualizations      | 1           |
-| [@lowdefy/blocks-markdown](./markdown.md)               | Markdown rendering          | 2           |
-| [@lowdefy/blocks-google-maps](./google-maps.md)         | Google Maps                 | 1           |
-| [@lowdefy/blocks-algolia](./algolia.md)                 | Algolia search              | 1           |
-| [@lowdefy/blocks-color-selectors](./color-selectors.md) | Color pickers               | 3           |
-| [@lowdefy/blocks-loaders](./loaders.md)                 | Loading spinners            | 1           |
-| [@lowdefy/blocks-qr](./qr.md)                           | QR code generation          | 1           |
+| Package                                         | Description                 | Block Count |
+| ----------------------------------------------- | --------------------------- | ----------- |
+| [@lowdefy/blocks-antd](./antd.md)               | Primary UI kit (Ant Design) | 62          |
+| [@lowdefy/blocks-basic](./basic.md)             | HTML primitives             | 8           |
+| [@lowdefy/blocks-aggrid](./aggrid.md)           | AG Grid data tables         | 1           |
+| [@lowdefy/blocks-echarts](./echarts.md)         | ECharts visualizations      | 1           |
+| [@lowdefy/blocks-markdown](./markdown.md)       | Markdown rendering          | 2           |
+| [@lowdefy/blocks-google-maps](./google-maps.md) | Google Maps                 | 1           |
+| [@lowdefy/blocks-algolia](./algolia.md)         | Algolia search              | 1           |
+| [@lowdefy/blocks-loaders](./loaders.md)         | Loading spinners            | 1           |
+| [@lowdefy/blocks-qr](./qr.md)                   | QR code generation          | 1           |
 
-## Block Structure
+## Block Package Structure
 
-Each block package exports:
+Each block package has:
+
+- `src/blocks/{BlockName}/{BlockName}.js` — React component
+- `src/blocks/{BlockName}/meta.js` — Block metadata (category, icons, valueType, cssKeys, events, properties schema)
+- `src/blocks.js` — Named exports of all block components
+- `src/metas.js` — Named exports of all block `meta.js` files
+- `src/types.js` — Type declarations derived from metas via `extractBlockTypes`
+
+### Block Metadata (`meta.js`)
+
+Each block has a `meta.js` file that is the single source of truth for all metadata:
 
 ```javascript
+// src/blocks/Anchor/meta.js
 export default {
-  // Block type definitions
-  types: {
-    Button: { meta: { category: 'input', ... } },
-    Card: { meta: { category: 'container', ... } },
-    // ...
-  }
+  category: 'display',
+  icons: ['AiOutlineLoading3Quarters'],
+  valueType: null,
+  cssKeys: {
+    element: 'The anchor element.',
+  },
+  events: {
+    onClick: 'Called when Anchor is clicked.',
+  },
+  properties: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      title: { type: 'string', description: 'Text to display in the anchor.' },
+      disabled: { type: 'boolean', default: false, description: 'Disable the anchor if true.' },
+      // ...
+    },
+  },
 };
+```
+
+| Field        | Type         | Description                                                             |
+| ------------ | ------------ | ----------------------------------------------------------------------- |
+| `category`   | string       | Block category (`container`, `input`, `display`, `list`, `context`)     |
+| `icons`      | string[]     | React-Icon names used by the block                                      |
+| `valueType`  | string\|null | Value type for input blocks (e.g., `'string'`, `'number'`)              |
+| `cssKeys`    | object       | Map of CSS key names to descriptions (e.g., `{ element: '...' }`)       |
+| `events`     | object       | Map of event names to descriptions (e.g., `{ onClick: '...' }`)         |
+| `properties` | object       | JSON Schema for the block's properties                                  |
+| `slots`      | string[]     | Named slot names for containers (e.g., `['content', 'title', 'extra']`) |
+
+### Metas Barrel (`metas.js`)
+
+Named exports of all block metadata for the package:
+
+```javascript
+// src/metas.js
+export { default as Anchor } from './blocks/Anchor/meta.js';
+export { default as Box } from './blocks/Box/meta.js';
+export { default as Icon } from './blocks/Icon/meta.js';
+// ...
+```
+
+### Types (`types.js`)
+
+Each block package has a `types.js` that derives type information from the metas barrel using `extractBlockTypes` from `@lowdefy/block-utils`:
+
+```javascript
+// src/types.js
+import { extractBlockTypes } from '@lowdefy/block-utils';
+import * as metas from './metas.js';
+
+export default extractBlockTypes(metas);
+```
+
+This produces a types object with `{ blocks, icons, blockMetas }` — see [@lowdefy/block-utils](../../utils/block-utils.md#extractblocktypesmetas) for details. The build pipeline reads `types.js` to resolve plugin types without loading full block component trees (which would pull in CSS, browser APIs, and heavy libraries).
+
+### Package Exports
+
+Block packages expose three entry points:
+
+```json
+{
+  "exports": {
+    "./blocks": "./dist/blocks.js",
+    "./metas": "./dist/metas.js",
+    "./types": "./dist/types.js"
+  }
+}
 ```
 
 ## Block Configuration
@@ -79,7 +151,7 @@ Each block has:
 - **type** - Block type name
 - **properties** - Configuration (title, style, etc.)
 - **events** - Event handlers (onClick, onChange)
-- **areas** - Child block containers
+- **slots** - Child block containers (use `blocks:` shorthand for the default `content` slot)
 - **layout** - Grid positioning
 - **visible** - Conditional visibility
 - **loading** - Loading skeleton
@@ -92,7 +164,7 @@ Each block has:
 
 2. Page load
    └── Block component loaded (code split)
-   └── Block registered in Areas
+   └── Block registered in Slots
 
 3. Render
    └── Properties evaluated (operators resolved)
@@ -108,7 +180,7 @@ Each block has:
 
 ## Runtime Schema Validation
 
-Each block can export a `schema.js` file describing its expected `properties` shape. These schemas are collected at build time into `plugins/blockSchemas.json`.
+Each block's `meta.js` file includes a `properties` JSON Schema. At build time, `writeBlockSchemaMap` imports the `metas` barrel from each package, calls `buildBlockSchema(meta)` to generate a full block schema (including `class`, `style`, `events`, and container `blocks`/`areas`), and writes `plugins/blockSchemas.json`. It also writes `plugins/blockMetas.json` with runtime metadata (category, valueType, initValue).
 
 When a `BlockError` occurs at runtime, the server validates the `received` properties against the block's schema and produces a diagnostic `ConfigError` with a human-readable message:
 
@@ -144,3 +216,11 @@ Blocks declare their category for:
 - IDE tooling support
 
 Categories: `container`, `input`, `display`, `list`, `context`
+
+### Why `meta.js` Instead of Separate Files?
+
+Previously, block metadata was split between a `.meta` static property on the component and a separate `schema.js` file. The `meta.js` file consolidates everything into a single source of truth that:
+
+- Can be imported without loading React or heavy component dependencies
+- Enables the metas barrel (`metas.js`) for lightweight type extraction
+- Contains both validation schemas and runtime metadata in one place

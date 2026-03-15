@@ -91,17 +91,18 @@ _ref:
       - id: example1
         type: PageHeaderMenu
         layout:
-          contentJustify: center
+          justify: center
         properties:
-          style:
-            minHeight: 300px
           menu:
             links: []
+        style:
+          --element:
+            minHeight: 300px
         blocks:
           - id: content_card
             type: Card
             layout:
-              contentGutter: 16
+              gap: 16
               size: 600
             blocks:
               - id: page_heading
@@ -132,7 +133,6 @@ _ref:
                 properties:
                   title: Reset
                   block: true
-                  type: default
                   icon: AiOutlineClear
               - id: submit_button
                 type: Button
@@ -141,7 +141,8 @@ _ref:
                 properties:
                   title: Submit
                   block: true
-                  type: primary
+                  color: primary
+                  variant: solid
                   icon: AiOutlineSave
       - id: body_what_happened
         type: MarkdownWithCode

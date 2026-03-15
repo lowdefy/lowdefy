@@ -15,16 +15,26 @@
 */
 
 import React from 'react';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 import { Typography } from 'antd';
 
+import withTheme from '../withTheme.js';
+
 const Paragraph = Typography.Paragraph;
 
-const ParagraphBlock = ({ blockId, components: { Icon }, events, methods, properties }) => (
+const ParagraphBlock = ({
+  blockId,
+  classNames = {},
+  components: { Icon },
+  events,
+  methods,
+  properties,
+  styles = {},
+}) => (
   <Paragraph
     id={blockId}
-    className={methods.makeCssClass(properties.style)}
+    className={classNames.element}
     code={properties.code}
     copyable={
       type.isObject(properties.copyable)
@@ -42,22 +52,28 @@ const ParagraphBlock = ({ blockId, components: { Icon }, events, methods, proper
                 [
                   <Icon
                     key="copy-icon"
-                    events={events}
                     blockId={`${blockId}_copyable_before_icon`}
+                    classNames={{ element: classNames.copyableIcon }}
+                    events={events}
                     properties={properties.copyable.icon[0]}
+                    styles={{ element: styles.copyableIcon }}
                   />,
                   <Icon
                     key="copied-icon"
                     blockId={`${blockId}_copyable_after_icon`}
+                    classNames={{ element: classNames.copyableIcon }}
                     events={events}
                     properties={properties.copyable.icon[1]}
+                    styles={{ element: styles.copyableIcon }}
                   />,
                 ]
               ) : (
                 <Icon
                   blockId={`${blockId}_copyable_icon`}
+                  classNames={{ element: classNames.copyableIcon }}
                   events={events}
                   properties={properties.copyable.icon}
+                  styles={{ element: styles.copyableIcon }}
                 />
               )),
             tooltips: properties.copyable.tooltips,
@@ -98,6 +114,7 @@ const ParagraphBlock = ({ blockId, components: { Icon }, events, methods, proper
     italic={properties.italic}
     mark={properties.mark}
     strong={properties.strong}
+    style={styles.element}
     type={properties.type}
     underline={properties.underline}
   >
@@ -105,11 +122,4 @@ const ParagraphBlock = ({ blockId, components: { Icon }, events, methods, proper
   </Paragraph>
 );
 
-ParagraphBlock.defaultProps = blockDefaultProps;
-ParagraphBlock.meta = {
-  category: 'display',
-  icons: [],
-  styles: ['blocks/Paragraph/style.less'],
-};
-
-export default ParagraphBlock;
+export default withTheme('Typography', withBlockDefaults(ParagraphBlock));

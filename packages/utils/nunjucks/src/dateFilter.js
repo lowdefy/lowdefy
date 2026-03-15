@@ -22,30 +22,37 @@
  * Licensed under the Apache 2.0 license.
  */
 
-import moment from 'moment';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc.js';
+import relativeTime from 'dayjs/plugin/relativeTime.js';
+import customParseFormat from 'dayjs/plugin/customParseFormat.js';
 import nunjucks from 'nunjucks';
 import { type } from '@lowdefy/helpers';
+
+dayjs.extend(utc);
+dayjs.extend(relativeTime);
+dayjs.extend(customParseFormat);
 
 // default default format (ISO 8601)
 let dateFilterDefaultFormat = null;
 
 // a date filter for Nunjucks
 // usage: {{ my_date | date(format) }}
-// see: <http://momentjs.com/docs/>
+// see: <https://day.js.org/docs/en/display/format>
 const dateFilter = (date, format, ...args) => {
   // for no date, return undefined.
   if (type.isNone(date)) {
     return '';
   }
-  // allow for moment function chaining, but return "Invalid date" for objects and arrays.
-  if ((type.isArray(date) || type.isObject(date)) && !(date instanceof moment)) {
-    return 'Invalid date';
+  // allow for dayjs function chaining, but return "Invalid date" for objects, arrays, and booleans.
+  if ((type.isArray(date) || type.isObject(date) || type.isBoolean(date)) && !dayjs.isDayjs(date)) {
+    return 'Invalid Date';
   }
   let result;
   const errs = [];
   let obj;
   try {
-    obj = moment(date);
+    obj = dayjs(date);
     if (obj[format] && type.isFunction(obj[format])) {
       result = obj[format](...args);
     } else {

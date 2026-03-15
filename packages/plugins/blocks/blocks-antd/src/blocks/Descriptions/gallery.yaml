@@ -1,0 +1,831 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic Descriptions
+  blocks:
+    - id: basic_array_items
+      type: Descriptions
+      properties:
+        title: User Profile
+        items:
+          - label: Full Name
+            value: Sarah Johnson
+          - label: Email
+            value: sarah.johnson@example.com
+          - label: Phone
+            value: +1 (555) 123-4567
+          - label: Location
+            value: San Francisco, CA
+          - label: Role
+            value: Senior Developer
+          - label: Department
+            value: Engineering
+    - id: basic_object_items
+      type: Descriptions
+      properties:
+        title: Object Format
+        items:
+          Name: Alex Chen
+          Email: alex.chen@example.com
+          Phone: +1 (555) 987-6543
+          Location: New York, NY
+          Role: Product Manager
+          Team: Growth
+
+- title: Bordered vs Borderless
+  blocks:
+    - id: bordered_default
+      type: Descriptions
+      properties:
+        title: Borderless (Default)
+        items:
+          - label: Hostname
+            value: prod-web-01
+          - label: IP Address
+            value: 192.168.1.100
+          - label: OS
+            value: Ubuntu 22.04 LTS
+          - label: CPU
+            value: 8 cores
+          - label: Memory
+            value: 32 GB
+          - label: Storage
+            value: 500 GB SSD
+    - id: bordered_true
+      type: Descriptions
+      properties:
+        title: Bordered
+        bordered: true
+        items:
+          - label: Hostname
+            value: prod-web-02
+          - label: IP Address
+            value: 192.168.1.101
+          - label: OS
+            value: Debian 12
+          - label: CPU
+            value: 16 cores
+          - label: Memory
+            value: 64 GB
+          - label: Storage
+            value: 1 TB NVMe
+
+- title: Sizes
+  blocks:
+    - id: size_default
+      type: Descriptions
+      properties:
+        title: Default Size
+        size: default
+        bordered: true
+        items:
+          - label: Product
+            value: Widget Pro
+          - label: SKU
+            value: WGT-PRO-001
+          - label: Price
+            value: $49.99
+          - label: Category
+            value: Electronics
+          - label: Weight
+            value: 0.5 kg
+          - label: In Stock
+            value: 1,250 units
+    - id: size_small
+      type: Descriptions
+      properties:
+        title: Small Size
+        size: small
+        bordered: true
+        items:
+          - label: Product
+            value: Widget Lite
+          - label: SKU
+            value: WGT-LIT-002
+          - label: Price
+            value: $24.99
+          - label: Category
+            value: Electronics
+          - label: Weight
+            value: 0.3 kg
+          - label: In Stock
+            value: 3,480 units
+
+- title: Vertical Layout
+  blocks:
+    - id: vertical_borderless
+      type: Descriptions
+      properties:
+        title: Order Summary
+        layout: vertical
+        items:
+          - label: Order Number
+            value: ORD-2026-0042
+          - label: Date
+            value: March 10, 2026
+          - label: Status
+            value: Shipped
+          - label: Total
+            value: $129.97
+    - id: vertical_bordered
+      type: Descriptions
+      properties:
+        title: Invoice Details
+        bordered: true
+        layout: vertical
+        items:
+          - label: Invoice Number
+            value: INV-2026-003
+          - label: Date Issued
+            value: March 1, 2026
+          - label: Due Date
+            value: March 31, 2026
+          - label: Amount
+            value: $2,450.00
+          - label: Status
+            value: Pending
+          - label: Payment Method
+            value: Wire Transfer
+
+- title: Column Configurations
+  blocks:
+    - id: columns_1
+      type: Descriptions
+      properties:
+        title: Single Column
+        column: 1
+        bordered: true
+        items:
+          - label: Full Name
+            value: Alex Chen
+          - label: Email
+            value: alex.chen@example.com
+          - label: Phone
+            value: +1 (555) 987-6543
+          - label: Address
+            value: 123 Main Street, New York, NY 10001
+    - id: columns_2
+      type: Descriptions
+      properties:
+        title: Two Columns
+        column: 2
+        bordered: true
+        items:
+          - label: First Name
+            value: Maria
+          - label: Last Name
+            value: Garcia
+          - label: Department
+            value: Marketing
+          - label: Title
+            value: Director
+          - label: Start Date
+            value: January 15, 2024
+          - label: Office
+            value: Building A, Floor 3
+    - id: columns_4
+      type: Descriptions
+      properties:
+        title: Four Columns
+        column: 4
+        bordered: true
+        items:
+          - label: Q1
+            value: $125,000
+          - label: Q2
+            value: $142,500
+          - label: Q3
+            value: $138,900
+          - label: Q4
+            value: $167,200
+          - label: YoY Growth
+            value: +12.4%
+          - label: Market Share
+            value: 23.1%
+          - label: Customers
+            value: 4,582
+          - label: NPS Score
+            value: 72
+
+- title: Responsive Columns
+  blocks:
+    - id: responsive_columns
+      type: Descriptions
+      properties:
+        title: Employee Record
+        bordered: true
+        column:
+          xs: 1
+          sm: 2
+          md: 3
+          lg: 3
+          xl: 4
+        items:
+          - label: Employee ID
+            value: EMP-1042
+          - label: Full Name
+            value: Jordan Rivera
+          - label: Department
+            value: Engineering
+          - label: Title
+            value: Staff Engineer
+          - label: Manager
+            value: Pat Williams
+          - label: Location
+            value: Austin, TX
+          - label: Start Date
+            value: April 2022
+          - label: Level
+            value: L5
+
+- title: Item Spanning
+  blocks:
+    - id: spanning_basic
+      type: Descriptions
+      properties:
+        title: Support Ticket
+        bordered: true
+        items:
+          - label: Ticket ID
+            value: TICKET-7891
+          - label: Priority
+            value: High
+          - label: Created
+            value: March 9, 2026
+          - label: Description
+            value: Users are unable to log in after the latest deployment. The authentication service returns a 503 error when attempting to validate credentials against the LDAP directory.
+            span: 3
+    - id: spanning_mixed
+      type: Descriptions
+      properties:
+        title: Project Overview
+        bordered: true
+        column: 3
+        items:
+          - label: Project Name
+            value: Phoenix Migration
+          - label: Status
+            value: In Progress
+          - label: Priority
+            value: Critical
+          - label: Lead
+            value: Priya Patel
+          - label: Team Size
+            value: 12
+          - label: Sprint
+            value: Sprint 14
+          - label: Objective
+            value: Migrate all legacy microservices from the monolithic architecture to a cloud-native Kubernetes deployment with zero downtime and full backwards compatibility.
+            span: 2
+          - label: Deadline
+            value: June 30, 2026
+    - id: spanning_full_width
+      type: Descriptions
+      properties:
+        title: API Error Log
+        bordered: true
+        column: 3
+        items:
+          - label: Timestamp
+            value: '2026-03-10T14:23:07Z'
+          - label: Endpoint
+            value: /api/v2/users/auth
+          - label: Status Code
+            value: 503
+          - label: Stack Trace
+            value: 'Error: ECONNREFUSED 10.0.1.45:5432 - Connection refused at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)'
+            span: 3
+          - label: Resolution
+            value: Database connection pool exhausted. Increased max_connections from 100 to 250 and implemented connection retry logic with exponential backoff.
+            span: 3
+
+- title: Colon Control
+  blocks:
+    - id: colon_true
+      type: Descriptions
+      properties:
+        title: With Colons (Default)
+        colon: true
+        items:
+          - label: Name
+            value: Sarah Johnson
+          - label: Role
+            value: Engineer
+          - label: Team
+            value: Platform
+    - id: colon_false
+      type: Descriptions
+      properties:
+        title: Without Colons
+        colon: false
+        items:
+          - label: Name
+            value: Sarah Johnson
+          - label: Role
+            value: Engineer
+          - label: Team
+            value: Platform
+
+- title: No Title
+  blocks:
+    - id: no_title_borderless
+      type: Descriptions
+      properties:
+        items:
+          - label: Browser
+            value: Chrome 122
+          - label: Operating System
+            value: macOS 15.3
+          - label: Screen Resolution
+            value: 2560 x 1440
+          - label: Language
+            value: English (US)
+          - label: Timezone
+            value: America/Los_Angeles
+          - label: User Agent
+            value: Mozilla/5.0
+    - id: no_title_bordered
+      type: Descriptions
+      properties:
+        bordered: true
+        items:
+          - label: Protocol
+            value: HTTPS
+          - label: Method
+            value: POST
+          - label: Content-Type
+            value: application/json
+          - label: Response Time
+            value: 142ms
+          - label: Cache
+            value: MISS
+          - label: CDN Node
+            value: us-west-2a
+
+- title: HTML in Labels and Values
+  blocks:
+    - id: html_content
+      type: Descriptions
+      properties:
+        title: Release Notes
+        bordered: true
+        items:
+          - label: '<b>Version</b>'
+            value: '<span style="color: #1677ff;">v3.2.0</span>'
+          - label: '<b>Release Date</b>'
+            value: March 10, 2026
+          - label: '<b>Status</b>'
+            value: '<span style="color: #52c41a; font-weight: bold;">Stable</span>'
+          - label: '<b>Changes</b>'
+            value: 'Added OAuth2 support, fixed memory leak in worker pool, improved query performance by <b>40%</b>'
+            span: 3
+
+- title: With Extra Slot
+  blocks:
+    - id: desc_with_extra
+      type: Descriptions
+      properties:
+        title: Account Details
+        bordered: true
+        items:
+          - label: Account ID
+            value: ACC-2026-0891
+          - label: Plan
+            value: Enterprise
+          - label: Status
+            value: Active
+          - label: Created
+            value: January 12, 2024
+          - label: Billing Cycle
+            value: Annual
+          - label: Next Invoice
+            value: January 12, 2027
+      slots:
+        extra:
+          blocks:
+            - id: desc_extra_button
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Edit
+                color: primary
+                variant: link
+                size: small
+
+- title: Realistic - User Account
+  blocks:
+    - id: user_account
+      type: Descriptions
+      properties:
+        title: Account Information
+        bordered: true
+        column: 2
+        items:
+          - label: Username
+            value: sjohnson
+          - label: Display Name
+            value: Sarah Johnson
+          - label: Email
+            value: sarah.johnson@acme.com
+          - label: Phone
+            value: +1 (555) 123-4567
+          - label: Role
+            value: Administrator
+          - label: Last Login
+            value: March 10, 2026 at 9:14 AM
+          - label: Two-Factor Auth
+            value: Enabled
+          - label: API Key
+            value: sk-****-****-7f3a
+          - label: Permissions
+            value: Read, Write, Delete, Manage Users, Audit Logs
+            span: 2
+
+- title: Realistic - Order Details
+  blocks:
+    - id: order_details
+      type: Descriptions
+      properties:
+        title: 'Order #ORD-2026-11583'
+        bordered: true
+        items:
+          - label: Customer
+            value: Acme Corporation
+          - label: Date Placed
+            value: March 8, 2026
+          - label: Payment Method
+            value: Visa ending in 4242
+          - label: Subtotal
+            value: $1,249.00
+          - label: Tax (8.25%)
+            value: $103.04
+          - label: Shipping
+            value: $0.00 (Free)
+          - label: Total
+            value: '$1,352.04'
+            span: 3
+    - id: order_shipping
+      type: Descriptions
+      properties:
+        title: Shipping Information
+        bordered: true
+        column: 2
+        items:
+          - label: Carrier
+            value: FedEx Ground
+          - label: Tracking Number
+            value: 7489 2305 1847
+          - label: Ship Date
+            value: March 9, 2026
+          - label: Est. Delivery
+            value: March 14, 2026
+          - label: Ship From
+            value: Warehouse B, Dallas, TX
+          - label: Ship To
+            value: 456 Oak Avenue, Portland, OR 97201
+
+- title: Realistic - System Information
+  blocks:
+    - id: system_info
+      type: Descriptions
+      properties:
+        title: System Health Dashboard
+        bordered: true
+        size: small
+        items:
+          - label: Service
+            value: api-gateway
+          - label: Status
+            value: '<span style="color: #52c41a;">Healthy</span>'
+          - label: Uptime
+            value: 99.97%
+          - label: CPU Usage
+            value: 34%
+          - label: Memory
+            value: 12.4 / 32 GB
+          - label: Disk
+            value: 187 / 500 GB
+          - label: Active Connections
+            value: 2,847
+          - label: Requests/sec
+            value: 1,243
+          - label: Avg Latency
+            value: 23ms
+          - label: Error Rate
+            value: '<span style="color: #52c41a;">0.02%</span>'
+          - label: Last Deploy
+            value: March 10, 2026 08:30 UTC
+          - label: Version
+            value: v2.14.3-rc1
+
+- title: Per-Item Styles
+  blocks:
+    - id: item_label_styles
+      type: Descriptions
+      properties:
+        title: Styled Labels and Values
+        bordered: true
+        items:
+          - label: Revenue
+            value: $487,200
+            labelStyle:
+              fontWeight: bold
+            contentStyle:
+              color: '#52c41a'
+              fontWeight: bold
+          - label: Expenses
+            value: $312,100
+            labelStyle:
+              fontWeight: bold
+            contentStyle:
+              color: '#ff4d4f'
+              fontWeight: bold
+          - label: Net Profit
+            value: $175,100
+            labelStyle:
+              fontWeight: bold
+              backgroundColor: '#f6ffed'
+            contentStyle:
+              color: '#52c41a'
+              fontWeight: bold
+              fontSize: 16
+    - id: item_inline_styles
+      type: Descriptions
+      properties:
+        title: Custom Item Backgrounds
+        bordered: true
+        items:
+          - label: Critical
+            value: 2 issues
+            style:
+              backgroundColor: '#fff2f0'
+          - label: Warning
+            value: 5 issues
+            style:
+              backgroundColor: '#fffbe6'
+          - label: Info
+            value: 12 issues
+            style:
+              backgroundColor: '#e6f4ff'
+
+- title: CSS Key Styling
+  blocks:
+    - id: css_element
+      type: Descriptions
+      properties:
+        title: Element CSS Key
+        bordered: true
+        items:
+          - label: Name
+            value: Jordan Rivera
+          - label: Email
+            value: jordan@example.com
+          - label: Phone
+            value: +1 (555) 444-7890
+      style:
+        --element:
+          border: 2px solid #1677ff
+          borderRadius: 8px
+          padding: 4px
+    - id: css_label_content
+      type: Descriptions
+      properties:
+        title: Label and Content CSS Keys
+        bordered: true
+        items:
+          - label: Service
+            value: Production API
+          - label: Region
+            value: us-east-1
+          - label: Tier
+            value: Premium
+      style:
+        --label:
+          fontWeight: bold
+          color: '#1677ff'
+        --content:
+          fontStyle: italic
+
+- title: Tailwind Classes
+  blocks:
+    - id: tailwind_shadow
+      type: Descriptions
+      class: shadow-md rounded-lg overflow-hidden
+      properties:
+        title: Card-Style Descriptions
+        bordered: true
+        items:
+          - label: Company
+            value: Acme Inc.
+          - label: Industry
+            value: Technology
+          - label: Founded
+            value: 2018
+          - label: Employees
+            value: 250
+          - label: Headquarters
+            value: San Francisco, CA
+          - label: Revenue
+            value: $48M ARR
+    - id: tailwind_dark_bg
+      type: Box
+      class: bg-slate-800 p-4 rounded-lg
+      blocks:
+        - id: tailwind_on_dark
+          type: Descriptions
+          properties:
+            title: '<span style="color: #ffffff;">Dark Background</span>'
+            colon: false
+            items:
+              - label: '<span style="color: #a0aec0;">Status</span>'
+                value: '<span style="color: #68d391;">Online</span>'
+              - label: '<span style="color: #a0aec0;">Latency</span>'
+                value: '<span style="color: #63b3ed;">12ms</span>'
+              - label: '<span style="color: #a0aec0;">Region</span>'
+                value: '<span style="color: #fc8181;">us-west-2</span>'
+
+- title: Theme Token Overrides
+  blocks:
+    - id: theme_custom_colors
+      type: Descriptions
+      properties:
+        title: Custom Label Colors
+        bordered: true
+        theme:
+          labelBg: '#e6f4ff'
+          labelColor: '#0958d9'
+          contentColor: '#434343'
+        items:
+          - label: Environment
+            value: Production
+          - label: Region
+            value: us-east-1
+          - label: Availability Zone
+            value: us-east-1a
+          - label: Instance Type
+            value: m5.xlarge
+          - label: Auto Scaling
+            value: Enabled
+          - label: Load Balancer
+            value: ALB-prod-01
+    - id: theme_warm_palette
+      type: Descriptions
+      properties:
+        title: Warm Color Palette
+        bordered: true
+        theme:
+          labelBg: '#fff7e6'
+          labelColor: '#ad4e00'
+          titleColor: '#ad4e00'
+          contentColor: '#613400'
+        items:
+          - label: Cafe
+            value: The Daily Grind
+          - label: Location
+            value: 42 Roast Avenue
+          - label: Hours
+            value: 7 AM - 9 PM
+          - label: Specialty
+            value: Single-origin pour over
+          - label: Rating
+            value: 4.8 / 5.0
+          - label: Price Range
+            value: $$
+    - id: theme_compact_spacing
+      type: Descriptions
+      properties:
+        title: Compact Spacing
+        bordered: true
+        size: small
+        theme:
+          itemPaddingBottom: 4
+          itemPaddingEnd: 8
+          titleMarginBottom: 8
+        items:
+          - label: CPU
+            value: 24%
+          - label: RAM
+            value: 8.2 GB
+          - label: Disk
+            value: 45%
+          - label: Network In
+            value: 12 Mbps
+          - label: Network Out
+            value: 8 Mbps
+          - label: Processes
+            value: 312
+    - id: theme_green_palette
+      type: Descriptions
+      properties:
+        title: Success Theme
+        bordered: true
+        theme:
+          labelBg: '#f6ffed'
+          labelColor: '#135200'
+          titleColor: '#135200'
+          contentColor: '#237804'
+        items:
+          - label: Test Suite
+            value: Integration Tests
+          - label: Passed
+            value: 247 / 247
+          - label: Duration
+            value: 4m 32s
+          - label: Coverage
+            value: 94.2%
+          - label: Branch
+            value: main
+          - label: Commit
+            value: a3f7b21
+    - id: theme_wide_colons
+      type: Descriptions
+      properties:
+        title: Wide Colon Spacing
+        theme:
+          colonMarginLeft: 4
+          colonMarginRight: 16
+        items:
+          - label: First Name
+            value: Taylor
+          - label: Last Name
+            value: Brooks
+          - label: Department
+            value: Design
+
+- title: Combined Features
+  blocks:
+    - id: combined_full_profile
+      type: Descriptions
+      class: shadow-sm rounded-lg overflow-hidden
+      properties:
+        title: '<b>Employee Profile</b>'
+        bordered: true
+        column: 2
+        size: small
+        theme:
+          labelBg: '#f0f5ff'
+          labelColor: '#1d39c4'
+        items:
+          - label: Employee ID
+            value: EMP-4521
+          - label: Full Name
+            value: '<b>Priya Patel</b>'
+          - label: Department
+            value: Engineering
+          - label: Title
+            value: Principal Engineer
+          - label: Email
+            value: priya.patel@acme.com
+          - label: Phone
+            value: +1 (555) 867-5309
+          - label: Office
+            value: Building C, Floor 7
+          - label: Manager
+            value: David Kim
+          - label: Bio
+            value: 15+ years of experience in distributed systems and cloud architecture. Led the migration of core services to Kubernetes, reducing infrastructure costs by 40%.
+            span: 2
+    - id: combined_invoice
+      type: Descriptions
+      class: shadow-sm rounded-lg overflow-hidden
+      properties:
+        title: 'Invoice #INV-2026-0847'
+        bordered: true
+        layout: vertical
+        column: 4
+        size: small
+        items:
+          - label: Billed To
+            value: Acme Corporation
+          - label: Invoice Date
+            value: March 1, 2026
+          - label: Due Date
+            value: March 31, 2026
+          - label: Status
+            value: '<span style="color: #faad14; font-weight: bold;">Pending</span>'
+          - label: Professional Services (160 hrs @ $150/hr)
+            value: $24,000.00
+            span: 2
+          - label: Cloud Infrastructure
+            value: $3,200.00
+          - label: Support Plan
+            value: $1,800.00
+          - label: Subtotal
+            value: $29,000.00
+          - label: Tax (8%)
+            value: $2,320.00
+          - label: Total Due
+            value: '<b style="font-size: 16px;">$31,320.00</b>'
+            span: 2

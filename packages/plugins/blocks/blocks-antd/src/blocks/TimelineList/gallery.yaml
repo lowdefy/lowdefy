@@ -1,0 +1,451 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic Timeline
+  fullWidth: true
+  blocks:
+    - id: tl_basic
+      type: TimelineList
+      properties:
+        data:
+          - title: Application submitted
+            label: '2024-01-10'
+          - title: Initial screening
+            label: '2024-01-15'
+          - title: Technical interview
+            label: '2024-01-22'
+          - title: Offer extended
+            label: '2024-02-01'
+      blocks:
+        - id: tl_basic_content
+          type: Paragraph
+          properties:
+            content:
+              _state: item.title
+    - id: tl_basic_left
+      type: TimelineList
+      properties:
+        mode: left
+        data:
+          - title: Step 1 - Created account
+          - title: Step 2 - Verified email
+          - title: Step 3 - Completed profile
+      blocks:
+        - id: tl_basic_left_content
+          type: Paragraph
+          properties:
+            content:
+              _state: item.title
+    - id: tl_basic_right
+      type: TimelineList
+      properties:
+        mode: right
+        data:
+          - title: Morning standup
+          - title: Design review
+          - title: Sprint retrospective
+      blocks:
+        - id: tl_basic_right_content
+          type: Paragraph
+          properties:
+            content:
+              _state: item.title
+    - id: tl_basic_alternate
+      type: TimelineList
+      properties:
+        mode: alternate
+        data:
+          - title: 2020 - Company founded
+            label: 'Q1 2020'
+          - title: 2021 - First product launch
+            label: 'Q2 2021'
+          - title: 2022 - Series A funding
+            label: 'Q1 2022'
+          - title: 2023 - 100k users milestone
+            label: 'Q3 2023'
+          - title: 2024 - International expansion
+            label: 'Q1 2024'
+      blocks:
+        - id: tl_basic_alternate_content
+          type: Paragraph
+          properties:
+            content:
+              _state: item.title
+
+- title: Colors and Icons
+  fullWidth: true
+  blocks:
+    - id: tl_colors
+      type: TimelineList
+      properties:
+        data:
+          - title: Feature deployed successfully
+            color: green
+          - title: Bug fix in progress
+            color: blue
+          - title: Build failed - investigating
+            color: red
+          - title: Code review pending
+            color: gray
+      blocks:
+        - id: tl_colors_content
+          type: Paragraph
+          properties:
+            content:
+              _state: item.title
+    - id: tl_icons
+      type: TimelineList
+      properties:
+        data:
+          - title: Order placed
+            icon: AiOutlineShoppingCart
+            color: blue
+          - title: Payment confirmed
+            icon: AiOutlineDollarCircle
+            color: green
+          - title: Shipped
+            icon: AiOutlineCar
+            color: orange
+          - title: Delivered
+            icon: AiOutlineCheckCircle
+            color: green
+      blocks:
+        - id: tl_icons_content
+          type: Paragraph
+          properties:
+            content:
+              _state: item.title
+    - id: tl_colors_custom_fields
+      type: TimelineList
+      properties:
+        colorField: status_color
+        iconField: status_icon
+        labelField: timestamp
+        data:
+          - description: Server deployed
+            status_color: green
+            status_icon: AiOutlineCloudServer
+            timestamp: '10:30 AM'
+          - description: Database migrated
+            status_color: blue
+            status_icon: AiOutlineDatabase
+            timestamp: '11:15 AM'
+          - description: Cache cleared
+            status_color: orange
+            status_icon: AiOutlineSync
+            timestamp: '11:45 AM'
+      blocks:
+        - id: tl_colors_custom_fields_content
+          type: Paragraph
+          properties:
+            content:
+              _state: item.description
+
+- title: Pending and Reverse
+  fullWidth: true
+  blocks:
+    - id: tl_pending
+      type: TimelineList
+      properties:
+        pending: true
+        data:
+          - title: Requirements gathered
+          - title: Design complete
+          - title: Development in progress
+      blocks:
+        - id: tl_pending_content
+          type: Paragraph
+          properties:
+            content:
+              _state: item.title
+    - id: tl_pending_dot
+      type: TimelineList
+      properties:
+        pending: true
+        pendingDotIcon:
+          name: AiOutlineClockCircle
+          color: '#1677ff'
+        data:
+          - title: Task A completed
+          - title: Task B completed
+          - title: Task C in progress
+      blocks:
+        - id: tl_pending_dot_content
+          type: Paragraph
+          properties:
+            content:
+              _state: item.title
+    - id: tl_reversed
+      type: TimelineList
+      properties:
+        reverse: true
+        data:
+          - title: Oldest entry
+          - title: Middle entry
+          - title: Newest entry
+      blocks:
+        - id: tl_reversed_content
+          type: Paragraph
+          properties:
+            content:
+              _state: item.title
+
+- title: Style and CSS
+  fullWidth: true
+  blocks:
+    - id: tl_css_tailwind_bg
+      type: TimelineList
+      class: bg-blue-50 p-4 rounded-lg border border-blue-200
+      properties:
+        data:
+          - title: Project created
+          - title: Team assigned
+          - title: Kickoff meeting
+      blocks:
+        - id: tl_css_tailwind_bg_content
+          type: Paragraph
+          properties:
+            content:
+              _state: item.title
+    - id: tl_css_tailwind_shadow
+      type: TimelineList
+      class: bg-white p-4 rounded-lg shadow-md
+      properties:
+        data:
+          - title: Order received
+            color: blue
+          - title: Processing payment
+            color: orange
+          - title: Order shipped
+            color: green
+      blocks:
+        - id: tl_css_tailwind_shadow_content
+          type: Paragraph
+          properties:
+            content:
+              _state: item.title
+    - id: tl_css_inline
+      type: TimelineList
+      style:
+        --element:
+          padding: 16px 24px
+          borderRadius: 8px
+          backgroundColor: '#f6ffed'
+          border: 1px solid #b7eb8f
+      properties:
+        data:
+          - title: Deployment started
+            color: green
+          - title: Tests passing
+            color: green
+          - title: Deployed to production
+            color: green
+      blocks:
+        - id: tl_css_inline_content
+          type: Paragraph
+          properties:
+            content:
+              _state: item.title
+
+- title: Theme Token Overrides
+  fullWidth: true
+  blocks:
+    - id: tl_theme_tail
+      type: TimelineList
+      properties:
+        data:
+          - title: Styled timeline entry one
+          - title: Styled timeline entry two
+          - title: Styled timeline entry three
+        theme:
+          tailColor: '#1677ff'
+          tailWidth: 3
+      blocks:
+        - id: tl_theme_tail_content
+          type: Paragraph
+          properties:
+            content:
+              _state: item.title
+    - id: tl_theme_dot
+      type: TimelineList
+      properties:
+        data:
+          - title: Custom dot border
+          - title: Wider dots
+          - title: More spacing
+        theme:
+          dotBorderWidth: 4
+          dotBg: '#f0f5ff'
+          itemPaddingBottom: 32
+      blocks:
+        - id: tl_theme_dot_content
+          type: Paragraph
+          properties:
+            content:
+              _state: item.title
+    - id: tl_theme_combined
+      type: TimelineList
+      properties:
+        data:
+          - title: Fully themed item one
+            color: '#722ed1'
+          - title: Fully themed item two
+            color: '#722ed1'
+          - title: Fully themed item three
+            color: '#722ed1'
+        theme:
+          tailColor: '#d3adf7'
+          tailWidth: 2
+          dotBorderWidth: 3
+          itemPaddingBottom: 28
+      blocks:
+        - id: tl_theme_combined_content
+          type: Paragraph
+          properties:
+            content:
+              _state: item.title
+
+- title: TimelineList in Project Tracker
+  fullWidth: true
+  blocks:
+    - id: tl_project_card
+      type: Card
+      properties:
+        title: Project Milestones
+        size: small
+      blocks:
+        - id: tl_project_timeline
+          type: TimelineList
+          properties:
+            pending: true
+            mode: left
+            data:
+              - title: Project kickoff
+                icon: AiOutlineFlag
+                color: blue
+                label: 'Jan 15'
+              - title: Design phase complete
+                icon: AiOutlineCheckCircle
+                color: green
+                label: 'Feb 28'
+              - title: Development sprint 1
+                icon: AiOutlineCheckCircle
+                color: green
+                label: 'Mar 30'
+              - title: QA testing
+                icon: AiOutlineLoading
+                color: orange
+                label: 'Apr 15'
+          blocks:
+            - id: tl_project_timeline_content
+              type: Paragraph
+              properties:
+                content:
+                  _state: item.title
+        - id: tl_project_actions
+          type: Box
+          layout:
+            gap: 8
+            justify: flex-end
+          blocks:
+            - id: tl_project_export_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Export Timeline
+                icon: AiOutlineDownload
+                color: primary
+                variant: outlined
+              events:
+                onClick:
+                  - id: tl_project_export_msg
+                    type: DisplayMessage
+                    params:
+                      content: Timeline exported successfully.
+                      status: success
+
+- title: TimelineList in Support Ticket
+  fullWidth: true
+  blocks:
+    - id: tl_support_card
+      type: Card
+      properties:
+        title: 'Ticket #4821 - Login Issue'
+        size: small
+      blocks:
+        - id: tl_support_timeline
+          type: TimelineList
+          properties:
+            reverse: true
+            data:
+              - title: Ticket created by user
+                icon: AiOutlinePlus
+                color: blue
+              - title: Assigned to support team
+                icon: AiOutlineTeam
+                color: blue
+              - title: Investigating root cause
+                icon: AiOutlineSearch
+                color: orange
+              - title: Fix deployed to production
+                icon: AiOutlineCheckCircle
+                color: green
+              - title: Ticket resolved
+                icon: AiOutlineLike
+                color: green
+          blocks:
+            - id: tl_support_timeline_content
+              type: Paragraph
+              properties:
+                content:
+                  _state: item.title
+        - id: tl_support_actions
+          type: Box
+          layout:
+            gap: 8
+            justify: flex-end
+          blocks:
+            - id: tl_support_reopen_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Reopen Ticket
+                icon: AiOutlineRollback
+                color: default
+                variant: outlined
+              events:
+                onClick:
+                  - id: tl_support_reopen_msg
+                    type: DisplayMessage
+                    params:
+                      content: Ticket reopened.
+                      status: info
+            - id: tl_support_close_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Close Ticket
+                icon: AiOutlineCheck
+                color: primary
+                variant: solid
+              events:
+                onClick:
+                  - id: tl_support_close_msg
+                    type: DisplayMessage
+                    params:
+                      content: Ticket closed successfully.
+                      status: success

@@ -22,7 +22,7 @@ blocks:
 
   - id: content_basic
     type: Content
-    areas:
+    slots:
       content:
         blocks:
           - id: content_basic_text
@@ -41,7 +41,7 @@ blocks:
         backgroundColor: '#fff'
         padding: 24px
         minHeight: 280px
-    areas:
+    slots:
       content:
         blocks:
           - id: content_with_style_text
@@ -55,14 +55,14 @@ blocks:
 
   - id: content_nested
     type: Content
-    areas:
+    slots:
       content:
         blocks:
           - id: content_nested_card
             type: Card
             properties:
               title: Nested Card
-            areas:
+            slots:
               content:
                 blocks:
                   - id: content_nested_card_text

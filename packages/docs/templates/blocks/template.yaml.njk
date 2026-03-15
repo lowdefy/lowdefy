@@ -91,8 +91,8 @@ blocks:
           - {{ category }}
           - {{ block_type }}
     layout:
-      contentGutter: 16
-    areas:
+      gap: 16
+    slots:
       header:
         blocks:
           _ref: templates/header.yaml
@@ -124,21 +124,42 @@ blocks:
                 value type: {{ value_type }}
                 ```
           {% endif %}
-          {% if areas %}
-          - id: areas_list
+          {% if slots %}
+          - id: slots_list
             type: Markdown
             properties:
               content: |
-                {% if user_defined_areas -%}
+                {% if user_defined_slots -%}
                 ```
-                areas: [key]
+                slots: [key]
                 ```
                 {% else %}
                 ```
-                areas: {{ areas | join(', ') }}
+                slots: {{ slots | join(', ') }}
                 ```
                 {% endif %}
           {% endif %}
+          - id: css_keys_list
+            type: Markdown
+            properties:
+              content:
+                _nunjucks:
+                  template: |
+                    {% raw %}
+                    ```
+                    cssKeys: {% for key in keys %}{% if not loop.first %}, {% endif %}{{ key }}{% endfor %}
+                    ```
+                    {% endraw %}
+                  on:
+                    keys:
+                      _get:
+                        key: cssKeys
+                        default:
+                          - element
+                        from:
+                          _ref:
+                            path:
+                              _var: schema
           - id: description
             type: MarkdownWithCode
             properties:
@@ -159,10 +180,19 @@ blocks:
                 layout:
                   _state: block.layout
                 style:
-                  _yaml.parse:
-                    - _if_none:
-                        - _state: style_block_input
-                        - ''
+                  _custom_yaml_parse:
+                    _if_none:
+                      - _state: style_block_input
+                      - ''
+                class:
+                  _if_none:
+                    - _state: block.class
+                    - null
+                styles:
+                  _custom_yaml_parse:
+                    _if_none:
+                      - _state: style_block_input
+                      - ''
                 {% if category != "context" %}
                 visible:
                   _state: block.visible
@@ -184,15 +214,15 @@ blocks:
                           _var: schema
                         transformer: templates/blocks/defaultValueTransformer.js
 
-                {% if areas %}
-                areas:
-                  {% for area in areas %}
-                  {{ area }}:
-                    gutter: 0
+                {% if slots %}
+                slots:
+                  {% for slot in slots %}
+                  {{ slot }}:
+                    gap: 0
                     style:
                       border: 1px dashed red
                     blocks:
-                      - id: block_area_{{ area }}
+                      - id: block_slot_{{ slot }}
                         type: Html
                         style:
                           background: '#f0f2f5'
@@ -200,7 +230,7 @@ blocks:
                           padding: 2px 5px
                           color: red
                         properties:
-                          html: {{ area }}
+                          html: {{ slot }}
                   {% endfor %}
                 {% endif %}
               {% if methods %}
@@ -238,7 +268,7 @@ blocks:
                         {% endraw %}
                       on:
                         value:
-                          _yaml.stringify:
+                          _custom_yaml_stringify:
                             on:
                               _var: methods.{{ loop.index0 }}.onClick
                             options:
@@ -264,9 +294,12 @@ blocks:
                         {% endraw %}
                       on:
                         value:
-                          _yaml.stringify:
-                            - block_id:
-                                _state: block_id
+                          _custom_yaml_stringify:
+                            - _custom_filter_default_value:
+                                value:
+                                  block_id:
+                                    _state: block_id
+                                defaultValue: {}
               {% endif %}
               - id: setup_divider
                 type: Divider
@@ -285,7 +318,7 @@ blocks:
                         {% endraw %}
                       on:
                         value:
-                          _yaml.stringify:
+                          _custom_yaml_stringify:
                             options:
                               sortKeys: false
                             on:
@@ -300,6 +333,15 @@ blocks:
                                   layout:
                                     _state: block.layout
                                   style:
+                                    _yaml.parse:
+                                      - _if_none:
+                                          - _state: style_block_input
+                                          - ''
+                                  class:
+                                    _if_none:
+                                      - _state: block.class
+                                      - null
+                                  styles:
                                     _yaml.parse:
                                       - _if_none:
                                           - _state: style_block_input
@@ -343,6 +385,8 @@ blocks:
                       title: 'layout:'
                     - key: style
                       title: 'style:'
+                    - key: class
+                      title: 'class:'
                     - key: events
                       title: 'events:'
                     - key: required
@@ -358,7 +402,7 @@ blocks:
                         _eq:
                           - _var: category
                           - context
-                areas:
+                slots:
                   properties:
                     blocks:
                       _ref:
@@ -370,7 +414,79 @@ blocks:
                       _ref: templates/blocks/layout.yaml
                   style:
                     blocks:
-                      _ref: templates/blocks/style.yaml
+                      - id: style_css_keys_info
+                        type: Markdown
+                        properties:
+                          content:
+                            _nunjucks:
+                              template: |
+                                {% raw %}
+                                Inline CSS style objects per CSS key. Each key targets a different part of the block.
+
+                                **CSS keys:** {% for key in keys %}{% if not loop.first %}, {% endif %}`{{ key }}`{% endfor %}
+                                {% endraw %}
+                              on:
+                                keys:
+                                  _get:
+                                    key: cssKeys
+                                    default:
+                                      - element
+                                    from:
+                                      _ref:
+                                        path:
+                                          _var: schema
+                      - id: style_block_input
+                        type: TextArea
+                        layout:
+                          _global: settings_input_layout
+                        properties:
+                          title: style
+                          rows: 4
+                          size: small
+                          placeholder: |
+                            border: 1px solid red
+                            --element:
+                              border: 1px solid blue
+                          label:
+                            span: 8
+                            align: right
+                            extra: "CSS style objects keyed by CSS key. Enter in YAML format."
+                  class:
+                    blocks:
+                      - id: class_css_keys_info
+                        type: Markdown
+                        properties:
+                          content:
+                            _nunjucks:
+                              template: |
+                                {% raw %}
+                                CSS class names (supports [Tailwind CSS](https://tailwindcss.com/) utility classes).
+
+                                Can be a string, array of strings, or object keyed by CSS key.
+
+                                **CSS keys:** {% for key in keys %}{% if not loop.first %}, {% endif %}`{{ key }}`{% endfor %}
+                                {% endraw %}
+                              on:
+                                keys:
+                                  _get:
+                                    key: cssKeys
+                                    default:
+                                      - element
+                                    from:
+                                      _ref:
+                                        path:
+                                          _var: schema
+                      - id: block.class
+                        type: TextInput
+                        layout:
+                          _global: settings_input_layout
+                        properties:
+                          title: class
+                          size: small
+                          label:
+                            span: 8
+                            align: right
+                            extra: Enter CSS class names as a string, e.g. "p-4 bg-white rounded".
                   events:
                     blocks:
                       - id: event_description

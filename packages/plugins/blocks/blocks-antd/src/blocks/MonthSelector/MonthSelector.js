@@ -16,23 +16,27 @@
 
 import React, { useState } from 'react';
 import { DatePicker } from 'antd';
-import moment from 'moment';
-import { blockDefaultProps } from '@lowdefy/block-utils';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc.js';
 import { type } from '@lowdefy/helpers';
 
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import Label from '../Label/Label.js';
+import withTheme from '../withTheme.js';
 import disabledDate from '../../disabledDate.js';
 
-const MonthPicker = DatePicker.MonthPicker;
+dayjs.extend(utc);
 
 const MonthSelector = ({
   blockId,
+  classNames = {},
   components: { Icon },
   events,
   loading,
   methods,
   properties,
   required,
+  styles = {},
   validation,
   value,
 }) => {
@@ -40,21 +44,25 @@ const MonthSelector = ({
   return (
     <Label
       blockId={blockId}
+      classNames={classNames}
       components={{ Icon }}
       events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       required={required}
+      styles={styles}
       validation={validation}
       content={{
         content: () => (
-          <div className={methods.makeCssClass({ width: '100%' })}>
+          <div style={{ width: '100%' }}>
             <div id={`${blockId}_${elementId}_popup`} />
-            <MonthPicker
+            <DatePicker
               id={`${blockId}_input`}
+              picker="month"
               allowClear={properties.allowClear !== false}
               autoFocus={properties.autoFocus}
-              bordered={properties.bordered}
-              className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
+              variant={properties.bordered === false ? 'borderless' : properties.variant}
+              className={classNames.element}
+              style={{ width: '100%', ...styles.element }}
               disabled={properties.disabled || loading}
               disabledDate={disabledDate(properties.disabledDates)}
               format={properties.format ?? 'YYYY-MM'}
@@ -62,18 +70,20 @@ const MonthSelector = ({
               placeholder={properties.placeholder ?? 'Select Month'}
               size={properties.size}
               status={validation.status}
-              value={type.isDate(value) ? moment.utc(value).startOf('month') : null}
+              value={type.isDate(value) ? dayjs.utc(value).startOf('month') : null}
               suffixIcon={
                 <Icon
                   blockId={`${blockId}_suffixIcon`}
+                  classNames={{ element: classNames.suffixIcon }}
                   events={events}
                   properties={properties.suffixIcon ?? 'AiOutlineCalendar'}
+                  styles={{ element: styles.suffixIcon }}
                 />
               }
               onChange={(newVal) => {
                 const val = !newVal
                   ? null
-                  : moment.utc(newVal.add(newVal.utcOffset(), 'minutes')).startOf('month').toDate();
+                  : dayjs.utc(newVal.add(newVal.utcOffset(), 'minutes')).startOf('month').toDate();
                 methods.setValue(val);
                 methods.triggerEvent({ name: 'onChange', event: { value: val } });
               }}
@@ -85,12 +95,4 @@ const MonthSelector = ({
   );
 };
 
-MonthSelector.defaultProps = blockDefaultProps;
-MonthSelector.meta = {
-  valueType: 'date',
-  category: 'input',
-  icons: [...Label.meta.icons, 'AiOutlineCalendar'],
-  styles: ['blocks/MonthSelector/style.less'],
-};
-
-export default MonthSelector;
+export default withTheme('DatePicker', withBlockDefaults(MonthSelector));

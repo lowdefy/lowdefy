@@ -13,12 +13,79 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: ColorSelector
-    value_type: string
-    category: input
-    schema: ../plugins/blocks/blocks-color-selectors/src/blocks/ColorSelector/schema.json
+    pageId: ColorSelector
+    pageTitle: ColorSelector
+    section: Input Blocks
     filePath: blocks/input/ColorSelector.yaml
-    description_content: |
-      A color selector component.
+    block_type: ColorSelector
+    antd_component: ColorPicker
+    antd_url: color-picker
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/ColorSelector
+    schema: ../plugins/blocks/blocks-antd/src/blocks/ColorSelector/meta.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/ColorSelector/gallery.yaml
+    description: >
+      Color picker with presets, format selection, and alpha channel.
+    onInit:
+      - id: set_initial_colors
+        type: SetState
+        params:
+          size_small: '#1677ff'
+          size_middle: '#1677ff'
+          size_large: '#1677ff'
+          size_text_small: '#1677ff'
+          size_text_middle: '#1677ff'
+          size_text_large: '#1677ff'
+          format_hex: '#1677ff'
+          format_rgb: '#52c41a'
+          format_hsb: '#722ed1'
+          allow_clear_red: '#f5222d'
+          allow_clear_blue: '#1677ff'
+          allow_clear_green: '#52c41a'
+          arrow_visible: '#1677ff'
+          arrow_hidden: '#52c41a'
+          alpha_enabled: '#1677ff'
+          alpha_disabled: '#fa8c16'
+          format_selector_enabled: '#1677ff'
+          format_selector_disabled: '#13c2c2'
+          mode_single: '#1677ff'
+          mode_gradient: '#1677ff'
+          placement_top: '#1677ff'
+          placement_topLeft: '#52c41a'
+          placement_topRight: '#722ed1'
+          placement_bottom: '#f5222d'
+          placement_bottomLeft: '#fa8c16'
+          placement_bottomRight: '#13c2c2'
+          presets_brand: '#1677ff'
+          presets_extended: '#ff4d4f'
+          presets_status: '#52c41a'
+          trigger_click: '#1677ff'
+          trigger_hover: '#52c41a'
+          disabled_basic: '#1677ff'
+          disabled_with_text: '#1677ff'
+          disabled_small: '#52c41a'
+          disabled_large: '#f5222d'
+          label_basic: '#1677ff'
+          label_inline: '#722ed1'
+          label_colon: '#52c41a'
+          label_extra: '#1677ff'
+          label_disabled: '#999999'
+          style_border: '#1677ff'
+          style_shadow: '#722ed1'
+          style_large_swatch: '#f5222d'
+          combined_full: '#1677ff'
+          combined_minimal: '#fa8c16'
+          combined_text_no_alpha: '#52c41a'
+          combined_gradient_presets: '#1677ff'
+          multi_primary: '#1677ff'
+          multi_success: '#52c41a'
+          multi_warning: '#faad14'
+          multi_error: '#f5222d'
+          multi_info: '#13c2c2'
+          multi_purple: '#722ed1'
+          theme_large_handler: '#1677ff'
+          theme_wide_picker: '#52c41a'
+          theme_large_presets: '#722ed1'
+          theme_custom_border_radius: '#fa8c16'
+          theme_combined: '#f5222d'

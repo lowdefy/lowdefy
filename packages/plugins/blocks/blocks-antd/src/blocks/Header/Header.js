@@ -16,27 +16,21 @@
 
 import React from 'react';
 import { Layout } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-utils';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 
 const Header = Layout.Header;
 
-const HeaderBlock = ({ blockId, content, methods, properties }) => (
+const HeaderBlock = ({ blockId, classNames = {}, content, properties, styles = {} }) => (
   <Header
     id={blockId}
-    className={`${methods.makeCssClass([
-      { backgroundColor: properties.theme === 'light' && '#fff' },
-      properties.style,
-    ])} hide-on-print`}
+    className={classNames.element ? `${classNames.element} hide-on-print` : 'hide-on-print'}
+    style={{
+      backgroundColor: properties.theme === 'light' ? '#fff' : undefined,
+      ...styles.element,
+    }}
   >
     {content.content && content.content()}
   </Header>
 );
 
-HeaderBlock.defaultProps = blockDefaultProps;
-HeaderBlock.meta = {
-  category: 'container',
-  icons: [],
-  styles: ['blocks/Header/style.less'],
-};
-
-export default HeaderBlock;
+export default withBlockDefaults(HeaderBlock);

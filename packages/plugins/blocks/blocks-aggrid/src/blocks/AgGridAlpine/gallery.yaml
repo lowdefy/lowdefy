@@ -1,0 +1,664 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic Table
+  fullWidth: true
+  blocks:
+    - id: basic_table
+      type: AgGridAlpine
+      properties:
+        height: 300
+        columnDefs:
+          - field: name
+            headerName: Name
+          - field: age
+            headerName: Age
+          - field: email
+            headerName: Email
+          - field: country
+            headerName: Country
+        rowData:
+          - name: Alice Johnson
+            age: 28
+            email: alice@example.com
+            country: United States
+          - name: Bob Smith
+            age: 35
+            email: bob@example.com
+            country: United Kingdom
+          - name: Charlie Lee
+            age: 42
+            email: charlie@example.com
+            country: Japan
+          - name: Diana Patel
+            age: 31
+            email: diana@example.com
+            country: India
+          - name: Erik Johansson
+            age: 26
+            email: erik@example.com
+            country: Sweden
+          - name: Fatima Al-Rashid
+            age: 39
+            email: fatima@example.com
+            country: UAE
+
+- title: Column Features
+  fullWidth: true
+  blocks:
+    - id: column_features
+      type: AgGridAlpine
+      properties:
+        height: 300
+        columnDefs:
+          - field: id
+            headerName: ID
+            width: 80
+            pinned: left
+            sortable: true
+          - field: product
+            headerName: Product Name
+            flex: 2
+            sortable: true
+            filter: true
+          - field: category
+            headerName: Category
+            flex: 1
+            sortable: true
+            filter: true
+          - field: price
+            headerName: Price ($)
+            width: 120
+            sortable: true
+            resizable: true
+          - field: stock
+            headerName: Stock
+            width: 100
+            sortable: true
+          - field: rating
+            headerName: Rating
+            width: 100
+            sortable: true
+        rowData:
+          - id: 1
+            product: Wireless Keyboard
+            category: Electronics
+            price: 49.99
+            stock: 230
+            rating: 4.5
+          - id: 2
+            product: Standing Desk
+            category: Furniture
+            price: 399.00
+            stock: 45
+            rating: 4.8
+          - id: 3
+            product: USB-C Hub
+            category: Electronics
+            price: 29.99
+            stock: 520
+            rating: 4.2
+          - id: 4
+            product: Ergonomic Chair
+            category: Furniture
+            price: 289.00
+            stock: 78
+            rating: 4.6
+          - id: 5
+            product: Webcam HD
+            category: Electronics
+            price: 79.99
+            stock: 310
+            rating: 4.0
+          - id: 6
+            product: Monitor Arm
+            category: Accessories
+            price: 39.99
+            stock: 190
+            rating: 4.3
+          - id: 7
+            product: Desk Lamp
+            category: Accessories
+            price: 24.99
+            stock: 415
+            rating: 4.1
+
+- title: Default Column Definitions
+  fullWidth: true
+  blocks:
+    - id: default_col_def
+      type: AgGridAlpine
+      properties:
+        height: 300
+        defaultColDef:
+          sortable: true
+          filter: true
+          resizable: true
+          flex: 1
+        columnDefs:
+          - field: employee
+            headerName: Employee
+          - field: department
+            headerName: Department
+          - field: title
+            headerName: Job Title
+          - field: location
+            headerName: Office
+          - field: startDate
+            headerName: Start Date
+        rowData:
+          - employee: Sarah Chen
+            department: Engineering
+            title: Senior Developer
+            location: San Francisco
+            startDate: 2019-03-15
+          - employee: James Wilson
+            department: Marketing
+            title: Campaign Manager
+            location: New York
+            startDate: 2020-07-01
+          - employee: Maria Garcia
+            department: Engineering
+            title: Tech Lead
+            location: Austin
+            startDate: 2018-11-20
+          - employee: David Kim
+            department: Sales
+            title: Account Executive
+            location: Chicago
+            startDate: 2021-01-10
+          - employee: Emily Brown
+            department: Design
+            title: UX Designer
+            location: San Francisco
+            startDate: 2020-09-05
+          - employee: Ahmed Hassan
+            department: Engineering
+            title: DevOps Engineer
+            location: Remote
+            startDate: 2022-02-14
+
+- title: Row Selection
+  fullWidth: true
+  blocks:
+    - id: row_selection
+      type: AgGridAlpine
+      properties:
+        height: 300
+        rowSelection: multiple
+        defaultColDef:
+          sortable: true
+          flex: 1
+        columnDefs:
+          - field: task
+            headerName: Task
+            flex: 2
+          - field: assignee
+            headerName: Assignee
+          - field: priority
+            headerName: Priority
+            width: 120
+          - field: status
+            headerName: Status
+            width: 120
+        rowData:
+          - task: Design login page
+            assignee: Alice
+            priority: High
+            status: Done
+          - task: Implement API endpoints
+            assignee: Bob
+            priority: High
+            status: In Progress
+          - task: Write unit tests
+            assignee: Charlie
+            priority: Medium
+            status: To Do
+          - task: Update documentation
+            assignee: Diana
+            priority: Low
+            status: To Do
+          - task: Code review PR #42
+            assignee: Erik
+            priority: Medium
+            status: In Progress
+          - task: Deploy to staging
+            assignee: Fatima
+            priority: High
+            status: Done
+
+- title: Pagination
+  fullWidth: true
+  blocks:
+    - id: pagination_table
+      type: AgGridAlpine
+      properties:
+        height: 350
+        pagination: true
+        paginationPageSize: 5
+        defaultColDef:
+          sortable: true
+          filter: true
+          flex: 1
+        columnDefs:
+          - field: orderId
+            headerName: Order ID
+            width: 120
+          - field: customer
+            headerName: Customer
+          - field: product
+            headerName: Product
+          - field: quantity
+            headerName: Qty
+            width: 80
+          - field: total
+            headerName: Total ($)
+            width: 110
+          - field: status
+            headerName: Status
+            width: 120
+        rowData:
+          - orderId: ORD-001
+            customer: Acme Corp
+            product: Widget Pro
+            quantity: 50
+            total: 2499.50
+            status: Shipped
+          - orderId: ORD-002
+            customer: Globex Inc
+            product: Gadget X
+            quantity: 25
+            total: 1249.75
+            status: Processing
+          - orderId: ORD-003
+            customer: Initech
+            product: Widget Pro
+            quantity: 100
+            total: 4999.00
+            status: Delivered
+          - orderId: ORD-004
+            customer: Umbrella Ltd
+            product: Connector A
+            quantity: 200
+            total: 1998.00
+            status: Shipped
+          - orderId: ORD-005
+            customer: Stark Ind
+            product: Gadget X
+            quantity: 10
+            total: 499.90
+            status: Processing
+          - orderId: ORD-006
+            customer: Wayne Ent
+            product: Widget Pro
+            quantity: 75
+            total: 3749.25
+            status: Delivered
+          - orderId: ORD-007
+            customer: Oscorp
+            product: Connector A
+            quantity: 150
+            total: 1498.50
+            status: Shipped
+          - orderId: ORD-008
+            customer: LexCorp
+            product: Gadget X
+            quantity: 30
+            total: 1499.70
+            status: Processing
+          - orderId: ORD-009
+            customer: Cyberdyne
+            product: Widget Pro
+            quantity: 60
+            total: 2999.40
+            status: Shipped
+          - orderId: ORD-010
+            customer: Tyrell Corp
+            product: Connector A
+            quantity: 500
+            total: 4990.00
+            status: Delivered
+          - orderId: ORD-011
+            customer: Weyland Co
+            product: Gadget X
+            quantity: 40
+            total: 1999.60
+            status: Processing
+          - orderId: ORD-012
+            customer: Soylent Inc
+            product: Widget Pro
+            quantity: 80
+            total: 3999.20
+            status: Shipped
+
+- title: Events
+  fullWidth: true
+  blocks:
+    - id: events_row_click
+      type: AgGridAlpine
+      properties:
+        height: 300
+        defaultColDef:
+          sortable: true
+          flex: 1
+        columnDefs:
+          - field: name
+            headerName: Name
+          - field: role
+            headerName: Role
+          - field: department
+            headerName: Department
+          - field: status
+            headerName: Status
+            width: 120
+        rowData:
+          - name: Alice Johnson
+            role: Developer
+            department: Engineering
+            status: Active
+          - name: Bob Smith
+            role: Designer
+            department: Design
+            status: Active
+          - name: Charlie Lee
+            role: Manager
+            department: Sales
+            status: On Leave
+          - name: Diana Patel
+            role: Analyst
+            department: Finance
+            status: Active
+          - name: Erik Johansson
+            role: DevOps
+            department: Engineering
+            status: Active
+      events:
+        onRowClick:
+          - id: row_click_message
+            type: DisplayMessage
+            params:
+              content:
+                _nunjucks:
+                  on:
+                    _event: row
+                  template: 'Clicked: {{ name }} ({{ role }}, {{ department }})'
+              duration: 3
+        onCellClick:
+          - id: cell_click_message
+            type: DisplayMessage
+            params:
+              status: info
+              content:
+                _nunjucks:
+                  on:
+                    name:
+                      _event: cell.column
+                    value:
+                      _event: cell.value
+                  template: 'Cell: {{ name }} = {{ value }}'
+              duration: 3
+    - id: events_row_selected
+      type: AgGridAlpine
+      properties:
+        height: 300
+        rowSelection: multiple
+        defaultColDef:
+          sortable: true
+          flex: 1
+        columnDefs:
+          - field: task
+            headerName: Task
+            flex: 2
+          - field: assignee
+            headerName: Assignee
+          - field: priority
+            headerName: Priority
+            width: 120
+        rowData:
+          - task: Design login page
+            assignee: Alice
+            priority: High
+          - task: Implement API
+            assignee: Bob
+            priority: High
+          - task: Write tests
+            assignee: Charlie
+            priority: Medium
+          - task: Update docs
+            assignee: Diana
+            priority: Low
+          - task: Code review
+            assignee: Erik
+            priority: Medium
+      events:
+        onRowSelected:
+          - id: row_selected_message
+            type: DisplayMessage
+            params:
+              status: success
+              content:
+                _nunjucks:
+                  on:
+                    row:
+                      _event: row.task
+                    count:
+                      _event: selected.length
+                  template: 'Selected "{{ row }}" ({{ count }} total selected)'
+              duration: 3
+
+- title: Column Styling
+  fullWidth: true
+  blocks:
+    - id: styled_columns
+      type: AgGridAlpine
+      properties:
+        height: 300
+        defaultColDef:
+          sortable: true
+          flex: 1
+        columnDefs:
+          - field: metric
+            headerName: Metric
+            flex: 2
+            cellStyle:
+              fontWeight: bold
+          - field: q1
+            headerName: Q1
+            cellStyle:
+              backgroundColor: '#e6f7ff'
+              textAlign: right
+          - field: q2
+            headerName: Q2
+            cellStyle:
+              backgroundColor: '#f6ffed'
+              textAlign: right
+          - field: q3
+            headerName: Q3
+            cellStyle:
+              backgroundColor: '#fff7e6'
+              textAlign: right
+          - field: q4
+            headerName: Q4
+            cellStyle:
+              backgroundColor: '#fff1f0'
+              textAlign: right
+        rowData:
+          - metric: Revenue ($K)
+            q1: 1250
+            q2: 1380
+            q3: 1520
+            q4: 1690
+          - metric: New Customers
+            q1: 145
+            q2: 162
+            q3: 178
+            q4: 201
+          - metric: Churn Rate (%)
+            q1: 3.2
+            q2: 2.8
+            q3: 2.5
+            q4: 2.1
+          - metric: NPS Score
+            q1: 42
+            q2: 45
+            q3: 48
+            q4: 52
+          - metric: Support Tickets
+            q1: 892
+            q2: 756
+            q3: 623
+            q4: 541
+
+- title: Large Dataset
+  fullWidth: true
+  blocks:
+    - id: large_dataset
+      type: AgGridAlpine
+      properties:
+        height: 400
+        pagination: true
+        paginationPageSize: 8
+        defaultColDef:
+          sortable: true
+          filter: true
+          resizable: true
+        columnDefs:
+          - field: id
+            headerName: '#'
+            width: 70
+            pinned: left
+          - field: firstName
+            headerName: First Name
+            flex: 1
+          - field: lastName
+            headerName: Last Name
+            flex: 1
+          - field: email
+            headerName: Email
+            flex: 2
+          - field: department
+            headerName: Department
+            flex: 1
+          - field: salary
+            headerName: Salary ($)
+            width: 120
+          - field: city
+            headerName: City
+            flex: 1
+        rowData:
+          - id: 1
+            firstName: Olivia
+            lastName: Martinez
+            email: olivia.martinez@corp.com
+            department: Engineering
+            salary: 95000
+            city: San Francisco
+          - id: 2
+            firstName: Liam
+            lastName: Thompson
+            email: liam.thompson@corp.com
+            department: Marketing
+            salary: 72000
+            city: New York
+          - id: 3
+            firstName: Emma
+            lastName: Davis
+            email: emma.davis@corp.com
+            department: Sales
+            salary: 68000
+            city: Chicago
+          - id: 4
+            firstName: Noah
+            lastName: Anderson
+            email: noah.anderson@corp.com
+            department: Engineering
+            salary: 105000
+            city: Seattle
+          - id: 5
+            firstName: Ava
+            lastName: Wilson
+            email: ava.wilson@corp.com
+            department: Design
+            salary: 82000
+            city: Austin
+          - id: 6
+            firstName: William
+            lastName: Taylor
+            email: william.taylor@corp.com
+            department: Finance
+            salary: 88000
+            city: Boston
+          - id: 7
+            firstName: Sophia
+            lastName: Moore
+            email: sophia.moore@corp.com
+            department: HR
+            salary: 71000
+            city: Denver
+          - id: 8
+            firstName: James
+            lastName: Jackson
+            email: james.jackson@corp.com
+            department: Engineering
+            salary: 112000
+            city: San Francisco
+          - id: 9
+            firstName: Isabella
+            lastName: White
+            email: isabella.white@corp.com
+            department: Marketing
+            salary: 76000
+            city: Los Angeles
+          - id: 10
+            firstName: Benjamin
+            lastName: Harris
+            email: benjamin.harris@corp.com
+            department: Sales
+            salary: 65000
+            city: Miami
+          - id: 11
+            firstName: Mia
+            lastName: Clark
+            email: mia.clark@corp.com
+            department: Engineering
+            salary: 99000
+            city: Portland
+          - id: 12
+            firstName: Lucas
+            lastName: Lewis
+            email: lucas.lewis@corp.com
+            department: Design
+            salary: 85000
+            city: Austin
+          - id: 13
+            firstName: Charlotte
+            lastName: Robinson
+            email: charlotte.robinson@corp.com
+            department: Finance
+            salary: 91000
+            city: New York
+          - id: 14
+            firstName: Henry
+            lastName: Walker
+            email: henry.walker@corp.com
+            department: HR
+            salary: 69000
+            city: Chicago
+          - id: 15
+            firstName: Amelia
+            lastName: Young
+            email: amelia.young@corp.com
+            department: Engineering
+            salary: 108000
+            city: Seattle

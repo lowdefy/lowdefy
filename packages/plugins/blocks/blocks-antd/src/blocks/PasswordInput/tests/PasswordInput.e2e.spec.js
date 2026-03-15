@@ -72,8 +72,10 @@ test.describe('PasswordInput Block', () => {
   });
 
   test('renders borderless style', async ({ page }) => {
-    const input = getInput(page, 'passwordinput_borderless');
-    await expect(input).toHaveClass(/ant-input-borderless/);
+    // In antd v6, the borderless variant class is on the affix wrapper, not the input element
+    const block = getBlock(page, 'passwordinput_borderless');
+    const affixWrapper = block.locator('.ant-input-affix-wrapper');
+    await expect(affixWrapper).toHaveClass(/ant-input-borderless/);
   });
 
   test('hides visibility toggle when visibilityToggle is false', async ({ page }) => {

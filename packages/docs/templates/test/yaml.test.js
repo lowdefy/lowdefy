@@ -96,7 +96,11 @@ test('yaml propertiesGetterTransformer', () => {
 });
 
 test('yaml defaultValueTransformer', () => {
-  expect(defaultValueTransformer(schema)).toMatchInlineSnapshot(`Object {}`);
+  expect(defaultValueTransformer(schema)).toMatchInlineSnapshot(`
+    Object {
+      "field": "",
+    }
+  `);
   const schemaDV = {
     properties: {
       type: 'object',
@@ -171,7 +175,7 @@ test('yaml schemaNested propertiesFormTransformer', () => {
         ],
         "id": "block.properties.obj",
         "layout": Object {
-          "contentGutter": 0,
+          "gap": 0,
         },
         "properties": Object {
           "bodyStyle": Object {
@@ -233,7 +237,13 @@ test('yaml schemaNested propertiesGetterTransformer', () => {
 });
 
 test('yaml schemaNested defaultValueTransformer', () => {
-  expect(defaultValueTransformer(schemaNested)).toMatchInlineSnapshot(`Object {}`);
+  expect(defaultValueTransformer(schemaNested)).toMatchInlineSnapshot(`
+    Object {
+      "obj": Object {
+        "field": "",
+      },
+    }
+  `);
   const schemaDV = {
     properties: {
       type: 'object',
@@ -314,7 +324,7 @@ test('yaml schemaYamlInArray propertiesFormTransformer', () => {
         ],
         "id": "block.properties.arr",
         "layout": Object {
-          "contentGutter": 0,
+          "gap": 0,
         },
         "properties": Object {
           "itemStyle": Object {
@@ -474,7 +484,7 @@ test('yaml schemaYamlInObjectInArray propertiesFormTransformer', () => {
             ],
             "id": "block.properties.arr.$",
             "layout": Object {
-              "contentGutter": 0,
+              "gap": 0,
             },
             "properties": Object {
               "bodyStyle": Object {
@@ -488,7 +498,7 @@ test('yaml schemaYamlInObjectInArray propertiesFormTransformer', () => {
         ],
         "id": "block.properties.arr",
         "layout": Object {
-          "contentGutter": 0,
+          "gap": 0,
         },
         "properties": Object {
           "itemStyle": Object {

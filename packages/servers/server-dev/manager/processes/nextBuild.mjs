@@ -30,7 +30,7 @@ function nextBuild({ bin, logger }) {
     try {
       await spawnProcess({
         command: 'node',
-        args: [bin.next, 'build'],
+        args: ['--max-old-space-size=4096', bin.next, 'build'],
         stdOutLineHandler: (line) => logger.debug(line),
         stdErrLineHandler: (line) => {
           logger.debug(line);

@@ -43,7 +43,23 @@ test('oneOf propertiesFormTransformer', () => {
   expect(propertiesFormTransformer(schema)).toMatchInlineSnapshot(`
     Array [
       Object {
-        "areas": Object {
+        "id": "field",
+        "layout": Object {
+          "gap": 0,
+        },
+        "properties": Object {
+          "bodyStyle": Object {
+            "padding": 0,
+          },
+          "headerStyle": Object {
+            "background": "rgba(0, 0, 0, 0.06)",
+            "color": "rgba(0, 0, 0, 0.45)",
+          },
+          "inner": true,
+          "size": "small",
+          "title": "Select field type",
+        },
+        "slots": Object {
           "content": Object {
             "blocks": Array [
               Object {
@@ -131,22 +147,6 @@ test('oneOf propertiesFormTransformer', () => {
               },
             ],
           },
-        },
-        "id": "field",
-        "layout": Object {
-          "contentGutter": 0,
-        },
-        "properties": Object {
-          "bodyStyle": Object {
-            "padding": 0,
-          },
-          "headerStyle": Object {
-            "background": "rgba(0, 0, 0, 0.06)",
-            "color": "rgba(0, 0, 0, 0.45)",
-          },
-          "inner": true,
-          "size": "small",
-          "title": "Select field type",
         },
         "type": "Card",
       },
@@ -286,7 +286,23 @@ test('oneOf schemaStrObj propertiesFormTransformer', () => {
   expect(propertiesFormTransformer(schemaStrObj)).toMatchInlineSnapshot(`
     Array [
       Object {
-        "areas": Object {
+        "id": "field",
+        "layout": Object {
+          "gap": 0,
+        },
+        "properties": Object {
+          "bodyStyle": Object {
+            "padding": 0,
+          },
+          "headerStyle": Object {
+            "background": "rgba(0, 0, 0, 0.06)",
+            "color": "rgba(0, 0, 0, 0.45)",
+          },
+          "inner": true,
+          "size": "small",
+          "title": "Select field type",
+        },
+        "slots": Object {
           "content": Object {
             "blocks": Array [
               Object {
@@ -359,7 +375,7 @@ test('oneOf schemaStrObj propertiesFormTransformer', () => {
                 ],
                 "id": "__object_block.properties.field",
                 "layout": Object {
-                  "contentGutter": 0,
+                  "gap": 0,
                 },
                 "properties": Object {
                   "bodyStyle": Object {
@@ -406,22 +422,6 @@ test('oneOf schemaStrObj propertiesFormTransformer', () => {
               },
             ],
           },
-        },
-        "id": "field",
-        "layout": Object {
-          "contentGutter": 0,
-        },
-        "properties": Object {
-          "bodyStyle": Object {
-            "padding": 0,
-          },
-          "headerStyle": Object {
-            "background": "rgba(0, 0, 0, 0.06)",
-            "color": "rgba(0, 0, 0, 0.45)",
-          },
-          "inner": true,
-          "size": "small",
-          "title": "Select field type",
         },
         "type": "Card",
       },
@@ -572,7 +572,23 @@ test('oneOf propertiesFormTransformer schemaOneOfStrYaml', () => {
   expect(propertiesFormTransformer(schemaOneOfStrYaml)).toMatchInlineSnapshot(`
     Array [
       Object {
-        "areas": Object {
+        "id": "field",
+        "layout": Object {
+          "gap": 0,
+        },
+        "properties": Object {
+          "bodyStyle": Object {
+            "padding": 0,
+          },
+          "headerStyle": Object {
+            "background": "rgba(0, 0, 0, 0.06)",
+            "color": "rgba(0, 0, 0, 0.45)",
+          },
+          "inner": true,
+          "size": "small",
+          "title": "Select field type",
+        },
+        "slots": Object {
           "content": Object {
             "blocks": Array [
               Object {
@@ -663,22 +679,6 @@ test('oneOf propertiesFormTransformer schemaOneOfStrYaml', () => {
               },
             ],
           },
-        },
-        "id": "field",
-        "layout": Object {
-          "contentGutter": 0,
-        },
-        "properties": Object {
-          "bodyStyle": Object {
-            "padding": 0,
-          },
-          "headerStyle": Object {
-            "background": "rgba(0, 0, 0, 0.06)",
-            "color": "rgba(0, 0, 0, 0.45)",
-          },
-          "inner": true,
-          "size": "small",
-          "title": "Select field type",
         },
         "type": "Card",
       },

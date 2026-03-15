@@ -15,100 +15,100 @@
 */
 
 import React from 'react';
-import { Checkbox, Space } from 'antd';
+import { Checkbox, ConfigProvider, Space } from 'antd';
 import { type } from '@lowdefy/helpers';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
 import Label from '../Label/Label.js';
 import getValueIndex from '../../getValueIndex.js';
 import getUniqueValues from '../../getUniqueValues.js';
+import withTheme from '../withTheme.js';
 
 const CheckboxSelector = ({
   blockId,
+  classNames = {},
   components,
   events,
   loading,
   properties,
   required,
+  styles = {},
   validation,
   value,
   methods,
 }) => {
   const uniqueValueOptions = getUniqueValues(properties.options || []);
+  const checkboxGroup = (
+    <Checkbox.Group
+      id={`${blockId}_input`}
+      className={classNames.element}
+      disabled={properties.disabled || loading}
+      style={styles.element}
+      onChange={(newVal) => {
+        const val = [];
+        newVal.forEach((nv) => {
+          val.push(
+            type.isPrimitive(uniqueValueOptions[nv])
+              ? uniqueValueOptions[nv]
+              : uniqueValueOptions[nv].value
+          );
+        });
+        methods.setValue(val);
+        methods.triggerEvent({ name: 'onChange', event: { value: val } });
+      }}
+      value={getValueIndex(value, uniqueValueOptions, true)}
+    >
+      <Space
+        direction={properties.direction}
+        wrap={type.isNone(properties.wrap) ? true : properties.wrap}
+        align={type.isNone(properties.align) ? 'start' : properties.align}
+      >
+        {uniqueValueOptions.map((opt, i) =>
+          type.isPrimitive(opt) ? (
+            <Checkbox id={`${blockId}_${i}`} key={i} value={`${i}`}>
+              {renderHtml({ html: `${opt}`, methods })}
+            </Checkbox>
+          ) : (
+            <Checkbox
+              id={`${blockId}_${i}`}
+              key={i}
+              value={`${i}`}
+              disabled={opt.disabled}
+              style={opt.style}
+            >
+              {type.isNone(opt.label)
+                ? renderHtml({ html: `${opt.value}`, methods })
+                : renderHtml({ html: opt.label, methods })}
+            </Checkbox>
+          )
+        )}
+      </Space>
+    </Checkbox.Group>
+  );
   return (
     <Label
       blockId={blockId}
+      classNames={classNames}
       components={components}
       events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}
+      styles={styles}
       content={{
-        content: () => (
-          <Checkbox.Group
-            id={`${blockId}_input`}
-            className={methods.makeCssClass([
-              properties.color && {
-                '& > label > span.ant-checkbox-checked:not(.ant-checkbox-disabled) > span': {
-                  backgroundColor: `${properties.color} !important`,
-                  borderColor: `${properties.color} !important`,
-                },
-              },
-              properties.inputStyle,
-            ])}
-            disabled={properties.disabled || loading}
-            onChange={(newVal) => {
-              const val = [];
-              newVal.forEach((nv) => {
-                val.push(
-                  type.isPrimitive(uniqueValueOptions[nv])
-                    ? uniqueValueOptions[nv]
-                    : uniqueValueOptions[nv].value
-                );
-              });
-              methods.setValue(val);
-              methods.triggerEvent({ name: 'onChange', event: { value: val } });
-            }}
-            value={getValueIndex(value, uniqueValueOptions, true)}
-          >
-            <Space
-              direction={properties.direction}
-              wrap={type.isNone(properties.wrap) ? true : properties.wrap}
-              align={type.isNone(properties.align) ? 'start' : properties.align}
+        content: () =>
+          properties.color ? (
+            <ConfigProvider
+              theme={{ components: { Checkbox: { colorPrimary: properties.color } } }}
             >
-              {uniqueValueOptions.map((opt, i) =>
-                type.isPrimitive(opt) ? (
-                  <Checkbox id={`${blockId}_${i}`} key={i} value={`${i}`}>
-                    {renderHtml({ html: `${opt}`, methods })}
-                  </Checkbox>
-                ) : (
-                  <Checkbox
-                    id={`${blockId}_${i}`}
-                    key={i}
-                    value={`${i}`}
-                    disabled={opt.disabled}
-                    className={methods.makeCssClass(opt.style)}
-                  >
-                    {type.isNone(opt.label)
-                      ? renderHtml({ html: `${opt.value}`, methods })
-                      : renderHtml({ html: opt.label, methods })}
-                  </Checkbox>
-                )
-              )}
-            </Space>
-          </Checkbox.Group>
-        ),
+              {checkboxGroup}
+            </ConfigProvider>
+          ) : (
+            checkboxGroup
+          ),
       }}
     />
   );
 };
 
-CheckboxSelector.defaultProps = blockDefaultProps;
-CheckboxSelector.meta = {
-  valueType: 'array',
-  category: 'input',
-  icons: [...Label.meta.icons],
-  styles: ['blocks/CheckboxSelector/style.less'],
-};
-
-export default CheckboxSelector;
+export default withTheme('Checkbox', withBlockDefaults(CheckboxSelector));

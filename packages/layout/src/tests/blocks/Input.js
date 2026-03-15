@@ -15,8 +15,7 @@
 */
 
 import React from 'react';
-import { Input } from 'antd';
 
-const Blank = ({ blockId, properties }) => <Input id={blockId} {...properties} />;
+const Blank = ({ blockId, properties }) => <input id={blockId} {...properties} />;
 
 export default Blank;

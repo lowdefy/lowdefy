@@ -389,7 +389,7 @@ blocks:
     type: ConfirmModal
     properties:
       title: Modal with Content Area
-    areas:
+    slots:
       content:
         blocks:
           - id: cm_content_area_text

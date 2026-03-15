@@ -1,0 +1,493 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Value and Title
+  blocks:
+    - id: value_number
+      type: Statistic
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Active Users
+        value: 112893
+    - id: value_decimal
+      type: Statistic
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Account Balance
+        value: 112893.12
+        precision: 2
+    - id: value_string
+      type: Statistic
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Status
+        value: Running
+    - id: value_version
+      type: Statistic
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Version
+        value: v4.2.1
+
+- title: Prefix and Suffix
+  blocks:
+    - id: prefix_dollar
+      type: Statistic
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Revenue
+        value: 24500
+        prefix: $
+    - id: suffix_percent
+      type: Statistic
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Completion
+        value: 93.5
+        suffix: '%'
+    - id: suffix_unit
+      type: Statistic
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Response Time
+        value: 42
+        suffix: ms
+    - id: prefix_suffix_price
+      type: Statistic
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Price
+        value: 49.99
+        prefix: $
+        suffix: /mo
+
+- title: Prefix and Suffix Icons
+  blocks:
+    - id: prefixicon_like
+      type: Statistic
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Feedback
+        value: 1128
+        prefixIcon: AiOutlineLike
+    - id: prefixicon_arrow_up
+      type: Statistic
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Growth
+        value: 11.28
+        suffix: '%'
+        prefixIcon:
+          name: AiOutlineArrowUp
+          color: '#3f8600'
+    - id: prefixicon_arrow_down
+      type: Statistic
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Decline
+        value: 9.3
+        suffix: '%'
+        prefixIcon:
+          name: AiOutlineArrowDown
+          color: '#cf1322'
+    - id: suffixicon_rise
+      type: Statistic
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Revenue Trend
+        value: 12500
+        prefix: $
+        suffixIcon:
+          name: AiOutlineRise
+          color: '#3f8600'
+    - id: suffixicon_info
+      type: Statistic
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Sessions
+        value: 8920
+        suffixIcon: AiOutlineInfoCircle
+
+- title: Precision
+  blocks:
+    - id: precision_0
+      type: Statistic
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Total Sales
+        value: 142587
+        precision: 0
+    - id: precision_1
+      type: Statistic
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Average Rating
+        value: 4.7
+        precision: 1
+    - id: precision_2
+      type: Statistic
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Average Price
+        value: 49.99
+        precision: 2
+        prefix: $
+    - id: precision_4
+      type: Statistic
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Exchange Rate
+        value: 1.3245
+        precision: 4
+
+- title: Separators
+  blocks:
+    - id: sep_default
+      type: Statistic
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Default (Comma)
+        value: 1234567.89
+        precision: 2
+    - id: sep_space
+      type: Statistic
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Space Separator
+        value: 1234567.89
+        precision: 2
+        groupSeparator: ' '
+    - id: sep_european
+      type: Statistic
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: European Format
+        value: 1234567.89
+        precision: 2
+        groupSeparator: '.'
+        decimalSeparator: ','
+
+- title: Loading State
+  blocks:
+    - id: loading_true
+      type: Statistic
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Fetching Data
+        value: 0
+        loading: true
+    - id: loading_false
+      type: Statistic
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Data Loaded
+        value: 12345
+        loading: false
+    - id: loading_with_prefix
+      type: Statistic
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Loading Revenue
+        value: 52800
+        prefix: $
+        loading: true
+
+- title: HTML in Title
+  blocks:
+    - id: html_bold_title
+      type: Statistic
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: '<b>Important</b> Metric'
+        value: 98.7
+        suffix: '%'
+    - id: html_colored_title
+      type: Statistic
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: '<span style="color: #1677ff">Active</span> Connections'
+        value: 1024
+    - id: html_icon_title
+      type: Statistic
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: 'Server Status &#x2705;'
+        value: Healthy
+
+- title: Style and CSS
+  blocks:
+    - id: css_tailwind_bg
+      type: Statistic
+      layout:
+        flex: 0 0 auto
+      class: bg-green-50 p-4 rounded-lg border border-green-200
+      properties:
+        title: Monthly Revenue
+        value: 52800
+        prefix: $
+    - id: css_tailwind_blue
+      type: Statistic
+      layout:
+        flex: 0 0 auto
+      class: bg-blue-50 p-4 rounded-lg border border-blue-200
+      properties:
+        title: Active Users
+        value: 2847
+        prefixIcon: AiOutlineTeam
+    - id: css_tailwind_center
+      type: Statistic
+      layout:
+        flex: 0 0 auto
+      class: text-center bg-purple-50 p-4 rounded-lg border border-purple-200
+      properties:
+        title: Avg. Score
+        value: 94.2
+        suffix: '%'
+    - id: css_inline_value
+      type: Statistic
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Error Rate
+        value: 0.12
+        suffix: '%'
+      style:
+        --element:
+          padding: 16px 24px
+          borderRadius: 8px
+          backgroundColor: '#fff2f0'
+          border: 1px solid #ffa39e
+        --value:
+          color: '#cf1322'
+          fontSize: 28
+
+- title: Theme Token Overrides
+  blocks:
+    - id: theme_large_title
+      type: Statistic
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Large Title Size
+        value: 42
+        theme:
+          titleFontSize: 20
+    - id: theme_large_content
+      type: Statistic
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Large Value Font
+        value: 99.9
+        suffix: '%'
+        theme:
+          contentFontSize: 36
+    - id: theme_custom_colors
+      type: Statistic
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Custom Color Theme
+        value: 1250
+        prefix: $
+        theme:
+          colorText: '#722ed1'
+          colorTextDescription: '#531dab'
+    - id: theme_font_family
+      type: Statistic
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Custom Font
+        value: 88750
+        theme:
+          contentFontFamily: Georgia, serif
+          contentFontWeight: '600'
+
+- title: Statistic in Dashboard Overview
+  blocks:
+    - id: dashboard_card
+      type: Card
+      properties:
+        title: System Overview
+        size: small
+      blocks:
+        - id: dashboard_row
+          type: Box
+          layout:
+            gap: 16
+          blocks:
+            - id: dash_revenue
+              type: Statistic
+              layout:
+                flex: 1 1 0
+              class: bg-green-50 p-4 rounded-lg
+              properties:
+                title: Total Revenue
+                value: 126560
+                prefix: $
+                precision: 0
+                prefixIcon:
+                  name: AiOutlineDollarCircle
+                  color: '#52c41a'
+            - id: dash_users
+              type: Statistic
+              layout:
+                flex: 1 1 0
+              class: bg-blue-50 p-4 rounded-lg
+              properties:
+                title: Active Users
+                value: 8920
+                prefixIcon:
+                  name: AiOutlineTeam
+                  color: '#1677ff'
+            - id: dash_errors
+              type: Statistic
+              layout:
+                flex: 1 1 0
+              class: bg-red-50 p-4 rounded-lg
+              properties:
+                title: Error Rate
+                value: 0.12
+                suffix: '%'
+                precision: 2
+                prefixIcon:
+                  name: AiOutlineBug
+                  color: '#ff4d4f'
+            - id: dash_uptime
+              type: Statistic
+              layout:
+                flex: 1 1 0
+              class: bg-green-50 p-4 rounded-lg
+              properties:
+                title: Uptime
+                value: 99.98
+                suffix: '%'
+                precision: 2
+                prefixIcon:
+                  name: AiOutlineCheckCircle
+                  color: '#52c41a'
+        - id: dashboard_updated
+          type: Markdown
+          properties:
+            content: '_Last updated 2 minutes ago_'
+
+- title: Statistic in Sales Report
+  blocks:
+    - id: sales_card
+      type: Card
+      properties:
+        title: Q4 Sales Report
+        size: small
+      blocks:
+        - id: sales_stats
+          type: Box
+          layout:
+            gap: 16
+          blocks:
+            - id: sales_total
+              type: Statistic
+              layout:
+                flex: 1 1 0
+              properties:
+                title: Total Sales
+                value: 284300
+                prefix: $
+                precision: 0
+                prefixIcon:
+                  name: AiOutlineArrowUp
+                  color: '#3f8600'
+                theme:
+                  contentFontSize: 28
+            - id: sales_orders
+              type: Statistic
+              layout:
+                flex: 1 1 0
+              properties:
+                title: Orders
+                value: 1523
+                prefixIcon: AiOutlineShoppingCart
+            - id: sales_avg
+              type: Statistic
+              layout:
+                flex: 1 1 0
+              properties:
+                title: Avg. Order Value
+                value: 186.67
+                prefix: $
+                precision: 2
+        - id: sales_actions
+          type: Box
+          layout:
+            gap: 8
+            justify: flex-end
+          blocks:
+            - id: sales_export_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Export Report
+                icon: AiOutlineDownload
+                color: primary
+                variant: outlined
+              events:
+                onClick:
+                  - id: sales_export_msg
+                    type: DisplayMessage
+                    params:
+                      content: Report exported successfully.
+                      status: success
+            - id: sales_share_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Share
+                icon: AiOutlineShareAlt
+                color: primary
+                variant: solid
+              events:
+                onClick:
+                  - id: sales_share_msg
+                    type: DisplayMessage
+                    params:
+                      content: Share link copied to clipboard.
+                      status: success

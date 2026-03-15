@@ -16,28 +16,38 @@
 
 import React from 'react';
 
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { Descriptions } from 'antd';
 import { type } from '@lowdefy/helpers';
 
-const DescriptionsBlock = ({ blockId, content, properties, methods }) => {
+import withTheme from '../withTheme.js';
+
+const DescriptionsBlock = ({
+  blockId,
+  classNames = {},
+  content,
+  properties,
+  methods,
+  styles = {},
+}) => {
   let dataItem = properties.items || [];
   if (type.isObject(dataItem)) {
     dataItem = Object.keys(dataItem).map((key) => ({ value: dataItem[key], key }));
   }
-  const { makeCssClass } = methods;
   return (
     <Descriptions
       id={blockId}
       bordered={properties.bordered}
       colon={properties.colon}
       column={properties.column}
-      contentStyle={methods.makeCssClass(properties.contentStyle, true)}
       extra={content.extra && content.extra()}
-      labelStyle={methods.makeCssClass(properties.labelStyle, true)}
       layout={properties.layout}
       size={properties.size}
       title={renderHtml({ html: properties.title, methods })}
+      className={classNames.element}
+      classNames={{ content: classNames.content, label: classNames.label }}
+      style={styles.element}
+      styles={{ content: styles.content, label: styles.label }}
     >
       {dataItem.map((item, i) => {
         let row = item;
@@ -62,11 +72,11 @@ const DescriptionsBlock = ({ blockId, content, properties, methods }) => {
               row.span ||
               (type.isFunction(itemOption.span) ? itemOption.span(row, i) : itemOption.span)
             }
-            className={`${makeCssClass([
-              { whiteSpace: 'pre-wrap' },
-              type.isFunction(itemOption.style) ? itemOption.style(row, i) : itemOption.style,
-              row.style,
-            ])}`}
+            style={{
+              whiteSpace: 'pre-wrap',
+              ...(type.isFunction(itemOption.style) ? itemOption.style(row, i) : itemOption.style),
+              ...row.style,
+            }}
           >
             {renderHtml({ html: value, methods })}
           </Descriptions.Item>
@@ -76,11 +86,4 @@ const DescriptionsBlock = ({ blockId, content, properties, methods }) => {
   );
 };
 
-DescriptionsBlock.defaultProps = blockDefaultProps;
-DescriptionsBlock.meta = {
-  category: 'container',
-  icons: [],
-  styles: ['blocks/Descriptions/style.less'],
-};
-
-export default DescriptionsBlock;
+export default withTheme('Descriptions', withBlockDefaults(DescriptionsBlock));

@@ -1,4 +1,3 @@
-/* eslint-disable import/namespace */
 /*
   Copyright 2020-2026 Lowdefy, Inc
 
@@ -14,11 +13,8 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import * as connections from './connections.js';
 
 export default {
-  connections: Object.keys(connections),
-  requests: Object.keys(connections)
-    .map((connection) => Object.keys(connections[connection].requests))
-    .flat(),
+  connections: ['Knex'],
+  requests: ['KnexBuilder', 'KnexRaw'],
 };

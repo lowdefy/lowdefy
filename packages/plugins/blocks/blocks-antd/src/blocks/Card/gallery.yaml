@@ -1,0 +1,1041 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic Card
+  blocks:
+    - id: basic_card
+      type: Card
+      properties:
+        title: Card Title
+      blocks:
+        - id: basic_card_p1
+          type: Paragraph
+          properties:
+            content: Cards provide a flexible and extensible content container with multiple variants. This is the default card with a simple title and body content.
+        - id: basic_card_p2
+          type: Paragraph
+          properties:
+            content: You can place any blocks inside the card body using the standard blocks key.
+
+    - id: basic_no_title
+      type: Card
+      blocks:
+        - id: basic_no_title_content
+          type: Paragraph
+          properties:
+            content: A card without a title. The header area is completely hidden, leaving only the body content. Useful as a simple elevated content container.
+
+- title: Sizes
+  blocks:
+    - id: size_default_card
+      type: Card
+      layout:
+        flex: 1 1 0
+      properties:
+        title: Default Size
+        size: default
+      blocks:
+        - id: size_default_p
+          type: Paragraph
+          properties:
+            content: Default size card with standard padding (24px) and normal header height (56px). This is the most common card size for general content.
+        - id: size_default_row
+          type: Box
+          layout:
+            gap: 8
+          blocks:
+            - id: size_default_tag1
+              type: Tag
+              properties:
+                title: Standard
+                color: blue
+            - id: size_default_tag2
+              type: Tag
+              properties:
+                title: 24px padding
+                color: default
+
+    - id: size_small_card
+      type: Card
+      layout:
+        flex: 1 1 0
+      properties:
+        title: Small Size
+        size: small
+      blocks:
+        - id: size_small_p
+          type: Paragraph
+          properties:
+            content: Small size card with compact padding (12px) and shorter header (38px). Ideal for dense layouts, dashboards, or sidebar widgets.
+        - id: size_small_row
+          type: Box
+          layout:
+            gap: 8
+          blocks:
+            - id: size_small_tag1
+              type: Tag
+              properties:
+                title: Compact
+                color: green
+            - id: size_small_tag2
+              type: Tag
+              properties:
+                title: 12px padding
+                color: default
+
+- title: Bordered vs Borderless
+  blocks:
+    - id: border_wrapper
+      type: Box
+      class: bg-gray-100 p-6 rounded-lg
+      layout:
+        gap: 16
+      blocks:
+        - id: bordered_card
+          type: Card
+          layout:
+            flex: 1 1 0
+          properties:
+            title: Bordered (default)
+            bordered: true
+          blocks:
+            - id: bordered_content
+              type: Paragraph
+              properties:
+                content: The default card has a visible border. This clearly separates the card from its surroundings.
+
+        - id: borderless_card
+          type: Card
+          layout:
+            flex: 1 1 0
+          properties:
+            title: Borderless
+            bordered: false
+          blocks:
+            - id: borderless_content
+              type: Paragraph
+              properties:
+                content: A borderless card blends into its container. Best used on colored backgrounds where the card's white fill provides enough contrast.
+
+- title: Card with Extra Slot
+  blocks:
+    - id: extra_text_card
+      type: Card
+      properties:
+        title: Recent Activity
+      slots:
+        extra:
+          blocks:
+            - id: extra_text_link
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: View All
+                color: primary
+                variant: link
+                size: small
+      blocks:
+        - id: extra_text_p1
+          type: Paragraph
+          properties:
+            content: 'User John updated the project settings 2 minutes ago.'
+        - id: extra_text_p2
+          type: Paragraph
+          properties:
+            content: 'User Sarah added 3 new team members 15 minutes ago.'
+        - id: extra_text_p3
+          type: Paragraph
+          properties:
+            content: 'Deployment completed successfully 1 hour ago.'
+
+    - id: extra_buttons_card
+      type: Card
+      properties:
+        title: Project Settings
+      slots:
+        extra:
+          blocks:
+            - id: extra_btn_row
+              type: Box
+              layout:
+                gap: 8
+              blocks:
+                - id: extra_btn_edit
+                  type: Button
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Edit
+                    icon: AiOutlineEdit
+                    color: primary
+                    variant: outlined
+                    size: small
+                - id: extra_btn_more
+                  type: Button
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    icon: AiOutlineEllipsis
+                    color: default
+                    variant: text
+                    size: small
+                    hideTitle: true
+      blocks:
+        - id: extra_buttons_content
+          type: Paragraph
+          properties:
+            content: The extra slot renders content in the top-right corner of the card header, next to the title. It accepts any blocks, commonly used for action buttons or links.
+
+- title: Card with Title Slot
+  blocks:
+    - id: title_slot_card
+      type: Card
+      slots:
+        title:
+          blocks:
+            - id: title_slot_row
+              type: Box
+              layout:
+                gap: 12
+                align: center
+              blocks:
+                - id: title_slot_avatar
+                  type: Avatar
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    icon: AiOutlineUser
+                    color: '#1677ff'
+                    backgroundColor: '#e6f4ff'
+                - id: title_slot_text
+                  type: Title
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    content: Custom Title Layout
+                    level: 5
+      blocks:
+        - id: title_slot_content
+          type: Paragraph
+          properties:
+            content: The title slot lets you replace the default text title with any combination of blocks. Here we use an Avatar and Title block side by side. This overrides the properties.title string.
+
+    - id: title_slot_badge_card
+      type: Card
+      slots:
+        title:
+          blocks:
+            - id: title_badge_row
+              type: Box
+              layout:
+                gap: 8
+                align: center
+              blocks:
+                - id: title_badge_text
+                  type: Title
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    content: Notifications
+                    level: 5
+                - id: title_badge_tag
+                  type: Tag
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: '12 new'
+                    color: red
+        extra:
+          blocks:
+            - id: title_badge_extra_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Mark all read
+                color: primary
+                variant: link
+                size: small
+      blocks:
+        - id: title_badge_content
+          type: Paragraph
+          properties:
+            content: Combining the title slot with the extra slot gives you full control over the entire header area.
+
+- title: Card with Cover Slot
+  blocks:
+    - id: cover_card_1
+      type: Card
+      layout:
+        flex: 1 1 0
+      properties:
+        title: Mountain Landscape
+        hoverable: true
+      slots:
+        cover:
+          blocks:
+            - id: cover_img_1
+              type: Html
+              properties:
+                html: '<img alt="landscape" src="https://picsum.photos/seed/mountain/600/300" style="width:100%; display:block;" />'
+      blocks:
+        - id: cover_card_1_desc
+          type: Paragraph
+          properties:
+            content: The cover slot renders content above the card body, typically used for images. It sits outside the body padding for edge-to-edge display.
+
+    - id: cover_card_2
+      type: Card
+      layout:
+        flex: 1 1 0
+      properties:
+        hoverable: true
+      slots:
+        cover:
+          blocks:
+            - id: cover_img_2
+              type: Html
+              properties:
+                html: '<img alt="architecture" src="https://picsum.photos/seed/building/600/300" style="width:100%; display:block;" />'
+      blocks:
+        - id: cover_card_2_title
+          type: Title
+          properties:
+            content: Architecture Photography
+            level: 5
+        - id: cover_card_2_desc
+          type: Paragraph
+          properties:
+            content: A cover card without a header title. The title is placed inside the body instead, giving a magazine-style layout.
+        - id: cover_card_2_tags
+          type: Box
+          layout:
+            gap: 8
+          blocks:
+            - id: cover_card_2_tag1
+              type: Tag
+              properties:
+                title: Photography
+                color: blue
+            - id: cover_card_2_tag2
+              type: Tag
+              properties:
+                title: Featured
+                color: gold
+
+- title: Inner Cards
+  blocks:
+    - id: inner_outer
+      type: Card
+      properties:
+        title: Group Title
+      slots:
+        extra:
+          blocks:
+            - id: inner_outer_extra
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: More
+                color: primary
+                variant: link
+                size: small
+      blocks:
+        - id: inner_first
+          type: Card
+          properties:
+            title: Inner Card One
+            inner: true
+          blocks:
+            - id: inner_first_content
+              type: Paragraph
+              properties:
+                content: Inner cards have a gray background and are designed for nesting inside a parent card. They provide visual grouping without extra border weight.
+        - id: inner_second
+          type: Card
+          properties:
+            title: Inner Card Two
+            inner: true
+          blocks:
+            - id: inner_second_content
+              type: Paragraph
+              properties:
+                content: Multiple inner cards can stack within a parent to organize related sections. Each has its own title and content area.
+        - id: inner_third
+          type: Card
+          properties:
+            title: Inner Card Three
+            inner: true
+            size: small
+          blocks:
+            - id: inner_third_content
+              type: Paragraph
+              properties:
+                content: Inner cards also support the small size variant for more compact layouts.
+
+- title: Hoverable Cards
+  blocks:
+    - id: hover_card_1
+      type: Card
+      layout:
+        flex: 1 1 0
+      properties:
+        title: Dashboard
+        hoverable: true
+      slots:
+        extra:
+          blocks:
+            - id: hover_card_1_icon
+              type: Icon
+              layout:
+                flex: 0 0 auto
+              properties:
+                name: AiOutlineDashboard
+                color: '#1677ff'
+                size: 20
+      blocks:
+        - id: hover_card_1_stat
+          type: Statistic
+          properties:
+            title: Active Users
+            value: 1248
+        - id: hover_card_1_p
+          type: Paragraph
+          properties:
+            content: Hover over any card in this section to see the elevation shadow effect. Commonly used for clickable card grids.
+
+    - id: hover_card_2
+      type: Card
+      layout:
+        flex: 1 1 0
+      properties:
+        title: Revenue
+        hoverable: true
+      slots:
+        extra:
+          blocks:
+            - id: hover_card_2_icon
+              type: Icon
+              layout:
+                flex: 0 0 auto
+              properties:
+                name: AiOutlineDollarCircle
+                color: '#52c41a'
+                size: 20
+      blocks:
+        - id: hover_card_2_stat
+          type: Statistic
+          properties:
+            title: Monthly Revenue
+            value: 48650
+            prefix: $
+        - id: hover_card_2_tag
+          type: Tag
+          properties:
+            title: +12.5%
+            color: success
+
+    - id: hover_card_3
+      type: Card
+      layout:
+        flex: 1 1 0
+      properties:
+        title: Tasks
+        hoverable: true
+      slots:
+        extra:
+          blocks:
+            - id: hover_card_3_icon
+              type: Icon
+              layout:
+                flex: 0 0 auto
+              properties:
+                name: AiOutlineCheckCircle
+                color: '#faad14'
+                size: 20
+      blocks:
+        - id: hover_card_3_stat
+          type: Statistic
+          properties:
+            title: Completed Today
+            value: 37
+        - id: hover_card_3_progress
+          type: Progress
+          properties:
+            percent: 74
+
+- title: Rich Content Cards
+  blocks:
+    - id: rich_profile_card
+      type: Card
+      layout:
+        flex: 1 1 0
+      blocks:
+        - id: rich_profile_row
+          type: Box
+          layout:
+            gap: 16
+            align: center
+          blocks:
+            - id: rich_profile_avatar
+              type: Avatar
+              layout:
+                flex: 0 0 auto
+              properties:
+                icon: AiOutlineUser
+                size: 64
+                color: '#fff'
+                backgroundColor: '#1677ff'
+            - id: rich_profile_info
+              type: Box
+              layout:
+                flex: 1 1 0
+                direction: column
+                gap: 4
+              blocks:
+                - id: rich_profile_name
+                  type: Title
+                  properties:
+                    content: Jane Cooper
+                    level: 4
+                - id: rich_profile_role
+                  type: Paragraph
+                  properties:
+                    content: Senior Product Designer
+        - id: rich_profile_divider
+          type: Divider
+        - id: rich_profile_details
+          type: Descriptions
+          properties:
+            size: small
+            column: 1
+            items:
+              - label: Email
+                value: jane.cooper@example.com
+              - label: Location
+                value: San Francisco, CA
+              - label: Team
+                value: Design Systems
+
+    - id: rich_project_card
+      type: Card
+      layout:
+        flex: 1 1 0
+      properties:
+        title: Project Alpha
+      slots:
+        extra:
+          blocks:
+            - id: rich_project_tag
+              type: Tag
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Active
+                color: success
+      blocks:
+        - id: rich_project_desc
+          type: Paragraph
+          properties:
+            content: A web application for managing team workflows, project timelines, and resource allocation across departments.
+        - id: rich_project_divider
+          type: Divider
+        - id: rich_project_meta_row
+          type: Box
+          layout:
+            gap: 16
+          blocks:
+            - id: rich_project_stat1
+              type: Statistic
+              layout:
+                flex: 1 1 0
+              properties:
+                title: Tasks
+                value: 42
+            - id: rich_project_stat2
+              type: Statistic
+              layout:
+                flex: 1 1 0
+              properties:
+                title: Members
+                value: 8
+            - id: rich_project_stat3
+              type: Statistic
+              layout:
+                flex: 1 1 0
+              properties:
+                title: Days Left
+                value: 14
+        - id: rich_project_progress
+          type: Progress
+          properties:
+            percent: 68
+
+    - id: rich_pricing_card
+      type: Card
+      layout:
+        flex: 1 1 0
+      properties:
+        hoverable: true
+      blocks:
+        - id: rich_pricing_title
+          type: Title
+          properties:
+            content: Pro Plan
+            level: 4
+        - id: rich_pricing_price_row
+          type: Box
+          layout:
+            align: baseline
+            gap: 4
+          blocks:
+            - id: rich_pricing_amount
+              type: Title
+              layout:
+                flex: 0 0 auto
+              properties:
+                content: $29
+                level: 2
+            - id: rich_pricing_period
+              type: Paragraph
+              layout:
+                flex: 0 0 auto
+              properties:
+                content: / month
+        - id: rich_pricing_divider
+          type: Divider
+        - id: rich_pricing_f1
+          type: Paragraph
+          properties:
+            content: 'Unlimited projects'
+        - id: rich_pricing_f2
+          type: Paragraph
+          properties:
+            content: '50 GB storage'
+        - id: rich_pricing_f3
+          type: Paragraph
+          properties:
+            content: 'Priority support'
+        - id: rich_pricing_f4
+          type: Paragraph
+          properties:
+            content: 'Advanced analytics'
+        - id: rich_pricing_btn
+          type: Button
+          properties:
+            title: Get Started
+            color: primary
+            variant: solid
+            block: true
+
+- title: Card Grid Layout
+  blocks:
+    - id: grid_card_1
+      type: Card
+      layout:
+        flex: 1 1 280px
+      properties:
+        title: Analytics
+        size: small
+        hoverable: true
+      slots:
+        extra:
+          blocks:
+            - id: grid_card_1_icon
+              type: Icon
+              layout:
+                flex: 0 0 auto
+              properties:
+                name: AiOutlineBarChart
+                color: '#1677ff'
+      blocks:
+        - id: grid_card_1_p
+          type: Paragraph
+          properties:
+            content: Track key metrics and performance indicators across your application in real time.
+        - id: grid_card_1_tags
+          type: Box
+          layout:
+            gap: 8
+          blocks:
+            - id: grid_card_1_t1
+              type: Tag
+              properties:
+                title: Metrics
+                color: blue
+            - id: grid_card_1_t2
+              type: Tag
+              properties:
+                title: Real-time
+                color: cyan
+
+    - id: grid_card_2
+      type: Card
+      layout:
+        flex: 1 1 280px
+      properties:
+        title: Security
+        size: small
+        hoverable: true
+      slots:
+        extra:
+          blocks:
+            - id: grid_card_2_icon
+              type: Icon
+              layout:
+                flex: 0 0 auto
+              properties:
+                name: AiOutlineLock
+                color: '#52c41a'
+      blocks:
+        - id: grid_card_2_p
+          type: Paragraph
+          properties:
+            content: Role-based access control, audit logging, and two-factor authentication for your team.
+        - id: grid_card_2_tags
+          type: Box
+          layout:
+            gap: 8
+          blocks:
+            - id: grid_card_2_t1
+              type: Tag
+              properties:
+                title: RBAC
+                color: green
+            - id: grid_card_2_t2
+              type: Tag
+              properties:
+                title: 2FA
+                color: lime
+
+    - id: grid_card_3
+      type: Card
+      layout:
+        flex: 1 1 280px
+      properties:
+        title: Integrations
+        size: small
+        hoverable: true
+      slots:
+        extra:
+          blocks:
+            - id: grid_card_3_icon
+              type: Icon
+              layout:
+                flex: 0 0 auto
+              properties:
+                name: AiOutlineApi
+                color: '#722ed1'
+      blocks:
+        - id: grid_card_3_p
+          type: Paragraph
+          properties:
+            content: Connect with over 50 third-party services including Slack, GitHub, Jira, and more.
+        - id: grid_card_3_tags
+          type: Box
+          layout:
+            gap: 8
+          blocks:
+            - id: grid_card_3_t1
+              type: Tag
+              properties:
+                title: API
+                color: purple
+            - id: grid_card_3_t2
+              type: Tag
+              properties:
+                title: Webhooks
+                color: geekblue
+
+    - id: grid_card_4
+      type: Card
+      layout:
+        flex: 1 1 280px
+      properties:
+        title: Collaboration
+        size: small
+        hoverable: true
+      slots:
+        extra:
+          blocks:
+            - id: grid_card_4_icon
+              type: Icon
+              layout:
+                flex: 0 0 auto
+              properties:
+                name: AiOutlineTeam
+                color: '#fa8c16'
+      blocks:
+        - id: grid_card_4_p
+          type: Paragraph
+          properties:
+            content: Shared workspaces, comments, mentions, and real-time co-editing for seamless teamwork.
+        - id: grid_card_4_tags
+          type: Box
+          layout:
+            gap: 8
+          blocks:
+            - id: grid_card_4_t1
+              type: Tag
+              properties:
+                title: Teams
+                color: orange
+            - id: grid_card_4_t2
+              type: Tag
+              properties:
+                title: Comments
+                color: gold
+
+- title: Styled Cards (Tailwind CSS)
+  blocks:
+    - id: styled_gradient
+      type: Card
+      layout:
+        flex: 1 1 0
+      class: bg-gradient-to-br from-blue-500 to-purple-600 text-white border-0 rounded-xl
+      blocks:
+        - id: styled_gradient_title
+          type: Title
+          class: text-white
+          properties:
+            content: Gradient Card
+            level: 4
+        - id: styled_gradient_p
+          type: Paragraph
+          class: text-blue-100
+          properties:
+            content: Using Tailwind CSS classes to create a gradient background card. The class property on the Card applies utility classes directly to the wrapper.
+
+    - id: styled_shadow
+      type: Card
+      layout:
+        flex: 1 1 0
+      class: shadow-xl rounded-2xl border-0
+      properties:
+        title: Elevated Card
+      blocks:
+        - id: styled_shadow_p
+          type: Paragraph
+          properties:
+            content: A borderless card with extra-large shadow and rounded corners. The shadow-xl class creates a prominent floating effect.
+
+    - id: styled_accent
+      type: Card
+      layout:
+        flex: 1 1 0
+      class: border-l-4 border-l-green-500 rounded-lg
+      properties:
+        title: Accent Border
+      blocks:
+        - id: styled_accent_p
+          type: Paragraph
+          properties:
+            content: A left accent border highlights important cards. Combine Tailwind border utilities with the Card component for custom accents.
+
+- title: Custom Header and Body Styles
+  blocks:
+    - id: style_header_bg
+      type: Card
+      layout:
+        flex: 1 1 0
+      properties:
+        title: Colored Header
+      style:
+        --header:
+          backgroundColor: '#e6f4ff'
+          borderBottom: 1px solid #91caff
+        --body:
+          backgroundColor: '#f0f5ff'
+      blocks:
+        - id: style_header_bg_p
+          type: Paragraph
+          properties:
+            content: Using style.header and style.body to apply custom CSS to the card header and body sections separately. The header has a blue tint with a matching border.
+
+    - id: style_dark_card
+      type: Card
+      layout:
+        flex: 1 1 0
+      properties:
+        title: Dark Theme Card
+      style:
+        --header:
+          backgroundColor: '#1f1f1f'
+          color: '#ffffff'
+          borderBottom: 1px solid #333
+        --body:
+          backgroundColor: '#2a2a2a'
+      blocks:
+        - id: style_dark_p
+          type: Paragraph
+          class: text-gray-300
+          properties:
+            content: A manually styled dark card using inline styles on the header and body. For app-wide dark themes, prefer antd theme tokens or ConfigProvider.
+
+    - id: style_compact_card
+      type: Card
+      layout:
+        flex: 1 1 0
+      properties:
+        title: Compact Custom Padding
+      style:
+        --header:
+          padding: 8px 16px
+          minHeight: 40px
+        --body:
+          padding: 12px 16px
+      blocks:
+        - id: style_compact_p
+          type: Paragraph
+          properties:
+            content: Inline styles on the header and body can override the default padding for a more compact layout without using the small size variant.
+
+- title: CSS Key Classes
+  blocks:
+    - id: css_element
+      type: Card
+      layout:
+        flex: 1 1 0
+      class:
+        element: shadow-lg rounded-xl
+        header: bg-blue-50
+        body: bg-white
+      properties:
+        title: Element + Header + Body
+      blocks:
+        - id: css_element_p
+          type: Paragraph
+          properties:
+            content: 'Card supports these CSS keys: element, header, body, cover, actions, extra. Use class as an object to target each area with Tailwind classes.'
+
+    - id: css_hover_ring
+      type: Card
+      layout:
+        flex: 1 1 0
+      class:
+        element: hover:ring-2 hover:ring-blue-400 transition-all duration-200 rounded-lg
+      properties:
+        title: Hover Ring Effect
+        hoverable: true
+      blocks:
+        - id: css_hover_ring_p
+          type: Paragraph
+          properties:
+            content: Combining the hoverable property with a Tailwind hover ring transition creates an interactive highlight on mouse over.
+
+    - id: css_extra_styled
+      type: Card
+      layout:
+        flex: 1 1 0
+      class:
+        extra: bg-green-50 px-3 py-1 rounded-full
+      properties:
+        title: Styled Extra Area
+      slots:
+        extra:
+          blocks:
+            - id: css_extra_tag
+              type: Tag
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Live
+                color: success
+      blocks:
+        - id: css_extra_styled_p
+          type: Paragraph
+          properties:
+            content: The extra CSS key lets you style the container around the extra slot content. Here a green pill background wraps the status tag.
+
+- title: Theme Token Overrides
+  blocks:
+    - id: theme_large_padding
+      type: Card
+      layout:
+        flex: 1 1 0
+      properties:
+        title: Large Padding
+        theme:
+          bodyPadding: 40
+          headerPadding: 40
+      blocks:
+        - id: theme_large_padding_p
+          type: Paragraph
+          properties:
+            content: Override bodyPadding and headerPadding tokens for extra spacious cards. These tokens control the internal spacing of the card.
+
+    - id: theme_colored_header
+      type: Card
+      layout:
+        flex: 1 1 0
+      properties:
+        title: Custom Header Background
+        theme:
+          headerBg: '#f6ffed'
+          colorTextHeading: '#389e0d'
+      blocks:
+        - id: theme_colored_header_p
+          type: Paragraph
+          properties:
+            content: The headerBg token changes the card header background color, and colorTextHeading changes the title text color. These apply through the antd theme system.
+
+    - id: theme_rounded
+      type: Card
+      layout:
+        flex: 1 1 0
+      properties:
+        title: Extra Rounded
+        theme:
+          borderRadiusLG: 20
+      blocks:
+        - id: theme_rounded_p
+          type: Paragraph
+          properties:
+            content: The borderRadiusLG token controls the card corner radius. Set a large value for a pill-like card appearance.
+
+    - id: theme_dense
+      type: Card
+      layout:
+        flex: 1 1 0
+      properties:
+        title: Dense Card
+        size: small
+        theme:
+          bodyPaddingSM: 8
+          headerPaddingSM: 8
+          headerHeightSM: 32
+          headerFontSizeSM: 12
+      blocks:
+        - id: theme_dense_p
+          type: Paragraph
+          properties:
+            content: Combine the small size variant with custom SM tokens for an ultra-compact card. Useful for data-dense dashboards.
+
+    - id: theme_custom_colors
+      type: Card
+      properties:
+        title: Custom Color Scheme
+        theme:
+          headerBg: '#fff7e6'
+          colorBgContainer: '#fffbe6'
+          colorTextHeading: '#d46b08'
+          colorText: '#874d00'
+          colorBorderSecondary: '#ffd591'
+      blocks:
+        - id: theme_custom_colors_p
+          type: Paragraph
+          properties:
+            content: A warm-toned card using theme tokens to customize the background, header, text, and border colors. Theme tokens cascade correctly through the antd design system.

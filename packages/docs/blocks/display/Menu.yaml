@@ -13,36 +13,17 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: Menu
-    category: display
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Menu/schema.json
+    pageId: Menu
+    pageTitle: Menu
+    section: Display Blocks
     filePath: blocks/display/Menu.yaml
-    description_content: |
-      A menu block used to display page links.
-    init_state_values:
-      block.properties.links:
-        - id: home
-          type: MenuLink
-          pageId: home
-          properties:
-            icon: AiOutlineHome
-            title: Home
-        - id: pages
-          type: MenuGroup
-          properties:
-            title: Pages
-            icon: AiOutlineLayout
-          links:
-            - id: page1
-              type: MenuLink
-              pageId: page1
-              properties:
-                title: Page 1
-            - id: more_pages
-              type: MenuGroup
-              links:
-                - id: page3
-                  type: MenuLink
-                  pageId: page3
+    block_type: Menu
+    antd_component: Menu
+    antd_url: menu
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/Menu
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Menu/meta.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/Menu/gallery.yaml
+    description: >
+      Horizontal or vertical navigation menu with nested items.

@@ -47,7 +47,7 @@ test('addDefaultPages, no pages array', () => {
           subTitle: 'Sorry, the page you are visiting does not exist.',
           title: '404',
         },
-        areas: {
+        slots: {
           extra: {
             blocks: [
               {
@@ -92,7 +92,7 @@ test('addDefaultPages, empty pages array', () => {
           subTitle: 'Sorry, the page you are visiting does not exist.',
           title: '404',
         },
-        areas: {
+        slots: {
           extra: {
             blocks: [
               {
@@ -141,7 +141,7 @@ test('addDefaultPages, pages without 404 page', () => {
           subTitle: 'Sorry, the page you are visiting does not exist.',
           title: '404',
         },
-        areas: {
+        slots: {
           extra: {
             blocks: [
               {

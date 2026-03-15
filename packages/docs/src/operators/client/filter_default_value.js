@@ -30,6 +30,11 @@ function custom_filter_default_value({ params }) {
 
   const filterObject = ({ obj, path }) => {
     Object.keys(obj).forEach((key) => {
+      // Strip internal build markers from display
+      if (key === '~k' || key === '~r' || key === '~l') {
+        delete obj[key];
+        return;
+      }
       const propPath = path.concat([key]);
       if (type.isObject(obj[key])) {
         filterObject({ obj: obj[key], path: propPath });
@@ -38,7 +43,10 @@ function custom_filter_default_value({ params }) {
       if (obj[key] === dv) {
         delete obj[key];
       }
-      if (obj[key] === null || isEmptyObject(obj[key])) {
+      if (obj[key] === null || obj[key] === undefined) {
+        delete obj[key];
+      }
+      if (isEmptyObject(obj[key])) {
         delete obj[key];
       }
     });

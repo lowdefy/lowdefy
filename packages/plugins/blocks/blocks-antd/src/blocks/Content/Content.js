@@ -16,21 +16,14 @@
 
 import React from 'react';
 import { Layout } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-utils';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 
 const Content = Layout.Content;
 
-const ContentBlock = ({ blockId, content, methods, properties }) => (
-  <Content id={blockId} className={methods.makeCssClass(properties.style)}>
+const ContentBlock = ({ blockId, classNames = {}, content, properties, styles = {} }) => (
+  <Content id={blockId} className={classNames.element} style={styles.element}>
     {content.content && content.content()}
   </Content>
 );
 
-ContentBlock.defaultProps = blockDefaultProps;
-ContentBlock.meta = {
-  category: 'container',
-  icons: [],
-  styles: ['blocks/Content/style.less'],
-};
-
-export default ContentBlock;
+export default withBlockDefaults(ContentBlock);

@@ -1,0 +1,92 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- id: default
+  type: Flex
+- id: 'properties.vertical: true'
+  type: Flex
+  properties:
+    vertical: true
+- id: 'properties.wrap: true'
+  type: Flex
+  properties:
+    wrap: true
+- id: 'properties.justify: flex-start'
+  type: Flex
+  properties:
+    justify: flex-start
+- id: 'properties.justify: center'
+  type: Flex
+  properties:
+    justify: center
+- id: 'properties.justify: flex-end'
+  type: Flex
+  properties:
+    justify: flex-end
+- id: 'properties.justify: space-between'
+  type: Flex
+  properties:
+    justify: space-between
+- id: 'properties.justify: space-around'
+  type: Flex
+  properties:
+    justify: space-around
+- id: 'properties.justify: space-evenly'
+  type: Flex
+  properties:
+    justify: space-evenly
+- id: 'properties.align: flex-start'
+  type: Flex
+  properties:
+    align: flex-start
+- id: 'properties.align: center'
+  type: Flex
+  properties:
+    align: center
+- id: 'properties.align: flex-end'
+  type: Flex
+  properties:
+    align: flex-end
+- id: 'properties.align: stretch'
+  type: Flex
+  properties:
+    align: stretch
+- id: 'properties.align: baseline'
+  type: Flex
+  properties:
+    align: baseline
+- id: 'properties.gap: small'
+  type: Flex
+  properties:
+    gap: small
+- id: 'properties.gap: middle'
+  type: Flex
+  properties:
+    gap: middle
+- id: 'properties.gap: large'
+  type: Flex
+  properties:
+    gap: large
+- id: 'properties.gap: 16'
+  type: Flex
+  properties:
+    gap: 16
+- id: properties.flex
+  type: Flex
+  properties:
+    flex: 1
+- id: properties.component
+  type: Flex
+  properties:
+    component: section

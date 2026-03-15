@@ -1,0 +1,504 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic
+  blocks:
+    - id: basic_default
+      type: Switch
+      properties:
+        title: Default Switch
+        label:
+          disabled: true
+    - id: basic_small
+      type: Switch
+      properties:
+        title: Small Size
+        size: small
+        label:
+          disabled: true
+    - id: basic_autofocus
+      type: Switch
+      properties:
+        title: AutoFocus Switch
+        autoFocus: true
+        label:
+          disabled: true
+
+- title: With Text Labels
+  blocks:
+    - id: text_on_off
+      type: Switch
+      properties:
+        title: On / Off
+        checkedText: 'ON'
+        uncheckedText: 'OFF'
+        label:
+          disabled: true
+    - id: text_yes_no
+      type: Switch
+      properties:
+        title: Yes / No
+        checkedText: 'Yes'
+        uncheckedText: 'No'
+        label:
+          disabled: true
+    - id: text_long
+      type: Switch
+      properties:
+        title: Longer Labels
+        checkedText: Enabled
+        uncheckedText: Disabled
+        label:
+          disabled: true
+    - id: text_numbers
+      type: Switch
+      properties:
+        title: Numeric Labels
+        checkedText: '1'
+        uncheckedText: '0'
+        label:
+          disabled: true
+    - id: text_small_on_off
+      type: Switch
+      properties:
+        title: Small with Text
+        checkedText: 'ON'
+        uncheckedText: 'OFF'
+        size: small
+        label:
+          disabled: true
+
+- title: With Icon Labels
+  blocks:
+    - id: icon_custom_check
+      type: Switch
+      properties:
+        title: Custom Checked Icon
+        checkedIcon: AiOutlineLike
+        uncheckedIcon: AiOutlineDislike
+        label:
+          disabled: true
+    - id: icon_lock
+      type: Switch
+      properties:
+        title: Lock / Unlock
+        checkedIcon: AiOutlineLock
+        uncheckedIcon: AiOutlineUnlock
+        label:
+          disabled: true
+    - id: icon_sound
+      type: Switch
+      properties:
+        title: Sound On / Off
+        checkedIcon: AiOutlineSound
+        uncheckedIcon:
+          name: AiOutlineStop
+          color: '#999'
+        label:
+          disabled: true
+    - id: icon_visibility
+      type: Switch
+      properties:
+        title: Visibility Toggle
+        checkedIcon: AiOutlineEye
+        uncheckedIcon: AiOutlineEyeInvisible
+        label:
+          disabled: true
+    - id: icon_power
+      type: Switch
+      properties:
+        title: Power Toggle
+        checkedIcon: AiOutlineThunderbolt
+        uncheckedIcon: AiOutlinePoweroff
+        label:
+          disabled: true
+
+- title: Custom Color
+  blocks:
+    - id: color_green
+      type: Switch
+      properties:
+        title: Green
+        color: '#52c41a'
+        label:
+          disabled: true
+    - id: color_orange
+      type: Switch
+      properties:
+        title: Orange
+        color: '#fa8c16'
+        label:
+          disabled: true
+    - id: color_purple
+      type: Switch
+      properties:
+        title: Purple
+        color: '#722ed1'
+        label:
+          disabled: true
+    - id: color_red
+      type: Switch
+      properties:
+        title: Red
+        color: '#f5222d'
+        label:
+          disabled: true
+    - id: color_cyan
+      type: Switch
+      properties:
+        title: Cyan
+        color: '#13c2c2'
+        label:
+          disabled: true
+
+- title: Color with Text Labels
+  blocks:
+    - id: color_text_green
+      type: Switch
+      properties:
+        title: Active / Inactive
+        color: '#52c41a'
+        checkedText: Active
+        uncheckedText: Inactive
+        label:
+          disabled: true
+    - id: color_text_red
+      type: Switch
+      properties:
+        title: Allow / Deny
+        color: '#f5222d'
+        checkedText: Allow
+        uncheckedText: Deny
+        label:
+          disabled: true
+    - id: color_text_purple
+      type: Switch
+      properties:
+        title: Public / Private
+        color: '#722ed1'
+        checkedText: Public
+        uncheckedText: Private
+        label:
+          disabled: true
+
+- title: Disabled State
+  blocks:
+    - id: disabled_off
+      type: Switch
+      properties:
+        title: Disabled (Off)
+        disabled: true
+        label:
+          disabled: true
+    - id: disabled_text
+      type: Switch
+      properties:
+        title: Disabled with Text
+        disabled: true
+        checkedText: 'ON'
+        uncheckedText: 'OFF'
+        label:
+          disabled: true
+    - id: disabled_small
+      type: Switch
+      properties:
+        title: Disabled Small
+        disabled: true
+        size: small
+        label:
+          disabled: true
+    - id: disabled_color
+      type: Switch
+      properties:
+        title: Disabled with Color
+        disabled: true
+        color: '#52c41a'
+        label:
+          disabled: true
+    - id: disabled_icons
+      type: Switch
+      properties:
+        title: Disabled with Icons
+        disabled: true
+        checkedIcon: AiOutlineLike
+        uncheckedIcon: AiOutlineDislike
+        label:
+          disabled: true
+
+- title: Label Options
+  blocks:
+    - id: label_default
+      type: Switch
+      properties:
+        title: Enable notifications
+    - id: label_extra
+      type: Switch
+      properties:
+        title: Notifications
+        label:
+          extra: Enable push notifications on this device.
+    - id: label_no_colon
+      type: Switch
+      properties:
+        title: Status
+        label:
+          colon: false
+    - id: label_hidden
+      type: Switch
+      properties:
+        title: Hidden Label
+        label:
+          disabled: true
+    - id: label_feedback
+      type: Switch
+      properties:
+        title: With Feedback
+        label:
+          hasFeedback: true
+
+- title: Label Inline
+  blocks:
+    - id: label_inline
+      type: Switch
+      properties:
+        title: Dark mode
+        label:
+          inline: true
+          span: 8
+    - id: label_inline_right
+      type: Switch
+      properties:
+        title: Auto-save
+        label:
+          inline: true
+          span: 8
+          align: right
+    - id: label_inline_small
+      type: Switch
+      properties:
+        title: Compact mode
+        size: small
+        label:
+          inline: true
+          span: 8
+
+- title: Style and Class Overrides
+  blocks:
+    - id: style_margin
+      type: Switch
+      style:
+        --element:
+          marginTop: 8
+      properties:
+        title: Styled Element
+        label:
+          disabled: true
+    - id: style_label
+      type: Switch
+      style:
+        --label:
+          fontWeight: bold
+          color: '#1677ff'
+      properties:
+        title: Styled Label
+    - id: class_tailwind
+      type: Switch
+      class: p-2 border border-gray-200 rounded
+      properties:
+        title: Tailwind Classes
+        label:
+          disabled: true
+
+- title: Theme Token Overrides
+  blocks:
+    - id: theme_large_track
+      type: Switch
+      properties:
+        title: Large Track
+        checkedText: 'ON'
+        uncheckedText: 'OFF'
+        label:
+          disabled: true
+        theme:
+          trackHeight: 30
+          trackMinWidth: 60
+          handleSize: 26
+    - id: theme_small_track
+      type: Switch
+      properties:
+        title: Tiny Track
+        size: small
+        label:
+          disabled: true
+        theme:
+          trackHeightSM: 12
+          trackMinWidthSM: 20
+          handleSizeSM: 8
+    - id: theme_no_shadow
+      type: Switch
+      properties:
+        title: No Handle Shadow
+        label:
+          disabled: true
+        theme:
+          handleShadow: '0 0 0 0 transparent'
+    - id: theme_colored_handle
+      type: Switch
+      properties:
+        title: Colored Handle
+        label:
+          disabled: true
+        theme:
+          handleBg: '#f0f5ff'
+    - id: theme_primary_color
+      type: Switch
+      properties:
+        title: Custom Primary Color
+        label:
+          disabled: true
+        theme:
+          colorPrimary: '#eb2f96'
+          colorPrimaryHover: '#f759ab'
+
+- title: Switch in Settings Panel
+  blocks:
+    - id: comp_settings_card
+      type: Card
+      properties:
+        title: Settings
+        size: small
+      blocks:
+        - id: comp_notifications
+          type: Switch
+          properties:
+            title: Notifications
+            label:
+              inline: true
+              span: 16
+          events:
+            onChange:
+              - id: comp_notifications_action
+                type: SetState
+                params:
+                  notifications_enabled:
+                    _state: comp_notifications
+        - id: comp_auto_update
+          type: Switch
+          properties:
+            title: Auto-update
+            label:
+              inline: true
+              span: 16
+          events:
+            onChange:
+              - id: comp_auto_update_action
+                type: SetState
+                params:
+                  auto_update_enabled:
+                    _state: comp_auto_update
+        - id: comp_dark_mode
+          type: Switch
+          properties:
+            title: Dark mode
+            label:
+              inline: true
+              span: 16
+          events:
+            onChange:
+              - id: comp_dark_mode_action
+                type: DisplayMessage
+                params:
+                  content: Dark mode toggled.
+                  duration: 2
+        - id: comp_analytics
+          type: Switch
+          properties:
+            title: Analytics
+            label:
+              inline: true
+              span: 16
+              extra: Allow anonymous usage data collection.
+          events:
+            onChange:
+              - id: comp_analytics_action
+                type: SetState
+                params:
+                  analytics_enabled:
+                    _state: comp_analytics
+
+- title: Switch in Privacy Settings
+  blocks:
+    - id: applied2_privacy_card
+      type: Card
+      properties:
+        title: Privacy Settings
+      blocks:
+        - id: applied2_privacy_profile_visible
+          type: Switch
+          properties:
+            title: Public Profile
+            checkedText: Visible
+            uncheckedText: Hidden
+            color: '#1677ff'
+            label:
+              inline: true
+              span: 16
+              extra: Allow other users to view your profile.
+        - id: applied2_privacy_activity_status
+          type: Switch
+          properties:
+            title: Activity Status
+            checkedText: 'ON'
+            uncheckedText: 'OFF'
+            color: '#52c41a'
+            label:
+              inline: true
+              span: 16
+              extra: Show when you are online.
+        - id: applied2_privacy_search_indexing
+          type: Switch
+          properties:
+            title: Search Engine Indexing
+            checkedText: Allow
+            uncheckedText: Block
+            color: '#fa8c16'
+            label:
+              inline: true
+              span: 16
+              extra: Allow search engines to index your profile.
+        - id: applied2_privacy_data_sharing
+          type: Switch
+          properties:
+            title: Data Sharing
+            checkedText: 'Yes'
+            uncheckedText: 'No'
+            color: '#722ed1'
+            label:
+              inline: true
+              span: 16
+              extra: Share anonymous usage data to help improve the service.
+        - id: applied2_privacy_save_btn
+          type: Button
+          properties:
+            title: Save Privacy Settings
+            icon: AiOutlineSave
+            type: primary
+            block: true
+          events:
+            onClick:
+              - id: save_privacy_action
+                type: DisplayMessage
+                params:
+                  content: Privacy settings updated successfully.
+                  duration: 3

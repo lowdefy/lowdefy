@@ -1,0 +1,622 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Sizes
+  blocks:
+    - id: size_small
+      type: TextArea
+      properties:
+        title: Small
+        size: small
+        placeholder: Small textarea
+    - id: size_middle
+      type: TextArea
+      properties:
+        title: Middle (Default)
+        size: middle
+        placeholder: Middle textarea
+    - id: size_large
+      type: TextArea
+      properties:
+        title: Large
+        size: large
+        placeholder: Large textarea
+- title: Placeholder
+  blocks:
+    - id: placeholder_default
+      type: TextArea
+      properties:
+        title: With Placeholder
+        placeholder: Enter your comments here...
+    - id: placeholder_long
+      type: TextArea
+      properties:
+        title: Descriptive Placeholder
+        placeholder: Please provide a detailed description of the issue you encountered, including steps to reproduce, expected behavior, and actual behavior.
+    - id: placeholder_none
+      type: TextArea
+      properties:
+        title: No Placeholder
+        label:
+          extra: TextArea with no placeholder text.
+- title: Row Variations
+  blocks:
+    - id: rows_1
+      type: TextArea
+      properties:
+        title: 1 Row
+        rows: 1
+        placeholder: Single row
+    - id: rows_2
+      type: TextArea
+      properties:
+        title: 2 Rows
+        rows: 2
+        placeholder: Two rows
+    - id: rows_3
+      type: TextArea
+      properties:
+        title: 3 Rows (Default)
+        placeholder: Three rows (default when no rows or autoSize specified)
+    - id: rows_4
+      type: TextArea
+      properties:
+        title: 4 Rows
+        rows: 4
+        placeholder: Four rows
+    - id: rows_6
+      type: TextArea
+      properties:
+        title: 6 Rows
+        rows: 6
+        placeholder: Six rows
+    - id: rows_10
+      type: TextArea
+      properties:
+        title: 10 Rows
+        rows: 10
+        placeholder: Ten rows - suitable for large text content
+- title: Auto Size (Boolean)
+  blocks:
+    - id: auto_size_true
+      type: TextArea
+      properties:
+        title: Auto Size Enabled
+        autoSize: true
+        placeholder: Start typing and the textarea will grow automatically as you add more lines of text
+    - id: auto_size_false
+      type: TextArea
+      properties:
+        title: Auto Size Disabled (Default)
+        autoSize: false
+        placeholder: Fixed height, does not grow
+- title: Auto Size (Min / Max Rows)
+  blocks:
+    - id: auto_size_min2_max4
+      type: TextArea
+      properties:
+        title: Min 2, Max 4 Rows
+        autoSize:
+          minRows: 2
+          maxRows: 4
+        placeholder: Grows from 2 to 4 rows
+    - id: auto_size_min3_max6
+      type: TextArea
+      properties:
+        title: Min 3, Max 6 Rows
+        autoSize:
+          minRows: 3
+          maxRows: 6
+        placeholder: Grows from 3 to 6 rows
+    - id: auto_size_min1_max10
+      type: TextArea
+      properties:
+        title: Min 1, Max 10 Rows
+        autoSize:
+          minRows: 1
+          maxRows: 10
+        placeholder: Compact start, generous max
+    - id: auto_size_min5_max5
+      type: TextArea
+      properties:
+        title: Min 5, Max 5 Rows (Fixed via autoSize)
+        autoSize:
+          minRows: 5
+          maxRows: 5
+        placeholder: Fixed at exactly 5 rows using autoSize object
+    - id: auto_size_min_only
+      type: TextArea
+      properties:
+        title: Min 2 Rows (No Max)
+        autoSize:
+          minRows: 2
+        placeholder: Starts at 2 rows, grows indefinitely
+- title: Allow Clear
+  blocks:
+    - id: allow_clear_true
+      type: TextArea
+      properties:
+        title: Allow Clear Enabled
+        allowClear: true
+        placeholder: Type something then click the clear icon
+    - id: allow_clear_false
+      type: TextArea
+      properties:
+        title: Allow Clear Disabled (Default)
+        allowClear: false
+        placeholder: No clear icon will appear
+    - id: allow_clear_with_rows
+      type: TextArea
+      properties:
+        title: Allow Clear with 4 Rows
+        allowClear: true
+        rows: 4
+        placeholder: Clearable with 4 rows
+- title: Character Count (showCount)
+  blocks:
+    - id: show_count_basic
+      type: TextArea
+      properties:
+        title: Show Count
+        showCount: true
+        placeholder: Character count displayed below
+    - id: show_count_with_max
+      type: TextArea
+      properties:
+        title: Show Count with Max Length (100)
+        showCount: true
+        maxLength: 100
+        placeholder: Max 100 characters
+    - id: show_count_max_200
+      type: TextArea
+      properties:
+        title: Show Count with Max Length (200)
+        showCount: true
+        maxLength: 200
+        placeholder: Max 200 characters
+    - id: show_count_max_50
+      type: TextArea
+      properties:
+        title: Show Count with Max Length (50)
+        showCount: true
+        maxLength: 50
+        placeholder: Short limit - 50 characters
+    - id: show_count_false
+      type: TextArea
+      properties:
+        title: Show Count Disabled (Default)
+        showCount: false
+        placeholder: No character count
+- title: Max Length (without showCount)
+  blocks:
+    - id: max_length_20
+      type: TextArea
+      properties:
+        title: Max 20 Characters
+        maxLength: 20
+        placeholder: Limited to 20 characters
+    - id: max_length_500
+      type: TextArea
+      properties:
+        title: Max 500 Characters
+        maxLength: 500
+        placeholder: Limited to 500 characters
+    - id: max_length_with_count
+      type: TextArea
+      properties:
+        title: Max 150 with Count
+        maxLength: 150
+        showCount: true
+        placeholder: Shows count and limits input
+- title: Bordered / Borderless
+  blocks:
+    - id: bordered_true
+      type: TextArea
+      properties:
+        title: Bordered (Default)
+        bordered: true
+        placeholder: Standard bordered textarea
+    - id: bordered_false
+      type: TextArea
+      properties:
+        title: Borderless
+        bordered: false
+        placeholder: No border style
+    - id: borderless_with_rows
+      type: TextArea
+      properties:
+        title: Borderless with 6 Rows
+        bordered: false
+        rows: 6
+        placeholder: Larger borderless textarea
+- title: Disabled State
+  blocks:
+    - id: disabled_empty
+      type: TextArea
+      properties:
+        title: Disabled (Empty)
+        disabled: true
+        placeholder: Cannot edit this field
+    - id: disabled_with_value
+      type: TextArea
+      properties:
+        title: Disabled (With Value)
+        disabled: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              disabled_with_value: This textarea is disabled and contains pre-filled content that cannot be edited.
+    - id: disabled_with_rows
+      type: TextArea
+      properties:
+        title: Disabled with 6 Rows
+        disabled: true
+        rows: 6
+        placeholder: Cannot edit
+    - id: disabled_borderless
+      type: TextArea
+      properties:
+        title: Disabled & Borderless
+        disabled: true
+        bordered: false
+        placeholder: Disabled without border
+- title: Label Options
+  blocks:
+    - id: label_default
+      type: TextArea
+      properties:
+        title: Default Label
+        placeholder: Standard label above
+    - id: label_custom_title
+      type: TextArea
+      properties:
+        title: Custom Title
+        label:
+          title: <b>Bold Label</b> with HTML
+        placeholder: Label supports HTML content
+    - id: label_with_extra
+      type: TextArea
+      properties:
+        title: Label with Extra
+        label:
+          extra: This is extra helper text below the textarea.
+        placeholder: Extra text appears below
+    - id: label_with_colon
+      type: TextArea
+      properties:
+        title: With Colon
+        label:
+          colon: true
+        placeholder: Colon appended to label
+    - id: label_no_colon
+      type: TextArea
+      properties:
+        title: Without Colon
+        label:
+          colon: false
+        placeholder: No colon on label
+- title: Label Inline
+  blocks:
+    - id: label_inline
+      type: TextArea
+      properties:
+        title: Inline Label
+        label:
+          inline: true
+        placeholder: Label and input on the same line
+    - id: label_inline_right
+      type: TextArea
+      properties:
+        title: Inline Right Aligned
+        label:
+          inline: true
+          align: right
+        placeholder: Right-aligned inline label
+    - id: label_inline_span
+      type: TextArea
+      properties:
+        title: Inline with Span
+        label:
+          inline: true
+          span: 8
+        placeholder: Custom label span width
+    - id: label_inline_extra
+      type: TextArea
+      properties:
+        title: Inline with Extra
+        label:
+          inline: true
+          extra: Helper text beneath inline textarea.
+        placeholder: Inline with extra text
+- title: Label Disabled / Hidden
+  blocks:
+    - id: label_disabled
+      type: TextArea
+      properties:
+        title: Hidden Label
+        label:
+          disabled: true
+        placeholder: Label is hidden but title still set
+    - id: label_feedback_disabled
+      type: TextArea
+      properties:
+        title: No Feedback
+        label:
+          hasFeedback: false
+        placeholder: Validation feedback text will not appear
+- title: Combined Features - Count + AutoSize
+  blocks:
+    - id: combo_count_autosize
+      type: TextArea
+      properties:
+        title: Count + Auto Size
+        showCount: true
+        maxLength: 300
+        autoSize:
+          minRows: 2
+          maxRows: 8
+        placeholder: Auto-growing textarea with character count
+    - id: combo_count_autosize_clear
+      type: TextArea
+      properties:
+        title: Count + Auto Size + Clear
+        showCount: true
+        maxLength: 500
+        autoSize:
+          minRows: 3
+          maxRows: 10
+        allowClear: true
+        placeholder: All features combined
+- title: Combined Features - Size + Rows
+  blocks:
+    - id: combo_small_2rows
+      type: TextArea
+      properties:
+        title: Small with 2 Rows
+        size: small
+        rows: 2
+        placeholder: Compact small textarea
+    - id: combo_large_6rows
+      type: TextArea
+      properties:
+        title: Large with 6 Rows
+        size: large
+        rows: 6
+        placeholder: Spacious large textarea
+    - id: combo_large_autosize
+      type: TextArea
+      properties:
+        title: Large with Auto Size
+        size: large
+        autoSize:
+          minRows: 2
+          maxRows: 6
+        placeholder: Large auto-growing textarea
+- title: Combined Features - Disabled Variants
+  blocks:
+    - id: combo_disabled_count
+      type: TextArea
+      properties:
+        title: Disabled with Count
+        disabled: true
+        showCount: true
+        maxLength: 200
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              combo_disabled_count: Pre-filled disabled text
+    - id: combo_disabled_clear
+      type: TextArea
+      properties:
+        title: Disabled with Allow Clear
+        disabled: true
+        allowClear: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              combo_disabled_clear: You cannot clear this
+    - id: combo_disabled_borderless_value
+      type: TextArea
+      properties:
+        title: Disabled Borderless with Value
+        disabled: true
+        bordered: false
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              combo_disabled_borderless_value: Disabled borderless text content that is read-only.
+- title: Use Case - Feedback Form
+  blocks:
+    - id: usecase_feedback
+      type: TextArea
+      properties:
+        title: Your Feedback
+        placeholder: Tell us what you think about our product...
+        autoSize:
+          minRows: 3
+          maxRows: 8
+        showCount: true
+        maxLength: 1000
+        allowClear: true
+        label:
+          extra: Please be specific with your feedback. Maximum 1000 characters.
+- title: Use Case - Code / JSON Input
+  blocks:
+    - id: usecase_code
+      type: TextArea
+      properties:
+        title: JSON Configuration
+        rows: 8
+        placeholder: |
+          {
+            "key": "value",
+            "nested": {
+              "property": true
+            }
+          }
+        label:
+          extra: Paste your JSON configuration here.
+- title: Use Case - Notes Field
+  blocks:
+    - id: usecase_notes
+      type: TextArea
+      properties:
+        title: Notes
+        rows: 4
+        placeholder: Add optional notes...
+        allowClear: true
+        label:
+          colon: false
+- title: Use Case - Bio / Description
+  blocks:
+    - id: usecase_bio
+      type: TextArea
+      properties:
+        title: Bio
+        placeholder: Write a short bio about yourself...
+        showCount: true
+        maxLength: 250
+        autoSize:
+          minRows: 2
+          maxRows: 5
+        label:
+          extra: A brief description shown on your profile.
+- title: CSS Styling
+  blocks:
+    - id: css_element
+      type: TextArea
+      properties:
+        title: Custom Element Style
+        placeholder: Styled textarea element
+      style:
+        --element:
+          backgroundColor: '#f0f5ff'
+          borderColor: '#597ef7'
+          borderRadius: 8
+    - id: css_label
+      type: TextArea
+      properties:
+        title: Custom Label Style
+        placeholder: Styled label text
+      style:
+        --label:
+          color: '#531dab'
+          fontWeight: bold
+          fontSize: 16
+    - id: css_extra
+      type: TextArea
+      properties:
+        title: Styled Extra Text
+        placeholder: Extra text below is styled
+        label:
+          extra: This extra text has custom styling.
+      style:
+        --extra:
+          color: '#08979c'
+          fontStyle: italic
+    - id: css_combined
+      type: TextArea
+      properties:
+        title: Combined CSS Styles
+        placeholder: Multiple style keys applied
+        label:
+          extra: Custom styled textarea with extra text.
+      style:
+        --element:
+          backgroundColor: '#fff7e6'
+          borderColor: '#ffa940'
+        --label:
+          color: '#d46b08'
+          fontWeight: 600
+        --extra:
+          color: '#ad6800'
+- title: CSS Class Names
+  blocks:
+    - id: class_rounded
+      type: TextArea
+      class: rounded-lg shadow-md
+      properties:
+        title: Rounded with Shadow
+        placeholder: Using Tailwind classes
+    - id: class_border
+      type: TextArea
+      class: border-2 border-blue-400 rounded-md
+      properties:
+        title: Blue Border
+        placeholder: Tailwind border classes
+        label:
+          disabled: true
+- title: Theme Token Overrides
+  blocks:
+    - id: theme_active_border
+      type: TextArea
+      properties:
+        title: Custom Active Border Color
+        placeholder: Click to see custom focus color
+        theme:
+          colorPrimary: '#722ed1'
+    - id: theme_font_size
+      type: TextArea
+      properties:
+        title: Larger Font Size
+        placeholder: 18px font size
+        theme:
+          fontSize: 18
+    - id: theme_padding_combined
+      type: TextArea
+      properties:
+        title: Custom Padding (Both)
+        placeholder: Extra padding in both directions
+        theme:
+          paddingInline: 24
+          paddingBlock: 16
+    - id: theme_purple
+      type: TextArea
+      properties:
+        title: Purple Theme
+        placeholder: Purple-themed textarea
+        theme:
+          colorPrimary: '#722ed1'
+          colorPrimaryHover: '#9254de'
+          colorBgContainer: '#faf0ff'
+          colorBorder: '#d3adf7'
+          borderRadius: 12
+    - id: theme_warm
+      type: TextArea
+      properties:
+        title: Warm Theme
+        placeholder: Warm-themed textarea
+        theme:
+          colorPrimary: '#d4380d'
+          colorPrimaryHover: '#ff7a45'
+          colorBgContainer: '#fff2e8'
+          colorBorder: '#ffbb96'
+          borderRadius: 10
+          fontSize: 15
+- title: AutoFocus
+  blocks:
+    - id: auto_focus_false
+      type: TextArea
+      properties:
+        title: No Auto Focus (Default)
+        autoFocus: false
+        placeholder: Does not auto focus

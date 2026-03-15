@@ -15,29 +15,19 @@
 */
 
 import React from 'react';
-import { blockDefaultProps } from '@lowdefy/block-utils';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 
-const ImgBlock = ({ blockId, events, properties, methods }) => {
-  const { style, ...allProps } = properties;
+const ImgBlock = ({ blockId, classNames, events, properties, methods, styles }) => {
   return (
     <img
-      {...allProps}
+      {...properties}
       id={blockId}
       data-testid={blockId}
       onClick={() => methods.triggerEvent({ name: 'onClick' })}
-      className={methods.makeCssClass([
-        { outline: 'none', cursor: events.onClick && 'pointer' },
-        style,
-      ])}
+      className={classNames?.element}
+      style={{ outline: 'none', cursor: events.onClick && 'pointer', ...styles?.element }}
     />
   );
 };
 
-ImgBlock.defaultProps = blockDefaultProps;
-ImgBlock.meta = {
-  category: 'display',
-  icons: [],
-  styles: [],
-};
-
-export default ImgBlock;
+export default withBlockDefaults(ImgBlock);

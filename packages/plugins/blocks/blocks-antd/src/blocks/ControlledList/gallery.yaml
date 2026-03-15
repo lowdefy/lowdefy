@@ -1,0 +1,460 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic ControlledList
+  fullWidth: true
+  blocks:
+    - id: cl_basic
+      type: ControlledList
+      properties:
+        title: Team Members
+      blocks:
+        - id: cl_basic_name
+          type: TextInput
+          layout:
+            flex: 1 1 0
+          properties:
+            placeholder: Full name
+        - id: cl_basic_email
+          type: TextInput
+          layout:
+            flex: 1 1 0
+          properties:
+            placeholder: Email address
+
+- title: Add to Front
+  fullWidth: true
+  blocks:
+    - id: cl_add_front
+      type: ControlledList
+      properties:
+        title: Recent Notes
+        addToFront: true
+      blocks:
+        - id: cl_add_front_input
+          type: TextArea
+          properties:
+            label:
+              disabled: true
+            placeholder: Write a note...
+            rows: 2
+
+- title: Custom Add Button
+  fullWidth: true
+  blocks:
+    - id: cl_custom_add
+      type: ControlledList
+      properties:
+        title: Shopping List
+        addItemButton:
+          title: Add Product
+          icon: AiOutlinePlus
+          color: primary
+          variant: outlined
+      blocks:
+        - id: cl_custom_add_product
+          type: TextInput
+          layout:
+            flex: 2 1 0
+          properties:
+            label:
+              disabled: true
+            placeholder: Product name
+        - id: cl_custom_add_qty
+          type: NumberInput
+          layout:
+            flex: 1 1 0
+          properties:
+            label:
+              disabled: true
+            placeholder: Qty
+
+- title: Hidden Buttons and Minimum Items
+  fullWidth: true
+  blocks:
+    - id: cl_no_add
+      type: ControlledList
+      properties:
+        title: Fixed Items (No Add Button)
+        hideAddButton: true
+      blocks:
+        - id: cl_no_add_input
+          type: TextInput
+          properties:
+            label:
+              disabled: true
+            placeholder: Item value
+
+    - id: cl_no_remove
+      type: ControlledList
+      properties:
+        title: Protected List (No Remove Button)
+        hideRemoveButton: true
+      blocks:
+        - id: cl_no_remove_input
+          type: TextInput
+          properties:
+            label:
+              disabled: true
+            placeholder: This item cannot be removed
+
+    - id: cl_min_items
+      type: ControlledList
+      properties:
+        title: At Least 2 Entries Required
+        minItems: 2
+      blocks:
+        - id: cl_min_items_input
+          type: TextInput
+          properties:
+            label:
+              disabled: true
+            placeholder: Required entry
+
+- title: Sizes
+  fullWidth: true
+  blocks:
+    - id: cl_size_small
+      type: ControlledList
+      properties:
+        title: Small
+        size: small
+      blocks:
+        - id: cl_size_small_input
+          type: TextInput
+          properties:
+            label:
+              disabled: true
+            placeholder: Small list item
+            size: small
+
+    - id: cl_size_default
+      type: ControlledList
+      properties:
+        title: Default
+      blocks:
+        - id: cl_size_default_input
+          type: TextInput
+          properties:
+            label:
+              disabled: true
+            placeholder: Default list item
+
+    - id: cl_size_large
+      type: ControlledList
+      properties:
+        title: Large
+        size: large
+      blocks:
+        - id: cl_size_large_input
+          type: TextInput
+          properties:
+            label:
+              disabled: true
+            placeholder: Large list item
+            size: large
+
+- title: Custom Empty Text and Multi-Field Row
+  fullWidth: true
+  blocks:
+    - id: cl_empty
+      type: ControlledList
+      properties:
+        title: Tasks
+        noDataTitle: No tasks yet. Click the button below to add one.
+      blocks:
+        - id: cl_empty_input
+          type: TextInput
+          properties:
+            label:
+              disabled: true
+            placeholder: Task description
+
+    - id: cl_multi_field
+      type: ControlledList
+      properties:
+        title: Address Book
+        addItemButton:
+          title: Add Contact
+          icon: AiOutlineUserAdd
+          color: green
+          variant: solid
+      blocks:
+        - id: cl_mf_name
+          type: TextInput
+          layout:
+            flex: 2 1 0
+          properties:
+            label:
+              disabled: true
+            placeholder: Name
+        - id: cl_mf_phone
+          type: TextInput
+          layout:
+            flex: 1 1 0
+          properties:
+            label:
+              disabled: true
+            placeholder: Phone
+        - id: cl_mf_city
+          type: TextInput
+          layout:
+            flex: 1 1 0
+          properties:
+            label:
+              disabled: true
+            placeholder: City
+
+- title: CSS Styling with Tailwind Classes
+  fullWidth: true
+  blocks:
+    - id: cl_css_shadow
+      type: ControlledList
+      style:
+        --element:
+          boxShadow: 0 2px 8px rgba(0, 0, 0, 0.1)
+          borderRadius: 8px
+        --header:
+          fontWeight: 600
+        --item:
+          paddingLeft: 12px
+          paddingRight: 12px
+      properties:
+        title: Styled with Shadow
+      blocks:
+        - id: cl_css_shadow_input
+          type: TextInput
+          properties:
+            label:
+              disabled: true
+            placeholder: Shadowed list item
+
+    - id: cl_css_colored
+      type: ControlledList
+      style:
+        --element:
+          background: '#fafafa'
+          borderColor: '#d9d9d9'
+        --header:
+          background: '#f0f5ff'
+          borderBottom: 1px solid #d9d9d9
+        --footer:
+          background: '#f0f5ff'
+      properties:
+        title: Custom Background Colors
+      blocks:
+        - id: cl_css_colored_input
+          type: TextInput
+          properties:
+            label:
+              disabled: true
+            placeholder: Colored background item
+
+    - id: cl_css_compact
+      type: ControlledList
+      style:
+        --element:
+          maxWidth: 400px
+        --item:
+          paddingTop: 4px
+          paddingBottom: 4px
+      properties:
+        title: Compact Constrained Width
+        size: small
+      blocks:
+        - id: cl_css_compact_input
+          type: TextInput
+          properties:
+            label:
+              disabled: true
+            placeholder: Compact item
+            size: small
+
+- title: Theme Token Overrides
+  fullWidth: true
+  blocks:
+    - id: cl_theme_padding
+      type: ControlledList
+      properties:
+        title: Custom Padding
+        theme:
+          itemPadding: '16px 24px'
+          headerBg: '#e6f4ff'
+          footerBg: '#f0f5ff'
+      blocks:
+        - id: cl_theme_padding_input
+          type: TextInput
+          properties:
+            label:
+              disabled: true
+            placeholder: Padded list item
+
+    - id: cl_theme_spacing
+      type: ControlledList
+      properties:
+        title: Large Item Padding
+        size: large
+        theme:
+          itemPaddingLG: '20px 32px'
+          titleMarginBottom: 20
+      blocks:
+        - id: cl_theme_spacing_input
+          type: TextInput
+          properties:
+            label:
+              disabled: true
+            placeholder: Spacious list item
+
+    - id: cl_theme_empty
+      type: ControlledList
+      properties:
+        title: Custom Empty Area
+        theme:
+          emptyTextPadding: 48
+          headerBg: '#f6ffed'
+          footerBg: '#f6ffed'
+      blocks:
+        - id: cl_theme_empty_input
+          type: TextInput
+          properties:
+            label:
+              disabled: true
+            placeholder: Item with themed empty area
+
+- title: ControlledList in Survey Builder
+  fullWidth: true
+  blocks:
+    - id: cl_survey_title
+      type: Title
+      properties:
+        content: Build Your Survey
+        level: 4
+    - id: cl_survey
+      type: ControlledList
+      properties:
+        title: Survey Questions
+        addItemButton:
+          title: Add Question
+          icon: AiOutlinePlus
+          color: primary
+          variant: outlined
+        minItems: 1
+      blocks:
+        - id: cl_survey_question
+          type: TextInput
+          layout:
+            flex: 2 1 0
+          properties:
+            label:
+              disabled: true
+            placeholder: Enter your question
+        - id: cl_survey_type
+          type: Selector
+          layout:
+            flex: 1 1 0
+          properties:
+            label:
+              disabled: true
+            placeholder: Answer type
+            options:
+              - label: Short Text
+                value: text
+              - label: Multiple Choice
+                value: multiple_choice
+              - label: Rating
+                value: rating
+              - label: Yes / No
+                value: boolean
+    - id: cl_survey_submit
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Save Survey
+        icon: AiOutlineSave
+        color: primary
+        variant: solid
+      events:
+        onClick:
+          - id: cl_survey_submit_action
+            type: Message
+            params:
+              content: Survey saved successfully!
+              status: success
+
+- title: ControlledList in Order Form
+  fullWidth: true
+  blocks:
+    - id: cl_order_title
+      type: Title
+      properties:
+        content: New Order
+        level: 4
+    - id: cl_order
+      type: ControlledList
+      properties:
+        title: Order Line Items
+        addItemButton:
+          title: Add Line Item
+          icon: AiOutlinePlus
+          color: primary
+          variant: dashed
+        minItems: 1
+      blocks:
+        - id: cl_order_product
+          type: TextInput
+          layout:
+            flex: 3 1 0
+          properties:
+            label:
+              disabled: true
+            placeholder: Product name
+        - id: cl_order_qty
+          type: NumberInput
+          layout:
+            flex: 1 1 0
+          properties:
+            label:
+              disabled: true
+            placeholder: Qty
+        - id: cl_order_price
+          type: NumberInput
+          layout:
+            flex: 1 1 0
+          properties:
+            label:
+              disabled: true
+            placeholder: Unit Price
+    - id: cl_order_note
+      type: TextArea
+      properties:
+        title: Order Notes
+        placeholder: Special instructions or delivery notes...
+        rows: 2
+    - id: cl_order_submit
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Submit Order
+        icon: AiOutlineShoppingCart
+        color: primary
+        variant: solid
+      events:
+        onClick:
+          - id: cl_order_submit_action
+            type: Message
+            params:
+              content: Order submitted!
+              status: success

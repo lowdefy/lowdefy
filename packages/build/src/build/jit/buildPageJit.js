@@ -63,11 +63,13 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     return null;
   }
 
-  // Reset errors for this build. Keep a local reference so that concurrent
-  // JIT builds (different pages sharing buildContext) cannot corrupt our
-  // error list by reassigning buildContext.errors during an await.
+  // Reset errors and warnings for this build. Keep local references so that
+  // concurrent JIT builds (different pages sharing buildContext) cannot corrupt
+  // our lists by reassigning during an await.
   const buildErrors = [];
+  const buildWarnings = [];
   buildContext.errors = buildErrors;
+  buildContext.warnings = buildWarnings;
 
   try {
 
@@ -241,6 +243,15 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
 
     // Write page artifacts
     await writePageJit({ page: finalPage, context: buildContext });
+
+    // Attach warnings after disk write so they don't persist in artifacts
+    if (buildWarnings.length > 0) {
+      finalPage._warnings = buildWarnings.map((w) => ({
+        type: w.name ?? 'ConfigWarning',
+        message: w.message,
+        source: w.source ?? null,
+      }));
+    }
 
     return finalPage;
   } catch (err) {

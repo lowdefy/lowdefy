@@ -36,15 +36,15 @@ test.describe('Selector Block', () => {
   test('renders with default placeholder', async ({ page }) => {
     const selector = getSelector(page, 'selector_basic');
     await expect(selector).toBeVisible();
-    const placeholder = selector.locator('.ant-select-selection-placeholder');
+    const placeholder = selector.locator('.ant-select-placeholder');
     await expect(placeholder).toHaveText('Select item');
   });
 
   test('renders with initial value', async ({ page }) => {
     const selector = getSelector(page, 'selector_with_value');
     await expect(selector).toBeVisible();
-    const selectedItem = selector.locator('.ant-select-selection-item');
-    await expect(selectedItem).toHaveText('Option 2');
+    const content = selector.locator('.ant-select-content');
+    await expect(content).toHaveText('Option 2');
   });
 
   // ============================================
@@ -53,7 +53,7 @@ test.describe('Selector Block', () => {
 
   test('renders with custom placeholder', async ({ page }) => {
     const selector = getSelector(page, 'selector_placeholder');
-    const placeholder = selector.locator('.ant-select-selection-placeholder');
+    const placeholder = selector.locator('.ant-select-placeholder');
     await expect(placeholder).toHaveText('Choose an item');
   });
 
@@ -80,13 +80,13 @@ test.describe('Selector Block', () => {
   test('hides clear button when allowClear is false', async ({ page }) => {
     const selector = getSelector(page, 'selector_no_allowclear');
     // Has a value but no clear button
-    await expect(selector.locator('.ant-select-selection-item')).toHaveText('A');
+    await expect(selector.locator('.ant-select-content')).toHaveText('A');
     await expect(selector.locator('.ant-select-clear')).toBeHidden();
   });
 
   test('hides arrow when showArrow is false', async ({ page }) => {
     const selector = getSelector(page, 'selector_no_arrow');
-    await expect(selector.locator('.ant-select-arrow')).toBeHidden();
+    await expect(selector.locator('.ant-select-suffix')).toBeHidden();
   });
 
   // ============================================
@@ -200,15 +200,15 @@ test.describe('Selector Block', () => {
     // Option 3 is at index 2
     await getOption(page, 'selector_basic', 2).click();
 
-    const selectedItem = selector.locator('.ant-select-selection-item');
-    await expect(selectedItem).toHaveText('Option 3');
+    const content = selector.locator('.ant-select-content');
+    await expect(content).toHaveText('Option 3');
   });
 
   test('can clear selection with clear button', async ({ page }) => {
     const selector = getSelector(page, 'selector_clearable');
 
     // Verify initial value
-    await expect(selector.locator('.ant-select-selection-item')).toHaveText('B');
+    await expect(selector.locator('.ant-select-content')).toHaveText('B');
 
     // Hover to reveal clear button and click
     await selector.hover();
@@ -216,7 +216,7 @@ test.describe('Selector Block', () => {
     await clearBtn.click();
 
     // Verify cleared - placeholder should be visible
-    await expect(selector.locator('.ant-select-selection-placeholder')).toBeVisible();
+    await expect(selector.locator('.ant-select-placeholder')).toBeVisible();
   });
 
   test('can filter options by typing', async ({ page }) => {
@@ -245,6 +245,6 @@ test.describe('Selector Block', () => {
     await expect(dropdown).toBeVisible();
 
     // No value should be selected
-    await expect(selector.locator('.ant-select-selection-placeholder')).toBeVisible();
+    await expect(selector.locator('.ant-select-placeholder')).toBeVisible();
   });
 });
