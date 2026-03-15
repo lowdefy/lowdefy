@@ -122,6 +122,13 @@ Events orchestrate action execution and handle:
 - Error handling per action
 - Debounce support (prevents rapid-fire execution)
 - Event-level catch actions for error recovery
+- Keyboard shortcut metadata storage
+
+#### Shortcut Support
+
+`initEvent()` preserves the `shortcut` string (or string array) from the event config on the runtime event object. Blocks access it via `events.onClick?.shortcut` to render shortcut badges.
+
+The `shortcut` property is read-only metadata — the Events class doesn't handle keyboard listening. The ShortcutManager in `@lowdefy/client` reads shortcut strings from the block tree and registers the actual keyboard listeners via tinykeys.
 
 ### Actions
 
