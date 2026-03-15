@@ -34,10 +34,9 @@
 '@lowdefy/build': major
 ---
 
-Replace hand-written `types.js` files in all 34 plugin packages with auto-generated `types.json`.
+Replace auto-generated `types.json` with source `types.js` files in all plugin packages.
 
 ### Breaking Changes
 
-- **Plugin type resolution**: Plugin types are now read from `types.json` (generated at build time) instead of `types.js`. This eliminates fragile import chains that loaded full module trees — including CSS files, browser APIs, and heavy libraries — just to resolve type names.
-- **Build-time extraction**: A shared extraction script in `@lowdefy/node-utils` runs as a post-build step, extracting type metadata from compiled `dist/` outputs into `types.json`.
-- **Block schema format**: Block schemas migrated from JSON files to JS modules with structured property, event, and method documentation, including `designTokens` sections.
+- **Plugin type resolution**: Plugin types are now read from source `types.js` files instead of auto-generated `types.json`. Block packages derive types from their `metas.js` barrel using the `extractBlockTypes` helper.
+- **`extract-plugin-types` script removed**: The build-time extraction script in `@lowdefy/node-utils` has been deleted. Each plugin package maintains its own `types.js`.
