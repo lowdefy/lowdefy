@@ -24,6 +24,7 @@ cli:
   disableTelemetry: true
   watchIgnore:
     - public/sitemap.xml
+    - public/search-index.json
 
 plugins:
   - name: '@lowdefy/docs'
@@ -91,4 +92,7 @@ menus:
 pages:
   _ref:
     path: pages.yaml
-    transformer: templates/generateSitemap.js
+    transformer: templates/generateSiteAssets.js
+    vars:
+      menus:
+        _ref: menus.yaml

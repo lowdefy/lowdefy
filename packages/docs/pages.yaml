@@ -96,7 +96,6 @@
 - _ref: blocks/display/DangerousHtml.yaml
 - _ref: blocks/display/DangerousMarkdown.yaml
 - _ref: blocks/display/Divider.yaml
-- _ref: blocks/display/DocSearch.yaml
 - _ref: blocks/display/EChart.yaml
 - _ref: blocks/display/FloatButton.yaml
 - _ref: blocks/display/Html.yaml
@@ -112,6 +111,7 @@
 - _ref: blocks/display/Progress.yaml
 - _ref: blocks/display/QRCode.yaml
 - _ref: blocks/display/S3Download.yaml
+- _ref: blocks/display/Search.yaml
 - _ref: blocks/display/Skeleton.yaml
 - _ref: blocks/display/SkeletonAvatar.yaml
 - _ref: blocks/display/SkeletonButton.yaml
