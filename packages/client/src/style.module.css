@@ -28,4 +28,43 @@
       transform: rotate(360deg);
     }
   }
+
+  .shortcut-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    margin-left: var(--ant-margin-xs);
+    font-size: calc(var(--ant-font-size-sm) - 1px);
+    line-height: 1;
+    vertical-align: middle;
+  }
+
+  .shortcut-kbd {
+    display: inline-block;
+    padding: 2px 5px;
+    font-size: calc(var(--ant-font-size-sm) - 1px);
+    font-family:
+      system-ui,
+      -apple-system,
+      sans-serif;
+    background-color: var(--ant-color-fill-quaternary);
+    border-radius: var(--ant-border-radius-sm);
+    border: 1px solid var(--ant-color-border);
+  }
+
+  .shortcut-kbd + .shortcut-kbd {
+    border-left: none;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  .shortcut-kbd:has(+ .shortcut-kbd) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .shortcut-then {
+    margin: 0 2px;
+    font-size: calc(var(--ant-font-size-sm) - 2px);
+  }
 }

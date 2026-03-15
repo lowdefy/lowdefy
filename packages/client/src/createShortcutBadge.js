@@ -16,25 +16,7 @@
 
 import React from 'react';
 
-const badgeStyle = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: '2px',
-  marginLeft: '8px',
-  fontSize: '11px',
-  lineHeight: 1,
-  verticalAlign: 'middle',
-};
-
-const kbdStyle = {
-  display: 'inline-block',
-  padding: '2px 5px',
-  fontSize: '11px',
-  fontFamily: 'system-ui, -apple-system, sans-serif',
-  backgroundColor: '#f0f0f0',
-  borderRadius: '3px',
-  border: '1px solid #d0d0d0',
-};
+import styles from './style.module.css';
 
 const SPECIAL_KEY_DISPLAY = {
   Escape: 'Esc',
@@ -111,7 +93,7 @@ function parsePart(part) {
   const modMap = isMac() ? MAC_MODIFIERS : WIN_MODIFIERS;
   const result = modifiers.map((mod) => modMap[mod.toLowerCase()] || mod);
   result.push(displayKey(key));
-  return result;
+  return [result.join('\u2009')];
 }
 
 function displayKey(key) {
@@ -129,14 +111,14 @@ function createShortcutBadge() {
     const segments = parseShortcut(primary);
 
     return (
-      <span className="lf-shortcut-badge" style={badgeStyle}>
+      <span className={styles['shortcut-badge']}>
         {segments.map((segment, i) =>
           segment === 'then' ? (
-            <span key={i} style={{ margin: '0 2px', fontSize: '10px' }}>
+            <span key={i} className={styles['shortcut-then']}>
               then
             </span>
           ) : (
-            <kbd key={i} style={kbdStyle}>
+            <kbd key={i} className={styles['shortcut-kbd']}>
               {segment}
             </kbd>
           )
