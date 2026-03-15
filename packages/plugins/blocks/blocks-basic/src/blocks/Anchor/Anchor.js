@@ -53,7 +53,7 @@ const AnchorBlock = ({
                   ? { name: 'AiOutlineLoading3Quarters', spin: true }
                   : icon
               }
-              styles={{ element: styles?.icon }}
+              styles={{ element: { marginRight: 4, ...styles?.icon } }}
             />
           )}
           {title || defaultTitle}
