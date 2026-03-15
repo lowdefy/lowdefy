@@ -2294,6 +2294,29 @@
                     }
                   ],
                   "description": "The anchor element."
+                },
+                "--icon": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The icon in the Anchor."
                 }
               }
             }
@@ -2321,6 +2344,10 @@
                 "--element": {
                   "type": "object",
                   "description": "The anchor element."
+                },
+                "--icon": {
+                  "type": "object",
+                  "description": "The icon in the Anchor."
                 }
               }
             },
@@ -2959,6 +2986,29 @@
                     }
                   ],
                   "description": "The block layout wrapper."
+                },
+                "--element": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Icon element."
                 }
               }
             }
@@ -2982,6 +3032,10 @@
                 "--block": {
                   "type": "object",
                   "description": "The block layout wrapper."
+                },
+                "--element": {
+                  "type": "object",
+                  "description": "The Icon element."
                 }
               }
             },
@@ -4163,6 +4217,29 @@
                     }
                   ],
                   "description": "The Breadcrumb element."
+                },
+                "--icon": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The icon in the Breadcrumb."
                 }
               }
             }
@@ -4190,6 +4267,10 @@
                 "--element": {
                   "type": "object",
                   "description": "The Breadcrumb element."
+                },
+                "--icon": {
+                  "type": "object",
+                  "description": "The icon in the Breadcrumb."
                 }
               }
             },
@@ -4973,6 +5054,52 @@
                   ],
                   "description": "The Statistic element."
                 },
+                "--prefixIcon": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The prefix icon in the Statistic."
+                },
+                "--suffixIcon": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The suffix icon in the Statistic."
+                },
                 "--value": {
                   "oneOf": [
                     {
@@ -5022,6 +5149,14 @@
                 "--element": {
                   "type": "object",
                   "description": "The Statistic element."
+                },
+                "--prefixIcon": {
+                  "type": "object",
+                  "description": "The prefix icon in the Statistic."
+                },
+                "--suffixIcon": {
+                  "type": "object",
+                  "description": "The suffix icon in the Statistic."
                 },
                 "--value": {
                   "type": "object",
@@ -5592,6 +5727,52 @@
                     }
                   ],
                   "description": "The TextInput validation feedback."
+                },
+                "--prefixIcon": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The prefix icon in the TextInput."
+                },
+                "--suffixIcon": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The suffix icon in the TextInput."
                 }
               }
             }
@@ -5631,6 +5812,14 @@
                 "--feedback": {
                   "type": "object",
                   "description": "The TextInput validation feedback."
+                },
+                "--prefixIcon": {
+                  "type": "object",
+                  "description": "The prefix icon in the TextInput."
+                },
+                "--suffixIcon": {
+                  "type": "object",
+                  "description": "The suffix icon in the TextInput."
                 }
               }
             },
@@ -5966,6 +6155,29 @@
                     }
                   ],
                   "description": "The Result element."
+                },
+                "--icon": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The icon in the Result."
                 }
               }
             }
@@ -5993,6 +6205,10 @@
                 "--element": {
                   "type": "object",
                   "description": "The Result element."
+                },
+                "--icon": {
+                  "type": "object",
+                  "description": "The icon in the Result."
                 }
               }
             },
@@ -6233,6 +6449,29 @@
                     }
                   ],
                   "description": "The Message element."
+                },
+                "--icon": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The icon in the Message."
                 }
               }
             }
@@ -6260,6 +6499,10 @@
                 "--element": {
                   "type": "object",
                   "description": "The Message element."
+                },
+                "--icon": {
+                  "type": "object",
+                  "description": "The icon in the Message."
                 }
               }
             },

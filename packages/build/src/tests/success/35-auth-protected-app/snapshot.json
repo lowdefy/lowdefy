@@ -2303,6 +2303,29 @@
                     }
                   ],
                   "description": "The Result element."
+                },
+                "--icon": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The icon in the Result."
                 }
               }
             }
@@ -2330,6 +2353,10 @@
                 "--element": {
                   "type": "object",
                   "description": "The Result element."
+                },
+                "--icon": {
+                  "type": "object",
+                  "description": "The icon in the Result."
                 }
               }
             },
@@ -2617,6 +2644,52 @@
                   ],
                   "description": "The Statistic element."
                 },
+                "--prefixIcon": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The prefix icon in the Statistic."
+                },
+                "--suffixIcon": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The suffix icon in the Statistic."
+                },
                 "--value": {
                   "oneOf": [
                     {
@@ -2666,6 +2739,14 @@
                 "--element": {
                   "type": "object",
                   "description": "The Statistic element."
+                },
+                "--prefixIcon": {
+                  "type": "object",
+                  "description": "The prefix icon in the Statistic."
+                },
+                "--suffixIcon": {
+                  "type": "object",
+                  "description": "The suffix icon in the Statistic."
                 },
                 "--value": {
                   "type": "object",
@@ -3085,6 +3166,29 @@
                   ],
                   "description": "The Avatar element."
                 },
+                "--icon": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The icon in the Avatar."
+                },
                 "--max": {
                   "oneOf": [
                     {
@@ -3134,6 +3238,10 @@
                 "--element": {
                   "type": "object",
                   "description": "The Avatar element."
+                },
+                "--icon": {
+                  "type": "object",
+                  "description": "The icon in the Avatar."
                 },
                 "--max": {
                   "type": "object",
@@ -3526,6 +3634,29 @@
                   ],
                   "description": "The Switch element."
                 },
+                "--checkedIcon": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The checked icon in the Switch."
+                },
                 "--label": {
                   "oneOf": [
                     {
@@ -3594,6 +3725,29 @@
                     }
                   ],
                   "description": "The Switch validation feedback."
+                },
+                "--uncheckedIcon": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The unchecked icon in the Switch."
                 }
               }
             }
@@ -3622,6 +3776,10 @@
                   "type": "object",
                   "description": "The Switch element."
                 },
+                "--checkedIcon": {
+                  "type": "object",
+                  "description": "The checked icon in the Switch."
+                },
                 "--label": {
                   "type": "object",
                   "description": "The Switch label."
@@ -3633,6 +3791,10 @@
                 "--feedback": {
                   "type": "object",
                   "description": "The Switch validation feedback."
+                },
+                "--uncheckedIcon": {
+                  "type": "object",
+                  "description": "The unchecked icon in the Switch."
                 }
               }
             },
@@ -3763,7 +3925,7 @@
             "bordered": {
               "type": "boolean",
               "default": true,
-              "description": "Whether or not the selector has a border style."
+              "description": "Whether or not the selector has a border style. Deprecated, use variant instead."
             },
             "clearIcon": {
               "type": [
@@ -3959,6 +4121,15 @@
             "title": {
               "type": "string",
               "description": "Title to describe the input component, if no title is specified the block id is displayed - supports html."
+            },
+            "variant": {
+              "type": "string",
+              "enum": [
+                "outlined",
+                "filled",
+                "borderless"
+              ],
+              "description": "Input visual variant. When set, takes precedence over bordered."
             },
             "theme": {
               "type": "object",
@@ -4221,6 +4392,29 @@
                   ],
                   "description": "The Selector element."
                 },
+                "--clearIcon": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The clear icon in the Selector."
+                },
                 "--label": {
                   "oneOf": [
                     {
@@ -4312,6 +4506,29 @@
                     }
                   ],
                   "description": "The Selector options."
+                },
+                "--suffixIcon": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The suffix icon in the Selector."
                 }
               }
             }
@@ -4340,6 +4557,10 @@
                   "type": "object",
                   "description": "The Selector element."
                 },
+                "--clearIcon": {
+                  "type": "object",
+                  "description": "The clear icon in the Selector."
+                },
                 "--label": {
                   "type": "object",
                   "description": "The Selector label."
@@ -4355,6 +4576,10 @@
                 "--options": {
                   "type": "object",
                   "description": "The Selector options."
+                },
+                "--suffixIcon": {
+                  "type": "object",
+                  "description": "The suffix icon in the Selector."
                 }
               }
             },
@@ -4672,6 +4897,29 @@
                     }
                   ],
                   "description": "The Message element."
+                },
+                "--icon": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The icon in the Message."
                 }
               }
             }
@@ -4699,6 +4947,10 @@
                 "--element": {
                   "type": "object",
                   "description": "The Message element."
+                },
+                "--icon": {
+                  "type": "object",
+                  "description": "The icon in the Message."
                 }
               }
             },
@@ -5209,6 +5461,29 @@
                     }
                   ],
                   "description": "The anchor element."
+                },
+                "--icon": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The icon in the Anchor."
                 }
               }
             }
@@ -5236,6 +5511,10 @@
                 "--element": {
                   "type": "object",
                   "description": "The anchor element."
+                },
+                "--icon": {
+                  "type": "object",
+                  "description": "The icon in the Anchor."
                 }
               }
             },
@@ -5874,6 +6153,29 @@
                     }
                   ],
                   "description": "The block layout wrapper."
+                },
+                "--element": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Icon element."
                 }
               }
             }
@@ -5897,6 +6199,10 @@
                 "--block": {
                   "type": "object",
                   "description": "The block layout wrapper."
+                },
+                "--element": {
+                  "type": "object",
+                  "description": "The Icon element."
                 }
               }
             },

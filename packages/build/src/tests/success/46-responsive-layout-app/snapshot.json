@@ -2259,6 +2259,29 @@
                     }
                   ],
                   "description": "The anchor element."
+                },
+                "--icon": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The icon in the Anchor."
                 }
               }
             }
@@ -2286,6 +2309,10 @@
                 "--element": {
                   "type": "object",
                   "description": "The anchor element."
+                },
+                "--icon": {
+                  "type": "object",
+                  "description": "The icon in the Anchor."
                 }
               }
             },
@@ -2924,6 +2951,29 @@
                     }
                   ],
                   "description": "The block layout wrapper."
+                },
+                "--element": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Icon element."
                 }
               }
             }
@@ -2947,6 +2997,10 @@
                 "--block": {
                   "type": "object",
                   "description": "The block layout wrapper."
+                },
+                "--element": {
+                  "type": "object",
+                  "description": "The Icon element."
                 }
               }
             },
@@ -4611,6 +4665,29 @@
                     }
                   ],
                   "description": "The Result element."
+                },
+                "--icon": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The icon in the Result."
                 }
               }
             }
@@ -4638,6 +4715,10 @@
                 "--element": {
                   "type": "object",
                   "description": "The Result element."
+                },
+                "--icon": {
+                  "type": "object",
+                  "description": "The icon in the Result."
                 }
               }
             },
@@ -4878,6 +4959,29 @@
                     }
                   ],
                   "description": "The Message element."
+                },
+                "--icon": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The icon in the Message."
                 }
               }
             }
@@ -4905,6 +5009,10 @@
                 "--element": {
                   "type": "object",
                   "description": "The Message element."
+                },
+                "--icon": {
+                  "type": "object",
+                  "description": "The icon in the Message."
                 }
               }
             },
