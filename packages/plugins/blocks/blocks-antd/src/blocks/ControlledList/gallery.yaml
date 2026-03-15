@@ -388,7 +388,7 @@
       events:
         onClick:
           - id: cl_survey_submit_action
-            type: Message
+            type: DisplayMessage
             params:
               content: Survey saved successfully!
               status: success
@@ -454,7 +454,7 @@
       events:
         onClick:
           - id: cl_order_submit_action
-            type: Message
+            type: DisplayMessage
             params:
               content: Order submitted!
               status: success

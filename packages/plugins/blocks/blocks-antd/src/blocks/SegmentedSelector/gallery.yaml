@@ -615,7 +615,8 @@
               - id: view_changed_action
                 type: SetState
                 params:
-                  applied2_dashboard_view: _state: applied2_dashboard_view_toggle
+                  applied2_dashboard_view:
+                    _state: applied2_dashboard_view_toggle
         - id: applied2_dashboard_date_range
           type: DateRangeSelector
           properties:
@@ -667,7 +668,8 @@
               - id: theme_changed_action
                 type: SetState
                 params:
-                  applied3_theme: _state: applied3_theme_selector
+                  applied3_theme:
+                    _state: applied3_theme_selector
         - id: applied3_language_selector
           type: SegmentedSelector
           properties:
@@ -684,7 +686,8 @@
               - id: language_changed_action
                 type: SetState
                 params:
-                  applied3_language: _state: applied3_language_selector
+                  applied3_language:
+                    _state: applied3_language_selector
         - id: applied3_notifications_toggle
           type: SegmentedSelector
           properties:
@@ -701,7 +704,8 @@
               - id: notifications_changed_action
                 type: SetState
                 params:
-                  applied3_notifications: _state: applied3_notifications_toggle
+                  applied3_notifications:
+                    _state: applied3_notifications_toggle
         - id: applied3_save_btn
           type: Button
           properties:

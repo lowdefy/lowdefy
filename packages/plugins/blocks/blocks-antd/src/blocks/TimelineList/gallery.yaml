@@ -31,8 +31,7 @@
         - id: tl_basic_content
           type: Paragraph
           properties:
-            content:
-              _state: item.title
+            content: Timeline item
     - id: tl_basic_left
       type: TimelineList
       properties:
@@ -45,8 +44,7 @@
         - id: tl_basic_left_content
           type: Paragraph
           properties:
-            content:
-              _state: item.title
+            content: Timeline item
     - id: tl_basic_right
       type: TimelineList
       properties:
@@ -59,8 +57,7 @@
         - id: tl_basic_right_content
           type: Paragraph
           properties:
-            content:
-              _state: item.title
+            content: Timeline item
     - id: tl_basic_alternate
       type: TimelineList
       properties:
@@ -80,8 +77,7 @@
         - id: tl_basic_alternate_content
           type: Paragraph
           properties:
-            content:
-              _state: item.title
+            content: Timeline item
 
 - title: Colors and Icons
   fullWidth: true
@@ -102,8 +98,7 @@
         - id: tl_colors_content
           type: Paragraph
           properties:
-            content:
-              _state: item.title
+            content: Timeline item
     - id: tl_icons
       type: TimelineList
       properties:
@@ -124,8 +119,7 @@
         - id: tl_icons_content
           type: Paragraph
           properties:
-            content:
-              _state: item.title
+            content: Timeline item
     - id: tl_colors_custom_fields
       type: TimelineList
       properties:
@@ -149,8 +143,7 @@
         - id: tl_colors_custom_fields_content
           type: Paragraph
           properties:
-            content:
-              _state: item.description
+            content: Timeline event description
 
 - title: Pending and Reverse
   fullWidth: true
@@ -167,8 +160,7 @@
         - id: tl_pending_content
           type: Paragraph
           properties:
-            content:
-              _state: item.title
+            content: Timeline item
     - id: tl_pending_dot
       type: TimelineList
       properties:
@@ -184,8 +176,7 @@
         - id: tl_pending_dot_content
           type: Paragraph
           properties:
-            content:
-              _state: item.title
+            content: Timeline item
     - id: tl_reversed
       type: TimelineList
       properties:
@@ -198,8 +189,7 @@
         - id: tl_reversed_content
           type: Paragraph
           properties:
-            content:
-              _state: item.title
+            content: Timeline item
 
 - title: Style and CSS
   fullWidth: true
@@ -216,8 +206,7 @@
         - id: tl_css_tailwind_bg_content
           type: Paragraph
           properties:
-            content:
-              _state: item.title
+            content: Timeline item
     - id: tl_css_tailwind_shadow
       type: TimelineList
       class: bg-white p-4 rounded-lg shadow-md
@@ -233,8 +222,7 @@
         - id: tl_css_tailwind_shadow_content
           type: Paragraph
           properties:
-            content:
-              _state: item.title
+            content: Timeline item
     - id: tl_css_inline
       type: TimelineList
       style:
@@ -255,8 +243,7 @@
         - id: tl_css_inline_content
           type: Paragraph
           properties:
-            content:
-              _state: item.title
+            content: Timeline item
 
 - title: Theme Token Overrides
   fullWidth: true
@@ -275,8 +262,7 @@
         - id: tl_theme_tail_content
           type: Paragraph
           properties:
-            content:
-              _state: item.title
+            content: Timeline item
     - id: tl_theme_dot
       type: TimelineList
       properties:
@@ -292,8 +278,7 @@
         - id: tl_theme_dot_content
           type: Paragraph
           properties:
-            content:
-              _state: item.title
+            content: Timeline item
     - id: tl_theme_combined
       type: TimelineList
       properties:
@@ -313,8 +298,7 @@
         - id: tl_theme_combined_content
           type: Paragraph
           properties:
-            content:
-              _state: item.title
+            content: Timeline item
 
 - title: TimelineList in Project Tracker
   fullWidth: true
@@ -351,8 +335,7 @@
             - id: tl_project_timeline_content
               type: Paragraph
               properties:
-                content:
-                  _state: item.title
+                content: Project milestone
         - id: tl_project_actions
           type: Box
           layout:
@@ -409,8 +392,7 @@
             - id: tl_support_timeline_content
               type: Paragraph
               properties:
-                content:
-                  _state: item.title
+                content: Support ticket update
         - id: tl_support_actions
           type: Box
           layout:

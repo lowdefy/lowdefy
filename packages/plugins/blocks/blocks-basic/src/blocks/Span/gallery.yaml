@@ -557,7 +557,7 @@
               - id: span_breadcrumb_home_click
                 type: Link
                 params:
-                  pageId: home
+                  url: /
         - id: span_breadcrumb_sep1
           type: Span
           layout:
@@ -582,7 +582,7 @@
               - id: span_breadcrumb_products_click
                 type: Link
                 params:
-                  pageId: products
+                  url: /products
         - id: span_breadcrumb_sep2
           type: Span
           layout:

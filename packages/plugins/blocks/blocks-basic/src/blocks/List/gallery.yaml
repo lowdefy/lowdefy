@@ -25,8 +25,7 @@
         - id: list_basic_item
           type: Html
           properties:
-            html:
-              _state: item.text
+            html: List item content
     - id: list_row
       type: List
       properties:
@@ -43,8 +42,7 @@
               padding: 8px 16px
               borderRadius: 6
           properties:
-            content:
-              _state: item.label
+            content: Item label
     - id: list_column
       type: List
       properties:
@@ -62,8 +60,7 @@
             - id: list_column_item_text
               type: Html
               properties:
-                html:
-                  _state: item.name
+                html: Item name
     - id: list_row_rev
       type: List
       properties:
@@ -80,8 +77,7 @@
               padding: 8px 16px
               borderRadius: 6
           properties:
-            content:
-              _state: item.label
+            content: Item label
     - id: list_col_rev
       type: List
       properties:
@@ -99,8 +95,7 @@
             - id: list_col_rev_item_text
               type: Html
               properties:
-                html:
-                  _state: item.name
+                html: Item name
 
 - title: Wrap and Scroll
   fullWidth: true
@@ -124,8 +119,7 @@
               textAlign: center
               margin: 4
           properties:
-            content:
-              _state: item.label
+            content: Item label
     - id: list_nowrap
       type: List
       properties:
@@ -148,8 +142,7 @@
               textAlign: center
               margin: 4
           properties:
-            content:
-              _state: item.label
+            content: Item label
     - id: list_scroll
       type: List
       properties:
@@ -174,8 +167,7 @@
             - id: list_scroll_item_text
               type: Html
               properties:
-                html:
-                  _state: item.name
+                html: Item name
 
 # ──────────────────────────────────────────────
 # Styling
@@ -193,8 +185,7 @@
         - id: list_tw_rounded_item
           type: Html
           properties:
-            html:
-              _state: item.text
+            html: List item content
     - id: list_tw_border
       type: List
       properties:
@@ -204,8 +195,7 @@
         - id: list_tw_border_item
           type: Html
           properties:
-            html:
-              _state: item.text
+            html: List item content
     - id: list_tw_accent
       type: List
       properties:
@@ -215,8 +205,7 @@
         - id: list_tw_accent_item
           type: Html
           properties:
-            html:
-              _state: item.text
+            html: List item content
 
 - title: Styled with CSS Key Object
   fullWidth: true
@@ -235,8 +224,7 @@
         - id: list_csskey_blue_item
           type: Html
           properties:
-            html:
-              _state: item.text
+            html: List item content
     - id: list_csskey_shadow
       type: List
       properties:
@@ -251,8 +239,7 @@
         - id: list_csskey_shadow_item
           type: Html
           properties:
-            html:
-              _state: item.text
+            html: List item content
     - id: list_csskey_dark
       type: List
       properties:
@@ -270,8 +257,7 @@
             --element:
               color: '#a0a0a0'
           properties:
-            html:
-              _state: item.text
+            html: List item content
 
 # ──────────────────────────────────────────────
 # Applied Examples
@@ -300,10 +286,10 @@
           events:
             onClick:
               - id: list_user_dir_click
-                type: SetState
+                type: DisplayMessage
                 params:
-                  selectedUser:
-                    _state: item.name
+                  content: User selected
+                  status: info
           blocks:
             - id: list_user_dir_icon
               type: Icon
@@ -318,8 +304,7 @@
               layout:
                 flex: 1
               properties:
-                html:
-                  _state: item.name
+                html: Item name
 
 - title: List in Card Gallery
   fullWidth: true
@@ -344,21 +329,16 @@
           events:
             onClick:
               - id: list_card_gallery_click
-                type: SetState
+                type: DisplayMessage
                 params:
-                  selectedCard:
-                    _state: item.title
+                  content: Card selected
+                  status: info
           blocks:
             - id: list_card_gallery_title
               type: Html
               properties:
-                html:
-                  _nunjucks:
-                    template: '<h4 style="margin: 0 0 8px 0;">{{ item.title }}</h4>'
-                    on:
-                      _state: true
+                html: '<h4 style="margin: 0 0 8px 0;">Card Title</h4>'
             - id: list_card_gallery_desc
               type: Html
               properties:
-                html:
-                  _state: item.description
+                html: Card description text
