@@ -14,11 +14,12 @@
   limitations under the License.
 */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { Tabs } from 'antd';
 
 import withTheme from '../withTheme.js';
+import useItemShortcuts from '../useItemShortcuts.js';
 
 const getTabs = ({ content, properties }) => {
   let tabs = properties.tabs;
@@ -31,16 +32,16 @@ const getTabs = ({ content, properties }) => {
   return tabs.filter((tab) => tab.key !== properties.extraAreaKey);
 };
 
-const TabsBlock = ({
+function TabsBlock({
   blockId,
   classNames = {},
-  components: { Icon },
+  components: { Icon, ShortcutBadge },
   events,
   content,
   methods,
   properties,
   styles = {},
-}) => {
+}) {
   const tabs = getTabs({ content, properties });
   const additionalProps = {};
   if (properties.extraAreaKey) {
@@ -57,6 +58,18 @@ const TabsBlock = ({
       }
     });
   });
+
+  const shortcutItems = tabs
+    .filter((tab) => tab.shortcut)
+    .map((tab) => ({ key: tab.key, shortcut: tab.shortcut, disabled: tab.disabled }));
+  const onShortcutMatch = useCallback(
+    (activeKey) => {
+      setKey(activeKey);
+      methods.triggerEvent({ name: 'onChange', event: { activeKey } });
+    },
+    [methods]
+  );
+  useItemShortcuts({ items: shortcutItems, onMatch: onShortcutMatch });
 
   return (
     <Tabs
@@ -100,6 +113,7 @@ const TabsBlock = ({
               />
             )}
             {tab.title ? renderHtml({ html: tab.title, methods }) : tab.key}
+            <ShortcutBadge shortcut={tab.shortcut} />
           </span>
         ),
         children: content[tab.key] && content[tab.key](),
@@ -107,6 +121,6 @@ const TabsBlock = ({
       {...additionalProps}
     />
   );
-};
+}
 
 export default withTheme('Tabs', withBlockDefaults(TabsBlock));

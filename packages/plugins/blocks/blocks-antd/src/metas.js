@@ -67,6 +67,7 @@ export { default as QRCode } from './blocks/QRCode/meta.js';
 export { default as RadioSelector } from './blocks/RadioSelector/meta.js';
 export { default as RatingSlider } from './blocks/RatingSlider/meta.js';
 export { default as Result } from './blocks/Result/meta.js';
+export { default as Search } from './blocks/Search/meta.js';
 export { default as SegmentedSelector } from './blocks/SegmentedSelector/meta.js';
 export { default as Selector } from './blocks/Selector/meta.js';
 export { default as Sider } from './blocks/Sider/meta.js';

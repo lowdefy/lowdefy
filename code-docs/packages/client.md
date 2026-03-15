@@ -79,6 +79,19 @@ import Client from '@lowdefy/client';
 | `createCallAPI.js`     | Creates function to call custom endpoints |
 | `request.js`           | HTTP request utilities                    |
 
+### Keyboard Shortcuts
+
+| Module                     | Purpose                                                 |
+| -------------------------- | ------------------------------------------------------- |
+| `createShortcutManager.js` | Global keyboard shortcut listener lifecycle (tinykeys)  |
+| `createShortcutBadge.js`   | ShortcutBadge React component for visual key indicators |
+
+**ShortcutManager lifecycle:** Initialized on page context creation → walks block tree to collect all shortcuts → registers a single global keydown listener via tinykeys → checks block visibility lazily per handler → destroyed on context change/unmount.
+
+**ShortcutBadge** is registered in `initLowdefyContext.js` as a component (alongside Icon and Link). Blocks receive it via props and render it next to titles/labels. It detects the platform (Mac vs Windows/Linux) and renders modifier symbols accordingly (⌘/⇧/⌥ on Mac, Ctrl/Shift/Alt elsewhere).
+
+See [keyboard-shortcuts.md](../architecture/keyboard-shortcuts.md) for the full data flow.
+
 ### Context Initialization
 
 | Module                   | Purpose                                                      |

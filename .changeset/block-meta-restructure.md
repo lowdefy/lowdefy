@@ -9,7 +9,6 @@
 '@lowdefy/blocks-echarts': major
 '@lowdefy/blocks-markdown': major
 '@lowdefy/blocks-aggrid': major
-'@lowdefy/blocks-algolia': major
 '@lowdefy/blocks-qr': major
 '@lowdefy/blocks-google-maps': major
 '@lowdefy/plugin-aws': major

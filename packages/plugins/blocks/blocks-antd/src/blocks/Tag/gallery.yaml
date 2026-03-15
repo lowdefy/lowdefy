@@ -286,6 +286,26 @@
             params:
               selectedCategory: design
 
+- title: Keyboard Shortcuts
+  blocks:
+    - id: shortcut_filter
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Toggle Filter
+        icon: AiOutlineFilter
+        color: blue
+      events:
+        onClick:
+          shortcut: mod+f
+          try:
+            - id: filter_msg
+              type: DisplayMessage
+              params:
+                content: Filter toggled
+                status: info
+
 - title: Style and CSS
   blocks:
     - id: css_shadow

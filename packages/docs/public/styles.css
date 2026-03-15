@@ -1,7 +1,3 @@
-:root {
-  --docsearch-primary-color: var(--ant-color-primary);
-}
-
 html,
 body {
   overflow-x: hidden;

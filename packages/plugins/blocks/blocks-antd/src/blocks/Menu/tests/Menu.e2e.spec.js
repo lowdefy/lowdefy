@@ -282,4 +282,24 @@ test.describe('Menu Block', () => {
     const display = getBlock(page, 'targeting_display');
     await expect(display).toHaveText('Clicked: target_users');
   });
+
+  // ============================================
+  // SHORTCUT BADGE TESTS
+  // ============================================
+
+  test('renders shortcut badges on menu items with shortcuts', async ({ page }) => {
+    const menu = getMenu(page, 'menu_shortcut');
+    await expect(menu).toBeVisible();
+
+    // Menu items with shortcuts should have kbd elements
+    const homeItem = menu.locator('.ant-menu-item').filter({ hasText: 'Home' });
+    await expect(homeItem.locator('kbd')).toHaveCount(2); // mod + 1
+
+    const searchItem = menu.locator('.ant-menu-item').filter({ hasText: 'Search' });
+    await expect(searchItem.locator('kbd')).toHaveCount(2); // mod + K
+
+    // Menu item without shortcut should have no kbd elements
+    const noShortcutItem = menu.locator('.ant-menu-item').filter({ hasText: 'No Shortcut' });
+    await expect(noShortcutItem.locator('kbd')).toHaveCount(0);
+  });
 });

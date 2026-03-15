@@ -847,3 +847,41 @@
               - Page definitions
               - Block properties
               - Event handling
+
+- title: Keyboard Shortcuts
+  blocks:
+    - id: ks_menu
+      type: Menu
+      style:
+        width: 256
+      properties:
+        mode: vertical
+        links:
+          - id: ks_home
+            type: MenuLink
+            properties:
+              title: Home
+              icon: AiOutlineHome
+              shortcut: mod+1
+          - id: ks_search
+            type: MenuLink
+            properties:
+              title: Search
+              icon: AiOutlineSearch
+              shortcut: mod+k
+          - id: ks_settings
+            type: MenuLink
+            properties:
+              title: Settings
+              icon: AiOutlineSetting
+              shortcut: mod+,
+      events:
+        onSelect:
+          - id: ks_select_msg
+            type: DisplayMessage
+            params:
+              content:
+                _string.concat:
+                  - 'Selected: '
+                  - _event: key
+              status: info

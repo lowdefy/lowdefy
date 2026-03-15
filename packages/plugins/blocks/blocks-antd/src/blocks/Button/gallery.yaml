@@ -452,6 +452,63 @@
         color: green
         variant: solid
 
+- title: Keyboard Shortcuts
+  blocks:
+    - id: shortcut_save
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Save
+        icon: AiOutlineSave
+        color: primary
+        variant: solid
+      events:
+        onClick:
+          shortcut: mod+s
+          try:
+            - id: save_msg
+              type: DisplayMessage
+              params:
+                content: Saved!
+                status: success
+    - id: shortcut_new
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: New Item
+        icon: AiOutlinePlus
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          shortcut: mod+n
+          try:
+            - id: new_msg
+              type: DisplayMessage
+              params:
+                content: Creating new item...
+                status: info
+    - id: shortcut_delete
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Delete
+        icon: AiOutlineDelete
+        color: danger
+        variant: solid
+      events:
+        onClick:
+          shortcut: mod+shift+d
+          try:
+            - id: delete_msg
+              type: DisplayMessage
+              params:
+                content: Item deleted
+                status: warning
+
 - title: Style and CSS
   blocks:
     - id: css_shadow

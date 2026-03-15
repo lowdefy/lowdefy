@@ -66,9 +66,7 @@ function transformer(obj) {
     contentArray.push({
       id: `${method.name}_types`,
       type: 'Markdown',
-      style: {
-        '.markdown-body': { fontSize: '14px' },
-      },
+      class: 'text-sm',
       properties: {
         content: method.types,
       },

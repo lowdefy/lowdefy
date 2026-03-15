@@ -118,4 +118,24 @@ test.describe('Tabs Block', () => {
     const display = getBlock(page, 'onchange_display');
     await expect(display).toHaveText('Active: change2');
   });
+
+  // ============================================
+  // SHORTCUT BADGE TESTS
+  // ============================================
+
+  test('renders shortcut badges on tabs with shortcuts', async ({ page }) => {
+    const tabs = getTabs(page, 'tabs_shortcut');
+    await expect(tabs).toBeVisible();
+
+    const tabItems = getTabItems(tabs);
+
+    // First tab has shortcut mod+1 → 2 kbd elements
+    await expect(tabItems.nth(0).locator('kbd')).toHaveCount(2);
+
+    // Second tab has shortcut mod+2 → 2 kbd elements
+    await expect(tabItems.nth(1).locator('kbd')).toHaveCount(2);
+
+    // Third tab has no shortcut → 0 kbd elements
+    await expect(tabItems.nth(2).locator('kbd')).toHaveCount(0);
+  });
 });

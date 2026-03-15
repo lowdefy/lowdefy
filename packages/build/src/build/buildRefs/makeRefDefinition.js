@@ -22,7 +22,10 @@ import makeId from '../../utils/makeId.js';
 function makeRefDefinition(refDefinition, parent, refMap, lineNumber, walkerPath) {
   // Use walker tree path when available for deterministic IDs under parallel
   // resolution. Falls back to counter for root ref and JIT-created refs.
-  const id = walkerPath != null ? walkerPath : makeId.next();
+  // When a file's root content is itself a _ref, both the outer and inner refs
+  // share the same walker path. Fall back to counter to avoid overwriting the
+  // outer ref's refMap entry (which would create a self-referencing parent).
+  const id = walkerPath != null && refMap[walkerPath] === undefined ? walkerPath : makeId.next();
   const refDef = {
     parent,
     lineNumber,

@@ -24,7 +24,7 @@ import withTheme from '../withTheme.js';
 const TagBlock = ({
   blockId,
   classNames = {},
-  components: { Icon },
+  components: { Icon, ShortcutBadge },
   events,
   methods,
   onClick,
@@ -59,12 +59,15 @@ const TagBlock = ({
       style={styles.element}
       {...additionalProps}
     >
-      {type.isString(properties.title)
-        ? renderHtml({
-            html: properties.title,
-            methods,
-          })
-        : properties.title ?? blockId}
+      <>
+        {type.isString(properties.title)
+          ? renderHtml({
+              html: properties.title,
+              methods,
+            })
+          : properties.title ?? blockId}
+        <ShortcutBadge shortcut={events.onClick?.shortcut} />
+      </>
     </Tag>
   );
 };

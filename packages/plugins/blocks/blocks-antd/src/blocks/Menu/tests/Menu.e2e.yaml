@@ -392,3 +392,50 @@ blocks:
               - 'Clicked: '
               - _state: targeting_clicked_key
           else: ''
+
+  # ============================================
+  # SHORTCUT BADGE TESTS
+  # ============================================
+
+  - id: menu_shortcut
+    type: Menu
+    properties:
+      mode: vertical
+      theme: light
+      links:
+        - id: sc_home
+          type: MenuLink
+          properties:
+            title: Home
+            shortcut: mod+1
+        - id: sc_search
+          type: MenuLink
+          properties:
+            title: Search
+            shortcut: mod+k
+        - id: sc_no_shortcut
+          type: MenuLink
+          properties:
+            title: No Shortcut
+    events:
+      onSelect:
+        - id: set_shortcut_key
+          type: SetState
+          params:
+            shortcut_selected_key:
+              _event: key
+
+  - id: shortcut_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: shortcut_selected_key
+              - null
+          then:
+            _string.concat:
+              - 'Selected: '
+              - _state: shortcut_selected_key
+          else: ''

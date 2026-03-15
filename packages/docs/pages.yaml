@@ -17,6 +17,7 @@
 - _ref: concepts/layout-overview.yaml
 - _ref: concepts/connections-and-requests.yaml
 - _ref: concepts/events-and-actions.yaml
+- _ref: concepts/keyboard-shortcuts.yaml
 - _ref: concepts/operators.yaml
 - _ref: concepts/secrets.yaml
 - _ref: concepts/logger.yaml
@@ -96,7 +97,6 @@
 - _ref: blocks/display/DangerousHtml.yaml
 - _ref: blocks/display/DangerousMarkdown.yaml
 - _ref: blocks/display/Divider.yaml
-- _ref: blocks/display/DocSearch.yaml
 - _ref: blocks/display/EChart.yaml
 - _ref: blocks/display/FloatButton.yaml
 - _ref: blocks/display/Html.yaml
@@ -112,6 +112,7 @@
 - _ref: blocks/display/Progress.yaml
 - _ref: blocks/display/QRCode.yaml
 - _ref: blocks/display/S3Download.yaml
+- _ref: blocks/display/Search.yaml
 - _ref: blocks/display/Skeleton.yaml
 - _ref: blocks/display/SkeletonAvatar.yaml
 - _ref: blocks/display/SkeletonButton.yaml
@@ -279,6 +280,7 @@
 - _ref: controls/try.yaml
 # - _ref: controls/while.yaml # TODO: Add back when while control implemented
 
+- _ref: migration/upgrade-guide.yaml
 - _ref: migration/v3-to-v4.yaml
 - _ref: migration/v4-to-v5.yaml
 

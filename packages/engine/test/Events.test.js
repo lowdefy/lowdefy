@@ -105,6 +105,7 @@ test('init Events', async () => {
       actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
       catchActions: [],
       debounce: undefined,
+      shortcut: null,
       history: [],
       loading: false,
     },
@@ -167,6 +168,7 @@ test('triggerEvent x1', async () => {
       actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
       catchActions: [],
       debounce: undefined,
+      shortcut: null,
       history: [],
       loading: true,
     },
@@ -311,6 +313,7 @@ test('registerEvent then triggerEvent x1', async () => {
       actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
       catchActions: [],
       debounce: null,
+      shortcut: null,
       history: [],
       loading: false,
     },
@@ -405,6 +408,7 @@ test('triggerEvent skip', async () => {
           },
         ],
         "loading": false,
+        "shortcut": null,
       },
     }
   `);
@@ -525,6 +529,7 @@ test('triggerEvent skip tests === true', async () => {
           },
         ],
         "loading": false,
+        "shortcut": null,
       },
     }
   `);
@@ -659,9 +664,11 @@ test('Actions try catch arrays', async () => {
   expect(button.Events.events).toEqual({
     onClick: {
       actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
+      catchActions: [{ id: 'b', type: 'SetState', params: { b: 'b' } }],
+      debounce: undefined,
+      shortcut: null,
       history: [],
       loading: false,
-      catchActions: [{ id: 'b', type: 'SetState', params: { b: 'b' } }],
     },
   });
 });
@@ -695,13 +702,14 @@ test('Actions try catch arrays and debounce.immediate == true (leading edge)', a
   expect(button.Events.events).toEqual({
     onClick: {
       actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
-      history: [],
-      loading: false,
       catchActions: [],
       debounce: {
         immediate: true,
         ms: 100,
       },
+      shortcut: null,
+      history: [],
+      loading: false,
     },
   });
   const firstClick = button.triggerEvent({ name: 'onClick', event: { x: 1 } });
@@ -808,12 +816,13 @@ test('Actions try catch arrays and debounce.immediate == undefined (trailing edg
   expect(button.Events.events).toEqual({
     onClick: {
       actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
-      history: [],
-      loading: false,
       catchActions: [],
       debounce: {
         ms: 100,
       },
+      shortcut: null,
+      history: [],
+      loading: false,
     },
   });
   const firstClick = button.triggerEvent({ name: 'onClick', event: { x: 1 } });
@@ -917,12 +926,13 @@ test('Actions try catch arrays and debounce.immediate == false default ms (trail
   expect(button.Events.events).toEqual({
     onClick: {
       actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
-      history: [],
-      loading: false,
       catchActions: [],
       debounce: {
         immediate: false,
       },
+      shortcut: null,
+      history: [],
+      loading: false,
     },
   });
   const firstClick = button.triggerEvent({ name: 'onClick', event: { x: 1 } });

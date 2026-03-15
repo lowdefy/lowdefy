@@ -29,14 +29,12 @@
             - id: ml_two_col_card_title
               type: Title
               properties:
-                content:
-                  _state: item.title
+                content: Card Title
                 level: 5
             - id: ml_two_col_card_p
               type: Paragraph
               properties:
-                content:
-                  _state: item.description
+                content: A short description for this card item.
 
     - id: ml_three_col
       type: MasonryList
@@ -52,14 +50,12 @@
             - id: ml_three_col_card_title
               type: Title
               properties:
-                content:
-                  _state: item.title
+                content: Card Title
                 level: 5
             - id: ml_three_col_card_p
               type: Paragraph
               properties:
-                content:
-                  _state: item.description
+                content: A short description for this card item.
 
     - id: ml_four_col
       type: MasonryList
@@ -75,14 +71,12 @@
             - id: ml_four_col_card_title
               type: Title
               properties:
-                content:
-                  _state: item.title
+                content: Card Title
                 level: 5
             - id: ml_four_col_card_p
               type: Paragraph
               properties:
-                content:
-                  _state: item.description
+                content: A short description for this card item.
 
 - title: Gutter and Rendering Options
   fullWidth: true
@@ -101,8 +95,7 @@
             - id: ml_gutter_small_card_p
               type: Paragraph
               properties:
-                content:
-                  _state: item.title
+                content: Card Title
 
     - id: ml_gutter_large
       type: MasonryList
@@ -118,8 +111,7 @@
             - id: ml_gutter_large_card_p
               type: Paragraph
               properties:
-                content:
-                  _state: item.title
+                content: Card Title
 
     - id: ml_gutter_array
       type: MasonryList
@@ -138,8 +130,7 @@
             - id: ml_gutter_array_card_p
               type: Paragraph
               properties:
-                content:
-                  _state: item.title
+                content: Card Title
 
     - id: ml_sequential
       type: MasonryList
@@ -156,8 +147,7 @@
             - id: ml_seq_card_p
               type: Paragraph
               properties:
-                content:
-                  _state: item.content
+                content: Item content text.
 
 - title: CSS Styling with Tailwind Classes
   fullWidth: true
@@ -178,8 +168,7 @@
             - id: ml_css_bg_card_p
               type: Paragraph
               properties:
-                content:
-                  _state: item.title
+                content: Card Title
 
     - id: ml_css_border
       type: MasonryList
@@ -197,8 +186,7 @@
             - id: ml_css_border_card_p
               type: Paragraph
               properties:
-                content:
-                  _state: item.title
+                content: Card Title
 
     - id: ml_css_shadow
       type: MasonryList
@@ -216,8 +204,7 @@
             - id: ml_css_shadow_card_p
               type: Paragraph
               properties:
-                content:
-                  _state: item.title
+                content: Card Title
 
 - title: Theme Token Overrides
   fullWidth: true
@@ -240,8 +227,7 @@
             - id: ml_theme_blue_card_p
               type: Paragraph
               properties:
-                content:
-                  _state: item.title
+                content: Card Title
 
     - id: ml_theme_warm
       type: MasonryList
@@ -262,8 +248,7 @@
             - id: ml_theme_warm_card_p
               type: Paragraph
               properties:
-                content:
-                  _state: item.title
+                content: Card Title
 
     - id: ml_theme_sharp
       type: MasonryList
@@ -282,8 +267,7 @@
             - id: ml_theme_sharp_card_p
               type: Paragraph
               properties:
-                content:
-                  _state: item.title
+                content: Card Title
 
     - id: ml_theme_dark
       type: MasonryList
@@ -304,8 +288,7 @@
             - id: ml_theme_dark_card_p
               type: Paragraph
               properties:
-                content:
-                  _state: item.title
+                content: Card Title
 
 - title: MasonryList in Task Board
   fullWidth: true
@@ -330,14 +313,12 @@
             - id: ml_tasks_card_title
               type: Title
               properties:
-                content:
-                  _state: item.title
+                content: Card Title
                 level: 5
             - id: ml_tasks_card_desc
               type: Paragraph
               properties:
-                content:
-                  _state: item.description
+                content: A short description for this card item.
             - id: ml_tasks_card_tags
               type: Box
               layout:
@@ -346,16 +327,8 @@
                 - id: ml_tasks_card_tag
                   type: Tag
                   properties:
-                    title:
-                      _state: item.status
-                    color:
-                      _if:
-                        test:
-                          _eq:
-                            - _state: item.status
-                            - Done
-                        then: green
-                        else: blue
+                    title: In Progress
+                    color: blue
             - id: ml_tasks_card_btn
               type: Button
               properties:
@@ -370,10 +343,7 @@
                   - id: ml_tasks_card_msg
                     type: DisplayMessage
                     params:
-                      content:
-                        _string.concat:
-                          - 'Viewing task: '
-                          - _state: item.title
+                      content: Viewing task details
                       status: info
 
 - title: MasonryList in Product Catalog
@@ -401,19 +371,16 @@
             - id: ml_products_card_name
               type: Title
               properties:
-                content:
-                  _state: item.name
+                content: Product Name
                 level: 5
             - id: ml_products_card_desc
               type: Paragraph
               properties:
-                content:
-                  _state: item.description
+                content: A short description for this card item.
             - id: ml_products_card_price
               type: Statistic
               properties:
-                value:
-                  _state: item.price
+                value: 29.99
                 prefix: $
             - id: ml_products_card_btn
               type: Button
@@ -429,8 +396,5 @@
                   - id: ml_products_card_msg
                     type: DisplayMessage
                     params:
-                      content:
-                        _string.concat:
-                          - _state: item.name
-                          - ' added to cart'
+                      content: Product added to cart
                       status: success

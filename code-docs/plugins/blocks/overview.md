@@ -31,7 +31,6 @@ Blocks are:
 | [@lowdefy/blocks-echarts](./echarts.md)         | ECharts visualizations      | 1           |
 | [@lowdefy/blocks-markdown](./markdown.md)       | Markdown rendering          | 2           |
 | [@lowdefy/blocks-google-maps](./google-maps.md) | Google Maps                 | 1           |
-| [@lowdefy/blocks-algolia](./algolia.md)         | Algolia search              | 1           |
 | [@lowdefy/blocks-loaders](./loaders.md)         | Loading spinners            | 1           |
 | [@lowdefy/blocks-qr](./qr.md)                   | QR code generation          | 1           |
 

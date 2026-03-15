@@ -1,0 +1,166 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: upgrade-guide
+    pageTitle: Upgrade Guide
+    section: Migration
+    filePath: migration/upgrade-guide.yaml
+    content:
+      - id: md1
+        type: MarkdownWithCode
+        style:
+          maxWidth: 800
+        properties:
+          content: |
+            This guide explains how the Lowdefy upgrade system works — independent of any specific version.
+
+            For version-specific migration details, see:
+            - [Version 4 to Version 5](/v4-to-v5)
+            - [Version 3 to Version 4](/v3-to-v4)
+
+            ## Quick start
+
+            ```bash
+            npx lowdefy upgrade
+            ```
+
+            That's it. The command reads your current version from `lowdefy.yaml`, fetches the latest codemods, resolves the upgrade chain, and walks you through each step.
+
+            ## How Lowdefy versioning works
+
+            Lowdefy follows [semantic versioning](https://semver.org/). Major versions (4.0 → 5.0) contain breaking changes. Minor and patch versions are backwards-compatible.
+
+            When breaking changes ship, the `@lowdefy/codemods` package is updated with migration scripts and guides for the new version. The `lowdefy upgrade` command uses this package to automate the migration.
+
+            ## The `lowdefy upgrade` command
+
+            The upgrade command:
+
+            1. Reads your current version from `lowdefy.yaml`.
+            2. Queries npm for the latest stable Lowdefy version (or uses `--to`).
+            3. Fetches `@lowdefy/codemods@latest` — a single package containing all migrations for all versions.
+            4. Resolves the upgrade chain — which intermediate versions need codemods.
+            5. Executes codemods phase by phase.
+            6. Updates `lowdefy.yaml` after each phase and suggests a git commit.
+
+            ### Options
+
+            | Option | Description | Default |
+            |---|---|---|
+            | `--to <version>` | Target version to upgrade to | Latest stable |
+            | `--plan` | Show the upgrade plan without executing | |
+            | `--dry-run` | Run scripts in dry-run mode (no file changes) | |
+            | `--scripts-only` | Skip AI-guided codemods (automated scripts only) | |
+            | `--resume` | Resume a previously interrupted upgrade | |
+            | `--config-directory` | Change config directory | `.` |
+            | `--log-level` | Log level (debug, info, warn, error) | `info` |
+
+            See the [CLI reference](/cli) for the full command documentation.
+
+            ## Multi-version upgrades
+
+            The upgrade command handles jumps across multiple versions. If you're on 4.5.0 and the latest is 6.0.0, the command resolves the full chain:
+
+            ```
+            4.5.0 → 5.0.0 → 6.0.0
+            ```
+
+            Each step in the chain is a **phase**. The command runs all codemods for phase 1, updates `lowdefy.yaml`, suggests a commit, then moves to phase 2. This gives you clean git history per version jump.
+
+            The version chain is computed from `registry.json` in the `@lowdefy/codemods` package. Each entry specifies a target version and a `from` semver range. The resolver walks the entries in order until the current version reaches the target.
+
+            ## Codemod categories
+
+            Each codemod falls into one of three categories:
+
+            ### Category A — Automated
+
+            Deterministic transformations. Renames, restructures, syntax changes. The script reads files, transforms content, and writes output. No human judgment needed.
+
+            **Examples:** `areas` → `slots`, `_moment` → `_dayjs`, `gutter` → `gap`
+
+            ### Category B — Semi-automated
+
+            Scripts that transform files and generate a review report. The transformation handles the common case, but edge cases need human review. The CLI pauses after running and asks you to review the report before continuing.
+
+            **Examples:** `bordered` → `variant` (multiple possible mappings), `button type/danger` → `color/variant`
+
+            ### Category C — AI-guided
+
+            Changes that require understanding intent, not just syntax. A script can't reliably determine the right transformation.
+
+            The CLI presents options:
+
+            1. **Copy prompt to clipboard** — paste into Claude Code, ChatGPT, Cursor, or any AI coding tool.
+            2. **View manual guide** — step-by-step instructions to follow without AI.
+            3. **Skip** — mark as pending. Return later with `--resume`.
+
+            If Claude Code is detected, an additional option to run the migration directly is offered.
+
+            **Examples:** Responsive breakpoint migration, Comment block replacement
+
+            ## Using AI tools for migrations
+
+            Category C codemods include self-contained markdown prompts. Each prompt includes:
+
+            - What changed and why
+            - Before/after YAML examples
+            - How to find affected files
+            - Edge cases to watch for
+
+            This format works with any AI coding tool. Copy the prompt, paste it into your tool of choice, and let it scan your project and apply changes.
+
+            ## Resuming interrupted upgrades
+
+            If you stop mid-upgrade (skip a codemod, close the terminal, or hit an error), run:
+
+            ```bash
+            npx lowdefy upgrade --resume
+            ```
+
+            The command reads `.lowdefy/upgrade-state.json` — a file that tracks which phases and codemods have completed — and picks up where you left off.
+
+            If you skip Category C codemods, the build warns about pending migrations:
+
+            ```
+            ⚠ Warning: 2 codemod(s) were skipped during upgrade.
+              Run "npx lowdefy upgrade --resume" to complete them.
+              Or add --skip-codemod-check to suppress this warning.
+            ```
+
+            Suppress this with `--skip-codemod-check` or `cli.skipCodemodCheck: true` in `lowdefy.yaml`.
+
+            ## Manual upgrades
+
+            If you prefer to upgrade without the command:
+
+            1. Read the version-specific migration guide (e.g. [V4 to V5](/v4-to-v5)).
+            2. Apply each breaking change manually using the before/after examples.
+            3. Update the `lowdefy:` version in `lowdefy.yaml`.
+            4. Run `lowdefy dev` and fix any remaining issues.
+
+            The upgrade command automates this process, but every change is documented in the migration guides for manual reference.
+
+            ## Backups
+
+            Automated codemods create backups in `.codemod-backup/` preserving the original file paths. Add this directory to `.gitignore` — between git history and the backup directory, you can always recover the original files.
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            next_page_title: V4 to V5
+            next_page_id: v4-to-v5

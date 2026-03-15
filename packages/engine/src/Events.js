@@ -38,6 +38,7 @@ class Events {
       actions: (type.isObject(actions) ? actions.try : actions) || [],
       catchActions: (type.isObject(actions) ? actions.catch : []) || [],
       debounce: type.isObject(actions) ? actions.debounce : null,
+      shortcut: type.isObject(actions) ? actions.shortcut ?? null : null,
       history: [],
       loading: false,
     };

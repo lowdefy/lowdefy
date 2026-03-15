@@ -15,8 +15,17 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors';
+import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 import createCheckDuplicateId from '../../../utils/createCheckDuplicateId.js';
+
+const BROWSER_DEFAULT_SHORTCUTS = new Set([
+  'mod+n',
+  'mod+t',
+  'mod+w',
+  'mod+r',
+  'mod+q',
+  'mod+l',
+]);
 
 function checkAction(
   action,
@@ -150,6 +159,35 @@ function buildEvents(block, pageContext) {
           checkDuplicateActionId,
         })
       );
+
+      // Validate shortcut strings and collect refs for duplicate detection
+      if (type.isObject(block.events[key]) && !type.isNone(block.events[key].shortcut)) {
+        const shortcuts = type.isArray(block.events[key].shortcut)
+          ? block.events[key].shortcut
+          : [block.events[key].shortcut];
+        shortcuts.forEach((shortcut) => {
+          if (!type.isString(shortcut) || shortcut === '') {
+            throw new ConfigError(
+              `Event shortcut is not a valid string on event "${key}" on block "${block.blockId}" on page "${pageContext.pageId}".`,
+              { received: shortcut, configKey: eventConfigKey }
+            );
+          }
+          if (BROWSER_DEFAULT_SHORTCUTS.has(shortcut.toLowerCase())) {
+            pageContext.context.handleWarning(
+              new ConfigWarning(
+                `Shortcut "${shortcut}" on event "${key}" on block "${block.blockId}" on page "${pageContext.pageId}" conflicts with a browser default.`,
+                { configKey: eventConfigKey }
+              )
+            );
+          }
+          pageContext.shortcutRefs.push({
+            shortcut,
+            blockId: block.blockId,
+            eventId: key,
+            configKey: eventConfigKey,
+          });
+        });
+      }
     });
   }
 }

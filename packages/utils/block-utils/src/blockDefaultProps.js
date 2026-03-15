@@ -16,7 +16,9 @@
 const blockDefaultProps = {
   basePath: '',
   blockId: 'undefined_id',
-  components: {},
+  components: {
+    ShortcutBadge: () => null,
+  },
   content: {},
   events: {},
   list: [],

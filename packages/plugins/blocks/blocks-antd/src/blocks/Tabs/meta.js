@@ -89,6 +89,10 @@ export default {
                 displayType: 'icon',
               },
             },
+            shortcut: {
+              type: 'string',
+              description: 'Keyboard shortcut to switch to this tab. Use "mod" for Cmd/Ctrl.',
+            },
           },
         },
       },

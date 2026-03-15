@@ -112,7 +112,7 @@
           - id: box_onclick_link_action
             type: Link
             params:
-              pageId: home
+              url: /
       blocks:
         - id: box_onclick_link_text
           type: Html
@@ -998,7 +998,7 @@
                       - id: box_page_nav_home_link
                         type: Link
                         params:
-                          pageId: home
+                          url: /
                 - id: box_page_nav_about
                   type: Button
                   layout:
@@ -1012,7 +1012,7 @@
                       - id: box_page_nav_about_link
                         type: Link
                         params:
-                          pageId: about
+                          url: /about
                 - id: box_page_nav_contact
                   type: Button
                   layout:
@@ -1026,7 +1026,7 @@
                       - id: box_page_nav_contact_link
                         type: Link
                         params:
-                          pageId: contact
+                          url: /contact
         - id: box_page_body
           type: Box
           layout:

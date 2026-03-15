@@ -14,12 +14,13 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Menu } from 'antd';
 import { type, get } from '@lowdefy/helpers';
 
 import { withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
+import useItemShortcuts from '../useItemShortcuts.js';
 
 const getDefaultMenu = (menus, menuId = 'default', links) => {
   if (type.isArray(links)) return links;
@@ -30,10 +31,25 @@ const getDefaultMenu = (menus, menuId = 'default', links) => {
 
 const getTitle = ({ id, properties, pageId, url }) => properties?.title ?? pageId ?? url ?? id;
 
+function collectLinkShortcuts(links) {
+  const result = [];
+  (links ?? []).forEach((link) => {
+    if (link.type === 'MenuLink' || !link.type) {
+      if (link.properties?.shortcut) {
+        result.push({ key: link.pageId ?? link.id, shortcut: link.properties.shortcut });
+      }
+    }
+    if (link.links) {
+      result.push(...collectLinkShortcuts(link.links));
+    }
+  });
+  return result;
+}
+
 function buildMenuItems({
   links,
   events,
-  components: { Icon, Link },
+  components: { Icon, Link, ShortcutBadge },
   classNames,
   styles,
   isTopLevel = true,
@@ -59,7 +75,7 @@ function buildMenuItems({
         children: buildMenuItems({
           links: link.links,
           events,
-          components: { Icon, Link },
+          components: { Icon, Link, ShortcutBadge },
           classNames,
           styles,
           isTopLevel: false,
@@ -108,16 +124,17 @@ function buildMenuItems({
           {...link}
         >
           {getTitle(link)}
+          <ShortcutBadge shortcut={link.properties?.shortcut} />
         </Link>
       ),
     };
   });
 }
 
-const MenuComp = ({
+function MenuComp({
   blockId,
   classNames = {},
-  components: { Icon, Link },
+  components: { Icon, Link, ShortcutBadge },
   events,
   menus,
   methods,
@@ -125,7 +142,7 @@ const MenuComp = ({
   properties,
   rename,
   styles = {},
-}) => {
+}) {
   const horizontalStyles = {
     lineHeight: '64px',
     width: '100%',
@@ -142,10 +159,22 @@ const MenuComp = ({
   const items = buildMenuItems({
     links: menu,
     events,
-    components: { Icon, Link },
+    components: { Icon, Link, ShortcutBadge },
     classNames,
     styles,
   });
+
+  const shortcutItems = collectLinkShortcuts(menu);
+  const onShortcutMatch = useCallback(
+    (key) => {
+      methods.triggerEvent({
+        name: get(rename, 'events.onSelect', { default: 'onSelect' }),
+        event: { key },
+      });
+    },
+    [methods, rename]
+  );
+  useItemShortcuts({ items: shortcutItems, onMatch: onShortcutMatch });
 
   return (
     <Menu
@@ -211,6 +240,6 @@ const MenuComp = ({
       {...exProps}
     />
   );
-};
+}
 
 export default withTheme('Menu', withBlockDefaults(MenuComp));

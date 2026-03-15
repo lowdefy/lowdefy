@@ -43,6 +43,7 @@
   },
   "dependencies": {
     "@lowdefy/helpers": "4.7.0",
+    "minisearch": "^7.0.0",
     "yaml": "2.3.4"
   },
   "devDependencies": {

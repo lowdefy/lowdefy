@@ -1,0 +1,151 @@
+{
+  "versions": [
+    {
+      "version": "5.0.0",
+      "from": ">=4.0.0 <5.0.0",
+      "description": "Antd v6 upgrade, layout grid changes, dayjs migration",
+      "codemods": [
+        {
+          "id": "rename-areas-to-slots",
+          "category": "A",
+          "description": "Rename areas to slots",
+          "path": "v5-0-0/01-rename-areas-to-slots.mjs",
+          "scope": "config"
+        },
+        {
+          "id": "migrate-properties-style",
+          "category": "A",
+          "description": "Move properties.style to style: { --element }",
+          "path": "v5-0-0/02-migrate-properties-style.mjs",
+          "scope": "config"
+        },
+        {
+          "id": "migrate-inline-style-props",
+          "category": "A",
+          "description": "Move inline style props to style: { --* } sub-slots",
+          "path": "v5-0-0/03-migrate-inline-style-props.mjs",
+          "scope": "config"
+        },
+        {
+          "id": "bordered-to-variant",
+          "category": "A",
+          "description": "Convert bordered: false to variant: borderless",
+          "path": "v5-0-0/04-bordered-to-variant.mjs",
+          "scope": "config"
+        },
+        {
+          "id": "simple-prop-renames",
+          "category": "A",
+          "description": "Rename deprecated properties and events (visible, dotPosition, etc.)",
+          "path": "v5-0-0/05-simple-prop-renames.mjs",
+          "scope": "config"
+        },
+        {
+          "id": "tabs-position-to-placement",
+          "category": "A",
+          "description": "Tabs tabPosition to tabPlacement with value mapping",
+          "path": "v5-0-0/06-tabs-position-to-placement.mjs",
+          "scope": "config"
+        },
+        {
+          "id": "notification-message-to-title",
+          "category": "A",
+          "description": "Notification message property renamed to title",
+          "path": "v5-0-0/07-notification-message-to-title.mjs",
+          "scope": "config"
+        },
+        {
+          "id": "divider-dual-rename",
+          "category": "B",
+          "description": "Divider type/orientation dual rename with value mapping",
+          "path": "v5-0-0/08-divider-dual-rename.mjs",
+          "scope": "config"
+        },
+        {
+          "id": "button-type-to-color-variant",
+          "category": "B",
+          "description": "Button type/danger to color + variant mapping",
+          "path": "v5-0-0/09-button-type-to-color-variant.mjs",
+          "scope": "config"
+        },
+        {
+          "id": "detect-styles-less",
+          "category": "B",
+          "description": "Detect public/styles.less and map Less variables to antd tokens",
+          "path": "v5-0-0/10-detect-styles-less.mjs",
+          "scope": "config"
+        },
+        {
+          "id": "detect-date-formats",
+          "category": "B",
+          "description": "Detect custom date format strings for dayjs compatibility",
+          "path": "v5-0-0/11-detect-date-formats.mjs",
+          "scope": "config"
+        },
+        {
+          "id": "migrate-meta-styles",
+          "category": "B",
+          "description": "Remove meta.styles from custom block plugins, add direct CSS imports",
+          "path": "v5-0-0/12-migrate-meta-styles.mjs",
+          "scope": "plugins"
+        },
+        {
+          "id": "rename-xxl-to-2xl",
+          "category": "B",
+          "description": "Rename xxl breakpoint key to 2xl",
+          "path": "v5-0-0/13-rename-xxl-to-2xl.mjs",
+          "scope": "config"
+        },
+        {
+          "id": "rename-gutter-to-gap",
+          "category": "A",
+          "description": "Rename gutter to gap and contentGutter to contentGap",
+          "path": "v5-0-0/14-rename-gutter-to-gap.mjs",
+          "scope": "config"
+        },
+        {
+          "id": "rename-content-prefix",
+          "category": "A",
+          "description": "Drop content* prefix from layout properties",
+          "path": "v5-0-0/15-rename-content-prefix.mjs",
+          "scope": "config"
+        },
+        {
+          "id": "rename-align-to-selfAlign",
+          "category": "B",
+          "description": "Rename layout.align to layout.selfAlign",
+          "path": "v5-0-0/16-rename-align-to-selfAlign.mjs",
+          "scope": "config"
+        },
+        {
+          "id": "rename-moment-to-dayjs",
+          "category": "A",
+          "description": "Rename _moment operator to _dayjs",
+          "path": "v5-0-0/17-rename-moment-to-dayjs.mjs",
+          "scope": "config"
+        },
+        {
+          "id": "report-thresholds-usage",
+          "category": "B",
+          "description": "Report thresholds usage in _dayjs.humanizeDuration",
+          "path": "v5-0-0/18-report-thresholds-usage.mjs",
+          "scope": "config"
+        },
+        {
+          "id": "responsive-style-breakpoints",
+          "category": "C",
+          "description": "Migrate responsive style breakpoints to Tailwind classes",
+          "path": "v5-0-0/19-responsive-style-breakpoints.md",
+          "scope": "config"
+        },
+        {
+          "id": "comment-block-removal",
+          "category": "C",
+          "description": "Replace removed Comment block with Flex + Avatar + Paragraph composition",
+          "path": "v5-0-0/20-comment-block-removal.md",
+          "scope": "config"
+        }
+      ]
+    }
+  ]
+}

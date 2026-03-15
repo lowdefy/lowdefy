@@ -48,7 +48,7 @@ async function startUp({ context, options = {}, command }) {
 
   context.pnpmCmd = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm';
   checkPnpmIsInstalled({ logger: context.logger, pnpmCmd: context.pnpmCmd });
-  await validateVersion(context);
+  await validateVersion({ ...context, configDirectory: context.configDirectory });
   context.sendTelemetry = getSendTelemetry(context);
 
   if (type.isNone(lowdefyVersion)) {

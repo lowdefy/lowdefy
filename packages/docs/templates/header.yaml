@@ -20,15 +20,28 @@
     marginRight: 8
   blocks:
     - id: docsearch
-      type: DocSearch
+      type: Search
       layout:
         flex: 0 1 auto
         align: middle
       properties:
-        appId: TTP0C3FN0L
-        indexName: lowdefy
-        apiKey:
-          _build.env: DOCSEARCH_API_KEY
+        indexUrl: /search-index.json
+        placeholder: Search docs...
+        shortcut: mod+k
+        label: Search
+        icon: AiOutlineSearch
+        showShortcut: true
+        maxResults: 15
+        highlightMatches: true
+        recentSearches: true
+        recentSearchesCount: 5
+      events:
+        onSelect:
+          - id: navigate
+            type: Link
+            params:
+              pageId:
+                _event: pageId
 - id: why_button
   type: Button
   visible:

@@ -30,7 +30,7 @@ const PageHeaderMenu = ({
   basePath,
   blockId,
   classNames = {},
-  components: { Icon, Link },
+  components: { Icon, Link, ShortcutBadge },
   content,
   events,
   menus,
@@ -43,7 +43,7 @@ const PageHeaderMenu = ({
     <Layout
       blockId={blockId}
       events={events}
-      components={{ Icon, Link }}
+      components={{ Icon, Link, ShortcutBadge }}
       styles={{
         element: mergeObjects([{ minHeight: '100vh' }, styles.element]),
       }}
@@ -53,7 +53,7 @@ const PageHeaderMenu = ({
             <Header
               blockId={`${blockId}_header`}
               events={events}
-              components={{ Icon, Link }}
+              components={{ Icon, Link, ShortcutBadge }}
               classNames={{ element: classNames.header }}
               properties={properties.header ?? {}}
               styles={{
@@ -99,7 +99,7 @@ const PageHeaderMenu = ({
                         <Menu
                           blockId={`${blockId}_menu`}
                           basePath={basePath}
-                          components={{ Icon, Link }}
+                          components={{ Icon, Link, ShortcutBadge }}
                           classNames={{ element: classNames.menu }}
                           events={events}
                           methods={methods}
@@ -133,7 +133,7 @@ const PageHeaderMenu = ({
                         <MobileMenu
                           blockId={`${blockId}_mobile_menu`}
                           basePath={basePath}
-                          components={{ Icon, Link }}
+                          components={{ Icon, Link, ShortcutBadge }}
                           events={events}
                           methods={methods}
                           menus={menus}
@@ -148,7 +148,7 @@ const PageHeaderMenu = ({
             />
             <Content
               blockId={`${blockId}_content`}
-              components={{ Icon, Link }}
+              components={{ Icon, Link, ShortcutBadge }}
               classNames={{ element: classNames.content }}
               events={events}
               properties={properties.content ?? {}}
@@ -168,7 +168,7 @@ const PageHeaderMenu = ({
                       <Breadcrumb
                         blockId={`${blockId}_breadcrumb`}
                         basePath={basePath}
-                        components={{ Icon, Link }}
+                        components={{ Icon, Link, ShortcutBadge }}
                         classNames={{ element: classNames.breadcrumb }}
                         events={events}
                         methods={methods}
@@ -193,7 +193,7 @@ const PageHeaderMenu = ({
             {content.footer && (
               <Footer
                 blockId={`${blockId}_footer`}
-                components={{ Icon, Link }}
+                components={{ Icon, Link, ShortcutBadge }}
                 classNames={{ element: classNames.footer }}
                 events={events}
                 properties={properties.footer}

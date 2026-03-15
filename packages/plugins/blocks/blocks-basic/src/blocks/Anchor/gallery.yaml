@@ -219,6 +219,26 @@
         home: true
         icon: AiOutlineHome
 
+- title: Keyboard Shortcuts
+  blocks:
+    - id: shortcut_docs
+      type: Anchor
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Documentation
+        url: https://docs.lowdefy.com
+        icon: AiOutlineBook
+      events:
+        onClick:
+          shortcut: mod+shift+d
+          try:
+            - id: docs_msg
+              type: DisplayMessage
+              params:
+                content: Opening docs...
+                status: info
+
 - title: Style Overrides
   blocks:
     - id: style_bold

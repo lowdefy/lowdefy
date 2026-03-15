@@ -381,6 +381,11 @@ export default {
                   default: false,
                   description: 'Whether the divider line is dashed.',
                 },
+                shortcut: {
+                  type: 'string',
+                  description:
+                    'Keyboard shortcut to select this menu item. Use "mod" for Cmd/Ctrl.',
+                },
               },
             },
             links: {
@@ -428,6 +433,11 @@ export default {
                         default: false,
                         description: 'Whether the divider line is dashed.',
                       },
+                      shortcut: {
+                        type: 'string',
+                        description:
+                          'Keyboard shortcut to select this menu item. Use "mod" for Cmd/Ctrl.',
+                      },
                     },
                     links: {
                       type: 'array',
@@ -473,6 +483,11 @@ export default {
                                 type: 'boolean',
                                 default: false,
                                 description: 'Whether the divider line is dashed.',
+                              },
+                              shortcut: {
+                                type: 'string',
+                                description:
+                                  'Keyboard shortcut to select this menu item. Use "mod" for Cmd/Ctrl.',
                               },
                             },
                           },

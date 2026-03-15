@@ -129,3 +129,16 @@ blocks:
               - true
           then: Tag closed
           else: ''
+
+  - id: tag_shortcut
+    type: Tag
+    properties:
+      title: Filter
+    events:
+      onClick:
+        shortcut: mod+f
+        try:
+          - id: filter_action
+            type: SetState
+            params:
+              filter_toggled: true
