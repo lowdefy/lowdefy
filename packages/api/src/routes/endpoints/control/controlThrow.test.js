@@ -29,7 +29,7 @@ test('throw at end of routine', async () => {
     {
       id: 'request:test_endpoint:test_request_1',
       type: 'TestRequestWait',
-      requestId: 'test_request_1',
+      stepId: 'test_request_1',
       connectionId: 'test',
       properties: {
         ms: 10,
@@ -38,7 +38,7 @@ test('throw at end of routine', async () => {
     {
       id: 'request:test_endpoint:test_request_2',
       type: 'TestRequestWait',
-      requestId: 'test_request_2',
+      stepId: 'test_request_2',
       connectionId: 'test',
       properties: {
         ms: 10,
@@ -59,7 +59,7 @@ test('throw at end of routine', async () => {
         request: {
           id: 'request:test_endpoint:test_request_1',
           type: 'TestRequestWait',
-          requestId: 'test_request_1',
+          stepId: 'test_request_1',
           connectionId: 'test',
           properties: {
             ms: 10,
@@ -79,7 +79,7 @@ test('throw at end of routine', async () => {
         request: {
           id: 'request:test_endpoint:test_request_2',
           type: 'TestRequestWait',
-          requestId: 'test_request_2',
+          stepId: 'test_request_2',
           connectionId: 'test',
           properties: {
             ms: 10,
@@ -102,7 +102,7 @@ test('throw in the middle of routine', async () => {
     {
       id: 'request:test_endpoint:test_request_1',
       type: 'TestRequestWait',
-      requestId: 'test_request_1',
+      stepId: 'test_request_1',
       connectionId: 'test',
       properties: {
         ms: 10,
@@ -114,7 +114,7 @@ test('throw in the middle of routine', async () => {
     {
       id: 'request:test_endpoint:test_request_2',
       type: 'TestRequestWait',
-      requestId: 'test_request_2',
+      stepId: 'test_request_2',
       connectionId: 'test',
       properties: {
         ms: 10,
@@ -131,7 +131,7 @@ test('throw in the middle of routine', async () => {
         request: {
           id: 'request:test_endpoint:test_request_1',
           type: 'TestRequestWait',
-          requestId: 'test_request_1',
+          stepId: 'test_request_1',
           connectionId: 'test',
           properties: {
             ms: 10,
@@ -155,7 +155,7 @@ test('multiple throws in routine', async () => {
     {
       id: 'request:test_endpoint:test_request_1',
       type: 'TestRequestWait',
-      requestId: 'test_request_1',
+      stepId: 'test_request_1',
       connectionId: 'test',
       properties: {
         ms: 10,
@@ -185,7 +185,7 @@ test('multiple throws in routine', async () => {
         request: {
           id: 'request:test_endpoint:test_request_1',
           type: 'TestRequestWait',
-          requestId: 'test_request_1',
+          stepId: 'test_request_1',
           connectionId: 'test',
           properties: {
             ms: 10,
@@ -212,7 +212,7 @@ test('truthy guard statement throw', async () => {
         {
           id: 'request:test_endpoint:test_request_guard_statement',
           type: 'TestRequest',
-          requestId: 'test_request_guard_statement',
+          stepId: 'test_request_guard_statement',
           connectionId: 'test',
           properties: {
             response: 'guard statement',
@@ -224,7 +224,7 @@ test('truthy guard statement throw', async () => {
     {
       id: 'request:test_endpoint:test_request_end',
       type: 'TestRequest',
-      requestId: 'test_request_end',
+      stepId: 'test_request_end',
       connectionId: 'test',
       properties: {
         response: 'end',
@@ -245,7 +245,7 @@ test('truthy guard statement throw', async () => {
         request: {
           id: 'request:test_endpoint:test_request_guard_statement',
           type: 'TestRequest',
-          requestId: 'test_request_guard_statement',
+          stepId: 'test_request_guard_statement',
           connectionId: 'test',
           properties: {
             response: 'guard statement',
@@ -271,7 +271,7 @@ test('throw in a try block with catch return', async () => {
         {
           id: 'request:test_endpoint:test_request_end',
           type: 'TestRequest',
-          requestId: 'test_request_end',
+          stepId: 'test_request_end',
           connectionId: 'test',
           properties: {
             response: 'end',
@@ -293,7 +293,7 @@ test('throw in a try block with catch return', async () => {
         request: {
           id: 'request:test_endpoint:test_request_end',
           type: 'TestRequest',
-          requestId: 'test_request_end',
+          stepId: 'test_request_end',
           connectionId: 'test',
           properties: {
             response: 'end',
@@ -320,7 +320,7 @@ test('throw in a try block with missing catch', async () => {
         {
           id: 'request:test_endpoint:test_request_end',
           type: 'TestRequest',
-          requestId: 'test_request_end',
+          stepId: 'test_request_end',
           connectionId: 'test',
           properties: {
             response: 'end',
@@ -342,7 +342,7 @@ test('throw in a try block with missing catch', async () => {
         request: {
           id: 'request:test_endpoint:test_request_end',
           type: 'TestRequest',
-          requestId: 'test_request_end',
+          stepId: 'test_request_end',
           connectionId: 'test',
           properties: {
             response: 'end',
@@ -368,7 +368,7 @@ test('throw in a try block with error in finally', async () => {
         {
           id: 'request:test_endpoint:test_request_end',
           type: 'TestRequest',
-          requestId: 'test_request_end',
+          stepId: 'test_request_end',
           connectionId: 'test',
           properties: {
             response: 'end',
@@ -392,7 +392,7 @@ test('throw in a try block with error in finally', async () => {
         request: {
           id: 'request:test_endpoint:test_request_end',
           type: 'TestRequest',
-          requestId: 'test_request_end',
+          stepId: 'test_request_end',
           connectionId: 'test',
           properties: {
             response: 'end',
@@ -424,7 +424,7 @@ test('throw in try block with cause', async () => {
         {
           id: 'request:test_endpoint:test_request_end',
           type: 'TestRequest',
-          requestId: 'test_request_end',
+          stepId: 'test_request_end',
           connectionId: 'test',
           properties: {
             response: 'end',
@@ -446,7 +446,7 @@ test('throw in try block with cause', async () => {
         request: {
           id: 'request:test_endpoint:test_request_end',
           type: 'TestRequest',
-          requestId: 'test_request_end',
+          stepId: 'test_request_end',
           connectionId: 'test',
           properties: {
             response: 'end',
@@ -472,7 +472,7 @@ test('throw in try block with empty catch', async () => {
         {
           id: 'request:test_endpoint:test_request_end',
           type: 'TestRequest',
-          requestId: 'test_request_end',
+          stepId: 'test_request_end',
           connectionId: 'test',
           properties: {
             response: 'end',
@@ -495,7 +495,7 @@ test('throw in try block with empty catch', async () => {
         request: {
           id: 'request:test_endpoint:test_request_end',
           type: 'TestRequest',
-          requestId: 'test_request_end',
+          stepId: 'test_request_end',
           connectionId: 'test',
           properties: {
             response: 'end',
@@ -522,7 +522,7 @@ test('throw in try block with return in finally block', async () => {
         {
           id: 'request:test_endpoint:test_request_end',
           type: 'TestRequest',
-          requestId: 'test_request_end',
+          stepId: 'test_request_end',
           connectionId: 'test',
           properties: {
             response: 'end',
@@ -545,7 +545,7 @@ test('throw in try block with return in finally block', async () => {
         request: {
           id: 'request:test_endpoint:test_request_end',
           type: 'TestRequest',
-          requestId: 'test_request_end',
+          stepId: 'test_request_end',
           connectionId: 'test',
           properties: {
             response: 'end',
@@ -573,7 +573,7 @@ test('throw in try block with request in finally block', async () => {
         {
           id: 'request:test_endpoint:test_request_end',
           type: 'TestRequest',
-          requestId: 'test_request_end',
+          stepId: 'test_request_end',
           connectionId: 'test',
           properties: {
             response: 'end',
@@ -585,7 +585,7 @@ test('throw in try block with request in finally block', async () => {
         {
           id: 'request:test_endpoint:test_request_end_2',
           type: 'TestRequest',
-          requestId: 'test_request_end_2',
+          stepId: 'test_request_end_2',
           connectionId: 'test',
           properties: {
             response: 'end',
@@ -606,7 +606,7 @@ test('throw in try block with request in finally block', async () => {
         request: {
           id: 'request:test_endpoint:test_request_end',
           type: 'TestRequest',
-          requestId: 'test_request_end',
+          stepId: 'test_request_end',
           connectionId: 'test',
           properties: {
             response: 'end',
@@ -628,7 +628,7 @@ test('throw in try block with request in finally block', async () => {
         request: {
           id: 'request:test_endpoint:test_request_end_2',
           type: 'TestRequest',
-          requestId: 'test_request_end_2',
+          stepId: 'test_request_end_2',
           connectionId: 'test',
           properties: {
             response: 'end',

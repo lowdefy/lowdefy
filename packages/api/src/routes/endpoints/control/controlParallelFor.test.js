@@ -23,7 +23,7 @@ test('parallel_for iterates over array', async () => {
     ':do': {
       id: 'request:test_endpoint:test_request',
       type: 'TestRequest',
-      requestId: 'test_request',
+      stepId: 'test_request',
       connectionId: 'test',
       properties: {
         response: 'processed',
@@ -48,7 +48,7 @@ test('parallel_for with empty array', async () => {
     ':do': {
       id: 'request:test_endpoint:test_request',
       type: 'TestRequest',
-      requestId: 'test_request',
+      stepId: 'test_request',
       connectionId: 'test',
       properties: {
         response: 'should not run',
@@ -73,7 +73,7 @@ test('parallel_for with object array', async () => {
     ':do': {
       id: 'request:test_endpoint:test_request',
       type: 'TestRequest',
-      requestId: 'test_request',
+      stepId: 'test_request',
       connectionId: 'test',
       properties: {
         response: 'processed',
@@ -91,7 +91,7 @@ test('missing :parallel_for variable name', async () => {
     ':do': {
       id: 'request:test_endpoint:test_request',
       type: 'TestRequest',
-      requestId: 'test_request',
+      stepId: 'test_request',
       connectionId: 'test',
       properties: {
         response: 'ok',
@@ -111,7 +111,7 @@ test(':in is not an array', async () => {
     ':do': {
       id: 'request:test_endpoint:test_request',
       type: 'TestRequest',
-      requestId: 'test_request',
+      stepId: 'test_request',
       connectionId: 'test',
       properties: {
         response: 'ok',
@@ -142,7 +142,7 @@ test('parallel_for logs iteration details', async () => {
     ':do': {
       id: 'request:test_endpoint:test_request',
       type: 'TestRequest',
-      requestId: 'test_request',
+      stepId: 'test_request',
       connectionId: 'test',
       properties: {
         response: 'ok',

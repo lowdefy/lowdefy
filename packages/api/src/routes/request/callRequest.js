@@ -34,7 +34,8 @@ async function callRequest(context, { blockId, pageId, payload, requestId }) {
 
   context.blockId = blockId;
   context.pageId = pageId;
-  context.payload = serializer.deserialize(payload);
+  const requestPayload = serializer.deserialize(payload);
+  context.payload = requestPayload;
   context.evaluateOperators = createEvaluateOperators(context);
 
   logger.debug({ event: 'debug_request', blockId, pageId, payload, requestId });
@@ -47,7 +48,9 @@ async function callRequest(context, { blockId, pageId, payload, requestId }) {
 
   const { connectionProperties, requestProperties } = evaluateOperators(context, {
     connectionConfig,
+    payload: requestPayload,
     requestConfig,
+    steps: {},
   });
 
   checkConnectionRead(context, {

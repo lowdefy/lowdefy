@@ -30,6 +30,8 @@ async function controlFor(context, routineContext, { control }) {
     input: control[':in'],
     items,
     location: control['~k'] ?? ':for',
+    steps: routineContext.steps,
+    payload: routineContext.payload,
   });
 
   logger.debug({

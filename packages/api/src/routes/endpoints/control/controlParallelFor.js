@@ -32,6 +32,8 @@ async function controlParallelFor(context, routineContext, { control }) {
     input: control[':in'],
     items,
     location: control['~k'] ?? ':parallel_for',
+    steps: routineContext.steps,
+    payload: routineContext.payload,
   });
 
   logger.debug({

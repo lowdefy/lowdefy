@@ -20,6 +20,8 @@ async function callRequestResolver(
   { blockId, endpointId, logger, pageId, payload },
   { connectionProperties, requestConfig, requestProperties, requestResolver }
 ) {
+  // stepId for endpoint steps (after build), requestId for page requests
+  const stepOrRequestId = requestConfig.stepId ?? requestConfig.requestId;
   try {
     const response = await requestResolver({
       blockId,
@@ -29,7 +31,7 @@ async function callRequestResolver(
       pageId,
       payload,
       request: requestProperties,
-      requestId: requestConfig.requestId,
+      requestId: stepOrRequestId,
     });
     return response;
   } catch (error) {
@@ -40,7 +42,7 @@ async function callRequestResolver(
 
     if (error instanceof ConfigError) {
       logger.debug(
-        { params: { id: requestConfig.requestId, type: requestConfig.type }, err: error },
+        { params: { id: stepOrRequestId, type: requestConfig.type }, err: error },
         error.message
       );
       throw error;
@@ -54,7 +56,7 @@ async function callRequestResolver(
         configKey: requestConfig['~k'],
       });
       logger.debug(
-        { params: { id: requestConfig.requestId, type: requestConfig.type }, err: serviceError },
+        { params: { id: stepOrRequestId, type: requestConfig.type }, err: serviceError },
         serviceError.message
       );
       throw serviceError;
@@ -65,12 +67,12 @@ async function callRequestResolver(
       cause: error,
       typeName: requestConfig.type,
       received: requestProperties,
-      location: `${requestConfig.connectionId}/${requestConfig.requestId}`,
+      location: `${requestConfig.connectionId}/${stepOrRequestId}`,
       configKey: requestConfig['~k'],
     });
 
     logger.debug(
-      { params: { id: requestConfig.requestId, type: requestConfig.type }, err: requestError },
+      { params: { id: stepOrRequestId, type: requestConfig.type }, err: requestError },
       requestError.message
     );
     throw requestError;

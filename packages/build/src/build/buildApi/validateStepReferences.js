@@ -20,16 +20,16 @@ import extractOperatorKey from '../../utils/extractOperatorKey.js';
 import traverseConfig from '../../utils/traverseConfig.js';
 
 // Collect all step IDs from a routine (including nested control structures)
-// Note: After buildRoutine, steps have requestId (original id) and id is modified
+// Note: After buildRoutine, steps have stepId (original id) and id is modified
 function collectStepIds(routine, stepIds) {
   if (type.isArray(routine)) {
     routine.forEach((item) => collectStepIds(item, stepIds));
     return;
   }
   if (type.isObject(routine)) {
-    // Check if this is a step (has requestId after build, or id before build)
-    if (routine.requestId) {
-      stepIds.add(routine.requestId);
+    // Check if this is a step (has stepId after build, or id before build)
+    if (routine.stepId) {
+      stepIds.add(routine.stepId);
     }
     // Recurse into all values (handles control structures like :then, :else, :try, :catch)
     Object.values(routine).forEach((value) => collectStepIds(value, stepIds));

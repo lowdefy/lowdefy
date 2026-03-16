@@ -15,9 +15,10 @@
 */
 
 function setStepId(step, { endpointId }) {
-  step.requestId = step.id;
+  step.stepId = step.id;
   step.endpointId = endpointId;
-  step.id = `request:${endpointId}:${step.requestId}`;
+  const prefix = step.type === 'CallApi' ? 'endpoint' : 'request';
+  step.id = `${prefix}:${endpointId}:${step.stepId}`;
 }
 
 export default setStepId;

@@ -8,6 +8,8 @@ function controlSetState(context, routineContext, { control }) {
     input: control[':set_state'],
     items,
     location: control['~k'] ?? ':set_state',
+    steps: routineContext.steps,
+    payload: routineContext.payload,
   });
 
   logger.debug({

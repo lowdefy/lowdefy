@@ -18,7 +18,7 @@ import runTest from './test/runTest.js';
 
 test('single stage', async () => {
   const routine = {
-    requestId: 'test_request',
+    stepId: 'test_request',
     type: 'TestRequest',
     id: 'request:test_endpoint:test_request',
     connectionId: 'test',
@@ -26,9 +26,9 @@ test('single stage', async () => {
       response: 1,
     },
   };
-  const { res, context } = await runTest({ routine });
+  const { res, context, routineContext } = await runTest({ routine });
   expect(res.status).toEqual('continue');
-  expect(context.steps).toEqual({ test_request: 1 });
+  expect(routineContext.steps).toEqual({ test_request: 1 });
   expect(context.logger.debug.mock.calls).toEqual([
     [
       {
@@ -36,7 +36,7 @@ test('single stage', async () => {
         request: {
           id: 'request:test_endpoint:test_request',
           type: 'TestRequest',
-          requestId: 'test_request',
+          stepId: 'test_request',
           connectionId: 'test',
           properties: {
             response: 1,
@@ -58,7 +58,7 @@ test('single stage', async () => {
 test('array with single stage', async () => {
   const routine = [
     {
-      requestId: 'test_request',
+      stepId: 'test_request',
       type: 'TestRequest',
       id: 'request:test_endpoint:test_request',
       connectionId: 'test',
@@ -67,9 +67,9 @@ test('array with single stage', async () => {
       },
     },
   ];
-  const { res, context } = await runTest({ routine });
+  const { res, context, routineContext } = await runTest({ routine });
   expect(res.status).toEqual('continue');
-  expect(context.steps).toEqual({ test_request: 1 });
+  expect(routineContext.steps).toEqual({ test_request: 1 });
   expect(context.logger.debug.mock.calls).toEqual([
     [
       {
@@ -77,7 +77,7 @@ test('array with single stage', async () => {
         request: {
           id: 'request:test_endpoint:test_request',
           type: 'TestRequest',
-          requestId: 'test_request',
+          stepId: 'test_request',
           connectionId: 'test',
           properties: {
             response: 1,
@@ -99,7 +99,7 @@ test('array with single stage', async () => {
 test('array with two stages', async () => {
   const routine = [
     {
-      requestId: 'test_request_1',
+      stepId: 'test_request_1',
       type: 'TestRequest',
       id: 'request:test_endpoint:test_request_1',
       connectionId: 'test',
@@ -108,7 +108,7 @@ test('array with two stages', async () => {
       },
     },
     {
-      requestId: 'test_request_2',
+      stepId: 'test_request_2',
       type: 'TestRequest',
       id: 'request:test_endpoint:test_request_2',
       connectionId: 'test',
@@ -117,9 +117,9 @@ test('array with two stages', async () => {
       },
     },
   ];
-  const { res, context } = await runTest({ routine });
+  const { res, context, routineContext } = await runTest({ routine });
   expect(res.status).toEqual('continue');
-  expect(context.steps).toEqual({ test_request_1: 1, test_request_2: 2 });
+  expect(routineContext.steps).toEqual({ test_request_1: 1, test_request_2: 2 });
   expect(context.logger.debug.mock.calls).toEqual([
     [
       {
@@ -127,7 +127,7 @@ test('array with two stages', async () => {
         request: {
           id: 'request:test_endpoint:test_request_1',
           type: 'TestRequest',
-          requestId: 'test_request_1',
+          stepId: 'test_request_1',
           connectionId: 'test',
           properties: {
             response: 1,
@@ -148,7 +148,7 @@ test('array with two stages', async () => {
         request: {
           id: 'request:test_endpoint:test_request_2',
           type: 'TestRequest',
-          requestId: 'test_request_2',
+          stepId: 'test_request_2',
           connectionId: 'test',
           properties: {
             response: 2,
@@ -171,7 +171,7 @@ test('nested array', async () => {
   const routine = [
     [
       {
-        requestId: 'test_request_1',
+        stepId: 'test_request_1',
         type: 'TestRequest',
         id: 'request:test_endpoint:test_request_1',
         connectionId: 'test',
@@ -180,7 +180,7 @@ test('nested array', async () => {
         },
       },
       {
-        requestId: 'test_request_2',
+        stepId: 'test_request_2',
         type: 'TestRequest',
         id: 'request:test_endpoint:test_request_2',
         connectionId: 'test',
@@ -190,7 +190,7 @@ test('nested array', async () => {
       },
     ],
     {
-      requestId: 'test_request_3',
+      stepId: 'test_request_3',
       type: 'TestRequest',
       id: 'request:test_endpoint:test_request_3',
       connectionId: 'test',
@@ -199,16 +199,16 @@ test('nested array', async () => {
       },
     },
   ];
-  const { res, context } = await runTest({ routine });
+  const { res, context, routineContext } = await runTest({ routine });
   expect(res.status).toEqual('continue');
-  expect(context.steps).toEqual({ test_request_1: 1, test_request_2: 2, test_request_3: 3 });
+  expect(routineContext.steps).toEqual({ test_request_1: 1, test_request_2: 2, test_request_3: 3 });
   expect(res.response).toEqual(undefined);
 });
 
 test('unknown control', async () => {
   const routine = {
     ':unknown': {
-      requestId: 'test_request',
+      stepId: 'test_request',
       type: 'TestRequest',
       id: 'request:test_endpoint:test_request_3',
       connectionId: 'test',
@@ -224,7 +224,7 @@ test('unknown control', async () => {
 
 test('_payload operator in request properties', async () => {
   const routine = {
-    requestId: 'test_request',
+    stepId: 'test_request',
     type: 'TestRequest',
     id: 'request:test_endpoint:test_request',
     connectionId: 'test',
@@ -232,14 +232,14 @@ test('_payload operator in request properties', async () => {
       response: { _payload: 'value' },
     },
   };
-  const { res, context } = await runTest({ routine, payload: { value: 'from_payload' } });
+  const { res, context, routineContext } = await runTest({ routine, payload: { value: 'from_payload' } });
   expect(res.status).toEqual('continue');
-  expect(context.steps).toEqual({ test_request: 'from_payload' });
+  expect(routineContext.steps).toEqual({ test_request: 'from_payload' });
 });
 
 test('_payload operator with nested path', async () => {
   const routine = {
-    requestId: 'test_request',
+    stepId: 'test_request',
     type: 'TestRequest',
     id: 'request:test_endpoint:test_request',
     connectionId: 'test',
@@ -247,18 +247,18 @@ test('_payload operator with nested path', async () => {
       response: { _payload: 'nested.deep.value' },
     },
   };
-  const { res, context } = await runTest({
+  const { res, context, routineContext } = await runTest({
     routine,
     payload: { nested: { deep: { value: 'deeply_nested' } } },
   });
   expect(res.status).toEqual('continue');
-  expect(context.steps).toEqual({ test_request: 'deeply_nested' });
+  expect(routineContext.steps).toEqual({ test_request: 'deeply_nested' });
 });
 
 test('_step operator accesses previous step result', async () => {
   const routine = [
     {
-      requestId: 'first_request',
+      stepId: 'first_request',
       type: 'TestRequest',
       id: 'request:test_endpoint:first_request',
       connectionId: 'test',
@@ -267,7 +267,7 @@ test('_step operator accesses previous step result', async () => {
       },
     },
     {
-      requestId: 'second_request',
+      stepId: 'second_request',
       type: 'TestRequest',
       id: 'request:test_endpoint:second_request',
       connectionId: 'test',
@@ -276,14 +276,14 @@ test('_step operator accesses previous step result', async () => {
       },
     },
   ];
-  const { res, context } = await runTest({ routine });
+  const { res, context, routineContext } = await runTest({ routine });
   expect(res.status).toEqual('continue');
-  expect(context.steps).toEqual({ first_request: 'first_value', second_request: 'first_value' });
+  expect(routineContext.steps).toEqual({ first_request: 'first_value', second_request: 'first_value' });
 });
 
 test('_secret operator in request properties', async () => {
   const routine = {
-    requestId: 'test_request',
+    stepId: 'test_request',
     type: 'TestRequest',
     id: 'request:test_endpoint:test_request',
     connectionId: 'test',
@@ -291,14 +291,14 @@ test('_secret operator in request properties', async () => {
       response: { _secret: 'REQUEST' },
     },
   };
-  const { res, context } = await runTest({ routine });
+  const { res, context, routineContext } = await runTest({ routine });
   expect(res.status).toEqual('continue');
-  expect(context.steps).toEqual({ test_request: 'requestSecret' });
+  expect(routineContext.steps).toEqual({ test_request: 'requestSecret' });
 });
 
 test('_user operator in request properties', async () => {
   const routine = {
-    requestId: 'test_request',
+    stepId: 'test_request',
     type: 'TestRequest',
     id: 'request:test_endpoint:test_request',
     connectionId: 'test',
@@ -306,14 +306,14 @@ test('_user operator in request properties', async () => {
       response: { _user: 'id' },
     },
   };
-  const { res, context } = await runTest({ routine });
+  const { res, context, routineContext } = await runTest({ routine });
   expect(res.status).toEqual('continue');
-  expect(context.steps).toEqual({ test_request: 'id' });
+  expect(routineContext.steps).toEqual({ test_request: 'id' });
 });
 
 test('_sum operator computes sum of payload values', async () => {
   const routine = {
-    requestId: 'test_request',
+    stepId: 'test_request',
     type: 'TestRequest',
     id: 'request:test_endpoint:test_request',
     connectionId: 'test',
@@ -323,14 +323,14 @@ test('_sum operator computes sum of payload values', async () => {
       },
     },
   };
-  const { res, context } = await runTest({ routine, payload: { a: 10, b: 5 } });
+  const { res, context, routineContext } = await runTest({ routine, payload: { a: 10, b: 5 } });
   expect(res.status).toEqual('continue');
-  expect(context.steps).toEqual({ test_request: 15 });
+  expect(routineContext.steps).toEqual({ test_request: 15 });
 });
 
 test('combined operators in request properties', async () => {
   const routine = {
-    requestId: 'test_request',
+    stepId: 'test_request',
     type: 'TestRequest',
     id: 'request:test_endpoint:test_request',
     connectionId: 'test',
@@ -342,9 +342,9 @@ test('combined operators in request properties', async () => {
       },
     },
   };
-  const { res, context } = await runTest({ routine, payload: { input: 'test_input' } });
+  const { res, context, routineContext } = await runTest({ routine, payload: { input: 'test_input' } });
   expect(res.status).toEqual('continue');
-  expect(context.steps).toEqual({
+  expect(routineContext.steps).toEqual({
     test_request: {
       fromPayload: 'test_input',
       fromSecret: 'requestSecret',

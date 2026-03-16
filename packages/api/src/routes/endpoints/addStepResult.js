@@ -15,9 +15,9 @@
 */
 import { set } from '@lowdefy/helpers';
 
-function addStepResult(context, { arrayIndices }, { result, stepId }) {
-  const key = [stepId, ...arrayIndices].join('.');
-  set(context.steps, key, result);
+function addStepResult(context, routineContext, { result, stepId }) {
+  const key = [stepId, ...routineContext.arrayIndices].join('.');
+  set(routineContext.steps, key, result);
 }
 
 export default addStepResult;
