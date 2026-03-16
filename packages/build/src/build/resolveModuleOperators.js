@@ -20,6 +20,7 @@ import { serializer, type } from '@lowdefy/helpers';
 function scopeMenuItemIds(links, entryId) {
   if (!Array.isArray(links)) return;
   for (const item of links) {
+    if (!item) continue;
     if (item.id) {
       item.id = `${entryId}/${item.id}`;
     }
