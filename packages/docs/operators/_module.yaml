@@ -25,9 +25,13 @@ _ref:
       _module.var: (key: string): any
       _module.var: (arguments: { key: string, default?: any }): any
       _module.pageId: (pageId: string): string
+      _module.pageId: (arguments: { id: string, module: string }): string
       _module.connectionId: (connectionId: string): string
+      _module.connectionId: (arguments: { id: string, module: string }): string
       _module.endpointId: (endpointId: string): string
+      _module.endpointId: (arguments: { id: string, module: string }): string
       _module.id: (true): string
+      _module.id: (arguments: { module: string }): string
       ```
     description: |
       The `_module` operator family provides access to module-scoped values during the build. These operators are only available inside module config files — they have no effect in app-level config.
@@ -84,13 +88,18 @@ _ref:
         types: |
           ```
           (pageId: string): string
+          (arguments: { id: string, module: string }): string
           ```
         description: |
-          Resolves a module-local page ID to its fully scoped ID. Use this in Link actions and anywhere a page reference is needed.
+          Resolves a page ID to its fully scoped ID. The string form references the current module's own pages. The object form references a page in a dependency module.
 
         arguments: |
           ###### string
           The module-local page ID (as declared in the module's page definition).
+
+          ###### object
+            - `id: string`: The page ID in the target module.
+            - `module: string`: The abstract dependency name (as declared in the module's `dependencies`).
 
         examples: |
           ###### Link to a sibling page:
@@ -103,17 +112,34 @@ _ref:
           ```
           In a module entry with `id: team-users`, resolves to `team-users/user-edit`.
 
+          ###### Link to a page in another module:
+          ```yaml
+          - id: view_contact
+            type: Link
+            params:
+              pageId:
+                _module.pageId:
+                  id: contact-detail
+                  module: contacts
+          ```
+          If the `contacts` dependency is wired to an entry with `id: contacts`, resolves to `contacts/contact-detail`.
+
       - name: connectionId
         types: |
           ```
           (connectionId: string): string
+          (arguments: { id: string, module: string }): string
           ```
         description: |
-          Resolves a module-local connection ID to its scoped or remapped ID. If the connection is remapped in the module entry config, returns the remapped app connection ID instead.
+          Resolves a connection ID to its scoped or remapped ID. The string form references the current module's connections. The object form references a connection in a dependency module.
 
         arguments: |
           ###### string
           The module-local connection ID (as declared in the module's connection definition).
+
+          ###### object
+            - `id: string`: The connection ID in the target module.
+            - `module: string`: The abstract dependency name (as declared in the module's `dependencies`).
 
         examples: |
           ###### Reference a module connection:
@@ -125,17 +151,31 @@ _ref:
 
           If the app remaps the connection (`connections: { users-db: my-app-mongodb }`), resolves to `my-app-mongodb` instead.
 
+          ###### Reference a connection in another module:
+          ```yaml
+          connectionId:
+            _module.connectionId:
+              id: contacts-db
+              module: contacts
+          ```
+          Resolves to the target module's scoped or remapped connection ID.
+
       - name: endpointId
         types: |
           ```
           (endpointId: string): string
+          (arguments: { id: string, module: string }): string
           ```
         description: |
-          Resolves a module-local API endpoint ID to its fully scoped ID.
+          Resolves an API endpoint ID to its fully scoped ID. The string form references the current module's endpoints. The object form references an endpoint in a dependency module.
 
         arguments: |
           ###### string
           The module-local endpoint ID (as declared in the module's API definition).
+
+          ###### object
+            - `id: string`: The endpoint ID in the target module.
+            - `module: string`: The abstract dependency name (as declared in the module's `dependencies`).
 
         examples: |
           ###### Call a module API endpoint:
@@ -148,17 +188,33 @@ _ref:
           ```
           In a module entry with `id: team-users`, resolves to `team-users/invite-user`.
 
+          ###### Call an API in another module:
+          ```yaml
+          - id: log_event
+            type: CallAPI
+            params:
+              endpointId:
+                _module.endpointId:
+                  id: log-event
+                  module: events
+          ```
+          Resolves to the target module's scoped endpoint ID.
+
       - name: id
         types: |
           ```
           (true): string
+          (arguments: { module: string }): string
           ```
         description: |
-          Returns the raw module entry ID. Useful for labels, conditional logic, or constructing dynamic strings.
+          Returns the raw module entry ID. The `true` form returns the current module's entry ID. The object form returns a dependency module's entry ID.
 
         arguments: |
           ###### boolean
-          Pass `true` to return the module entry ID.
+          Pass `true` to return the current module entry ID.
+
+          ###### object
+            - `module: string`: The abstract dependency name (as declared in the module's `dependencies`).
 
         examples: |
           ###### Use in a label:
@@ -169,3 +225,11 @@ _ref:
               - " - User Admin"
           ```
           In a module entry with `id: team-users`, returns `"team-users - User Admin"`.
+
+          ###### Get a dependency's entry ID:
+          ```yaml
+          contactsEntry:
+            _module.id:
+              module: contacts
+          ```
+          Returns the concrete entry ID that the `contacts` dependency is wired to.

@@ -33,7 +33,7 @@ async function build(options) {
 
   // Phase 0-1: Module processing
   await fetchModules({ context });                       // Fetch GitHub tarballs, resolve local paths
-  await buildModuleDefs({ components, context });        // Parse manifests, resolve _module.var
+  await buildModuleDefs({ components, context });        // Local resolve → validate deps → full resolve
 
   // Phase 2: Parse and compose configuration
   const components = await buildRefs({ context });       // Resolve _ref imports (incl. module refs)
@@ -87,8 +87,9 @@ async function build(options) {
 | Module | Purpose |
 |--------|---------|
 | `fetchModules.js` | Fetch module sources (GitHub tarballs, local paths) |
-| `buildModuleDefs.js` | Parse module manifests, resolve `_module.var`, validate plugins/secrets |
-| `buildModules.js` | Scope module IDs, resolve `_module.*` operators, merge into components |
+| `buildModuleDefs.js` | Three-phase module processing: local resolve → validate wiring → full resolve |
+| `resolveModuleDependencies.js` | Auto-wire and validate cross-module dependency mappings |
+| `buildModules.js` | Scope module IDs, resolve `_module.*` operators (string + object form), merge |
 | `resolveModuleOperators.js` | Resolve `_module.pageId`, `_module.connectionId`, `_module.endpointId`, `_module.id` |
 | `buildRefs/` | Resolve `_ref` operators to compose config from multiple files |
 | `buildRefs/getModuleRefContent.js` | Resolve `_ref: { module, component/menu }` from resolved manifests |

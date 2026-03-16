@@ -58,6 +58,7 @@ _ref:
             - `source: string` — **Required.** Where to fetch the module. Supports GitHub repos and local paths.
             - `vars: object` — Values passed to the module, accessible via [`_module.var`](/_module).
             - `connections: object` — Connection remapping. Maps module connection names to app connection IDs.
+            - `dependencies: object` — Dependency wiring. Maps abstract dependency names to concrete module entry IDs. See [Cross-Module Dependencies](#cross-module-dependencies).
 
             ## Module Manifest
 
@@ -255,6 +256,74 @@ _ref:
 
             When a connection is remapped, the module's secret references for that connection are skipped — the app connection handles its own secrets. See [Secrets](/secrets) for more on secret management.
 
+            ## Cross-Module Dependencies
+
+            Modules can reference each other — embed components, link to pages, call APIs, and use connections from other modules. Dependencies use injection: the module declares what it needs, you wire it to a concrete entry.
+
+            ### Auto-Wiring
+
+            If a module declares a dependency and a module entry with the same `id` exists, the build wires them automatically. No configuration needed:
+
+            ```yaml
+            modules:
+              - id: contacts
+                source: "github:my-org/crm/contacts@v1"
+                # Declares dependency "companies" — auto-wires to entry below
+              - id: companies
+                source: "github:my-org/crm/companies@v1"
+                # Declares dependency "contacts" — auto-wires to entry above
+            ```
+
+            ### Explicit Wiring
+
+            When entry IDs don't match the dependency names, provide explicit `dependencies`:
+
+            ```yaml
+            modules:
+              - id: app-layout
+                source: "github:my-org/crm/layout-sidebar@v2"
+
+              - id: contacts
+                source: "github:my-org/crm/contacts@v1"
+                dependencies:
+                  layout: app-layout  # Module declares "layout", entry is "app-layout"
+            ```
+
+            `dependencies` keys are the abstract names the module declares. Values are the entry IDs from your `modules` list. Explicit `dependencies` override auto-wiring.
+
+            ### Multi-Instance with Dependencies
+
+            When the same module source has multiple entries, auto-wiring is ambiguous. Use explicit `dependencies` to wire each instance:
+
+            ```yaml
+            modules:
+              - id: internal-contacts
+                source: "github:my-org/crm/contacts@v1"
+                dependencies:
+                  companies: internal-companies
+                vars:
+                  collection: internal_contacts
+
+              - id: external-contacts
+                source: "github:my-org/crm/contacts@v1"
+                dependencies:
+                  companies: external-companies
+                vars:
+                  collection: external_contacts
+
+              - id: internal-companies
+                source: "github:my-org/crm/companies@v1"
+                dependencies:
+                  contacts: internal-contacts
+
+              - id: external-companies
+                source: "github:my-org/crm/companies@v1"
+                dependencies:
+                  contacts: external-contacts
+            ```
+
+            Each instance links to its own partner. The module code is identical — only the wiring differs.
+
             ## Troubleshooting
 
             **"Module 'X' requires plugin 'Y' version 'Z'"** — Add the required plugin to your app's `plugins` array in `lowdefy.yaml`, or update the version if already installed.
@@ -264,6 +333,10 @@ _ref:
             **"Duplicate page ID 'X'"** — Two module entries produce the same scoped page ID. Use different entry IDs for each module instance.
 
             **Page not found at expected URL** — Module pages are served at `/{entryId}/{pageId}`, not `/{pageId}`. Check the entry ID in your `modules` config.
+
+            **"Module 'X' declares dependency 'Y' but no mapping provided and no module entry 'Y' exists"** — The module needs another module that isn't in your app. Either add a module entry with `id: Y`, or add `dependencies: { Y: your-entry-id }` to the module entry.
+
+            **"Module 'X' does not declare dependency 'Y'"** — You provided a `dependencies` key that the module doesn't expect. Check the module's `module.lowdefy.yaml` for declared dependencies.
 
       - _ref:
           path: templates/navigation_buttons.yaml

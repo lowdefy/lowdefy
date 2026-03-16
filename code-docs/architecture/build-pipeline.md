@@ -82,11 +82,19 @@ Runs inside the build process. GitHub modules are cached in `.lowdefy/modules/`.
 ### Phase 1: Build Module Definitions
 
 ```javascript
-buildModuleDefs()   // Parse module.lowdefy.yaml, resolve _ref + _module.var,
-                    // validate plugin deps and secret allowlists
+buildModuleDefs()   // Three-phase module processing:
+                    // 1a. Local resolve — _ref + _module.var, extract exports/deps
+                    // 1b. Validate wiring — auto-wire + validate dependency mappings
+                    // 1c. Full resolve — cross-module _ref + _module.*Id operators
 ```
 
-Walks each `module.lowdefy.yaml` with the entry's vars available as `moduleVars` on the `WalkContext`. After this phase, `context.modules` contains fully resolved manifests. ID operators (`_module.pageId`, etc.) remain unresolved until Phase 3.
+Processes modules in three steps to support mutual dependencies (e.g., contacts ↔ companies):
+
+1. **Local resolve** — For each module, walk `module.lowdefy.yaml` with `shouldStop` preserving pages, API, connections, and menu link content. Local `_ref`s, `_module.var`, and `_build.*` resolve, producing concrete `components` and `menus` arrays. Extract `dependencies` and `exports` declarations.
+2. **Validate wiring** — `resolveModuleDependencies` auto-wires dependencies by exact name match, then validates all mappings (no unmapped deps, no unknown keys, targets exist, no self-references).
+3. **Full resolve** — Walk each manifest again with `moduleDependencies` set. Cross-module `_ref: { module, component }` looks up content in concrete arrays from step 1. `_module.*Id: { id, module }` operators validate against target exports.
+
+After Phase 1, `context.modules` contains fully resolved manifests with all cross-module refs inlined. ID operators (`_module.pageId`, etc.) remain as operator objects — resolved in Phase 3. See [module-system.md](module-system.md) for details.
 
 ### Phase 2: Ref Resolution
 
@@ -101,10 +109,10 @@ When the walker encounters `_ref: { module, component }`, it calls `getModuleRef
 ### Phase 3: Build Modules
 
 ```javascript
-buildModules()      // Scope IDs, resolve _module ID operators, merge into components
+buildModules()      // Scope IDs, resolve _module ID operators (string + object form), merge
 ```
 
-For each module entry: resolves `_module.pageId`, `_module.connectionId`, `_module.endpointId`, `_module.id` operators; prefixes page/connection/API/menu IDs with `{entryId}/`; appends to app's `components`. See [module-system.md](module-system.md).
+For each module entry: resolves `_module.pageId`, `_module.connectionId`, `_module.endpointId`, `_module.id` operators in both string form (`"page-id"` → same module) and object form (`{ id: "page-id", module: "dep-name" }` → cross-module); prefixes page/connection/API/menu IDs with `{entryId}/`; appends to app's `components`. See [module-system.md](module-system.md).
 
 ### Phase 4: Schema Validation
 
@@ -347,9 +355,10 @@ installServer() → runLowdefyBuild()
      ↓
 fetchModules() → buildModuleDefs()
   ├─ Fetch GitHub tarballs / resolve local paths
-  ├─ Parse each module.lowdefy.yaml
-  ├─ Resolve _ref + _module.var in module manifests
-  └─ Validate plugin deps + secret allowlists
+  ├─ Local resolve: parse each module.lowdefy.yaml, resolve local _ref + _module.var
+  ├─ Extract exports + dependencies, validate plugin deps + secret allowlists
+  ├─ Validate wiring: auto-wire dependencies by name match, validate mappings
+  └─ Full resolve: resolve cross-module _ref + _module.*Id operators
      ↓
 createContext() → buildRefs()
   ├─ Start with lowdefy.yaml

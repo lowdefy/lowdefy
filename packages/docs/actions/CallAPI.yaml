@@ -29,6 +29,8 @@ _ref:
       The `CallAPI` action invokes a server-side API endpoint defined in your Lowdefy application's configuration.
       It sends an optional payload to the API and returns the response data, making it a way to execute server-side logic and orchestrate database operations from your Lowdefy pages.
 
+      > **Note:** `CallAPI` can only target endpoints with `type: Api`. Endpoints with `type: InternalApi` are server-only and cannot be called from client pages. See [Lowdefy APIs](/lowdefy-api) for details.
+
     params: |
       ###### object
         - `endpointId: string`: __Required__ - The id of the API endpoint to call.

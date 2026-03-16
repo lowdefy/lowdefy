@@ -405,9 +405,21 @@ async function callEndpoint(context, { blockId, endpointId, pageId, payload }) {
   context.evaluateOperators = createEvaluateOperators(context);
 
   const endpointConfig = await getEndpointConfig(context, { endpointId });
+
+  // InternalApi endpoints are server-only — block HTTP access
+  if (endpointConfig.type === 'InternalApi') {
+    throw new ConfigError(`API Endpoint "${endpointId}" does not exist.`);
+  }
+
   authorizeApiEndpoint(context, { endpointConfig });
 
-  const routineContext = { arrayIndices: [], items: {} };
+  const routineContext = {
+    steps: {},                              // Per-invocation step results
+    payload: serializer.deserialize(payload), // Per-invocation payload
+    arrayIndices: [],
+    items: {},
+    endpointDepth: 0,                       // Recursion depth counter
+  };
 
   const { error, response, status } = await runRoutine(context, routineContext, {
     routine: endpointConfig.routine,
@@ -416,6 +428,8 @@ async function callEndpoint(context, { blockId, endpointId, pageId, payload }) {
   return { error, response, status, success: !['error', 'reject'].includes(status) };
 }
 ```
+
+**`routineContext` carries per-invocation state** — each routine invocation gets its own `steps` and `payload`. This enables endpoint-to-endpoint calls (see below) where a called endpoint has an isolated namespace.
 
 ### Routine Execution
 
@@ -426,6 +440,9 @@ async function runRoutine(context, routineContext, { routine }) {
   if (type.isObject(routine)) {
     if (routine.id?.startsWith?.('request:')) {
       return await handleRequest(context, routineContext, { request: routine });
+    }
+    if (routine.id?.startsWith?.('endpoint:')) {
+      return await handleEndpointCall(context, routineContext, { step: routine });
     }
     return await handleControl(context, routineContext, { control: routine });
   }
@@ -441,6 +458,57 @@ async function runRoutine(context, routineContext, { routine }) {
   }
 }
 ```
+
+Steps are dispatched by ID prefix: `request:` → database/API call via `handleRequest`, `endpoint:` → server-side endpoint call via `handleEndpointCall`, no prefix → control flow via `handleControl`.
+
+### Endpoint-to-Endpoint Calls
+
+**File:** `packages/api/src/routes/endpoints/handleEndpointCall.js`
+
+When a routine contains a `CallApi` step (built with `endpoint:` prefix), `handleEndpointCall` loads the target endpoint, authorizes the current user, and runs the target's routine in a fresh `routineContext`:
+
+```javascript
+async function handleEndpointCall(context, routineContext, { step }) {
+  const evaluatedProperties = context.evaluateOperators({
+    input: step.properties,               // Resolve operators in endpointId, payload
+    steps: routineContext.steps,
+    payload: routineContext.payload,
+  });
+
+  // Recursion guard (max depth 10)
+  if ((routineContext.endpointDepth ?? 0) >= 10) {
+    throw new ConfigError('Endpoint call depth exceeded maximum of 10.');
+  }
+
+  const endpointConfig = await getEndpointConfig(context, {
+    endpointId: evaluatedProperties.endpointId,
+  });
+  authorizeApiEndpoint(context, { endpointConfig });
+
+  // Isolated context — target gets its own steps and payload
+  const childRoutineContext = {
+    steps: {},
+    payload: evaluatedProperties.payload ?? {},
+    arrayIndices: [],
+    items: {},
+    endpointDepth: (routineContext.endpointDepth ?? 0) + 1,
+  };
+
+  const result = await runRoutine(context, childRoutineContext, {
+    routine: endpointConfig.routine,
+  });
+
+  // Store target's :return value in caller's steps
+  addStepResult(context, routineContext, {
+    result: result.status === 'return' ? result.response : null,
+    stepId: step.stepId,
+  });
+}
+```
+
+**Isolation:** The called endpoint's internal step results never appear in the caller's `routineContext.steps` — only the `:return` value does. This prevents namespace collisions between routines.
+
+**Endpoint types:** `Api` endpoints are callable from both HTTP and other endpoints. `InternalApi` endpoints are server-only — `callEndpoint` blocks HTTP access, but `handleEndpointCall` can reach them.
 
 ## End-to-End Example
 
@@ -493,6 +561,9 @@ async function runRoutine(context, routineContext, { routine }) {
 | Authorization       | `packages/api/src/routes/request/authorizeRequest.js`   |
 | Validation          | `packages/api/src/routes/request/validateSchemas.js`    |
 | Endpoint Handler    | `packages/api/src/routes/endpoints/callEndpoint.js`     |
+| Endpoint Call       | `packages/api/src/routes/endpoints/handleEndpointCall.js`|
+| Routine Dispatch    | `packages/api/src/routes/endpoints/runRoutine.js`       |
+| Step Result Storage | `packages/api/src/routes/endpoints/addStepResult.js`    |
 | State Manager       | `packages/engine/src/State.js`                          |
 
 ## Architectural Patterns

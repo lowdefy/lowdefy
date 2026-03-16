@@ -230,6 +230,101 @@ _ref:
                     field_id: primary_contact
             ```
 
+            ## Declaring Dependencies
+
+            When your module needs resources from another module — pages to link to, components to embed, APIs to call — declare those dependencies in `module.lowdefy.yaml`:
+
+            ```yaml
+            dependencies:
+              - id: contacts
+                description: Contact management (selector component, detail pages)
+              - id: layout
+                description: Page layout components
+              - id: events
+                description: Audit event logging
+            ```
+
+            Each dependency has an `id` (the abstract name you use in your module content) and a `description` (documents what kind of module is expected). The `id` is your choice — it's not tied to any specific entry name.
+
+            ## Declaring Exports
+
+            Declare what your module exposes so the build can validate cross-module references:
+
+            ```yaml
+            exports:
+              pages:
+                - id: company-list
+                - id: company-detail
+              components:
+                - id: company-selector
+                  description: Dropdown selector for picking companies
+              menus:
+                - id: default
+              api:
+                - id: save-company
+            ```
+
+            Omit empty sections. The build validates that cross-module references target declared exports.
+
+            ## Using Cross-Module References
+
+            ### Linking to Pages in Another Module
+
+            Use the object form of `_module.pageId` with a `module` field:
+
+            ```yaml
+            # Link to a page in the contacts dependency
+            - id: view-contact
+              type: Link
+              params:
+                pageId:
+                  _module.pageId:
+                    id: contact-detail
+                    module: contacts
+            ```
+
+            The string form (`_module.pageId: company-detail`) continues to reference the current module's own pages.
+
+            ### Calling APIs in Another Module
+
+            ```yaml
+            - id: log-event
+              type: CallAPI
+              params:
+                endpointId:
+                  _module.endpointId:
+                    id: log-event
+                    module: events
+            ```
+
+            ### Embedding Components from Another Module
+
+            Use `_ref: { module, component }` where `module` is the abstract dependency name:
+
+            ```yaml
+            blocks:
+              - _ref:
+                  module: contacts
+                  component: contact-selector
+                  vars:
+                    field_id: primary_contact
+            ```
+
+            The embedded component resolves in its source module's context. Its `_module.var` and `_module.*Id` operators read from the source module's entry — not yours. Per-ref `_var` works for customizing the component at the point of inclusion.
+
+            ### Including Menus from Another Module
+
+            ```yaml
+            links:
+              _build.array.concat:
+                - _ref:
+                    module: contacts
+                    menu: default
+                - _ref: menus/company-links.yaml
+            ```
+
+            Cross-module `_ref` supports `component` and `menu` types only. Pages, connections, and APIs have dedicated ID operators.
+
             ## Declaring Plugin Dependencies
 
             Modules declare required plugins with semver version constraints. The build validates these against the app's `plugins` array:
