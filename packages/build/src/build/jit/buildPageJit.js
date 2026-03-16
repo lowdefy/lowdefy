@@ -24,6 +24,7 @@ import operators from '@lowdefy/operators-js/operators/build';
 import addKeys from '../addKeys.js';
 import buildPage from '../buildPages/buildPage.js';
 import resolveModuleOperators from '../resolveModuleOperators.js';
+import validateCallApiRefs from '../buildPages/validateCallApiRefs.js';
 import validateLinkReferences from '../buildPages/validateLinkReferences.js';
 import validatePayloadReferences from '../buildPages/validatePayloadReferences.js';
 import validateServerStateReferences from '../buildPages/validateServerStateReferences.js';
@@ -213,9 +214,12 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     // JIT addKeys assigns fresh ~k values that aren't in the skeleton keyMap.
     await writeMaps({ context: buildContext });
 
-    // Initialize linkActionRefs for buildPage (normally done by buildPages)
+    // Initialize action ref collections for buildPage (normally done by buildPages)
     if (!buildContext.linkActionRefs) {
       buildContext.linkActionRefs = [];
+    }
+    if (!buildContext.callApiActionRefs) {
+      buildContext.callApiActionRefs = [];
     }
 
     // Build the page (validation, block processing)
@@ -247,6 +251,14 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     validateLinkReferences({
       linkActionRefs: buildContext.linkActionRefs,
       pageIds,
+      context: buildContext,
+    });
+    const endpointConfigs = type.isArray(buildContext.components?.api)
+      ? buildContext.components.api
+      : [];
+    validateCallApiRefs({
+      callApiActionRefs: buildContext.callApiActionRefs,
+      endpointConfigs,
       context: buildContext,
     });
     validateStateReferences({ page: processed, context: buildContext });

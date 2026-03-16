@@ -1,7 +1,7 @@
 {
   "api/events/log-event.json": {
     "id": "endpoint:events/log-event",
-    "type": "Endpoint",
+    "type": "Api",
     "routine": {
       "~arr": [
         {
@@ -13,7 +13,7 @@
             "url": "/events",
             "~k": "o"
           },
-          "requestId": "log",
+          "stepId": "log",
           "endpointId": "events/log-event",
           "~k": "n"
         }
@@ -354,25 +354,25 @@
       "~k_parent": "8"
     },
     "l": {
-      "key": "root.api[0:events/log-event:Endpoint]",
+      "key": "root.api[0:events/log-event:Api]",
       "~k_parent": "k",
       "~r": "4",
       "~l": 1
     },
     "m": {
-      "key": "root.api[0:events/log-event:Endpoint].routine",
+      "key": "root.api[0:events/log-event:Api].routine",
       "~k_parent": "l",
       "~r": "4",
       "~l": 3
     },
     "n": {
-      "key": "root.api[0:events/log-event:Endpoint].routine[0:events/event-store:AxiosHttp]",
+      "key": "root.api[0:events/log-event:Api].routine[0:events/event-store:AxiosHttp]",
       "~k_parent": "m",
       "~r": "4",
       "~l": 4
     },
     "o": {
-      "key": "root.api[0:events/log-event:Endpoint].routine[0:events/event-store:AxiosHttp].properties",
+      "key": "root.api[0:events/log-event:Api].routine[0:events/event-store:AxiosHttp].properties",
       "~k_parent": "n",
       "~r": "4",
       "~l": 8
@@ -466,7 +466,7 @@
       "~k_parent": "1h"
     },
     "1m": {
-      "key": "root.api[0:events/log-event:Endpoint].auth",
+      "key": "root.api[0:events/log-event:Api].auth",
       "~k_parent": "l"
     },
     "1n": {

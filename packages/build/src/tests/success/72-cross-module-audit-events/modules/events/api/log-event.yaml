@@ -1,5 +1,5 @@
 id: log-event
-type: Endpoint
+type: Api
 routine:
   - id: log
     type: AxiosHttp

@@ -22,6 +22,7 @@ function checkAction(
   action,
   {
     blockId,
+    callApiActionRefs,
     checkDuplicateActionId,
     eventId,
     linkActionRefs,
@@ -88,6 +89,20 @@ function checkAction(
       });
     }
   }
+
+  // Collect static CallAPI action references for validation
+  if (action.type === 'CallAPI' && !type.isNone(action.params)) {
+    const params = action.params;
+    if (type.isObject(params) && type.isString(params.endpointId)) {
+      callApiActionRefs.push({
+        endpointId: params.endpointId,
+        action,
+        blockId,
+        eventId,
+        sourcePageId: pageId,
+      });
+    }
+  }
 }
 
 function buildEvents(block, pageContext) {
@@ -132,6 +147,7 @@ function buildEvents(block, pageContext) {
         checkAction(action, {
           eventId: key,
           blockId: block.blockId,
+          callApiActionRefs: pageContext.callApiActionRefs,
           typeCounters: pageContext.typeCounters,
           pageId: pageContext.pageId,
           linkActionRefs: pageContext.linkActionRefs,
@@ -143,6 +159,7 @@ function buildEvents(block, pageContext) {
         checkAction(action, {
           eventId: key,
           blockId: block.blockId,
+          callApiActionRefs: pageContext.callApiActionRefs,
           typeCounters: pageContext.typeCounters,
           pageId: pageContext.pageId,
           linkActionRefs: pageContext.linkActionRefs,

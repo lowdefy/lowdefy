@@ -1,5 +1,5 @@
 id: send-invite
-type: Endpoint
+type: Api
 routine:
   - id: send-email
     type: SendGridMailSend

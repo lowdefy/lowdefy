@@ -50,6 +50,7 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
   buildBlock(page, {
     auth: page.auth,
     blockIdCounter: createCounter(),
+    callApiActionRefs: context.callApiActionRefs ?? [],
     checkDuplicateRequestId: createCheckDuplicateId({
       message: 'Duplicate requestId "{{ id }}" on page "{{ pageId }}".',
     }),

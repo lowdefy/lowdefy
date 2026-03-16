@@ -1,7 +1,7 @@
 {
   "api/inviter/send-invite.json": {
     "id": "endpoint:inviter/send-invite",
-    "type": "Endpoint",
+    "type": "Api",
     "routine": {
       "~arr": [
         {
@@ -17,7 +17,7 @@
             "text": "You have been invited!",
             "~k": "t"
           },
-          "requestId": "send-email",
+          "stepId": "send-email",
           "endpointId": "inviter/send-invite",
           "~k": "s"
         }
@@ -437,31 +437,31 @@
       "~k_parent": "8"
     },
     "q": {
-      "key": "root.api[0:inviter/send-invite:Endpoint]",
+      "key": "root.api[0:inviter/send-invite:Api]",
       "~k_parent": "p",
       "~r": "5",
       "~l": 1
     },
     "r": {
-      "key": "root.api[0:inviter/send-invite:Endpoint].routine",
+      "key": "root.api[0:inviter/send-invite:Api].routine",
       "~k_parent": "q",
       "~r": "5",
       "~l": 3
     },
     "s": {
-      "key": "root.api[0:inviter/send-invite:Endpoint].routine[0:inviter/email-conn:SendGridMailSend]",
+      "key": "root.api[0:inviter/send-invite:Api].routine[0:inviter/email-conn:SendGridMailSend]",
       "~k_parent": "r",
       "~r": "5",
       "~l": 4
     },
     "t": {
-      "key": "root.api[0:inviter/send-invite:Endpoint].routine[0:inviter/email-conn:SendGridMailSend].properties",
+      "key": "root.api[0:inviter/send-invite:Api].routine[0:inviter/email-conn:SendGridMailSend].properties",
       "~k_parent": "s",
       "~r": "5",
       "~l": 8
     },
     "u": {
-      "key": "root.api[0:inviter/send-invite:Endpoint].routine[0:inviter/email-conn:SendGridMailSend].properties.to",
+      "key": "root.api[0:inviter/send-invite:Api].routine[0:inviter/email-conn:SendGridMailSend].properties.to",
       "~k_parent": "t",
       "~r": "5",
       "~l": 9
@@ -559,7 +559,7 @@
       "~k_parent": "1p"
     },
     "1u": {
-      "key": "root.api[0:inviter/send-invite:Endpoint].auth",
+      "key": "root.api[0:inviter/send-invite:Api].auth",
       "~k_parent": "q"
     },
     "1v": {
