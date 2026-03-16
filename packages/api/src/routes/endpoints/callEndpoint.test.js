@@ -113,6 +113,7 @@ test('InternalApi error matches missing endpoint error message', async () => {
 
   // InternalApi should throw the exact same message as a missing endpoint
   const expectedMessage = 'API Endpoint "internal_ep" does not exist.';
+  expect.assertions(2);
   try {
     await callEndpoint(context, {
       blockId: 'blockId',

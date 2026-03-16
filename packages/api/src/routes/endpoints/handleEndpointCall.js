@@ -75,11 +75,8 @@ async function handleEndpointCall(context, routineContext, { step }) {
     stepId: step.stepId,
   });
 
-  // Propagate errors
-  if (result.status === 'error') {
-    throw result.error ?? new Error('Endpoint call failed');
-  }
-  if (result.status === 'reject') {
+  // Propagate errors and rejects to the caller
+  if (result.status === 'error' || result.status === 'reject') {
     return result;
   }
 

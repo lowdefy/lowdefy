@@ -51,13 +51,19 @@ function validateStep(step, { endpointId }) {
   }
 
   if (step.type === 'CallApi') {
-    if (type.isUndefined(step.properties?.endpointId)) {
+    if (type.isNone(step.properties?.endpointId)) {
       throw new ConfigError(
         `Endpoint step "${step.id}" at endpoint "${endpointId}" requires properties.endpointId.`,
         { configKey }
       );
     }
-    if (!type.isUndefined(step.connectionId)) {
+    if (!type.isString(step.properties.endpointId) && !type.isObject(step.properties.endpointId)) {
+      throw new ConfigError(
+        `Endpoint step "${step.id}" at endpoint "${endpointId}" properties.endpointId is not a string.`,
+        { received: step.properties.endpointId, configKey }
+      );
+    }
+    if (!type.isNone(step.connectionId)) {
       throw new ConfigError(
         `Endpoint step "${step.id}" at endpoint "${endpointId}" should not have a connectionId.`,
         { configKey }
