@@ -85,7 +85,6 @@
       ],
       "~k": "i"
     },
-    "~k": "5",
     "api": {
       "roles": {
         "~k": "2a"
@@ -105,7 +104,8 @@
     "theme": {
       "~k": "2e"
     },
-    "configured": true
+    "configured": true,
+    "~k": "5"
   },
   "config.json": {
     "~k": "27"
@@ -1510,8 +1510,8 @@
                 },
                 "~k": "20"
               },
-              "~k": "1y",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "1y"
             }
           ],
           "~k": "1x"
@@ -1562,8 +1562,8 @@
                 "content": "Administration",
                 "~k": "1k"
               },
-              "~k": "1j",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "1j"
             }
           ],
           "~k": "1i"
@@ -1608,8 +1608,8 @@
                 "content": "User Dashboard",
                 "~k": "10"
               },
-              "~k": "z",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "z"
             }
           ],
           "~k": "y"
@@ -1663,8 +1663,8 @@
                 },
                 "~k": "t"
               },
-              "~k": "r",
-              "blockId": "loginBtn"
+              "blockId": "loginBtn",
+              "~k": "r"
             }
           ],
           "~k": "q"
@@ -1715,8 +1715,8 @@
                 "content": "My Profile",
                 "~k": "15"
               },
-              "~k": "14",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "14"
             }
           ],
           "~k": "13"
@@ -1761,8 +1761,8 @@
                 "content": "Manager Reports",
                 "~k": "1a"
               },
-              "~k": "19",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "19"
             }
           ],
           "~k": "18"
@@ -1807,8 +1807,8 @@
                 "content": "Team Management",
                 "~k": "1f"
               },
-              "~k": "1e",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "1e"
             }
           ],
           "~k": "1d"
@@ -1853,8 +1853,8 @@
                 "content": "Manage Users",
                 "~k": "1p"
               },
-              "~k": "1o",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "1o"
             }
           ],
           "~k": "1n"

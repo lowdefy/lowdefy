@@ -969,8 +969,8 @@
                 },
                 "~k": "w"
               },
-              "~k": "u",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "u"
             }
           ],
           "~k": "t"
@@ -1015,8 +1015,8 @@
                 "content": "About This Demo",
                 "~k": "j"
               },
-              "~k": "i",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "i"
             },
             {
               "id": "block:about:description:0",
@@ -1025,8 +1025,8 @@
                 "content": "This is a multi-page application that demonstrates page references.",
                 "~k": "l"
               },
-              "~k": "k",
-              "blockId": "description"
+              "blockId": "description",
+              "~k": "k"
             }
           ],
           "~k": "h"
@@ -1065,8 +1065,8 @@
                 "content": "API Endpoints Demo",
                 "~k": "c"
               },
-              "~k": "b",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "b"
             },
             {
               "id": "block:home:description:0",
@@ -1075,8 +1075,8 @@
                 "content": "This app demonstrates API endpoints with various controls.",
                 "~k": "e"
               },
-              "~k": "d",
-              "blockId": "description"
+              "blockId": "description",
+              "~k": "d"
             }
           ],
           "~k": "a"

@@ -862,8 +862,8 @@
                 },
                 "~k": "m"
               },
-              "~k": "k",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "k"
             }
           ],
           "~k": "j"
@@ -904,8 +904,8 @@
                 "content": "IDs: [\n  \"column-1\",\n  \"column-2\",\n  \"column-3\"\n]",
                 "~k": "b"
               },
-              "~k": "a",
-              "blockId": "text"
+              "blockId": "text",
+              "~k": "a"
             }
           ],
           "~k": "9"

@@ -910,12 +910,12 @@
                 "title": "Home",
                 "~k": "e"
               },
-              "~k": "d",
               "auth": {
                 "public": true,
                 "~k": "1d"
               },
-              "menuItemId": "home"
+              "menuItemId": "home",
+              "~k": "d"
             },
             {
               "id": "menuitem:main:admin/settings",
@@ -925,12 +925,12 @@
                 "title": "Settings",
                 "~k": "g"
               },
-              "~k": "f",
               "auth": {
                 "public": true,
                 "~k": "1e"
               },
-              "menuItemId": "admin/settings"
+              "menuItemId": "admin/settings",
+              "~k": "f"
             },
             {
               "id": "menuitem:main:admin/users",
@@ -940,18 +940,18 @@
                 "title": "Users",
                 "~k": "i"
               },
-              "~k": "h",
               "auth": {
                 "public": true,
                 "~k": "1f"
               },
-              "menuItemId": "admin/users"
+              "menuItemId": "admin/users",
+              "~k": "h"
             }
           ],
           "~k": "1c"
         },
-        "~k": "b",
-        "menuId": "main"
+        "menuId": "main",
+        "~k": "b"
       }
     ],
     "~k": "a"
@@ -1004,8 +1004,8 @@
                 },
                 "~k": "13"
               },
-              "~k": "11",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "11"
             }
           ],
           "~k": "10"
@@ -1046,8 +1046,8 @@
                 "content": "Administration",
                 "~k": "o"
               },
-              "~k": "n",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "n"
             }
           ],
           "~k": "m"
@@ -1082,8 +1082,8 @@
                 "content": "User Management",
                 "~k": "s"
               },
-              "~k": "r",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "r"
             }
           ],
           "~k": "q"
@@ -2097,9 +2097,9 @@
       "lineNumber": 21,
       "path": null,
       "original": {
-        "~l": 21,
         "module": "admin",
-        "menu": "default"
+        "menu": "default",
+        "~l": 21
       }
     }
   },

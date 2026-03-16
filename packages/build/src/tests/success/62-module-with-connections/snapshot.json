@@ -59,8 +59,8 @@
       "from": "test@example.com",
       "~k": "j"
     },
-    "~k": "i",
-    "connectionId": "notify/email"
+    "connectionId": "notify/email",
+    "~k": "i"
   },
   "global.json": {},
   "keyMap.json": {
@@ -976,8 +976,8 @@
                 },
                 "~k": "v"
               },
-              "~k": "t",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "t"
             }
           ],
           "~k": "s"
@@ -1033,8 +1033,8 @@
                 "title": "Send Notification",
                 "~k": "d"
               },
-              "~k": "c",
-              "blockId": "send-btn"
+              "blockId": "send-btn",
+              "~k": "c"
             }
           ],
           "~k": "b"
@@ -1047,12 +1047,12 @@
       "~arr": [
         {
           "id": "request:notify/inbox:send-email",
-          "~k": "f",
           "payload": {
             "~k": "1d"
           },
           "requestId": "send-email",
-          "pageId": "notify/inbox"
+          "pageId": "notify/inbox",
+          "~k": "f"
         }
       ],
       "~k": "1c"
@@ -1068,7 +1068,6 @@
       "subject": "Test",
       "~k": "g"
     },
-    "~k": "f",
     "payload": {
       "~k": "1d"
     },
@@ -1077,7 +1076,8 @@
       "~k": "1e"
     },
     "requestId": "send-email",
-    "pageId": "notify/inbox"
+    "pageId": "notify/inbox",
+    "~k": "f"
   },
   "plugins/actionSchemas.json": {
     "Link": {

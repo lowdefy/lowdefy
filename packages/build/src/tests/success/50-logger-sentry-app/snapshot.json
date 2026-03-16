@@ -943,8 +943,8 @@
                 },
                 "~k": "v"
               },
-              "~k": "t",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "t"
             }
           ],
           "~k": "s"
@@ -989,8 +989,8 @@
                 "content": "Logger Demo",
                 "~k": "d"
               },
-              "~k": "c",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "c"
             },
             {
               "id": "block:home:triggerError:0",
@@ -1024,8 +1024,8 @@
                 },
                 "~k": "g"
               },
-              "~k": "e",
-              "blockId": "triggerError"
+              "blockId": "triggerError",
+              "~k": "e"
             }
           ],
           "~k": "b"

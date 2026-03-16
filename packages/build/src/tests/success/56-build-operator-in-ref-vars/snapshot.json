@@ -899,8 +899,8 @@
                 },
                 "~k": "r"
               },
-              "~k": "p",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "p"
             }
           ],
           "~k": "o"
@@ -970,8 +970,8 @@
                 },
                 "~k": "b"
               },
-              "~k": "a",
-              "blockId": "button"
+              "blockId": "button",
+              "~k": "a"
             }
           ],
           "~k": "9"

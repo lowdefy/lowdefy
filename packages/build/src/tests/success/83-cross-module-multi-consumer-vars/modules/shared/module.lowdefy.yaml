@@ -1,0 +1,15 @@
+name: Shared
+
+exports:
+  components:
+    - id: card
+
+components:
+  - id: card
+    type: Component
+    component:
+      id: card-title
+      type: Title
+      properties:
+        content:
+          _var: title

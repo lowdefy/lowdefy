@@ -886,8 +886,8 @@
                 },
                 "~k": "o"
               },
-              "~k": "m",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "m"
             }
           ],
           "~k": "l"
@@ -928,8 +928,8 @@
                 "content": "Welcome",
                 "~k": "9"
               },
-              "~k": "8",
-              "blockId": "heading"
+              "blockId": "heading",
+              "~k": "8"
             },
             {
               "id": "block:home:intro:0",
@@ -938,8 +938,8 @@
                 "content": "This is the intro text.",
                 "~k": "b"
               },
-              "~k": "a",
-              "blockId": "intro"
+              "blockId": "intro",
+              "~k": "a"
             },
             {
               "id": "block:home:cta:0",
@@ -948,8 +948,8 @@
                 "title": "Click Me",
                 "~k": "d"
               },
-              "~k": "c",
-              "blockId": "cta"
+              "blockId": "cta",
+              "~k": "c"
             }
           ],
           "~k": "7"

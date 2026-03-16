@@ -1089,8 +1089,8 @@
                 },
                 "~k": "1e"
               },
-              "~k": "1c",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "1c"
             }
           ],
           "~k": "1b"
@@ -1132,7 +1132,6 @@
                 "padding": 16,
                 "~k": "s"
               },
-              "~k": "r",
               "blockId": "header",
               "areas": {
                 "content": {
@@ -1150,8 +1149,8 @@
                           "level": 3,
                           "~k": "w"
                         },
-                        "~k": "u",
-                        "blockId": "logo"
+                        "blockId": "logo",
+                        "~k": "u"
                       }
                     ],
                     "~k": "t"
@@ -1159,7 +1158,8 @@
                   "~k": "22"
                 },
                 "~k": "21"
-              }
+              },
+              "~k": "r"
             },
             {
               "id": "block:about:content:0",
@@ -1168,8 +1168,8 @@
                 "content": "About page content",
                 "~k": "y"
               },
-              "~k": "x",
-              "blockId": "content"
+              "blockId": "content",
+              "~k": "x"
             },
             {
               "id": "block:about:footer:0",
@@ -1180,7 +1180,6 @@
                 "marginTop": 24,
                 "~k": "10"
               },
-              "~k": "z",
               "blockId": "footer",
               "areas": {
                 "content": {
@@ -1193,8 +1192,8 @@
                           "content": "© 2024 My Company",
                           "~k": "13"
                         },
-                        "~k": "12",
-                        "blockId": "copyright"
+                        "blockId": "copyright",
+                        "~k": "12"
                       }
                     ],
                     "~k": "11"
@@ -1202,7 +1201,8 @@
                   "~k": "24"
                 },
                 "~k": "23"
-              }
+              },
+              "~k": "z"
             }
           ],
           "~k": "q"
@@ -1238,7 +1238,6 @@
                 "padding": 16,
                 "~k": "d"
               },
-              "~k": "c",
               "blockId": "header",
               "areas": {
                 "content": {
@@ -1256,8 +1255,8 @@
                           "level": 3,
                           "~k": "h"
                         },
-                        "~k": "f",
-                        "blockId": "logo"
+                        "blockId": "logo",
+                        "~k": "f"
                       }
                     ],
                     "~k": "e"
@@ -1265,7 +1264,8 @@
                   "~k": "1t"
                 },
                 "~k": "1s"
-              }
+              },
+              "~k": "c"
             },
             {
               "id": "block:home:content:0",
@@ -1274,8 +1274,8 @@
                 "content": "Home page content",
                 "~k": "j"
               },
-              "~k": "i",
-              "blockId": "content"
+              "blockId": "content",
+              "~k": "i"
             },
             {
               "id": "block:home:footer:0",
@@ -1286,7 +1286,6 @@
                 "marginTop": 24,
                 "~k": "l"
               },
-              "~k": "k",
               "blockId": "footer",
               "areas": {
                 "content": {
@@ -1299,8 +1298,8 @@
                           "content": "© 2024 My Company",
                           "~k": "o"
                         },
-                        "~k": "n",
-                        "blockId": "copyright"
+                        "blockId": "copyright",
+                        "~k": "n"
                       }
                     ],
                     "~k": "m"
@@ -1308,7 +1307,8 @@
                   "~k": "1v"
                 },
                 "~k": "1u"
-              }
+              },
+              "~k": "k"
             }
           ],
           "~k": "b"

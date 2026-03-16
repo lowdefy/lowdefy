@@ -878,8 +878,8 @@
                 },
                 "~k": "p"
               },
-              "~k": "n",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "n"
             }
           ],
           "~k": "m"
@@ -916,7 +916,6 @@
             {
               "id": "block:dashboard:header:0",
               "type": "Box",
-              "~k": "b",
               "blockId": "header",
               "areas": {
                 "content": {
@@ -930,8 +929,8 @@
                           "text": "Active",
                           "~k": "e"
                         },
-                        "~k": "d",
-                        "blockId": "status-badge"
+                        "blockId": "status-badge",
+                        "~k": "d"
                       }
                     ],
                     "~k": "c"
@@ -939,7 +938,8 @@
                   "~k": "14"
                 },
                 "~k": "13"
-              }
+              },
+              "~k": "b"
             }
           ],
           "~k": "a"
@@ -2010,9 +2010,9 @@
       "lineNumber": 19,
       "path": null,
       "original": {
-        "~l": 19,
         "module": "widgets",
-        "component": "status-badge"
+        "component": "status-badge",
+        "~l": 19
       }
     },
     "5": {

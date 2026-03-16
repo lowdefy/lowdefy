@@ -912,8 +912,8 @@
                 },
                 "~k": "q"
               },
-              "~k": "o",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "o"
             }
           ],
           "~k": "n"
@@ -950,7 +950,6 @@
             {
               "id": "block:home:container:0",
               "type": "Box",
-              "~k": "8",
               "blockId": "container",
               "areas": {
                 "content": {
@@ -963,13 +962,12 @@
                           "content": "Inner Title",
                           "~k": "b"
                         },
-                        "~k": "a",
-                        "blockId": "inner1"
+                        "blockId": "inner1",
+                        "~k": "a"
                       },
                       {
                         "id": "block:home:inner2:0",
                         "type": "Box",
-                        "~k": "c",
                         "blockId": "inner2",
                         "areas": {
                           "content": {
@@ -982,8 +980,8 @@
                                     "content": "Deeply nested content",
                                     "~k": "f"
                                   },
-                                  "~k": "e",
-                                  "blockId": "deepest"
+                                  "blockId": "deepest",
+                                  "~k": "e"
                                 }
                               ],
                               "~k": "d"
@@ -991,7 +989,8 @@
                             "~k": "17"
                           },
                           "~k": "16"
-                        }
+                        },
+                        "~k": "c"
                       }
                     ],
                     "~k": "9"
@@ -999,7 +998,8 @@
                   "~k": "15"
                 },
                 "~k": "14"
-              }
+              },
+              "~k": "8"
             }
           ],
           "~k": "7"

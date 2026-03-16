@@ -1197,8 +1197,8 @@
                 },
                 "~k": "1j"
               },
-              "~k": "1h",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "1h"
             }
           ],
           "~k": "1g"
@@ -1239,8 +1239,8 @@
                 "content": "About Page",
                 "~k": "m"
               },
-              "~k": "l",
-              "blockId": "about-title"
+              "blockId": "about-title",
+              "~k": "l"
             }
           ],
           "~k": "k"
@@ -1295,8 +1295,8 @@
                 },
                 "~k": "13"
               },
-              "~k": "12",
-              "blockId": "back"
+              "blockId": "back",
+              "~k": "12"
             },
             {
               "id": "block:alerts/alert-detail:detail-title:0",
@@ -1305,8 +1305,8 @@
                 "content": "Alert Detail",
                 "~k": "18"
               },
-              "~k": "17",
-              "blockId": "detail-title"
+              "blockId": "detail-title",
+              "~k": "17"
             }
           ],
           "~k": "11"
@@ -1350,8 +1350,8 @@
                 },
                 "~k": "q"
               },
-              "~k": "p",
-              "blockId": "heading"
+              "blockId": "heading",
+              "~k": "p"
             },
             {
               "id": "block:alerts/alert-list:alert-type:0",
@@ -1360,8 +1360,8 @@
                 "content": "warning",
                 "~k": "u"
               },
-              "~k": "t",
-              "blockId": "alert-type"
+              "blockId": "alert-type",
+              "~k": "t"
             },
             {
               "id": "block:alerts/alert-list:detail-link:0",
@@ -1390,8 +1390,8 @@
                 },
                 "~k": "w"
               },
-              "~k": "v",
-              "blockId": "detail-link"
+              "blockId": "detail-link",
+              "~k": "v"
             }
           ],
           "~k": "o"
@@ -1426,8 +1426,8 @@
                 "content": "Home Page",
                 "~k": "c"
               },
-              "~k": "b",
-              "blockId": "welcome"
+              "blockId": "welcome",
+              "~k": "b"
             },
             {
               "id": "block:home:alerts-link:0",
@@ -1460,8 +1460,8 @@
                 },
                 "~k": "f"
               },
-              "~k": "d",
-              "blockId": "alerts-link"
+              "blockId": "alerts-link",
+              "~k": "d"
             }
           ],
           "~k": "a"

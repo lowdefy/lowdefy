@@ -1090,8 +1090,8 @@
                 },
                 "~k": "18"
               },
-              "~k": "16",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "16"
             }
           ],
           "~k": "15"
@@ -1136,8 +1136,8 @@
                 "content": "About Our Company",
                 "~k": "k"
               },
-              "~k": "j",
-              "blockId": "heading"
+              "blockId": "heading",
+              "~k": "j"
             },
             {
               "id": "block:about:description:0",
@@ -1146,8 +1146,8 @@
                 "content": "We are a company that builds great things.",
                 "~k": "m"
               },
-              "~k": "l",
-              "blockId": "description"
+              "blockId": "description",
+              "~k": "l"
             }
           ],
           "~k": "i"
@@ -1186,8 +1186,8 @@
                 "content": "Get In Touch",
                 "~k": "r"
               },
-              "~k": "q",
-              "blockId": "heading"
+              "blockId": "heading",
+              "~k": "q"
             },
             {
               "id": "block:contact:email:0",
@@ -1196,8 +1196,8 @@
                 "title": "Your Email",
                 "~k": "t"
               },
-              "~k": "s",
-              "blockId": "email"
+              "blockId": "email",
+              "~k": "s"
             },
             {
               "id": "block:contact:message:0",
@@ -1206,8 +1206,8 @@
                 "title": "Message",
                 "~k": "v"
               },
-              "~k": "u",
-              "blockId": "message"
+              "blockId": "message",
+              "~k": "u"
             },
             {
               "id": "block:contact:submit:0",
@@ -1216,8 +1216,8 @@
                 "title": "Send Message",
                 "~k": "x"
               },
-              "~k": "w",
-              "blockId": "submit"
+              "blockId": "submit",
+              "~k": "w"
             }
           ],
           "~k": "p"
@@ -1256,8 +1256,8 @@
                 "content": "Welcome Home",
                 "~k": "d"
               },
-              "~k": "c",
-              "blockId": "heading"
+              "blockId": "heading",
+              "~k": "c"
             },
             {
               "id": "block:home:intro:0",
@@ -1266,8 +1266,8 @@
                 "content": "This is the home page.",
                 "~k": "f"
               },
-              "~k": "e",
-              "blockId": "intro"
+              "blockId": "intro",
+              "~k": "e"
             }
           ],
           "~k": "b"

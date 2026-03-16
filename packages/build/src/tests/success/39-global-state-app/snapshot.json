@@ -1415,8 +1415,8 @@
                 },
                 "~k": "2h"
               },
-              "~k": "2f",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "2f"
             }
           ],
           "~k": "2e"
@@ -1461,8 +1461,8 @@
                 "content": "Your Cart",
                 "~k": "1q"
               },
-              "~k": "1p",
-              "blockId": "cartTitle"
+              "blockId": "cartTitle",
+              "~k": "1p"
             },
             {
               "id": "block:cart:itemCount:0",
@@ -1481,8 +1481,8 @@
                 },
                 "~k": "1s"
               },
-              "~k": "1r",
-              "blockId": "itemCount"
+              "blockId": "itemCount",
+              "~k": "1r"
             },
             {
               "id": "block:cart:total:0",
@@ -1496,8 +1496,8 @@
                 },
                 "~k": "1x"
               },
-              "~k": "1w",
-              "blockId": "total"
+              "blockId": "total",
+              "~k": "1w"
             },
             {
               "id": "block:cart:clearCart:0",
@@ -1538,8 +1538,8 @@
                 },
                 "~k": "21"
               },
-              "~k": "1z",
-              "blockId": "clearCart"
+              "blockId": "clearCart",
+              "~k": "1z"
             }
           ],
           "~k": "1o"
@@ -1610,8 +1610,8 @@
                 },
                 "~k": "k"
               },
-              "~k": "j",
-              "blockId": "themeDisplay"
+              "blockId": "themeDisplay",
+              "~k": "j"
             },
             {
               "id": "block:home:langDisplay:0",
@@ -1627,8 +1627,8 @@
                 },
                 "~k": "o"
               },
-              "~k": "n",
-              "blockId": "langDisplay"
+              "blockId": "langDisplay",
+              "~k": "n"
             }
           ],
           "~k": "i"
@@ -1709,8 +1709,8 @@
                 },
                 "~k": "z"
               },
-              "~k": "u",
-              "blockId": "themeSelect"
+              "blockId": "themeSelect",
+              "~k": "u"
             },
             {
               "id": "block:settings:langSelect:0",
@@ -1766,8 +1766,8 @@
                 },
                 "~k": "1a"
               },
-              "~k": "14",
-              "blockId": "langSelect"
+              "blockId": "langSelect",
+              "~k": "14"
             },
             {
               "id": "block:settings:notifSwitch:0",
@@ -1803,8 +1803,8 @@
                 },
                 "~k": "1h"
               },
-              "~k": "1f",
-              "blockId": "notifSwitch"
+              "blockId": "notifSwitch",
+              "~k": "1f"
             }
           ],
           "~k": "t"

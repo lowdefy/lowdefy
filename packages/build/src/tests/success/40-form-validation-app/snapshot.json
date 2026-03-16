@@ -1308,8 +1308,8 @@
                 },
                 "~k": "2e"
               },
-              "~k": "2c",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "2c"
             }
           ],
           "~k": "2b"
@@ -1354,13 +1354,12 @@
                 "content": "User Registration",
                 "~k": "a"
               },
-              "~k": "9",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "9"
             },
             {
               "id": "block:registration:form:0",
               "type": "Card",
-              "~k": "b",
               "blockId": "form",
               "areas": {
                 "content": {
@@ -1414,8 +1413,8 @@
                           "placeholder": "Choose a username",
                           "~k": "n"
                         },
-                        "~k": "d",
-                        "blockId": "username"
+                        "blockId": "username",
+                        "~k": "d"
                       },
                       {
                         "id": "block:registration:email:0",
@@ -1447,8 +1446,8 @@
                           "placeholder": "your@email.com",
                           "~k": "u"
                         },
-                        "~k": "o",
-                        "blockId": "email"
+                        "blockId": "email",
+                        "~k": "o"
                       },
                       {
                         "id": "block:registration:password:0",
@@ -1500,8 +1499,8 @@
                           "title": "Password",
                           "~k": "16"
                         },
-                        "~k": "v",
-                        "blockId": "password"
+                        "blockId": "password",
+                        "~k": "v"
                       },
                       {
                         "id": "block:registration:confirmPassword:0",
@@ -1537,8 +1536,8 @@
                           "title": "Confirm Password",
                           "~k": "1e"
                         },
-                        "~k": "17",
-                        "blockId": "confirmPassword"
+                        "blockId": "confirmPassword",
+                        "~k": "17"
                       },
                       {
                         "id": "block:registration:age:0",
@@ -1591,8 +1590,8 @@
                           "max": 150,
                           "~k": "1p"
                         },
-                        "~k": "1f",
-                        "blockId": "age"
+                        "blockId": "age",
+                        "~k": "1f"
                       },
                       {
                         "id": "block:registration:terms:0",
@@ -1625,8 +1624,8 @@
                           "title": "I accept the terms and conditions",
                           "~k": "1w"
                         },
-                        "~k": "1q",
-                        "blockId": "terms"
+                        "blockId": "terms",
+                        "~k": "1q"
                       },
                       {
                         "id": "block:registration:submitBtn:0",
@@ -1667,8 +1666,8 @@
                           },
                           "~k": "1z"
                         },
-                        "~k": "1x",
-                        "blockId": "submitBtn"
+                        "blockId": "submitBtn",
+                        "~k": "1x"
                       }
                     ],
                     "~k": "c"
@@ -1676,7 +1675,8 @@
                   "~k": "2t"
                 },
                 "~k": "2s"
-              }
+              },
+              "~k": "b"
             }
           ],
           "~k": "8"

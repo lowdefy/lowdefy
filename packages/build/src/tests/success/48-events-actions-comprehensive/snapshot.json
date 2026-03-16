@@ -1811,8 +1811,8 @@
                 },
                 "~k": "4a"
               },
-              "~k": "48",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "48"
             }
           ],
           "~k": "47"
@@ -1857,8 +1857,8 @@
                 "content": "About Page",
                 "~k": "3t"
               },
-              "~k": "3s",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "3s"
             },
             {
               "id": "block:about:backBtn:0",
@@ -1891,8 +1891,8 @@
                 },
                 "~k": "3w"
               },
-              "~k": "3u",
-              "blockId": "backBtn"
+              "blockId": "backBtn",
+              "~k": "3u"
             }
           ],
           "~k": "3r"
@@ -1980,8 +1980,8 @@
                 "content": "Events & Actions Demo",
                 "~k": "i"
               },
-              "~k": "h",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "h"
             },
             {
               "id": "block:home:stateCard:0",
@@ -1990,7 +1990,6 @@
                 "title": "State Management",
                 "~k": "k"
               },
-              "~k": "j",
               "blockId": "stateCard",
               "areas": {
                 "content": {
@@ -2007,8 +2006,8 @@
                           },
                           "~k": "n"
                         },
-                        "~k": "m",
-                        "blockId": "counterDisplay"
+                        "blockId": "counterDisplay",
+                        "~k": "m"
                       },
                       {
                         "id": "block:home:incrementBtn:0",
@@ -2053,8 +2052,8 @@
                           },
                           "~k": "r"
                         },
-                        "~k": "p",
-                        "blockId": "incrementBtn"
+                        "blockId": "incrementBtn",
+                        "~k": "p"
                       },
                       {
                         "id": "block:home:decrementBtn:0",
@@ -2099,8 +2098,8 @@
                           },
                           "~k": "10"
                         },
-                        "~k": "y",
-                        "blockId": "decrementBtn"
+                        "blockId": "decrementBtn",
+                        "~k": "y"
                       },
                       {
                         "id": "block:home:resetBtn:0",
@@ -2130,8 +2129,8 @@
                           },
                           "~k": "19"
                         },
-                        "~k": "17",
-                        "blockId": "resetBtn"
+                        "blockId": "resetBtn",
+                        "~k": "17"
                       }
                     ],
                     "~k": "l"
@@ -2139,7 +2138,8 @@
                   "~k": "4t"
                 },
                 "~k": "4s"
-              }
+              },
+              "~k": "j"
             },
             {
               "id": "block:home:linkCard:0",
@@ -2148,7 +2148,6 @@
                 "title": "Navigation Actions",
                 "~k": "1d"
               },
-              "~k": "1c",
               "blockId": "linkCard",
               "areas": {
                 "content": {
@@ -2185,8 +2184,8 @@
                           },
                           "~k": "1h"
                         },
-                        "~k": "1f",
-                        "blockId": "homeLink"
+                        "blockId": "homeLink",
+                        "~k": "1f"
                       },
                       {
                         "id": "block:home:pageLink:0",
@@ -2219,8 +2218,8 @@
                           },
                           "~k": "1n"
                         },
-                        "~k": "1l",
-                        "blockId": "pageLink"
+                        "blockId": "pageLink",
+                        "~k": "1l"
                       },
                       {
                         "id": "block:home:urlLink:0",
@@ -2254,8 +2253,8 @@
                           },
                           "~k": "1t"
                         },
-                        "~k": "1r",
-                        "blockId": "urlLink"
+                        "blockId": "urlLink",
+                        "~k": "1r"
                       }
                     ],
                     "~k": "1e"
@@ -2263,7 +2262,8 @@
                   "~k": "51"
                 },
                 "~k": "50"
-              }
+              },
+              "~k": "1c"
             },
             {
               "id": "block:home:messageCard:0",
@@ -2272,7 +2272,6 @@
                 "title": "Messages",
                 "~k": "1y"
               },
-              "~k": "1x",
               "blockId": "messageCard",
               "areas": {
                 "content": {
@@ -2312,8 +2311,8 @@
                           },
                           "~k": "22"
                         },
-                        "~k": "20",
-                        "blockId": "successMsg"
+                        "blockId": "successMsg",
+                        "~k": "20"
                       },
                       {
                         "id": "block:home:errorMsg:0",
@@ -2348,8 +2347,8 @@
                           },
                           "~k": "28"
                         },
-                        "~k": "26",
-                        "blockId": "errorMsg"
+                        "blockId": "errorMsg",
+                        "~k": "26"
                       },
                       {
                         "id": "block:home:warningMsg:0",
@@ -2383,8 +2382,8 @@
                           },
                           "~k": "2e"
                         },
-                        "~k": "2c",
-                        "blockId": "warningMsg"
+                        "blockId": "warningMsg",
+                        "~k": "2c"
                       }
                     ],
                     "~k": "1z"
@@ -2392,7 +2391,8 @@
                   "~k": "59"
                 },
                 "~k": "58"
-              }
+              },
+              "~k": "1x"
             },
             {
               "id": "block:home:advancedCard:0",
@@ -2401,7 +2401,6 @@
                 "title": "Advanced Actions",
                 "~k": "2j"
               },
-              "~k": "2i",
               "blockId": "advancedCard",
               "areas": {
                 "content": {
@@ -2452,8 +2451,8 @@
                           },
                           "~k": "2n"
                         },
-                        "~k": "2l",
-                        "blockId": "conditionalAction"
+                        "blockId": "conditionalAction",
+                        "~k": "2l"
                       },
                       {
                         "id": "block:home:asyncAction:0",
@@ -2497,8 +2496,8 @@
                           },
                           "~k": "2w"
                         },
-                        "~k": "2u",
-                        "blockId": "asyncAction"
+                        "blockId": "asyncAction",
+                        "~k": "2u"
                       },
                       {
                         "id": "block:home:waitAction:0",
@@ -2549,8 +2548,8 @@
                           },
                           "~k": "34"
                         },
-                        "~k": "32",
-                        "blockId": "waitAction"
+                        "blockId": "waitAction",
+                        "~k": "32"
                       }
                     ],
                     "~k": "2k"
@@ -2558,7 +2557,8 @@
                   "~k": "5h"
                 },
                 "~k": "5g"
-              }
+              },
+              "~k": "2i"
             },
             {
               "id": "block:home:debounceCard:0",
@@ -2567,7 +2567,6 @@
                 "title": "Debounced Events",
                 "~k": "3d"
               },
-              "~k": "3c",
               "blockId": "debounceCard",
               "areas": {
                 "content": {
@@ -2607,16 +2606,16 @@
                               ],
                               "~k": "3k"
                             },
-                            "~k": "3i",
                             "catch": {
                               "~arr": [],
                               "~k": "5q"
-                            }
+                            },
+                            "~k": "3i"
                           },
                           "~k": "3h"
                         },
-                        "~k": "3f",
-                        "blockId": "searchInput"
+                        "blockId": "searchInput",
+                        "~k": "3f"
                       }
                     ],
                     "~k": "3e"
@@ -2624,7 +2623,8 @@
                   "~k": "5p"
                 },
                 "~k": "5o"
-              }
+              },
+              "~k": "3c"
             }
           ],
           "~k": "g"

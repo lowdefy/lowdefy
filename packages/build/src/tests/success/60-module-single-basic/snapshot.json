@@ -921,8 +921,8 @@
                 },
                 "~k": "q"
               },
-              "~k": "o",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "o"
             }
           ],
           "~k": "n"
@@ -963,8 +963,8 @@
                 "content": "Hello World",
                 "~k": "f"
               },
-              "~k": "e",
-              "blockId": "greeting-text"
+              "blockId": "greeting-text",
+              "~k": "e"
             }
           ],
           "~k": "d"
@@ -999,8 +999,8 @@
                 "content": "Home Page",
                 "~k": "b"
               },
-              "~k": "a",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "a"
             }
           ],
           "~k": "9"

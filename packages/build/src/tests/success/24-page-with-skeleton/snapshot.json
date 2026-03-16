@@ -868,8 +868,8 @@
                 },
                 "~k": "m"
               },
-              "~k": "k",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "k"
             }
           ],
           "~k": "j"
@@ -918,8 +918,8 @@
                 "content": "Loaded content",
                 "~k": "b"
               },
-              "~k": "a",
-              "blockId": "content"
+              "blockId": "content",
+              "~k": "a"
             }
           ],
           "~k": "9"

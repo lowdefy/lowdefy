@@ -1018,8 +1018,8 @@
                 },
                 "~k": "15"
               },
-              "~k": "13",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "13"
             }
           ],
           "~k": "12"
@@ -1060,8 +1060,8 @@
                 "content": "My Dashboard",
                 "~k": "e"
               },
-              "~k": "d",
-              "blockId": "page-title"
+              "blockId": "page-title",
+              "~k": "d"
             },
             {
               "id": "block:dash/overview:Total Users:0",
@@ -1073,7 +1073,6 @@
                 },
                 "~k": "g"
               },
-              "~k": "f",
               "blockId": "Total Users",
               "areas": {
                 "content": {
@@ -1086,8 +1085,8 @@
                           "content": "Total Users",
                           "~k": "k"
                         },
-                        "~k": "j",
-                        "blockId": "label"
+                        "blockId": "label",
+                        "~k": "j"
                       },
                       {
                         "id": "block:dash/overview:value:0",
@@ -1096,8 +1095,8 @@
                           "content": "1,234",
                           "~k": "m"
                         },
-                        "~k": "l",
-                        "blockId": "value"
+                        "blockId": "value",
+                        "~k": "l"
                       }
                     ],
                     "~k": "i"
@@ -1105,7 +1104,8 @@
                   "~k": "1n"
                 },
                 "~k": "1m"
-              }
+              },
+              "~k": "f"
             },
             {
               "id": "block:dash/overview:Active Today:0",
@@ -1117,7 +1117,6 @@
                 },
                 "~k": "o"
               },
-              "~k": "n",
               "blockId": "Active Today",
               "areas": {
                 "content": {
@@ -1130,8 +1129,8 @@
                           "content": "Active Today",
                           "~k": "s"
                         },
-                        "~k": "r",
-                        "blockId": "label"
+                        "blockId": "label",
+                        "~k": "r"
                       },
                       {
                         "id": "block:dash/overview:value:1",
@@ -1140,8 +1139,8 @@
                           "content": "56",
                           "~k": "u"
                         },
-                        "~k": "t",
-                        "blockId": "value"
+                        "blockId": "value",
+                        "~k": "t"
                       }
                     ],
                     "~k": "q"
@@ -1149,7 +1148,8 @@
                   "~k": "1p"
                 },
                 "~k": "1o"
-              }
+              },
+              "~k": "n"
             }
           ],
           "~k": "c"

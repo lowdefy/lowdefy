@@ -952,8 +952,8 @@
                 },
                 "~k": "w"
               },
-              "~k": "u",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "u"
             }
           ],
           "~k": "t"
@@ -1039,8 +1039,8 @@
                 },
                 "~k": "a"
               },
-              "~k": "9",
-              "blockId": "error_message"
+              "blockId": "error_message",
+              "~k": "9"
             }
           ],
           "~k": "8"

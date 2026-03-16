@@ -17,19 +17,19 @@
             "text": "You have been invited!",
             "~k": "t"
           },
-          "~k": "s",
           "requestId": "send-email",
-          "endpointId": "inviter/send-invite"
+          "endpointId": "inviter/send-invite",
+          "~k": "s"
         }
       ],
       "~k": "r"
     },
-    "~k": "q",
     "auth": {
       "public": true,
       "~k": "1u"
     },
-    "endpointId": "inviter/send-invite"
+    "endpointId": "inviter/send-invite",
+    "~k": "q"
   },
   "app.json": {
     "html": {
@@ -90,8 +90,8 @@
       },
       "~k": "n"
     },
-    "~k": "m",
-    "connectionId": "inviter/email-conn"
+    "connectionId": "inviter/email-conn",
+    "~k": "m"
   },
   "global.json": {},
   "keyMap.json": {
@@ -1087,8 +1087,8 @@
                 },
                 "~k": "15"
               },
-              "~k": "13",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "13"
             }
           ],
           "~k": "12"
@@ -1144,8 +1144,8 @@
                 "content": "You have been invited!",
                 "~k": "e"
               },
-              "~k": "d",
-              "blockId": "message"
+              "blockId": "message",
+              "~k": "d"
             },
             {
               "id": "block:inviter/invite:send-btn:0",
@@ -1178,8 +1178,8 @@
                 },
                 "~k": "h"
               },
-              "~k": "f",
-              "blockId": "send-btn"
+              "blockId": "send-btn",
+              "~k": "f"
             }
           ],
           "~k": "c"

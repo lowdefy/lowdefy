@@ -155,7 +155,7 @@ function tagRefDeep(node, refId) {
   }
 }
 
-// Deep clone preserving ~r, ~l, ~k non-enumerable markers.
+// Deep clone preserving non-enumerable build markers (~r, ~l, ~k, ~arr, ~deferredFrom).
 // Used before resolving ref def path/vars to prevent mutation of stored originals.
 function cloneForResolve(value) {
   if (!type.isObject(value) && !type.isArray(value)) return value;
@@ -165,6 +165,8 @@ function cloneForResolve(value) {
     if (value['~l'] !== undefined) setNonEnumerableProperty(clone, '~l', value['~l']);
     if (value['~k'] !== undefined) setNonEnumerableProperty(clone, '~k', value['~k']);
     if (value['~arr'] !== undefined) setNonEnumerableProperty(clone, '~arr', value['~arr']);
+    if (value['~deferredFrom'] !== undefined)
+      setNonEnumerableProperty(clone, '~deferredFrom', value['~deferredFrom']);
     return clone;
   }
   const clone = {};
@@ -174,6 +176,8 @@ function cloneForResolve(value) {
   if (value['~r'] !== undefined) setNonEnumerableProperty(clone, '~r', value['~r']);
   if (value['~l'] !== undefined) setNonEnumerableProperty(clone, '~l', value['~l']);
   if (value['~k'] !== undefined) setNonEnumerableProperty(clone, '~k', value['~k']);
+  if (value['~deferredFrom'] !== undefined)
+    setNonEnumerableProperty(clone, '~deferredFrom', value['~deferredFrom']);
   return clone;
 }
 
@@ -360,7 +364,7 @@ async function resolveRef(node, ctx) {
         referencedFrom: ctx.currentFile,
         walkCtx: ctx,
       });
-      content = result.content;
+      content = cloneForResolve(result.content);
       resolvedEntryId = result.entryId;
     } else {
       content = await getRefContent({

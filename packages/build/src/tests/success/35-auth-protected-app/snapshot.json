@@ -39,10 +39,10 @@
         ],
         "~k": "h"
       },
-      "~k": "g",
       "roles": {
         "~k": "32"
-      }
+      },
+      "~k": "g"
     },
     "session": {
       "maxAge": 86400,
@@ -60,7 +60,6 @@
       "image": "picture",
       "~k": "k"
     },
-    "~k": "a",
     "api": {
       "roles": {
         "~k": "34"
@@ -78,7 +77,8 @@
       "~arr": [],
       "~k": "37"
     },
-    "configured": true
+    "configured": true,
+    "~k": "a"
   },
   "config.json": {
     "~k": "30"
@@ -1418,12 +1418,12 @@
                 "icon": "AiOutlineDashboard",
                 "~k": "p"
               },
-              "~k": "o",
               "auth": {
                 "public": false,
                 "~k": "39"
               },
-              "menuItemId": "dashboard"
+              "menuItemId": "dashboard",
+              "~k": "o"
             },
             {
               "id": "menuitem:default:profile",
@@ -1434,12 +1434,12 @@
                 "icon": "AiOutlineUser",
                 "~k": "r"
               },
-              "~k": "q",
               "auth": {
                 "public": false,
                 "~k": "3a"
               },
-              "menuItemId": "profile"
+              "menuItemId": "profile",
+              "~k": "q"
             },
             {
               "id": "menuitem:default:settings",
@@ -1450,18 +1450,18 @@
                 "icon": "AiOutlineSetting",
                 "~k": "t"
               },
-              "~k": "s",
               "auth": {
                 "public": false,
                 "~k": "3b"
               },
-              "menuItemId": "settings"
+              "menuItemId": "settings",
+              "~k": "s"
             }
           ],
           "~k": "38"
         },
-        "~k": "m",
-        "menuId": "default"
+        "menuId": "default",
+        "~k": "m"
       }
     ],
     "~k": "l"
@@ -1514,8 +1514,8 @@
                 },
                 "~k": "2t"
               },
-              "~k": "2r",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "2r"
             }
           ],
           "~k": "2q"
@@ -1567,13 +1567,12 @@
                 },
                 "~k": "1g"
               },
-              "~k": "1f",
-              "blockId": "welcome"
+              "blockId": "welcome",
+              "~k": "1f"
             },
             {
               "id": "block:dashboard:stats:0",
               "type": "Box",
-              "~k": "1j",
               "blockId": "stats",
               "areas": {
                 "content": {
@@ -1587,8 +1586,8 @@
                           "value": 42,
                           "~k": "1m"
                         },
-                        "~k": "1l",
-                        "blockId": "stat1"
+                        "blockId": "stat1",
+                        "~k": "1l"
                       },
                       {
                         "id": "block:dashboard:stat2:0",
@@ -1598,8 +1597,8 @@
                           "value": 128,
                           "~k": "1o"
                         },
-                        "~k": "1n",
-                        "blockId": "stat2"
+                        "blockId": "stat2",
+                        "~k": "1n"
                       }
                     ],
                     "~k": "1k"
@@ -1607,7 +1606,8 @@
                   "~k": "3s"
                 },
                 "~k": "3r"
-              }
+              },
+              "~k": "1j"
             }
           ],
           "~k": "1e"
@@ -1664,8 +1664,8 @@
                 },
                 "~k": "12"
               },
-              "~k": "10",
-              "blockId": "loginBtn"
+              "blockId": "loginBtn",
+              "~k": "10"
             }
           ],
           "~k": "z"
@@ -1714,8 +1714,8 @@
                 "size": 80,
                 "~k": "1t"
               },
-              "~k": "1s",
-              "blockId": "avatar"
+              "blockId": "avatar",
+              "~k": "1s"
             },
             {
               "id": "block:profile:name:0",
@@ -1728,8 +1728,8 @@
                 },
                 "~k": "1w"
               },
-              "~k": "1v",
-              "blockId": "name"
+              "blockId": "name",
+              "~k": "1v"
             },
             {
               "id": "block:profile:email:0",
@@ -1741,8 +1741,8 @@
                 },
                 "~k": "1z"
               },
-              "~k": "1y",
-              "blockId": "email"
+              "blockId": "email",
+              "~k": "1y"
             }
           ],
           "~k": "1r"
@@ -1781,8 +1781,8 @@
                 "content": "This page is public",
                 "~k": "19"
               },
-              "~k": "18",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "18"
             },
             {
               "id": "block:public-page:content:0",
@@ -1791,8 +1791,8 @@
                 "content": "Anyone can see this page without signing in.",
                 "~k": "1b"
               },
-              "~k": "1a",
-              "blockId": "content"
+              "blockId": "content",
+              "~k": "1a"
             }
           ],
           "~k": "17"
@@ -1831,8 +1831,8 @@
                 "content": "Account Settings",
                 "~k": "25"
               },
-              "~k": "24",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "24"
             },
             {
               "id": "block:settings:notifications:0",
@@ -1841,8 +1841,8 @@
                 "title": "Enable Notifications",
                 "~k": "27"
               },
-              "~k": "26",
-              "blockId": "notifications"
+              "blockId": "notifications",
+              "~k": "26"
             },
             {
               "id": "block:settings:theme:0",
@@ -1871,8 +1871,8 @@
                 },
                 "~k": "29"
               },
-              "~k": "28",
-              "blockId": "theme"
+              "blockId": "theme",
+              "~k": "28"
             },
             {
               "id": "block:settings:logoutBtn:0",
@@ -1902,8 +1902,8 @@
                 },
                 "~k": "2g"
               },
-              "~k": "2e",
-              "blockId": "logoutBtn"
+              "blockId": "logoutBtn",
+              "~k": "2e"
             }
           ],
           "~k": "23"

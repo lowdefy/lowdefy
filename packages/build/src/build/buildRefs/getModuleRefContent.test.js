@@ -355,4 +355,58 @@ describe('getModuleRefContent', () => {
       })
     ).rejects.toThrow('Use _module.endpointId');
   });
+
+  test('returns shared reference to component content (caller must clone)', async () => {
+    const context = createContext({
+      modules: {
+        layout: createModuleEntry({
+          id: 'layout',
+          components: [
+            { id: 'wrapper', component: { blocks: [{ _var: 'content' }] } },
+          ],
+        }),
+      },
+    });
+
+    const result1 = await getModuleRefContent({
+      context,
+      refDef: { module: 'layout', component: 'wrapper' },
+      referencedFrom: 'lowdefy.yaml',
+    });
+    const result2 = await getModuleRefContent({
+      context,
+      refDef: { module: 'layout', component: 'wrapper' },
+      referencedFrom: 'lowdefy.yaml',
+    });
+
+    // getModuleRefContent returns direct references — mutation bleeds
+    result1.content.blocks[0] = 'resolved-A';
+    expect(result2.content.blocks[0]).toBe('resolved-A');
+  });
+
+  test('returns shared reference to menu links (caller must clone)', async () => {
+    const context = createContext({
+      modules: {
+        nav: createModuleEntry({
+          id: 'nav',
+          menus: [{ id: 'default', links: [{ id: 'home', pageId: 'home' }] }],
+        }),
+      },
+    });
+
+    const result1 = await getModuleRefContent({
+      context,
+      refDef: { module: 'nav', menu: 'default' },
+      referencedFrom: 'lowdefy.yaml',
+    });
+    const result2 = await getModuleRefContent({
+      context,
+      refDef: { module: 'nav', menu: 'default' },
+      referencedFrom: 'lowdefy.yaml',
+    });
+
+    // getModuleRefContent returns direct references — mutation bleeds
+    result1.content[0].id = 'consumer-a/home';
+    expect(result2.content[0].id).toBe('consumer-a/home');
+  });
 });

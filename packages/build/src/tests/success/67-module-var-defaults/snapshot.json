@@ -885,8 +885,8 @@
                 },
                 "~k": "q"
               },
-              "~k": "o",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "o"
             }
           ],
           "~k": "n"
@@ -927,8 +927,8 @@
                 "content": "blue",
                 "~k": "b"
               },
-              "~k": "a",
-              "blockId": "color-display"
+              "blockId": "color-display",
+              "~k": "a"
             },
             {
               "id": "block:settings/preferences:page-size-display:0",
@@ -937,8 +937,8 @@
                 "content": 10,
                 "~k": "d"
               },
-              "~k": "c",
-              "blockId": "page-size-display"
+              "blockId": "page-size-display",
+              "~k": "c"
             },
             {
               "id": "block:settings/preferences:missing-var:0",
@@ -947,8 +947,8 @@
                 "content": "fallback-value",
                 "~k": "f"
               },
-              "~k": "e",
-              "blockId": "missing-var"
+              "blockId": "missing-var",
+              "~k": "e"
             }
           ],
           "~k": "9"

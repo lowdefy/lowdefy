@@ -860,8 +860,8 @@
                 },
                 "~k": "m"
               },
-              "~k": "k",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "k"
             }
           ],
           "~k": "j"
@@ -902,8 +902,8 @@
                 "span": 12,
                 "~k": "9"
               },
-              "~k": "8",
-              "blockId": "col1"
+              "blockId": "col1",
+              "~k": "8"
             },
             {
               "id": "block:home:col2:0",
@@ -912,8 +912,8 @@
                 "span": 12,
                 "~k": "b"
               },
-              "~k": "a",
-              "blockId": "col2"
+              "blockId": "col2",
+              "~k": "a"
             }
           ],
           "~k": "7"

@@ -916,8 +916,8 @@
                 },
                 "~k": "u"
               },
-              "~k": "s",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "s"
             }
           ],
           "~k": "r"
@@ -952,8 +952,8 @@
                 "content": "My App",
                 "~k": "b"
               },
-              "~k": "a",
-              "blockId": "logo"
+              "blockId": "logo",
+              "~k": "a"
             }
           ],
           "~k": "9"
@@ -970,8 +970,8 @@
                 "content": "Main content",
                 "~k": "f"
               },
-              "~k": "e",
-              "blockId": "main"
+              "blockId": "main",
+              "~k": "e"
             }
           ],
           "~k": "d"
@@ -988,8 +988,8 @@
                 "content": "© 2024",
                 "~k": "j"
               },
-              "~k": "i",
-              "blockId": "copyright"
+              "blockId": "copyright",
+              "~k": "i"
             }
           ],
           "~k": "h"

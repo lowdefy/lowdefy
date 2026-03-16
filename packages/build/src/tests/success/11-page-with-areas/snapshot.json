@@ -896,8 +896,8 @@
                 },
                 "~k": "q"
               },
-              "~k": "o",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "o"
             }
           ],
           "~k": "n"
@@ -932,8 +932,8 @@
                 "content": "Card Title",
                 "~k": "b"
               },
-              "~k": "a",
-              "blockId": "cardTitle"
+              "blockId": "cardTitle",
+              "~k": "a"
             }
           ],
           "~k": "9"
@@ -950,8 +950,8 @@
                 "content": "Card content goes here",
                 "~k": "f"
               },
-              "~k": "e",
-              "blockId": "cardContent"
+              "blockId": "cardContent",
+              "~k": "e"
             }
           ],
           "~k": "d"

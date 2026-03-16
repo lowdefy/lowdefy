@@ -1146,8 +1146,8 @@
                 },
                 "~k": "1o"
               },
-              "~k": "1m",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "1m"
             }
           ],
           "~k": "1l"
@@ -1232,8 +1232,8 @@
                 "placeholder": "Add new todo...",
                 "~k": "h"
               },
-              "~k": "g",
-              "blockId": "newTodo"
+              "blockId": "newTodo",
+              "~k": "g"
             },
             {
               "id": "block:todos:addBtn:0",
@@ -1306,8 +1306,8 @@
                 },
                 "~k": "k"
               },
-              "~k": "i",
-              "blockId": "addBtn"
+              "blockId": "addBtn",
+              "~k": "i"
             },
             {
               "id": "block:todos:todoList:0",
@@ -1319,7 +1319,6 @@
                 },
                 "~k": "z"
               },
-              "~k": "y",
               "blockId": "todoList",
               "areas": {
                 "content": {
@@ -1328,7 +1327,6 @@
                       {
                         "id": "block:todos:todoItem:0",
                         "type": "Box",
-                        "~k": "12",
                         "blockId": "todoItem",
                         "areas": {
                           "content": {
@@ -1344,8 +1342,8 @@
                                     },
                                     "~k": "15"
                                   },
-                                  "~k": "14",
-                                  "blockId": "checkbox"
+                                  "blockId": "checkbox",
+                                  "~k": "14"
                                 },
                                 {
                                   "id": "block:todos:text:0",
@@ -1372,8 +1370,8 @@
                                     },
                                     "~k": "1c"
                                   },
-                                  "~k": "17",
-                                  "blockId": "text"
+                                  "blockId": "text",
+                                  "~k": "17"
                                 }
                               ],
                               "~k": "13"
@@ -1381,7 +1379,8 @@
                             "~k": "29"
                           },
                           "~k": "28"
-                        }
+                        },
+                        "~k": "12"
                       }
                     ],
                     "~k": "11"
@@ -1389,7 +1388,8 @@
                   "~k": "27"
                 },
                 "~k": "26"
-              }
+              },
+              "~k": "y"
             }
           ],
           "~k": "f"

@@ -112,7 +112,6 @@
       "roles": "roles",
       "~k": "1a"
     },
-    "~k": "p",
     "api": {
       "roles": {
         "~k": "aj"
@@ -126,7 +125,8 @@
       "~arr": [],
       "~k": "al"
     },
-    "configured": true
+    "configured": true,
+    "~k": "p"
   },
   "config.json": {
     "homePageId": "dashboard",
@@ -145,8 +145,8 @@
       },
       "~k": "j"
     },
-    "~k": "i",
-    "connectionId": "api"
+    "connectionId": "api",
+    "~k": "i"
   },
   "connections/db.json": {
     "id": "connection:db",
@@ -157,8 +157,8 @@
       "write": true,
       "~k": "m"
     },
-    "~k": "l",
-    "connectionId": "db"
+    "connectionId": "db",
+    "~k": "l"
   },
   "connections/ordersDb.json": {
     "id": "connection:ordersDb",
@@ -169,8 +169,8 @@
       "write": true,
       "~k": "o"
     },
-    "~k": "n",
-    "connectionId": "ordersDb"
+    "connectionId": "ordersDb",
+    "~k": "n"
   },
   "global.json": {
     "appName": "Enterprise CRM",
@@ -3607,12 +3607,12 @@
                 "icon": "AiOutlineDashboard",
                 "~k": "1l"
               },
-              "~k": "1k",
               "auth": {
                 "public": false,
                 "~k": "an"
               },
-              "menuItemId": "dashboard"
+              "menuItemId": "dashboard",
+              "~k": "1k"
             },
             {
               "id": "menuitem:default:customers",
@@ -3632,7 +3632,6 @@
                       "title": "All Customers",
                       "~k": "1q"
                     },
-                    "~k": "1p",
                     "auth": {
                       "public": false,
                       "roles": {
@@ -3643,7 +3642,8 @@
                       },
                       "~k": "ap"
                     },
-                    "menuItemId": "all-customers"
+                    "menuItemId": "all-customers",
+                    "~k": "1p"
                   },
                   {
                     "id": "menuitem:default:add-customer",
@@ -3653,7 +3653,6 @@
                       "title": "Add Customer",
                       "~k": "1s"
                     },
-                    "~k": "1r",
                     "auth": {
                       "public": false,
                       "roles": {
@@ -3664,17 +3663,18 @@
                       },
                       "~k": "ar"
                     },
-                    "menuItemId": "add-customer"
+                    "menuItemId": "add-customer",
+                    "~k": "1r"
                   }
                 ],
                 "~k": "ao"
               },
-              "~k": "1m",
               "auth": {
                 "public": true,
                 "~k": "at"
               },
-              "menuItemId": "customers"
+              "menuItemId": "customers",
+              "~k": "1m"
             },
             {
               "id": "menuitem:default:orders",
@@ -3685,7 +3685,6 @@
                 "icon": "AiOutlineShoppingCart",
                 "~k": "1u"
               },
-              "~k": "1t",
               "auth": {
                 "public": false,
                 "roles": {
@@ -3696,7 +3695,8 @@
                 },
                 "~k": "au"
               },
-              "menuItemId": "orders"
+              "menuItemId": "orders",
+              "~k": "1t"
             },
             {
               "id": "menuitem:default:reports",
@@ -3707,7 +3707,6 @@
                 "icon": "AiOutlineBarChart",
                 "~k": "1w"
               },
-              "~k": "1v",
               "auth": {
                 "public": false,
                 "roles": {
@@ -3718,7 +3717,8 @@
                 },
                 "~k": "aw"
               },
-              "menuItemId": "reports"
+              "menuItemId": "reports",
+              "~k": "1v"
             },
             {
               "id": "menuitem:default:settings",
@@ -3729,7 +3729,6 @@
                 "icon": "AiOutlineSetting",
                 "~k": "1y"
               },
-              "~k": "1x",
               "auth": {
                 "public": false,
                 "roles": {
@@ -3740,13 +3739,14 @@
                 },
                 "~k": "ay"
               },
-              "menuItemId": "settings"
+              "menuItemId": "settings",
+              "~k": "1x"
             }
           ],
           "~k": "am"
         },
-        "~k": "1i",
-        "menuId": "default"
+        "menuId": "default",
+        "~k": "1i"
       }
     ],
     "~k": "1h"
@@ -3799,8 +3799,8 @@
                 },
                 "~k": "ab"
               },
-              "~k": "a9",
-              "blockId": "home"
+              "blockId": "home",
+              "~k": "a9"
             }
           ],
           "~k": "a8"
@@ -3929,7 +3929,6 @@
                 },
                 "~k": "70"
               },
-              "~k": "6z",
               "blockId": "form",
               "areas": {
                 "content": {
@@ -3943,8 +3942,8 @@
                           "title": "Name",
                           "~k": "76"
                         },
-                        "~k": "75",
-                        "blockId": "name"
+                        "blockId": "name",
+                        "~k": "75"
                       },
                       {
                         "id": "block:customer-detail:email:0",
@@ -3954,8 +3953,8 @@
                           "title": "Email",
                           "~k": "78"
                         },
-                        "~k": "77",
-                        "blockId": "email"
+                        "blockId": "email",
+                        "~k": "77"
                       },
                       {
                         "id": "block:customer-detail:phone:0",
@@ -3964,8 +3963,8 @@
                           "title": "Phone",
                           "~k": "7a"
                         },
-                        "~k": "79",
-                        "blockId": "phone"
+                        "blockId": "phone",
+                        "~k": "79"
                       },
                       {
                         "id": "block:customer-detail:status:0",
@@ -3994,8 +3993,8 @@
                           },
                           "~k": "7c"
                         },
-                        "~k": "7b",
-                        "blockId": "status"
+                        "blockId": "status",
+                        "~k": "7b"
                       },
                       {
                         "id": "block:customer-detail:notes:0",
@@ -4005,13 +4004,12 @@
                           "rows": 4,
                           "~k": "7i"
                         },
-                        "~k": "7h",
-                        "blockId": "notes"
+                        "blockId": "notes",
+                        "~k": "7h"
                       },
                       {
                         "id": "block:customer-detail:actions:0",
                         "type": "Box",
-                        "~k": "7j",
                         "blockId": "actions",
                         "areas": {
                           "content": {
@@ -4070,8 +4068,8 @@
                                     },
                                     "~k": "7n"
                                   },
-                                  "~k": "7l",
-                                  "blockId": "saveBtn"
+                                  "blockId": "saveBtn",
+                                  "~k": "7l"
                                 },
                                 {
                                   "id": "block:customer-detail:cancelBtn:0",
@@ -4104,8 +4102,8 @@
                                     },
                                     "~k": "7x"
                                   },
-                                  "~k": "7v",
-                                  "blockId": "cancelBtn"
+                                  "blockId": "cancelBtn",
+                                  "~k": "7v"
                                 }
                               ],
                               "~k": "7k"
@@ -4113,7 +4111,8 @@
                             "~k": "c9"
                           },
                           "~k": "c8"
-                        }
+                        },
+                        "~k": "7j"
                       }
                     ],
                     "~k": "74"
@@ -4121,7 +4120,8 @@
                   "~k": "c7"
                 },
                 "~k": "c6"
-              }
+              },
+              "~k": "6z"
             }
           ],
           "~k": "6y"
@@ -4153,9 +4153,9 @@
             },
             "~k": "5q"
           },
-          "~k": "5p",
           "requestId": "getCustomer",
-          "pageId": "customer-detail"
+          "pageId": "customer-detail",
+          "~k": "5p"
         },
         {
           "id": "request:customer-detail:saveCustomer",
@@ -4186,9 +4186,9 @@
             },
             "~k": "5w"
           },
-          "~k": "5v",
           "requestId": "saveCustomer",
-          "pageId": "customer-detail"
+          "pageId": "customer-detail",
+          "~k": "5v"
         }
       ],
       "~k": "cg"
@@ -4216,7 +4216,6 @@
       },
       "~k": "5s"
     },
-    "~k": "5p",
     "auth": {
       "public": false,
       "roles": {
@@ -4228,7 +4227,8 @@
       "~k": "ch"
     },
     "requestId": "getCustomer",
-    "pageId": "customer-detail"
+    "pageId": "customer-detail",
+    "~k": "5p"
   },
   "pages/customer-detail/requests/saveCustomer.json": {
     "id": "request:customer-detail:saveCustomer",
@@ -4303,7 +4303,6 @@
       },
       "~k": "63"
     },
-    "~k": "5v",
     "auth": {
       "public": false,
       "roles": {
@@ -4315,7 +4314,8 @@
       "~k": "ck"
     },
     "requestId": "saveCustomer",
-    "pageId": "customer-detail"
+    "pageId": "customer-detail",
+    "~k": "5v"
   },
   "pages/customers.json": {
     "id": "page:customers",
@@ -4352,7 +4352,6 @@
             {
               "id": "block:customers:toolbar:0",
               "type": "Box",
-              "~k": "41",
               "blockId": "toolbar",
               "areas": {
                 "content": {
@@ -4387,16 +4386,16 @@
                               ],
                               "~k": "49"
                             },
-                            "~k": "47",
                             "catch": {
                               "~arr": [],
                               "~k": "bn"
-                            }
+                            },
+                            "~k": "47"
                           },
                           "~k": "46"
                         },
-                        "~k": "43",
-                        "blockId": "searchQuery"
+                        "blockId": "searchQuery",
+                        "~k": "43"
                       },
                       {
                         "id": "block:customers:statusFilter:0",
@@ -4451,8 +4450,8 @@
                           },
                           "~k": "4i"
                         },
-                        "~k": "4b",
-                        "blockId": "statusFilter"
+                        "blockId": "statusFilter",
+                        "~k": "4b"
                       },
                       {
                         "id": "block:customers:addBtn:0",
@@ -4491,8 +4490,8 @@
                           },
                           "~k": "4o"
                         },
-                        "~k": "4l",
-                        "blockId": "addBtn"
+                        "blockId": "addBtn",
+                        "~k": "4l"
                       }
                     ],
                     "~k": "42"
@@ -4500,7 +4499,8 @@
                   "~k": "bm"
                 },
                 "~k": "bl"
-              }
+              },
+              "~k": "41"
             },
             {
               "id": "block:customers:customerList:0",
@@ -4512,7 +4512,6 @@
                 },
                 "~k": "4t"
               },
-              "~k": "4s",
               "blockId": "customerList",
               "areas": {
                 "content": {
@@ -4560,7 +4559,6 @@
                           },
                           "~k": "4z"
                         },
-                        "~k": "4w",
                         "blockId": "customerCard",
                         "areas": {
                           "content": {
@@ -4576,8 +4574,8 @@
                                     },
                                     "~k": "57"
                                   },
-                                  "~k": "56",
-                                  "blockId": "email"
+                                  "blockId": "email",
+                                  "~k": "56"
                                 },
                                 {
                                   "id": "block:customers:status:0",
@@ -4630,8 +4628,8 @@
                                     },
                                     "~k": "5a"
                                   },
-                                  "~k": "59",
-                                  "blockId": "status"
+                                  "blockId": "status",
+                                  "~k": "59"
                                 }
                               ],
                               "~k": "55"
@@ -4639,7 +4637,8 @@
                             "~k": "bx"
                           },
                           "~k": "bw"
-                        }
+                        },
+                        "~k": "4w"
                       }
                     ],
                     "~k": "4v"
@@ -4647,7 +4646,8 @@
                   "~k": "bt"
                 },
                 "~k": "bs"
-              }
+              },
+              "~k": "4s"
             }
           ],
           "~k": "40"
@@ -4683,9 +4683,9 @@
             },
             "~k": "39"
           },
-          "~k": "38",
           "requestId": "getCustomers",
-          "pageId": "customers"
+          "pageId": "customers",
+          "~k": "38"
         }
       ],
       "~k": "c0"
@@ -4777,7 +4777,6 @@
       },
       "~k": "3c"
     },
-    "~k": "38",
     "auth": {
       "public": false,
       "roles": {
@@ -4789,7 +4788,8 @@
       "~k": "c1"
     },
     "requestId": "getCustomers",
-    "pageId": "customers"
+    "pageId": "customers",
+    "~k": "38"
   },
   "pages/dashboard.json": {
     "id": "page:dashboard",
@@ -4837,13 +4837,12 @@
                 },
                 "~k": "2c"
               },
-              "~k": "2b",
-              "blockId": "welcomeTitle"
+              "blockId": "welcomeTitle",
+              "~k": "2b"
             },
             {
               "id": "block:dashboard:statsRow:0",
               "type": "Box",
-              "~k": "2f",
               "blockId": "statsRow",
               "areas": {
                 "content": {
@@ -4856,7 +4855,6 @@
                           "span": 6,
                           "~k": "2i"
                         },
-                        "~k": "2h",
                         "blockId": "totalCustomers",
                         "areas": {
                           "content": {
@@ -4873,8 +4871,8 @@
                                     },
                                     "~k": "2l"
                                   },
-                                  "~k": "2k",
-                                  "blockId": "customerStat"
+                                  "blockId": "customerStat",
+                                  "~k": "2k"
                                 }
                               ],
                               "~k": "2j"
@@ -4882,7 +4880,8 @@
                             "~k": "b7"
                           },
                           "~k": "b6"
-                        }
+                        },
+                        "~k": "2h"
                       },
                       {
                         "id": "block:dashboard:totalOrders:0",
@@ -4891,7 +4890,6 @@
                           "span": 6,
                           "~k": "2o"
                         },
-                        "~k": "2n",
                         "blockId": "totalOrders",
                         "areas": {
                           "content": {
@@ -4908,8 +4906,8 @@
                                     },
                                     "~k": "2r"
                                   },
-                                  "~k": "2q",
-                                  "blockId": "orderStat"
+                                  "blockId": "orderStat",
+                                  "~k": "2q"
                                 }
                               ],
                               "~k": "2p"
@@ -4917,7 +4915,8 @@
                             "~k": "b9"
                           },
                           "~k": "b8"
-                        }
+                        },
+                        "~k": "2n"
                       },
                       {
                         "id": "block:dashboard:revenue:0",
@@ -4926,7 +4925,6 @@
                           "span": 6,
                           "~k": "2u"
                         },
-                        "~k": "2t",
                         "blockId": "revenue",
                         "areas": {
                           "content": {
@@ -4944,8 +4942,8 @@
                                     },
                                     "~k": "2x"
                                   },
-                                  "~k": "2w",
-                                  "blockId": "revenueStat"
+                                  "blockId": "revenueStat",
+                                  "~k": "2w"
                                 }
                               ],
                               "~k": "2v"
@@ -4953,7 +4951,8 @@
                             "~k": "bb"
                           },
                           "~k": "ba"
-                        }
+                        },
+                        "~k": "2t"
                       },
                       {
                         "id": "block:dashboard:growth:0",
@@ -4962,7 +4961,6 @@
                           "span": 6,
                           "~k": "30"
                         },
-                        "~k": "2z",
                         "blockId": "growth",
                         "areas": {
                           "content": {
@@ -4980,8 +4978,8 @@
                                     },
                                     "~k": "33"
                                   },
-                                  "~k": "32",
-                                  "blockId": "growthStat"
+                                  "blockId": "growthStat",
+                                  "~k": "32"
                                 }
                               ],
                               "~k": "31"
@@ -4989,7 +4987,8 @@
                             "~k": "bd"
                           },
                           "~k": "bc"
-                        }
+                        },
+                        "~k": "2z"
                       }
                     ],
                     "~k": "2g"
@@ -4997,7 +4996,8 @@
                   "~k": "b5"
                 },
                 "~k": "b4"
-              }
+              },
+              "~k": "2f"
             }
           ],
           "~k": "2a"
@@ -5016,12 +5016,12 @@
       "~arr": [
         {
           "id": "request:dashboard:getStats",
-          "~k": "23",
           "payload": {
             "~k": "bg"
           },
           "requestId": "getStats",
-          "pageId": "dashboard"
+          "pageId": "dashboard",
+          "~k": "23"
         }
       ],
       "~k": "bf"
@@ -5036,7 +5036,6 @@
       "url": "/stats",
       "~k": "24"
     },
-    "~k": "23",
     "payload": {
       "~k": "bg"
     },
@@ -5045,7 +5044,8 @@
       "~k": "bh"
     },
     "requestId": "getStats",
-    "pageId": "dashboard"
+    "pageId": "dashboard",
+    "~k": "23"
   },
   "pages/login.json": {
     "id": "page:login",
@@ -5093,8 +5093,8 @@
                 },
                 "~k": "9i"
               },
-              "~k": "9g",
-              "blockId": "googleBtn"
+              "blockId": "googleBtn",
+              "~k": "9g"
             },
             {
               "id": "block:login:divider:0",
@@ -5104,8 +5104,8 @@
                 "content": "or",
                 "~k": "9n"
               },
-              "~k": "9m",
-              "blockId": "divider"
+              "blockId": "divider",
+              "~k": "9m"
             },
             {
               "id": "block:login:emailInput:0",
@@ -5115,8 +5115,8 @@
                 "placeholder": "your@email.com",
                 "~k": "9p"
               },
-              "~k": "9o",
-              "blockId": "emailInput"
+              "blockId": "emailInput",
+              "~k": "9o"
             },
             {
               "id": "block:login:passwordInput:0",
@@ -5125,8 +5125,8 @@
                 "title": "Password",
                 "~k": "9r"
               },
-              "~k": "9q",
-              "blockId": "passwordInput"
+              "blockId": "passwordInput",
+              "~k": "9q"
             },
             {
               "id": "block:login:credentialsBtn:0",
@@ -5169,8 +5169,8 @@
                 },
                 "~k": "9u"
               },
-              "~k": "9s",
-              "blockId": "credentialsBtn"
+              "blockId": "credentialsBtn",
+              "~k": "9s"
             }
           ],
           "~k": "9f"
@@ -5221,8 +5221,8 @@
                 "content": "Order Management",
                 "~k": "85"
               },
-              "~k": "84",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "84"
             },
             {
               "id": "block:orders:placeholder:0",
@@ -5231,8 +5231,8 @@
                 "content": "Order management interface",
                 "~k": "87"
               },
-              "~k": "86",
-              "blockId": "placeholder"
+              "blockId": "placeholder",
+              "~k": "86"
             }
           ],
           "~k": "83"
@@ -5277,8 +5277,8 @@
                 "content": "Analytics & Reports",
                 "~k": "8c"
               },
-              "~k": "8b",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "8b"
             },
             {
               "id": "block:reports:placeholder:0",
@@ -5287,8 +5287,8 @@
                 "content": "Reports and analytics interface",
                 "~k": "8e"
               },
-              "~k": "8d",
-              "blockId": "placeholder"
+              "blockId": "placeholder",
+              "~k": "8d"
             }
           ],
           "~k": "8a"
@@ -5333,8 +5333,8 @@
                 "content": "Application Settings",
                 "~k": "8j"
               },
-              "~k": "8i",
-              "blockId": "title"
+              "blockId": "title",
+              "~k": "8i"
             },
             {
               "id": "block:settings:settingsForm:0",
@@ -5343,7 +5343,6 @@
                 "title": "General Settings",
                 "~k": "8l"
               },
-              "~k": "8k",
               "blockId": "settingsForm",
               "areas": {
                 "content": {
@@ -5358,8 +5357,8 @@
                           "max": 100,
                           "~k": "8o"
                         },
-                        "~k": "8n",
-                        "blockId": "itemsPerPage"
+                        "blockId": "itemsPerPage",
+                        "~k": "8n"
                       },
                       {
                         "id": "block:settings:timezone:0",
@@ -5393,8 +5392,8 @@
                           },
                           "~k": "8q"
                         },
-                        "~k": "8p",
-                        "blockId": "timezone"
+                        "blockId": "timezone",
+                        "~k": "8p"
                       },
                       {
                         "id": "block:settings:darkMode:0",
@@ -5403,8 +5402,8 @@
                           "title": "Dark Mode",
                           "~k": "8x"
                         },
-                        "~k": "8w",
-                        "blockId": "darkMode"
+                        "blockId": "darkMode",
+                        "~k": "8w"
                       },
                       {
                         "id": "block:settings:notifications:0",
@@ -5413,8 +5412,8 @@
                           "title": "Enable Notifications",
                           "~k": "8z"
                         },
-                        "~k": "8y",
-                        "blockId": "notifications"
+                        "blockId": "notifications",
+                        "~k": "8y"
                       },
                       {
                         "id": "block:settings:saveSettingsBtn:0",
@@ -5468,8 +5467,8 @@
                           },
                           "~k": "92"
                         },
-                        "~k": "90",
-                        "blockId": "saveSettingsBtn"
+                        "blockId": "saveSettingsBtn",
+                        "~k": "90"
                       }
                     ],
                     "~k": "8m"
@@ -5477,7 +5476,8 @@
                   "~k": "d4"
                 },
                 "~k": "d3"
-              }
+              },
+              "~k": "8k"
             }
           ],
           "~k": "8h"

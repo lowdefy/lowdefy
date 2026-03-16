@@ -378,15 +378,15 @@
       "~l": 21
     },
     "s": {
-      "key": "root.pages[2:companies/company-list:Box].blocks[0:layout-box:Box].blocks[1:contact-table:Title]",
+      "key": "root.pages[2:companies/company-list:Box].blocks[0:layout-box:Box].blocks[1:company-table:Title]",
       "~k_parent": "p",
-      "~r": "5",
+      "~r": "7",
       "~l": 8
     },
     "t": {
-      "key": "root.pages[2:companies/company-list:Box].blocks[0:layout-box:Box].blocks[1:contact-table:Title].properties",
+      "key": "root.pages[2:companies/company-list:Box].blocks[0:layout-box:Box].blocks[1:company-table:Title].properties",
       "~k_parent": "s",
-      "~r": "5",
+      "~r": "7",
       "~l": 11
     },
     "v": {
@@ -1079,13 +1079,13 @@
                         "~k": "q"
                       },
                       {
-                        "id": "block:companies/company-list:contact-table:0",
+                        "id": "block:companies/company-list:company-table:0",
                         "type": "Title",
                         "properties": {
-                          "content": "Contacts",
+                          "content": "Companies",
                           "~k": "t"
                         },
-                        "blockId": "contact-table",
+                        "blockId": "company-table",
                         "~k": "s"
                       }
                     ],
