@@ -1,7 +1,7 @@
 ---
 name: l-write-block-e2e
 description: Generate comprehensive e2e tests for Lowdefy blocks using Playwright. Use when creating end-to-end tests for block functionality, testing block rendering, properties, events, and user interactions.
-argument-hint: "<package-name> <BlockName>"
+argument-hint: '<package-name> <BlockName>'
 ---
 
 # E2E Test Generator for Lowdefy Blocks
@@ -34,7 +34,8 @@ If missing, set up the infrastructure first (see Package Setup section).
 Read these files to understand the block:
 
 1. **Block component** (`src/blocks/{BlockName}/{BlockName}.js`)
-   - Check ID pattern: `id={blockId}` (display) vs `id={\`${blockId}_input\`}` (input)
+
+   - Check ID pattern: `id={blockId}` (display) vs `id={\`${blockId}\_input\`}` (input)
    - Does it use Label wrapper? (input blocks do)
    - What events does it support?
 
@@ -48,11 +49,21 @@ Read these files to understand the block:
 
 The framework wrapper (`#bl-{blockId}`) is guaranteed to exist for ALL block types and should be your primary selector. `getBlock(page, blockId)` returns this wrapper element.
 
+**CRITICAL: Always use `escapeId()` when interpolating blockId into CSS selectors.**
+
+Block IDs can contain dots (e.g., `form.field.name`) which CSS interprets as class selectors. Always wrap with `escapeId()`:
+
+```javascript
+import { escapeId } from '@lowdefy/e2e-utils';
+```
+
 **Two-step pattern for all blocks:**
-1. Get the framework wrapper: `getBlock(page, blockId)` → `#bl-{blockId}`
+
+1. Get the framework wrapper: `getBlock(page, blockId)` → `#bl-{blockId}` (already escaped internally)
 2. Locate the Ant Design component inside: `.locator('.ant-xxx')`
 
 **Display Blocks** (Button, Alert, Badge, Progress, Result, etc.):
+
 ```javascript
 // Pattern: getBlock() returns wrapper, then locate Ant component inside
 const getButton = (page, blockId) => getBlock(page, blockId).locator('.ant-btn');
@@ -62,28 +73,35 @@ const getProgress = (page, blockId) => getBlock(page, blockId).locator('.ant-pro
 ```
 
 **Typography Display Blocks** (Title, Paragraph):
+
 ```javascript
 const getTitle = (page, blockId) => getBlock(page, blockId).locator('h1, h2, h3, h4, h5');
 const getParagraph = (page, blockId) => getBlock(page, blockId).locator('.ant-typography');
 ```
 
 **Input Blocks with Label** (TextInput, NumberInput, etc.):
+
 - Input element has a known ID pattern: `${blockId}_input`
 - Still use `getBlock()` for the wrapper when checking labels, clear buttons, etc.
+
 ```javascript
+import { escapeId } from '@lowdefy/e2e-utils';
+
 // For the input element specifically (has its own ID)
-const getInput = (page, blockId) => page.locator(`#${blockId}_input`);
+const getInput = (page, blockId) => page.locator(`#${escapeId(blockId)}_input`);
 
 // For wrapper-level operations (hover for clear button, check label, etc.)
 // Use getBlock(page, blockId) directly
 ```
 
 **Select/Dropdown Blocks** (Selector, MultipleSelector, etc.):
+
 - Ant Design controls the `.ant-select` wrapper (we can't add IDs to it)
 - Scope with the input ID we DO control
+
 ```javascript
-const getSelector = (page, blockId) => page.locator(`.ant-select:has(#${blockId}_input)`);
-const getOption = (page, blockId, index) => page.locator(`#${blockId}_${index}`);
+const getSelector = (page, blockId) => page.locator(`.ant-select:has(#${escapeId(blockId)}_input)`);
+const getOption = (page, blockId, index) => page.locator(`#${escapeId(blockId)}_${index}`);
 ```
 
 ### Step 3: Create Test Fixtures
@@ -94,7 +112,7 @@ Create `src/blocks/{BlockName}/tests/{BlockName}.e2e.yaml`:
 # Copyright 2020-2026 Lowdefy, Inc
 # ... license header ...
 
-id: blockname  # Page ID - lowercase, used in URL
+id: blockname # Page ID - lowercase, used in URL
 type: Box
 
 events:
@@ -197,6 +215,7 @@ blocks:
 ```
 
 **Block ID Naming Convention:**
+
 - `{blockname}_basic` - Basic rendering
 - `{blockname}_{property}` - Property-specific (e.g., `textinput_disabled`)
 - `{blockname}_on{event}` - Event tests (e.g., `textinput_onblur`)
@@ -207,6 +226,7 @@ blocks:
 Create `src/blocks/{BlockName}/tests/{BlockName}.e2e.spec.js`:
 
 **For Display Blocks (Button, Alert, Badge, etc.):**
+
 ```javascript
 /*
   Copyright 2020-2026 Lowdefy, Inc
@@ -217,13 +237,14 @@ Create `src/blocks/{BlockName}/tests/{BlockName}.e2e.spec.js`:
 
 import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { escapeId } from '@lowdefy/e2e-utils';
 
 // Display block: use framework wrapper, then locate Ant component inside
 const getButton = (page, blockId) => getBlock(page, blockId).locator('.ant-btn');
 
 test.describe('Button Block', () => {
   test.beforeEach(async ({ page }) => {
-    await navigateToTestPage(page, 'button');  // matches yaml id
+    await navigateToTestPage(page, 'button'); // matches yaml id
   });
 
   test('renders basic button', async ({ page }) => {
@@ -253,12 +274,14 @@ test.describe('Button Block', () => {
 ```
 
 **For Input Blocks (TextInput, NumberInput, etc.):**
+
 ```javascript
 import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { escapeId } from '@lowdefy/e2e-utils';
 
 // Input block: input element has specific ID pattern
-const getInput = (page, blockId) => page.locator(`#${blockId}_input`);
+const getInput = (page, blockId) => page.locator(`#${escapeId(blockId)}_input`);
 
 test.describe('TextInput Block', () => {
   test.beforeEach(async ({ page }) => {
@@ -330,19 +353,19 @@ Fix any failures before committing.
 
 All Lowdefy blocks are wrapped by `BlockLayout` which renders `id="bl-{blockId}"`. This wrapper ID is **framework-guaranteed** and always exists, making it the most reliable selector for targeting blocks.
 
-- `getBlock(page, blockId)` uses `#bl-{blockId}` (framework wrapper)
-- Input elements use `#${blockId}_input` (component-rendered)
-- Options use `#${blockId}_0`, `#${blockId}_1`, etc. (component-rendered)
+- `getBlock(page, blockId)` uses `#bl-{blockId}` (framework wrapper, escapes internally)
+- Input elements use `#${escapeId(blockId)}_input` (component-rendered, must escape manually)
+- Options use `#${escapeId(blockId)}_0`, `#${escapeId(blockId)}_1`, etc. (must escape manually)
 
 ### Selector Priority (Most to Least Preferred)
 
-| Priority | Selector Type | When to Use | Example |
-|----------|---------------|-------------|---------|
-| 1 | Framework wrapper | Block container | `getBlock()` → `#bl-{blockId}` |
-| 2 | Input ID | Form inputs | `#${blockId}_input` |
-| 3 | Role-based | Buttons with accessible names | `getByRole('button', { name: 'Copy' })` |
-| 4 | Class + ID | Ant Design internals | `.ant-select:has(#${blockId}_input)` |
-| 5 | Class only | **Last resort** - style assertions | `.ant-input-sm` |
+| Priority | Selector Type     | When to Use                        | Example                                        |
+| -------- | ----------------- | ---------------------------------- | ---------------------------------------------- |
+| 1        | Framework wrapper | Block container                    | `getBlock()` → `#bl-{blockId}`                 |
+| 2        | Input ID          | Form inputs                        | `#${escapeId(blockId)}_input`                  |
+| 3        | Role-based        | Buttons with accessible names      | `getByRole('button', { name: 'Copy' })`        |
+| 4        | Class + ID        | Ant Design internals               | `.ant-select:has(#${escapeId(blockId)}_input)` |
+| 5        | Class only        | **Last resort** - style assertions | `.ant-input-sm`                                |
 
 ### Role-Based Selectors (Preferred for Ant Design Buttons)
 
@@ -357,19 +380,22 @@ const editBtn = block.getByRole('button', { name: 'Edit' }).first();
 ```
 
 **Why role-based is better:**
+
 - Uses semantic meaning (what the button does) not implementation (class names)
 - Less fragile than class selectors like `.ant-typography-copy`
 - Ant Design won't change accessible names without it being a breaking change
 
 ### About Class Selectors
 
-We use `.ant-select:has(#${blockId}_input)` for Selector blocks because:
+We use `.ant-select:has(#${escapeId(blockId)}_input)` for Selector blocks because:
+
 - The `.ant-select` wrapper is created internally by Ant Design
 - We cannot add `data-testid` to it (we don't control that element)
 - We scope it with the ID we DO control to ensure uniqueness
 - This is standard practice for testing Ant Design components
 
 **When class selectors are still needed:**
+
 - Style assertions: `await expect(input).toHaveClass(/ant-input-sm/);`
 - Elements without accessible names (wrapper divs, icons)
 - The `.ant-typography-edit-content` wrapper for Typography edit mode
@@ -377,35 +403,39 @@ We use `.ant-select:has(#${blockId}_input)` for Selector blocks because:
 ## Ant Design Class Patterns
 
 ### Size Classes
-| Component | Small | Large |
-|-----------|-------|-------|
-| Input/TextArea | `ant-input-sm` | `ant-input-lg` |
-| Button | `ant-btn-sm` | `ant-btn-lg` |
-| Select | `ant-select-sm` | `ant-select-lg` |
+
+| Component           | Small                 | Large                 |
+| ------------------- | --------------------- | --------------------- |
+| Input/TextArea      | `ant-input-sm`        | `ant-input-lg`        |
+| Button              | `ant-btn-sm`          | `ant-btn-lg`          |
+| Select              | `ant-select-sm`       | `ant-select-lg`       |
 | NumberInput wrapper | `ant-input-number-sm` | `ant-input-number-lg` |
-| DatePicker | `ant-picker-small` | `ant-picker-large` |
+| DatePicker          | `ant-picker-small`    | `ant-picker-large`    |
 
 ### Style Classes
-| Style | Class Pattern |
-|-------|---------------|
-| Borderless | `ant-input-borderless`, `ant-select-borderless` |
-| Disabled Select | `ant-select-disabled` |
-| Loading Button | `ant-btn-loading` |
-| Primary Button | `ant-btn-primary` |
-| Danger Button | `ant-btn-dangerous` |
+
+| Style           | Class Pattern                                   |
+| --------------- | ----------------------------------------------- |
+| Borderless      | `ant-input-borderless`, `ant-select-borderless` |
+| Disabled Select | `ant-select-disabled`                           |
+| Loading Button  | `ant-btn-loading`                               |
+| Primary Button  | `ant-btn-primary`                               |
+| Danger Button   | `ant-btn-dangerous`                             |
 
 ### Typography Classes
-| Type | Class |
-|------|-------|
+
+| Type      | Class                      |
+| --------- | -------------------------- |
 | Secondary | `ant-typography-secondary` |
-| Warning | `ant-typography-warning` |
-| Danger | `ant-typography-danger` |
-| Success | `ant-typography-success` |
-| Disabled | `ant-typography-disabled` |
+| Warning   | `ant-typography-warning`   |
+| Danger    | `ant-typography-danger`    |
+| Success   | `ant-typography-success`   |
+| Disabled  | `ant-typography-disabled`  |
 
 ## Common Test Patterns
 
 ### Testing Clear Button (requires hover)
+
 ```javascript
 test('can clear value', async ({ page }) => {
   const block = getBlock(page, 'blockname_clearable');
@@ -420,6 +450,7 @@ test('can clear value', async ({ page }) => {
 ```
 
 ### Testing NumberInput Controls
+
 ```javascript
 test('can increment with controls', async ({ page }) => {
   const block = getBlock(page, 'numberinput_controls');
@@ -434,6 +465,7 @@ test('can increment with controls', async ({ page }) => {
 ```
 
 ### Testing Select Dropdown
+
 ```javascript
 test('can select option', async ({ page }) => {
   const selector = getSelector(page, 'selector_basic');
@@ -448,6 +480,7 @@ test('can select option', async ({ page }) => {
 ```
 
 ### Testing Password Visibility Toggle
+
 ```javascript
 test('can toggle password visibility', async ({ page }) => {
   const block = getBlock(page, 'passwordinput_visibility');
@@ -463,6 +496,7 @@ test('can toggle password visibility', async ({ page }) => {
 ## Known Patterns
 
 ### Typography Editable (TitleInput, ParagraphInput)
+
 The editable typography components replace the element with an edit wrapper when clicking the edit button:
 
 ```javascript
@@ -501,12 +535,15 @@ test('onCopy event fires when copy button is clicked', async ({ page }) => {
 ```
 
 **Key insights:**
+
 - When Typography enters edit mode, the heading/paragraph is replaced with a `div.ant-typography-edit-content` containing a textarea
 - Use `page.locator('.ant-typography-edit-content textarea')` instead of `block.locator('textarea')`
 - For `onCopy` to fire, `copyable` must be an object (e.g., `copyable: { text: 'Copy text' }`), not just `true`
 
 ### TextArea maxLength
+
 TextArea enforces maxLength at component level, not via HTML attribute. Test by filling more characters and checking result:
+
 ```javascript
 await textarea.fill('a'.repeat(150));
 const value = await textarea.inputValue();
@@ -514,14 +551,15 @@ expect(value.length).toBeLessThanOrEqual(100);
 ```
 
 ### DatePicker Blocks (DateSelector, DateTimeSelector, etc.)
+
 Date picker blocks use Ant Design's DatePicker which has specific patterns:
 
 ```javascript
 // Helper to get the picker wrapper (use framework wrapper ID)
-const getPicker = (page, blockId) => page.locator(`#bl-${blockId} .ant-picker`);
+const getPicker = (page, blockId) => page.locator(`#bl-${escapeId(blockId)} .ant-picker`);
 
 // Helper to get the input
-const getInput = (page, blockId) => page.locator(`#${blockId}_input`);
+const getInput = (page, blockId) => page.locator(`#${escapeId(blockId)}_input`);
 
 test('can select a date', async ({ page }) => {
   const input = getInput(page, 'ds_basic');
@@ -555,6 +593,7 @@ test('can clear value', async ({ page }) => {
 ```
 
 **Key insights:**
+
 - DatePicker size classes are `ant-picker-small/large` (not `sm/lg`)
 - Use `.ant-picker-cell-in-view` for reliable date cell selection
 - RangePicker: start input has ID, end input needs `.ant-picker-input:last-child input`
@@ -577,7 +616,7 @@ const packageDir = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 
 export default createPlaywrightConfig({
   packageDir,
-  port: 3002,  // See port assignments below
+  port: 3002, // See port assignments below
 });
 ```
 
@@ -620,11 +659,11 @@ The `@lowdefy/block-dev-e2e` package provides:
 
 ## Port Assignments
 
-| Package | Port |
-|---------|------|
-| blocks-basic | 3001 |
-| blocks-antd | 3002 |
-| blocks-aggrid | 3003 |
+| Package         | Port |
+| --------------- | ---- |
+| blocks-basic    | 3001 |
+| blocks-antd     | 3002 |
+| blocks-aggrid   | 3003 |
 | blocks-markdown | 3004 |
 
 ## Commit Convention

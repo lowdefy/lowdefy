@@ -16,16 +16,17 @@
 
 import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { escapeId } from '@lowdefy/e2e-utils';
 
 // Helper to get a radio option by its label text (works regardless of ID format)
 const getRadioByLabel = (page, blockId, labelText) =>
-  page.locator(`#${blockId}_input label:has-text("${labelText}") input[type="radio"]`);
+  page.locator(`#${escapeId(blockId)}_input label:has-text("${labelText}") input[type="radio"]`);
 
 // Helper to get a radio option by index (for object options)
-const getRadioByIndex = (page, blockId, index) => page.locator(`#${blockId}_${index}`);
+const getRadioByIndex = (page, blockId, index) => page.locator(`#${escapeId(blockId)}_${index}`);
 
 // Helper to get the radio group
-const getRadioGroup = (page, blockId) => page.locator(`#${blockId}_input`);
+const getRadioGroup = (page, blockId) => page.locator(`#${escapeId(blockId)}_input`);
 
 test.describe('RadioSelector Block', () => {
   test.beforeEach(async ({ page }) => {

@@ -16,9 +16,10 @@
 
 import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { escapeId } from '@lowdefy/e2e-utils';
 
 // MobileMenu renders a button and a drawer
-const getMobileMenuButton = (page, blockId) => page.locator(`#${blockId}_button`);
+const getMobileMenuButton = (page, blockId) => page.locator(`#${escapeId(blockId)}_button`);
 const getDrawer = (page) => page.locator('.ant-drawer-content-wrapper');
 const getDrawerMenu = (page) => page.locator('.ant-drawer .ant-menu');
 

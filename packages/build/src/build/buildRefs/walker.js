@@ -298,7 +298,7 @@ function resolveModuleVar(node, ctx) {
 async function resolveRef(node, ctx) {
   // 1. Create ref definition
   const lineNumber = node['~l'];
-  const refDef = makeRefDefinition(node._ref, ctx.refId, ctx.refMap, lineNumber);
+  const refDef = makeRefDefinition(node._ref, ctx.refId, ctx.refMap, lineNumber, ctx.path);
 
   // 2. Store unresolved vars before resolution mutates them, and clone so
   //    resolution operates on a copy (preserving original.vars for resolver refs).
@@ -312,11 +312,13 @@ async function resolveRef(node, ctx) {
   if (type.isObject(refDef.path)) {
     refDef.path = await resolve(cloneForResolve(refDef.path), ctx);
   }
-  for (const varKey of varKeys) {
-    if (type.isObject(refDef.vars[varKey]) || type.isArray(refDef.vars[varKey])) {
-      refDef.vars[varKey] = await resolve(refDef.vars[varKey], ctx);
-    }
-  }
+  await Promise.all(
+    varKeys.map(async (varKey) => {
+      if (type.isObject(refDef.vars[varKey]) || type.isArray(refDef.vars[varKey])) {
+        refDef.vars[varKey] = await resolve(refDef.vars[varKey], ctx);
+      }
+    }),
+  );
   if (type.isObject(refDef.key)) {
     refDef.key = await resolve(cloneForResolve(refDef.key), ctx);
   }
@@ -483,8 +485,16 @@ async function resolve(node, ctx) {
   // 4. Object with _var — resolve, then re-walk the result so any
   //    _ref or _build.* operators inside the default value get processed.
   if (type.isObject(node) && !type.isUndefined(node._var)) {
-    const varResult = resolveVar(node, ctx);
-    return resolve(varResult, ctx);
+    try {
+      const varResult = resolveVar(node, ctx);
+      return await resolve(varResult, ctx);
+    } catch (error) {
+      if (error instanceof ConfigError) {
+        ctx.collectError(error);
+        return null;
+      }
+      throw error;
+    }
   }
 
   // 4b. Object with _module.var — resolve, then re-walk the result
@@ -497,33 +507,37 @@ async function resolve(node, ctx) {
     return resolve(moduleVarResult, ctx);
   }
 
-  // 5. Array — walk children in-place
+  // 5. Array — walk children in parallel
   if (type.isArray(node)) {
-    for (let i = 0; i < node.length; i++) {
-      node[i] = await resolve(node[i], ctx.child(String(i)));
-    }
+    await Promise.all(
+      node.map(async (item, i) => {
+        node[i] = await resolve(item, ctx.child(String(i)));
+      }),
+    );
     return node;
   }
 
-  // 6. Object — walk children in-place
+  // 6. Object — walk children in parallel
   const keys = Object.keys(node);
-  for (const key of keys) {
-    if (ctx.shouldStop) {
-      const childPath = ctx.path ? `${ctx.path}.${key}` : key;
-      const stopMode = ctx.shouldStop(childPath, ctx.refId);
-      if (stopMode === 'delete' || stopMode === true) {
-        delete node[key];
-        continue;
-      }
-      if (stopMode === 'preserve') {
-        if (type.isObject(node[key]) || type.isArray(node[key])) {
-          setNonEnumerableProperty(node[key], '~deferredFrom', ctx.currentFile);
+  await Promise.all(
+    keys.map(async (key) => {
+      if (ctx.shouldStop) {
+        const childPath = ctx.path ? `${ctx.path}.${key}` : key;
+        const stopMode = ctx.shouldStop(childPath, ctx.refId);
+        if (stopMode === 'delete' || stopMode === true) {
+          delete node[key];
+          return;
         }
-        continue;
+        if (stopMode === 'preserve') {
+          if (type.isObject(node[key]) || type.isArray(node[key])) {
+            setNonEnumerableProperty(node[key], '~deferredFrom', ctx.currentFile);
+          }
+          return;
+        }
       }
-    }
-    node[key] = await resolve(node[key], ctx.child(key));
-  }
+      node[key] = await resolve(node[key], ctx.child(key));
+    }),
+  );
 
   // Check if this is a _build.* operator
   if (isBuildOperator(node)) {

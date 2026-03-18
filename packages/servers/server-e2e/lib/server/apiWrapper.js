@@ -16,7 +16,6 @@
 
 import path from 'path';
 import { createApiContext } from '@lowdefy/api';
-import { getSecretsFromEnv } from '@lowdefy/node-utils';
 import { serializer } from '@lowdefy/helpers';
 import { v4 as uuid } from 'uuid';
 
@@ -24,13 +23,14 @@ import config from '../build/config.js';
 import connections from '../../build/plugins/connections.js';
 import createLogger from './log/createLogger.js';
 import fileCache from './fileCache.js';
+import getE2eSecrets from './getE2eSecrets.js';
 import getServerSession from './auth/getServerSession.js';
 import createHandleError from './log/createHandleError.js';
 import logRequest from './log/logRequest.js';
 import operators from '../../build/plugins/operators/server.js';
 import jsMap from '../../build/plugins/operators/serverJsMap.js';
 
-const secrets = getSecretsFromEnv();
+const secrets = getE2eSecrets();
 
 function apiWrapper(handler) {
   return async function wrappedHandler(req, res) {

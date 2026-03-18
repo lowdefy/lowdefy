@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { createBlockHelper } from '@lowdefy/e2e-utils';
+import { createBlockHelper, escapeId } from '@lowdefy/e2e-utils';
 
 // Throw intentionally throws an error on render — use the block wrapper for presence checks.
-const locator = (page, blockId) => page.locator(`#bl-${blockId}`);
+const locator = (page, blockId) => page.locator(`#bl-${escapeId(blockId)}`);
 
 export default createBlockHelper({
   locator,

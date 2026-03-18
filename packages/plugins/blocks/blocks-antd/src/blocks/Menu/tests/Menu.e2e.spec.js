@@ -16,9 +16,10 @@
 
 import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { escapeId } from '@lowdefy/e2e-utils';
 
 // Menu block has id={blockId} directly on the Ant Design Menu
-const getMenu = (page, blockId) => page.locator(`#${blockId}`);
+const getMenu = (page, blockId) => page.locator(`#${escapeId(blockId)}`);
 
 test.describe('Menu Block', () => {
   test.beforeEach(async ({ page }) => {

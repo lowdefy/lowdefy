@@ -18,13 +18,24 @@
 
 /* eslint-disable no-console */
 
+import fs from 'fs';
 import path from 'path';
 import prompts from 'prompts';
 
 import detectApps from './detectApps.js';
 import generateFiles from './generateFiles.js';
-import installDeps, { detectPackageManager } from './installDeps.js';
 import updateGitignore from './updateGitignore.js';
+
+function detectPackageManager(cwd) {
+  let dir = cwd;
+  while (dir !== path.dirname(dir)) {
+    if (fs.existsSync(path.join(dir, 'pnpm-lock.yaml'))) return 'pnpm';
+    if (fs.existsSync(path.join(dir, 'yarn.lock'))) return 'yarn';
+    if (fs.existsSync(path.join(dir, 'package-lock.json'))) return 'npm';
+    dir = path.dirname(dir);
+  }
+  return 'npm';
+}
 
 async function init() {
   const cwd = process.cwd();
@@ -122,59 +133,43 @@ async function init() {
   // Step 6: Update .gitignore
   updateGitignore(cwd);
 
-  // Step 7: Ask about dependency installation
-  const installResponse = await prompts({
-    type: 'confirm',
-    name: 'install',
-    message: 'Would you like to run install now?',
-    initial: true,
-  });
-
-  // Handle Ctrl+C
-  if (installResponse.install === undefined) {
-    console.log('\nSetup cancelled.');
-    process.exit(0);
-  }
-
-  if (installResponse.install) {
-    // Step 8: Install dependencies for each selected app
-    for (const app of selectedApps) {
-      const appDir = path.join(cwd, app.path);
-      installDeps({ appDir });
-    }
-  } else {
-    // Print manual install instructions per app
-    for (const app of selectedApps) {
-      const packageManager = detectPackageManager(path.join(cwd, app.path));
-      console.log(`\nTo install dependencies manually in ${app.path}:`);
-      console.log(`  cd ${app.path}`);
-      console.log(`  ${packageManager} install`);
-      console.log('  npx playwright install chromium');
-    }
-  }
-
-  // Step 9: Print completion summary
+  // Step 7: Print completion summary and next steps
   console.log('\n✓ E2E testing setup complete!\n');
+  console.log('Next steps:\n');
 
+  let step = 1;
+
+  // Install instructions
+  const packageManager = detectPackageManager(cwd);
+  console.log(`  ${step}. Install dependencies:`);
   if (selectedApps.length === 1) {
-    const app = selectedApps[0];
-    console.log(`Run tests from ${app.path}:`);
-    console.log(`  cd ${app.path}`);
-    console.log('  pnpm e2e');
-    console.log('  pnpm e2e:ui  # for UI mode');
-  } else {
-    console.log('Run tests from each app directory:');
-    for (const app of selectedApps) {
-      console.log(`\n  ${app.name}:`);
-      console.log(`    cd ${app.path} && pnpm e2e`);
-    }
+    console.log(`     cd ${selectedApps[0].path}`);
+  }
+  console.log(`     ${packageManager} install`);
+  console.log('     npx playwright install chromium');
+  step += 1;
+
+  // MongoDB setup
+  if (useMongoDB) {
+    console.log(`\n  ${step}. Configure MongoDB testing:`);
+    console.log('     Copy .env.e2e to .env.e2e.local');
+    console.log('     Set LOWDEFY_E2E_MONGODB_URI to your test database');
+    console.log('     See mongodb.spec.js for example tests');
+    step += 1;
   }
 
-  if (useMongoDB) {
-    console.log('\nMongoDB testing setup:');
-    console.log('  1. Copy .env.e2e to .env.e2e.local');
-    console.log('  2. Set MDB_E2E_URI to your test database');
-    console.log('  3. See mongodb.spec.js for example tests');
+  // Run tests
+  console.log(`\n  ${step}. Run tests:`);
+  if (selectedApps.length === 1) {
+    console.log(`     cd ${selectedApps[0].path}`);
+    console.log('     pnpm e2e            # Run all tests');
+    console.log('     pnpm e2e:headed     # Run with visible browser');
+    console.log('     pnpm e2e:ui         # Playwright UI mode');
+    console.log('     pnpm e2e:server     # Start server for reuse');
+  } else {
+    for (const app of selectedApps) {
+      console.log(`     cd ${app.path} && pnpm e2e`);
+    }
   }
 }
 

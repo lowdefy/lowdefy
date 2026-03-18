@@ -1,0 +1,30 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+lowdefy: local
+name: blocks-aggrid E2E Tests
+
+pages:
+  # Display variants
+  - _ref: ../../src/blocks/AgGridAlpine/tests/AgGridAlpine.e2e.yaml
+  - _ref: ../../src/blocks/AgGridAlpineDark/tests/AgGridAlpineDark.e2e.yaml
+  - _ref: ../../src/blocks/AgGridBalham/tests/AgGridBalham.e2e.yaml
+  - _ref: ../../src/blocks/AgGridBalhamDark/tests/AgGridBalhamDark.e2e.yaml
+  - _ref: ../../src/blocks/AgGridMaterial/tests/AgGridMaterial.e2e.yaml
+  # Input variants
+  - _ref: ../../src/blocks/AgGridInputAlpine/tests/AgGridInputAlpine.e2e.yaml
+  - _ref: ../../src/blocks/AgGridInputAlpineDark/tests/AgGridInputAlpineDark.e2e.yaml
+  - _ref: ../../src/blocks/AgGridInputBalham/tests/AgGridInputBalham.e2e.yaml
+  - _ref: ../../src/blocks/AgGridInputBalhamDark/tests/AgGridInputBalhamDark.e2e.yaml
+  - _ref: ../../src/blocks/AgGridInputMaterial/tests/AgGridInputMaterial.e2e.yaml

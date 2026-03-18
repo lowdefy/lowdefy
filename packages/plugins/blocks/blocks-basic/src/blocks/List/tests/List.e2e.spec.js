@@ -16,11 +16,12 @@
 
 import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { escapeId } from '@lowdefy/e2e-utils';
 
 // List block renders a Box inside the BlockLayout wrapper.
 // The Box has the blockId and receives the flex/style properties.
 // Structure: #bl-{blockId} (wrapper) > #{blockId} (styled Box)
-const getListContainer = (page, blockId) => page.locator(`#${blockId}`);
+const getListContainer = (page, blockId) => page.locator(`#${escapeId(blockId)}`);
 
 test.describe('List Block', () => {
   test.beforeEach(async ({ page }) => {

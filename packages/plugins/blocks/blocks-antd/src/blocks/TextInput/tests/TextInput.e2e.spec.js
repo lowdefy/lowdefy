@@ -16,9 +16,10 @@
 
 import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { escapeId } from '@lowdefy/e2e-utils';
 
 // Helper to get the input element (input has id={blockId}_input)
-const getInput = (page, blockId) => page.locator(`#${blockId}_input`);
+const getInput = (page, blockId) => page.locator(`#${escapeId(blockId)}_input`);
 
 test.describe('TextInput Block', () => {
   test.beforeEach(async ({ page }) => {

@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
-import { createBlockHelper } from '@lowdefy/e2e-utils';
+import { createBlockHelper, escapeId } from '@lowdefy/e2e-utils';
 
-const locator = (page, blockId) => page.locator(`#bl-${blockId} .ant-layout-sider`);
+const locator = (page, blockId) => page.locator(`#bl-${escapeId(blockId)} .ant-layout-sider`);
 
 export default createBlockHelper({
   locator,

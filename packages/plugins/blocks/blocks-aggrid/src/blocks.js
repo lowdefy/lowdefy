@@ -1,5 +1,5 @@
 /*
-  Copyright 2021 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -22,4 +22,5 @@ export { default as AgGridInputAlpine } from './blocks/AgGridInputAlpine/AgGridI
 export { default as AgGridInputAlpineDark } from './blocks/AgGridInputAlpineDark/AgGridInputAlpineDark.js';
 export { default as AgGridInputBalham } from './blocks/AgGridInputBalham/AgGridInputBalham.js';
 export { default as AgGridInputBalhamDark } from './blocks/AgGridInputBalhamDark/AgGridInputBalhamDark.js';
+export { default as AgGridInputMaterial } from './blocks/AgGridInputMaterial/AgGridInputMaterial.js';
 export { default as AgGridMaterial } from './blocks/AgGridMaterial/AgGridMaterial.js';

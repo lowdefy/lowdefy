@@ -16,9 +16,10 @@
 
 import { test, expect } from '@playwright/test';
 import { navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { escapeId } from '@lowdefy/e2e-utils';
 
 // Divider uses id={blockId} directly
-const getDivider = (page, blockId) => page.locator(`#${blockId}`);
+const getDivider = (page, blockId) => page.locator(`#${escapeId(blockId)}`);
 
 test.describe('Divider Block', () => {
   test.beforeEach(async ({ page }) => {

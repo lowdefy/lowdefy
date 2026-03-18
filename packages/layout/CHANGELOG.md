@@ -1,5 +1,14 @@
 # Change Log
 
+## 4.7.0
+
+### Patch Changes
+
+- Updated dependencies [4543688f7]
+- Updated dependencies [dea6651a1]
+  - @lowdefy/helpers@4.7.0
+  - @lowdefy/block-utils@4.7.0
+
 ## 4.6.0
 
 ### Patch Changes

@@ -29,7 +29,10 @@ async function waitForReady(page) {
 }
 
 async function goto(page, path) {
-  await page.goto(path);
+  // domcontentloaded is sufficient — waitForReady gates on the Lowdefy client
+  // context, which is a stronger readiness signal than the browser 'load' event.
+  // Using 'load' can hang when pages have WebSocket connections or slow resources.
+  await page.goto(path, { waitUntil: 'domcontentloaded' });
   await waitForReady(page);
 }
 
@@ -38,7 +41,7 @@ async function expectNavigation(page, urlPattern) {
 }
 
 async function waitForPage(page, path) {
-  await page.waitForURL(path);
+  await page.waitForURL(path, { waitUntil: 'domcontentloaded' });
   await waitForReady(page);
 }
 

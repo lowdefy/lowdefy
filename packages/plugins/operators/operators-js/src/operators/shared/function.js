@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { serializer } from '@lowdefy/helpers';
+
 function _function({
   actions,
   arrayIndices,
@@ -31,7 +33,7 @@ function _function({
       arrayIndices,
       args,
       event,
-      input: params,
+      input: serializer.copy(params),
       location,
       operatorPrefix: `_${operatorPrefix}`,
       payload,

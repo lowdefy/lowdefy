@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { createBlockHelper } from '@lowdefy/e2e-utils';
+import { createBlockHelper, escapeId } from '@lowdefy/e2e-utils';
 import { expect } from '@playwright/test';
 
-const locator = (page, blockId) => page.locator(`#bl-${blockId} .ant-tree`);
+const locator = (page, blockId) => page.locator(`#bl-${escapeId(blockId)} .ant-tree`);
 
 export default createBlockHelper({
   locator,

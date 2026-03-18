@@ -16,12 +16,13 @@
 
 import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { escapeId } from '@lowdefy/e2e-utils';
 
 // Label block has id={blockId} on the Row wrapper
 // Note: When nesting TextInput inside Label, there are two label elements
 // (one from Label block, one from TextInput's internal Label wrapper)
 // Use .first() to target the outer Label's elements
-const getLabel = (page, blockId) => page.locator(`#${blockId}`);
+const getLabel = (page, blockId) => page.locator(`#${escapeId(blockId)}`);
 const getLabelTitle = (page, blockId) => getLabel(page, blockId).locator('label').first();
 
 test.describe('Label Block', () => {

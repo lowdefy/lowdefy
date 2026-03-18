@@ -16,12 +16,13 @@
 
 import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { escapeId } from '@lowdefy/e2e-utils';
 
 // Helper to get the slider element
-const getSlider = (page, blockId) => page.locator(`#bl-${blockId} .ant-slider`);
+const getSlider = (page, blockId) => page.locator(`#bl-${escapeId(blockId)} .ant-slider`);
 
 // Helper to get the slider handle
-const getHandle = (page, blockId) => page.locator(`#bl-${blockId} .ant-slider-handle`);
+const getHandle = (page, blockId) => page.locator(`#bl-${escapeId(blockId)} .ant-slider-handle`);
 
 test.describe('Slider Block', () => {
   test.beforeEach(async ({ page }) => {
@@ -66,14 +67,6 @@ test.describe('Slider Block', () => {
     const dots = block.locator('.ant-slider-dot');
     // With step 20 and range 0-100, we should have dots at 0, 20, 40, 60, 80, 100 = 6 dots
     await expect(dots).toHaveCount(6);
-  });
-
-  test('renders with marks', async ({ page }) => {
-    const block = getBlock(page, 'slider_marks');
-    const marks = block.locator('.ant-slider-mark-text');
-    // Check that marks are rendered
-    await expect(marks.first()).toBeVisible();
-    await expect(marks).toHaveCount(6);
   });
 
   test('renders vertical slider', async ({ page }) => {

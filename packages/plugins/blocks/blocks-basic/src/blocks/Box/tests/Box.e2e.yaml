@@ -48,7 +48,13 @@ blocks:
         properties:
           content: Child content
 
-  # Test 5: Box with onClick event using SetState
+  # Test 5: Box with dotted block ID (regression test for CSS selector escaping)
+  - id: form.field.name
+    type: Box
+    properties:
+      content: Dotted ID Box
+
+  # Test 6: Box with onClick event using SetState
   - id: box_clickable
     type: Box
     properties:

@@ -80,8 +80,20 @@ function updatePackageJson({ appPath, cwd, useExperimental, useMongoDB }) {
     updated = true;
   }
 
+  if (!pkg.scripts['e2e:headed']) {
+    pkg.scripts['e2e:headed'] =
+      'SLOW_MO=500 playwright test --headed --workers=1 --config=e2e/playwright.config.js';
+    updated = true;
+  }
+
   if (!pkg.scripts['e2e:ui']) {
     pkg.scripts['e2e:ui'] = 'playwright test --ui --config=e2e/playwright.config.js';
+    updated = true;
+  }
+
+  if (!pkg.scripts['e2e:server']) {
+    pkg.scripts['e2e:server'] =
+      'lowdefy build --server e2e && lowdefy start --port 3000 --log-level warn';
     updated = true;
   }
 

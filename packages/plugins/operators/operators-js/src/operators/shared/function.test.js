@@ -13,9 +13,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { ServerParser, WebParser } from '@lowdefy/operators';
+import { evaluateOperators, ServerParser, WebParser } from '@lowdefy/operators';
 import _function from './function.js';
 import _args from './args.js';
+import _array from './array.js';
 import _payload from '../server/payload.js';
 import _state from '../shared/state.js';
 
@@ -132,4 +133,36 @@ test('WebParser, _function throws on parser errors', () => {
   const params = { __state: [] };
   const fn = _function({ location, params, parser, payload, operatorPrefix: '_' });
   expect(fn).toThrow('_state params must be of type string, integer, boolean or object.');
+});
+
+test('evaluateOperators, _function callback template not mutated across repeated invocations', () => {
+  const buildOperators = { _args, _array, _function };
+  const input = {
+    items: {
+      '_build.array.map': {
+        on: [
+          { id: 'alpha', label: 'Alpha' },
+          { id: 'beta', label: 'Beta' },
+          { id: 'gamma', label: 'Gamma' },
+        ],
+        callback: {
+          '_build.function': {
+            value: { '__build.args': '0.id' },
+            title: { '__build.args': '0.label' },
+          },
+        },
+      },
+    },
+  };
+  const res = evaluateOperators({
+    input,
+    operators: buildOperators,
+    operatorPrefix: '_build.',
+  });
+  expect(res.errors).toEqual([]);
+  expect(res.output.items).toEqual([
+    { value: 'alpha', title: 'Alpha' },
+    { value: 'beta', title: 'Beta' },
+    { value: 'gamma', title: 'Gamma' },
+  ]);
 });

@@ -16,13 +16,14 @@
 
 import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { escapeId } from '@lowdefy/e2e-utils';
 
 // Helper to get the phone number input element
-const getInput = (page, blockId) => page.locator(`#${blockId}_input`);
+const getInput = (page, blockId) => page.locator(`#${escapeId(blockId)}_input`);
 
 // Helper to get the country code selector
 const getCodeSelector = (page, blockId) =>
-  page.locator(`#bl-${blockId} .ant-select:has(#${blockId}_select_input)`);
+  page.locator(`#bl-${escapeId(blockId)} .ant-select:has(#${escapeId(blockId)}_select_input)`);
 
 test.describe('PhoneNumberInput Block', () => {
   test.beforeEach(async ({ page }) => {

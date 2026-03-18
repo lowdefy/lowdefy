@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/website",
-  "version": "4.6.0",
+  "version": "4.7.0",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -32,7 +32,7 @@
   },
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3006",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -41,11 +41,14 @@
     "@ant-design/icons": "4.8.0",
     "@vercel/analytics": "^1.6.1",
     "framer-motion": "^11.0.0",
+    "gray-matter": "4.0.3",
     "lucide-react": "^0.400.0",
     "next": "^14.2.0",
     "posthog-js": "^1.343.2",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-markdown": "8.0.7",
+    "react-syntax-highlighter": "15.5.0"
   },
   "devDependencies": {
     "@playwright/test": "1.50.1",

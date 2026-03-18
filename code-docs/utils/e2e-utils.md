@@ -125,7 +125,6 @@ ldf.mock.request('id', { response }); // Inline mocking
 | `index.js`           | CLI entry point (`npx @lowdefy/e2e-utils`)  |
 | `detectApps.js`      | Finds Lowdefy apps in `app/` or `apps/`     |
 | `generateFiles.js`   | Creates e2e folder structure from templates |
-| `installDeps.js`     | Package manager detection and install       |
 | `updateGitignore.js` | Adds test artifacts to .gitignore           |
 
 ### Config (`src/config.js`)
@@ -470,12 +469,12 @@ await ldf.state('key').expect.toBe(value, { timeout: 10000 });
 
 ## Environment Variables
 
-| Variable                  | Set By                | Used By        | Purpose                                                         |
-| ------------------------- | --------------------- | -------------- | --------------------------------------------------------------- |
-| `NEXT_PUBLIC_LOWDEFY_E2E` | webServer command     | Client runtime | Exposes `window.lowdefy` for state/validation access            |
-| `LOWDEFY_BUILD_DIR`       | `createConfig()`      | Fixtures       | Absolute path to build artifacts for manifest/helper resolution |
-| `LOWDEFY_E2E_MOCKS_FILE`  | `createConfig()`      | Fixtures       | Absolute path to static mocks YAML file                         |
-| `MDB_E2E_URI`             | User (.env.e2e.local) | mdb fixture    | MongoDB test database connection string                         |
+| Variable                  | Set By                                    | Used By        | Purpose                                                         |
+| ------------------------- | ----------------------------------------- | -------------- | --------------------------------------------------------------- |
+| `NEXT_PUBLIC_LOWDEFY_E2E` | webServer command                         | Client runtime | Exposes `window.lowdefy` for state/validation access            |
+| `LOWDEFY_BUILD_DIR`       | `createConfig()`                          | Fixtures       | Absolute path to build artifacts for manifest/helper resolution |
+| `LOWDEFY_E2E_MOCKS_FILE`  | `createConfig()`                          | Fixtures       | Absolute path to static mocks YAML file                         |
+| `LOWDEFY_E2E_MONGODB_URI` | User (.env.e2e.local) or `configureMdb()` | mdb fixture    | MongoDB test database connection string                         |
 
 `NEXT_PUBLIC_LOWDEFY_E2E=true` is critical: without it, `window.lowdefy` is not exposed and all state/request/validation assertions fail.
 
@@ -499,7 +498,6 @@ src/
 │   ├── index.js                # CLI entry
 │   ├── detectApps.js
 │   ├── generateFiles.js
-│   ├── installDeps.js
 │   ├── updateGitignore.js
 │   └── templates/
 │       ├── playwright.config.js.template

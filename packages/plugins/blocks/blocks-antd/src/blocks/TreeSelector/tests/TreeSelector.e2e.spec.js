@@ -16,17 +16,20 @@
 
 import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { escapeId } from '@lowdefy/e2e-utils';
 
 // Helper to get the tree container using framework wrapper ID (bl-{blockId})
-const getTree = (page, blockId) => page.locator(`#bl-${blockId} .ant-tree`);
+const getTree = (page, blockId) => page.locator(`#bl-${escapeId(blockId)} .ant-tree`);
 
 // Helper to get a tree node by its title text
 const getTreeNodeByText = (page, blockId, label) =>
-  page.locator(`#bl-${blockId} .ant-tree-treenode`).filter({ hasText: label });
+  page.locator(`#bl-${escapeId(blockId)} .ant-tree-treenode`).filter({ hasText: label });
 
 // Helper to get a clickable tree node title by text
 const getTreeNodeTitle = (page, blockId, label) =>
-  page.locator(`#bl-${blockId} .ant-tree-node-content-wrapper`).filter({ hasText: label });
+  page
+    .locator(`#bl-${escapeId(blockId)} .ant-tree-node-content-wrapper`)
+    .filter({ hasText: label });
 
 // Helper to get the expand/collapse switcher for a node
 const getTreeNodeSwitcher = (page, blockId, label) =>

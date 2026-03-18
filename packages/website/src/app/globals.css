@@ -153,6 +153,72 @@
   color: #94a3b8;
 }
 
+/* Article content typography */
+.article-content {
+  @apply text-slate-700 dark:text-slate-300 leading-relaxed;
+}
+
+.article-content p {
+  @apply mb-6 text-base sm:text-lg leading-relaxed;
+}
+
+.article-content h2 {
+  @apply text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white font-mono mt-12 mb-4;
+}
+
+.article-content h3 {
+  @apply text-xl sm:text-2xl font-bold text-slate-900 dark:text-white font-mono mt-10 mb-3;
+}
+
+.article-content ul,
+.article-content ol {
+  @apply mb-6 pl-6;
+}
+
+.article-content ul {
+  @apply list-disc;
+}
+
+.article-content ol {
+  @apply list-decimal;
+}
+
+.article-content li {
+  @apply mb-2 text-base sm:text-lg leading-relaxed;
+}
+
+.article-content code {
+  @apply font-mono text-sm bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 border border-slate-200 dark:border-slate-700;
+}
+
+.article-content pre {
+  @apply mb-6 p-4 bg-slate-900 dark:bg-slate-800/80 border border-slate-800 dark:border-slate-700 overflow-x-auto;
+}
+
+.article-content pre code {
+  @apply bg-transparent border-none p-0 text-slate-100;
+}
+
+.article-content blockquote {
+  @apply mb-6 pl-4 border-l-2 border-primary-500/40 text-slate-600 dark:text-slate-400 italic;
+}
+
+.article-content strong {
+  @apply font-bold text-slate-900 dark:text-white;
+}
+
+.article-content a {
+  @apply text-primary-500 hover:text-primary-400 underline underline-offset-2 transition-colors;
+}
+
+.article-content img {
+  @apply my-8 w-full;
+}
+
+.article-content hr {
+  @apply my-8 border-slate-200 dark:border-slate-800;
+}
+
 /* Dark scrollbar for code blocks */
 .scrollbar-dark::-webkit-scrollbar {
   width: 6px;
