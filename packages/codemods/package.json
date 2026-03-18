@@ -13,5 +13,8 @@
     "registry.json",
     "v*/"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {}
 }
