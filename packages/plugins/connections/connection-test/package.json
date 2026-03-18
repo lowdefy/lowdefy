@@ -24,7 +24,7 @@
     "@lowdefy/errors": "4.7.0"
   },
   "devDependencies": {
-    "@lowdefy/node-utils": "4.5.2"
+    "@lowdefy/node-utils": "4.7.0"
   },
   "publishConfig": {
     "access": "public"

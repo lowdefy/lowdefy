@@ -594,8 +594,8 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/node-utils':
-        specifier: 4.5.2
-        version: 4.5.2
+        specifier: 4.7.0
+        version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.0
         version: 0.8.0(@swc/core@1.15.18)
@@ -622,8 +622,8 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/node-utils':
-        specifier: 4.5.2
-        version: 4.5.2
+        specifier: 4.7.0
+        version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.0
         version: 0.8.0(@swc/core@1.15.18)
@@ -671,11 +671,11 @@ importers:
         version: 18.2.0(react@18.2.0)
     devDependencies:
       '@lowdefy/block-dev-e2e':
-        specifier: 4.6.0
-        version: 4.6.0
+        specifier: 4.7.0
+        version: link:../../../utils/block-dev-e2e
       '@lowdefy/e2e-utils':
-        specifier: 4.6.0
-        version: 4.6.0(@playwright/test@1.50.1)
+        specifier: 4.7.0
+        version: link:../../../utils/e2e-utils
       '@playwright/test':
         specifier: 1.50.1
         version: 1.50.1
@@ -800,11 +800,11 @@ importers:
         version: 18.2.0(react@18.2.0)
     devDependencies:
       '@lowdefy/block-dev-e2e':
-        specifier: 4.6.0
-        version: 4.6.0
+        specifier: 4.7.0
+        version: link:../../../utils/block-dev-e2e
       '@lowdefy/e2e-utils':
-        specifier: 4.6.0
-        version: 4.6.0(@playwright/test@1.50.1)
+        specifier: 4.7.0
+        version: link:../../../utils/e2e-utils
       '@playwright/test':
         specifier: 1.50.1
         version: 1.50.1
@@ -834,11 +834,11 @@ importers:
         version: 18.2.0(react@18.2.0)
     devDependencies:
       '@lowdefy/block-dev-e2e':
-        specifier: 4.6.0
-        version: 4.6.0
+        specifier: 4.7.0
+        version: link:../../../utils/block-dev-e2e
       '@lowdefy/e2e-utils':
-        specifier: 4.6.0
-        version: 4.6.0(@playwright/test@1.50.1)
+        specifier: 4.7.0
+        version: link:../../../utils/e2e-utils
       '@playwright/test':
         specifier: 1.50.1
         version: 1.50.1
@@ -868,11 +868,11 @@ importers:
         version: 18.2.0(react@18.2.0)
     devDependencies:
       '@lowdefy/block-dev-e2e':
-        specifier: 4.6.0
-        version: 4.6.0
+        specifier: 4.7.0
+        version: link:../../../utils/block-dev-e2e
       '@lowdefy/e2e-utils':
-        specifier: 4.6.0
-        version: 4.6.0(@playwright/test@1.50.1)
+        specifier: 4.7.0
+        version: link:../../../utils/e2e-utils
       '@playwright/test':
         specifier: 1.50.1
         version: 1.50.1
@@ -914,11 +914,11 @@ importers:
         version: 3.0.0
     devDependencies:
       '@lowdefy/block-dev-e2e':
-        specifier: 4.6.0
-        version: 4.6.0
+        specifier: 4.7.0
+        version: link:../../../utils/block-dev-e2e
       '@lowdefy/e2e-utils':
-        specifier: 4.6.0
-        version: 4.6.0(@playwright/test@1.50.1)
+        specifier: 4.7.0
+        version: link:../../../utils/e2e-utils
       '@playwright/test':
         specifier: 1.50.1
         version: 1.50.1
@@ -948,11 +948,11 @@ importers:
         version: 18.2.0(react@18.2.0)
     devDependencies:
       '@lowdefy/block-dev-e2e':
-        specifier: 4.6.0
-        version: 4.6.0
+        specifier: 4.7.0
+        version: link:../../../utils/block-dev-e2e
       '@lowdefy/e2e-utils':
-        specifier: 4.6.0
-        version: 4.6.0(@playwright/test@1.50.1)
+        specifier: 4.7.0
+        version: link:../../../utils/e2e-utils
       '@playwright/test':
         specifier: 1.50.1
         version: 1.50.1
@@ -1233,8 +1233,8 @@ importers:
         version: link:../../../utils/errors
     devDependencies:
       '@lowdefy/node-utils':
-        specifier: 4.5.2
-        version: 4.5.2
+        specifier: 4.7.0
+        version: link:../../../utils/node-utils
 
   packages/plugins/operators/operators-change-case:
     dependencies:
@@ -1249,8 +1249,8 @@ importers:
         version: 5.4.0
     devDependencies:
       '@lowdefy/node-utils':
-        specifier: 4.5.2
-        version: 4.5.2
+        specifier: 4.7.0
+        version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.0
         version: 0.8.0(@swc/core@1.15.18)
@@ -1308,8 +1308,8 @@ importers:
         version: 1.0.2
     devDependencies:
       '@lowdefy/node-utils':
-        specifier: 4.5.2
-        version: 4.5.2
+        specifier: 4.7.0
+        version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.0
         version: 0.8.0(@swc/core@1.15.18)
@@ -1339,8 +1339,8 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/node-utils':
-        specifier: 4.5.2
-        version: 4.5.2
+        specifier: 4.7.0
+        version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.0
         version: 0.8.0(@swc/core@1.15.18)
@@ -1373,8 +1373,8 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/node-utils':
-        specifier: 4.5.2
-        version: 4.5.2
+        specifier: 4.7.0
+        version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.0
         version: 0.8.0(@swc/core@1.15.18)
@@ -1404,8 +1404,8 @@ importers:
         version: 6.4.9
     devDependencies:
       '@lowdefy/node-utils':
-        specifier: 4.5.2
-        version: 4.5.2
+        specifier: 4.7.0
+        version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.0
         version: 0.8.0(@swc/core@1.15.18)
@@ -1435,8 +1435,8 @@ importers:
         version: link:../../../operators
     devDependencies:
       '@lowdefy/node-utils':
-        specifier: 4.5.2
-        version: 4.5.2
+        specifier: 4.7.0
+        version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.0
         version: 0.8.0(@swc/core@1.15.18)
@@ -1469,8 +1469,8 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/node-utils':
-        specifier: 4.5.2
-        version: 4.5.2
+        specifier: 4.7.0
+        version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.0
         version: 0.8.0(@swc/core@1.15.18)
@@ -1503,8 +1503,8 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/node-utils':
-        specifier: 4.5.2
-        version: 4.5.2
+        specifier: 4.7.0
+        version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.0
         version: 0.8.0(@swc/core@1.15.18)
@@ -1524,8 +1524,8 @@ importers:
   packages/plugins/plugins/plugin-auth0:
     devDependencies:
       '@lowdefy/node-utils':
-        specifier: 4.5.2
-        version: 4.5.2
+        specifier: 4.7.0
+        version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.0
         version: 0.8.0(@swc/core@1.15.18)
@@ -1609,8 +1609,8 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/node-utils':
-        specifier: 4.5.2
-        version: 4.5.2
+        specifier: 4.7.0
+        version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.0
         version: 0.8.0(@swc/core@1.15.18)
@@ -1637,8 +1637,8 @@ importers:
         version: 4.24.5(next@13.5.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(nodemailer@6.9.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
     devDependencies:
       '@lowdefy/node-utils':
-        specifier: 4.5.2
-        version: 4.5.2
+        specifier: 4.7.0
+        version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.0
         version: 0.8.0(@swc/core@1.15.18)
@@ -3516,27 +3516,6 @@ packages:
 
   '@js-joda/core@5.5.3':
     resolution: {integrity: sha512-7dqNYwG8gCt4hfg5PKgM7xLEcgSBcx/UgC92OMnhMmvAnq11QzDFPrxUkNR/u5kn17WWLZ8beZ4A3Qrz4pZcmQ==}
-
-  '@lowdefy/block-dev-e2e@4.6.0':
-    resolution: {integrity: sha512-eEHznyHFt/pnwR2Le1hCnKIrjRdJ5DBdETclt4DUmeeRV8VuI1cs2XD/Re2SmFCKQBithMCftecFpBklsgVGYg==}
-
-  '@lowdefy/e2e-utils@4.6.0':
-    resolution: {integrity: sha512-Czv1O0NiVbCCnfLesnskJ4UZ24PBKohZ02ngI88O9oL0bGS1ExAHdqlg2Q5ZKXV0Cp6sj2LPVkJZ1PWDgPh8Sg==}
-    hasBin: true
-    peerDependencies:
-      '@playwright/test': 1.50.1
-
-  '@lowdefy/errors@4.6.0':
-    resolution: {integrity: sha512-Riw9KcblXSWdAIrN90uwYw1w/bvBngZ6QaxOv3+mYKe9sjwN9tn2DNp5oS6OSTak0vHh3iS6fMoFr3qKWmnTJg==}
-
-  '@lowdefy/helpers@4.5.2':
-    resolution: {integrity: sha512-kARdRGH8sR+d2Mwx84UGhTtIY/W7S1oDbiwiGK+3IHs3LCTaKnggQWEyjjJ6UGxETZm5wFyk7cY9EdxadIKjjg==}
-
-  '@lowdefy/helpers@4.6.0':
-    resolution: {integrity: sha512-vKkO7oMyL2Ecuh7haRceTUSgEEBLf1HktAYZOlhJVKrzQwfiT/NjmdThVpKyadIvBtomFlGgbVI7YG8QGKietQ==}
-
-  '@lowdefy/node-utils@4.5.2':
-    resolution: {integrity: sha512-3d+cByIBwa7prME1S6XHeaY88ZhlXDNxnYtGhQgLfuBQrFD05QED7uyPuaDnDH4uyEPc2LGOzK8BwFrSiLLCuw==}
 
   '@manypkg/find-root@1.1.0':
     resolution: {integrity: sha512-mki5uBvhHzO8kYYix/WRy2WX8S3B5wdVSc9D6KcU5lQNglP2yt58/VfLuAK49glRXChosY8ap2oJ1qgma3GUVA==}
@@ -13334,34 +13313,6 @@ snapshots:
       '@jridgewell/sourcemap-codec': 1.4.15
 
   '@js-joda/core@5.5.3': {}
-
-  '@lowdefy/block-dev-e2e@4.6.0':
-    dependencies:
-      '@lowdefy/e2e-utils': 4.6.0(@playwright/test@1.50.1)
-      '@playwright/test': 1.50.1
-
-  '@lowdefy/e2e-utils@4.6.0(@playwright/test@1.50.1)':
-    dependencies:
-      '@lowdefy/helpers': 4.6.0
-      '@playwright/test': 1.50.1
-      js-yaml: 4.1.0
-      prompts: 2.4.2
-
-  '@lowdefy/errors@4.6.0': {}
-
-  '@lowdefy/helpers@4.5.2':
-    dependencies:
-      lodash.merge: 4.6.2
-
-  '@lowdefy/helpers@4.6.0':
-    dependencies:
-      '@lowdefy/errors': 4.6.0
-      lodash.merge: 4.6.2
-
-  '@lowdefy/node-utils@4.5.2':
-    dependencies:
-      '@lowdefy/helpers': 4.5.2
-      fs-extra: 11.1.1
 
   '@manypkg/find-root@1.1.0':
     dependencies:
