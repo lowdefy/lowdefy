@@ -1,0 +1,170 @@
+# Copyright 2020-2026 Lowdefy, Inc
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Pre-built Index
+  description: >
+    Load a pre-built search index from a static JSON file. The index is
+    generated at build time by a _ref transformer and served from the
+    public/ folder. See the guide above for the full transformer code.
+  blocks:
+    - id: example_search_prebuilt
+      type: Search
+      properties:
+        indexUrl: /search-index.json
+        placeholder: Search pages...
+        result:
+          title: title
+          description: snippet
+          category: section
+          pageId: pageId
+        groups:
+          - label: Concepts
+            match:
+              section: Concepts
+            icon: AiOutlineBulb
+          - label: Blocks
+            match:
+              section: Blocks
+            icon: AiOutlineLayout
+      events:
+        onSelect:
+          - id: navigate
+            type: Link
+            params:
+              pageId:
+                _event: pageId
+
+- title: Runtime Documents
+  description: >
+    Pass an array of documents directly — no index file needed. The block
+    indexes them client-side using MiniSearch. Good for small datasets,
+    dynamic content from requests, or prototyping.
+  blocks:
+    - id: example_search_runtime
+      type: Search
+      properties:
+        documents:
+          - id: users
+            title: User Management
+            body: Create, edit, and deactivate user accounts. Assign roles and permissions.
+            category: Admin
+          - id: billing
+            title: Billing & Invoices
+            body: View invoices, update payment methods, and download receipts.
+            category: Finance
+          - id: reports
+            title: Analytics Reports
+            body: Dashboard with charts for revenue, signups, and engagement metrics.
+            category: Analytics
+          - id: settings
+            title: App Settings
+            body: Configure notifications, theme, language, and integration API keys.
+            category: Admin
+          - id: api-keys
+            title: API Keys
+            body: Generate and revoke API keys for third-party integrations.
+            category: Admin
+        fields: [title, body]
+        storeFields: [title, category, id]
+        searchOptions:
+          boost:
+            title: 2
+          fuzzy: 0.2
+        result:
+          title: title
+          description: body
+          category: category
+        groups:
+          - label: Admin
+            match:
+              category: Admin
+            icon: AiOutlineSetting
+          - label: Finance
+            match:
+              category: Finance
+            icon: AiOutlineDollar
+          - label: Analytics
+            match:
+              category: Analytics
+            icon: AiOutlineBarChart
+        placeholder: Search features...
+        label: Find
+        shortcut: mod+k
+      events:
+        onSelect:
+          - id: show_result
+            type: DisplayMessage
+            params:
+              content:
+                _string.concat:
+                  - 'Selected: '
+                  - _event: title
+
+- title: Custom Shortcut
+  description: >
+    Change the keyboard shortcut and trigger label. The shortcut badge
+    updates automatically.
+  blocks:
+    - id: example_search_custom_shortcut
+      type: Search
+      properties:
+        indexUrl: /search-index.json
+        shortcut: mod+j
+        label: Quick Find
+        placeholder: Quick find...
+      events:
+        onSelect:
+          - id: navigate
+            type: Link
+            params:
+              pageId:
+                _event: pageId
+
+- title: Analytics Events
+  description: >
+    Use onSearch and onSelect events to track search analytics — what users
+    search for, how many results they see, and which results they click.
+  blocks:
+    - id: example_search_analytics
+      type: Search
+      properties:
+        indexUrl: /search-index.json
+      events:
+        onSearch:
+          - id: track_search
+            type: DisplayMessage
+            params:
+              content:
+                _string.concat:
+                  - 'Search: "'
+                  - _event: value
+                  - '" ('
+                  - _event: resultCount
+                  - ' results)'
+        onSelect:
+          - id: track_click
+            type: DisplayMessage
+            params:
+              content:
+                _string.concat:
+                  - 'Clicked "'
+                  - _event: title
+                  - '" for query "'
+                  - _event: query
+                  - '"'
+          - id: navigate
+            type: Link
+            params:
+              pageId:
+                _event: pageId

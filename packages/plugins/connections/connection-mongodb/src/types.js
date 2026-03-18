@@ -1,4 +1,3 @@
-/* eslint-disable import/namespace */
 /*
   Copyright 2020-2026 Lowdefy, Inc
 
@@ -15,15 +14,21 @@
   limitations under the License.
 */
 
-import * as adapters from './auth/adapters.js';
-import * as connections from './connections.js';
-
 export default {
+  connections: ['MongoDBCollection'],
+  requests: [
+    'MongoDBAggregation',
+    'MongoDBBulkWrite',
+    'MongoDBDeleteMany',
+    'MongoDBDeleteOne',
+    'MongoDBFind',
+    'MongoDBFindOne',
+    'MongoDBInsertMany',
+    'MongoDBInsertOne',
+    'MongoDBUpdateMany',
+    'MongoDBUpdateOne',
+  ],
   auth: {
-    adapters: Object.keys(adapters),
+    adapters: ['MongoDBAdapter'],
   },
-  connections: Object.keys(connections),
-  requests: Object.keys(connections)
-    .map((connection) => Object.keys(connections[connection].requests))
-    .flat(),
 };

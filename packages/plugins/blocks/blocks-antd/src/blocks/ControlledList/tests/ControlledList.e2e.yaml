@@ -45,7 +45,7 @@ blocks:
     type: ControlledList
     properties:
       title: List With Items
-    areas:
+    slots:
       content:
         blocks:
           - id: controlledlist_with_items_text
@@ -115,7 +115,7 @@ blocks:
     properties:
       title: Min Items List
       minItems: 2
-    areas:
+    slots:
       content:
         blocks:
           - id: controlledlist_minitems_text
@@ -134,7 +134,7 @@ blocks:
     type: ControlledList
     properties:
       title: Add Items List
-    areas:
+    slots:
       content:
         blocks:
           - id: controlledlist_add_text
@@ -149,7 +149,7 @@ blocks:
     type: ControlledList
     properties:
       title: Remove Items List
-    areas:
+    slots:
       content:
         blocks:
           - id: controlledlist_remove_text

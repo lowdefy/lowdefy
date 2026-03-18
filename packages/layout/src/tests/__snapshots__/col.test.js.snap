@@ -1,106 +1,38 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`align 1`] = `
-.emotion-1 {
-  height: 100px;
-}
-
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
-.emotion-4 {
-  background: #40AA55;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="lf-col"
     id="bl-align23456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <div
       id="align23456"
-    >
-      <div
-        class="ant-row emotion-1"
-        id="align-content23456"
-      >
-        <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-          id="bl-One23456"
-          style="align-self: flex-start;"
-        >
-          <button
-            class="ant-btn ant-btn-default"
-            id="One23456"
-            type="button"
-          >
-            <span>
-              One23456
-            </span>
-          </button>
-        </div>
-        <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-          id="bl-Two23456"
-          style="align-self: center;"
-        >
-          <button
-            class="ant-btn ant-btn-default"
-            id="Two23456"
-            type="button"
-          >
-            <span>
-              Two23456
-            </span>
-          </button>
-        </div>
-        <div
-          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-          id="bl-Three23456"
-          style="align-self: flex-end;"
-        >
-          <button
-            class="ant-btn ant-btn-default"
-            id="Three23456"
-            type="button"
-          >
-            <span>
-              Three23456
-            </span>
-          </button>
-        </div>
-      </div>
-    </div>
+    />
   </div>
 </div>
 `;
 
 exports[`center content 1`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="lf-col"
     id="bl-center content23456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <div
       id="center content23456"
     >
       <div
-        class="ant-row ant-row-center emotion-1"
+        class="lf-row"
         id="center content-content23456"
+        style="justify-content: center; flex-wrap: wrap;"
       >
         <div
-          class="ant-col emotion-2"
+          class=""
           id="bl-One23456"
-          style="flex: 0 1 800px;"
+          style="flex: 0 1 800px; background: rgb(64, 160, 255);"
         >
           <div
             id="One23456"
@@ -116,30 +48,24 @@ exports[`center content 1`] = `
 `;
 
 exports[`grow 0 0 1`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="lf-col"
     id="bl-grow 0 023456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <div
       id="grow 0 023456"
     >
       <div
-        class="ant-row emotion-1"
+        class="lf-row"
         id="grow 0 0-content23456"
+        style="flex-wrap: wrap;"
       >
         <div
-          class="ant-col emotion-2"
+          class=""
           id="bl-One23456"
-          style="flex: 0 1 auto;"
+          style="flex: 0 1 auto; background: rgb(64, 160, 255);"
         >
           <div
             id="One23456"
@@ -149,9 +75,9 @@ exports[`grow 0 0 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-3"
+          class=""
           id="bl-Two23456"
-          style="flex: 0 1 auto;"
+          style="flex: 0 1 auto; background: rgb(255, 79, 175);"
         >
           <div
             id="Two23456"
@@ -167,30 +93,24 @@ exports[`grow 0 0 1`] = `
 `;
 
 exports[`grow 0 1 1`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="lf-col"
     id="bl-grow 0 123456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <div
       id="grow 0 123456"
     >
       <div
-        class="ant-row emotion-1"
+        class="lf-row"
         id="grow 0 1-content23456"
+        style="flex-wrap: wrap;"
       >
         <div
-          class="ant-col emotion-2"
+          class=""
           id="bl-One23456"
-          style="flex: 0 1 auto;"
+          style="flex: 0 1 auto; background: rgb(64, 160, 255);"
         >
           <div
             id="One23456"
@@ -200,9 +120,9 @@ exports[`grow 0 1 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-3"
+          class=""
           id="bl-Two23456"
-          style="flex: 1 1 auto;"
+          style="flex: 1 1 auto; background: rgb(255, 79, 175);"
         >
           <div
             id="Two23456"
@@ -218,30 +138,24 @@ exports[`grow 0 1 1`] = `
 `;
 
 exports[`grow 1 0 1`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="lf-col"
     id="bl-grow 1 023456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <div
       id="grow 1 023456"
     >
       <div
-        class="ant-row emotion-1"
+        class="lf-row"
         id="grow 1 0-content23456"
+        style="flex-wrap: wrap;"
       >
         <div
-          class="ant-col emotion-2"
+          class=""
           id="bl-One23456"
-          style="flex: 1 1 auto;"
+          style="flex: 1 1 auto; background: rgb(64, 160, 255);"
         >
           <div
             id="One23456"
@@ -251,9 +165,9 @@ exports[`grow 1 0 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-3"
+          class=""
           id="bl-Two23456"
-          style="flex: 0 1 auto;"
+          style="flex: 0 1 auto; background: rgb(255, 79, 175);"
         >
           <div
             id="Two23456"
@@ -269,30 +183,24 @@ exports[`grow 1 0 1`] = `
 `;
 
 exports[`grow 1 1 1`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="lf-col"
     id="bl-grow 1 123456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <div
       id="grow 1 123456"
     >
       <div
-        class="ant-row emotion-1"
+        class="lf-row"
         id="grow 1 1-content23456"
+        style="flex-wrap: wrap;"
       >
         <div
-          class="ant-col emotion-2"
+          class=""
           id="bl-One23456"
-          style="flex: 1 1 auto;"
+          style="flex: 1 1 auto; background: rgb(64, 160, 255);"
         >
           <div
             id="One23456"
@@ -302,9 +210,9 @@ exports[`grow 1 1 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-3"
+          class=""
           id="bl-Two23456"
-          style="flex: 1 1 auto;"
+          style="flex: 1 1 auto; background: rgb(255, 79, 175);"
         >
           <div
             id="Two23456"
@@ -320,29 +228,24 @@ exports[`grow 1 1 1`] = `
 `;
 
 exports[`offset 1`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="lf-col"
     id="bl-offset23456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <div
       id="offset23456"
     >
       <div
-        class="ant-row emotion-1"
+        class="lf-row"
         id="offset-content23456"
+        style="flex-wrap: wrap;"
       >
         <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-20 ant-col-md-offset-4"
+          class="lf-col"
           id="bl-One23456"
+          style="--lf-span: 24; --lf-span-md: 20; --lf-offset-md: 4; background: rgb(64, 160, 255);"
         >
           <div
             id="One23456"
@@ -352,8 +255,9 @@ exports[`offset 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-10 ant-col-md-offset-4"
+          class="lf-col"
           id="bl-Two23456"
+          style="--lf-span: 24; --lf-span-md: 10; --lf-offset-md: 4; background: rgb(255, 79, 175);"
         >
           <div
             id="Two23456"
@@ -369,34 +273,24 @@ exports[`offset 1`] = `
 `;
 
 exports[`offset push pull span 1`] = `
-.emotion-2 {
-  background: #40AA55;
-}
-
-.emotion-3 {
-  background: #40a0FF;
-}
-
-.emotion-4 {
-  background: #FF4FaF;
-  opacity: 0.5;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="lf-col"
     id="bl-offset push pull span23456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <div
       id="offset push pull span23456"
     >
       <div
-        class="ant-row emotion-1"
+        class="lf-row"
         id="offset push pull span-content23456"
+        style="flex-wrap: wrap;"
       >
         <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-md-offset-2"
+          class="lf-col"
           id="bl-One23456"
+          style="--lf-span: 24; --lf-span-md: 6; --lf-offset-md: 2; background: rgb(64, 170, 85);"
         >
           <div
             id="One23456"
@@ -406,8 +300,9 @@ exports[`offset push pull span 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-md-push-1"
+          class="lf-col lf-col-push"
           id="bl-One23456"
+          style="--lf-span: 24; --lf-span-md: 6; --lf-push-md: 1; background: rgb(64, 160, 255);"
         >
           <div
             id="One23456"
@@ -417,8 +312,9 @@ exports[`offset push pull span 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-md-pull-1"
+          class="lf-col lf-col-pull"
           id="bl-Two23456"
+          style="--lf-span: 24; --lf-span-md: 6; --lf-pull-md: 1; background: rgb(255, 79, 175); opacity: 0.5;"
         >
           <div
             id="Two23456"
@@ -434,29 +330,24 @@ exports[`offset push pull span 1`] = `
 `;
 
 exports[`order 1`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="lf-col"
     id="bl-order23456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <div
       id="order23456"
     >
       <div
-        class="ant-row emotion-1"
+        class="lf-row"
         id="order-content23456"
+        style="flex-wrap: wrap;"
       >
         <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-md-order-1"
+          class="lf-col"
           id="bl-One23456"
+          style="--lf-span: 24; --lf-span-md: 24; --lf-order-md: 1; background: rgb(64, 160, 255);"
         >
           <div
             id="One23456"
@@ -466,8 +357,9 @@ exports[`order 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-md-order-0"
+          class="lf-col"
           id="bl-Two23456"
+          style="--lf-span: 24; --lf-span-md: 24; --lf-order-md: 0; background: rgb(255, 79, 175);"
         >
           <div
             id="Two23456"
@@ -483,30 +375,24 @@ exports[`order 1`] = `
 `;
 
 exports[`pull 1`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-  opacity: 0.5;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="lf-col"
     id="bl-pull23456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <div
       id="pull23456"
     >
       <div
-        class="ant-row emotion-1"
+        class="lf-row"
         id="pull-content23456"
+        style="flex-wrap: wrap;"
       >
         <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          class="lf-col"
           id="bl-One23456"
+          style="--lf-span: 24; --lf-span-md: 10; background: rgb(64, 160, 255);"
         >
           <div
             id="One23456"
@@ -516,8 +402,9 @@ exports[`pull 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-10 ant-col-md-pull-1"
+          class="lf-col lf-col-pull"
           id="bl-Two23456"
+          style="--lf-span: 24; --lf-span-md: 10; --lf-pull-md: 1; background: rgb(255, 79, 175); opacity: 0.5;"
         >
           <div
             id="Two23456"
@@ -533,30 +420,24 @@ exports[`pull 1`] = `
 `;
 
 exports[`push 1`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-  opacity: 0.5;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="lf-col"
     id="bl-push23456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <div
       id="push23456"
     >
       <div
-        class="ant-row emotion-1"
+        class="lf-row"
         id="push-content23456"
+        style="flex-wrap: wrap;"
       >
         <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-10 ant-col-md-push-1"
+          class="lf-col lf-col-push"
           id="bl-One23456"
+          style="--lf-span: 24; --lf-span-md: 10; --lf-push-md: 1; background: rgb(64, 160, 255);"
         >
           <div
             id="One23456"
@@ -566,8 +447,9 @@ exports[`push 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+          class="lf-col"
           id="bl-Two23456"
+          style="--lf-span: 24; --lf-span-md: 10; background: rgb(255, 79, 175); opacity: 0.5;"
         >
           <div
             id="Two23456"
@@ -583,30 +465,24 @@ exports[`push 1`] = `
 `;
 
 exports[`shrink 1 1 1`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="lf-col"
     id="bl-shrink 1 123456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <div
       id="shrink 1 123456"
     >
       <div
-        class="ant-row emotion-1"
+        class="lf-row"
         id="shrink 1 1-content23456"
+        style="flex-wrap: wrap;"
       >
         <div
-          class="ant-col emotion-2"
+          class=""
           id="bl-One23456"
-          style="flex: 0 1 auto;"
+          style="flex: 0 1 auto; background: rgb(64, 160, 255);"
         >
           <div
             id="One23456"
@@ -616,9 +492,9 @@ exports[`shrink 1 1 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-3"
+          class=""
           id="bl-Two23456"
-          style="flex: 0 1 auto;"
+          style="flex: 0 1 auto; background: rgb(255, 79, 175);"
         >
           <div
             id="Two23456"
@@ -634,30 +510,24 @@ exports[`shrink 1 1 1`] = `
 `;
 
 exports[`size 1`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="lf-col"
     id="bl-size23456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <div
       id="size23456"
     >
       <div
-        class="ant-row emotion-1"
+        class="lf-row"
         id="size-content23456"
+        style="flex-wrap: wrap;"
       >
         <div
-          class="ant-col emotion-2"
+          class=""
           id="bl-One23456"
-          style="flex: 0 1 200px;"
+          style="flex: 0 1 200px; background: rgb(64, 160, 255);"
         >
           <div
             id="One23456"
@@ -667,9 +537,9 @@ exports[`size 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-3"
+          class=""
           id="bl-Two23456"
-          style="flex: 0 1 400px;"
+          style="flex: 0 1 400px; background: rgb(255, 79, 175);"
         >
           <div
             id="Two23456"
@@ -685,29 +555,24 @@ exports[`size 1`] = `
 `;
 
 exports[`span 1`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="lf-col"
     id="bl-span23456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <div
       id="span23456"
     >
       <div
-        class="ant-row emotion-1"
+        class="lf-row"
         id="span-content23456"
+        style="flex-wrap: wrap;"
       >
         <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+          class="lf-col"
           id="bl-One23456"
+          style="--lf-span: 24; --lf-span-md: 4; background: rgb(64, 160, 255);"
         >
           <div
             id="One23456"
@@ -717,8 +582,9 @@ exports[`span 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+          class="lf-col"
           id="bl-Two23456"
+          style="--lf-span: 24; --lf-span-md: 8; background: rgb(255, 79, 175);"
         >
           <div
             id="Two23456"
@@ -728,8 +594,9 @@ exports[`span 1`] = `
           </div>
         </div>
         <div
-          class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-15"
+          class="lf-col"
           id="bl-Three23456"
+          style="--lf-span: 24; --lf-span-md: 15;"
         >
           <div
             id="Three23456"

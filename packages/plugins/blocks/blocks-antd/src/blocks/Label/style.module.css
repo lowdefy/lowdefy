@@ -1,0 +1,185 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+/*
+  Antd Form.Item styles needed by the Label block.
+
+  Label reuses ant-form-item-* class names without rendering antd's <Form> or
+  <Form.Item> components, so their CSS-in-JS styles are never generated.
+  This file provides the subset of Form.Item styles that Label depends on.
+
+  Styles are extracted from antd v6 CSS-in-JS output and placed in @layer antd
+  so they sit at the correct cascade priority.
+*/
+
+@layer antd {
+  /* Label column */
+  :global(.ant-form-item .ant-form-item-label) {
+    flex-grow: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-align: end;
+    vertical-align: middle;
+  }
+
+  :global(.ant-form-item .ant-form-item-label-left) {
+    text-align: start;
+  }
+
+  :global(.ant-form-item .ant-form-item-label > label) {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    max-width: 100%;
+    height: var(--ant-form-label-height, var(--ant-control-height));
+    color: var(--ant-form-label-color, var(--ant-color-text));
+    font-size: var(--ant-form-label-font-size, var(--ant-font-size));
+  }
+
+  /* Required asterisk */
+  :global(.ant-form-item .ant-form-item-label > label.ant-form-item-required)::before {
+    display: inline-block;
+    margin-inline-end: var(--ant-margin-xxs, 4px);
+    color: var(--ant-form-label-required-mark-color, var(--ant-color-error));
+    font-size: var(--ant-font-size);
+    font-family: SimSun, sans-serif;
+    line-height: 1;
+    content: '*';
+  }
+
+  /* Colon after label */
+  :global(.ant-form-item .ant-form-item-label > label)::after {
+    content: ':';
+    position: relative;
+    margin-block: 0;
+    margin-inline-start: var(--ant-form-label-colon-margin-inline-start, 2px);
+    margin-inline-end: var(--ant-form-label-colon-margin-inline-end, 8px);
+  }
+
+  :global(.ant-form-item .ant-form-item-label > label.ant-form-item-no-colon)::after {
+    content: '\a0';
+  }
+
+  /* Control column */
+  :global(.ant-form-item .ant-form-item-control) {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  :global(.ant-form-item .ant-form-item-control-input) {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: var(--ant-control-height);
+  }
+
+  :global(.ant-form-item .ant-form-item-control-input-content) {
+    flex: auto;
+    max-width: 100%;
+  }
+
+  /* Help text / extra */
+  :global(.ant-form-item .ant-form-item-explain),
+  :global(.ant-form-item .ant-form-item-extra) {
+    clear: both;
+    color: var(--ant-color-text-description);
+    font-size: var(--ant-font-size);
+    line-height: var(--ant-line-height);
+  }
+
+  /* Validation feedback colors */
+  :global(.ant-form-item .ant-form-item-explain-error) {
+    color: var(--ant-color-error);
+  }
+
+  :global(.ant-form-item .ant-form-item-explain-warning) {
+    color: var(--ant-color-warning);
+  }
+
+  :global(.ant-form-item .ant-form-item-explain-success) {
+    color: var(--ant-color-success);
+  }
+
+  /* Feedback icons */
+  :global(.ant-form-item .ant-form-item-feedback-icon) {
+    font-size: var(--ant-font-size);
+    text-align: center;
+    visibility: visible;
+    pointer-events: none;
+  }
+
+  :global(.ant-form-item .ant-form-item-feedback-icon-success) {
+    color: var(--ant-color-success);
+  }
+
+  :global(.ant-form-item .ant-form-item-feedback-icon-error) {
+    color: var(--ant-color-error);
+  }
+
+  :global(.ant-form-item .ant-form-item-feedback-icon-warning) {
+    color: var(--ant-color-warning);
+  }
+
+  :global(.ant-form-item .ant-form-item-feedback-icon-validating) {
+    color: var(--ant-color-primary);
+  }
+
+  /* Custom: feedback icon spacing */
+  :global(.ldf-feedback-icon) {
+    margin-inline-start: var(--ant-margin-xxs, 4px);
+  }
+}
+
+/*
+  Error/warning state for group components (Radio, Checkbox, ButtonSelector,
+  Segmented) that don't support antd's native `status` prop.
+
+  These rules must live OUTSIDE @layer antd so they beat antd's unlayered
+  CSS-in-JS output in the cascade.
+*/
+:global(.ant-form-item-has-error .ant-radio-inner) {
+  border-color: var(--ant-color-error) !important;
+}
+
+:global(.ant-form-item-has-error .ant-checkbox-inner) {
+  border-color: var(--ant-color-error) !important;
+}
+
+:global(.ant-form-item-has-error .ant-radio-button-wrapper) {
+  border-color: var(--ant-color-error) !important;
+}
+
+:global(.ant-form-item-has-error .ant-segmented) {
+  border-color: var(--ant-color-error);
+}
+
+/* Warning state */
+:global(.ant-form-item-has-warning .ant-radio-inner) {
+  border-color: var(--ant-color-warning) !important;
+}
+
+:global(.ant-form-item-has-warning .ant-checkbox-inner) {
+  border-color: var(--ant-color-warning) !important;
+}
+
+:global(.ant-form-item-has-warning .ant-radio-button-wrapper) {
+  border-color: var(--ant-color-warning) !important;
+}
+
+:global(.ant-form-item-has-warning .ant-segmented) {
+  border-color: var(--ant-color-warning);
+}

@@ -129,3 +129,45 @@ blocks:
               - true
           then: Tag closed
           else: ''
+
+  - id: tag_shortcut
+    type: Tag
+    properties:
+      title: Filter
+    events:
+      onClick:
+        shortcut: mod+f
+        try:
+          - id: filter_action
+            type: SetState
+            params:
+              filter_toggled: true
+
+  # ============================================
+  # SHORTCUT KEYBOARD TESTS
+  # ============================================
+
+  - id: tag_shortcut_fires
+    type: Tag
+    properties:
+      title: Toggle
+    events:
+      onClick:
+        shortcut: mod+j
+        try:
+          - id: set_tag_shortcut_fired
+            type: SetState
+            params:
+              tag_shortcut_fired: true
+
+  - id: tag_shortcut_fired_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _not:
+              _not:
+                _state: tag_shortcut_fired
+          then: 'shortcut:fired'
+          else: ''

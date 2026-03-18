@@ -15,8 +15,8 @@
 */
 
 import React, { useState, useEffect } from 'react';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 import { mergeObjects, get } from '@lowdefy/helpers';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 
 import Button from '../Button/Button.js';
 import Drawer from '../Drawer/Drawer.js';
@@ -25,6 +25,7 @@ import Menu from '../Menu/Menu.js';
 const MobileMenu = ({
   basePath,
   blockId,
+  classNames = {},
   components,
   events,
   methods,
@@ -32,6 +33,7 @@ const MobileMenu = ({
   pageId,
   properties,
   rename,
+  styles = {},
 }) => {
   const [openState, setOpen] = useState(false);
   useEffect(() => {
@@ -45,7 +47,7 @@ const MobileMenu = ({
     });
   });
   return (
-    <div id={blockId}>
+    <div id={blockId} className={classNames.element} style={styles.element}>
       <Button
         blockId={`${blockId}_button`}
         components={components}
@@ -99,9 +101,10 @@ const MobileMenu = ({
               properties={{
                 collapsed: false,
                 theme: 'light',
-                ...(mergeObjects(properties, { style: { marginTop: 24 } }) || {}),
+                ...properties,
                 mode: 'inline',
               }}
+              styles={{ element: { marginTop: 24 } }}
               rename={{
                 events: {
                   onClick: 'onMenuItemClick',
@@ -116,11 +119,4 @@ const MobileMenu = ({
   );
 };
 
-MobileMenu.defaultProps = blockDefaultProps;
-MobileMenu.meta = {
-  category: 'display',
-  icons: ['AiOutlineMenuUnfold', 'AiOutlineMenuFold'],
-  styles: ['blocks/MobileMenu/style.less'],
-};
-
-export default MobileMenu;
+export default withBlockDefaults(MobileMenu);

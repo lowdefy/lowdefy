@@ -1,0 +1,84 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- id: default
+  type: ColorSelector
+- id: 'properties.format: rgb'
+  type: ColorSelector
+  properties:
+    format: rgb
+- id: 'properties.format: hex'
+  type: ColorSelector
+  properties:
+    format: hex
+- id: 'properties.format: hsb'
+  type: ColorSelector
+  properties:
+    format: hsb
+- id: 'properties.showText: true'
+  type: ColorSelector
+  properties:
+    showText: true
+- id: 'properties.size: small'
+  type: ColorSelector
+  properties:
+    size: small
+- id: 'properties.size: middle'
+  type: ColorSelector
+  properties:
+    size: middle
+- id: 'properties.size: large'
+  type: ColorSelector
+  properties:
+    size: large
+- id: 'properties.disabled: true'
+  type: ColorSelector
+  properties:
+    disabled: true
+- id: 'properties.allowClear: true'
+  type: ColorSelector
+  properties:
+    allowClear: true
+- id: 'properties.trigger: hover'
+  type: ColorSelector
+  properties:
+    trigger: hover
+- id: 'properties.trigger: click'
+  type: ColorSelector
+  properties:
+    trigger: click
+- id: 'properties.mode: gradient'
+  type: ColorSelector
+  properties:
+    mode: gradient
+- id: 'properties.disabledAlpha: true'
+  type: ColorSelector
+  properties:
+    disabledAlpha: true
+- id: 'properties.disabledFormat: true'
+  type: ColorSelector
+  properties:
+    disabledFormat: true
+- id: 'properties.placement: bottomLeft'
+  type: ColorSelector
+  properties:
+    placement: bottomLeft
+- id: 'properties.arrow: false'
+  type: ColorSelector
+  properties:
+    arrow: false
+- id: 'properties.open: true'
+  type: ColorSelector
+  properties:
+    open: true

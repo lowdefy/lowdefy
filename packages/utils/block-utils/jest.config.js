@@ -12,5 +12,5 @@ export default {
   transform: {
     '^.+\\.(t|j)sx?$': ['@swc/jest', { configFile: '../../../.swcrc.test' }],
   },
-  snapshotSerializers: ['@emotion/jest/serializer', 'jest-serializer-html'],
+  snapshotSerializers: ['jest-serializer-html'],
 };

@@ -15,3 +15,5 @@
 */
 
 export { default as _custom_filter_default_value } from './operators/client/filter_default_value.js';
+export { default as _custom_yaml_parse } from './operators/client/yaml_parse.js';
+export { default as _custom_yaml_stringify } from './operators/client/yaml_stringify.js';

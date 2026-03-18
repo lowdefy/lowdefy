@@ -1,0 +1,32 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/blocks/gallery.yaml.njk
+  vars:
+    pageId: DropdownButton
+    pageTitle: DropdownButton
+    section: Display Blocks
+    filePath: blocks/display/DropdownButton.yaml
+    block_type: DropdownButton
+    antd_component: Dropdown
+    antd_url: dropdown
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/DropdownButton
+    schema: ../plugins/blocks/blocks-antd/src/blocks/DropdownButton/meta.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/DropdownButton/gallery.yaml
+    description: >
+      Button that opens a dropdown menu of action items. Each item triggers a
+      named event — define item eventNames and matching events in the block
+      events section. Supports split button mode with a primary action button
+      and a dropdown arrow.

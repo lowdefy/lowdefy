@@ -48,7 +48,7 @@ test('init blocks and SetState to set value to block', async () => {
     lowdefy,
     pageConfig,
   });
-  const { textInput } = context._internal.RootAreas.map;
+  const { textInput } = context._internal.RootSlots.map;
 
   expect(context.state).toEqual({ textInput: 'init' });
   expect(textInput.value).toEqual('init');
@@ -63,7 +63,7 @@ test('Blocks to init with no blocks passed', async () => {
     lowdefy,
     pageConfig,
   });
-  expect(context._internal.RootAreas.context.pageId).toEqual('root');
+  expect(context._internal.RootSlots.context.pageId).toEqual('root');
 });
 
 test('set block enforceType value no init', async () => {
@@ -81,7 +81,7 @@ test('set block enforceType value no init', async () => {
     lowdefy,
     pageConfig,
   });
-  const { selector } = context._internal.RootAreas.map;
+  const { selector } = context._internal.RootSlots.map;
   expect(selector.value).toEqual([]);
   expect(context.state).toEqual({ selector: [] });
 });
@@ -98,21 +98,20 @@ test('set block value to initValue in meta', async () => {
     ],
   };
   lowdefy._internal.blocks = {
+    ObjectBlock: {},
+  };
+  lowdefy._internal.blockMetas = {
     ObjectBlock: {
-      meta: {
-        category: 'input',
-        valueType: 'object',
-        initValue: {
-          a: 1,
-        },
-      },
+      category: 'input',
+      valueType: 'object',
+      initValue: { a: 1 },
     },
   };
   const context = await testContext({
     lowdefy,
     pageConfig,
   });
-  const { object_one } = context._internal.RootAreas.map;
+  const { object_one } = context._internal.RootSlots.map;
   expect(object_one.value).toEqual({ a: 1 });
   expect(context.state).toEqual({ object_one: { a: 1 } });
 });
@@ -141,7 +140,7 @@ test('Reset to change blocks back to initState', async () => {
     lowdefy,
     pageConfig,
   });
-  const { textInput } = context._internal.RootAreas.map;
+  const { textInput } = context._internal.RootSlots.map;
   expect(textInput.value).toEqual(null);
   expect(context.state).toEqual({ b: 'b', textInput: null });
   textInput.setValue('new');
@@ -149,7 +148,7 @@ test('Reset to change blocks back to initState', async () => {
   expect(context.state).toEqual({ textInput: 'new', b: 'b' });
   // Reset action sequence
   context._internal.State.resetState();
-  context._internal.RootAreas.reset(
+  context._internal.RootSlots.reset(
     serializer.deserializeFromString(context._internal.State.frozenState)
   );
   context._internal.update();
@@ -178,7 +177,7 @@ test('state should not have value if block is not visible', async () => {
     lowdefy,
     pageConfig,
   });
-  const { textInput } = context._internal.RootAreas.map;
+  const { textInput } = context._internal.RootSlots.map;
   expect(textInput.value).toBe(null);
   expect(context.state).toEqual({});
 });
@@ -483,20 +482,20 @@ test('block should only not be evaluated when visible === false', async () => {
     lowdefy,
     pageConfig,
   });
-  expect(context._internal.RootAreas.map.a.eval.properties).toEqual();
-  expect(context._internal.RootAreas.map.b.eval.properties).toEqual({ title: 'test' });
-  expect(context._internal.RootAreas.map.c.eval.properties).toEqual({ title: 'test' });
-  expect(context._internal.RootAreas.map.d.eval.properties).toEqual({ title: 'test' });
-  expect(context._internal.RootAreas.map.e.eval.properties).toEqual({ title: 'test' });
-  expect(context._internal.RootAreas.map.f.eval.properties).toEqual({ title: 'test' });
-  expect(context._internal.RootAreas.map.g.eval.properties).toEqual({ title: 'test' });
-  expect(context._internal.RootAreas.map.h.eval.properties).toEqual({ title: 'test' });
-  expect(context._internal.RootAreas.map.i.eval.properties).toEqual({ title: 'test' });
-  expect(context._internal.RootAreas.map.j.eval.properties).toEqual({ title: 'test' });
-  expect(context._internal.RootAreas.map.k.eval.properties).toEqual({ title: 'test' });
-  expect(context._internal.RootAreas.map.l.eval.properties).toEqual({ title: 'test' });
-  expect(context._internal.RootAreas.map.m.eval.properties).toEqual({ title: 'test' });
-  expect(context._internal.RootAreas.map.n.eval.properties).toEqual({ title: 'test' });
+  expect(context._internal.RootSlots.map.a.eval.properties).toEqual();
+  expect(context._internal.RootSlots.map.b.eval.properties).toEqual({ title: 'test' });
+  expect(context._internal.RootSlots.map.c.eval.properties).toEqual({ title: 'test' });
+  expect(context._internal.RootSlots.map.d.eval.properties).toEqual({ title: 'test' });
+  expect(context._internal.RootSlots.map.e.eval.properties).toEqual({ title: 'test' });
+  expect(context._internal.RootSlots.map.f.eval.properties).toEqual({ title: 'test' });
+  expect(context._internal.RootSlots.map.g.eval.properties).toEqual({ title: 'test' });
+  expect(context._internal.RootSlots.map.h.eval.properties).toEqual({ title: 'test' });
+  expect(context._internal.RootSlots.map.i.eval.properties).toEqual({ title: 'test' });
+  expect(context._internal.RootSlots.map.j.eval.properties).toEqual({ title: 'test' });
+  expect(context._internal.RootSlots.map.k.eval.properties).toEqual({ title: 'test' });
+  expect(context._internal.RootSlots.map.l.eval.properties).toEqual({ title: 'test' });
+  expect(context._internal.RootSlots.map.m.eval.properties).toEqual({ title: 'test' });
+  expect(context._internal.RootSlots.map.n.eval.properties).toEqual({ title: 'test' });
 });
 
 test('set value from block', async () => {
@@ -514,7 +513,7 @@ test('set value from block', async () => {
     lowdefy,
     pageConfig,
   });
-  const { swtch } = context._internal.RootAreas.map;
+  const { swtch } = context._internal.RootSlots.map;
 
   expect(swtch.value).toBe(false);
   expect(context.state).toEqual({ swtch: false });
@@ -539,7 +538,7 @@ test('set value from block in nested object', async () => {
     lowdefy,
     pageConfig,
   });
-  const block = context._internal.RootAreas.map['a.b.c'];
+  const block = context._internal.RootSlots.map['a.b.c'];
 
   expect(block.value).toBe(null);
   expect(context.state).toEqual({ a: { b: { c: null } } });
@@ -573,7 +572,7 @@ test('set value from block with type enforceType', async () => {
     lowdefy,
     pageConfig,
   });
-  const { textInput } = context._internal.RootAreas.map;
+  const { textInput } = context._internal.RootSlots.map;
   expect(textInput.value).toBe('a');
   expect(context.state).toEqual({ textInput: 'a' });
   expect(textInput.setValue).toBeDefined();
@@ -618,7 +617,7 @@ test('parse visible operator with setValue', async () => {
     lowdefy,
     pageConfig,
   });
-  const { textA } = context._internal.RootAreas.map;
+  const { textA } = context._internal.RootSlots.map;
 
   expect(textA.value).toBe('show b');
   expect(context.state).toEqual({ textA: 'show b', textB: 'b' });
@@ -663,7 +662,7 @@ test('rec parse visible operator with setValue', async () => {
     lowdefy,
     pageConfig,
   });
-  const { textA, textB, textC } = context._internal.RootAreas.map;
+  const { textA, textB, textC } = context._internal.RootSlots.map;
   expect(textA.value).toBe('a');
   expect(textB.eval.visible).toBe(false);
   expect(textC.eval.visible).toBe(false);
@@ -707,7 +706,7 @@ test('non-input blocks visibility toggle', async () => {
     pageConfig,
   });
   expect(context.state).toEqual({ swtch: true });
-  const { button, swtch } = context._internal.RootAreas.map;
+  const { button, swtch } = context._internal.RootSlots.map;
   expect(button.visibleEval.output).toEqual(true);
   swtch.setValue(false);
   expect(context.state).toEqual({ swtch: false });
@@ -754,9 +753,9 @@ test('non-input blocks visibility toggle in array', async () => {
   });
   expect(context.state).toEqual({ list: [{ swtch: true }, { swtch: false }] });
 
-  const button0 = context._internal.RootAreas.map['list.0.button'];
-  const button1 = context._internal.RootAreas.map['list.1.button'];
-  const swtch1 = context._internal.RootAreas.map['list.1.swtch'];
+  const button0 = context._internal.RootSlots.map['list.0.button'];
+  const button1 = context._internal.RootSlots.map['list.1.button'];
+  const swtch1 = context._internal.RootSlots.map['list.1.swtch'];
 
   expect(button0.visibleEval.output).toEqual(true);
   expect(button1.visibleEval.output).toEqual(false);
@@ -801,7 +800,7 @@ test('no need to evaluate invisible blocks', async () => {
     pageConfig,
   });
   expect(context.state).toEqual({ swtch: true });
-  const { button, swtch } = context._internal.RootAreas.map;
+  const { button, swtch } = context._internal.RootSlots.map;
   expect(button.visibleEval.output).toEqual(true);
   expect(button.propertiesEval.output.field).toEqual(true);
   swtch.setValue(false);
@@ -854,13 +853,13 @@ test('max recuse limit', async () => {
     lowdefy,
     pageConfig,
   });
-  const { c } = context._internal.RootAreas.map;
+  const { c } = context._internal.RootSlots.map;
 
   let count = 0;
 
-  const updateStateFromRoot = context._internal.RootAreas.updateStateFromRoot;
+  const updateStateFromRoot = context._internal.RootSlots.updateStateFromRoot;
 
-  context._internal.RootAreas.updateStateFromRoot = () => {
+  context._internal.RootSlots.updateStateFromRoot = () => {
     count += 1;
     updateStateFromRoot();
   };

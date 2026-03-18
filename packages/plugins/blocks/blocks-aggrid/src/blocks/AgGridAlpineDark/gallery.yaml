@@ -1,0 +1,352 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Alpine Dark - Basic Table
+  fullWidth: true
+  blocks:
+    - id: alpine_dark_basic_table
+      type: AgGridAlpineDark
+      properties:
+        height: 300
+        columnDefs:
+          - field: name
+            headerName: Name
+          - field: age
+            headerName: Age
+          - field: email
+            headerName: Email
+          - field: country
+            headerName: Country
+        rowData:
+          - name: Alice Johnson
+            age: 28
+            email: alice@example.com
+            country: United States
+          - name: Bob Smith
+            age: 35
+            email: bob@example.com
+            country: United Kingdom
+          - name: Charlie Lee
+            age: 42
+            email: charlie@example.com
+            country: Japan
+          - name: Diana Patel
+            age: 31
+            email: diana@example.com
+            country: India
+          - name: Erik Johansson
+            age: 26
+            email: erik@example.com
+            country: Sweden
+          - name: Fatima Al-Rashid
+            age: 39
+            email: fatima@example.com
+            country: UAE
+
+- title: Alpine Dark - Column Features
+  fullWidth: true
+  blocks:
+    - id: alpine_dark_column_features
+      type: AgGridAlpineDark
+      properties:
+        height: 300
+        columnDefs:
+          - field: id
+            headerName: ID
+            width: 80
+            pinned: left
+            sortable: true
+          - field: product
+            headerName: Product Name
+            flex: 2
+            sortable: true
+            filter: true
+          - field: category
+            headerName: Category
+            flex: 1
+            sortable: true
+            filter: true
+          - field: price
+            headerName: Price ($)
+            width: 120
+            sortable: true
+            resizable: true
+          - field: stock
+            headerName: Stock
+            width: 100
+            sortable: true
+          - field: rating
+            headerName: Rating
+            width: 100
+            sortable: true
+        rowData:
+          - id: 1
+            product: Wireless Keyboard
+            category: Electronics
+            price: 49.99
+            stock: 230
+            rating: 4.5
+          - id: 2
+            product: Standing Desk
+            category: Furniture
+            price: 399.00
+            stock: 45
+            rating: 4.8
+          - id: 3
+            product: USB-C Hub
+            category: Electronics
+            price: 29.99
+            stock: 520
+            rating: 4.2
+          - id: 4
+            product: Ergonomic Chair
+            category: Furniture
+            price: 289.00
+            stock: 78
+            rating: 4.6
+          - id: 5
+            product: Webcam HD
+            category: Electronics
+            price: 79.99
+            stock: 310
+            rating: 4.0
+
+- title: Alpine Dark - Default Column Definitions
+  fullWidth: true
+  blocks:
+    - id: alpine_dark_default_col_def
+      type: AgGridAlpineDark
+      properties:
+        height: 300
+        defaultColDef:
+          sortable: true
+          filter: true
+          resizable: true
+          flex: 1
+        columnDefs:
+          - field: employee
+            headerName: Employee
+          - field: department
+            headerName: Department
+          - field: title
+            headerName: Job Title
+          - field: location
+            headerName: Office
+          - field: startDate
+            headerName: Start Date
+        rowData:
+          - employee: Sarah Chen
+            department: Engineering
+            title: Senior Developer
+            location: San Francisco
+            startDate: '2019-03-15'
+          - employee: James Wilson
+            department: Marketing
+            title: Campaign Manager
+            location: New York
+            startDate: '2020-07-01'
+          - employee: Maria Garcia
+            department: Engineering
+            title: Tech Lead
+            location: Austin
+            startDate: '2018-11-20'
+          - employee: David Kim
+            department: Sales
+            title: Account Executive
+            location: Chicago
+            startDate: '2021-01-10'
+          - employee: Emily Brown
+            department: Design
+            title: UX Designer
+            location: San Francisco
+            startDate: '2020-09-05'
+
+- title: Alpine Dark - Row Selection
+  fullWidth: true
+  blocks:
+    - id: alpine_dark_row_selection
+      type: AgGridAlpineDark
+      properties:
+        height: 300
+        rowSelection: multiple
+        defaultColDef:
+          sortable: true
+          flex: 1
+        columnDefs:
+          - field: task
+            headerName: Task
+            flex: 2
+          - field: assignee
+            headerName: Assignee
+          - field: priority
+            headerName: Priority
+            width: 120
+          - field: status
+            headerName: Status
+            width: 120
+        rowData:
+          - task: Design login page
+            assignee: Alice
+            priority: High
+            status: Done
+          - task: Implement API endpoints
+            assignee: Bob
+            priority: High
+            status: In Progress
+          - task: Write unit tests
+            assignee: Charlie
+            priority: Medium
+            status: To Do
+          - task: Update documentation
+            assignee: Diana
+            priority: Low
+            status: To Do
+          - task: Code review PR #42
+            assignee: Erik
+            priority: Medium
+            status: In Progress
+
+- title: Alpine Dark - Pagination
+  fullWidth: true
+  blocks:
+    - id: alpine_dark_pagination
+      type: AgGridAlpineDark
+      properties:
+        height: 350
+        pagination: true
+        paginationPageSize: 5
+        defaultColDef:
+          sortable: true
+          filter: true
+          flex: 1
+        columnDefs:
+          - field: orderId
+            headerName: Order ID
+            width: 120
+          - field: customer
+            headerName: Customer
+          - field: product
+            headerName: Product
+          - field: quantity
+            headerName: Qty
+            width: 80
+          - field: total
+            headerName: Total ($)
+            width: 110
+          - field: status
+            headerName: Status
+            width: 120
+        rowData:
+          - orderId: ORD-101
+            customer: Acme Corp
+            product: Widget Pro
+            quantity: 50
+            total: 2499.50
+            status: Shipped
+          - orderId: ORD-102
+            customer: Globex Inc
+            product: Gadget X
+            quantity: 25
+            total: 1249.75
+            status: Processing
+          - orderId: ORD-103
+            customer: Initech
+            product: Widget Pro
+            quantity: 100
+            total: 4999.00
+            status: Delivered
+          - orderId: ORD-104
+            customer: Umbrella Ltd
+            product: Connector A
+            quantity: 200
+            total: 1998.00
+            status: Shipped
+          - orderId: ORD-105
+            customer: Stark Ind
+            product: Gadget X
+            quantity: 10
+            total: 499.90
+            status: Processing
+          - orderId: ORD-106
+            customer: Wayne Ent
+            product: Widget Pro
+            quantity: 75
+            total: 3749.25
+            status: Delivered
+          - orderId: ORD-107
+            customer: Oscorp
+            product: Connector A
+            quantity: 150
+            total: 1498.50
+            status: Shipped
+          - orderId: ORD-108
+            customer: LexCorp
+            product: Gadget X
+            quantity: 30
+            total: 1499.70
+            status: Processing
+
+- title: Alpine Dark - Column Styling
+  fullWidth: true
+  blocks:
+    - id: alpine_dark_styled_columns
+      type: AgGridAlpineDark
+      properties:
+        height: 300
+        defaultColDef:
+          sortable: true
+          flex: 1
+        columnDefs:
+          - field: metric
+            headerName: Metric
+            flex: 2
+            cellStyle:
+              fontWeight: bold
+          - field: q1
+            headerName: Q1
+            cellStyle:
+              textAlign: right
+          - field: q2
+            headerName: Q2
+            cellStyle:
+              textAlign: right
+          - field: q3
+            headerName: Q3
+            cellStyle:
+              textAlign: right
+          - field: q4
+            headerName: Q4
+            cellStyle:
+              textAlign: right
+        rowData:
+          - metric: Revenue ($K)
+            q1: 1250
+            q2: 1380
+            q3: 1520
+            q4: 1690
+          - metric: New Customers
+            q1: 145
+            q2: 162
+            q3: 178
+            q4: 201
+          - metric: Churn Rate (%)
+            q1: 3.2
+            q2: 2.8
+            q3: 2.5
+            q4: 2.1
+          - metric: NPS Score
+            q1: 42
+            q2: 45
+            q3: 48
+            q4: 52

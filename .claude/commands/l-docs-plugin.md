@@ -34,8 +34,6 @@ UI components that render in the browser
 - `blocks-echarts` - ECharts visualizations
 - `blocks-markdown` - Markdown rendering
 - `blocks-google-maps` - Google Maps integration
-- `blocks-algolia` - Algolia search
-- `blocks-color-selectors` - Color pickers
 - `blocks-loaders` - Loading spinners
 - `blocks-qr` - QR code generation
 

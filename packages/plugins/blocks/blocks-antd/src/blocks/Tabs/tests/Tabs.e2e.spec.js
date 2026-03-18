@@ -118,4 +118,48 @@ test.describe('Tabs Block', () => {
     const display = getBlock(page, 'onchange_display');
     await expect(display).toHaveText('Active: change2');
   });
+
+  // ============================================
+  // SHORTCUT BADGE TESTS
+  // ============================================
+
+  test('renders shortcut badges on tabs with shortcuts', async ({ page }) => {
+    const tabs = getTabs(page, 'tabs_shortcut');
+    await expect(tabs).toBeVisible();
+
+    const tabItems = getTabItems(tabs);
+
+    // First tab has shortcut mod+1 → 1 kbd element (modifier+key joined)
+    await expect(tabItems.nth(0).locator('kbd')).toHaveCount(1);
+
+    // Second tab has shortcut mod+2 → 1 kbd element (modifier+key joined)
+    await expect(tabItems.nth(1).locator('kbd')).toHaveCount(1);
+
+    // Third tab has no shortcut → 0 kbd elements
+    await expect(tabItems.nth(2).locator('kbd')).toHaveCount(0);
+  });
+
+  // ============================================
+  // SHORTCUT KEYBOARD TESTS
+  // ============================================
+
+  test('switches to tab when shortcut is pressed', async ({ page }) => {
+    const mod = process.platform === 'darwin' ? 'Meta' : 'Control';
+    const tabs = getTabs(page, 'tabs_shortcut_fires');
+    await expect(tabs).toBeVisible();
+    const tabItems = getTabItems(tabs);
+
+    // First tab should be active by default
+    await expect(tabItems.nth(0)).toHaveClass(/ant-tabs-tab-active/);
+
+    // Press mod+j to switch to Tab A (already active, but fires onChange)
+    await page.keyboard.press(`${mod}+j`);
+    const display = getBlock(page, 'tabs_shortcut_fired_display');
+    await expect(display).toHaveText('active:sk_tab1');
+
+    // Press mod+; to switch to Tab B
+    await page.keyboard.press(`${mod}+;`);
+    await expect(display).toHaveText('active:sk_tab2');
+    await expect(tabItems.nth(1)).toHaveClass(/ant-tabs-tab-active/);
+  });
 });

@@ -29,7 +29,15 @@ events:
           - First item
           - Second item
           - Third item
-        timeline_mode:
+        timeline_mode_left:
+          - Left item
+          - Right item
+          - Another left
+        timeline_mode_right:
+          - Left item
+          - Right item
+          - Another left
+        timeline_mode_alternate:
           - Left item
           - Right item
           - Another left
@@ -41,6 +49,9 @@ events:
           - Icon event 1
           - Icon event 2
         timeline_pending:
+          - Completed 1
+          - Completed 2
+        timeline_pending_text:
           - Completed 1
           - Completed 2
         timeline_reverse:
@@ -96,7 +107,7 @@ blocks:
         type: Span
         properties:
           content:
-            _state: timeline_mode.$
+            _state: timeline_mode_left.$
 
   - id: timeline_mode_right
     type: TimelineList
@@ -107,7 +118,7 @@ blocks:
         type: Span
         properties:
           content:
-            _state: timeline_mode.$
+            _state: timeline_mode_right.$
 
   - id: timeline_mode_alternate
     type: TimelineList
@@ -118,7 +129,7 @@ blocks:
         type: Span
         properties:
           content:
-            _state: timeline_mode.$
+            _state: timeline_mode_alternate.$
 
   # ============================================
   # LABEL TESTS
@@ -182,7 +193,7 @@ blocks:
         type: Span
         properties:
           content:
-            _state: timeline_pending.$
+            _state: timeline_pending_text.$
 
   # ============================================
   # REVERSE TESTS

@@ -21,6 +21,13 @@ function createHandleError(lowdefy) {
   const loggedErrors = new Set();
   const logger = lowdefy._internal.logger;
 
+  function logError(error) {
+    if (!(error instanceof UserError)) {
+      lowdefy._runtimeErrorCallback?.(error);
+    }
+    logger.error(error);
+  }
+
   return async function handleError(error) {
     const errorKey = `${error.message}:${error.configKey || ''}`;
     if (loggedErrors.has(errorKey)) {
@@ -30,7 +37,7 @@ function createHandleError(lowdefy) {
 
     // UserError is client-only — log to browser console, never send to server
     if (error instanceof UserError) {
-      logger.error(error);
+      logError(error);
       return;
     }
 
@@ -38,7 +45,7 @@ function createHandleError(lowdefy) {
     if (error.isLowdefyError) {
       // Server-originated errors already have source resolved — just display locally
       if (error.source) {
-        logger.error(error);
+        logError(error);
         return;
       }
       // Client-originated errors — send to server for logging + location resolution
@@ -59,19 +66,19 @@ function createHandleError(lowdefy) {
           // If server produced a consolidated ConfigError, log it and return early
           // (cause chain includes original error)
           if (serializedConfigError) {
-            logger.error(serializer.deserialize(serializedConfigError));
+            logError(serializer.deserialize(serializedConfigError));
             return;
           }
         }
       } catch {
         // Server logging failed - continue with local console
       }
-      logger.error(error);
+      logError(error);
       return;
     }
 
     // Other errors - just log locally
-    logger.error(error);
+    logError(error);
   };
 }
 

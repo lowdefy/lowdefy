@@ -70,7 +70,7 @@ nunjucksEnv.addFilter('uppercase', (str) => str.toUpperCase());
 
 ### date(value, format, ...args)
 
-Format dates using moment.js:
+Format dates using Day.js:
 
 ```javascript
 // Default ISO format
@@ -106,7 +106,7 @@ Format dates using moment.js:
 // '2024-01-16'
 ```
 
-**Supported Moment Methods:**
+**Supported Day.js Methods:**
 
 - `format(string)` - Format date
 - `fromNow()` - Relative time
@@ -178,7 +178,7 @@ Standard Nunjucks syntax:
 ## Dependencies
 
 - `nunjucks` (3.2.4)
-- `moment` (2.29.4)
+- `dayjs` (1.11.x)
 - `@lowdefy/helpers` (4.4.0)
 
 ## Usage Examples

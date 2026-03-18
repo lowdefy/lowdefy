@@ -1,0 +1,562 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic Click Dropdown
+  blocks:
+    - id: dropdown_menu_basic
+      type: DropdownMenu
+      layout:
+        flex: 0 0 auto
+      properties:
+        trigger: click
+        links:
+          - id: dm_basic_home
+            type: MenuLink
+            pageId: home
+            properties:
+              title: Home
+              icon: AiOutlineHome
+          - id: dm_basic_profile
+            type: MenuLink
+            pageId: home
+            properties:
+              title: Profile
+              icon: AiOutlineUser
+          - id: dm_basic_div
+            type: MenuDivider
+          - id: dm_basic_logout
+            type: MenuLink
+            properties:
+              title: Log Out
+              icon: AiOutlineLogout
+              danger: true
+      blocks:
+        - id: dropdown_menu_basic_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Account
+            color: primary
+            variant: solid
+
+- title: Hover Trigger (Default)
+  blocks:
+    - id: dropdown_menu_hover
+      type: DropdownMenu
+      layout:
+        flex: 0 0 auto
+      properties:
+        links:
+          - id: dm_hover_item1
+            type: MenuLink
+            properties:
+              title: Option A
+          - id: dm_hover_item2
+            type: MenuLink
+            properties:
+              title: Option B
+          - id: dm_hover_item3
+            type: MenuLink
+            properties:
+              title: Option C
+      blocks:
+        - id: dropdown_menu_hover_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Hover me
+            color: default
+            variant: outlined
+
+- title: Context Menu
+  blocks:
+    - id: dropdown_menu_context
+      type: DropdownMenu
+      properties:
+        trigger: contextMenu
+        links:
+          - id: dm_ctx_copy
+            type: MenuLink
+            properties:
+              title: Copy
+              icon: AiOutlineCopy
+          - id: dm_ctx_paste
+            type: MenuLink
+            properties:
+              title: Paste
+              icon: AiOutlineSnippets
+          - id: dm_ctx_div
+            type: MenuDivider
+          - id: dm_ctx_delete
+            type: MenuLink
+            properties:
+              title: Delete
+              icon: AiOutlineDelete
+              danger: true
+      blocks:
+        - id: dropdown_menu_context_area
+          type: Card
+          properties:
+            size: small
+            bordered: true
+          blocks:
+            - id: dropdown_menu_context_text
+              type: Paragraph
+              properties:
+                content: Right-click anywhere in this card to open the context menu.
+
+- title: Placement
+  blocks:
+    - id: dropdown_menu_pl_bl
+      type: DropdownMenu
+      layout:
+        flex: 0 0 auto
+      properties:
+        trigger: click
+        placement: bottomLeft
+        links:
+          - id: dm_pl_bl_1
+            type: MenuLink
+            properties:
+              title: Item 1
+          - id: dm_pl_bl_2
+            type: MenuLink
+            properties:
+              title: Item 2
+      blocks:
+        - id: dropdown_menu_pl_bl_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: bottomLeft
+            color: primary
+            variant: solid
+            size: small
+    - id: dropdown_menu_pl_br
+      type: DropdownMenu
+      layout:
+        flex: 0 0 auto
+      properties:
+        trigger: click
+        placement: bottomRight
+        links:
+          - id: dm_pl_br_1
+            type: MenuLink
+            properties:
+              title: Item 1
+          - id: dm_pl_br_2
+            type: MenuLink
+            properties:
+              title: Item 2
+      blocks:
+        - id: dropdown_menu_pl_br_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: bottomRight
+            color: primary
+            variant: outlined
+            size: small
+    - id: dropdown_menu_pl_tl
+      type: DropdownMenu
+      layout:
+        flex: 0 0 auto
+      properties:
+        trigger: click
+        placement: topLeft
+        links:
+          - id: dm_pl_tl_1
+            type: MenuLink
+            properties:
+              title: Item 1
+          - id: dm_pl_tl_2
+            type: MenuLink
+            properties:
+              title: Item 2
+      blocks:
+        - id: dropdown_menu_pl_tl_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: topLeft
+            color: default
+            variant: outlined
+            size: small
+
+- title: With Arrow
+  blocks:
+    - id: dropdown_menu_arrow
+      type: DropdownMenu
+      layout:
+        flex: 0 0 auto
+      properties:
+        trigger: click
+        arrow: true
+        links:
+          - id: dm_arrow_1
+            type: MenuLink
+            properties:
+              title: Settings
+              icon: AiOutlineSetting
+          - id: dm_arrow_2
+            type: MenuLink
+            properties:
+              title: Help
+              icon: AiOutlineQuestionCircle
+      blocks:
+        - id: dropdown_menu_arrow_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: With Arrow
+            color: primary
+            variant: solid
+    - id: dropdown_menu_arrow_center
+      type: DropdownMenu
+      layout:
+        flex: 0 0 auto
+      properties:
+        trigger: click
+        arrow:
+          pointAtCenter: true
+        links:
+          - id: dm_arrowc_1
+            type: MenuLink
+            properties:
+              title: Settings
+              icon: AiOutlineSetting
+          - id: dm_arrowc_2
+            type: MenuLink
+            properties:
+              title: Help
+              icon: AiOutlineQuestionCircle
+      blocks:
+        - id: dropdown_menu_arrow_center_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Arrow at Center
+            color: primary
+            variant: outlined
+
+- title: Groups and Dividers
+  blocks:
+    - id: dropdown_menu_groups
+      type: DropdownMenu
+      layout:
+        flex: 0 0 auto
+      properties:
+        trigger: click
+        links:
+          - id: dm_grp_nav
+            type: MenuGroup
+            properties:
+              title: Navigation
+              icon: AiOutlineAppstore
+            links:
+              - id: dm_grp_nav_home
+                type: MenuLink
+                pageId: home
+                properties:
+                  title: Home
+              - id: dm_grp_nav_dash
+                type: MenuLink
+                pageId: home
+                properties:
+                  title: Dashboard
+          - id: dm_grp_div
+            type: MenuDivider
+          - id: dm_grp_account
+            type: MenuGroup
+            properties:
+              title: Account
+              icon: AiOutlineUser
+            links:
+              - id: dm_grp_acc_profile
+                type: MenuLink
+                pageId: home
+                properties:
+                  title: Profile
+              - id: dm_grp_acc_settings
+                type: MenuLink
+                pageId: home
+                properties:
+                  title: Settings
+      blocks:
+        - id: dropdown_menu_groups_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Grouped Menu
+            color: primary
+            variant: solid
+
+- title: Disabled Items
+  blocks:
+    - id: dropdown_menu_disabled
+      type: DropdownMenu
+      layout:
+        flex: 0 0 auto
+      properties:
+        trigger: click
+        links:
+          - id: dm_dis_active
+            type: MenuLink
+            properties:
+              title: Available Action
+              icon: AiOutlineCheck
+          - id: dm_dis_disabled
+            type: MenuLink
+            properties:
+              title: Unavailable (disabled)
+              disabled: true
+          - id: dm_dis_div
+            type: MenuDivider
+          - id: dm_dis_danger
+            type: MenuLink
+            properties:
+              title: Danger Action
+              danger: true
+      blocks:
+        - id: dropdown_menu_disabled_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Mixed States
+            color: default
+            variant: outlined
+
+- title: Icons and Shortcuts
+  blocks:
+    - id: dropdown_menu_shortcuts
+      type: DropdownMenu
+      layout:
+        flex: 0 0 auto
+      properties:
+        trigger: click
+        links:
+          - id: dm_sc_new
+            type: MenuLink
+            properties:
+              title: New File
+              icon: AiOutlineFileAdd
+              shortcut: mod+shift+N
+          - id: dm_sc_save
+            type: MenuLink
+            properties:
+              title: Save
+              icon: AiOutlineSave
+              shortcut: mod+shift+S
+          - id: dm_sc_div
+            type: MenuDivider
+          - id: dm_sc_close
+            type: MenuLink
+            properties:
+              title: Close
+              icon: AiOutlineClose
+              shortcut: mod+shift+W
+      events:
+        onClick:
+          - id: dropdown_menu_shortcuts_msg
+            type: DisplayMessage
+            params:
+              content:
+                _string.concat:
+                  - 'Shortcut action: '
+                  - _event: key
+              duration: 2
+      blocks:
+        - id: dropdown_menu_shortcuts_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: File Menu
+            color: primary
+            variant: solid
+
+- title: onOpenChange Event
+  blocks:
+    - id: dropdown_menu_event
+      type: DropdownMenu
+      layout:
+        flex: 0 0 auto
+      properties:
+        trigger: click
+        links:
+          - id: dm_ev_1
+            type: MenuLink
+            properties:
+              title: Option A
+          - id: dm_ev_2
+            type: MenuLink
+            properties:
+              title: Option B
+      events:
+        onOpenChange:
+          - id: dropdown_menu_event_msg
+            type: DisplayMessage
+            params:
+              content: Dropdown toggled!
+              duration: 2
+      blocks:
+        - id: dropdown_menu_event_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Click to Toggle
+            color: primary
+            variant: solid
+            icon: AiOutlineBell
+
+- title: onClick Event
+  blocks:
+    - id: dropdown_menu_onclick
+      type: DropdownMenu
+      layout:
+        flex: 0 0 auto
+      properties:
+        trigger: click
+        links:
+          - id: dm_oc_edit
+            type: MenuLink
+            properties:
+              title: Edit
+              icon: AiOutlineEdit
+          - id: dm_oc_copy
+            type: MenuLink
+            properties:
+              title: Copy
+              icon: AiOutlineCopy
+          - id: dm_oc_delete
+            type: MenuLink
+            properties:
+              title: Delete
+              icon: AiOutlineDelete
+              danger: true
+      events:
+        onClick:
+          - id: dropdown_menu_onclick_msg
+            type: DisplayMessage
+            params:
+              content:
+                _string.concat:
+                  - 'Clicked: '
+                  - _event: key
+              duration: 2
+      blocks:
+        - id: dropdown_menu_onclick_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Actions
+            color: default
+            variant: outlined
+
+- title: Theme Token Overrides
+  blocks:
+    - id: dropdown_menu_theme
+      type: DropdownMenu
+      layout:
+        flex: 0 0 auto
+      properties:
+        trigger: click
+        theme:
+          controlItemBgHover: '#f0f5ff'
+          borderRadiusLG: 12
+        links:
+          - id: dm_th_1
+            type: MenuLink
+            properties:
+              title: Styled Item A
+          - id: dm_th_2
+            type: MenuLink
+            properties:
+              title: Styled Item B
+          - id: dm_th_3
+            type: MenuLink
+            properties:
+              title: Styled Item C
+      blocks:
+        - id: dropdown_menu_theme_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Custom Theme
+            color: primary
+            variant: solid
+
+- title: User Account Menu
+  blocks:
+    - id: dropdown_menu_user
+      type: DropdownMenu
+      layout:
+        flex: 0 0 auto
+      properties:
+        trigger: click
+        placement: bottomRight
+        links:
+          - id: dm_user_profile
+            type: MenuLink
+            pageId: home
+            properties:
+              title: My Profile
+              icon: AiOutlineUser
+          - id: dm_user_settings
+            type: MenuLink
+            pageId: home
+            properties:
+              title: Settings
+              icon: AiOutlineSetting
+          - id: dm_user_div
+            type: MenuDivider
+          - id: dm_user_logout
+            type: MenuLink
+            properties:
+              title: Log Out
+              icon: AiOutlineLogout
+              danger: true
+      blocks:
+        - id: dropdown_menu_user_trigger
+          type: Box
+          layout:
+            gap: 8
+            align: center
+          blocks:
+            - id: dropdown_menu_user_avatar
+              type: Avatar
+              layout:
+                flex: 0 0 auto
+              properties:
+                content: JD
+                color: '#fff'
+                backgroundColor: '#1677ff'
+            - id: dropdown_menu_user_name
+              type: Paragraph
+              layout:
+                flex: 0 0 auto
+              properties:
+                content: Jane Doe

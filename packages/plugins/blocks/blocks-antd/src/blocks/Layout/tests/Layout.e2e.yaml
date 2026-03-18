@@ -22,7 +22,7 @@ blocks:
 
   - id: layout_basic
     type: Layout
-    areas:
+    slots:
       content:
         blocks:
           - id: layout_basic_content
@@ -40,7 +40,7 @@ blocks:
       style:
         backgroundColor: '#f0f0f0'
         minHeight: 100px
-    areas:
+    slots:
       content:
         blocks:
           - id: layout_with_style_content
@@ -54,12 +54,12 @@ blocks:
 
   - id: layout_nested
     type: Layout
-    areas:
+    slots:
       content:
         blocks:
           - id: layout_nested_header
             type: Header
-            areas:
+            slots:
               content:
                 blocks:
                   - id: layout_nested_header_content
@@ -68,7 +68,7 @@ blocks:
                       content: Header
           - id: layout_nested_content
             type: Content
-            areas:
+            slots:
               content:
                 blocks:
                   - id: layout_nested_main
@@ -77,7 +77,7 @@ blocks:
                       content: Main content
           - id: layout_nested_footer
             type: Footer
-            areas:
+            slots:
               content:
                 blocks:
                   - id: layout_nested_footer_content

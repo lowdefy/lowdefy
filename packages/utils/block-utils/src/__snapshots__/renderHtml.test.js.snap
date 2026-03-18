@@ -1,41 +1,31 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renderHtml html boolean false 1`] = `
-<span
-  class="emotion-0"
->
+<span>
   false
 </span>
 `;
 
 exports[`renderHtml html boolean true 1`] = `
-<span
-  class="emotion-0"
->
+<span>
   true
 </span>
 `;
 
 exports[`renderHtml html number 0 1`] = `
-<span
-  class="emotion-0"
->
+<span>
   0
 </span>
 `;
 
 exports[`renderHtml html number 123 1`] = `
-<span
-  class="emotion-0"
->
+<span>
   123
 </span>
 `;
 
 exports[`renderHtml html string 1`] = `
-<span
-  class="emotion-0"
->
+<span>
   <p>
     Hello
   </p>

@@ -84,7 +84,7 @@ _ref:
 
       Returns:  `"1 Aug 2022"`
 
-      The `_nunjucks` date filter formats dates using the [moment.js](/https://momentjs.com/docs/#/displaying/format/) library.
+      The `_nunjucks` date filter formats dates using the [Day.js](https://day.js.org/docs/en/display/format) library.
 
       ###### Use the _nunjucks unique filter:
 

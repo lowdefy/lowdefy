@@ -1,0 +1,226 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: keyboard-shortcuts
+    pageTitle: Keyboard Shortcuts
+    section: Concepts
+    filePath: concepts/keyboard-shortcuts.yaml
+    content:
+      - id: md1
+        type: MarkdownWithCode
+        properties:
+          content: |
+            Blocks can bind keyboard shortcuts to events. When the key combination is pressed, the event fires — same as if the user clicked the block.
+
+            Add a `shortcut` property to the event's long-form object:
+
+            ###### Shortcut on a button click event:
+            ```yaml
+            - id: search_btn
+              type: Button
+              properties:
+                title: Search
+              events:
+                onClick:
+                  shortcut: mod+K
+                  try:
+                    - id: open_search
+                      type: SetState
+                      params:
+                        searchOpen: true
+            ```
+
+            ## Shortcut string format
+
+            Format: `modifier+modifier+key`
+
+            **Modifiers:**
+            - `mod` — `Cmd` on Mac, `Ctrl` on Windows/Linux (platform-aware)
+            - `shift` — Shift key
+            - `alt` — `Option` on Mac, `Alt` on Windows/Linux
+            - `ctrl` — always `Ctrl`, even on Mac
+
+            **Keys:** Letters (`a`–`z`), numbers (`0`–`9`), and special keys (`Escape`, `Enter`, `Backspace`, `Delete`, `ArrowUp`, `ArrowDown`, `ArrowLeft`, `ArrowRight`, `Tab`, `Space`, `/`, `.`, `,`).
+
+            **Key sequences** (space-separated): `g i` means press `g`, then `i` within 1 second.
+
+            | Shortcut | Mac | Windows |
+            |---|---|---|
+            | `mod+K` | ⌘ K | Ctrl K |
+            | `mod+shift+P` | ⌘ ⇧ P | Ctrl Shift P |
+            | `Escape` | Esc | Esc |
+            | `mod+Enter` | ⌘ ↵ | Ctrl ↵ |
+            | `alt+N` | ⌥ N | Alt N |
+            | `g i` | G then I | G then I |
+
+            ## Multiple shortcuts for one event
+
+            Use an array to bind multiple key combinations to the same event:
+
+            ```yaml
+            events:
+              onClick:
+                shortcut:
+                  - mod+K
+                  - /
+                try:
+                  - id: open_search
+                    type: SetState
+            ```
+
+            ## Shortcuts on multiple events
+
+            Each event on a block can have its own shortcut:
+
+            ```yaml
+            - id: users_table
+              type: AgGridTable
+              events:
+                onNewRow:
+                  shortcut: alt+N
+                  try:
+                    - id: new_row
+                      type: SetState
+                onDeleteRow:
+                  shortcut: mod+Backspace
+                  try:
+                    - id: delete_row
+                      type: Request
+                      params:
+                        requestId: deleteUser
+            ```
+
+            ## Common shortcuts
+
+            Recommended shortcuts for common actions:
+
+            | Action | Shortcut | Notes |
+            |--------|----------|-------|
+            | Open search | `mod+K` or `/` | `/` suppressed in text inputs |
+            | Close modal or drawer | `Escape` | See note below |
+            | Save or submit form | `mod+S` or `mod+Enter` | `mod+S` overrides browser "Save Page" |
+            | New record | `alt+N` | Avoids `mod+N` (browser new window) |
+            | Delete record | `mod+Backspace` | |
+            | Focus search input | `/` | Suppressed while typing |
+            | Navigate home | `alt+H` | |
+
+            > Ant Design's Modal and Drawer components already handle Escape internally. Adding `shortcut: Escape` on an `onClose` event lets you run custom Lowdefy actions (like [`SetState`](/SetState)) when Escape is pressed, but may cause the event to fire twice if the component also closes itself. Use this when you need custom close behavior beyond the component's built-in Escape handling.
+
+            ## Input field behavior
+
+            Shortcuts with modifiers (`mod`, `ctrl`, `alt`) fire even when focus is in a text input. Single-key shortcuts (like `Escape` or `/`) are suppressed when focus is in an editable field — pressing `/` while typing won't trigger a shortcut.
+
+            ## Visibility
+
+            Shortcuts only fire for visible blocks. If a block's `visible` property evaluates to `false`, its shortcuts are inactive.
+
+            ## Browser defaults
+
+            When a shortcut matches, the browser's default action for that key combination is suppressed.
+
+            > **Warning:** Some browser shortcuts cannot be reliably overridden. Avoid binding these — they may not work or may confuse users:
+            > - `mod+N` (new window), `mod+T` (new tab), `mod+W` (close tab)
+            > - `mod+R` (reload), `mod+Q` (quit), `mod+L` (address bar)
+            >
+            > The build warns when a shortcut matches a known browser default.
+
+            ## Recipes
+
+            **Search with Cmd+K:**
+
+            ```yaml
+            - id: search_btn
+              type: Button
+              properties:
+                title: Search
+                icon: AiOutlineSearch
+              events:
+                onClick:
+                  shortcut: mod+K
+                  try:
+                    - id: open_search
+                      type: SetState
+                      params:
+                        searchOpen: true
+            ```
+
+            **Save form with Cmd+S:**
+
+            ```yaml
+            - id: save_btn
+              type: Button
+              properties:
+                title: Save
+                icon: AiOutlineSave
+              events:
+                onClick:
+                  shortcut: mod+S
+                  try:
+                    - id: validate
+                      type: Validate
+                    - id: save_data
+                      type: Request
+                      params:
+                        requestId: saveRecord
+                    - id: show_saved
+                      type: DisplayMessage
+                      params:
+                        content: Saved!
+            ```
+
+            **Tab navigation with Alt+1/2/3:**
+
+            ```yaml
+            - id: nav_dashboard
+              type: Button
+              properties:
+                title: Dashboard
+              events:
+                onClick:
+                  shortcut: alt+1
+                  try:
+                    - id: go
+                      type: Link
+                      params:
+                        pageId: dashboard
+
+            - id: nav_users
+              type: Button
+              properties:
+                title: Users
+              events:
+                onClick:
+                  shortcut: alt+2
+                  try:
+                    - id: go
+                      type: Link
+                      params:
+                        pageId: users
+
+            - id: nav_settings
+              type: Button
+              properties:
+                title: Settings
+              events:
+                onClick:
+                  shortcut: alt+3
+                  try:
+                    - id: go
+                      type: Link
+                      params:
+                        pageId: settings
+            ```

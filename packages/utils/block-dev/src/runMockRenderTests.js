@@ -31,14 +31,9 @@ const runMockRenderTests = ({
 }) => {
   const { before, getProps } = mockBlock({ meta: Block.meta, logger, schema });
 
-  const makeCssClass = jest.fn();
-  const makeCssImp = (style, op) => JSON.stringify({ style, options: op });
-
   beforeEach(async () => {
     await reset();
     before();
-    makeCssClass.mockReset();
-    makeCssClass.mockImplementation(makeCssImp);
   });
 
   examples.forEach((ex) => {
@@ -56,7 +51,7 @@ const runMockRenderTests = ({
           const Block = await mock.getBlock();
           const Shell = () => {
             const props = getProps(ex);
-            return <Block {...props} methods={{ ...props.methods, makeCssClass }} value={value} />;
+            return <Block {...props} value={value} />;
           };
           const { container } = render(<Shell />);
           await waitFor(() => expect(container.firstChild).toMatchSnapshot());

@@ -77,7 +77,7 @@ test('getState params is true', async () => {
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootAreas.map['button'];
+  const button = context._internal.RootSlots.map['button'];
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual({
     blockId: 'button',
@@ -130,7 +130,7 @@ test('getState params is some', async () => {
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootAreas.map['button'];
+  const button = context._internal.RootSlots.map['button'];
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual({
     blockId: 'button',
@@ -182,7 +182,7 @@ test('getState params is none', async () => {
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootAreas.map['button'];
+  const button = context._internal.RootSlots.map['button'];
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual({
     blockId: 'button',
@@ -246,7 +246,7 @@ test('getState params.key is null', async () => {
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootAreas.map['button'];
+  const button = context._internal.RootSlots.map['button'];
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual({
     blockId: 'button',
@@ -301,7 +301,7 @@ test('getState params.all is true', async () => {
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootAreas.map['button'];
+  const button = context._internal.RootSlots.map['button'];
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual({
     blockId: 'button',
@@ -356,7 +356,7 @@ test('getState params.key is not string or int', async () => {
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootAreas.map['button'];
+  const button = context._internal.RootSlots.map['button'];
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual({
     blockId: 'button',
@@ -429,7 +429,7 @@ test('getState params.key is some', async () => {
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootAreas.map['button'];
+  const button = context._internal.RootSlots.map['button'];
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual({
     blockId: 'button',

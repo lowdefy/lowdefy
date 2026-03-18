@@ -15,10 +15,11 @@
 */
 
 import React from 'react';
-import classNames from 'classnames';
 import { omit, type } from '@lowdefy/helpers';
 import Icon from '@ant-design/icons';
-import { blockDefaultProps, ErrorBoundary, makeCssClass } from '@lowdefy/block-utils';
+import { cn, withBlockDefaults, ErrorBoundary } from '@lowdefy/block-utils';
+
+import iconStyles from './style.module.css';
 
 const lowdefyProps = [
   'actionLog',
@@ -33,6 +34,7 @@ const lowdefyProps = [
   'registerEvent',
   'registerMethod',
   'schemaErrors',
+  'styles',
   'validation',
 ];
 
@@ -48,17 +50,26 @@ const createIcon = (Icons) => {
     return spacedTitle.substring(spacedTitle.indexOf(' ') + 1);
   };
 
-  const IconBlock = ({ blockId, events, methods, onClick, properties, ...props }) => {
+  const IconBlock = ({
+    blockId,
+    classNames = {},
+    events,
+    methods,
+    onClick,
+    properties,
+    styles = {},
+    ...props
+  }) => {
     const propertiesObj = type.isString(properties) ? { name: properties } : properties;
     const spin =
       (propertiesObj.spin || events.onClick?.loading) && !propertiesObj.disableLoadingIcon;
     const iconProps = {
       id: blockId,
-      className: classNames({
-        [makeCssClass([{ cursor: (onClick || events.onClick) && 'pointer' }, propertiesObj.style])]:
-          true,
-        'icon-spin': spin,
-      }),
+      className: cn(classNames.element, { [iconStyles['icon-spin']]: spin }),
+      style: {
+        cursor: onClick || events.onClick ? 'pointer' : undefined,
+        ...styles.element,
+      },
       rotate: propertiesObj.rotate,
       color: propertiesObj.color,
       title: propertiesObj.title ?? formatTitle(propertiesObj.name),
@@ -98,8 +109,7 @@ const createIcon = (Icons) => {
     );
   };
   const AntIcon = (all) => <Icon component={() => <IconBlock {...all} />} />;
-  AntIcon.defaultProps = blockDefaultProps;
-  return AntIcon;
+  return withBlockDefaults(AntIcon);
 };
 
 export default createIcon;

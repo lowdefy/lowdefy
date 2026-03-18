@@ -1,0 +1,518 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Dark Theme (Default)
+  fullWidth: true
+  blocks:
+    - id: header_dark_default
+      type: Layout
+      blocks:
+        - id: header_dark_default_el
+          type: Header
+          style:
+            display: flex
+            alignItems: center
+            paddingInline: 24px
+          blocks:
+            - id: header_dark_default_title
+              type: Paragraph
+              properties:
+                content: Dark Theme Header (default)
+                style:
+                  color: white
+                  margin: 0
+                  fontSize: 16px
+
+- title: Light Theme
+  fullWidth: true
+  blocks:
+    - id: header_light_theme
+      type: Layout
+      blocks:
+        - id: header_light_theme_el
+          type: Header
+          properties:
+            theme: light
+          style:
+            display: flex
+            alignItems: center
+            paddingInline: 24px
+            borderBottom: 1px solid #f0f0f0
+          blocks:
+            - id: header_light_theme_title
+              type: Paragraph
+              properties:
+                content: Light Theme Header
+                style:
+                  margin: 0
+                  fontSize: 16px
+
+- title: Theme Token Overrides
+  fullWidth: true
+  blocks:
+    - id: header_token_custom_bg
+      type: Layout
+      blocks:
+        - id: header_token_custom_bg_el
+          type: Header
+          properties:
+            theme:
+              colorBgLayout: '#1a1a2e'
+              headerHeight: 80
+              headerPadding: '0 32px'
+          style:
+            display: flex
+            alignItems: center
+          blocks:
+            - id: header_token_custom_bg_title
+              type: Paragraph
+              properties:
+                content: Custom Background and Height (80px)
+                style:
+                  color: white
+                  margin: 0
+                  fontSize: 16px
+
+    - id: header_token_branded
+      type: Layout
+      blocks:
+        - id: header_token_branded_el
+          type: Header
+          properties:
+            theme:
+              colorBgLayout: '#0958d9'
+              headerHeight: 56
+              headerPadding: '0 24px'
+          style:
+            display: flex
+            alignItems: center
+            justifyContent: space-between
+          blocks:
+            - id: header_token_branded_title
+              type: Paragraph
+              properties:
+                content: '<b>Branded Header</b>'
+                style:
+                  color: white
+                  margin: 0
+                  fontSize: 18px
+            - id: header_token_branded_subtitle
+              type: Paragraph
+              properties:
+                content: Using blue colorBgLayout token
+                style:
+                  color: '#bae0ff'
+                  margin: 0
+
+    - id: header_token_compact
+      type: Layout
+      blocks:
+        - id: header_token_compact_el
+          type: Header
+          properties:
+            theme:
+              headerHeight: 40
+              headerPadding: '0 16px'
+          style:
+            display: flex
+            alignItems: center
+          blocks:
+            - id: header_token_compact_title
+              type: Paragraph
+              properties:
+                content: Compact Header (40px height)
+                style:
+                  color: white
+                  margin: 0
+                  fontSize: 13px
+
+- title: Style and CSS Classes
+  fullWidth: true
+  blocks:
+    - id: header_css_gradient
+      type: Layout
+      blocks:
+        - id: header_css_gradient_el
+          type: Header
+          class:
+            element: bg-gradient-to-r from-indigo-600 to-purple-600
+          style:
+            display: flex
+            alignItems: center
+            paddingInline: 24px
+          blocks:
+            - id: header_css_gradient_title
+              type: Paragraph
+              properties:
+                content: Gradient Header via Tailwind on element CSS key
+                style:
+                  color: white
+                  margin: 0
+
+    - id: header_css_bordered
+      type: Layout
+      blocks:
+        - id: header_css_bordered_el
+          type: Header
+          properties:
+            theme: light
+          class:
+            element: border-b-2 border-blue-500 shadow-sm
+          style:
+            display: flex
+            alignItems: center
+            paddingInline: 24px
+          blocks:
+            - id: header_css_bordered_title
+              type: Paragraph
+              properties:
+                content: Light Header with Bottom Accent Border and Shadow
+                style:
+                  margin: 0
+
+    - id: header_css_rounded
+      type: Layout
+      blocks:
+        - id: header_css_rounded_el
+          type: Header
+          class:
+            element: rounded-b-xl shadow-md mx-4 mt-2
+          style:
+            display: flex
+            alignItems: center
+            paddingInline: 24px
+          blocks:
+            - id: header_css_rounded_title
+              type: Paragraph
+              properties:
+                content: Rounded Bottom Corners with Shadow
+                style:
+                  color: white
+                  margin: 0
+
+- title: Header with Navigation
+  fullWidth: true
+  blocks:
+    - id: header_nav_layout
+      type: Layout
+      blocks:
+        - id: header_nav_layout_el
+          type: Header
+          style:
+            display: flex
+            alignItems: center
+            paddingInline: 24px
+          blocks:
+            - id: header_nav_layout_logo
+              type: Paragraph
+              properties:
+                content: '<b>MyApp</b>'
+                style:
+                  color: white
+                  margin: 0
+                  marginRight: 32px
+                  fontSize: 18px
+            - id: header_nav_layout_menu
+              type: Menu
+              properties:
+                mode: horizontal
+                theme: dark
+                links:
+                  - id: header_nav_layout_home
+                    type: MenuLink
+                    properties:
+                      title: Home
+                      icon: AiOutlineHome
+                  - id: header_nav_layout_about
+                    type: MenuLink
+                    properties:
+                      title: About
+                  - id: header_nav_layout_contact
+                    type: MenuLink
+                    properties:
+                      title: Contact
+
+- title: Header in App Shell
+  fullWidth: true
+  blocks:
+    - id: header_app_shell
+      type: Layout
+      style:
+        minHeight: 300px
+      blocks:
+        - id: header_app_shell_el
+          type: Header
+          style:
+            display: flex
+            alignItems: center
+            justifyContent: space-between
+            paddingInline: 24px
+          blocks:
+            - id: header_app_shell_brand
+              type: Box
+              layout:
+                gap: 12
+                align: center
+                flex: 0 0 auto
+              blocks:
+                - id: header_app_shell_icon
+                  type: Icon
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    name: AiOutlineAppstore
+                    size: 24
+                    color: '#1677ff'
+                - id: header_app_shell_name
+                  type: Paragraph
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    content: '<b>WorkspaceApp</b>'
+                    style:
+                      color: white
+                      margin: 0
+                      fontSize: 18px
+            - id: header_app_shell_menu
+              type: Menu
+              layout:
+                flex: 1 1 0
+              properties:
+                mode: horizontal
+                theme: dark
+                links:
+                  - id: header_app_shell_dashboard
+                    type: MenuLink
+                    properties:
+                      title: Dashboard
+                      icon: AiOutlineDashboard
+                  - id: header_app_shell_projects
+                    type: MenuLink
+                    properties:
+                      title: Projects
+                      icon: AiOutlineProject
+                  - id: header_app_shell_settings
+                    type: MenuLink
+                    properties:
+                      title: Settings
+                      icon: AiOutlineSetting
+            - id: header_app_shell_actions
+              type: Box
+              layout:
+                gap: 8
+                flex: 0 0 auto
+              blocks:
+                - id: header_app_shell_btn_notify
+                  type: Button
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    icon: AiOutlineBell
+                    color: default
+                    variant: text
+                    hideTitle: true
+                  events:
+                    onClick:
+                      - id: header_app_shell_notify_msg
+                        type: DisplayMessage
+                        params:
+                          content: No new notifications.
+                          duration: 2
+                - id: header_app_shell_btn_user
+                  type: Button
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    icon: AiOutlineUser
+                    color: default
+                    variant: text
+                    hideTitle: true
+                  events:
+                    onClick:
+                      - id: header_app_shell_user_msg
+                        type: DisplayMessage
+                        params:
+                          content: User profile menu would open here.
+                          duration: 2
+        - id: header_app_shell_body
+          type: Layout
+          blocks:
+            - id: header_app_shell_sider
+              type: Sider
+              properties:
+                width: 200
+                theme: light
+              style:
+                borderRight: 1px solid #f0f0f0
+              blocks:
+                - id: header_app_shell_sider_menu
+                  type: Menu
+                  properties:
+                    links:
+                      - id: header_app_shell_sider_overview
+                        type: MenuLink
+                        properties:
+                          title: Overview
+                      - id: header_app_shell_sider_analytics
+                        type: MenuLink
+                        properties:
+                          title: Analytics
+                      - id: header_app_shell_sider_reports
+                        type: MenuLink
+                        properties:
+                          title: Reports
+            - id: header_app_shell_content
+              type: Content
+              style:
+                padding: 24px
+                background: '#fff'
+              blocks:
+                - id: header_app_shell_content_title
+                  type: Title
+                  properties:
+                    content: Dashboard Overview
+                    level: 3
+                - id: header_app_shell_content_text
+                  type: Paragraph
+                  properties:
+                    content: This demonstrates a full app shell layout with a dark Header containing branding, horizontal navigation, and action buttons. The Header sits above a Layout with a Sider and Content area.
+
+- title: Header in Marketing Page
+  fullWidth: true
+  blocks:
+    - id: header_marketing
+      type: Layout
+      style:
+        minHeight: 350px
+      blocks:
+        - id: header_marketing_el
+          type: Header
+          properties:
+            theme: light
+          style:
+            display: flex
+            alignItems: center
+            justifyContent: space-between
+            paddingInline: 48px
+            borderBottom: 1px solid #f0f0f0
+          blocks:
+            - id: header_marketing_brand
+              type: Paragraph
+              layout:
+                flex: 0 0 auto
+              properties:
+                content: '<b style="font-size:22px; color:#1677ff;">Acme Inc</b>'
+                style:
+                  margin: 0
+            - id: header_marketing_nav
+              type: Box
+              layout:
+                gap: 32
+                flex: 0 0 auto
+                align: center
+              blocks:
+                - id: header_marketing_nav_features
+                  type: Button
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Features
+                    color: default
+                    variant: link
+                  events:
+                    onClick:
+                      - id: header_marketing_nav_features_link
+                        type: Link
+                        params:
+                          url: '#features'
+                - id: header_marketing_nav_pricing
+                  type: Button
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Pricing
+                    color: default
+                    variant: link
+                  events:
+                    onClick:
+                      - id: header_marketing_nav_pricing_link
+                        type: Link
+                        params:
+                          url: '#pricing'
+                - id: header_marketing_nav_docs
+                  type: Button
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Docs
+                    color: default
+                    variant: link
+                  events:
+                    onClick:
+                      - id: header_marketing_nav_docs_link
+                        type: Link
+                        params:
+                          url: '#docs'
+            - id: header_marketing_cta_row
+              type: Box
+              layout:
+                gap: 12
+                flex: 0 0 auto
+              blocks:
+                - id: header_marketing_btn_login
+                  type: Button
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Log In
+                    color: default
+                    variant: outlined
+                  events:
+                    onClick:
+                      - id: header_marketing_login_action
+                        type: DisplayMessage
+                        params:
+                          content: Navigating to login page...
+                          duration: 2
+                - id: header_marketing_btn_signup
+                  type: Button
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Get Started
+                    color: primary
+                    variant: solid
+                  events:
+                    onClick:
+                      - id: header_marketing_signup_action
+                        type: DisplayMessage
+                        params:
+                          content: Navigating to sign up page...
+                          duration: 2
+        - id: header_marketing_content
+          type: Content
+          style:
+            padding: 64px 48px
+            background: '#fff'
+            textAlign: center
+          blocks:
+            - id: header_marketing_hero_title
+              type: Title
+              properties:
+                content: Build Better Products, Faster
+                level: 1
+            - id: header_marketing_hero_subtitle
+              type: Paragraph
+              properties:
+                content: This demonstrates a light-themed Header used in a marketing landing page. The Header uses horizontal button-based navigation with Link actions and prominent call-to-action buttons, providing a clean and professional top bar.

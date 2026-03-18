@@ -14,9 +14,12 @@
   limitations under the License.
 */
 
-import React, { useState, useEffect } from 'react';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import React, { useState, useEffect, useCallback } from 'react';
+import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { Tabs } from 'antd';
+
+import withTheme from '../withTheme.js';
+import useItemShortcuts from '../useItemShortcuts.js';
 
 const getTabs = ({ content, properties }) => {
   let tabs = properties.tabs;
@@ -29,7 +32,16 @@ const getTabs = ({ content, properties }) => {
   return tabs.filter((tab) => tab.key !== properties.extraAreaKey);
 };
 
-const TabsBlock = ({ blockId, components: { Icon }, events, content, methods, properties }) => {
+function TabsBlock({
+  blockId,
+  classNames = {},
+  components: { Icon, ShortcutBadge },
+  events,
+  content,
+  methods,
+  properties,
+  styles = {},
+}) {
   const tabs = getTabs({ content, properties });
   const additionalProps = {};
   if (properties.extraAreaKey) {
@@ -47,6 +59,18 @@ const TabsBlock = ({ blockId, components: { Icon }, events, content, methods, pr
     });
   });
 
+  const shortcutItems = tabs
+    .filter((tab) => tab.shortcut)
+    .map((tab) => ({ key: tab.key, shortcut: tab.shortcut, disabled: tab.disabled }));
+  const onShortcutMatch = useCallback(
+    (activeKey) => {
+      setKey(activeKey);
+      methods.triggerEvent({ name: 'onChange', event: { activeKey } });
+    },
+    [methods]
+  );
+  useItemShortcuts({ items: shortcutItems, onMatch: onShortcutMatch });
+
   return (
     <Tabs
       activeKey={key}
@@ -57,8 +81,7 @@ const TabsBlock = ({ blockId, components: { Icon }, events, content, methods, pr
         methods.triggerEvent({ name: 'onChange', event: { activeKey } });
       }}
       size={properties.size ?? 'default'}
-      tabBarStyle={methods.makeCssClass(properties.tabBarStyle, true)}
-      tabPosition={properties.tabPosition ?? 'top'}
+      tabPlacement={properties.tabPlacement ?? 'top'}
       type={properties.tabType ?? 'line'}
       onTabScroll={({ direction }) =>
         methods.triggerEvent({ name: 'onTabScroll', event: { direction } })
@@ -66,14 +89,31 @@ const TabsBlock = ({ blockId, components: { Icon }, events, content, methods, pr
       onTabClick={(key) => {
         methods.triggerEvent({ name: 'onTabClick', event: { key } });
       }}
+      className={classNames.element}
+      classNames={{
+        tabBar: classNames.tabBar,
+        tabPane: classNames.tabPane,
+        inkBar: classNames.inkBar,
+      }}
+      style={styles.element}
+      styles={{ tabBar: styles.tabBar }}
       items={tabs.map((tab) => ({
         id: `${blockId}_${tab.key}`,
         key: tab.key,
         disabled: tab.disabled,
         label: (
-          <span className={methods.makeCssClass(tab.titleStyle)}>
-            {tab.icon && <Icon blockId={`${blockId}_icon`} events={events} properties={tab.icon} />}
+          <span style={tab.titleStyle}>
+            {tab.icon && (
+              <Icon
+                blockId={`${blockId}_icon`}
+                classNames={{ element: classNames.icon }}
+                events={events}
+                properties={tab.icon}
+                styles={{ element: styles.icon }}
+              />
+            )}
             {tab.title ? renderHtml({ html: tab.title, methods }) : tab.key}
+            <ShortcutBadge shortcut={tab.shortcut} />
           </span>
         ),
         children: content[tab.key] && content[tab.key](),
@@ -81,13 +121,6 @@ const TabsBlock = ({ blockId, components: { Icon }, events, content, methods, pr
       {...additionalProps}
     />
   );
-};
+}
 
-TabsBlock.defaultProps = blockDefaultProps;
-TabsBlock.meta = {
-  category: 'container',
-  icons: [],
-  styles: ['blocks/Tabs/style.less'],
-};
-
-export default TabsBlock;
+export default withTheme('Tabs', withBlockDefaults(TabsBlock));

@@ -29,7 +29,7 @@
 - id: 'center content'
   type: Box
   layout:
-    contentJustify: center
+    justify: center
   blocks:
     - id: One
       type: Paragraph

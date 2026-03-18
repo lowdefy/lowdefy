@@ -1,0 +1,267 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: dropdown_menu
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC CLICK TRIGGER
+  # ============================================
+
+  - id: dm_click
+    type: DropdownMenu
+    properties:
+      trigger: click
+      links:
+        - id: dm_click_item1
+          type: MenuLink
+          properties:
+            title: Item One
+            icon: AiOutlineHome
+        - id: dm_click_item2
+          type: MenuLink
+          properties:
+            title: Item Two
+        - id: dm_click_div
+          type: MenuDivider
+        - id: dm_click_danger
+          type: MenuLink
+          properties:
+            title: Danger Item
+            danger: true
+    events:
+      onClick:
+        - id: dm_click_set
+          type: SetState
+          params:
+            dm_click_result:
+              _event: key
+    blocks:
+      - id: dm_click_trigger
+        type: Button
+        properties:
+          title: Click Menu
+
+  - id: dm_click_display
+    type: Paragraph
+    properties:
+      content:
+        _state: dm_click_result
+
+  # ============================================
+  # HOVER TRIGGER
+  # ============================================
+
+  - id: dm_hover
+    type: DropdownMenu
+    properties:
+      trigger: hover
+      links:
+        - id: dm_hover_item1
+          type: MenuLink
+          properties:
+            title: Hover A
+        - id: dm_hover_item2
+          type: MenuLink
+          properties:
+            title: Hover B
+    blocks:
+      - id: dm_hover_trigger
+        type: Button
+        properties:
+          title: Hover Menu
+
+  # ============================================
+  # DISABLED ITEMS
+  # ============================================
+
+  - id: dm_disabled
+    type: DropdownMenu
+    properties:
+      trigger: click
+      links:
+        - id: dm_dis_enabled
+          type: MenuLink
+          properties:
+            title: Enabled
+        - id: dm_dis_disabled
+          type: MenuLink
+          properties:
+            title: Disabled
+            disabled: true
+    events:
+      onClick:
+        - id: dm_dis_set
+          type: SetState
+          params:
+            dm_disabled_result:
+              _event: key
+    blocks:
+      - id: dm_disabled_trigger
+        type: Button
+        properties:
+          title: Disabled Items
+
+  - id: dm_disabled_display
+    type: Paragraph
+    properties:
+      content:
+        _state: dm_disabled_result
+
+  # ============================================
+  # GROUPS AND DIVIDERS
+  # ============================================
+
+  - id: dm_groups
+    type: DropdownMenu
+    properties:
+      trigger: click
+      links:
+        - id: dm_grp_nav
+          type: MenuGroup
+          properties:
+            title: Navigation
+          links:
+            - id: dm_grp_home
+              type: MenuLink
+              properties:
+                title: Home
+            - id: dm_grp_about
+              type: MenuLink
+              properties:
+                title: About
+        - id: dm_grp_div
+          type: MenuDivider
+        - id: dm_grp_other
+          type: MenuLink
+          properties:
+            title: Other
+    blocks:
+      - id: dm_groups_trigger
+        type: Button
+        properties:
+          title: Grouped Menu
+
+  # ============================================
+  # onOpenChange EVENT
+  # ============================================
+
+  - id: dm_openchange
+    type: DropdownMenu
+    properties:
+      trigger: click
+      links:
+        - id: dm_oc_item
+          type: MenuLink
+          properties:
+            title: Item
+    events:
+      onOpenChange:
+        - id: dm_oc_set
+          type: SetState
+          params:
+            dm_open_changed: true
+    blocks:
+      - id: dm_openchange_trigger
+        type: Button
+        properties:
+          title: Open Change
+
+  - id: dm_openchange_display
+    type: Paragraph
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: dm_open_changed
+              - true
+          then: Open changed!
+          else: ''
+
+  # ============================================
+  # ICONS ON ITEMS
+  # ============================================
+
+  - id: dm_icons
+    type: DropdownMenu
+    properties:
+      trigger: click
+      links:
+        - id: dm_icon_item1
+          type: MenuLink
+          properties:
+            title: With Icon
+            icon: AiOutlineStar
+        - id: dm_icon_item2
+          type: MenuLink
+          properties:
+            title: No Icon
+    blocks:
+      - id: dm_icons_trigger
+        type: Button
+        properties:
+          title: Icons Menu
+
+  # ============================================
+  # SHORTCUT TESTS
+  # ============================================
+
+  - id: dm_shortcut
+    type: DropdownMenu
+    properties:
+      trigger: click
+      links:
+        - id: dm_sc_home
+          type: MenuLink
+          properties:
+            title: Home
+            shortcut: mod+j
+        - id: dm_sc_settings
+          type: MenuLink
+          properties:
+            title: Settings
+            shortcut: mod+;
+        - id: dm_sc_none
+          type: MenuLink
+          properties:
+            title: No Shortcut
+    events:
+      onClick:
+        - id: dm_sc_set
+          type: SetState
+          params:
+            dm_shortcut_result:
+              _event: key
+    blocks:
+      - id: dm_shortcut_trigger
+        type: Button
+        properties:
+          title: Shortcut Menu
+
+  - id: dm_shortcut_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: dm_shortcut_result
+              - null
+          then:
+            _string.concat:
+              - 'clicked:'
+              - _state: dm_shortcut_result
+          else: ''

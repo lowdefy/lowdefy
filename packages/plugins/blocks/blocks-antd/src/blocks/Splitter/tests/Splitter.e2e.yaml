@@ -1,0 +1,114 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: splitter_block
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: sp_basic
+    type: Splitter
+    style:
+      minHeight: 200px
+    properties:
+      panels:
+        - key: left
+        - key: right
+    slots:
+      left:
+        blocks:
+          - id: sp_left_text
+            type: Paragraph
+            properties:
+              content: Left Panel
+      right:
+        blocks:
+          - id: sp_right_text
+            type: Paragraph
+            properties:
+              content: Right Panel
+
+  # ============================================
+  # VERTICAL LAYOUT
+  # ============================================
+
+  - id: sp_vertical
+    type: Splitter
+    properties:
+      layout: vertical
+      panels:
+        - key: top
+        - key: bottom
+    style:
+      height: 300px
+    slots:
+      top:
+        blocks:
+          - id: sp_top_text
+            type: Paragraph
+            properties:
+              content: Top Panel
+      bottom:
+        blocks:
+          - id: sp_bottom_text
+            type: Paragraph
+            properties:
+              content: Bottom Panel
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  - id: sp_resize
+    type: Splitter
+    style:
+      minHeight: 200px
+    properties:
+      panels:
+        - key: a
+        - key: b
+    events:
+      onResizeEnd:
+        - id: set_resized
+          type: SetState
+          params:
+            sp_resized: true
+    slots:
+      a:
+        blocks:
+          - id: sp_a_text
+            type: Paragraph
+            properties:
+              content: Panel A
+      b:
+        blocks:
+          - id: sp_b_text
+            type: Paragraph
+            properties:
+              content: Panel B
+
+  - id: sp_resize_display
+    type: Paragraph
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: sp_resized
+              - true
+          then: Resize fired
+          else: ''

@@ -10,7 +10,7 @@ This package provides:
 - Action execution pipeline (Actions class)
 - Event handling (Events class)
 - Request orchestration (Requests class)
-- Block area management (Areas class)
+- Block slot management (Slots class, renamed from Areas)
 - Navigation link creation
 
 ## Key Exports
@@ -18,7 +18,7 @@ This package provides:
 ```javascript
 import getContext, {
   Actions,
-  Areas,
+  Slots,
   createLink,
   Events,
   Requests,
@@ -46,7 +46,7 @@ const context = getContext({
 │           ┌──────────────────┼──────────────────┐               │
 │           ▼                  ▼                  ▼               │
 │  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐         │
-│  │   Events    │    │  Requests   │    │    Areas    │         │
+│  │   Events    │    │  Requests   │    │    Slots    │         │
 │  │ (handlers)  │    │  (data)     │    │  (blocks)   │         │
 │  └──────┬──────┘    └─────────────┘    └─────────────┘         │
 │         │                                                       │
@@ -122,6 +122,13 @@ Events orchestrate action execution and handle:
 - Error handling per action
 - Debounce support (prevents rapid-fire execution)
 - Event-level catch actions for error recovery
+- Keyboard shortcut metadata storage
+
+#### Shortcut Support
+
+`initEvent()` preserves the `shortcut` string (or string array) from the event config on the runtime event object. Blocks access it via `events.onClick?.shortcut` to render shortcut badges.
+
+The `shortcut` property is read-only metadata — the Events class doesn't handle keyboard listening. The ShortcutManager in `@lowdefy/client` reads shortcut strings from the block tree and registers the actual keyboard listeners via tinykeys.
 
 ### Actions
 
@@ -183,30 +190,32 @@ Requests class handles:
 - Error handling
 - Automatic retry on transient failures
 
-### Areas
+### Slots
 
-Manages the block tree structure:
+Manages the block tree structure (renamed from Areas in v5):
 
 ```javascript
-// Block areas
-areas:
+// Block slots
+slots:
   content:
     blocks:
       - id: header
         type: Title
       - id: form
         type: Box
-        areas:
+        slots:
           content:
             blocks: [...]
 ```
 
-Areas class:
+Slots class:
 
 - Builds block hierarchy
-- Evaluates block properties
+- Evaluates block properties (including `class` and `styles`)
 - Manages block visibility
 - Handles skeleton loading
+
+The engine also evaluates `class` (string, array, or cssKey-keyed object of Tailwind classes) and `styles` (cssKey-keyed inline style objects) alongside properties.
 
 ## State Container Structure
 

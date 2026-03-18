@@ -15,15 +15,14 @@
 */
 
 import React from 'react';
-import { makeCssClass } from '@lowdefy/block-utils';
 
-const DisplayMessage = ({ Component, id, methods }) => {
+const DisplayMessage = ({ Component, components, id, methods }) => {
   return (
     <Component
       blockId={id}
+      components={components}
       key={id}
       methods={{
-        makeCssClass,
         registerMethod: methods.registerMethod,
         triggerEvent: () => undefined,
       }}

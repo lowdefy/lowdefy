@@ -14,10 +14,20 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import getContext from '@lowdefy/engine';
 
+import createShortcutManager from './createShortcutManager.js';
 import MountEvents from './MountEvents.js';
+
+const ShortcutEffect = ({ context }) => {
+  useEffect(() => {
+    const manager = createShortcutManager();
+    manager.init(context);
+    return () => manager.destroy();
+  }, [context]);
+  return null;
+};
 
 const Context = ({ children, config, jsMap, lowdefy, resetContext }) => {
   const context = getContext({ config, jsMap, lowdefy, resetContext });
@@ -41,7 +51,12 @@ const Context = ({ children, config, jsMap, lowdefy, resetContext }) => {
     >
       {(loadingOnInit) => {
         if (loadingOnInit) return '';
-        return children(context);
+        return (
+          <>
+            <ShortcutEffect context={context} />
+            {children(context)}
+          </>
+        );
       }}
     </MountEvents>
   );

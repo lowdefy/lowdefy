@@ -13,34 +13,17 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: Drawer
-    category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Drawer/schema.json
+    pageId: Drawer
+    pageTitle: Drawer
+    section: Container Blocks
     filePath: blocks/container/Drawer.yaml
-    description_content: |
-      A panel which slides in from the edge of the screen.
-      The Drawer has a single area, `content`.
-
-      > To open the drawer, invoke a drawer method.
-    areas:
-      - content
-      - extra
-    methods:
-      - name: toggleOpen
-        onClick:
-          - id: toggleOpen
-            type: CallMethod
-            params:
-              blockId: block_id
-              method: toggleOpen
-      - name: setOpen
-        onClick:
-          - id: setOpen
-            type: CallMethod
-            params:
-              blockId: block_id
-              method: setOpen
-              args:
-                - open: true
+    block_type: Drawer
+    antd_component: Drawer
+    antd_url: drawer
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/Drawer
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Drawer/meta.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/Drawer/gallery.yaml
+    description: >
+      Panel that slides in from the edge of the screen.

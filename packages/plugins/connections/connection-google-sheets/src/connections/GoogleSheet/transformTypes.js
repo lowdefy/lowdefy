@@ -15,7 +15,10 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import moment from 'moment';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc.js';
+
+dayjs.extend(utc);
 
 const readTransformers = {
   string: (value) => value,
@@ -26,7 +29,10 @@ const readTransformers = {
   },
   boolean: (value) => value === 'TRUE',
   date: (value) => {
-    const date = moment.utc(value);
+    // Reject short strings that aren't meaningful dates (e.g. "1", "01")
+    // but dayjs would parse timezone-dependently.
+    if (typeof value === 'string' && value.length < 4) return null;
+    const date = dayjs.utc(value);
     if (!date.isValid()) return null;
     return date.toDate();
   },

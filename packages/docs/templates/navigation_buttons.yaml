@@ -18,7 +18,7 @@ style:
   marginTop: 40px
   marginBottom: 80px
 layout:
-  contentGutter: 16
+  gap: 16
 blocks:
   - id: previous_button
     type: Button
@@ -31,7 +31,6 @@ blocks:
       size: large
       title:
         _var: previous_page_title
-      type: default
     events:
       onClick:
         - id: link_back
@@ -54,7 +53,6 @@ blocks:
       size: large
       title:
         _var: next_page_title
-      type: default
     events:
       onClick:
         - id: link_forward

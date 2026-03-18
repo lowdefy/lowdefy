@@ -19,31 +19,31 @@ import { describe, expect, test } from '@jest/globals';
 import parseRefContent from './parseRefContent.js';
 
 describe('parseRefContent', () => {
-  test('parses YAML content', () => {
+  test('parses YAML content', async () => {
     const content = `id: home
 type: Box`;
-    const result = parseRefContent({ content, refDef: { path: 'test.yaml' } });
+    const result = await parseRefContent({ content, refDef: { path: 'test.yaml' } });
     expect(result).toEqual({
       id: 'home',
       type: 'Box',
     });
   });
 
-  test('parses YAML content with arrays', () => {
+  test('parses YAML content with arrays', async () => {
     const content = `pages:
   - id: home
     type: Box`;
-    const result = parseRefContent({ content, refDef: { path: 'test.yaml' } });
+    const result = await parseRefContent({ content, refDef: { path: 'test.yaml' } });
     expect(result.pages).toHaveLength(1);
     expect(result.pages[0].id).toBe('home');
   });
 
-  test('adds ~l (line numbers) to YAML objects', () => {
+  test('adds ~l (line numbers) to YAML objects', async () => {
     const content = `id: home
 type: Box
 properties:
   title: Hello`;
-    const result = parseRefContent({ content, refDef: { path: 'test.yaml' } });
+    const result = await parseRefContent({ content, refDef: { path: 'test.yaml' } });
 
     // Root object should have line 1
     expect(result['~l']).toBe(1);
@@ -53,7 +53,7 @@ properties:
     expect(result.properties['~l']).toBe(3);
   });
 
-  test('adds ~l (line numbers) to nested objects in arrays', () => {
+  test('adds ~l (line numbers) to nested objects in arrays', async () => {
     const content = `pages:
   - id: home
     type: Box
@@ -62,7 +62,7 @@ properties:
         type: Title
       - id: content
         type: Paragraph`;
-    const result = parseRefContent({ content, refDef: { path: 'test.yaml' } });
+    const result = await parseRefContent({ content, refDef: { path: 'test.yaml' } });
 
     // Root should be line 1
     expect(result['~l']).toBe(1);
@@ -77,7 +77,7 @@ properties:
     expect(result.pages[0].blocks[1]['~l']).toBe(7);
   });
 
-  test('handles deeply nested structures with line numbers', () => {
+  test('handles deeply nested structures with line numbers', async () => {
     const content = `pages:
   - id: home
     type: Box
@@ -89,7 +89,7 @@ properties:
             type: Title
             properties:
               content: Hello`;
-    const result = parseRefContent({ content, refDef: { path: 'test.yaml' } });
+    const result = await parseRefContent({ content, refDef: { path: 'test.yaml' } });
 
     expect(result['~l']).toBe(1);
     expect(result.pages[0]['~l']).toBe(2);
@@ -99,9 +99,9 @@ properties:
     expect(result.pages[0].blocks[0].blocks[0].properties['~l']).toBe(10);
   });
 
-  test('parses JSON content without line numbers', () => {
+  test('parses JSON content without line numbers', async () => {
     const content = '{"id": "home", "type": "Box"}';
-    const result = parseRefContent({ content, refDef: { path: 'test.json' } });
+    const result = await parseRefContent({ content, refDef: { path: 'test.json' } });
 
     expect(result).toEqual({
       id: 'home',
@@ -111,16 +111,16 @@ properties:
     expect(result['~l']).toBeUndefined();
   });
 
-  test('returns raw content for unknown extensions', () => {
+  test('returns raw content for unknown extensions', async () => {
     const content = 'Hello World';
-    const result = parseRefContent({ content, refDef: { path: 'test.txt' } });
+    const result = await parseRefContent({ content, refDef: { path: 'test.txt' } });
     expect(result).toBe('Hello World');
   });
 
-  test('~l property is non-enumerable', () => {
+  test('~l property is non-enumerable', async () => {
     const content = `id: home
 type: Box`;
-    const result = parseRefContent({ content, refDef: { path: 'test.yaml' } });
+    const result = await parseRefContent({ content, refDef: { path: 'test.yaml' } });
 
     // ~l exists but is not enumerable
     expect(result['~l']).toBe(1);
@@ -128,37 +128,37 @@ type: Box`;
     expect(Object.keys(result)).not.toContain('~l');
   });
 
-  test('YAML parse error in .yaml file includes lineNumber', () => {
+  test('YAML parse error in .yaml file includes lineNumber', async () => {
     const content = `id: home
 type: Box
 properties:
   title: [unclosed bracket`;
-    expect(() => {
-      parseRefContent({ content, refDef: { path: 'test.yaml' } });
-    }).toThrow('YAML parse error in "test.yaml".');
+    await expect(
+      parseRefContent({ content, refDef: { path: 'test.yaml' } })
+    ).rejects.toThrow('YAML parse error in "test.yaml".');
     try {
-      parseRefContent({ content, refDef: { path: 'test.yaml' } });
+      await parseRefContent({ content, refDef: { path: 'test.yaml' } });
     } catch (error) {
       expect(error.lineNumber).not.toBeNull();
       expect(error.filePath).toBe('test.yaml');
     }
   });
 
-  test('YAML parse error in .yaml.njk file does not include lineNumber', () => {
+  test('YAML parse error in .yaml.njk file does not include lineNumber', async () => {
     // Nunjucks vars: {{ title }} renders to the value of title.
     // The generated YAML has an unclosed bracket causing a parse error.
     const content = `id: home
 type: Box
 properties:
   title: {{ title }}`;
-    expect(() => {
+    await expect(
       parseRefContent({
         content,
         refDef: { path: 'page.yaml.njk', vars: { title: '[unclosed bracket' } },
-      });
-    }).toThrow('Nunjucks template "page.yaml.njk" produced invalid YAML.');
+      })
+    ).rejects.toThrow('Nunjucks template "page.yaml.njk" produced invalid YAML.');
     try {
-      parseRefContent({
+      await parseRefContent({
         content,
         refDef: { path: 'page.yaml.njk', vars: { title: '[unclosed bracket' } },
       });

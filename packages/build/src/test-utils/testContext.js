@@ -29,6 +29,7 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
     stage: 'test',
     directories: {
       config: configDirectory || '',
+      server: '',
     },
     typeCounters: {
       actions: createCounter(),

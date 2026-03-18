@@ -1,0 +1,535 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Text Inputs
+  blocks:
+    - id: ig_text_default
+      type: TextInput
+      properties:
+        label:
+          title: TextInput
+        placeholder: Type something...
+    - id: ig_text_prefix
+      type: TextInput
+      properties:
+        label:
+          title: With prefix icon
+        prefixIcon: AiOutlineUser
+        placeholder: Username
+    - id: ig_text_count
+      type: TextInput
+      properties:
+        label:
+          title: With character count
+        showCount: true
+        maxLength: 50
+    - id: ig_password
+      type: PasswordInput
+      properties:
+        label:
+          title: PasswordInput
+        placeholder: Enter password
+    - id: ig_number
+      type: NumberInput
+      properties:
+        label:
+          title: NumberInput
+        placeholder: Enter a number
+        min: 0
+        max: 100
+        step: 1
+    - id: ig_number_no_controls
+      type: NumberInput
+      properties:
+        label:
+          title: NumberInput (no controls)
+        controls: false
+        placeholder: '0.00'
+        precision: 2
+    - id: ig_textarea
+      type: TextArea
+      properties:
+        label:
+          title: TextArea
+        placeholder: Write a longer message...
+        rows: 3
+    - id: ig_textarea_auto
+      type: TextArea
+      properties:
+        label:
+          title: TextArea (auto-size)
+        autoSize:
+          minRows: 2
+          maxRows: 6
+        placeholder: Auto-expanding text area
+    - id: ig_autocomplete
+      type: AutoComplete
+      properties:
+        label:
+          title: AutoComplete
+        placeholder: Type or select item
+        options:
+          - Apple
+          - Banana
+          - Cherry
+          - Date
+          - Elderberry
+    - id: ig_phone
+      type: PhoneNumberInput
+      properties:
+        label:
+          title: PhoneNumberInput
+        placeholder: Phone number
+
+- title: Selectors
+  blocks:
+    - id: ig_selector
+      type: Selector
+      properties:
+        label:
+          title: Selector
+        placeholder: Select an item
+        options:
+          - Option A
+          - Option B
+          - Option C
+    - id: ig_selector_search
+      type: Selector
+      properties:
+        label:
+          title: Selector (searchable)
+        showSearch: true
+        placeholder: Search items...
+        options:
+          - label: United States
+            value: us
+          - label: United Kingdom
+            value: uk
+          - label: Germany
+            value: de
+          - label: France
+            value: fr
+          - label: Japan
+            value: jp
+    - id: ig_multi
+      type: MultipleSelector
+      properties:
+        label:
+          title: MultipleSelector
+        placeholder: Select multiple items
+        options:
+          - React
+          - Vue
+          - Angular
+          - Svelte
+          - Solid
+    - id: ig_multi_tags
+      type: MultipleSelector
+      properties:
+        label:
+          title: MultipleSelector (tags)
+        placeholder: Select tags
+        options:
+          - label: Bug
+            value: bug
+            tag:
+              color: red
+          - label: Feature
+            value: feature
+            tag:
+              color: blue
+          - label: Enhancement
+            value: enhancement
+            tag:
+              color: green
+          - label: Documentation
+            value: docs
+            tag:
+              color: orange
+    - id: ig_tree
+      type: TreeSelector
+      properties:
+        label:
+          title: TreeSelector
+        options:
+          - label: Engineering
+            value: eng
+            children:
+              - label: Frontend
+                value: fe
+              - label: Backend
+                value: be
+          - label: Design
+            value: design
+            children:
+              - label: UX
+                value: ux
+              - label: UI
+                value: ui
+
+- title: Choice Inputs
+  blocks:
+    - id: ig_radio
+      type: RadioSelector
+      properties:
+        label:
+          title: RadioSelector
+        options:
+          - Small
+          - Medium
+          - Large
+    - id: ig_radio_vertical
+      type: RadioSelector
+      properties:
+        label:
+          title: RadioSelector (vertical)
+        direction: vertical
+        options:
+          - Option 1
+          - Option 2
+          - Option 3
+    - id: ig_checkbox
+      type: CheckboxSelector
+      properties:
+        label:
+          title: CheckboxSelector
+        options:
+          - Email
+          - SMS
+          - Push notification
+    - id: ig_checkbox_vertical
+      type: CheckboxSelector
+      properties:
+        label:
+          title: CheckboxSelector (vertical)
+        direction: vertical
+        options:
+          - Read
+          - Write
+          - Execute
+    - id: ig_button_sel
+      type: ButtonSelector
+      properties:
+        label:
+          title: ButtonSelector
+        options:
+          - Daily
+          - Weekly
+          - Monthly
+    - id: ig_button_sel_outline
+      type: ButtonSelector
+      properties:
+        label:
+          title: ButtonSelector (outline)
+        buttonStyle: outline
+        options:
+          - S
+          - M
+          - L
+          - XL
+    - id: ig_segmented
+      type: SegmentedSelector
+      properties:
+        label:
+          title: SegmentedSelector
+        options:
+          - List
+          - Grid
+          - Table
+    - id: ig_segmented_block
+      type: SegmentedSelector
+      properties:
+        label:
+          title: SegmentedSelector (block)
+        block: true
+        options:
+          - Day
+          - Week
+          - Month
+          - Year
+
+- title: Toggles
+  blocks:
+    - id: ig_switch
+      type: Switch
+      properties:
+        label:
+          title: Switch
+    - id: ig_switch_text
+      type: Switch
+      properties:
+        label:
+          title: Switch (with text)
+        checkedText: 'ON'
+        uncheckedText: 'OFF'
+    - id: ig_switch_icon
+      type: Switch
+      properties:
+        label:
+          title: Switch (with icons)
+        checkedIcon: AiOutlineCheck
+        uncheckedIcon: AiOutlineClose
+    - id: ig_checkbox_sw
+      type: CheckboxSwitch
+      properties:
+        label:
+          title: CheckboxSwitch
+        description: I agree to the terms and conditions
+
+- title: Date & Time Pickers
+  blocks:
+    - id: ig_date
+      type: DateSelector
+      properties:
+        label:
+          title: DateSelector
+        placeholder: Select a date
+    - id: ig_datetime
+      type: DateTimeSelector
+      properties:
+        label:
+          title: DateTimeSelector
+        placeholder: Select date & time
+    - id: ig_daterange
+      type: DateRangeSelector
+      properties:
+        label:
+          title: DateRangeSelector
+    - id: ig_month
+      type: MonthSelector
+      properties:
+        label:
+          title: MonthSelector
+        placeholder: Select month
+    - id: ig_week
+      type: WeekSelector
+      properties:
+        label:
+          title: WeekSelector
+        placeholder: Select week
+
+- title: Color Selectors
+  blocks:
+    - id: ig_colorselector
+      type: ColorSelector
+      properties:
+        label:
+          title: ColorSelector
+        showText: true
+      events:
+        onMount:
+          - id: set_ig_colorselector
+            type: SetState
+            params:
+              ig_colorselector: '#1677ff'
+    - id: ig_colorselector_presets
+      type: ColorSelector
+      properties:
+        label:
+          title: ColorSelector (presets)
+        showText: true
+        presets:
+          - label: Brand
+            colors:
+              - '#1677ff'
+              - '#13c2c2'
+              - '#52c41a'
+              - '#faad14'
+              - '#f5222d'
+          - label: Neutral
+            colors:
+              - '#000000'
+              - '#333333'
+              - '#666666'
+              - '#999999'
+              - '#ffffff'
+      events:
+        onMount:
+          - id: set_ig_colorselector_presets
+            type: SetState
+            params:
+              ig_colorselector_presets: '#1677ff'
+
+- title: Sliders & Pagination
+  blocks:
+    - id: ig_rating
+      type: RatingSlider
+      properties:
+        label:
+          title: RatingSlider
+    - id: ig_rating_custom
+      type: RatingSlider
+      properties:
+        label:
+          title: RatingSlider (custom range)
+        min: 1
+        max: 5
+        step: 1
+        disableNotApplicable: true
+        color: '#faad14'
+    - id: ig_pagination
+      type: Pagination
+      properties:
+        label:
+          title: Pagination
+        total: 100
+    - id: ig_pagination_full
+      type: Pagination
+      properties:
+        label:
+          title: Pagination (full features)
+        total: 500
+        showSizeChanger: true
+        showQuickJumper: true
+
+- title: Editable Typography
+  blocks:
+    - id: ig_title_input
+      type: TitleInput
+      properties:
+        label:
+          title: TitleInput
+    - id: ig_title_input_level
+      type: TitleInput
+      properties:
+        label:
+          title: TitleInput (level 3)
+        level: 3
+    - id: ig_paragraph_input
+      type: ParagraphInput
+      properties:
+        label:
+          title: ParagraphInput
+    - id: ig_paragraph_copyable
+      type: ParagraphInput
+      properties:
+        label:
+          title: ParagraphInput (copyable)
+        copyable: true
+
+- title: Sizes
+  blocks:
+    - id: ig_size_sm_text
+      type: TextInput
+      properties:
+        label:
+          title: Small TextInput
+        size: small
+        placeholder: Small
+    - id: ig_size_md_text
+      type: TextInput
+      properties:
+        label:
+          title: Default TextInput
+        placeholder: Default
+    - id: ig_size_lg_text
+      type: TextInput
+      properties:
+        label:
+          title: Large TextInput
+        size: large
+        placeholder: Large
+    - id: ig_size_sm_sel
+      type: Selector
+      properties:
+        label:
+          title: Small Selector
+        size: small
+        placeholder: Small
+        options:
+          - A
+          - B
+    - id: ig_size_md_sel
+      type: Selector
+      properties:
+        label:
+          title: Default Selector
+        placeholder: Default
+        options:
+          - A
+          - B
+    - id: ig_size_lg_sel
+      type: Selector
+      properties:
+        label:
+          title: Large Selector
+        size: large
+        placeholder: Large
+        options:
+          - A
+          - B
+
+- title: Variants
+  blocks:
+    - id: ig_var_outlined
+      type: TextInput
+      properties:
+        label:
+          title: Outlined (default)
+        placeholder: outlined
+    - id: ig_var_filled
+      type: DateSelector
+      properties:
+        label:
+          title: Filled
+        variant: filled
+        placeholder: filled
+    - id: ig_var_borderless
+      type: DateSelector
+      properties:
+        label:
+          title: Borderless
+        variant: borderless
+        placeholder: borderless
+
+- title: Disabled State
+  blocks:
+    - id: ig_dis_text
+      type: TextInput
+      properties:
+        label:
+          title: TextInput
+        disabled: true
+        placeholder: Disabled
+    - id: ig_dis_sel
+      type: Selector
+      properties:
+        label:
+          title: Selector
+        disabled: true
+        placeholder: Disabled
+        options:
+          - A
+          - B
+    - id: ig_dis_radio
+      type: RadioSelector
+      properties:
+        label:
+          title: RadioSelector
+        disabled: true
+        options:
+          - Option 1
+          - Option 2
+    - id: ig_dis_switch
+      type: Switch
+      properties:
+        label:
+          title: Switch
+        disabled: true
+    - id: ig_dis_date
+      type: DateSelector
+      properties:
+        label:
+          title: DateSelector
+        disabled: true

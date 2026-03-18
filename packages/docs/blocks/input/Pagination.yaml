@@ -13,21 +13,17 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: Pagination
-    value_type: object
-    category: input
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Pagination/schema.json
+    pageId: Pagination
+    pageTitle: Pagination
+    section: Input Blocks
     filePath: blocks/input/Pagination.yaml
-    init_property_values:
-      pageSizeOptions: [10, 20, 30, 40]
-    init_state_values:
-      block_id:
-        current: 1
-        pageSize: 10
-        skip: 0
-    description_content: |
-      The `Pagination` controls user input for pagination purposes.
-
-      > This block does not paginate requests, it only manage pagination parameters which can be used to control pagination requests.
+    block_type: Pagination
+    antd_component: Pagination
+    antd_url: pagination
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/Pagination
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Pagination/meta.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/Pagination/gallery.yaml
+    description: >
+      Pagination control with page size changer and quick jumper.

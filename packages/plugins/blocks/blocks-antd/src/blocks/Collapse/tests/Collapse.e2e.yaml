@@ -30,7 +30,7 @@ blocks:
           title: Panel 2
         - key: panel3
           title: Panel 3
-    areas:
+    slots:
       panel1:
         blocks:
           - id: collapse_basic_panel1_content
@@ -63,7 +63,7 @@ blocks:
           title: Accordion Panel 1
         - key: acc2
           title: Accordion Panel 2
-    areas:
+    slots:
       acc1:
         blocks:
           - id: collapse_accordion_panel1_content
@@ -88,7 +88,7 @@ blocks:
       panels:
         - key: borderless1
           title: Borderless Panel
-    areas:
+    slots:
       borderless1:
         blocks:
           - id: collapse_borderless_content
@@ -103,11 +103,11 @@ blocks:
   - id: collapse_icon_right
     type: Collapse
     properties:
-      expandIconPosition: right
+      expandIconPlacement: end
       panels:
         - key: iconright1
           title: Icon on Right
-    areas:
+    slots:
       iconright1:
         blocks:
           - id: collapse_icon_right_content
@@ -128,7 +128,7 @@ blocks:
         - key: disabled
           title: Disabled Panel
           disabled: true
-    areas:
+    slots:
       enabled:
         blocks:
           - id: collapse_enabled_content
@@ -155,7 +155,7 @@ blocks:
           title: First Panel
         - key: second
           title: Second Panel (Default Open)
-    areas:
+    slots:
       first:
         blocks:
           - id: collapse_default_first_content
@@ -185,7 +185,7 @@ blocks:
           type: SetState
           params:
             collapse_changed: true
-    areas:
+    slots:
       change1:
         blocks:
           - id: collapse_onchange_content

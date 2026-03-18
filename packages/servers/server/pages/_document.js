@@ -25,7 +25,7 @@ const basePath = lowdefyConfig.basePath ?? '';
 class LowdefyDocument extends Document {
   render() {
     return (
-      <Html>
+      <Html className="lowdefy">
         <Head>
           <link rel="manifest" href={`${basePath}/manifest.webmanifest`} />
           <link rel="icon" type="image/svg+xml" href={`${basePath}/icon.svg`} />

@@ -64,13 +64,13 @@ test('block events actions array should map to try catch', () => {
     ],
   };
   const res = buildPages({ components, context });
-  expect(get(res, 'pages.0.areas.content.blocks.0.events.onClick.try')).toEqual([
+  expect(get(res, 'pages.0.slots.content.blocks.0.events.onClick.try')).toEqual([
     {
       id: 'action_1',
       type: 'Reset',
     },
   ]);
-  expect(get(res, 'pages.0.areas.content.blocks.0.events.onClick.catch')).toEqual([]);
+  expect(get(res, 'pages.0.slots.content.blocks.0.events.onClick.catch')).toEqual([]);
 });
 
 test('block events actions as try catch arrays', () => {
@@ -106,13 +106,13 @@ test('block events actions as try catch arrays', () => {
     ],
   };
   const res = buildPages({ components, context });
-  expect(get(res, 'pages.0.areas.content.blocks.0.events.onClick.try')).toEqual([
+  expect(get(res, 'pages.0.slots.content.blocks.0.events.onClick.try')).toEqual([
     {
       id: 'action_1',
       type: 'Reset',
     },
   ]);
-  expect(get(res, 'pages.0.areas.content.blocks.0.events.onClick.catch')).toEqual([
+  expect(get(res, 'pages.0.slots.content.blocks.0.events.onClick.catch')).toEqual([
     {
       id: 'action_2',
       type: 'Retry',
@@ -147,13 +147,13 @@ test('block events actions as try array and catch not defined.', () => {
     ],
   };
   const res = buildPages({ components, context });
-  expect(get(res, 'pages.0.areas.content.blocks.0.events.onClick.try')).toEqual([
+  expect(get(res, 'pages.0.slots.content.blocks.0.events.onClick.try')).toEqual([
     {
       id: 'action_1',
       type: 'Reset',
     },
   ]);
-  expect(get(res, 'pages.0.areas.content.blocks.0.events.onClick.catch')).toEqual([]);
+  expect(get(res, 'pages.0.slots.content.blocks.0.events.onClick.catch')).toEqual([]);
 });
 
 test('block events actions try not an array', () => {
@@ -441,7 +441,7 @@ test("don't throw on Duplicate separate block events action ids", () => {
     ],
   };
   const res = buildPages({ components, context });
-  expect(get(res, 'pages.0.areas.content.blocks.0')).toEqual({
+  expect(get(res, 'pages.0.slots.content.blocks.0')).toEqual({
     blockId: 'block_1',
     events: {
       onChange: {

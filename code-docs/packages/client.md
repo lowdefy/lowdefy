@@ -79,6 +79,19 @@ import Client from '@lowdefy/client';
 | `createCallAPI.js`     | Creates function to call custom endpoints |
 | `request.js`           | HTTP request utilities                    |
 
+### Keyboard Shortcuts
+
+| Module                     | Purpose                                                 |
+| -------------------------- | ------------------------------------------------------- |
+| `createShortcutManager.js` | Global keyboard shortcut listener lifecycle (tinykeys)  |
+| `createShortcutBadge.js`   | ShortcutBadge React component for visual key indicators |
+
+**ShortcutManager lifecycle:** Initialized on page context creation → walks block tree to collect all shortcuts → registers a single global keydown listener via tinykeys → checks block visibility lazily per handler → destroyed on context change/unmount.
+
+**ShortcutBadge** is registered in `initLowdefyContext.js` as a component (alongside Icon and Link). Blocks receive it via props and render it next to titles/labels. It detects the platform (Mac vs Windows/Linux) and renders modifier symbols accordingly (⌘/⇧/⌥ on Mac, Ctrl/Shift/Alt elsewhere).
+
+See [keyboard-shortcuts.md](../architecture/keyboard-shortcuts.md) for the full data flow.
+
 ### Context Initialization
 
 | Module                   | Purpose                                                      |
@@ -222,7 +235,7 @@ Blocks receive it as a prop, not via React context, for performance.
 ## Integration Points
 
 - **@lowdefy/engine**: Provides state management and actions
-- **@lowdefy/layout**: Provides layout components
+- **@lowdefy/layout**: Provides layout components. Container.js, InputContainer.js, etc. pass `classNames.block`/`styles.block` to BlockLayout, and layout components accept `className`/`style` props instead of the deprecated `makeCssClass`/`blockStyle`/`areaStyle` pattern.
 - **@lowdefy/block-utils**: Block helper utilities
 - **Block plugins**: Actual UI components
 - **Next.js**: Router and head management

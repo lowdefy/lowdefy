@@ -19,18 +19,25 @@ const transformer = (_, obj) => {
     id: 'examples',
     type: 'Box',
     layout: {
-      contentGutter: 16,
+      gap: 16,
     },
     blocks: [],
   };
   obj.examples.forEach((example, i) => {
+    // Support both structured { title, block } and raw block { id, type } formats.
+    const isRawBlock = example.type && !example.block;
+    const title = isRawBlock ? example.id : example.title;
+    const block = isRawBlock ? example : example.block;
+    const description = isRawBlock ? '' : example.description || '';
+    const extra = isRawBlock ? undefined : example.extra;
+
     examples.blocks.push({
       id: `example_title_${i}`,
       type: 'Markdown',
       properties: {
-        content: `#####  ${example.title}
+        content: `#####  ${title}
 
-${example.description || ''}
+${description}
 `,
       },
     });
@@ -40,7 +47,7 @@ ${example.description || ''}
       layout: {
         span: 12,
       },
-      blocks: example.extra ? [example.block, example.extra] : [example.block],
+      blocks: extra ? [block, extra] : [block],
     });
     examples.blocks.push({
       id: `example_config_box_${i}`,
@@ -62,10 +69,10 @@ ${example.description || ''}
 `,
                 on: {
                   block: {
-                    '_yaml.stringify': [
-                      { '_json.parse': JSON.stringify(example.block) },
+                    _custom_yaml_stringify: [
+                      JSON.parse(JSON.stringify(block)),
                       { sortKeys: false },
-                    ], // copy this object, build must make a copy
+                    ],
                   },
                 },
               },

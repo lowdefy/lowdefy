@@ -94,13 +94,13 @@ test.describe('Tooltip Block', () => {
     await expect(tooltip).toBeVisible();
   });
 
-  test('renders tooltip visible by default when defaultVisible is true', async ({ page }) => {
+  test('renders tooltip visible by default when defaultOpen is true', async ({ page }) => {
     // This tooltip should be visible without any interaction
     const tooltip = page.locator('.ant-tooltip').filter({ hasText: 'Visible by default' });
     await expect(tooltip).toBeVisible();
   });
 
-  test('onVisibleChange event fires when tooltip visibility changes', async ({ page }) => {
+  test('onOpenChange event fires when tooltip visibility changes', async ({ page }) => {
     const trigger = getBlock(page, 'tooltip_onvisiblechange_trigger');
     await trigger.click();
     const display = getBlock(page, 'onvisiblechange_display');

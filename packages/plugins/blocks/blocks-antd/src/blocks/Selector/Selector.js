@@ -15,11 +15,12 @@
 */
 
 import React, { useState } from 'react';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { get, type } from '@lowdefy/helpers';
 import { Select } from 'antd';
 
 import Label from '../Label/Label.js';
+import withTheme from '../withTheme.js';
 import getValueIndex from '../../getValueIndex.js';
 import getUniqueValues from '../../getUniqueValues.js';
 
@@ -27,12 +28,14 @@ const Option = Select.Option;
 
 const Selector = ({
   blockId,
+  classNames = {},
   components: { Icon, Link },
   events,
   loading,
   methods,
   properties,
   required,
+  styles = {},
   validation,
   value,
 }) => {
@@ -42,19 +45,22 @@ const Selector = ({
   return (
     <Label
       blockId={blockId}
+      classNames={classNames}
       components={{ Icon, Link }}
       events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}
+      styles={styles}
       content={{
         content: () => (
-          <div className={methods.makeCssClass({ width: '100%' })}>
+          <div style={{ width: '100%' }}>
             <div id={`${blockId}_${elementId}_popup`} />
             <Select
               id={`${blockId}_input`}
-              bordered={properties.bordered}
-              className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
+              variant={properties.bordered === false ? 'borderless' : properties.variant}
+              className={classNames.element}
+              style={{ width: '100%', ...styles.element }}
               mode="single"
               autoFocus={properties.autoFocus}
               getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
@@ -65,8 +71,10 @@ const Selector = ({
                 properties.suffixIcon && (
                   <Icon
                     blockId={`${blockId}_suffixIcon`}
+                    classNames={{ element: classNames.suffixIcon }}
                     events={events}
                     properties={properties.suffixIcon}
+                    styles={{ element: styles.suffixIcon }}
                   />
                 )
               }
@@ -74,8 +82,10 @@ const Selector = ({
                 properties.clearIcon && (
                   <Icon
                     blockId={`${blockId}_clearIcon`}
+                    classNames={{ element: classNames.clearIcon }}
                     events={events}
                     properties={properties.clearIcon}
+                    styles={{ element: styles.clearIcon }}
                   />
                 )
               }
@@ -121,7 +131,8 @@ const Selector = ({
               {uniqueValueOptions.map((opt, i) =>
                 type.isPrimitive(opt) ? (
                   <Option
-                    className={methods.makeCssClass(properties.optionsStyle)}
+                    style={styles.options}
+                    className={classNames.options}
                     id={`${blockId}_${i}`}
                     key={i}
                     value={`${i}`}
@@ -130,7 +141,8 @@ const Selector = ({
                   </Option>
                 ) : (
                   <Option
-                    className={methods.makeCssClass([properties.optionsStyle, opt.style])}
+                    style={{ ...styles.options, ...opt.style }}
+                    className={classNames.options}
                     disabled={opt.disabled}
                     filterstring={opt.filterString}
                     id={`${blockId}_${i}`}
@@ -151,12 +163,4 @@ const Selector = ({
   );
 };
 
-Selector.defaultProps = blockDefaultProps;
-Selector.meta = {
-  valueType: 'any',
-  category: 'input',
-  icons: [...Label.meta.icons],
-  styles: ['blocks/Selector/style.less'],
-};
-
-export default Selector;
+export default withTheme('Select', withBlockDefaults(Selector));

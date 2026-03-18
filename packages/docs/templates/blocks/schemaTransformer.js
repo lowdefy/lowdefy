@@ -15,9 +15,10 @@
 */
 
 const reviver = (key, value) => {
-  if (key !== 'docs') {
-    return value;
+  if (key === 'docs' || key === '~k' || key === '~r' || key === '~l') {
+    return undefined;
   }
+  return value;
 };
 
 const transformer = (obj) => JSON.parse(JSON.stringify(obj), reviver);

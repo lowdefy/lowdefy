@@ -1,32 +1,18 @@
-const withLess = require('next-with-less');
 const lowdefyConfig = require('./build/config.json');
+const blockPackages = require('./build/blockPackages.json');
 
-const nextConfig = withLess({
+// Transpile @lowdefy/client plus all block plugin packages that may
+// contain CSS imports (e.g., AG Grid themes, loaders, markdown).
+// Built dynamically so custom user plugins are included automatically.
+const transpilePackages = ['@lowdefy/client', ...blockPackages];
+
+const nextConfig = {
   basePath: lowdefyConfig.basePath,
   // reactStrictMode: true,
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      config.resolve.fallback = {
-        assert: false,
-        buffer: false,
-        crypto: false,
-        events: false,
-        fs: false,
-        path: false,
-        process: require.resolve('process/browser'),
-        util: false,
-      };
-    }
-    return config;
-  },
+  turbopack: {},
+  transpilePackages,
   compress: false,
-  outputFileTracing: false,
   poweredByHeader: false,
-  generateEtags: false,
-  optimizeFonts: false,
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-});
+};
 
 module.exports = nextConfig;

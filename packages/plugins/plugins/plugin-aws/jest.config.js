@@ -21,7 +21,7 @@ export default {
         '^.+\\.(t|j)sx?$': ['@swc/jest', { configFile: '../../../../.swcrc.test' }],
         '\\.yaml$': '@lowdefy/jest-yaml-transform',
       },
-      snapshotSerializers: ['@emotion/jest/serializer', 'jest-serializer-html'],
+      snapshotSerializers: ['jest-serializer-html'],
     },
     {
       displayName: 'CLIENT',
@@ -44,7 +44,7 @@ export default {
         '^.+\\.(t|j)sx?$': ['@swc/jest', { configFile: '../../../../.swcrc.test' }],
         '\\.yaml$': '@lowdefy/jest-yaml-transform',
       },
-      snapshotSerializers: ['@emotion/jest/serializer', 'jest-serializer-html'],
+      snapshotSerializers: ['jest-serializer-html'],
     },
   ],
 };

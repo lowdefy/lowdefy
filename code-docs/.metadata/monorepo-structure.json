@@ -23,10 +23,8 @@
     "plugins": {
       "blocks": [
         "@lowdefy/blocks-aggrid",
-        "@lowdefy/blocks-algolia",
         "@lowdefy/blocks-antd",
         "@lowdefy/blocks-basic",
-        "@lowdefy/blocks-color-selectors",
         "@lowdefy/blocks-echarts",
         "@lowdefy/blocks-google-maps",
         "@lowdefy/blocks-loaders",
@@ -48,7 +46,7 @@
         "@lowdefy/operators-diff",
         "@lowdefy/operators-js",
         "@lowdefy/operators-jsonata",
-        "@lowdefy/operators-moment",
+        "@lowdefy/operators-dayjs",
         "@lowdefy/operators-mql",
         "@lowdefy/operators-nunjucks",
         "@lowdefy/operators-uuid",

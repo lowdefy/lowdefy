@@ -1,0 +1,563 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Note: All examples on this page are wrapped in a single GoogleMapsScript
+# block via the docs page template. Individual examples do not need their own script.
+
+- title: Basic Heatmap
+  blocks:
+    - id: heatmap_basic
+      type: GoogleMapsHeatmap
+      properties:
+        map:
+          center:
+            lat: 37.775
+            lng: -122.434
+          zoom: 13
+        heatmap:
+          data:
+            - lat: 37.782
+              lng: -122.447
+            - lat: 37.782
+              lng: -122.445
+            - lat: 37.782
+              lng: -122.443
+            - lat: 37.784
+              lng: -122.441
+            - lat: 37.786
+              lng: -122.439
+            - lat: 37.786
+              lng: -122.435
+            - lat: 37.770
+              lng: -122.432
+            - lat: 37.768
+              lng: -122.430
+
+- title: Map Center and Zoom
+  blocks:
+    - id: heatmap_zoomed_out
+      type: GoogleMapsHeatmap
+      properties:
+        map:
+          center:
+            lat: 51.509
+            lng: -0.118
+          zoom: 10
+        heatmap:
+          data:
+            - lat: 51.512
+              lng: -0.091
+            - lat: 51.507
+              lng: -0.076
+            - lat: 51.503
+              lng: -0.119
+            - lat: 51.515
+              lng: -0.142
+    - id: heatmap_zoomed_in
+      type: GoogleMapsHeatmap
+      properties:
+        map:
+          center:
+            lat: 51.509
+            lng: -0.118
+          zoom: 15
+        heatmap:
+          data:
+            - lat: 51.512
+              lng: -0.091
+            - lat: 51.507
+              lng: -0.076
+            - lat: 51.503
+              lng: -0.119
+            - lat: 51.515
+              lng: -0.142
+
+- title: Map Options
+  blocks:
+    - id: heatmap_map_options
+      type: GoogleMapsHeatmap
+      properties:
+        map:
+          center:
+            lat: 40.7128
+            lng: -74.006
+          zoom: 12
+          options:
+            mapTypeId: satellite
+            disableDefaultUI: true
+        heatmap:
+          data:
+            - lat: 40.7128
+              lng: -74.006
+            - lat: 40.7200
+              lng: -73.998
+            - lat: 40.7060
+              lng: -74.010
+            - lat: 40.7180
+              lng: -73.990
+
+- title: Weighted Heatmap Data
+  blocks:
+    - id: heatmap_weighted
+      type: GoogleMapsHeatmap
+      properties:
+        autoBounds: false
+        map:
+          center:
+            lat: 51.509
+            lng: -0.118
+          zoom: 13
+        heatmap:
+          data:
+            - location:
+                lat: 51.512
+                lng: -0.091
+              weight: 10
+            - location:
+                lat: 51.507
+                lng: -0.076
+              weight: 5
+            - location:
+                lat: 51.503
+                lng: -0.119
+              weight: 8
+            - location:
+                lat: 51.515
+                lng: -0.142
+              weight: 3
+            - location:
+                lat: 51.520
+                lng: -0.105
+              weight: 7
+
+- title: Heatmap Radius and Opacity
+  blocks:
+    - id: heatmap_radius_small
+      type: GoogleMapsHeatmap
+      properties:
+        map:
+          center:
+            lat: 40.7128
+            lng: -74.006
+          zoom: 12
+        heatmap:
+          radius: 15
+          data:
+            - lat: 40.7128
+              lng: -74.006
+            - lat: 40.7200
+              lng: -73.998
+            - lat: 40.7060
+              lng: -74.010
+            - lat: 40.7180
+              lng: -73.990
+            - lat: 40.7100
+              lng: -74.015
+    - id: heatmap_radius_large
+      type: GoogleMapsHeatmap
+      properties:
+        map:
+          center:
+            lat: 40.7128
+            lng: -74.006
+          zoom: 12
+        heatmap:
+          radius: 50
+          data:
+            - lat: 40.7128
+              lng: -74.006
+            - lat: 40.7200
+              lng: -73.998
+            - lat: 40.7060
+              lng: -74.010
+            - lat: 40.7180
+              lng: -73.990
+            - lat: 40.7100
+              lng: -74.015
+    - id: heatmap_opacity_low
+      type: GoogleMapsHeatmap
+      properties:
+        map:
+          center:
+            lat: 34.0522
+            lng: -118.2437
+          zoom: 12
+        heatmap:
+          opacity: 0.3
+          data:
+            - lat: 34.0522
+              lng: -118.2437
+            - lat: 34.0600
+              lng: -118.2500
+            - lat: 34.0480
+              lng: -118.2350
+            - lat: 34.0550
+              lng: -118.2600
+    - id: heatmap_opacity_full
+      type: GoogleMapsHeatmap
+      properties:
+        map:
+          center:
+            lat: 34.0522
+            lng: -118.2437
+          zoom: 12
+        heatmap:
+          opacity: 1
+          data:
+            - lat: 34.0522
+              lng: -118.2437
+            - lat: 34.0600
+              lng: -118.2500
+            - lat: 34.0480
+              lng: -118.2350
+            - lat: 34.0550
+              lng: -118.2600
+
+- title: Auto Bounds
+  blocks:
+    - id: heatmap_no_auto_bounds
+      type: GoogleMapsHeatmap
+      properties:
+        autoBounds: false
+        map:
+          center:
+            lat: 35.6762
+            lng: 139.6503
+          zoom: 11
+        heatmap:
+          data:
+            - lat: 35.6812
+              lng: 139.7671
+            - lat: 35.6595
+              lng: 139.7005
+            - lat: 35.6938
+              lng: 139.7034
+            - lat: 35.6586
+              lng: 139.7454
+
+- title: Heatmap with Markers
+  blocks:
+    - id: heatmap_with_markers
+      type: GoogleMapsHeatmap
+      properties:
+        map:
+          center:
+            lat: 48.8566
+            lng: 2.3522
+          zoom: 13
+        markers:
+          - position:
+              lat: 48.8584
+              lng: 2.2945
+            label: A
+          - position:
+              lat: 48.8606
+              lng: 2.3376
+            label: B
+          - position:
+              lat: 48.8530
+              lng: 2.3499
+            label: C
+        heatmap:
+          radius: 25
+          data:
+            - lat: 48.8584
+              lng: 2.2945
+            - lat: 48.8606
+              lng: 2.3376
+            - lat: 48.8530
+              lng: 2.3499
+            - lat: 48.8620
+              lng: 2.3320
+            - lat: 48.8566
+              lng: 2.3522
+
+- title: Custom Map Style
+  blocks:
+    - id: heatmap_custom_style
+      type: GoogleMapsHeatmap
+      properties:
+        style:
+          width: 100%
+          height: 500px
+        map:
+          center:
+            lat: -33.8688
+            lng: 151.2093
+          zoom: 12
+        heatmap:
+          radius: 30
+          data:
+            - lat: -33.8688
+              lng: 151.2093
+            - lat: -33.8560
+              lng: 151.2153
+            - lat: -33.8750
+              lng: 151.2000
+            - lat: -33.8610
+              lng: 151.2100
+
+- title: Map Event Actions
+  blocks:
+    - id: heatmap_events
+      type: GoogleMapsHeatmap
+      properties:
+        map:
+          center:
+            lat: 48.8566
+            lng: 2.3522
+          zoom: 13
+        markers:
+          - position:
+              lat: 48.8584
+              lng: 2.2945
+            label: A
+          - position:
+              lat: 48.8606
+              lng: 2.3376
+            label: B
+        heatmap:
+          data:
+            - lat: 48.8584
+              lng: 2.2945
+            - lat: 48.8606
+              lng: 2.3376
+            - lat: 48.8566
+              lng: 2.3522
+      events:
+        onClick:
+          - id: heatmap_click_display
+            type: DisplayMessage
+            params:
+              content: Map clicked!
+              status: info
+        onMarkerClick:
+          - id: heatmap_marker_click_msg
+            type: DisplayMessage
+            params:
+              content: Marker clicked!
+              status: success
+        onZoomChanged:
+          - id: heatmap_zoom_set_state
+            type: SetState
+            params:
+              currentZoom:
+                _event: zoom
+
+- title: CSS Key Styling
+  blocks:
+    - id: heatmap_css_element
+      type: GoogleMapsHeatmap
+      class:
+        element: rounded-xl shadow-lg border-2 border-blue-300
+      properties:
+        map:
+          center:
+            lat: 37.775
+            lng: -122.434
+          zoom: 13
+        heatmap:
+          data:
+            - lat: 37.782
+              lng: -122.447
+            - lat: 37.782
+              lng: -122.445
+            - lat: 37.784
+              lng: -122.441
+            - lat: 37.786
+              lng: -122.435
+    - id: heatmap_css_rounded_shadow
+      type: GoogleMapsHeatmap
+      class:
+        element: rounded-2xl shadow-2xl overflow-hidden
+      properties:
+        style:
+          height: 350px
+        map:
+          center:
+            lat: 51.509
+            lng: -0.118
+          zoom: 13
+        heatmap:
+          data:
+            - lat: 51.512
+              lng: -0.091
+            - lat: 51.507
+              lng: -0.076
+            - lat: 51.503
+              lng: -0.119
+
+- title: GoogleMapsHeatmap in Store Activity Dashboard
+  fullWidth: true
+  blocks:
+    - id: store_dashboard_title
+      type: Title
+      properties:
+        content: Store Foot Traffic Analysis
+        level: 3
+    - id: store_dashboard_desc
+      type: Paragraph
+      properties:
+        content: Visualizing customer activity density across downtown locations. Higher intensity areas indicate more foot traffic during peak hours.
+    - id: store_dashboard_map
+      type: GoogleMapsHeatmap
+      class:
+        element: rounded-lg shadow-md
+      properties:
+        style:
+          height: 450px
+        map:
+          center:
+            lat: 40.7580
+            lng: -73.9855
+          zoom: 14
+        markers:
+          - position:
+              lat: 40.7614
+              lng: -73.9776
+            label: S1
+          - position:
+              lat: 40.7549
+              lng: -73.9840
+            label: S2
+          - position:
+              lat: 40.7587
+              lng: -73.9900
+            label: S3
+        heatmap:
+          radius: 35
+          opacity: 0.7
+          data:
+            - lat: 40.7614
+              lng: -73.9776
+            - lat: 40.7600
+              lng: -73.9790
+            - lat: 40.7590
+              lng: -73.9800
+            - lat: 40.7549
+              lng: -73.9840
+            - lat: 40.7560
+              lng: -73.9830
+            - lat: 40.7587
+              lng: -73.9900
+            - lat: 40.7575
+              lng: -73.9870
+      events:
+        onMarkerClick:
+          - id: store_marker_click_msg
+            type: DisplayMessage
+            params:
+              content: Click a store marker to view detailed foot traffic analytics.
+              status: info
+
+- title: GoogleMapsHeatmap in Environmental Sensor Network
+  fullWidth: true
+  blocks:
+    - id: sensor_network_card
+      type: Card
+      properties:
+        title: Air Quality Monitoring - San Francisco Bay Area
+      slots:
+        extra:
+          blocks:
+            - id: sensor_network_refresh_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Refresh Data
+                icon: AiOutlineReload
+                color: primary
+                variant: outlined
+                size: small
+              events:
+                onClick:
+                  - id: sensor_refresh_msg
+                    type: DisplayMessage
+                    params:
+                      content: Sensor data refreshed.
+                      status: success
+      blocks:
+        - id: sensor_network_desc
+          type: Paragraph
+          properties:
+            content: Real-time air quality index readings from distributed sensor stations. Warmer areas on the heatmap indicate higher pollutant concentrations. Markers show individual sensor locations.
+        - id: sensor_network_map
+          type: GoogleMapsHeatmap
+          class:
+            element: rounded-lg
+          properties:
+            autoBounds: false
+            style:
+              height: 500px
+            map:
+              center:
+                lat: 37.775
+                lng: -122.418
+              zoom: 12
+              options:
+                mapTypeControl: false
+                streetViewControl: false
+            markers:
+              - position:
+                  lat: 37.7849
+                  lng: -122.4094
+                label: '1'
+              - position:
+                  lat: 37.7694
+                  lng: -122.4862
+                label: '2'
+              - position:
+                  lat: 37.7599
+                  lng: -122.4148
+                label: '3'
+              - position:
+                  lat: 37.7909
+                  lng: -122.4000
+                label: '4'
+              - position:
+                  lat: 37.7750
+                  lng: -122.4350
+                label: '5'
+            heatmap:
+              radius: 40
+              opacity: 0.6
+              data:
+                - lat: 37.7849
+                  lng: -122.4094
+                - lat: 37.7694
+                  lng: -122.4862
+                - lat: 37.7599
+                  lng: -122.4148
+                - lat: 37.7909
+                  lng: -122.4000
+                - lat: 37.7750
+                  lng: -122.4350
+                - lat: 37.7800
+                  lng: -122.4200
+                - lat: 37.7720
+                  lng: -122.4500
+          events:
+            onMarkerClick:
+              - id: sensor_marker_click_msg
+                type: DisplayMessage
+                params:
+                  content: Select a sensor station to view detailed air quality readings.
+                  status: info
+            onClick:
+              - id: sensor_map_click_set
+                type: SetState
+                params:
+                  selectedLocation:
+                    _event: latLng

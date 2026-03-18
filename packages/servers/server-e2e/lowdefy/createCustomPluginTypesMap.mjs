@@ -15,11 +15,14 @@
   limitations under the License.
 */
 
+import { createRequire } from 'node:module';
 import path from 'path';
 import { get } from '@lowdefy/helpers';
 import { readFile } from '@lowdefy/node-utils';
 import { createPluginTypesMap } from '@lowdefy/build';
 import YAML from 'yaml';
+
+const require = createRequire(import.meta.url);
 
 async function getPluginDefinitions({ directories }) {
   let lowdefyYaml = await readFile(path.join(directories.config, 'lowdefy.yaml'));
@@ -47,16 +50,12 @@ async function createCustomPluginTypesMap({ directories }) {
       server: {},
     },
     requests: {},
-    styles: {
-      packages: {},
-      blocks: {},
-    },
   };
 
   const pluginDefinitions = await getPluginDefinitions({ directories });
 
   for (const plugin of pluginDefinitions) {
-    const { default: types } = await import(`${plugin.name}/types`);
+    const types = require(`${plugin.name}/types`);
     createPluginTypesMap({
       packageTypes: types,
       typesMap: customTypesMap,

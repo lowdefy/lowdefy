@@ -36,7 +36,6 @@ Beyond production server:
 Additional block packages:
 
 - `@lowdefy/blocks-aggrid`
-- `@lowdefy/blocks-color-selectors`
 - `@lowdefy/blocks-echarts`
 - `@lowdefy/blocks-markdown`
 - `@lowdefy/blocks-qr`
@@ -45,7 +44,7 @@ Additional operators:
 
 - `@lowdefy/operators-change-case`
 - `@lowdefy/operators-diff`
-- `@lowdefy/operators-moment`
+- `@lowdefy/operators-dayjs`
 - `@lowdefy/operators-mql`
 - `@lowdefy/operators-nunjucks`
 - `@lowdefy/operators-uuid`

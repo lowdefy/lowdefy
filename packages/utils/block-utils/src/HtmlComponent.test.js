@@ -18,54 +18,49 @@ import React from 'react';
 import { render } from '@testing-library/react';
 
 import HtmlComponent from './HtmlComponent.js';
-import makeCssClass from './makeCssClass.js';
-
-const methods = {
-  makeCssClass,
-};
 
 test('Render default', () => {
-  const { container } = render(<HtmlComponent methods={methods} />);
+  const { container } = render(<HtmlComponent />);
   expect(container.firstChild).toMatchSnapshot();
 });
 
 test('Render default and id', () => {
-  const { container } = render(<HtmlComponent id="test-id" methods={methods} />);
+  const { container } = render(<HtmlComponent id="test-id" />);
   expect(container.firstChild).toMatchSnapshot();
 });
 
 test('Render string and update', () => {
-  const { container, rerender } = render(<HtmlComponent html="A string value" methods={methods} />);
+  const { container, rerender } = render(<HtmlComponent html="A string value" />);
   expect(container.firstChild).toMatchSnapshot();
-  rerender(<HtmlComponent html="A string value updated" methods={methods} />);
+  rerender(<HtmlComponent html="A string value updated" />);
   expect(container.firstChild).toMatchSnapshot();
 });
 
 test('Render number', () => {
-  const { container, rerender } = render(<HtmlComponent html={123} methods={methods} />);
+  const { container, rerender } = render(<HtmlComponent html={123} />);
   expect(container.firstChild).toMatchSnapshot();
-  rerender(<HtmlComponent html={1000} methods={methods} />);
+  rerender(<HtmlComponent html={1000} />);
   expect(container.firstChild).toMatchSnapshot();
 });
 
 test('Render number 0 1', () => {
-  const { container, rerender } = render(<HtmlComponent html={0} methods={methods} />);
+  const { container, rerender } = render(<HtmlComponent html={0} />);
   expect(container.firstChild).toMatchSnapshot();
-  rerender(<HtmlComponent html={1} methods={methods} />);
+  rerender(<HtmlComponent html={1} />);
   expect(container.firstChild).toMatchSnapshot();
 });
 
 test('Render boolean true false', () => {
-  const { container, rerender } = render(<HtmlComponent html={true} methods={methods} />);
+  const { container, rerender } = render(<HtmlComponent html={true} />);
   expect(container.firstChild).toMatchSnapshot();
-  rerender(<HtmlComponent html={false} methods={methods} />);
+  rerender(<HtmlComponent html={false} />);
   expect(container.firstChild).toMatchSnapshot();
 });
 
 test('Render null, undefined', () => {
-  const { container, rerender } = render(<HtmlComponent html={null} methods={methods} />);
+  const { container, rerender } = render(<HtmlComponent html={null} />);
   expect(container.firstChild).toMatchSnapshot();
-  rerender(<HtmlComponent html={undefined} methods={methods} />);
+  rerender(<HtmlComponent html={undefined} />);
   expect(container.firstChild).toMatchSnapshot();
 });
 
@@ -73,14 +68,12 @@ test('Render html', () => {
   const { container, rerender } = render(
     <HtmlComponent
       html={'<div style="background: green; padding: 10px;">Content green background</div>'}
-      methods={methods}
     />
   );
   expect(container.firstChild).toMatchSnapshot();
   rerender(
     <HtmlComponent
       html={'<div style="background: green; padding: 10px;">Content green background updated</div>'}
-      methods={methods}
     />
   );
   expect(container.firstChild).toMatchSnapshot();
@@ -90,7 +83,6 @@ test('Render html div', () => {
   const { container, rerender } = render(
     <HtmlComponent
       html={'<div style="background: green; padding: 10px;">Content green background</div>'}
-      methods={methods}
       div={true}
     />
   );
@@ -98,18 +90,17 @@ test('Render html div', () => {
   rerender(
     <HtmlComponent
       html={'<div style="background: green; padding: 10px;">Content green background updated</div>'}
-      methods={methods}
       div={true}
     />
   );
   expect(container.firstChild).toMatchSnapshot();
 });
 
-test('Render html and style', () => {
+test('Render html with className and style', () => {
   const { container, rerender } = render(
     <HtmlComponent
       html={'<div style="background: green; padding: 10px;">Content green background</div>'}
-      methods={methods}
+      className="custom-class"
       style={{ color: 'red' }}
     />
   );
@@ -119,8 +110,8 @@ test('Render html and style', () => {
       html={
         '<div style="background: green; padding: 10px; updated: true;">Content green background</div>'
       }
-      methods={methods}
-      style={{ color: 'red updated' }}
+      className="custom-class-updated"
+      style={{ color: 'blue' }}
     />
   );
   expect(container.firstChild).toMatchSnapshot();
@@ -132,7 +123,6 @@ test('Render html iframe', () => {
       html={
         '<iframe width="560" height="315" src="https://www.youtube.com/embed/7N7GWdlQJlU" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
       }
-      methods={methods}
     />
   );
   expect(container.firstChild).toMatchSnapshot();
@@ -152,7 +142,6 @@ test('Render bad html', async () => {
         <math><mi xlink:href="data:x,<script>alert('echo')</script>"></mi></math>
       </div><script>alert('script tag');</script>
       `}
-      methods={methods}
     />
   );
   expect(container.firstChild).toMatchSnapshot();

@@ -49,6 +49,7 @@ import writeApi from '../writeApi.js';
 import writeGlobal from '../writeGlobal.js';
 import writeJs from '../buildJs/writeJs.js';
 import writeLogger from '../writeLogger.js';
+import writeTheme from '../writeTheme.js';
 import writeMaps from '../writeMaps.js';
 import updateServerPackageJson from '../full/updateServerPackageJson.js';
 import writeMenus from '../writeMenus.js';
@@ -58,6 +59,8 @@ import writePluginImports from '../writePluginImports/writePluginImports.js';
 import addInstalledTypes from './addInstalledTypes.js';
 import buildJsShallow from './buildJsShallow.js';
 import buildShallowPages from './buildShallowPages.js';
+import collectPageContent from '../collectPageContent.js';
+import stripPageContent from './stripPageContent.js';
 import writeSourcelessPages from './writeSourcelessPages.js';
 
 async function shallowBuild(options) {
@@ -90,6 +93,14 @@ async function shallowBuild(options) {
 
     // addKeys + testSchema first for error location info
     tryBuildStep(addKeys, 'addKeys', { components, context });
+    context.tailwindContentMap = new Map();
+    for (const page of components.pages ?? []) {
+      const content = collectPageContent([page]);
+      if (content) {
+        context.tailwindContentMap.set(page.id, content);
+      }
+    }
+    stripPageContent({ components, context });
     tryBuildStep(testSchema, 'testSchema', { components, context });
 
     logCollectedErrors(context);
@@ -132,6 +143,7 @@ async function shallowBuild(options) {
     await writeApi({ components, context });
     await writeConfig({ components, context });
     await writeGlobal({ components, context });
+    await writeTheme({ components, context });
     await writeLogger({ components, context });
     await writeMaps({ context });
     await context.writeBuildArtifact(

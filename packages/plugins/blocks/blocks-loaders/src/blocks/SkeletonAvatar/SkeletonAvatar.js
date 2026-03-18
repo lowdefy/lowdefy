@@ -16,11 +16,11 @@
 
 import React from 'react';
 import { type } from '@lowdefy/helpers';
-import { blockDefaultProps } from '@lowdefy/block-utils';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 
 import Skeleton from '../Skeleton/Skeleton.js';
 
-const SkeletonAvatar = ({ properties, methods }) => {
+const SkeletonAvatar = ({ classNames, properties, styles }) => {
   let size = properties.size ?? 32;
   if (type.isString(size)) {
     switch (properties.size) {
@@ -36,12 +36,14 @@ const SkeletonAvatar = ({ properties, methods }) => {
   }
   return (
     <Skeleton
-      methods={methods}
-      properties={{
-        style: {
-          ...{ borderRadius: properties.shape === 'square' ? '0' : size / 2 },
-          ...(properties.style || {}),
+      classNames={classNames}
+      styles={{
+        element: {
+          borderRadius: properties.shape === 'square' ? '0' : size / 2,
+          ...styles?.element,
         },
+      }}
+      properties={{
         width: size,
         height: size,
       }}
@@ -49,11 +51,4 @@ const SkeletonAvatar = ({ properties, methods }) => {
   );
 };
 
-SkeletonAvatar.defaultProps = blockDefaultProps;
-SkeletonAvatar.meta = {
-  category: 'display',
-  icons: [],
-  styles: ['blocks/SkeletonAvatar/style.less'],
-};
-
-export default SkeletonAvatar;
+export default withBlockDefaults(SkeletonAvatar);

@@ -459,7 +459,7 @@ test('transformRead dates', () => {
       original: 1,
     },
     {
-      dateTransform: new Date('2001-01-01T00:00:00.000Z'), // This is weird
+      dateTransform: null,
       original: '1',
     },
     {

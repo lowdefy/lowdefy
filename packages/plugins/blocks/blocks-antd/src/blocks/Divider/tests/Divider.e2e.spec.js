@@ -49,7 +49,7 @@ test.describe('Divider Block', () => {
   });
 
   // ============================================
-  // TYPE TESTS
+  // ORIENTATION TESTS (horizontal/vertical)
   // ============================================
 
   test('renders horizontal divider by default', async ({ page }) => {
@@ -77,22 +77,22 @@ test.describe('Divider Block', () => {
   });
 
   // ============================================
-  // ORIENTATION TESTS
+  // TITLE PLACEMENT TESTS (left/center/right)
   // ============================================
 
-  test('renders with left orientation', async ({ page }) => {
+  test('renders with left title placement', async ({ page }) => {
     const divider = getDivider(page, 'divider_left');
-    await expect(divider).toHaveClass(/ant-divider-with-text-left/);
+    await expect(divider).toHaveClass(/ant-divider-with-text-start/);
   });
 
-  test('renders with center orientation', async ({ page }) => {
+  test('renders with center title placement', async ({ page }) => {
     const divider = getDivider(page, 'divider_center');
     await expect(divider).toHaveClass(/ant-divider-with-text-center/);
   });
 
-  test('renders with right orientation', async ({ page }) => {
+  test('renders with right title placement', async ({ page }) => {
     const divider = getDivider(page, 'divider_right');
-    await expect(divider).toHaveClass(/ant-divider-with-text-right/);
+    await expect(divider).toHaveClass(/ant-divider-with-text-end/);
   });
 
   // ============================================

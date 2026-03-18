@@ -1,0 +1,190 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/blocks/gallery.yaml.njk
+  vars:
+    pageId: MasonryList
+    pageTitle: MasonryList
+    section: List Blocks
+    filePath: blocks/list/MasonryList.yaml
+    block_type: MasonryList
+    antd_component: List
+    antd_url: list
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/MasonryList
+    schema: ../plugins/blocks/blocks-antd/src/blocks/MasonryList/meta.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/MasonryList/gallery.yaml
+    description: >
+      Masonry-style grid layout for list data. Items flow into columns and stack
+      vertically, filling gaps left by shorter items. Provide an array in state
+      and use _state operators in the template to access each item's data.
+    onInit:
+      - id: init_masonry_data
+        type: SetState
+        params:
+          ml_basic:
+            - title: Getting Started
+              desc: A quick intro to the platform.
+              bg: bg-blue-50
+            - title: Authentication
+              desc: Set up login providers, configure session handling, manage user roles and permissions, and integrate with external identity services like Auth0 and Okta.
+              bg: bg-purple-50
+            - title: API Reference
+              desc: Full endpoint documentation with request and response examples.
+              bg: bg-green-50
+            - title: Deployment Guide
+              desc: Step-by-step deployment to Docker, Vercel, and Node.js. Covers environment variables, build configuration, CI/CD pipelines, secrets management, and production monitoring setup.
+              bg: bg-orange-50
+            - title: Theming
+              desc: Colors, fonts, and tokens.
+              bg: bg-cyan-50
+            - title: FAQ
+              desc: Answers to common questions about setup, configuration, limits, and troubleshooting. Covers billing, rate limits, version compatibility, and migration between major releases.
+              bg: bg-pink-50
+            - title: Changelog
+              desc: What's new in each release.
+              bg: bg-yellow-50
+            - title: Security
+              desc: Best practices for securing your Lowdefy application in production, including HTTPS, CSP headers, secret management, and input validation.
+              bg: bg-red-50
+            - title: Plugins
+              desc: Extend Lowdefy with custom blocks, actions, operators, and connections.
+              bg: bg-indigo-50
+          ml_two:
+            - title: Why We Rebuilt the Dashboard
+              body: The old dashboard loaded 14 API requests on every page view. Users complained about 3-second load times on mobile. We moved to server-side aggregation, cut it to 2 requests, and dropped p95 latency from 3.1s to 400ms. The key insight was that 80% of the data never changed between page loads.
+              bg: bg-blue-50
+            - title: Release Notes v4.7
+              body: New MasonryList block, Splitter block, and keyboard shortcuts on menu items.
+              bg: bg-green-50
+            - title: On-Call Runbook
+              body: If the deploy pipeline fails, check the GitHub Actions log first. Nine times out of ten it's a flaky test. Retry the job. If it fails twice, check the Slack incidents channel for known issues before escalating. For database connection errors, verify the connection pool isn't exhausted — the monitoring dashboard is at grafana.internal/d/db-pools.
+              bg: bg-orange-50
+            - title: Hiring Update
+              body: Senior full-stack role open.
+              bg: bg-purple-50
+            - title: Design System Migration
+              body: Moving from custom CSS to Ant Design v6 component tokens. Every component gets a theme object for overrides. This eliminates 3,000 lines of custom CSS and gives us dark mode for free. Timeline is 6 weeks — 2 for core components, 2 for forms, 2 for testing.
+              bg: bg-cyan-50
+          ml_gutter_tight:
+            - label: Alpha
+            - label: Bravo
+            - label: Charlie
+            - label: Delta
+            - label: Echo
+            - label: Foxtrot
+          ml_gutter_wide:
+            - label: Alpha
+            - label: Bravo
+            - label: Charlie
+            - label: Delta
+            - label: Echo
+            - label: Foxtrot
+          ml_notes:
+            - title: Sprint Goals
+              body: Finish dropdown blocks, update docs, run e2e tests. Ship by Friday.
+              tag: Work
+              color: blue
+              bg: bg-blue-50
+            - title: Grocery List
+              body: Milk, bread, eggs.
+              tag: Personal
+              color: green
+              bg: bg-green-50
+            - title: Bug Report
+              body: The Affix gallery throws a ConfigError because the _if test receives undefined instead of boolean. The _event operator returns undefined in gallery context where no event fires. Fixed by wrapping with _eq to guarantee a boolean result.
+              tag: Bug
+              color: red
+              bg: bg-red-50
+            - title: Meeting Notes
+              body: Agreed on the MasonryList API. Four columns for team directory, three for notes. Sequential mode for timeline-style content. Ship it next week.
+              tag: Work
+              color: blue
+              bg: bg-blue-50
+            - title: Read Later
+              body: Shape Up.
+              tag: Personal
+              color: green
+              bg: bg-green-50
+            - title: Deploy Checklist
+              body: Run tests. Check bundle size. Verify env vars. Tag release. Monitor error rate for 30 minutes. Roll back if p99 latency exceeds 2s.
+              tag: Ops
+              color: orange
+              bg: bg-orange-50
+            - title: Idea
+              body: What if we added a gallery page for every block that auto-generates from a YAML file? One source of truth for docs and live examples.
+              tag: Feature
+              color: purple
+              bg: bg-purple-50
+          ml_team:
+            - name: Sarah Chen
+              initials: SC
+              role: Engineering Lead
+              bg: '#1677ff'
+            - name: Marcus Johnson
+              initials: MJ
+              role: Product Manager
+              bg: '#722ed1'
+            - name: Aisha Patel
+              initials: AP
+              role: Senior Engineer
+              bg: '#13c2c2'
+            - name: Tom Andersen
+              initials: TA
+              role: Designer
+              bg: '#fa8c16'
+            - name: Lina Morales
+              initials: LM
+              role: QA Engineer
+              bg: '#52c41a'
+            - name: James O'Brien
+              initials: JO
+              role: DevOps
+              bg: '#f5222d'
+            - name: Yuki Tanaka
+              initials: YT
+              role: Frontend Engineer
+              bg: '#eb2f96'
+            - name: David Kim
+              initials: DK
+              role: Backend Engineer
+              bg: '#2f54eb'
+          ml_seq:
+            - title: Getting Started
+              desc: A quick intro to the platform.
+              bg: bg-blue-50
+            - title: Authentication
+              desc: Set up login providers, configure session handling, manage user roles and permissions, and integrate with external identity services like Auth0 and Okta.
+              bg: bg-purple-50
+            - title: API Reference
+              desc: Full endpoint documentation with request and response examples.
+              bg: bg-green-50
+            - title: Deployment Guide
+              desc: Step-by-step deployment to Docker, Vercel, and Node.js. Covers environment variables, build configuration, CI/CD pipelines, secrets management, and production monitoring setup.
+              bg: bg-orange-50
+            - title: Theming
+              desc: Colors, fonts, and tokens.
+              bg: bg-cyan-50
+            - title: FAQ
+              desc: Answers to common questions about setup, configuration, limits, and troubleshooting. Covers billing, rate limits, version compatibility, and migration between major releases.
+              bg: bg-pink-50
+            - title: Changelog
+              desc: What's new in each release.
+              bg: bg-yellow-50
+            - title: Security
+              desc: Best practices for securing your Lowdefy application in production, including HTTPS, CSP headers, secret management, and input validation.
+              bg: bg-red-50
+            - title: Plugins
+              desc: Extend Lowdefy with custom blocks, actions, operators, and connections.
+              bg: bg-indigo-50

@@ -236,7 +236,7 @@ _ref:
                 type: Html
                 properties:
                   html:
-                    _media: size ## Returns xs if used on phone width screen width < 576px
+                    _media: size ## Returns xs if used on phone width screen width < 640px
                 ```
 
                 ## User

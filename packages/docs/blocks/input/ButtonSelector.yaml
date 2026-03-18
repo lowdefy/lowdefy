@@ -13,24 +13,17 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: ButtonSelector
-    value_type: any
-    category: input
-    schema: ../plugins/blocks/blocks-antd/src/blocks/ButtonSelector/schema.json
+    pageId: ButtonSelector
+    pageTitle: ButtonSelector
+    section: Input Blocks
     filePath: blocks/input/ButtonSelector.yaml
-    init_state_values:
-      __type_block.properties.options: object[]
-      __object_arr_block.properties.options:
-        - label: First
-          value: '1'
-        - label: Second
-          value: '2'
-
-    description_content: |
-      The `ButtonSelector` block allows a user to select a single value from a set of options. The user cannot deselect an option once they have selected an input.
-
-      The options for the selector can be provides as either an array of primitive values (strings, numbers, booleans or dates), or as an array of label-value pairs, where the label is a string, and the value can be of any type, including objects like dates and arrays.
-
-      > Other selector blocks are `CheckboxSelector`, `MultipleSelector`, `RadioSelector` and `Selector`.
+    block_type: ButtonSelector
+    antd_component: Radio
+    antd_url: radio
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/ButtonSelector
+    schema: ../plugins/blocks/blocks-antd/src/blocks/ButtonSelector/meta.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/ButtonSelector/gallery.yaml
+    description: >
+      Radio group styled as toggle buttons.

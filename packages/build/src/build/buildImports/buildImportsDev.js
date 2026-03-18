@@ -15,7 +15,6 @@
 */
 
 import buildIconImports from './buildIconImports.js';
-import buildStyleImports from './buildStyleImports.js';
 import defaultIconsDev from './defaultIconsDev.js';
 
 function getPluginPackages({ components }) {
@@ -68,7 +67,6 @@ function buildImportsDev({ components, context }) {
       client: buildImportClassDev({ pluginPackages, map: context.typesMap.operators.client }),
       server: buildImportClassDev({ pluginPackages, map: context.typesMap.operators.server }),
     },
-    styles: buildStyleImports({ blocks, context }),
   };
 }
 

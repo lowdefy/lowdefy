@@ -40,8 +40,8 @@ test.describe('AutoComplete Block', () => {
   test('renders with default placeholder', async ({ page }) => {
     const wrapper = getAutoComplete(page, 'ac_basic');
     await expect(wrapper).toBeVisible();
-    // AutoComplete shows placeholder in a span, not as input attribute
-    const placeholder = wrapper.locator('.ant-select-selection-placeholder');
+    // AutoComplete shows placeholder in a span
+    const placeholder = wrapper.locator('.ant-select-placeholder');
     await expect(placeholder).toHaveText('Type or select item');
   });
 
@@ -56,7 +56,7 @@ test.describe('AutoComplete Block', () => {
 
   test('renders with custom placeholder', async ({ page }) => {
     const wrapper = getAutoComplete(page, 'ac_placeholder');
-    const placeholder = wrapper.locator('.ant-select-selection-placeholder');
+    const placeholder = wrapper.locator('.ant-select-placeholder');
     await expect(placeholder).toHaveText('Start typing...');
   });
 

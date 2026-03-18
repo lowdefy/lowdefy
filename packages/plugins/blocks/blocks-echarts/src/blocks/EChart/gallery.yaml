@@ -1,0 +1,395 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Bar Chart
+  fullWidth: true
+  blocks:
+    - id: bar_chart
+      type: EChart
+      properties:
+        height: 350
+        option:
+          tooltip:
+            trigger: axis
+          legend:
+            data:
+              - Revenue
+              - Expenses
+          xAxis:
+            type: category
+            data:
+              - Jan
+              - Feb
+              - Mar
+              - Apr
+              - May
+              - Jun
+          yAxis:
+            type: value
+            axisLabel:
+              formatter: '${value}'
+          series:
+            - name: Revenue
+              type: bar
+              data:
+                - 4200
+                - 3800
+                - 5100
+                - 4600
+                - 5800
+                - 6200
+              itemStyle:
+                color: '#5470c6'
+            - name: Expenses
+              type: bar
+              data:
+                - 3100
+                - 2900
+                - 3400
+                - 3200
+                - 3600
+                - 3800
+              itemStyle:
+                color: '#91cc75'
+
+- title: Line Chart
+  fullWidth: true
+  blocks:
+    - id: line_chart
+      type: EChart
+      properties:
+        height: 350
+        option:
+          tooltip:
+            trigger: axis
+          legend:
+            data:
+              - Organic
+              - Paid
+              - Referral
+          xAxis:
+            type: category
+            data:
+              - Jan
+              - Feb
+              - Mar
+              - Apr
+              - May
+              - Jun
+              - Jul
+              - Aug
+          yAxis:
+            type: value
+          series:
+            - name: Organic
+              type: line
+              smooth: true
+              data:
+                - 820
+                - 932
+                - 1100
+                - 1234
+                - 1390
+                - 1530
+                - 1620
+                - 1780
+            - name: Paid
+              type: line
+              smooth: true
+              data:
+                - 420
+                - 510
+                - 635
+                - 720
+                - 845
+                - 910
+                - 980
+                - 1050
+            - name: Referral
+              type: line
+              smooth: true
+              data:
+                - 220
+                - 280
+                - 310
+                - 350
+                - 410
+                - 480
+                - 530
+                - 590
+
+- title: Pie Chart
+  fullWidth: true
+  blocks:
+    - id: pie_chart
+      type: EChart
+      properties:
+        height: 350
+        option:
+          tooltip:
+            trigger: item
+            formatter: '{a} <br/>{b}: {c} ({d}%)'
+          legend:
+            orient: vertical
+            left: left
+            data:
+              - Direct
+              - Search Engine
+              - Email
+              - Social Media
+              - Affiliates
+              - Other
+          series:
+            - name: Traffic Source
+              type: pie
+              radius:
+                - '40%'
+                - '70%'
+              avoidLabelOverlap: true
+              itemStyle:
+                borderRadius: 6
+                borderColor: '#fff'
+                borderWidth: 2
+              label:
+                show: true
+                formatter: '{b}: {d}%'
+              data:
+                - name: Direct
+                  value: 3350
+                - name: Search Engine
+                  value: 5100
+                - name: Email
+                  value: 1548
+                - name: Social Media
+                  value: 2430
+                - name: Affiliates
+                  value: 980
+                - name: Other
+                  value: 620
+
+- title: Area Chart
+  fullWidth: true
+  blocks:
+    - id: area_chart
+      type: EChart
+      properties:
+        height: 350
+        option:
+          tooltip:
+            trigger: axis
+          legend:
+            data:
+              - Downloads
+              - Active Users
+          xAxis:
+            type: category
+            boundaryGap: false
+            data:
+              - Mon
+              - Tue
+              - Wed
+              - Thu
+              - Fri
+              - Sat
+              - Sun
+          yAxis:
+            type: value
+          series:
+            - name: Downloads
+              type: line
+              smooth: true
+              areaStyle:
+                opacity: 0.3
+              data:
+                - 1200
+                - 1400
+                - 1350
+                - 1680
+                - 1920
+                - 980
+                - 870
+            - name: Active Users
+              type: line
+              smooth: true
+              areaStyle:
+                opacity: 0.3
+              data:
+                - 450
+                - 520
+                - 490
+                - 610
+                - 720
+                - 380
+                - 340
+
+- title: Scatter Plot
+  fullWidth: true
+  blocks:
+    - id: scatter_plot
+      type: EChart
+      properties:
+        height: 350
+        option:
+          tooltip:
+            trigger: item
+          xAxis:
+            name: Price ($)
+            nameLocation: middle
+            nameGap: 30
+          yAxis:
+            name: Rating
+            nameLocation: middle
+            nameGap: 40
+          series:
+            - name: Electronics
+              type: scatter
+              symbolSize: 14
+              data:
+                - [29, 4.2]
+                - [49, 4.5]
+                - [79, 4.0]
+                - [99, 4.8]
+                - [149, 3.9]
+                - [199, 4.6]
+                - [249, 4.3]
+            - name: Furniture
+              type: scatter
+              symbolSize: 14
+              data:
+                - [89, 3.8]
+                - [159, 4.1]
+                - [289, 4.7]
+                - [399, 4.4]
+                - [449, 4.9]
+                - [599, 4.2]
+            - name: Accessories
+              type: scatter
+              symbolSize: 14
+              data:
+                - [9, 3.5]
+                - [15, 4.0]
+                - [24, 4.3]
+                - [39, 3.9]
+                - [19, 4.6]
+                - [34, 4.1]
+
+- title: Mixed Chart
+  fullWidth: true
+  blocks:
+    - id: mixed_chart
+      type: EChart
+      properties:
+        height: 350
+        option:
+          tooltip:
+            trigger: axis
+            axisPointer:
+              type: cross
+          legend:
+            data:
+              - Sales Volume
+              - Avg Price
+          xAxis:
+            type: category
+            data:
+              - Laptops
+              - Phones
+              - Tablets
+              - Watches
+              - Headphones
+              - Cameras
+          yAxis:
+            - type: value
+              name: Units Sold
+              position: left
+            - type: value
+              name: Avg Price ($)
+              position: right
+          series:
+            - name: Sales Volume
+              type: bar
+              data:
+                - 1240
+                - 3560
+                - 890
+                - 2100
+                - 4300
+                - 560
+              itemStyle:
+                color: '#5470c6'
+            - name: Avg Price
+              type: line
+              yAxisIndex: 1
+              smooth: true
+              data:
+                - 899
+                - 699
+                - 449
+                - 299
+                - 149
+                - 549
+              lineStyle:
+                width: 3
+              itemStyle:
+                color: '#ee6666'
+
+- title: Dashboard Gauge
+  fullWidth: true
+  blocks:
+    - id: gauge_chart
+      type: EChart
+      properties:
+        height: 350
+        option:
+          series:
+            - type: gauge
+              startAngle: 200
+              endAngle: -20
+              min: 0
+              max: 100
+              splitNumber: 10
+              progress:
+                show: true
+                width: 20
+              pointer:
+                show: true
+              axisLine:
+                lineStyle:
+                  width: 20
+              axisTick:
+                show: false
+              splitLine:
+                length: 10
+                lineStyle:
+                  width: 2
+                  color: '#999'
+              axisLabel:
+                distance: 25
+                fontSize: 12
+                color: '#999'
+              title:
+                offsetCenter:
+                  - 0
+                  - '70%'
+                fontSize: 16
+              detail:
+                valueAnimation: true
+                fontSize: 32
+                offsetCenter:
+                  - 0
+                  - '40%'
+                formatter: '{value}%'
+              data:
+                - value: 73
+                  name: Performance

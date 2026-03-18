@@ -1,0 +1,79 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- id: default
+  type: Splitter
+- id: 'properties.layout: horizontal'
+  type: Splitter
+  properties:
+    layout: horizontal
+    panels:
+      - key: left
+        defaultSize: 50%
+      - key: right
+        defaultSize: 50%
+- id: 'properties.layout: vertical'
+  type: Splitter
+  properties:
+    layout: vertical
+    panels:
+      - key: top
+        defaultSize: 50%
+      - key: bottom
+        defaultSize: 50%
+- id: properties.panels
+  type: Splitter
+  properties:
+    panels:
+      - key: first
+        defaultSize: 200
+        min: 100
+        max: 400
+      - key: second
+        defaultSize: 300
+      - key: third
+        min: 50
+- id: properties.panels collapsible
+  type: Splitter
+  properties:
+    panels:
+      - key: left
+        collapsible: true
+      - key: right
+        collapsible: true
+- id: 'properties.panels resizable: false'
+  type: Splitter
+  properties:
+    panels:
+      - key: left
+        resizable: false
+      - key: right
+- id: 'properties.lazy: true'
+  type: Splitter
+  properties:
+    lazy: true
+    panels:
+      - key: left
+        defaultSize: 50%
+      - key: right
+        defaultSize: 50%
+- id: 'properties.orientation: vertical'
+  type: Splitter
+  properties:
+    orientation: vertical
+    panels:
+      - key: top
+        defaultSize: 50%
+      - key: bottom
+        defaultSize: 50%

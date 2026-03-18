@@ -21,7 +21,6 @@ test('default', () => {
 });
 
 test('call default methods', () => {
-  expect(blockDefaultProps.methods.makeCssClass({ a: 1 })).toEqual('css-1iomdgj');
   expect(blockDefaultProps.methods.registerEvent()).toEqual(undefined);
   expect(blockDefaultProps.methods.registerMethod()).toEqual(undefined);
   expect(blockDefaultProps.methods.triggerEvent()).toEqual(undefined);

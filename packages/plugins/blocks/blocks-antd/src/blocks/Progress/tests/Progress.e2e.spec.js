@@ -38,13 +38,13 @@ test.describe('Progress Block', () => {
 
   test('renders with percent value', async ({ page }) => {
     const block = getProgress(page, 'progress_basic');
-    const text = block.locator('.ant-progress-text');
+    const text = block.locator('.ant-progress-indicator');
     await expect(text).toContainText('50%');
   });
 
   test('renders zero percent', async ({ page }) => {
     const block = getProgress(page, 'progress_zero');
-    const text = block.locator('.ant-progress-text');
+    const text = block.locator('.ant-progress-indicator');
     await expect(text).toContainText('0%');
   });
 
@@ -114,7 +114,7 @@ test.describe('Progress Block', () => {
     const block = getProgress(page, 'progress_show_info');
     const progress = block.locator('.ant-progress');
     await expect(progress).toHaveClass(/ant-progress-show-info/);
-    const text = block.locator('.ant-progress-text');
+    const text = block.locator('.ant-progress-indicator');
     await expect(text).toBeVisible();
   });
 
@@ -147,7 +147,7 @@ test.describe('Progress Block', () => {
 
   test('renders circle with custom width', async ({ page }) => {
     const block = getProgress(page, 'progress_circle_width');
-    const wrapper = block.locator('.ant-progress-inner');
+    const wrapper = block.locator('.ant-progress-body');
     // Custom width should be applied
     await expect(wrapper).toBeVisible();
   });

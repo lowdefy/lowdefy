@@ -16,19 +16,26 @@
 
 import React from 'react';
 import { Typography } from 'antd';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
+
+import withTheme from '../withTheme.js';
 
 const Title = Typography.Title;
 
-const TitleBlock = ({ blockId, components: { Icon }, events, properties, methods }) => {
-  return (
+const TitleBlock = ({
+  blockId,
+  classNames = {},
+  components: { Icon },
+  events,
+  properties,
+  methods,
+  styles = {},
+}) => {
+  const titleEl = (
     <Title
       id={blockId}
-      className={methods.makeCssClass([
-        properties.color && { color: `${properties.color} !important` },
-        properties.style,
-      ])}
+      className={classNames.element}
       code={properties.code}
       copyable={
         type.isObject(properties.copyable)
@@ -47,21 +54,27 @@ const TitleBlock = ({ blockId, components: { Icon }, events, properties, methods
                     <Icon
                       key="copy-icon"
                       blockId={`${blockId}_copyable_before_icon`}
+                      classNames={{ element: classNames.copyableIcon }}
                       events={events}
                       properties={properties.copyable.icon[0]}
+                      styles={{ element: styles.copyableIcon }}
                     />,
                     <Icon
                       key="copied-icon"
                       blockId={`${blockId}_copyable_after_icon`}
+                      classNames={{ element: classNames.copyableIcon }}
                       events={events}
                       properties={properties.copyable.icon[1]}
+                      styles={{ element: styles.copyableIcon }}
                     />,
                   ]
                 ) : (
                   <Icon
                     blockId={`${blockId}_copyable_icon`}
+                    classNames={{ element: classNames.copyableIcon }}
                     events={events}
                     properties={properties.copyable.icon}
+                    styles={{ element: styles.copyableIcon }}
                   />
                 )),
               tooltips: properties.copyable.tooltips,
@@ -102,19 +115,14 @@ const TitleBlock = ({ blockId, components: { Icon }, events, properties, methods
       italic={properties.italic}
       level={properties.level}
       mark={properties.mark}
+      style={{ ...styles.element, ...(properties.color && { color: properties.color }) }}
       type={properties.type}
       underline={properties.underline}
     >
       {renderHtml({ html: properties.content, methods })}
     </Title>
   );
+  return titleEl;
 };
 
-TitleBlock.defaultProps = blockDefaultProps;
-TitleBlock.meta = {
-  category: 'display',
-  icons: [],
-  styles: ['blocks/Title/style.less'],
-};
-
-export default TitleBlock;
+export default withTheme('Typography', withBlockDefaults(TitleBlock));

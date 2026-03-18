@@ -13,44 +13,17 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: CheckboxSwitch
-    value_type: any[]
-    category: input
-    schema: ../plugins/blocks/blocks-antd/src/blocks/CheckboxSwitch/schema.json
+    pageId: CheckboxSwitch
+    pageTitle: CheckboxSwitch
+    section: Input Blocks
     filePath: blocks/input/CheckboxSwitch.yaml
-    description_content: |
-      The `CheckboxSwitch` block allows a user to select a boolean value between (true/false).
-
-      > A similar switch block is `Switch`. Alternatively the `CheckboxSelector` can be used to list multiple options.
-    examples:
-      - title: Checkbox only
-        block:
-          id: checkbox_example
-          type: CheckboxSwitch
-          properties:
-            label:
-              disabled: true
-      - title: Description only
-        block:
-          id: description_example
-          type: CheckboxSwitch
-          properties:
-            description: Option
-      - title: Description and label
-        block:
-          id: description_label_example
-          type: CheckboxSwitch
-          properties:
-            description: Option
-            label:
-              title: Label
-      - title: Agree to terms and conditions
-        block:
-          id: terms_example
-          type: CheckboxSwitch
-          properties:
-            description: I agree to the terms and conditions and privacy policy as found on the website.... Thoroughly I agree to the terms and conditions and privacy policy as found on the website....
-            label:
-              disabled: true
+    block_type: CheckboxSwitch
+    antd_component: Checkbox
+    antd_url: checkbox
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/CheckboxSwitch
+    schema: ../plugins/blocks/blocks-antd/src/blocks/CheckboxSwitch/meta.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/CheckboxSwitch/gallery.yaml
+    description: >
+      Single checkbox for boolean input.

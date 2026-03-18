@@ -13,14 +13,17 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: Sider
-    category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Sider/schema.json
+    pageId: Sider
+    pageTitle: Sider
+    section: Container Blocks
     filePath: blocks/container/Sider.yaml
-    description_content: |
-      The `Sider` block provides a page container for a [sider](https://4x.ant.design/components/layout/) area with content.
-
-    areas:
-      - content
+    block_type: Sider
+    antd_component: Sider
+    antd_url: layout
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/Sider
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Sider/meta.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/Sider/gallery.yaml
+    description: >
+      Sidebar layout container for page navigation.

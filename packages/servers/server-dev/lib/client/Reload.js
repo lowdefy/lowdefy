@@ -34,6 +34,11 @@ const Reload = ({ children, basePath, lowdefy }) => {
         if (lowdefy._internal?.initialised) {
           lowdefy._internal.initialised = false;
         }
+        // Refresh JIT CSS link to pick up newly compiled Tailwind classes
+        const cssLink = document.getElementById('tailwind-jit-css');
+        if (cssLink) {
+          cssLink.href = `${basePath}/tailwind-jit.css?v=${Date.now()}`;
+        }
         setReset(true);
         console.log('Reloaded config.');
       }, 600);

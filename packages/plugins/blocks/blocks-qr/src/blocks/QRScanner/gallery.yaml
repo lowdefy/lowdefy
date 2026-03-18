@@ -1,0 +1,103 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Note: QRScanner requires camera access to function.
+# In the gallery preview, the scanner will not activate without a camera.
+# These examples demonstrate the available configuration options.
+
+- title: Default (Inactive)
+  blocks:
+    - id: qr_scanner_default
+      type: QRScanner
+      properties:
+        inactiveByDefault: true
+
+- title: Custom Scan Area
+  blocks:
+    - id: qr_scanner_qrbox_number
+      type: QRScanner
+      properties:
+        inactiveByDefault: true
+        qrbox: 200
+    - id: qr_scanner_qrbox_object
+      type: QRScanner
+      properties:
+        inactiveByDefault: true
+        qrbox:
+          width: 300
+          height: 200
+
+- title: Custom Aspect Ratio
+  blocks:
+    - id: qr_scanner_aspect_wide
+      type: QRScanner
+      properties:
+        inactiveByDefault: true
+        aspectRatio: 1.777778
+    - id: qr_scanner_aspect_square
+      type: QRScanner
+      properties:
+        inactiveByDefault: true
+        aspectRatio: 1
+
+- title: Custom FPS
+  blocks:
+    - id: qr_scanner_fps_low
+      type: QRScanner
+      properties:
+        inactiveByDefault: true
+        fps: 5
+    - id: qr_scanner_fps_high
+      type: QRScanner
+      properties:
+        inactiveByDefault: true
+        fps: 30
+
+- title: Disable Flip
+  blocks:
+    - id: qr_scanner_no_flip
+      type: QRScanner
+      properties:
+        inactiveByDefault: true
+        disableFlip: true
+
+- title: Specific Barcode Formats
+  blocks:
+    - id: qr_scanner_qr_only
+      type: QRScanner
+      properties:
+        inactiveByDefault: true
+        formatsToSupport:
+          - QR_CODE
+    - id: qr_scanner_ean_codes
+      type: QRScanner
+      properties:
+        inactiveByDefault: true
+        formatsToSupport:
+          - EAN_13
+          - EAN_8
+          - UPC_A
+          - UPC_E
+    - id: qr_scanner_all_1d
+      type: QRScanner
+      properties:
+        inactiveByDefault: true
+        formatsToSupport:
+          - CODABAR
+          - CODE_39
+          - CODE_93
+          - CODE_128
+          - ITF
+          - EAN_13
+          - EAN_8

@@ -1,5 +1,5 @@
 /*
-  Copyright 2021 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,28 +15,21 @@
 */
 
 import React from 'react';
-import { blockDefaultProps } from '@lowdefy/block-utils';
+import { withBlockDefaults } from '@lowdefy/block-utils';
+
+import '@ag-grid-community/styles/ag-grid.css';
+import '@ag-grid-community/styles/ag-theme-alpine.css';
 
 import AgGrid from '../../AgGrid.js';
 
-const AgGridAlpine = ({ blockId, events, loading, methods, properties }) => (
+const AgGridAlpine = ({ blockId, events, loading, methods, properties, styles }) => (
   <div
     id={blockId}
-    className={`ag-theme-alpine ${methods.makeCssClass({
-      width: '100%',
-      height: properties.height ?? 500,
-      ...properties.style,
-    })}`}
+    className="ag-theme-alpine"
+    style={{ width: '100%', height: properties.height ?? 500, ...styles?.element }}
   >
     <AgGrid events={events} loading={loading} methods={methods} properties={properties} />
   </div>
 );
 
-AgGridAlpine.defaultProps = blockDefaultProps;
-AgGridAlpine.meta = {
-  category: 'display',
-  icons: [],
-  styles: ['blocks/AgGridAlpine/style.less'],
-};
-
-export default AgGridAlpine;
+export default withBlockDefaults(AgGridAlpine);

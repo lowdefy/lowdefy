@@ -60,6 +60,7 @@ const Client = ({
         id="lowdefy-display-message"
         key={`${config.pageConfig.id}-display-message`}
         Component={lowdefy._internal.blockComponents.Message}
+        components={lowdefy._internal.components}
         methods={{
           registerMethod: (_, method) => {
             lowdefy._internal.displayMessage = method;
@@ -80,12 +81,12 @@ const Client = ({
               <Head
                 Component={Components.Head}
                 properties={
-                  context._internal.RootAreas.map[config.pageConfig.blockId].eval.properties
+                  context._internal.RootSlots.map[config.pageConfig.blockId].eval.properties
                 }
               />
               <Block
-                block={context._internal.RootAreas.map[config.pageConfig.blockId]}
-                Blocks={context._internal.RootAreas}
+                block={context._internal.RootSlots.map[config.pageConfig.blockId]}
+                Blocks={context._internal.RootSlots}
                 context={context}
                 lowdefy={lowdefy}
                 parentLoading={false}

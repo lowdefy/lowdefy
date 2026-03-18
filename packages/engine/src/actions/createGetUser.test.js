@@ -71,7 +71,7 @@ test('getUser params is true', async () => {
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootAreas.map['button'];
+  const button = context._internal.RootSlots.map['button'];
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual({
     blockId: 'button',
@@ -115,7 +115,7 @@ test('getUser params is some', async () => {
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootAreas.map['button'];
+  const button = context._internal.RootSlots.map['button'];
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual({
     blockId: 'button',
@@ -158,7 +158,7 @@ test('getUser params is none', async () => {
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootAreas.map['button'];
+  const button = context._internal.RootSlots.map['button'];
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual({
     blockId: 'button',
@@ -213,7 +213,7 @@ test('getUser params.key is null', async () => {
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootAreas.map['button'];
+  const button = context._internal.RootSlots.map['button'];
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual({
     blockId: 'button',
@@ -259,7 +259,7 @@ test('getUser params.all is true', async () => {
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootAreas.map['button'];
+  const button = context._internal.RootSlots.map['button'];
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual({
     blockId: 'button',
@@ -305,7 +305,7 @@ test('getUser params.key is not string or int', async () => {
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootAreas.map['button'];
+  const button = context._internal.RootSlots.map['button'];
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual({
     blockId: 'button',
@@ -369,7 +369,7 @@ test('getUser params.key is some', async () => {
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootAreas.map['button'];
+  const button = context._internal.RootSlots.map['button'];
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual({
     blockId: 'button',

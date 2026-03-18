@@ -17,7 +17,9 @@
 import React, { useState, useEffect } from 'react';
 import { Drawer } from 'antd';
 import { get } from '@lowdefy/helpers';
-import { blockDefaultProps } from '@lowdefy/block-utils';
+
+import { withBlockDefaults } from '@lowdefy/block-utils';
+import withTheme from '../withTheme.js';
 
 const handleClose = async ({ methods, rename, setOpen }) => {
   const response = await methods.triggerEvent({
@@ -63,7 +65,16 @@ const setOpenState = ({ open, methods, rename, setOpen }) => {
   }
 };
 
-const DrawerBlock = ({ blockId, content, properties, methods, rename, onClose }) => {
+const DrawerBlock = ({
+  blockId,
+  classNames = {},
+  content,
+  properties,
+  methods,
+  rename,
+  onClose,
+  styles = {},
+}) => {
   const [openState, setOpen] = useState(false);
   useEffect(() => {
     methods.registerMethod(get(rename, 'methods.toggleOpen', { default: 'toggleOpen' }), () =>
@@ -99,22 +110,27 @@ const DrawerBlock = ({ blockId, content, properties, methods, rename, onClose })
           }))
       }
       afterOpenChange={(drawerOpen) => handleAfterOpenChange({ drawerOpen, methods, rename })}
-      drawerStyle={methods.makeCssClass(properties.drawerStyle, true)}
-      headerStyle={methods.makeCssClass(properties.headerStyle, true)}
-      bodyStyle={methods.makeCssClass(properties.bodyStyle, true)}
-      maskStyle={methods.makeCssClass(properties.maskStyle, true)}
-      contentWrapperStyle={methods.makeCssClass(properties.contentWrapperStyle, true)}
+      className={classNames.element}
+      classNames={{
+        header: classNames.header,
+        body: classNames.body,
+        footer: classNames.footer,
+        mask: classNames.mask,
+        wrapper: classNames.wrapper,
+        content: classNames.content,
+      }}
+      style={styles.element}
+      styles={{
+        header: styles.header,
+        body: styles.body,
+        mask: styles.mask,
+        wrapper: styles.wrapper,
+        content: styles.content,
+      }}
     >
       {content.content && content.content()}
     </Drawer>
   );
 };
 
-DrawerBlock.defaultProps = blockDefaultProps;
-DrawerBlock.meta = {
-  category: 'container',
-  icons: [],
-  styles: ['blocks/Drawer/style.less'],
-};
-
-export default DrawerBlock;
+export default withTheme('Drawer', withBlockDefaults(DrawerBlock));

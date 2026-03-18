@@ -133,7 +133,7 @@ blocks:
       items:
         - label: Data
           value: Some data
-    areas:
+    slots:
       extra:
         blocks:
           - id: descriptions_extra_button

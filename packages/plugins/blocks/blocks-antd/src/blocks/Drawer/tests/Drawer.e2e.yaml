@@ -24,7 +24,7 @@ blocks:
     type: Drawer
     properties:
       title: Basic Drawer
-    areas:
+    slots:
       content:
         blocks:
           - id: drawer_basic_content
@@ -56,7 +56,7 @@ blocks:
     properties:
       title: Right Drawer
       placement: right
-    areas:
+    slots:
       content:
         blocks:
           - id: drawer_right_content
@@ -84,7 +84,7 @@ blocks:
     properties:
       title: Left Drawer
       placement: left
-    areas:
+    slots:
       content:
         blocks:
           - id: drawer_left_content
@@ -113,7 +113,7 @@ blocks:
       title: Top Drawer
       placement: top
       height: 300
-    areas:
+    slots:
       content:
         blocks:
           - id: drawer_top_content
@@ -142,7 +142,7 @@ blocks:
       title: Bottom Drawer
       placement: bottom
       height: 300
-    areas:
+    slots:
       content:
         blocks:
           - id: drawer_bottom_content
@@ -174,7 +174,7 @@ blocks:
     properties:
       title: Wide Drawer
       width: 500
-    areas:
+    slots:
       content:
         blocks:
           - id: drawer_custom_width_content
@@ -202,7 +202,7 @@ blocks:
     properties:
       title: No Close Button
       closable: false
-    areas:
+    slots:
       content:
         blocks:
           - id: drawer_no_close_content
@@ -230,7 +230,7 @@ blocks:
     properties:
       title: Mask Not Closable
       maskClosable: false
-    areas:
+    slots:
       content:
         blocks:
           - id: drawer_mask_not_closable_content
@@ -258,7 +258,7 @@ blocks:
     properties:
       title: No Mask Drawer
       mask: false
-    areas:
+    slots:
       content:
         blocks:
           - id: drawer_no_mask_content
@@ -285,7 +285,7 @@ blocks:
     type: Drawer
     properties:
       title: Drawer with Extra
-    areas:
+    slots:
       content:
         blocks:
           - id: drawer_with_extra_content
@@ -323,7 +323,7 @@ blocks:
     type: Drawer
     properties:
       title: Toggle Drawer
-    areas:
+    slots:
       content:
         blocks:
           - id: drawer_toggle_content
@@ -358,7 +358,7 @@ blocks:
           type: SetState
           params:
             drawer_open_fired: true
-    areas:
+    slots:
       content:
         blocks:
           - id: drawer_onopen_content
@@ -403,7 +403,7 @@ blocks:
           type: SetState
           params:
             drawer_close_fired: true
-    areas:
+    slots:
       content:
         blocks:
           - id: drawer_onclose_content
@@ -448,7 +448,7 @@ blocks:
           type: SetState
           params:
             drawer_toggle_fired: true
-    areas:
+    slots:
       content:
         blocks:
           - id: drawer_ontoggle_content
@@ -491,7 +491,7 @@ blocks:
           type: SetState
           params:
             drawer_afterclose_fired: true
-    areas:
+    slots:
       content:
         blocks:
           - id: drawer_afterclose_content

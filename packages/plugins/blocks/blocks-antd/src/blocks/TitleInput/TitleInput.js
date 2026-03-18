@@ -16,18 +16,22 @@
 
 import React, { useState } from 'react';
 import { Typography } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
+
+import { withBlockDefaults } from '@lowdefy/block-utils';
+import withTheme from '../withTheme.js';
 
 const Title = Typography.Title;
 
 const TitleInput = ({
   blockId,
+  classNames = {},
   components: { Icon },
   events,
   loading,
   methods,
   properties,
+  styles = {},
   value,
 }) => {
   const [editing, setEdit] = useState(false);
@@ -44,19 +48,17 @@ const TitleInput = ({
       methods.triggerEvent({ name: 'onChange', event: { value: val } });
     },
   };
-  return (
+  const titleEl = (
     <Title
       id={blockId}
+      className={classNames.element}
       code={properties.code}
       italic={properties.italic}
       level={properties.level}
       mark={properties.mark}
+      style={{ ...styles.element, ...(properties.color && { color: properties.color }) }}
       type={properties.type}
       underline={properties.underline}
-      className={methods.makeCssClass([
-        properties.color && { color: `${properties.color} !important` },
-        properties.style,
-      ])}
       copyable={
         type.isObject(properties.copyable)
           ? {
@@ -73,22 +75,28 @@ const TitleInput = ({
                   [
                     <Icon
                       key="copy-icon"
-                      events={events}
                       blockId={`${blockId}_copyable_before_icon`}
+                      classNames={{ element: classNames.copyableIcon }}
+                      events={events}
                       properties={properties.copyable.icon[0]}
+                      styles={{ element: styles.copyableIcon }}
                     />,
                     <Icon
                       key="copied-icon"
-                      events={events}
                       blockId={`${blockId}_copyable_after_icon`}
+                      classNames={{ element: classNames.copyableIcon }}
+                      events={events}
                       properties={properties.copyable.icon[1]}
+                      styles={{ element: styles.copyableIcon }}
                     />,
                   ]
                 ) : (
                   <Icon
                     blockId={`${blockId}_copyable_icon`}
+                    classNames={{ element: classNames.copyableIcon }}
                     events={events}
                     properties={properties.copyable.icon}
+                    styles={{ element: styles.copyableIcon }}
                   />
                 )),
               tooltips: properties.copyable.tooltips,
@@ -118,8 +126,10 @@ const TitleInput = ({
               icon: properties.editable.icon && (
                 <Icon
                   blockId={`${blockId}_editable_icon`}
+                  classNames={{ element: classNames.editableIcon }}
                   events={events}
                   properties={properties.editable.icon}
+                  styles={{ element: styles.editableIcon }}
                 />
               ),
               tooltip: properties.editable.tooltip,
@@ -134,13 +144,7 @@ const TitleInput = ({
       {!type.isNone(value) ? value.toString() : ''}
     </Title>
   );
-};
-TitleInput.defaultProps = blockDefaultProps;
-TitleInput.meta = {
-  valueType: 'string',
-  category: 'input',
-  icons: [],
-  styles: ['blocks/TitleInput/style.less'],
+  return titleEl;
 };
 
-export default TitleInput;
+export default withTheme('Typography', withBlockDefaults(TitleInput));

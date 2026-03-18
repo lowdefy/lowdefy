@@ -34,6 +34,24 @@ export default {
     style: {
       type: 'object',
     },
+    class: {
+      oneOf: [
+        { type: 'string' },
+        { type: 'array', items: { type: 'string' } },
+        {
+          type: 'object',
+          additionalProperties: {
+            oneOf: [{ type: 'string' }, { type: 'array', items: { type: 'string' } }],
+          },
+        },
+      ],
+    },
+    styles: {
+      type: 'object',
+      additionalProperties: {
+        type: 'object',
+      },
+    },
     layout: {
       type: 'object',
     },

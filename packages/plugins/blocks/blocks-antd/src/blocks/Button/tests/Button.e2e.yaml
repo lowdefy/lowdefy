@@ -164,3 +164,83 @@ blocks:
           type: Wait
           params:
             ms: 2000
+
+  - id: button_shortcut
+    type: Button
+    properties:
+      title: Save
+    events:
+      onClick:
+        shortcut: mod+s
+        try:
+          - id: save_action
+            type: SetState
+            params:
+              saved: true
+
+  - id: button_shortcut_no_title
+    type: Button
+    properties:
+      icon: AiOutlineSearch
+      hideTitle: true
+    events:
+      onClick:
+        shortcut: mod+k
+        try:
+          - id: search_action
+            type: SetState
+            params:
+              searched: true
+
+  # ============================================
+  # SHORTCUT KEYBOARD TESTS
+  # ============================================
+
+  - id: button_shortcut_fires
+    type: Button
+    properties:
+      title: Save
+    events:
+      onClick:
+        shortcut: mod+j
+        try:
+          - id: set_shortcut_fired
+            type: SetState
+            params:
+              button_shortcut_fired: true
+
+  - id: button_shortcut_fired_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _not:
+              _state: button_shortcut_fired
+          else: 'shortcut:fired'
+          then: ''
+
+  - id: button_shortcut_hidden
+    type: Button
+    visible: false
+    properties:
+      title: Hidden
+    events:
+      onClick:
+        shortcut: mod+.
+        try:
+          - id: set_hidden_shortcut_fired
+            type: SetState
+            params:
+              button_hidden_shortcut_fired: true
+
+  - id: button_shortcut_hidden_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _not:
+              _state: button_hidden_shortcut_fired
+          else: 'hidden:fired'
+          then: ''

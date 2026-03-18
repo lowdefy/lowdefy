@@ -16,10 +16,13 @@
 
 import React from 'react';
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { blockDefaultProps } from '@lowdefy/block-utils';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import ReactMarkdown from 'react-markdown';
 
 import gfm from 'remark-gfm';
+
+import markdownStyles from '../../style.module.css';
+import codeblockStyles from '../../codeblock.module.css';
 
 // See https://github.com/react-syntax-highlighter/react-syntax-highlighter/issues/393 for esm issue.
 import { github } from 'react-syntax-highlighter/dist/cjs/styles/hljs/index.js';
@@ -33,21 +36,24 @@ import yaml from 'react-syntax-highlighter/dist/cjs/languages/hljs/yaml.js';
 import markdown from 'react-syntax-highlighter/dist/cjs/languages/hljs/markdown.js';
 import handlebars from 'react-syntax-highlighter/dist/cjs/languages/hljs/handlebars.js';
 
-SyntaxHighlighter.registerLanguage('handlebars', handlebars.default);
-SyntaxHighlighter.registerLanguage('nunjucks', handlebars.default);
-SyntaxHighlighter.registerLanguage('html', handlebars.default);
-SyntaxHighlighter.registerLanguage('java', java.default);
-SyntaxHighlighter.registerLanguage('javascript', javascript.default);
-SyntaxHighlighter.registerLanguage('js', javascript.default);
-SyntaxHighlighter.registerLanguage('jsx', javascript.default);
-SyntaxHighlighter.registerLanguage('json', json.default);
-SyntaxHighlighter.registerLanguage('markdown', markdown.default);
-SyntaxHighlighter.registerLanguage('python', python.default);
-SyntaxHighlighter.registerLanguage('py', python.default);
-SyntaxHighlighter.registerLanguage('typescript', typescript.default);
-SyntaxHighlighter.registerLanguage('ts', typescript.default);
-SyntaxHighlighter.registerLanguage('xml', xml.default);
-SyntaxHighlighter.registerLanguage('yaml', yaml.default);
+// Handle CJS/ESM interop: webpack gives { default: fn }, Turbopack may give fn directly.
+const lang = (m) => m.default || m;
+
+SyntaxHighlighter.registerLanguage('handlebars', lang(handlebars));
+SyntaxHighlighter.registerLanguage('nunjucks', lang(handlebars));
+SyntaxHighlighter.registerLanguage('html', lang(handlebars));
+SyntaxHighlighter.registerLanguage('java', lang(java));
+SyntaxHighlighter.registerLanguage('javascript', lang(javascript));
+SyntaxHighlighter.registerLanguage('js', lang(javascript));
+SyntaxHighlighter.registerLanguage('jsx', lang(javascript));
+SyntaxHighlighter.registerLanguage('json', lang(json));
+SyntaxHighlighter.registerLanguage('markdown', lang(markdown));
+SyntaxHighlighter.registerLanguage('python', lang(python));
+SyntaxHighlighter.registerLanguage('py', lang(python));
+SyntaxHighlighter.registerLanguage('typescript', lang(typescript));
+SyntaxHighlighter.registerLanguage('ts', lang(typescript));
+SyntaxHighlighter.registerLanguage('xml', lang(xml));
+SyntaxHighlighter.registerLanguage('yaml', lang(yaml));
 
 const components = {
   code({ inline, className, children, ...props }) {
@@ -66,10 +72,10 @@ const components = {
     );
   },
 };
-const MarkdownWithCode = ({ blockId, properties, methods }) => (
-  <div id={blockId} className={methods.makeCssClass(properties.style)}>
+const MarkdownWithCode = ({ blockId, classNames, properties, styles }) => (
+  <div id={blockId} className={classNames?.element} style={styles?.element}>
     <ReactMarkdown
-      className="markdown-body"
+      className={markdownStyles['markdown-body']}
       skipHtml={properties.skipHtml}
       remarkPlugins={[gfm]}
       components={components}
@@ -79,11 +85,4 @@ const MarkdownWithCode = ({ blockId, properties, methods }) => (
   </div>
 );
 
-MarkdownWithCode.defaultProps = blockDefaultProps;
-MarkdownWithCode.meta = {
-  category: 'container',
-  icons: [],
-  styles: [],
-};
-
-export default MarkdownWithCode;
+export default withBlockDefaults(MarkdownWithCode);

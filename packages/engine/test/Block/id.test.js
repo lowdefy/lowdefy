@@ -51,7 +51,7 @@ test('array block with init, set to id', async () => {
     pageConfig,
   });
   expect(context.state).toEqual({ list: [{ text: 'b' }] });
-  const list_text = context._internal.RootAreas.map['list.0.text'];
+  const list_text = context._internal.RootSlots.map['list.0.text'];
   expect(list_text.value).toEqual('b');
 });
 
@@ -74,8 +74,8 @@ test('two blocks with same id should have the same value', async () => {
     lowdefy,
     pageConfig,
   });
-  const swtch1 = context._internal.RootAreas.subAreas['page:root'][0].areas.content.blocks[0];
-  const swtch2 = context._internal.RootAreas.subAreas['page:root'][0].areas.content.blocks[1];
+  const swtch1 = context._internal.RootSlots.subSlots['page:root'][0].slots.content.blocks[0];
+  const swtch2 = context._internal.RootSlots.subSlots['page:root'][0].slots.content.blocks[1];
   expect(swtch1.value).toBe(false);
   expect(swtch2.value).toBe(false);
   expect(context.state).toEqual({ swtch1: false });
@@ -134,7 +134,7 @@ test('two blocks with same id and state and different visibility', async () => {
     lowdefy,
     pageConfig,
   });
-  const { textInput, button } = context._internal.RootAreas.map;
+  const { textInput, button } = context._internal.RootSlots.map;
 
   expect(textInput.visibleEval.output).toBe(false); // Visibility of the last block in the config with same id
   expect(textInput.value).toBe('abc');
@@ -186,7 +186,7 @@ test('two blocks with same id and state and different visibility', async () => {
 //     lowdefy,
 //     pageConfig,
 //   });
-//   const { swtch1, swtch2, text1, text2 } = context._internal.RootAreas.map;
+//   const { swtch1, swtch2, text1, text2 } = context._internal.RootSlots.map;
 
 //   expect(text1.visibleEval.output).toBe(true);
 //   expect(text2.visibleEval.output).toBe(true);

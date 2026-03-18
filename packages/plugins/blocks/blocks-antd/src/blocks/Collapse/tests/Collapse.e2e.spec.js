@@ -77,7 +77,7 @@ test.describe('Collapse Block', () => {
   test('renders with icon on right', async ({ page }) => {
     const collapse = getCollapse(page, 'collapse_icon_right');
     await expect(collapse).toBeVisible();
-    await expect(collapse).toHaveClass(/ant-collapse-icon-position-end/);
+    await expect(collapse).toHaveClass(/ant-collapse-icon-placement-end/);
   });
 
   test('disabled panel cannot be opened', async ({ page }) => {

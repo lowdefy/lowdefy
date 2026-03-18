@@ -150,4 +150,44 @@ test.describe('Button Block', () => {
     // The button should show loading spinner (ant-btn-loading class)
     await expect(button).toHaveClass(/ant-btn-loading/);
   });
+
+  test('renders shortcut badge when onClick has shortcut', async ({ page }) => {
+    const button = getButton(page, 'button_shortcut');
+    await expect(button).toBeVisible();
+    // ShortcutBadge renders kbd elements for each key segment
+    const kbd = button.locator('kbd');
+    await expect(kbd.first()).toBeAttached();
+    // Should have at least 1 kbd elements (modifier + key)
+    expect(await kbd.count()).toBeGreaterThanOrEqual(1);
+  });
+
+  test('does not render shortcut badge when hideTitle is true', async ({ page }) => {
+    const button = getButton(page, 'button_shortcut_no_title');
+    await expect(button).toBeVisible();
+    // ShortcutBadge should not appear when title is hidden
+    const kbd = button.locator('kbd');
+    expect(await kbd.count()).toBe(0);
+  });
+
+  // ============================================
+  // SHORTCUT KEYBOARD TESTS
+  // ============================================
+
+  test('fires onClick when keyboard shortcut is pressed', async ({ page }) => {
+    const mod = process.platform === 'darwin' ? 'Meta' : 'Control';
+    const display = getBlock(page, 'button_shortcut_fired_display');
+    await expect(display).not.toHaveText('shortcut:fired');
+    await page.keyboard.press(`${mod}+j`);
+    await expect(display).toHaveText('shortcut:fired');
+  });
+
+  test('does not fire shortcut on hidden block', async ({ page }) => {
+    const mod = process.platform === 'darwin' ? 'Meta' : 'Control';
+    const display = getBlock(page, 'button_shortcut_hidden_display');
+    await expect(display).not.toHaveText('hidden:fired');
+    await page.keyboard.press(`${mod}+.`);
+    // Wait briefly to ensure no delayed state update
+    await page.waitForTimeout(500);
+    await expect(display).not.toHaveText('hidden:fired');
+  });
 });

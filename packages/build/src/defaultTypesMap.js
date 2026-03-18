@@ -6,6 +6,7 @@ const defaultTypesMap = {
     events: {},
     providers: {},
   },
+  blockMetas: {},
   blocks: {},
   connections: {},
   icons: {},
@@ -18,10 +19,6 @@ const defaultTypesMap = {
     actions: {},
     blocks: {},
     operators: {},
-  },
-  styles: {
-    packages: {},
-    blocks: {},
   },
 };
 

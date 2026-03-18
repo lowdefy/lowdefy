@@ -1,0 +1,115 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: segmented_selector
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: seg_basic
+    type: SegmentedSelector
+    properties:
+      label:
+        disabled: true
+      options:
+        - Daily
+        - Weekly
+        - Monthly
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  - id: seg_change
+    type: SegmentedSelector
+    properties:
+      label:
+        disabled: true
+      options:
+        - Option A
+        - Option B
+    events:
+      onChange:
+        - id: set_seg_result
+          type: SetState
+          params:
+            seg_result:
+              _event: value
+
+  - id: seg_change_display
+    type: Paragraph
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: seg_result
+              - null
+          then:
+            _state: seg_result
+          else: ''
+
+  # ============================================
+  # DISABLED TEST
+  # ============================================
+
+  - id: seg_disabled
+    type: SegmentedSelector
+    properties:
+      label:
+        disabled: true
+      disabled: true
+      options:
+        - X
+        - Y
+
+  # ============================================
+  # SIZE TESTS
+  # ============================================
+
+  - id: seg_small
+    type: SegmentedSelector
+    properties:
+      label:
+        disabled: true
+      size: small
+      options:
+        - S
+        - M
+        - L
+
+  - id: seg_middle
+    type: SegmentedSelector
+    properties:
+      label:
+        disabled: true
+      size: middle
+      options:
+        - S
+        - M
+        - L
+
+  - id: seg_large
+    type: SegmentedSelector
+    properties:
+      label:
+        disabled: true
+      size: large
+      options:
+        - S
+        - M
+        - L

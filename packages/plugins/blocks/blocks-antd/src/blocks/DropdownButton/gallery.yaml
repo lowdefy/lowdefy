@@ -1,0 +1,603 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic Action Dropdown
+  blocks:
+    - id: db_basic
+      type: DropdownButton
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Actions
+        items:
+          - title: Edit
+            eventName: onEdit
+            icon: AiOutlineEdit
+          - title: Duplicate
+            eventName: onDuplicate
+            icon: AiOutlineCopy
+          - type: divider
+          - title: Delete
+            eventName: onDelete
+            icon: AiOutlineDelete
+            danger: true
+      events:
+        onEdit:
+          - id: db_basic_edit_msg
+            type: DisplayMessage
+            params:
+              content: Edit clicked
+              duration: 2
+        onDuplicate:
+          - id: db_basic_dup_msg
+            type: DisplayMessage
+            params:
+              content: Duplicate clicked
+              duration: 2
+        onDelete:
+          - id: db_basic_del_msg
+            type: DisplayMessage
+            params:
+              content: Delete clicked
+              status: error
+              duration: 2
+
+- title: Split Button
+  blocks:
+    - id: db_split
+      type: DropdownButton
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Save
+        icon: AiOutlineSave
+        color: primary
+        variant: solid
+        split: true
+        items:
+          - title: Save as Draft
+            eventName: onSaveDraft
+            icon: AiOutlineFile
+          - title: Save & Publish
+            eventName: onPublish
+            icon: AiOutlineSend
+      events:
+        onClick:
+          - id: db_split_save_msg
+            type: DisplayMessage
+            params:
+              content: Save clicked
+              status: success
+              duration: 2
+        onSaveDraft:
+          - id: db_split_draft_msg
+            type: DisplayMessage
+            params:
+              content: Saved as draft
+              duration: 2
+        onPublish:
+          - id: db_split_pub_msg
+            type: DisplayMessage
+            params:
+              content: Published!
+              status: success
+              duration: 2
+
+- title: Button Types
+  blocks:
+    - id: db_type_primary
+      type: DropdownButton
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Primary
+        color: primary
+        variant: solid
+        items:
+          - title: Action A
+            eventName: onA
+          - title: Action B
+            eventName: onB
+    - id: db_type_default
+      type: DropdownButton
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Default
+        items:
+          - title: Action A
+            eventName: onA
+          - title: Action B
+            eventName: onB
+    - id: db_type_dashed
+      type: DropdownButton
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Dashed
+        color: default
+        variant: dashed
+        items:
+          - title: Action A
+            eventName: onA
+          - title: Action B
+            eventName: onB
+    - id: db_type_text
+      type: DropdownButton
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Text
+        color: default
+        variant: text
+        items:
+          - title: Action A
+            eventName: onA
+          - title: Action B
+            eventName: onB
+
+- title: Button Sizes
+  blocks:
+    - id: db_size_small
+      type: DropdownButton
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Small
+        size: small
+        items:
+          - title: Item 1
+            eventName: on1
+          - title: Item 2
+            eventName: on2
+    - id: db_size_middle
+      type: DropdownButton
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Middle
+        size: middle
+        items:
+          - title: Item 1
+            eventName: on1
+          - title: Item 2
+            eventName: on2
+    - id: db_size_large
+      type: DropdownButton
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Large
+        size: large
+        items:
+          - title: Item 1
+            eventName: on1
+          - title: Item 2
+            eventName: on2
+
+- title: With Icon
+  blocks:
+    - id: db_icon
+      type: DropdownButton
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Export
+        icon: AiOutlineDownload
+        color: primary
+        variant: outlined
+        items:
+          - title: Export as CSV
+            eventName: onCSV
+            icon: AiOutlineFile
+          - title: Export as PDF
+            eventName: onPDF
+            icon: AiOutlineFilePdf
+          - title: Export as Excel
+            eventName: onExcel
+            icon: AiOutlineFileExcel
+      events:
+        onCSV:
+          - id: db_icon_csv_msg
+            type: DisplayMessage
+            params:
+              content: Exporting CSV...
+              duration: 2
+        onPDF:
+          - id: db_icon_pdf_msg
+            type: DisplayMessage
+            params:
+              content: Exporting PDF...
+              duration: 2
+        onExcel:
+          - id: db_icon_excel_msg
+            type: DisplayMessage
+            params:
+              content: Exporting Excel...
+              duration: 2
+
+- title: Disabled Items
+  blocks:
+    - id: db_disabled_items
+      type: DropdownButton
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Manage
+        items:
+          - title: View Details
+            eventName: onView
+            icon: AiOutlineEye
+          - title: Edit (no permission)
+            eventName: onEdit
+            icon: AiOutlineEdit
+            disabled: true
+          - type: divider
+          - title: Archive
+            eventName: onArchive
+            icon: AiOutlineDelete
+            danger: true
+      events:
+        onView:
+          - id: db_dis_view_msg
+            type: DisplayMessage
+            params:
+              content: Viewing details...
+              duration: 2
+        onArchive:
+          - id: db_dis_archive_msg
+            type: DisplayMessage
+            params:
+              content: Archived!
+              status: warning
+              duration: 2
+
+- title: Shortcuts on Items
+  blocks:
+    - id: db_shortcuts
+      type: DropdownButton
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Edit
+        icon: AiOutlineEdit
+        items:
+          - title: Undo
+            eventName: onUndo
+            icon: AiOutlineUndo
+            shortcut: mod+Z
+          - title: Redo
+            eventName: onRedo
+            icon: AiOutlineRedo
+            shortcut: mod+shift+Z
+          - type: divider
+          - title: Delete
+            eventName: onDelete
+            icon: AiOutlineDelete
+            danger: true
+            shortcut: mod+Backspace
+      events:
+        onUndo:
+          - id: db_sc_undo_msg
+            type: DisplayMessage
+            params:
+              content: Undo
+              duration: 2
+        onRedo:
+          - id: db_sc_redo_msg
+            type: DisplayMessage
+            params:
+              content: Redo
+              duration: 2
+        onDelete:
+          - id: db_sc_del_msg
+            type: DisplayMessage
+            params:
+              content: Deleted
+              status: error
+              duration: 2
+
+- title: Hover Trigger
+  blocks:
+    - id: db_hover
+      type: DropdownButton
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Hover Menu
+        trigger: hover
+        items:
+          - title: Quick Action A
+            eventName: onQuickA
+          - title: Quick Action B
+            eventName: onQuickB
+
+- title: Split Button Sizes
+  blocks:
+    - id: db_split_small
+      type: DropdownButton
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Small Split
+        color: primary
+        variant: solid
+        size: small
+        split: true
+        items:
+          - title: Option A
+            eventName: onA
+          - title: Option B
+            eventName: onB
+    - id: db_split_default
+      type: DropdownButton
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Default Split
+        color: primary
+        variant: solid
+        split: true
+        items:
+          - title: Option A
+            eventName: onA
+          - title: Option B
+            eventName: onB
+    - id: db_split_large
+      type: DropdownButton
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Large Split
+        color: primary
+        variant: solid
+        size: large
+        split: true
+        items:
+          - title: Option A
+            eventName: onA
+          - title: Option B
+            eventName: onB
+
+- title: onOpenChange Event
+  blocks:
+    - id: db_openchange
+      type: DropdownButton
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Track Open
+        items:
+          - title: Item A
+            eventName: onA
+          - title: Item B
+            eventName: onB
+      events:
+        onOpenChange:
+          - id: db_openchange_msg
+            type: DisplayMessage
+            params:
+              content: Dropdown toggled!
+              duration: 2
+
+- title: Button Colors
+  blocks:
+    - id: db_color_primary
+      type: DropdownButton
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Primary
+        color: primary
+        variant: solid
+        items:
+          - title: Option A
+            eventName: onA
+          - title: Option B
+            eventName: onB
+    - id: db_color_danger
+      type: DropdownButton
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Danger
+        color: danger
+        variant: solid
+        items:
+          - title: Option A
+            eventName: onA
+          - title: Option B
+            eventName: onB
+    - id: db_color_green
+      type: DropdownButton
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Green
+        color: green
+        variant: solid
+        items:
+          - title: Option A
+            eventName: onA
+          - title: Option B
+            eventName: onB
+    - id: db_color_custom
+      type: DropdownButton
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Custom Hex
+        color: '#722ed1'
+        variant: solid
+        items:
+          - title: Option A
+            eventName: onA
+          - title: Option B
+            eventName: onB
+
+- title: Ghost and Danger
+  blocks:
+    - id: db_ghost
+      type: DropdownButton
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Ghost
+        color: primary
+        variant: solid
+        ghost: true
+        items:
+          - title: Option A
+            eventName: onA
+          - title: Option B
+            eventName: onB
+    - id: db_danger_btn
+      type: DropdownButton
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Danger Button
+        danger: true
+        items:
+          - title: Option A
+            eventName: onA
+          - title: Option B
+            eventName: onB
+
+- title: Button Shape
+  blocks:
+    - id: db_shape_square
+      type: DropdownButton
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Square
+        shape: square
+        items:
+          - title: Option A
+            eventName: onA
+          - title: Option B
+            eventName: onB
+    - id: db_shape_round
+      type: DropdownButton
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Round
+        shape: round
+        items:
+          - title: Option A
+            eventName: onA
+          - title: Option B
+            eventName: onB
+
+- title: Theme — Styled Account Dropdown
+  blocks:
+    - id: db_theme_account
+      type: DropdownButton
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: My Account
+        icon: AiOutlineUser
+        color: '#531dab'
+        variant: solid
+        theme:
+          borderRadiusLG: 12
+          controlItemBgHover: '#f9f0ff'
+          controlItemBgActive: '#efdbff'
+          button:
+            borderRadius: 20
+            paddingInline: 24
+            controlHeight: 40
+        items:
+          - title: Profile Settings
+            eventName: onProfile
+            icon: AiOutlineSetting
+          - title: Billing & Plans
+            eventName: onBilling
+            icon: AiOutlineCreditCard
+          - type: divider
+          - title: Sign Out
+            eventName: onSignOut
+            icon: AiOutlineLogout
+            danger: true
+      events:
+        onProfile:
+          - id: db_theme_profile_msg
+            type: DisplayMessage
+            params:
+              content: Opening profile settings...
+              duration: 2
+        onBilling:
+          - id: db_theme_billing_msg
+            type: DisplayMessage
+            params:
+              content: Opening billing page...
+              duration: 2
+        onSignOut:
+          - id: db_theme_signout_msg
+            type: DisplayMessage
+            params:
+              content: Signed out
+              status: warning
+              duration: 2
+
+- title: Theme — Danger Zone Split
+  blocks:
+    - id: db_theme_dangerzone
+      type: DropdownButton
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Delete Account
+        icon: AiOutlineWarning
+        color: danger
+        variant: solid
+        split: true
+        theme:
+          borderRadiusLG: 8
+          button:
+            colorPrimary: '#cf1322'
+            colorPrimaryHover: '#a8071a'
+            colorPrimaryActive: '#820014'
+        items:
+          - title: Delete All Data
+            eventName: onDeleteData
+            icon: AiOutlineDelete
+            danger: true
+          - title: Export Data First
+            eventName: onExportFirst
+            icon: AiOutlineDownload
+      events:
+        onClick:
+          - id: db_dz_click_msg
+            type: DisplayMessage
+            params:
+              content: Are you sure? This cannot be undone.
+              status: error
+              duration: 3
+        onDeleteData:
+          - id: db_dz_deldata_msg
+            type: DisplayMessage
+            params:
+              content: All data deleted permanently.
+              status: error
+              duration: 3
+        onExportFirst:
+          - id: db_dz_export_msg
+            type: DisplayMessage
+            params:
+              content: Exporting data before deletion...
+              duration: 2

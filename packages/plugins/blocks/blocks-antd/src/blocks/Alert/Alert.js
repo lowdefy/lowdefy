@@ -16,16 +16,35 @@
 
 import React from 'react';
 import { Alert } from 'antd';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
-const AlertBlock = ({ blockId, content, events, components: { Icon }, methods, properties }) => {
+import withTheme from '../withTheme.js';
+
+const AlertBlock = ({
+  blockId,
+  classNames = {},
+  content,
+  events,
+  components: { Icon },
+  methods,
+  properties,
+  styles = {},
+}) => {
   const additionalProps = {};
   if (properties.icon) {
     additionalProps.icon = (
-      <Icon blockId={`${blockId}_icon`} events={events} properties={properties.icon} />
+      <Icon
+        blockId={`${blockId}_icon`}
+        classNames={{ element: classNames.icon }}
+        events={events}
+        properties={properties.icon}
+        styles={{ element: styles.icon }}
+      />
     );
   }
+  const { element: elementClass, ...subClasses } = classNames;
+  const { element: elementStyle, ...subStyles } = styles;
   return (
     <Alert
       action={content.action && content.action()}
@@ -33,6 +52,8 @@ const AlertBlock = ({ blockId, content, events, components: { Icon }, methods, p
       banner={properties.banner}
       closable={properties.closable}
       closeText={properties.closeText}
+      className={elementClass}
+      classNames={subClasses}
       description={renderHtml({ html: properties.description, methods })}
       id={blockId}
       message={
@@ -44,17 +65,12 @@ const AlertBlock = ({ blockId, content, events, components: { Icon }, methods, p
       }
       onClose={() => methods.triggerEvent({ name: 'onClose' })}
       showIcon={properties.showIcon === false ? false : true}
+      style={elementStyle}
+      styles={subStyles}
       type={properties.type}
       {...additionalProps}
     />
   );
 };
 
-AlertBlock.defaultProps = blockDefaultProps;
-AlertBlock.meta = {
-  category: 'container',
-  icons: [],
-  styles: ['blocks/Alert/style.less'],
-};
-
-export default AlertBlock;
+export default withTheme('Alert', withBlockDefaults(AlertBlock));

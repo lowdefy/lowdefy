@@ -15,16 +15,22 @@
   limitations under the License.
 */
 
+import { createRequire } from 'node:module';
 import path from 'path';
 import { get } from '@lowdefy/helpers';
 import { readFile } from '@lowdefy/node-utils';
 import { createPluginTypesMap } from '@lowdefy/build';
 import YAML from 'yaml';
 
+const require = createRequire(import.meta.url);
+
 async function getPluginDefinitions({ directories }) {
   let lowdefyYaml = await readFile(path.join(directories.config, 'lowdefy.yaml'));
   if (!lowdefyYaml) {
     lowdefyYaml = await readFile(path.join(directories.config, 'lowdefy.yml'));
+  }
+  if (!lowdefyYaml) {
+    return [];
   }
   const lowdefy = YAML.parse(lowdefyYaml);
   return get(lowdefy, 'plugins', { default: [] });
@@ -39,6 +45,7 @@ async function createCustomPluginTypesMap({ directories, logger }) {
       events: {},
       providers: {},
     },
+    blockMetas: {},
     blocks: {},
     connections: {},
     icons: {},
@@ -47,10 +54,6 @@ async function createCustomPluginTypesMap({ directories, logger }) {
       server: {},
     },
     requests: {},
-    styles: {
-      packages: {},
-      blocks: {},
-    },
   };
 
   const pluginDefinitions = await getPluginDefinitions({ directories });
@@ -58,7 +61,7 @@ async function createCustomPluginTypesMap({ directories, logger }) {
   for (const plugin of pluginDefinitions) {
     let types;
     try {
-      types = (await import(`${plugin.name}/types`)).default;
+      types = require(`${plugin.name}/types`);
     } catch (e) {
       logger.error(`Failed to import plugin "${plugin.name}".`);
       logger.debug(e);
@@ -66,7 +69,7 @@ async function createCustomPluginTypesMap({ directories, logger }) {
       throw new Error(`Failed to import plugin "${plugin.name}".`);
     }
     createPluginTypesMap({
-      packageTypes: types,
+      packageTypes: types.default ?? types,
       typesMap: customTypesMap,
       packageName: plugin.name,
       version: plugin.version,

@@ -15,20 +15,18 @@
 */
 
 import React from 'react';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 import { Layout } from 'antd';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 
-const LayoutBlock = ({ blockId, content, properties, methods }) => (
-  <Layout id={blockId} className={methods.makeCssClass(properties.style)}>
+const LayoutBlock = ({ blockId, classNames = {}, content, properties, styles = {} }) => (
+  <Layout
+    id={blockId}
+    className={classNames.element}
+    hasSider={properties.hasSider}
+    style={styles.element}
+  >
     {content.content && content.content()}
   </Layout>
 );
 
-LayoutBlock.defaultProps = blockDefaultProps;
-LayoutBlock.meta = {
-  category: 'container',
-  icons: [],
-  styles: ['blocks/Layout/style.less'],
-};
-
-export default LayoutBlock;
+export default withBlockDefaults(LayoutBlock);

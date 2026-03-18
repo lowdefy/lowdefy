@@ -13,37 +13,20 @@
 # limitations under the License.
 
 _ref:
-  path: templates/generic_block.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: GoogleMapsScript
-    category: container
+    pageId: GoogleMapsScript
     pageTitle: GoogleMapsScript
+    section: Container Blocks
     filePath: blocks/container/GoogleMapsScript.yaml
-    schema: ../plugins/blocks/blocks-google-maps/src/blocks/GoogleMapsScript/GoogleMapsScript.json
-    description_content: |
-      This is a Lowdefy blocks wrapper for the [Google Maps API](https://developers.google.com/maps/documentation/javascript/overview). It is used to specify the api key and libraries to be used for the [`GoogleMaps`](./GoogleMaps) and [`GoogleMapsHeatmap`](./GoogleMapsHeatmap) blocks, and wraps these blocks as a parent container. Only one `GoogleMapsScript` blocks should be used on a page.v
-
-      ### Properties
-
-      - `apiKey: string`: Your Google Maps API key.
-      - `libraries: array`: List of [Google libraries](https://developers.google.com/maps/documentation/javascript/libraries).
-
-    examples:
-      - title: Simple Script
-        block:
-          id: google_maps_script
-          type: GoogleMapsScript
-          properties:
-            apiKey:
-              _build.env: GOOGLE_MAPS_API_KEY
-          blocks: []
-
-      - title: Script with libraries
-        block:
-          id: google_maps_script
-          type: GoogleMapsScript
-          properties:
-            libraries:
-              - visualization
-            apiKey:
-              _build.env: GOOGLE_MAPS_API_KEY
+    block_type: GoogleMapsScript
+    github_path: packages/plugins/blocks/blocks-google-maps/src/blocks/GoogleMapsScript
+    schema: ../plugins/blocks/blocks-google-maps/src/blocks/GoogleMapsScript/meta.js
+    gallery: ../plugins/blocks/blocks-google-maps/src/blocks/GoogleMapsScript/gallery.yaml
+    note: >
+      GoogleMapsScript loads the Google Maps JavaScript API. Only one GoogleMapsScript should be used per page.
+      It must wrap GoogleMaps or GoogleMapsHeatmap blocks as a parent container.
+      The examples below show configuration patterns — maps require a valid API key to render.
+    description: >
+      Loads the Google Maps JavaScript API and wraps `GoogleMaps` and `GoogleMapsHeatmap` blocks
+      as a parent container. Configure the API key, language, region, libraries, and API version.

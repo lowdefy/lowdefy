@@ -1,102 +1,66 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Icon default 1`] = `
-<span
-  class="anticon"
-  role="img"
->
-  <svg
-    class="emotion-0"
-    data-testid="AiOutlineExclamationCircle"
-    id="undefined_id"
-  />
-</span>
+<svg
+  class=""
+  data-testid="AiOutlineExclamationCircle"
+  id="undefined_id"
+  title=""
+/>
 `;
 
 exports[`Icon default and id 1`] = `
-<span
-  class="anticon"
-  role="img"
->
-  <svg
-    class="emotion-0"
-    data-testid="AiOutlineExclamationCircle"
-    id="test-id"
-  />
-</span>
+<svg
+  class=""
+  data-testid="AiOutlineExclamationCircle"
+  id="test-id"
+  title=""
+/>
 `;
 
 exports[`Icon properties string 1`] = `
-<span
-  class="anticon"
-  role="img"
->
-  <svg
-    class="emotion-0"
-    data-testid="AiIcon"
-    id="test-id"
-    title="AiIcon"
-  />
-</span>
+<svg
+  class=""
+  data-testid="AiIcon"
+  id="test-id"
+  title="Icon"
+/>
 `;
 
 exports[`Icon properties.name 1`] = `
-<span
-  class="anticon"
-  role="img"
->
-  <svg
-    class="emotion-0"
-    data-testid="AiIcon"
-    id="test-id"
-    title="AiIcon"
-  />
-</span>
+<svg
+  class=""
+  data-testid="AiIcon"
+  id="test-id"
+  title="Icon"
+/>
 `;
 
 exports[`Icon properties.name error 1`] = `
-<span
-  class="anticon"
-  role="img"
->
-  <svg
-    class="emotion-0"
-    color="#F00"
-    data-testid="AiOutlineExclamationCircle"
-    id="test-id"
-    title="ErrorIcon"
-  />
-</span>
+<svg
+  class=""
+  color="#F00"
+  data-testid="AiOutlineExclamationCircle"
+  id="test-id"
+  title="Icon"
+/>
 `;
 
 exports[`Icon properties.spin 1`] = `
-<span
-  class="anticon"
-  role="img"
->
-  <svg
-    class="emotion-0 icon-spin"
-    data-testid="AiOutlineLoading3Quarters"
-    id="test-id"
-    title="AiIcon"
-  />
-</span>
+<svg
+  class="undefined"
+  data-testid="AiOutlineLoading3Quarters"
+  id="test-id"
+  title="Icon"
+/>
 `;
 
-exports[`Icon properties.style 1`] = `
-.emotion-0 {
-  background: yellow;
-}
-
-<span
-  class="anticon"
-  role="img"
->
-  <svg
-    class="emotion-0"
-    data-testid="AiIcon"
-    id="test-id"
-    title="AiIcon"
-  />
-</span>
+exports[`Icon styles.element 1`] = `
+<svg
+  class=""
+  data-testid="AiIcon"
+  id="test-id"
+  style="background: yellow;"
+  title="Icon"
+/>
 `;

@@ -22,6 +22,7 @@ import { hideBin } from 'yargs/helpers';
 import pino from 'pino';
 import { createNodeLogger } from '@lowdefy/logger/node';
 import checkMockUserWarning from './processes/checkMockUserWarning.mjs';
+import compileCss from './processes/compileCss.mjs';
 import initialBuild from './processes/initialBuild.mjs';
 import installPlugins from './processes/installPlugins.mjs';
 import lowdefyBuild from './processes/lowdefyBuild.mjs';
@@ -86,6 +87,7 @@ async function getContext() {
     }
   };
 
+  context.compileCss = compileCss(context);
   context.nextBuild = nextBuild(context);
   context.readDotEnv = readDotEnv(context);
   context.reloadClients = reloadClients(context);

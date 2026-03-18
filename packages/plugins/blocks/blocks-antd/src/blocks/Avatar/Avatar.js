@@ -16,39 +16,94 @@
 
 import React from 'react';
 import { Avatar } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 
-const AvatarBlock = ({ blockId, events, components: { Icon }, methods, properties }) => (
-  <Avatar
-    id={blockId}
-    alt={properties.alt}
-    gap={properties.gap}
-    shape={properties.shape}
-    size={properties.size}
-    src={properties.src}
-    onClick={() => methods.triggerEvent({ name: 'onClick' })}
-    className={methods.makeCssClass([
-      {
+import { withBlockDefaults } from '@lowdefy/block-utils';
+import withTheme from '../withTheme.js';
+
+const AvatarBlock = ({
+  blockId,
+  classNames = {},
+  events,
+  components: { Icon },
+  methods,
+  properties,
+  styles = {},
+}) => {
+  if (properties.group) {
+    return (
+      <Avatar.Group
+        id={blockId}
+        className={classNames.element}
+        style={{
+          cursor: events.onClick && 'pointer',
+          ...styles.element,
+        }}
+        maxCount={properties.group.maxCount}
+        maxPopoverPlacement={properties.group.maxPopoverPlacement}
+        maxPopoverTrigger={properties.group.maxPopoverTrigger}
+        maxStyle={styles.max}
+        shape={properties.group.shape ?? properties.shape}
+        size={properties.group.size ?? properties.size}
+        onClick={() => methods.triggerEvent({ name: 'onClick' })}
+      >
+        {(properties.group.avatars ?? []).map((avatar, i) => (
+          <Avatar
+            key={`${blockId}_${i}`}
+            alt={avatar.alt}
+            gap={avatar.gap}
+            shape={avatar.shape}
+            size={avatar.size}
+            src={avatar.src}
+            style={{ backgroundColor: !avatar.src && avatar.color }}
+            icon={
+              avatar.icon && (
+                <Icon
+                  blockId={`${blockId}_avatar_${i}_icon`}
+                  classNames={{ element: classNames.icon }}
+                  events={events}
+                  properties={avatar.icon}
+                  styles={{ element: styles.icon }}
+                />
+              )
+            }
+          >
+            {avatar.content}
+          </Avatar>
+        ))}
+      </Avatar.Group>
+    );
+  }
+
+  return (
+    <Avatar
+      id={blockId}
+      alt={properties.alt}
+      className={classNames.element}
+      gap={properties.gap}
+      shape={properties.shape}
+      size={properties.size}
+      src={properties.src}
+      onClick={() => methods.triggerEvent({ name: 'onClick' })}
+      style={{
         backgroundColor: !properties.src && properties.color,
         cursor: events.onClick && 'pointer',
-      },
-      properties.style,
-    ])}
-    icon={
-      properties.icon && (
-        <Icon blockId={`${blockId}_icon`} events={events} properties={properties.icon} />
-      )
-    }
-  >
-    {properties.content}
-  </Avatar>
-);
-
-AvatarBlock.defaultProps = blockDefaultProps;
-AvatarBlock.meta = {
-  category: 'display',
-  icons: [],
-  styles: ['blocks/Avatar/style.less'],
+        ...styles.element,
+      }}
+      icon={
+        properties.icon && (
+          <Icon
+            blockId={`${blockId}_icon`}
+            classNames={{ element: classNames.icon }}
+            events={events}
+            properties={properties.icon}
+            styles={{ element: styles.icon }}
+          />
+        )
+      }
+    >
+      {properties.content}
+    </Avatar>
+  );
 };
 
-export default AvatarBlock;
+export default withTheme('Avatar', withBlockDefaults(AvatarBlock));

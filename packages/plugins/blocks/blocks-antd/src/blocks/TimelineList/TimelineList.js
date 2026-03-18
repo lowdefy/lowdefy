@@ -16,11 +16,22 @@
 
 import React from 'react';
 import { Timeline } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 import { get, mergeObjects, serializer, type } from '@lowdefy/helpers';
 
+import { withBlockDefaults } from '@lowdefy/block-utils';
+import withTheme from '../withTheme.js';
+
 // TODO: need to pass value to list blocks to render item level settings.
-const TimelineList = ({ blockId, components: { Icon }, events, list, methods, properties }) => {
+const TimelineList = ({
+  blockId,
+  classNames = {},
+  components: { Icon },
+  events,
+  list,
+  methods,
+  properties,
+  styles = {},
+}) => {
   // Temporary fix until list blocks get value from state
   const value = properties.data;
   const other = {};
@@ -30,18 +41,21 @@ const TimelineList = ({ blockId, components: { Icon }, events, list, methods, pr
   return (
     <Timeline
       id={blockId}
-      className={methods.makeCssClass([{ padding: '5px 0px 0px 5px' }, properties.style])}
+      className={classNames.element}
       pending={properties.pending}
       pendingDot={
         properties.pendingDotIcon && (
           <Icon
             blockId={`${blockId}_pendingDotIcon`}
+            classNames={{ element: classNames.pendingDotIcon }}
             events={events}
-            properties={mergeObjects([{ style: { fontSize: 16 } }, properties.pendingDotIcon])}
+            properties={properties.pendingDotIcon}
+            styles={{ element: { fontSize: 16, ...styles.pendingDotIcon } }}
           />
         )
       }
       reverse={properties.reverse}
+      style={{ padding: '5px 0px 0px 5px', ...styles.element }}
       {...other}
     >
       {(list || []).map((child, i) => {
@@ -64,8 +78,10 @@ const TimelineList = ({ blockId, components: { Icon }, events, list, methods, pr
               icon && (
                 <Icon
                   blockId={`${blockId}_${i}_icon`}
+                  classNames={{ element: classNames.icon }}
                   events={events}
-                  properties={mergeObjects([{ style, color }, icon])}
+                  properties={mergeObjects([{ color }, icon])}
+                  styles={{ element: { ...style, ...styles.icon } }}
                 />
               )
             }
@@ -78,11 +94,4 @@ const TimelineList = ({ blockId, components: { Icon }, events, list, methods, pr
   );
 };
 
-TimelineList.defaultProps = blockDefaultProps;
-TimelineList.meta = {
-  category: 'list',
-  icons: [],
-  styles: ['blocks/TimelineList/style.less'],
-};
-
-export default TimelineList;
+export default withTheme('Timeline', withBlockDefaults(TimelineList));

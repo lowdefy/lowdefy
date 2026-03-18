@@ -29,13 +29,13 @@ blocks:
       title: Section Title
 
   # ============================================
-  # TYPE TESTS
+  # ORIENTATION TESTS (horizontal/vertical)
   # ============================================
 
   - id: divider_horizontal
     type: Divider
     properties:
-      type: horizontal
+      orientation: horizontal
 
   - id: divider_vertical_container
     type: Box
@@ -53,7 +53,7 @@ blocks:
       - id: divider_vertical
         type: Divider
         properties:
-          type: vertical
+          orientation: vertical
 
       - id: text_after
         type: Span
@@ -76,26 +76,26 @@ blocks:
       plain: true
 
   # ============================================
-  # ORIENTATION TESTS
+  # TITLE PLACEMENT TESTS (left/center/right)
   # ============================================
 
   - id: divider_left
     type: Divider
     properties:
       title: Left Aligned
-      orientation: left
+      titlePlacement: left
 
   - id: divider_center
     type: Divider
     properties:
       title: Center Aligned
-      orientation: center
+      titlePlacement: center
 
   - id: divider_right
     type: Divider
     properties:
       title: Right Aligned
-      orientation: right
+      titlePlacement: right
 
   # ============================================
   # HTML TITLE

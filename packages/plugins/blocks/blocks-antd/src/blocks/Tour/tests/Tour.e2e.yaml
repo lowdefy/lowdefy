@@ -1,0 +1,90 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: tour_block
+type: Box
+
+blocks:
+  # ============================================
+  # TOUR TARGETS
+  # ============================================
+
+  - id: tour_target_1
+    type: Button
+    properties:
+      title: Step 1 Target
+
+  - id: tour_target_2
+    type: Button
+    properties:
+      title: Step 2 Target
+
+  # ============================================
+  # TOUR TRIGGER
+  # ============================================
+
+  - id: tour_trigger
+    type: Button
+    properties:
+      title: Start Tour
+    events:
+      onClick:
+        - id: open_tour
+          type: SetState
+          params:
+            tour_open: true
+
+  # ============================================
+  # TOUR BLOCK
+  # ============================================
+
+  - id: tour_component
+    type: Tour
+    properties:
+      open:
+        _state: tour_open
+      steps:
+        - target: tour_target_1
+          title: First Step
+          description: This is step one
+        - target: tour_target_2
+          title: Second Step
+          description: This is step two
+    events:
+      onClose:
+        - id: close_tour
+          type: SetState
+          params:
+            tour_open: false
+      onChange:
+        - id: set_step_changed
+          type: SetState
+          params:
+            tour_step_changed: true
+
+  # ============================================
+  # DISPLAY BLOCKS
+  # ============================================
+
+  - id: tour_close_display
+    type: Paragraph
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: tour_open
+              - false
+          then: Tour closed
+          else: ''

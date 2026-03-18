@@ -1,4 +1,3 @@
-/* eslint-disable import/namespace */
 /*
   Copyright 2020-2026 Lowdefy, Inc
 
@@ -15,21 +14,12 @@
   limitations under the License.
 */
 
-import * as connections from './connections.js';
-import * as blocks from './blocks.js';
+import { extractBlockTypes } from '@lowdefy/block-utils';
 
-const icons = {};
-const styles = {};
-Object.keys(blocks).forEach((block) => {
-  icons[block] = blocks[block].meta.icons ?? [];
-  styles[block] = blocks[block].meta.styles ?? [];
-});
+import * as metas from './metas.js';
+
 export default {
-  blocks: Object.keys(blocks),
-  icons,
-  styles: { default: [], ...styles },
-  connections: Object.keys(connections),
-  requests: Object.keys(connections)
-    .map((connection) => Object.keys(connections[connection].requests))
-    .flat(),
+  ...extractBlockTypes(metas),
+  connections: ['AwsS3Bucket'],
+  requests: ['AwsS3PresignedGetObject', 'AwsS3PresignedPostPolicy'],
 };

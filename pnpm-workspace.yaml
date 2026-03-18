@@ -4,6 +4,7 @@ packages:
   - packages/servers/*
   - packages/utils/*
   - packages/ides/*
-
-ignoredBuiltDependencies:
+onlyBuiltDependencies:
+  - '@swc/core'
+  - esbuild
   - '@sentry/cli'

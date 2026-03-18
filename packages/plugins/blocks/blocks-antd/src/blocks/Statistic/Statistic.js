@@ -17,29 +17,43 @@
 import React from 'react';
 import { Statistic } from 'antd';
 import { type } from '@lowdefy/helpers';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
-const StatisticBlock = ({ blockId, components: { Icon }, events, properties, methods }) => {
+import withTheme from '../withTheme.js';
+
+const StatisticBlock = ({
+  blockId,
+  classNames = {},
+  components: { Icon },
+  events,
+  properties,
+  methods,
+  styles = {},
+}) => {
   const additionalProps = {};
   if (properties.decimalSeparator) {
     additionalProps.decimalSeparator = properties.decimalSeparator;
   }
   return (
     <Statistic
-      className={methods.makeCssClass(properties.style)}
+      className={classNames.element}
+      classNames={{ value: classNames.value }}
       groupSeparator={properties.groupSeparator}
       id={blockId}
       loading={properties.loading}
       precision={properties.precision}
       title={renderHtml({ html: properties.title, methods })}
       value={type.isNone(properties.value) ? '' : properties.value}
-      valueStyle={methods.makeCssClass(properties.valueStyle, true)}
+      style={styles.element}
+      styles={{ value: styles.value }}
       prefix={
         properties.prefixIcon ? (
           <Icon
             blockId={`${blockId}_prefixIcon`}
+            classNames={{ element: classNames.prefixIcon }}
             events={events}
             properties={properties.prefixIcon}
+            styles={{ element: styles.prefixIcon }}
           />
         ) : (
           properties.prefix ?? ''
@@ -49,8 +63,10 @@ const StatisticBlock = ({ blockId, components: { Icon }, events, properties, met
         properties.suffixIcon ? (
           <Icon
             blockId={`${blockId}_suffixIcon`}
+            classNames={{ element: classNames.suffixIcon }}
             events={events}
             properties={properties.suffixIcon}
+            styles={{ element: styles.suffixIcon }}
           />
         ) : (
           properties.suffix ?? ''
@@ -61,11 +77,4 @@ const StatisticBlock = ({ blockId, components: { Icon }, events, properties, met
   );
 };
 
-StatisticBlock.defaultProps = blockDefaultProps;
-StatisticBlock.meta = {
-  category: 'display',
-  icons: [],
-  styles: ['blocks/Statistic/style.less'],
-};
-
-export default StatisticBlock;
+export default withTheme('Statistic', withBlockDefaults(StatisticBlock));

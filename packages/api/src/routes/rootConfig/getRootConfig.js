@@ -16,16 +16,19 @@
 
 import getHomeAndMenus from './getHomeAndMenus.js';
 import getLowdefyGlobal from './getLowdefyGlobal.js';
+import getLowdefyTheme from './getLowdefyTheme.js';
 
 async function getRootConfig(context) {
-  const [lowdefyGlobal, { home, menus }] = await Promise.all([
+  const [lowdefyGlobal, theme, { home, menus }] = await Promise.all([
     getLowdefyGlobal(context),
+    getLowdefyTheme(context),
     getHomeAndMenus(context),
   ]);
   return {
     home,
     lowdefyGlobal,
     menus,
+    theme,
   };
 }
 

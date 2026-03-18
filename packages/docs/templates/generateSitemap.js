@@ -36,7 +36,7 @@ function transformer(pages) {
 `);
   };
 
-  const sitemap = pages.reduce(addPage, sitemapStart).concat(sitemapEnd);
+  const sitemap = pages.filter(Boolean).reduce(addPage, sitemapStart).concat(sitemapEnd);
 
   fs.writeFileSync(
     path.join(dirname(fileURLToPath(import.meta.url)), '../public/sitemap.xml'),

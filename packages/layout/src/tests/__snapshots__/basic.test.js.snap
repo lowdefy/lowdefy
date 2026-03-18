@@ -3,17 +3,14 @@
 exports[`Button 1`] = `
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="lf-col"
     id="bl-Button23456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <button
-      class="ant-btn ant-btn-default"
       id="Button23456"
-      type="button"
     >
-      <span>
-        Button23456
-      </span>
+      Button23456
     </button>
   </div>
 </div>
@@ -22,14 +19,10 @@ exports[`Button 1`] = `
 exports[`Disabled Col 1`] = `
 <div>
   <div
-    class="emotion-0"
     id="bl-Disabled Col23456"
   >
     <input
-      class="ant-input"
       id="Disabled Col23456"
-      type="text"
-      value=""
     />
   </div>
 </div>
@@ -38,14 +31,12 @@ exports[`Disabled Col 1`] = `
 exports[`Input 1`] = `
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="lf-col"
     id="bl-Input23456"
+    style="--lf-span: 24; --lf-span-md: 24;"
   >
     <input
-      class="ant-input"
       id="Input23456"
-      type="text"
-      value=""
     />
   </div>
 </div>
@@ -54,14 +45,12 @@ exports[`Input 1`] = `
 exports[`Input 2`] = `
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+    class="lf-col"
     id="bl-Input23456"
+    style="--lf-span: 24; --lf-span-md: 4;"
   >
     <input
-      class="ant-input"
       id="Input23456"
-      type="text"
-      value=""
     />
   </div>
 </div>
@@ -70,8 +59,9 @@ exports[`Input 2`] = `
 exports[`Paragraph span: 12 1`] = `
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+    class="lf-col"
     id="bl-Paragraph span: 1223456"
+    style="--lf-span: 24; --lf-span-md: 12;"
   >
     <div
       id="Paragraph span: 1223456"
@@ -83,15 +73,11 @@ exports[`Paragraph span: 12 1`] = `
 `;
 
 exports[`Paragraph style 1`] = `
-.emotion-0 {
-  background: white;
-  border-radius: 20px;
-}
-
 <div>
   <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+    class="lf-col"
     id="bl-Paragraph style23456"
+    style="--lf-span: 24; --lf-span-md: 24; background: white; border-radius: 20px;"
   >
     <div
       id="Paragraph style23456"

@@ -17,7 +17,7 @@
 import { runMockRenderTests } from '@lowdefy/block-dev';
 
 import Block from './S3UploadButton.js';
-import examples from './examples.yaml';
+import examples from './tests.yaml';
 import schema from './schema.json';
 
 const testConfig = {

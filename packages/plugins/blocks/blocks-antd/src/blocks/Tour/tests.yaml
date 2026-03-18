@@ -1,0 +1,151 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- id: default
+  type: Tour
+- id: 'properties.open: true'
+  type: Tour
+  properties:
+    open: true
+    steps:
+      - title: Step 1
+        description: Welcome to the tour.
+      - title: Step 2
+        description: This is the second step.
+- id: properties.steps
+  type: Tour
+  properties:
+    open: true
+    steps:
+      - title: Welcome
+        description: This is the first step.
+        target: my_block_id
+        placement: bottom
+      - title: Next Feature
+        description: Here is the next feature.
+- id: 'properties.current: 1'
+  type: Tour
+  properties:
+    open: true
+    current: 1
+    steps:
+      - title: Step 1
+        description: First step.
+      - title: Step 2
+        description: Second step.
+- id: 'properties.type: default'
+  type: Tour
+  properties:
+    open: true
+    type: default
+    steps:
+      - title: Step 1
+        description: Default type tour.
+- id: 'properties.type: primary'
+  type: Tour
+  properties:
+    open: true
+    type: primary
+    steps:
+      - title: Step 1
+        description: Primary type tour.
+- id: 'properties.mask: false'
+  type: Tour
+  properties:
+    open: true
+    mask: false
+    steps:
+      - title: Step 1
+        description: No mask tour.
+- id: 'properties.arrow: false'
+  type: Tour
+  properties:
+    open: true
+    arrow: false
+    steps:
+      - title: Step 1
+        description: No arrow tour.
+- id: 'properties.closable: false'
+  type: Tour
+  properties:
+    open: true
+    closable: false
+    steps:
+      - title: Step 1
+        description: Tour without close button.
+- id: 'properties.keyboard: false'
+  type: Tour
+  properties:
+    open: true
+    keyboard: false
+    steps:
+      - title: Step 1
+        description: Tour without keyboard navigation.
+- id: 'properties.animated: false'
+  type: Tour
+  properties:
+    open: true
+    animated: false
+    steps:
+      - title: Step 1
+        description: Tour without animation.
+- id: 'properties.zIndex: 1001'
+  type: Tour
+  properties:
+    open: true
+    zIndex: 1001
+    steps:
+      - title: Step 1
+        description: Tour with custom z-index.
+- id: properties.gap
+  type: Tour
+  properties:
+    open: true
+    gap:
+      x: 10
+      y: 10
+    steps:
+      - title: Step 1
+        description: Tour with gap offset.
+- id: 'properties.disabledInteraction: true'
+  type: Tour
+  properties:
+    open: true
+    disabledInteraction: true
+    steps:
+      - title: Step 1
+        description: Tour with disabled interaction.
+- id: properties.steps with cover
+  type: Tour
+  properties:
+    open: true
+    steps:
+      - title: Step 1
+        description: Step with a cover image.
+        cover: https://via.placeholder.com/300x150
+      - title: Step 2
+        description: Step without a cover image.
+- id: properties.steps with per-step closable and mask
+  type: Tour
+  properties:
+    open: true
+    steps:
+      - title: Step 1
+        description: Step with close button hidden.
+        closable: false
+        mask: false
+      - title: Step 2
+        description: Step with close button visible.
+        closable: true
+        mask: true

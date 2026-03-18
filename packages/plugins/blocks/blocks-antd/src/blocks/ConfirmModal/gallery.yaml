@@ -1,0 +1,1043 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic Confirm Modal
+  blocks:
+    - id: confirm_basic_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open Confirm
+        color: primary
+        variant: solid
+      events:
+        onClick:
+          - id: confirm_basic_open
+            type: CallMethod
+            params:
+              blockId: confirm_basic
+              method: open
+    - id: confirm_basic
+      type: ConfirmModal
+      properties:
+        title: Are you sure?
+        content: This action cannot be undone.
+
+- title: Status Types
+  blocks:
+    - id: confirm_status_confirm_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Confirm
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_status_confirm_open
+            type: CallMethod
+            params:
+              blockId: confirm_status_confirm
+              method: open
+    - id: confirm_status_info_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Info
+        color: blue
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_status_info_open
+            type: CallMethod
+            params:
+              blockId: confirm_status_info
+              method: open
+    - id: confirm_status_success_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Success
+        color: green
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_status_success_open
+            type: CallMethod
+            params:
+              blockId: confirm_status_success
+              method: open
+    - id: confirm_status_warning_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Warning
+        color: orange
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_status_warning_open
+            type: CallMethod
+            params:
+              blockId: confirm_status_warning
+              method: open
+    - id: confirm_status_error_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Error
+        color: danger
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_status_error_open
+            type: CallMethod
+            params:
+              blockId: confirm_status_error
+              method: open
+    - id: confirm_status_confirm
+      type: ConfirmModal
+      properties:
+        title: Confirm Action
+        content: Do you want to proceed with this action?
+        status: confirm
+    - id: confirm_status_info
+      type: ConfirmModal
+      properties:
+        title: Information
+        content: Your account has been updated successfully.
+        status: info
+    - id: confirm_status_success
+      type: ConfirmModal
+      properties:
+        title: Success
+        content: The operation completed successfully.
+        status: success
+    - id: confirm_status_warning
+      type: ConfirmModal
+      properties:
+        title: Warning
+        content: This will overwrite existing data. Are you sure you want to continue?
+        status: warning
+    - id: confirm_status_error
+      type: ConfirmModal
+      properties:
+        title: Error
+        content: An error occurred while processing your request. Do you want to retry?
+        status: error
+
+- title: Override Status at Open Time
+  blocks:
+    - id: confirm_override_info_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open as Info
+        color: blue
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_override_info_open
+            type: CallMethod
+            params:
+              blockId: confirm_override
+              method: open
+              args:
+                status: info
+    - id: confirm_override_error_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open as Error
+        color: danger
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_override_error_open
+            type: CallMethod
+            params:
+              blockId: confirm_override
+              method: open
+              args:
+                status: error
+    - id: confirm_override_success_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open as Success
+        color: green
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_override_success_open
+            type: CallMethod
+            params:
+              blockId: confirm_override
+              method: open
+              args:
+                status: success
+    - id: confirm_override
+      type: ConfirmModal
+      properties:
+        title: Dynamic Status
+        content: The status of this modal was set at open time via the method args, overriding the default.
+        status: confirm
+
+- title: Custom Button Text
+  blocks:
+    - id: confirm_btn_text_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open Custom Buttons
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_btn_text_open
+            type: CallMethod
+            params:
+              blockId: confirm_btn_text
+              method: open
+    - id: confirm_btn_text
+      type: ConfirmModal
+      properties:
+        title: Save Changes?
+        content: You have unsaved changes. Do you want to save before leaving?
+        okText: Save
+        cancelText: Discard
+
+- title: Custom Icon
+  blocks:
+    - id: confirm_icon_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open with Custom Icon
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_icon_open
+            type: CallMethod
+            params:
+              blockId: confirm_icon
+              method: open
+    - id: confirm_icon_colored_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open with Colored Icon
+        color: danger
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_icon_colored_open
+            type: CallMethod
+            params:
+              blockId: confirm_icon_colored
+              method: open
+    - id: confirm_icon
+      type: ConfirmModal
+      properties:
+        title: Delete Item?
+        content: This item will be permanently removed from the system.
+        icon: AiOutlineDelete
+    - id: confirm_icon_colored
+      type: ConfirmModal
+      properties:
+        title: Danger Zone
+        content: Are you absolutely sure you want to delete this project and all its data?
+        icon:
+          name: AiOutlineWarning
+          color: '#ff4d4f'
+          size: 22
+
+- title: Closable and Mask Options
+  blocks:
+    - id: confirm_closable_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Closable
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_closable_open
+            type: CallMethod
+            params:
+              blockId: confirm_closable
+              method: open
+    - id: confirm_mask_closable_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Mask Closable
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_mask_closable_open
+            type: CallMethod
+            params:
+              blockId: confirm_mask_closable
+              method: open
+    - id: confirm_no_mask_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: No Mask
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_no_mask_open
+            type: CallMethod
+            params:
+              blockId: confirm_no_mask
+              method: open
+    - id: confirm_closable
+      type: ConfirmModal
+      properties:
+        title: Closable Confirm
+        content: This confirm modal shows a close (x) button in the top right.
+        closable: true
+    - id: confirm_mask_closable
+      type: ConfirmModal
+      properties:
+        title: Mask Closable
+        content: Click the mask area outside the modal to dismiss it.
+        maskClosable: true
+    - id: confirm_no_mask
+      type: ConfirmModal
+      properties:
+        title: No Mask
+        content: This confirm modal has no mask overlay behind it.
+        mask: false
+
+- title: Centered and Custom Width
+  blocks:
+    - id: confirm_centered_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Centered
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_centered_open
+            type: CallMethod
+            params:
+              blockId: confirm_centered
+              method: open
+    - id: confirm_narrow_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Narrow (300px)
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_narrow_open
+            type: CallMethod
+            params:
+              blockId: confirm_narrow
+              method: open
+    - id: confirm_wide_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Wide (600px)
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_wide_open
+            type: CallMethod
+            params:
+              blockId: confirm_wide
+              method: open
+    - id: confirm_centered
+      type: ConfirmModal
+      properties:
+        title: Centered Confirm
+        content: This confirm modal is vertically centered in the viewport.
+        centered: true
+    - id: confirm_narrow
+      type: ConfirmModal
+      properties:
+        title: Narrow Confirm
+        content: A compact 300px confirm modal.
+        width: 300
+    - id: confirm_wide
+      type: ConfirmModal
+      properties:
+        title: Wide Confirm
+        content: A wider 600px confirm modal with more room for content. Useful for complex messages or forms.
+        width: 600
+
+- title: Custom Z-Index
+  blocks:
+    - id: confirm_zindex_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open Confirm (z-index 2000)
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_zindex_open
+            type: CallMethod
+            params:
+              blockId: confirm_zindex
+              method: open
+    - id: confirm_zindex
+      type: ConfirmModal
+      properties:
+        title: High Z-Index Confirm
+        content: This confirm modal uses a custom z-index of 2000, ensuring it appears above other overlays.
+        zIndex: 2000
+
+- title: Custom Button Properties
+  blocks:
+    - id: confirm_ok_btn_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open with Danger Ok
+        color: danger
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_ok_btn_open
+            type: CallMethod
+            params:
+              blockId: confirm_ok_btn
+              method: open
+    - id: confirm_icon_btns_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open with Icon Buttons
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_icon_btns_open
+            type: CallMethod
+            params:
+              blockId: confirm_icon_btns
+              method: open
+    - id: confirm_ok_btn
+      type: ConfirmModal
+      properties:
+        title: Delete Permanently?
+        content: This action will permanently delete the selected items and cannot be undone.
+        status: error
+        okText: Delete
+        okButton:
+          danger: true
+        cancelText: Keep Items
+    - id: confirm_icon_btns
+      type: ConfirmModal
+      properties:
+        title: Export Data?
+        content: Your data will be exported to a CSV file and downloaded.
+        status: confirm
+        okText: Export
+        okButton:
+          icon: AiOutlineDownload
+        cancelText: Cancel
+        cancelButton:
+          icon: AiOutlineClose
+
+- title: Modal Style
+  blocks:
+    - id: confirm_modal_style_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open Styled Modal
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_modal_style_open
+            type: CallMethod
+            params:
+              blockId: confirm_modal_style
+              method: open
+    - id: confirm_modal_style
+      type: ConfirmModal
+      properties:
+        title: Styled Modal
+        content: This modal uses the modalStyle property to apply custom CSS directly to the modal element.
+        modalStyle:
+          borderRadius: 16
+          boxShadow: 0 8px 32px rgba(0, 0, 0, 0.2)
+
+- title: Content Slot
+  blocks:
+    - id: confirm_content_slot_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open with Rich Content
+        color: primary
+        variant: solid
+      events:
+        onClick:
+          - id: confirm_content_slot_open
+            type: CallMethod
+            params:
+              blockId: confirm_content_slot
+              method: open
+    - id: confirm_content_slot
+      type: ConfirmModal
+      properties:
+        title: Review Changes
+        status: confirm
+        width: 500
+      blocks:
+        - id: confirm_content_slot_desc
+          type: Descriptions
+          properties:
+            size: small
+            column: 1
+            items:
+              - label: File
+                value: report-2026-Q1.xlsx
+              - label: Size
+                value: 2.4 MB
+              - label: Modified
+                value: March 10, 2026
+              - label: Author
+                value: Jane Cooper
+
+- title: HTML Content
+  blocks:
+    - id: confirm_html_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open with HTML Content
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_html_open
+            type: CallMethod
+            params:
+              blockId: confirm_html
+              method: open
+    - id: confirm_html
+      type: ConfirmModal
+      properties:
+        title: '<b>Important</b> Notice'
+        content: 'Your subscription will expire on <b>March 31, 2026</b>. Please <em>renew</em> to avoid service interruption.'
+        status: warning
+
+- title: Events with Actions
+  blocks:
+    - id: confirm_events_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open with Event Actions
+        color: primary
+        variant: solid
+      events:
+        onClick:
+          - id: confirm_events_open
+            type: CallMethod
+            params:
+              blockId: confirm_events
+              method: open
+    - id: confirm_events_result
+      type: Paragraph
+      properties:
+        content:
+          _if:
+            test:
+              _state: confirm_events_action
+            then:
+              _string.concat:
+                - 'Last action: '
+                - _state: confirm_events_action
+            else: Click the button above and choose Ok or Cancel.
+    - id: confirm_events
+      type: ConfirmModal
+      properties:
+        title: Confirm with Events
+        content: Clicking Ok or Cancel will update the state and show a message.
+        okText: Confirm
+      events:
+        onOpen:
+          - id: confirm_events_on_open_set
+            type: SetState
+            params:
+              confirm_events_action: Modal opened...
+        onOk:
+          - id: confirm_events_on_ok_set
+            type: SetState
+            params:
+              confirm_events_action: Confirmed
+          - id: confirm_events_on_ok_msg
+            type: DisplayMessage
+            params:
+              content: Action confirmed successfully.
+              status: success
+        onCancel:
+          - id: confirm_events_on_cancel_set
+            type: SetState
+            params:
+              confirm_events_action: Cancelled
+          - id: confirm_events_on_cancel_msg
+            type: DisplayMessage
+            params:
+              content: Action was cancelled.
+              status: info
+
+- title: CSS Key Classes
+  blocks:
+    - id: confirm_css_element_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Styled Element
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_css_element_open
+            type: CallMethod
+            params:
+              blockId: confirm_css_element
+              method: open
+    - id: confirm_css_body_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Styled Body
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_css_body_open
+            type: CallMethod
+            params:
+              blockId: confirm_css_body
+              method: open
+    - id: confirm_css_element
+      type: ConfirmModal
+      class:
+        element: rounded-2xl shadow-2xl
+      properties:
+        title: Styled Element
+        content: 'The element CSS key applies Tailwind classes to the modal wrapper. This modal uses rounded-2xl and shadow-2xl on the element key.'
+    - id: confirm_css_body
+      type: ConfirmModal
+      class:
+        body: bg-blue-50 p-6
+      properties:
+        title: Styled Body
+        content: 'The body CSS key targets the modal body area. This modal uses bg-blue-50 and p-6 on the body key for a tinted content area.'
+
+- title: Theme Token Overrides
+  blocks:
+    - id: confirm_theme_colors_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Custom Colors
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_theme_colors_open
+            type: CallMethod
+            params:
+              blockId: confirm_theme_colors
+              method: open
+    - id: confirm_theme_padding_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Custom Padding
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_theme_padding_open
+            type: CallMethod
+            params:
+              blockId: confirm_theme_padding
+              method: open
+    - id: confirm_theme_radius_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Custom Radius and Mask
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: confirm_theme_radius_open
+            type: CallMethod
+            params:
+              blockId: confirm_theme_radius
+              method: open
+    - id: confirm_theme_colors
+      type: ConfirmModal
+      properties:
+        title: Custom Color Theme
+        content: This modal uses theme tokens to set a custom header background, title color, content background, and footer background.
+        theme:
+          headerBg: '#e6f4ff'
+          titleColor: '#0958d9'
+          titleFontSize: 18
+          contentBg: '#f0f5ff'
+          footerBg: '#f0f5ff'
+    - id: confirm_theme_padding
+      type: ConfirmModal
+      properties:
+        title: Custom Padding
+        content: This modal uses confirmBodyPadding and confirmBtnsMarginTop tokens for tighter spacing. The confirmIconMarginInlineEnd adjusts icon-to-text distance.
+        theme:
+          confirmBodyPadding: '16px 24px'
+          confirmBtnsMarginTop: 16
+          confirmIconMarginInlineEnd: 12
+    - id: confirm_theme_radius
+      type: ConfirmModal
+      properties:
+        title: Rounded with Tinted Mask
+        content: This modal uses borderRadiusLG for extra-rounded corners and colorBgMask for a tinted overlay backdrop.
+        theme:
+          borderRadiusLG: 20
+          colorBgMask: 'rgba(0, 0, 100, 0.3)'
+          titleLineHeight: 2
+
+- title: ConfirmModal in Delete Flow
+  blocks:
+    - id: delete_flow_card
+      type: Card
+      properties:
+        title: Team Members
+        size: small
+      blocks:
+        - id: delete_flow_list_item_1
+          type: Box
+          layout:
+            gap: 12
+            align: center
+          blocks:
+            - id: delete_flow_avatar_1
+              type: Avatar
+              layout:
+                flex: 0 0 auto
+              properties:
+                icon: AiOutlineUser
+                size: 32
+                color: '#fff'
+                backgroundColor: '#1677ff'
+            - id: delete_flow_name_1
+              type: Paragraph
+              layout:
+                flex: 1 1 0
+              properties:
+                content: Sarah Chen - Product Manager
+            - id: delete_flow_remove_btn_1
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Remove
+                icon: AiOutlineDelete
+                color: danger
+                variant: text
+                size: small
+              events:
+                onClick:
+                  - id: delete_flow_set_member
+                    type: SetState
+                    params:
+                      member_to_remove: Sarah Chen
+                  - id: delete_flow_open_confirm
+                    type: CallMethod
+                    params:
+                      blockId: delete_flow_confirm
+                      method: open
+        - id: delete_flow_divider
+          type: Divider
+        - id: delete_flow_list_item_2
+          type: Box
+          layout:
+            gap: 12
+            align: center
+          blocks:
+            - id: delete_flow_avatar_2
+              type: Avatar
+              layout:
+                flex: 0 0 auto
+              properties:
+                icon: AiOutlineUser
+                size: 32
+                color: '#fff'
+                backgroundColor: '#52c41a'
+            - id: delete_flow_name_2
+              type: Paragraph
+              layout:
+                flex: 1 1 0
+              properties:
+                content: James Park - Engineering Lead
+            - id: delete_flow_remove_btn_2
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Remove
+                icon: AiOutlineDelete
+                color: danger
+                variant: text
+                size: small
+              events:
+                onClick:
+                  - id: delete_flow_set_member_2
+                    type: SetState
+                    params:
+                      member_to_remove: James Park
+                  - id: delete_flow_open_confirm_2
+                    type: CallMethod
+                    params:
+                      blockId: delete_flow_confirm
+                      method: open
+    - id: delete_flow_confirm
+      type: ConfirmModal
+      properties:
+        title: Remove Team Member
+        status: error
+        icon:
+          name: AiOutlineUserDelete
+          color: '#ff4d4f'
+        okText: Remove
+        okButton:
+          danger: true
+        cancelText: Keep Member
+        content:
+          _string.concat:
+            - 'Are you sure you want to remove '
+            - _state: member_to_remove
+            - ' from the team? They will lose access to all project resources.'
+      events:
+        onOk:
+          - id: delete_flow_ok_msg
+            type: DisplayMessage
+            params:
+              content:
+                _string.concat:
+                  - _state: member_to_remove
+                  - ' has been removed from the team.'
+              status: success
+
+- title: ConfirmModal in Form Submission
+  blocks:
+    - id: form_submit_card
+      type: Card
+      properties:
+        title: Submit Support Ticket
+      blocks:
+        - id: form_submit_subject
+          type: TextInput
+          properties:
+            title: Subject
+            placeholder: Brief description of the issue
+        - id: form_submit_priority
+          type: Selector
+          properties:
+            title: Priority
+            options:
+              - label: Low
+                value: low
+              - label: Medium
+                value: medium
+              - label: High
+                value: high
+              - label: Critical
+                value: critical
+        - id: form_submit_description
+          type: TextArea
+          properties:
+            title: Description
+            placeholder: Describe your issue in detail...
+            rows: 4
+        - id: form_submit_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Submit Ticket
+            icon: AiOutlineSend
+            color: primary
+            variant: solid
+          events:
+            onClick:
+              - id: form_submit_open_confirm
+                type: CallMethod
+                params:
+                  blockId: form_submit_confirm
+                  method: open
+    - id: form_submit_confirm
+      type: ConfirmModal
+      properties:
+        title: Submit Support Ticket?
+        content: Please verify your ticket details before submitting. You will receive a confirmation email once the ticket is created.
+        status: confirm
+        okText: Submit
+        cancelText: Review Again
+        centered: true
+        width: 480
+        icon: AiOutlineCheckCircle
+      events:
+        onOk:
+          - id: form_submit_ok_msg
+            type: DisplayMessage
+            params:
+              content: Support ticket submitted successfully. Check your email for confirmation.
+              status: success
+          - id: form_submit_ok_reset
+            type: SetState
+            params:
+              form_submit_subject: null
+              form_submit_priority: null
+              form_submit_description: null
+        onCancel:
+          - id: form_submit_cancel_msg
+            type: DisplayMessage
+            params:
+              content: Take your time to review the details.
+              status: info
+
+- title: ConfirmModal in Navigation Guard
+  blocks:
+    - id: nav_guard_card
+      type: Card
+      properties:
+        title: Edit Profile
+      blocks:
+        - id: nav_guard_name
+          type: TextInput
+          properties:
+            title: Display Name
+            placeholder: Enter your display name
+        - id: nav_guard_email
+          type: TextInput
+          properties:
+            title: Email Address
+            placeholder: name@example.com
+        - id: nav_guard_actions
+          type: Box
+          layout:
+            gap: 8
+            justify: end
+          blocks:
+            - id: nav_guard_save_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Save Changes
+                color: primary
+                variant: solid
+              events:
+                onClick:
+                  - id: nav_guard_save_msg
+                    type: DisplayMessage
+                    params:
+                      content: Profile saved successfully.
+                      status: success
+            - id: nav_guard_leave_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Leave Page
+                color: default
+                variant: outlined
+              events:
+                onClick:
+                  - id: nav_guard_open_confirm
+                    type: CallMethod
+                    params:
+                      blockId: nav_guard_confirm
+                      method: open
+    - id: nav_guard_confirm
+      type: ConfirmModal
+      properties:
+        title: Unsaved Changes
+        content: You have unsaved changes that will be lost if you leave this page. Do you want to save your changes before leaving?
+        status: warning
+        icon: AiOutlineWarning
+        okText: Save & Leave
+        cancelText: Discard Changes
+        closable: true
+      events:
+        onOk:
+          - id: nav_guard_ok_msg
+            type: DisplayMessage
+            params:
+              content: Changes saved. Navigating away...
+              status: success
+          - id: nav_guard_ok_link
+            type: Link
+            params:
+              home: true
+        onCancel:
+          - id: nav_guard_cancel_link
+            type: Link
+            params:
+              home: true

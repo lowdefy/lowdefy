@@ -15,9 +15,11 @@
 */
 
 import React, { useState, useEffect } from 'react';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { get } from '@lowdefy/helpers';
 import { Modal } from 'antd';
+
+import withTheme from '../withTheme.js';
 
 const triggerSetOpen = ({ methods, setOpen, state }) => {
   if (!state) {
@@ -29,7 +31,15 @@ const triggerSetOpen = ({ methods, setOpen, state }) => {
   setOpen(state);
 };
 
-const ModalBlock = ({ blockId, content, events, methods, properties }) => {
+const ModalBlock = ({
+  blockId,
+  classNames = {},
+  content,
+  events,
+  methods,
+  properties,
+  styles = {},
+}) => {
   const [openState, setOpen] = useState(false);
   useEffect(() => {
     methods.registerMethod('toggleOpen', () =>
@@ -51,7 +61,6 @@ const ModalBlock = ({ blockId, content, events, methods, properties }) => {
       <Modal
         id={`${blockId}_modal`}
         afterClose={() => methods.triggerEvent({ name: 'afterClose' })}
-        bodyStyle={methods.makeCssClass(properties.bodyStyle, true)}
         cancelButtonProps={properties.cancelButtonProps}
         cancelText={properties.cancelText ?? 'Cancel'}
         centered={!!properties.centered}
@@ -59,16 +68,24 @@ const ModalBlock = ({ blockId, content, events, methods, properties }) => {
         confirmLoading={get(events, 'onOk.loading')}
         mask={properties.mask !== undefined ? properties.mask : true}
         maskClosable={properties.maskClosable !== undefined ? properties.maskClosable : true}
-        maskStyle={methods.makeCssClass(properties.maskStyle, true)}
         okButtonProps={properties.okButtonProps}
         okText={properties.okText ?? 'Ok'}
         okType={properties.okButtonType ?? 'primary'}
-        style={properties.style}
         title={renderHtml({ html: properties.title, methods })}
-        visible={openState}
+        open={openState}
         width={properties.width}
-        wrapClassName={methods.makeCssClass(properties.wrapperStyle)}
         zIndex={properties.zIndex}
+        className={classNames.element}
+        classNames={{
+          header: classNames.header,
+          body: classNames.body,
+          footer: classNames.footer,
+          mask: classNames.mask,
+          content: classNames.content,
+          wrapper: classNames.wrapper,
+        }}
+        style={styles.element}
+        styles={{ body: styles.body, mask: styles.mask, wrapper: styles.wrapper }}
         onOk={async () => {
           const response = await methods.triggerEvent({ name: 'onOk' });
           if (response.success === false) return;
@@ -91,11 +108,4 @@ const ModalBlock = ({ blockId, content, events, methods, properties }) => {
   );
 };
 
-ModalBlock.defaultProps = blockDefaultProps;
-ModalBlock.meta = {
-  category: 'container',
-  icons: [],
-  styles: ['blocks/Modal/style.less'],
-};
-
-export default ModalBlock;
+export default withTheme('Modal', withBlockDefaults(ModalBlock));

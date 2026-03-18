@@ -104,7 +104,7 @@ blocks:
       status: success
       title: Payment Successful
       subTitle: 'Order number: 2017182818828182881'
-    areas:
+    slots:
       content:
         blocks:
           - id: result_content_paragraph
@@ -117,7 +117,7 @@ blocks:
     properties:
       status: success
       title: Order Placed
-    areas:
+    slots:
       extra:
         blocks:
           - id: result_extra_button

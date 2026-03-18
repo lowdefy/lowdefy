@@ -1,0 +1,1753 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic PageSiderMenu
+  fullWidth: true
+  blocks:
+    - id: psm_basic
+      type: PageSiderMenu
+      properties:
+        header:
+          theme: dark
+        sider:
+          theme: light
+          initialCollapsed: false
+          collapsible: true
+          width: 220
+        menu:
+          theme: light
+          links:
+            - id: psm_basic_dash
+              type: MenuLink
+              properties:
+                title: Dashboard
+                icon: AiOutlineDashboard
+            - id: psm_basic_users
+              type: MenuLink
+              properties:
+                title: Users
+                icon: AiOutlineUser
+            - id: psm_basic_settings
+              type: MenuLink
+              properties:
+                title: Settings
+                icon: AiOutlineSetting
+      blocks:
+        - id: psm_basic_content
+          type: Paragraph
+          properties:
+            content: PageSiderMenu provides a full page layout with a collapsible sidebar navigation. The sider contains an inline menu that automatically collapses on small screens. A mobile drawer menu is shown on smaller viewports.
+
+- title: Dark Theme Sider
+  fullWidth: true
+  blocks:
+    - id: psm_dark
+      type: PageSiderMenu
+      properties:
+        header:
+          theme: dark
+        sider:
+          theme: dark
+          initialCollapsed: false
+          collapsible: true
+          width: 200
+        menu:
+          theme: dark
+          links:
+            - id: psm_dark_overview
+              type: MenuLink
+              properties:
+                title: Overview
+                icon: AiOutlineAppstore
+            - id: psm_dark_analytics
+              type: MenuLink
+              properties:
+                title: Analytics
+                icon: AiOutlineBarChart
+            - id: psm_dark_reports
+              type: MenuLink
+              properties:
+                title: Reports
+                icon: AiOutlineFileText
+      blocks:
+        - id: psm_dark_content
+          type: Paragraph
+          properties:
+            content: Dark theme sidebar with matching dark menu. The sider.theme property controls the sidebar background color and the menu.theme should match for a consistent appearance.
+
+- title: Light Header Theme
+  fullWidth: true
+  blocks:
+    - id: psm_light_header
+      type: PageSiderMenu
+      properties:
+        header:
+          theme: light
+        sider:
+          theme: light
+          initialCollapsed: false
+          collapsible: true
+          width: 220
+        menu:
+          theme: light
+          links:
+            - id: psm_lh_dash
+              type: MenuLink
+              properties:
+                title: Dashboard
+                icon: AiOutlineDashboard
+            - id: psm_lh_reports
+              type: MenuLink
+              properties:
+                title: Reports
+                icon: AiOutlineFileText
+      blocks:
+        - id: psm_light_header_content
+          type: Paragraph
+          properties:
+            content: Setting header.theme to light uses a white header background instead of dark. This creates a lighter, more minimal look for the page.
+
+- title: Menu with Groups and Nested Items
+  fullWidth: true
+  blocks:
+    - id: psm_groups
+      type: PageSiderMenu
+      properties:
+        header:
+          theme: dark
+        sider:
+          theme: light
+          initialCollapsed: false
+          collapsible: true
+          width: 240
+        menu:
+          theme: light
+          links:
+            - id: psm_grp_dash
+              type: MenuLink
+              properties:
+                title: Dashboard
+                icon: AiOutlineDashboard
+            - id: psm_grp_management
+              type: MenuGroup
+              properties:
+                title: Management
+                icon: AiOutlineTeam
+              links:
+                - id: psm_grp_users
+                  type: MenuLink
+                  properties:
+                    title: Users
+                - id: psm_grp_roles
+                  type: MenuLink
+                  properties:
+                    title: Roles
+                - id: psm_grp_permissions
+                  type: MenuLink
+                  properties:
+                    title: Permissions
+            - id: psm_grp_content_group
+              type: MenuGroup
+              properties:
+                title: Content
+                icon: AiOutlineEdit
+              links:
+                - id: psm_grp_pages
+                  type: MenuLink
+                  properties:
+                    title: Pages
+                - id: psm_grp_posts
+                  type: MenuLink
+                  properties:
+                    title: Posts
+                - id: psm_grp_media
+                  type: MenuLink
+                  properties:
+                    title: Media
+            - id: psm_grp_settings
+              type: MenuLink
+              properties:
+                title: Settings
+                icon: AiOutlineSetting
+      blocks:
+        - id: psm_groups_content
+          type: Paragraph
+          properties:
+            content: The inline sidebar menu supports nested groups using MenuGroup. Groups expand and collapse to reveal sub-items, making it ideal for applications with deep navigation hierarchies.
+
+- title: Initially Collapsed Sider
+  fullWidth: true
+  blocks:
+    - id: psm_collapsed
+      type: PageSiderMenu
+      properties:
+        header:
+          theme: dark
+        sider:
+          theme: light
+          initialCollapsed: true
+          collapsible: true
+          width: 220
+        menu:
+          theme: light
+          links:
+            - id: psm_col_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+            - id: psm_col_inbox
+              type: MenuLink
+              properties:
+                title: Inbox
+                icon: AiOutlineInbox
+            - id: psm_col_starred
+              type: MenuLink
+              properties:
+                title: Starred
+                icon: AiOutlineStar
+      blocks:
+        - id: psm_collapsed_content
+          type: Paragraph
+          properties:
+            content: The sider starts collapsed when sider.initialCollapsed is set to true. Only menu icons are visible in the collapsed state. The toggle button at the bottom allows expanding and collapsing the sidebar.
+
+- title: Custom Sider Width and Collapsed Width
+  fullWidth: true
+  blocks:
+    - id: psm_width
+      type: PageSiderMenu
+      properties:
+        header:
+          theme: dark
+        sider:
+          theme: light
+          initialCollapsed: false
+          collapsible: true
+          width: 300
+          collapsedWidth: 60
+        menu:
+          theme: light
+          links:
+            - id: psm_w_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+            - id: psm_w_explore
+              type: MenuLink
+              properties:
+                title: Explore
+                icon: AiOutlineSearch
+            - id: psm_w_library
+              type: MenuLink
+              properties:
+                title: Library
+                icon: AiOutlineBook
+      blocks:
+        - id: psm_width_content
+          type: Paragraph
+          properties:
+            content: The sider.width property controls the expanded width (300px here) and sider.collapsedWidth controls the collapsed width (60px). Setting collapsedWidth to 0 completely hides the sidebar when collapsed.
+
+- title: Hidden Toggle Button and Non-Collapsible Sider
+  fullWidth: true
+  blocks:
+    - id: psm_no_toggle
+      type: PageSiderMenu
+      properties:
+        header:
+          theme: dark
+        sider:
+          theme: light
+          initialCollapsed: false
+          collapsible: false
+          hideToggleButton: true
+          width: 200
+        menu:
+          theme: light
+          links:
+            - id: psm_nt_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+            - id: psm_nt_projects
+              type: MenuLink
+              properties:
+                title: Projects
+                icon: AiOutlineProject
+            - id: psm_nt_settings
+              type: MenuLink
+              properties:
+                title: Settings
+                icon: AiOutlineSetting
+      blocks:
+        - id: psm_no_toggle_content
+          type: Paragraph
+          properties:
+            content: Setting sider.hideToggleButton to true removes the toggle button at the bottom of the sidebar. Combined with collapsible set to false, this creates a fixed sidebar that stays permanently open.
+
+- title: Sider Breakpoint
+  fullWidth: true
+  blocks:
+    - id: psm_breakpoint
+      type: PageSiderMenu
+      properties:
+        header:
+          theme: dark
+        sider:
+          theme: light
+          initialCollapsed: false
+          collapsible: true
+          breakpoint: lg
+          width: 220
+        menu:
+          theme: light
+          links:
+            - id: psm_bp_dash
+              type: MenuLink
+              properties:
+                title: Dashboard
+                icon: AiOutlineDashboard
+            - id: psm_bp_reports
+              type: MenuLink
+              properties:
+                title: Reports
+                icon: AiOutlineBarChart
+      blocks:
+        - id: psm_breakpoint_content
+          type: Paragraph
+          properties:
+            content: The sider.breakpoint property controls at which screen size the sidebar collapses responsively. Options are xs, sm (default), md, lg, and xl. Set to lg here so the sider stays visible on medium screens.
+
+- title: Reverse Arrow Sider
+  fullWidth: true
+  blocks:
+    - id: psm_reverse
+      type: PageSiderMenu
+      properties:
+        header:
+          theme: dark
+        sider:
+          theme: light
+          initialCollapsed: false
+          collapsible: true
+          reverseArrow: true
+          width: 200
+        menu:
+          theme: light
+          links:
+            - id: psm_rev_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+            - id: psm_rev_tasks
+              type: MenuLink
+              properties:
+                title: Tasks
+                icon: AiOutlineCheckSquare
+      blocks:
+        - id: psm_reverse_content
+          type: Paragraph
+          properties:
+            content: The sider.reverseArrow property reverses the direction of the collapse arrow on the toggle button. This is intended for sidebars that expand from the right side.
+
+- title: With Breadcrumb
+  fullWidth: true
+  blocks:
+    - id: psm_breadcrumb
+      type: PageSiderMenu
+      properties:
+        header:
+          theme: dark
+        sider:
+          theme: light
+          initialCollapsed: false
+          collapsible: true
+        breadcrumb:
+          separator: /
+          list:
+            - Home
+            - Dashboard
+            - Analytics
+        menu:
+          theme: light
+          links:
+            - id: psm_bc_dash
+              type: MenuLink
+              properties:
+                title: Dashboard
+                icon: AiOutlineDashboard
+            - id: psm_bc_analytics
+              type: MenuLink
+              properties:
+                title: Analytics
+                icon: AiOutlineBarChart
+      blocks:
+        - id: psm_breadcrumb_content
+          type: Paragraph
+          properties:
+            content: Breadcrumbs provide navigation context above the main content. Set the breadcrumb property with a list of path items and an optional separator character.
+
+- title: Breadcrumb with Custom Separator
+  fullWidth: true
+  blocks:
+    - id: psm_bc_custom
+      type: PageSiderMenu
+      properties:
+        header:
+          theme: dark
+        sider:
+          theme: light
+          initialCollapsed: false
+          collapsible: true
+        breadcrumb:
+          separator: '>'
+          list:
+            - Application
+            - Settings
+            - Profile
+        menu:
+          theme: light
+          links:
+            - id: psm_bcc_settings
+              type: MenuLink
+              properties:
+                title: Settings
+                icon: AiOutlineSetting
+      blocks:
+        - id: psm_bc_custom_content
+          type: Paragraph
+          properties:
+            content: The breadcrumb.separator property accepts any string. Here a greater-than sign is used instead of the default forward slash.
+
+- title: Logo Configuration
+  fullWidth: true
+  blocks:
+    - id: psm_logo
+      type: PageSiderMenu
+      properties:
+        header:
+          theme: dark
+        logo:
+          src: https://lowdefy.com/logos/name_250.png
+          alt: My Application
+          style:
+            height: 32
+        sider:
+          theme: light
+          initialCollapsed: false
+          collapsible: true
+        menu:
+          theme: light
+          links:
+            - id: psm_logo_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+            - id: psm_logo_pages
+              type: MenuLink
+              properties:
+                title: Pages
+                icon: AiOutlineFile
+      blocks:
+        - id: psm_logo_content
+          type: Paragraph
+          properties:
+            content: The logo property configures the header logo image. Set logo.src for the image URL, logo.alt for accessible alt text, and logo.style to control size and spacing. Use logo.srcMobile and logo.breakpoint to show different logos on mobile vs desktop.
+
+- title: Header Style and Content Style
+  fullWidth: true
+  blocks:
+    - id: psm_header_styles
+      type: PageSiderMenu
+      properties:
+        header:
+          theme: dark
+          style:
+            backgroundColor: '#001529'
+            borderBottom: 2px solid #1677ff
+          contentStyle:
+            alignItems: center
+        sider:
+          theme: light
+          initialCollapsed: false
+          collapsible: true
+        menu:
+          theme: light
+          links:
+            - id: psm_hs2_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+      blocks:
+        - id: psm_header_styles_content
+          type: Paragraph
+          properties:
+            content: The header.style property applies CSS to the header element itself, while header.contentStyle controls the flex layout of items inside the header (like the header slot content). Here a blue bottom border accents the header.
+
+- title: Footer Style
+  fullWidth: true
+  blocks:
+    - id: psm_footer_style
+      type: PageSiderMenu
+      properties:
+        header:
+          theme: dark
+        sider:
+          theme: light
+          initialCollapsed: false
+          collapsible: true
+        footer:
+          style:
+            textAlign: center
+            backgroundColor: '#fafafa'
+            borderTop: 1px solid #f0f0f0
+        menu:
+          theme: light
+          links:
+            - id: psm_fs_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+      slots:
+        footer:
+          blocks:
+            - id: psm_fs_text
+              type: Paragraph
+              properties:
+                content: Footer styled with background color and top border.
+                style:
+                  textAlign: center
+                  margin: 0
+      blocks:
+        - id: psm_footer_style_content
+          type: Paragraph
+          properties:
+            content: The footer.style property applies CSS to the footer container. Use it to set background colors, borders, padding, and text alignment.
+
+- title: Content Style
+  fullWidth: true
+  blocks:
+    - id: psm_content_style
+      type: PageSiderMenu
+      properties:
+        header:
+          theme: dark
+        sider:
+          theme: light
+          initialCollapsed: false
+          collapsible: true
+        content:
+          style:
+            backgroundColor: '#f5f5f5'
+            padding: 0 24px 24px 24px
+        menu:
+          theme: light
+          links:
+            - id: psm_cs_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+      blocks:
+        - id: psm_content_style_text
+          type: Paragraph
+          properties:
+            content: The content.style property overrides the default content area padding and background. The default padding is 0 40px 40px 40px.
+
+- title: Sider Style
+  fullWidth: true
+  blocks:
+    - id: psm_sider_style
+      type: PageSiderMenu
+      properties:
+        header:
+          theme: dark
+        sider:
+          theme: light
+          initialCollapsed: false
+          collapsible: true
+          width: 220
+          style:
+            borderRight: 2px solid #1677ff
+        menu:
+          theme: light
+          links:
+            - id: psm_ss2_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+            - id: psm_ss2_tasks
+              type: MenuLink
+              properties:
+                title: Tasks
+                icon: AiOutlineCheckSquare
+      blocks:
+        - id: psm_sider_style_content
+          type: Paragraph
+          properties:
+            content: The sider.style property applies CSS to the sider container itself. Here a blue right border is added to accent the sidebar.
+
+- title: Toggle Sider Button Properties
+  fullWidth: true
+  blocks:
+    - id: psm_toggle_btn
+      type: PageSiderMenu
+      properties:
+        header:
+          theme: dark
+        sider:
+          theme: light
+          initialCollapsed: false
+          collapsible: true
+          width: 220
+        toggleSiderButton:
+          color: primary
+          variant: outlined
+        menu:
+          theme: light
+          links:
+            - id: psm_tb_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+            - id: psm_tb_settings
+              type: MenuLink
+              properties:
+                title: Settings
+                icon: AiOutlineSetting
+      blocks:
+        - id: psm_toggle_btn_content
+          type: Paragraph
+          properties:
+            content: The toggleSiderButton property passes Button properties to the collapse/expand toggle at the bottom of the sidebar. Here we set color and variant to style the toggle button.
+
+- title: Menu Large and Medium Overrides
+  fullWidth: true
+  blocks:
+    - id: psm_menu_overrides
+      type: PageSiderMenu
+      properties:
+        header:
+          theme: dark
+        sider:
+          theme: light
+          initialCollapsed: false
+          collapsible: true
+          width: 220
+        menu:
+          theme: light
+          links:
+            - id: psm_mo_dash
+              type: MenuLink
+              properties:
+                title: Dashboard
+                icon: AiOutlineDashboard
+            - id: psm_mo_settings
+              type: MenuLink
+              properties:
+                title: Settings
+                icon: AiOutlineSetting
+        menuLg:
+          theme: light
+        menuMd:
+          theme: dark
+      blocks:
+        - id: psm_menu_overrides_content
+          type: Paragraph
+          properties:
+            content: The menuLg property overrides menu properties for the desktop sidebar, while menuMd overrides for the mobile drawer menu. This allows different themes or configurations per viewport size.
+
+- title: With Header Slot
+  fullWidth: true
+  blocks:
+    - id: psm_header_slot
+      type: PageSiderMenu
+      properties:
+        header:
+          theme: dark
+          contentStyle:
+            alignItems: center
+        sider:
+          theme: light
+          initialCollapsed: false
+          collapsible: true
+        menu:
+          theme: light
+          links:
+            - id: psm_hs_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+            - id: psm_hs_tasks
+              type: MenuLink
+              properties:
+                title: Tasks
+                icon: AiOutlineCheckSquare
+      slots:
+        header:
+          blocks:
+            - id: psm_header_slot_avatar
+              type: Avatar
+              layout:
+                flex: 0 0 auto
+              properties:
+                icon: AiOutlineUser
+                size: small
+      blocks:
+        - id: psm_header_slot_content
+          type: Paragraph
+          properties:
+            content: The header slot places custom blocks in the header area. This is typically used for user profile elements, notification indicators, or quick action buttons. The header.contentStyle property controls the flex layout of these items.
+
+- title: With Footer Slot
+  fullWidth: true
+  blocks:
+    - id: psm_footer
+      type: PageSiderMenu
+      properties:
+        header:
+          theme: dark
+        sider:
+          theme: light
+          initialCollapsed: false
+          collapsible: true
+        footer:
+          style:
+            textAlign: center
+        menu:
+          theme: light
+          links:
+            - id: psm_ft_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+            - id: psm_ft_about
+              type: MenuLink
+              properties:
+                title: About
+                icon: AiOutlineInfoCircle
+      blocks:
+        - id: psm_footer_main
+          type: Paragraph
+          properties:
+            content: The footer slot appears below the main content area. Use slots.footer to add footer blocks and properties.footer.style to customize the footer appearance.
+      slots:
+        footer:
+          blocks:
+            - id: psm_footer_text
+              type: Paragraph
+              properties:
+                content: Application Footer - Built with Lowdefy
+                style:
+                  textAlign: center
+                  margin: 0
+
+- title: With Sider Slot
+  fullWidth: true
+  blocks:
+    - id: psm_sider_slot
+      type: PageSiderMenu
+      properties:
+        header:
+          theme: dark
+        sider:
+          theme: light
+          initialCollapsed: false
+          collapsible: true
+          width: 220
+        menu:
+          theme: light
+          links:
+            - id: psm_ss_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+            - id: psm_ss_pages
+              type: MenuLink
+              properties:
+                title: Pages
+                icon: AiOutlineFile
+      slots:
+        sider:
+          blocks:
+            - id: psm_sider_slot_help
+              type: Alert
+              style:
+                margin: 12px
+              properties:
+                message: Need Help?
+                description: Visit our documentation for guides and tutorials.
+                type: info
+                showIcon: true
+      blocks:
+        - id: psm_sider_slot_content
+          type: Paragraph
+          properties:
+            content: The sider slot renders custom content below the menu inside the sidebar. This is useful for help links, version info, or supplementary navigation elements.
+
+- title: With Content Slot
+  fullWidth: true
+  blocks:
+    - id: psm_content_slot
+      type: PageSiderMenu
+      properties:
+        header:
+          theme: dark
+        sider:
+          theme: light
+          initialCollapsed: false
+          collapsible: true
+          width: 220
+        menu:
+          theme: light
+          links:
+            - id: psm_csl_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+      blocks:
+        - id: psm_content_slot_title
+          type: Title
+          properties:
+            content: Main Content Area
+            level: 3
+        - id: psm_content_slot_text
+          type: Paragraph
+          properties:
+            content: The default content slot is where the main page blocks are placed. Any blocks added directly under the PageSiderMenu blocks key render in the content area between the breadcrumb and footer.
+
+- title: Theme Token Overrides
+  fullWidth: true
+  blocks:
+    - id: psm_theme_primary
+      type: PageSiderMenu
+      properties:
+        header:
+          theme: dark
+        sider:
+          theme: light
+          initialCollapsed: false
+          collapsible: true
+        menu:
+          theme: light
+          links:
+            - id: psm_th_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+            - id: psm_th_pages
+              type: MenuLink
+              properties:
+                title: Pages
+                icon: AiOutlineFile
+        theme:
+          colorPrimary: '#52c41a'
+          colorBgContainer: '#f6ffed'
+      blocks:
+        - id: psm_theme_primary_content
+          type: Paragraph
+          properties:
+            content: The theme property allows overriding Ant Design design tokens for the entire page. Here the primary color is set to green and the container background to a light green tint.
+
+- title: Theme Token - Custom Layout Colors
+  fullWidth: true
+  blocks:
+    - id: psm_theme_layout
+      type: PageSiderMenu
+      properties:
+        header:
+          theme: light
+        sider:
+          theme: light
+          initialCollapsed: false
+          collapsible: true
+        menu:
+          theme: light
+          links:
+            - id: psm_tl_dash
+              type: MenuLink
+              properties:
+                title: Dashboard
+                icon: AiOutlineDashboard
+            - id: psm_tl_settings
+              type: MenuLink
+              properties:
+                title: Settings
+                icon: AiOutlineSetting
+        theme:
+          colorPrimary: '#722ed1'
+          colorBgLayout: '#f9f0ff'
+          colorText: '#531dab'
+      blocks:
+        - id: psm_theme_layout_content
+          type: Paragraph
+          properties:
+            content: Design tokens like colorBgLayout, colorText, and colorPrimary let you create a fully custom color scheme. These tokens cascade through all nested antd components on the page.
+
+- title: Theme Token - Compact Spacing
+  fullWidth: true
+  blocks:
+    - id: psm_theme_compact
+      type: PageSiderMenu
+      properties:
+        header:
+          theme: dark
+        sider:
+          theme: light
+          initialCollapsed: false
+          collapsible: true
+          width: 180
+        menu:
+          theme: light
+          links:
+            - id: psm_tc_dash
+              type: MenuLink
+              properties:
+                title: Dashboard
+                icon: AiOutlineDashboard
+            - id: psm_tc_inbox
+              type: MenuLink
+              properties:
+                title: Inbox
+                icon: AiOutlineInbox
+        theme:
+          fontSize: 12
+          padding: 12
+          margin: 8
+      blocks:
+        - id: psm_theme_compact_content
+          type: Paragraph
+          properties:
+            content: Reduce fontSize, padding, and margin tokens for a denser UI. These global tokens affect all antd components within the page.
+
+- title: CSS Key Classes (Tailwind)
+  fullWidth: true
+  blocks:
+    - id: psm_css_keys
+      type: PageSiderMenu
+      class:
+        header: bg-gradient-to-r from-blue-600 to-blue-800
+        sider: bg-gray-50
+        content: bg-white
+        footer: bg-gray-100
+      properties:
+        header:
+          theme: dark
+        sider:
+          theme: light
+          initialCollapsed: false
+          collapsible: true
+          width: 220
+        footer:
+          style:
+            textAlign: center
+        breadcrumb:
+          list:
+            - Home
+            - Styled Page
+        menu:
+          theme: light
+          links:
+            - id: psm_ck_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+            - id: psm_ck_pages
+              type: MenuLink
+              properties:
+                title: Pages
+                icon: AiOutlineFile
+      slots:
+        footer:
+          blocks:
+            - id: psm_ck_footer_text
+              type: Paragraph
+              properties:
+                content: Styled footer area
+                style:
+                  textAlign: center
+                  margin: 0
+      blocks:
+        - id: psm_css_keys_content
+          type: Paragraph
+          properties:
+            content: 'PageSiderMenu supports these CSS keys: element, header, logo, sider, menu, content, breadcrumb, and footer. Use class as an object to target each area with Tailwind classes.'
+
+- title: CSS Key - Sider and Menu Styling
+  fullWidth: true
+  blocks:
+    - id: psm_css_sider
+      type: PageSiderMenu
+      class:
+        sider: border-r-2 border-r-indigo-500
+        menu: py-4
+        content: p-8
+      properties:
+        header:
+          theme: dark
+        sider:
+          theme: light
+          initialCollapsed: false
+          collapsible: true
+          width: 220
+        menu:
+          theme: light
+          links:
+            - id: psm_csm_dash
+              type: MenuLink
+              properties:
+                title: Dashboard
+                icon: AiOutlineDashboard
+            - id: psm_csm_reports
+              type: MenuLink
+              properties:
+                title: Reports
+                icon: AiOutlineBarChart
+      blocks:
+        - id: psm_css_sider_content
+          type: Paragraph
+          properties:
+            content: Target the sider, menu, and content CSS keys individually with Tailwind classes. Here the sider has an indigo right border, the menu has vertical padding, and the content area has uniform padding.
+
+- title: CSS Key - Breadcrumb and Logo
+  fullWidth: true
+  blocks:
+    - id: psm_css_bc
+      type: PageSiderMenu
+      class:
+        breadcrumb: bg-blue-50 px-4 py-2 rounded-lg
+        logo: h-8 w-auto
+      properties:
+        header:
+          theme: dark
+        sider:
+          theme: light
+          initialCollapsed: false
+          collapsible: true
+        breadcrumb:
+          list:
+            - Home
+            - Reports
+            - Monthly
+        menu:
+          theme: light
+          links:
+            - id: psm_cbc_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+            - id: psm_cbc_reports
+              type: MenuLink
+              properties:
+                title: Reports
+                icon: AiOutlineBarChart
+      blocks:
+        - id: psm_css_bc_content
+          type: Paragraph
+          properties:
+            content: The breadcrumb CSS key targets the breadcrumb container, and logo targets the header logo image. Here the breadcrumb has a blue background with padding.
+
+- title: Admin Dashboard
+  fullWidth: true
+  blocks:
+    - id: psm_admin
+      type: PageSiderMenu
+      properties:
+        header:
+          theme: dark
+          contentStyle:
+            alignItems: center
+        sider:
+          theme: dark
+          initialCollapsed: false
+          collapsible: true
+          width: 240
+        breadcrumb:
+          list:
+            - Admin
+            - Dashboard
+        menu:
+          theme: dark
+          links:
+            - id: psm_admin_dash
+              type: MenuLink
+              properties:
+                title: Dashboard
+                icon: AiOutlineDashboard
+            - id: psm_admin_users_group
+              type: MenuGroup
+              properties:
+                title: User Management
+                icon: AiOutlineTeam
+              links:
+                - id: psm_admin_all_users
+                  type: MenuLink
+                  properties:
+                    title: All Users
+                - id: psm_admin_user_roles
+                  type: MenuLink
+                  properties:
+                    title: Roles & Permissions
+            - id: psm_admin_content_group
+              type: MenuGroup
+              properties:
+                title: Content
+                icon: AiOutlineEdit
+              links:
+                - id: psm_admin_articles
+                  type: MenuLink
+                  properties:
+                    title: Articles
+                - id: psm_admin_categories
+                  type: MenuLink
+                  properties:
+                    title: Categories
+            - id: psm_admin_analytics
+              type: MenuLink
+              properties:
+                title: Analytics
+                icon: AiOutlineBarChart
+            - id: psm_admin_settings
+              type: MenuLink
+              properties:
+                title: Settings
+                icon: AiOutlineSetting
+      slots:
+        header:
+          blocks:
+            - id: psm_admin_header_row
+              type: Box
+              layout:
+                gap: 16
+                align: center
+              blocks:
+                - id: psm_admin_notif_btn
+                  type: Button
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    icon: AiOutlineBell
+                    hideTitle: true
+                    color: default
+                    variant: text
+                    size: small
+                  events:
+                    onClick:
+                      - id: psm_admin_notif_action
+                        type: DisplayMessage
+                        params:
+                          content: You have 3 new notifications.
+                          status: info
+                - id: psm_admin_avatar
+                  type: Avatar
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    icon: AiOutlineUser
+                    size: small
+                    color: '#fff'
+                    backgroundColor: '#1677ff'
+        footer:
+          blocks:
+            - id: psm_admin_footer_text
+              type: Paragraph
+              properties:
+                content: Admin Panel v2.4.1
+                style:
+                  textAlign: center
+                  margin: 0
+                  color: '#999'
+                  fontSize: 12
+      blocks:
+        - id: psm_admin_title
+          type: Title
+          properties:
+            content: Dashboard Overview
+            level: 3
+        - id: psm_admin_stats_row
+          type: Box
+          layout:
+            gap: 16
+          blocks:
+            - id: psm_admin_stat_users
+              type: Card
+              layout:
+                flex: 1 1 0
+              properties:
+                size: small
+              blocks:
+                - id: psm_admin_stat_users_val
+                  type: Statistic
+                  properties:
+                    title: Total Users
+                    value: 2847
+                    prefix:
+                      icon: AiOutlineUser
+            - id: psm_admin_stat_revenue
+              type: Card
+              layout:
+                flex: 1 1 0
+              properties:
+                size: small
+              blocks:
+                - id: psm_admin_stat_revenue_val
+                  type: Statistic
+                  properties:
+                    title: Revenue
+                    value: 58420
+                    prefix: $
+            - id: psm_admin_stat_orders
+              type: Card
+              layout:
+                flex: 1 1 0
+              properties:
+                size: small
+              blocks:
+                - id: psm_admin_stat_orders_val
+                  type: Statistic
+                  properties:
+                    title: Orders
+                    value: 384
+        - id: psm_admin_recent_card
+          type: Card
+          properties:
+            title: Recent Activity
+          blocks:
+            - id: psm_admin_activity_1
+              type: Paragraph
+              properties:
+                content: 'User john@example.com updated their profile 5 minutes ago.'
+            - id: psm_admin_activity_2
+              type: Paragraph
+              properties:
+                content: 'New order #1284 placed by customer sarah@example.com.'
+            - id: psm_admin_activity_3
+              type: Paragraph
+              properties:
+                content: 'Article "Getting Started Guide" published by admin.'
+
+- title: Project Management Application
+  fullWidth: true
+  blocks:
+    - id: psm_project
+      type: PageSiderMenu
+      properties:
+        header:
+          theme: light
+          contentStyle:
+            alignItems: center
+        sider:
+          theme: light
+          initialCollapsed: false
+          collapsible: true
+          width: 250
+        breadcrumb:
+          separator: /
+          list:
+            - Projects
+            - Project Alpha
+            - Tasks
+        content:
+          style:
+            padding: 0 32px 32px 32px
+        menu:
+          theme: light
+          links:
+            - id: psm_proj_overview
+              type: MenuLink
+              properties:
+                title: Overview
+                icon: AiOutlineAppstore
+            - id: psm_proj_tasks_link
+              type: MenuLink
+              properties:
+                title: Tasks
+                icon: AiOutlineCheckSquare
+            - id: psm_proj_team_group
+              type: MenuGroup
+              properties:
+                title: Team
+                icon: AiOutlineTeam
+              links:
+                - id: psm_proj_members
+                  type: MenuLink
+                  properties:
+                    title: Members
+                - id: psm_proj_activity
+                  type: MenuLink
+                  properties:
+                    title: Activity Log
+            - id: psm_proj_files
+              type: MenuLink
+              properties:
+                title: Files
+                icon: AiOutlineFile
+            - id: psm_proj_settings_link
+              type: MenuLink
+              properties:
+                title: Project Settings
+                icon: AiOutlineSetting
+      slots:
+        header:
+          blocks:
+            - id: psm_proj_header_row
+              type: Box
+              layout:
+                gap: 12
+                align: center
+              blocks:
+                - id: psm_proj_search_btn
+                  type: Button
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    icon: AiOutlineSearch
+                    hideTitle: true
+                    color: default
+                    variant: text
+                    size: small
+                - id: psm_proj_add_btn
+                  type: Button
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: New Task
+                    icon: AiOutlinePlus
+                    color: primary
+                    variant: solid
+                    size: small
+                  events:
+                    onClick:
+                      - id: psm_proj_add_action
+                        type: DisplayMessage
+                        params:
+                          content: New task dialog would open here.
+                          status: info
+        sider:
+          blocks:
+            - id: psm_proj_sider_tag
+              type: Box
+              style:
+                padding: 12px
+              blocks:
+                - id: psm_proj_progress_label
+                  type: Paragraph
+                  properties:
+                    content: Sprint Progress
+                    style:
+                      margin: 0 0 8px 0
+                      fontSize: 12
+                      color: '#999'
+                - id: psm_proj_progress
+                  type: Progress
+                  properties:
+                    percent: 68
+                    size: small
+      blocks:
+        - id: psm_proj_title
+          type: Title
+          properties:
+            content: Project Alpha - Tasks
+            level: 3
+        - id: psm_proj_summary_row
+          type: Box
+          layout:
+            gap: 16
+          blocks:
+            - id: psm_proj_stat_total
+              type: Card
+              layout:
+                flex: 1 1 0
+              properties:
+                size: small
+              blocks:
+                - id: psm_proj_stat_total_val
+                  type: Statistic
+                  properties:
+                    title: Total Tasks
+                    value: 42
+            - id: psm_proj_stat_done
+              type: Card
+              layout:
+                flex: 1 1 0
+              properties:
+                size: small
+              blocks:
+                - id: psm_proj_stat_done_val
+                  type: Statistic
+                  properties:
+                    title: Completed
+                    value: 28
+            - id: psm_proj_stat_open
+              type: Card
+              layout:
+                flex: 1 1 0
+              properties:
+                size: small
+              blocks:
+                - id: psm_proj_stat_open_val
+                  type: Statistic
+                  properties:
+                    title: In Progress
+                    value: 14
+        - id: psm_proj_tasks_card
+          type: Card
+          properties:
+            title: Active Tasks
+          slots:
+            extra:
+              blocks:
+                - id: psm_proj_filter_btn
+                  type: Button
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Filter
+                    icon: AiOutlineFilter
+                    color: default
+                    variant: outlined
+                    size: small
+          blocks:
+            - id: psm_proj_task_1
+              type: Box
+              layout:
+                gap: 8
+                align: center
+              style:
+                padding: 8px 0
+                borderBottom: 1px solid #f0f0f0
+              blocks:
+                - id: psm_proj_task_1_title
+                  type: Paragraph
+                  layout:
+                    flex: 1 1 0
+                  properties:
+                    content: Implement user authentication flow
+                    style:
+                      margin: 0
+                - id: psm_proj_task_1_tag
+                  type: Tag
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: High
+                    color: red
+            - id: psm_proj_task_2
+              type: Box
+              layout:
+                gap: 8
+                align: center
+              style:
+                padding: 8px 0
+                borderBottom: 1px solid #f0f0f0
+              blocks:
+                - id: psm_proj_task_2_title
+                  type: Paragraph
+                  layout:
+                    flex: 1 1 0
+                  properties:
+                    content: Design dashboard wireframes
+                    style:
+                      margin: 0
+                - id: psm_proj_task_2_tag
+                  type: Tag
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Medium
+                    color: orange
+            - id: psm_proj_task_3
+              type: Box
+              layout:
+                gap: 8
+                align: center
+              style:
+                padding: 8px 0
+              blocks:
+                - id: psm_proj_task_3_title
+                  type: Paragraph
+                  layout:
+                    flex: 1 1 0
+                  properties:
+                    content: Write API documentation
+                    style:
+                      margin: 0
+                - id: psm_proj_task_3_tag
+                  type: Tag
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Low
+                    color: green
+
+- title: Customer Support Portal
+  fullWidth: true
+  blocks:
+    - id: psm_support
+      type: PageSiderMenu
+      class:
+        header: bg-gradient-to-r from-indigo-600 to-indigo-800
+      properties:
+        header:
+          theme: dark
+          contentStyle:
+            alignItems: center
+        sider:
+          theme: light
+          initialCollapsed: false
+          collapsible: true
+          width: 230
+        breadcrumb:
+          list:
+            - Support
+            - Tickets
+        menu:
+          theme: light
+          links:
+            - id: psm_sup_tickets
+              type: MenuLink
+              properties:
+                title: Tickets
+                icon: AiOutlineInbox
+            - id: psm_sup_knowledge
+              type: MenuLink
+              properties:
+                title: Knowledge Base
+                icon: AiOutlineBook
+            - id: psm_sup_customers_group
+              type: MenuGroup
+              properties:
+                title: Customers
+                icon: AiOutlineTeam
+              links:
+                - id: psm_sup_all_customers
+                  type: MenuLink
+                  properties:
+                    title: All Customers
+                - id: psm_sup_segments
+                  type: MenuLink
+                  properties:
+                    title: Segments
+            - id: psm_sup_reports
+              type: MenuLink
+              properties:
+                title: Reports
+                icon: AiOutlineBarChart
+        theme:
+          colorPrimary: '#4f46e5'
+      slots:
+        header:
+          blocks:
+            - id: psm_sup_header_search
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                icon: AiOutlineSearch
+                hideTitle: true
+                color: default
+                variant: text
+                size: small
+        footer:
+          blocks:
+            - id: psm_sup_footer
+              type: Paragraph
+              properties:
+                content: Support Portal - Powered by Lowdefy
+                style:
+                  textAlign: center
+                  margin: 0
+                  color: '#aaa'
+                  fontSize: 12
+      blocks:
+        - id: psm_sup_title
+          type: Title
+          properties:
+            content: Open Tickets
+            level: 3
+        - id: psm_sup_stats
+          type: Box
+          layout:
+            gap: 16
+          blocks:
+            - id: psm_sup_stat_open
+              type: Card
+              layout:
+                flex: 1 1 0
+              properties:
+                size: small
+              blocks:
+                - id: psm_sup_stat_open_val
+                  type: Statistic
+                  properties:
+                    title: Open
+                    value: 24
+            - id: psm_sup_stat_pending
+              type: Card
+              layout:
+                flex: 1 1 0
+              properties:
+                size: small
+              blocks:
+                - id: psm_sup_stat_pending_val
+                  type: Statistic
+                  properties:
+                    title: Pending
+                    value: 8
+            - id: psm_sup_stat_resolved
+              type: Card
+              layout:
+                flex: 1 1 0
+              properties:
+                size: small
+              blocks:
+                - id: psm_sup_stat_resolved_val
+                  type: Statistic
+                  properties:
+                    title: Resolved Today
+                    value: 15
+        - id: psm_sup_tickets_card
+          type: Card
+          properties:
+            title: Recent Tickets
+          blocks:
+            - id: psm_sup_ticket_1
+              type: Box
+              layout:
+                gap: 12
+                align: center
+              style:
+                padding: 12px 0
+                borderBottom: 1px solid #f0f0f0
+              blocks:
+                - id: psm_sup_ticket_1_info
+                  type: Box
+                  layout:
+                    flex: 1 1 0
+                    direction: column
+                    gap: 4
+                  blocks:
+                    - id: psm_sup_ticket_1_subject
+                      type: Paragraph
+                      properties:
+                        content: Cannot reset password after account migration
+                        style:
+                          margin: 0
+                          fontWeight: 500
+                    - id: psm_sup_ticket_1_meta
+                      type: Paragraph
+                      properties:
+                        content: 'Ticket #4521 - Submitted 2 hours ago'
+                        style:
+                          margin: 0
+                          fontSize: 12
+                          color: '#999'
+                - id: psm_sup_ticket_1_priority
+                  type: Tag
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Urgent
+                    color: red
+            - id: psm_sup_ticket_2
+              type: Box
+              layout:
+                gap: 12
+                align: center
+              style:
+                padding: 12px 0
+                borderBottom: 1px solid #f0f0f0
+              blocks:
+                - id: psm_sup_ticket_2_info
+                  type: Box
+                  layout:
+                    flex: 1 1 0
+                    direction: column
+                    gap: 4
+                  blocks:
+                    - id: psm_sup_ticket_2_subject
+                      type: Paragraph
+                      properties:
+                        content: Invoice PDF not generating for annual subscriptions
+                        style:
+                          margin: 0
+                          fontWeight: 500
+                    - id: psm_sup_ticket_2_meta
+                      type: Paragraph
+                      properties:
+                        content: 'Ticket #4518 - Submitted 5 hours ago'
+                        style:
+                          margin: 0
+                          fontSize: 12
+                          color: '#999'
+                - id: psm_sup_ticket_2_priority
+                  type: Tag
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Normal
+                    color: blue
+            - id: psm_sup_ticket_3
+              type: Box
+              layout:
+                gap: 12
+                align: center
+              style:
+                padding: 12px 0
+              blocks:
+                - id: psm_sup_ticket_3_info
+                  type: Box
+                  layout:
+                    flex: 1 1 0
+                    direction: column
+                    gap: 4
+                  blocks:
+                    - id: psm_sup_ticket_3_subject
+                      type: Paragraph
+                      properties:
+                        content: Feature request - Dark mode for dashboard
+                        style:
+                          margin: 0
+                          fontWeight: 500
+                    - id: psm_sup_ticket_3_meta
+                      type: Paragraph
+                      properties:
+                        content: 'Ticket #4515 - Submitted yesterday'
+                        style:
+                          margin: 0
+                          fontSize: 12
+                          color: '#999'
+                - id: psm_sup_ticket_3_priority
+                  type: Tag
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Low
+                    color: default

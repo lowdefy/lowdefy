@@ -61,11 +61,11 @@ test('buildTestPage', () => {
       },
     ],
 
-    areas: {
+    slots: {
       content: {
         blocks: [
           {
-            areas: {
+            slots: {
               content: {
                 blocks: [
                   {

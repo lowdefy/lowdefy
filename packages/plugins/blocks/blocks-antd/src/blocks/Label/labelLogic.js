@@ -21,10 +21,11 @@ import getLabelCol from './getLabelCol.js';
 
 const labelLogic = ({
   blockId,
+  blockClassNames = {},
   content,
-  methods,
   properties = {},
   required = false,
+  styles = {},
   validation = {
     messages: [],
     status: null, // enum: [null, 'success', 'warning', 'error', 'validating'
@@ -44,63 +45,68 @@ const labelLogic = ({
   if (type.isString(label) && properties.colon && label.trim() !== '') {
     label = label.replace(/[:|：]\s*$/u, '');
   }
-  const rowClassName = classNames({
-    'ant-form-item': true,
-    'ant-form-item-with-help': false,
-    [methods.makeCssClass({
-      flexWrap: properties.inline && 'inherit', // wrap extra content below input
-      marginBottom: 0,
-    })]: true,
+
+  const rowClassName = classNames('ant-form-item', {
+    'ant-form-item-has-error': validation.status === 'error',
+    'ant-form-item-has-warning': validation.status === 'warning',
   });
+  const rowStyle = {
+    flexWrap: properties.inline ? 'inherit' : undefined,
+    marginBottom: 0,
+  };
 
   const labelColClassName = classNames({
     'ant-form-item-label': true,
-    'ant-form-item-label-left': properties.align === 'left' || !properties.align, // default align left
-    [methods.makeCssClass({
-      overflow: properties.inline && 'inherit', // wrap label content below input
-      whiteSpace: !properties.inline && 'normal', // set label title wrap for long labels
-      marginBottom: properties.size === 'small' ? 0 : 8,
-      // overflow: 'visible',
-    })]: true,
+    'ant-form-item-label-left': properties.align === 'left' || !properties.align,
   });
+  const labelColStyle = {
+    overflow: properties.inline ? 'inherit' : undefined,
+    whiteSpace: !properties.inline ? 'normal' : undefined,
+    marginBottom: properties.size === 'small' ? 0 : 8,
+  };
 
-  const labelClassName = classNames({
-    'ant-form-item-required': required,
-    'ant-form-item-no-colon': properties.colon === false,
-    [methods.makeCssClass([
-      {
-        height: 'fit-content !important',
-        minHeight:
-          properties.inline &&
-          (properties.size === 'large' ? 40 : properties.size === 'small' ? 24 : 32), // set height for inline label to be centered
-      },
-      properties.style,
-    ])]: true,
-  });
+  const labelClassName = classNames(
+    {
+      'ant-form-item-required': required,
+      'ant-form-item-no-colon': properties.colon === false,
+    },
+    blockClassNames.label
+  );
+  const labelStyle = {
+    height: 'fit-content',
+    minHeight: properties.inline
+      ? properties.size === 'large'
+        ? 40
+        : properties.size === 'small'
+          ? 24
+          : 32
+      : undefined,
+    ...styles.label,
+  };
 
-  const extraClassName = classNames({
-    'ant-form-item-explain': true,
-    'ant-form-item-extra': true,
-    [methods.makeCssClass([
-      {
-        marginTop: properties.size === 'small' ? -4 : 0, // in size small reduce extra top margin
-      },
-      properties.extraStyle,
-    ])]: true,
-  });
+  const extraClassName = classNames(
+    'ant-form-item-explain',
+    'ant-form-item-extra',
+    blockClassNames.extra
+  );
+  const extraStyle = {
+    marginTop: properties.size === 'small' ? -4 : 0,
+    ...styles.extra,
+  };
 
-  const feedbackClassName = classNames({
-    'ant-form-item-explain-success': validation.status === 'success',
-    'ant-form-item-explain-warning': validation.status === 'warning',
-    'ant-form-item-explain-error': validation.status === 'error',
-    'ant-form-item-explain-validating': validation.status === 'validating',
-    [methods.makeCssClass([
-      {
-        marginTop: properties.size === 'small' ? -4 : 0, // in size small reduce extra top margin
-      },
-      properties.feedbackStyle,
-    ])]: true,
-  });
+  const feedbackClassName = classNames(
+    {
+      'ant-form-item-explain-success': validation.status === 'success',
+      'ant-form-item-explain-warning': validation.status === 'warning',
+      'ant-form-item-explain-error': validation.status === 'error',
+      'ant-form-item-explain-validating': validation.status === 'validating',
+    },
+    blockClassNames.feedback
+  );
+  const feedbackStyle = {
+    marginTop: properties.size === 'small' ? -4 : 0,
+    ...styles.feedback,
+  };
 
   const iconClassName = classNames({
     'ant-form-item-feedback-icon': true,
@@ -115,13 +121,18 @@ const labelLogic = ({
   const showFeedback = validation.status === 'warning' || validation.status === 'error';
   return {
     extraClassName,
+    extraStyle,
     feedbackClassName,
+    feedbackStyle,
     iconClassName,
     label: !properties.disabled && label,
     labelClassName,
     labelCol,
     labelColClassName,
+    labelColStyle,
+    labelStyle,
     rowClassName,
+    rowStyle,
     showExtra,
     showFeedback,
     wrapperCol,

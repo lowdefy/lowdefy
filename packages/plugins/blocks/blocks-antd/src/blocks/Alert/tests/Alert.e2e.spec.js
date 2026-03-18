@@ -38,7 +38,7 @@ test.describe('Alert Block', () => {
 
   test('renders with message', async ({ page }) => {
     const block = getAlert(page, 'alert_basic');
-    const message = block.locator('.ant-alert-message');
+    const message = block.locator('.ant-alert-title');
     await expect(message).toHaveText('Basic Alert Message');
   });
 

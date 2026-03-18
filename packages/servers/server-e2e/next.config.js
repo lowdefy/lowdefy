@@ -1,9 +1,9 @@
-const withLess = require('next-with-less');
 const lowdefyConfig = require('./build/config.json');
 
-const nextConfig = withLess({
+const nextConfig = {
   basePath: lowdefyConfig.basePath,
   reactStrictMode: true,
+  transpilePackages: ['@lowdefy/client', '@lowdefy/blocks-loaders', '@lowdefy/blocks-markdown'],
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {
@@ -21,10 +21,9 @@ const nextConfig = withLess({
   },
   poweredByHeader: false,
   output: process.env.LOWDEFY_BUILD_OUTPUT_STANDALONE === '1' ? 'standalone' : undefined,
-  outputFileTracing: true,
   eslint: {
     ignoreDuringBuilds: true,
   },
-});
+};
 
 module.exports = nextConfig;

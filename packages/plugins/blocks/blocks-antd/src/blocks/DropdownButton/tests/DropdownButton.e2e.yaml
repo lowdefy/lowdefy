@@ -1,0 +1,242 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: dropdown_button
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC DROPDOWN BUTTON
+  # ============================================
+
+  - id: db_basic
+    type: DropdownButton
+    properties:
+      title: Actions
+      icon: AiOutlineDown
+      items:
+        - title: Edit
+          eventName: onEdit
+          icon: AiOutlineEdit
+        - title: Duplicate
+          eventName: onDuplicate
+          icon: AiOutlineCopy
+        - type: divider
+        - title: Delete
+          eventName: onDelete
+          icon: AiOutlineDelete
+          danger: true
+    events:
+      onEdit:
+        - id: db_basic_edit_set
+          type: SetState
+          params:
+            db_basic_result: edit
+      onDuplicate:
+        - id: db_basic_dup_set
+          type: SetState
+          params:
+            db_basic_result: duplicate
+      onDelete:
+        - id: db_basic_del_set
+          type: SetState
+          params:
+            db_basic_result: delete
+
+  - id: db_basic_display
+    type: Paragraph
+    properties:
+      content:
+        _state: db_basic_result
+
+  # ============================================
+  # DISABLED ITEMS
+  # ============================================
+
+  - id: db_disabled
+    type: DropdownButton
+    properties:
+      title: Manage
+      items:
+        - title: View
+          eventName: onView
+        - title: Edit (no access)
+          eventName: onEdit
+          disabled: true
+    events:
+      onView:
+        - id: db_dis_view_set
+          type: SetState
+          params:
+            db_disabled_result: view
+      onEdit:
+        - id: db_dis_edit_set
+          type: SetState
+          params:
+            db_disabled_result: edit
+
+  - id: db_disabled_display
+    type: Paragraph
+    properties:
+      content:
+        _state: db_disabled_result
+
+  # ============================================
+  # DANGER ITEMS
+  # ============================================
+
+  - id: db_danger
+    type: DropdownButton
+    properties:
+      title: Danger
+      items:
+        - title: Safe Action
+          eventName: onSafe
+        - type: divider
+        - title: Dangerous Action
+          eventName: onDanger
+          danger: true
+
+  # ============================================
+  # SPLIT MODE
+  # ============================================
+
+  - id: db_split
+    type: DropdownButton
+    properties:
+      title: Save
+      color: primary
+      variant: solid
+      split: true
+      items:
+        - title: Save as Draft
+          eventName: onDraft
+        - title: Save & Publish
+          eventName: onPublish
+    events:
+      onClick:
+        - id: db_split_click_set
+          type: SetState
+          params:
+            db_split_result: primary_click
+      onDraft:
+        - id: db_split_draft_set
+          type: SetState
+          params:
+            db_split_result: draft
+      onPublish:
+        - id: db_split_pub_set
+          type: SetState
+          params:
+            db_split_result: publish
+
+  - id: db_split_display
+    type: Paragraph
+    properties:
+      content:
+        _state: db_split_result
+
+  # ============================================
+  # onOpenChange EVENT
+  # ============================================
+
+  - id: db_openchange
+    type: DropdownButton
+    properties:
+      title: Track Open
+      items:
+        - title: Item A
+          eventName: onA
+    events:
+      onOpenChange:
+        - id: db_oc_set
+          type: SetState
+          params:
+            db_open_changed: true
+
+  - id: db_openchange_display
+    type: Paragraph
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: db_open_changed
+              - true
+          then: Open changed!
+          else: ''
+
+  # ============================================
+  # WITH ICON
+  # ============================================
+
+  - id: db_icon
+    type: DropdownButton
+    properties:
+      title: Export
+      icon: AiOutlineDownload
+      items:
+        - title: CSV
+          eventName: onCSV
+        - title: PDF
+          eventName: onPDF
+
+  # ============================================
+  # SHORTCUT TESTS
+  # ============================================
+
+  - id: db_shortcut
+    type: DropdownButton
+    properties:
+      title: Shortcuts
+      items:
+        - title: Quick Save
+          eventName: onQuickSave
+          shortcut: mod+j
+        - title: Quick Export
+          eventName: onQuickExport
+          shortcut: mod+;
+        - title: No Shortcut
+          eventName: onNoShortcut
+    events:
+      onQuickSave:
+        - id: db_sc_save_set
+          type: SetState
+          params:
+            db_shortcut_result: quick_save
+      onQuickExport:
+        - id: db_sc_export_set
+          type: SetState
+          params:
+            db_shortcut_result: quick_export
+      onNoShortcut:
+        - id: db_sc_none_set
+          type: SetState
+          params:
+            db_shortcut_result: no_shortcut
+
+  - id: db_shortcut_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: db_shortcut_result
+              - null
+          then:
+            _string.concat:
+              - 'result:'
+              - _state: db_shortcut_result
+          else: ''

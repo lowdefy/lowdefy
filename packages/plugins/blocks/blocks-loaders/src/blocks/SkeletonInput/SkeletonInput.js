@@ -15,11 +15,11 @@
 */
 
 import React from 'react';
-import { blockDefaultProps } from '@lowdefy/block-utils';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 
 import Skeleton from '../Skeleton/Skeleton.js';
 
-const SkeletonInput = ({ properties, methods }) => {
+const SkeletonInput = ({ classNames, properties, styles }) => {
   let inputHeight;
   switch (properties.size) {
     case 'small':
@@ -32,34 +32,29 @@ const SkeletonInput = ({ properties, methods }) => {
       inputHeight = 32;
   }
   return (
-    <div>
+    <div className={classNames?.element} style={styles?.element}>
       {properties.label !== false && (
         <Skeleton
-          methods={methods}
+          styles={{
+            element: { marginBottom: 10 },
+          }}
           properties={{
             width: properties.labelWidth ?? properties.width ?? '30%',
             height: properties.labelHeight ?? 20,
-            style: { ...{ marginBottom: 10 }, ...(properties.labelStyle || {}) },
           }}
         />
       )}
       <Skeleton
-        methods={methods}
+        styles={{
+          element: styles?.input ?? {},
+        }}
         properties={{
           width: properties.width ?? '100%',
           height: properties.inputHeight ?? inputHeight,
-          style: properties.inputStyle || {},
         }}
       />
     </div>
   );
 };
 
-SkeletonInput.defaultProps = blockDefaultProps;
-SkeletonInput.meta = {
-  category: 'display',
-  icons: [],
-  styles: ['blocks/SkeletonInput/style.less'],
-};
-
-export default SkeletonInput;
+export default withBlockDefaults(SkeletonInput);

@@ -1,0 +1,125 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: search_block
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: search_basic
+    type: Search
+    properties:
+      label: Search Docs
+      documents:
+        - id: doc1
+          title: Getting Started
+          body: A quick introduction to Lowdefy.
+          category: Guides
+        - id: doc2
+          title: Authentication
+          body: Set up login providers and user roles.
+          category: Guides
+        - id: doc3
+          title: Button Block
+          body: Display block with click events.
+          category: Blocks
+      fields:
+        - title
+        - body
+      storeFields:
+        - title
+        - category
+
+  # ============================================
+  # CUSTOM LABEL
+  # ============================================
+
+  - id: search_custom_label
+    type: Search
+    properties:
+      label: Find anything...
+      showShortcut: false
+      documents: []
+      fields:
+        - title
+
+  # ============================================
+  # EVENTS
+  # ============================================
+
+  - id: search_events
+    type: Search
+    properties:
+      label: Search with Events
+      documents:
+        - id: ev1
+          title: Test Result
+          body: A test document for event testing.
+      fields:
+        - title
+        - body
+      storeFields:
+        - title
+    events:
+      onOpen:
+        - id: search_open_set
+          type: SetState
+          params:
+            search_opened: true
+      onClose:
+        - id: search_close_set
+          type: SetState
+          params:
+            search_closed: true
+
+  - id: search_open_display
+    type: Paragraph
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: search_opened
+              - true
+          then: Opened!
+          else: ''
+
+  - id: search_close_display
+    type: Paragraph
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: search_closed
+              - true
+          then: Closed!
+          else: ''
+
+  # ============================================
+  # SHORTCUT TESTS
+  # ============================================
+
+  - id: search_shortcut_custom
+    type: Search
+    properties:
+      label: Custom Shortcut
+      shortcut: mod+.
+      showShortcut: true
+      documents: []
+      fields:
+        - title

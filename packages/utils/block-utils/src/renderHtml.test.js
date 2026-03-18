@@ -17,10 +17,7 @@
 import { render } from '@testing-library/react';
 
 import renderHtml from './renderHtml.js';
-import makeCssClass from './makeCssClass.js';
-const methods = {
-  makeCssClass,
-};
+const methods = {};
 
 test('renderHtml html is undefined', () => {
   expect(renderHtml({ methods })).toBe(undefined);

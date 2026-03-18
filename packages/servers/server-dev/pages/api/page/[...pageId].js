@@ -39,6 +39,7 @@ async function handler({ context, req, res }) {
         type: err.name ?? 'Error',
         message: err.message,
         source: err.source ?? null,
+        stack: err.stack ?? null,
       });
     }
     res.status(500).json({
@@ -63,6 +64,9 @@ async function handler({ context, req, res }) {
   if (pageConfig === null) {
     res.status(404).send('Page not found.');
   } else {
+    if (buildResult?.warnings?.length > 0) {
+      pageConfig._warnings = buildResult.warnings;
+    }
     res.status(200).json(pageConfig);
   }
 }

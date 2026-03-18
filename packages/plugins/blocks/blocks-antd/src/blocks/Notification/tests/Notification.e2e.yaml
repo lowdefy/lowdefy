@@ -23,7 +23,7 @@ blocks:
   - id: notif_basic
     type: Notification
     properties:
-      message: Basic Notification
+      title: Basic Notification
       description: This is a basic notification description.
       status: info
 
@@ -47,7 +47,7 @@ blocks:
   - id: notif_success
     type: Notification
     properties:
-      message: Success!
+      title: Success!
       description: Operation completed successfully.
       status: success
 
@@ -67,7 +67,7 @@ blocks:
   - id: notif_error
     type: Notification
     properties:
-      message: Error
+      title: Error
       description: An error occurred.
       status: error
 
@@ -87,7 +87,7 @@ blocks:
   - id: notif_warning
     type: Notification
     properties:
-      message: Warning
+      title: Warning
       description: Please be careful.
       status: warning
 
@@ -107,7 +107,7 @@ blocks:
   - id: notif_info
     type: Notification
     properties:
-      message: Information
+      title: Information
       description: Here is some helpful information.
       status: info
 
@@ -131,7 +131,7 @@ blocks:
   - id: notif_top_right
     type: Notification
     properties:
-      message: Top Right
+      title: Top Right
       description: Default placement.
       placement: topRight
 
@@ -151,7 +151,7 @@ blocks:
   - id: notif_top_left
     type: Notification
     properties:
-      message: Top Left
+      title: Top Left
       description: Notification at top left.
       placement: topLeft
 
@@ -171,7 +171,7 @@ blocks:
   - id: notif_bottom_right
     type: Notification
     properties:
-      message: Bottom Right
+      title: Bottom Right
       description: Notification at bottom right.
       placement: bottomRight
 
@@ -191,7 +191,7 @@ blocks:
   - id: notif_bottom_left
     type: Notification
     properties:
-      message: Bottom Left
+      title: Bottom Left
       description: Notification at bottom left.
       placement: bottomLeft
 
@@ -215,7 +215,7 @@ blocks:
   - id: notif_custom_icon
     type: Notification
     properties:
-      message: Custom Icon
+      title: Custom Icon
       description: Notification with custom icon.
       icon: AiOutlineSmile
 
@@ -235,7 +235,7 @@ blocks:
   - id: notif_with_button
     type: Notification
     properties:
-      message: With Button
+      title: With Button
       description: Notification with action button.
       button:
         title: Action
@@ -261,7 +261,7 @@ blocks:
   - id: notif_runtime
     type: Notification
     properties:
-      message: Default
+      title: Default
       description: Default description
       status: info
 
@@ -278,7 +278,7 @@ blocks:
             method: open
             args:
               - status: success
-                message: Runtime Success
+                title: Runtime Success
                 description: Success message at runtime
 
   # ============================================
@@ -289,7 +289,7 @@ blocks:
   - id: notif_onclose
     type: Notification
     properties:
-      message: OnClose Test
+      title: OnClose Test
       description: Notification will close soon.
       duration: 1
     events:
@@ -327,7 +327,7 @@ blocks:
   - id: notif_onclick
     type: Notification
     properties:
-      message: Click Me
+      title: Click Me
       description: Click on this notification.
       duration: 10
     events:

@@ -13,50 +13,17 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: Layout
-    category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Layout/schema.json
+    pageId: Layout
+    pageTitle: Layout
+    section: Container Blocks
     filePath: blocks/container/Layout.yaml
-    description_content: |
-      The `Layout` block provides a page container for a [layout](https://4x.ant.design/components/layout/) area with content. It can be used as a wrapper, in which `Header`, `Sider`, `Content,` `Footer` or `Layout` itself can be nested.
-
-    areas:
-      - content
-
-    examples:
-      - title: Layout, Header-Content-Footer
-        block:
-          id: layout_example
-          type: Layout
-          style:
-            textAlign: center
-          blocks:
-            - id: header
-              type: Header
-              blocks:
-                - id: Title
-                  type: Title
-                  properties:
-                    content: Header
-                  style:
-                    backgroundColor: red
-            - id: content
-              type: Content
-              blocks:
-                - id: Title
-                  type: Title
-                  style:
-                    backgroundColor: green
-                  properties:
-                    content: Content
-            - id: footer
-              type: Footer
-              blocks:
-                - id: Title
-                  type: Title
-                  style:
-                    backgroundColor: blue
-                  properties:
-                    content: Footer
+    block_type: Layout
+    antd_component: Layout
+    antd_url: layout
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/Layout
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Layout/meta.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/Layout/gallery.yaml
+    description: >
+      Ant Design layout container for structuring page sections.

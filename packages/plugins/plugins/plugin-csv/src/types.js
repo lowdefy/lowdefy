@@ -14,8 +14,6 @@
   limitations under the License.
 */
 
-import * as actions from './actions.js';
-
 export default {
-  actions: Object.keys(actions),
+  actions: ['DownloadCsv'],
 };

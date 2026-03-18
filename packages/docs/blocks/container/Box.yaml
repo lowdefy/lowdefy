@@ -13,15 +13,15 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/template.yaml.njk
+  path: templates/blocks/gallery.yaml.njk
   vars:
-    block_type: Box
-    category: container
-    schema: ../plugins/blocks/blocks-basic/src/blocks/Box/schema.json
+    pageId: Box
+    pageTitle: Box
+    section: Container Blocks
     filePath: blocks/container/Box.yaml
-    description_content: |
-      A Box is a container that places sub-blocks into a html `<div>`.
-      The Box has a single area, `content`.
-
-    areas:
-      - content
+    block_type: Box
+    github_path: packages/plugins/blocks/blocks-basic/src/blocks/Box
+    schema: ../plugins/blocks/blocks-basic/src/blocks/Box/meta.js
+    gallery: ../plugins/blocks/blocks-basic/src/blocks/Box/gallery.yaml
+    description: >
+      Basic block-level container for layout.

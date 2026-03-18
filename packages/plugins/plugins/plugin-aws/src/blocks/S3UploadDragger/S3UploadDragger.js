@@ -16,7 +16,7 @@
 
 import React, { useEffect } from 'react';
 import { Upload } from 'antd';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import { withBlockDefaults, renderHtml } from '@lowdefy/block-utils';
 
 import useFileList from '../utils/useFileList.js';
 import getS3Upload from '../utils/getS3Upload.js';
@@ -24,7 +24,7 @@ import getOnPaste from '../utils/getOnPaste.js';
 
 const { Dragger } = Upload;
 
-const S3UploadDragger = ({ blockId, methods, properties, value }) => {
+const S3UploadDragger = ({ blockId, classNames = {}, methods, properties, styles = {}, value }) => {
   const [state, loadFileList, setFileList, removeFile, setValue] = useFileList({
     properties,
     methods,
@@ -59,7 +59,8 @@ const S3UploadDragger = ({ blockId, methods, properties, value }) => {
       <Dragger
         accept={properties.accept ?? '*'}
         beforeUpload={loadFileList}
-        className={methods.makeCssClass([properties.style])}
+        className={classNames.element}
+        style={styles.element}
         customRequest={s3UploadRequest}
         disabled={properties.disabled}
         fileList={state.fileList}
@@ -71,7 +72,7 @@ const S3UploadDragger = ({ blockId, methods, properties, value }) => {
           methods.triggerEvent({ name: 'onChange' });
         }}
       >
-        <div className="ant-upload-hint">
+        <div className={classNames.hint} style={styles.hint}>
           {renderHtml({
             html: properties.title ?? 'Click or drag to add a file.',
             methods,
@@ -82,12 +83,4 @@ const S3UploadDragger = ({ blockId, methods, properties, value }) => {
   );
 };
 
-S3UploadDragger.defaultProps = blockDefaultProps;
-S3UploadDragger.meta = {
-  valueType: 'object',
-  category: 'input',
-  icons: [],
-  styles: ['blocks/S3UploadDragger/style.less'],
-};
-
-export default S3UploadDragger;
+export default withBlockDefaults(S3UploadDragger);

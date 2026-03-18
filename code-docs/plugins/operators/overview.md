@@ -21,17 +21,17 @@ Operators are:
 
 ## Available Operator Packages
 
-| Package                                            | Purpose                  | Key Operators                     |
-| -------------------------------------------------- | ------------------------ | --------------------------------- |
-| [@lowdefy/operators-js](./js.md)                   | Core JS operators        | `_if`, `_get`, `_state`, `_array` |
-| [@lowdefy/operators-mql](./mql.md)                 | MongoDB Query Language   | `_mql_*` query operators          |
-| [@lowdefy/operators-moment](./moment.md)           | Date/time with Moment.js | `_moment`, `_date`                |
-| [@lowdefy/operators-nunjucks](./nunjucks.md)       | Template strings         | `_nunjucks`                       |
-| [@lowdefy/operators-change-case](./change-case.md) | String case conversion   | `_change_case`                    |
-| [@lowdefy/operators-diff](./diff.md)               | Object diffing           | `_diff`                           |
-| [@lowdefy/operators-uuid](./uuid.md)               | UUID generation          | `_uuid`                           |
-| [@lowdefy/operators-yaml](./yaml.md)               | YAML parsing             | `_yaml_parse`, `_yaml_stringify`  |
-| [@lowdefy/operators-jsonata](./jsonata.md)         | JSONata queries          | `_jsonata`                        |
+| Package                                            | Purpose                | Key Operators                     |
+| -------------------------------------------------- | ---------------------- | --------------------------------- |
+| [@lowdefy/operators-js](./js.md)                   | Core JS operators      | `_if`, `_get`, `_state`, `_array` |
+| [@lowdefy/operators-mql](./mql.md)                 | MongoDB Query Language | `_mql_*` query operators          |
+| [@lowdefy/operators-dayjs](./dayjs.md)             | Date/time with Day.js  | `_dayjs`, `_date`                 |
+| [@lowdefy/operators-nunjucks](./nunjucks.md)       | Template strings       | `_nunjucks`                       |
+| [@lowdefy/operators-change-case](./change-case.md) | String case conversion | `_change_case`                    |
+| [@lowdefy/operators-diff](./diff.md)               | Object diffing         | `_diff`                           |
+| [@lowdefy/operators-uuid](./uuid.md)               | UUID generation        | `_uuid`                           |
+| [@lowdefy/operators-yaml](./yaml.md)               | YAML parsing           | `_yaml_parse`, `_yaml_stringify`  |
+| [@lowdefy/operators-jsonata](./jsonata.md)         | JSONata queries        | `_jsonata`                        |
 
 ## Operator Syntax
 
@@ -146,7 +146,7 @@ This is **reactive** validation — it only runs when an error is caught, not on
 ### Why Multiple Packages?
 
 - Modularity: only include what you use
-- Bundle size: Moment.js is heavy
+- Bundle size: keep dependencies small
 - Flexibility: swap implementations
 - Independence: version separately
 

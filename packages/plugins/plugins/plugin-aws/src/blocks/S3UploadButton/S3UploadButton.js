@@ -15,7 +15,7 @@
 */
 
 import React, { useEffect } from 'react';
-import { blockDefaultProps } from '@lowdefy/block-utils';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import { Button } from '@lowdefy/blocks-antd/blocks';
 
 import { Upload } from 'antd';
@@ -23,7 +23,16 @@ import { Upload } from 'antd';
 import useFileList from '../utils/useFileList.js';
 import getS3Upload from '../utils/getS3Upload.js';
 
-const S3UploadButtonBlock = ({ blockId, components, events, methods, properties, value }) => {
+const S3UploadButtonBlock = ({
+  blockId,
+  classNames = {},
+  components,
+  events,
+  methods,
+  properties,
+  styles = {},
+  value,
+}) => {
   const [state, loadFileList, setFileList, removeFile, setValue] = useFileList({
     properties,
     methods,
@@ -52,6 +61,8 @@ const S3UploadButtonBlock = ({ blockId, components, events, methods, properties,
     <Upload
       accept={properties.accept ?? '*'}
       beforeUpload={loadFileList}
+      className={classNames.element}
+      style={styles.element}
       customRequest={s3UploadRequest}
       disabled={properties.disabled}
       fileList={state.fileList}
@@ -81,12 +92,4 @@ const S3UploadButtonBlock = ({ blockId, components, events, methods, properties,
   );
 };
 
-S3UploadButtonBlock.defaultProps = blockDefaultProps;
-S3UploadButtonBlock.meta = {
-  valueType: 'object',
-  category: 'input',
-  icons: ['AiOutlineUpload'],
-  styles: ['blocks/S3UploadButton/style.less'],
-};
-
-export default S3UploadButtonBlock;
+export default withBlockDefaults(S3UploadButtonBlock);

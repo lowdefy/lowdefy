@@ -64,6 +64,7 @@ _ref:
                 "./auth/providers": "./src/auth/providers.js",
                 "./blocks": "./src/blocks.js",
                 "./connections": "./src/connections.js",
+                "./metas": "./src/metas.js",
                 "./operators/client": "./src/operators/client.js",
                 "./operators/server": "./src/operators/server.js",
                 "./types": "./src/types.js"
@@ -73,7 +74,7 @@ _ref:
             }
             ```
 
-            The `./types` entry point is required, and the other entry points are only required if the package exports the corresponding types.
+            The `./types` entry point is required, and the other entry points are only required if the package exports the corresponding types. Block packages should also export `./metas` for build-time schema generation.
 
             You can change your folder structure in your package, but then you need to change the `exports` entry points in the `package.json` file to match your file structure.
 
@@ -123,26 +124,27 @@ _ref:
             };
             ```
 
-            When developing blocks, the names of any react-icons used by the block, as well the path to any CSS or LESS files used by the block also need to be included in the types object, as discussed in more detail [here](/plugins-blocks).
-
             ###### Example `types.js` for blocks
 
+            Block packages use `extractBlockTypes` from `@lowdefy/block-utils` to derive type information from block metadata files. Each block has a `meta.js` file containing its category, icons, events, CSS keys, and property schema. These are re-exported via a `metas.js` barrel file:
+
             ```js
-            import * as blocks from './blocks.js';
-
-            const icons = {};
-            const styles = {};
-            Object.keys(blocks).forEach((block) => {
-              icons[block] = blocks[block].meta.icons || [];
-              styles[block] = blocks[block].meta.styles || [];
-            });
-
-            export default {
-              blocks: Object.keys(blocks),
-              icons,
-              styles: { default: [], ...styles },
-            };
+            // src/metas.js — re-export each block's metadata
+            export { default as MyBlock } from './blocks/MyBlock/meta.js';
+            export { default as MyOtherBlock } from './blocks/MyOtherBlock/meta.js';
             ```
+
+            ```js
+            // src/types.js — derive types from metas
+            import { extractBlockTypes } from '@lowdefy/block-utils';
+            import * as metas from './metas.js';
+
+            export default extractBlockTypes(metas);
+            ```
+
+            The `extractBlockTypes` function returns `{ blocks, icons, blockMetas }` which the build pipeline uses to resolve plugin types without loading React components or heavy dependencies.
+
+            See the [default Lowdefy block packages](https://github.com/lowdefy/lowdefy/tree/main/packages/plugins/blocks) for full examples.
 
             ### Named export files
 

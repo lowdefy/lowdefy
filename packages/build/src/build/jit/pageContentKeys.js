@@ -18,6 +18,6 @@
 // Only `id`, `type` (and skeleton-computed `pageId`, `auth`, `~k`, `~r`) survive.
 // `type` is always a resolved string (never a ref target) and must stay on stubs
 // for schema validation (block schema requires both `id` and `type`).
-const PAGE_CONTENT_KEYS = ['blocks', 'areas', 'events', 'requests', 'layout'];
+const PAGE_CONTENT_KEYS = ['blocks', 'areas', 'slots', 'events', 'requests', 'layout'];
 
 export default PAGE_CONTENT_KEYS;

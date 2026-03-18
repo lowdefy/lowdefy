@@ -16,26 +16,28 @@
 
 import React from 'react';
 import { BlockLayout } from '@lowdefy/layout';
-import { makeCssClass } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
 import InputContainer from './InputContainer.js';
 import Container from './Container.js';
 import List from './List.js';
 import LoadingBlock from './LoadingBlock.js';
+import resolveClassNames from './resolveClassNames.js';
 
 const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
   if (!block.eval) return null; // TODO: check Renderer updates before eval is executed for the first time on lists. See #520
   if (block.eval.visible === false)
     return <div id={`vs-${block.blockId}`} style={{ display: 'none' }} />;
   const Component = lowdefy._internal.blockComponents[block.type];
+  const classNames = resolveClassNames(block.eval.class);
 
   if (loading && type.isObject(block.eval.skeleton)) {
     return (
       <LoadingBlock
         blockLayout={block.eval.layout}
         blockProperties={block.eval.properties}
-        blockStyle={block.eval.style}
+        blockStyle={block.eval.style?.block}
+        blockClass={classNames}
         context={context}
         lowdefy={lowdefy}
         skeleton={block.eval.skeleton}
@@ -43,7 +45,8 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
     );
   }
 
-  switch (Component.meta.category) {
+  const category = lowdefy._internal.blockMetas[block.type]?.category;
+  switch (category) {
     case 'list':
       return (
         <List
@@ -70,13 +73,12 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
       return (
         <BlockLayout
           id={`bl-${block.blockId}`}
-          blockStyle={block.eval.style}
+          style={block.eval.style?.block}
+          className={classNames.block}
           layout={block.eval.layout}
-          makeCssClass={makeCssClass}
         >
           <Component
             methods={Object.assign(block.methods, {
-              makeCssClass,
               registerEvent: block.registerEvent,
               registerMethod: block.registerMethod,
               setValue: block.setValue,
@@ -84,14 +86,16 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
             })}
             basePath={lowdefy.basePath}
             blockId={block.blockId}
+            classNames={classNames}
             components={lowdefy._internal.components}
-            events={block.eval.events}
+            events={block.eval.events ?? {}}
             key={block.blockId}
             loading={loading}
             menus={lowdefy.menus}
             pageId={lowdefy.pageId}
             properties={block.eval.properties}
             required={block.eval.required}
+            styles={block.eval.style ?? {}}
             validation={block.eval.validation}
             value={block.value}
           />
@@ -112,27 +116,28 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
       return (
         <BlockLayout
           id={`bl-${block.blockId}`}
-          blockStyle={block.eval.style}
+          style={block.eval.style?.block}
+          className={classNames.block}
           layout={block.eval.layout}
-          makeCssClass={makeCssClass}
         >
           <Component
             methods={Object.assign(block.methods, {
-              makeCssClass,
               registerEvent: block.registerEvent,
               registerMethod: block.registerMethod,
               triggerEvent: block.triggerEvent,
             })}
             basePath={lowdefy.basePath}
             blockId={block.blockId}
+            classNames={classNames}
             components={lowdefy._internal.components}
-            events={block.eval.events}
+            events={block.eval.events ?? {}}
             key={block.blockId}
             loading={loading}
             menus={lowdefy.menus}
             pageId={lowdefy.pageId}
             properties={block.eval.properties}
             required={block.eval.required}
+            styles={block.eval.style ?? {}}
             validation={block.eval.validation}
           />
         </BlockLayout>

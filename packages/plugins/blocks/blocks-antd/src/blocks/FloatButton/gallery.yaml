@@ -1,0 +1,518 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Type
+  blocks:
+    - id: float_demo
+      type: FloatButton
+      visible:
+        _state: float_active
+      properties:
+        type:
+          _state: float_props.type
+        shape:
+          _state: float_props.shape
+        icon:
+          _state: float_props.icon
+        tooltip:
+          _state: float_props.tooltip
+        description:
+          _state: float_props.description
+        badge:
+          _state: float_props.badge
+        href:
+          _state: float_props.href
+        target:
+          _state: float_props.target
+        theme:
+          _state: float_props.theme
+      events:
+        onClick:
+          - id: float_click_msg
+            type: DisplayMessage
+            params:
+              content: FloatButton clicked!
+              status: info
+    - id: btn_type_default
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Default
+        color: default
+        variant: outlined
+        icon: AiOutlineQuestionCircle
+      events:
+        onClick:
+          - id: set_type_default
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                type: default
+                icon: AiOutlineQuestionCircle
+                tooltip: Default type
+    - id: btn_type_primary
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Primary
+        color: primary
+        variant: outlined
+        icon: AiOutlineQuestionCircle
+      events:
+        onClick:
+          - id: set_type_primary
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                type: primary
+                icon: AiOutlineQuestionCircle
+                tooltip: Primary type
+    - id: btn_type_support
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Support
+        color: primary
+        variant: outlined
+        icon: AiOutlineCustomerService
+      events:
+        onClick:
+          - id: set_type_support
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                type: primary
+                icon: AiOutlineCustomerService
+                tooltip: Contact support
+
+- title: Shape
+  blocks:
+    - id: btn_shape_circle
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Circle
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: set_shape_circle
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                shape: circle
+                icon: AiOutlinePlus
+                tooltip: Circle (default)
+    - id: btn_shape_square
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Square
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: set_shape_square
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                shape: square
+                icon: AiOutlineSetting
+                tooltip: Square shape
+    - id: btn_shape_square_primary
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Square Primary
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: set_shape_square_primary
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                shape: square
+                type: primary
+                icon: AiOutlineEdit
+                tooltip: Square primary
+
+- title: Icon
+  blocks:
+    - id: btn_icon_string
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: String
+        color: default
+        variant: outlined
+        icon: AiOutlineQuestionCircle
+      events:
+        onClick:
+          - id: set_icon_string
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                icon: AiOutlineQuestionCircle
+                tooltip: String icon
+    - id: btn_icon_object
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Object
+        color: default
+        variant: outlined
+        icon: AiOutlineRocket
+      events:
+        onClick:
+          - id: set_icon_object
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                icon:
+                  name: AiOutlineRocket
+                tooltip: Object icon
+    - id: btn_icon_colored
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Colored
+        color: default
+        variant: outlined
+        icon: AiOutlineHeart
+      events:
+        onClick:
+          - id: set_icon_colored
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                icon:
+                  name: AiOutlineHeart
+                  color: '#eb2f96'
+                tooltip: Colored icon
+
+- title: Tooltip
+  blocks:
+    - id: btn_tooltip_short
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Short
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: set_tooltip_short
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                icon: AiOutlineQuestionCircle
+                tooltip: Help
+    - id: btn_tooltip_long
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Long
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: set_tooltip_long
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                icon: AiOutlineCustomerService
+                tooltip: Click here to get help from our support team
+
+- title: Description
+  blocks:
+    - id: btn_desc_icon
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: With Icon
+        color: primary
+        variant: outlined
+        icon: AiOutlineQuestionCircle
+      events:
+        onClick:
+          - id: set_desc_icon
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                shape: square
+                type: primary
+                icon: AiOutlineQuestionCircle
+                description: Help
+    - id: btn_desc_docs
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Docs
+        color: primary
+        variant: outlined
+        icon: AiOutlineFileText
+      events:
+        onClick:
+          - id: set_desc_docs
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                shape: square
+                type: primary
+                icon: AiOutlineFileText
+                description: Docs
+    - id: btn_desc_text
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Text Only
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: set_desc_text
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                shape: square
+                type: primary
+                description: Chat
+
+- title: Badge
+  blocks:
+    - id: btn_badge_count
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Count
+        color: default
+        variant: outlined
+        icon: AiOutlineBell
+      events:
+        onClick:
+          - id: set_badge_count
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                icon: AiOutlineBell
+                tooltip: Notifications
+                badge:
+                  count: 5
+    - id: btn_badge_dot
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Dot
+        color: default
+        variant: outlined
+        icon: AiOutlineMail
+      events:
+        onClick:
+          - id: set_badge_dot
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                icon: AiOutlineMail
+                tooltip: Messages
+                badge:
+                  dot: true
+    - id: btn_badge_overflow
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Overflow
+        color: default
+        variant: outlined
+        icon: AiOutlineInbox
+      events:
+        onClick:
+          - id: set_badge_overflow
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                icon: AiOutlineInbox
+                tooltip: Inbox
+                badge:
+                  count: 99
+                  overflowCount: 50
+
+- title: Href
+  blocks:
+    - id: btn_href_link
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Link
+        color: default
+        variant: outlined
+        icon: AiOutlineLink
+      events:
+        onClick:
+          - id: set_href_link
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                icon: AiOutlineLink
+                tooltip: Open Lowdefy (new tab)
+                href: https://lowdefy.com
+                target: _blank
+    - id: btn_href_docs
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Docs Link
+        color: primary
+        variant: outlined
+        icon: AiOutlineFileText
+      events:
+        onClick:
+          - id: set_href_docs
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                type: primary
+                icon: AiOutlineFileText
+                tooltip: View documentation (new tab)
+                href: https://docs.lowdefy.com
+                target: _blank
+
+- title: Theme Token Overrides
+  blocks:
+    - id: btn_theme_green
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Green
+        color: primary
+        variant: outlined
+        icon: AiOutlineCheck
+      events:
+        onClick:
+          - id: set_theme_green
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                type: primary
+                icon: AiOutlineCheck
+                tooltip: Green primary
+                theme:
+                  colorPrimary: '#52c41a'
+                  colorPrimaryHover: '#73d13d'
+    - id: btn_theme_dark
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Dark
+        color: default
+        variant: outlined
+        icon: AiOutlineSetting
+      events:
+        onClick:
+          - id: set_theme_dark
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                icon: AiOutlineSetting
+                tooltip: Dark background
+                theme:
+                  colorBgElevated: '#1f1f1f'
+                  colorText: '#ffffff'
+    - id: btn_theme_large
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Large
+        color: primary
+        variant: outlined
+        icon: AiOutlinePlus
+      events:
+        onClick:
+          - id: set_theme_large
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                type: primary
+                icon: AiOutlinePlus
+                tooltip: Large button
+                theme:
+                  controlHeightLG: 56
+                  fontSizeIcon: 24
+    - id: btn_theme_badge
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Custom Badge
+        color: default
+        variant: outlined
+        icon: AiOutlineBell
+      events:
+        onClick:
+          - id: set_theme_badge
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                icon: AiOutlineBell
+                tooltip: Custom badge color
+                badge:
+                  count: 3
+                theme:
+                  badgeColor: '#722ed1'
+                  dotSize: 12

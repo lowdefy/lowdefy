@@ -1,0 +1,224 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic Masonry (3 Columns)
+  fullWidth: true
+  blocks:
+    - id: ml_basic
+      type: MasonryList
+      properties:
+        columns: 3
+        gutter: 16
+      blocks:
+        - id: ml_basic.$.card
+          type: Card
+          class:
+            _state: ml_basic.$.bg
+          properties:
+            size: small
+          blocks:
+            - id: ml_basic.$.title_block
+              type: Title
+              properties:
+                content:
+                  _state: ml_basic.$.title
+                level: 5
+            - id: ml_basic.$.desc_block
+              type: Paragraph
+              properties:
+                content:
+                  _state: ml_basic.$.desc
+
+- title: Two Columns
+  fullWidth: true
+  blocks:
+    - id: ml_two
+      type: MasonryList
+      properties:
+        columns: 2
+        gutter: 16
+      blocks:
+        - id: ml_two.$.card
+          type: Card
+          class:
+            _state: ml_two.$.bg
+          properties:
+            size: small
+          blocks:
+            - id: ml_two.$.title_block
+              type: Title
+              properties:
+                content:
+                  _state: ml_two.$.title
+                level: 5
+            - id: ml_two.$.body_block
+              type: Paragraph
+              properties:
+                content:
+                  _state: ml_two.$.body
+
+- title: Gutter Sizes
+  fullWidth: true
+  blocks:
+    - id: ml_gutter_tight
+      type: MasonryList
+      properties:
+        columns: 3
+        gutter: 6
+      blocks:
+        - id: ml_gutter_tight.$.card
+          type: Card
+          class: bg-blue-50
+          properties:
+            size: small
+          blocks:
+            - id: ml_gutter_tight.$.label_block
+              type: Paragraph
+              properties:
+                content:
+                  _state: ml_gutter_tight.$.label
+    - id: ml_gutter_wide
+      type: MasonryList
+      properties:
+        columns: 3
+        gutter: 24
+      blocks:
+        - id: ml_gutter_wide.$.card
+          type: Card
+          class: bg-blue-50
+          properties:
+            size: small
+          blocks:
+            - id: ml_gutter_wide.$.label_block
+              type: Paragraph
+              properties:
+                content:
+                  _state: ml_gutter_wide.$.label
+
+- title: Note Board
+  fullWidth: true
+  blocks:
+    - id: ml_notes
+      type: MasonryList
+      properties:
+        columns: 3
+        gutter: 12
+      blocks:
+        - id: ml_notes.$.card
+          type: Card
+          class:
+            _state: ml_notes.$.bg
+          properties:
+            size: small
+          blocks:
+            - id: ml_notes.$.row
+              type: Box
+              layout:
+                justify: space-between
+                align: center
+              blocks:
+                - id: ml_notes.$.title_block
+                  type: Title
+                  layout:
+                    flex: 1 1 0
+                  properties:
+                    content:
+                      _state: ml_notes.$.title
+                    level: 5
+                - id: ml_notes.$.tag_block
+                  type: Tag
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title:
+                      _state: ml_notes.$.tag
+                    color:
+                      _state: ml_notes.$.color
+            - id: ml_notes.$.body_block
+              type: Paragraph
+              properties:
+                content:
+                  _state: ml_notes.$.body
+
+- title: Team Directory
+  fullWidth: true
+  blocks:
+    - id: ml_team
+      type: MasonryList
+      properties:
+        columns: 4
+        gutter: 12
+      blocks:
+        - id: ml_team.$.card
+          type: Card
+          properties:
+            size: small
+          blocks:
+            - id: ml_team.$.header
+              type: Box
+              layout:
+                gap: 8
+                align: center
+              blocks:
+                - id: ml_team.$.avatar
+                  type: Avatar
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    content:
+                      _state: ml_team.$.initials
+                    backgroundColor:
+                      _state: ml_team.$.bg
+                - id: ml_team.$.name_block
+                  type: Title
+                  layout:
+                    flex: 1 1 0
+                  properties:
+                    content:
+                      _state: ml_team.$.name
+                    level: 5
+            - id: ml_team.$.role_block
+              type: Paragraph
+              properties:
+                content:
+                  _state: ml_team.$.role
+
+- title: Sequential Rendering
+  fullWidth: true
+  blocks:
+    - id: ml_seq
+      type: MasonryList
+      properties:
+        columns: 3
+        gutter: 16
+        sequential: true
+      blocks:
+        - id: ml_seq.$.card
+          type: Card
+          class:
+            _state: ml_seq.$.bg
+          properties:
+            size: small
+          blocks:
+            - id: ml_seq.$.title_block
+              type: Title
+              properties:
+                content:
+                  _state: ml_seq.$.title
+                level: 5
+            - id: ml_seq.$.desc_block
+              type: Paragraph
+              properties:
+                content:
+                  _state: ml_seq.$.desc

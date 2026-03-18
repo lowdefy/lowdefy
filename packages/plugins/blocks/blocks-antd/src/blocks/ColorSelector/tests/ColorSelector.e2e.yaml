@@ -1,0 +1,77 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: color_selector
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: cs_basic
+    type: ColorSelector
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  - id: cs_change
+    type: ColorSelector
+    events:
+      onChange:
+        - id: set_cs_changed
+          type: SetState
+          params:
+            cs_changed: true
+
+  - id: cs_change_display
+    type: Paragraph
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: cs_changed
+              - true
+          then: Changed!
+          else: ''
+
+  # ============================================
+  # DISABLED TEST
+  # ============================================
+
+  - id: cs_disabled
+    type: ColorSelector
+    properties:
+      disabled: true
+
+  # ============================================
+  # SIZE TESTS
+  # ============================================
+
+  - id: cs_small
+    type: ColorSelector
+    properties:
+      size: small
+
+  - id: cs_middle
+    type: ColorSelector
+    properties:
+      size: middle
+
+  - id: cs_large
+    type: ColorSelector
+    properties:
+      size: large

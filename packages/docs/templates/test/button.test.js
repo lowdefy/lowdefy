@@ -103,7 +103,7 @@ test('button propertiesFormTransformer', () => {
         ],
         "id": "block.properties.field_button_card",
         "layout": Object {
-          "contentGutter": 0,
+          "gap": 0,
         },
         "properties": Object {
           "inner": true,

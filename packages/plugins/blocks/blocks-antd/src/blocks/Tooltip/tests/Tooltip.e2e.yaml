@@ -141,7 +141,7 @@ blocks:
       title: Event tooltip
       trigger: click
     events:
-      onVisibleChange:
+      onOpenChange:
         - id: set_visible_changed
           type: SetState
           params:
@@ -186,7 +186,7 @@ blocks:
     type: Tooltip
     properties:
       title: Visible by default
-      defaultVisible: true
+      defaultOpen: true
       placement: bottom
     blocks:
       - id: tooltip_default_visible_trigger

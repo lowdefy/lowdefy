@@ -181,10 +181,6 @@ Typically filtered by prefix or naming convention in calling code.
 | `src/getFileExtension.js`      | Extension parsing                      |
 | `src/spawnProcess.js`          | Process spawning                       |
 | `src/getSecretsFromEnv.js`     | Environment secrets                    |
-| `src/ConfigMessage.js`         | Base class for config messages         |
-| `src/ConfigError.js`           | Build-time error with location         |
-| `src/ConfigWarning.js`         | Build-time warning with prodError flag |
-| `src/resolveConfigLocation.js` | Config location resolver               |
 
 ## Usage Examples
 

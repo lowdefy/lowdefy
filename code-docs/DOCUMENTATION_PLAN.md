@@ -66,7 +66,6 @@ Framework Version: 4.4.0
 - [x] code-docs/plugins/blocks/markdown.md
 - [x] code-docs/plugins/blocks/google-maps.md
 - [x] code-docs/plugins/blocks/algolia.md
-- [x] code-docs/plugins/blocks/color-selectors.md
 - [x] code-docs/plugins/blocks/loaders.md
 - [x] code-docs/plugins/blocks/qr.md
 

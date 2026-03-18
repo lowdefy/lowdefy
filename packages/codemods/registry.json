@@ -1,0 +1,111 @@
+{
+  "versions": [
+    {
+      "version": "5.0.0",
+      "from": ">=4.0.0 <5.0.0",
+      "description": "Antd v6 upgrade, layout grid changes, dayjs migration",
+      "codemods": [
+        {
+          "id": "rename-areas-to-slots",
+          "description": "Rename areas to slots",
+          "path": "v5-0-0/01-rename-areas-to-slots.md"
+        },
+        {
+          "id": "migrate-properties-style",
+          "description": "Move properties.style to style: { /element }",
+          "path": "v5-0-0/02-migrate-properties-style.md"
+        },
+        {
+          "id": "migrate-inline-style-props",
+          "description": "Move inline style props to style: { /* } sub-slots",
+          "path": "v5-0-0/03-migrate-inline-style-props.md"
+        },
+        {
+          "id": "bordered-to-variant",
+          "description": "Convert bordered: false to variant: borderless",
+          "path": "v5-0-0/04-bordered-to-variant.md"
+        },
+        {
+          "id": "simple-prop-renames",
+          "description": "Rename deprecated properties and events (visible, dotPosition, etc.)",
+          "path": "v5-0-0/05-simple-prop-renames.md"
+        },
+        {
+          "id": "tabs-position-to-placement",
+          "description": "Tabs tabPosition to tabPlacement with value mapping",
+          "path": "v5-0-0/06-tabs-position-to-placement.md"
+        },
+        {
+          "id": "notification-message-to-title",
+          "description": "Notification message property renamed to title",
+          "path": "v5-0-0/07-notification-message-to-title.md"
+        },
+        {
+          "id": "divider-dual-rename",
+          "description": "Divider type/orientation dual rename with value mapping",
+          "path": "v5-0-0/08-divider-dual-rename.md"
+        },
+        {
+          "id": "button-type-to-color-variant",
+          "description": "Button type/danger to color + variant mapping",
+          "path": "v5-0-0/09-button-type-to-color-variant.md"
+        },
+        {
+          "id": "detect-styles-less",
+          "description": "Detect public/styles.less and map Less variables to antd tokens",
+          "path": "v5-0-0/10-detect-styles-less.md"
+        },
+        {
+          "id": "detect-date-formats",
+          "description": "Detect custom date format strings for dayjs compatibility",
+          "path": "v5-0-0/11-detect-date-formats.md"
+        },
+        {
+          "id": "migrate-meta-styles",
+          "description": "Remove meta.styles from custom block plugins, add direct CSS imports",
+          "path": "v5-0-0/12-migrate-meta-styles.md"
+        },
+        {
+          "id": "rename-xxl-to-2xl",
+          "description": "Rename xxl breakpoint key to 2xl",
+          "path": "v5-0-0/13-rename-xxl-to-2xl.md"
+        },
+        {
+          "id": "rename-gutter-to-gap",
+          "description": "Rename gutter to gap and contentGutter to contentGap",
+          "path": "v5-0-0/14-rename-gutter-to-gap.md"
+        },
+        {
+          "id": "rename-content-prefix",
+          "description": "Drop content* prefix from layout properties",
+          "path": "v5-0-0/15-rename-content-prefix.md"
+        },
+        {
+          "id": "rename-align-to-selfAlign",
+          "description": "Rename layout.align to layout.selfAlign",
+          "path": "v5-0-0/16-rename-align-to-selfAlign.md"
+        },
+        {
+          "id": "rename-moment-to-dayjs",
+          "description": "Rename _moment operator to _dayjs",
+          "path": "v5-0-0/17-rename-moment-to-dayjs.md"
+        },
+        {
+          "id": "report-thresholds-usage",
+          "description": "Report thresholds usage in _dayjs.humanizeDuration",
+          "path": "v5-0-0/18-report-thresholds-usage.md"
+        },
+        {
+          "id": "responsive-style-breakpoints",
+          "description": "Migrate responsive style breakpoints to Tailwind classes",
+          "path": "v5-0-0/19-responsive-style-breakpoints.md"
+        },
+        {
+          "id": "comment-block-removal",
+          "description": "Replace removed Comment block with Flex + Avatar + Paragraph composition",
+          "path": "v5-0-0/20-comment-block-removal.md"
+        }
+      ]
+    }
+  ]
+}

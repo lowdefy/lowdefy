@@ -43,6 +43,9 @@ function createHandleWarning({ context }) {
     if (context.seenSourceLines?.has(dedupKey)) return;
     context.seenSourceLines?.add(dedupKey);
 
+    if (context.warnings) {
+      context.warnings.push(warning);
+    }
     context.logger.warn(warning);
   };
 }

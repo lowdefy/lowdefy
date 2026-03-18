@@ -63,4 +63,13 @@ test.describe('Anchor Block', () => {
     await anchor.click();
     await expect(anchor).toHaveText('Clicked!');
   });
+
+  test('renders shortcut badge when onClick has shortcut', async ({ page }) => {
+    const anchor = getAnchor(page, 'anchor_shortcut');
+    await expect(anchor).toBeVisible();
+    // ShortcutBadge renders kbd elements for each key segment
+    const kbd = anchor.locator('kbd');
+    await expect(kbd.first()).toBeAttached();
+    expect(await kbd.count()).toBeGreaterThanOrEqual(2);
+  });
 });

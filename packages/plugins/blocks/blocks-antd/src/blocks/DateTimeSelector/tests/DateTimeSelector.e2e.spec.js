@@ -106,8 +106,14 @@ test.describe('DateTimeSelector Block', () => {
     const dropdown = page.locator('.ant-picker-dropdown:visible');
     await expect(dropdown).toBeVisible();
 
-    // Click a date cell - this triggers onChange via onSelect
+    // Click a date cell
     await page.locator('.ant-picker-cell-in-view').first().click();
+
+    // In antd v6, showTime pickers require clicking OK to confirm and trigger onChange
+    const okButton = page.locator('.ant-picker-ok button:visible');
+    if (await okButton.isVisible()) {
+      await okButton.click();
+    }
 
     const display = getBlock(page, 'dts_onchange_display');
     await expect(display).toHaveText('DateTime selected');

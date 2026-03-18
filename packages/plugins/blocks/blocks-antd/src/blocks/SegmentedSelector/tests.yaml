@@ -1,0 +1,141 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- id: default
+  type: SegmentedSelector
+- id: properties.title
+  type: SegmentedSelector
+  properties:
+    options:
+      - Option A
+      - Option B
+      - Option C
+    title: 'properties.title: My SegmentedSelector Title'
+- id: properties.options-string
+  type: SegmentedSelector
+  properties:
+    options:
+      - Option A
+      - Option B
+      - Option C
+- id: properties.options-number
+  type: SegmentedSelector
+  properties:
+    options:
+      - 15
+      - 20
+- id: properties.options-boolean
+  type: SegmentedSelector
+  properties:
+    options:
+      - true
+      - false
+- id: properties.options-object
+  type: SegmentedSelector
+  properties:
+    options:
+      - label: Daily
+        value: daily
+      - label: Weekly
+        value: weekly
+      - label: Monthly
+        value: monthly
+- id: properties.options-object-with-icon
+  type: SegmentedSelector
+  properties:
+    options:
+      - label: List
+        value: list
+        icon: AiOutlineUnorderedList
+      - label: Grid
+        value: grid
+        icon: AiOutlineAppstore
+- id: 'properties.size: small'
+  type: SegmentedSelector
+  properties:
+    options:
+      - Option A
+      - Option B
+    size: small
+- id: 'properties.size: large'
+  type: SegmentedSelector
+  properties:
+    options:
+      - Option A
+      - Option B
+    size: large
+- id: 'properties.block: true'
+  type: SegmentedSelector
+  properties:
+    options:
+      - Option A
+      - Option B
+      - Option C
+    block: true
+- id: 'properties.disabled: true'
+  type: SegmentedSelector
+  properties:
+    options:
+      - Option A
+      - Option B
+    disabled: true
+- id: 'properties.shape: round'
+  type: SegmentedSelector
+  properties:
+    options:
+      - Option A
+      - Option B
+      - Option C
+    shape: round
+- id: 'properties.vertical: true'
+  type: SegmentedSelector
+  properties:
+    options:
+      - Option A
+      - Option B
+      - Option C
+    vertical: true
+- id: 'properties.options: html'
+  type: SegmentedSelector
+  properties:
+    options:
+      - '<div>Some main text</div><div style="font-size: 6px;">Some small subtext</div>'
+      - '<div style="color: green;">Option green</div>'
+      - Option C
+- id: 'properties.options.label: html'
+  type: SegmentedSelector
+  properties:
+    options:
+      - label: '<div>Some main text</div><div style="font-size: 6px;">Some small subtext</div>'
+        value: 1
+      - label: '<div style="color: green;">Option green</div>'
+        value: 2
+      - label: Option 3
+        value: 3
+- id: 'properties.label: inline_true'
+  type: SegmentedSelector
+  properties:
+    options:
+      - Option A
+      - Option B
+    label:
+      inline: true
+- id: 'properties.label.extra: showingextra'
+  type: SegmentedSelector
+  properties:
+    options:
+      - Option A
+      - Option B
+    label:
+      extra: showing extra

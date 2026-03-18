@@ -61,7 +61,6 @@ pages:
   # Step 2.3: Utility Display
   - _ref: ../../src/blocks/Tooltip/tests/Tooltip.e2e.yaml
   - _ref: ../../src/blocks/Popover/tests/Popover.e2e.yaml
-  - _ref: ../../src/blocks/Comment/tests/Comment.e2e.yaml
   - _ref: ../../src/blocks/TimelineList/tests/TimelineList.e2e.yaml
   # Step 3.1: Core Layout
   - _ref: ../../src/blocks/Layout/tests/Layout.e2e.yaml
@@ -93,3 +92,17 @@ pages:
   - _ref: ../../src/blocks/PageSiderMenu/tests/PageSiderMenu.e2e.yaml
   # Step 6: Form Components
   - _ref: ../../src/blocks/Label/tests/Label.e2e.yaml
+  # Step 7: New Blocks
+  - _ref: ../../src/blocks/ColorSelector/tests/ColorSelector.e2e.yaml
+  - _ref: ../../src/blocks/DropdownButton/tests/DropdownButton.e2e.yaml
+  - _ref: ../../src/blocks/DropdownMenu/tests/DropdownMenu.e2e.yaml
+  - _ref: ../../src/blocks/Flex/tests/Flex.e2e.yaml
+  - _ref: ../../src/blocks/FloatButton/tests/FloatButton.e2e.yaml
+  - _ref: ../../src/blocks/Masonry/tests/Masonry.e2e.yaml
+  - _ref: ../../src/blocks/MasonryList/tests/MasonryList.e2e.yaml
+  - _ref: ../../src/blocks/QRCode/tests/QRCode.e2e.yaml
+  - _ref: ../../src/blocks/Search/tests/Search.e2e.yaml
+  - _ref: ../../src/blocks/SegmentedSelector/tests/SegmentedSelector.e2e.yaml
+  - _ref: ../../src/blocks/Splitter/tests/Splitter.e2e.yaml
+  - _ref: ../../src/blocks/Tour/tests/Tour.e2e.yaml
+  - _ref: ../../src/blocks/Watermark/tests/Watermark.e2e.yaml

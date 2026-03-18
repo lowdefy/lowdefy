@@ -261,7 +261,7 @@ test('request on a sub-block', () => {
             payload: {},
           },
         ],
-        areas: {
+        slots: {
           content: {
             blocks: [
               {

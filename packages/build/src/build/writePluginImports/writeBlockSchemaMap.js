@@ -14,8 +14,11 @@
   limitations under the License.
 */
 
+import { buildBlockSchema } from '@lowdefy/block-utils';
+
 async function writeBlockSchemaMap({ components, context }) {
   const schemas = {};
+  const allMetas = {};
 
   const typesMapSchemas = context.typesMap.schemas?.blocks ?? {};
 
@@ -28,22 +31,51 @@ async function writeBlockSchemaMap({ components, context }) {
   }
 
   for (const [packageName, blocks] of Object.entries(blocksByPackage)) {
-    let packageSchemas;
+    let packageMetas;
     try {
-      packageSchemas = await import(`${packageName}/schemas`);
+      packageMetas = await import(/* webpackIgnore: true */ `${packageName}/metas`);
     } catch {
-      // Package not resolvable from build context (custom plugins) — skip
+      try {
+        packageMetas = await import(/* webpackIgnore: true */ `${packageName}/schemas`);
+      } catch {
+        // Package not resolvable from build context (custom plugins) — skip
+      }
     }
     for (const block of blocks) {
+      const meta = packageMetas?.[block.originalTypeName];
       if (typesMapSchemas[block.typeName]) {
         schemas[block.typeName] = typesMapSchemas[block.typeName];
-      } else if (packageSchemas?.[block.originalTypeName]) {
-        schemas[block.typeName] = packageSchemas[block.originalTypeName];
+      } else if (meta) {
+        schemas[block.typeName] = buildBlockSchema(meta);
+      }
+      if (meta) {
+        allMetas[block.typeName] = meta;
       }
     }
   }
 
-  return context.writeBuildArtifact('plugins/blockSchemas.json', JSON.stringify(schemas));
+  const blockMetas = {};
+  const typesMapBlockMetas = context.typesMap.blockMetas ?? {};
+  for (const block of components.imports.blocks) {
+    const typesMapMeta = typesMapBlockMetas[block.typeName];
+    const meta = allMetas[block.typeName];
+    if (typesMapMeta) {
+      blockMetas[block.typeName] = {
+        category: typesMapMeta.category,
+        ...(typesMapMeta.valueType != null && { valueType: typesMapMeta.valueType }),
+        ...(typesMapMeta.initValue !== undefined && { initValue: typesMapMeta.initValue }),
+      };
+    } else if (meta) {
+      blockMetas[block.typeName] = {
+        category: meta.category,
+        ...(meta.valueType != null && { valueType: meta.valueType }),
+        ...(meta.initValue !== undefined && { initValue: meta.initValue }),
+      };
+    }
+  }
+
+  await context.writeBuildArtifact('plugins/blockSchemas.json', JSON.stringify(schemas));
+  await context.writeBuildArtifact('plugins/blockMetas.json', JSON.stringify(blockMetas));
 }
 
 export default writeBlockSchemaMap;

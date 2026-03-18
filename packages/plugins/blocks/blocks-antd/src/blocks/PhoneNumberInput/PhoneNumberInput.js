@@ -16,10 +16,11 @@
 
 import React from 'react';
 import { Input, Select } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 import regions from './regions.js';
 
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import Label from '../Label/Label.js';
+import withTheme from '../withTheme.js';
 import getValueIndex from '../../getValueIndex.js';
 import getUniqueValues from '../../getUniqueValues.js';
 
@@ -49,21 +50,20 @@ function getDefaultRegion({ allowedRegions, defaultRegion, uniqueValueOptions })
 
 function AddOnSelect({
   blockId,
+  classNames = {},
   defaultValue,
   loading,
   methods,
   properties,
+  styles,
   uniqueValueOptions,
   value,
 }) {
   return (
     <Select
       id={`${blockId}_select_input`}
-      bordered={properties.bordered}
-      className={methods.makeCssClass([
-        { minWidth: 100 },
-        methods.makeCssClass(properties.selectStyle),
-      ])}
+      variant={properties.bordered === false ? 'borderless' : properties.variant}
+      style={{ minWidth: 100, ...styles.select }}
       defaultValue={defaultValue}
       disabled={properties.disabled || loading}
       dropdownMatchSelectWidth={false}
@@ -110,7 +110,8 @@ function AddOnSelect({
             : `${opt.value.flag} ${opt.value.name} ${opt.value.dial_code}`;
         return (
           <Option
-            className={methods.makeCssClass([properties.optionsStyle])}
+            style={styles.options}
+            className={classNames.options}
             filterString={displayLabel}
             id={`${blockId}_${i}`}
             key={`${i}`}
@@ -127,12 +128,14 @@ function AddOnSelect({
 
 const PhoneNumberInput = ({
   blockId,
+  classNames = {},
   components: { Icon, Link },
   events,
   loading,
   methods,
   properties,
   required,
+  styles = {},
   validation,
   value,
 }) => {
@@ -168,10 +171,12 @@ const PhoneNumberInput = ({
   return (
     <Label
       blockId={blockId}
+      classNames={classNames}
       components={{ Icon, Link }}
       events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       required={required}
+      styles={styles}
       validation={validation}
       content={{
         content: () => {
@@ -181,18 +186,23 @@ const PhoneNumberInput = ({
               addonBefore={
                 <AddOnSelect
                   blockId={blockId}
+                  classNames={classNames}
                   defaultValue={defaultValue}
                   loading={loading}
                   methods={methods}
                   properties={properties}
+                  styles={styles}
                   uniqueValueOptions={uniqueValueOptions}
                   value={value}
                 />
               }
               allowClear={properties.allowClear}
               autoFocus={properties.autoFocus}
-              bordered={properties.bordered}
-              className={`ldf-phone-number-input ${methods.makeCssClass(properties.inputStyle)}`}
+              variant={properties.bordered === false ? 'borderless' : properties.variant}
+              className={`ldf-phone-number-input${
+                classNames.element ? ` ${classNames.element}` : ''
+              }`}
+              style={styles.element}
               disabled={properties.disabled || loading}
               maxLength={properties.maxLength}
               placeholder={properties.placeholder}
@@ -239,8 +249,10 @@ const PhoneNumberInput = ({
                 (properties.prefixIcon && (
                   <Icon
                     blockId={`${blockId}_prefixIcon`}
+                    classNames={{ element: classNames.prefixIcon }}
                     events={events}
                     properties={properties.prefixIcon}
+                    styles={{ element: styles.prefixIcon }}
                   />
                 ))
               }
@@ -251,8 +263,10 @@ const PhoneNumberInput = ({
                     {properties.suffixIcon && (
                       <Icon
                         blockId={`${blockId}_suffixIcon`}
+                        classNames={{ element: classNames.suffixIcon }}
                         events={events}
                         properties={properties.suffixIcon}
+                        styles={{ element: styles.suffixIcon }}
                       />
                     )}
                   </>
@@ -266,12 +280,4 @@ const PhoneNumberInput = ({
   );
 };
 
-PhoneNumberInput.defaultProps = blockDefaultProps;
-PhoneNumberInput.meta = {
-  valueType: 'object',
-  category: 'input',
-  icons: [...Label.meta.icons],
-  styles: ['blocks/PhoneNumberInput/style.less'],
-};
-
-export default PhoneNumberInput;
+export default withTheme('Input', withBlockDefaults(PhoneNumberInput));

@@ -1,16 +1,86 @@
 # @lowdefy/blocks-antd
 
-Primary UI component library for Lowdefy, built on [Ant Design](https://ant.design/components/overview). Contains 62 blocks covering most UI needs.
+Primary UI component library for Lowdefy, built on [Ant Design v5](https://ant.design/components/overview) with CSS-in-JS (CSS variables mode). Contains 71 blocks covering most UI needs.
 
 ## Overview
 
 This is the default block package included with Lowdefy. It provides:
 
 - Form inputs (text, number, date, selectors)
-- Layout components (Card, Collapse, Tabs)
-- Display components (Title, Paragraph, Alert)
-- Navigation (Menu, Breadcrumb, Pagination)
+- Layout components (Card, Collapse, Tabs, Flex, Splitter)
+- Display components (Title, Paragraph, Alert, QRCode, Watermark)
+- Navigation (Menu, Breadcrumb, Pagination, FloatButton, Tour)
 - Feedback (Message, Modal, Progress)
+- Theming (ConfigProvider, ColorPicker, Segmented)
+
+## Styling Architecture
+
+### CSS Variables Mode
+
+Ant Design runs in CSS variables mode (`cssVar: { key: 'lowdefy' }`, `hashed: false`) configured in the server's `_app.js`. The `<Html>` element has `className="lowdefy"` in `_document.js` so the CSS variables are set on `:root`, allowing Tailwind and custom CSS to reference `--ant-*` tokens. No Less or CSS-in-JS hashing at runtime.
+
+### `withTheme` HOC
+
+Every block is wrapped with the `withTheme(antdComponentName, BlockComponent)` higher-order component (defined in `src/blocks/withTheme.js`). It intercepts `properties.theme` and, when present, wraps the block in a scoped `<ConfigProvider>` that applies per-block Ant Design token overrides:
+
+```javascript
+// withTheme strips `theme` from properties and scopes a ConfigProvider
+function withTheme(antdComponentName, BlockComponent) {
+  const Wrapped = (props) => {
+    const { theme, ...restProperties } = props.properties;
+    const rendered = <BlockComponent {...props} properties={restProperties} />;
+    if (!theme) return rendered;
+    return (
+      <ConfigProvider theme={{ components: { [antdComponentName]: theme } }}>
+        {rendered}
+      </ConfigProvider>
+    );
+  };
+  // ...
+}
+
+// Usage in a block file:
+export default withTheme('Badge', BadgeBlock);
+```
+
+The first argument (`antdComponentName`) must match the Ant Design component name so the theme tokens target the correct component.
+
+### `cssKeys` in Block Meta
+
+Each block declares `cssKeys` in its `meta`, listing which style targets the block supports:
+
+```javascript
+BadgeBlock.meta = {
+  category: 'display',
+  icons: [...],
+  styles: [...],
+  cssKeys: ['element', 'indicator'],
+};
+```
+
+These keys define valid targets for the `class` (object form) and `styles` config properties. Common keys:
+
+| Key         | Purpose                                           |
+| ----------- | ------------------------------------------------- |
+| `element`   | The primary antd component element                |
+| `popup`     | Popup/dropdown overlays (selectors, date pickers) |
+| `indicator` | Status indicators (Badge)                         |
+| `header`    | Header sections (Card, Collapse)                  |
+
+### `classNames` and `styles` Prop Flow
+
+The engine evaluates `class` and `styles` from the block config and exposes them as `block.eval.class` and `block.eval.styles`. The client rendering layer (`Container.js`, `InputContainer.js`, etc.) then passes these to the block component as `classNames` and `styles` props:
+
+```javascript
+// In client/src/block/Container.js
+<Component
+  classNames={classNames} // resolved from block.eval.class
+  styles={block.eval.styles} // e.g., { block: {...}, element: {...} }
+  // ...
+/>
+```
+
+The `styles` object maps cssKey names to inline style objects. The `classNames` object maps cssKey names to CSS class strings. Blocks use these to apply targeted styling to specific sub-elements.
 
 ## Block Categories
 
@@ -123,12 +193,28 @@ User feedback:
 | `Notification` | Rich notification   |
 | `ConfirmModal` | Confirmation dialog |
 
+### New in Ant Design v5/v6
+
+| Block            | Purpose                              |
+| ---------------- | ------------------------------------ |
+| `FloatButton`    | Floating action button               |
+| `Tour`           | Step-by-step guided tour             |
+| `QRCode`         | QR code generator                    |
+| `ColorPicker`    | Color selection input                |
+| `Segmented`      | Segmented control (iOS-style toggle) |
+| `Flex`           | Flexbox layout shorthand             |
+| `Splitter`       | Resizable split panes                |
+| `Masonry`        | Masonry/waterfall grid layout        |
+| `Watermark`      | Background watermark overlay         |
+| `ConfigProvider` | Theme/locale provider block          |
+
 ### Special Blocks
 
 | Block     | Purpose          |
 | --------- | ---------------- |
 | `Divider` | Visual separator |
-| `Comment` | Comment display  |
+
+> **Note:** The `Comment` block has been removed (the upstream Ant Design Comment component was removed in v5).
 
 ## Common Properties
 
@@ -136,8 +222,9 @@ Most blocks support:
 
 ```yaml
 properties:
-  # Styling
-  style: { ... } # CSS styles
+  # Per-block Ant Design token overrides (consumed by withTheme HOC)
+  theme:
+    colorPrimary: '#1677ff'
 
   # Content (varies by block)
   title: string
@@ -146,6 +233,14 @@ properties:
   # State
   disabled: boolean
   loading: boolean
+
+# Styling via class and styles (processed by normalizeClassAndStyles at build time)
+class:
+  block: 'p-4 rounded' # Tailwind classes on the layout wrapper
+  element: 'text-primary' # Classes on the antd element
+styles:
+  block: { padding: 16 } # Inline style on the layout wrapper
+  element: { color: 'red' } # Inline style on the antd element
 ```
 
 ## Input Block Properties

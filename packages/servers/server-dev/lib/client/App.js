@@ -29,6 +29,7 @@ import { getReloadVersion } from './utils/useMutateCache.js';
 import useRootConfig from './utils/useRootConfig.js';
 
 import actions from '../../build/plugins/actions.js';
+import blockMetas from '../../build/plugins/blockMetas.json';
 import blocks from '../../build/plugins/blocks.js';
 import icons from '../../build/plugins/icons.js';
 import operators from '../../build/plugins/operators/client.js';
@@ -37,6 +38,10 @@ import staticJsMap from '../../build/plugins/operators/clientJsMap.js';
 const App = ({ auth, lowdefy }) => {
   const router = useRouter();
   const { data: rootConfig } = useRootConfig(router.basePath);
+
+  if (rootConfig?.theme) {
+    lowdefy.theme = rootConfig.theme;
+  }
 
   const { redirect, pageId } = setPageId(router, rootConfig);
   if (redirect) {
@@ -60,6 +65,7 @@ const App = ({ auth, lowdefy }) => {
             router={router}
             types={{
               actions,
+              blockMetas,
               blocks,
               icons,
               operators,

@@ -16,11 +16,10 @@
 
 import React from 'react';
 import { Area, BlockLayout } from '@lowdefy/layout';
-import { makeCssClass } from '@lowdefy/block-utils';
-
 import LoadingBlock from './LoadingBlock.js';
 
 const LoadingContainer = ({
+  blockClass,
   blockId,
   blockLayout,
   blockProperties,
@@ -32,18 +31,17 @@ const LoadingContainer = ({
 }) => {
   const content = {};
   // eslint-disable-next-line prefer-destructuring
-  Object.keys(skeleton.areas).forEach((areaKey, i) => {
-    content[areaKey] = (areaStyle) => (
+  Object.keys(skeleton.slots).forEach((slotKey, i) => {
+    content[slotKey] = () => (
       <Area
-        area={skeleton.areas[areaKey]}
-        areaKey={areaKey}
-        areaStyle={[areaStyle, skeleton.areas[areaKey]?.style]}
-        id={`s-ar-${blockId}-${skeleton.id}-${areaKey}`}
-        key={`s-ar-${blockId}-${skeleton.id}-${areaKey}-${i}`}
+        area={skeleton.slots[slotKey]}
+        areaKey={slotKey}
+        style={skeleton.slots[slotKey]?.style}
+        id={`s-ar-${blockId}-${skeleton.id}-${slotKey}`}
+        key={`s-ar-${blockId}-${skeleton.id}-${slotKey}-${i}`}
         layout={skeleton.layout ?? blockLayout}
-        makeCssClass={makeCssClass}
       >
-        {skeleton.areas[areaKey].blocks.map((skl, k) => (
+        {skeleton.slots[slotKey].blocks.map((skl, k) => (
           <LoadingBlock
             blockId={blockId}
             context={context}
@@ -57,10 +55,10 @@ const LoadingContainer = ({
   });
   return (
     <BlockLayout
-      blockStyle={skeleton.style ?? blockStyle}
+      style={skeleton.style ?? blockStyle}
       id={`s-bl-${blockId}-${skeleton.id}`}
       layout={skeleton.layout ?? blockLayout}
-      makeCssClass={makeCssClass}
+      className={skeleton.class ?? blockClass}
     >
       <Component
         basePath={lowdefy.basePath}
@@ -69,7 +67,7 @@ const LoadingContainer = ({
         content={content}
         key={skeleton.id}
         menus={lowdefy.menus}
-        methods={{ makeCssClass }}
+        methods={{}}
         pageId={lowdefy.pageId}
         properties={skeleton.properties ?? blockProperties}
       />

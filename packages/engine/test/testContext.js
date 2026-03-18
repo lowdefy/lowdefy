@@ -40,52 +40,26 @@ const testContext = async ({ lowdefy, pageConfig }) => {
       operators: testOperators,
       actions: { ...testActions, ...lowdefy?._internal?.actions },
       blockComponents: {
-        TextInput: {
-          meta: {
-            category: 'input',
-            valueType: 'string',
-          },
-        },
-        Box: {
-          meta: {
-            category: 'container',
-          },
-        },
-        Button: {
-          meta: {
-            category: 'display',
-          },
-        },
-        List: {
-          meta: {
-            category: 'list',
-            valueType: 'array',
-          },
-        },
-        Paragraph: {
-          meta: {
-            category: 'display',
-          },
-        },
-        Switch: {
-          meta: {
-            category: 'input',
-            valueType: 'boolean',
-          },
-        },
-        MultipleSelector: {
-          meta: {
-            category: 'input',
-            valueType: 'array',
-          },
-        },
-        NumberInput: {
-          meta: {
-            category: 'input',
-            valueType: 'number',
-          },
-        },
+        TextInput: {},
+        Box: {},
+        Button: {},
+        List: {},
+        Paragraph: {},
+        Switch: {},
+        MultipleSelector: {},
+        NumberInput: {},
         ...lowdefy?._internal?.blocks,
+      },
+      blockMetas: {
+        TextInput: { category: 'input', valueType: 'string' },
+        Box: { category: 'container' },
+        Button: { category: 'display' },
+        List: { category: 'list', valueType: 'array' },
+        Paragraph: { category: 'display' },
+        Switch: { category: 'input', valueType: 'boolean' },
+        MultipleSelector: { category: 'input', valueType: 'array' },
+        NumberInput: { category: 'input', valueType: 'number' },
+        ...lowdefy?._internal?.blockMetas,
       },
     },
   };

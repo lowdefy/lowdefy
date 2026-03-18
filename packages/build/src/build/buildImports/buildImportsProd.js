@@ -15,7 +15,6 @@
 */
 
 import buildIconImports from './buildIconImports.js';
-import buildStyleImports from './buildStyleImports.js';
 import defaultIconsProd from './defaultIconsProd.js';
 
 function buildImportClassProd(types) {
@@ -44,7 +43,6 @@ function buildImportsProd({ components, context }) {
       client: buildImportClassProd(components.types.operators.client),
       server: buildImportClassProd(components.types.operators.server),
     },
-    styles: buildStyleImports({ blocks, context }),
   };
 }
 

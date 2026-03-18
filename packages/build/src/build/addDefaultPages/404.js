@@ -25,7 +25,7 @@ export default {
     title: '404',
     subTitle: 'Sorry, the page you are visiting does not exist.',
   },
-  areas: {
+  slots: {
     extra: {
       blocks: [
         {

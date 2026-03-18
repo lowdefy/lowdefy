@@ -16,18 +16,22 @@
 
 import React, { useState } from 'react';
 import { Typography } from 'antd';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
+
+import { withBlockDefaults } from '@lowdefy/block-utils';
+import withTheme from '../withTheme.js';
 
 const Paragraph = Typography.Paragraph;
 
 const ParagraphInput = ({
   blockId,
+  classNames = {},
   components: { Icon },
   events,
   loading,
   methods,
   properties,
+  styles = {},
   value,
 }) => {
   const [editing, setEdit] = useState(false);
@@ -47,7 +51,7 @@ const ParagraphInput = ({
   return (
     <Paragraph
       id={blockId}
-      className={methods.makeCssClass(properties.style)}
+      className={classNames.element}
       code={properties.code}
       copyable={
         type.isObject(properties.copyable)
@@ -66,21 +70,27 @@ const ParagraphInput = ({
                     <Icon
                       key="copy-icon"
                       blockId={`${blockId}_copyable_before_icon`}
+                      classNames={{ element: classNames.copyableIcon }}
                       events={events}
                       properties={properties.copyable.icon[0]}
+                      styles={{ element: styles.copyableIcon }}
                     />,
                     <Icon
                       key="copied-icon"
                       blockId={`${blockId}_copyable_after_icon`}
+                      classNames={{ element: classNames.copyableIcon }}
                       events={events}
                       properties={properties.copyable.icon[1]}
+                      styles={{ element: styles.copyableIcon }}
                     />,
                   ]
                 ) : (
                   <Icon
                     blockId={`${blockId}_copyable_icon`}
+                    classNames={{ element: classNames.copyableIcon }}
                     events={events}
                     properties={properties.copyable.icon}
+                    styles={{ element: styles.copyableIcon }}
                   />
                 )),
               tooltips: properties.copyable.tooltips,
@@ -116,8 +126,10 @@ const ParagraphInput = ({
               icon: properties.editable.icon && (
                 <Icon
                   blockId={`${blockId}_editable_icon`}
+                  classNames={{ element: classNames.editableIcon }}
                   events={events}
                   properties={properties.editable.icon}
+                  styles={{ element: styles.editableIcon }}
                 />
               ),
               tooltip: properties.editable.tooltip,
@@ -131,6 +143,7 @@ const ParagraphInput = ({
       italic={properties.italic}
       mark={properties.mark}
       strong={properties.strong}
+      style={styles.element}
       type={properties.type}
       underline={properties.underline}
     >
@@ -139,12 +152,4 @@ const ParagraphInput = ({
   );
 };
 
-ParagraphInput.defaultProps = blockDefaultProps;
-ParagraphInput.meta = {
-  valueType: 'string',
-  category: 'input',
-  icons: [],
-  styles: ['blocks/ParagraphInput/style.less'],
-};
-
-export default ParagraphInput;
+export default withTheme('Typography', withBlockDefaults(ParagraphInput));

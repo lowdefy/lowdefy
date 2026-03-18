@@ -16,21 +16,24 @@
 
 import React from 'react';
 import { type } from '@lowdefy/helpers';
-import { blockDefaultProps } from '@lowdefy/block-utils';
 import { Input } from 'antd';
 
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import Label from '../Label/Label.js';
+import withTheme from '../withTheme.js';
 import useRunAfterUpdate from '../../useRunAfterUpdate.js';
 
 const TextAreaComp = Input.TextArea;
 
 const TextAreaBlock = ({
   blockId,
+  classNames = {},
   components,
   events,
   loading,
   properties,
   required,
+  styles = {},
   validation,
   value,
   methods,
@@ -38,11 +41,13 @@ const TextAreaBlock = ({
   return (
     <Label
       blockId={blockId}
+      classNames={classNames}
       components={components}
       events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}
+      styles={styles}
       content={{
         content: () => {
           const runAfterUpdate = useRunAfterUpdate();
@@ -51,13 +56,15 @@ const TextAreaBlock = ({
               id={`${blockId}_input`}
               allowClear={properties.allowClear}
               autoFocus={properties.autoFocus}
-              bordered={properties.bordered}
-              className={methods.makeCssClass(properties.inputStyle)}
+              variant={properties.bordered === false ? 'borderless' : properties.variant}
+              className={classNames.element}
+              style={styles.element}
               disabled={properties.disabled || loading}
               maxLength={properties.maxLength}
               placeholder={properties.placeholder}
               showCount={properties.showCount}
               size={properties.size}
+              status={validation.status}
               value={value}
               autoSize={
                 properties.rows
@@ -92,12 +99,4 @@ const TextAreaBlock = ({
   );
 };
 
-TextAreaBlock.defaultProps = blockDefaultProps;
-TextAreaBlock.meta = {
-  valueType: 'string',
-  category: 'input',
-  icons: [...Label.meta.icons],
-  styles: ['blocks/TextArea/style.less'],
-};
-
-export default TextAreaBlock;
+export default withTheme('Input', withBlockDefaults(TextAreaBlock));

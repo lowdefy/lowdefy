@@ -100,7 +100,7 @@ test('Request call one request', async () => {
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootAreas.map['button'];
+  const button = context._internal.RootSlots.map['button'];
   const promise = button.triggerEvent({ name: 'onClick' });
   expect(context.requests.req_one).toEqual([
     {
@@ -162,7 +162,7 @@ test('Request call all requests', async () => {
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootAreas.map['button'];
+  const button = context._internal.RootSlots.map['button'];
   const promise = button.triggerEvent({ name: 'onClick' });
   expect(context.requests).toEqual({
     req_one: [
@@ -262,7 +262,7 @@ test('Request call array of requests', async () => {
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootAreas.map['button'];
+  const button = context._internal.RootSlots.map['button'];
   const promise = button.triggerEvent({ name: 'onClick' });
   expect(context.requests).toEqual({
     req_one: [
@@ -362,7 +362,7 @@ test('Request pass if params are none', async () => {
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootAreas.map['button'];
+  const button = context._internal.RootSlots.map['button'];
   await button.triggerEvent({ name: 'onClick' });
   expect(context.requests).toEqual({});
 });
@@ -391,7 +391,7 @@ test('Request call request error', async () => {
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootAreas.map['button'];
+  const button = context._internal.RootSlots.map['button'];
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(context.requests.req_error).toEqual([
     {

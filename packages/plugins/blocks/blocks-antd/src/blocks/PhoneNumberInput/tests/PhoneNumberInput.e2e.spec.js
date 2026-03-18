@@ -77,7 +77,7 @@ test.describe('PhoneNumberInput Block', () => {
 
   test('renders with default region US', async ({ page }) => {
     const selector = getCodeSelector(page, 'phone_default_region');
-    const selected = selector.locator('.ant-select-selection-item');
+    const selected = selector.locator('.ant-select-content');
     // US dial code is +1
     await expect(selected).toContainText('+1');
   });
@@ -97,7 +97,7 @@ test.describe('PhoneNumberInput Block', () => {
 
   test('hides flags when showFlags is false', async ({ page }) => {
     const selector = getCodeSelector(page, 'phone_no_flags');
-    const selected = selector.locator('.ant-select-selection-item');
+    const selected = selector.locator('.ant-select-content');
     // Should show dial code without flag emoji
     const text = await selected.textContent();
     // Flags are emoji characters - check that dial code shows without flag
@@ -182,7 +182,7 @@ test.describe('PhoneNumberInput Block', () => {
     await ukOption.click();
 
     // Verify UK is selected (+44)
-    const selected = selector.locator('.ant-select-selection-item');
+    const selected = selector.locator('.ant-select-content');
     await expect(selected).toContainText('+44');
   });
 

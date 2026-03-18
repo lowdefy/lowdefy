@@ -22,14 +22,14 @@ blocks:
 
   - id: sider_basic
     type: Layout
-    areas:
+    slots:
       content:
         blocks:
           - id: sider_basic_sider
             type: Sider
             properties:
               initialCollapsed: false
-            areas:
+            slots:
               content:
                 blocks:
                   - id: sider_basic_content
@@ -43,7 +43,7 @@ blocks:
 
   - id: sider_theme_light
     type: Layout
-    areas:
+    slots:
       content:
         blocks:
           - id: sider_theme_light_sider
@@ -51,7 +51,7 @@ blocks:
             properties:
               theme: light
               initialCollapsed: false
-            areas:
+            slots:
               content:
                 blocks:
                   - id: sider_theme_light_content
@@ -61,7 +61,7 @@ blocks:
 
   - id: sider_theme_dark
     type: Layout
-    areas:
+    slots:
       content:
         blocks:
           - id: sider_theme_dark_sider
@@ -69,7 +69,7 @@ blocks:
             properties:
               theme: dark
               initialCollapsed: false
-            areas:
+            slots:
               content:
                 blocks:
                   - id: sider_theme_dark_content
@@ -83,7 +83,7 @@ blocks:
 
   - id: sider_collapsed
     type: Layout
-    areas:
+    slots:
       content:
         blocks:
           - id: sider_collapsed_sider
@@ -91,7 +91,7 @@ blocks:
             properties:
               initialCollapsed: true
               collapsible: true
-            areas:
+            slots:
               content:
                 blocks:
                   - id: sider_collapsed_content
@@ -101,7 +101,7 @@ blocks:
 
   - id: sider_expanded
     type: Layout
-    areas:
+    slots:
       content:
         blocks:
           - id: sider_expanded_sider
@@ -109,7 +109,7 @@ blocks:
             properties:
               initialCollapsed: false
               collapsible: true
-            areas:
+            slots:
               content:
                 blocks:
                   - id: sider_expanded_content
@@ -123,7 +123,7 @@ blocks:
 
   - id: sider_custom_width
     type: Layout
-    areas:
+    slots:
       content:
         blocks:
           - id: sider_custom_width_sider
@@ -131,7 +131,7 @@ blocks:
             properties:
               width: 300
               initialCollapsed: false
-            areas:
+            slots:
               content:
                 blocks:
                   - id: sider_custom_width_content
@@ -145,7 +145,7 @@ blocks:
 
   - id: sider_collapsible
     type: Layout
-    areas:
+    slots:
       content:
         blocks:
           - id: sider_collapsible_sider
@@ -153,7 +153,7 @@ blocks:
             properties:
               collapsible: true
               initialCollapsed: false
-            areas:
+            slots:
               content:
                 blocks:
                   - id: sider_collapsible_content

@@ -18,7 +18,10 @@ function transformer(obj) {
   if (!obj.methods || !obj.page.blocks) {
     return obj.page;
   }
-  const contentArray = obj.page.blocks[0].areas.content.blocks[0].blocks[1].blocks;
+  if (!obj.page.blocks) {
+    return obj.page;
+  }
+  const contentArray = obj.page.blocks[0].slots.content.blocks[0].blocks[1].blocks;
   const operatorName = obj.page.properties.title;
 
   contentArray.push({
@@ -63,9 +66,7 @@ function transformer(obj) {
     contentArray.push({
       id: `${method.name}_types`,
       type: 'Markdown',
-      style: {
-        '.markdown-body': { fontSize: '14px' },
-      },
+      class: 'text-sm',
       properties: {
         content: method.types,
       },

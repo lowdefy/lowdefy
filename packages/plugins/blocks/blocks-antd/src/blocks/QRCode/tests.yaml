@@ -1,0 +1,113 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- id: default
+  type: QRCode
+- id: properties.value
+  type: QRCode
+  properties:
+    value: https://lowdefy.com
+- id: 'properties.size: 200'
+  type: QRCode
+  properties:
+    value: https://lowdefy.com
+    size: 200
+- id: properties.color
+  type: QRCode
+  properties:
+    value: https://lowdefy.com
+    color: '#1677ff'
+- id: properties.bgColor
+  type: QRCode
+  properties:
+    value: https://lowdefy.com
+    bgColor: '#f0f0f0'
+- id: 'properties.errorLevel: L'
+  type: QRCode
+  properties:
+    value: https://lowdefy.com
+    errorLevel: L
+- id: 'properties.errorLevel: M'
+  type: QRCode
+  properties:
+    value: https://lowdefy.com
+    errorLevel: M
+- id: 'properties.errorLevel: Q'
+  type: QRCode
+  properties:
+    value: https://lowdefy.com
+    errorLevel: Q
+- id: 'properties.errorLevel: H'
+  type: QRCode
+  properties:
+    value: https://lowdefy.com
+    errorLevel: H
+- id: properties.icon
+  type: QRCode
+  properties:
+    value: https://lowdefy.com
+    icon: https://lowdefy.com/icon.png
+    errorLevel: H
+- id: 'properties.iconSize: 60'
+  type: QRCode
+  properties:
+    value: https://lowdefy.com
+    icon: https://lowdefy.com/icon.png
+    iconSize: 60
+    errorLevel: H
+- id: 'properties.marginSize: 2'
+  type: QRCode
+  properties:
+    value: https://lowdefy.com
+    marginSize: 2
+- id: 'properties.minVersion: 5'
+  type: QRCode
+  properties:
+    value: https://lowdefy.com
+    minVersion: 5
+- id: 'properties.type: canvas'
+  type: QRCode
+  properties:
+    value: https://lowdefy.com
+    type: canvas
+- id: 'properties.type: svg'
+  type: QRCode
+  properties:
+    value: https://lowdefy.com
+    type: svg
+- id: 'properties.bordered: false'
+  type: QRCode
+  properties:
+    value: https://lowdefy.com
+    bordered: false
+- id: 'properties.status: active'
+  type: QRCode
+  properties:
+    value: https://lowdefy.com
+    status: active
+- id: 'properties.status: expired'
+  type: QRCode
+  properties:
+    value: https://lowdefy.com
+    status: expired
+- id: 'properties.status: loading'
+  type: QRCode
+  properties:
+    value: https://lowdefy.com
+    status: loading
+- id: 'properties.status: scanned'
+  type: QRCode
+  properties:
+    value: https://lowdefy.com
+    status: scanned
