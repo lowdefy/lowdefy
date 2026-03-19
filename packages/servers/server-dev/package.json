@@ -53,7 +53,6 @@
     "@lowdefy/blocks-echarts": "4.7.0",
     "@lowdefy/blocks-loaders": "4.7.0",
     "@lowdefy/blocks-markdown": "4.7.0",
-    "@lowdefy/blocks-qr": "4.7.0",
     "@lowdefy/build": "4.7.0",
     "@lowdefy/client": "4.7.0",
     "@lowdefy/connection-axios-http": "4.7.0",

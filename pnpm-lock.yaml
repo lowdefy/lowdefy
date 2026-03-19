@@ -1678,18 +1678,9 @@ importers:
       '@lowdefy/blocks-loaders':
         specifier: 4.7.0
         version: link:../../plugins/blocks/blocks-loaders
-      '@lowdefy/blocks-markdown':
-        specifier: 4.7.0
-        version: link:../../plugins/blocks/blocks-markdown
       '@lowdefy/client':
         specifier: 4.7.0
         version: link:../../client
-      '@lowdefy/connection-axios-http':
-        specifier: 4.7.0
-        version: link:../../plugins/connections/connection-axios-http
-      '@lowdefy/connection-mongodb':
-        specifier: 4.7.0
-        version: link:../../plugins/connections/connection-mongodb
       '@lowdefy/errors':
         specifier: 4.7.0
         version: link:../../utils/errors
@@ -1708,12 +1699,6 @@ importers:
       '@lowdefy/operators-js':
         specifier: 4.7.0
         version: link:../../plugins/operators/operators-js
-      '@lowdefy/operators-nunjucks':
-        specifier: 4.7.0
-        version: link:../../plugins/operators/operators-nunjucks
-      '@lowdefy/operators-uuid':
-        specifier: 4.7.0
-        version: link:../../plugins/operators/operators-uuid
       '@lowdefy/plugin-next-auth':
         specifier: 4.7.0
         version: link:../../plugins/plugins/plugin-next-auth
@@ -1796,9 +1781,6 @@ importers:
       '@lowdefy/blocks-markdown':
         specifier: 4.7.0
         version: link:../../plugins/blocks/blocks-markdown
-      '@lowdefy/blocks-qr':
-        specifier: 4.7.0
-        version: link:../../plugins/blocks/blocks-qr
       '@lowdefy/build':
         specifier: 4.7.0
         version: link:../../build
